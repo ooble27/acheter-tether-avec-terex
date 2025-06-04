@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Home, HelpCircle, User, Globe, CircleDollarSign } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useState } from 'react';
 
@@ -21,19 +21,36 @@ interface AppSidebarProps {
   onLogout: () => void;
 }
 
+const TetherIcon = ({ className, color }: { className?: string, color?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle cx="12" cy="12" r="12" fill={color || "#26A17B"} />
+    <path
+      d="M12.8 7.5H16V5.2H8V7.5H11.2V8.1C8.9 8.2 7.2 8.7 7.2 9.3S8.9 10.4 11.2 10.5V16.8H12.8V10.5C15.1 10.4 16.8 9.9 16.8 9.3S15.1 8.2 12.8 8.1V7.5Z"
+      fill="white"
+    />
+  </svg>
+);
+
 const menuItems = [
   { id: 'home', label: 'Accueil', icon: Home },
   { 
     id: 'buy', 
     label: 'Acheter USDT', 
-    icon: CircleDollarSign,
-    iconColor: 'text-green-500'
+    icon: TetherIcon,
+    iconColor: '#26A17B',
+    isCustomIcon: true
   },
   { 
     id: 'sell', 
     label: 'Vendre USDT', 
-    icon: CircleDollarSign,
-    iconColor: 'text-red-500'
+    icon: TetherIcon,
+    iconColor: '#ef4444',
+    isCustomIcon: true
   },
   { id: 'transfer', label: 'Virement International', icon: Globe },
   { id: 'profile', label: 'Mon Profil', icon: User },
@@ -73,13 +90,18 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                         : 'text-gray-300 hover:bg-terex-gray hover:text-white'
                     }`}
                   >
-                    <IconComponent 
-                      className={`mr-3 h-5 w-5 ${
-                        item.iconColor ? item.iconColor : ''
-                      } ${
-                        activeSection === item.id ? 'text-white' : ''
-                      }`} 
-                    />
+                    {item.isCustomIcon ? (
+                      <IconComponent 
+                        className="mr-3 h-5 w-5"
+                        color={activeSection === item.id ? 'white' : item.iconColor}
+                      />
+                    ) : (
+                      <IconComponent 
+                        className={`mr-3 h-5 w-5 ${
+                          activeSection === item.id ? 'text-white' : ''
+                        }`} 
+                      />
+                    )}
                     <span>{item.label}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
