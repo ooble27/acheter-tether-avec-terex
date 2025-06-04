@@ -198,19 +198,35 @@ export function InternationalTransfer() {
           <div className="space-y-3">
             <div className="p-4 bg-terex-gray rounded-lg">
               <div className="flex justify-between mb-2">
-                <span className="text-gray-300">Montant:</span>
+                <span className="text-gray-300">Montant à envoyer:</span>
                 <span className="text-white">{cadAmount} CAD</span>
               </div>
               <div className="flex justify-between mb-2">
-                <span className="text-gray-300">Destinataire recevra:</span>
+                <span className="text-gray-300">Pays de destination:</span>
+                <span className="text-white">
+                  {country === 'senegal' ? '🇸🇳 Sénégal' : 
+                   country === 'cote-ivoire' ? '🇨🇮 Côte d\'Ivoire' :
+                   country === 'mali' ? '🇲🇱 Mali' :
+                   country === 'burkina' ? '🇧🇫 Burkina Faso' : '🇳🇪 Niger'}
+                </span>
+              </div>
+              <div className="flex justify-between mb-2">
+                <span className="text-gray-300">Montant à recevoir:</span>
                 <span className="text-terex-accent">{cfaAmount} CFA</span>
+              </div>
+              <div className="flex justify-between mb-2">
+                <span className="text-gray-300">Méthode de réception:</span>
+                <span className="text-white">
+                  {paymentMethod === 'orange' ? 'Orange Money' : 
+                   paymentMethod === 'wave' ? 'Wave' : 'Moov Money'}
+                </span>
               </div>
               <div className="flex justify-between mb-2">
                 <span className="text-gray-300">Bénéficiaire:</span>
                 <span className="text-white">{recipientName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-300">Téléphone:</span>
+                <span className="text-gray-300">Numéro de réception:</span>
                 <span className="text-white">{recipientPhone}</span>
               </div>
             </div>

@@ -189,15 +189,23 @@ export function SellUSDT() {
                 <span className="text-white">{usdtAmount} USDT</span>
               </div>
               <div className="flex justify-between mb-2">
+                <span className="text-gray-300">Réseau d'envoi:</span>
+                <span className="text-white">{network}</span>
+              </div>
+              <div className="flex justify-between mb-2">
                 <span className="text-gray-300">Montant à recevoir:</span>
                 <span className="text-terex-accent">{cfaAmount} CFA</span>
+              </div>
+              <div className="flex justify-between mb-2">
+                <span className="text-gray-300">Méthode de réception:</span>
+                <span className="text-white">{paymentMethod === 'orange' ? 'Orange Money' : 'Wave'}</span>
               </div>
               <div className="flex justify-between mb-2">
                 <span className="text-gray-300">Bénéficiaire:</span>
                 <span className="text-white">{recipientName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-300">Téléphone:</span>
+                <span className="text-gray-300">Numéro de réception:</span>
                 <span className="text-white">{recipientPhone}</span>
               </div>
             </div>

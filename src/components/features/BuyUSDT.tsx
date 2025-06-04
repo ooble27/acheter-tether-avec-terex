@@ -177,9 +177,13 @@ export function BuyUSDT() {
                 <span className="text-gray-300">USDT à recevoir:</span>
                 <span className="text-terex-accent">{usdtAmount} USDT</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between mb-2">
                 <span className="text-gray-300">Réseau:</span>
                 <span className="text-white">{network}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-300">Adresse de réception:</span>
+                <span className="text-white text-sm break-all">{address}</span>
               </div>
             </div>
           </div>
