@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/dashboard/AppSidebar';
@@ -7,6 +8,7 @@ import { InternationalTransfer } from '@/components/features/InternationalTransf
 import { FAQ } from '@/components/features/FAQ';
 import { DashboardHome } from '@/components/dashboard/DashboardHome';
 import { Profile } from '@/components/features/Profile';
+import { TransactionProvider } from '@/contexts/TransactionContext';
 
 interface DashboardProps {
   user: { email: string; name: string } | null;
@@ -36,17 +38,19 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   };
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-terex-dark">
-        <AppSidebar 
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-          onLogout={onLogout}
-        />
-        <main className="flex-1 p-6">
-          {renderContent()}
-        </main>
-      </div>
-    </SidebarProvider>
+    <TransactionProvider>
+      <SidebarProvider>
+        <div className="min-h-screen flex w-full bg-terex-dark">
+          <AppSidebar 
+            activeSection={activeSection}
+            setActiveSection={setActiveSection}
+            onLogout={onLogout}
+          />
+          <main className="flex-1 p-6">
+            {renderContent()}
+          </main>
+        </div>
+      </SidebarProvider>
+    </TransactionProvider>
   );
 }

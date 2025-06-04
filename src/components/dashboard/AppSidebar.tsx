@@ -1,3 +1,4 @@
+
 import {
   Sidebar,
   SidebarContent,
@@ -29,7 +30,7 @@ export function AppSidebar({ activeSection, setActiveSection, onLogout }: AppSid
   return (
     <Sidebar className="bg-terex-darker border-r border-terex-gray">
       <SidebarHeader className="p-6">
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2">
           <img 
             src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
             alt="Terex Logo" 
