@@ -1,8 +1,6 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CryptoPrices } from '@/components/home/CryptoPrices';
 import { CryptoNews } from '@/components/home/CryptoNews';
-import { USDTLivePrice } from '@/components/home/USDTLivePrice';
 
 interface DashboardHomeProps {
   user: { email: string; name: string } | null;
@@ -19,9 +17,6 @@ export function DashboardHome({ user }: DashboardHomeProps) {
           Gérez vos transactions USDT et vos transferts internationaux en toute simplicité.
         </p>
       </div>
-
-      {/* Section prix USDT en temps réel */}
-      <USDTLivePrice />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent transition-colors">
