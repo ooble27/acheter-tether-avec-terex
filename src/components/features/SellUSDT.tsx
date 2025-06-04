@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -131,7 +130,7 @@ export function SellUSDT() {
                 <span className="text-gray-300">Vous vendez</span>
                 <div className="flex items-center space-x-2">
                   <img 
-                    src="https://cryptologos.cc/logos/tether-usdt-logo.png" 
+                    src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                     alt="USDT" 
                     className="w-5 h-5"
                   />
@@ -195,7 +194,7 @@ export function SellUSDT() {
                 <span className="text-gray-300">USDT à vendre:</span>
                 <div className="flex items-center space-x-2">
                   <img 
-                    src="https://cryptologos.cc/logos/tether-usdt-logo.png" 
+                    src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                     alt="USDT" 
                     className="w-4 h-4"
                   />
