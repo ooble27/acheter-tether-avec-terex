@@ -25,25 +25,25 @@ export function CryptoNews() {
             id: '1',
             title: 'Bitcoin atteint de nouveaux sommets',
             summary: 'Le Bitcoin continue sa progression après les dernières annonces institutionnelles...',
-            url: '#',
+            url: 'https://coinmarketcap.com/alexandria/article/bitcoin-hits-new-highs',
             published_at: new Date().toISOString(),
-            source: 'CryptoNews'
+            source: 'CoinMarketCap'
           },
           {
             id: '2',
             title: 'Ethereum 2.0 : Mise à jour majeure',
             summary: 'La blockchain Ethereum franchit une nouvelle étape avec sa dernière mise à jour...',
-            url: '#',
+            url: 'https://coinmarketcap.com/alexandria/article/ethereum-2-major-update',
             published_at: new Date(Date.now() - 3600000).toISOString(),
-            source: 'BlockchainDaily'
+            source: 'CoinMarketCap'
           },
           {
             id: '3',
             title: 'USDT : Stabilité confirmée',
             summary: 'Tether maintient sa parité avec le dollar américain malgré la volatilité du marché...',
-            url: '#',
+            url: 'https://coinmarketcap.com/alexandria/article/usdt-stability-confirmed',
             published_at: new Date(Date.now() - 7200000).toISOString(),
-            source: 'StablecoinReport'
+            source: 'CoinMarketCap'
           }
         ];
         
@@ -95,7 +95,7 @@ export function CryptoNews() {
       </CardHeader>
       <CardContent className="space-y-4">
         {news.map((article) => (
-          <div key={article.id} className="p-4 bg-terex-dark rounded-lg hover:bg-terex-gray transition-colors">
+          <div key={article.id} className="p-4 bg-terex-dark rounded-lg hover:bg-terex-gray transition-colors cursor-pointer" onClick={() => window.open(article.url, '_blank')}>
             <div className="flex items-start justify-between mb-2">
               <h3 className="text-white font-medium text-sm line-clamp-2 flex-1">
                 {article.title}
