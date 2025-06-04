@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { CircleDollarSign } from 'lucide-react';
 
 export function BuyUSDT() {
   const [currency, setCurrency] = useState('CFA');
@@ -134,9 +135,12 @@ export function BuyUSDT() {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-300">Vous recevrez</span>
-                <span className="text-terex-accent font-bold text-lg">
-                  {usdtAmount} USDT
-                </span>
+                <div className="flex items-center space-x-2">
+                  <CircleDollarSign className="w-5 h-5 text-terex-accent" />
+                  <span className="text-terex-accent font-bold text-lg">
+                    {usdtAmount} USDT
+                  </span>
+                </div>
               </div>
               {network && (
                 <div className="flex justify-between">
@@ -175,7 +179,10 @@ export function BuyUSDT() {
               </div>
               <div className="flex justify-between mb-2">
                 <span className="text-gray-300">USDT à recevoir:</span>
-                <span className="text-terex-accent">{usdtAmount} USDT</span>
+                <div className="flex items-center space-x-2">
+                  <CircleDollarSign className="w-4 h-4 text-terex-accent" />
+                  <span className="text-terex-accent">{usdtAmount} USDT</span>
+                </div>
               </div>
               <div className="flex justify-between mb-2">
                 <span className="text-gray-300">Réseau:</span>
