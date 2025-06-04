@@ -1,4 +1,5 @@
 
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CircleDollarSign, TrendingUp, Users, Globe } from 'lucide-react';
 
@@ -123,3 +124,4 @@ export function DashboardHome({ user }: DashboardHomeProps) {
     </div>
   );
 }
+
