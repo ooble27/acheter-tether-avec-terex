@@ -21,6 +21,7 @@ const menuItems = [
   { id: 'buy', label: 'Acheter USDT', icon: '💰' },
   { id: 'sell', label: 'Vendre USDT', icon: '💸' },
   { id: 'transfer', label: 'Virement International', icon: '🌍' },
+  { id: 'profile', label: 'Mon Profil', icon: '👤' },
   { id: 'faq', label: 'FAQ', icon: '❓' },
 ];
 

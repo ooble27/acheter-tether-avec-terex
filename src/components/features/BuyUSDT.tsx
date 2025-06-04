@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,6 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { CircleDollarSign } from 'lucide-react';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export function BuyUSDT() {
   const [currency, setCurrency] = useState('CFA');
@@ -14,6 +15,8 @@ export function BuyUSDT() {
   const [network, setNetwork] = useState('');
   const [address, setAddress] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const isMobile = useIsMobile();
 
   const exchangeRates = {
     CFA: 615, // 1 USDT = 615 CFA
@@ -27,9 +30,14 @@ export function BuyUSDT() {
     setShowConfirmation(true);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    setIsProcessing(true);
+    
+    // Simulation du traitement
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    setIsProcessing(false);
     setShowConfirmation(false);
-    // Redirection vers la page de paiement
     console.log('Redirection vers le paiement...');
   };
 
@@ -42,7 +50,7 @@ export function BuyUSDT() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'} gap-8`}>
         <Card className="bg-terex-darker border-terex-gray">
           <CardHeader>
             <CardTitle className="text-white">Détails de la transaction</CardTitle>
@@ -198,15 +206,24 @@ export function BuyUSDT() {
             <Button 
               variant="outline" 
               onClick={() => setShowConfirmation(false)}
+              disabled={isProcessing}
               className="border-terex-gray text-gray-300"
             >
               Annuler
             </Button>
             <Button 
               onClick={handleConfirm}
+              disabled={isProcessing}
               className="gradient-button text-white"
             >
-              Confirmer et payer
+              {isProcessing ? (
+                <div className="flex items-center space-x-2">
+                  <LoadingSpinner size="sm" />
+                  <span>Traitement...</span>
+                </div>
+              ) : (
+                'Confirmer et payer'
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
