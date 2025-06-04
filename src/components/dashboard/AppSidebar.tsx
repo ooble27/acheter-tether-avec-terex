@@ -20,11 +20,12 @@ interface AppSidebarProps {
   onLogout: () => void;
 }
 
-const TetherLogo = ({ className, isActive }: { className?: string, isActive?: boolean }) => (
+const TetherLogo = ({ className, isActive, color }: { className?: string, isActive?: boolean, color?: string }) => (
   <img 
     src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
     alt="Tether Logo"
     className={`${className} ${isActive ? 'brightness-0 invert' : ''}`}
+    style={color && !isActive ? { filter: `hue-rotate(${color === 'red' ? '330deg' : '0deg'}) saturate(2)` } : {}}
   />
 );
 
@@ -40,6 +41,7 @@ const menuItems = [
     id: 'sell', 
     label: 'Vendre USDT', 
     icon: TetherLogo,
+    iconColor: 'red',
     isCustomIcon: true
   },
   { id: 'transfer', label: 'Virement International', icon: Globe },
@@ -84,6 +86,7 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                       <IconComponent 
                         className="mr-3 h-5 w-5"
                         isActive={activeSection === item.id}
+                        color={item.iconColor}
                       />
                     ) : (
                       <IconComponent 
