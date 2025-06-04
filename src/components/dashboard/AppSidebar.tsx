@@ -1,4 +1,3 @@
-
 import {
   Sidebar,
   SidebarContent,
@@ -21,19 +20,12 @@ interface AppSidebarProps {
   onLogout: () => void;
 }
 
-const TetherIcon = ({ className, color }: { className?: string, color?: string }) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <circle cx="12" cy="12" r="12" fill={color || "#26A17B"} />
-    <path
-      d="M12.8 7.5H16V5.2H8V7.5H11.2V8.1C8.9 8.2 7.2 8.7 7.2 9.3S8.9 10.4 11.2 10.5V16.8H12.8V10.5C15.1 10.4 16.8 9.9 16.8 9.3S15.1 8.2 12.8 8.1V7.5Z"
-      fill="white"
-    />
-  </svg>
+const TetherLogo = ({ className, isActive }: { className?: string, isActive?: boolean }) => (
+  <img 
+    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
+    alt="Tether Logo"
+    className={`${className} ${isActive ? 'brightness-0 invert' : ''}`}
+  />
 );
 
 const menuItems = [
@@ -41,15 +33,13 @@ const menuItems = [
   { 
     id: 'buy', 
     label: 'Acheter USDT', 
-    icon: TetherIcon,
-    iconColor: '#26A17B',
+    icon: TetherLogo,
     isCustomIcon: true
   },
   { 
     id: 'sell', 
     label: 'Vendre USDT', 
-    icon: TetherIcon,
-    iconColor: '#ef4444',
+    icon: TetherLogo,
     isCustomIcon: true
   },
   { id: 'transfer', label: 'Virement International', icon: Globe },
@@ -93,7 +83,7 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                     {item.isCustomIcon ? (
                       <IconComponent 
                         className="mr-3 h-5 w-5"
-                        color={activeSection === item.id ? 'white' : item.iconColor}
+                        isActive={activeSection === item.id}
                       />
                     ) : (
                       <IconComponent 
