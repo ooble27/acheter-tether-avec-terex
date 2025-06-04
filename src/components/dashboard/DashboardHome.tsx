@@ -1,7 +1,6 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CircleDollarSign, TrendingUp, Users, Globe } from 'lucide-react';
-import { USDTMarketInfo } from './USDTMarketInfo';
 
 interface DashboardHomeProps {
   user: { email: string; name: string } | null;
@@ -43,36 +42,28 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-1">
-          <USDTMarketInfo />
-        </div>
-        
-        <div className="lg:col-span-3">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {stats.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <Card key={index} className="bg-terex-darker border-terex-gray">
-                  <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-sm font-medium text-gray-400">
-                      {stat.title}
-                    </CardTitle>
-                    <Icon className={`h-4 w-4 ${stat.color}`} />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-white">
-                      {stat.value}
-                    </div>
-                    <p className="text-xs text-gray-400">
-                      {stat.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {stats.map((stat, index) => {
+          const Icon = stat.icon;
+          return (
+            <Card key={index} className="bg-terex-darker border-terex-gray">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-400">
+                  {stat.title}
+                </CardTitle>
+                <Icon className={`h-4 w-4 ${stat.color}`} />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-white">
+                  {stat.value}
+                </div>
+                <p className="text-xs text-gray-400">
+                  {stat.description}
+                </p>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
