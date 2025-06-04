@@ -42,7 +42,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
             <CardDescription className="text-gray-400">
               Convertissez vos USDT en francs CFA instantanément
             </CardDescription>
-          </CardContent>
+          </CardHeader>
           <CardContent>
             <p className="text-terex-accent font-medium">Réception rapide • Orange Money & Wave</p>
           </CardContent>
@@ -57,7 +57,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
             <CardDescription className="text-gray-400">
               Envoyez de l'argent vers l'Afrique depuis le Canada
             </CardDescription>
-          </CardContent>
+          </CardHeader>
           <CardContent>
             <p className="text-terex-accent font-medium">Frais réduits • Transfert rapide</p>
           </CardContent>
