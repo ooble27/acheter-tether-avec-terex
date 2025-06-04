@@ -29,10 +29,10 @@ const menuItems = [
   { id: 'faq', label: 'FAQ', icon: '❓' },
 ];
 
-const SidebarContent = ({ activeSection, setActiveSection, onLogout }: AppSidebarProps) => (
+const AppSidebarContent = ({ activeSection, setActiveSection, onLogout }: AppSidebarProps) => (
   <>
     <SidebarHeader className="p-6">
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-1">
         <img 
           src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
           alt="Terex Logo" 
@@ -87,7 +87,7 @@ export function AppSidebar({ activeSection, setActiveSection, onLogout }: AppSid
 
   return (
     <Sidebar className="bg-terex-darker border-r border-terex-gray">
-      <SidebarContent 
+      <AppSidebarContent 
         activeSection={activeSection} 
         setActiveSection={setActiveSection} 
         onLogout={onLogout} 
@@ -109,7 +109,7 @@ export function MobileMenu({ activeSection, setActiveSection, onLogout }: AppSid
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="w-64 bg-terex-darker border-r border-terex-gray p-0">
-        <SidebarContent 
+        <AppSidebarContent 
           activeSection={activeSection} 
           setActiveSection={setActiveSection} 
           onLogout={onLogout} 
