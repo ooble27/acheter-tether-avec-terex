@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useState } from 'react';
 
 interface AppSidebarProps {
   activeSection: string;
@@ -29,7 +30,7 @@ const menuItems = [
   { id: 'faq', label: 'FAQ', icon: '❓' },
 ];
 
-const AppSidebarContent = ({ activeSection, setActiveSection, onLogout }: AppSidebarProps) => (
+const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemClick }: AppSidebarProps & { onItemClick?: () => void }) => (
   <>
     <SidebarHeader className="p-6">
       <div className="flex items-center space-x-1">
@@ -50,7 +51,10 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout }: AppSid
             {menuItems.map((item) => (
               <SidebarMenuItem key={item.id}>
                 <SidebarMenuButton 
-                  onClick={() => setActiveSection(item.id)}
+                  onClick={() => {
+                    setActiveSection(item.id);
+                    onItemClick?.();
+                  }}
                   className={`w-full justify-start text-left p-3 rounded-lg transition-colors ${
                     activeSection === item.id
                       ? 'bg-terex-accent text-white'
@@ -97,8 +101,14 @@ export function AppSidebar({ activeSection, setActiveSection, onLogout }: AppSid
 }
 
 export function MobileMenu({ activeSection, setActiveSection, onLogout }: AppSidebarProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleItemClick = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button 
           variant="ghost" 
@@ -112,7 +122,8 @@ export function MobileMenu({ activeSection, setActiveSection, onLogout }: AppSid
         <AppSidebarContent 
           activeSection={activeSection} 
           setActiveSection={setActiveSection} 
-          onLogout={onLogout} 
+          onLogout={onLogout}
+          onItemClick={handleItemClick}
         />
       </SheetContent>
     </Sheet>
