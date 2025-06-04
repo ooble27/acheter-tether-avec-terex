@@ -1,0 +1,237 @@
+
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+
+export function InternationalTransfer() {
+  const [cadAmount, setCadAmount] = useState('');
+  const [country, setCountry] = useState('');
+  const [recipientName, setRecipientName] = useState('');
+  const [recipientPhone, setRecipientPhone] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const exchangeRates = {
+    senegal: 456, // 1 CAD = 456 CFA
+    'cote-ivoire': 456,
+    mali: 456,
+    burkina: 456,
+    niger: 456,
+  };
+
+  const cfaAmount = cadAmount && country ? 
+    (parseFloat(cadAmount) * exchangeRates[country as keyof typeof exchangeRates]).toFixed(0) : '0';
+
+  const handleTransfer = () => {
+    if (!cadAmount || !country || !recipientName || !recipientPhone || !paymentMethod) return;
+    setShowConfirmation(true);
+  };
+
+  const handleConfirm = () => {
+    setShowConfirmation(false);
+    console.log('Redirection vers le paiement pour le virement...');
+  };
+
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div>
+        <h1 className="text-3xl font-bold text-white mb-2">Virement International</h1>
+        <p className="text-gray-400">
+          Envoyez de l'argent rapidement et en toute sécurité vers l'Afrique
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card className="bg-terex-darker border-terex-gray">
+          <CardHeader>
+            <CardTitle className="text-white">Détails du virement</CardTitle>
+            <CardDescription className="text-gray-400">
+              Configurez votre transfert international
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <Label className="text-white">Montant à envoyer (CAD)</Label>
+              <Input
+                type="number"
+                placeholder="Montant en dollars canadiens"
+                value={cadAmount}
+                onChange={(e) => setCadAmount(e.target.value)}
+                className="bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-white">Pays de destination</Label>
+              <Select value={country} onValueChange={setCountry}>
+                <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white">
+                  <SelectValue placeholder="Choisissez un pays" />
+                </SelectTrigger>
+                <SelectContent className="bg-terex-gray border-terex-gray-light">
+                  <SelectItem value="senegal">🇸🇳 Sénégal</SelectItem>
+                  <SelectItem value="cote-ivoire">🇨🇮 Côte d'Ivoire</SelectItem>
+                  <SelectItem value="mali">🇲🇱 Mali</SelectItem>
+                  <SelectItem value="burkina">🇧🇫 Burkina Faso</SelectItem>
+                  <SelectItem value="niger">🇳🇪 Niger</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-white">Nom du bénéficiaire</Label>
+              <Input
+                type="text"
+                placeholder="Nom complet du destinataire"
+                value={recipientName}
+                onChange={(e) => setRecipientName(e.target.value)}
+                className="bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-white">Numéro de téléphone</Label>
+              <Input
+                type="tel"
+                placeholder="+221 XX XXX XX XX"
+                value={recipientPhone}
+                onChange={(e) => setRecipientPhone(e.target.value)}
+                className="bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-white">Méthode de réception</Label>
+              <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white">
+                  <SelectValue placeholder="Choisissez une méthode" />
+                </SelectTrigger>
+                <SelectContent className="bg-terex-gray border-terex-gray-light">
+                  <SelectItem value="orange">Orange Money</SelectItem>
+                  <SelectItem value="wave">Wave</SelectItem>
+                  <SelectItem value="moov">Moov Money</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Button 
+              onClick={handleTransfer}
+              disabled={!cadAmount || !country || !recipientName || !recipientPhone || !paymentMethod}
+              className="w-full gradient-button text-white font-medium disabled:opacity-50"
+            >
+              Envoyer le virement
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-terex-darker border-terex-gray">
+          <CardHeader>
+            <CardTitle className="text-white">Récapitulatif</CardTitle>
+            <CardDescription className="text-gray-400">
+              Détails de votre transfert international
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-4 bg-terex-gray rounded-lg space-y-3">
+              <div className="flex justify-between">
+                <span className="text-gray-300">Montant envoyé</span>
+                <span className="text-white font-medium">
+                  {cadAmount || '0'} CAD
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-300">Taux de change</span>
+                <span className="text-terex-accent">
+                  1 CAD = {country ? exchangeRates[country as keyof typeof exchangeRates] : '---'} CFA
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-300">Frais de transfert</span>
+                <span className="text-terex-accent">
+                  Inclus
+                </span>
+              </div>
+              <div className="flex justify-between border-t border-terex-gray-light pt-3">
+                <span className="text-gray-300">Montant reçu</span>
+                <span className="text-terex-accent font-bold text-lg">
+                  {cfaAmount} CFA
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-white font-medium">Informations importantes</h3>
+              <ul className="text-sm text-gray-400 space-y-1">
+                <li>• Transfert sous 15 minutes</li>
+                <li>• Taux de change compétitif</li>
+                <li>• Frais de transaction inclus</li>
+                <li>• Minimum 25 CAD</li>
+                <li>• Service disponible 24/7</li>
+              </ul>
+            </div>
+
+            {country && (
+              <div className="p-3 bg-terex-accent/10 border border-terex-accent/20 rounded-lg">
+                <p className="text-terex-accent text-sm">
+                  🌍 Transfert vers {country === 'senegal' ? 'le Sénégal' : 
+                    country === 'cote-ivoire' ? 'la Côte d\'Ivoire' :
+                    country === 'mali' ? 'le Mali' :
+                    country === 'burkina' ? 'le Burkina Faso' : 'le Niger'}
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+        <DialogContent className="bg-terex-darker border-terex-gray">
+          <DialogHeader>
+            <DialogTitle className="text-white">Confirmer le virement</DialogTitle>
+            <DialogDescription className="text-gray-400">
+              Vérifiez les informations avant d'envoyer le virement.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="p-4 bg-terex-gray rounded-lg">
+              <div className="flex justify-between mb-2">
+                <span className="text-gray-300">Montant:</span>
+                <span className="text-white">{cadAmount} CAD</span>
+              </div>
+              <div className="flex justify-between mb-2">
+                <span className="text-gray-300">Destinataire recevra:</span>
+                <span className="text-terex-accent">{cfaAmount} CFA</span>
+              </div>
+              <div className="flex justify-between mb-2">
+                <span className="text-gray-300">Bénéficiaire:</span>
+                <span className="text-white">{recipientName}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-300">Téléphone:</span>
+                <span className="text-white">{recipientPhone}</span>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowConfirmation(false)}
+              className="border-terex-gray text-gray-300"
+            >
+              Annuler
+            </Button>
+            <Button 
+              onClick={handleConfirm}
+              className="gradient-button text-white"
+            >
+              Confirmer le virement
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
