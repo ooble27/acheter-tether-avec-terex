@@ -1,5 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CryptoPrices } from '@/components/home/CryptoPrices';
+import { CryptoNews } from '@/components/home/CryptoNews';
 
 interface DashboardHomeProps {
   user: { email: string; name: string } | null;
@@ -110,6 +112,12 @@ export function DashboardHome({ user }: DashboardHomeProps) {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Section des fonctionnalités crypto */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <CryptoPrices />
+        <CryptoNews />
       </div>
     </div>
   );
