@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/dashboard/AppSidebar';
+import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
 import { BuyUSDT } from '@/components/features/BuyUSDT';
 import { SellUSDT } from '@/components/features/SellUSDT';
 import { InternationalTransfer } from '@/components/features/InternationalTransfer';
@@ -9,6 +9,7 @@ import { FAQ } from '@/components/features/FAQ';
 import { DashboardHome } from '@/components/dashboard/DashboardHome';
 import { Profile } from '@/components/features/Profile';
 import { TransactionProvider } from '@/contexts/TransactionContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface DashboardProps {
   user: { email: string; name: string } | null;
@@ -17,6 +18,7 @@ interface DashboardProps {
 
 export function Dashboard({ user, onLogout }: DashboardProps) {
   const [activeSection, setActiveSection] = useState('home');
+  const isMobile = useIsMobile();
 
   const renderContent = () => {
     switch (activeSection) {
@@ -46,7 +48,12 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             setActiveSection={setActiveSection}
             onLogout={onLogout}
           />
-          <main className="flex-1 p-6">
+          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'}`}>
+            <MobileMenu 
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+              onLogout={onLogout}
+            />
             {renderContent()}
           </main>
         </div>

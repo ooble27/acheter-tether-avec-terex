@@ -10,6 +10,9 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Menu } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface AppSidebarProps {
   activeSection: string;
@@ -26,53 +29,92 @@ const menuItems = [
   { id: 'faq', label: 'FAQ', icon: '❓' },
 ];
 
+const SidebarContent = ({ activeSection, setActiveSection, onLogout }: AppSidebarProps) => (
+  <>
+    <SidebarHeader className="p-6">
+      <div className="flex items-center space-x-2">
+        <img 
+          src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+          alt="Terex Logo" 
+          className="w-10 h-10"
+        />
+        <h1 className="text-2xl font-bold text-white">
+          <span className="text-terex-accent">Terex</span>
+        </h1>
+      </div>
+    </SidebarHeader>
+    <SidebarContent>
+      <SidebarGroup>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            {menuItems.map((item) => (
+              <SidebarMenuItem key={item.id}>
+                <SidebarMenuButton 
+                  onClick={() => setActiveSection(item.id)}
+                  className={`w-full justify-start text-left p-3 rounded-lg transition-colors ${
+                    activeSection === item.id
+                      ? 'bg-terex-accent text-white'
+                      : 'text-gray-300 hover:bg-terex-gray hover:text-white'
+                  }`}
+                >
+                  <span className="mr-3 text-lg">{item.icon}</span>
+                  <span>{item.label}</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+    </SidebarContent>
+    <div className="p-4 border-t border-terex-gray">
+      <Button 
+        onClick={onLogout}
+        variant="outline" 
+        className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
+      >
+        Déconnexion
+      </Button>
+    </div>
+  </>
+);
+
 export function AppSidebar({ activeSection, setActiveSection, onLogout }: AppSidebarProps) {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return null; // Le menu mobile sera géré par MobileMenu
+  }
+
   return (
     <Sidebar className="bg-terex-darker border-r border-terex-gray">
-      <SidebarHeader className="p-6">
-        <div className="flex items-center space-x-2">
-          <img 
-            src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-            alt="Terex Logo" 
-            className="w-10 h-10"
-          />
-          <h1 className="text-2xl font-bold text-white">
-            <span className="text-terex-accent">Terex</span>
-          </h1>
-        </div>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.id}>
-                  <SidebarMenuButton 
-                    onClick={() => setActiveSection(item.id)}
-                    className={`w-full justify-start text-left p-3 rounded-lg transition-colors ${
-                      activeSection === item.id
-                        ? 'bg-terex-accent text-white'
-                        : 'text-gray-300 hover:bg-terex-gray hover:text-white'
-                    }`}
-                  >
-                    <span className="mr-3 text-lg">{item.icon}</span>
-                    <span>{item.label}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      <div className="p-4 border-t border-terex-gray">
-        <Button 
-          onClick={onLogout}
-          variant="outline" 
-          className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
-        >
-          Déconnexion
-        </Button>
-      </div>
+      <SidebarContent 
+        activeSection={activeSection} 
+        setActiveSection={setActiveSection} 
+        onLogout={onLogout} 
+      />
     </Sidebar>
+  );
+}
+
+export function MobileMenu({ activeSection, setActiveSection, onLogout }: AppSidebarProps) {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button 
+          variant="ghost" 
+          size="icon"
+          className="md:hidden fixed top-4 left-4 z-50 bg-terex-darker border border-terex-gray text-white hover:bg-terex-gray"
+        >
+          <Menu className="h-6 w-6" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-64 bg-terex-darker border-r border-terex-gray p-0">
+        <SidebarContent 
+          activeSection={activeSection} 
+          setActiveSection={setActiveSection} 
+          onLogout={onLogout} 
+        />
+      </SheetContent>
+    </Sheet>
   );
 }
