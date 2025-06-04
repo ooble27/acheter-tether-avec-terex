@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, CircleDollarSign } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useState } from 'react';
 
@@ -22,12 +22,22 @@ interface AppSidebarProps {
 }
 
 const menuItems = [
-  { id: 'home', label: 'Accueil', icon: '🏠' },
-  { id: 'buy', label: 'Acheter USDT', icon: '💰' },
-  { id: 'sell', label: 'Vendre USDT', icon: '💸' },
-  { id: 'transfer', label: 'Virement International', icon: '🌍' },
-  { id: 'profile', label: 'Mon Profil', icon: '👤' },
-  { id: 'faq', label: 'FAQ', icon: '❓' },
+  { id: 'home', label: 'Accueil', icon: Home },
+  { 
+    id: 'buy', 
+    label: 'Acheter USDT', 
+    icon: CircleDollarSign,
+    iconColor: 'text-green-500'
+  },
+  { 
+    id: 'sell', 
+    label: 'Vendre USDT', 
+    icon: CircleDollarSign,
+    iconColor: 'text-red-500'
+  },
+  { id: 'transfer', label: 'Virement International', icon: Globe },
+  { id: 'profile', label: 'Mon Profil', icon: User },
+  { id: 'faq', label: 'FAQ', icon: HelpCircle },
 ];
 
 const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemClick }: AppSidebarProps & { onItemClick?: () => void }) => (
@@ -48,24 +58,33 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
       <SidebarGroup>
         <SidebarGroupContent>
           <SidebarMenu>
-            {menuItems.map((item) => (
-              <SidebarMenuItem key={item.id}>
-                <SidebarMenuButton 
-                  onClick={() => {
-                    setActiveSection(item.id);
-                    onItemClick?.();
-                  }}
-                  className={`w-full justify-start text-left p-3 rounded-lg transition-colors ${
-                    activeSection === item.id
-                      ? 'bg-terex-accent text-white'
-                      : 'text-gray-300 hover:bg-terex-gray hover:text-white'
-                  }`}
-                >
-                  <span className="mr-3 text-lg">{item.icon}</span>
-                  <span>{item.label}</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+            {menuItems.map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <SidebarMenuItem key={item.id}>
+                  <SidebarMenuButton 
+                    onClick={() => {
+                      setActiveSection(item.id);
+                      onItemClick?.();
+                    }}
+                    className={`w-full justify-start text-left p-3 rounded-lg transition-colors ${
+                      activeSection === item.id
+                        ? 'bg-terex-accent text-white'
+                        : 'text-gray-300 hover:bg-terex-gray hover:text-white'
+                    }`}
+                  >
+                    <IconComponent 
+                      className={`mr-3 h-5 w-5 ${
+                        item.iconColor ? item.iconColor : ''
+                      } ${
+                        activeSection === item.id ? 'text-white' : ''
+                      }`} 
+                    />
+                    <span>{item.label}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
