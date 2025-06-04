@@ -17,35 +17,35 @@ export function Profile({ user }: ProfileProps) {
   const mockTransactions = [
     {
       id: '1',
-      type: 'buy',
+      type: 'buy' as const,
       amount: '50000',
       currency: 'CFA',
       usdtAmount: '81.30',
       network: 'TRC20',
       address: 'TXYZabc123...def456',
-      status: 'completed',
+      status: 'completed' as const,
       date: '2024-06-01T10:30:00Z'
     },
     {
       id: '2',
-      type: 'sell',
+      type: 'sell' as const,
       amount: '100.00',
       currency: 'USDT',
       fiatAmount: '61500',
       receiveCurrency: 'CFA',
       network: 'BEP20',
-      status: 'pending',
+      status: 'pending' as const,
       date: '2024-06-03T14:15:00Z'
     },
     {
       id: '3',
-      type: 'buy',
+      type: 'buy' as const,
       amount: '25',
       currency: 'CAD',
       usdtAmount: '18.52',
       network: 'ERC20',
       address: 'TXYZabc789...def012',
-      status: 'confirmed',
+      status: 'confirmed' as const,
       date: '2024-06-02T09:45:00Z'
     }
   ];
