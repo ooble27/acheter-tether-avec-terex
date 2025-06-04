@@ -1,3 +1,4 @@
+
 import {
   Sidebar,
   SidebarContent,
@@ -25,7 +26,9 @@ const TetherLogo = ({ className, isActive, color }: { className?: string, isActi
     src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
     alt="Tether Logo"
     className={`${className} ${isActive ? 'brightness-0 invert' : ''}`}
-    style={color && !isActive ? { filter: `hue-rotate(${color === 'red' ? '330deg' : '0deg'}) saturate(2)` } : {}}
+    style={color === 'red' && !isActive ? { 
+      filter: 'hue-rotate(0deg) saturate(0) brightness(0) invert(27%) sepia(98%) saturate(7465%) hue-rotate(0deg) brightness(98%) contrast(118%)'
+    } : {}}
   />
 );
 
