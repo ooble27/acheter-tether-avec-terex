@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -5,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CircleDollarSign } from 'lucide-react';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -144,7 +144,11 @@ export function BuyUSDT() {
               <div className="flex justify-between">
                 <span className="text-gray-300">Vous recevrez</span>
                 <div className="flex items-center space-x-2">
-                  <CircleDollarSign className="w-5 h-5 text-terex-accent" />
+                  <img 
+                    src="https://cryptologos.cc/logos/tether-usdt-logo.png" 
+                    alt="USDT" 
+                    className="w-5 h-5"
+                  />
                   <span className="text-terex-accent font-bold text-lg">
                     {usdtAmount} USDT
                   </span>
@@ -188,7 +192,11 @@ export function BuyUSDT() {
               <div className="flex justify-between mb-2">
                 <span className="text-gray-300">USDT à recevoir:</span>
                 <div className="flex items-center space-x-2">
-                  <CircleDollarSign className="w-4 h-4 text-terex-accent" />
+                  <img 
+                    src="https://cryptologos.cc/logos/tether-usdt-logo.png" 
+                    alt="USDT" 
+                    className="w-4 h-4"
+                  />
                   <span className="text-terex-accent">{usdtAmount} USDT</span>
                 </div>
               </div>

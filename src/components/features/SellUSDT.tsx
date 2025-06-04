@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CircleDollarSign } from 'lucide-react';
 
 export function SellUSDT() {
   const [usdtAmount, setUsdtAmount] = useState('');
@@ -131,7 +130,11 @@ export function SellUSDT() {
               <div className="flex justify-between">
                 <span className="text-gray-300">Vous vendez</span>
                 <div className="flex items-center space-x-2">
-                  <CircleDollarSign className="w-5 h-5 text-terex-accent" />
+                  <img 
+                    src="https://cryptologos.cc/logos/tether-usdt-logo.png" 
+                    alt="USDT" 
+                    className="w-5 h-5"
+                  />
                   <span className="text-white font-medium">
                     {usdtAmount || '0'} USDT
                   </span>
@@ -191,7 +194,11 @@ export function SellUSDT() {
               <div className="flex justify-between mb-2">
                 <span className="text-gray-300">USDT à vendre:</span>
                 <div className="flex items-center space-x-2">
-                  <CircleDollarSign className="w-4 h-4 text-terex-accent" />
+                  <img 
+                    src="https://cryptologos.cc/logos/tether-usdt-logo.png" 
+                    alt="USDT" 
+                    className="w-4 h-4"
+                  />
                   <span className="text-white">{usdtAmount} USDT</span>
                 </div>
               </div>
