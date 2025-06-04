@@ -1,3 +1,4 @@
+
 import {
   Sidebar,
   SidebarContent,
@@ -86,7 +87,6 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                       <IconComponent 
                         className="mr-3 h-5 w-5"
                         isActive={activeSection === item.id}
-                        color={item.iconColor}
                       />
                     ) : (
                       <IconComponent 
