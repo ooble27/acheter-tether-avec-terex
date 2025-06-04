@@ -1,4 +1,3 @@
-
 import {
   Sidebar,
   SidebarContent,
@@ -33,10 +32,10 @@ const menuItems = [
 const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemClick }: AppSidebarProps & { onItemClick?: () => void }) => (
   <>
     <SidebarHeader className="p-6">
-      <div className="flex items-center space-x-1">
+      <div className="flex items-center space-x-3">
         <img 
-          src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-          alt="Terex Logo" 
+          src="https://cryptologos.cc/logos/tether-usdt-logo.svg"
+          alt="Tether USDT Logo" 
           className="w-10 h-10"
         />
         <h1 className="text-2xl font-bold text-white">
