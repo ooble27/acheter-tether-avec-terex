@@ -1,4 +1,3 @@
-
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +10,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Home, HelpCircle, User, Globe } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useState } from 'react';
 
@@ -43,9 +42,7 @@ const menuItems = [
   { 
     id: 'sell', 
     label: 'Vendre USDT', 
-    icon: TetherLogo,
-    iconColor: 'red',
-    isCustomIcon: true
+    icon: TrendingDown
   },
   { id: 'transfer', label: 'Virement International', icon: Globe },
   { id: 'profile', label: 'Mon Profil', icon: User },
