@@ -1,64 +1,83 @@
 
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 const AuthCallback = () => {
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
 
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
+        // Récupérer les paramètres de l'URL
+        const type = searchParams.get('type');
+        
+        // Gérer le callback d'authentification
         const { data, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('Error during auth callback:', error);
+          console.error('Erreur callback auth:', error);
           toast({
-            title: "Erreur de vérification",
-            description: "Impossible de vérifier votre email. Veuillez réessayer.",
+            title: "Erreur d'authentification",
+            description: error.message,
             variant: "destructive",
           });
           navigate('/');
           return;
         }
 
-        if (data.session) {
+        // Si c'est une réinitialisation de mot de passe
+        if (type === 'recovery' && data.session) {
+          console.log('Redirection vers réinitialisation mot de passe');
+          navigate('/password-reset');
+          return;
+        }
+
+        // Si c'est une confirmation d'email
+        if (type === 'signup' && data.session) {
+          console.log('Email confirmé, redirection vers dashboard');
           toast({
-            title: "Email vérifié !",
-            description: "Votre compte a été activé avec succès",
+            title: "Email confirmé !",
+            description: "Votre compte a été activé avec succès.",
             className: "bg-green-600 text-white border-green-600",
           });
           navigate('/');
-        } else {
-          navigate('/');
+          return;
         }
-      } catch (error) {
-        console.error('Unexpected error:', error);
+
+        // Si c'est une session normale
+        if (data.session) {
+          console.log('Session active, redirection vers dashboard');
+          navigate('/');
+          return;
+        }
+
+        // Aucune session - rediriger vers login
+        console.log('Aucune session, redirection vers login');
         navigate('/');
-      } finally {
-        setLoading(false);
+
+      } catch (error) {
+        console.error('Erreur inattendue:', error);
+        toast({
+          title: "Erreur",
+          description: "Une erreur inattendue s'est produite",
+          variant: "destructive",
+        });
+        navigate('/');
       }
     };
 
     handleAuthCallback();
-  }, [navigate, toast]);
+  }, [navigate, searchParams, toast]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-terex-dark flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-terex-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <div className="text-white text-lg">Vérification de votre email...</div>
-          <div className="text-gray-400 text-sm mt-2">Veuillez patienter</div>
-        </div>
-      </div>
-    );
-  }
-
-  return null;
+  return (
+    <div className="min-h-screen bg-terex-dark flex items-center justify-center">
+      <div className="text-white text-lg">Vérification en cours...</div>
+    </div>
+  );
 };
 
 export default AuthCallback;
