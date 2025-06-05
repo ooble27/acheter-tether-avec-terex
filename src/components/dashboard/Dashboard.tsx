@@ -28,8 +28,6 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       await signOut();
     } catch (error) {
       console.error('Dashboard: Logout error:', error);
-      // Force redirect even on error
-      window.location.href = '/';
     }
   };
 

@@ -3,9 +3,17 @@ import { LoginForm } from '@/components/auth/LoginForm';
 import { Dashboard } from '@/components/dashboard/Dashboard';
 import { EmailVerificationPending } from '@/components/auth/EmailVerificationPending';
 import { useAuth } from '@/contexts/AuthContext';
+import { useEffect } from 'react';
 
 const Index = () => {
   const { user, session, loading } = useAuth();
+
+  // Prevent any automatic redirects when user is null
+  useEffect(() => {
+    if (!loading && !user && !session) {
+      console.log('User not authenticated, staying on login page')
+    }
+  }, [user, session, loading])
 
   if (loading) {
     return (
@@ -34,7 +42,7 @@ const Index = () => {
     return <Dashboard user={userData} onLogout={() => {}} />;
   }
 
-  // User is not logged in
+  // User is not logged in - show login form
   return (
     <div className="min-h-screen bg-terex-dark">
       <LoginForm />

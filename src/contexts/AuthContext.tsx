@@ -35,13 +35,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isSigningOut, setIsSigningOut] = useState(false)
 
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       console.log('Initial session:', session)
-      setSession(session)
-      setUser(session?.user ?? null)
+      if (!isSigningOut) {
+        setSession(session)
+        setUser(session?.user ?? null)
+      }
       setLoading(false)
     })
 
@@ -49,14 +52,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state change:', event, session)
+        
+        // Ignore auth changes during sign out process
+        if (isSigningOut && event !== 'SIGNED_OUT') {
+          console.log('Ignoring auth change during sign out:', event)
+          return
+        }
+        
         setSession(session)
         setUser(session?.user ?? null)
         setLoading(false)
+        
+        // Reset signing out flag when fully signed out
+        if (event === 'SIGNED_OUT') {
+          setIsSigningOut(false)
+        }
       }
     )
 
     return () => subscription.unsubscribe()
-  }, [])
+  }, [isSigningOut])
 
   const signUp = async (email: string, password: string, name: string) => {
     const { error } = await supabase.auth.signUp({
@@ -81,32 +96,39 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   const signOut = async () => {
+    if (isSigningOut) {
+      console.log('Sign out already in progress, ignoring...')
+      return
+    }
+
     try {
-      console.log('Attempting to sign out...')
+      console.log('Starting sign out process...')
+      setIsSigningOut(true)
       
-      // Force clear local state first
+      // Clear local state immediately
       setUser(null)
       setSession(null)
       
-      // Then sign out from Supabase
+      // Sign out from Supabase
       const { error } = await supabase.auth.signOut()
       
       if (error) {
-        console.error('Sign out error:', error)
-        throw error
+        console.error('Supabase sign out error:', error)
+      } else {
+        console.log('Supabase sign out successful')
       }
       
-      console.log('Sign out successful')
-      
-      // Force page reload to ensure clean state
-      window.location.href = '/'
+      // Force redirect regardless of error
+      setTimeout(() => {
+        window.location.href = '/'
+      }, 100)
       
     } catch (error) {
       console.error('Error during sign out:', error)
-      // Even if there's an error, clear local state and redirect
-      setUser(null)
-      setSession(null)
-      window.location.href = '/'
+      // Force redirect even on error
+      setTimeout(() => {
+        window.location.href = '/'
+      }, 100)
     }
   }
 
