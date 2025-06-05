@@ -127,7 +127,7 @@ export function KYCForm({ onComplete }: KYCFormProps) {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6 md:space-y-8 p-3 md:p-6">
+    <div className="w-full space-y-6 md:space-y-8 p-3 md:p-6">
       {/* Informations personnelles */}
       <Card className="bg-terex-darker border-terex-gray shadow-lg">
         <CardHeader className="pb-4 md:pb-6 px-4 md:px-6 pt-4 md:pt-6">

@@ -66,7 +66,7 @@ export const useUserProfile = () => {
         return { error: error.message };
       }
 
-      // Update local state
+      // Update local state without refetching
       setProfile(prev => prev ? { ...prev, ...updates } : null);
 
       toast({

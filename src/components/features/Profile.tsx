@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -59,7 +59,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
   const { profile, loading: profileLoading, updateProfile, updateEmail } = useUserProfile();
 
   // Update form data when profile loads
-  useState(() => {
+  useEffect(() => {
     if (profile) {
       setFormData({
         full_name: profile.full_name || user?.name || '',
@@ -75,7 +75,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
         email: user.email || ''
       }));
     }
-  });
+  }, [profile, user]);
 
   const tabs = [
     { id: 'profile', label: 'Profil', icon: User },
@@ -166,7 +166,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
         language: formData.language
       });
 
-      if (profileResult.error) {
+      if (profileResult?.error) {
         toast({
           title: "Erreur",
           description: profileResult.error,
@@ -178,7 +178,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
       // Update email if changed
       if (formData.email !== user?.email) {
         const emailResult = await updateEmail(formData.email);
-        if (emailResult.error) {
+        if (emailResult?.error) {
           toast({
             title: "Erreur email",
             description: emailResult.error,
@@ -552,7 +552,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
             )}
 
             {activeTab === 'kyc' && (
-              <div className="space-y-6">
+              <div className="space-y-6 w-full">
                 <Card className="bg-terex-darker border-terex-gray">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center">
@@ -586,7 +586,9 @@ export function Profile({ user, onLogout }: ProfileProps) {
                     </CardContent>
                   </Card>
                 ) : (
-                  <KYCForm onComplete={handleKYCFormComplete} />
+                  <div className="w-full">
+                    <KYCForm onComplete={handleKYCFormComplete} />
+                  </div>
                 )}
               </div>
             )}
