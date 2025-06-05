@@ -1,19 +1,7 @@
 
-import { useState, useEffect } from 'react';
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from './AppSidebar';
-import { DashboardHome } from './DashboardHome';
-import { BuyUSDT } from '@/components/features/BuyUSDT';
-import { SellUSDT } from '@/components/features/SellUSDT';
-import { InternationalTransfer } from '@/components/features/InternationalTransfer';
-import { TransactionHistory } from '@/components/features/TransactionHistory';
-import { KYCPage } from '@/components/features/KYCPage';
-import { Profile } from '@/components/features/Profile';
-import { FAQ } from '@/components/features/FAQ';
-import { KYCAdmin } from '@/components/admin/KYCAdmin';
-import { OrderManagement } from '@/components/admin/OrderManagement';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { TransactionProvider } from '@/contexts/TransactionContext';
+import { DashboardContent } from './DashboardContent';
 
 interface DashboardProps {
   user: { email: string; name: string };
@@ -21,69 +9,10 @@ interface DashboardProps {
 }
 
 export function Dashboard({ user, onLogout }: DashboardProps) {
-  const [activeSection, setActiveSection] = useState('home');
-
-  const renderContent = () => {
-    switch (activeSection) {
-      case 'home':
-        return <DashboardHome />;
-      case 'buy':
-        return <BuyUSDT />;
-      case 'sell':
-        return <SellUSDT />;
-      case 'transfer':
-        return <InternationalTransfer />;
-      case 'history':
-        return <TransactionHistory />;
-      case 'kyc':
-        return <KYCPage />;
-      case 'profile':
-        return <Profile />;
-      case 'faq':
-        return <FAQ />;
-      case 'admin-kyc':
-        return <KYCAdmin />;
-      case 'admin-orders':
-        return <OrderManagement />;
-      default:
-        return <DashboardHome />;
-    }
-  };
-
   return (
     <AuthProvider>
       <TransactionProvider>
-        <SidebarProvider>
-          <div className="flex min-h-screen w-full bg-terex-dark">
-            <AppSidebar 
-              user={user} 
-              activeSection={activeSection}
-              onSectionChange={setActiveSection}
-            />
-            <div className="flex-1 flex flex-col">
-              <header className="sticky top-0 z-10 bg-terex-darker border-b border-terex-gray p-4">
-                <div className="flex items-center justify-between">
-                  <SidebarTrigger className="text-white" />
-                  <h1 className="text-xl font-semibold text-white">
-                    {activeSection === 'home' && 'Tableau de bord'}
-                    {activeSection === 'buy' && 'Acheter USDT'}
-                    {activeSection === 'sell' && 'Vendre USDT'}
-                    {activeSection === 'transfer' && 'Virement international'}
-                    {activeSection === 'history' && 'Historique des transactions'}
-                    {activeSection === 'kyc' && 'Vérification KYC'}
-                    {activeSection === 'profile' && 'Profil'}
-                    {activeSection === 'faq' && 'Questions fréquentes'}
-                    {activeSection === 'admin-kyc' && 'Administration KYC'}
-                    {activeSection === 'admin-orders' && 'Gestion des commandes'}
-                  </h1>
-                </div>
-              </header>
-              <main className="flex-1 overflow-auto">
-                {renderContent()}
-              </main>
-            </div>
-          </div>
-        </SidebarProvider>
+        <DashboardContent user={user} onLogout={onLogout} />
       </TransactionProvider>
     </AuthProvider>
   );
