@@ -8,19 +8,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRightLeft, Shield, Clock, CreditCard } from 'lucide-react';
-import { useOrders } from '@/hooks/useOrders';
-import { useAuth } from '@/contexts/AuthContext';
 
 export function BuyUSDT() {
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
-  const [walletAddress, setWalletAddress] = useState('');
-  const [isCreatingOrder, setIsCreatingOrder] = useState(false);
-
-  const { createOrder } = useOrders();
-  const { user } = useAuth();
 
   const exchangeRates = {
     CFA: 615,
@@ -40,41 +33,6 @@ export function BuyUSDT() {
     } else {
       return ['50', '100', '500', '1000'];
     }
-  };
-
-  const handleBuyUSDT = async () => {
-    if (!user) {
-      console.error('Utilisateur non connecté');
-      return;
-    }
-
-    if (!amount || !walletAddress) {
-      console.error('Montant ou adresse manquante');
-      return;
-    }
-
-    setIsCreatingOrder(true);
-
-    const orderData = {
-      type: 'buy',
-      amount: parseFloat(amount),
-      currency: paymentMethod === 'mobile' ? 'CFA' : currency,
-      usdt_amount: parseFloat(usdtAmount),
-      exchange_rate: paymentMethod === 'mobile' ? 615 : exchangeRates[currency as keyof typeof exchangeRates],
-      payment_method: paymentMethod as 'card' | 'mobile',
-      network,
-      wallet_address: walletAddress
-    };
-
-    const result = await createOrder(orderData);
-    
-    if (result) {
-      // Réinitialiser le formulaire
-      setAmount('');
-      setWalletAddress('');
-    }
-
-    setIsCreatingOrder(false);
   };
 
   return (
@@ -216,8 +174,6 @@ export function BuyUSDT() {
                         <Input
                           type="text"
                           placeholder="Votre adresse USDT"
-                          value={walletAddress}
-                          onChange={(e) => setWalletAddress(e.target.value)}
                           className="bg-terex-gray border-terex-gray-light text-white h-12"
                         />
                       </div>
@@ -225,11 +181,10 @@ export function BuyUSDT() {
                       {/* Buy Button */}
                       <Button 
                         size="lg"
-                        onClick={handleBuyUSDT}
-                        disabled={!amount || !walletAddress || isCreatingOrder}
                         className="w-full gradient-button text-white font-semibold h-12 text-lg"
+                        disabled={!amount}
                       >
-                        {isCreatingOrder ? 'Création de la commande...' : 'Acheter USDT'}
+                        Acheter USDT
                       </Button>
                     </TabsContent>
                   ))}

@@ -90,63 +90,6 @@ export type Database = {
         }
         Relationships: []
       }
-      orders: {
-        Row: {
-          amount: number
-          created_at: string
-          currency: string
-          exchange_rate: number
-          id: string
-          network: string
-          notes: string | null
-          payment_method: Database["public"]["Enums"]["payment_method"]
-          processed_at: string | null
-          processed_by: string | null
-          status: Database["public"]["Enums"]["order_status"]
-          type: string
-          updated_at: string
-          usdt_amount: number
-          user_id: string
-          wallet_address: string | null
-        }
-        Insert: {
-          amount: number
-          created_at?: string
-          currency?: string
-          exchange_rate: number
-          id?: string
-          network?: string
-          notes?: string | null
-          payment_method: Database["public"]["Enums"]["payment_method"]
-          processed_at?: string | null
-          processed_by?: string | null
-          status?: Database["public"]["Enums"]["order_status"]
-          type?: string
-          updated_at?: string
-          usdt_amount: number
-          user_id: string
-          wallet_address?: string | null
-        }
-        Update: {
-          amount?: number
-          created_at?: string
-          currency?: string
-          exchange_rate?: number
-          id?: string
-          network?: string
-          notes?: string | null
-          payment_method?: Database["public"]["Enums"]["payment_method"]
-          processed_at?: string | null
-          processed_by?: string | null
-          status?: Database["public"]["Enums"]["order_status"]
-          type?: string
-          updated_at?: string
-          usdt_amount?: number
-          user_id?: string
-          wallet_address?: string | null
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           country: string | null
@@ -216,13 +159,6 @@ export type Database = {
       }
     }
     Enums: {
-      order_status:
-        | "pending"
-        | "processing"
-        | "completed"
-        | "cancelled"
-        | "failed"
-      payment_method: "card" | "mobile"
       user_role: "user" | "admin" | "kyc_reviewer"
     }
     CompositeTypes: {
@@ -339,14 +275,6 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      order_status: [
-        "pending",
-        "processing",
-        "completed",
-        "cancelled",
-        "failed",
-      ],
-      payment_method: ["card", "mobile"],
       user_role: ["user", "admin", "kyc_reviewer"],
     },
   },
