@@ -21,54 +21,40 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
     try {
       console.log('Chemin original:', path);
       
-      // Si l'URL contient déjà le domaine complet, l'utiliser directement
-      if (path.includes('supabase.co') || path.includes('http')) {
-        console.log('Utilisation directe de l\'URL complète:', path);
+      // Si l'URL est déjà complète (avec https://), l'utiliser directement
+      if (path.startsWith('http')) {
+        console.log('URL complète détectée:', path);
         return path;
       }
-
-      // Extraire l'ID utilisateur et le type de document du chemin
-      // Format attendu peut être: user-id/document-type.jpg ou kyc-documents/user-id/document-type.jpg
-      let cleanPath = path;
       
-      // Supprimer les préfixes potentiels
-      if (cleanPath.startsWith('kyc-documents/')) {
-        cleanPath = cleanPath.substring('kyc-documents/'.length);
-        console.log('Chemin nettoyé (préfixe kyc-documents/ supprimé):', cleanPath);
+      // Extraire le nom de fichier pour une utilisation directe
+      const fileName = path.split('/').pop() || path;
+      console.log('Nom de fichier extrait:', fileName);
+      
+      // Pour les chemins commençant par "kyc-documents/"
+      if (path.includes('kyc-documents/')) {
+        // Récupérer la partie après "kyc-documents/"
+        const relativePath = path.substring(path.indexOf('kyc-documents/') + 'kyc-documents/'.length);
+        console.log('Chemin relatif (après kyc-documents/):', relativePath);
+        
+        const { data } = supabase.storage
+          .from('kyc-documents')
+          .getPublicUrl(relativePath);
+        
+        console.log('URL publique (chemin relatif):', data.publicUrl);
+        return data.publicUrl;
       }
       
-      if (cleanPath.startsWith('/kyc-documents/')) {
-        cleanPath = cleanPath.substring('/kyc-documents/'.length);
-        console.log('Chemin nettoyé (préfixe /kyc-documents/ supprimé):', cleanPath);
-      }
-      
-      // Essayer plusieurs formats possibles pour l'URL
-      const { data: data1 } = supabase.storage
-        .from('kyc-documents')
-        .getPublicUrl(cleanPath);
-      
-      console.log('URL construite avec chemin nettoyé:', data1.publicUrl);
-      
-      // Essayer également avec le chemin original
-      const { data: data2 } = supabase.storage
+      // Essayer le chemin tel quel
+      const { data: directData } = supabase.storage
         .from('kyc-documents')
         .getPublicUrl(path);
       
-      console.log('URL construite avec chemin original:', data2.publicUrl);
+      console.log('URL publique (chemin direct):', directData.publicUrl);
+      return directData.publicUrl;
       
-      // Récupérer directement depuis le bucket sans préfixe
-      const fileName = cleanPath.split('/').pop();
-      if (fileName) {
-        const { data: data3 } = supabase.storage
-          .from('kyc-documents')
-          .getPublicUrl(fileName);
-        console.log('URL construite avec nom de fichier uniquement:', data3.publicUrl);
-      }
-      
-      // Utiliser l'URL qui a le plus de chances de fonctionner
-      return data1.publicUrl;
     } catch (error) {
-      console.error('Erreur lors de la construction de l\'URL:', error);
+      console.error('Erreur lors de la récupération de l\'URL:', error);
       return null;
     }
   };
@@ -82,39 +68,27 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
     try {
       console.log('Tentative de chargement du document:', url);
       
-      // Essayer plusieurs méthodes pour obtenir l'URL
+      // Vérifier si le bucket existe
+      const { data: buckets } = await supabase.storage.listBuckets();
+      console.log('Buckets disponibles:', buckets?.map(b => b.name));
+      
+      // Essayer différentes façons d'obtenir l'URL de l'image
       const finalUrl = await getImageUrl(url);
       
-      if (finalUrl) {
-        // Tester l'accessibilité de l'image
-        const img = new Image();
-        img.onload = () => {
-          console.log('Image chargée avec succès:', finalUrl);
-          setImageUrl(finalUrl);
-          setShowModal(true);
-          setLoading(false);
-        };
-        img.onerror = (e) => {
-          console.error('Erreur de chargement de l\'image:', e);
-          console.error('URL testée:', finalUrl);
-          
-          // Essayer d'utiliser directement l'URL brute comme dernier recours
-          if (url.includes('http')) {
-            console.log('Tentative avec URL brute:', url);
-            setImageUrl(url);
-            setShowModal(true);
-            setLoading(false);
-          } else {
-            setError(true);
-            setLoading(false);
-          }
-        };
-        img.src = finalUrl;
-      } else {
+      if (!finalUrl) {
         console.error('Impossible de construire l\'URL');
         setError(true);
         setLoading(false);
+        return;
       }
+      
+      console.log('URL finale à utiliser:', finalUrl);
+      
+      // Vérifier directement l'accès à l'URL sans utiliser Image.onload
+      setImageUrl(finalUrl);
+      setShowModal(true);
+      setLoading(false);
+      
     } catch (error) {
       console.error('Erreur lors du chargement de l\'image:', error);
       setError(true);
@@ -208,6 +182,12 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
                     setError(true);
                   }}
                 />
+              </div>
+            )}
+            {error && (
+              <div className="text-center p-4 bg-red-500/10 rounded-lg">
+                <p className="text-red-400">Impossible de charger l'image</p>
+                <p className="text-gray-400 text-sm mt-2">URL: {imageUrl}</p>
               </div>
             )}
           </div>
