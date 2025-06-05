@@ -1,4 +1,5 @@
 
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
@@ -18,6 +20,27 @@ export function LoginForm() {
   
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
+
+  const checkIfEmailExists = async (email: string): Promise<boolean> => {
+    try {
+      // Essayer de se connecter avec un mot de passe manifestement incorrect
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password: '___invalid_password_check___'
+      });
+      
+      // Si l'erreur est "Invalid login credentials", l'email existe
+      if (error && error.message === "Invalid login credentials") {
+        return true;
+      }
+      
+      // Si une autre erreur ou pas d'erreur, considérer que l'email n'existe pas
+      return false;
+    } catch (error) {
+      console.error('Erreur lors de la vérification de l\'email:', error);
+      return false;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent, isLogin: boolean) => {
     e.preventDefault();
@@ -36,7 +59,23 @@ export function LoginForm() {
           });
         }
       } else {
-        // Inscription directe sans vérification préalable
+        // Vérifier si l'email existe avant l'inscription
+        console.log('Vérification de l\'email:', email);
+        
+        const emailExists = await checkIfEmailExists(email);
+        
+        if (emailExists) {
+          console.log('Email existe déjà détecté');
+          toast({
+            title: "Erreur d'inscription",
+            description: "Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.",
+            variant: "destructive",
+          });
+          setIsLoading(false);
+          return;
+        }
+        
+        // Si l'email n'existe pas, procéder à l'inscription
         console.log('Tentative d\'inscription pour:', email);
         
         const { error } = await signUp(email, password, name);
