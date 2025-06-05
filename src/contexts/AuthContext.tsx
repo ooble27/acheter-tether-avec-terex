@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useEffect, useState } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
@@ -38,6 +39,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session:', session)
       setSession(session)
       setUser(session?.user ?? null)
       setLoading(false)
@@ -46,6 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state change:', event, session)
         setSession(session)
         setUser(session?.user ?? null)
         setLoading(false)
@@ -78,7 +81,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   const signOut = async () => {
-    await supabase.auth.signOut()
+    try {
+      console.log('Attempting to sign out...')
+      
+      // Force clear local state first
+      setUser(null)
+      setSession(null)
+      
+      // Then sign out from Supabase
+      const { error } = await supabase.auth.signOut()
+      
+      if (error) {
+        console.error('Sign out error:', error)
+        throw error
+      }
+      
+      console.log('Sign out successful')
+      
+      // Force page reload to ensure clean state
+      window.location.href = '/'
+      
+    } catch (error) {
+      console.error('Error during sign out:', error)
+      // Even if there's an error, clear local state and redirect
+      setUser(null)
+      setSession(null)
+      window.location.href = '/'
+    }
   }
 
   const resendVerification = async (email: string) => {
