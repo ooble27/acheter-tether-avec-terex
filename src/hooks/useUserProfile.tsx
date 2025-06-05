@@ -22,6 +22,8 @@ export const useUserProfile = () => {
     
     try {
       setLoading(true);
+      console.log('Récupération du profil pour l\'utilisateur:', user.id);
+      
       const { data, error } = await supabase
         .from('profiles')
         .select('full_name, phone, country, language')
@@ -31,8 +33,10 @@ export const useUserProfile = () => {
       if (error) {
         console.error('Error fetching profile:', error);
       } else if (data) {
+        console.log('Profil récupéré:', data);
         setProfile(data);
       } else {
+        console.log('Aucun profil trouvé, création d\'un profil par défaut');
         // Create default profile if none exists
         const defaultProfile = {
           full_name: user.user_metadata?.name || user.email?.split('@')[0] || '',
@@ -53,12 +57,16 @@ export const useUserProfile = () => {
     if (!user) return { error: 'No user logged in' };
 
     try {
+      console.log('Mise à jour du profil avec:', updates);
+      
       const { error } = await supabase
         .from('profiles')
         .upsert({
           id: user.id,
           ...updates,
           updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'id'
         });
 
       if (error) {
@@ -66,14 +74,19 @@ export const useUserProfile = () => {
         return { error: error.message };
       }
 
-      // Update local state without refetching
+      // Update local state immediately
       setProfile(prev => prev ? { ...prev, ...updates } : null);
+      
+      console.log('Profil mis à jour avec succès');
 
       toast({
         title: "Profil mis à jour",
         description: "Vos informations ont été sauvegardées avec succès",
         className: "bg-green-600 text-white border-green-600",
       });
+
+      // Refresh to ensure data persistence
+      await fetchProfile();
 
       return { error: null };
     } catch (error) {

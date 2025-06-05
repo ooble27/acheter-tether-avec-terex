@@ -123,14 +123,14 @@ export const useOrders = () => {
 
       if (orderDetails) {
         console.log('Envoi des notifications email pour la commande:', orderId, 'nouveau statut:', status);
+        console.log('ID du client de la commande:', orderDetails.user_id);
         
-        // Envoyer directement les emails via la edge function en utilisant l'ID utilisateur
-        // La edge function se chargera de récupérer l'email côté serveur
+        // CORRECTION IMPORTANTE: Utiliser l'ID du client qui a passé la commande, pas l'admin
         try {
           // Email de mise à jour de statut
           await supabase.functions.invoke('send-email-notification', {
             body: {
-              userId: orderDetails.user_id,
+              userId: orderDetails.user_id, // ID du CLIENT, pas de l'admin
               orderId: orderId,
               emailAddress: null, // Sera récupéré côté serveur
               emailType: 'status_update',
@@ -143,7 +143,7 @@ export const useOrders = () => {
           if (status === 'processing' && paymentStatus === 'confirmed') {
             await supabase.functions.invoke('send-email-notification', {
               body: {
-                userId: orderDetails.user_id,
+                userId: orderDetails.user_id, // ID du CLIENT, pas de l'admin
                 orderId: orderId,
                 emailAddress: null, // Sera récupéré côté serveur
                 emailType: 'payment_confirmed',
@@ -153,7 +153,7 @@ export const useOrders = () => {
             });
           }
 
-          console.log('Emails de notification envoyés avec succès');
+          console.log('Emails de notification envoyés avec succès au client:', orderDetails.user_id);
         } catch (emailError) {
           console.error('Erreur lors de l\'envoi des emails:', emailError);
         }

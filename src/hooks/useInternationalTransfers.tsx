@@ -116,14 +116,14 @@ export const useInternationalTransfers = () => {
 
       if (transferDetails) {
         console.log('Envoi des notifications email pour le transfert:', transferId, 'nouveau statut:', status);
+        console.log('ID du client du transfert:', transferDetails.user_id);
         
-        // Envoyer directement les emails via la edge function en utilisant l'ID utilisateur
-        // La edge function se chargera de récupérer l'email côté serveur
+        // CORRECTION IMPORTANTE: Utiliser l'ID du client qui a créé le transfert, pas l'admin
         try {
           // Email de mise à jour de statut
           await supabase.functions.invoke('send-email-notification', {
             body: {
-              userId: transferDetails.user_id,
+              userId: transferDetails.user_id, // ID du CLIENT, pas de l'admin
               orderId: null, // Pas d'orderId pour les transferts
               emailAddress: null, // Sera récupéré côté serveur
               emailType: 'status_update',
@@ -136,7 +136,7 @@ export const useInternationalTransfers = () => {
           if (status === 'processing') {
             await supabase.functions.invoke('send-email-notification', {
               body: {
-                userId: transferDetails.user_id,
+                userId: transferDetails.user_id, // ID du CLIENT, pas de l'admin
                 orderId: null, // Pas d'orderId pour les transferts
                 emailAddress: null, // Sera récupéré côté serveur
                 emailType: 'payment_confirmed',
@@ -146,7 +146,7 @@ export const useInternationalTransfers = () => {
             });
           }
 
-          console.log('Emails de notification de transfert envoyés avec succès');
+          console.log('Emails de notification de transfert envoyés avec succès au client:', transferDetails.user_id);
         } catch (emailError) {
           console.error('Erreur lors de l\'envoi des emails de transfert:', emailError);
         }
