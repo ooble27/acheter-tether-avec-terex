@@ -18,6 +18,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
 interface ProfileProps {
   user: { email: string; name: string } | null;
@@ -44,8 +52,8 @@ export function Profile({ user, onLogout }: ProfileProps) {
   };
 
   const tabs = [
-    { id: 'profile', label: 'Mon Profil', icon: User },
-    { id: 'transactions', label: 'Transactions', icon: History },
+    { id: 'profile', label: 'Profil', icon: User },
+    { id: 'transactions', label: 'Historique', icon: History },
     { id: 'settings', label: 'Paramètres', icon: Settings },
   ];
 
@@ -113,253 +121,315 @@ export function Profile({ user, onLogout }: ProfileProps) {
   const kycStatus = getKYCStatus();
   const StatusIcon = kycStatus.icon;
 
+  const EditInfoSheet = () => (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="outline" size="sm" className="border-terex-gray text-gray-300 hover:bg-terex-gray w-full sm:w-auto">
+          <Edit className="w-4 h-4 mr-2" />
+          Modifier
+        </Button>
+      </SheetTrigger>
+      <SheetContent side={isMobile ? "bottom" : "right"} className="bg-terex-darker border-terex-gray">
+        <SheetHeader>
+          <SheetTitle className="text-white">Modifier mes informations</SheetTitle>
+          <SheetDescription className="text-gray-400">
+            Mettez à jour vos informations personnelles
+          </SheetDescription>
+        </SheetHeader>
+        <div className="mt-6 space-y-4">
+          <div>
+            <label className="text-gray-400 text-sm block mb-2">Nom complet</label>
+            <input 
+              type="text" 
+              defaultValue={userProfile.fullName}
+              className="w-full bg-terex-gray border border-terex-gray rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-terex-accent focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label className="text-gray-400 text-sm block mb-2">Téléphone</label>
+            <input 
+              type="tel" 
+              defaultValue={userProfile.phone}
+              className="w-full bg-terex-gray border border-terex-gray rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-terex-accent focus:border-transparent"
+            />
+          </div>
+          <Button className="w-full bg-terex-accent hover:bg-terex-accent/90 mt-6">
+            Sauvegarder
+          </Button>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Mon Profil</h1>
-        <p className="text-gray-400">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in px-1 sm:px-0">
+      <div className="text-center sm:text-left">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Mon Profil</h1>
+        <p className="text-gray-400 text-sm sm:text-base">
           Gérez votre compte et consultez vos informations
         </p>
       </div>
 
-      <div className={`${isMobile ? 'space-y-4' : 'flex space-x-6'}`}>
-        {/* Navigation Tabs */}
-        <div className={`${isMobile ? 'flex overflow-x-auto' : 'flex flex-col'} space-x-2 ${isMobile ? '' : 'space-x-0 space-y-2'} ${isMobile ? 'pb-2' : 'w-64'}`}>
+      {/* Mobile optimized navigation */}
+      {isMobile ? (
+        <div className="flex space-x-1 bg-terex-darker rounded-lg p-1 overflow-x-auto">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center space-x-2 px-4 py-3 rounded-lg transition-colors whitespace-nowrap ${
+                className={`flex-1 min-w-0 flex flex-col items-center justify-center space-y-1 px-2 py-3 rounded-md transition-colors text-xs ${
                   activeTab === tab.id
                     ? 'bg-terex-accent text-white'
                     : 'text-gray-300 hover:bg-terex-gray hover:text-white'
                 }`}
               >
-                <Icon className="w-5 h-5" />
-                <span>{tab.label}</span>
+                <Icon className="w-4 h-4" />
+                <span className="truncate">{tab.label}</span>
               </button>
             );
           })}
         </div>
-
-        {/* Content */}
-        <div className="flex-1">
-          {activeTab === 'profile' && (
-            <div className="space-y-6">
-              {/* KYC Status */}
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-12 h-12 ${kycStatus.bgColor} rounded-full flex items-center justify-center`}>
-                        <StatusIcon className={`w-6 h-6 ${kycStatus.color}`} />
-                      </div>
-                      <div>
-                        <CardTitle className="text-white">Statut de vérification</CardTitle>
-                        <CardDescription className="text-gray-400">{kycStatus.description}</CardDescription>
-                      </div>
-                    </div>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${kycStatus.color} ${kycStatus.bgColor}`}>
-                      {kycStatus.status}
-                    </span>
-                  </div>
-                </CardHeader>
-              </Card>
-
-              {/* Personal Information */}
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-white">Informations personnelles</CardTitle>
-                    <Button variant="outline" size="sm" className="border-terex-gray text-gray-300 hover:bg-terex-gray">
-                      <Edit className="w-4 h-4 mr-2" />
-                      Modifier mes infos
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-gray-400 text-sm">Nom complet</label>
-                      <p className="text-white">{userProfile.fullName}</p>
-                    </div>
-                    <div>
-                      <label className="text-gray-400 text-sm">Adresse email</label>
-                      <p className="text-white">{userProfile.email}</p>
-                    </div>
-                    <div>
-                      <label className="text-gray-400 text-sm">Numéro de téléphone</label>
-                      <p className="text-white">{userProfile.phone}</p>
-                    </div>
-                    <div>
-                      <label className="text-gray-400 text-sm">Pays</label>
-                      <p className="text-white">{userProfile.country}</p>
-                    </div>
-                    <div>
-                      <label className="text-gray-400 text-sm">Langue préférée</label>
-                      <p className="text-white">{userProfile.language}</p>
-                    </div>
-                    <div>
-                      <label className="text-gray-400 text-sm">Date d'inscription</label>
-                      <p className="text-white">{userProfile.joinDate}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Recent Transactions */}
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader>
-                  <CardTitle className="text-white">Dernières transactions</CardTitle>
-                  <CardDescription className="text-gray-400">
-                    Vos 3 dernières opérations
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {transactions.length === 0 ? (
-                    <div className="text-center py-8">
-                      <History className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-400">Aucune transaction récente</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {transactions.slice(0, 3).map((transaction, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 bg-terex-gray rounded-lg">
-                          <div>
-                            <p className="text-white font-medium">{transaction.type}</p>
-                            <p className="text-gray-400 text-sm">{transaction.date}</p>
-                          </div>
-                          <span className={`font-medium ${
-                            transaction.type.includes('Achat') ? 'text-green-400' : 'text-blue-400'
-                          }`}>
-                            {transaction.amount}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Share Terex */}
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center">
-                    <Share2 className="w-5 h-5 mr-2" />
-                    Partager Terex avec mes amis
-                  </CardTitle>
-                  <CardDescription className="text-gray-400">
-                    Invitez vos proches à découvrir Terex
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button 
-                    onClick={handleShareTerex}
-                    className="w-full bg-terex-accent hover:bg-terex-accent/90"
-                  >
-                    <Copy className="w-4 h-4 mr-2" />
-                    Partager Terex
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {activeTab === 'transactions' && (
-            <>
-              {transactions.length === 0 ? (
-                <Card className="bg-terex-darker border-terex-gray">
-                  <CardContent className="p-8 text-center">
-                    <History className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-white text-lg font-medium mb-2">Aucune transaction</h3>
-                    <p className="text-gray-400">
-                      Vos transactions apparaîtront ici une fois que vous aurez effectué votre première opération.
-                    </p>
-                  </CardContent>
-                </Card>
-              ) : (
-                <TransactionHistory transactions={transactions} />
-              )}
-            </>
-          )}
-
-          {activeTab === 'settings' && (
-            <div className="space-y-6">
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader>
-                  <CardTitle className="text-white">Paramètres du compte</CardTitle>
-                  <CardDescription className="text-gray-400">
-                    Gérez vos préférences et paramètres de sécurité
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray"
-                  >
-                    <Lock className="w-4 h-4 mr-2" />
-                    Changer mon mot de passe
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray"
-                    onClick={onLogout}
-                  >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Se déconnecter
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Danger Zone */}
-              <Card className="bg-terex-darker border-red-600/50">
-                <CardHeader>
-                  <CardTitle className="text-red-400">Zone de danger</CardTitle>
-                  <CardDescription className="text-gray-400">
-                    Actions irréversibles
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button 
-                        variant="destructive" 
-                        className="w-full justify-start"
-                      >
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Supprimer mon compte
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="bg-terex-darker border-terex-gray">
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="text-white">Êtes-vous absolument sûr ?</AlertDialogTitle>
-                        <AlertDialogDescription className="text-gray-400">
-                          Cette action ne peut pas être annulée. Cela supprimera définitivement votre compte 
-                          et toutes vos données de nos serveurs.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel className="border-terex-gray text-gray-300 hover:bg-terex-gray">
-                          Annuler
-                        </AlertDialogCancel>
-                        <AlertDialogAction 
-                          onClick={handleDeleteAccount}
-                          disabled={isDeleting}
-                          className="bg-red-600 hover:bg-red-700"
-                        >
-                          {isDeleting ? 'Suppression...' : 'Supprimer définitivement'}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </CardContent>
-              </Card>
-            </div>
-          )}
+      ) : (
+        <div className="flex space-x-6">
+          <div className="flex flex-col space-y-2 w-64">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center space-x-2 px-4 py-3 rounded-lg transition-colors ${
+                    activeTab === tab.id
+                      ? 'bg-terex-accent text-white'
+                      : 'text-gray-300 hover:bg-terex-gray hover:text-white'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="flex-1">
+            {/* Content will be rendered here for desktop */}
+          </div>
         </div>
+      )}
+
+      {/* Content */}
+      <div className={!isMobile ? 'ml-80' : ''}>
+        {activeTab === 'profile' && (
+          <div className="space-y-4 sm:space-y-6">
+            {/* KYC Status */}
+            <Card className="bg-terex-darker border-terex-gray">
+              <CardHeader className="pb-3 sm:pb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 ${kycStatus.bgColor} rounded-full flex items-center justify-center`}>
+                      <StatusIcon className={`w-5 h-5 sm:w-6 sm:h-6 ${kycStatus.color}`} />
+                    </div>
+                    <div>
+                      <CardTitle className="text-white text-lg">Statut de vérification</CardTitle>
+                      <CardDescription className="text-gray-400 text-sm">{kycStatus.description}</CardDescription>
+                    </div>
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${kycStatus.color} ${kycStatus.bgColor} text-center`}>
+                    {kycStatus.status}
+                  </span>
+                </div>
+              </CardHeader>
+            </Card>
+
+            {/* Personal Information */}
+            <Card className="bg-terex-darker border-terex-gray">
+              <CardHeader className="pb-3 sm:pb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
+                  <CardTitle className="text-white">Informations personnelles</CardTitle>
+                  <EditInfoSheet />
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4 pt-0">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-gray-400 text-sm">Nom complet</label>
+                    <p className="text-white font-medium">{userProfile.fullName}</p>
+                  </div>
+                  <div>
+                    <label className="text-gray-400 text-sm">Email</label>
+                    <p className="text-white font-medium break-all">{userProfile.email}</p>
+                  </div>
+                  <div>
+                    <label className="text-gray-400 text-sm">Téléphone</label>
+                    <p className="text-white font-medium">{userProfile.phone}</p>
+                  </div>
+                  <div>
+                    <label className="text-gray-400 text-sm">Pays</label>
+                    <p className="text-white font-medium">{userProfile.country}</p>
+                  </div>
+                  <div>
+                    <label className="text-gray-400 text-sm">Langue</label>
+                    <p className="text-white font-medium">{userProfile.language}</p>
+                  </div>
+                  <div>
+                    <label className="text-gray-400 text-sm">Inscription</label>
+                    <p className="text-white font-medium">{userProfile.joinDate}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Recent Transactions */}
+            <Card className="bg-terex-darker border-terex-gray">
+              <CardHeader>
+                <CardTitle className="text-white">Dernières transactions</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Vos 3 dernières opérations
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {transactions.length === 0 ? (
+                  <div className="text-center py-6 sm:py-8">
+                    <History className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-400">Aucune transaction récente</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {transactions.slice(0, 3).map((transaction, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-terex-gray rounded-lg">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-white font-medium truncate">{transaction.type}</p>
+                          <p className="text-gray-400 text-sm">{transaction.date}</p>
+                        </div>
+                        <span className={`font-medium text-sm sm:text-base ${
+                          transaction.type.includes('Achat') ? 'text-green-400' : 'text-blue-400'
+                        }`}>
+                          {transaction.amount}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Share Terex */}
+            <Card className="bg-terex-darker border-terex-gray">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Share2 className="w-5 h-5 mr-2" />
+                  Partager Terex
+                </CardTitle>
+                <CardDescription className="text-gray-400">
+                  Invitez vos proches à découvrir Terex
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button 
+                  onClick={handleShareTerex}
+                  className="w-full bg-terex-accent hover:bg-terex-accent/90 h-12"
+                >
+                  <Copy className="w-4 h-4 mr-2" />
+                  Partager Terex
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {activeTab === 'transactions' && (
+          <>
+            {transactions.length === 0 ? (
+              <Card className="bg-terex-darker border-terex-gray">
+                <CardContent className="p-6 sm:p-8 text-center">
+                  <History className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-white text-lg font-medium mb-2">Aucune transaction</h3>
+                  <p className="text-gray-400 text-sm">
+                    Vos transactions apparaîtront ici une fois que vous aurez effectué votre première opération.
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <TransactionHistory transactions={transactions} />
+            )}
+          </>
+        )}
+
+        {activeTab === 'settings' && (
+          <div className="space-y-4 sm:space-y-6">
+            <Card className="bg-terex-darker border-terex-gray">
+              <CardHeader>
+                <CardTitle className="text-white">Paramètres du compte</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Gérez vos préférences et paramètres de sécurité
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
+                >
+                  <Lock className="w-4 h-4 mr-3" />
+                  Changer mon mot de passe
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
+                  onClick={onLogout}
+                >
+                  <LogOut className="w-4 h-4 mr-3" />
+                  Se déconnecter
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Danger Zone */}
+            <Card className="bg-terex-darker border-red-600/50">
+              <CardHeader>
+                <CardTitle className="text-red-400">Zone de danger</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Actions irréversibles
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button 
+                      variant="destructive" 
+                      className="w-full justify-start h-12"
+                    >
+                      <Trash2 className="w-4 h-4 mr-3" />
+                      Supprimer mon compte
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="bg-terex-darker border-terex-gray mx-4 max-w-lg">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="text-white">Êtes-vous absolument sûr ?</AlertDialogTitle>
+                      <AlertDialogDescription className="text-gray-400">
+                        Cette action ne peut pas être annulée. Cela supprimera définitivement votre compte 
+                        et toutes vos données de nos serveurs.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="flex-col sm:flex-row space-y-2 sm:space-y-0">
+                      <AlertDialogCancel className="border-terex-gray text-gray-300 hover:bg-terex-gray w-full sm:w-auto">
+                        Annuler
+                      </AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={handleDeleteAccount}
+                        disabled={isDeleting}
+                        className="bg-red-600 hover:bg-red-700 w-full sm:w-auto"
+                      >
+                        {isDeleting ? 'Suppression...' : 'Supprimer définitivement'}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );
