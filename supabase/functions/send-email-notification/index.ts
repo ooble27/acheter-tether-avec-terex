@@ -1,438 +1,25 @@
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.0.0";
 import { Resend } from "npm:resend@2.0.0";
+import { renderAsync } from 'npm:@react-email/components@0.0.22';
+import * as React from 'npm:react@18.3.1';
+
+// Import des templates d'emails
+import { OrderConfirmationEmail } from './_templates/order-confirmation.tsx';
+import { StatusUpdateEmail } from './_templates/status-update.tsx';
+import { PaymentConfirmedEmail } from './_templates/payment-confirmed.tsx';
+import { TransferConfirmationEmail } from './_templates/transfer-confirmation.tsx';
+
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
-};
-
-interface EmailNotificationRequest {
-  userId: string;
-  orderId?: string;
-  emailAddress?: string | null;
-  emailType: string;
-  transactionType: string;
-  orderData?: any;
-}
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleString('fr-FR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-};
-
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('fr-FR').format(amount);
-};
-
-const getStatusText = (status: string) => {
-  const statusMap = {
-    'pending': 'En attente',
-    'processing': 'En cours de traitement',
-    'completed': 'Terminée',
-    'cancelled': 'Annulée',
-    'failed': 'Échouée'
-  };
-  return statusMap[status as keyof typeof statusMap] || status;
-};
-
-const getStatusColor = (status: string) => {
-  const colorMap = {
-    'pending': '#f59e0b',
-    'processing': '#3b82f6',
-    'completed': '#10b981',
-    'cancelled': '#ef4444',
-    'failed': '#ef4444'
-  };
-  return colorMap[status as keyof typeof colorMap] || '#6b7280';
-};
-
-const generateEmailContent = (emailType: string, transactionType: string, orderData: any) => {
-  const baseUrl = "https://app.terangaexchange.com";
-  const txId = `TEREX-${orderData.id?.substring(0, 8).toUpperCase()}`;
-  
-  const baseTemplate = `
-    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
-      <!-- Simple Header -->
-      <div style="padding: 20px 40px; text-align: center; border-bottom: 1px solid #e2e8f0;">
-        <h1 style="color: #1e293b; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">
-          TEREX
-        </h1>
-      </div>
-  `;
-
-  const footerTemplate = `
-      <!-- Footer -->
-      <div style="background: #f8fafc; padding: 30px 40px; border-top: 1px solid #e2e8f0;">
-        <div style="text-align: center; margin-bottom: 20px;">
-          <a href="${baseUrl}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
-            Accéder à mon compte
-          </a>
-        </div>
-        
-        <div style="border-top: 1px solid #e2e8f0; padding-top: 20px; text-align: center;">
-          <p style="color: #64748b; font-size: 12px; margin: 0 0 8px 0;">
-            Cet email a été envoyé automatiquement par Terex
-          </p>
-          <p style="color: #64748b; font-size: 12px; margin: 0;">
-            © 2024 Terex. Tous droits réservés.
-          </p>
-        </div>
-      </div>
-    </div>
-  `;
-
-  switch (emailType) {
-    case 'order_confirmation':
-      if (transactionType === 'buy') {
-        return {
-          subject: `✅ Commande confirmée #${txId} - Achat USDT`,
-          html: `${baseTemplate}
-            <!-- Content -->
-            <div style="padding: 40px;">
-              <div style="text-align: center; margin-bottom: 30px;">
-                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
-                  <span style="color: white; font-size: 24px;">✓</span>
-                </div>
-                <h2 style="color: #1e293b; margin: 0; font-size: 24px; font-weight: 700;">
-                  Commande confirmée !
-                </h2>
-                <p style="color: #64748b; margin: 8px 0 0 0; font-size: 16px;">
-                  Votre achat USDT a été enregistré avec succès
-                </p>
-              </div>
-
-              <!-- Transaction Details -->
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin: 24px 0;">
-                <h3 style="color: #1e293b; margin: 0 0 16px 0; font-size: 18px; font-weight: 600;">
-                  📋 Détails de la transaction
-                </h3>
-                
-                <div style="display: grid; gap: 12px;">
-                  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                    <span style="color: #64748b; font-weight: 500;">Numéro de transaction</span>
-                    <span style="color: #1e293b; font-weight: 600; font-family: monospace;">${txId}</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                    <span style="color: #64748b; font-weight: 500;">Montant payé</span>
-                    <span style="color: #1e293b; font-weight: 600;">${formatCurrency(orderData.amount)} ${orderData.currency}</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                    <span style="color: #64748b; font-weight: 500;">USDT à recevoir</span>
-                    <span style="color: #10b981; font-weight: 700; font-size: 16px;">${formatCurrency(orderData.usdt_amount)} USDT</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                    <span style="color: #64748b; font-weight: 500;">Taux de change</span>
-                    <span style="color: #1e293b; font-weight: 600;">1 USDT = ${formatCurrency(orderData.exchange_rate)} ${orderData.currency}</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                    <span style="color: #64748b; font-weight: 500;">Réseau blockchain</span>
-                    <span style="color: #1e293b; font-weight: 600;">${orderData.network}</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                    <span style="color: #64748b; font-weight: 500;">Adresse de réception</span>
-                    <span style="color: #1e293b; font-weight: 600; font-family: monospace; word-break: break-all; font-size: 12px;">${orderData.wallet_address}</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; padding: 8px 0;">
-                    <span style="color: #64748b; font-weight: 500;">Date de création</span>
-                    <span style="color: #1e293b; font-weight: 600;">${formatDate(orderData.created_at)}</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Status -->
-              <div style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 16px; margin: 24px 0;">
-                <div style="display: flex; align-items: center;">
-                  <div style="width: 8px; height: 8px; background: #f59e0b; border-radius: 50%; margin-right: 12px;"></div>
-                  <div>
-                    <p style="color: #92400e; margin: 0; font-weight: 600;">Statut : En attente de traitement</p>
-                    <p style="color: #92400e; margin: 4px 0 0 0; font-size: 14px;">Nous traitons votre commande. Vous recevrez une notification dès validation.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div style="background: #eff6ff; border: 1px solid #3b82f6; border-radius: 8px; padding: 16px; margin: 24px 0;">
-                <h4 style="color: #1e40af; margin: 0 0 8px 0; font-size: 16px;">🔍 Suivi blockchain</h4>
-                <p style="color: #1e40af; margin: 0; font-size: 14px;">
-                  Une fois votre paiement validé, vous pourrez suivre votre transaction USDT directement sur la blockchain ${orderData.network}.
-                </p>
-              </div>
-            </div>
-            ${footerTemplate}
-          `
-        };
-      } else if (transactionType === 'sell') {
-        return {
-          subject: `✅ Commande confirmée #${txId} - Vente USDT`,
-          html: `${baseTemplate}
-            <!-- Content -->
-            <div style="padding: 40px;">
-              <div style="text-align: center; margin-bottom: 30px;">
-                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
-                  <span style="color: white; font-size: 24px;">💰</span>
-                </div>
-                <h2 style="color: #1e293b; margin: 0; font-size: 24px; font-weight: 700;">
-                  Vente confirmée !
-                </h2>
-                <p style="color: #64748b; margin: 8px 0 0 0; font-size: 16px;">
-                  Votre vente USDT a été enregistrée avec succès
-                </p>
-              </div>
-
-              <!-- Transaction Details -->
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin: 24px 0;">
-                <h3 style="color: #1e293b; margin: 0 0 16px 0; font-size: 18px; font-weight: 600;">
-                  📋 Détails de la transaction
-                </h3>
-                
-                <div style="display: grid; gap: 12px;">
-                  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                    <span style="color: #64748b; font-weight: 500;">Numéro de transaction</span>
-                    <span style="color: #1e293b; font-weight: 600; font-family: monospace;">${txId}</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                    <span style="color: #64748b; font-weight: 500;">USDT vendus</span>
-                    <span style="color: #f59e0b; font-weight: 700; font-size: 16px;">${formatCurrency(orderData.usdt_amount)} USDT</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                    <span style="color: #64748b; font-weight: 500;">Montant à recevoir</span>
-                    <span style="color: #1e293b; font-weight: 600;">${formatCurrency(orderData.amount)} ${orderData.currency}</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                    <span style="color: #64748b; font-weight: 500;">Taux de change</span>
-                    <span style="color: #1e293b; font-weight: 600;">1 USDT = ${formatCurrency(orderData.exchange_rate)} ${orderData.currency}</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; padding: 8px 0;">
-                    <span style="color: #64748b; font-weight: 500;">Date de création</span>
-                    <span style="color: #1e293b; font-weight: 600;">${formatDate(orderData.created_at)}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 16px; margin: 24px 0;">
-                <h4 style="color: #92400e; margin: 0 0 8px 0; font-size: 16px;">📤 Instructions d'envoi</h4>
-                <p style="color: #92400e; margin: 0; font-size: 14px;">
-                  Envoyez vos USDT à l'adresse fournie pour finaliser la vente. Vous recevrez votre paiement après confirmation.
-                </p>
-              </div>
-            </div>
-            ${footerTemplate}
-          `
-        };
-      }
-      break;
-
-    case 'transfer_confirmation':
-      return {
-        subject: `✅ Transfert confirmé #${txId} - Virement international`,
-        html: `${baseTemplate}
-          <!-- Content -->
-          <div style="padding: 40px;">
-            <div style="text-align: center; margin-bottom: 30px;">
-              <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
-                <span style="color: white; font-size: 24px;">🌍</span>
-              </div>
-              <h2 style="color: #1e293b; margin: 0; font-size: 24px; font-weight: 700;">
-                Transfert confirmé !
-              </h2>
-              <p style="color: #64748b; margin: 8px 0 0 0; font-size: 16px;">
-                Votre virement international a été enregistré avec succès
-              </p>
-            </div>
-
-            <!-- Transfer Details -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin: 24px 0;">
-              <h3 style="color: #1e293b; margin: 0 0 16px 0; font-size: 18px; font-weight: 600;">
-                📋 Détails du transfert
-              </h3>
-              
-              <div style="display: grid; gap: 12px;">
-                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                  <span style="color: #64748b; font-weight: 500;">Numéro de transaction</span>
-                  <span style="color: #1e293b; font-weight: 600; font-family: monospace;">${txId}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                  <span style="color: #64748b; font-weight: 500;">Montant envoyé</span>
-                  <span style="color: #1e293b; font-weight: 600;">${formatCurrency(orderData.amount)} ${orderData.from_currency}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                  <span style="color: #64748b; font-weight: 500;">Montant reçu</span>
-                  <span style="color: #3b82f6; font-weight: 700; font-size: 16px;">${formatCurrency(orderData.total_amount)} ${orderData.to_currency}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                  <span style="color: #64748b; font-weight: 500;">Destinataire</span>
-                  <span style="color: #1e293b; font-weight: 600;">${orderData.recipient_name}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                  <span style="color: #64748b; font-weight: 500;">Pays de destination</span>
-                  <span style="color: #1e293b; font-weight: 600;">${orderData.recipient_country}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 8px 0;">
-                  <span style="color: #64748b; font-weight: 500;">Date de création</span>
-                  <span style="color: #1e293b; font-weight: 600;">${formatDate(orderData.created_at)}</span>
-                </div>
-              </div>
-            </div>
-
-            <div style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 16px; margin: 24px 0;">
-              <h4 style="color: #92400e; margin: 0 0 8px 0; font-size: 16px;">⏱️ Délai de traitement</h4>
-              <p style="color: #92400e; margin: 0; font-size: 14px;">
-                Votre transfert sera traité dans les 5 minutes suivant la validation du paiement.
-              </p>
-            </div>
-          </div>
-          ${footerTemplate}
-        `
-      };
-      
-    case 'status_update':
-      const statusText = getStatusText(orderData.status);
-      const statusColor = getStatusColor(orderData.status);
-      
-      let transactionTypeText = 'Transaction';
-      if (transactionType === 'buy') transactionTypeText = 'Achat USDT';
-      else if (transactionType === 'sell') transactionTypeText = 'Vente USDT';
-      else if (transactionType === 'transfer') transactionTypeText = 'Virement international';
-      
-      return {
-        subject: `🔄 Mise à jour #${txId} - ${statusText}`,
-        html: `${baseTemplate}
-          <!-- Content -->
-          <div style="padding: 40px;">
-            <div style="text-align: center; margin-bottom: 30px;">
-              <div style="width: 60px; height: 60px; background: ${statusColor}; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
-                <span style="color: white; font-size: 24px;">🔄</span>
-              </div>
-              <h2 style="color: #1e293b; margin: 0; font-size: 24px; font-weight: 700;">
-                Statut mis à jour
-              </h2>
-              <p style="color: #64748b; margin: 8px 0 0 0; font-size: 16px;">
-                Transaction #${txId}
-              </p>
-            </div>
-
-            <!-- Status Update -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin: 24px 0;">
-              <div style="text-align: center; margin-bottom: 20px;">
-                <div style="display: inline-flex; align-items: center; background: ${statusColor}; color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600;">
-                  <div style="width: 8px; height: 8px; background: white; border-radius: 50%; margin-right: 8px;"></div>
-                  ${statusText}
-                </div>
-              </div>
-              
-              <div style="display: grid; gap: 12px;">
-                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                  <span style="color: #64748b; font-weight: 500;">Transaction ID</span>
-                  <span style="color: #1e293b; font-weight: 600; font-family: monospace;">${txId}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                  <span style="color: #64748b; font-weight: 500;">Type</span>
-                  <span style="color: #1e293b; font-weight: 600;">${transactionTypeText}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                  <span style="color: #64748b; font-weight: 500;">Montant</span>
-                  <span style="color: #1e293b; font-weight: 600;">${formatCurrency(orderData.amount || orderData.usdt_amount)} ${orderData.currency || orderData.from_currency || 'USDT'}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 8px 0;">
-                  <span style="color: #64748b; font-weight: 500;">Mis à jour le</span>
-                  <span style="color: #1e293b; font-weight: 600;">${formatDate(new Date().toISOString())}</span>
-                </div>
-              </div>
-            </div>
-
-            ${orderData.status === 'completed' ? `
-            <div style="background: #dcfce7; border: 1px solid #16a34a; border-radius: 8px; padding: 16px; margin: 24px 0;">
-              <h4 style="color: #15803d; margin: 0 0 8px 0; font-size: 16px;">🎉 Transaction terminée !</h4>
-              <p style="color: #15803d; margin: 0 0 8px 0; font-size: 14px;">
-                Votre transaction a été complétée avec succès.
-              </p>
-              ${transactionType === 'buy' ? `<p style="color: #15803d; margin: 0; font-size: 12px;">🔗 Consultez les détails sur la blockchain ${orderData.network}</p>` : ''}
-            </div>
-            ` : orderData.status === 'processing' ? `
-            <div style="background: #dbeafe; border: 1px solid #3b82f6; border-radius: 8px; padding: 16px; margin: 24px 0;">
-              <h4 style="color: #1e40af; margin: 0 0 8px 0; font-size: 16px;">⏳ Transaction en cours</h4>
-              <p style="color: #1e40af; margin: 0; font-size: 14px;">
-                Votre transaction est actuellement en cours de traitement. Veuillez patienter.
-              </p>
-            </div>
-            ` : ''}
-          </div>
-          ${footerTemplate}
-        `
-      };
-
-    case 'payment_confirmed':
-      return {
-        subject: `💰 Paiement confirmé #${txId} - Transaction en cours`,
-        html: `${baseTemplate}
-          <!-- Content -->
-          <div style="padding: 40px;">
-            <div style="text-align: center; margin-bottom: 30px;">
-              <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
-                <span style="color: white; font-size: 24px;">💰</span>
-              </div>
-              <h2 style="color: #1e293b; margin: 0; font-size: 24px; font-weight: 700;">
-                Paiement confirmé !
-              </h2>
-              <p style="color: #64748b; margin: 8px 0 0 0; font-size: 16px;">
-                Votre transaction est maintenant en cours de traitement
-              </p>
-            </div>
-
-            <div style="background: #dcfce7; border: 1px solid #16a34a; border-radius: 12px; padding: 24px; margin: 24px 0;">
-              <h4 style="color: #15803d; margin: 0 0 16px 0; font-size: 18px;">✅ Paiement validé</h4>
-              <p style="color: #15803d; margin: 0 0 12px 0; font-size: 14px;">
-                Votre paiement a été confirmé avec succès.
-              </p>
-              <p style="color: #15803d; margin: 0; font-size: 14px;">
-                Nous procédons maintenant au traitement de votre transaction.
-              </p>
-            </div>
-
-            <div style="background: #eff6ff; border: 1px solid #3b82f6; border-radius: 8px; padding: 16px; margin: 24px 0;">
-              <h4 style="color: #1e40af; margin: 0 0 8px 0; font-size: 16px;">⏱️ Délai de traitement</h4>
-              <p style="color: #1e40af; margin: 0; font-size: 14px;">
-                Votre transaction sera complétée dans les 5-10 minutes suivant cette confirmation.
-              </p>
-            </div>
-          </div>
-          ${footerTemplate}
-        `
-      };
-      
-    default:
-      return {
-        subject: `📬 Notification Terex #${txId}`,
-        html: `${baseTemplate}
-          <!-- Content -->
-          <div style="padding: 40px;">
-            <h2 style="color: #1e293b; margin: 0 0 16px 0; font-size: 24px; font-weight: 700;">
-              Notification
-            </h2>
-            <p style="color: #64748b; margin: 0 0 24px 0; font-size: 16px;">
-              Vous avez reçu une nouvelle notification de Terex.
-            </p>
-            <p style="color: #64748b; margin: 0; font-size: 14px;">
-              Transaction: #${txId}
-            </p>
-          </div>
-          ${footerTemplate}
-        `
-      };
-  }
 };
 
 const handler = async (req: Request): Promise<Response> => {
@@ -441,42 +28,104 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { userId, orderId, emailAddress, emailType, transactionType, orderData }: EmailNotificationRequest = await req.json();
+    const { 
+      userId, 
+      orderId, 
+      emailAddress, 
+      emailType, 
+      transactionType, 
+      orderData 
+    } = await req.json();
 
-    console.log('Début de l\'envoi d\'email:', { userId, emailType, transactionType, emailAddress });
+    console.log('Début de l\'envoi d\'email:', {
+      userId,
+      emailType,
+      transactionType,
+      emailAddress
+    });
 
-    // Si l'email n'est pas fourni, le récupérer via l'API auth admin
-    let clientEmail = emailAddress;
-    if (!clientEmail) {
+    let finalEmailAddress = emailAddress;
+
+    // Récupérer l'email de l'utilisateur s'il n'est pas fourni
+    if (!emailAddress && userId) {
       console.log('Récupération de l\'email pour l\'utilisateur:', userId);
       
-      // Utiliser l'API auth admin pour récupérer l'email
-      const { data: authData, error: usersError } = await supabase.auth.admin.listUsers();
+      const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(userId);
       
-      if (!usersError && authData?.users) {
-        const clientUser = authData.users.find((u: any) => u.id === userId);
-        clientEmail = clientUser?.email;
-        console.log('Email trouvé:', clientEmail);
-      } else {
-        console.error('Erreur lors de la récupération des utilisateurs:', usersError);
+      if (authError || !authUser.user?.email) {
+        console.error('Erreur lors de la récupération de l\'utilisateur:', authError);
         throw new Error('Impossible de récupérer l\'email de l\'utilisateur');
       }
+      
+      finalEmailAddress = authUser.user.email;
+      console.log('Email trouvé:', finalEmailAddress);
     }
 
-    if (!clientEmail) {
-      throw new Error('Aucune adresse email trouvée pour l\'utilisateur');
+    if (!finalEmailAddress) {
+      throw new Error('Adresse email manquante');
     }
 
-    // Créer l'enregistrement de notification
+    // Générer le contenu de l'email en fonction du type
+    let subject = '';
+    let htmlContent = '';
+
+    switch (emailType) {
+      case 'order_confirmation':
+        subject = `✅ Commande confirmée #TEREX-${orderData.id?.slice(-8)} - ${transactionType === 'buy' ? 'Achat' : 'Vente'} USDT`;
+        htmlContent = await renderAsync(
+          React.createElement(OrderConfirmationEmail, {
+            orderData,
+            transactionType: transactionType as 'buy' | 'sell'
+          })
+        );
+        break;
+
+      case 'status_update':
+        const statusText = orderData.status === 'processing' ? 'En cours de traitement' : 
+                          orderData.status === 'completed' ? 'Terminée' : 
+                          orderData.status === 'cancelled' ? 'Annulée' : orderData.status;
+        subject = `🔄 Mise à jour #TEREX-${orderData.id?.slice(-8)} - ${statusText}`;
+        htmlContent = await renderAsync(
+          React.createElement(StatusUpdateEmail, {
+            orderData,
+            transactionType
+          })
+        );
+        break;
+
+      case 'payment_confirmed':
+        subject = `💰 Paiement confirmé #TEREX-${orderData.id?.slice(-8)}`;
+        htmlContent = await renderAsync(
+          React.createElement(PaymentConfirmedEmail, {
+            orderData,
+            transactionType
+          })
+        );
+        break;
+
+      case 'transfer_confirmation':
+        subject = `🌍 Transfert confirmé #TEREX-${orderData.id?.slice(-8)}`;
+        htmlContent = await renderAsync(
+          React.createElement(TransferConfirmationEmail, {
+            transferData: orderData
+          })
+        );
+        break;
+
+      default:
+        throw new Error(`Type d'email non supporté: ${emailType}`);
+    }
+
+    // Sauvegarder la notification dans la base de données
     const { data: notification, error: notificationError } = await supabase
       .from('email_notifications')
       .insert({
         user_id: userId,
         order_id: orderId,
-        email_address: clientEmail,
+        email_address: finalEmailAddress,
         email_type: emailType,
         transaction_type: transactionType,
-        subject: generateEmailContent(emailType, transactionType, orderData)?.subject || 'Notification Terex',
+        subject: subject,
         status: 'pending'
       })
       .select()
@@ -484,45 +133,52 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (notificationError) {
       console.error('Erreur lors de la création de la notification:', notificationError);
-      throw notificationError;
+    } else {
+      console.log('Notification créée:', notification.id);
     }
 
-    console.log('Notification créée:', notification.id);
-
-    // Générer le contenu de l'email
-    const emailContent = generateEmailContent(emailType, transactionType, orderData);
-    
-    if (!emailContent) {
-      throw new Error('Type d\'email non supporté');
-    }
-
-    console.log('Envoi de l\'email à:', clientEmail, 'Sujet:', emailContent.subject);
+    console.log('Envoi de l\'email à:', finalEmailAddress, 'Sujet:', subject);
 
     // Envoyer l'email avec Resend
     const emailResponse = await resend.emails.send({
       from: "Terex <noreply@terangaexchange.com>",
-      to: [clientEmail],
-      subject: emailContent.subject,
-      html: emailContent.html,
+      to: [finalEmailAddress],
+      subject: subject,
+      html: htmlContent,
     });
 
-    console.log("Email envoyé avec succès:", emailResponse);
+    if (emailResponse.error) {
+      console.error('Erreur Resend:', emailResponse.error);
+      
+      // Mettre à jour le statut de la notification
+      if (notification?.id) {
+        await supabase
+          .from('email_notifications')
+          .update({
+            status: 'failed',
+            error_message: emailResponse.error.message,
+            sent_at: new Date().toISOString()
+          })
+          .eq('id', notification.id);
+      }
+      
+      throw emailResponse.error;
+    }
 
-    // Mettre à jour le statut de la notification
-    await supabase
-      .from('email_notifications')
-      .update({
-        status: 'sent',
-        sent_at: new Date().toISOString()
-      })
-      .eq('id', notification.id);
+    console.log('Email envoyé avec succès:', emailResponse);
 
-    return new Response(JSON.stringify({ 
-      success: true, 
-      notificationId: notification.id,
-      emailId: emailResponse.data?.id,
-      emailSentTo: clientEmail
-    }), {
+    // Mettre à jour le statut de la notification comme réussie
+    if (notification?.id) {
+      await supabase
+        .from('email_notifications')
+        .update({
+          status: 'sent',
+          sent_at: new Date().toISOString()
+        })
+        .eq('id', notification.id);
+    }
+
+    return new Response(JSON.stringify({ success: true, data: emailResponse }), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
@@ -531,8 +187,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
   } catch (error: any) {
-    console.error("Erreur lors de l'envoi de l'email:", error);
-
+    console.error("Erreur dans send-email-notification:", error);
     return new Response(
       JSON.stringify({ error: error.message }),
       {

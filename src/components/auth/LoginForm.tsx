@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -38,11 +37,24 @@ export function LoginForm() {
       } else {
         const { error } = await signUp(email, password, name);
         if (error) {
+          console.log('Erreur inscription:', error);
+          
+          // Gestion spécifique des erreurs d'inscription
+          let errorMessage = error.message;
+          
+          if (error.message.includes("User already registered") || 
+              error.message.includes("already registered") ||
+              error.message.includes("already exists")) {
+            errorMessage = "Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.";
+          } else if (error.message.includes("Password should be at least")) {
+            errorMessage = "Le mot de passe doit contenir au moins 6 caractères.";
+          } else if (error.message.includes("Invalid email")) {
+            errorMessage = "Format d'email invalide.";
+          }
+          
           toast({
             title: "Erreur d'inscription",
-            description: error.message === "User already registered"
-              ? "Un compte existe déjà avec cet email"
-              : error.message,
+            description: errorMessage,
             variant: "destructive",
           });
         } else {
@@ -54,6 +66,7 @@ export function LoginForm() {
         }
       }
     } catch (error) {
+      console.error('Erreur inattendue:', error);
       toast({
         title: "Erreur",
         description: "Une erreur inattendue s'est produite",
