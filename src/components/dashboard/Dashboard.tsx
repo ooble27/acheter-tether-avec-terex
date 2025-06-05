@@ -27,6 +27,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       console.log('Dashboard: Starting logout...')
       await signOut();
       console.log('Dashboard: Logout completed')
+      // No need to manually redirect, the auth state change will handle it
     } catch (error) {
       console.error('Dashboard: Logout error:', error)
     }

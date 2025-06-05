@@ -7,7 +7,12 @@ import { useAuth } from '@/contexts/AuthContext';
 const Index = () => {
   const { user, session, loading } = useAuth();
 
-  console.log('Index: Auth state:', { user: !!user, session: !!session, loading })
+  console.log('Index: Auth state:', { 
+    user: !!user, 
+    session: !!session, 
+    loading,
+    userEmailConfirmed: user?.email_confirmed_at
+  })
 
   if (loading) {
     return (
@@ -17,7 +22,17 @@ const Index = () => {
     );
   }
 
-  // User is logged in but email not verified
+  // No user at all - show login form
+  if (!user) {
+    console.log('Index: No user found, showing login form')
+    return (
+      <div className="min-h-screen bg-terex-dark">
+        <LoginForm />
+      </div>
+    );
+  }
+
+  // User exists but email not verified
   if (user && !user.email_confirmed_at) {
     console.log('Index: User logged in but email not verified')
     return (
@@ -28,7 +43,7 @@ const Index = () => {
   }
 
   // User is logged in and email is verified
-  if (user && session) {
+  if (user && session && user.email_confirmed_at) {
     console.log('Index: User fully authenticated, showing dashboard')
     const userData = {
       email: user.email || '',
@@ -38,8 +53,8 @@ const Index = () => {
     return <Dashboard user={userData} onLogout={() => {}} />;
   }
 
-  // User is not logged in - show login form
-  console.log('Index: User not authenticated, showing login form')
+  // Fallback - show login form
+  console.log('Index: Fallback case, showing login form')
   return (
     <div className="min-h-screen bg-terex-dark">
       <LoginForm />

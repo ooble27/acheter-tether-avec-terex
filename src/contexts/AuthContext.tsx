@@ -39,15 +39,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     console.log('AuthProvider: Initializing...')
     
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('AuthProvider: Initial session:', session)
-      setSession(session)
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-
-    // Listen for auth changes
+    // Listen for auth changes first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('AuthProvider: Auth state change:', event, session)
@@ -57,11 +49,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     )
 
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('AuthProvider: Initial session:', session)
+      setSession(session)
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
+
     return () => subscription.unsubscribe()
   }, [])
 
   const signUp = async (email: string, password: string, name: string) => {
     console.log('AuthProvider: Starting sign up for:', email)
+    setLoading(true)
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -73,27 +74,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     })
     console.log('AuthProvider: Sign up result:', { error })
+    setLoading(false)
     return { error }
   }
 
   const signIn = async (email: string, password: string) => {
     console.log('AuthProvider: Starting sign in for:', email)
+    setLoading(true)
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password
     })
     console.log('AuthProvider: Sign in result:', { error })
+    setLoading(false)
     return { error }
   }
 
   const signOut = async () => {
     console.log('AuthProvider: Starting sign out...')
+    setLoading(true)
+    
     try {
-      // Clear local state immediately
-      setUser(null)
-      setSession(null)
-      
-      // Sign out from Supabase
       const { error } = await supabase.auth.signOut()
       
       if (error) {
@@ -101,8 +102,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } else {
         console.log('AuthProvider: Sign out successful')
       }
+      
+      // Force clear the state regardless of error
+      setUser(null)
+      setSession(null)
     } catch (error) {
       console.error('AuthProvider: Error during sign out:', error)
+      // Force clear the state even on error
+      setUser(null)
+      setSession(null)
+    } finally {
+      setLoading(false)
     }
   }
 
