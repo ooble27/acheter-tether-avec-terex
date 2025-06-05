@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,33 +54,40 @@ export function LoginForm() {
           // Essayer de s'inscrire pour voir si l'email existe déjà
           const { error: signUpError } = await signUp(email, password, name);
           
-          // Si Supabase retourne une erreur liée à un email déjà utilisé
-          if (signUpError && signUpError.message.includes("already registered")) {
+          // Dans tous les cas où signUp ne réussit pas parfaitement ou si l'email existe déjà
+          // on considère que l'email est déjà utilisé
+          if (signUpError) {
             toast({
               title: "Email déjà utilisé",
-              description: "Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.",
-              variant: "destructive",
-            });
-          } else if (signUpError) {
-            // Autres erreurs d'inscription
-            toast({
-              title: "Erreur d'inscription",
-              description: signUpError.message,
+              description: "Cet email est déjà utilisé. Veuillez vous connecter.",
               variant: "destructive",
             });
           } else {
-            // Inscription réussie
-            toast({
-              title: "Inscription réussie !",
-              description: "Vérifiez votre email pour activer votre compte",
-              className: "bg-green-600 text-white border-green-600",
-            });
+            // Vérifier si c'est vraiment une nouvelle inscription réussie
+            // En tentant une connexion immédiate après l'inscription
+            const { error: verifyError } = await signIn(email, password);
+            if (verifyError) {
+              // Si on ne peut pas se connecter après une "inscription réussie", 
+              // c'est probablement que l'email existe déjà
+              toast({
+                title: "Email déjà utilisé",
+                description: "Cet email est déjà utilisé. Veuillez vous connecter.",
+                variant: "destructive",
+              });
+            } else {
+              // Vraie nouvelle inscription
+              toast({
+                title: "Inscription réussie !",
+                description: "Vérifiez votre email pour activer votre compte",
+                className: "bg-green-600 text-white border-green-600",
+              });
+            }
           }
         } else {
           // Autre erreur de connexion (email existe déjà)
           toast({
             title: "Email déjà utilisé",
-            description: "Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.",
+            description: "Cet email est déjà utilisé. Veuillez vous connecter.",
             variant: "destructive",
           });
         }
