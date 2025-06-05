@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -116,12 +115,12 @@ export function InternationalTransfer() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Transfer Form */}
           <div className="lg:col-span-2">
-            <Card className="bg-white border-0 shadow-lg">
+            <Card className="bg-terex-darker border-terex-gray shadow-lg">
               <CardHeader className="pb-4">
-                <CardTitle className="text-2xl font-bold text-gray-900">
+                <CardTitle className="text-2xl font-bold text-white">
                   Nouveau transfert
                 </CardTitle>
-                <CardDescription className="text-gray-600">
+                <CardDescription className="text-gray-400">
                   Configurez votre transfert international en quelques clics
                 </CardDescription>
               </CardHeader>
@@ -129,30 +128,30 @@ export function InternationalTransfer() {
                 {/* Amount and Country Selection */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label className="text-gray-700 font-medium">Vous envoyez</Label>
+                    <Label className="text-gray-300 font-medium">Vous envoyez</Label>
                     <div className="relative">
                       <Input
                         type="number"
                         placeholder="0.00"
                         value={cadAmount}
                         onChange={(e) => setCadAmount(e.target.value)}
-                        className="text-2xl font-bold pr-16 h-14"
+                        className="text-2xl font-bold pr-16 h-14 bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
                       />
                       <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                        <Badge variant="secondary" className="font-medium">CAD</Badge>
+                        <Badge variant="secondary" className="font-medium bg-terex-accent text-white">CAD</Badge>
                       </div>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label className="text-gray-700 font-medium">Vers</Label>
+                    <Label className="text-gray-300 font-medium">Vers</Label>
                     <Select value={country} onValueChange={setCountry}>
-                      <SelectTrigger className="h-14">
+                      <SelectTrigger className="h-14 bg-terex-gray border-terex-gray-light text-white">
                         <SelectValue placeholder="Choisissez un pays" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-terex-darker border-terex-gray">
                         {countries.map((country) => (
-                          <SelectItem key={country.code} value={country.code}>
+                          <SelectItem key={country.code} value={country.code} className="text-white hover:bg-terex-gray">
                             <div className="flex items-center space-x-3">
                               <span className="text-xl">{country.flag}</span>
                               <span>{country.name}</span>
@@ -166,14 +165,14 @@ export function InternationalTransfer() {
 
                 {/* Exchange Rate Display */}
                 {selectedCountry && (
-                  <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="bg-terex-gray p-4 rounded-lg border border-terex-gray-light">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm text-gray-600">Taux de change</p>
-                        <p className="font-bold text-lg">1 CAD = {rate} {selectedCountry.currency}</p>
+                        <p className="text-sm text-gray-400">Taux de change</p>
+                        <p className="font-bold text-lg text-white">1 CAD = {rate} {selectedCountry.currency}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-600">Le destinataire recevra</p>
+                        <p className="text-sm text-gray-400">Le destinataire recevra</p>
                         <p className="font-bold text-2xl text-terex-accent">{cfaAmount} {selectedCountry.currency}</p>
                       </div>
                     </div>
@@ -182,7 +181,7 @@ export function InternationalTransfer() {
 
                 {/* Delivery Speed */}
                 <div className="space-y-3">
-                  <Label className="text-gray-700 font-medium">Vitesse de livraison</Label>
+                  <Label className="text-gray-300 font-medium">Vitesse de livraison</Label>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {deliveryOptions.map((option) => (
                       <button
@@ -190,15 +189,15 @@ export function InternationalTransfer() {
                         onClick={() => setDeliverySpeed(option.value)}
                         className={`p-4 rounded-lg border-2 text-left transition-all ${
                           deliverySpeed === option.value
-                            ? 'border-terex-accent bg-terex-accent/5'
-                            : 'border-gray-200 hover:border-gray-300'
+                            ? 'border-terex-accent bg-terex-accent/20'
+                            : 'border-terex-gray-light hover:border-terex-accent/50 bg-terex-gray'
                         }`}
                       >
                         <div className="flex items-center gap-2 mb-2">
                           {option.icon}
-                          <span className="font-medium">{option.label}</span>
+                          <span className="font-medium text-white">{option.label}</span>
                         </div>
-                        <p className="text-sm text-gray-600">{option.time}</p>
+                        <p className="text-sm text-gray-400">{option.time}</p>
                         <p className="text-sm font-medium text-terex-accent">
                           {option.fee === 0 ? 'Gratuit' : `${option.fee > 0 ? '+' : ''}${option.fee} CAD`}
                         </p>
@@ -209,7 +208,7 @@ export function InternationalTransfer() {
 
                 {/* Payment Method */}
                 <div className="space-y-3">
-                  <Label className="text-gray-700 font-medium">Comment payez-vous ?</Label>
+                  <Label className="text-gray-300 font-medium">Comment payez-vous ?</Label>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {paymentMethods.map((method) => (
                       <button
@@ -217,15 +216,15 @@ export function InternationalTransfer() {
                         onClick={() => setPaymentMethod(method.value)}
                         className={`p-4 rounded-lg border-2 text-left transition-all ${
                           paymentMethod === method.value
-                            ? 'border-terex-accent bg-terex-accent/5'
-                            : 'border-gray-200 hover:border-gray-300'
+                            ? 'border-terex-accent bg-terex-accent/20'
+                            : 'border-terex-gray-light hover:border-terex-accent/50 bg-terex-gray'
                         }`}
                       >
                         <div className="flex items-center gap-3 mb-2">
                           {method.icon}
-                          <span className="font-medium">{method.label}</span>
+                          <span className="font-medium text-white">{method.label}</span>
                         </div>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-400">
                           {method.fee === 0 ? 'Gratuit' : `${method.fee} CAD de frais`}
                         </p>
                       </button>
@@ -235,7 +234,7 @@ export function InternationalTransfer() {
 
                 {/* Receive Method */}
                 <div className="space-y-3">
-                  <Label className="text-gray-700 font-medium">Comment le destinataire recevra-t-il l'argent ?</Label>
+                  <Label className="text-gray-300 font-medium">Comment le destinataire recevra-t-il l'argent ?</Label>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {receiveMethods.map((method) => (
                       <button
@@ -243,38 +242,39 @@ export function InternationalTransfer() {
                         onClick={() => setRecipientMethod(method.value)}
                         className={`p-4 rounded-lg border-2 text-center transition-all ${
                           recipientMethod === method.value
-                            ? 'border-terex-accent bg-terex-accent/5'
-                            : 'border-gray-200 hover:border-gray-300'
+                            ? 'border-terex-accent bg-terex-accent/20'
+                            : 'border-terex-gray-light hover:border-terex-accent/50 bg-terex-gray'
                         }`}
                       >
                         <div className="flex justify-center mb-2">
                           {method.icon}
                         </div>
-                        <p className="text-sm font-medium">{method.label}</p>
+                        <p className="text-sm font-medium text-white">{method.label}</p>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <Separator />
+                <Separator className="bg-terex-gray-light" />
 
                 {/* Recipient Information */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Informations du destinataire</h3>
+                  <h3 className="text-lg font-semibold text-white">Informations du destinataire</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label className="text-gray-700">Nom complet</Label>
+                      <Label className="text-gray-300">Nom complet</Label>
                       <Input
                         type="text"
                         placeholder="Nom du destinataire"
                         value={recipientName}
                         onChange={(e) => setRecipientName(e.target.value)}
+                        className="bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-gray-700">
+                      <Label className="text-gray-300">
                         {recipientMethod === 'bank' ? 'Numéro de compte' : 'Numéro de téléphone'}
                       </Label>
                       <Input
@@ -282,6 +282,7 @@ export function InternationalTransfer() {
                         placeholder={recipientMethod === 'bank' ? 'Numéro de compte' : '+221 XX XXX XX XX'}
                         value={recipientPhone}
                         onChange={(e) => setRecipientPhone(e.target.value)}
+                        className="bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
                       />
                     </div>
                   </div>
@@ -293,43 +294,43 @@ export function InternationalTransfer() {
           {/* Summary Sidebar */}
           <div className="space-y-6">
             {/* Transfer Summary */}
-            <Card className="bg-white border-0 shadow-lg sticky top-6">
+            <Card className="bg-terex-darker border-terex-gray shadow-lg sticky top-6">
               <CardHeader>
-                <CardTitle className="text-xl font-bold text-gray-900">Résumé du transfert</CardTitle>
+                <CardTitle className="text-xl font-bold text-white">Résumé du transfert</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Montant envoyé</span>
-                    <span className="font-medium">{cadAmount || '0'} CAD</span>
+                    <span className="text-gray-400">Montant envoyé</span>
+                    <span className="font-medium text-white">{cadAmount || '0'} CAD</span>
                   </div>
                   
                   {paymentFee > 0 && (
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Frais de paiement</span>
-                      <span className="font-medium">{paymentFee} CAD</span>
+                      <span className="text-gray-400">Frais de paiement</span>
+                      <span className="font-medium text-white">{paymentFee} CAD</span>
                     </div>
                   )}
                   
                   {deliveryFee !== 0 && (
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Frais de livraison</span>
-                      <span className="font-medium text-green-600">
+                      <span className="text-gray-400">Frais de livraison</span>
+                      <span className="font-medium text-green-400">
                         {deliveryFee > 0 ? `+${deliveryFee}` : deliveryFee} CAD
                       </span>
                     </div>
                   )}
                   
-                  <Separator />
+                  <Separator className="bg-terex-gray-light" />
                   
                   <div className="flex justify-between text-lg font-bold">
-                    <span>Total à payer</span>
-                    <span>{totalToSend.toFixed(2)} CAD</span>
+                    <span className="text-white">Total à payer</span>
+                    <span className="text-white">{totalToSend.toFixed(2)} CAD</span>
                   </div>
                   
-                  <div className="bg-terex-accent/10 p-3 rounded-lg">
+                  <div className="bg-terex-accent/20 p-3 rounded-lg border border-terex-accent/30">
                     <div className="flex justify-between">
-                      <span className="text-gray-700">Le destinataire recevra</span>
+                      <span className="text-gray-300">Le destinataire recevra</span>
                       <span className="font-bold text-terex-accent text-xl">
                         {cfaAmount} {selectedCountry?.currency || 'CFA'}
                       </span>
@@ -340,12 +341,12 @@ export function InternationalTransfer() {
                 <Button 
                   onClick={handleTransfer}
                   disabled={!cadAmount || !country || !recipientName || !recipientPhone || !paymentMethod || !recipientMethod}
-                  className="w-full gradient-button text-white font-medium h-12 text-lg disabled:opacity-50"
+                  className="w-full bg-terex-accent hover:bg-terex-accent-light text-white font-medium h-12 text-lg disabled:opacity-50"
                 >
                   Continuer le transfert
                 </Button>
 
-                <div className="text-center text-sm text-gray-500">
+                <div className="text-center text-sm text-gray-400">
                   <Shield className="w-4 h-4 inline mr-1" />
                   Sécurisé par un cryptage 256-bit
                 </div>
@@ -353,29 +354,29 @@ export function InternationalTransfer() {
             </Card>
 
             {/* Trust Indicators */}
-            <Card className="bg-white border-0 shadow-lg">
+            <Card className="bg-terex-darker border-terex-gray shadow-lg">
               <CardContent className="p-6">
-                <h3 className="font-semibold text-gray-900 mb-4">Pourquoi nous faire confiance ?</h3>
+                <h3 className="font-semibold text-white mb-4">Pourquoi nous faire confiance ?</h3>
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
                     <Shield className="w-5 h-5 text-terex-accent mt-0.5" />
                     <div>
-                      <p className="font-medium text-sm">Sécurité garantie</p>
-                      <p className="text-xs text-gray-600">Agréé et réglementé</p>
+                      <p className="font-medium text-sm text-white">Sécurité garantie</p>
+                      <p className="text-xs text-gray-400">Agréé et réglementé</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <Clock className="w-5 h-5 text-terex-accent mt-0.5" />
                     <div>
-                      <p className="font-medium text-sm">Transfert rapide</p>
-                      <p className="text-xs text-gray-600">En quelques minutes</p>
+                      <p className="font-medium text-sm text-white">Transfert rapide</p>
+                      <p className="text-xs text-gray-400">En quelques minutes</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <Star className="w-5 h-5 text-terex-accent mt-0.5" />
                     <div>
-                      <p className="font-medium text-sm">Excellent service</p>
-                      <p className="text-xs text-gray-600">Support 24/7</p>
+                      <p className="font-medium text-sm text-white">Excellent service</p>
+                      <p className="text-xs text-gray-400">Support 24/7</p>
                     </div>
                   </div>
                 </div>
@@ -386,73 +387,73 @@ export function InternationalTransfer() {
 
         {/* Confirmation Dialog */}
         <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl bg-terex-darker border-terex-gray">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold">Confirmer votre transfert</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-2xl font-bold text-white">Confirmer votre transfert</DialogTitle>
+              <DialogDescription className="text-gray-400">
                 Vérifiez attentivement les informations avant de finaliser le transfert.
               </DialogDescription>
             </DialogHeader>
             
             <div className="space-y-6">
               {/* Transfer Details */}
-              <div className="bg-gray-50 p-6 rounded-lg space-y-4">
+              <div className="bg-terex-gray p-6 rounded-lg space-y-4 border border-terex-gray-light">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600">Vous envoyez</p>
-                    <p className="text-2xl font-bold">{cadAmount} CAD</p>
+                    <p className="text-sm text-gray-400">Vous envoyez</p>
+                    <p className="text-2xl font-bold text-white">{cadAmount} CAD</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Destinataire recevra</p>
+                    <p className="text-sm text-gray-400">Destinataire recevra</p>
                     <p className="text-2xl font-bold text-terex-accent">{cfaAmount} {selectedCountry?.currency}</p>
                   </div>
                 </div>
                 
-                <Separator />
+                <Separator className="bg-terex-gray-light" />
                 
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-gray-600">Pays de destination</p>
-                    <p className="font-medium">{selectedCountry?.flag} {selectedCountry?.name}</p>
+                    <p className="text-gray-400">Pays de destination</p>
+                    <p className="font-medium text-white">{selectedCountry?.flag} {selectedCountry?.name}</p>
                   </div>
                   <div>
-                    <p className="text-gray-600">Vitesse de livraison</p>
-                    <p className="font-medium">{selectedDeliveryOption?.label} ({selectedDeliveryOption?.time})</p>
+                    <p className="text-gray-400">Vitesse de livraison</p>
+                    <p className="font-medium text-white">{selectedDeliveryOption?.label} ({selectedDeliveryOption?.time})</p>
                   </div>
                   <div>
-                    <p className="text-gray-600">Méthode de paiement</p>
-                    <p className="font-medium">{selectedPaymentMethod?.label}</p>
+                    <p className="text-gray-400">Méthode de paiement</p>
+                    <p className="font-medium text-white">{selectedPaymentMethod?.label}</p>
                   </div>
                   <div>
-                    <p className="text-gray-600">Méthode de réception</p>
-                    <p className="font-medium">{receiveMethods.find(m => m.value === recipientMethod)?.label}</p>
+                    <p className="text-gray-400">Méthode de réception</p>
+                    <p className="font-medium text-white">{receiveMethods.find(m => m.value === recipientMethod)?.label}</p>
                   </div>
                 </div>
               </div>
 
               {/* Recipient Details */}
               <div className="space-y-3">
-                <h4 className="font-semibold">Informations du destinataire</h4>
-                <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-white">Informations du destinataire</h4>
+                <div className="bg-terex-gray p-4 rounded-lg border border-terex-gray-light">
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <p className="text-gray-600">Nom complet</p>
-                      <p className="font-medium">{recipientName}</p>
+                      <p className="text-gray-400">Nom complet</p>
+                      <p className="font-medium text-white">{recipientName}</p>
                     </div>
                     <div>
-                      <p className="text-gray-600">
+                      <p className="text-gray-400">
                         {recipientMethod === 'bank' ? 'Numéro de compte' : 'Téléphone'}
                       </p>
-                      <p className="font-medium">{recipientPhone}</p>
+                      <p className="font-medium text-white">{recipientPhone}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Total Cost */}
-              <div className="bg-terex-accent/10 p-4 rounded-lg">
+              <div className="bg-terex-accent/20 p-4 rounded-lg border border-terex-accent/30">
                 <div className="flex justify-between items-center">
-                  <span className="text-lg font-medium">Total à payer</span>
+                  <span className="text-lg font-medium text-white">Total à payer</span>
                   <span className="text-2xl font-bold text-terex-accent">{totalToSend.toFixed(2)} CAD</span>
                 </div>
               </div>
@@ -462,13 +463,13 @@ export function InternationalTransfer() {
               <Button 
                 variant="outline" 
                 onClick={() => setShowConfirmation(false)}
-                className="flex-1"
+                className="flex-1 border-terex-gray-light text-white hover:bg-terex-gray"
               >
                 Modifier
               </Button>
               <Button 
                 onClick={handleConfirm}
-                className="flex-1 gradient-button text-white"
+                className="flex-1 bg-terex-accent hover:bg-terex-accent-light text-white"
               >
                 Confirmer et payer
               </Button>
