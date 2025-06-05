@@ -11,8 +11,9 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useUserRole } from '@/hooks/useUserRole';
 import { useState } from 'react';
 
 interface AppSidebarProps {
@@ -50,71 +51,99 @@ const menuItems = [
   { id: 'faq', label: 'FAQ', icon: HelpCircle },
 ];
 
-const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemClick }: AppSidebarProps & { onItemClick?: () => void }) => (
-  <>
-    <SidebarHeader className="p-6">
-      <div className="flex items-center space-x-1">
-        <img 
-          src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-          alt="Terex Logo" 
-          className="w-10 h-10"
-        />
-        <h1 className="text-2xl font-bold text-white">
-          <span className="text-terex-accent">Terex</span>
-        </h1>
-      </div>
-    </SidebarHeader>
-    <SidebarContent>
-      <SidebarGroup>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            {menuItems.map((item) => {
-              const IconComponent = item.icon;
-              return (
-                <SidebarMenuItem key={item.id}>
+const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemClick }: AppSidebarProps & { onItemClick?: () => void }) => {
+  const { isKYCReviewer } = useUserRole();
+
+  return (
+    <>
+      <SidebarHeader className="p-6">
+        <div className="flex items-center space-x-1">
+          <img 
+            src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+            alt="Terex Logo" 
+            className="w-10 h-10"
+          />
+          <h1 className="text-2xl font-bold text-white">
+            <span className="text-terex-accent">Terex</span>
+          </h1>
+        </div>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {menuItems.map((item) => {
+                const IconComponent = item.icon;
+                return (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton 
+                      onClick={() => {
+                        setActiveSection(item.id);
+                        onItemClick?.();
+                      }}
+                      className={`w-full justify-start text-left p-3 rounded-lg transition-colors ${
+                        activeSection === item.id
+                          ? 'bg-terex-accent text-white'
+                          : 'text-gray-300 hover:bg-terex-gray hover:text-white'
+                      }`}
+                    >
+                      {item.isCustomIcon ? (
+                        <IconComponent 
+                          className="mr-3 h-5 w-5"
+                          isActive={activeSection === item.id}
+                        />
+                      ) : (
+                        <IconComponent 
+                          className={`mr-3 h-5 w-5 ${
+                            activeSection === item.id ? 'text-white' : ''
+                          }`} 
+                        />
+                      )}
+                      <span>{item.label}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+              
+              {/* Administration KYC - visible seulement aux KYC reviewers et admins */}
+              {isKYCReviewer() && (
+                <SidebarMenuItem>
                   <SidebarMenuButton 
                     onClick={() => {
-                      setActiveSection(item.id);
+                      setActiveSection('kyc-admin');
                       onItemClick?.();
                     }}
                     className={`w-full justify-start text-left p-3 rounded-lg transition-colors ${
-                      activeSection === item.id
+                      activeSection === 'kyc-admin'
                         ? 'bg-terex-accent text-white'
                         : 'text-gray-300 hover:bg-terex-gray hover:text-white'
                     }`}
                   >
-                    {item.isCustomIcon ? (
-                      <IconComponent 
-                        className="mr-3 h-5 w-5"
-                        isActive={activeSection === item.id}
-                      />
-                    ) : (
-                      <IconComponent 
-                        className={`mr-3 h-5 w-5 ${
-                          activeSection === item.id ? 'text-white' : ''
-                        }`} 
-                      />
-                    )}
-                    <span>{item.label}</span>
+                    <Shield 
+                      className={`mr-3 h-5 w-5 ${
+                        activeSection === 'kyc-admin' ? 'text-white' : ''
+                      }`} 
+                    />
+                    <span>Administration KYC</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              );
-            })}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
-    </SidebarContent>
-    <div className="p-4 border-t border-terex-gray">
-      <Button 
-        onClick={onLogout}
-        variant="outline" 
-        className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
-      >
-        Déconnexion
-      </Button>
-    </div>
-  </>
-);
+              )}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <div className="p-4 border-t border-terex-gray">
+        <Button 
+          onClick={onLogout}
+          variant="outline" 
+          className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
+        >
+          Déconnexion
+        </Button>
+      </div>
+    </>
+  );
+};
 
 export function AppSidebar({ activeSection, setActiveSection, onLogout }: AppSidebarProps) {
   const isMobile = useIsMobile();
