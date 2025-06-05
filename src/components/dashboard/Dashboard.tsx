@@ -24,10 +24,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
   const handleLogout = async () => {
     try {
-      console.log('Dashboard: Starting logout...');
+      console.log('Dashboard: Starting logout...')
       await signOut();
+      console.log('Dashboard: Logout completed')
     } catch (error) {
-      console.error('Dashboard: Logout error:', error);
+      console.error('Dashboard: Logout error:', error)
     }
   };
 

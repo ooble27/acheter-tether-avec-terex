@@ -3,17 +3,11 @@ import { LoginForm } from '@/components/auth/LoginForm';
 import { Dashboard } from '@/components/dashboard/Dashboard';
 import { EmailVerificationPending } from '@/components/auth/EmailVerificationPending';
 import { useAuth } from '@/contexts/AuthContext';
-import { useEffect } from 'react';
 
 const Index = () => {
   const { user, session, loading } = useAuth();
 
-  // Prevent any automatic redirects when user is null
-  useEffect(() => {
-    if (!loading && !user && !session) {
-      console.log('User not authenticated, staying on login page')
-    }
-  }, [user, session, loading])
+  console.log('Index: Auth state:', { user: !!user, session: !!session, loading })
 
   if (loading) {
     return (
@@ -25,6 +19,7 @@ const Index = () => {
 
   // User is logged in but email not verified
   if (user && !user.email_confirmed_at) {
+    console.log('Index: User logged in but email not verified')
     return (
       <div className="min-h-screen bg-terex-dark">
         <EmailVerificationPending user={user} />
@@ -34,6 +29,7 @@ const Index = () => {
 
   // User is logged in and email is verified
   if (user && session) {
+    console.log('Index: User fully authenticated, showing dashboard')
     const userData = {
       email: user.email || '',
       name: user.user_metadata?.name || user.email?.split('@')[0] || 'Utilisateur'
@@ -43,6 +39,7 @@ const Index = () => {
   }
 
   // User is not logged in - show login form
+  console.log('Index: User not authenticated, showing login form')
   return (
     <div className="min-h-screen bg-terex-dark">
       <LoginForm />
