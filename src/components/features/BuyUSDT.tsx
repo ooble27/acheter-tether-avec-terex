@@ -24,9 +24,16 @@ export function BuyUSDT() {
 
   const paymentMethods = [
     { id: 'card', name: 'Carte bancaire', icon: '💳', fee: '0%', time: 'Instantané' },
-    { id: 'transfer', name: 'Virement bancaire', icon: '🏦', fee: '0%', time: '1-3 jours' },
     { id: 'mobile', name: 'Mobile Money', icon: '📱', fee: '0%', time: 'Instantané' }
   ];
+
+  const getQuickAmounts = () => {
+    if (currency === 'CFA') {
+      return ['50000', '100000', '500000', '1000000'];
+    } else {
+      return ['50', '100', '500', '1000'];
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark p-4">
@@ -51,7 +58,7 @@ export function BuyUSDT() {
               </CardHeader>
               <CardContent className="p-6">
                 <Tabs value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-6">
-                  <TabsList className="grid w-full grid-cols-3 bg-terex-gray">
+                  <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
                     {paymentMethods.map((method) => (
                       <TabsTrigger 
                         key={method.id} 
@@ -79,15 +86,21 @@ export function BuyUSDT() {
                                 onChange={(e) => setAmount(e.target.value)}
                                 className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
                               />
-                              <Select value={currency} onValueChange={setCurrency}>
-                                <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="CFA">CFA</SelectItem>
-                                  <SelectItem value="CAD">CAD</SelectItem>
-                                </SelectContent>
-                              </Select>
+                              {method.id === 'mobile' ? (
+                                <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
+                                  <span className="text-terex-accent font-medium">CFA</span>
+                                </div>
+                              ) : (
+                                <Select value={currency} onValueChange={setCurrency}>
+                                  <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="CFA">CFA</SelectItem>
+                                    <SelectItem value="CAD">CAD</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              )}
                             </div>
                           </div>
                           
@@ -119,7 +132,7 @@ export function BuyUSDT() {
                         <div className="bg-terex-gray rounded-lg p-3">
                           <div className="flex justify-between text-sm">
                             <span className="text-gray-400">Taux de change</span>
-                            <span className="text-white">1 USDT = {exchangeRates[currency as keyof typeof exchangeRates]} {currency}</span>
+                            <span className="text-white">1 USDT = {method.id === 'mobile' ? '615 CFA' : `${exchangeRates[currency as keyof typeof exchangeRates]} ${currency}`}</span>
                           </div>
                           <div className="flex justify-between text-sm mt-1">
                             <span className="text-gray-400">Frais</span>
@@ -242,7 +255,7 @@ export function BuyUSDT() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-2">
-                  {['50', '100', '500', '1000'].map((value) => (
+                  {getQuickAmounts().map((value) => (
                     <Button
                       key={value}
                       variant="outline"
@@ -250,7 +263,7 @@ export function BuyUSDT() {
                       onClick={() => setAmount(value)}
                       className="border-terex-gray text-gray-300 hover:bg-terex-gray"
                     >
-                      {value} {currency}
+                      {value} {paymentMethod === 'mobile' ? 'CFA' : currency}
                     </Button>
                   ))}
                 </div>
