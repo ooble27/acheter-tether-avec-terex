@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -34,14 +35,12 @@ export function SellUSDT() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark p-4">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">Vendre USDT</h1>
           <p className="text-gray-400">Convertissez vos USDT en francs CFA instantanément</p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
-          {/* Main Trading Interface */}
           <div className="lg:col-span-2">
             <Card className="bg-terex-darker border-terex-gray shadow-2xl">
               <CardHeader className="border-b border-terex-gray">
@@ -53,7 +52,6 @@ export function SellUSDT() {
                 </div>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
-                {/* Amount Input Section */}
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -106,12 +104,11 @@ export function SellUSDT() {
                     </div>
                     <div className="flex justify-between text-sm mt-1">
                       <span className="text-gray-400">Temps de traitement</span>
-                      <span className="text-terex-accent">< 5 min</span>
+                      <span className="text-terex-accent">&lt; 5 min</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Network Selection */}
                 <div className="space-y-2">
                   <Label className="text-white text-sm font-medium">Réseau d'envoi</Label>
                   <Select value={network} onValueChange={setNetwork}>
@@ -133,7 +130,6 @@ export function SellUSDT() {
                   </Select>
                 </div>
 
-                {/* Crypto Receive Address */}
                 <div className="space-y-2">
                   <Label className="text-white text-sm font-medium">Adresse de réception (fournie par Terex)</Label>
                   <div className="relative">
@@ -155,7 +151,6 @@ export function SellUSDT() {
                   <p className="text-xs text-gray-400">Envoyez vos USDT à cette adresse via le réseau {network}</p>
                 </div>
 
-                {/* Payment Service Selection */}
                 <div className="space-y-2">
                   <Label className="text-white text-sm font-medium">Où voulez-vous recevoir l'argent ?</Label>
                   <Select value={paymentService} onValueChange={setPaymentService}>
@@ -170,7 +165,6 @@ export function SellUSDT() {
                   </Select>
                 </div>
 
-                {/* Phone Number for Payment */}
                 {paymentService && (
                   <div className="space-y-2">
                     <Label className="text-white text-sm font-medium">Numéro de réception</Label>
@@ -182,7 +176,6 @@ export function SellUSDT() {
                   </div>
                 )}
 
-                {/* Sell Button */}
                 <Button 
                   size="lg"
                   className="w-full gradient-button text-white font-semibold h-12 text-lg"
@@ -194,9 +187,7 @@ export function SellUSDT() {
             </Card>
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-6">
-            {/* Market Trends */}
             <Card className="bg-terex-darker border-terex-gray">
               <CardHeader>
                 <CardTitle className="text-white text-lg flex items-center">
@@ -221,7 +212,6 @@ export function SellUSDT() {
               </CardContent>
             </Card>
 
-            {/* Quick Sell Amounts */}
             <Card className="bg-terex-darker border-terex-gray">
               <CardHeader>
                 <CardTitle className="text-white text-lg">Montants rapides</CardTitle>
@@ -243,7 +233,6 @@ export function SellUSDT() {
               </CardContent>
             </Card>
 
-            {/* Security Info */}
             <Card className="bg-terex-darker border-terex-gray">
               <CardHeader>
                 <CardTitle className="text-white text-lg flex items-center">
