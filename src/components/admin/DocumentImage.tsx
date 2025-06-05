@@ -24,11 +24,21 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
         return path;
       }
 
-      // Sinon, construire l'URL publique depuis le bucket
+      // Nettoyer le chemin pour enlever les préfixes potentiels
+      let cleanPath = path;
+      if (path.startsWith('kyc-documents/')) {
+        cleanPath = path.substring('kyc-documents/'.length);
+      }
+      if (path.startsWith('/kyc-documents/')) {
+        cleanPath = path.substring('/kyc-documents/'.length);
+      }
+
+      // Construire l'URL publique depuis le bucket
       const { data } = supabase.storage
         .from('kyc-documents')
-        .getPublicUrl(path);
+        .getPublicUrl(cleanPath);
       
+      console.log('URL construite pour le document:', data.publicUrl);
       return data.publicUrl;
     } catch (error) {
       console.error('Erreur lors de la construction de l\'URL:', error);
@@ -43,23 +53,27 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
     setError(false);
     
     try {
+      console.log('Tentative de chargement du document:', url);
       const finalUrl = await getImageUrl(url);
       
       if (finalUrl) {
         // Tester l'accessibilité de l'image
         const img = new Image();
         img.onload = () => {
+          console.log('Image chargée avec succès');
           setImageUrl(finalUrl);
           setShowModal(true);
           setLoading(false);
         };
-        img.onerror = () => {
-          console.error('Image non accessible:', finalUrl);
+        img.onerror = (e) => {
+          console.error('Erreur de chargement de l\'image:', e);
+          console.error('URL testée:', finalUrl);
           setError(true);
           setLoading(false);
         };
         img.src = finalUrl;
       } else {
+        console.error('Impossible de construire l\'URL');
         setError(true);
         setLoading(false);
       }
@@ -129,9 +143,14 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
           </Button>
           
           {error && (
-            <p className="text-red-400 text-xs text-center">
-              Erreur lors du chargement du document
-            </p>
+            <div className="text-center">
+              <p className="text-red-400 text-xs">
+                Erreur lors du chargement du document
+              </p>
+              <p className="text-gray-500 text-xs mt-1">
+                Chemin: {url}
+              </p>
+            </div>
           )}
         </div>
       </div>
@@ -147,7 +166,7 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
                   alt={alt}
                   className="max-w-full max-h-[70vh] object-contain rounded-lg"
                   onError={(e) => {
-                    console.error('Erreur de chargement de l\'image:', e);
+                    console.error('Erreur de rendu de l\'image dans la modal:', e);
                     setError(true);
                   }}
                 />
