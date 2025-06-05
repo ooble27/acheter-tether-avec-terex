@@ -11,6 +11,7 @@ import { KYCAlert } from './KYCAlert';
 import { KYCPage } from './KYCPage';
 import { TransactionHistory } from './TransactionHistory';
 import { Share2, MessageCircle } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@radix-ui/react-dialog';
 
 interface ProfileProps {
   user: { email: string; name: string } | null;
@@ -20,6 +21,7 @@ interface ProfileProps {
 export function Profile({ user, onLogout }: ProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [showKYC, setShowKYC] = useState(false);
+  const [showShareOptions, setShowShareOptions] = useState(false);
   const { toast } = useToast();
   const { profile, loading, updateProfile } = useUserProfile();
   const { transactions } = useTransactions();
@@ -84,81 +86,46 @@ export function Profile({ user, onLogout }: ProfileProps) {
   };
 
   const handleShareTerex = () => {
+    setShowShareOptions(true);
+  };
+
+  const shareToSocialMedia = (platform: string) => {
     const terexUrl = 'https://terex.com';
     const shareText = 'Découvrez Terex - La plateforme de change et de transfert d\'argent';
     
-    if (navigator.share) {
-      navigator.share({
-        title: 'Terex',
-        text: shareText,
-        url: terexUrl,
-      }).catch((error) => {
-        console.error('Erreur lors du partage:', error);
-        // Fallback en cas d'erreur
-        fallbackShare();
-      });
-    } else {
-      // Fallback pour les navigateurs qui ne supportent pas l'API Web Share
-      fallbackShare();
-    }
-  };
-
-  const fallbackShare = () => {
-    const terexUrl = 'https://terex.com';
-    const shareText = 'Découvrez Terex - La plateforme de change et de transfert d\'argent';
-    const fullText = `${shareText} - ${terexUrl}`;
+    let shareUrl = '';
     
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(fullText).then(() => {
-        toast({
-          title: "Lien copié !",
-          description: "Le lien Terex a été copié dans le presse-papiers",
-          className: "bg-green-600 text-white border-green-600",
+    switch (platform) {
+      case 'whatsapp':
+        shareUrl = `https://wa.me/?text=${encodeURIComponent(`${shareText} ${terexUrl}`)}`;
+        break;
+      case 'facebook':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(terexUrl)}&quote=${encodeURIComponent(shareText)}`;
+        break;
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(terexUrl)}`;
+        break;
+      case 'telegram':
+        shareUrl = `https://t.me/share/url?url=${encodeURIComponent(terexUrl)}&text=${encodeURIComponent(shareText)}`;
+        break;
+      case 'linkedin':
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(terexUrl)}`;
+        break;
+      case 'copy':
+        navigator.clipboard.writeText(`${shareText} - ${terexUrl}`).then(() => {
+          toast({
+            title: "Lien copié !",
+            description: "Le lien Terex a été copié dans le presse-papiers",
+            className: "bg-green-600 text-white border-green-600",
+          });
         });
-      }).catch(() => {
-        // Si le clipboard ne marche pas non plus, essayer une autre méthode
-        fallbackCopy(fullText);
-      });
-    } else {
-      fallbackCopy(fullText);
+        setShowShareOptions(false);
+        return;
     }
-  };
-
-  const fallbackCopy = (text: string) => {
-    // Méthode alternative pour copier le texte
-    try {
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.left = '-999999px';
-      textArea.style.top = '-999999px';
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      
-      const successful = document.execCommand('copy');
-      document.body.removeChild(textArea);
-      
-      if (successful) {
-        toast({
-          title: "Lien copié !",
-          description: "Le lien Terex a été copié dans le presse-papiers",
-          className: "bg-green-600 text-white border-green-600",
-        });
-      } else {
-        toast({
-          title: "Partage Terex",
-          description: "Visitez https://terex.com pour découvrir notre plateforme",
-          className: "bg-terex-accent text-white border-terex-accent",
-        });
-      }
-    } catch (error) {
-      console.error('Erreur lors de la copie:', error);
-      toast({
-        title: "Partage Terex",
-        description: "Visitez https://terex.com pour découvrir notre plateforme",
-        className: "bg-terex-accent text-white border-terex-accent",
-      });
+    
+    if (shareUrl) {
+      window.open(shareUrl, '_blank', 'width=600,height=400');
+      setShowShareOptions(false);
     }
   };
 
@@ -333,6 +300,54 @@ export function Profile({ user, onLogout }: ProfileProps) {
       </div>
 
       <TransactionHistory transactions={transactions} />
+
+      {/* Dialog de partage */}
+      <Dialog open={showShareOptions} onOpenChange={setShowShareOptions}>
+        <DialogContent className="bg-terex-card border-terex-border">
+          <DialogHeader>
+            <DialogTitle className="text-white">Partager Terex</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              onClick={() => shareToSocialMedia('whatsapp')}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              WhatsApp
+            </Button>
+            <Button
+              onClick={() => shareToSocialMedia('facebook')}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Facebook
+            </Button>
+            <Button
+              onClick={() => shareToSocialMedia('twitter')}
+              className="bg-sky-500 hover:bg-sky-600 text-white"
+            >
+              Twitter
+            </Button>
+            <Button
+              onClick={() => shareToSocialMedia('telegram')}
+              className="bg-blue-500 hover:bg-blue-600 text-white"
+            >
+              Telegram
+            </Button>
+            <Button
+              onClick={() => shareToSocialMedia('linkedin')}
+              className="bg-blue-700 hover:bg-blue-800 text-white"
+            >
+              LinkedIn
+            </Button>
+            <Button
+              onClick={() => shareToSocialMedia('copy')}
+              variant="outline"
+              className="border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
+            >
+              Copier le lien
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
