@@ -17,7 +17,7 @@ export interface KYCVerificationWithHistory {
   postal_code?: string;
   country?: string;
   phone_number?: string;
-  identity_document_type?: 'passport' | 'national_id' | 'drivers_license';
+  identity_document_type?: 'passport' | 'national_id' | 'drivers_license' | null;
   identity_document_number?: string;
   identity_document_front_url?: string;
   identity_document_back_url?: string;
@@ -68,13 +68,13 @@ export const useKYCAdmin = () => {
         return;
       }
 
-      // Pour l'instant, on ne récupère pas l'historique car la table n'est pas encore dans les types
-      // Une fois que Supabase aura regénéré les types, nous pourrons ajouter ceci :
+      // Mapper les données avec les types corrects
       const verificationsWithHistory = (verificationsData || []).map((verification) => ({
         ...verification,
         status: verification.status as 'pending' | 'submitted' | 'under_review' | 'approved' | 'rejected',
+        identity_document_type: verification.identity_document_type as 'passport' | 'national_id' | 'drivers_license' | null,
         history: [] // Temporairement vide jusqu'à ce que les types soient mis à jour
-      }));
+      })) as KYCVerificationWithHistory[];
 
       setVerifications(verificationsWithHistory);
 
