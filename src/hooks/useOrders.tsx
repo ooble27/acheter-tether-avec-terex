@@ -1,8 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useEmailNotifications } from '@/hooks/useEmailNotifications';
 import type { Database } from '@/integrations/supabase/types';
 
 type Order = Database['public']['Tables']['orders']['Row'];
@@ -15,6 +15,7 @@ export const useOrders = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const { toast } = useToast();
+  const { sendEmailNotification } = useEmailNotifications();
 
   const fetchOrders = async () => {
     if (!user) return;
@@ -70,6 +71,14 @@ export const useOrders = () => {
         description: "Votre commande a été créée avec succès",
       });
 
+      // Envoyer l'email de confirmation automatiquement
+      await sendEmailNotification(
+        'order_confirmation',
+        data.type,
+        data,
+        data.id
+      );
+
       await fetchOrders();
       return data;
     } catch (error) {
@@ -103,6 +112,23 @@ export const useOrders = () => {
       if (error) {
         console.error('Erreur lors de la mise à jour:', error);
         throw error;
+      }
+
+      // Récupérer les données de la commande pour l'email
+      const { data: orderDetails } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', orderId)
+        .single();
+
+      if (orderDetails) {
+        // Envoyer un email de mise à jour de statut
+        await sendEmailNotification(
+          'status_update',
+          orderDetails.type,
+          { ...orderDetails, status },
+          orderId
+        );
       }
 
       toast({
