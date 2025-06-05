@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
@@ -18,6 +18,38 @@ export function LoginForm() {
   
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
+
+  const checkIfUserExists = async (email: string): Promise<boolean> => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', (await supabase.auth.getUser()).data.user?.id || '')
+        .single();
+      
+      if (error && error.code !== 'PGRST116') {
+        console.log('Erreur lors de la vérification:', error);
+        return false;
+      }
+      
+      // Essayer de se connecter avec cet email et un mot de passe bidon
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password: 'dummy-password-check-123'
+      });
+      
+      // Si l'erreur est "Invalid login credentials", l'utilisateur n'existe pas
+      // Si l'erreur est autre chose, l'utilisateur existe probablement
+      if (signInError?.message === 'Invalid login credentials') {
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.log('Erreur lors de la vérification de l\'utilisateur:', error);
+      return false;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent, isLogin: boolean) => {
     e.preventDefault();
@@ -38,6 +70,19 @@ export function LoginForm() {
       } else {
         console.log('Tentative d\'inscription pour:', email);
         
+        // Vérifier si l'utilisateur existe déjà
+        const userExists = await checkIfUserExists(email);
+        
+        if (userExists) {
+          toast({
+            title: "Erreur d'inscription",
+            description: "Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.",
+            variant: "destructive",
+          });
+          setIsLoading(false);
+          return;
+        }
+        
         const { error } = await signUp(email, password, name);
         
         if (error) {
@@ -45,19 +90,7 @@ export function LoginForm() {
           
           let errorMessage = error.message;
           
-          // Gestion des erreurs spécifiques de Supabase
-          if (error.message.includes("User already registered") || 
-              error.message.includes("already registered") ||
-              error.message.includes("already exists") ||
-              error.message.includes("Email already in use") ||
-              error.message.includes("email already taken") ||
-              error.message.includes("duplicate") ||
-              error.code === "email_address_invalid" ||
-              error.code === "user_already_exists" ||
-              error.code === "signup_disabled" ||
-              error.message.toLowerCase().includes("email") && error.message.toLowerCase().includes("already")) {
-            errorMessage = "Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.";
-          } else if (error.message.includes("Password should be at least")) {
+          if (error.message.includes("Password should be at least")) {
             errorMessage = "Le mot de passe doit contenir au moins 6 caractères.";
           } else if (error.message.includes("Invalid email")) {
             errorMessage = "Format d'email invalide.";
