@@ -114,25 +114,47 @@ export const useOrders = () => {
         throw error;
       }
 
-      // Récupérer les données de la commande pour l'email
+      // Récupérer les données de la commande ET le profil du client pour obtenir son email
       const { data: orderDetails } = await supabase
         .from('orders')
-        .select('*')
+        .select(`
+          *,
+          profiles!orders_user_id_fkey(*)
+        `)
         .eq('id', orderId)
         .single();
 
       if (orderDetails) {
-        // Envoyer un email de mise à jour de statut
-        await sendEmailNotification(
-          'status_update',
-          orderDetails.type,
-          { ...orderDetails, status },
-          orderId
-        );
+        // Récupérer l'email du client qui a créé la commande
+        const { data: userData } = await supabase.auth.admin.getUserById(orderDetails.user_id);
+        const clientEmail = userData.user?.email;
 
-        // Si le statut passe à "processing" avec payment_status "confirmed", envoyer email de paiement confirmé
-        if (status === 'processing' && paymentStatus === 'confirmed') {
-          await sendPaymentConfirmation({ ...orderDetails, status }, orderId);
+        if (clientEmail) {
+          // Envoyer un email de mise à jour de statut au CLIENT
+          await supabase.functions.invoke('send-email-notification', {
+            body: {
+              userId: orderDetails.user_id,
+              orderId: orderId,
+              emailAddress: clientEmail,
+              emailType: 'status_update',
+              transactionType: orderDetails.type,
+              orderData: { ...orderDetails, status }
+            },
+          });
+
+          // Si le statut passe à "processing" avec payment_status "confirmed", envoyer email de paiement confirmé
+          if (status === 'processing' && paymentStatus === 'confirmed') {
+            await supabase.functions.invoke('send-email-notification', {
+              body: {
+                userId: orderDetails.user_id,
+                orderId: orderId,
+                emailAddress: clientEmail,
+                emailType: 'payment_confirmed',
+                transactionType: orderDetails.type,
+                orderData: { ...orderDetails, status }
+              },
+            });
+          }
         }
       }
 

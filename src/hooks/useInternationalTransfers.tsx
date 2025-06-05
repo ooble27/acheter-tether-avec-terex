@@ -115,20 +115,36 @@ export const useInternationalTransfers = () => {
         .single();
 
       if (transferDetails) {
-        // Envoyer un email de mise à jour de statut
-        await sendTransferNotification(
-          'status_update',
-          { ...transferDetails, status },
-          transferId
-        );
+        // Récupérer l'email du client qui a créé le transfert
+        const { data: userData } = await supabase.auth.admin.getUserById(transferDetails.user_id);
+        const clientEmail = userData.user?.email;
 
-        // Si le statut passe à "processing", envoyer email de paiement confirmé
-        if (status === 'processing') {
-          await sendTransferNotification(
-            'payment_confirmed',
-            { ...transferDetails, status },
-            transferId
-          );
+        if (clientEmail) {
+          // Envoyer un email de mise à jour de statut au CLIENT
+          await supabase.functions.invoke('send-email-notification', {
+            body: {
+              userId: transferDetails.user_id,
+              orderId: transferId,
+              emailAddress: clientEmail,
+              emailType: 'status_update',
+              transactionType: 'transfer',
+              orderData: { ...transferDetails, status }
+            },
+          });
+
+          // Si le statut passe à "processing", envoyer email de paiement confirmé
+          if (status === 'processing') {
+            await supabase.functions.invoke('send-email-notification', {
+              body: {
+                userId: transferDetails.user_id,
+                orderId: transferId,
+                emailAddress: clientEmail,
+                emailType: 'payment_confirmed',
+                transactionType: 'transfer',
+                orderData: { ...transferDetails, status }
+              },
+            });
+          }
         }
       }
 
