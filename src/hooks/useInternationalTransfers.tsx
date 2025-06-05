@@ -115,43 +115,40 @@ export const useInternationalTransfers = () => {
         .single();
 
       if (transferDetails) {
-        // Récupérer directement l'email du client via une requête auth
-        const { data: authData, error: usersError } = await supabase.auth.admin.listUsers();
+        console.log('Envoi des notifications email pour le transfert:', transferId, 'nouveau statut:', status);
         
-        if (!usersError && authData?.users) {
-          const clientUser = authData.users.find((u: any) => u.id === transferDetails.user_id);
-          const clientEmail = clientUser?.email;
+        // Envoyer directement les emails via la edge function en utilisant l'ID utilisateur
+        // La edge function se chargera de récupérer l'email côté serveur
+        try {
+          // Email de mise à jour de statut
+          await supabase.functions.invoke('send-email-notification', {
+            body: {
+              userId: transferDetails.user_id,
+              orderId: null, // Pas d'orderId pour les transferts
+              emailAddress: null, // Sera récupéré côté serveur
+              emailType: 'status_update',
+              transactionType: 'transfer',
+              orderData: { ...transferDetails, status }
+            },
+          });
 
-          if (clientEmail) {
-            console.log('Envoi email de statut transfert à:', clientEmail);
-            
-            // Envoyer un email de mise à jour de statut au CLIENT
-            // Ne pas passer order_id pour les transferts pour éviter les erreurs de foreign key
+          // Si le statut passe à "processing", envoyer email de paiement confirmé
+          if (status === 'processing') {
             await supabase.functions.invoke('send-email-notification', {
               body: {
                 userId: transferDetails.user_id,
                 orderId: null, // Pas d'orderId pour les transferts
-                emailAddress: clientEmail,
-                emailType: 'status_update',
+                emailAddress: null, // Sera récupéré côté serveur
+                emailType: 'payment_confirmed',
                 transactionType: 'transfer',
                 orderData: { ...transferDetails, status }
               },
             });
-
-            // Si le statut passe à "processing", envoyer email de paiement confirmé
-            if (status === 'processing') {
-              await supabase.functions.invoke('send-email-notification', {
-                body: {
-                  userId: transferDetails.user_id,
-                  orderId: null, // Pas d'orderId pour les transferts
-                  emailAddress: clientEmail,
-                  emailType: 'payment_confirmed',
-                  transactionType: 'transfer',
-                  orderData: { ...transferDetails, status }
-                },
-              });
-            }
           }
+
+          console.log('Emails de notification de transfert envoyés avec succès');
+        } catch (emailError) {
+          console.error('Erreur lors de l\'envoi des emails de transfert:', emailError);
         }
       }
 

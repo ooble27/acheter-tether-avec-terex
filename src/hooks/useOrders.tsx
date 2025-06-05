@@ -114,53 +114,48 @@ export const useOrders = () => {
         throw error;
       }
 
-      // Récupérer les données de la commande avec le profil du client
+      // Récupérer les données de la commande pour l'email
       const { data: orderDetails } = await supabase
         .from('orders')
-        .select(`
-          *,
-          profiles!orders_user_id_fkey(*)
-        `)
+        .select('*')
         .eq('id', orderId)
         .single();
 
       if (orderDetails) {
-        // Récupérer directement l'email du client via une requête auth
-        const { data: authData, error: usersError } = await supabase.auth.admin.listUsers();
+        console.log('Envoi des notifications email pour la commande:', orderId, 'nouveau statut:', status);
         
-        if (!usersError && authData?.users) {
-          const clientUser = authData.users.find((u: any) => u.id === orderDetails.user_id);
-          const clientEmail = clientUser?.email;
+        // Envoyer directement les emails via la edge function en utilisant l'ID utilisateur
+        // La edge function se chargera de récupérer l'email côté serveur
+        try {
+          // Email de mise à jour de statut
+          await supabase.functions.invoke('send-email-notification', {
+            body: {
+              userId: orderDetails.user_id,
+              orderId: orderId,
+              emailAddress: null, // Sera récupéré côté serveur
+              emailType: 'status_update',
+              transactionType: orderDetails.type,
+              orderData: { ...orderDetails, status }
+            },
+          });
 
-          if (clientEmail) {
-            console.log('Envoi email de statut à:', clientEmail);
-            
-            // Envoyer un email de mise à jour de statut au CLIENT
+          // Si le statut passe à "processing" avec payment_status "confirmed", envoyer email de paiement confirmé
+          if (status === 'processing' && paymentStatus === 'confirmed') {
             await supabase.functions.invoke('send-email-notification', {
               body: {
                 userId: orderDetails.user_id,
                 orderId: orderId,
-                emailAddress: clientEmail,
-                emailType: 'status_update',
+                emailAddress: null, // Sera récupéré côté serveur
+                emailType: 'payment_confirmed',
                 transactionType: orderDetails.type,
                 orderData: { ...orderDetails, status }
               },
             });
-
-            // Si le statut passe à "processing" avec payment_status "confirmed", envoyer email de paiement confirmé
-            if (status === 'processing' && paymentStatus === 'confirmed') {
-              await supabase.functions.invoke('send-email-notification', {
-                body: {
-                  userId: orderDetails.user_id,
-                  orderId: orderId,
-                  emailAddress: clientEmail,
-                  emailType: 'payment_confirmed',
-                  transactionType: orderDetails.type,
-                  orderData: { ...orderDetails, status }
-                },
-              });
-            }
           }
+
+          console.log('Emails de notification envoyés avec succès');
+        } catch (emailError) {
+          console.error('Erreur lors de l\'envoi des emails:', emailError);
         }
       }
 

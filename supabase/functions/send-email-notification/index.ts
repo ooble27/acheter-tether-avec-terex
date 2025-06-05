@@ -12,7 +12,7 @@ const corsHeaders = {
 interface EmailNotificationRequest {
   userId: string;
   orderId?: string;
-  emailAddress: string;
+  emailAddress?: string | null;
   emailType: string;
   transactionType: string;
   orderData?: any;
@@ -443,13 +443,37 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const { userId, orderId, emailAddress, emailType, transactionType, orderData }: EmailNotificationRequest = await req.json();
 
+    console.log('Début de l\'envoi d\'email:', { userId, emailType, transactionType, emailAddress });
+
+    // Si l'email n'est pas fourni, le récupérer via l'API auth admin
+    let clientEmail = emailAddress;
+    if (!clientEmail) {
+      console.log('Récupération de l\'email pour l\'utilisateur:', userId);
+      
+      // Utiliser l'API auth admin pour récupérer l'email
+      const { data: authData, error: usersError } = await supabase.auth.admin.listUsers();
+      
+      if (!usersError && authData?.users) {
+        const clientUser = authData.users.find((u: any) => u.id === userId);
+        clientEmail = clientUser?.email;
+        console.log('Email trouvé:', clientEmail);
+      } else {
+        console.error('Erreur lors de la récupération des utilisateurs:', usersError);
+        throw new Error('Impossible de récupérer l\'email de l\'utilisateur');
+      }
+    }
+
+    if (!clientEmail) {
+      throw new Error('Aucune adresse email trouvée pour l\'utilisateur');
+    }
+
     // Créer l'enregistrement de notification
     const { data: notification, error: notificationError } = await supabase
       .from('email_notifications')
       .insert({
         user_id: userId,
         order_id: orderId,
-        email_address: emailAddress,
+        email_address: clientEmail,
         email_type: emailType,
         transaction_type: transactionType,
         subject: generateEmailContent(emailType, transactionType, orderData)?.subject || 'Notification Terex',
@@ -463,6 +487,8 @@ const handler = async (req: Request): Promise<Response> => {
       throw notificationError;
     }
 
+    console.log('Notification créée:', notification.id);
+
     // Générer le contenu de l'email
     const emailContent = generateEmailContent(emailType, transactionType, orderData);
     
@@ -470,10 +496,12 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('Type d\'email non supporté');
     }
 
+    console.log('Envoi de l\'email à:', clientEmail, 'Sujet:', emailContent.subject);
+
     // Envoyer l'email avec Resend
     const emailResponse = await resend.emails.send({
       from: "Terex <noreply@terangaexchange.com>",
-      to: [emailAddress],
+      to: [clientEmail],
       subject: emailContent.subject,
       html: emailContent.html,
     });
@@ -492,7 +520,8 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(JSON.stringify({ 
       success: true, 
       notificationId: notification.id,
-      emailId: emailResponse.data?.id 
+      emailId: emailResponse.data?.id,
+      emailSentTo: clientEmail
     }), {
       status: 200,
       headers: {
