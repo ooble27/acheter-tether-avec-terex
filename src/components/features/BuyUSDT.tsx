@@ -36,37 +36,38 @@ export function BuyUSDT() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark p-4">
+    <div className="min-h-screen bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark p-2 md:p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Acheter USDT</h1>
+        <div className="text-center mb-6 md:mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Acheter USDT</h1>
           <p className="text-gray-400">Achetez des USDT facilement et en toute sécurité</p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
           {/* Main Trading Interface */}
           <div className="lg:col-span-2">
             <Card className="bg-terex-darker border-terex-gray shadow-2xl">
-              <CardHeader className="border-b border-terex-gray">
+              <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-white text-xl">Acheter USDT</CardTitle>
+                  <CardTitle className="text-white text-lg md:text-xl">Acheter USDT</CardTitle>
                   <Badge variant="outline" className="text-terex-accent border-terex-accent">
                     Taux en temps réel
                   </Badge>
                 </div>
               </CardHeader>
-              <CardContent className="p-6">
+              <CardContent className="p-4 md:p-6">
                 <Tabs value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-6">
                   <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
                     {paymentMethods.map((method) => (
                       <TabsTrigger 
                         key={method.id} 
                         value={method.id}
-                        className="data-[state=active]:bg-terex-accent data-[state=active]:text-white"
+                        className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
                       >
-                        <span className="mr-2">{method.icon}</span>
-                        {method.name}
+                        <span className="mr-1 md:mr-2">{method.icon}</span>
+                        <span className="hidden sm:inline">{method.name}</span>
+                        <span className="sm:hidden">{method.id === 'card' ? 'Carte' : 'Mobile'}</span>
                       </TabsTrigger>
                     ))}
                   </TabsList>
@@ -75,7 +76,7 @@ export function BuyUSDT() {
                     <TabsContent key={method.id} value={method.id} className="space-y-6">
                       {/* Amount Input Section */}
                       <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <Label className="text-white text-sm font-medium">Je paie</Label>
                             <div className="relative">
@@ -84,15 +85,15 @@ export function BuyUSDT() {
                                 placeholder="0.00"
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
-                                className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
+                                className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24 md:pr-20"
                               />
                               {method.id === 'mobile' ? (
                                 <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
-                                  <span className="text-terex-accent font-medium">CFA</span>
+                                  <span className="text-terex-accent font-medium text-sm">CFA</span>
                                 </div>
                               ) : (
                                 <Select value={currency} onValueChange={setCurrency}>
-                                  <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
+                                  <SelectTrigger className="absolute right-1 top-1 w-20 h-10 bg-terex-gray-light border-0 text-terex-accent">
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -111,15 +112,15 @@ export function BuyUSDT() {
                                 type="text"
                                 value={usdtAmount}
                                 readOnly
-                                className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
+                                className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24"
                               />
-                              <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
+                              <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-1 py-1">
                                 <img 
                                   src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                                   alt="USDT" 
-                                  className="w-6 h-6"
+                                  className="w-5 h-5"
                                 />
-                                <span className="text-terex-accent font-medium">USDT</span>
+                                <span className="text-terex-accent font-medium text-sm">USDT</span>
                               </div>
                             </div>
                           </div>
@@ -193,23 +194,23 @@ export function BuyUSDT() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {/* Market Info */}
             <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader>
-                <CardTitle className="text-white text-lg">Prix du marché</CardTitle>
+              <CardHeader className="p-4">
+                <CardTitle className="text-white text-base md:text-lg">Prix du marché</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-3 p-4 pt-0">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">USDT/USD</span>
+                  <span className="text-gray-400 text-sm">USDT/USD</span>
                   <span className="text-terex-accent font-bold">$1.00</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">USDT/CFA</span>
+                  <span className="text-gray-400 text-sm">USDT/CFA</span>
                   <span className="text-white font-bold">615 CFA</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">USDT/CAD</span>
+                  <span className="text-gray-400 text-sm">USDT/CAD</span>
                   <span className="text-white font-bold">1.35 CAD</span>
                 </div>
               </CardContent>
@@ -217,13 +218,13 @@ export function BuyUSDT() {
 
             {/* Security Features */}
             <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader>
-                <CardTitle className="text-white text-lg flex items-center">
-                  <Shield className="w-5 h-5 mr-2 text-terex-accent" />
+              <CardHeader className="p-4">
+                <CardTitle className="text-white text-base md:text-lg flex items-center">
+                  <Shield className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
                   Sécurité
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-3 p-4 pt-0">
                 <div className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
                   <div>
@@ -250,10 +251,10 @@ export function BuyUSDT() {
 
             {/* Quick Actions */}
             <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader>
-                <CardTitle className="text-white text-lg">Montants rapides</CardTitle>
+              <CardHeader className="p-4">
+                <CardTitle className="text-white text-base md:text-lg">Montants rapides</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4 pt-0">
                 <div className="grid grid-cols-2 gap-2">
                   {getQuickAmounts().map((value) => (
                     <Button
@@ -261,7 +262,7 @@ export function BuyUSDT() {
                       variant="outline"
                       size="sm"
                       onClick={() => setAmount(value)}
-                      className="border-terex-gray text-gray-300 hover:bg-terex-gray"
+                      className="border-terex-gray text-gray-300 hover:bg-terex-gray text-xs"
                     >
                       {value} {paymentMethod === 'mobile' ? 'CFA' : currency}
                     </Button>
