@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
@@ -18,6 +18,30 @@ export function LoginForm() {
   
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
+
+  const checkEmailExists = async (email: string): Promise<boolean> => {
+    try {
+      // Essayer de se connecter avec un mot de passe temporaire pour vérifier si l'email existe
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: 'temp_password_check_123456789' // Mot de passe temporaire qui ne marchera jamais
+      });
+      
+      // Si l'erreur contient "Invalid login credentials", l'email pourrait exister
+      // Si l'erreur contient "Email not confirmed", l'email existe définitivement
+      if (error) {
+        return error.message.includes('Invalid login credentials') || 
+               error.message.includes('Email not confirmed') ||
+               error.message.includes('Invalid') ||
+               !error.message.includes('not found');
+      }
+      
+      return false;
+    } catch (error) {
+      console.error('Erreur lors de la vérification de l\'email:', error);
+      return false;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent, isLogin: boolean) => {
     e.preventDefault();
@@ -36,33 +60,36 @@ export function LoginForm() {
           });
         }
       } else {
-        // Pour l'inscription, on essaie directement de s'inscrire
-        const { error: signUpError } = await signUp(email, password, name);
+        // Pour l'inscription, vérifier d'abord si l'email existe
+        const emailExists = await checkEmailExists(email);
         
-        if (signUpError) {
-          // Vérifier le type d'erreur spécifique
-          if (signUpError.message.includes("already registered") || 
-              signUpError.message.includes("User already registered")) {
-            toast({
-              title: "Email déjà utilisé",
-              description: "Cet email est déjà utilisé. Veuillez vous connecter.",
-              variant: "destructive",
-            });
-          } else {
-            // Autres erreurs d'inscription
+        if (emailExists) {
+          // L'email existe déjà, afficher le message d'erreur et rediriger vers connexion
+          toast({
+            title: "Email déjà utilisé",
+            description: "Ce mail est déjà utilisé. Connectez-vous avec vos identifiants.",
+            variant: "destructive",
+          });
+          // Rediriger vers l'onglet de connexion
+          setActiveTab('login');
+        } else {
+          // L'email n'existe pas, procéder à l'inscription
+          const { error: signUpError } = await signUp(email, password, name);
+          
+          if (signUpError) {
             toast({
               title: "Erreur d'inscription",
               description: signUpError.message,
               variant: "destructive",
             });
+          } else {
+            // Inscription réussie
+            toast({
+              title: "Inscription réussie !",
+              description: "Vérifiez votre email pour activer votre compte",
+              className: "bg-green-600 text-white border-green-600",
+            });
           }
-        } else {
-          // Inscription réussie
-          toast({
-            title: "Inscription réussie !",
-            description: "Vérifiez votre email pour activer votre compte",
-            className: "bg-green-600 text-white border-green-600",
-          });
         }
       }
     } catch (error) {
