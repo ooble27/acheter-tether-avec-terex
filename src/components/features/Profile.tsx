@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -93,17 +92,72 @@ export function Profile({ user, onLogout }: ProfileProps) {
         title: 'Terex',
         text: shareText,
         url: terexUrl,
-      }).catch(console.error);
+      }).catch((error) => {
+        console.error('Erreur lors du partage:', error);
+        // Fallback en cas d'erreur
+        fallbackShare();
+      });
     } else {
       // Fallback pour les navigateurs qui ne supportent pas l'API Web Share
-      navigator.clipboard.writeText(`${shareText} - ${terexUrl}`).then(() => {
+      fallbackShare();
+    }
+  };
+
+  const fallbackShare = () => {
+    const terexUrl = 'https://terex.com';
+    const shareText = 'Découvrez Terex - La plateforme de change et de transfert d\'argent';
+    const fullText = `${shareText} - ${terexUrl}`;
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(fullText).then(() => {
         toast({
-          title: "Lien copié",
+          title: "Lien copié !",
           description: "Le lien Terex a été copié dans le presse-papiers",
+          className: "bg-green-600 text-white border-green-600",
         });
       }).catch(() => {
-        // Si le clipboard ne marche pas, ouvrir dans un nouvel onglet
-        window.open(terexUrl, '_blank');
+        // Si le clipboard ne marche pas non plus, essayer une autre méthode
+        fallbackCopy(fullText);
+      });
+    } else {
+      fallbackCopy(fullText);
+    }
+  };
+
+  const fallbackCopy = (text: string) => {
+    // Méthode alternative pour copier le texte
+    try {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      if (successful) {
+        toast({
+          title: "Lien copié !",
+          description: "Le lien Terex a été copié dans le presse-papiers",
+          className: "bg-green-600 text-white border-green-600",
+        });
+      } else {
+        toast({
+          title: "Partage Terex",
+          description: "Visitez https://terex.com pour découvrir notre plateforme",
+          className: "bg-terex-accent text-white border-terex-accent",
+        });
+      }
+    } catch (error) {
+      console.error('Erreur lors de la copie:', error);
+      toast({
+        title: "Partage Terex",
+        description: "Visitez https://terex.com pour découvrir notre plateforme",
+        className: "bg-terex-accent text-white border-terex-accent",
       });
     }
   };
