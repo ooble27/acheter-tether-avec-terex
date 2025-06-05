@@ -1,164 +1,124 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { TransactionHistory } from '@/components/features/TransactionHistory';
-import { KYCForm } from '@/components/features/KYCForm';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { useTransactions } from '@/contexts/TransactionContext';
-import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
-import { useKYC } from '@/hooks/useKYC';
 import { useUserProfile } from '@/hooks/useUserProfile';
-import { User, History, Settings, Shield, Share2, Edit, Lock, LogOut, Trash2, CheckCircle, AlertCircle, Copy, Clock, XCircle } from 'lucide-react';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+import { useKYC } from '@/hooks/useKYC';
+import { KYCForm } from './KYCForm';
+import { User, Settings, CheckCircle, FileText, Phone, Globe, Mail, AlertCircle, Clock } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-interface ProfileProps {
-  user: { email: string; name: string } | null;
-  onLogout?: () => void;
+interface ProfileFormData {
+  full_name: string;
+  phone: string;
+  country: string;
+  language: string;
+  email: string;
 }
 
-export function Profile({ user, onLogout }: ProfileProps) {
+const getKYCStatusInfo = (status?: string) => {
+  switch (status) {
+    case 'pending':
+      return {
+        label: 'En attente',
+        color: 'bg-yellow-500',
+        icon: Clock,
+        description: 'Commencez votre vérification d\'identité'
+      };
+    case 'submitted':
+      return {
+        label: 'Soumis',
+        color: 'bg-blue-500',
+        icon: FileText,
+        description: 'Votre dossier est en cours d\'examen'
+      };
+    case 'under_review':
+      return {
+        label: 'En révision',
+        color: 'bg-orange-500',
+        icon: AlertCircle,
+        description: 'Vérification en cours par notre équipe'
+      };
+    case 'approved':
+      return {
+        label: 'Vérifié',
+        color: 'bg-green-500',
+        icon: CheckCircle,
+        description: 'Votre identité a été vérifiée avec succès'
+      };
+    case 'rejected':
+      return {
+        label: 'Rejeté',
+        color: 'bg-red-500',
+        icon: AlertCircle,
+        description: 'Votre dossier a été rejeté. Veuillez le resoummettre.'
+      };
+    default:
+      return {
+        label: 'Non démarré',
+        color: 'bg-gray-500',
+        icon: FileText,
+        description: 'Commencez votre vérification d\'identité'
+      };
+  }
+};
+
+export function Profile() {
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('profile');
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [showKYCForm, setShowKYCForm] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [formData, setFormData] = useState({
+  const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  
+  // Initialize form data with user data
+  const [formData, setFormData] = useState<ProfileFormData>({
     full_name: '',
-    email: '',
     phone: '',
     country: '',
-    language: 'Français'
+    language: 'Français',
+    email: ''
   });
-  
-  const isMobile = useIsMobile();
-  const { transactions } = useTransactions();
-  const { toast } = useToast();
-  const { signOut } = useAuth();
-  const { kycData, loading: kycLoading, refetch: refetchKYC } = useKYC();
+
   const { profile, loading: profileLoading, updateProfile, updateEmail } = useUserProfile();
+  const { kycData, loading: kycLoading } = useKYC();
 
   // Update form data when profile loads
   useEffect(() => {
-    if (profile) {
+    if (profile && user) {
       setFormData({
-        full_name: profile.full_name || user?.name || '',
-        email: user?.email || '',
+        full_name: profile.full_name || '',
         phone: profile.phone || '',
         country: profile.country || '',
-        language: profile.language || 'Français'
-      });
-    } else if (user) {
-      setFormData(prev => ({
-        ...prev,
-        full_name: user.name || '',
+        language: profile.language || 'Français',
         email: user.email || ''
-      }));
+      });
     }
   }, [profile, user]);
 
   const tabs = [
     { id: 'profile', label: 'Profil', icon: User },
-    { id: 'kyc', label: 'Vérification', icon: Shield },
-    { id: 'transactions', label: 'Historique', icon: History },
-    { id: 'settings', label: 'Paramètres', icon: Settings },
+    { id: 'kyc', label: 'Vérification KYC', icon: FileText }
   ];
 
-  const handleShareTerex = async () => {
-    const shareLink = `https://terex.app?ref=${user?.email?.split('@')[0] || 'user123'}`;
-    
-    try {
-      await navigator.clipboard.writeText(shareLink);
-      toast({
-        title: "Lien copié !",
-        description: "Le lien de partage a été copié dans votre presse-papiers",
-        className: "bg-green-600 text-white border-green-600",
-      });
-    } catch (err) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de copier le lien",
-        variant: "destructive",
-      });
-    }
+  const handleInputChange = (field: keyof ProfileFormData, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
-  const handleDeleteAccount = () => {
-    setIsDeleting(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsDeleting(false);
-      toast({
-        title: "Compte supprimé",
-        description: "Votre compte a été supprimé avec succès",
-        className: "bg-red-600 text-white border-red-600",
-      });
-      if (onLogout) onLogout();
-    }, 2000);
-  };
+  const handleSave = async () => {
+    if (!user) return;
 
-  const handleLogout = async () => {
-    if (isLoggingOut) return;
-    
-    setIsLoggingOut(true);
-    
+    setSaving(true);
     try {
-      console.log('Profile: Starting logout process...');
-      
-      await signOut();
-      
-      toast({
-        title: "Déconnexion réussie",
-        description: "Vous avez été déconnecté avec succès",
-        className: "bg-green-600 text-white border-green-600",
-      });
-      
-    } catch (error) {
-      console.error('Profile: Logout error:', error);
-      
-      toast({
-        title: "Erreur",
-        description: "Problème lors de la déconnexion, vous allez être redirigé",
-        variant: "destructive",
-      });
-      
-      // Force redirect even on error
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 1000);
-      
-    } finally {
-      setIsLoggingOut(false);
-    }
-  };
-
-  const handleSaveProfile = async () => {
-    if (isSaving) return;
-    
-    setIsSaving(true);
-    
-    try {
-      // Update profile data
+      // Update profile information
       const profileResult = await updateProfile({
         full_name: formData.full_name,
         phone: formData.phone,
@@ -184,9 +144,11 @@ export function Profile({ user, onLogout }: ProfileProps) {
             description: emailResult.error,
             variant: "destructive",
           });
+          return;
         }
       }
-      
+
+      setIsEditing(false);
     } catch (error) {
       console.error('Error saving profile:', error);
       toast({
@@ -195,777 +157,289 @@ export function Profile({ user, onLogout }: ProfileProps) {
         variant: "destructive",
       });
     } finally {
-      setIsSaving(false);
+      setSaving(false);
     }
   };
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const getKYCStatus = () => {
-    if (kycLoading) {
-      return {
-        status: 'Chargement...',
-        icon: Clock,
-        color: 'text-gray-400',
-        bgColor: 'bg-gray-400/10',
-        description: 'Chargement des informations'
-      };
-    }
-
-    if (!kycData) {
-      return {
-        status: 'Non vérifié',
-        icon: AlertCircle,
-        color: 'text-red-400',
-        bgColor: 'bg-red-400/10',
-        description: 'Vérification requise pour utiliser nos services'
-      };
-    }
-
-    switch (kycData.status) {
-      case 'approved':
-        return {
-          status: 'Vérifié',
-          icon: CheckCircle,
-          color: 'text-green-400',
-          bgColor: 'bg-green-400/10',
-          description: 'Votre identité a été vérifiée avec succès'
-        };
-      case 'submitted':
-      case 'under_review':
-        return {
-          status: 'En cours d\'examen',
-          icon: Clock,
-          color: 'text-yellow-400',
-          bgColor: 'bg-yellow-400/10',
-          description: 'Vos documents sont en cours de vérification'
-        };
-      case 'rejected':
-        return {
-          status: 'Rejeté',
-          icon: XCircle,
-          color: 'text-red-400',
-          bgColor: 'bg-red-400/10',
-          description: kycData.rejection_reason || 'Documents non conformes'
-        };
-      default:
-        return {
-          status: 'Non vérifié',
-          icon: AlertCircle,
-          color: 'text-red-400',
-          bgColor: 'bg-red-400/10',
-          description: 'Vérification d\'identité requise'
-        };
-    }
-  };
-
-  const kycStatus = getKYCStatus();
-  const StatusIcon = kycStatus.icon;
 
   const handleKYCFormComplete = () => {
-    setShowKYCForm(false);
-    refetchKYC();
-    setActiveTab('profile');
+    // Refresh KYC data or show success message
+    toast({
+      title: "Vérification soumise",
+      description: "Votre dossier KYC a été soumis avec succès",
+      className: "bg-green-600 text-white border-green-600",
+    });
   };
 
-  const EditInfoSheet = () => (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="border-terex-gray text-gray-300 hover:bg-terex-gray w-full sm:w-auto">
-          <Edit className="w-4 h-4 mr-2" />
-          Modifier
-        </Button>
-      </SheetTrigger>
-      <SheetContent side={isMobile ? "bottom" : "right"} className="bg-terex-darker border-terex-gray">
-        <SheetHeader>
-          <SheetTitle className="text-white">Modifier mes informations</SheetTitle>
-          <SheetDescription className="text-gray-400">
-            Mettez à jour vos informations personnelles
-          </SheetDescription>
-        </SheetHeader>
-        <div className="mt-6 space-y-4">
-          <div>
-            <Label className="text-gray-400 text-sm block mb-2">Nom complet</Label>
-            <Input 
-              type="text" 
-              value={formData.full_name}
-              onChange={(e) => handleInputChange('full_name', e.target.value)}
-              className="w-full bg-terex-gray border border-terex-gray rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-terex-accent focus:border-transparent"
-            />
-          </div>
-          <div>
-            <Label className="text-gray-400 text-sm block mb-2">Email</Label>
-            <Input 
-              type="email" 
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              className="w-full bg-terex-gray border border-terex-gray rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-terex-accent focus:border-transparent"
-            />
-          </div>
-          <div>
-            <Label className="text-gray-400 text-sm block mb-2">Téléphone</Label>
-            <Input 
-              type="tel" 
-              value={formData.phone}
-              onChange={(e) => handleInputChange('phone', e.target.value)}
-              placeholder="Votre numéro de téléphone"
-              className="w-full bg-terex-gray border border-terex-gray rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-terex-accent focus:border-transparent"
-            />
-          </div>
-          <div>
-            <Label className="text-gray-400 text-sm block mb-2">Pays</Label>
-            <Input 
-              type="text" 
-              value={formData.country}
-              onChange={(e) => handleInputChange('country', e.target.value)}
-              placeholder="Votre pays"
-              className="w-full bg-terex-gray border border-terex-gray rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-terex-accent focus:border-transparent"
-            />
-          </div>
-          <div>
-            <Label className="text-gray-400 text-sm block mb-2">Langue</Label>
-            <select 
-              value={formData.language}
-              onChange={(e) => handleInputChange('language', e.target.value)}
-              className="w-full bg-terex-gray border border-terex-gray rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-terex-accent focus:border-transparent"
-            >
-              <option value="Français">Français</option>
-              <option value="English">English</option>
-              <option value="Español">Español</option>
-            </select>
-          </div>
-          <Button 
-            className="w-full bg-terex-accent hover:bg-terex-accent/90 mt-6" 
-            onClick={handleSaveProfile}
-            disabled={isSaving}
-          >
-            {isSaving ? 'Sauvegarde...' : 'Sauvegarder'}
-          </Button>
-        </div>
-      </SheetContent>
-    </Sheet>
-  );
+  const kycStatus = getKYCStatusInfo(kycData?.status);
+  const StatusIcon = kycStatus.icon;
 
-  if (profileLoading) {
+  if (profileLoading || kycLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-white">Chargement du profil...</div>
+      <div className="min-h-screen bg-terex-dark flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <div className="text-white text-lg">Chargement du profil...</div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6 animate-fade-in px-1 sm:px-0">
-      <div className="text-center sm:text-left">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Mon Profil</h1>
-        <p className="text-gray-400 text-sm sm:text-base">
-          Gérez votre compte et consultez vos informations
-        </p>
+    <div className="min-h-screen bg-terex-dark">
+      {/* En-tête profil */}
+      <div className="bg-gradient-to-r from-terex-darker to-terex-accent/20 border-b border-terex-gray">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0">
+            <div className="flex items-center space-x-4">
+              <div className="w-16 h-16 md:w-20 md:h-20 bg-terex-accent/20 rounded-full flex items-center justify-center">
+                <User className="w-8 h-8 md:w-10 md:h-10 text-terex-accent" />
+              </div>
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-white">
+                  {profile?.full_name || user?.email?.split('@')[0] || 'Utilisateur'}
+                </h1>
+                <p className="text-gray-400 text-sm md:text-base">{user?.email}</p>
+                <div className="flex items-center mt-2">
+                  <div className={`w-2 h-2 rounded-full ${kycStatus.color} mr-2`}></div>
+                  <span className="text-sm text-gray-400">KYC: {kycStatus.label}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Mobile optimized navigation */}
-      {isMobile ? (
-        <div className="flex space-x-1 bg-terex-darker rounded-lg p-1 overflow-x-auto">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 min-w-0 flex flex-col items-center justify-center space-y-1 px-2 py-3 rounded-md transition-colors text-xs ${
-                  activeTab === tab.id
-                    ? 'bg-terex-accent text-white'
-                    : 'text-gray-300 hover:bg-terex-gray hover:text-white'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span className="truncate">{tab.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="flex space-x-6">
-          <div className="flex flex-col space-y-2 w-64 flex-shrink-0">
+      {/* Navigation tabs */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid grid-cols-2 w-full md:w-auto bg-terex-card border border-terex-border">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
-                <button
+                <TabsTrigger
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === tab.id
-                      ? 'bg-terex-accent text-white'
-                      : 'text-gray-300 hover:bg-terex-gray hover:text-white'
-                  }`}
+                  value={tab.id}
+                  className="flex items-center space-x-2 text-gray-400 data-[state=active]:text-white data-[state=active]:bg-terex-accent"
                 >
-                  <Icon className="w-5 h-5" />
-                  <span>{tab.label}</span>
-                </button>
+                  <Icon className="w-4 h-4" />
+                  <span className="hidden sm:inline">{tab.label}</span>
+                </TabsTrigger>
               );
             })}
-          </div>
-          <div className="flex-1">
-            {/* Desktop Content */}
-            {activeTab === 'profile' && (
-              <div className="space-y-6">
-                {/* KYC Status */}
-                <Card className="bg-terex-darker border-terex-gray">
-                  <CardHeader className="pb-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-12 h-12 ${kycStatus.bgColor} rounded-full flex items-center justify-center`}>
-                          <StatusIcon className={`w-6 h-6 ${kycStatus.color}`} />
-                        </div>
-                        <div>
-                          <CardTitle className="text-white text-lg">Statut de vérification</CardTitle>
-                          <CardDescription className="text-gray-400 text-sm">{kycStatus.description}</CardDescription>
-                        </div>
-                      </div>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${kycStatus.color} ${kycStatus.bgColor}`}>
-                        {kycStatus.status}
-                      </span>
-                    </div>
-                    {kycData?.status === 'pending' && (
-                      <div className="mt-4">
-                        <Button 
-                          onClick={() => setActiveTab('kyc')}
-                          className="bg-terex-accent hover:bg-terex-accent/90"
-                        >
-                          Commencer la vérification
-                        </Button>
-                      </div>
-                    )}
-                    {kycData?.status === 'rejected' && (
-                      <div className="mt-4">
-                        <Button 
-                          onClick={() => setActiveTab('kyc')}
-                          variant="outline"
-                          className="border-yellow-500 text-yellow-500 hover:bg-yellow-500/10"
-                        >
-                          Soumettre à nouveau
-                        </Button>
-                      </div>
-                    )}
-                  </CardHeader>
-                </Card>
+          </TabsList>
 
-                {/* Personal Information */}
-                <Card className="bg-terex-darker border-terex-gray">
-                  <CardHeader className="pb-6">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-white">Informations personnelles</CardTitle>
-                      <EditInfoSheet />
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4 pt-0">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-gray-400 text-sm">Nom complet</label>
-                        <p className="text-white font-medium">{formData.full_name || 'Non renseigné'}</p>
-                      </div>
-                      <div>
-                        <label className="text-gray-400 text-sm">Email</label>
-                        <p className="text-white font-medium break-all">{formData.email}</p>
-                      </div>
-                      <div>
-                        <label className="text-gray-400 text-sm">Téléphone</label>
-                        <p className="text-white font-medium">{formData.phone || 'Non renseigné'}</p>
-                      </div>
-                      <div>
-                        <label className="text-gray-400 text-sm">Pays</label>
-                        <p className="text-white font-medium">{formData.country || 'Non renseigné'}</p>
-                      </div>
-                      <div>
-                        <label className="text-gray-400 text-sm">Langue</label>
-                        <p className="text-white font-medium">{formData.language}</p>
-                      </div>
-                      <div>
-                        <label className="text-gray-400 text-sm">Inscription</label>
-                        <p className="text-white font-medium">15 janvier 2024</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Recent Transactions */}
-                <Card className="bg-terex-darker border-terex-gray">
-                  <CardHeader>
-                    <CardTitle className="text-white">Dernières transactions</CardTitle>
-                    <CardDescription className="text-gray-400">
-                      Vos 3 dernières opérations
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {transactions.length === 0 ? (
-                      <div className="text-center py-8">
-                        <History className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                        <p className="text-gray-400">Aucune transaction récente</p>
-                      </div>
-                    ) : (
-                      <div className="space-y-3">
-                        {transactions.slice(0, 3).map((transaction, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-terex-gray rounded-lg">
-                            <div className="min-w-0 flex-1">
-                              <p className="text-white font-medium truncate">{transaction.type}</p>
-                              <p className="text-gray-400 text-sm">{transaction.date}</p>
-                            </div>
-                            <span className={`font-medium ${
-                              transaction.type.includes('Achat') ? 'text-green-400' : 'text-blue-400'
-                            }`}>
-                              {transaction.amount}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-
-                {/* Share Terex */}
-                <Card className="bg-terex-darker border-terex-gray">
-                  <CardHeader>
-                    <CardTitle className="text-white flex items-center">
-                      <Share2 className="w-5 h-5 mr-2" />
-                      Partager Terex
-                    </CardTitle>
-                    <CardDescription className="text-gray-400">
-                      Invitez vos proches à découvrir Terex
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button 
-                      onClick={handleShareTerex}
-                      className="w-full bg-terex-accent hover:bg-terex-accent/90 h-12"
-                    >
-                      <Copy className="w-4 h-4 mr-2" />
-                      Partager Terex
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
-
-            {activeTab === 'kyc' && (
-              <div className="space-y-6 w-full">
-                <Card className="bg-terex-darker border-terex-gray">
-                  <CardHeader>
-                    <CardTitle className="text-white flex items-center">
-                      <Shield className="w-5 h-5 mr-2" />
-                      Vérification d'identité KYC
-                    </CardTitle>
-                    <CardDescription className="text-gray-400">
-                      Vérifiez votre identité pour accéder à tous nos services
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-
-                {kycData?.status === 'approved' ? (
-                  <Card className="bg-green-600/10 border-green-600/50">
-                    <CardContent className="p-6 text-center">
-                      <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
-                      <h3 className="text-white text-xl font-medium mb-2">Identité vérifiée</h3>
-                      <p className="text-green-400">
-                        Votre identité a été vérifiée avec succès. Vous pouvez maintenant utiliser tous nos services.
-                      </p>
-                    </CardContent>
-                  </Card>
-                ) : kycData?.status === 'submitted' || kycData?.status === 'under_review' ? (
-                  <Card className="bg-yellow-600/10 border-yellow-600/50">
-                    <CardContent className="p-6 text-center">
-                      <Clock className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-                      <h3 className="text-white text-xl font-medium mb-2">Vérification en cours</h3>
-                      <p className="text-yellow-400">
-                        Vos documents sont en cours d'examen. Nous vous contacterons sous 1-3 jours ouvrables.
-                      </p>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  <div className="w-full">
-                    <KYCForm onComplete={handleKYCFormComplete} />
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeTab === 'transactions' && (
-              <>
-                {transactions.length === 0 ? (
-                  <Card className="bg-terex-darker border-terex-gray">
-                    <CardContent className="p-8 text-center">
-                      <History className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-white text-lg font-medium mb-2">Aucune transaction</h3>
-                      <p className="text-gray-400 text-sm">
-                        Vos transactions apparaîtront ici une fois que vous aurez effectué votre première opération.
-                      </p>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  <TransactionHistory transactions={transactions} />
-                )}
-              </>
-            )}
-
-            {activeTab === 'settings' && (
-              <div className="space-y-6">
-                <Card className="bg-terex-darker border-terex-gray">
-                  <CardHeader>
-                    <CardTitle className="text-white">Paramètres du compte</CardTitle>
-                    <CardDescription className="text-gray-400">
-                      Gérez vos préférences et paramètres de sécurité
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <Button 
-                      variant="outline" 
-                      className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
-                    >
-                      <Lock className="w-4 h-4 mr-3" />
-                      Changer mon mot de passe
-                    </Button>
-                    
-                    <Button 
-                      variant="outline" 
-                      className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
-                      onClick={handleLogout}
-                      disabled={isLoggingOut}
-                    >
-                      <LogOut className="w-4 h-4 mr-3" />
-                      {isLoggingOut ? 'Déconnexion...' : 'Se déconnecter'}
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                {/* Danger Zone */}
-                <Card className="bg-terex-darker border-red-600/50">
-                  <CardHeader>
-                    <CardTitle className="text-red-400">Zone de danger</CardTitle>
-                    <CardDescription className="text-gray-400">
-                      Actions irréversibles
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button 
-                          variant="destructive" 
-                          className="w-full justify-start h-12"
-                        >
-                          <Trash2 className="w-4 h-4 mr-3" />
-                          Supprimer mon compte
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent className="bg-terex-darker border-terex-gray mx-4 max-w-lg">
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="text-white">Êtes-vous absolument sûr ?</AlertDialogTitle>
-                          <AlertDialogDescription className="text-gray-400">
-                            Cette action ne peut pas être annulée. Cela supprimera définitivement votre compte 
-                            et toutes vos données de nos serveurs.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter className="flex-col sm:flex-row space-y-2 sm:space-y-0">
-                          <AlertDialogCancel className="border-terex-gray text-gray-300 hover:bg-terex-gray w-full sm:w-auto">
-                            Annuler
-                          </AlertDialogCancel>
-                          <AlertDialogAction 
-                            onClick={handleDeleteAccount}
-                            disabled={isDeleting}
-                            className="bg-red-600 hover:bg-red-700 w-full sm:w-auto"
-                          >
-                            {isDeleting ? 'Suppression...' : 'Supprimer définitivement'}
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Mobile Content */}
-      {isMobile && (
-        <div>
-          {activeTab === 'profile' && (
-            <div className="space-y-4 sm:space-y-6 animate-fade-in px-1 sm:px-0">
-              {/* KYC Status */}
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader className="pb-3 sm:pb-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-10 h-10 sm:w-12 sm:h-12 ${kycStatus.bgColor} rounded-full flex items-center justify-center`}>
-                        <StatusIcon className={`w-5 h-5 sm:w-6 sm:h-6 ${kycStatus.color}`} />
-                      </div>
-                      <div>
-                        <CardTitle className="text-white text-lg">Statut de vérification</CardTitle>
-                        <CardDescription className="text-gray-400 text-sm">{kycStatus.description}</CardDescription>
-                      </div>
-                    </div>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${kycStatus.color} ${kycStatus.bgColor} text-center`}>
-                      {kycStatus.status}
-                    </span>
-                  </div>
-                  {kycData?.status === 'pending' && (
-                    <div className="mt-4">
-                      <Button 
-                        onClick={() => setActiveTab('kyc')}
-                        className="bg-terex-accent hover:bg-terex-accent/90 w-full"
-                      >
-                        Commencer la vérification
-                      </Button>
-                    </div>
-                  )}
-                  {kycData?.status === 'rejected' && (
-                    <div className="mt-4">
-                      <Button 
-                        onClick={() => setActiveTab('kyc')}
-                        variant="outline"
-                        className="border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 w-full"
-                      >
-                        Soumettre à nouveau
-                      </Button>
-                    </div>
-                  )}
-                </CardHeader>
-              </Card>
-
-              {/* Personal Information */}
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader className="pb-3 sm:pb-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
-                    <CardTitle className="text-white">Informations personnelles</CardTitle>
-                    <EditInfoSheet />
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4 pt-0">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-gray-400 text-sm">Nom complet</label>
-                      <p className="text-white font-medium">{formData.full_name || 'Non renseigné'}</p>
-                    </div>
-                    <div>
-                      <label className="text-gray-400 text-sm">Email</label>
-                      <p className="text-white font-medium break-all">{formData.email}</p>
-                    </div>
-                    <div>
-                      <label className="text-gray-400 text-sm">Téléphone</label>
-                      <p className="text-white font-medium">{formData.phone || 'Non renseigné'}</p>
-                    </div>
-                    <div>
-                      <label className="text-gray-400 text-sm">Pays</label>
-                      <p className="text-white font-medium">{formData.country || 'Non renseigné'}</p>
-                    </div>
-                    <div>
-                      <label className="text-gray-400 text-sm">Langue</label>
-                      <p className="text-white font-medium">{formData.language}</p>
-                    </div>
-                    <div>
-                      <label className="text-gray-400 text-sm">Inscription</label>
-                      <p className="text-white font-medium">15 janvier 2024</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Recent Transactions */}
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader>
-                  <CardTitle className="text-white">Dernières transactions</CardTitle>
-                  <CardDescription className="text-gray-400">
-                    Vos 3 dernières opérations
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {transactions.length === 0 ? (
-                    <div className="text-center py-6 sm:py-8">
-                      <History className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-400">Aucune transaction récente</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {transactions.slice(0, 3).map((transaction, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 bg-terex-gray rounded-lg">
-                          <div className="min-w-0 flex-1">
-                            <p className="text-white font-medium truncate">{transaction.type}</p>
-                            <p className="text-gray-400 text-sm">{transaction.date}</p>
-                          </div>
-                          <span className={`font-medium text-sm sm:text-base ${
-                            transaction.type.includes('Achat') ? 'text-green-400' : 'text-blue-400'
-                          }`}>
-                            {transaction.amount}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Share Terex */}
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center">
-                    <Share2 className="w-5 h-5 mr-2" />
-                    Partager Terex
+          <TabsContent value="profile" className="mt-6 space-y-6">
+            {/* Informations personnelles */}
+            <Card className="bg-terex-darker border-terex-gray">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
+                <div>
+                  <CardTitle className="text-white flex items-center text-xl">
+                    <User className="w-5 h-5 mr-3" />
+                    Informations personnelles
                   </CardTitle>
-                  <CardDescription className="text-gray-400">
-                    Invitez vos proches à découvrir Terex
+                  <CardDescription className="text-gray-400 mt-2">
+                    Gérez vos informations de profil et de contact
                   </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button 
-                    onClick={handleShareTerex}
-                    className="w-full bg-terex-accent hover:bg-terex-accent/90 h-12"
+                </div>
+                {!isEditing ? (
+                  <Button
+                    onClick={() => setIsEditing(true)}
+                    className="bg-terex-accent hover:bg-terex-accent/90"
                   >
-                    <Copy className="w-4 h-4 mr-2" />
-                    Partager Terex
+                    <Settings className="w-4 h-4 mr-2" />
+                    Modifier
                   </Button>
+                ) : (
+                  <div className="flex space-x-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setIsEditing(false);
+                        // Reset form data
+                        if (profile && user) {
+                          setFormData({
+                            full_name: profile.full_name || '',
+                            phone: profile.phone || '',
+                            country: profile.country || '',
+                            language: profile.language || 'Français',
+                            email: user.email || ''
+                          });
+                        }
+                      }}
+                      disabled={saving}
+                      className="border-gray-600 text-gray-400 hover:bg-gray-800"
+                    >
+                      Annuler
+                    </Button>
+                    <Button
+                      onClick={handleSave}
+                      disabled={saving}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      {saving ? 'Sauvegarde...' : 'Sauvegarder'}
+                    </Button>
+                  </div>
+                )}
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {!isEditing ? (
+                  // Mode affichage
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-gray-400 text-sm">Nom complet</Label>
+                      <p className="text-white text-base">
+                        {profile?.full_name || 'Non défini'}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-gray-400 text-sm">Téléphone</Label>
+                      <p className="text-white text-base flex items-center">
+                        <Phone className="w-4 h-4 mr-2 text-gray-400" />
+                        {profile?.phone || 'Non défini'}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-gray-400 text-sm">Pays</Label>
+                      <p className="text-white text-base flex items-center">
+                        <Globe className="w-4 h-4 mr-2 text-gray-400" />
+                        {profile?.country || 'Non défini'}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-gray-400 text-sm">Langue</Label>
+                      <p className="text-white text-base">
+                        {profile?.language || 'Français'}
+                      </p>
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <Label className="text-gray-400 text-sm">Email</Label>
+                      <p className="text-white text-base flex items-center">
+                        <Mail className="w-4 h-4 mr-2 text-gray-400" />
+                        {user?.email}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  // Mode édition
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="full_name" className="text-gray-300">Nom complet</Label>
+                      <Input
+                        id="full_name"
+                        value={formData.full_name}
+                        onChange={(e) => handleInputChange('full_name', e.target.value)}
+                        className="bg-terex-gray border-terex-gray text-white"
+                        placeholder="Votre nom complet"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-gray-300">Téléphone</Label>
+                      <Input
+                        id="phone"
+                        value={formData.phone}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        className="bg-terex-gray border-terex-gray text-white"
+                        placeholder="+221 XX XXX XX XX"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="country" className="text-gray-300">Pays</Label>
+                      <Input
+                        id="country"
+                        value={formData.country}
+                        onChange={(e) => handleInputChange('country', e.target.value)}
+                        className="bg-terex-gray border-terex-gray text-white"
+                        placeholder="Votre pays"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="language" className="text-gray-300">Langue</Label>
+                      <Select
+                        value={formData.language}
+                        onValueChange={(value) => handleInputChange('language', value)}
+                      >
+                        <SelectTrigger className="bg-terex-gray border-terex-gray text-white">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Français">Français</SelectItem>
+                          <SelectItem value="English">English</SelectItem>
+                          <SelectItem value="Español">Español</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="email" className="text-gray-300">Email</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        className="bg-terex-gray border-terex-gray text-white"
+                        placeholder="votre@email.com"
+                      />
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="kyc" className="mt-6">
+            {/* Statut KYC */}
+            <Card className="bg-terex-darker border-terex-gray mb-6">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <StatusIcon className={`w-5 h-5 mr-3 ${kycStatus.color.replace('bg-', 'text-')}`} />
+                  Vérification d'identité KYC
+                </CardTitle>
+                <CardDescription className="text-gray-400">
+                  Vérifiez votre identité pour accéder à tous nos services
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between p-4 bg-terex-gray/50 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-3 h-3 rounded-full ${kycStatus.color}`}></div>
+                    <div>
+                      <p className="text-white font-medium">{kycStatus.label}</p>
+                      <p className="text-gray-400 text-sm">{kycStatus.description}</p>
+                    </div>
+                  </div>
+                  <Badge variant="secondary" className={`${kycStatus.color} text-white border-none`}>
+                    {kycStatus.label}
+                  </Badge>
+                </div>
+                {kycData?.rejection_reason && (
+                  <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                    <p className="text-sm text-gray-400 mb-1">Raison du rejet:</p>
+                    <p className="text-white">{kycData.rejection_reason}</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Formulaire KYC ou statut */}
+            {kycData?.status === 'approved' ? (
+              <Card className="bg-green-500/10 border-green-500/20">
+                <CardContent className="p-6 text-center">
+                  <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    Identité vérifiée avec succès !
+                  </h3>
+                  <p className="text-gray-400">
+                    Votre compte est maintenant entièrement vérifié. Vous avez accès à tous nos services.
+                  </p>
                 </CardContent>
               </Card>
-            </div>
-          )}
-
-          {activeTab === 'kyc' && (
-            <div className="space-y-4">
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center">
-                    <Shield className="w-5 h-5 mr-2" />
-                    Vérification KYC
-                  </CardTitle>
-                  <CardDescription className="text-gray-400">
-                    Vérifiez votre identité pour accéder à tous nos services
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              {kycData?.status === 'approved' ? (
-                <Card className="bg-green-600/10 border-green-600/50">
-                  <CardContent className="p-6 text-center">
-                    <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-4" />
-                    <h3 className="text-white text-lg font-medium mb-2">Identité vérifiée</h3>
-                    <p className="text-green-400 text-sm">
-                      Votre identité a été vérifiée avec succès.
-                    </p>
-                  </CardContent>
-                </Card>
-              ) : kycData?.status === 'submitted' || kycData?.status === 'under_review' ? (
-                <Card className="bg-yellow-600/10 border-yellow-600/50">
-                  <CardContent className="p-6 text-center">
-                    <Clock className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-                    <h3 className="text-white text-lg font-medium mb-2">En cours d'examen</h3>
-                    <p className="text-yellow-400 text-sm">
-                      Vos documents sont en cours de vérification.
-                    </p>
-                  </CardContent>
-                </Card>
-              ) : (
+            ) : (
+              <div className="w-full">
                 <KYCForm onComplete={handleKYCFormComplete} />
-              )}
-            </div>
-          )}
-
-          {activeTab === 'transactions' && (
-            <div className="space-y-4 sm:space-y-6 animate-fade-in px-1 sm:px-0">
-              {transactions.length === 0 ? (
-                <Card className="bg-terex-darker border-terex-gray">
-                  <CardContent className="p-6 sm:p-8 text-center">
-                    <History className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-white text-lg font-medium mb-2">Aucune transaction</h3>
-                    <p className="text-gray-400 text-sm">
-                      Vos transactions apparaîtront ici une fois que vous aurez effectué votre première opération.
-                    </p>
-                  </CardContent>
-                </Card>
-              ) : (
-                <TransactionHistory transactions={transactions} />
-              )}
-            </div>
-          )}
-
-          {activeTab === 'settings' && (
-            <div className="space-y-4 sm:space-y-6 animate-fade-in px-1 sm:px-0">
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader>
-                  <CardTitle className="text-white">Paramètres du compte</CardTitle>
-                  <CardDescription className="text-gray-400">
-                    Gérez vos préférences et paramètres de sécurité
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
-                  >
-                    <Lock className="w-4 h-4 mr-3" />
-                    Changer mon mot de passe
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
-                    onClick={handleLogout}
-                    disabled={isLoggingOut}
-                  >
-                    <LogOut className="w-4 h-4 mr-3" />
-                    {isLoggingOut ? 'Déconnexion...' : 'Se déconnecter'}
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-terex-darker border-red-600/50">
-                <CardHeader>
-                  <CardTitle className="text-red-400">Zone de danger</CardTitle>
-                  <CardDescription className="text-gray-400">
-                    Actions irréversibles
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button 
-                        variant="destructive" 
-                        className="w-full justify-start h-12"
-                      >
-                        <Trash2 className="w-4 h-4 mr-3" />
-                        Supprimer mon compte
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="bg-terex-darker border-terex-gray mx-4 max-w-lg">
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="text-white">Êtes-vous absolument sûr ?</AlertDialogTitle>
-                        <AlertDialogDescription className="text-gray-400">
-                          Cette action ne peut pas être annulée. Cela supprimera définitivement votre compte 
-                          et toutes vos données de nos serveurs.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter className="flex-col sm:flex-row space-y-2 sm:space-y-0">
-                        <AlertDialogCancel className="border-terex-gray text-gray-300 hover:bg-terex-gray w-full sm:w-auto">
-                          Annuler
-                        </AlertDialogCancel>
-                        <AlertDialogAction 
-                          onClick={handleDeleteAccount}
-                          disabled={isDeleting}
-                          className="bg-red-600 hover:bg-red-700 w-full sm:w-auto"
-                        >
-                          {isDeleting ? 'Suppression...' : 'Supprimer définitivement'}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-        </div>
-      )}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }
