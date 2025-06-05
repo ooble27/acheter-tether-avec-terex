@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,14 +43,22 @@ export function LoginForm() {
           // Gestion spécifique des erreurs d'inscription
           let errorMessage = error.message;
           
+          // Détection plus précise des erreurs d'email déjà utilisé
           if (error.message.includes("User already registered") || 
               error.message.includes("already registered") ||
-              error.message.includes("already exists")) {
+              error.message.includes("already exists") ||
+              error.message.includes("Email already in use") ||
+              error.message.includes("email already taken") ||
+              error.message.includes("duplicate") ||
+              error.code === "email_address_invalid" ||
+              error.code === "user_already_exists") {
             errorMessage = "Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.";
           } else if (error.message.includes("Password should be at least")) {
             errorMessage = "Le mot de passe doit contenir au moins 6 caractères.";
           } else if (error.message.includes("Invalid email")) {
             errorMessage = "Format d'email invalide.";
+          } else if (error.message.includes("weak password")) {
+            errorMessage = "Le mot de passe est trop faible. Utilisez au moins 6 caractères.";
           }
           
           toast({
@@ -57,13 +66,17 @@ export function LoginForm() {
             description: errorMessage,
             variant: "destructive",
           });
-        } else {
-          toast({
-            title: "Inscription réussie !",
-            description: "Vérifiez votre email pour activer votre compte",
-            className: "bg-green-600 text-white border-green-600",
-          });
+          
+          // Ne pas afficher le message de succès si il y a une erreur
+          return;
         }
+        
+        // Message de succès seulement si pas d'erreur
+        toast({
+          title: "Inscription réussie !",
+          description: "Vérifiez votre email pour activer votre compte",
+          className: "bg-green-600 text-white border-green-600",
+        });
       }
     } catch (error) {
       console.error('Erreur inattendue:', error);
