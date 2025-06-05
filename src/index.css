@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
@@ -73,7 +74,6 @@
   box-shadow: none;
 }
 
-/* Animations optimisées pour mobile */
 @media (prefers-reduced-motion: no-preference) {
   .animate-fade-in {
     animation: fade-in 0.4s ease-out;
@@ -110,7 +110,6 @@
   }
 }
 
-/* Améliorations pour mobile */
 @media (max-width: 768px) {
   .mobile-optimized {
     padding: 1rem;
@@ -122,7 +121,6 @@
   }
 }
 
-/* Transitions fluides */
 * {
   transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
