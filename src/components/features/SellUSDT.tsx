@@ -35,8 +35,7 @@ export function SellUSDT() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark p-2 md:p-4">
       <div className="max-w-7xl mx-auto">
-        {/* Header - déplacé vers la gauche */}
-        <div className="text-left mb-6 md:mb-8">
+        <div className="text-center mb-6 md:mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Vendre USDT</h1>
           <p className="text-gray-400">Convertissez vos USDT en francs CFA instantanément</p>
         </div>
@@ -63,15 +62,15 @@ export function SellUSDT() {
                           placeholder="0.00"
                           value={amount}
                           onChange={(e) => setAmount(e.target.value)}
-                          className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-16"
+                          className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24"
                         />
-                        <div className="absolute right-1 top-1 flex items-center space-x-1 bg-terex-gray-light rounded px-1 py-1">
+                        <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-1 py-1">
                           <img 
                             src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                             alt="USDT" 
-                            className="w-4 h-4"
+                            className="w-5 h-5"
                           />
-                          <span className="text-terex-accent font-medium text-xs">USDT</span>
+                          <span className="text-terex-accent font-medium text-sm">USDT</span>
                         </div>
                       </div>
                     </div>
@@ -83,9 +82,9 @@ export function SellUSDT() {
                           type="text"
                           value={cfaAmount}
                           readOnly
-                          className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-16"
+                          className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
                         />
-                        <span className="absolute right-3 top-3 text-terex-accent font-medium text-xs">CFA</span>
+                        <span className="absolute right-3 top-3 text-terex-accent font-medium text-sm">CFA</span>
                       </div>
                     </div>
                   </div>
