@@ -1,74 +1,87 @@
 
 import { useState } from 'react';
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/dashboard/AppSidebar";
-import { DashboardHome } from "@/components/dashboard/DashboardHome";
-import { BuyUSDT } from "@/components/features/BuyUSDT";
-import { EnhancedBuyUSDT } from "@/components/features/EnhancedBuyUSDT";
-import { SellUSDT } from "@/components/features/SellUSDT";
-import { TransactionHistory } from "@/components/features/TransactionHistory";
-import { InternationalTransfer } from "@/components/features/InternationalTransfer";
-import { FAQ } from "@/components/features/FAQ";
-import { Profile } from "@/components/features/Profile";
-import { KYCPage } from "@/components/features/KYCPage";
-import { OrdersAdmin } from "@/components/admin/OrdersAdmin";
-import { EnhancedOrdersAdmin } from "@/components/admin/EnhancedOrdersAdmin";
-import { KYCAdmin } from "@/components/admin/KYCAdmin";
-import { AuthProvider } from '@/contexts/AuthContext';
-import { useTransactions } from '@/contexts/TransactionContext';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
+import { BuyUSDT } from '@/components/features/BuyUSDT';
+import { SellUSDT } from '@/components/features/SellUSDT';
+import { InternationalTransfer } from '@/components/features/InternationalTransfer';
+import { FAQ } from '@/components/features/FAQ';
+import { DashboardHome } from '@/components/dashboard/DashboardHome';
+import { Profile } from '@/components/features/Profile';
+import { KYCPage } from '@/components/features/KYCPage';
+import { KYCAdmin } from '@/components/admin/KYCAdmin';
+import { OrdersAdmin } from '@/components/admin/OrdersAdmin';
+import { TransactionProvider } from '@/contexts/TransactionContext';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/contexts/AuthContext';
+import { useUserRole } from '@/hooks/useUserRole';
 
 interface DashboardProps {
-  user: {
-    email: string;
-    name: string;
-  };
+  user: { email: string; name: string } | null;
   onLogout: () => void;
 }
 
 export function Dashboard({ user, onLogout }: DashboardProps) {
-  const [activeTab, setActiveTab] = useState('home');
-  const { transactions } = useTransactions();
+  const [activeSection, setActiveSection] = useState('home');
+  const isMobile = useIsMobile();
+  const { signOut } = useAuth();
+  const { isKYCReviewer } = useUserRole();
+
+  const handleLogout = async () => {
+    try {
+      console.log('Dashboard: Starting logout...')
+      await signOut();
+      console.log('Dashboard: Logout completed')
+      // No need to manually redirect, the auth state change will handle it
+    } catch (error) {
+      console.error('Dashboard: Logout error:', error)
+    }
+  };
 
   const renderContent = () => {
-    switch (activeTab) {
+    switch (activeSection) {
       case 'home':
         return <DashboardHome user={user} />;
-      case 'buy-usdt':
-        return <EnhancedBuyUSDT />;
-      case 'sell-usdt':
+      case 'buy':
+        return <BuyUSDT />;
+      case 'sell':
         return <SellUSDT />;
-      case 'transactions':
-        return <TransactionHistory transactions={transactions} />;
       case 'transfer':
         return <InternationalTransfer />;
+      case 'profile':
+        return <Profile user={user} onLogout={handleLogout} />;
+      case 'kyc':
+        return <KYCPage onBack={() => setActiveSection('profile')} />;
       case 'faq':
         return <FAQ />;
-      case 'profile':
-        return <Profile user={user} onLogout={onLogout} />;
-      case 'kyc':
-        return <KYCPage onBack={() => setActiveTab('profile')} />;
-      case 'orders-admin':
-        return <EnhancedOrdersAdmin />;
       case 'kyc-admin':
-        return <KYCAdmin />;
+        return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
+      case 'orders-admin':
+        return isKYCReviewer() ? <OrdersAdmin /> : <div className="text-white">Accès non autorisé</div>;
       default:
         return <DashboardHome user={user} />;
     }
   };
 
   return (
-    <AuthProvider>
+    <TransactionProvider>
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-terex-dark">
-          <AppSidebar activeSection={activeTab} setActiveSection={setActiveTab} onLogout={onLogout} />
-          <main className="flex-1">
-            <div className="p-2">
-              <SidebarTrigger className="mb-4" />
-            </div>
+          <AppSidebar 
+            activeSection={activeSection}
+            setActiveSection={setActiveSection}
+            onLogout={handleLogout}
+          />
+          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'}`}>
+            <MobileMenu 
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+              onLogout={handleLogout}
+            />
             {renderContent()}
           </main>
         </div>
       </SidebarProvider>
-    </AuthProvider>
+    </TransactionProvider>
   );
 }
