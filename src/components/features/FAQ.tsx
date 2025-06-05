@@ -100,7 +100,7 @@ export function FAQ() {
             <CardContent className="space-y-4">
               <div className="p-3 bg-terex-gray rounded-lg">
                 <h3 className="text-terex-accent font-medium mb-1">📧 Email</h3>
-                <p className="text-gray-300 text-sm">support@terex.com</p>
+                <p className="text-gray-300 text-sm">Terangaexchange@gmail.com</p>
               </div>
               <div className="p-3 bg-terex-gray rounded-lg">
                 <h3 className="text-terex-accent font-medium mb-1">💬 Chat en direct</h3>
@@ -108,7 +108,7 @@ export function FAQ() {
               </div>
               <div className="p-3 bg-terex-gray rounded-lg">
                 <h3 className="text-terex-accent font-medium mb-1">📞 Téléphone</h3>
-                <p className="text-gray-300 text-sm">+1 (514) 123-4567</p>
+                <p className="text-gray-300 text-sm">+1 (418) 261-9091</p>
               </div>
             </CardContent>
           </Card>
