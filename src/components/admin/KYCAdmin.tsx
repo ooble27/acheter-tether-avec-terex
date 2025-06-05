@@ -64,78 +64,78 @@ export function KYCAdmin() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4 md:p-6">
       {/* En-tête */}
-      <div>
-        <h1 className="text-3xl font-bold text-white">Administration KYC</h1>
-        <p className="text-gray-400">Gérez les vérifications d'identité des utilisateurs</p>
+      <div className="text-center md:text-left">
+        <h1 className="text-2xl md:text-3xl font-bold text-white">Administration KYC</h1>
+        <p className="text-gray-400 mt-2">Gérez les vérifications d'identité des utilisateurs</p>
       </div>
 
-      {/* Statistiques */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      {/* Statistiques - responsive */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
         <Card className="bg-terex-card border-terex-border">
-          <CardContent className="p-4">
+          <CardContent className="p-3 md:p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">En attente</p>
-                <p className="text-2xl font-bold text-white">{stats.pending}</p>
+                <p className="text-xs md:text-sm text-gray-400">En attente</p>
+                <p className="text-lg md:text-2xl font-bold text-white">{stats.pending}</p>
               </div>
-              <Clock className="h-8 w-8 text-yellow-500" />
+              <Clock className="h-6 w-6 md:h-8 md:w-8 text-yellow-500" />
             </div>
           </CardContent>
         </Card>
 
         <Card className="bg-terex-card border-terex-border border-blue-500/50">
-          <CardContent className="p-4">
+          <CardContent className="p-3 md:p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Soumis</p>
-                <p className="text-2xl font-bold text-blue-400">{stats.submitted}</p>
-                <p className="text-xs text-blue-400">Action requise</p>
+                <p className="text-xs md:text-sm text-gray-400">Soumis</p>
+                <p className="text-lg md:text-2xl font-bold text-blue-400">{stats.submitted}</p>
+                <p className="text-xs text-blue-400 hidden md:block">Action requise</p>
               </div>
-              <AlertCircle className="h-8 w-8 text-blue-500" />
+              <AlertCircle className="h-6 w-6 md:h-8 md:w-8 text-blue-500" />
             </div>
           </CardContent>
         </Card>
 
         <Card className="bg-terex-card border-terex-border">
-          <CardContent className="p-4">
+          <CardContent className="p-3 md:p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">En révision</p>
-                <p className="text-2xl font-bold text-white">{stats.under_review}</p>
+                <p className="text-xs md:text-sm text-gray-400">En révision</p>
+                <p className="text-lg md:text-2xl font-bold text-white">{stats.under_review}</p>
               </div>
-              <Clock className="h-8 w-8 text-orange-500" />
+              <Clock className="h-6 w-6 md:h-8 md:w-8 text-orange-500" />
             </div>
           </CardContent>
         </Card>
 
         <Card className="bg-terex-card border-terex-border">
-          <CardContent className="p-4">
+          <CardContent className="p-3 md:p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Approuvés</p>
-                <p className="text-2xl font-bold text-white">{stats.approved}</p>
+                <p className="text-xs md:text-sm text-gray-400">Approuvés</p>
+                <p className="text-lg md:text-2xl font-bold text-white">{stats.approved}</p>
               </div>
-              <CheckCircle className="h-8 w-8 text-green-500" />
+              <CheckCircle className="h-6 w-6 md:h-8 md:w-8 text-green-500" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-terex-card border-terex-border">
-          <CardContent className="p-4">
+        <Card className="bg-terex-card border-terex-border col-span-2 md:col-span-1">
+          <CardContent className="p-3 md:p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Rejetés</p>
-                <p className="text-2xl font-bold text-white">{stats.rejected}</p>
+                <p className="text-xs md:text-sm text-gray-400">Rejetés</p>
+                <p className="text-lg md:text-2xl font-bold text-white">{stats.rejected}</p>
               </div>
-              <XCircle className="h-8 w-8 text-red-500" />
+              <XCircle className="h-6 w-6 md:h-8 md:w-8 text-red-500" />
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Filtres et recherche */}
+      {/* Filtres et recherche - responsive */}
       <Card className="bg-terex-card border-terex-border">
         <CardContent className="p-4">
           <div className="flex flex-col md:flex-row gap-4">
@@ -171,7 +171,7 @@ export function KYCAdmin() {
       {priorityVerifications.length > 0 && (
         <Card className="bg-terex-card border-blue-500/50">
           <CardHeader>
-            <CardTitle className="text-white flex items-center">
+            <CardTitle className="text-white flex items-center text-lg md:text-xl">
               <AlertCircle className="h-5 w-5 mr-2 text-blue-500" />
               Vérifications à traiter en priorité ({priorityVerifications.length})
             </CardTitle>
@@ -181,7 +181,7 @@ export function KYCAdmin() {
               {priorityVerifications.map((verification) => (
                 <div
                   key={verification.id}
-                  className="flex items-center justify-between p-4 bg-blue-500/10 rounded-lg border border-blue-500/30 hover:border-blue-500/50 transition-colors cursor-pointer"
+                  className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-blue-500/10 rounded-lg border border-blue-500/30 hover:border-blue-500/50 transition-colors cursor-pointer space-y-3 md:space-y-0"
                   onClick={() => setSelectedVerification(verification.id)}
                 >
                   <div className="flex items-center space-x-4">
@@ -191,7 +191,7 @@ export function KYCAdmin() {
                           ? `${verification.first_name} ${verification.last_name}`
                           : 'Nom non fourni'}
                       </h3>
-                      <p className="text-gray-400 text-sm">ID: {verification.user_id}</p>
+                      <p className="text-gray-400 text-sm">ID: {verification.user_id.slice(0, 8)}...</p>
                       <p className="text-gray-400 text-sm">
                         Soumis le: {verification.submitted_at 
                           ? new Date(verification.submitted_at).toLocaleDateString('fr-FR')
@@ -199,7 +199,7 @@ export function KYCAdmin() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center justify-between md:justify-end space-x-4">
                     {getStatusBadge(verification.status)}
                     <Button variant="outline" size="sm" className="border-blue-500 text-blue-400 hover:bg-blue-500/20">
                       <Eye className="h-4 w-4 mr-2" />
@@ -213,16 +213,17 @@ export function KYCAdmin() {
         </Card>
       )}
 
-      {/* Liste des autres vérifications */}
+      {/* Liste des autres vérifications - responsive */}
       <Card className="bg-terex-card border-terex-border">
         <CardHeader>
-          <CardTitle className="text-white">
+          <CardTitle className="text-white text-lg md:text-xl">
             {priorityVerifications.length > 0 ? 'Autres vérifications' : 'Toutes les vérifications KYC'}
           </CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
             <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
               <div className="text-white text-lg">Chargement...</div>
             </div>
           ) : otherVerifications.length === 0 ? (
@@ -236,7 +237,7 @@ export function KYCAdmin() {
               {otherVerifications.map((verification) => (
                 <div
                   key={verification.id}
-                  className="flex items-center justify-between p-4 bg-terex-dark rounded-lg border border-terex-border hover:border-terex-accent/50 transition-colors cursor-pointer"
+                  className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-terex-dark rounded-lg border border-terex-border hover:border-terex-accent/50 transition-colors cursor-pointer space-y-3 md:space-y-0"
                   onClick={() => setSelectedVerification(verification.id)}
                 >
                   <div className="flex items-center space-x-4">
@@ -246,7 +247,7 @@ export function KYCAdmin() {
                           ? `${verification.first_name} ${verification.last_name}`
                           : 'Nom non fourni'}
                       </h3>
-                      <p className="text-gray-400 text-sm">ID: {verification.user_id}</p>
+                      <p className="text-gray-400 text-sm">ID: {verification.user_id.slice(0, 8)}...</p>
                       <p className="text-gray-400 text-sm">
                         Soumis le: {verification.submitted_at 
                           ? new Date(verification.submitted_at).toLocaleDateString('fr-FR')
@@ -254,7 +255,7 @@ export function KYCAdmin() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center justify-between md:justify-end space-x-4">
                     {getStatusBadge(verification.status)}
                     <Button variant="outline" size="sm">
                       <Eye className="h-4 w-4 mr-2" />

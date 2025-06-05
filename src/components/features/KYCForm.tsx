@@ -127,135 +127,137 @@ export function KYCForm({ onComplete }: KYCFormProps) {
   };
 
   return (
-    <div className="space-y-6">
-      <Card className="bg-terex-darker border-terex-gray">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center">
-            <User className="w-5 h-5 mr-2" />
+    <div className="max-w-4xl mx-auto space-y-8 p-6">
+      {/* Informations personnelles */}
+      <Card className="bg-terex-darker border-terex-gray shadow-lg">
+        <CardHeader className="pb-6">
+          <CardTitle className="text-white flex items-center text-2xl">
+            <User className="w-6 h-6 mr-3" />
             Informations personnelles
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-gray-400 text-base">
             Saisissez vos informations personnelles exactement comme elles apparaissent sur vos documents d'identité
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="first_name" className="text-gray-300">Prénom *</Label>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="first_name" className="text-gray-300 text-base font-medium">Prénom *</Label>
               <Input
                 id="first_name"
                 value={formData.first_name || ''}
                 onChange={(e) => handleInputChange('first_name', e.target.value)}
-                className="bg-terex-gray border-terex-gray text-white"
+                className="bg-terex-gray border-terex-gray text-white h-12 text-base"
                 placeholder="Votre prénom"
               />
             </div>
-            <div>
-              <Label htmlFor="last_name" className="text-gray-300">Nom *</Label>
+            <div className="space-y-2">
+              <Label htmlFor="last_name" className="text-gray-300 text-base font-medium">Nom *</Label>
               <Input
                 id="last_name"
                 value={formData.last_name || ''}
                 onChange={(e) => handleInputChange('last_name', e.target.value)}
-                className="bg-terex-gray border-terex-gray text-white"
+                className="bg-terex-gray border-terex-gray text-white h-12 text-base"
                 placeholder="Votre nom"
               />
             </div>
-            <div>
-              <Label htmlFor="date_of_birth" className="text-gray-300">Date de naissance *</Label>
+            <div className="space-y-2">
+              <Label htmlFor="date_of_birth" className="text-gray-300 text-base font-medium">Date de naissance *</Label>
               <Input
                 id="date_of_birth"
                 type="date"
                 value={formData.date_of_birth || ''}
                 onChange={(e) => handleInputChange('date_of_birth', e.target.value)}
-                className="bg-terex-gray border-terex-gray text-white"
+                className="bg-terex-gray border-terex-gray text-white h-12 text-base"
               />
             </div>
-            <div>
-              <Label htmlFor="nationality" className="text-gray-300">Nationalité *</Label>
+            <div className="space-y-2">
+              <Label htmlFor="nationality" className="text-gray-300 text-base font-medium">Nationalité *</Label>
               <Input
                 id="nationality"
                 value={formData.nationality || ''}
                 onChange={(e) => handleInputChange('nationality', e.target.value)}
-                className="bg-terex-gray border-terex-gray text-white"
+                className="bg-terex-gray border-terex-gray text-white h-12 text-base"
                 placeholder="Votre nationalité"
               />
             </div>
-            <div>
-              <Label htmlFor="phone_number" className="text-gray-300">Téléphone *</Label>
+            <div className="space-y-2">
+              <Label htmlFor="phone_number" className="text-gray-300 text-base font-medium">Téléphone *</Label>
               <Input
                 id="phone_number"
                 type="tel"
                 value={formData.phone_number || ''}
                 onChange={(e) => handleInputChange('phone_number', e.target.value)}
-                className="bg-terex-gray border-terex-gray text-white"
-                placeholder="+33 6 12 34 56 78"
+                className="bg-terex-gray border-terex-gray text-white h-12 text-base"
+                placeholder=""
               />
             </div>
-            <div>
-              <Label htmlFor="country" className="text-gray-300">Pays de résidence *</Label>
+            <div className="space-y-2">
+              <Label htmlFor="country" className="text-gray-300 text-base font-medium">Pays de résidence *</Label>
               <Input
                 id="country"
                 value={formData.country || ''}
                 onChange={(e) => handleInputChange('country', e.target.value)}
-                className="bg-terex-gray border-terex-gray text-white"
-                placeholder="France"
+                className="bg-terex-gray border-terex-gray text-white h-12 text-base"
+                placeholder=""
               />
             </div>
           </div>
-          <div>
-            <Label htmlFor="address" className="text-gray-300">Adresse complète *</Label>
+          <div className="space-y-2">
+            <Label htmlFor="address" className="text-gray-300 text-base font-medium">Adresse complète *</Label>
             <Textarea
               id="address"
               value={formData.address || ''}
               onChange={(e) => handleInputChange('address', e.target.value)}
-              className="bg-terex-gray border-terex-gray text-white"
+              className="bg-terex-gray border-terex-gray text-white min-h-[100px] text-base"
               placeholder="Numéro, rue, appartement..."
-              rows={3}
+              rows={4}
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="city" className="text-gray-300">Ville *</Label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="city" className="text-gray-300 text-base font-medium">Ville *</Label>
               <Input
                 id="city"
                 value={formData.city || ''}
                 onChange={(e) => handleInputChange('city', e.target.value)}
-                className="bg-terex-gray border-terex-gray text-white"
+                className="bg-terex-gray border-terex-gray text-white h-12 text-base"
                 placeholder="Votre ville"
               />
             </div>
-            <div>
-              <Label htmlFor="postal_code" className="text-gray-300">Code postal</Label>
+            <div className="space-y-2">
+              <Label htmlFor="postal_code" className="text-gray-300 text-base font-medium">Code postal</Label>
               <Input
                 id="postal_code"
                 value={formData.postal_code || ''}
                 onChange={(e) => handleInputChange('postal_code', e.target.value)}
-                className="bg-terex-gray border-terex-gray text-white"
-                placeholder="75001"
+                className="bg-terex-gray border-terex-gray text-white h-12 text-base"
+                placeholder=""
               />
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="bg-terex-darker border-terex-gray">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center">
-            <FileText className="w-5 h-5 mr-2" />
+      {/* Document d'identité */}
+      <Card className="bg-terex-darker border-terex-gray shadow-lg">
+        <CardHeader className="pb-6">
+          <CardTitle className="text-white flex items-center text-2xl">
+            <FileText className="w-6 h-6 mr-3" />
             Document d'identité
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-gray-400 text-base">
             Téléchargez une pièce d'identité valide (recto et verso)
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label className="text-gray-300">Type de document *</Label>
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <Label className="text-gray-300 text-base font-medium">Type de document *</Label>
             <Select 
               value={formData.identity_document_type} 
               onValueChange={(value) => handleInputChange('identity_document_type', value)}
             >
-              <SelectTrigger className="bg-terex-gray border-terex-gray text-white">
+              <SelectTrigger className="bg-terex-gray border-terex-gray text-white h-12 text-base">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-terex-gray border-terex-gray">
@@ -266,21 +268,21 @@ export function KYCForm({ onComplete }: KYCFormProps) {
             </Select>
           </div>
           
-          <div>
-            <Label htmlFor="document_number" className="text-gray-300">Numéro du document *</Label>
+          <div className="space-y-2">
+            <Label htmlFor="document_number" className="text-gray-300 text-base font-medium">Numéro du document *</Label>
             <Input
               id="document_number"
               value={formData.identity_document_number || ''}
               onChange={(e) => handleInputChange('identity_document_number', e.target.value)}
-              className="bg-terex-gray border-terex-gray text-white"
+              className="bg-terex-gray border-terex-gray text-white h-12 text-base"
               placeholder="Numéro de votre document"
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label className="text-gray-300">Recto du document *</Label>
-              <div className="mt-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-3">
+              <Label className="text-gray-300 text-base font-medium">Recto du document *</Label>
+              <div>
                 <input
                   type="file"
                   id="front-doc"
@@ -293,32 +295,36 @@ export function KYCForm({ onComplete }: KYCFormProps) {
                 />
                 <label
                   htmlFor="front-doc"
-                  className={`flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+                  className={`flex items-center justify-center w-full h-40 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 ${
                     formData.identity_document_front_url 
-                      ? 'border-green-500 bg-green-500/10' 
-                      : 'border-terex-gray hover:border-terex-accent bg-terex-gray/50 hover:bg-terex-gray'
+                      ? 'border-green-500 bg-green-500/10 hover:bg-green-500/20' 
+                      : 'border-terex-gray hover:border-terex-accent bg-terex-gray/30 hover:bg-terex-gray/50'
                   }`}
                 >
                   {uploading === 'identity_front' ? (
-                    <div className="text-white">Téléchargement...</div>
+                    <div className="text-white text-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
+                      Téléchargement...
+                    </div>
                   ) : formData.identity_document_front_url ? (
                     <div className="text-green-400 text-center">
-                      <FileText className="w-8 h-8 mx-auto mb-2" />
-                      Document téléchargé
+                      <FileText className="w-12 h-12 mx-auto mb-3" />
+                      <p className="text-sm font-medium">Document téléchargé</p>
                     </div>
                   ) : (
                     <div className="text-gray-400 text-center">
-                      <Upload className="w-8 h-8 mx-auto mb-2" />
-                      Cliquez pour télécharger
+                      <Upload className="w-12 h-12 mx-auto mb-3" />
+                      <p className="text-sm font-medium">Cliquez pour télécharger</p>
+                      <p className="text-xs text-gray-500 mt-1">PNG, JPG, PDF (max 10MB)</p>
                     </div>
                   )}
                 </label>
               </div>
             </div>
 
-            <div>
-              <Label className="text-gray-300">Verso du document *</Label>
-              <div className="mt-2">
+            <div className="space-y-3">
+              <Label className="text-gray-300 text-base font-medium">Verso du document *</Label>
+              <div>
                 <input
                   type="file"
                   id="back-doc"
@@ -331,23 +337,27 @@ export function KYCForm({ onComplete }: KYCFormProps) {
                 />
                 <label
                   htmlFor="back-doc"
-                  className={`flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+                  className={`flex items-center justify-center w-full h-40 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 ${
                     formData.identity_document_back_url 
-                      ? 'border-green-500 bg-green-500/10' 
-                      : 'border-terex-gray hover:border-terex-accent bg-terex-gray/50 hover:bg-terex-gray'
+                      ? 'border-green-500 bg-green-500/10 hover:bg-green-500/20' 
+                      : 'border-terex-gray hover:border-terex-accent bg-terex-gray/30 hover:bg-terex-gray/50'
                   }`}
                 >
                   {uploading === 'identity_back' ? (
-                    <div className="text-white">Téléchargement...</div>
+                    <div className="text-white text-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
+                      Téléchargement...
+                    </div>
                   ) : formData.identity_document_back_url ? (
                     <div className="text-green-400 text-center">
-                      <FileText className="w-8 h-8 mx-auto mb-2" />
-                      Document téléchargé
+                      <FileText className="w-12 h-12 mx-auto mb-3" />
+                      <p className="text-sm font-medium">Document téléchargé</p>
                     </div>
                   ) : (
                     <div className="text-gray-400 text-center">
-                      <Upload className="w-8 h-8 mx-auto mb-2" />
-                      Cliquez pour télécharger
+                      <Upload className="w-12 h-12 mx-auto mb-3" />
+                      <p className="text-sm font-medium">Cliquez pour télécharger</p>
+                      <p className="text-xs text-gray-500 mt-1">PNG, JPG, PDF (max 10MB)</p>
                     </div>
                   )}
                 </label>
@@ -357,13 +367,14 @@ export function KYCForm({ onComplete }: KYCFormProps) {
         </CardContent>
       </Card>
 
-      <Card className="bg-terex-darker border-terex-gray">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center">
-            <Camera className="w-5 h-5 mr-2" />
+      {/* Photo avec document */}
+      <Card className="bg-terex-darker border-terex-gray shadow-lg">
+        <CardHeader className="pb-6">
+          <CardTitle className="text-white flex items-center text-2xl">
+            <Camera className="w-6 h-6 mr-3" />
             Photo avec document
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-gray-400 text-base">
             Prenez une photo de vous en tenant votre document d'identité à côté de votre visage
           </CardDescription>
         </CardHeader>
@@ -381,23 +392,27 @@ export function KYCForm({ onComplete }: KYCFormProps) {
             />
             <label
               htmlFor="selfie"
-              className={`flex items-center justify-center w-full h-40 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+              className={`flex items-center justify-center w-full h-48 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 ${
                 formData.selfie_url 
-                  ? 'border-green-500 bg-green-500/10' 
-                  : 'border-terex-gray hover:border-terex-accent bg-terex-gray/50 hover:bg-terex-gray'
+                  ? 'border-green-500 bg-green-500/10 hover:bg-green-500/20' 
+                  : 'border-terex-gray hover:border-terex-accent bg-terex-gray/30 hover:bg-terex-gray/50'
               }`}
             >
               {uploading === 'selfie' ? (
-                <div className="text-white">Téléchargement...</div>
+                <div className="text-white text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-3"></div>
+                  Téléchargement...
+                </div>
               ) : formData.selfie_url ? (
                 <div className="text-green-400 text-center">
-                  <Camera className="w-12 h-12 mx-auto mb-2" />
-                  Photo téléchargée
+                  <Camera className="w-16 h-16 mx-auto mb-4" />
+                  <p className="text-lg font-medium">Photo téléchargée</p>
                 </div>
               ) : (
                 <div className="text-gray-400 text-center">
-                  <Camera className="w-12 h-12 mx-auto mb-2" />
-                  Cliquez pour prendre une photo
+                  <Camera className="w-16 h-16 mx-auto mb-4" />
+                  <p className="text-lg font-medium">Cliquez pour prendre une photo</p>
+                  <p className="text-sm text-gray-500 mt-2">Tenez votre document à côté de votre visage</p>
                 </div>
               )}
             </label>
@@ -405,13 +420,14 @@ export function KYCForm({ onComplete }: KYCFormProps) {
         </CardContent>
       </Card>
 
-      <Card className="bg-terex-darker border-terex-gray">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center">
-            <MapPin className="w-5 h-5 mr-2" />
+      {/* Justificatif de domicile */}
+      <Card className="bg-terex-darker border-terex-gray shadow-lg">
+        <CardHeader className="pb-6">
+          <CardTitle className="text-white flex items-center text-2xl">
+            <MapPin className="w-6 h-6 mr-3" />
             Justificatif de domicile
           </CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardDescription className="text-gray-400 text-base">
             Téléchargez un justificatif de domicile de moins de 3 mois (facture, relevé bancaire...)
           </CardDescription>
         </CardHeader>
@@ -429,23 +445,27 @@ export function KYCForm({ onComplete }: KYCFormProps) {
             />
             <label
               htmlFor="proof-address"
-              className={`flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+              className={`flex items-center justify-center w-full h-40 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 ${
                 formData.proof_of_address_url 
-                  ? 'border-green-500 bg-green-500/10' 
-                  : 'border-terex-gray hover:border-terex-accent bg-terex-gray/50 hover:bg-terex-gray'
+                  ? 'border-green-500 bg-green-500/10 hover:bg-green-500/20' 
+                  : 'border-terex-gray hover:border-terex-accent bg-terex-gray/30 hover:bg-terex-gray/50'
               }`}
             >
               {uploading === 'proof_address' ? (
-                <div className="text-white">Téléchargement...</div>
+                <div className="text-white text-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
+                  Téléchargement...
+                </div>
               ) : formData.proof_of_address_url ? (
                 <div className="text-green-400 text-center">
-                  <FileText className="w-8 h-8 mx-auto mb-2" />
-                  Justificatif téléchargé
+                  <FileText className="w-12 h-12 mx-auto mb-3" />
+                  <p className="text-sm font-medium">Justificatif téléchargé</p>
                 </div>
               ) : (
                 <div className="text-gray-400 text-center">
-                  <Upload className="w-8 h-8 mx-auto mb-2" />
-                  Cliquez pour télécharger
+                  <Upload className="w-12 h-12 mx-auto mb-3" />
+                  <p className="text-sm font-medium">Cliquez pour télécharger</p>
+                  <p className="text-xs text-gray-500 mt-1">PNG, JPG, PDF (max 10MB)</p>
                 </div>
               )}
             </label>
@@ -453,13 +473,21 @@ export function KYCForm({ onComplete }: KYCFormProps) {
         </CardContent>
       </Card>
 
-      <div className="flex justify-center">
+      {/* Bouton de soumission */}
+      <div className="flex justify-center pt-6">
         <Button 
           onClick={handleSubmit}
           disabled={submitting}
-          className="bg-terex-accent hover:bg-terex-accent/90 w-full md:w-auto px-8 py-3"
+          className="bg-terex-accent hover:bg-terex-accent/90 text-white font-medium px-12 py-4 text-lg h-auto rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
         >
-          {submitting ? 'Soumission en cours...' : 'Soumettre pour vérification'}
+          {submitting ? (
+            <>
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+              Soumission en cours...
+            </>
+          ) : (
+            'Soumettre pour vérification'
+          )}
         </Button>
       </div>
     </div>

@@ -42,13 +42,34 @@ export const useKYC = () => {
 
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      
+      // Essayer de récupérer d'abord les données existantes
+      let { data, error } = await supabase
         .from('kyc_verifications')
         .select('*')
         .eq('user_id', user.id)
         .single();
 
-      if (error && error.code !== 'PGRST116') {
+      // Si aucun enregistrement n'existe, en créer un
+      if (error && error.code === 'PGRST116') {
+        console.log('Aucun enregistrement KYC trouvé, création d\'un nouveau...');
+        
+        const { data: newData, error: insertError } = await supabase
+          .from('kyc_verifications')
+          .insert({
+            user_id: user.id,
+            status: 'pending'
+          })
+          .select()
+          .single();
+
+        if (insertError) {
+          console.error('Erreur lors de la création KYC:', insertError);
+          return;
+        }
+        
+        data = newData;
+      } else if (error) {
         console.error('Erreur lors de la récupération des données KYC:', error);
         return;
       }
@@ -93,21 +114,35 @@ export const useKYC = () => {
     if (!user) return { error: 'Utilisateur non connecté' };
 
     try {
-      const { error } = await supabase
+      console.log('Soumission KYC pour utilisateur:', user.id);
+      console.log('Données à soumettre:', formData);
+
+      const updateData = {
+        ...formData,
+        status: 'submitted',
+        submitted_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      const { data, error } = await supabase
         .from('kyc_verifications')
-        .update({
-          ...formData,
-          status: 'submitted',
-          submitted_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
-        .eq('user_id', user.id);
+        .update(updateData)
+        .eq('user_id', user.id)
+        .select()
+        .single();
 
       if (error) {
         console.error('Erreur lors de la soumission KYC:', error);
+        toast({
+          title: "Erreur de soumission",
+          description: "Impossible de soumettre votre demande. Veuillez réessayer.",
+          variant: "destructive"
+        });
         return { error: error.message };
       }
 
+      console.log('KYC soumis avec succès:', data);
+      
       await fetchKYCData();
       
       toast({
@@ -119,6 +154,11 @@ export const useKYC = () => {
       return { success: true };
     } catch (error) {
       console.error('Erreur inattendue:', error);
+      toast({
+        title: "Erreur technique",
+        description: "Une erreur inattendue s'est produite. Veuillez réessayer.",
+        variant: "destructive"
+      });
       return { error: 'Erreur inattendue lors de la soumission' };
     }
   };
@@ -127,6 +167,8 @@ export const useKYC = () => {
     if (!user) return { error: 'Utilisateur non connecté' };
 
     try {
+      console.log('Upload du document:', documentType, 'pour utilisateur:', user.id);
+      
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/${documentType}.${fileExt}`;
 
@@ -143,6 +185,7 @@ export const useKYC = () => {
         .from('kyc-documents')
         .getPublicUrl(fileName);
 
+      console.log('Document uploadé avec succès:', data.publicUrl);
       return { success: true, url: data.publicUrl };
     } catch (error) {
       console.error('Erreur inattendue upload:', error);
