@@ -47,12 +47,22 @@ export const useEmailNotifications = () => {
     }
   };
 
-  // Nouvelle fonction pour envoyer des notifications de paiement confirmé
+  // Fonction pour les confirmations d'achat USDT
+  const sendBuyConfirmation = async (orderData: any, orderId: string) => {
+    return sendEmailNotification('order_confirmation', 'buy', orderData, orderId);
+  };
+
+  // Fonction pour les confirmations de vente USDT
+  const sendSellConfirmation = async (orderData: any, orderId: string) => {
+    return sendEmailNotification('order_confirmation', 'sell', orderData, orderId);
+  };
+
+  // Fonction pour les confirmations de paiement
   const sendPaymentConfirmation = async (orderData: any, orderId: string) => {
     return sendEmailNotification('payment_confirmed', orderData.type, orderData, orderId);
   };
 
-  // Nouvelle fonction pour les notifications de transfert international
+  // Fonction pour les notifications de transfert international
   const sendTransferNotification = async (
     emailType: string,
     transferData: any,
@@ -94,6 +104,8 @@ export const useEmailNotifications = () => {
 
   return {
     sendEmailNotification,
+    sendBuyConfirmation,
+    sendSellConfirmation,
     sendPaymentConfirmation,
     sendTransferNotification
   };

@@ -7,12 +7,25 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRightLeft, Shield, Clock, Globe, CreditCard, Smartphone, MapPin, Phone } from 'lucide-react';
+import { useInternationalTransfers } from '@/hooks/useInternationalTransfers';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 export function InternationalTransfer() {
   const [sendAmount, setSendAmount] = useState('');
   const [recipientCountry, setRecipientCountry] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [receiveMethod, setReceiveMethod] = useState('');
+  const [recipientFirstName, setRecipientFirstName] = useState('');
+  const [recipientLastName, setRecipientLastName] = useState('');
+  const [recipientEmail, setRecipientEmail] = useState('');
+  const [recipientPhone, setRecipientPhone] = useState('');
+  const [recipientAccount, setRecipientAccount] = useState('');
+  const [recipientBank, setRecipientBank] = useState('');
+  
+  const { createTransfer, loading } = useInternationalTransfers();
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   // Taux de change fixe CAD vers CFA
   const exchangeRate = 445.50;
@@ -28,6 +41,43 @@ export function InternationalTransfer() {
     { code: 'NG', name: 'Nigeria', flag: '🇳🇬' },
     { code: 'BJ', name: 'Bénin', flag: '🇧🇯' }
   ];
+
+  const handleCreateTransfer = async () => {
+    if (!user) {
+      toast({
+        title: "Connexion requise",
+        description: "Vous devez être connecté pour effectuer un transfert",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || 
+        !recipientFirstName || !recipientLastName || !recipientPhone) {
+      toast({
+        title: "Informations manquantes",
+        description: "Veuillez remplir tous les champs requis",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const transferData = {
+      amount: parseFloat(sendAmount),
+      from_currency: 'CAD',
+      to_currency: 'CFA',
+      exchange_rate: exchangeRate,
+      fees: parseFloat(fees),
+      total_amount: parseFloat(receiveAmount),
+      recipient_name: `${recipientFirstName} ${recipientLastName}`,
+      recipient_account: recipientAccount || recipientPhone,
+      recipient_bank: recipientBank,
+      recipient_country: recipientCountry,
+      status: 'pending'
+    };
+
+    await createTransfer(transferData);
+  };
 
   return (
     <div className="min-h-screen bg-terex-dark p-2 md:p-4">
@@ -193,20 +243,28 @@ export function InternationalTransfer() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
                       placeholder="Prénom"
+                      value={recipientFirstName}
+                      onChange={(e) => setRecipientFirstName(e.target.value)}
                       className="bg-terex-gray border-terex-gray-light text-white h-12"
                     />
                     <Input
                       placeholder="Nom de famille"
+                      value={recipientLastName}
+                      onChange={(e) => setRecipientLastName(e.target.value)}
                       className="bg-terex-gray border-terex-gray-light text-white h-12"
                     />
                     <Input
                       placeholder="Email (optionnel)"
                       type="email"
+                      value={recipientEmail}
+                      onChange={(e) => setRecipientEmail(e.target.value)}
                       className="bg-terex-gray border-terex-gray-light text-white h-12"
                     />
                     <Input
                       placeholder="Téléphone"
                       type="tel"
+                      value={recipientPhone}
+                      onChange={(e) => setRecipientPhone(e.target.value)}
                       className="bg-terex-gray border-terex-gray-light text-white h-12"
                     />
                   </div>
@@ -215,10 +273,14 @@ export function InternationalTransfer() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                       <Input
                         placeholder="IBAN / Numéro de compte"
+                        value={recipientAccount}
+                        onChange={(e) => setRecipientAccount(e.target.value)}
                         className="bg-terex-gray border-terex-gray-light text-white h-12"
                       />
                       <Input
                         placeholder="Nom de la banque"
+                        value={recipientBank}
+                        onChange={(e) => setRecipientBank(e.target.value)}
                         className="bg-terex-gray border-terex-gray-light text-white h-12"
                       />
                     </div>
@@ -228,9 +290,10 @@ export function InternationalTransfer() {
                 <Button 
                   size="lg"
                   className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                  disabled={!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry}
+                  disabled={!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName || !recipientPhone || loading}
+                  onClick={handleCreateTransfer}
                 >
-                  Continuer le transfert
+                  {loading ? 'Traitement...' : 'Continuer le transfert'}
                 </Button>
               </CardContent>
             </Card>

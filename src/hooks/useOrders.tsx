@@ -16,7 +16,7 @@ export const useOrders = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const { toast } = useToast();
-  const { sendEmailNotification, sendPaymentConfirmation } = useEmailNotifications();
+  const { sendBuyConfirmation, sendSellConfirmation, sendEmailNotification, sendPaymentConfirmation } = useEmailNotifications();
 
   const fetchOrders = async () => {
     if (!user) return;
@@ -72,13 +72,12 @@ export const useOrders = () => {
         description: "Votre commande a été créée avec succès",
       });
 
-      // Envoyer l'email de confirmation automatiquement
-      await sendEmailNotification(
-        'order_confirmation',
-        data.type,
-        data,
-        data.id
-      );
+      // Envoyer l'email de confirmation selon le type de commande
+      if (data.type === 'buy') {
+        await sendBuyConfirmation(data, data.id);
+      } else if (data.type === 'sell') {
+        await sendSellConfirmation(data, data.id);
+      }
 
       await fetchOrders();
       return data;

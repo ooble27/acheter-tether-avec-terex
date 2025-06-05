@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { Resend } from "npm:resend@2.0.0";
@@ -65,14 +66,11 @@ const generateEmailContent = (emailType: string, transactionType: string, orderD
   
   const baseTemplate = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
-      <!-- Header -->
-      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px 40px; text-align: center;">
-        <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
-          TERANGA EXCHANGE
+      <!-- Simple Header -->
+      <div style="padding: 20px 40px; text-align: center; border-bottom: 1px solid #e2e8f0;">
+        <h1 style="color: #1e293b; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">
+          TEREX
         </h1>
-        <p style="color: #e2e8f0; margin: 8px 0 0 0; font-size: 14px; opacity: 0.9;">
-          Plateforme d'échange crypto professionnelle
-        </p>
       </div>
   `;
 
@@ -87,10 +85,10 @@ const generateEmailContent = (emailType: string, transactionType: string, orderD
         
         <div style="border-top: 1px solid #e2e8f0; padding-top: 20px; text-align: center;">
           <p style="color: #64748b; font-size: 12px; margin: 0 0 8px 0;">
-            Cet email a été envoyé automatiquement par Teranga Exchange
+            Cet email a été envoyé automatiquement par Terex
           </p>
           <p style="color: #64748b; font-size: 12px; margin: 0;">
-            © 2024 Teranga Exchange. Tous droits réservés.
+            © 2024 Terex. Tous droits réservés.
           </p>
         </div>
       </div>
@@ -176,12 +174,138 @@ const generateEmailContent = (emailType: string, transactionType: string, orderD
             ${footerTemplate}
           `
         };
+      } else if (transactionType === 'sell') {
+        return {
+          subject: `✅ Commande confirmée #${txId} - Vente USDT`,
+          html: `${baseTemplate}
+            <!-- Content -->
+            <div style="padding: 40px;">
+              <div style="text-align: center; margin-bottom: 30px;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: white; font-size: 24px;">💰</span>
+                </div>
+                <h2 style="color: #1e293b; margin: 0; font-size: 24px; font-weight: 700;">
+                  Vente confirmée !
+                </h2>
+                <p style="color: #64748b; margin: 8px 0 0 0; font-size: 16px;">
+                  Votre vente USDT a été enregistrée avec succès
+                </p>
+              </div>
+
+              <!-- Transaction Details -->
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin: 24px 0;">
+                <h3 style="color: #1e293b; margin: 0 0 16px 0; font-size: 18px; font-weight: 600;">
+                  📋 Détails de la transaction
+                </h3>
+                
+                <div style="display: grid; gap: 12px;">
+                  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                    <span style="color: #64748b; font-weight: 500;">Numéro de transaction</span>
+                    <span style="color: #1e293b; font-weight: 600; font-family: monospace;">${txId}</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                    <span style="color: #64748b; font-weight: 500;">USDT vendus</span>
+                    <span style="color: #f59e0b; font-weight: 700; font-size: 16px;">${formatCurrency(orderData.usdt_amount)} USDT</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                    <span style="color: #64748b; font-weight: 500;">Montant à recevoir</span>
+                    <span style="color: #1e293b; font-weight: 600;">${formatCurrency(orderData.amount)} ${orderData.currency}</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                    <span style="color: #64748b; font-weight: 500;">Taux de change</span>
+                    <span style="color: #1e293b; font-weight: 600;">1 USDT = ${formatCurrency(orderData.exchange_rate)} ${orderData.currency}</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                    <span style="color: #64748b; font-weight: 500;">Date de création</span>
+                    <span style="color: #1e293b; font-weight: 600;">${formatDate(orderData.created_at)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 16px; margin: 24px 0;">
+                <h4 style="color: #92400e; margin: 0 0 8px 0; font-size: 16px;">📤 Instructions d'envoi</h4>
+                <p style="color: #92400e; margin: 0; font-size: 14px;">
+                  Envoyez vos USDT à l'adresse fournie pour finaliser la vente. Vous recevrez votre paiement après confirmation.
+                </p>
+              </div>
+            </div>
+            ${footerTemplate}
+          `
+        };
       }
       break;
+
+    case 'transfer_confirmation':
+      return {
+        subject: `✅ Transfert confirmé #${txId} - Virement international`,
+        html: `${baseTemplate}
+          <!-- Content -->
+          <div style="padding: 40px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
+                <span style="color: white; font-size: 24px;">🌍</span>
+              </div>
+              <h2 style="color: #1e293b; margin: 0; font-size: 24px; font-weight: 700;">
+                Transfert confirmé !
+              </h2>
+              <p style="color: #64748b; margin: 8px 0 0 0; font-size: 16px;">
+                Votre virement international a été enregistré avec succès
+              </p>
+            </div>
+
+            <!-- Transfer Details -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin: 24px 0;">
+              <h3 style="color: #1e293b; margin: 0 0 16px 0; font-size: 18px; font-weight: 600;">
+                📋 Détails du transfert
+              </h3>
+              
+              <div style="display: grid; gap: 12px;">
+                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                  <span style="color: #64748b; font-weight: 500;">Numéro de transaction</span>
+                  <span style="color: #1e293b; font-weight: 600; font-family: monospace;">${txId}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                  <span style="color: #64748b; font-weight: 500;">Montant envoyé</span>
+                  <span style="color: #1e293b; font-weight: 600;">${formatCurrency(orderData.amount)} ${orderData.from_currency}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                  <span style="color: #64748b; font-weight: 500;">Montant reçu</span>
+                  <span style="color: #3b82f6; font-weight: 700; font-size: 16px;">${formatCurrency(orderData.total_amount)} ${orderData.to_currency}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                  <span style="color: #64748b; font-weight: 500;">Destinataire</span>
+                  <span style="color: #1e293b; font-weight: 600;">${orderData.recipient_name}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                  <span style="color: #64748b; font-weight: 500;">Pays de destination</span>
+                  <span style="color: #1e293b; font-weight: 600;">${orderData.recipient_country}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                  <span style="color: #64748b; font-weight: 500;">Date de création</span>
+                  <span style="color: #1e293b; font-weight: 600;">${formatDate(orderData.created_at)}</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 16px; margin: 24px 0;">
+              <h4 style="color: #92400e; margin: 0 0 8px 0; font-size: 16px;">⏱️ Délai de traitement</h4>
+              <p style="color: #92400e; margin: 0; font-size: 14px;">
+                Votre transfert sera traité dans les 5 minutes suivant la validation du paiement.
+              </p>
+            </div>
+          </div>
+          ${footerTemplate}
+        `
+      };
       
     case 'status_update':
       const statusText = getStatusText(orderData.status);
       const statusColor = getStatusColor(orderData.status);
+      
+      let transactionTypeText = 'Transaction';
+      if (transactionType === 'buy') transactionTypeText = 'Achat USDT';
+      else if (transactionType === 'sell') transactionTypeText = 'Vente USDT';
+      else if (transactionType === 'transfer') transactionTypeText = 'Virement international';
       
       return {
         subject: `🔄 Mise à jour #${txId} - ${statusText}`,
@@ -216,11 +340,11 @@ const generateEmailContent = (emailType: string, transactionType: string, orderD
                 </div>
                 <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
                   <span style="color: #64748b; font-weight: 500;">Type</span>
-                  <span style="color: #1e293b; font-weight: 600;">${transactionType === 'buy' ? 'Achat USDT' : 'Vente USDT'}</span>
+                  <span style="color: #1e293b; font-weight: 600;">${transactionTypeText}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
                   <span style="color: #64748b; font-weight: 500;">Montant</span>
-                  <span style="color: #1e293b; font-weight: 600;">${formatCurrency(orderData.usdt_amount)} USDT</span>
+                  <span style="color: #1e293b; font-weight: 600;">${formatCurrency(orderData.amount || orderData.usdt_amount)} ${orderData.currency || orderData.from_currency || 'USDT'}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; padding: 8px 0;">
                   <span style="color: #64748b; font-weight: 500;">Mis à jour le</span>
@@ -233,11 +357,9 @@ const generateEmailContent = (emailType: string, transactionType: string, orderD
             <div style="background: #dcfce7; border: 1px solid #16a34a; border-radius: 8px; padding: 16px; margin: 24px 0;">
               <h4 style="color: #15803d; margin: 0 0 8px 0; font-size: 16px;">🎉 Transaction terminée !</h4>
               <p style="color: #15803d; margin: 0 0 8px 0; font-size: 14px;">
-                Votre transaction a été complétée avec succès. Vous pouvez maintenant vérifier votre solde.
+                Votre transaction a été complétée avec succès.
               </p>
-              <p style="color: #15803d; margin: 0; font-size: 12px;">
-                🔗 Consultez les détails sur la blockchain ${orderData.network}
-              </p>
+              ${transactionType === 'buy' ? `<p style="color: #15803d; margin: 0; font-size: 12px;">🔗 Consultez les détails sur la blockchain ${orderData.network}</p>` : ''}
             </div>
             ` : orderData.status === 'processing' ? `
             <div style="background: #dbeafe; border: 1px solid #3b82f6; border-radius: 8px; padding: 16px; margin: 24px 0;">
@@ -254,7 +376,7 @@ const generateEmailContent = (emailType: string, transactionType: string, orderD
 
     case 'payment_confirmed':
       return {
-        subject: `💰 Paiement confirmé #${txId} - USDT en cours d'envoi`,
+        subject: `💰 Paiement confirmé #${txId} - Transaction en cours`,
         html: `${baseTemplate}
           <!-- Content -->
           <div style="padding: 40px;">
@@ -266,24 +388,24 @@ const generateEmailContent = (emailType: string, transactionType: string, orderD
                 Paiement confirmé !
               </h2>
               <p style="color: #64748b; margin: 8px 0 0 0; font-size: 16px;">
-                Vos USDT sont en cours d'envoi
+                Votre transaction est maintenant en cours de traitement
               </p>
             </div>
 
             <div style="background: #dcfce7; border: 1px solid #16a34a; border-radius: 12px; padding: 24px; margin: 24px 0;">
               <h4 style="color: #15803d; margin: 0 0 16px 0; font-size: 18px;">✅ Paiement validé</h4>
               <p style="color: #15803d; margin: 0 0 12px 0; font-size: 14px;">
-                Votre paiement de <strong>${formatCurrency(orderData.amount)} ${orderData.currency}</strong> a été confirmé.
+                Votre paiement a été confirmé avec succès.
               </p>
               <p style="color: #15803d; margin: 0; font-size: 14px;">
-                Nous procédons maintenant à l'envoi de <strong>${formatCurrency(orderData.usdt_amount)} USDT</strong> vers votre adresse.
+                Nous procédons maintenant au traitement de votre transaction.
               </p>
             </div>
 
             <div style="background: #eff6ff; border: 1px solid #3b82f6; border-radius: 8px; padding: 16px; margin: 24px 0;">
-              <h4 style="color: #1e40af; margin: 0 0 8px 0; font-size: 16px;">⏱️ Délai d'envoi</h4>
+              <h4 style="color: #1e40af; margin: 0 0 8px 0; font-size: 16px;">⏱️ Délai de traitement</h4>
               <p style="color: #1e40af; margin: 0; font-size: 14px;">
-                Les USDT seront envoyés dans les 5-10 minutes suivant cette confirmation.
+                Votre transaction sera complétée dans les 5-10 minutes suivant cette confirmation.
               </p>
             </div>
           </div>
@@ -293,7 +415,7 @@ const generateEmailContent = (emailType: string, transactionType: string, orderD
       
     default:
       return {
-        subject: `📬 Notification Teranga Exchange #${txId}`,
+        subject: `📬 Notification Terex #${txId}`,
         html: `${baseTemplate}
           <!-- Content -->
           <div style="padding: 40px;">
@@ -301,7 +423,7 @@ const generateEmailContent = (emailType: string, transactionType: string, orderD
               Notification
             </h2>
             <p style="color: #64748b; margin: 0 0 24px 0; font-size: 16px;">
-              Vous avez reçu une nouvelle notification de Teranga Exchange.
+              Vous avez reçu une nouvelle notification de Terex.
             </p>
             <p style="color: #64748b; margin: 0; font-size: 14px;">
               Transaction: #${txId}
@@ -330,7 +452,7 @@ const handler = async (req: Request): Promise<Response> => {
         email_address: emailAddress,
         email_type: emailType,
         transaction_type: transactionType,
-        subject: generateEmailContent(emailType, transactionType, orderData)?.subject || 'Notification Teranga Exchange',
+        subject: generateEmailContent(emailType, transactionType, orderData)?.subject || 'Notification Terex',
         status: 'pending'
       })
       .select()
@@ -350,7 +472,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Envoyer l'email avec Resend
     const emailResponse = await resend.emails.send({
-      from: "Teranga Exchange <noreply@terangaexchange.com>",
+      from: "Terex <noreply@terangaexchange.com>",
       to: [emailAddress],
       subject: emailContent.subject,
       html: emailContent.html,

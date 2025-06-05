@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,11 +6,18 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRightLeft, Shield, TrendingUp, Copy } from 'lucide-react';
+import { useOrders } from '@/hooks/useOrders';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 export function SellUSDT() {
   const [amount, setAmount] = useState('');
   const [network, setNetwork] = useState('TRC20');
   const [paymentService, setPaymentService] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const { createOrder, loading } = useOrders();
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   const exchangeRate = 615;
   const cfaAmount = amount ? (parseFloat(amount) * exchangeRate).toFixed(0) : '0';
@@ -30,6 +36,46 @@ export function SellUSDT() {
 
   const copyAddress = () => {
     navigator.clipboard.writeText(getReceiveAddress());
+    toast({
+      title: "Adresse copiée",
+      description: "L'adresse a été copiée dans le presse-papiers",
+    });
+  };
+
+  const handleSellUSDT = async () => {
+    if (!user) {
+      toast({
+        title: "Connexion requise",
+        description: "Vous devez être connecté pour effectuer une vente",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!amount || !paymentService || !phoneNumber) {
+      toast({
+        title: "Informations manquantes",
+        description: "Veuillez remplir tous les champs requis",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const orderData = {
+      user_id: user.id,
+      type: 'sell' as const,
+      usdt_amount: parseFloat(amount),
+      amount: parseFloat(cfaAmount),
+      currency: 'CFA',
+      exchange_rate: exchangeRate,
+      network,
+      payment_method: paymentService as any,
+      notes: `Vente USDT - ${paymentService}: ${phoneNumber}`,
+      status: 'pending' as const,
+      payment_status: 'pending'
+    };
+
+    await createOrder(orderData);
   };
 
   return (
@@ -171,6 +217,8 @@ export function SellUSDT() {
                     <Input
                       type="tel"
                       placeholder="+221 XX XXX XX XX"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
                       className="bg-terex-gray border-terex-gray-light text-white h-12"
                     />
                   </div>
@@ -179,9 +227,10 @@ export function SellUSDT() {
                 <Button 
                   size="lg"
                   className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                  disabled={!amount || !paymentService}
+                  disabled={!amount || !paymentService || !phoneNumber || loading}
+                  onClick={handleSellUSDT}
                 >
-                  Vendre USDT
+                  {loading ? 'Traitement...' : 'Vendre USDT'}
                 </Button>
               </CardContent>
             </Card>
