@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,60 +36,32 @@ export function LoginForm() {
           });
         }
       } else {
-        // Pour l'inscription, on essaie d'abord de se connecter pour vérifier si l'email existe
-        const { error: loginError } = await signIn(email, password);
+        // Pour l'inscription, on essaie directement de s'inscrire
+        const { error: signUpError } = await signUp(email, password, name);
         
-        if (!loginError) {
-          // Si la connexion réussit, l'email existe déjà avec le bon mot de passe
-          toast({
-            title: "Email déjà utilisé",
-            description: "Cet email est déjà utilisé. Vous êtes maintenant connecté.",
-            variant: "destructive",
-          });
-          setIsLoading(false);
-          return;
-        }
-        
-        // Si la connexion échoue, vérifier le type d'erreur
-        if (loginError.message === "Invalid login credentials") {
-          // Essayer de s'inscrire pour voir si l'email existe déjà
-          const { error: signUpError } = await signUp(email, password, name);
-          
-          // Dans tous les cas où signUp ne réussit pas parfaitement ou si l'email existe déjà
-          // on considère que l'email est déjà utilisé
-          if (signUpError) {
+        if (signUpError) {
+          // Vérifier le type d'erreur spécifique
+          if (signUpError.message.includes("already registered") || 
+              signUpError.message.includes("User already registered")) {
             toast({
               title: "Email déjà utilisé",
               description: "Cet email est déjà utilisé. Veuillez vous connecter.",
               variant: "destructive",
             });
           } else {
-            // Vérifier si c'est vraiment une nouvelle inscription réussie
-            // En tentant une connexion immédiate après l'inscription
-            const { error: verifyError } = await signIn(email, password);
-            if (verifyError) {
-              // Si on ne peut pas se connecter après une "inscription réussie", 
-              // c'est probablement que l'email existe déjà
-              toast({
-                title: "Email déjà utilisé",
-                description: "Cet email est déjà utilisé. Veuillez vous connecter.",
-                variant: "destructive",
-              });
-            } else {
-              // Vraie nouvelle inscription
-              toast({
-                title: "Inscription réussie !",
-                description: "Vérifiez votre email pour activer votre compte",
-                className: "bg-green-600 text-white border-green-600",
-              });
-            }
+            // Autres erreurs d'inscription
+            toast({
+              title: "Erreur d'inscription",
+              description: signUpError.message,
+              variant: "destructive",
+            });
           }
         } else {
-          // Autre erreur de connexion (email existe déjà)
+          // Inscription réussie
           toast({
-            title: "Email déjà utilisé",
-            description: "Cet email est déjà utilisé. Veuillez vous connecter.",
-            variant: "destructive",
+            title: "Inscription réussie !",
+            description: "Vérifiez votre email pour activer votre compte",
+            className: "bg-green-600 text-white border-green-600",
           });
         }
       }
