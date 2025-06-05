@@ -1,4 +1,3 @@
-
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +10,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, Send } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useState } from 'react';
@@ -49,6 +48,24 @@ const menuItems = [
   { id: 'transfer', label: 'Virement International', icon: Globe },
   { id: 'profile', label: 'Mon Profil', icon: User },
   { id: 'faq', label: 'FAQ', icon: HelpCircle },
+];
+
+const adminItems = [
+  {
+    title: "KYC Admin",
+    icon: Shield,
+    key: "kyc-admin"
+  },
+  {
+    title: "Commandes",
+    icon: ShoppingCart,
+    key: "orders-admin"
+  },
+  {
+    title: "Virements",
+    icon: Send,
+    key: "transfers-admin"
+  }
 ];
 
 const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemClick }: AppSidebarProps & { onItemClick?: () => void }) => {

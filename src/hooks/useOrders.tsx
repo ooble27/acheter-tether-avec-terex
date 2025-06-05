@@ -2,141 +2,127 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import { useEmailNotifications } from './useEmailNotifications';
+import { toast } from 'sonner';
 import type { Database } from '@/integrations/supabase/types';
 
-type Order = Database['public']['Tables']['orders']['Row'];
-type OrderInsert = Database['public']['Tables']['orders']['Insert'];
+type OrderStatus = Database['public']['Enums']['order_status'];
 
-export type { Order };
+export interface Order {
+  id: string;
+  user_id: string;
+  amount: number;
+  usdt_amount: number;
+  exchange_rate: number;
+  payment_method: string;
+  status: OrderStatus;
+  type: string;
+  currency: string;
+  network: string;
+  wallet_address?: string;
+  payment_status?: string;
+  payment_reference?: string;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+  processed_at?: string;
+  processed_by?: string;
+}
 
 export const useOrders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
-  const { toast } = useToast();
+  const { sendOrderConfirmation, sendOrderStatusUpdate } = useEmailNotifications();
 
   const fetchOrders = async () => {
-    if (!user) return;
-
     try {
       const { data, error } = await supabase
         .from('orders')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Erreur lors de la récupération des commandes:', error);
-        throw error;
-      }
-
+      if (error) throw error;
       setOrders(data || []);
     } catch (error) {
-      console.error('Erreur:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de charger les commandes",
-        variant: "destructive",
-      });
+      console.error('Error fetching orders:', error);
+      toast.error('Erreur lors du chargement des commandes');
     } finally {
       setLoading(false);
     }
   };
 
-  const createOrder = async (orderData: Omit<OrderInsert, 'user_id'>) => {
-    if (!user) {
-      toast({
-        title: "Erreur",
-        description: "Vous devez être connecté pour créer une commande",
-        variant: "destructive",
-      });
-      return null;
-    }
-
+  const createOrder = async (orderData: Omit<Order, 'id' | 'created_at' | 'updated_at'>) => {
     try {
-      const insertData: OrderInsert = {
-        ...orderData,
-        user_id: user.id,
-        status: orderData.status || 'pending',
-        payment_status: orderData.payment_status || 'pending'
-      };
-
       const { data, error } = await supabase
         .from('orders')
-        .insert(insertData)
+        .insert(orderData)
         .select()
         .single();
 
-      if (error) {
-        console.error('Erreur lors de la création de la commande:', error);
-        throw error;
+      if (error) throw error;
+
+      // Send confirmation email
+      try {
+        await sendOrderConfirmation(data);
+      } catch (emailError) {
+        console.error('Failed to send confirmation email:', emailError);
+        // Don't throw error, just log it
       }
 
-      toast({
-        title: "Commande créée",
-        description: "Votre commande a été créée avec succès",
-      });
-
       await fetchOrders();
+      toast.success('Commande créée avec succès');
       return data;
     } catch (error) {
-      console.error('Erreur:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de créer la commande",
-        variant: "destructive",
-      });
-      return null;
+      console.error('Error creating order:', error);
+      toast.error('Erreur lors de la création de la commande');
+      throw error;
     }
   };
 
-  const updateOrderStatus = async (orderId: string, status: Database['public']['Enums']['order_status'], paymentStatus?: string) => {
+  const updateOrderStatus = async (orderId: string, status: OrderStatus, paymentStatus?: string) => {
     try {
-      const updateData: Partial<OrderInsert> = { 
-        status,
-        processed_by: user?.id,
-        processed_at: new Date().toISOString()
-      };
-      
-      if (paymentStatus) {
-        updateData.payment_status = paymentStatus;
-      }
-
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('orders')
-        .update(updateData)
-        .eq('id', orderId);
+        .update({
+          status,
+          payment_status: paymentStatus,
+          processed_at: status === 'completed' ? new Date().toISOString() : null,
+          processed_by: user?.id
+        })
+        .eq('id', orderId)
+        .select()
+        .single();
 
-      if (error) {
-        console.error('Erreur lors de la mise à jour:', error);
-        throw error;
+      if (error) throw error;
+
+      // Send status update email
+      try {
+        await sendOrderStatusUpdate(data, status);
+      } catch (emailError) {
+        console.error('Failed to send status update email:', emailError);
+        // Don't throw error, just log it
       }
-
-      toast({
-        title: "Statut mis à jour",
-        description: "Le statut de la commande a été mis à jour",
-      });
 
       await fetchOrders();
+      toast.success('Statut de la commande mis à jour');
+      return data;
     } catch (error) {
-      console.error('Erreur:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de mettre à jour le statut",
-        variant: "destructive",
-      });
+      console.error('Error updating order status:', error);
+      toast.error('Erreur lors de la mise à jour du statut');
+      throw error;
     }
   };
 
   useEffect(() => {
     fetchOrders();
-  }, [user]);
+  }, []);
 
   return {
     orders,
     loading,
     createOrder,
     updateOrderStatus,
-    refreshOrders: fetchOrders
+    refetch: fetchOrders
   };
 };
