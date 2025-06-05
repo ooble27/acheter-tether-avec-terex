@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
@@ -12,6 +11,7 @@ import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { TransactionProvider } from '@/contexts/TransactionContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/contexts/AuthContext';
+import { useUserRole } from '@/hooks/useUserRole';
 
 interface DashboardProps {
   user: { email: string; name: string } | null;
@@ -22,6 +22,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   const [activeSection, setActiveSection] = useState('home');
   const isMobile = useIsMobile();
   const { signOut } = useAuth();
+  const { isKYCReviewer } = useUserRole();
 
   const handleLogout = async () => {
     try {
@@ -49,7 +50,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'faq':
         return <FAQ />;
       case 'kyc-admin':
-        return <KYCAdmin />;
+        return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
       default:
         return <DashboardHome user={user} />;
     }
