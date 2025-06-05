@@ -19,32 +19,6 @@ export function LoginForm() {
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
 
-  const checkEmailExists = async (email: string) => {
-    try {
-      // Essayer de se connecter avec un mot de passe temporaire pour vérifier si l'email existe
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password: 'temporary-check-password-123456789'
-      });
-      
-      // Si l'erreur est "Invalid login credentials", l'email existe mais le mot de passe est faux
-      if (error && error.message === "Invalid login credentials") {
-        return true; // Email existe
-      }
-      
-      // Vérifier aussi dans la table profiles si elle existe
-      const { data } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', 'dummy-check'); // Cette requête va échouer mais nous permet de vérifier la structure
-      
-      return false; // Email n'existe pas
-    } catch (error) {
-      console.log('Erreur lors de la vérification:', error);
-      return false;
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent, isLogin: boolean) => {
     e.preventDefault();
     setIsLoading(true);
@@ -78,7 +52,7 @@ export function LoginForm() {
             description: "Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.",
             variant: "destructive",
           });
-          setLoading(false);
+          setIsLoading(false);
           return;
         }
         
