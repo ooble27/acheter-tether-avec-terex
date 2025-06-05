@@ -31,7 +31,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'transfer':
         return <InternationalTransfer />;
       case 'profile':
-        return <Profile user={user} />;
+        return <Profile user={user} onLogout={onLogout} />;
       case 'faq':
         return <FAQ />;
       default:
