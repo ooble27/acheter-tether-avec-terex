@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useState } from 'react';
@@ -125,6 +125,30 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                       }`} 
                     />
                     <span>Administration KYC</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
+
+              {/* Administration des commandes - visible seulement aux admins et KYC reviewers */}
+              {isKYCReviewer() && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton 
+                    onClick={() => {
+                      setActiveSection('orders-admin');
+                      onItemClick?.();
+                    }}
+                    className={`w-full justify-start text-left p-3 rounded-lg transition-colors ${
+                      activeSection === 'orders-admin'
+                        ? 'bg-terex-accent text-white'
+                        : 'text-gray-300 hover:bg-terex-gray hover:text-white'
+                    }`}
+                  >
+                    <ShoppingCart 
+                      className={`mr-3 h-5 w-5 ${
+                        activeSection === 'orders-admin' ? 'text-white' : ''
+                      }`} 
+                    />
+                    <span>Gestion Commandes</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               )}

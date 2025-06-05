@@ -8,12 +8,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRightLeft, Shield, Clock, CreditCard } from 'lucide-react';
+import { OrderConfirmation } from '@/components/features/OrderConfirmation';
+import { useOrders } from '@/hooks/useOrders';
 
 export function BuyUSDT() {
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
+  const [walletAddress, setWalletAddress] = useState('');
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const { createOrder } = useOrders();
 
   const exchangeRates = {
     CFA: 615,
@@ -35,12 +42,64 @@ export function BuyUSDT() {
     }
   };
 
+  const handleBuyClick = () => {
+    if (!amount || !walletAddress) {
+      return;
+    }
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmOrder = async () => {
+    setLoading(true);
+    
+    const orderData = {
+      type: 'buy',
+      amount: parseFloat(amount),
+      currency: paymentMethod === 'mobile' ? 'CFA' : currency,
+      usdt_amount: parseFloat(usdtAmount),
+      exchange_rate: exchangeRates[currency as keyof typeof exchangeRates],
+      payment_method: paymentMethod,
+      network,
+      wallet_address: walletAddress
+    };
+
+    const result = await createOrder(orderData);
+    
+    if (result) {
+      // Réinitialiser le formulaire
+      setAmount('');
+      setWalletAddress('');
+      setShowConfirmation(false);
+    }
+    
+    setLoading(false);
+  };
+
+  if (showConfirmation) {
+    return (
+      <OrderConfirmation
+        orderData={{
+          amount,
+          currency: paymentMethod === 'mobile' ? 'CFA' : currency,
+          usdtAmount,
+          network,
+          walletAddress,
+          paymentMethod,
+          exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
+        }}
+        onConfirm={handleConfirmOrder}
+        onBack={() => setShowConfirmation(false)}
+        loading={loading}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-terex-dark p-2 md:p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6 md:mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Acheter usdt</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Acheter USDT</h1>
           <p className="text-gray-400">Achetez des USDT facilement et en toute sécurité</p>
         </div>
 
@@ -174,6 +233,8 @@ export function BuyUSDT() {
                         <Input
                           type="text"
                           placeholder="Votre adresse USDT"
+                          value={walletAddress}
+                          onChange={(e) => setWalletAddress(e.target.value)}
                           className="bg-terex-gray border-terex-gray-light text-white h-12"
                         />
                       </div>
@@ -182,9 +243,10 @@ export function BuyUSDT() {
                       <Button 
                         size="lg"
                         className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                        disabled={!amount}
+                        disabled={!amount || !walletAddress}
+                        onClick={handleBuyClick}
                       >
-                        Acheter USDT
+                        Continuer l'achat
                       </Button>
                     </TabsContent>
                   ))}
