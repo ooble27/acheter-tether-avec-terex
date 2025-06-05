@@ -5,19 +5,63 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
 
-interface LoginFormProps {
-  onLogin: (email: string, password: string) => void;
-}
-
-export function LoginForm({ onLogin }: LoginFormProps) {
+export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('login');
+  
+  const { signIn, signUp } = useAuth();
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent, isLogin: boolean) => {
+  const handleSubmit = async (e: React.FormEvent, isLogin: boolean) => {
     e.preventDefault();
-    onLogin(email, password);
+    setIsLoading(true);
+
+    try {
+      if (isLogin) {
+        const { error } = await signIn(email, password);
+        if (error) {
+          toast({
+            title: "Erreur de connexion",
+            description: error.message === "Invalid login credentials" 
+              ? "Email ou mot de passe incorrect" 
+              : error.message,
+            variant: "destructive",
+          });
+        }
+      } else {
+        const { error } = await signUp(email, password, name);
+        if (error) {
+          toast({
+            title: "Erreur d'inscription",
+            description: error.message === "User already registered"
+              ? "Un compte existe déjà avec cet email"
+              : error.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Inscription réussie !",
+            description: "Vérifiez votre email pour activer votre compte",
+            className: "bg-green-600 text-white border-green-600",
+          });
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Une erreur inattendue s'est produite",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -38,7 +82,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="login" className="space-y-4">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
               <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
                 <TabsTrigger value="login" className="data-[state=active]:bg-terex-accent">
                   Connexion
@@ -60,6 +104,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                       onChange={(e) => setEmail(e.target.value)}
                       className="bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                   <div className="space-y-2">
@@ -72,13 +117,22 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                       onChange={(e) => setPassword(e.target.value)}
                       className="bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                   <Button 
                     type="submit" 
                     className="w-full gradient-button text-white font-medium"
+                    disabled={isLoading}
                   >
-                    Se connecter
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Connexion...
+                      </>
+                    ) : (
+                      'Se connecter'
+                    )}
                   </Button>
                 </form>
               </TabsContent>
@@ -95,6 +149,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                       onChange={(e) => setName(e.target.value)}
                       className="bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                   <div className="space-y-2">
@@ -107,6 +162,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                       onChange={(e) => setEmail(e.target.value)}
                       className="bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                   <div className="space-y-2">
@@ -119,13 +175,23 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                       onChange={(e) => setPassword(e.target.value)}
                       className="bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
                       required
+                      disabled={isLoading}
+                      minLength={6}
                     />
                   </div>
                   <Button 
                     type="submit" 
                     className="w-full gradient-button text-white font-medium"
+                    disabled={isLoading}
                   >
-                    Créer un compte
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Inscription...
+                      </>
+                    ) : (
+                      'Créer un compte'
+                    )}
                   </Button>
                 </form>
               </TabsContent>

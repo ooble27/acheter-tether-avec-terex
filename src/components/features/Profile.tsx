@@ -5,6 +5,7 @@ import { TransactionHistory } from '@/components/features/TransactionHistory';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTransactions } from '@/contexts/TransactionContext';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { User, History, Settings, Shield, Share2, Edit, Lock, LogOut, Trash2, CheckCircle, AlertCircle, Copy } from 'lucide-react';
 import {
   AlertDialog,
@@ -37,6 +38,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
   const isMobile = useIsMobile();
   const { transactions } = useTransactions();
   const { toast } = useToast();
+  const { signOut } = useAuth();
 
   // Mock user data - in real app this would come from backend
   const userProfile = {
@@ -87,6 +89,23 @@ export function Profile({ user, onLogout }: ProfileProps) {
       });
       if (onLogout) onLogout();
     }, 2000);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Déconnexion réussie",
+        description: "Vous avez été déconnecté avec succès",
+        className: "bg-green-600 text-white border-green-600",
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de se déconnecter",
+        variant: "destructive",
+      });
+    }
   };
 
   const getKYCStatus = () => {
@@ -370,7 +389,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
                     <Button 
                       variant="outline" 
                       className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
-                      onClick={onLogout}
+                      onClick={handleLogout}
                     >
                       <LogOut className="w-4 h-4 mr-3" />
                       Se déconnecter
@@ -587,7 +606,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
                   <Button 
                     variant="outline" 
                     className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
-                    onClick={onLogout}
+                    onClick={handleLogout}
                   >
                     <LogOut className="w-4 h-4 mr-3" />
                     Se déconnecter
