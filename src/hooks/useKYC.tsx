@@ -53,7 +53,13 @@ export const useKYC = () => {
         return;
       }
 
-      setKycData(data);
+      // Cast the data to ensure proper typing
+      if (data) {
+        setKycData({
+          ...data,
+          status: data.status as KYCData['status']
+        });
+      }
     } catch (error) {
       console.error('Erreur inattendue:', error);
     } finally {
