@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -193,7 +192,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
         </div>
       ) : (
         <div className="flex space-x-6">
-          <div className="flex flex-col space-y-2 w-64">
+          <div className="flex flex-col space-y-2 w-64 flex-shrink-0">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -213,224 +212,436 @@ export function Profile({ user, onLogout }: ProfileProps) {
             })}
           </div>
           <div className="flex-1">
-            {/* Content will be rendered here for desktop */}
+            {/* Desktop Content */}
+            {activeTab === 'profile' && (
+              <div className="space-y-6">
+                {/* KYC Status */}
+                <Card className="bg-terex-darker border-terex-gray">
+                  <CardHeader className="pb-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-12 h-12 ${kycStatus.bgColor} rounded-full flex items-center justify-center`}>
+                          <StatusIcon className={`w-6 h-6 ${kycStatus.color}`} />
+                        </div>
+                        <div>
+                          <CardTitle className="text-white text-lg">Statut de vérification</CardTitle>
+                          <CardDescription className="text-gray-400 text-sm">{kycStatus.description}</CardDescription>
+                        </div>
+                      </div>
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${kycStatus.color} ${kycStatus.bgColor}`}>
+                        {kycStatus.status}
+                      </span>
+                    </div>
+                  </CardHeader>
+                </Card>
+
+                {/* Personal Information */}
+                <Card className="bg-terex-darker border-terex-gray">
+                  <CardHeader className="pb-6">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-white">Informations personnelles</CardTitle>
+                      <EditInfoSheet />
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pt-0">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-gray-400 text-sm">Nom complet</label>
+                        <p className="text-white font-medium">{userProfile.fullName}</p>
+                      </div>
+                      <div>
+                        <label className="text-gray-400 text-sm">Email</label>
+                        <p className="text-white font-medium break-all">{userProfile.email}</p>
+                      </div>
+                      <div>
+                        <label className="text-gray-400 text-sm">Téléphone</label>
+                        <p className="text-white font-medium">{userProfile.phone}</p>
+                      </div>
+                      <div>
+                        <label className="text-gray-400 text-sm">Pays</label>
+                        <p className="text-white font-medium">{userProfile.country}</p>
+                      </div>
+                      <div>
+                        <label className="text-gray-400 text-sm">Langue</label>
+                        <p className="text-white font-medium">{userProfile.language}</p>
+                      </div>
+                      <div>
+                        <label className="text-gray-400 text-sm">Inscription</label>
+                        <p className="text-white font-medium">{userProfile.joinDate}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Recent Transactions */}
+                <Card className="bg-terex-darker border-terex-gray">
+                  <CardHeader>
+                    <CardTitle className="text-white">Dernières transactions</CardTitle>
+                    <CardDescription className="text-gray-400">
+                      Vos 3 dernières opérations
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {transactions.length === 0 ? (
+                      <div className="text-center py-8">
+                        <History className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-400">Aucune transaction récente</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {transactions.slice(0, 3).map((transaction, index) => (
+                          <div key={index} className="flex items-center justify-between p-3 bg-terex-gray rounded-lg">
+                            <div className="min-w-0 flex-1">
+                              <p className="text-white font-medium truncate">{transaction.type}</p>
+                              <p className="text-gray-400 text-sm">{transaction.date}</p>
+                            </div>
+                            <span className={`font-medium ${
+                              transaction.type.includes('Achat') ? 'text-green-400' : 'text-blue-400'
+                            }`}>
+                              {transaction.amount}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Share Terex */}
+                <Card className="bg-terex-darker border-terex-gray">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center">
+                      <Share2 className="w-5 h-5 mr-2" />
+                      Partager Terex
+                    </CardTitle>
+                    <CardDescription className="text-gray-400">
+                      Invitez vos proches à découvrir Terex
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button 
+                      onClick={handleShareTerex}
+                      className="w-full bg-terex-accent hover:bg-terex-accent/90 h-12"
+                    >
+                      <Copy className="w-4 h-4 mr-2" />
+                      Partager Terex
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {activeTab === 'transactions' && (
+              <>
+                {transactions.length === 0 ? (
+                  <Card className="bg-terex-darker border-terex-gray">
+                    <CardContent className="p-8 text-center">
+                      <History className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-white text-lg font-medium mb-2">Aucune transaction</h3>
+                      <p className="text-gray-400 text-sm">
+                        Vos transactions apparaîtront ici une fois que vous aurez effectué votre première opération.
+                      </p>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <TransactionHistory transactions={transactions} />
+                )}
+              </>
+            )}
+
+            {activeTab === 'settings' && (
+              <div className="space-y-6">
+                <Card className="bg-terex-darker border-terex-gray">
+                  <CardHeader>
+                    <CardTitle className="text-white">Paramètres du compte</CardTitle>
+                    <CardDescription className="text-gray-400">
+                      Gérez vos préférences et paramètres de sécurité
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
+                    >
+                      <Lock className="w-4 h-4 mr-3" />
+                      Changer mon mot de passe
+                    </Button>
+                    
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
+                      onClick={onLogout}
+                    >
+                      <LogOut className="w-4 h-4 mr-3" />
+                      Se déconnecter
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Danger Zone */}
+                <Card className="bg-terex-darker border-red-600/50">
+                  <CardHeader>
+                    <CardTitle className="text-red-400">Zone de danger</CardTitle>
+                    <CardDescription className="text-gray-400">
+                      Actions irréversibles
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button 
+                          variant="destructive" 
+                          className="w-full justify-start h-12"
+                        >
+                          <Trash2 className="w-4 h-4 mr-3" />
+                          Supprimer mon compte
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="bg-terex-darker border-terex-gray mx-4 max-w-lg">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="text-white">Êtes-vous absolument sûr ?</AlertDialogTitle>
+                          <AlertDialogDescription className="text-gray-400">
+                            Cette action ne peut pas être annulée. Cela supprimera définitivement votre compte 
+                            et toutes vos données de nos serveurs.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="flex-col sm:flex-row space-y-2 sm:space-y-0">
+                          <AlertDialogCancel className="border-terex-gray text-gray-300 hover:bg-terex-gray w-full sm:w-auto">
+                            Annuler
+                          </AlertDialogCancel>
+                          <AlertDialogAction 
+                            onClick={handleDeleteAccount}
+                            disabled={isDeleting}
+                            className="bg-red-600 hover:bg-red-700 w-full sm:w-auto"
+                          >
+                            {isDeleting ? 'Suppression...' : 'Supprimer définitivement'}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </div>
         </div>
       )}
 
-      {/* Content */}
-      <div className={!isMobile ? 'ml-80' : ''}>
-        {activeTab === 'profile' && (
-          <div className="space-y-4 sm:space-y-6">
-            {/* KYC Status */}
-            <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader className="pb-3 sm:pb-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-10 h-10 sm:w-12 sm:h-12 ${kycStatus.bgColor} rounded-full flex items-center justify-center`}>
-                      <StatusIcon className={`w-5 h-5 sm:w-6 sm:h-6 ${kycStatus.color}`} />
+      {/* Mobile Content */}
+      {isMobile && (
+        <div>
+          {activeTab === 'profile' && (
+            <div className="space-y-4 sm:space-y-6">
+              {/* KYC Status */}
+              <Card className="bg-terex-darker border-terex-gray">
+                <CardHeader className="pb-3 sm:pb-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-10 h-10 sm:w-12 sm:h-12 ${kycStatus.bgColor} rounded-full flex items-center justify-center`}>
+                        <StatusIcon className={`w-5 h-5 sm:w-6 sm:h-6 ${kycStatus.color}`} />
+                      </div>
+                      <div>
+                        <CardTitle className="text-white text-lg">Statut de vérification</CardTitle>
+                        <CardDescription className="text-gray-400 text-sm">{kycStatus.description}</CardDescription>
+                      </div>
+                    </div>
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${kycStatus.color} ${kycStatus.bgColor} text-center`}>
+                      {kycStatus.status}
+                    </span>
+                  </div>
+                </CardHeader>
+              </Card>
+
+              {/* Personal Information */}
+              <Card className="bg-terex-darker border-terex-gray">
+                <CardHeader className="pb-3 sm:pb-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
+                    <CardTitle className="text-white">Informations personnelles</CardTitle>
+                    <EditInfoSheet />
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4 pt-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-gray-400 text-sm">Nom complet</label>
+                      <p className="text-white font-medium">{userProfile.fullName}</p>
                     </div>
                     <div>
-                      <CardTitle className="text-white text-lg">Statut de vérification</CardTitle>
-                      <CardDescription className="text-gray-400 text-sm">{kycStatus.description}</CardDescription>
+                      <label className="text-gray-400 text-sm">Email</label>
+                      <p className="text-white font-medium break-all">{userProfile.email}</p>
+                    </div>
+                    <div>
+                      <label className="text-gray-400 text-sm">Téléphone</label>
+                      <p className="text-white font-medium">{userProfile.phone}</p>
+                    </div>
+                    <div>
+                      <label className="text-gray-400 text-sm">Pays</label>
+                      <p className="text-white font-medium">{userProfile.country}</p>
+                    </div>
+                    <div>
+                      <label className="text-gray-400 text-sm">Langue</label>
+                      <p className="text-white font-medium">{userProfile.language}</p>
+                    </div>
+                    <div>
+                      <label className="text-gray-400 text-sm">Inscription</label>
+                      <p className="text-white font-medium">{userProfile.joinDate}</p>
                     </div>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${kycStatus.color} ${kycStatus.bgColor} text-center`}>
-                    {kycStatus.status}
-                  </span>
-                </div>
-              </CardHeader>
-            </Card>
-
-            {/* Personal Information */}
-            <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader className="pb-3 sm:pb-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
-                  <CardTitle className="text-white">Informations personnelles</CardTitle>
-                  <EditInfoSheet />
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4 pt-0">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-gray-400 text-sm">Nom complet</label>
-                    <p className="text-white font-medium">{userProfile.fullName}</p>
-                  </div>
-                  <div>
-                    <label className="text-gray-400 text-sm">Email</label>
-                    <p className="text-white font-medium break-all">{userProfile.email}</p>
-                  </div>
-                  <div>
-                    <label className="text-gray-400 text-sm">Téléphone</label>
-                    <p className="text-white font-medium">{userProfile.phone}</p>
-                  </div>
-                  <div>
-                    <label className="text-gray-400 text-sm">Pays</label>
-                    <p className="text-white font-medium">{userProfile.country}</p>
-                  </div>
-                  <div>
-                    <label className="text-gray-400 text-sm">Langue</label>
-                    <p className="text-white font-medium">{userProfile.language}</p>
-                  </div>
-                  <div>
-                    <label className="text-gray-400 text-sm">Inscription</label>
-                    <p className="text-white font-medium">{userProfile.joinDate}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Recent Transactions */}
-            <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader>
-                <CardTitle className="text-white">Dernières transactions</CardTitle>
-                <CardDescription className="text-gray-400">
-                  Vos 3 dernières opérations
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {transactions.length === 0 ? (
-                  <div className="text-center py-6 sm:py-8">
-                    <History className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-400">Aucune transaction récente</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {transactions.slice(0, 3).map((transaction, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-terex-gray rounded-lg">
-                        <div className="min-w-0 flex-1">
-                          <p className="text-white font-medium truncate">{transaction.type}</p>
-                          <p className="text-gray-400 text-sm">{transaction.date}</p>
-                        </div>
-                        <span className={`font-medium text-sm sm:text-base ${
-                          transaction.type.includes('Achat') ? 'text-green-400' : 'text-blue-400'
-                        }`}>
-                          {transaction.amount}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Share Terex */}
-            <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center">
-                  <Share2 className="w-5 h-5 mr-2" />
-                  Partager Terex
-                </CardTitle>
-                <CardDescription className="text-gray-400">
-                  Invitez vos proches à découvrir Terex
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button 
-                  onClick={handleShareTerex}
-                  className="w-full bg-terex-accent hover:bg-terex-accent/90 h-12"
-                >
-                  <Copy className="w-4 h-4 mr-2" />
-                  Partager Terex
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-
-        {activeTab === 'transactions' && (
-          <>
-            {transactions.length === 0 ? (
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardContent className="p-6 sm:p-8 text-center">
-                  <History className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-white text-lg font-medium mb-2">Aucune transaction</h3>
-                  <p className="text-gray-400 text-sm">
-                    Vos transactions apparaîtront ici une fois que vous aurez effectué votre première opération.
-                  </p>
                 </CardContent>
               </Card>
-            ) : (
-              <TransactionHistory transactions={transactions} />
-            )}
-          </>
-        )}
 
-        {activeTab === 'settings' && (
-          <div className="space-y-4 sm:space-y-6">
-            <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader>
-                <CardTitle className="text-white">Paramètres du compte</CardTitle>
-                <CardDescription className="text-gray-400">
-                  Gérez vos préférences et paramètres de sécurité
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
-                >
-                  <Lock className="w-4 h-4 mr-3" />
-                  Changer mon mot de passe
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
-                  onClick={onLogout}
-                >
-                  <LogOut className="w-4 h-4 mr-3" />
-                  Se déconnecter
-                </Button>
-              </CardContent>
-            </Card>
+              {/* Recent Transactions */}
+              <Card className="bg-terex-darker border-terex-gray">
+                <CardHeader>
+                  <CardTitle className="text-white">Dernières transactions</CardTitle>
+                  <CardDescription className="text-gray-400">
+                    Vos 3 dernières opérations
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {transactions.length === 0 ? (
+                    <div className="text-center py-6 sm:py-8">
+                      <History className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-400">Aucune transaction récente</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {transactions.slice(0, 3).map((transaction, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 bg-terex-gray rounded-lg">
+                          <div className="min-w-0 flex-1">
+                            <p className="text-white font-medium truncate">{transaction.type}</p>
+                            <p className="text-gray-400 text-sm">{transaction.date}</p>
+                          </div>
+                          <span className={`font-medium text-sm sm:text-base ${
+                            transaction.type.includes('Achat') ? 'text-green-400' : 'text-blue-400'
+                          }`}>
+                            {transaction.amount}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
 
-            {/* Danger Zone */}
-            <Card className="bg-terex-darker border-red-600/50">
-              <CardHeader>
-                <CardTitle className="text-red-400">Zone de danger</CardTitle>
-                <CardDescription className="text-gray-400">
-                  Actions irréversibles
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button 
-                      variant="destructive" 
-                      className="w-full justify-start h-12"
-                    >
-                      <Trash2 className="w-4 h-4 mr-3" />
-                      Supprimer mon compte
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent className="bg-terex-darker border-terex-gray mx-4 max-w-lg">
-                    <AlertDialogHeader>
-                      <AlertDialogTitle className="text-white">Êtes-vous absolument sûr ?</AlertDialogTitle>
-                      <AlertDialogDescription className="text-gray-400">
-                        Cette action ne peut pas être annulée. Cela supprimera définitivement votre compte 
-                        et toutes vos données de nos serveurs.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter className="flex-col sm:flex-row space-y-2 sm:space-y-0">
-                      <AlertDialogCancel className="border-terex-gray text-gray-300 hover:bg-terex-gray w-full sm:w-auto">
-                        Annuler
-                      </AlertDialogCancel>
-                      <AlertDialogAction 
-                        onClick={handleDeleteAccount}
-                        disabled={isDeleting}
-                        className="bg-red-600 hover:bg-red-700 w-full sm:w-auto"
+              {/* Share Terex */}
+              <Card className="bg-terex-darker border-terex-gray">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <Share2 className="w-5 h-5 mr-2" />
+                    Partager Terex
+                  </CardTitle>
+                  <CardDescription className="text-gray-400">
+                    Invitez vos proches à découvrir Terex
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button 
+                    onClick={handleShareTerex}
+                    className="w-full bg-terex-accent hover:bg-terex-accent/90 h-12"
+                  >
+                    <Copy className="w-4 h-4 mr-2" />
+                    Partager Terex
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {activeTab === 'transactions' && (
+            <>
+              {transactions.length === 0 ? (
+                <Card className="bg-terex-darker border-terex-gray">
+                  <CardContent className="p-6 sm:p-8 text-center">
+                    <History className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-white text-lg font-medium mb-2">Aucune transaction</h3>
+                    <p className="text-gray-400 text-sm">
+                      Vos transactions apparaîtront ici une fois que vous aurez effectué votre première opération.
+                    </p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <TransactionHistory transactions={transactions} />
+              )}
+            </>
+          )}
+
+          {activeTab === 'settings' && (
+            <div className="space-y-4 sm:space-y-6">
+              <Card className="bg-terex-darker border-terex-gray">
+                <CardHeader>
+                  <CardTitle className="text-white">Paramètres du compte</CardTitle>
+                  <CardDescription className="text-gray-400">
+                    Gérez vos préférences et paramètres de sécurité
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
+                  >
+                    <Lock className="w-4 h-4 mr-3" />
+                    Changer mon mot de passe
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
+                    onClick={onLogout}
+                  >
+                    <LogOut className="w-4 h-4 mr-3" />
+                    Se déconnecter
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Danger Zone */}
+              <Card className="bg-terex-darker border-red-600/50">
+                <CardHeader>
+                  <CardTitle className="text-red-400">Zone de danger</CardTitle>
+                  <CardDescription className="text-gray-400">
+                    Actions irréversibles
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button 
+                        variant="destructive" 
+                        className="w-full justify-start h-12"
                       >
-                        {isDeleting ? 'Suppression...' : 'Supprimer définitivement'}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-      </div>
+                        <Trash2 className="w-4 h-4 mr-3" />
+                        Supprimer mon compte
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="bg-terex-darker border-terex-gray mx-4 max-w-lg">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="text-white">Êtes-vous absolument sûr ?</AlertDialogTitle>
+                        <AlertDialogDescription className="text-gray-400">
+                          Cette action ne peut pas être annulée. Cela supprimera définitivement votre compte 
+                          et toutes vos données de nos serveurs.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter className="flex-col sm:flex-row space-y-2 sm:space-y-0">
+                        <AlertDialogCancel className="border-terex-gray text-gray-300 hover:bg-terex-gray w-full sm:w-auto">
+                          Annuler
+                        </AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={handleDeleteAccount}
+                          disabled={isDeleting}
+                          className="bg-red-600 hover:bg-red-700 w-full sm:w-auto"
+                        >
+                          {isDeleting ? 'Suppression...' : 'Supprimer définitivement'}
+                        </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
