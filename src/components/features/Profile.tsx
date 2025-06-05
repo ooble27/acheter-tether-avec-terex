@@ -11,7 +11,7 @@ import { KYCAlert } from './KYCAlert';
 import { KYCPage } from './KYCPage';
 import { TransactionHistory } from './TransactionHistory';
 import { Share2, MessageCircle } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@radix-ui/react-dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 interface ProfileProps {
   user: { email: string; name: string } | null;
