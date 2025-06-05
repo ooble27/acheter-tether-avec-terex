@@ -55,7 +55,8 @@ export const useKYC = () => {
         throw error;
       }
 
-      setKycData(data);
+      // Type assertion pour résoudre le conflit TypeScript avec le status
+      setKycData(data as KYCData);
     } catch (error) {
       console.error('Erreur lors de la récupération KYC:', error);
       toast({
@@ -133,7 +134,8 @@ export const useKYC = () => {
         return { error: error.message };
       }
 
-      setKycData(data);
+      // Type assertion pour résoudre le conflit TypeScript avec le status
+      setKycData(data as KYCData);
       
       toast({
         title: "KYC soumis",
