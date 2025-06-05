@@ -19,27 +19,54 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
 
   const getImageUrl = async (path: string) => {
     try {
+      console.log('Chemin original:', path);
+      
       // Si l'URL contient déjà le domaine complet, l'utiliser directement
       if (path.includes('supabase.co') || path.includes('http')) {
+        console.log('Utilisation directe de l\'URL complète:', path);
         return path;
       }
 
-      // Nettoyer le chemin pour enlever les préfixes potentiels
+      // Extraire l'ID utilisateur et le type de document du chemin
+      // Format attendu peut être: user-id/document-type.jpg ou kyc-documents/user-id/document-type.jpg
       let cleanPath = path;
-      if (path.startsWith('kyc-documents/')) {
-        cleanPath = path.substring('kyc-documents/'.length);
+      
+      // Supprimer les préfixes potentiels
+      if (cleanPath.startsWith('kyc-documents/')) {
+        cleanPath = cleanPath.substring('kyc-documents/'.length);
+        console.log('Chemin nettoyé (préfixe kyc-documents/ supprimé):', cleanPath);
       }
-      if (path.startsWith('/kyc-documents/')) {
-        cleanPath = path.substring('/kyc-documents/'.length);
+      
+      if (cleanPath.startsWith('/kyc-documents/')) {
+        cleanPath = cleanPath.substring('/kyc-documents/'.length);
+        console.log('Chemin nettoyé (préfixe /kyc-documents/ supprimé):', cleanPath);
       }
-
-      // Construire l'URL publique depuis le bucket
-      const { data } = supabase.storage
+      
+      // Essayer plusieurs formats possibles pour l'URL
+      const { data: data1 } = supabase.storage
         .from('kyc-documents')
         .getPublicUrl(cleanPath);
       
-      console.log('URL construite pour le document:', data.publicUrl);
-      return data.publicUrl;
+      console.log('URL construite avec chemin nettoyé:', data1.publicUrl);
+      
+      // Essayer également avec le chemin original
+      const { data: data2 } = supabase.storage
+        .from('kyc-documents')
+        .getPublicUrl(path);
+      
+      console.log('URL construite avec chemin original:', data2.publicUrl);
+      
+      // Récupérer directement depuis le bucket sans préfixe
+      const fileName = cleanPath.split('/').pop();
+      if (fileName) {
+        const { data: data3 } = supabase.storage
+          .from('kyc-documents')
+          .getPublicUrl(fileName);
+        console.log('URL construite avec nom de fichier uniquement:', data3.publicUrl);
+      }
+      
+      // Utiliser l'URL qui a le plus de chances de fonctionner
+      return data1.publicUrl;
     } catch (error) {
       console.error('Erreur lors de la construction de l\'URL:', error);
       return null;
@@ -54,13 +81,15 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
     
     try {
       console.log('Tentative de chargement du document:', url);
+      
+      // Essayer plusieurs méthodes pour obtenir l'URL
       const finalUrl = await getImageUrl(url);
       
       if (finalUrl) {
         // Tester l'accessibilité de l'image
         const img = new Image();
         img.onload = () => {
-          console.log('Image chargée avec succès');
+          console.log('Image chargée avec succès:', finalUrl);
           setImageUrl(finalUrl);
           setShowModal(true);
           setLoading(false);
@@ -68,8 +97,17 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
         img.onerror = (e) => {
           console.error('Erreur de chargement de l\'image:', e);
           console.error('URL testée:', finalUrl);
-          setError(true);
-          setLoading(false);
+          
+          // Essayer d'utiliser directement l'URL brute comme dernier recours
+          if (url.includes('http')) {
+            console.log('Tentative avec URL brute:', url);
+            setImageUrl(url);
+            setShowModal(true);
+            setLoading(false);
+          } else {
+            setError(true);
+            setLoading(false);
+          }
         };
         img.src = finalUrl;
       } else {

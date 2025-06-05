@@ -76,6 +76,8 @@ export const useKYC = () => {
 
       // Cast the data to ensure proper typing
       if (data) {
+        console.log("Données KYC récupérées:", data);
+        
         setKycData({
           id: data.id,
           user_id: data.user_id,
@@ -171,6 +173,18 @@ export const useKYC = () => {
       
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/${documentType}.${fileExt}`;
+      console.log('Nom de fichier pour upload:', fileName);
+
+      // Vérifier si le bucket existe
+      const { data: buckets, error: bucketsError } = await supabase.storage
+        .listBuckets();
+      
+      console.log('Buckets disponibles:', buckets);
+      
+      if (bucketsError) {
+        console.error('Erreur lors de la récupération des buckets:', bucketsError);
+        return { error: 'Erreur lors de la récupération des buckets' };
+      }
 
       const { error: uploadError } = await supabase.storage
         .from('kyc-documents')

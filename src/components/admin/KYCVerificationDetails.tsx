@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -89,7 +88,7 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
   const canTakeAction = verification.status === 'submitted' || verification.status === 'under_review';
 
   return (
-    <div className="min-h-screen bg-terex-dark p-4 pb-safe">
+    <div className="min-h-screen bg-terex-dark p-4 pb-safe overflow-x-hidden">
       <div className="mx-auto max-w-6xl space-y-6">
         {/* En-tête */}
         <div className="flex flex-col space-y-4">

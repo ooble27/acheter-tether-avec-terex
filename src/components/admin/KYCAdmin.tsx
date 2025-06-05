@@ -64,7 +64,7 @@ export function KYCAdmin() {
   }
 
   return (
-    <div className="space-y-6 p-4 md:p-6">
+    <div className="space-y-6 p-4 md:p-6 max-w-full overflow-hidden">
       {/* En-tête */}
       <div className="text-center md:text-left">
         <h1 className="text-2xl md:text-3xl font-bold text-white">Administration KYC</h1>
@@ -72,7 +72,7 @@ export function KYCAdmin() {
       </div>
 
       {/* Statistiques - responsive */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 max-w-full">
         <Card className="bg-terex-card border-terex-border">
           <CardContent className="p-3 md:p-4">
             <div className="flex items-center justify-between">
@@ -169,7 +169,7 @@ export function KYCAdmin() {
 
       {/* Vérifications prioritaires */}
       {priorityVerifications.length > 0 && (
-        <Card className="bg-terex-card border-blue-500/50">
+        <Card className="bg-terex-card border-blue-500/50 max-w-full">
           <CardHeader>
             <CardTitle className="text-white flex items-center text-lg md:text-xl">
               <AlertCircle className="h-5 w-5 mr-2 text-blue-500" />
@@ -177,31 +177,31 @@ export function KYCAdmin() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-4 overflow-x-hidden">
               {priorityVerifications.map((verification) => (
                 <div
                   key={verification.id}
-                  className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-blue-500/10 rounded-lg border border-blue-500/30 hover:border-blue-500/50 transition-colors cursor-pointer space-y-3 md:space-y-0"
+                  className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-blue-500/10 rounded-lg border border-blue-500/30 hover:border-blue-500/50 transition-colors cursor-pointer space-y-3 md:space-y-0 w-full"
                   onClick={() => setSelectedVerification(verification.id)}
                 >
-                  <div className="flex items-center space-x-4">
-                    <div>
-                      <h3 className="text-white font-medium">
+                  <div className="flex items-center space-x-4 min-w-0">
+                    <div className="min-w-0 overflow-hidden">
+                      <h3 className="text-white font-medium truncate">
                         {verification.first_name && verification.last_name
                           ? `${verification.first_name} ${verification.last_name}`
                           : 'Nom non fourni'}
                       </h3>
-                      <p className="text-gray-400 text-sm">ID: {verification.user_id.slice(0, 8)}...</p>
-                      <p className="text-gray-400 text-sm">
+                      <p className="text-gray-400 text-sm truncate">ID: {verification.user_id.slice(0, 8)}...</p>
+                      <p className="text-gray-400 text-sm truncate">
                         Soumis le: {verification.submitted_at 
                           ? new Date(verification.submitted_at).toLocaleDateString('fr-FR')
                           : 'Non soumis'}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between md:justify-end space-x-4">
+                  <div className="flex items-center justify-between md:justify-end space-x-4 flex-shrink-0">
                     {getStatusBadge(verification.status)}
-                    <Button variant="outline" size="sm" className="border-blue-500 text-blue-400 hover:bg-blue-500/20">
+                    <Button variant="outline" size="sm" className="border-blue-500 text-blue-400 hover:bg-blue-500/20 whitespace-nowrap">
                       <Eye className="h-4 w-4 mr-2" />
                       Examiner
                     </Button>
@@ -214,7 +214,7 @@ export function KYCAdmin() {
       )}
 
       {/* Liste des autres vérifications - responsive */}
-      <Card className="bg-terex-card border-terex-border">
+      <Card className="bg-terex-card border-terex-border max-w-full">
         <CardHeader>
           <CardTitle className="text-white text-lg md:text-xl">
             {priorityVerifications.length > 0 ? 'Autres vérifications' : 'Toutes les vérifications KYC'}
@@ -233,31 +233,31 @@ export function KYCAdmin() {
               <p className="text-gray-400">Aucune vérification ne correspond à vos critères de recherche.</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 overflow-x-hidden">
               {otherVerifications.map((verification) => (
                 <div
                   key={verification.id}
-                  className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-terex-dark rounded-lg border border-terex-border hover:border-terex-accent/50 transition-colors cursor-pointer space-y-3 md:space-y-0"
+                  className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-terex-dark rounded-lg border border-terex-border hover:border-terex-accent/50 transition-colors cursor-pointer space-y-3 md:space-y-0 w-full"
                   onClick={() => setSelectedVerification(verification.id)}
                 >
-                  <div className="flex items-center space-x-4">
-                    <div>
-                      <h3 className="text-white font-medium">
+                  <div className="flex items-center space-x-4 min-w-0">
+                    <div className="min-w-0 overflow-hidden">
+                      <h3 className="text-white font-medium truncate">
                         {verification.first_name && verification.last_name
                           ? `${verification.first_name} ${verification.last_name}`
                           : 'Nom non fourni'}
                       </h3>
-                      <p className="text-gray-400 text-sm">ID: {verification.user_id.slice(0, 8)}...</p>
-                      <p className="text-gray-400 text-sm">
+                      <p className="text-gray-400 text-sm truncate">ID: {verification.user_id.slice(0, 8)}...</p>
+                      <p className="text-gray-400 text-sm truncate">
                         Soumis le: {verification.submitted_at 
                           ? new Date(verification.submitted_at).toLocaleDateString('fr-FR')
                           : 'Non soumis'}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between md:justify-end space-x-4">
+                  <div className="flex items-center justify-between md:justify-end space-x-4 flex-shrink-0">
                     {getStatusBadge(verification.status)}
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="whitespace-nowrap">
                       <Eye className="h-4 w-4 mr-2" />
                       Voir détails
                     </Button>
