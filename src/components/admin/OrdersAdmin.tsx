@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,6 +14,9 @@ import {
 } from 'lucide-react';
 import { useOrders, Order } from '@/hooks/useOrders';
 import { useUserRole } from '@/hooks/useUserRole';
+import type { Database } from '@/integrations/supabase/types';
+
+type OrderStatus = Database['public']['Enums']['order_status'];
 
 export function OrdersAdmin() {
   const { orders, loading, updateOrderStatus } = useOrders();
@@ -58,7 +60,7 @@ export function OrdersAdmin() {
     }
   };
 
-  const handleStatusUpdate = async (orderId: string, newStatus: string, paymentStatus?: string) => {
+  const handleStatusUpdate = async (orderId: string, newStatus: OrderStatus, paymentStatus?: string) => {
     await updateOrderStatus(orderId, newStatus, paymentStatus);
   };
 
@@ -192,7 +194,7 @@ export function OrdersAdmin() {
 
 interface OrdersListProps {
   orders: Order[];
-  onStatusUpdate: (orderId: string, status: string, paymentStatus?: string) => void;
+  onStatusUpdate: (orderId: string, status: OrderStatus, paymentStatus?: string) => void;
   showActions: boolean;
 }
 
@@ -281,7 +283,7 @@ function OrdersList({ orders, onStatusUpdate, showActions }: OrdersListProps) {
                     <>
                       <Button
                         size="sm"
-                        onClick={() => onStatusUpdate(order.id, 'processing')}
+                        onClick={() => onStatusUpdate(order.id, 'processing' as OrderStatus)}
                         className="bg-blue-600 hover:bg-blue-700"
                       >
                         <TrendingUp className="w-4 h-4 mr-1" />
@@ -290,7 +292,7 @@ function OrdersList({ orders, onStatusUpdate, showActions }: OrdersListProps) {
                       <Button
                         size="sm"
                         variant="destructive"
-                        onClick={() => onStatusUpdate(order.id, 'cancelled')}
+                        onClick={() => onStatusUpdate(order.id, 'cancelled' as OrderStatus)}
                       >
                         <XCircle className="w-4 h-4 mr-1" />
                         Annuler
@@ -301,7 +303,7 @@ function OrdersList({ orders, onStatusUpdate, showActions }: OrdersListProps) {
                     <>
                       <Button
                         size="sm"
-                        onClick={() => onStatusUpdate(order.id, 'completed', 'paid')}
+                        onClick={() => onStatusUpdate(order.id, 'completed' as OrderStatus, 'paid')}
                         className="bg-green-600 hover:bg-green-700"
                       >
                         <CheckCircle className="w-4 h-4 mr-1" />
@@ -310,7 +312,7 @@ function OrdersList({ orders, onStatusUpdate, showActions }: OrdersListProps) {
                       <Button
                         size="sm"
                         variant="destructive"
-                        onClick={() => onStatusUpdate(order.id, 'cancelled')}
+                        onClick={() => onStatusUpdate(order.id, 'cancelled' as OrderStatus)}
                       >
                         <XCircle className="w-4 h-4 mr-1" />
                         Annuler
