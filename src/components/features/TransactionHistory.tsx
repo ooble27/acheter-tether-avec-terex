@@ -23,7 +23,7 @@ interface TransactionHistoryProps {
   transactions: Transaction[];
 }
 
-export function TransactionHistory({ transactions }: TransactionHistoryProps) {
+export function TransactionHistory({ transactions = [] }: TransactionHistoryProps) {
   const isMobile = useIsMobile();
 
   const getStatusBadge = (status: string) => {
@@ -55,6 +55,25 @@ export function TransactionHistory({ transactions }: TransactionHistoryProps) {
       minute: '2-digit'
     });
   };
+
+  // Handle empty transactions
+  if (!transactions || transactions.length === 0) {
+    return (
+      <Card className="bg-terex-darker border-terex-gray">
+        <CardHeader>
+          <CardTitle className="text-white">Historique des transactions</CardTitle>
+          <CardDescription className="text-gray-400">
+            Consultez toutes vos transactions passées
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <p className="text-gray-400">Aucune transaction pour le moment</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (isMobile) {
     return (

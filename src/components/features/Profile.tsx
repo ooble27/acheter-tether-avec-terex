@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useUserProfile } from '@/hooks/useUserProfile';
+import { useTransactions } from '@/contexts/TransactionContext';
 import { KYCAlert } from './KYCAlert';
 import { TransactionHistory } from './TransactionHistory';
 
@@ -18,9 +20,10 @@ export function Profile({ user, onLogout }: ProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
   const { toast } = useToast();
   const { profile, loading, updateProfile } = useUserProfile();
+  const { transactions } = useTransactions();
 
   const [formData, setFormData] = useState({
-    name: profile?.name || user?.name || '',
+    name: profile?.full_name || user?.name || '',
     phone: profile?.phone || '',
     country: profile?.country || '',
     language: profile?.language || 'fr',
@@ -36,7 +39,12 @@ export function Profile({ user, onLogout }: ProfileProps) {
 
   const handleSave = async () => {
     try {
-      await updateProfile(formData);
+      await updateProfile({
+        full_name: formData.name,
+        phone: formData.phone,
+        country: formData.country,
+        language: formData.language
+      });
       setIsEditing(false);
       toast({
         title: "Profil mis à jour",
@@ -53,13 +61,18 @@ export function Profile({ user, onLogout }: ProfileProps) {
 
   const handleCancel = () => {
     setFormData({
-      name: profile?.name || user?.name || '',
+      name: profile?.full_name || user?.name || '',
       phone: profile?.phone || '',
       country: profile?.country || '',
       language: profile?.language || 'fr',
       email: user?.email || ''
     });
     setIsEditing(false);
+  };
+
+  const handleStartKYC = () => {
+    // TODO: Implement KYC start logic
+    console.log('Starting KYC process...');
   };
 
   if (loading) {
@@ -77,7 +90,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
         <p className="text-gray-400">Gérez vos informations personnelles et préférences</p>
       </div>
 
-      <KYCAlert />
+      <KYCAlert status="pending" onStartKYC={handleStartKYC} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="bg-terex-darker border-terex-gray">
@@ -218,7 +231,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
         </Card>
       </div>
 
-      <TransactionHistory />
+      <TransactionHistory transactions={transactions} />
     </div>
   );
 }
