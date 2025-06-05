@@ -116,10 +116,10 @@ export const useInternationalTransfers = () => {
 
       if (transferDetails) {
         // Récupérer directement l'email du client via une requête auth
-        const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers();
+        const { data: authData, error: usersError } = await supabase.auth.admin.listUsers();
         
-        if (!usersError && users) {
-          const clientUser = users.find(u => u.id === transferDetails.user_id);
+        if (!usersError && authData?.users) {
+          const clientUser = authData.users.find((u: any) => u.id === transferDetails.user_id);
           const clientEmail = clientUser?.email;
 
           if (clientEmail) {
