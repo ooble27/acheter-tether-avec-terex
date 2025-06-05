@@ -78,113 +78,114 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
   const canTakeAction = verification.status === 'submitted' || verification.status === 'under_review';
 
   return (
-    <div className="space-y-4 md:space-y-6 p-3 md:p-0">
-      {/* En-tête avec retour - responsive */}
-      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-        <div className="flex flex-col space-y-3 md:flex-row md:items-center md:space-y-0 md:space-x-4">
+    <div className="min-h-screen bg-terex-dark p-4 pb-safe">
+      <div className="mx-auto max-w-4xl space-y-4">
+        {/* En-tête avec retour - mobile optimized */}
+        <div className="flex flex-col space-y-3">
           <Button 
             variant="ghost" 
             onClick={onBack} 
-            className="text-white hover:bg-terex-accent/20 w-fit"
+            className="text-white hover:bg-terex-accent/20 self-start"
             size="sm"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Retour
           </Button>
-          <div>
-            <h1 className="text-xl md:text-3xl font-bold text-white leading-tight">
+          
+          <div className="flex flex-col space-y-2">
+            <h1 className="text-2xl font-bold text-white leading-tight">
               Vérification KYC
             </h1>
-            <p className="text-base md:text-lg font-medium text-white mt-1">
+            <p className="text-lg font-medium text-white">
               {verification.first_name} {verification.last_name}
             </p>
-            <p className="text-sm md:text-base text-gray-400">ID: {verification.user_id.slice(0, 12)}...</p>
+            <p className="text-sm text-gray-400 break-all">
+              ID: {verification.user_id.slice(0, 12)}...
+            </p>
+            
+            <div className="flex items-center space-x-3 pt-2">
+              <div className={`w-3 h-3 rounded-full ${getStatusColor(verification.status)}`}></div>
+              <Badge variant="secondary" className="text-sm">
+                {verification.status === 'pending' && 'En attente'}
+                {verification.status === 'submitted' && 'Soumis'}
+                {verification.status === 'under_review' && 'En révision'}
+                {verification.status === 'approved' && 'Approuvé'}
+                {verification.status === 'rejected' && 'Rejeté'}
+              </Badge>
+            </div>
           </div>
         </div>
-        
-        <div className="flex items-center space-x-3">
-          <div className={`w-3 h-3 rounded-full ${getStatusColor(verification.status)}`}></div>
-          <Badge variant="secondary" className="text-sm md:text-base">
-            {verification.status === 'pending' && 'En attente'}
-            {verification.status === 'submitted' && 'Soumis'}
-            {verification.status === 'under_review' && 'En révision'}
-            {verification.status === 'approved' && 'Approuvé'}
-            {verification.status === 'rejected' && 'Rejeté'}
-          </Badge>
-        </div>
-      </div>
 
-      {/* Actions rapides - responsive */}
-      {canTakeAction && (
-        <Card className="bg-terex-card border-terex-border">
-          <CardContent className="p-3 md:p-4">
-            <div className="flex flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-4">
-              {verification.status === 'submitted' && (
+        {/* Actions rapides - mobile optimized */}
+        {canTakeAction && (
+          <Card className="bg-terex-card border-terex-border">
+            <CardContent className="p-4">
+              <div className="flex flex-col space-y-3">
+                {verification.status === 'submitted' && (
+                  <Button
+                    onClick={handleSetUnderReview}
+                    className="bg-orange-600 hover:bg-orange-700 w-full"
+                    size="sm"
+                  >
+                    <Clock className="h-4 w-4 mr-2" />
+                    Mettre en révision
+                  </Button>
+                )}
                 <Button
-                  onClick={handleSetUnderReview}
-                  className="bg-orange-600 hover:bg-orange-700 w-full md:w-auto"
+                  onClick={() => setShowApproveDialog(true)}
+                  className="bg-green-600 hover:bg-green-700 w-full"
                   size="sm"
                 >
-                  <Clock className="h-4 w-4 mr-2" />
-                  Mettre en révision
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Approuver
                 </Button>
-              )}
-              <Button
-                onClick={() => setShowApproveDialog(true)}
-                className="bg-green-600 hover:bg-green-700 w-full md:w-auto"
-                size="sm"
-              >
-                <CheckCircle className="h-4 w-4 mr-2" />
-                Approuver
-              </Button>
-              <Button
-                onClick={() => setShowRejectDialog(true)}
-                variant="destructive"
-                className="w-full md:w-auto"
-                size="sm"
-              >
-                <XCircle className="h-4 w-4 mr-2" />
-                Rejeter
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+                <Button
+                  onClick={() => setShowRejectDialog(true)}
+                  variant="destructive"
+                  className="w-full"
+                  size="sm"
+                >
+                  <XCircle className="h-4 w-4 mr-2" />
+                  Rejeter
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-        {/* Informations personnelles - responsive */}
+        {/* Informations personnelles - mobile optimized */}
         <Card className="bg-terex-card border-terex-border">
-          <CardHeader className="pb-3 md:pb-4">
-            <CardTitle className="text-white flex items-center text-lg md:text-xl">
-              <User className="h-4 w-4 md:h-5 md:w-5 mr-2" />
+          <CardHeader className="pb-3">
+            <CardTitle className="text-white flex items-center text-lg">
+              <User className="h-4 w-4 mr-2" />
               Informations personnelles
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 md:space-y-4 text-sm md:text-base">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+          <CardContent className="space-y-4 text-sm">
+            <div className="grid grid-cols-1 gap-4">
               <div>
-                <label className="text-xs md:text-sm text-gray-400">Prénom</label>
-                <p className="text-white font-medium">{verification.first_name || 'Non fourni'}</p>
+                <label className="text-xs text-gray-400 block mb-1">Prénom</label>
+                <p className="text-white font-medium break-words">{verification.first_name || 'Non fourni'}</p>
               </div>
               <div>
-                <label className="text-xs md:text-sm text-gray-400">Nom</label>
-                <p className="text-white font-medium">{verification.last_name || 'Non fourni'}</p>
+                <label className="text-xs text-gray-400 block mb-1">Nom</label>
+                <p className="text-white font-medium break-words">{verification.last_name || 'Non fourni'}</p>
               </div>
               <div>
-                <label className="text-xs md:text-sm text-gray-400">Date de naissance</label>
+                <label className="text-xs text-gray-400 block mb-1">Date de naissance</label>
                 <p className="text-white font-medium">{verification.date_of_birth || 'Non fournie'}</p>
               </div>
               <div>
-                <label className="text-xs md:text-sm text-gray-400">Nationalité</label>
-                <p className="text-white font-medium">{verification.nationality || 'Non fournie'}</p>
+                <label className="text-xs text-gray-400 block mb-1">Nationalité</label>
+                <p className="text-white font-medium break-words">{verification.nationality || 'Non fournie'}</p>
               </div>
-              <div className="md:col-span-2">
-                <label className="text-xs md:text-sm text-gray-400">Téléphone</label>
-                <p className="text-white font-medium">{verification.phone_number || 'Non fourni'}</p>
+              <div>
+                <label className="text-xs text-gray-400 block mb-1">Téléphone</label>
+                <p className="text-white font-medium break-words">{verification.phone_number || 'Non fourni'}</p>
               </div>
-              <div className="md:col-span-2">
-                <label className="text-xs md:text-sm text-gray-400">Adresse</label>
-                <p className="text-white font-medium">
+              <div>
+                <label className="text-xs text-gray-400 block mb-1">Adresse</label>
+                <p className="text-white font-medium break-words">
                   {verification.address ? (
                     `${verification.address}, ${verification.city} ${verification.postal_code}, ${verification.country}`
                   ) : (
@@ -196,17 +197,17 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
           </CardContent>
         </Card>
 
-        {/* Informations du document - responsive */}
+        {/* Informations du document - mobile optimized */}
         <Card className="bg-terex-card border-terex-border">
-          <CardHeader className="pb-3 md:pb-4">
-            <CardTitle className="text-white flex items-center text-lg md:text-xl">
-              <FileText className="h-4 w-4 md:h-5 md:w-5 mr-2" />
+          <CardHeader className="pb-3">
+            <CardTitle className="text-white flex items-center text-lg">
+              <FileText className="h-4 w-4 mr-2" />
               Informations du document
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 md:space-y-4 text-sm md:text-base">
+          <CardContent className="space-y-4 text-sm">
             <div>
-              <label className="text-xs md:text-sm text-gray-400">Type de document</label>
+              <label className="text-xs text-gray-400 block mb-1">Type de document</label>
               <p className="text-white font-medium">
                 {verification.identity_document_type === 'passport' && 'Passeport'}
                 {verification.identity_document_type === 'national_id' && 'Carte d\'identité nationale'}
@@ -215,13 +216,13 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
               </p>
             </div>
             <div>
-              <label className="text-xs md:text-sm text-gray-400">Numéro de document</label>
+              <label className="text-xs text-gray-400 block mb-1">Numéro de document</label>
               <p className="text-white font-medium break-all">{verification.identity_document_number || 'Non fourni'}</p>
             </div>
             
             <div>
-              <label className="text-xs md:text-sm text-gray-400">Dates importantes</label>
-              <div className="space-y-1 text-xs md:text-sm">
+              <label className="text-xs text-gray-400 block mb-1">Dates importantes</label>
+              <div className="space-y-2 text-xs">
                 <div>
                   <span className="text-gray-400">Créé le: </span>
                   <span className="text-white">{formatDate(verification.created_at)}</span>
@@ -242,51 +243,51 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
             </div>
             
             {verification.rejection_reason && (
-              <div className="mt-3 p-2 md:p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-                <p className="text-xs md:text-sm text-gray-400 mb-1">Raison du rejet:</p>
-                <p className="text-white text-xs md:text-sm">{verification.rejection_reason}</p>
+              <div className="mt-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <p className="text-xs text-gray-400 mb-1">Raison du rejet:</p>
+                <p className="text-white text-xs break-words">{verification.rejection_reason}</p>
               </div>
             )}
           </CardContent>
         </Card>
-      </div>
 
-      {/* Documents d'identité - responsive */}
-      <Card className="bg-terex-card border-terex-border">
-        <CardHeader className="pb-3 md:pb-4">
-          <CardTitle className="text-white flex items-center text-lg md:text-xl">
-            <Eye className="h-4 w-4 md:h-5 md:w-5 mr-2" />
-            Documents fournis
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            <DocumentImage
-              url={verification.identity_document_front_url}
-              alt="Document recto"
-              title="Document d'identité (recto)"
-            />
-            
-            <DocumentImage
-              url={verification.identity_document_back_url}
-              alt="Document verso"
-              title="Document d'identité (verso)"
-            />
-            
-            <DocumentImage
-              url={verification.selfie_url}
-              alt="Selfie"
-              title="Photo selfie"
-            />
-            
-            <DocumentImage
-              url={verification.proof_of_address_url}
-              alt="Justificatif de domicile"
-              title="Justificatif de domicile"
-            />
-          </div>
-        </CardContent>
-      </Card>
+        {/* Documents d'identité - mobile optimized */}
+        <Card className="bg-terex-card border-terex-border">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-white flex items-center text-lg">
+              <Eye className="h-4 w-4 mr-2" />
+              Documents fournis
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 gap-4">
+              <DocumentImage
+                url={verification.identity_document_front_url}
+                alt="Document recto"
+                title="Document d'identité (recto)"
+              />
+              
+              <DocumentImage
+                url={verification.identity_document_back_url}
+                alt="Document verso"
+                title="Document d'identité (verso)"
+              />
+              
+              <DocumentImage
+                url={verification.selfie_url}
+                alt="Selfie"
+                title="Photo selfie"
+              />
+              
+              <DocumentImage
+                url={verification.proof_of_address_url}
+                alt="Justificatif de domicile"
+                title="Justificatif de domicile"
+              />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Dialog d'approbation */}
       <Dialog open={showApproveDialog} onOpenChange={setShowApproveDialog}>
@@ -306,11 +307,11 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
               rows={3}
             />
           </div>
-          <DialogFooter className="flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
+          <DialogFooter className="flex flex-col space-y-2">
             <Button 
               variant="outline" 
               onClick={() => setShowApproveDialog(false)}
-              className="w-full md:w-auto"
+              className="w-full"
               size="sm"
             >
               Annuler
@@ -318,7 +319,7 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
             <Button
               onClick={handleApprove}
               disabled={submitting}
-              className="bg-green-600 hover:bg-green-700 w-full md:w-auto"
+              className="bg-green-600 hover:bg-green-700 w-full"
               size="sm"
             >
               {submitting ? 'Traitement...' : 'Approuver'}
@@ -346,11 +347,11 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
               rows={3}
             />
           </div>
-          <DialogFooter className="flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
+          <DialogFooter className="flex flex-col space-y-2">
             <Button 
               variant="outline" 
               onClick={() => setShowRejectDialog(false)}
-              className="w-full md:w-auto"
+              className="w-full"
               size="sm"
             >
               Annuler
@@ -359,7 +360,7 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
               onClick={handleReject}
               disabled={submitting || !rejectionReason.trim()}
               variant="destructive"
-              className="w-full md:w-auto"
+              className="w-full"
               size="sm"
             >
               {submitting ? 'Traitement...' : 'Rejeter'}

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,7 @@ import { useTransactions } from '@/contexts/TransactionContext';
 import { KYCAlert } from './KYCAlert';
 import { KYCPage } from './KYCPage';
 import { TransactionHistory } from './TransactionHistory';
+import { ExternalLink, MessageCircle } from 'lucide-react';
 
 interface ProfileProps {
   user: { email: string; name: string } | null;
@@ -73,6 +75,17 @@ export function Profile({ user, onLogout }: ProfileProps) {
 
   const handleStartKYC = () => {
     setShowKYC(true);
+  };
+
+  const handleWhatsAppClick = () => {
+    const phoneNumber = '+14182619091';
+    const message = 'Bonjour, je souhaiterais obtenir plus d\'informations sur Terex.';
+    const whatsappUrl = `https://wa.me/${phoneNumber.replace('+', '')}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handleTerexWebsiteClick = () => {
+    window.open('https://terex.com', '_blank');
   };
 
   if (loading) {
@@ -213,24 +226,34 @@ export function Profile({ user, onLogout }: ProfileProps) {
 
         <Card className="bg-terex-darker border-terex-gray">
           <CardHeader>
-            <CardTitle className="text-white">Actions du compte</CardTitle>
+            <CardTitle className="text-white">Partager Terex</CardTitle>
             <CardDescription className="text-gray-400">
-              Gérez votre compte et vos préférences
+              Découvrez notre site web et contactez-nous
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="p-4 bg-terex-accent/10 border border-terex-accent/20 rounded-lg">
-              <p className="text-terex-accent text-sm mb-2">✓ Compte vérifié</p>
-              <p className="text-gray-300 text-sm">Votre email a été confirmé avec succès.</p>
+            <div className="space-y-3">
+              <Button 
+                onClick={handleTerexWebsiteClick}
+                variant="outline"
+                className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Visiter le site Terex
+              </Button>
+              
+              <Button 
+                onClick={handleWhatsAppClick}
+                className="w-full bg-green-600 hover:bg-green-700 text-white"
+              >
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Nous rejoindre sur WhatsApp
+              </Button>
             </div>
             
-            <Button 
-              onClick={onLogout}
-              variant="outline" 
-              className="w-full border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
-            >
-              Se déconnecter
-            </Button>
+            <div className="text-center text-sm text-gray-400 mt-4">
+              <p>Partagez Terex avec vos proches et découvrez tous nos services</p>
+            </div>
           </CardContent>
         </Card>
       </div>
