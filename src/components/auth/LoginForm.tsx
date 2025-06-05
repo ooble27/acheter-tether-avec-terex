@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
@@ -18,6 +18,32 @@ export function LoginForm() {
   
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
+
+  const checkEmailExists = async (email: string) => {
+    try {
+      // Essayer de se connecter avec un mot de passe temporaire pour vérifier si l'email existe
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password: 'temporary-check-password-123456789'
+      });
+      
+      // Si l'erreur est "Invalid login credentials", l'email existe mais le mot de passe est faux
+      if (error && error.message === "Invalid login credentials") {
+        return true; // Email existe
+      }
+      
+      // Vérifier aussi dans la table profiles si elle existe
+      const { data } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', 'dummy-check'); // Cette requête va échouer mais nous permet de vérifier la structure
+      
+      return false; // Email n'existe pas
+    } catch (error) {
+      console.log('Erreur lors de la vérification:', error);
+      return false;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent, isLogin: boolean) => {
     e.preventDefault();
@@ -36,14 +62,34 @@ export function LoginForm() {
           });
         }
       } else {
+        // Vérifier si l'email existe déjà avant l'inscription
+        console.log('Vérification de l\'email:', email);
+        
+        // Première vérification : essayer de réinitialiser le mot de passe
+        const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: 'https://example.com/reset' // URL temporaire
+        });
+        
+        // Si pas d'erreur sur le reset, l'email existe déjà
+        if (!resetError) {
+          console.log('Email existe déjà détecté via reset password');
+          toast({
+            title: "Erreur d'inscription",
+            description: "Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.",
+            variant: "destructive",
+          });
+          setLoading(false);
+          return;
+        }
+        
+        // Si on arrive ici, l'email n'existe pas, on peut créer le compte
         const { error } = await signUp(email, password, name);
+        
         if (error) {
           console.log('Erreur inscription:', error);
           
-          // Gestion spécifique des erreurs d'inscription
           let errorMessage = error.message;
           
-          // Détection plus précise des erreurs d'email déjà utilisé
           if (error.message.includes("User already registered") || 
               error.message.includes("already registered") ||
               error.message.includes("already exists") ||
@@ -66,8 +112,6 @@ export function LoginForm() {
             description: errorMessage,
             variant: "destructive",
           });
-          
-          // Ne pas afficher le message de succès si il y a une erreur
           return;
         }
         
