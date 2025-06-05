@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { useTransactions } from '@/contexts/TransactionContext';
 import { KYCAlert } from './KYCAlert';
+import { KYCPage } from './KYCPage';
 import { TransactionHistory } from './TransactionHistory';
 
 interface ProfileProps {
@@ -18,6 +18,7 @@ interface ProfileProps {
 
 export function Profile({ user, onLogout }: ProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const [showKYC, setShowKYC] = useState(false);
   const { toast } = useToast();
   const { profile, loading, updateProfile } = useUserProfile();
   const { transactions } = useTransactions();
@@ -71,8 +72,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
   };
 
   const handleStartKYC = () => {
-    // TODO: Implement KYC start logic
-    console.log('Starting KYC process...');
+    setShowKYC(true);
   };
 
   if (loading) {
@@ -81,6 +81,10 @@ export function Profile({ user, onLogout }: ProfileProps) {
         <div className="text-white">Chargement...</div>
       </div>
     );
+  }
+
+  if (showKYC) {
+    return <KYCPage onBack={() => setShowKYC(false)} />;
   }
 
   return (
