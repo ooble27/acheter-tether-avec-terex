@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,14 +15,14 @@ export function SellUSDT() {
   const exchangeRate = 615;
   const cfaAmount = amount ? (parseFloat(amount) * exchangeRate).toFixed(0) : '0';
 
-  // Adresse de réception crypto fournie par Terex
+  // Adresses de réception crypto fournies par Terex
   const getReceiveAddress = () => {
     const addresses = {
-      TRC20: 'TXYZabc123...DefGhi456',
-      BEP20: 'BNBxyz789...AbcDef123',
-      ERC20: '0x1234...5678',
-      Arbitrum: '0xAbcd...Efgh',
-      Polygon: '0x9876...5432'
+      TRC20: 'TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb',
+      BEP20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
+      ERC20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
+      Arbitrum: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
+      Polygon: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84'
     };
     return addresses[network as keyof typeof addresses] || 'Adresse non disponible';
   };
