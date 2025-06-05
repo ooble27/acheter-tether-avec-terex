@@ -38,8 +38,8 @@ export function BuyUSDT() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark p-2 md:p-4">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-6 md:mb-8">
+        {/* Header - déplacé vers la gauche */}
+        <div className="text-left mb-6 md:mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Acheter USDT</h1>
           <p className="text-gray-400">Achetez des USDT facilement et en toute sécurité</p>
         </div>
@@ -85,15 +85,15 @@ export function BuyUSDT() {
                                 placeholder="0.00"
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
-                                className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24 md:pr-20"
+                                className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-32 md:pr-20"
                               />
                               {method.id === 'mobile' ? (
-                                <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
-                                  <span className="text-terex-accent font-medium text-sm">CFA</span>
+                                <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-1 py-1">
+                                  <span className="text-terex-accent font-medium text-xs">CFA</span>
                                 </div>
                               ) : (
                                 <Select value={currency} onValueChange={setCurrency}>
-                                  <SelectTrigger className="absolute right-1 top-1 w-20 h-10 bg-terex-gray-light border-0 text-terex-accent">
+                                  <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent text-xs">
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -112,15 +112,15 @@ export function BuyUSDT() {
                                 type="text"
                                 value={usdtAmount}
                                 readOnly
-                                className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24"
+                                className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-16"
                               />
-                              <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-1 py-1">
+                              <div className="absolute right-1 top-1 flex items-center space-x-1 bg-terex-gray-light rounded px-1 py-1">
                                 <img 
                                   src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                                   alt="USDT" 
-                                  className="w-5 h-5"
+                                  className="w-4 h-4"
                                 />
-                                <span className="text-terex-accent font-medium text-sm">USDT</span>
+                                <span className="text-terex-accent font-medium text-xs">USDT</span>
                               </div>
                             </div>
                           </div>
