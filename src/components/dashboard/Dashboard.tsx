@@ -15,6 +15,7 @@ import { OrdersAdmin } from "@/components/admin/OrdersAdmin";
 import { EnhancedOrdersAdmin } from "@/components/admin/EnhancedOrdersAdmin";
 import { KYCAdmin } from "@/components/admin/KYCAdmin";
 import { AuthProvider } from '@/contexts/AuthContext';
+import { useTransactions } from '@/contexts/TransactionContext';
 
 interface DashboardProps {
   user: {
@@ -26,31 +27,32 @@ interface DashboardProps {
 
 export function Dashboard({ user, onLogout }: DashboardProps) {
   const [activeTab, setActiveTab] = useState('home');
+  const { transactions } = useTransactions();
 
   const renderContent = () => {
     switch (activeTab) {
       case 'home':
-        return <DashboardHome />;
+        return <DashboardHome user={user} />;
       case 'buy-usdt':
         return <EnhancedBuyUSDT />;
       case 'sell-usdt':
         return <SellUSDT />;
       case 'transactions':
-        return <TransactionHistory />;
+        return <TransactionHistory transactions={transactions} />;
       case 'transfer':
         return <InternationalTransfer />;
       case 'faq':
         return <FAQ />;
       case 'profile':
-        return <Profile />;
+        return <Profile user={user} onLogout={onLogout} />;
       case 'kyc':
-        return <KYCPage />;
+        return <KYCPage onBack={() => setActiveTab('profile')} />;
       case 'orders-admin':
         return <EnhancedOrdersAdmin />;
       case 'kyc-admin':
         return <KYCAdmin />;
       default:
-        return <DashboardHome />;
+        return <DashboardHome user={user} />;
     }
   };
 
@@ -58,7 +60,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     <AuthProvider>
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-terex-dark">
-          <AppSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+          <AppSidebar activeSection={activeTab} setActiveSection={setActiveTab} onLogout={onLogout} />
           <main className="flex-1">
             <div className="p-2">
               <SidebarTrigger className="mb-4" />
