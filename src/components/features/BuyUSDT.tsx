@@ -12,7 +12,7 @@ import { OrderConfirmation } from '@/components/features/OrderConfirmation';
 import { useOrders } from '@/hooks/useOrders';
 
 export function BuyUSDT() {
-  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'mobile'>('card');
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
@@ -30,8 +30,8 @@ export function BuyUSDT() {
   const usdtAmount = amount ? (parseFloat(amount) / exchangeRates[currency as keyof typeof exchangeRates]).toFixed(6) : '0';
 
   const paymentMethods = [
-    { id: 'card', name: 'Carte bancaire', icon: '💳', fee: '0%', time: 'Instantané' },
-    { id: 'mobile', name: 'Mobile Money', icon: '📱', fee: '0%', time: 'Instantané' }
+    { id: 'card' as const, name: 'Carte bancaire', icon: '💳', fee: '0%', time: 'Instantané' },
+    { id: 'mobile' as const, name: 'Mobile Money', icon: '📱', fee: '0%', time: 'Instantané' }
   ];
 
   const getQuickAmounts = () => {
@@ -60,7 +60,9 @@ export function BuyUSDT() {
       exchange_rate: exchangeRates[currency as keyof typeof exchangeRates],
       payment_method: paymentMethod,
       network,
-      wallet_address: walletAddress
+      wallet_address: walletAddress,
+      status: 'pending',
+      payment_status: 'pending'
     };
 
     const result = await createOrder(orderData);
@@ -116,7 +118,7 @@ export function BuyUSDT() {
                 </div>
               </CardHeader>
               <CardContent className="p-4 md:p-6">
-                <Tabs value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-6">
+                <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'card' | 'mobile')} className="space-y-6">
                   <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
                     {paymentMethods.map((method) => (
                       <TabsTrigger 

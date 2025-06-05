@@ -12,7 +12,7 @@ export interface Order {
   currency: string;
   usdt_amount: number;
   exchange_rate: number;
-  payment_method: string;
+  payment_method: 'card' | 'mobile';
   network: string;
   wallet_address?: string;
   status: string;
@@ -71,12 +71,12 @@ export const useOrders = () => {
     try {
       const { data, error } = await supabase
         .from('orders')
-        .insert([{
+        .insert({
           ...orderData,
           user_id: user.id,
-          status: 'pending',
-          payment_status: 'pending'
-        }])
+          status: orderData.status || 'pending',
+          payment_status: orderData.payment_status || 'pending'
+        })
         .select()
         .single();
 
