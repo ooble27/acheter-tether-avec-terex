@@ -8,7 +8,6 @@ interface AuthContextType {
   session: Session | null
   loading: boolean
   signUp: (email: string, password: string, name: string) => Promise<{ error: any }>
-  signIn: (email: string, password: string) => Promise<{ error: any }>
   signOut: () => Promise<void>
   resendVerification: (email: string) => Promise<{ error: any }>
 }
@@ -18,7 +17,6 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   loading: true,
   signUp: async () => ({ error: null }),
-  signIn: async () => ({ error: null }),
   signOut: async () => {},
   resendVerification: async () => ({ error: null }),
 })
@@ -78,18 +76,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return { error }
   }
 
-  const signIn = async (email: string, password: string) => {
-    console.log('AuthProvider: Starting sign in for:', email)
-    setLoading(true)
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    })
-    console.log('AuthProvider: Sign in result:', { error })
-    setLoading(false)
-    return { error }
-  }
-
   const signOut = async () => {
     console.log('AuthProvider: Starting sign out...')
     setLoading(true)
@@ -132,7 +118,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     session,
     loading,
     signUp,
-    signIn,
     signOut,
     resendVerification,
   }
