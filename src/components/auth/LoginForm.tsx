@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,29 +36,28 @@ export function LoginForm() {
           });
         }
       } else {
-        const { error } = await signUp(email, password, name);
-        if (error) {
-          console.log('Erreur inscription:', error);
-          
-          // Gestion spécifique des erreurs d'inscription
-          let errorMessage = error.message;
-          
-          if (error.message.includes("User already registered") || 
-              error.message.includes("already registered") ||
-              error.message.includes("already exists")) {
-            errorMessage = "Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.";
-          } else if (error.message.includes("Password should be at least")) {
-            errorMessage = "Le mot de passe doit contenir au moins 6 caractères.";
-          } else if (error.message.includes("Invalid email")) {
-            errorMessage = "Format d'email invalide.";
+        // Pour l'inscription, on essaie directement de s'inscrire
+        const { error: signUpError } = await signUp(email, password, name);
+        
+        if (signUpError) {
+          // Vérifier le type d'erreur spécifique
+          if (signUpError.message.includes("already registered") || 
+              signUpError.message.includes("User already registered")) {
+            toast({
+              title: "Email déjà utilisé",
+              description: "Cet email est déjà utilisé. Veuillez vous connecter.",
+              variant: "destructive",
+            });
+          } else {
+            // Autres erreurs d'inscription
+            toast({
+              title: "Erreur d'inscription",
+              description: signUpError.message,
+              variant: "destructive",
+            });
           }
-          
-          toast({
-            title: "Erreur d'inscription",
-            description: errorMessage,
-            variant: "destructive",
-          });
         } else {
+          // Inscription réussie
           toast({
             title: "Inscription réussie !",
             description: "Vérifiez votre email pour activer votre compte",
