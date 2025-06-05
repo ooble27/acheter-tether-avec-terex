@@ -47,7 +47,54 @@ export const useEmailNotifications = () => {
     }
   };
 
+  // Nouvelle fonction pour envoyer des notifications de paiement confirmé
+  const sendPaymentConfirmation = async (orderData: any, orderId: string) => {
+    return sendEmailNotification('payment_confirmed', orderData.type, orderData, orderId);
+  };
+
+  // Nouvelle fonction pour les notifications de transfert international
+  const sendTransferNotification = async (
+    emailType: string,
+    transferData: any,
+    transferId?: string
+  ) => {
+    if (!user?.email) {
+      console.log('Pas d\'adresse email utilisateur disponible');
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.functions.invoke('send-email-notification', {
+        body: {
+          userId: user.id,
+          orderId: transferId,
+          emailAddress: user.email,
+          emailType,
+          transactionType: 'transfer',
+          orderData: transferData
+        },
+      });
+
+      if (error) {
+        console.error('Erreur lors de l\'envoi de l\'email de transfert:', error);
+        throw error;
+      }
+
+      console.log('Email de transfert envoyé avec succès:', data);
+      return data;
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi de la notification de transfert:', error);
+      toast({
+        title: "Attention",
+        description: "L'email de notification n'a pas pu être envoyé, mais votre transfert est bien enregistré.",
+        variant: "default",
+      });
+    }
+  };
+
   return {
-    sendEmailNotification
+    sendEmailNotification,
+    sendPaymentConfirmation,
+    sendTransferNotification
   };
 };

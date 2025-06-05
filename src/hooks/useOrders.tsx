@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -15,7 +16,7 @@ export const useOrders = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const { toast } = useToast();
-  const { sendEmailNotification } = useEmailNotifications();
+  const { sendEmailNotification, sendPaymentConfirmation } = useEmailNotifications();
 
   const fetchOrders = async () => {
     if (!user) return;
@@ -129,6 +130,11 @@ export const useOrders = () => {
           { ...orderDetails, status },
           orderId
         );
+
+        // Si le statut passe à "processing" avec payment_status "confirmed", envoyer email de paiement confirmé
+        if (status === 'processing' && paymentStatus === 'confirmed') {
+          await sendPaymentConfirmation({ ...orderDetails, status }, orderId);
+        }
       }
 
       toast({
