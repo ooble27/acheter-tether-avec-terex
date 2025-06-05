@@ -54,7 +54,7 @@ export const MagicLinkEmail = ({ magicLink, userEmail }: MagicLinkEmailProps) =>
           </Section>
           
           <Text style={smallText}>
-            Ce lien de connexion est valable pendant <strong>5 minutes</strong> pour votre sécurité.
+            Ce lien de connexion est valable pendant <strong>10 minutes</strong> pour votre sécurité.
           </Text>
           
           <Hr style={hr} />

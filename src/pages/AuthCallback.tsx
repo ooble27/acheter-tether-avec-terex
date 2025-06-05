@@ -12,33 +12,88 @@ const AuthCallback = () => {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        console.log('Callback URL params:', Object.fromEntries(searchParams.entries()));
+        console.log('AuthCallback: URL complète:', window.location.href);
+        console.log('AuthCallback: Paramètres URL:', Object.fromEntries(searchParams.entries()));
         
         // Récupérer les paramètres de l'URL
         const type = searchParams.get('type');
         const error = searchParams.get('error');
         const errorDescription = searchParams.get('error_description');
+        const accessToken = searchParams.get('access_token');
+        const refreshToken = searchParams.get('refresh_token');
         
-        console.log('Type de callback:', type);
-        console.log('Error:', error);
+        console.log('AuthCallback: Analyse des paramètres:', {
+          type,
+          error,
+          errorDescription,
+          hasAccessToken: !!accessToken,
+          hasRefreshToken: !!refreshToken
+        });
         
         // Vérifier s'il y a une erreur dans l'URL
         if (error) {
-          console.error('Erreur dans l\'URL:', error, errorDescription);
-          toast({
-            title: "Erreur d'authentification",
-            description: errorDescription || error,
-            variant: "destructive",
-          });
+          console.error('AuthCallback: Erreur dans l\'URL:', error, errorDescription);
+          
+          if (error === 'access_denied') {
+            toast({
+              title: "Connexion annulée",
+              description: "Vous avez annulé la connexion.",
+              variant: "destructive",
+            });
+          } else if (errorDescription?.includes('expired') || error.includes('expired')) {
+            toast({
+              title: "Lien expiré",
+              description: "Le lien de connexion a expiré. Veuillez demander un nouveau lien.",
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: "Erreur de connexion",
+              description: errorDescription || error,
+              variant: "destructive",
+            });
+          }
           navigate('/');
           return;
+        }
+        
+        // Si nous avons des tokens dans l'URL, essayer de les utiliser
+        if (accessToken && refreshToken) {
+          console.log('AuthCallback: Tokens trouvés dans l\'URL, tentative de session...');
+          
+          const { data, error: sessionError } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          });
+          
+          if (sessionError) {
+            console.error('AuthCallback: Erreur lors de la création de session:', sessionError);
+            toast({
+              title: "Erreur de session",
+              description: "Impossible de créer la session. Le lien a peut-être expiré.",
+              variant: "destructive",
+            });
+            navigate('/');
+            return;
+          }
+          
+          if (data.session) {
+            console.log('AuthCallback: Session créée avec succès');
+            toast({
+              title: "Connexion réussie !",
+              description: "Vous êtes maintenant connecté à Terex.",
+              className: "bg-green-600 text-white border-green-600",
+            });
+            navigate('/');
+            return;
+          }
         }
         
         // Récupérer la session actuelle
         const { data, error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError) {
-          console.error('Erreur callback auth:', sessionError);
+          console.error('AuthCallback: Erreur récupération session:', sessionError);
           toast({
             title: "Erreur d'authentification",
             description: sessionError.message,
@@ -48,11 +103,11 @@ const AuthCallback = () => {
           return;
         }
 
-        console.log('Session data:', data);
+        console.log('AuthCallback: Données de session:', data);
 
         // Si c'est une confirmation d'email (première inscription)
         if (type === 'signup' && data.session) {
-          console.log('Email confirmé lors de l\'inscription, redirection vers dashboard');
+          console.log('AuthCallback: Email confirmé lors de l\'inscription');
           toast({
             title: "Email confirmé !",
             description: "Votre compte a été activé avec succès.",
@@ -64,7 +119,7 @@ const AuthCallback = () => {
 
         // Si c'est un Magic Link (connexion par email)
         if (type === 'magiclink' && data.session) {
-          console.log('Magic Link utilisé, redirection vers dashboard');
+          console.log('AuthCallback: Magic Link utilisé avec succès');
           toast({
             title: "Connexion réussie !",
             description: "Vous êtes maintenant connecté.",
@@ -74,9 +129,9 @@ const AuthCallback = () => {
           return;
         }
 
-        // Si c'est une session normale (token dans l'URL)
+        // Si nous avons une session active
         if (data.session) {
-          console.log('Session active, redirection vers dashboard');
+          console.log('AuthCallback: Session active détectée');
           toast({
             title: "Connexion réussie !",
             description: "Bienvenue sur Terex.",
@@ -87,16 +142,16 @@ const AuthCallback = () => {
         }
 
         // Aucune session - rediriger vers login
-        console.log('Aucune session, redirection vers login');
+        console.log('AuthCallback: Aucune session trouvée');
         toast({
-          title: "Lien expiré",
-          description: "Le lien de connexion a expiré. Veuillez demander un nouveau lien.",
+          title: "Lien invalide",
+          description: "Le lien de connexion est invalide ou a expiré. Veuillez demander un nouveau lien.",
           variant: "destructive",
         });
         navigate('/');
 
       } catch (error) {
-        console.error('Erreur inattendue:', error);
+        console.error('AuthCallback: Erreur inattendue:', error);
         toast({
           title: "Erreur",
           description: "Une erreur inattendue s'est produite",
@@ -114,6 +169,7 @@ const AuthCallback = () => {
       <div className="text-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-terex-accent mx-auto mb-4"></div>
         <div className="text-white text-lg">Connexion en cours...</div>
+        <div className="text-gray-400 text-sm mt-2">Vérification du lien de connexion...</div>
       </div>
     </div>
   );

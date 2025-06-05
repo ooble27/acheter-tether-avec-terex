@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,22 +41,39 @@ export function LoginForm() {
     setIsLoading(true);
 
     try {
+      console.log('Tentative de connexion Magic Link pour:', email);
+      
       const { error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
-          shouldCreateUser: false // Ne pas créer d'utilisateur automatiquement
+          shouldCreateUser: false,
+          // Utiliser le template personnalisé et augmenter la durée de vie
+          data: {
+            site_url: window.location.origin
+          }
         }
       });
 
+      console.log('Résultat Magic Link:', { error });
+
       if (error) {
-        if (error.message.includes("User not found") || error.message.includes("Invalid email")) {
+        console.error('Erreur Magic Link:', error);
+        if (error.message.includes("User not found") || 
+            error.message.includes("Invalid email") ||
+            error.message.includes("Unable to validate email address")) {
           toast({
             title: "Compte introuvable",
             description: "Aucun compte n'existe avec cet email. Veuillez créer un compte d'abord.",
             variant: "destructive",
           });
           setActiveTab('register');
+        } else if (error.message.includes("For security purposes")) {
+          toast({
+            title: "Trop de tentatives",
+            description: "Veuillez attendre quelques minutes avant de réessayer.",
+            variant: "destructive",
+          });
         } else {
           toast({
             title: "Erreur",
@@ -69,12 +85,12 @@ export function LoginForm() {
         setMagicLinkSent(true);
         toast({
           title: "Email envoyé !",
-          description: "Vérifiez votre boîte mail pour vous connecter. Le lien est valable 5 minutes.",
+          description: "Vérifiez votre boîte mail pour vous connecter. Le lien est valable 10 minutes.",
           className: "bg-green-600 text-white border-green-600",
         });
       }
     } catch (error) {
-      console.error('Erreur Magic Link:', error);
+      console.error('Erreur inattendue Magic Link:', error);
       toast({
         title: "Erreur",
         description: "Une erreur inattendue s'est produite",
@@ -151,7 +167,10 @@ export function LoginForm() {
             <CardContent className="space-y-4">
               <div className="bg-terex-gray/50 p-4 rounded-lg border border-terex-gray-light">
                 <p className="text-sm text-gray-300 text-center">
-                  ⏰ Le lien est valable pendant <strong className="text-terex-accent">5 minutes</strong>
+                  ⏰ Le lien est valable pendant <strong className="text-terex-accent">10 minutes</strong>
+                </p>
+                <p className="text-xs text-gray-400 text-center mt-2">
+                  📧 Vérifiez aussi vos spams si vous ne recevez pas l'email
                 </p>
               </div>
               
@@ -241,6 +260,9 @@ export function LoginForm() {
                     <p className="text-xs text-gray-300">
                       Entrez votre email et recevez un lien de connexion sécurisé. 
                       Plus besoin de retenir votre mot de passe !
+                    </p>
+                    <p className="text-xs text-yellow-400 mt-1">
+                      💡 Astuce : Ajoutez noreply@terangaexchange.com à vos contacts pour éviter les spams
                     </p>
                   </div>
 
