@@ -56,8 +56,30 @@ export const useKYC = () => {
       // Cast the data to ensure proper typing
       if (data) {
         setKycData({
-          ...data,
-          status: data.status as KYCData['status']
+          id: data.id,
+          user_id: data.user_id,
+          status: data.status as KYCData['status'],
+          first_name: data.first_name || undefined,
+          last_name: data.last_name || undefined,
+          date_of_birth: data.date_of_birth || undefined,
+          nationality: data.nationality || undefined,
+          address: data.address || undefined,
+          city: data.city || undefined,
+          postal_code: data.postal_code || undefined,
+          country: data.country || undefined,
+          phone_number: data.phone_number || undefined,
+          identity_document_type: data.identity_document_type as KYCData['identity_document_type'] || undefined,
+          identity_document_number: data.identity_document_number || undefined,
+          identity_document_front_url: data.identity_document_front_url || undefined,
+          identity_document_back_url: data.identity_document_back_url || undefined,
+          selfie_url: data.selfie_url || undefined,
+          proof_of_address_url: data.proof_of_address_url || undefined,
+          submitted_at: data.submitted_at || undefined,
+          reviewed_at: data.reviewed_at || undefined,
+          reviewed_by: data.reviewed_by || undefined,
+          rejection_reason: data.rejection_reason || undefined,
+          created_at: data.created_at || new Date().toISOString(),
+          updated_at: data.updated_at || new Date().toISOString()
         });
       }
     } catch (error) {
