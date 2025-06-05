@@ -9,6 +9,122 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      email_notifications: {
+        Row: {
+          created_at: string
+          email_address: string
+          email_type: string
+          error_message: string | null
+          id: string
+          order_id: string | null
+          sent_at: string | null
+          status: string
+          subject: string
+          transaction_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_address: string
+          email_type: string
+          error_message?: string | null
+          id?: string
+          order_id?: string | null
+          sent_at?: string | null
+          status?: string
+          subject: string
+          transaction_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_address?: string
+          email_type?: string
+          error_message?: string | null
+          id?: string
+          order_id?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string
+          transaction_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_notifications_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      international_transfers: {
+        Row: {
+          amount: number
+          created_at: string
+          exchange_rate: number
+          fees: number
+          from_currency: string
+          id: string
+          processed_at: string | null
+          processed_by: string | null
+          recipient_account: string
+          recipient_bank: string | null
+          recipient_country: string
+          recipient_name: string
+          reference_number: string | null
+          status: string
+          to_currency: string
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          exchange_rate: number
+          fees?: number
+          from_currency?: string
+          id?: string
+          processed_at?: string | null
+          processed_by?: string | null
+          recipient_account: string
+          recipient_bank?: string | null
+          recipient_country: string
+          recipient_name: string
+          reference_number?: string | null
+          status?: string
+          to_currency: string
+          total_amount: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          exchange_rate?: number
+          fees?: number
+          from_currency?: string
+          id?: string
+          processed_at?: string | null
+          processed_by?: string | null
+          recipient_account?: string
+          recipient_bank?: string | null
+          recipient_country?: string
+          recipient_name?: string
+          reference_number?: string | null
+          status?: string
+          to_currency?: string
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       kyc_verifications: {
         Row: {
           address: string | null

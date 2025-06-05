@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowRightLeft, Shield, Clock, CreditCard } from 'lucide-react';
 import { OrderConfirmation } from '@/components/features/OrderConfirmation';
 import { useOrders } from '@/hooks/useOrders';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function BuyUSDT() {
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'mobile'>('card');
@@ -21,6 +22,7 @@ export function BuyUSDT() {
   const [loading, setLoading] = useState(false);
 
   const { createOrder } = useOrders();
+  const { user } = useAuth();
 
   const exchangeRates = {
     CFA: 615,
@@ -50,9 +52,12 @@ export function BuyUSDT() {
   };
 
   const handleConfirmOrder = async () => {
+    if (!user) return;
+    
     setLoading(true);
     
     const orderData = {
+      user_id: user.id,
       type: 'buy',
       amount: parseFloat(amount),
       currency: paymentMethod === 'mobile' ? 'CFA' : currency,

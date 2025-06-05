@@ -43,7 +43,7 @@ export const useOrders = () => {
     }
   };
 
-  const createOrder = async (orderData: Omit<OrderInsert, 'user_id'>) => {
+  const createOrder = async (orderData: OrderInsert) => {
     if (!user) {
       toast({
         title: "Erreur",
@@ -54,16 +54,9 @@ export const useOrders = () => {
     }
 
     try {
-      const insertData: OrderInsert = {
-        ...orderData,
-        user_id: user.id,
-        status: orderData.status || 'pending',
-        payment_status: orderData.payment_status || 'pending'
-      };
-
       const { data, error } = await supabase
         .from('orders')
-        .insert(insertData)
+        .insert(orderData)
         .select()
         .single();
 
