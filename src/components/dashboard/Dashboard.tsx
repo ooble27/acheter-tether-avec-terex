@@ -8,6 +8,7 @@ import { InternationalTransfer } from '@/components/features/InternationalTransf
 import { FAQ } from '@/components/features/FAQ';
 import { DashboardHome } from '@/components/dashboard/DashboardHome';
 import { Profile } from '@/components/features/Profile';
+import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { TransactionProvider } from '@/contexts/TransactionContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/contexts/AuthContext';
@@ -47,6 +48,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         return <Profile user={user} onLogout={handleLogout} />;
       case 'faq':
         return <FAQ />;
+      case 'kyc-admin':
+        return <KYCAdmin />;
       default:
         return <DashboardHome user={user} />;
     }
