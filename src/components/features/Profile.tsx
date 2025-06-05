@@ -11,7 +11,7 @@ import { useTransactions } from '@/contexts/TransactionContext';
 import { KYCAlert } from './KYCAlert';
 import { KYCPage } from './KYCPage';
 import { TransactionHistory } from './TransactionHistory';
-import { ExternalLink, MessageCircle } from 'lucide-react';
+import { Share2, MessageCircle } from 'lucide-react';
 
 interface ProfileProps {
   user: { email: string; name: string } | null;
@@ -84,8 +84,28 @@ export function Profile({ user, onLogout }: ProfileProps) {
     window.open(whatsappUrl, '_blank');
   };
 
-  const handleTerexWebsiteClick = () => {
-    window.open('https://terex.com', '_blank');
+  const handleShareTerex = () => {
+    const terexUrl = 'https://terex.com';
+    const shareText = 'Découvrez Terex - La plateforme de change et de transfert d\'argent';
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'Terex',
+        text: shareText,
+        url: terexUrl,
+      }).catch(console.error);
+    } else {
+      // Fallback pour les navigateurs qui ne supportent pas l'API Web Share
+      navigator.clipboard.writeText(`${shareText} - ${terexUrl}`).then(() => {
+        toast({
+          title: "Lien copié",
+          description: "Le lien Terex a été copié dans le presse-papiers",
+        });
+      }).catch(() => {
+        // Si le clipboard ne marche pas, ouvrir dans un nouvel onglet
+        window.open(terexUrl, '_blank');
+      });
+    }
   };
 
   if (loading) {
@@ -228,18 +248,18 @@ export function Profile({ user, onLogout }: ProfileProps) {
           <CardHeader>
             <CardTitle className="text-white">Partager Terex</CardTitle>
             <CardDescription className="text-gray-400">
-              Découvrez notre site web et contactez-nous
+              Partagez Terex avec vos proches et contactez-nous
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-3">
               <Button 
-                onClick={handleTerexWebsiteClick}
+                onClick={handleShareTerex}
                 variant="outline"
                 className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
               >
-                <ExternalLink className="w-4 h-4 mr-2" />
-                Visiter le site Terex
+                <Share2 className="w-4 h-4 mr-2" />
+                Partager Terex
               </Button>
               
               <Button 
