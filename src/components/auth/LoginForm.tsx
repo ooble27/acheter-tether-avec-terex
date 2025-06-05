@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +8,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
@@ -36,27 +36,9 @@ export function LoginForm() {
           });
         }
       } else {
-        // Vérifier si l'email existe déjà avant l'inscription
-        console.log('Vérification de l\'email:', email);
+        // Inscription directe sans vérification préalable
+        console.log('Tentative d\'inscription pour:', email);
         
-        // Première vérification : essayer de réinitialiser le mot de passe
-        const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: 'https://example.com/reset' // URL temporaire
-        });
-        
-        // Si pas d'erreur sur le reset, l'email existe déjà
-        if (!resetError) {
-          console.log('Email existe déjà détecté via reset password');
-          toast({
-            title: "Erreur d'inscription",
-            description: "Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.",
-            variant: "destructive",
-          });
-          setIsLoading(false);
-          return;
-        }
-        
-        // Si on arrive ici, l'email n'existe pas, on peut créer le compte
         const { error } = await signUp(email, password, name);
         
         if (error) {
@@ -64,6 +46,7 @@ export function LoginForm() {
           
           let errorMessage = error.message;
           
+          // Gestion des erreurs spécifiques de Supabase
           if (error.message.includes("User already registered") || 
               error.message.includes("already registered") ||
               error.message.includes("already exists") ||
@@ -71,7 +54,9 @@ export function LoginForm() {
               error.message.includes("email already taken") ||
               error.message.includes("duplicate") ||
               error.code === "email_address_invalid" ||
-              error.code === "user_already_exists") {
+              error.code === "user_already_exists" ||
+              error.code === "signup_disabled" ||
+              error.message.toLowerCase().includes("email") && error.message.toLowerCase().includes("already")) {
             errorMessage = "Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.";
           } else if (error.message.includes("Password should be at least")) {
             errorMessage = "Le mot de passe doit contenir au moins 6 caractères.";
