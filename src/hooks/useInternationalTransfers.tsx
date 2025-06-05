@@ -126,10 +126,11 @@ export const useInternationalTransfers = () => {
             console.log('Envoi email de statut transfert à:', clientEmail);
             
             // Envoyer un email de mise à jour de statut au CLIENT
+            // Ne pas passer order_id pour les transferts pour éviter les erreurs de foreign key
             await supabase.functions.invoke('send-email-notification', {
               body: {
                 userId: transferDetails.user_id,
-                orderId: transferId,
+                orderId: null, // Pas d'orderId pour les transferts
                 emailAddress: clientEmail,
                 emailType: 'status_update',
                 transactionType: 'transfer',
@@ -142,7 +143,7 @@ export const useInternationalTransfers = () => {
               await supabase.functions.invoke('send-email-notification', {
                 body: {
                   userId: transferDetails.user_id,
-                  orderId: transferId,
+                  orderId: null, // Pas d'orderId pour les transferts
                   emailAddress: clientEmail,
                   emailType: 'payment_confirmed',
                   transactionType: 'transfer',

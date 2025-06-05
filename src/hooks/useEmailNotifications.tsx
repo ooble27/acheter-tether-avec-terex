@@ -77,7 +77,7 @@ export const useEmailNotifications = () => {
       const { data, error } = await supabase.functions.invoke('send-email-notification', {
         body: {
           userId: user.id,
-          orderId: transferId,
+          orderId: null, // Pas d'orderId pour les transferts
           emailAddress: user.email,
           emailType,
           transactionType: 'transfer',
