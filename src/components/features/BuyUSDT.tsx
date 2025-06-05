@@ -36,7 +36,7 @@ export function BuyUSDT() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark p-2 md:p-4">
+    <div className="min-h-screen bg-terex-dark p-2 md:p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6 md:mb-8">
