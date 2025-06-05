@@ -175,23 +175,6 @@ export const useKYC = () => {
       const fileName = `${user.id}/${documentType}.${fileExt}`;
       console.log('Nom de fichier pour upload:', fileName);
 
-      // Vérifier si le bucket existe
-      const { data: buckets, error: bucketsError } = await supabase.storage
-        .listBuckets();
-      
-      console.log('Buckets disponibles:', buckets?.map(b => b.name));
-      
-      if (bucketsError) {
-        console.error('Erreur lors de la récupération des buckets:', bucketsError);
-        return { error: 'Erreur lors de la récupération des buckets' };
-      }
-
-      const bucketExists = buckets?.some(b => b.name === 'kyc-documents');
-      if (!bucketExists) {
-        console.error('Bucket kyc-documents n\'existe pas');
-        return { error: 'Le bucket kyc-documents n\'existe pas' };
-      }
-
       const { error: uploadError } = await supabase.storage
         .from('kyc-documents')
         .upload(fileName, file, { upsert: true });
@@ -207,8 +190,7 @@ export const useKYC = () => {
 
       console.log('Document uploadé avec succès:', data.publicUrl);
       
-      // Stocker l'URL complète dans la base de données
-      return { success: true, url: fileName };
+      return { success: true, url: data.publicUrl };
     } catch (error) {
       console.error('Erreur inattendue upload:', error);
       return { error: 'Erreur lors du téléchargement du fichier' };

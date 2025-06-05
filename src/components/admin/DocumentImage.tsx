@@ -1,7 +1,6 @@
 
 import { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { supabase } from '@/integrations/supabase/client';
 import { Eye, FileText, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -13,51 +12,8 @@ interface DocumentImageProps {
 
 export function DocumentImage({ url, alt, title }: DocumentImageProps) {
   const [showModal, setShowModal] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-
-  const getImageUrl = async (path: string) => {
-    try {
-      console.log('Chemin original:', path);
-      
-      // Si l'URL est déjà complète (avec https://), l'utiliser directement
-      if (path.startsWith('http')) {
-        console.log('URL complète détectée:', path);
-        return path;
-      }
-      
-      // Extraire le nom de fichier pour une utilisation directe
-      const fileName = path.split('/').pop() || path;
-      console.log('Nom de fichier extrait:', fileName);
-      
-      // Pour les chemins commençant par "kyc-documents/"
-      if (path.includes('kyc-documents/')) {
-        // Récupérer la partie après "kyc-documents/"
-        const relativePath = path.substring(path.indexOf('kyc-documents/') + 'kyc-documents/'.length);
-        console.log('Chemin relatif (après kyc-documents/):', relativePath);
-        
-        const { data } = supabase.storage
-          .from('kyc-documents')
-          .getPublicUrl(relativePath);
-        
-        console.log('URL publique (chemin relatif):', data.publicUrl);
-        return data.publicUrl;
-      }
-      
-      // Essayer le chemin tel quel
-      const { data: directData } = supabase.storage
-        .from('kyc-documents')
-        .getPublicUrl(path);
-      
-      console.log('URL publique (chemin direct):', directData.publicUrl);
-      return directData.publicUrl;
-      
-    } catch (error) {
-      console.error('Erreur lors de la récupération de l\'URL:', error);
-      return null;
-    }
-  };
 
   const handleImageClick = async () => {
     if (!url) return;
@@ -66,29 +22,9 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
     setError(false);
     
     try {
-      console.log('Tentative de chargement du document:', url);
-      
-      // Vérifier si le bucket existe
-      const { data: buckets } = await supabase.storage.listBuckets();
-      console.log('Buckets disponibles:', buckets?.map(b => b.name));
-      
-      // Essayer différentes façons d'obtenir l'URL de l'image
-      const finalUrl = await getImageUrl(url);
-      
-      if (!finalUrl) {
-        console.error('Impossible de construire l\'URL');
-        setError(true);
-        setLoading(false);
-        return;
-      }
-      
-      console.log('URL finale à utiliser:', finalUrl);
-      
-      // Vérifier directement l'accès à l'URL sans utiliser Image.onload
-      setImageUrl(finalUrl);
+      console.log('Ouverture du document:', url);
       setShowModal(true);
       setLoading(false);
-      
     } catch (error) {
       console.error('Erreur lors du chargement de l\'image:', error);
       setError(true);
@@ -100,16 +36,13 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
     if (!url) return;
     
     try {
-      const finalUrl = await getImageUrl(url);
-      if (finalUrl) {
-        const link = document.createElement('a');
-        link.href = finalUrl;
-        link.download = `${title.replace(/\s+/g, '_')}.jpg`;
-        link.target = '_blank';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${title.replace(/\s+/g, '_')}.jpg`;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     } catch (error) {
       console.error('Erreur lors du téléchargement:', error);
     }
@@ -160,7 +93,7 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
                 Erreur lors du chargement du document
               </p>
               <p className="text-gray-500 text-xs mt-1">
-                Chemin: {url}
+                URL: {url}
               </p>
             </div>
           )}
@@ -171,10 +104,10 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
         <DialogContent className="max-w-4xl max-h-[90vh] bg-terex-card border-terex-border">
           <div className="flex flex-col space-y-4">
             <h3 className="text-white text-lg font-medium">{title}</h3>
-            {imageUrl && (
+            {url && (
               <div className="flex justify-center">
                 <img
-                  src={imageUrl}
+                  src={url}
                   alt={alt}
                   className="max-w-full max-h-[70vh] object-contain rounded-lg"
                   onError={(e) => {
@@ -187,7 +120,7 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
             {error && (
               <div className="text-center p-4 bg-red-500/10 rounded-lg">
                 <p className="text-red-400">Impossible de charger l'image</p>
-                <p className="text-gray-400 text-sm mt-2">URL: {imageUrl}</p>
+                <p className="text-gray-400 text-sm mt-2">URL: {url}</p>
               </div>
             )}
           </div>
