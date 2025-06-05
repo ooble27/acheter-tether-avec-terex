@@ -15,6 +15,7 @@ export function PasswordReset() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [sessionChecked, setSessionChecked] = useState(false);
   
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -38,11 +39,40 @@ export function PasswordReset() {
   useEffect(() => {
     // Vérifier s'il y a une session active pour la réinitialisation
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        console.log('Session de réinitialisation:', session);
+        console.log('Erreur session:', error);
+        
+        if (error) {
+          console.error('Erreur lors de la vérification de session:', error);
+          toast({
+            title: "Erreur de session",
+            description: "Impossible de vérifier votre session. Veuillez réessayer.",
+            variant: "destructive",
+          });
+          navigate('/');
+          return;
+        }
+        
+        if (!session) {
+          console.log('Aucune session active pour la réinitialisation');
+          toast({
+            title: "Lien expiré ou invalide",
+            description: "Le lien de réinitialisation a expiré ou est invalide. Veuillez demander un nouveau lien.",
+            variant: "destructive",
+          });
+          navigate('/');
+          return;
+        }
+        
+        setSessionChecked(true);
+      } catch (error) {
+        console.error('Erreur inattendue lors de la vérification:', error);
         toast({
-          title: "Lien expiré",
-          description: "Le lien de réinitialisation a expiré. Veuillez demander un nouveau lien.",
+          title: "Erreur",
+          description: "Une erreur inattendue s'est produite.",
           variant: "destructive",
         });
         navigate('/');
@@ -81,6 +111,7 @@ export function PasswordReset() {
       });
 
       if (error) {
+        console.error('Erreur mise à jour mot de passe:', error);
         toast({
           title: "Erreur",
           description: error.message,
@@ -109,6 +140,18 @@ export function PasswordReset() {
       setIsLoading(false);
     }
   };
+
+  // Afficher un loader pendant la vérification de session
+  if (!sessionChecked) {
+    return (
+      <div className="min-h-screen bg-terex-dark flex items-center justify-center">
+        <div className="text-white text-lg flex items-center gap-2">
+          <Loader2 className="w-5 h-5 animate-spin" />
+          Vérification du lien de réinitialisation...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-terex-dark flex items-center justify-center p-4">

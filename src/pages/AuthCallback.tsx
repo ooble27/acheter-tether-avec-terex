@@ -12,8 +12,15 @@ const AuthCallback = () => {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
+        console.log('Callback URL params:', Object.fromEntries(searchParams.entries()));
+        
         // Récupérer les paramètres de l'URL
         const type = searchParams.get('type');
+        const accessToken = searchParams.get('access_token');
+        const refreshToken = searchParams.get('refresh_token');
+        
+        console.log('Type de callback:', type);
+        console.log('Access token présent:', !!accessToken);
         
         // Gérer le callback d'authentification
         const { data, error } = await supabase.auth.getSession();
@@ -29,11 +36,30 @@ const AuthCallback = () => {
           return;
         }
 
-        // Si c'est une réinitialisation de mot de passe
-        if (type === 'recovery' && data.session) {
+        console.log('Session data:', data);
+
+        // Si c'est une réinitialisation de mot de passe ET qu'il y a un token d'accès
+        if (type === 'recovery' || (accessToken && refreshToken)) {
           console.log('Redirection vers réinitialisation mot de passe');
-          navigate('/password-reset');
-          return;
+          
+          // Vérifier qu'il y a bien une session active pour la réinitialisation
+          if (data.session) {
+            toast({
+              title: "Lien de réinitialisation valide",
+              description: "Vous pouvez maintenant créer un nouveau mot de passe.",
+              className: "bg-blue-600 text-white border-blue-600",
+            });
+            navigate('/password-reset');
+            return;
+          } else {
+            toast({
+              title: "Lien expiré",
+              description: "Le lien de réinitialisation a expiré. Veuillez demander un nouveau lien.",
+              variant: "destructive",
+            });
+            navigate('/');
+            return;
+          }
         }
 
         // Si c'est une confirmation d'email
