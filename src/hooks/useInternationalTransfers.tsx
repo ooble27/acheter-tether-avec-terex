@@ -115,35 +115,41 @@ export const useInternationalTransfers = () => {
         .single();
 
       if (transferDetails) {
-        // Récupérer l'email du client qui a créé le transfert
-        const { data: userData } = await supabase.auth.admin.getUserById(transferDetails.user_id);
-        const clientEmail = userData.user?.email;
+        // Récupérer directement l'email du client via une requête auth
+        const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers();
+        
+        if (!usersError && users) {
+          const clientUser = users.find(u => u.id === transferDetails.user_id);
+          const clientEmail = clientUser?.email;
 
-        if (clientEmail) {
-          // Envoyer un email de mise à jour de statut au CLIENT
-          await supabase.functions.invoke('send-email-notification', {
-            body: {
-              userId: transferDetails.user_id,
-              orderId: transferId,
-              emailAddress: clientEmail,
-              emailType: 'status_update',
-              transactionType: 'transfer',
-              orderData: { ...transferDetails, status }
-            },
-          });
-
-          // Si le statut passe à "processing", envoyer email de paiement confirmé
-          if (status === 'processing') {
+          if (clientEmail) {
+            console.log('Envoi email de statut transfert à:', clientEmail);
+            
+            // Envoyer un email de mise à jour de statut au CLIENT
             await supabase.functions.invoke('send-email-notification', {
               body: {
                 userId: transferDetails.user_id,
                 orderId: transferId,
                 emailAddress: clientEmail,
-                emailType: 'payment_confirmed',
+                emailType: 'status_update',
                 transactionType: 'transfer',
                 orderData: { ...transferDetails, status }
               },
             });
+
+            // Si le statut passe à "processing", envoyer email de paiement confirmé
+            if (status === 'processing') {
+              await supabase.functions.invoke('send-email-notification', {
+                body: {
+                  userId: transferDetails.user_id,
+                  orderId: transferId,
+                  emailAddress: clientEmail,
+                  emailType: 'payment_confirmed',
+                  transactionType: 'transfer',
+                  orderData: { ...transferDetails, status }
+                },
+              });
+            }
           }
         }
       }

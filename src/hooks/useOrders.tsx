@@ -114,7 +114,7 @@ export const useOrders = () => {
         throw error;
       }
 
-      // Récupérer les données de la commande ET le profil du client pour obtenir son email
+      // Récupérer les données de la commande avec le profil du client
       const { data: orderDetails } = await supabase
         .from('orders')
         .select(`
@@ -125,35 +125,41 @@ export const useOrders = () => {
         .single();
 
       if (orderDetails) {
-        // Récupérer l'email du client qui a créé la commande
-        const { data: userData } = await supabase.auth.admin.getUserById(orderDetails.user_id);
-        const clientEmail = userData.user?.email;
+        // Récupérer directement l'email du client via une requête auth
+        const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers();
+        
+        if (!usersError && users) {
+          const clientUser = users.find(u => u.id === orderDetails.user_id);
+          const clientEmail = clientUser?.email;
 
-        if (clientEmail) {
-          // Envoyer un email de mise à jour de statut au CLIENT
-          await supabase.functions.invoke('send-email-notification', {
-            body: {
-              userId: orderDetails.user_id,
-              orderId: orderId,
-              emailAddress: clientEmail,
-              emailType: 'status_update',
-              transactionType: orderDetails.type,
-              orderData: { ...orderDetails, status }
-            },
-          });
-
-          // Si le statut passe à "processing" avec payment_status "confirmed", envoyer email de paiement confirmé
-          if (status === 'processing' && paymentStatus === 'confirmed') {
+          if (clientEmail) {
+            console.log('Envoi email de statut à:', clientEmail);
+            
+            // Envoyer un email de mise à jour de statut au CLIENT
             await supabase.functions.invoke('send-email-notification', {
               body: {
                 userId: orderDetails.user_id,
                 orderId: orderId,
                 emailAddress: clientEmail,
-                emailType: 'payment_confirmed',
+                emailType: 'status_update',
                 transactionType: orderDetails.type,
                 orderData: { ...orderDetails, status }
               },
             });
+
+            // Si le statut passe à "processing" avec payment_status "confirmed", envoyer email de paiement confirmé
+            if (status === 'processing' && paymentStatus === 'confirmed') {
+              await supabase.functions.invoke('send-email-notification', {
+                body: {
+                  userId: orderDetails.user_id,
+                  orderId: orderId,
+                  emailAddress: clientEmail,
+                  emailType: 'payment_confirmed',
+                  transactionType: orderDetails.type,
+                  orderData: { ...orderDetails, status }
+                },
+              });
+            }
           }
         }
       }
