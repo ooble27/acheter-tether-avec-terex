@@ -1,194 +1,284 @@
+import { useState } from "react"
+import {
+  Bell,
+  ChevronRight,
+  ChevronsUpDown,
+  CreditCard,
+  FileText,
+  Home,
+  LogOut,
+  Package,
+  Settings,
+  Shield,
+  User,
+  Users,
+  HelpCircle,
+  ArrowUpDown,
+  History,
+  ShoppingCart
+} from "lucide-react"
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
-  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { useUserRole } from '@/hooks/useUserRole';
-import { useState } from 'react';
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+} from "@/components/ui/sidebar"
+import { supabase } from '@/integrations/supabase/client'
+import { useUserRole } from '@/hooks/useUserRole'
 
 interface AppSidebarProps {
-  activeSection: string;
-  setActiveSection: (section: string) => void;
-  onLogout: () => void;
+  user: { email: string; name: string }
+  activeSection: string
+  onSectionChange: (section: string) => void
 }
 
-const TetherLogo = ({ className, isActive, color }: { className?: string, isActive?: boolean, color?: string }) => (
-  <img 
-    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
-    alt="Tether Logo"
-    className={`${className} ${isActive ? 'brightness-0 invert' : ''}`}
-    style={color === 'red' && !isActive ? { 
-      filter: 'hue-rotate(0deg) saturate(0) brightness(0) invert(27%) sepia(98%) saturate(7465%) hue-rotate(0deg) brightness(98%) contrast(118%)'
-    } : {}}
-  />
-);
+export function AppSidebar({ user, activeSection, onSectionChange }: AppSidebarProps) {
+  const [isAdminOpen, setIsAdminOpen] = useState(false)
+  const { isAdmin, isKYCReviewer } = useUserRole()
 
-const menuItems = [
-  { id: 'home', label: 'Accueil', icon: Home },
-  { 
-    id: 'buy', 
-    label: 'Acheter USDT', 
-    icon: TetherLogo,
-    isCustomIcon: true
-  },
-  { 
-    id: 'sell', 
-    label: 'Vendre USDT', 
-    icon: TrendingDown
-  },
-  { id: 'transfer', label: 'Virement International', icon: Globe },
-  { id: 'profile', label: 'Mon Profil', icon: User },
-  { id: 'faq', label: 'FAQ', icon: HelpCircle },
-];
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+  }
 
-const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemClick }: AppSidebarProps & { onItemClick?: () => void }) => {
-  const { isKYCReviewer } = useUserRole();
-
-  return (
-    <>
-      <SidebarHeader className="p-6">
-        <div className="flex items-center space-x-1">
-          <img 
-            src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-            alt="Terex Logo" 
-            className="w-10 h-10"
-          />
-          <h1 className="text-2xl font-bold text-white">
-            <span className="text-terex-accent">Terex</span>
-          </h1>
-        </div>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => {
-                const IconComponent = item.icon;
-                return (
-                  <SidebarMenuItem key={item.id}>
-                    <SidebarMenuButton 
-                      onClick={() => {
-                        setActiveSection(item.id);
-                        onItemClick?.();
-                      }}
-                      className={`w-full justify-start text-left p-3 rounded-lg transition-colors ${
-                        activeSection === item.id
-                          ? 'bg-terex-accent text-white'
-                          : 'text-gray-300 hover:bg-terex-gray hover:text-white'
-                      }`}
-                    >
-                      {item.isCustomIcon ? (
-                        <IconComponent 
-                          className="mr-3 h-5 w-5"
-                          isActive={activeSection === item.id}
-                        />
-                      ) : (
-                        <IconComponent 
-                          className={`mr-3 h-5 w-5 ${
-                            activeSection === item.id ? 'text-white' : ''
-                          }`} 
-                        />
-                      )}
-                      <span>{item.label}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-              
-              {/* Administration KYC - visible seulement aux KYC reviewers et admins */}
-              {isKYCReviewer() && (
-                <SidebarMenuItem>
-                  <SidebarMenuButton 
-                    onClick={() => {
-                      setActiveSection('kyc-admin');
-                      onItemClick?.();
-                    }}
-                    className={`w-full justify-start text-left p-3 rounded-lg transition-colors ${
-                      activeSection === 'kyc-admin'
-                        ? 'bg-terex-accent text-white'
-                        : 'text-gray-300 hover:bg-terex-gray hover:text-white'
-                    }`}
-                  >
-                    <Shield 
-                      className={`mr-3 h-5 w-5 ${
-                        activeSection === 'kyc-admin' ? 'text-white' : ''
-                      }`} 
-                    />
-                    <span>Administration KYC</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              )}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      <div className="p-4 border-t border-terex-gray">
-        <Button 
-          onClick={onLogout}
-          variant="outline" 
-          className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
-        >
-          Déconnexion
-        </Button>
-      </div>
-    </>
-  );
-};
-
-export function AppSidebar({ activeSection, setActiveSection, onLogout }: AppSidebarProps) {
-  const isMobile = useIsMobile();
-
-  if (isMobile) {
-    return null; // Le menu mobile sera géré par MobileMenu
+  const data = {
+    user: {
+      name: user.name,
+      email: user.email,
+      avatar: "/avatars/shadcn.jpg",
+    },
+    navMain: [
+      {
+        title: "Accueil",
+        url: "#",
+        icon: Home,
+        onClick: () => onSectionChange('home'),
+        isActive: activeSection === 'home'
+      },
+      {
+        title: "Acheter USDT",
+        url: "#",
+        icon: CreditCard,
+        onClick: () => onSectionChange('buy'),
+        isActive: activeSection === 'buy'
+      },
+      {
+        title: "Vendre USDT",
+        url: "#",
+        icon: ArrowUpDown,
+        onClick: () => onSectionChange('sell'),
+        isActive: activeSection === 'sell'
+      },
+      {
+        title: "Virement international",
+        url: "#",
+        icon: Package,
+        onClick: () => onSectionChange('transfer'),
+        isActive: activeSection === 'transfer'
+      },
+      {
+        title: "Historique",
+        url: "#",
+        icon: History,
+        onClick: () => onSectionChange('history'),
+        isActive: activeSection === 'history'
+      },
+      {
+        title: "KYC",
+        url: "#",
+        icon: Shield,
+        onClick: () => onSectionChange('kyc'),
+        isActive: activeSection === 'kyc'
+      },
+      {
+        title: "Profil",
+        url: "#",
+        icon: User,
+        onClick: () => onSectionChange('profile'),
+        isActive: activeSection === 'profile'
+      },
+      {
+        title: "FAQ",
+        url: "#",
+        icon: HelpCircle,
+        onClick: () => onSectionChange('faq'),
+        isActive: activeSection === 'faq'
+      },
+    ],
+    adminItems: [
+      {
+        title: "Vérification KYC",
+        icon: Users,
+        onClick: () => onSectionChange('admin-kyc'),
+        isActive: activeSection === 'admin-kyc'
+      },
+      {
+        title: "Gestion des commandes",
+        icon: ShoppingCart,
+        onClick: () => onSectionChange('admin-orders'),
+        isActive: activeSection === 'admin-orders'
+      }
+    ]
   }
 
   return (
-    <Sidebar className="bg-terex-darker border-r border-terex-gray">
-      <AppSidebarContent 
-        activeSection={activeSection} 
-        setActiveSection={setActiveSection} 
-        onLogout={onLogout} 
-      />
+    <Sidebar variant="inset" className="bg-terex-darker border-r border-terex-gray">
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton
+                  size="lg"
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                >
+                  <Avatar className="h-8 w-8 rounded-lg">
+                    <AvatarImage src={data.user.avatar} alt={data.user.name} />
+                    <AvatarFallback className="rounded-lg bg-terex-accent text-white">
+                      {data.user.name.split(' ').map(n => n[0]).join('')}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold text-white">{data.user.name}</span>
+                    <span className="truncate text-xs text-gray-400">{data.user.email}</span>
+                  </div>
+                  <ChevronsUpDown className="ml-auto size-4 text-gray-400" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg bg-terex-card border-terex-border"
+                side="bottom"
+                align="end"
+                sideOffset={4}
+              >
+                <DropdownMenuLabel className="p-0 font-normal">
+                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                    <Avatar className="h-8 w-8 rounded-lg">
+                      <AvatarImage src={data.user.avatar} alt={data.user.name} />
+                      <AvatarFallback className="rounded-lg bg-terex-accent text-white">
+                        {data.user.name.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-semibold text-white">{data.user.name}</span>
+                      <span className="truncate text-xs text-gray-400">{data.user.email}</span>
+                    </div>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-terex-border" />
+                <DropdownMenuItem className="text-gray-300 hover:bg-terex-gray focus:bg-terex-gray">
+                  <Settings className="mr-2 h-4 w-4" />
+                  Paramètres
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-gray-300 hover:bg-terex-gray focus:bg-terex-gray">
+                  <Bell className="mr-2 h-4 w-4" />
+                  Notifications
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-terex-border" />
+                <DropdownMenuItem 
+                  onClick={handleLogout}
+                  className="text-red-400 hover:bg-terex-gray focus:bg-terex-gray"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Déconnexion
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-gray-400">Navigation</SidebarGroupLabel>
+          <SidebarMenu>
+            {data.navMain.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  onClick={item.onClick}
+                  className={`text-gray-300 hover:bg-terex-gray hover:text-white ${
+                    item.isActive ? 'bg-terex-accent text-white' : ''
+                  }`}
+                >
+                  {item.icon && <item.icon />}
+                  <span>{item.title}</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {(isAdmin || isKYCReviewer) && (
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-gray-400">Administration</SidebarGroupLabel>
+            <SidebarMenu>
+              <Collapsible
+                open={isAdminOpen}
+                onOpenChange={setIsAdminOpen}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton 
+                      tooltip="Administration"
+                      className="text-gray-300 hover:bg-terex-gray hover:text-white"
+                    >
+                      <Shield />
+                      <span>Administration</span>
+                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {data.adminItems.map((subItem) => (
+                        <SidebarMenuSubItem key={subItem.title}>
+                          <SidebarMenuSubButton 
+                            asChild
+                            onClick={subItem.onClick}
+                            className={`text-gray-300 hover:bg-terex-gray hover:text-white ${
+                              subItem.isActive ? 'bg-terex-accent text-white' : ''
+                            }`}
+                          >
+                            <div className="flex items-center cursor-pointer">
+                              <subItem.icon className="mr-2 h-4 w-4" />
+                              <span>{subItem.title}</span>
+                            </div>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+            </SidebarMenu>
+          </SidebarGroup>
+        )}
+      </SidebarContent>
+      <SidebarFooter>
+        
+      </SidebarFooter>
     </Sidebar>
-  );
-}
-
-export function MobileMenu({ activeSection, setActiveSection, onLogout }: AppSidebarProps) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleItemClick = () => {
-    setIsOpen(false);
-  };
-
-  return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="icon"
-          className="md:hidden fixed top-4 left-4 z-50 bg-terex-darker border border-terex-gray text-white hover:bg-terex-gray"
-        >
-          <Menu className="h-6 w-6" />
-        </Button>
-      </SheetTrigger>
-      <SheetContent side="left" className="w-64 bg-terex-darker border-r border-terex-gray p-0">
-        <AppSidebarContent 
-          activeSection={activeSection} 
-          setActiveSection={setActiveSection} 
-          onLogout={onLogout}
-          onItemClick={handleItemClick}
-        />
-      </SheetContent>
-    </Sheet>
-  );
+  )
 }
