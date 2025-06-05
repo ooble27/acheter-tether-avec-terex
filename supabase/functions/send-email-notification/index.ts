@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { Resend } from "npm:resend@2.0.0";
@@ -62,7 +61,7 @@ const getStatusColor = (status: string) => {
 
 const generateEmailContent = (emailType: string, transactionType: string, orderData: any) => {
   const baseUrl = "https://app.terangaexchange.com";
-  const txId = `TRX-${orderData.id?.substring(0, 8).toUpperCase()}`;
+  const txId = `TEREX-${orderData.id?.substring(0, 8).toUpperCase()}`;
   
   const baseTemplate = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
