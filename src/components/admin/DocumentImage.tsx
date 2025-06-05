@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
-import { Eye, FileText } from 'lucide-react';
+import { Eye, FileText, Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface DocumentImageProps {
   url?: string;
@@ -16,6 +17,25 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
+  const getImageUrl = async (path: string) => {
+    try {
+      // Si l'URL contient déjà le domaine complet, l'utiliser directement
+      if (path.includes('supabase.co') || path.includes('http')) {
+        return path;
+      }
+
+      // Sinon, construire l'URL publique depuis le bucket
+      const { data } = supabase.storage
+        .from('kyc-documents')
+        .getPublicUrl(path);
+      
+      return data.publicUrl;
+    } catch (error) {
+      console.error('Erreur lors de la construction de l\'URL:', error);
+      return null;
+    }
+  };
+
   const handleImageClick = async () => {
     if (!url) return;
     
@@ -23,31 +43,49 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
     setError(false);
     
     try {
-      let finalUrl = url;
+      const finalUrl = await getImageUrl(url);
       
-      // Si l'URL ne contient pas déjà le domaine complet, construire l'URL publique
-      if (!url.includes('supabase.co') && !url.includes('http')) {
-        const { data } = supabase.storage
-          .from('kyc-documents')
-          .getPublicUrl(url);
-        
-        finalUrl = data.publicUrl;
-      }
-      
-      // Tester si l'URL est accessible
-      const response = await fetch(finalUrl, { method: 'HEAD' });
-      if (response.ok) {
-        setImageUrl(finalUrl);
-        setShowModal(true);
+      if (finalUrl) {
+        // Tester l'accessibilité de l'image
+        const img = new Image();
+        img.onload = () => {
+          setImageUrl(finalUrl);
+          setShowModal(true);
+          setLoading(false);
+        };
+        img.onerror = () => {
+          console.error('Image non accessible:', finalUrl);
+          setError(true);
+          setLoading(false);
+        };
+        img.src = finalUrl;
       } else {
         setError(true);
-        console.error('Image non accessible:', finalUrl);
+        setLoading(false);
       }
     } catch (error) {
       console.error('Erreur lors du chargement de l\'image:', error);
       setError(true);
-    } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!url) return;
+    
+    try {
+      const finalUrl = await getImageUrl(url);
+      if (finalUrl) {
+        const link = document.createElement('a');
+        link.href = finalUrl;
+        link.download = `${title.replace(/\s+/g, '_')}.jpg`;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } catch (error) {
+      console.error('Erreur lors du téléchargement:', error);
     }
   };
 
@@ -71,17 +109,27 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
         <div className="p-3 bg-terex-gray border-b border-terex-border">
           <p className="text-white text-sm font-medium">{title}</p>
         </div>
-        <div className="p-4">
-          <button
+        <div className="p-4 space-y-2">
+          <Button
             onClick={handleImageClick}
             disabled={loading}
-            className="w-full bg-terex-accent hover:bg-terex-accent/80 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors flex items-center justify-center space-x-2"
+            className="w-full bg-terex-accent hover:bg-terex-accent/80 disabled:opacity-50 text-white"
           >
-            <Eye className="h-4 w-4" />
-            <span>{loading ? 'Chargement...' : 'Voir le document'}</span>
-          </button>
+            <Eye className="h-4 w-4 mr-2" />
+            {loading ? 'Chargement...' : 'Voir le document'}
+          </Button>
+          
+          <Button
+            onClick={handleDownload}
+            variant="outline"
+            className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Télécharger
+          </Button>
+          
           {error && (
-            <p className="text-red-400 text-xs mt-2 text-center">
+            <p className="text-red-400 text-xs text-center">
               Erreur lors du chargement du document
             </p>
           )}
