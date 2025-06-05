@@ -1,11 +1,14 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { ArrowRight, Clock, Shield, Star, Globe, CreditCard, Smartphone, Building } from 'lucide-react';
 
 export function InternationalTransfer() {
   const [cadAmount, setCadAmount] = useState('');
@@ -13,21 +16,64 @@ export function InternationalTransfer() {
   const [recipientName, setRecipientName] = useState('');
   const [recipientPhone, setRecipientPhone] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [recipientMethod, setRecipientMethod] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [deliverySpeed, setDeliverySpeed] = useState('instant');
 
   const exchangeRates = {
-    senegal: 456, // 1 CAD = 456 CFA
+    senegal: 456,
     'cote-ivoire': 456,
     mali: 456,
     burkina: 456,
     niger: 456,
   };
 
-  const cfaAmount = cadAmount && country ? 
-    (parseFloat(cadAmount) * exchangeRates[country as keyof typeof exchangeRates]).toFixed(0) : '0';
+  const countries = [
+    { code: 'senegal', name: 'Sénégal', flag: '🇸🇳', currency: 'CFA' },
+    { code: 'cote-ivoire', name: 'Côte d\'Ivoire', flag: '🇨🇮', currency: 'CFA' },
+    { code: 'mali', name: 'Mali', flag: '🇲🇱', currency: 'CFA' },
+    { code: 'burkina', name: 'Burkina Faso', flag: '🇧🇫', currency: 'CFA' },
+    { code: 'niger', name: 'Niger', flag: '🇳🇪', currency: 'CFA' },
+  ];
+
+  const deliveryOptions = [
+    { value: 'instant', label: 'Instantané', time: '0-15 min', fee: 0, icon: <Clock className="w-4 h-4" /> },
+    { value: 'fast', label: 'Rapide', time: '1-2 heures', fee: -5, icon: <ArrowRight className="w-4 h-4" /> },
+    { value: 'economy', label: 'Économique', time: '1-3 jours', fee: -10, icon: <Globe className="w-4 h-4" /> },
+  ];
+
+  const paymentMethods = [
+    { value: 'card', label: 'Carte bancaire', icon: <CreditCard className="w-5 h-5" />, fee: 2.99 },
+    { value: 'interac', label: 'Interac e-Transfer', icon: <img src="/lovable-uploads/bc1a1cb4-cd89-4200-bed4-5090b6e10d48.png" alt="Interac" className="w-5 h-5 object-contain" />, fee: 0 },
+    { value: 'bank', label: 'Virement bancaire', icon: <Building className="w-5 h-5" />, fee: 0 },
+  ];
+
+  const receiveMethods = [
+    { value: 'orange', label: 'Orange Money', icon: <img src="/lovable-uploads/109de98a-a26f-4bbf-b8f0-8f33c50d1a7a.png" alt="Orange Money" className="w-5 h-5 object-contain" /> },
+    { value: 'wave', label: 'Wave', icon: <img src="/lovable-uploads/e4d24098-9cf3-4dcb-a9fb-57e6c263dc64.png" alt="Wave" className="w-5 h-5 object-contain" /> },
+    { value: 'bank', label: 'Compte bancaire', icon: <Building className="w-5 h-5" /> },
+    { value: 'cash', label: 'Retrait en espèces', icon: <Smartphone className="w-5 h-5" /> },
+  ];
+
+  const selectedCountry = countries.find(c => c.code === country);
+  const selectedPaymentMethod = paymentMethods.find(p => p.value === paymentMethod);
+  const selectedDeliveryOption = deliveryOptions.find(d => d.value === deliverySpeed);
+
+  const calculateFees = () => {
+    const amount = parseFloat(cadAmount) || 0;
+    const paymentFee = selectedPaymentMethod?.fee || 0;
+    const deliveryFee = selectedDeliveryOption?.fee || 0;
+    const totalFees = paymentFee + deliveryFee;
+    return { paymentFee, deliveryFee, totalFees };
+  };
+
+  const { paymentFee, deliveryFee, totalFees } = calculateFees();
+  const totalToSend = (parseFloat(cadAmount) || 0) + totalFees;
+  const rate = selectedCountry ? exchangeRates[country as keyof typeof exchangeRates] : 0;
+  const cfaAmount = cadAmount && rate ? ((parseFloat(cadAmount) || 0) * rate).toFixed(0) : '0';
 
   const handleTransfer = () => {
-    if (!cadAmount || !country || !recipientName || !recipientPhone || !paymentMethod) return;
+    if (!cadAmount || !country || !recipientName || !recipientPhone || !paymentMethod || !recipientMethod) return;
     setShowConfirmation(true);
   };
 
@@ -37,311 +83,394 @@ export function InternationalTransfer() {
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-6 md:mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Virement International</h1>
-          <p className="text-gray-400">
-            Envoyez de l'argent rapidement et en toute sécurité vers l'Afrique
-          </p>
+    <div className="min-h-screen bg-terex-dark">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-terex-accent to-terex-accent-light text-white py-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              Envoyez de l'argent vers l'Afrique
+            </h1>
+            <p className="text-xl md:text-2xl mb-6 text-white/90">
+              Transferts rapides, sécurisés et aux meilleurs taux
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 text-sm">
+              <div className="flex items-center gap-2">
+                <Shield className="w-5 h-5" />
+                <span>100% sécurisé</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-5 h-5" />
+                <span>Transfert en 15 minutes</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Star className="w-5 h-5" />
+                <span>+50,000 clients satisfaits</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Transfer Form */}
+          <div className="lg:col-span-2">
+            <Card className="bg-white border-0 shadow-lg">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-2xl font-bold text-gray-900">
+                  Nouveau transfert
+                </CardTitle>
+                <CardDescription className="text-gray-600">
+                  Configurez votre transfert international en quelques clics
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Amount and Country Selection */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label className="text-gray-700 font-medium">Vous envoyez</Label>
+                    <div className="relative">
+                      <Input
+                        type="number"
+                        placeholder="0.00"
+                        value={cadAmount}
+                        onChange={(e) => setCadAmount(e.target.value)}
+                        className="text-2xl font-bold pr-16 h-14"
+                      />
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                        <Badge variant="secondary" className="font-medium">CAD</Badge>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-gray-700 font-medium">Vers</Label>
+                    <Select value={country} onValueChange={setCountry}>
+                      <SelectTrigger className="h-14">
+                        <SelectValue placeholder="Choisissez un pays" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {countries.map((country) => (
+                          <SelectItem key={country.code} value={country.code}>
+                            <div className="flex items-center space-x-3">
+                              <span className="text-xl">{country.flag}</span>
+                              <span>{country.name}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {/* Exchange Rate Display */}
+                {selectedCountry && (
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-600">Taux de change</p>
+                        <p className="font-bold text-lg">1 CAD = {rate} {selectedCountry.currency}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-gray-600">Le destinataire recevra</p>
+                        <p className="font-bold text-2xl text-terex-accent">{cfaAmount} {selectedCountry.currency}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Delivery Speed */}
+                <div className="space-y-3">
+                  <Label className="text-gray-700 font-medium">Vitesse de livraison</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {deliveryOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => setDeliverySpeed(option.value)}
+                        className={`p-4 rounded-lg border-2 text-left transition-all ${
+                          deliverySpeed === option.value
+                            ? 'border-terex-accent bg-terex-accent/5'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          {option.icon}
+                          <span className="font-medium">{option.label}</span>
+                        </div>
+                        <p className="text-sm text-gray-600">{option.time}</p>
+                        <p className="text-sm font-medium text-terex-accent">
+                          {option.fee === 0 ? 'Gratuit' : `${option.fee > 0 ? '+' : ''}${option.fee} CAD`}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Payment Method */}
+                <div className="space-y-3">
+                  <Label className="text-gray-700 font-medium">Comment payez-vous ?</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {paymentMethods.map((method) => (
+                      <button
+                        key={method.value}
+                        onClick={() => setPaymentMethod(method.value)}
+                        className={`p-4 rounded-lg border-2 text-left transition-all ${
+                          paymentMethod === method.value
+                            ? 'border-terex-accent bg-terex-accent/5'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 mb-2">
+                          {method.icon}
+                          <span className="font-medium">{method.label}</span>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          {method.fee === 0 ? 'Gratuit' : `${method.fee} CAD de frais`}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Receive Method */}
+                <div className="space-y-3">
+                  <Label className="text-gray-700 font-medium">Comment le destinataire recevra-t-il l'argent ?</Label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {receiveMethods.map((method) => (
+                      <button
+                        key={method.value}
+                        onClick={() => setRecipientMethod(method.value)}
+                        className={`p-4 rounded-lg border-2 text-center transition-all ${
+                          recipientMethod === method.value
+                            ? 'border-terex-accent bg-terex-accent/5'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <div className="flex justify-center mb-2">
+                          {method.icon}
+                        </div>
+                        <p className="text-sm font-medium">{method.label}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Recipient Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Informations du destinataire</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-gray-700">Nom complet</Label>
+                      <Input
+                        type="text"
+                        placeholder="Nom du destinataire"
+                        value={recipientName}
+                        onChange={(e) => setRecipientName(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-gray-700">
+                        {recipientMethod === 'bank' ? 'Numéro de compte' : 'Numéro de téléphone'}
+                      </Label>
+                      <Input
+                        type="tel"
+                        placeholder={recipientMethod === 'bank' ? 'Numéro de compte' : '+221 XX XXX XX XX'}
+                        value={recipientPhone}
+                        onChange={(e) => setRecipientPhone(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Summary Sidebar */}
+          <div className="space-y-6">
+            {/* Transfer Summary */}
+            <Card className="bg-white border-0 shadow-lg sticky top-6">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-gray-900">Résumé du transfert</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Montant envoyé</span>
+                    <span className="font-medium">{cadAmount || '0'} CAD</span>
+                  </div>
+                  
+                  {paymentFee > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Frais de paiement</span>
+                      <span className="font-medium">{paymentFee} CAD</span>
+                    </div>
+                  )}
+                  
+                  {deliveryFee !== 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Frais de livraison</span>
+                      <span className="font-medium text-green-600">
+                        {deliveryFee > 0 ? `+${deliveryFee}` : deliveryFee} CAD
+                      </span>
+                    </div>
+                  )}
+                  
+                  <Separator />
+                  
+                  <div className="flex justify-between text-lg font-bold">
+                    <span>Total à payer</span>
+                    <span>{totalToSend.toFixed(2)} CAD</span>
+                  </div>
+                  
+                  <div className="bg-terex-accent/10 p-3 rounded-lg">
+                    <div className="flex justify-between">
+                      <span className="text-gray-700">Le destinataire recevra</span>
+                      <span className="font-bold text-terex-accent text-xl">
+                        {cfaAmount} {selectedCountry?.currency || 'CFA'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <Button 
+                  onClick={handleTransfer}
+                  disabled={!cadAmount || !country || !recipientName || !recipientPhone || !paymentMethod || !recipientMethod}
+                  className="w-full gradient-button text-white font-medium h-12 text-lg disabled:opacity-50"
+                >
+                  Continuer le transfert
+                </Button>
+
+                <div className="text-center text-sm text-gray-500">
+                  <Shield className="w-4 h-4 inline mr-1" />
+                  Sécurisé par un cryptage 256-bit
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Trust Indicators */}
+            <Card className="bg-white border-0 shadow-lg">
+              <CardContent className="p-6">
+                <h3 className="font-semibold text-gray-900 mb-4">Pourquoi nous faire confiance ?</h3>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <Shield className="w-5 h-5 text-terex-accent mt-0.5" />
+                    <div>
+                      <p className="font-medium text-sm">Sécurité garantie</p>
+                      <p className="text-xs text-gray-600">Agréé et réglementé</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Clock className="w-5 h-5 text-terex-accent mt-0.5" />
+                    <div>
+                      <p className="font-medium text-sm">Transfert rapide</p>
+                      <p className="text-xs text-gray-600">En quelques minutes</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Star className="w-5 h-5 text-terex-accent mt-0.5" />
+                    <div>
+                      <p className="font-medium text-sm">Excellent service</p>
+                      <p className="text-xs text-gray-600">Support 24/7</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card className="bg-terex-darker border-terex-gray">
-            <CardHeader>
-              <CardTitle className="text-white">Détails du virement</CardTitle>
-              <CardDescription className="text-gray-400">
-                Configurez votre transfert international
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label className="text-white">Montant à envoyer (CAD)</Label>
-                <Input
-                  type="number"
-                  placeholder="Montant en dollars canadiens"
-                  value={cadAmount}
-                  onChange={(e) => setCadAmount(e.target.value)}
-                  className="bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-white">Pays de destination</Label>
-                <Select value={country} onValueChange={setCountry}>
-                  <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white">
-                    <SelectValue placeholder="Choisissez un pays" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-terex-gray border-terex-gray-light">
-                    <SelectItem value="senegal">🇸🇳 Sénégal</SelectItem>
-                    <SelectItem value="cote-ivoire">🇨🇮 Côte d'Ivoire</SelectItem>
-                    <SelectItem value="mali">🇲🇱 Mali</SelectItem>
-                    <SelectItem value="burkina">🇧🇫 Burkina Faso</SelectItem>
-                    <SelectItem value="niger">🇳🇪 Niger</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-white">Nom du bénéficiaire</Label>
-                <Input
-                  type="text"
-                  placeholder="Nom complet du destinataire"
-                  value={recipientName}
-                  onChange={(e) => setRecipientName(e.target.value)}
-                  className="bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-white">Numéro de téléphone</Label>
-                <Input
-                  type="tel"
-                  placeholder="+221 XX XXX XX XX"
-                  value={recipientPhone}
-                  onChange={(e) => setRecipientPhone(e.target.value)}
-                  className="bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-white">Méthode de réception</Label>
-                <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                  <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white">
-                    <SelectValue placeholder="Choisissez une méthode" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-terex-gray border-terex-gray-light">
-                    <SelectItem value="orange">
-                      <div className="flex items-center space-x-2">
-                        <img 
-                          src="/lovable-uploads/109de98a-a26f-4bbf-b8f0-8f33c50d1a7a.png" 
-                          alt="Orange Money" 
-                          className="w-6 h-6 object-contain"
-                        />
-                        <span>Orange Money</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="wave">
-                      <div className="flex items-center space-x-2">
-                        <img 
-                          src="/lovable-uploads/e4d24098-9cf3-4dcb-a9fb-57e6c263dc64.png" 
-                          alt="Wave" 
-                          className="w-6 h-6 object-contain"
-                        />
-                        <span>Wave</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="interac">
-                      <div className="flex items-center space-x-2">
-                        <img 
-                          src="/lovable-uploads/bc1a1cb4-cd89-4200-bed4-5090b6e10d48.png" 
-                          alt="Interac" 
-                          className="w-6 h-6 object-contain"
-                        />
-                        <span>Interac e-Transfer</span>
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {paymentMethod && (
-                <div className="space-y-2">
-                  <Label className="text-white">
-                    {paymentMethod === 'interac' ? 'Adresse email Interac' : 'Numéro de réception'}
-                  </Label>
-                  <Input
-                    type={paymentMethod === 'interac' ? 'email' : 'tel'}
-                    placeholder={paymentMethod === 'interac' ? 'email@exemple.com' : '+221 XX XXX XX XX'}
-                    className="bg-terex-gray border-terex-gray-light text-white"
-                  />
-                </div>
-              )}
-
-              <Button 
-                onClick={handleTransfer}
-                disabled={!cadAmount || !country || !recipientName || !recipientPhone || !paymentMethod}
-                className="w-full gradient-button text-white font-medium disabled:opacity-50"
-              >
-                Envoyer le virement
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-terex-darker border-terex-gray">
-            <CardHeader>
-              <CardTitle className="text-white">Récapitulatif</CardTitle>
-              <CardDescription className="text-gray-400">
-                Détails de votre transfert international
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="p-4 bg-terex-gray rounded-lg space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-300">Montant envoyé</span>
-                  <span className="text-white font-medium">
-                    {cadAmount || '0'} CAD
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-300">Taux de change</span>
-                  <span className="text-terex-accent">
-                    1 CAD = {country ? exchangeRates[country as keyof typeof exchangeRates] : '---'} CFA
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-300">Frais de transfert</span>
-                  <span className="text-terex-accent">
-                    Inclus
-                  </span>
-                </div>
-                <div className="flex justify-between border-t border-terex-gray-light pt-3">
-                  <span className="text-gray-300">Montant reçu</span>
-                  <span className="text-terex-accent font-bold text-lg">
-                    {cfaAmount} CFA
-                  </span>
-                </div>
-              </div>
-
-              {/* Méthodes de paiement disponibles */}
-              <div className="space-y-3">
-                <h3 className="text-white font-medium">Méthodes de paiement acceptées</h3>
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-terex-gray p-3 rounded-lg flex flex-col items-center space-y-2">
-                    <img 
-                      src="/lovable-uploads/109de98a-a26f-4bbf-b8f0-8f33c50d1a7a.png" 
-                      alt="Orange Money" 
-                      className="w-8 h-8 object-contain"
-                    />
-                    <span className="text-xs text-gray-300 text-center">Orange Money</span>
-                  </div>
-                  <div className="bg-terex-gray p-3 rounded-lg flex flex-col items-center space-y-2">
-                    <img 
-                      src="/lovable-uploads/e4d24098-9cf3-4dcb-a9fb-57e6c263dc64.png" 
-                      alt="Wave" 
-                      className="w-8 h-8 object-contain"
-                    />
-                    <span className="text-xs text-gray-300 text-center">Wave</span>
-                  </div>
-                  <div className="bg-terex-gray p-3 rounded-lg flex flex-col items-center space-y-2">
-                    <img 
-                      src="/lovable-uploads/bc1a1cb4-cd89-4200-bed4-5090b6e10d48.png" 
-                      alt="Interac" 
-                      className="w-8 h-8 object-contain"
-                    />
-                    <span className="text-xs text-gray-300 text-center">Interac e-Transfer</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-white font-medium">Informations importantes</h3>
-                <ul className="text-sm text-gray-400 space-y-1">
-                  <li>• Transfert sous 15 minutes</li>
-                  <li>• Taux de change compétitif</li>
-                  <li>• Frais de transaction inclus</li>
-                  <li>• Minimum 25 CAD</li>
-                  <li>• Service disponible 24/7</li>
-                </ul>
-              </div>
-
-              {country && (
-                <div className="p-3 bg-terex-accent/10 border border-terex-accent/20 rounded-lg">
-                  <p className="text-terex-accent text-sm">
-                    🌍 Transfert vers {country === 'senegal' ? 'le Sénégal' : 
-                      country === 'cote-ivoire' ? 'la Côte d\'Ivoire' :
-                      country === 'mali' ? 'le Mali' :
-                      country === 'burkina' ? 'le Burkina Faso' : 'le Niger'}
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
+        {/* Confirmation Dialog */}
         <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
-          <DialogContent className="bg-terex-darker border-terex-gray">
+          <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle className="text-white">Confirmer le virement</DialogTitle>
-              <DialogDescription className="text-gray-400">
-                Vérifiez les informations avant d'envoyer le virement.
+              <DialogTitle className="text-2xl font-bold">Confirmer votre transfert</DialogTitle>
+              <DialogDescription>
+                Vérifiez attentivement les informations avant de finaliser le transfert.
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-3">
-              <div className="p-4 bg-terex-gray rounded-lg">
-                <div className="flex justify-between mb-2">
-                  <span className="text-gray-300">Montant à envoyer:</span>
-                  <span className="text-white">{cadAmount} CAD</span>
-                </div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-gray-300">Pays de destination:</span>
-                  <span className="text-white">
-                    {country === 'senegal' ? '🇸🇳 Sénégal' : 
-                     country === 'cote-ivoire' ? '🇨🇮 Côte d\'Ivoire' :
-                     country === 'mali' ? '🇲🇱 Mali' :
-                     country === 'burkina' ? '🇧🇫 Burkina Faso' : '🇳🇪 Niger'}
-                  </span>
-                </div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-gray-300">Montant à recevoir:</span>
-                  <span className="text-terex-accent">{cfaAmount} CFA</span>
-                </div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-gray-300">Méthode de réception:</span>
-                  <div className="flex items-center space-x-2">
-                    {paymentMethod === 'orange' && (
-                      <img 
-                        src="/lovable-uploads/109de98a-a26f-4bbf-b8f0-8f33c50d1a7a.png" 
-                        alt="Orange Money" 
-                        className="w-4 h-4 object-contain"
-                      />
-                    )}
-                    {paymentMethod === 'wave' && (
-                      <img 
-                        src="/lovable-uploads/e4d24098-9cf3-4dcb-a9fb-57e6c263dc64.png" 
-                        alt="Wave" 
-                        className="w-4 h-4 object-contain"
-                      />
-                    )}
-                    {paymentMethod === 'interac' && (
-                      <img 
-                        src="/lovable-uploads/bc1a1cb4-cd89-4200-bed4-5090b6e10d48.png" 
-                        alt="Interac" 
-                        className="w-4 h-4 object-contain"
-                      />
-                    )}
-                    <span className="text-white">
-                      {paymentMethod === 'orange' ? 'Orange Money' : 
-                       paymentMethod === 'wave' ? 'Wave' : 
-                       paymentMethod === 'interac' ? 'Interac e-Transfer' : 'Moov Money'}
-                    </span>
+            
+            <div className="space-y-6">
+              {/* Transfer Details */}
+              <div className="bg-gray-50 p-6 rounded-lg space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-600">Vous envoyez</p>
+                    <p className="text-2xl font-bold">{cadAmount} CAD</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Destinataire recevra</p>
+                    <p className="text-2xl font-bold text-terex-accent">{cfaAmount} {selectedCountry?.currency}</p>
                   </div>
                 </div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-gray-300">Bénéficiaire:</span>
-                  <span className="text-white">{recipientName}</span>
+                
+                <Separator />
+                
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p className="text-gray-600">Pays de destination</p>
+                    <p className="font-medium">{selectedCountry?.flag} {selectedCountry?.name}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Vitesse de livraison</p>
+                    <p className="font-medium">{selectedDeliveryOption?.label} ({selectedDeliveryOption?.time})</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Méthode de paiement</p>
+                    <p className="font-medium">{selectedPaymentMethod?.label}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Méthode de réception</p>
+                    <p className="font-medium">{receiveMethods.find(m => m.value === recipientMethod)?.label}</p>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-300">
-                    {paymentMethod === 'interac' ? 'Email de réception:' : 'Numéro de réception:'}
-                  </span>
-                  <span className="text-white">{recipientPhone}</span>
+              </div>
+
+              {/* Recipient Details */}
+              <div className="space-y-3">
+                <h4 className="font-semibold">Informations du destinataire</h4>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-gray-600">Nom complet</p>
+                      <p className="font-medium">{recipientName}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">
+                        {recipientMethod === 'bank' ? 'Numéro de compte' : 'Téléphone'}
+                      </p>
+                      <p className="font-medium">{recipientPhone}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Total Cost */}
+              <div className="bg-terex-accent/10 p-4 rounded-lg">
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-medium">Total à payer</span>
+                  <span className="text-2xl font-bold text-terex-accent">{totalToSend.toFixed(2)} CAD</span>
                 </div>
               </div>
             </div>
-            <DialogFooter>
+
+            <DialogFooter className="gap-3">
               <Button 
                 variant="outline" 
                 onClick={() => setShowConfirmation(false)}
-                className="border-terex-gray text-gray-300"
+                className="flex-1"
               >
-                Annuler
+                Modifier
               </Button>
               <Button 
                 onClick={handleConfirm}
-                className="gradient-button text-white"
+                className="flex-1 gradient-button text-white"
               >
-                Confirmer le virement
+                Confirmer et payer
               </Button>
             </DialogFooter>
           </DialogContent>
