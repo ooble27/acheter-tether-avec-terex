@@ -3,27 +3,12 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import type { Database } from '@/integrations/supabase/types';
 
-export interface Order {
-  id: string;
-  user_id: string;
-  type: string;
-  amount: number;
-  currency: string;
-  usdt_amount: number;
-  exchange_rate: number;
-  payment_method: 'card' | 'mobile';
-  network: string;
-  wallet_address?: string;
-  status: string;
-  payment_status?: string;
-  payment_reference?: string;
-  notes?: string;
-  created_at: string;
-  updated_at: string;
-  processed_at?: string;
-  processed_by?: string;
-}
+type Order = Database['public']['Tables']['orders']['Row'];
+type OrderInsert = Database['public']['Tables']['orders']['Insert'];
+
+export type { Order };
 
 export const useOrders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -58,7 +43,7 @@ export const useOrders = () => {
     }
   };
 
-  const createOrder = async (orderData: Omit<Order, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => {
+  const createOrder = async (orderData: Omit<OrderInsert, 'user_id'>) => {
     if (!user) {
       toast({
         title: "Erreur",
@@ -69,14 +54,16 @@ export const useOrders = () => {
     }
 
     try {
+      const insertData: OrderInsert = {
+        ...orderData,
+        user_id: user.id,
+        status: orderData.status || 'pending',
+        payment_status: orderData.payment_status || 'pending'
+      };
+
       const { data, error } = await supabase
         .from('orders')
-        .insert({
-          ...orderData,
-          user_id: user.id,
-          status: orderData.status || 'pending',
-          payment_status: orderData.payment_status || 'pending'
-        })
+        .insert(insertData)
         .select()
         .single();
 
@@ -103,9 +90,9 @@ export const useOrders = () => {
     }
   };
 
-  const updateOrderStatus = async (orderId: string, status: string, paymentStatus?: string) => {
+  const updateOrderStatus = async (orderId: string, status: Database['public']['Enums']['order_status'], paymentStatus?: string) => {
     try {
-      const updateData: any = { 
+      const updateData: Partial<OrderInsert> = { 
         status,
         processed_by: user?.id,
         processed_at: new Date().toISOString()

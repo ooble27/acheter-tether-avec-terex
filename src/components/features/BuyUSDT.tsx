@@ -61,7 +61,7 @@ export function BuyUSDT() {
       payment_method: paymentMethod,
       network,
       wallet_address: walletAddress,
-      status: 'pending',
+      status: 'pending' as const,
       payment_status: 'pending'
     };
 
