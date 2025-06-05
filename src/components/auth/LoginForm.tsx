@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -36,19 +35,43 @@ export function LoginForm() {
           });
         }
       } else {
-        const { error } = await signUp(email, password, name);
+        // Pour l'inscription, on essaie d'abord de se connecter pour vérifier si l'email existe
+        const { error: loginError } = await signIn(email, password);
         
-        if (error) {
+        if (!loginError) {
+          // Si la connexion réussit, l'email existe déjà
           toast({
-            title: "Erreur d'inscription",
-            description: error.message,
+            title: "Email déjà utilisé",
+            description: "Cet email est déjà utilisé. Vous êtes maintenant connecté.",
             variant: "destructive",
           });
+          setIsLoading(false);
+          return;
+        }
+        
+        // Si la connexion échoue avec "Invalid login credentials", on peut procéder à l'inscription
+        if (loginError.message === "Invalid login credentials") {
+          const { error } = await signUp(email, password, name);
+          
+          if (error) {
+            toast({
+              title: "Erreur d'inscription",
+              description: error.message,
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: "Inscription réussie !",
+              description: "Vérifiez votre email pour activer votre compte",
+              className: "bg-green-600 text-white border-green-600",
+            });
+          }
         } else {
+          // Autre erreur de connexion
           toast({
-            title: "Inscription réussie !",
-            description: "Vérifiez votre email pour activer votre compte",
-            className: "bg-green-600 text-white border-green-600",
+            title: "Erreur",
+            description: "Une erreur s'est produite lors de la vérification de l'email",
+            variant: "destructive",
           });
         }
       }
