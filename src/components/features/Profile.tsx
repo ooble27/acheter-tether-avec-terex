@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { TransactionHistory } from '@/components/features/TransactionHistory';
 import { KYCForm } from '@/components/features/KYCForm';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -8,6 +10,7 @@ import { useTransactions } from '@/contexts/TransactionContext';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useKYC } from '@/hooks/useKYC';
+import { useUserProfile } from '@/hooks/useUserProfile';
 import { User, History, Settings, Shield, Share2, Edit, Lock, LogOut, Trash2, CheckCircle, AlertCircle, Copy, Clock, XCircle } from 'lucide-react';
 import {
   AlertDialog,
@@ -39,21 +42,40 @@ export function Profile({ user, onLogout }: ProfileProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [showKYCForm, setShowKYCForm] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [formData, setFormData] = useState({
+    full_name: '',
+    email: '',
+    phone: '',
+    country: '',
+    language: 'Français'
+  });
+  
   const isMobile = useIsMobile();
   const { transactions } = useTransactions();
   const { toast } = useToast();
   const { signOut } = useAuth();
   const { kycData, loading: kycLoading, refetch: refetchKYC } = useKYC();
+  const { profile, loading: profileLoading, updateProfile, updateEmail } = useUserProfile();
 
-  // Mock user data - in real app this would come from backend
-  const userProfile = {
-    fullName: user?.name || 'Utilisateur',
-    email: user?.email || '',
-    phone: '+1 234 567 8900',
-    country: 'Canada',
-    language: 'Français',
-    joinDate: '15 janvier 2024',
-  };
+  // Update form data when profile loads
+  useState(() => {
+    if (profile) {
+      setFormData({
+        full_name: profile.full_name || user?.name || '',
+        email: user?.email || '',
+        phone: profile.phone || '',
+        country: profile.country || '',
+        language: profile.language || 'Français'
+      });
+    } else if (user) {
+      setFormData(prev => ({
+        ...prev,
+        full_name: user.name || '',
+        email: user.email || ''
+      }));
+    }
+  });
 
   const tabs = [
     { id: 'profile', label: 'Profil', icon: User },
@@ -128,6 +150,60 @@ export function Profile({ user, onLogout }: ProfileProps) {
     } finally {
       setIsLoggingOut(false);
     }
+  };
+
+  const handleSaveProfile = async () => {
+    if (isSaving) return;
+    
+    setIsSaving(true);
+    
+    try {
+      // Update profile data
+      const profileResult = await updateProfile({
+        full_name: formData.full_name,
+        phone: formData.phone,
+        country: formData.country,
+        language: formData.language
+      });
+
+      if (profileResult.error) {
+        toast({
+          title: "Erreur",
+          description: profileResult.error,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Update email if changed
+      if (formData.email !== user?.email) {
+        const emailResult = await updateEmail(formData.email);
+        if (emailResult.error) {
+          toast({
+            title: "Erreur email",
+            description: emailResult.error,
+            variant: "destructive",
+          });
+        }
+      }
+      
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la sauvegarde",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const getKYCStatus = () => {
@@ -214,28 +290,74 @@ export function Profile({ user, onLogout }: ProfileProps) {
         </SheetHeader>
         <div className="mt-6 space-y-4">
           <div>
-            <label className="text-gray-400 text-sm block mb-2">Nom complet</label>
-            <input 
+            <Label className="text-gray-400 text-sm block mb-2">Nom complet</Label>
+            <Input 
               type="text" 
-              defaultValue={userProfile.fullName}
+              value={formData.full_name}
+              onChange={(e) => handleInputChange('full_name', e.target.value)}
               className="w-full bg-terex-gray border border-terex-gray rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-terex-accent focus:border-transparent"
             />
           </div>
           <div>
-            <label className="text-gray-400 text-sm block mb-2">Téléphone</label>
-            <input 
-              type="tel" 
-              defaultValue={userProfile.phone}
+            <Label className="text-gray-400 text-sm block mb-2">Email</Label>
+            <Input 
+              type="email" 
+              value={formData.email}
+              onChange={(e) => handleInputChange('email', e.target.value)}
               className="w-full bg-terex-gray border border-terex-gray rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-terex-accent focus:border-transparent"
             />
           </div>
-          <Button className="w-full bg-terex-accent hover:bg-terex-accent/90 mt-6">
-            Sauvegarder
+          <div>
+            <Label className="text-gray-400 text-sm block mb-2">Téléphone</Label>
+            <Input 
+              type="tel" 
+              value={formData.phone}
+              onChange={(e) => handleInputChange('phone', e.target.value)}
+              placeholder="Votre numéro de téléphone"
+              className="w-full bg-terex-gray border border-terex-gray rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-terex-accent focus:border-transparent"
+            />
+          </div>
+          <div>
+            <Label className="text-gray-400 text-sm block mb-2">Pays</Label>
+            <Input 
+              type="text" 
+              value={formData.country}
+              onChange={(e) => handleInputChange('country', e.target.value)}
+              placeholder="Votre pays"
+              className="w-full bg-terex-gray border border-terex-gray rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-terex-accent focus:border-transparent"
+            />
+          </div>
+          <div>
+            <Label className="text-gray-400 text-sm block mb-2">Langue</Label>
+            <select 
+              value={formData.language}
+              onChange={(e) => handleInputChange('language', e.target.value)}
+              className="w-full bg-terex-gray border border-terex-gray rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-terex-accent focus:border-transparent"
+            >
+              <option value="Français">Français</option>
+              <option value="English">English</option>
+              <option value="Español">Español</option>
+            </select>
+          </div>
+          <Button 
+            className="w-full bg-terex-accent hover:bg-terex-accent/90 mt-6" 
+            onClick={handleSaveProfile}
+            disabled={isSaving}
+          >
+            {isSaving ? 'Sauvegarde...' : 'Sauvegarder'}
           </Button>
         </div>
       </SheetContent>
     </Sheet>
   );
+
+  if (profileLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-white">Chargement du profil...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 sm:space-y-6 animate-fade-in px-1 sm:px-0">
@@ -345,27 +467,27 @@ export function Profile({ user, onLogout }: ProfileProps) {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-gray-400 text-sm">Nom complet</label>
-                        <p className="text-white font-medium">{userProfile.fullName}</p>
+                        <p className="text-white font-medium">{formData.full_name || 'Non renseigné'}</p>
                       </div>
                       <div>
                         <label className="text-gray-400 text-sm">Email</label>
-                        <p className="text-white font-medium break-all">{userProfile.email}</p>
+                        <p className="text-white font-medium break-all">{formData.email}</p>
                       </div>
                       <div>
                         <label className="text-gray-400 text-sm">Téléphone</label>
-                        <p className="text-white font-medium">{userProfile.phone}</p>
+                        <p className="text-white font-medium">{formData.phone || 'Non renseigné'}</p>
                       </div>
                       <div>
                         <label className="text-gray-400 text-sm">Pays</label>
-                        <p className="text-white font-medium">{userProfile.country}</p>
+                        <p className="text-white font-medium">{formData.country || 'Non renseigné'}</p>
                       </div>
                       <div>
                         <label className="text-gray-400 text-sm">Langue</label>
-                        <p className="text-white font-medium">{userProfile.language}</p>
+                        <p className="text-white font-medium">{formData.language}</p>
                       </div>
                       <div>
                         <label className="text-gray-400 text-sm">Inscription</label>
-                        <p className="text-white font-medium">{userProfile.joinDate}</p>
+                        <p className="text-white font-medium">15 janvier 2024</p>
                       </div>
                     </div>
                   </CardContent>
@@ -624,27 +746,27 @@ export function Profile({ user, onLogout }: ProfileProps) {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="text-gray-400 text-sm">Nom complet</label>
-                      <p className="text-white font-medium">{userProfile.fullName}</p>
+                      <p className="text-white font-medium">{formData.full_name || 'Non renseigné'}</p>
                     </div>
                     <div>
                       <label className="text-gray-400 text-sm">Email</label>
-                      <p className="text-white font-medium break-all">{userProfile.email}</p>
+                      <p className="text-white font-medium break-all">{formData.email}</p>
                     </div>
                     <div>
                       <label className="text-gray-400 text-sm">Téléphone</label>
-                      <p className="text-white font-medium">{userProfile.phone}</p>
+                      <p className="text-white font-medium">{formData.phone || 'Non renseigné'}</p>
                     </div>
                     <div>
                       <label className="text-gray-400 text-sm">Pays</label>
-                      <p className="text-white font-medium">{userProfile.country}</p>
+                      <p className="text-white font-medium">{formData.country || 'Non renseigné'}</p>
                     </div>
                     <div>
                       <label className="text-gray-400 text-sm">Langue</label>
-                      <p className="text-white font-medium">{userProfile.language}</p>
+                      <p className="text-white font-medium">{formData.language}</p>
                     </div>
                     <div>
                       <label className="text-gray-400 text-sm">Inscription</label>
-                      <p className="text-white font-medium">{userProfile.joinDate}</p>
+                      <p className="text-white font-medium">15 janvier 2024</p>
                     </div>
                   </div>
                 </CardContent>
@@ -796,7 +918,6 @@ export function Profile({ user, onLogout }: ProfileProps) {
                 </CardContent>
               </Card>
 
-              {/* Danger Zone */}
               <Card className="bg-terex-darker border-red-600/50">
                 <CardHeader>
                   <CardTitle className="text-red-400">Zone de danger</CardTitle>
