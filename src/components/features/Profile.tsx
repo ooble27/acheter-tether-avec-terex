@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { TransactionHistory } from '@/components/features/TransactionHistory';
+import { KYCForm } from '@/components/features/KYCForm';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTransactions } from '@/contexts/TransactionContext';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { User, History, Settings, Shield, Share2, Edit, Lock, LogOut, Trash2, CheckCircle, AlertCircle, Copy } from 'lucide-react';
+import { useKYC } from '@/hooks/useKYC';
+import { User, History, Settings, Shield, Share2, Edit, Lock, LogOut, Trash2, CheckCircle, AlertCircle, Copy, Clock, XCircle } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,10 +38,12 @@ export function Profile({ user, onLogout }: ProfileProps) {
   const [activeTab, setActiveTab] = useState('profile');
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [showKYCForm, setShowKYCForm] = useState(false);
   const isMobile = useIsMobile();
   const { transactions } = useTransactions();
   const { toast } = useToast();
   const { signOut } = useAuth();
+  const { kycData, loading: kycLoading, refetch: refetchKYC } = useKYC();
 
   // Mock user data - in real app this would come from backend
   const userProfile = {
@@ -49,12 +53,11 @@ export function Profile({ user, onLogout }: ProfileProps) {
     country: 'Canada',
     language: 'Français',
     joinDate: '15 janvier 2024',
-    isKYCVerified: true, // This would come from backend
-    hasKYCDocuments: true
   };
 
   const tabs = [
     { id: 'profile', label: 'Profil', icon: User },
+    { id: 'kyc', label: 'Vérification', icon: Shield },
     { id: 'transactions', label: 'Historique', icon: History },
     { id: 'settings', label: 'Paramètres', icon: Settings },
   ];
@@ -128,35 +131,71 @@ export function Profile({ user, onLogout }: ProfileProps) {
   };
 
   const getKYCStatus = () => {
-    if (userProfile.isKYCVerified) {
+    if (kycLoading) {
       return {
-        status: 'Vérifié',
-        icon: CheckCircle,
-        color: 'text-green-400',
-        bgColor: 'bg-green-400/10',
-        description: 'Votre identité a été vérifiée'
+        status: 'Chargement...',
+        icon: Clock,
+        color: 'text-gray-400',
+        bgColor: 'bg-gray-400/10',
+        description: 'Chargement des informations'
       };
-    } else if (userProfile.hasKYCDocuments) {
-      return {
-        status: 'En attente',
-        icon: AlertCircle,
-        color: 'text-yellow-400',
-        bgColor: 'bg-yellow-400/10',
-        description: 'Vérification en cours'
-      };
-    } else {
+    }
+
+    if (!kycData) {
       return {
         status: 'Non vérifié',
         icon: AlertCircle,
         color: 'text-red-400',
         bgColor: 'bg-red-400/10',
-        description: 'Vérification requise'
+        description: 'Vérification requise pour utiliser nos services'
       };
+    }
+
+    switch (kycData.status) {
+      case 'approved':
+        return {
+          status: 'Vérifié',
+          icon: CheckCircle,
+          color: 'text-green-400',
+          bgColor: 'bg-green-400/10',
+          description: 'Votre identité a été vérifiée avec succès'
+        };
+      case 'submitted':
+      case 'under_review':
+        return {
+          status: 'En cours d\'examen',
+          icon: Clock,
+          color: 'text-yellow-400',
+          bgColor: 'bg-yellow-400/10',
+          description: 'Vos documents sont en cours de vérification'
+        };
+      case 'rejected':
+        return {
+          status: 'Rejeté',
+          icon: XCircle,
+          color: 'text-red-400',
+          bgColor: 'bg-red-400/10',
+          description: kycData.rejection_reason || 'Documents non conformes'
+        };
+      default:
+        return {
+          status: 'Non vérifié',
+          icon: AlertCircle,
+          color: 'text-red-400',
+          bgColor: 'bg-red-400/10',
+          description: 'Vérification d\'identité requise'
+        };
     }
   };
 
   const kycStatus = getKYCStatus();
   const StatusIcon = kycStatus.icon;
+
+  const handleKYCFormComplete = () => {
+    setShowKYCForm(false);
+    refetchKYC();
+    setActiveTab('profile');
+  };
 
   const EditInfoSheet = () => (
     <Sheet>
@@ -270,6 +309,27 @@ export function Profile({ user, onLogout }: ProfileProps) {
                         {kycStatus.status}
                       </span>
                     </div>
+                    {kycData?.status === 'pending' && (
+                      <div className="mt-4">
+                        <Button 
+                          onClick={() => setActiveTab('kyc')}
+                          className="bg-terex-accent hover:bg-terex-accent/90"
+                        >
+                          Commencer la vérification
+                        </Button>
+                      </div>
+                    )}
+                    {kycData?.status === 'rejected' && (
+                      <div className="mt-4">
+                        <Button 
+                          onClick={() => setActiveTab('kyc')}
+                          variant="outline"
+                          className="border-yellow-500 text-yellow-500 hover:bg-yellow-500/10"
+                        >
+                          Soumettre à nouveau
+                        </Button>
+                      </div>
+                    )}
                   </CardHeader>
                 </Card>
 
@@ -366,6 +426,46 @@ export function Profile({ user, onLogout }: ProfileProps) {
                     </Button>
                   </CardContent>
                 </Card>
+              </div>
+            )}
+
+            {activeTab === 'kyc' && (
+              <div className="space-y-6">
+                <Card className="bg-terex-darker border-terex-gray">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center">
+                      <Shield className="w-5 h-5 mr-2" />
+                      Vérification d'identité KYC
+                    </CardTitle>
+                    <CardDescription className="text-gray-400">
+                      Vérifiez votre identité pour accéder à tous nos services
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+
+                {kycData?.status === 'approved' ? (
+                  <Card className="bg-green-600/10 border-green-600/50">
+                    <CardContent className="p-6 text-center">
+                      <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
+                      <h3 className="text-white text-xl font-medium mb-2">Identité vérifiée</h3>
+                      <p className="text-green-400">
+                        Votre identité a été vérifiée avec succès. Vous pouvez maintenant utiliser tous nos services.
+                      </p>
+                    </CardContent>
+                  </Card>
+                ) : kycData?.status === 'submitted' || kycData?.status === 'under_review' ? (
+                  <Card className="bg-yellow-600/10 border-yellow-600/50">
+                    <CardContent className="p-6 text-center">
+                      <Clock className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
+                      <h3 className="text-white text-xl font-medium mb-2">Vérification en cours</h3>
+                      <p className="text-yellow-400">
+                        Vos documents sont en cours d'examen. Nous vous contacterons sous 1-3 jours ouvrables.
+                      </p>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <KYCForm onComplete={handleKYCFormComplete} />
+                )}
               </div>
             )}
 
@@ -470,7 +570,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
       {isMobile && (
         <div>
           {activeTab === 'profile' && (
-            <div className="space-y-4 sm:space-y-6">
+            <div className="space-y-4 sm:space-y-6 animate-fade-in px-1 sm:px-0">
               {/* KYC Status */}
               <Card className="bg-terex-darker border-terex-gray">
                 <CardHeader className="pb-3 sm:pb-6">
@@ -488,6 +588,27 @@ export function Profile({ user, onLogout }: ProfileProps) {
                       {kycStatus.status}
                     </span>
                   </div>
+                  {kycData?.status === 'pending' && (
+                    <div className="mt-4">
+                      <Button 
+                        onClick={() => setActiveTab('kyc')}
+                        className="bg-terex-accent hover:bg-terex-accent/90 w-full"
+                      >
+                        Commencer la vérification
+                      </Button>
+                    </div>
+                  )}
+                  {kycData?.status === 'rejected' && (
+                    <div className="mt-4">
+                      <Button 
+                        onClick={() => setActiveTab('kyc')}
+                        variant="outline"
+                        className="border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 w-full"
+                      >
+                        Soumettre à nouveau
+                      </Button>
+                    </div>
+                  )}
                 </CardHeader>
               </Card>
 
@@ -587,8 +708,48 @@ export function Profile({ user, onLogout }: ProfileProps) {
             </div>
           )}
 
+          {activeTab === 'kyc' && (
+            <div className="space-y-4">
+              <Card className="bg-terex-darker border-terex-gray">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <Shield className="w-5 h-5 mr-2" />
+                    Vérification KYC
+                  </CardTitle>
+                  <CardDescription className="text-gray-400">
+                    Vérifiez votre identité pour accéder à tous nos services
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              {kycData?.status === 'approved' ? (
+                <Card className="bg-green-600/10 border-green-600/50">
+                  <CardContent className="p-6 text-center">
+                    <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-4" />
+                    <h3 className="text-white text-lg font-medium mb-2">Identité vérifiée</h3>
+                    <p className="text-green-400 text-sm">
+                      Votre identité a été vérifiée avec succès.
+                    </p>
+                  </CardContent>
+                </Card>
+              ) : kycData?.status === 'submitted' || kycData?.status === 'under_review' ? (
+                <Card className="bg-yellow-600/10 border-yellow-600/50">
+                  <CardContent className="p-6 text-center">
+                    <Clock className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
+                    <h3 className="text-white text-lg font-medium mb-2">En cours d'examen</h3>
+                    <p className="text-yellow-400 text-sm">
+                      Vos documents sont en cours de vérification.
+                    </p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <KYCForm onComplete={handleKYCFormComplete} />
+              )}
+            </div>
+          )}
+
           {activeTab === 'transactions' && (
-            <>
+            <div className="space-y-4 sm:space-y-6 animate-fade-in px-1 sm:px-0">
               {transactions.length === 0 ? (
                 <Card className="bg-terex-darker border-terex-gray">
                   <CardContent className="p-6 sm:p-8 text-center">
@@ -602,11 +763,11 @@ export function Profile({ user, onLogout }: ProfileProps) {
               ) : (
                 <TransactionHistory transactions={transactions} />
               )}
-            </>
+            </div>
           )}
 
           {activeTab === 'settings' && (
-            <div className="space-y-4 sm:space-y-6">
+            <div className="space-y-4 sm:space-y-6 animate-fade-in px-1 sm:px-0">
               <Card className="bg-terex-darker border-terex-gray">
                 <CardHeader>
                   <CardTitle className="text-white">Paramètres du compte</CardTitle>
@@ -673,7 +834,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
                         >
                           {isDeleting ? 'Suppression...' : 'Supprimer définitivement'}
                         </AlertDialogAction>
-                        </AlertDialogFooter>
+                      </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
                 </CardContent>

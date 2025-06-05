@@ -9,6 +9,87 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      kyc_verifications: {
+        Row: {
+          address: string | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          date_of_birth: string | null
+          first_name: string | null
+          id: string
+          identity_document_back_url: string | null
+          identity_document_front_url: string | null
+          identity_document_number: string | null
+          identity_document_type: string | null
+          last_name: string | null
+          nationality: string | null
+          phone_number: string | null
+          postal_code: string | null
+          proof_of_address_url: string | null
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          selfie_url: string | null
+          status: string
+          submitted_at: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          first_name?: string | null
+          id?: string
+          identity_document_back_url?: string | null
+          identity_document_front_url?: string | null
+          identity_document_number?: string | null
+          identity_document_type?: string | null
+          last_name?: string | null
+          nationality?: string | null
+          phone_number?: string | null
+          postal_code?: string | null
+          proof_of_address_url?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selfie_url?: string | null
+          status?: string
+          submitted_at?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          first_name?: string | null
+          id?: string
+          identity_document_back_url?: string | null
+          identity_document_front_url?: string | null
+          identity_document_number?: string | null
+          identity_document_type?: string | null
+          last_name?: string | null
+          nationality?: string | null
+          phone_number?: string | null
+          postal_code?: string | null
+          proof_of_address_url?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selfie_url?: string | null
+          status?: string
+          submitted_at?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       Terex: {
         Row: {
           created_at: string
@@ -24,15 +105,46 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _user_id: string
+          _role: Database["public"]["Enums"]["user_role"]
+        }
+        Returns: boolean
+      }
+      is_kyc_verified: {
+        Args: { _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      user_role: "user" | "admin" | "kyc_reviewer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -147,6 +259,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["user", "admin", "kyc_reviewer"],
+    },
   },
 } as const
