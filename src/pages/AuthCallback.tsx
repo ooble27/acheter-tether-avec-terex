@@ -18,31 +18,46 @@ const AuthCallback = () => {
         const type = searchParams.get('type');
         const accessToken = searchParams.get('access_token');
         const refreshToken = searchParams.get('refresh_token');
+        const error = searchParams.get('error');
+        const errorDescription = searchParams.get('error_description');
         
         console.log('Type de callback:', type);
         console.log('Access token présent:', !!accessToken);
+        console.log('Error:', error);
         
-        // Gérer le callback d'authentification
-        const { data, error } = await supabase.auth.getSession();
-        
+        // Vérifier s'il y a une erreur dans l'URL
         if (error) {
-          console.error('Erreur callback auth:', error);
+          console.error('Erreur dans l\'URL:', error, errorDescription);
           toast({
             title: "Erreur d'authentification",
-            description: error.message,
+            description: errorDescription || error,
             variant: "destructive",
           });
           navigate('/');
           return;
         }
-
-        console.log('Session data:', data);
-
-        // Si c'est une réinitialisation de mot de passe ET qu'il y a un token d'accès
-        if (type === 'recovery' || (accessToken && refreshToken)) {
-          console.log('Redirection vers réinitialisation mot de passe');
+        
+        // PRIORITÉ 1: Vérifier si c'est une réinitialisation de mot de passe
+        // On vérifie d'abord les paramètres URL avant la session
+        if (type === 'recovery') {
+          console.log('Type recovery détecté, redirection vers réinitialisation');
           
-          // Vérifier qu'il y a bien une session active pour la réinitialisation
+          // Attendre un peu que la session soit établie
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          const { data, error } = await supabase.auth.getSession();
+          
+          if (error) {
+            console.error('Erreur lors de la récupération de session pour recovery:', error);
+            toast({
+              title: "Lien expiré",
+              description: "Le lien de réinitialisation a expiré. Veuillez demander un nouveau lien.",
+              variant: "destructive",
+            });
+            navigate('/');
+            return;
+          }
+          
           if (data.session) {
             toast({
               title: "Lien de réinitialisation valide",
@@ -61,6 +76,22 @@ const AuthCallback = () => {
             return;
           }
         }
+        
+        // Si ce n'est pas un recovery, gérer normalement
+        const { data, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error('Erreur callback auth:', sessionError);
+          toast({
+            title: "Erreur d'authentification",
+            description: sessionError.message,
+            variant: "destructive",
+          });
+          navigate('/');
+          return;
+        }
+
+        console.log('Session data:', data);
 
         // Si c'est une confirmation d'email
         if (type === 'signup' && data.session) {
