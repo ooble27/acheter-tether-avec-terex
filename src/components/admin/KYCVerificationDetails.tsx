@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { ArrowLeft, CheckCircle, XCircle, Clock, User, FileText, Image, Calendar } from 'lucide-react';
+import { ArrowLeft, CheckCircle, XCircle, Clock, User, FileText, Calendar, Eye } from 'lucide-react';
 import { useKYCAdmin, KYCVerificationWithHistory } from '@/hooks/useKYCAdmin';
+import { DocumentImage } from './DocumentImage';
 
 interface KYCVerificationDetailsProps {
   verification: KYCVerificationWithHistory;
@@ -74,66 +75,68 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
     });
   };
 
+  const canTakeAction = verification.status === 'submitted' || verification.status === 'under_review';
+
   return (
     <div className="space-y-6">
       {/* En-tête avec retour */}
-      <div className="flex items-center space-x-4">
-        <Button variant="ghost" onClick={onBack} className="text-white hover:bg-terex-accent/20">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Retour à la liste
-        </Button>
-        <div>
-          <h1 className="text-3xl font-bold text-white">
-            Vérification KYC - {verification.first_name} {verification.last_name}
-          </h1>
-          <p className="text-gray-400">ID utilisateur: {verification.user_id}</p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <Button variant="ghost" onClick={onBack} className="text-white hover:bg-terex-accent/20">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Retour à la liste
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold text-white">
+              Vérification KYC - {verification.first_name} {verification.last_name}
+            </h1>
+            <p className="text-gray-400">ID utilisateur: {verification.user_id}</p>
+          </div>
+        </div>
+        
+        <div className="flex items-center space-x-3">
+          <div className={`w-3 h-3 rounded-full ${getStatusColor(verification.status)}`}></div>
+          <Badge variant="secondary" className="text-lg">
+            {verification.status === 'pending' && 'En attente'}
+            {verification.status === 'submitted' && 'Soumis'}
+            {verification.status === 'under_review' && 'En révision'}
+            {verification.status === 'approved' && 'Approuvé'}
+            {verification.status === 'rejected' && 'Rejeté'}
+          </Badge>
         </div>
       </div>
 
       {/* Actions rapides */}
-      {verification.status === 'submitted' && (
-        <div className="flex space-x-4">
-          <Button
-            onClick={handleSetUnderReview}
-            className="bg-orange-600 hover:bg-orange-700"
-          >
-            <Clock className="h-4 w-4 mr-2" />
-            Mettre en révision
-          </Button>
-          <Button
-            onClick={() => setShowApproveDialog(true)}
-            className="bg-green-600 hover:bg-green-700"
-          >
-            <CheckCircle className="h-4 w-4 mr-2" />
-            Approuver
-          </Button>
-          <Button
-            onClick={() => setShowRejectDialog(true)}
-            variant="destructive"
-          >
-            <XCircle className="h-4 w-4 mr-2" />
-            Rejeter
-          </Button>
-        </div>
-      )}
-
-      {verification.status === 'under_review' && (
-        <div className="flex space-x-4">
-          <Button
-            onClick={() => setShowApproveDialog(true)}
-            className="bg-green-600 hover:bg-green-700"
-          >
-            <CheckCircle className="h-4 w-4 mr-2" />
-            Approuver
-          </Button>
-          <Button
-            onClick={() => setShowRejectDialog(true)}
-            variant="destructive"
-          >
-            <XCircle className="h-4 w-4 mr-2" />
-            Rejeter
-          </Button>
-        </div>
+      {canTakeAction && (
+        <Card className="bg-terex-card border-terex-border">
+          <CardContent className="p-4">
+            <div className="flex flex-wrap gap-4">
+              {verification.status === 'submitted' && (
+                <Button
+                  onClick={handleSetUnderReview}
+                  className="bg-orange-600 hover:bg-orange-700"
+                >
+                  <Clock className="h-4 w-4 mr-2" />
+                  Mettre en révision
+                </Button>
+              )}
+              <Button
+                onClick={() => setShowApproveDialog(true)}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Approuver
+              </Button>
+              <Button
+                onClick={() => setShowRejectDialog(true)}
+                variant="destructive"
+              >
+                <XCircle className="h-4 w-4 mr-2" />
+                Rejeter
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -181,156 +184,99 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
           </CardContent>
         </Card>
 
-        {/* Documents d'identité */}
+        {/* Informations du document */}
         <Card className="bg-terex-card border-terex-border">
           <CardHeader>
             <CardTitle className="text-white flex items-center">
               <FileText className="h-5 w-5 mr-2" />
-              Documents d'identité
+              Informations du document
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <label className="text-sm text-gray-400">Type de document</label>
-              <p className="text-white">{verification.identity_document_type || 'Non fourni'}</p>
+              <p className="text-white">
+                {verification.identity_document_type === 'passport' && 'Passeport'}
+                {verification.identity_document_type === 'national_id' && 'Carte d\'identité nationale'}
+                {verification.identity_document_type === 'drivers_license' && 'Permis de conduire'}
+                {!verification.identity_document_type && 'Non fourni'}
+              </p>
             </div>
             <div>
               <label className="text-sm text-gray-400">Numéro de document</label>
               <p className="text-white">{verification.identity_document_number || 'Non fourni'}</p>
             </div>
             
-            {/* Images des documents */}
-            <div className="space-y-4">
-              {verification.identity_document_front_url && (
-                <div>
-                  <label className="text-sm text-gray-400 block mb-2">Document recto</label>
-                  <img
-                    src={verification.identity_document_front_url}
-                    alt="Document recto"
-                    className="w-full h-48 object-cover rounded-lg border border-terex-border"
-                  />
-                </div>
-              )}
-              
-              {verification.identity_document_back_url && (
-                <div>
-                  <label className="text-sm text-gray-400 block mb-2">Document verso</label>
-                  <img
-                    src={verification.identity_document_back_url}
-                    alt="Document verso"
-                    className="w-full h-48 object-cover rounded-lg border border-terex-border"
-                  />
-                </div>
-              )}
-              
-              {verification.selfie_url && (
-                <div>
-                  <label className="text-sm text-gray-400 block mb-2">Selfie</label>
-                  <img
-                    src={verification.selfie_url}
-                    alt="Selfie"
-                    className="w-full h-48 object-cover rounded-lg border border-terex-border"
-                  />
-                </div>
-              )}
-              
-              {verification.proof_of_address_url && (
-                <div>
-                  <label className="text-sm text-gray-400 block mb-2">Justificatif de domicile</label>
-                  <img
-                    src={verification.proof_of_address_url}
-                    alt="Justificatif de domicile"
-                    className="w-full h-48 object-cover rounded-lg border border-terex-border"
-                  />
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Statut et historique */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-terex-card border-terex-border">
-          <CardHeader>
-            <CardTitle className="text-white">Statut actuel</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <div className={`w-3 h-3 rounded-full ${getStatusColor(verification.status)}`}></div>
-                <Badge variant="secondary" className="text-lg">
-                  {verification.status === 'pending' && 'En attente'}
-                  {verification.status === 'submitted' && 'Soumis'}
-                  {verification.status === 'under_review' && 'En révision'}
-                  {verification.status === 'approved' && 'Approuvé'}
-                  {verification.status === 'rejected' && 'Rejeté'}
-                </Badge>
-              </div>
-              
-              <div className="grid grid-cols-1 gap-2 text-sm">
-                <div>
-                  <span className="text-gray-400">Créé le: </span>
-                  <span className="text-white">{formatDate(verification.created_at)}</span>
-                </div>
-                {verification.submitted_at && (
+            <div className="grid grid-cols-1 gap-4">
+              <div>
+                <label className="text-sm text-gray-400">Dates importantes</label>
+                <div className="space-y-2 text-sm">
                   <div>
-                    <span className="text-gray-400">Soumis le: </span>
-                    <span className="text-white">{formatDate(verification.submitted_at)}</span>
+                    <span className="text-gray-400">Créé le: </span>
+                    <span className="text-white">{formatDate(verification.created_at)}</span>
                   </div>
-                )}
-                {verification.reviewed_at && (
-                  <div>
-                    <span className="text-gray-400">Révisé le: </span>
-                    <span className="text-white">{formatDate(verification.reviewed_at)}</span>
-                  </div>
-                )}
-              </div>
-              
-              {verification.rejection_reason && (
-                <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-                  <p className="text-sm text-gray-400 mb-1">Raison du rejet:</p>
-                  <p className="text-white">{verification.rejection_reason}</p>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-card border-terex-border">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <Calendar className="h-5 w-5 mr-2" />
-              Historique
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {verification.history && verification.history.length > 0 ? (
-                verification.history.map((entry) => (
-                  <div key={entry.id} className="flex items-start space-x-3 p-3 bg-terex-dark rounded-lg">
-                    <div className={`w-2 h-2 rounded-full mt-2 ${getStatusColor(entry.action)}`}></div>
-                    <div className="flex-1">
-                      <p className="text-white text-sm font-medium">
-                        {entry.action === 'approved' && 'Approuvé'}
-                        {entry.action === 'rejected' && 'Rejeté'}
-                        {entry.action === 'submitted' && 'Soumis'}
-                        {entry.action === 'under_review' && 'Mis en révision'}
-                      </p>
-                      <p className="text-gray-400 text-xs">{formatDate(entry.created_at)}</p>
-                      {entry.reason && (
-                        <p className="text-gray-300 text-xs mt-1">{entry.reason}</p>
-                      )}
+                  {verification.submitted_at && (
+                    <div>
+                      <span className="text-gray-400">Soumis le: </span>
+                      <span className="text-white">{formatDate(verification.submitted_at)}</span>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-400 text-sm">Aucun historique disponible</p>
-              )}
+                  )}
+                  {verification.reviewed_at && (
+                    <div>
+                      <span className="text-gray-400">Révisé le: </span>
+                      <span className="text-white">{formatDate(verification.reviewed_at)}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
+            
+            {verification.rejection_reason && (
+              <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <p className="text-sm text-gray-400 mb-1">Raison du rejet:</p>
+                <p className="text-white">{verification.rejection_reason}</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
+
+      {/* Documents d'identité */}
+      <Card className="bg-terex-card border-terex-border">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center">
+            <Eye className="h-5 w-5 mr-2" />
+            Documents fournis
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <DocumentImage
+              url={verification.identity_document_front_url}
+              alt="Document recto"
+              title="Document d'identité (recto)"
+            />
+            
+            <DocumentImage
+              url={verification.identity_document_back_url}
+              alt="Document verso"
+              title="Document d'identité (verso)"
+            />
+            
+            <DocumentImage
+              url={verification.selfie_url}
+              alt="Selfie"
+              title="Photo selfie"
+            />
+            
+            <DocumentImage
+              url={verification.proof_of_address_url}
+              alt="Justificatif de domicile"
+              title="Justificatif de domicile"
+            />
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Dialog d'approbation */}
       <Dialog open={showApproveDialog} onOpenChange={setShowApproveDialog}>

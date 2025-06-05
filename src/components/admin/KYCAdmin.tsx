@@ -1,12 +1,11 @@
 
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Users, Clock, CheckCircle, XCircle, AlertCircle, Search } from 'lucide-react';
+import { Users, Clock, CheckCircle, XCircle, AlertCircle, Search, Eye } from 'lucide-react';
 import { useKYCAdmin } from '@/hooks/useKYCAdmin';
 import { KYCVerificationDetails } from './KYCVerificationDetails';
 
@@ -18,11 +17,11 @@ export function KYCAdmin() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      pending: { label: 'En attente', variant: 'secondary' as const, icon: Clock },
-      submitted: { label: 'Soumis', variant: 'default' as const, icon: AlertCircle },
-      under_review: { label: 'En révision', variant: 'default' as const, icon: Clock },
-      approved: { label: 'Approuvé', variant: 'default' as const, icon: CheckCircle },
-      rejected: { label: 'Rejeté', variant: 'destructive' as const, icon: XCircle }
+      pending: { label: 'En attente', variant: 'secondary' as const, icon: Clock, color: 'text-yellow-500' },
+      submitted: { label: 'Soumis', variant: 'default' as const, icon: AlertCircle, color: 'text-blue-500' },
+      under_review: { label: 'En révision', variant: 'default' as const, icon: Clock, color: 'text-orange-500' },
+      approved: { label: 'Approuvé', variant: 'default' as const, icon: CheckCircle, color: 'text-green-500' },
+      rejected: { label: 'Rejeté', variant: 'destructive' as const, icon: XCircle, color: 'text-red-500' }
     };
 
     const config = statusConfig[status as keyof typeof statusConfig];
@@ -30,7 +29,7 @@ export function KYCAdmin() {
 
     return (
       <Badge variant={config?.variant || 'secondary'} className="flex items-center gap-1">
-        <Icon className="w-3 h-3" />
+        <Icon className={`w-3 h-3 ${config?.color || 'text-gray-500'}`} />
         {config?.label || status}
       </Badge>
     );
@@ -46,6 +45,10 @@ export function KYCAdmin() {
     
     return matchesSearch && matchesStatus;
   });
+
+  // Séparer les vérifications par priorité
+  const priorityVerifications = filteredVerifications.filter(v => v.status === 'submitted');
+  const otherVerifications = filteredVerifications.filter(v => v.status !== 'submitted');
 
   if (selectedVerification) {
     const verification = verifications.find(v => v.id === selectedVerification);
@@ -82,12 +85,13 @@ export function KYCAdmin() {
           </CardContent>
         </Card>
 
-        <Card className="bg-terex-card border-terex-border">
+        <Card className="bg-terex-card border-terex-border border-blue-500/50">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-400">Soumis</p>
-                <p className="text-2xl font-bold text-white">{stats.submitted}</p>
+                <p className="text-2xl font-bold text-blue-400">{stats.submitted}</p>
+                <p className="text-xs text-blue-400">Action requise</p>
               </div>
               <AlertCircle className="h-8 w-8 text-blue-500" />
             </div>
@@ -163,17 +167,65 @@ export function KYCAdmin() {
         </CardContent>
       </Card>
 
-      {/* Liste des vérifications */}
+      {/* Vérifications prioritaires */}
+      {priorityVerifications.length > 0 && (
+        <Card className="bg-terex-card border-blue-500/50">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center">
+              <AlertCircle className="h-5 w-5 mr-2 text-blue-500" />
+              Vérifications à traiter en priorité ({priorityVerifications.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {priorityVerifications.map((verification) => (
+                <div
+                  key={verification.id}
+                  className="flex items-center justify-between p-4 bg-blue-500/10 rounded-lg border border-blue-500/30 hover:border-blue-500/50 transition-colors cursor-pointer"
+                  onClick={() => setSelectedVerification(verification.id)}
+                >
+                  <div className="flex items-center space-x-4">
+                    <div>
+                      <h3 className="text-white font-medium">
+                        {verification.first_name && verification.last_name
+                          ? `${verification.first_name} ${verification.last_name}`
+                          : 'Nom non fourni'}
+                      </h3>
+                      <p className="text-gray-400 text-sm">ID: {verification.user_id}</p>
+                      <p className="text-gray-400 text-sm">
+                        Soumis le: {verification.submitted_at 
+                          ? new Date(verification.submitted_at).toLocaleDateString('fr-FR')
+                          : 'Non soumis'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    {getStatusBadge(verification.status)}
+                    <Button variant="outline" size="sm" className="border-blue-500 text-blue-400 hover:bg-blue-500/20">
+                      <Eye className="h-4 w-4 mr-2" />
+                      Examiner
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Liste des autres vérifications */}
       <Card className="bg-terex-card border-terex-border">
         <CardHeader>
-          <CardTitle className="text-white">Vérifications KYC</CardTitle>
+          <CardTitle className="text-white">
+            {priorityVerifications.length > 0 ? 'Autres vérifications' : 'Toutes les vérifications KYC'}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
             <div className="text-center py-8">
               <div className="text-white text-lg">Chargement...</div>
             </div>
-          ) : filteredVerifications.length === 0 ? (
+          ) : otherVerifications.length === 0 ? (
             <div className="text-center py-8">
               <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
               <div className="text-white text-lg mb-2">Aucune vérification trouvée</div>
@@ -181,7 +233,7 @@ export function KYCAdmin() {
             </div>
           ) : (
             <div className="space-y-4">
-              {filteredVerifications.map((verification) => (
+              {otherVerifications.map((verification) => (
                 <div
                   key={verification.id}
                   className="flex items-center justify-between p-4 bg-terex-dark rounded-lg border border-terex-border hover:border-terex-accent/50 transition-colors cursor-pointer"
@@ -205,6 +257,7 @@ export function KYCAdmin() {
                   <div className="flex items-center space-x-4">
                     {getStatusBadge(verification.status)}
                     <Button variant="outline" size="sm">
+                      <Eye className="h-4 w-4 mr-2" />
                       Voir détails
                     </Button>
                   </div>
