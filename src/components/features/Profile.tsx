@@ -35,7 +35,6 @@ interface ProfileProps {
 export function Profile({ user, onLogout }: ProfileProps) {
   const [activeTab, setActiveTab] = useState('profile');
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const isMobile = useIsMobile();
   const { transactions } = useTransactions();
   const { toast } = useToast();
@@ -93,37 +92,19 @@ export function Profile({ user, onLogout }: ProfileProps) {
   };
 
   const handleLogout = async () => {
-    if (isLoggingOut) return;
-    
-    setIsLoggingOut(true);
-    
     try {
-      console.log('Profile: Starting logout process...');
-      
       await signOut();
-      
       toast({
         title: "Déconnexion réussie",
         description: "Vous avez été déconnecté avec succès",
         className: "bg-green-600 text-white border-green-600",
       });
-      
     } catch (error) {
-      console.error('Profile: Logout error:', error);
-      
       toast({
         title: "Erreur",
-        description: "Problème lors de la déconnexion, vous allez être redirigé",
+        description: "Impossible de se déconnecter",
         variant: "destructive",
       });
-      
-      // Force redirect even on error
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 1000);
-      
-    } finally {
-      setIsLoggingOut(false);
     }
   };
 
@@ -409,10 +390,9 @@ export function Profile({ user, onLogout }: ProfileProps) {
                       variant="outline" 
                       className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
                       onClick={handleLogout}
-                      disabled={isLoggingOut}
                     >
                       <LogOut className="w-4 h-4 mr-3" />
-                      {isLoggingOut ? 'Déconnexion...' : 'Se déconnecter'}
+                      Se déconnecter
                     </Button>
                   </CardContent>
                 </Card>
@@ -627,10 +607,9 @@ export function Profile({ user, onLogout }: ProfileProps) {
                     variant="outline" 
                     className="w-full justify-start border-terex-gray text-gray-300 hover:bg-terex-gray h-12"
                     onClick={handleLogout}
-                    disabled={isLoggingOut}
                   >
                     <LogOut className="w-4 h-4 mr-3" />
-                    {isLoggingOut ? 'Déconnexion...' : 'Se déconnecter'}
+                    Se déconnecter
                   </Button>
                 </CardContent>
               </Card>
