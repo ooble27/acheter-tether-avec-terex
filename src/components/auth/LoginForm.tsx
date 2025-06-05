@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -39,7 +40,7 @@ export function LoginForm() {
         const { error: loginError } = await signIn(email, password);
         
         if (!loginError) {
-          // Si la connexion réussit, l'email existe déjà
+          // Si la connexion réussit, l'email existe déjà avec le bon mot de passe
           toast({
             title: "Email déjà utilisé",
             description: "Cet email est déjà utilisé. Vous êtes maintenant connecté.",
@@ -49,17 +50,27 @@ export function LoginForm() {
           return;
         }
         
-        // Si la connexion échoue avec "Invalid login credentials", on peut procéder à l'inscription
+        // Si la connexion échoue, vérifier le type d'erreur
         if (loginError.message === "Invalid login credentials") {
-          const { error } = await signUp(email, password, name);
+          // Essayer de s'inscrire pour voir si l'email existe déjà
+          const { error: signUpError } = await signUp(email, password, name);
           
-          if (error) {
+          // Si Supabase retourne une erreur liée à un email déjà utilisé
+          if (signUpError && signUpError.message.includes("already registered")) {
+            toast({
+              title: "Email déjà utilisé",
+              description: "Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.",
+              variant: "destructive",
+            });
+          } else if (signUpError) {
+            // Autres erreurs d'inscription
             toast({
               title: "Erreur d'inscription",
-              description: error.message,
+              description: signUpError.message,
               variant: "destructive",
             });
           } else {
+            // Inscription réussie
             toast({
               title: "Inscription réussie !",
               description: "Vérifiez votre email pour activer votre compte",
@@ -67,10 +78,10 @@ export function LoginForm() {
             });
           }
         } else {
-          // Autre erreur de connexion
+          // Autre erreur de connexion (email existe déjà)
           toast({
-            title: "Erreur",
-            description: "Une erreur s'est produite lors de la vérification de l'email",
+            title: "Email déjà utilisé",
+            description: "Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.",
             variant: "destructive",
           });
         }
