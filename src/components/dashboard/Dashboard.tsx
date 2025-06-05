@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
@@ -10,7 +11,6 @@ import { Profile } from '@/components/features/Profile';
 import { KYCPage } from '@/components/features/KYCPage';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { OrdersAdmin } from '@/components/admin/OrdersAdmin';
-import { TransfersAdmin } from '@/components/admin/TransfersAdmin';
 import { TransactionProvider } from '@/contexts/TransactionContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/contexts/AuthContext';
@@ -58,8 +58,6 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
       case 'orders-admin':
         return isKYCReviewer() ? <OrdersAdmin /> : <div className="text-white">Accès non autorisé</div>;
-      case 'transfers-admin':
-        return isKYCReviewer() ? <TransfersAdmin /> : <div className="text-white">Accès non autorisé</div>;
       default:
         return <DashboardHome user={user} />;
     }

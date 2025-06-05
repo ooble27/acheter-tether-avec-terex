@@ -1,376 +1,338 @@
 
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
-import { useTransfers } from '@/hooks/useTransfers';
-import { TransactionHistory } from './TransactionHistory';
-import { 
-  Send, 
-  Calculator, 
-  AlertCircle, 
-  CheckCircle, 
-  Clock,
-  MapPin,
-  DollarSign,
-  Users
-} from 'lucide-react';
-
-const countries = [
-  'France', 'Sénégal', 'Côte d\'Ivoire', 'Mali', 'Burkina Faso', 
-  'Niger', 'Guinée', 'Bénin', 'Togo', 'Cameroun', 'Gabon'
-];
-
-const currencies = [
-  { code: 'EUR', name: 'Euro', rate: 655 },
-  { code: 'XOF', name: 'Franc CFA BCEAO', rate: 1 },
-  { code: 'XAF', name: 'Franc CFA BEAC', rate: 1 },
-  { code: 'GNF', name: 'Franc Guinéen', rate: 0.065 }
-];
+import { Badge } from '@/components/ui/badge';
+import { ArrowRightLeft, Shield, Clock, Globe, CreditCard, Smartphone, MapPin, Phone } from 'lucide-react';
 
 export function InternationalTransfer() {
-  const { transfers, loading, createTransfer } = useTransfers();
-  const [formData, setFormData] = useState({
-    amount: '',
-    fromCurrency: 'USDT',
-    toCurrency: 'XOF',
-    recipientName: '',
-    recipientAccount: '',
-    recipientBank: '',
-    recipientCountry: '',
-    notes: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [exchangeRate] = useState(655); // USDT to XOF rate
-  const fees = 25; // Fixed fees in USDT
+  const [sendAmount, setSendAmount] = useState('');
+  const [recipientCountry, setRecipientCountry] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const [receiveMethod, setReceiveMethod] = useState('');
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  // Taux de change fixe CAD vers CFA
+  const exchangeRate = 445.50;
+  const receiveAmount = sendAmount ? (parseFloat(sendAmount) * exchangeRate).toFixed(2) : '0.00';
+  const fees = sendAmount ? (parseFloat(sendAmount) * 0.02).toFixed(2) : '0.00';
 
-  const calculateTotal = () => {
-    const amount = parseFloat(formData.amount) || 0;
-    const totalAmount = amount * exchangeRate;
-    const totalFees = fees * exchangeRate;
-    return { totalAmount, totalFees, finalAmount: totalAmount - totalFees };
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isSubmitting) return;
-
-    const amount = parseFloat(formData.amount);
-    if (!amount || amount <= 0) {
-      alert('Veuillez entrer un montant valide');
-      return;
-    }
-
-    if (!formData.recipientName || !formData.recipientAccount || !formData.recipientCountry) {
-      alert('Veuillez remplir tous les champs obligatoires');
-      return;
-    }
-
-    try {
-      setIsSubmitting(true);
-      const { totalAmount } = calculateTotal();
-      
-      await createTransfer({
-        amount,
-        from_currency: formData.fromCurrency,
-        to_currency: formData.toCurrency,
-        recipient_name: formData.recipientName,
-        recipient_account: formData.recipientAccount,
-        recipient_bank: formData.recipientBank,
-        recipient_country: formData.recipientCountry,
-        exchange_rate: exchangeRate,
-        fees,
-        total_amount: totalAmount
-      });
-
-      // Reset form
-      setFormData({
-        amount: '',
-        fromCurrency: 'USDT',
-        toCurrency: 'XOF',
-        recipientName: '',
-        recipientAccount: '',
-        recipientBank: '',
-        recipientCountry: '',
-        notes: ''
-      });
-    } catch (error) {
-      console.error('Transfer submission error:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const { totalAmount, totalFees, finalAmount } = calculateTotal();
-
-  // Convert transfers to transaction format for history display
-  const transactionHistory = transfers.map(transfer => ({
-    id: transfer.id,
-    type: 'transfer' as const,
-    amount: transfer.amount.toString(),
-    currency: transfer.from_currency,
-    fiatAmount: transfer.total_amount.toString(),
-    receiveCurrency: transfer.to_currency,
-    network: 'International Wire',
-    address: `${transfer.recipient_name} - ${transfer.recipient_country}`,
-    status: transfer.status as 'pending' | 'confirmed' | 'completed' | 'failed',
-    date: transfer.created_at
-  }));
+  // Pays disponibles (limités aux 6 demandés)
+  const availableCountries = [
+    { code: 'SN', name: 'Sénégal', flag: '🇸🇳' },
+    { code: 'CI', name: 'Côte d\'Ivoire', flag: '🇨🇮' },
+    { code: 'ML', name: 'Mali', flag: '🇲🇱' },
+    { code: 'BF', name: 'Burkina Faso', flag: '🇧🇫' },
+    { code: 'NG', name: 'Nigeria', flag: '🇳🇬' },
+    { code: 'BJ', name: 'Bénin', flag: '🇧🇯' }
+  ];
 
   return (
-    <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold text-white">Virement International</h1>
-        <p className="text-gray-400">
-          Envoyez vos USDT partout dans le monde via virement bancaire
-        </p>
-      </div>
+    <div className="min-h-screen bg-terex-dark p-2 md:p-4">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Virement international</h1>
+          <p className="text-gray-400">Envoyer de l'argent rapidement à vos proches</p>
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Formulaire de virement */}
-        <div className="lg:col-span-2">
-          <Card className="bg-terex-darker border-terex-gray">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center space-x-2">
-                <Send className="w-5 h-5 text-terex-accent" />
-                <span>Nouveau virement</span>
-              </CardTitle>
-              <CardDescription className="text-gray-400">
-                Remplissez les informations pour effectuer un virement international
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="lg:col-span-2">
+            <Card className="bg-terex-darker border-terex-gray shadow-2xl">
+              <CardHeader className="border-b border-terex-gray p-4 md:p-6">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-white text-lg md:text-xl">Nouveau transfert</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 md:p-6 space-y-6">
                 {/* Montant et devises */}
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="amount" className="text-white">
-                        Montant à envoyer
-                      </Label>
-                      <div className="relative">
+                      <Label className="text-white text-sm font-medium">Vous envoyez</Label>
+                      <div className="flex space-x-2">
                         <Input
-                          id="amount"
                           type="number"
-                          step="0.01"
                           placeholder="0.00"
-                          value={formData.amount}
-                          onChange={(e) => handleInputChange('amount', e.target.value)}
-                          className="bg-terex-gray border-terex-gray text-white pl-12"
-                          required
+                          value={sendAmount}
+                          onChange={(e) => setSendAmount(e.target.value)}
+                          className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 flex-1"
                         />
-                        <DollarSign className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                        <div className="bg-terex-gray border border-terex-gray-light text-white h-12 w-24 flex items-center justify-center rounded">
+                          CAD
+                        </div>
                       </div>
                     </div>
+                    
                     <div className="space-y-2">
-                      <Label htmlFor="toCurrency" className="text-white">
-                        Devise de réception
-                      </Label>
-                      <Select 
-                        value={formData.toCurrency} 
-                        onValueChange={(value) => handleInputChange('toCurrency', value)}
-                      >
-                        <SelectTrigger className="bg-terex-gray border-terex-gray text-white">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="bg-terex-gray border-terex-gray">
-                          {currencies.map((currency) => (
-                            <SelectItem key={currency.code} value={currency.code}>
-                              {currency.code} - {currency.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Label className="text-white text-sm font-medium">Destinataire</Label>
+                      <div className="flex space-x-2">
+                        <Input
+                          type="text"
+                          value={receiveAmount}
+                          readOnly
+                          className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 flex-1"
+                        />
+                        <div className="bg-terex-gray border border-terex-gray-light text-white h-12 w-24 flex items-center justify-center rounded">
+                          CFA
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center">
+                    <ArrowRightLeft className="w-5 h-5 text-terex-accent" />
+                  </div>
+
+                  <div className="bg-terex-gray rounded-lg p-4">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Taux de change</span>
+                        <span className="text-white">1 CAD = {exchangeRate} CFA</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Frais</span>
+                        <span className="text-terex-accent">{fees} CAD</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Délai</span>
+                        <span className="text-terex-accent">5 minutes</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Total à payer</span>
+                        <span className="text-white font-semibold">{sendAmount ? (parseFloat(sendAmount) + parseFloat(fees)).toFixed(2) : '0.00'} CAD</span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <Separator className="bg-terex-gray" />
+                {/* Pays de destination */}
+                <div className="space-y-2">
+                  <Label className="text-white text-sm font-medium">Pays de destination</Label>
+                  <Select value={recipientCountry} onValueChange={setRecipientCountry}>
+                    <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
+                      <SelectValue placeholder="Sélectionner un pays" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableCountries.map((country) => (
+                        <SelectItem key={country.code} value={country.code}>
+                          <div className="flex items-center space-x-2">
+                            <span>{country.flag}</span>
+                            <span>{country.name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Méthode de paiement */}
+                <div className="space-y-2">
+                  <Label className="text-white text-sm font-medium">Comment payez-vous ?</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {[
+                      { id: 'card', label: 'Carte bancaire', icon: CreditCard, desc: 'Visa, Mastercard' },
+                      { id: 'bank', label: 'Virement bancaire', icon: MapPin, desc: 'Depuis votre banque' },
+                      { id: 'interac', label: 'Interac E-Transfer', icon: Smartphone, desc: 'Interac' }
+                    ].map((method) => (
+                      <div
+                        key={method.id}
+                        onClick={() => setPaymentMethod(method.id)}
+                        className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                          paymentMethod === method.id
+                            ? 'border-terex-accent bg-terex-accent/10'
+                            : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <method.icon className="w-5 h-5 text-terex-accent" />
+                          <div>
+                            <p className="text-white font-medium text-sm">{method.label}</p>
+                            <p className="text-gray-400 text-xs">{method.desc}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Méthode de réception */}
+                <div className="space-y-2">
+                  <Label className="text-white text-sm font-medium">Comment le destinataire reçoit-il l'argent ?</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {[
+                      { id: 'mobile', label: 'Mobile Money', icon: Smartphone, desc: 'Orange Money, Wave' },
+                      { id: 'bank_transfer', label: 'Virement bancaire', icon: MapPin, desc: 'Directement sur le compte' },
+                      { id: 'cash_pickup', label: 'Retrait en espèces', icon: Phone, desc: 'Points de retrait' }
+                    ].map((method) => (
+                      <div
+                        key={method.id}
+                        onClick={() => setReceiveMethod(method.id)}
+                        className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                          receiveMethod === method.id
+                            ? 'border-terex-accent bg-terex-accent/10'
+                            : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <method.icon className="w-5 h-5 text-terex-accent" />
+                          <div>
+                            <p className="text-white font-medium text-sm">{method.label}</p>
+                            <p className="text-gray-400 text-xs">{method.desc}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
                 {/* Informations du destinataire */}
                 <div className="space-y-4">
-                  <h3 className="text-white font-medium flex items-center space-x-2">
-                    <Users className="w-4 h-4 text-terex-accent" />
-                    <span>Informations du destinataire</span>
-                  </h3>
-                  
+                  <Label className="text-white text-sm font-medium">Informations du destinataire</Label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="recipientName" className="text-white">
-                        Nom complet du destinataire *
-                      </Label>
-                      <Input
-                        id="recipientName"
-                        type="text"
-                        placeholder="Jean Dupont"
-                        value={formData.recipientName}
-                        onChange={(e) => handleInputChange('recipientName', e.target.value)}
-                        className="bg-terex-gray border-terex-gray text-white"
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="recipientCountry" className="text-white">
-                        Pays de destination *
-                      </Label>
-                      <Select 
-                        value={formData.recipientCountry} 
-                        onValueChange={(value) => handleInputChange('recipientCountry', value)}
-                      >
-                        <SelectTrigger className="bg-terex-gray border-terex-gray text-white">
-                          <SelectValue placeholder="Sélectionnez un pays" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-terex-gray border-terex-gray">
-                          {countries.map((country) => (
-                            <SelectItem key={country} value={country}>
-                              <div className="flex items-center space-x-2">
-                                <MapPin className="w-4 h-4" />
-                                <span>{country}</span>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="recipientAccount" className="text-white">
-                        Numéro de compte / IBAN *
-                      </Label>
-                      <Input
-                        id="recipientAccount"
-                        type="text"
-                        placeholder="FR76 1234 5678 9012 3456 7890 123"
-                        value={formData.recipientAccount}
-                        onChange={(e) => handleInputChange('recipientAccount', e.target.value)}
-                        className="bg-terex-gray border-terex-gray text-white"
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="recipientBank" className="text-white">
-                        Nom de la banque
-                      </Label>
-                      <Input
-                        id="recipientBank"
-                        type="text"
-                        placeholder="Banque Centrale"
-                        value={formData.recipientBank}
-                        onChange={(e) => handleInputChange('recipientBank', e.target.value)}
-                        className="bg-terex-gray border-terex-gray text-white"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="notes" className="text-white">
-                      Notes (optionnel)
-                    </Label>
-                    <Textarea
-                      id="notes"
-                      placeholder="Motif du virement..."
-                      value={formData.notes}
-                      onChange={(e) => handleInputChange('notes', e.target.value)}
-                      className="bg-terex-gray border-terex-gray text-white"
-                      rows={3}
+                    <Input
+                      placeholder="Prénom"
+                      className="bg-terex-gray border-terex-gray-light text-white h-12"
+                    />
+                    <Input
+                      placeholder="Nom de famille"
+                      className="bg-terex-gray border-terex-gray-light text-white h-12"
+                    />
+                    <Input
+                      placeholder="Email (optionnel)"
+                      type="email"
+                      className="bg-terex-gray border-terex-gray-light text-white h-12"
+                    />
+                    <Input
+                      placeholder="Téléphone"
+                      type="tel"
+                      className="bg-terex-gray border-terex-gray-light text-white h-12"
                     />
                   </div>
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={isSubmitting || !formData.amount}
-                  className="w-full bg-terex-accent hover:bg-terex-accent/80 text-white"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Clock className="w-4 h-4 mr-2 animate-spin" />
-                      Traitement en cours...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 mr-2" />
-                      Initier le virement
-                    </>
+                  
+                  {receiveMethod === 'bank_transfer' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                      <Input
+                        placeholder="IBAN / Numéro de compte"
+                        className="bg-terex-gray border-terex-gray-light text-white h-12"
+                      />
+                      <Input
+                        placeholder="Nom de la banque"
+                        className="bg-terex-gray border-terex-gray-light text-white h-12"
+                      />
+                    </div>
                   )}
+                </div>
+
+                <Button 
+                  size="lg"
+                  className="w-full gradient-button text-white font-semibold h-12 text-lg"
+                  disabled={!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry}
+                >
+                  Continuer le transfert
                 </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          </div>
 
-        {/* Résumé du virement */}
-        <div className="space-y-6">
-          <Card className="bg-terex-darker border-terex-gray">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center space-x-2">
-                <Calculator className="w-5 h-5 text-terex-accent" />
-                <span>Résumé</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Montant à envoyer:</span>
-                  <span className="text-white">{formData.amount || '0'} USDT</span>
+          {/* Sidebar */}
+          <div className="space-y-4 md:space-y-6">
+            <Card className="bg-terex-darker border-terex-gray">
+              <CardHeader className="p-4">
+                <CardTitle className="text-white text-base md:text-lg flex items-center">
+                  <Globe className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
+                  Transfert international
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 p-4 pt-0">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-400 text-sm">Pays disponibles</span>
+                  <span className="text-terex-accent font-bold">6</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Taux de change:</span>
-                  <span className="text-white">1 USDT = {exchangeRate} {formData.toCurrency}</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-400 text-sm">Devises supportées</span>
+                  <span className="text-terex-accent font-bold">2</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Frais de service:</span>
-                  <span className="text-white">{totalFees.toLocaleString()} {formData.toCurrency}</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-400 text-sm">Points de retrait</span>
+                  <span className="text-terex-accent font-bold">5k+</span>
                 </div>
-                <Separator className="bg-terex-gray" />
-                <div className="flex justify-between font-medium">
-                  <span className="text-white">Montant reçu:</span>
-                  <span className="text-terex-accent">
-                    {finalAmount.toLocaleString()} {formData.toCurrency}
-                  </span>
-                </div>
-              </div>
+              </CardContent>
+            </Card>
 
-              <Alert className="bg-terex-gray border-terex-accent/20">
-                <AlertCircle className="w-4 h-4 text-terex-accent" />
-                <AlertDescription className="text-gray-300 text-sm">
-                  Le virement sera traité sous 1-3 jours ouvrables selon le pays de destination.
-                </AlertDescription>
-              </Alert>
-            </CardContent>
-          </Card>
+            <Card className="bg-terex-darker border-terex-gray">
+              <CardHeader className="p-4">
+                <CardTitle className="text-white text-base md:text-lg">Montants rapides (CAD)</CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 pt-0">
+                <div className="grid grid-cols-2 gap-2">
+                  {['100', '250', '500', '1000'].map((value) => (
+                    <Button
+                      key={value}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSendAmount(value)}
+                      className="border-terex-gray text-gray-300 hover:bg-terex-gray text-xs"
+                    >
+                      {value} CAD
+                    </Button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
-          <Card className="bg-terex-darker border-terex-gray">
-            <CardHeader>
-              <CardTitle className="text-white text-sm">Devises disponibles</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {currencies.map((currency) => (
-                  <div key={currency.code} className="flex justify-between text-xs">
-                    <span className="text-gray-400">{currency.code}</span>
-                    <span className="text-white">{currency.rate}</span>
+            <Card className="bg-terex-darker border-terex-gray">
+              <CardHeader className="p-4">
+                <CardTitle className="text-white text-base md:text-lg flex items-center">
+                  <Shield className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
+                  Sécurité
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 p-4 pt-0">
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                  <div>
+                    <p className="text-white text-sm font-medium">Chiffrement 256-bit</p>
+                    <p className="text-gray-400 text-xs">Vos données sont protégées</p>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                  <div>
+                    <p className="text-white text-sm font-medium">Régulé au Sénégal</p>
+                    <p className="text-gray-400 text-xs">Conforme aux normes locales</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                  <div>
+                    <p className="text-white text-sm font-medium">Suivi en temps réel</p>
+                    <p className="text-gray-400 text-xs">Suivez votre transfert à tout moment</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-terex-darker border-terex-gray">
+              <CardHeader className="p-4">
+                <CardTitle className="text-white text-base md:text-lg flex items-center">
+                  <Clock className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
+                  Délais de transfert
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 p-4 pt-0">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-400 text-sm">Tous les pays</span>
+                  <Badge variant="outline" className="text-green-500 border-green-500 text-xs">
+                    5 minutes
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-
-      {/* Historique des virements */}
-      <TransactionHistory transactions={transactionHistory} />
     </div>
   );
 }
