@@ -1,10 +1,8 @@
-
 import {
   Text,
   Section,
   Row,
   Column,
-  Img,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 import { BaseEmail } from './base-email.tsx';
@@ -20,16 +18,6 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
   
   return (
     <BaseEmail preview={preview} title={title}>
-      <div style={logoContainer}>
-        <Img
-          src="https://mwwjrrduavfcwjiyniuy.supabase.co/storage/v1/object/public/avatars/terex-logo.png"
-          width="120"
-          height="40"
-          alt="Terex"
-          style={logo}
-        />
-      </div>
-      
       <div style={iconContainer}>
         <div style={successIcon}>
           {transactionType === 'buy' ? '💰' : '🚀'}
@@ -139,7 +127,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
           📞 Informations de contact
         </Text>
         <Text style={contactText}>
-          • Support client : support@terex.com
+          • Support client : terangaexchange@gmail.com
           • Téléphone Sénégal : +221 77 397 27 49
           • WhatsApp : +1 4182619091
           • Horaires : 24h/7j
@@ -159,16 +147,6 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
 };
 
 // Styles améliorés avec logo
-const logoContainer = {
-  textAlign: 'center' as const,
-  marginBottom: '20px',
-  paddingTop: '20px',
-};
-
-const logo = {
-  margin: '0 auto',
-};
-
 const iconContainer = {
   textAlign: 'center' as const,
   marginBottom: '24px',
