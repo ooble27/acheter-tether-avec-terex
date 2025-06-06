@@ -27,7 +27,13 @@ const Index = () => {
     );
   }
 
-  return user ? <Dashboard user={user} onLogout={() => {}} /> : <LoginForm />;
+  // Créer l'objet utilisateur avec le nom extrait des métadonnées
+  const userWithName = user ? {
+    email: user.email || '',
+    name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
+  } : null;
+
+  return userWithName ? <Dashboard user={userWithName} onLogout={() => {}} /> : <LoginForm />;
 };
 
 export default Index;
