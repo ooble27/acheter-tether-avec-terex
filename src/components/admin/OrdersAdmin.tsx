@@ -16,7 +16,10 @@ export function OrdersAdmin() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
 
-  if (!isAdmin() && !isKYCReviewer()) {
+  // Vérification des permissions avec garde-fou
+  const hasPermission = isAdmin?.() || isKYCReviewer?.();
+  
+  if (!hasPermission) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center p-8 bg-white rounded-lg border border-gray-200 shadow-sm">
@@ -28,13 +31,16 @@ export function OrdersAdmin() {
   }
 
   const filteredOrders = useMemo(() => {
-    if (!orders || orders.length === 0) return [];
+    if (!orders || !Array.isArray(orders)) return [];
     
     return orders.filter(order => {
+      if (!order) return false;
+      
+      const searchString = searchTerm.toLowerCase();
       const matchesSearch = 
-        order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (order.wallet_address && order.wallet_address.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (order.payment_reference && order.payment_reference.toLowerCase().includes(searchTerm.toLowerCase()));
+        (order.id || '').toLowerCase().includes(searchString) ||
+        (order.wallet_address || '').toLowerCase().includes(searchString) ||
+        (order.payment_reference || '').toLowerCase().includes(searchString);
       
       const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
       const matchesType = typeFilter === 'all' || order.type === typeFilter;
@@ -47,12 +53,17 @@ export function OrdersAdmin() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  const dailyOrders = orders ? orders.filter(order => 
-    new Date(order.created_at).getTime() >= today.getTime()
-  ) : [];
+  const dailyOrders = useMemo(() => {
+    if (!orders || !Array.isArray(orders)) return [];
+    
+    return orders.filter(order => {
+      if (!order?.created_at) return false;
+      return new Date(order.created_at).getTime() >= today.getTime();
+    });
+  }, [orders, today]);
 
   const stats = useMemo(() => {
-    if (!orders) {
+    if (!orders || !Array.isArray(orders)) {
       return {
         pendingCount: 0,
         processingCount: 0,
@@ -62,11 +73,11 @@ export function OrdersAdmin() {
       };
     }
 
-    const pendingCount = orders.filter(order => order.status === 'pending').length;
-    const processingCount = orders.filter(order => order.status === 'processing').length;
-    const completedCount = orders.filter(order => order.status === 'completed').length;
-    const dailyVolume = dailyOrders.reduce((sum, order) => sum + (order.amount || 0), 0);
-    const dailyUSDT = dailyOrders.reduce((sum, order) => sum + (order.usdt_amount || 0), 0);
+    const pendingCount = orders.filter(order => order?.status === 'pending').length;
+    const processingCount = orders.filter(order => order?.status === 'processing').length;
+    const completedCount = orders.filter(order => order?.status === 'completed').length;
+    const dailyVolume = dailyOrders.reduce((sum, order) => sum + (order?.amount || 0), 0);
+    const dailyUSDT = dailyOrders.reduce((sum, order) => sum + (order?.usdt_amount || 0), 0);
 
     return {
       pendingCount,
@@ -78,6 +89,11 @@ export function OrdersAdmin() {
   }, [orders, dailyOrders]);
 
   const handleStatusUpdate = async (orderId: string, newStatus: OrderStatus, paymentStatus?: string) => {
+    if (!updateOrderStatus) {
+      console.error('updateOrderStatus function not available');
+      return;
+    }
+    
     try {
       await updateOrderStatus(orderId, newStatus, paymentStatus);
     } catch (error) {

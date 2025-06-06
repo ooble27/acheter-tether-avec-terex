@@ -17,11 +17,11 @@ interface OrdersStatsCardsProps {
 }
 
 export function OrdersStatsCards({ 
-  pendingCount, 
-  processingCount, 
-  completedCount, 
-  dailyVolume, 
-  dailyUSDT 
+  pendingCount = 0, 
+  processingCount = 0, 
+  completedCount = 0, 
+  dailyVolume = 0, 
+  dailyUSDT = 0 
 }: OrdersStatsCardsProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
@@ -33,7 +33,7 @@ export function OrdersStatsCards({
             </div>
             <div>
               <p className="text-sm font-medium text-gray-600">En attente</p>
-              <p className="text-2xl font-bold text-gray-900">{pendingCount}</p>
+              <p className="text-2xl font-bold text-gray-900">{pendingCount || 0}</p>
             </div>
           </div>
         </CardContent>
@@ -47,7 +47,7 @@ export function OrdersStatsCards({
             </div>
             <div>
               <p className="text-sm font-medium text-gray-600">En traitement</p>
-              <p className="text-2xl font-bold text-gray-900">{processingCount}</p>
+              <p className="text-2xl font-bold text-gray-900">{processingCount || 0}</p>
             </div>
           </div>
         </CardContent>
@@ -61,7 +61,7 @@ export function OrdersStatsCards({
             </div>
             <div>
               <p className="text-sm font-medium text-gray-600">Terminées</p>
-              <p className="text-2xl font-bold text-gray-900">{completedCount}</p>
+              <p className="text-2xl font-bold text-gray-900">{completedCount || 0}</p>
             </div>
           </div>
         </CardContent>
@@ -76,7 +76,7 @@ export function OrdersStatsCards({
             <div>
               <p className="text-sm font-medium text-gray-600">Volume jour</p>
               <p className="text-lg font-bold text-gray-900">
-                {dailyVolume.toLocaleString()} CFA
+                {(dailyVolume || 0).toLocaleString()} CFA
               </p>
             </div>
           </div>
@@ -91,7 +91,7 @@ export function OrdersStatsCards({
             </div>
             <div>
               <p className="text-sm font-medium text-gray-600">USDT jour</p>
-              <p className="text-lg font-bold text-gray-900">{dailyUSDT.toFixed(2)}</p>
+              <p className="text-lg font-bold text-gray-900">{(dailyUSDT || 0).toFixed(2)}</p>
             </div>
           </div>
         </CardContent>

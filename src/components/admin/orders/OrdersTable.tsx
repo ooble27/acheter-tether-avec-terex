@@ -42,7 +42,7 @@ export function OrdersTable({ orders, onStatusUpdate }: OrdersTableProps) {
     };
 
     const config = statusConfig[status as keyof typeof statusConfig] || 
-      { label: status, className: 'bg-gray-100 text-gray-800 border-gray-200' };
+      { label: status || 'Inconnu', className: 'bg-gray-100 text-gray-800 border-gray-200' };
 
     return (
       <Badge variant="outline" className={`${config.className} font-medium`}>
@@ -59,7 +59,7 @@ export function OrdersTable({ orders, onStatusUpdate }: OrdersTableProps) {
     };
 
     const config = typeConfig[type as keyof typeof typeConfig] || 
-      { label: type, className: 'bg-gray-100 text-gray-800 border-gray-200' };
+      { label: type || 'Inconnu', className: 'bg-gray-100 text-gray-800 border-gray-200' };
 
     return (
       <Badge variant="outline" className={`${config.className} font-medium text-xs`}>
@@ -89,7 +89,7 @@ export function OrdersTable({ orders, onStatusUpdate }: OrdersTableProps) {
     </TableHead>
   );
 
-  if (!orders || orders.length === 0) {
+  if (!orders || !Array.isArray(orders) || orders.length === 0) {
     return (
       <div className="bg-white border border-gray-200 rounded-lg p-12 text-center">
         <div className="text-gray-400 mb-4">
@@ -117,99 +117,103 @@ export function OrdersTable({ orders, onStatusUpdate }: OrdersTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {orders.map((order) => (
-            <TableRow key={order.id} className="border-gray-200 hover:bg-gray-50">
-              <TableCell className="font-mono text-sm">
-                #{order.id.slice(0, 8)}
-              </TableCell>
-              <TableCell>
-                {getTypeBadge(order.type)}
-              </TableCell>
-              <TableCell className="font-semibold">
-                {(order.amount || 0).toLocaleString()} {order.currency || 'CFA'}
-              </TableCell>
-              <TableCell className="font-semibold text-terex-accent">
-                {(order.usdt_amount || 0).toFixed(2)} USDT
-              </TableCell>
-              <TableCell className="text-sm text-gray-600">
-                {order.payment_method || 'N/A'}
-              </TableCell>
-              <TableCell>
-                {getStatusBadge(order.status)}
-              </TableCell>
-              <TableCell className="text-sm text-gray-600">
-                {new Date(order.created_at).toLocaleDateString('fr-FR', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center space-x-1">
-                  {order.status === 'pending' && (
-                    <>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => onStatusUpdate(order.id, 'processing' as OrderStatus)}
-                        className="h-8 px-2 text-xs border-blue-200 text-blue-700 hover:bg-blue-50"
-                      >
-                        <TrendingUp className="w-3 h-3 mr-1" />
-                        Traiter
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => onStatusUpdate(order.id, 'cancelled' as OrderStatus)}
-                        className="h-8 px-2 text-xs border-red-200 text-red-700 hover:bg-red-50"
-                      >
-                        <XCircle className="w-3 h-3 mr-1" />
-                        Annuler
-                      </Button>
-                    </>
-                  )}
-                  {order.status === 'processing' && (
-                    <>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => onStatusUpdate(order.id, 'completed' as OrderStatus, 'paid')}
-                        className="h-8 px-2 text-xs border-green-200 text-green-700 hover:bg-green-50"
-                      >
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                        Valider
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => onStatusUpdate(order.id, 'cancelled' as OrderStatus)}
-                        className="h-8 px-2 text-xs border-red-200 text-red-700 hover:bg-red-50"
-                      >
-                        <XCircle className="w-3 h-3 mr-1" />
-                        Annuler
-                      </Button>
-                    </>
-                  )}
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="h-8 w-8 p-0 border-gray-200 text-gray-500 hover:bg-gray-50"
-                  >
-                    <Eye className="w-3 h-3" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="h-8 w-8 p-0 border-gray-200 text-gray-500 hover:bg-gray-50"
-                  >
-                    <MoreHorizontal className="w-3 h-3" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
+          {orders.map((order) => {
+            if (!order || !order.id) return null;
+            
+            return (
+              <TableRow key={order.id} className="border-gray-200 hover:bg-gray-50">
+                <TableCell className="font-mono text-sm">
+                  #{(order.id || '').slice(0, 8)}
+                </TableCell>
+                <TableCell>
+                  {getTypeBadge(order.type || '')}
+                </TableCell>
+                <TableCell className="font-semibold">
+                  {(order.amount || 0).toLocaleString()} {order.currency || 'CFA'}
+                </TableCell>
+                <TableCell className="font-semibold text-terex-accent">
+                  {(order.usdt_amount || 0).toFixed(2)} USDT
+                </TableCell>
+                <TableCell className="text-sm text-gray-600">
+                  {order.payment_method || 'N/A'}
+                </TableCell>
+                <TableCell>
+                  {getStatusBadge(order.status || '')}
+                </TableCell>
+                <TableCell className="text-sm text-gray-600">
+                  {order.created_at ? new Date(order.created_at).toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  }) : 'N/A'}
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center space-x-1">
+                    {order.status === 'pending' && (
+                      <>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => onStatusUpdate(order.id, 'processing' as OrderStatus)}
+                          className="h-8 px-2 text-xs border-blue-200 text-blue-700 hover:bg-blue-50"
+                        >
+                          <TrendingUp className="w-3 h-3 mr-1" />
+                          Traiter
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => onStatusUpdate(order.id, 'cancelled' as OrderStatus)}
+                          className="h-8 px-2 text-xs border-red-200 text-red-700 hover:bg-red-50"
+                        >
+                          <XCircle className="w-3 h-3 mr-1" />
+                          Annuler
+                        </Button>
+                      </>
+                    )}
+                    {order.status === 'processing' && (
+                      <>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => onStatusUpdate(order.id, 'completed' as OrderStatus, 'paid')}
+                          className="h-8 px-2 text-xs border-green-200 text-green-700 hover:bg-green-50"
+                        >
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          Valider
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => onStatusUpdate(order.id, 'cancelled' as OrderStatus)}
+                          className="h-8 px-2 text-xs border-red-200 text-red-700 hover:bg-red-50"
+                        >
+                          <XCircle className="w-3 h-3 mr-1" />
+                          Annuler
+                        </Button>
+                      </>
+                    )}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 w-8 p-0 border-gray-200 text-gray-500 hover:bg-gray-50"
+                    >
+                      <Eye className="w-3 h-3" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 w-8 p-0 border-gray-200 text-gray-500 hover:bg-gray-50"
+                    >
+                      <MoreHorizontal className="w-3 h-3" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>
