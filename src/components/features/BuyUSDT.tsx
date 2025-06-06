@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,8 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRightLeft, Shield, Clock, CreditCard } from 'lucide-react';
+import { ArrowRightLeft, Shield, Clock, CreditCard, Smartphone } from 'lucide-react';
 import { OrderConfirmation } from '@/components/features/OrderConfirmation';
+import { PaymentPage } from '@/components/features/PaymentPage';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -19,6 +19,7 @@ export function BuyUSDT() {
   const [network, setNetwork] = useState('TRC20');
   const [walletAddress, setWalletAddress] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { createOrder } = useOrders();
@@ -73,14 +74,37 @@ export function BuyUSDT() {
     const result = await createOrder(orderData);
     
     if (result) {
-      // Réinitialiser le formulaire
-      setAmount('');
-      setWalletAddress('');
       setShowConfirmation(false);
+      setShowPayment(true);
     }
     
     setLoading(false);
   };
+
+  const handlePaymentComplete = () => {
+    // Réinitialiser le formulaire
+    setAmount('');
+    setWalletAddress('');
+    setShowPayment(false);
+  };
+
+  if (showPayment) {
+    return (
+      <PaymentPage
+        orderData={{
+          amount,
+          currency: paymentMethod === 'mobile' ? 'CFA' : currency,
+          usdtAmount,
+          network,
+          walletAddress,
+          paymentMethod,
+          exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
+        }}
+        onBack={() => setShowPayment(false)}
+        onPaymentComplete={handlePaymentComplete}
+      />
+    );
+  }
 
   if (showConfirmation) {
     return (
@@ -125,17 +149,22 @@ export function BuyUSDT() {
               <CardContent className="p-4 md:p-6">
                 <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'card' | 'mobile')} className="space-y-6">
                   <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
-                    {paymentMethods.map((method) => (
-                      <TabsTrigger 
-                        key={method.id} 
-                        value={method.id}
-                        className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
-                      >
-                        <span className="mr-1 md:mr-2">{method.icon}</span>
-                        <span className="hidden sm:inline">{method.name}</span>
-                        <span className="sm:hidden">{method.id === 'card' ? 'Carte' : 'Mobile'}</span>
-                      </TabsTrigger>
-                    ))}
+                    <TabsTrigger 
+                      value="card"
+                      className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
+                    >
+                      <CreditCard className="mr-1 md:mr-2 w-4 h-4" />
+                      <span className="hidden sm:inline">Carte bancaire</span>
+                      <span className="sm:hidden">Carte</span>
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="mobile"
+                      className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
+                    >
+                      <Smartphone className="mr-1 md:mr-2 w-4 h-4" />
+                      <span className="hidden sm:inline">Mobile Money</span>
+                      <span className="sm:hidden">Mobile</span>
+                    </TabsTrigger>
                   </TabsList>
 
                   {paymentMethods.map((method) => (
