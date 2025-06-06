@@ -122,7 +122,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
         <Text style={platformText}>
           Suivez l'état de votre transaction en temps réel sur votre espace client Terex.
         </Text>
-        <Link href="https://terex.lovable.app" style={platformLink}>
+        <Link href="https://app.terangaexchange.com" style={platformLink}>
           Accéder à la plateforme Terex
         </Link>
       </Section>
