@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -57,14 +56,14 @@ export const useOrders = () => {
         throw transfersError;
       }
 
-      // Convertir les transferts en format "order" unifié
-      const convertedTransfers: UnifiedOrder[] = (transfersData || []).map((transfer: InternationalTransfer) => ({
+      // Convertir les transferts en format "order" unifié avec type explicite
+      const convertedTransfers: UnifiedOrder[] = (transfersData || []).map((transfer: InternationalTransfer): UnifiedOrder => ({
         id: transfer.id,
         user_id: transfer.user_id,
         amount: transfer.amount,
         usdt_amount: transfer.amount, // Pour les transferts, c'est le même montant
         currency: transfer.from_currency || 'USDT',
-        type: 'transfer' as const,
+        type: 'transfer' as const, // Type explicite
         status: transfer.status as any,
         payment_method: 'bank_transfer' as any,
         payment_status: transfer.status === 'completed' ? 'paid' : 'pending',
@@ -86,8 +85,14 @@ export const useOrders = () => {
         total_amount: transfer.total_amount,
       }));
 
+      // Convertir les commandes normales avec type explicite
+      const convertedOrders: UnifiedOrder[] = (ordersData || []).map((order: Order): UnifiedOrder => ({
+        ...order,
+        type: order.type as 'buy' | 'sell' | 'transfer', // Cast explicite du type
+      }));
+
       // Combiner et trier par date de création
-      const allOrders = [...(ordersData || []), ...convertedTransfers]
+      const allOrders = [...convertedOrders, ...convertedTransfers]
         .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
       setOrders(allOrders);
