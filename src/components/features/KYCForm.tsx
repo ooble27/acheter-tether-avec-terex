@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useKYC, KYCData } from '@/hooks/useKYC';
-import { Upload, FileText, Camera, MapPin, User, Calendar, Phone, Globe } from 'lucide-react';
+import { Upload, FileText, Camera, MapPin, User, Calendar, Phone, Globe, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface KYCFormProps {
@@ -387,28 +387,54 @@ export function KYCForm({ onComplete }: KYCFormProps) {
         </CardContent>
       </Card>
 
-      {/* Photo avec document */}
+      {/* Photo avec document - Version améliorée */}
       <Card className="bg-terex-darker border-terex-gray shadow-lg w-full">
         <CardHeader className="pb-4 md:pb-6 px-6 md:px-8 pt-6 md:pt-8">
           <CardTitle className="text-white flex items-center text-xl md:text-2xl">
             <Camera className="w-6 h-6 md:w-7 md:h-7 mr-3 md:mr-4 flex-shrink-0" />
-            <span className="leading-tight">Photo avec document</span>
+            <span className="leading-tight">Photo avec document d'identité</span>
           </CardTitle>
           <CardDescription className="text-gray-400 text-base md:text-lg leading-relaxed">
-            Prenez une photo de vous en tenant votre document d'identité à côté de votre visage
+            Téléchargez une photo de vous tenant votre document d'identité à côté de votre visage
           </CardDescription>
         </CardHeader>
         <CardContent className="px-6 md:px-8 pb-6 md:pb-8">
+          {/* Instructions avec exemple visuel */}
+          <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 md:p-6 mb-6 md:mb-8">
+            <div className="flex items-start space-x-3 md:space-x-4">
+              <AlertCircle className="w-6 h-6 md:w-7 md:h-7 text-blue-400 flex-shrink-0 mt-1" />
+              <div className="space-y-3 md:space-y-4">
+                <h4 className="text-white font-medium text-lg md:text-xl">Instructions importantes :</h4>
+                <ul className="text-gray-300 text-base md:text-lg space-y-2 md:space-y-3">
+                  <li className="flex items-start">
+                    <span className="text-blue-400 mr-2 md:mr-3 font-bold">1.</span>
+                    <span>Tenez votre document d'identité à côté de votre visage</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-blue-400 mr-2 md:mr-3 font-bold">2.</span>
+                    <span>Assurez-vous que votre visage et le document sont clairement visibles</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-blue-400 mr-2 md:mr-3 font-bold">3.</span>
+                    <span>Prenez la photo dans un endroit bien éclairé</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-blue-400 mr-2 md:mr-3 font-bold">4.</span>
+                    <span>Utilisez l'appareil photo de votre téléphone ou appareil</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
           <div>
             <input
               type="file"
               id="selfie"
               accept="image/*"
-              capture="user"
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) {
-                  e.preventDefault();
                   handleFileUpload(file, 'selfie', 'selfie_url');
                 }
               }}
@@ -430,13 +456,15 @@ export function KYCForm({ onComplete }: KYCFormProps) {
               ) : formData.selfie_url ? (
                 <div className="text-green-400 text-center">
                   <Camera className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-5" />
-                  <p className="text-base md:text-xl font-medium">Photo téléchargée</p>
+                  <p className="text-base md:text-xl font-medium">Photo téléchargée avec succès</p>
+                  <p className="text-sm md:text-base text-green-300 mt-2">Vous pouvez remplacer la photo si nécessaire</p>
                 </div>
               ) : (
                 <div className="text-gray-400 text-center px-4">
-                  <Camera className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-5" />
-                  <p className="text-base md:text-xl font-medium">Cliquez pour prendre une photo</p>
-                  <p className="text-sm md:text-base text-gray-500 mt-2">Tenez votre document à côté de votre visage</p>
+                  <Upload className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-5" />
+                  <p className="text-base md:text-xl font-medium">Cliquez pour télécharger votre photo</p>
+                  <p className="text-sm md:text-base text-gray-500 mt-2">Photo de vous avec votre document d'identité</p>
+                  <p className="text-xs md:text-sm text-gray-600 mt-1">Format: JPG, PNG (max 10MB)</p>
                 </div>
               )}
             </label>

@@ -57,10 +57,13 @@ export const useKYCAdmin = () => {
     try {
       setLoading(true);
       
-      // Récupérer toutes les vérifications KYC
+      // Récupérer toutes les vérifications KYC avec des données réelles
       const { data: verificationsData, error: verificationsError } = await supabase
         .from('kyc_verifications')
         .select('*')
+        .or('status.eq.submitted,status.eq.under_review,status.eq.approved,status.eq.rejected')
+        .not('first_name', 'is', null)
+        .not('last_name', 'is', null)
         .order('created_at', { ascending: false });
 
       if (verificationsError) {
@@ -68,8 +71,16 @@ export const useKYCAdmin = () => {
         return;
       }
 
+      // Filtrer les vérifications qui ont au minimum les informations de base
+      const completeVerifications = (verificationsData || []).filter((verification) => {
+        return verification.first_name && 
+               verification.last_name && 
+               verification.status !== 'pending' &&
+               (verification.identity_document_front_url || verification.submitted_at);
+      });
+
       // Mapper les données avec les types corrects
-      const verificationsWithHistory = (verificationsData || []).map((verification) => ({
+      const verificationsWithHistory = completeVerifications.map((verification) => ({
         ...verification,
         status: verification.status as 'pending' | 'submitted' | 'under_review' | 'approved' | 'rejected',
         identity_document_type: verification.identity_document_type as 'passport' | 'national_id' | 'drivers_license' | null,
@@ -78,7 +89,7 @@ export const useKYCAdmin = () => {
 
       setVerifications(verificationsWithHistory);
 
-      // Calculer les statistiques
+      // Calculer les statistiques uniquement sur les vérifications complètes
       const newStats = verificationsWithHistory.reduce(
         (acc, verification) => {
           acc[verification.status as keyof typeof acc]++;
