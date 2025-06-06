@@ -1,4 +1,3 @@
-
 import {
   Body,
   Container,
@@ -62,11 +61,6 @@ export const MagicLinkEmail = ({ magicLink, userEmail }: MagicLinkEmailProps) =>
           <Text style={smallText}>
             Si vous n'avez pas demandé cette connexion, ignorez simplement cet email.
             Votre compte reste sécurisé.
-          </Text>
-          
-          <Text style={smallText}>
-            <strong>Astuce :</strong> Ajoutez noreply@terangaexchange.com à vos contacts 
-            pour éviter que nos emails arrivent dans les spams.
           </Text>
         </Section>
         
