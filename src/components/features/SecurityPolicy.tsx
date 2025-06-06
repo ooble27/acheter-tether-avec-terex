@@ -452,28 +452,28 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
                     <span className="text-red-300 font-bold">1</span>
                   </div>
                   <p className="text-red-100 text-sm font-medium">Détection</p>
-                  <p className="text-red-200 text-xs">< 60 secondes</p>
+                  <p className="text-red-200 text-xs">{'< 60 secondes'}</p>
                 </div>
                 <div className="text-center">
                   <div className="bg-orange-500/20 rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-2">
                     <span className="text-orange-300 font-bold">2</span>
                   </div>
                   <p className="text-orange-100 text-sm font-medium">Confinement</p>
-                  <p className="text-orange-200 text-xs">< 5 minutes</p>
+                  <p className="text-orange-200 text-xs">{'< 5 minutes'}</p>
                 </div>
                 <div className="text-center">
                   <div className="bg-yellow-500/20 rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-2">
                     <span className="text-yellow-300 font-bold">3</span>
                   </div>
                   <p className="text-yellow-100 text-sm font-medium">Éradication</p>
-                  <p className="text-yellow-200 text-xs">< 30 minutes</p>
+                  <p className="text-yellow-200 text-xs">{'< 30 minutes'}</p>
                 </div>
                 <div className="text-center">
                   <div className="bg-green-500/20 rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-2">
                     <span className="text-green-300 font-bold">4</span>
                   </div>
                   <p className="text-green-100 text-sm font-medium">Récupération</p>
-                  <p className="text-green-200 text-xs">< 2 heures</p>
+                  <p className="text-green-200 text-xs">{'< 2 heures'}</p>
                 </div>
               </div>
             </div>
@@ -573,7 +573,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
                     <p className="text-red-100 text-sm"><span className="font-medium">Email prioritaire:</span> security@terex.com</p>
                     <p className="text-red-100 text-sm"><span className="font-medium">Support 24/7:</span> Terangaexchange@gmail.com</p>
                     <p className="text-red-100 text-sm"><span className="font-medium">Ligne urgence:</span> +1 (418) 261-9091</p>
-                    <p className="text-red-100 text-sm"><span className="font-medium">Temps de réponse:</span> < 15 minutes garanti</p>
+                    <p className="text-red-100 text-sm"><span className="font-medium">Temps de réponse:</span> {'< 15 minutes garanti'}</p>
                   </div>
                 </div>
               </div>
