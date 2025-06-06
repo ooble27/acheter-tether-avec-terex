@@ -281,9 +281,11 @@ export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPag
                         onClick={() => setMobileData({...mobileData, provider: 'orange'})}
                       >
                         <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-                            <span className="text-white font-bold text-sm">OM</span>
-                          </div>
+                          <img 
+                            src="/lovable-uploads/62ebb1fa-b6ad-4de9-b63e-14b9a3baaf99.png" 
+                            alt="Orange Money" 
+                            className="w-8 h-8 rounded-full"
+                          />
                           <div>
                             <h3 className="text-white font-semibold">Orange Money</h3>
                             <p className="text-gray-400 text-sm">Paiement sécurisé</p>

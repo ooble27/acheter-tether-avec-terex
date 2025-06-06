@@ -31,6 +31,7 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
       
       <Text style={text}>
         Excellente nouvelle ! Nous avons confirmé la réception de votre paiement.
+        Voici tous les détails de votre transaction :
       </Text>
       
       <Section style={confirmationBanner}>
@@ -45,7 +46,7 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
       <Section style={orderCard}>
         <div style={cardHeader}>
           <Text style={cardTitle}>
-            📋 Détails de la transaction
+            📋 Détails complets de la transaction
           </Text>
         </div>
         
@@ -59,21 +60,38 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
             </Column>
           </Row>
           
+          <Row style={row}>
+            <Column style={label}>Date et heure du paiement :</Column>
+            <Column style={value}>{new Date(orderData.payment_confirmed_at || Date.now()).toLocaleString('fr-FR')}</Column>
+          </Row>
+          
           {transactionType !== 'transfer' && (
             <>
               <Row style={row}>
-                <Column style={label}>Type :</Column>
+                <Column style={label}>Type de transaction :</Column>
                 <Column style={valueHighlight}>
                   {orderData.type === 'buy' ? '💳 Achat USDT' : '💸 Vente USDT'}
                 </Column>
               </Row>
               <Row style={row}>
-                <Column style={label}>Montant reçu :</Column>
+                <Column style={label}>Montant payé :</Column>
                 <Column style={value}>{orderData.amount || 0} {orderData.currency || 'CFA'}</Column>
               </Row>
               <Row style={row}>
-                <Column style={label}>USDT à recevoir :</Column>
+                <Column style={label}>Quantité USDT à recevoir :</Column>
                 <Column style={usdtAmount}>{orderData.usdt_amount || 0} USDT</Column>
+              </Row>
+              <Row style={row}>
+                <Column style={label}>Réseau de réception :</Column>
+                <Column style={value}>{orderData.network || 'TRC20'}</Column>
+              </Row>
+              <Row style={row}>
+                <Column style={label}>Adresse de réception :</Column>
+                <Column style={addressValue}>{orderData.wallet_address || 'N/A'}</Column>
+              </Row>
+              <Row style={row}>
+                <Column style={label}>Taux de change appliqué :</Column>
+                <Column style={value}>{orderData.exchange_rate || 0} {orderData.currency || 'CFA'}/USDT</Column>
               </Row>
             </>
           )}
@@ -81,21 +99,52 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
           {transactionType === 'transfer' && (
             <>
               <Row style={row}>
-                <Column style={label}>Montant :</Column>
+                <Column style={label}>Montant envoyé :</Column>
                 <Column style={valueHighlight}>
                   {orderData.amount || 0} {orderData.from_currency || 'USDT'}
                 </Column>
               </Row>
               <Row style={row}>
-                <Column style={label}>Destinataire :</Column>
+                <Column style={label}>Nom du destinataire :</Column>
                 <Column style={value}>{orderData.recipient_name || 'N/A'}</Column>
+              </Row>
+              <Row style={row}>
+                <Column style={label}>Compte destinataire :</Column>
+                <Column style={accountValue}>{orderData.recipient_account || 'N/A'}</Column>
+              </Row>
+              <Row style={row}>
+                <Column style={label}>Banque destinataire :</Column>
+                <Column style={value}>{orderData.recipient_bank || 'N/A'}</Column>
               </Row>
               <Row style={row}>
                 <Column style={label}>Pays de destination :</Column>
                 <Column style={countryValue}>{orderData.recipient_country || 'N/A'}</Column>
               </Row>
+              <Row style={row}>
+                <Column style={label}>Montant à recevoir :</Column>
+                <Column style={usdtAmount}>{orderData.total_amount || 0} {orderData.to_currency || 'N/A'}</Column>
+              </Row>
+              <Row style={row}>
+                <Column style={label}>Frais de transfert :</Column>
+                <Column style={value}>{orderData.fees || 0} {orderData.from_currency || 'USDT'}</Column>
+              </Row>
             </>
           )}
+          
+          <Row style={row}>
+            <Column style={label}>Méthode de paiement :</Column>
+            <Column style={value}>
+              {orderData.payment_method === 'card' ? '💳 Carte bancaire' : 
+               orderData.payment_method === 'wave' ? '📱 Wave' :
+               orderData.payment_method === 'orange' ? '🟠 Orange Money' : 
+               orderData.payment_method || 'N/A'}
+            </Column>
+          </Row>
+          
+          <Row style={row}>
+            <Column style={label}>Référence de paiement :</Column>
+            <Column style={value}>{orderData.payment_reference || orderData.id?.slice(-8) || 'N/A'}</Column>
+          </Row>
         </div>
       </Section>
       
@@ -105,8 +154,26 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
         </Text>
         <Text style={progressText}>
           {transactionType === 'transfer' 
-            ? 'Votre transfert international est maintenant en cours de traitement. Nous procédons à l\'envoi des fonds vers le destinataire.'
-            : 'Votre transaction est maintenant en cours de finalisation. Nous procédons au transfert des USDT vers votre portefeuille.'
+            ? `Votre transfert international est maintenant en cours de traitement. 
+
+• Vérification des informations du destinataire ✅
+• Traitement du paiement ✅  
+• Initiation du transfert 🔄 EN COURS
+• Réception par le destinataire ⏳ En attente
+
+Délai estimé : 24-48h ouvrables
+
+Le destinataire sera notifié dès réception des fonds.`
+            : `Votre transaction USDT est maintenant en cours de finalisation.
+
+• Réception du paiement ✅
+• Vérification du paiement ✅
+• Préparation du transfert USDT 🔄 EN COURS  
+• Envoi vers votre portefeuille ⏳ En attente
+
+Délai estimé : 5-15 minutes
+
+Vos USDT seront envoyés à : ${orderData.wallet_address || 'votre adresse'}`
           }
         </Text>
         
@@ -115,12 +182,38 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
         </div>
         
         <Text style={progressLabel}>
-          Traitement en cours...
+          Traitement en cours - 75% complété
+        </Text>
+      </Section>
+
+      <Section style={securityCard}>
+        <Text style={securityTitle}>
+          🔒 Informations de sécurité
+        </Text>
+        <Text style={securityText}>
+          • Transaction sécurisée par cryptage SSL 256-bit
+          • Vérification automatique des paiements
+          • Fonds protégés par portefeuilles multi-signatures
+          • Surveillance 24h/7j de toutes les transactions
+          • Support client disponible à tout moment
+        </Text>
+      </Section>
+
+      <Section style={contactCard}>
+        <Text style={contactTitle}>
+          📞 Besoin d'aide ?
+        </Text>
+        <Text style={contactText}>
+          • Support client : support@terex.com
+          • Téléphone urgent : +221 XX XXX XX XX  
+          • WhatsApp : +221 XX XXX XX XX
+          • Horaires : 24h/7j
+          • Référence à mentionner : #TEREX-{orderData.id?.slice(-8) || 'N/A'}
         </Text>
       </Section>
       
       <Text style={text}>
-        Vous recevrez une notification dès que la transaction sera terminée.
+        Vous recevrez une notification immédiate dès que la transaction sera terminée.
       </Text>
       
       <Text style={thankYou}>
@@ -130,7 +223,7 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
   );
 };
 
-// Styles améliorés
+// Styles avec nouvelles sections
 const iconContainer = {
   textAlign: 'center' as const,
   marginBottom: '24px',
@@ -249,6 +342,23 @@ const countryValue = {
   width: '60%',
 };
 
+const addressValue = {
+  color: '#2d3748',
+  fontSize: '12px',
+  fontWeight: '600',
+  width: '60%',
+  wordBreak: 'break-all' as const,
+  fontFamily: 'monospace',
+};
+
+const accountValue = {
+  color: '#2d3748',
+  fontSize: '12px',
+  fontWeight: '600',
+  width: '60%',
+  fontFamily: 'monospace',
+};
+
 const progressCard = {
   backgroundColor: '#edf2f7',
   border: '1px solid #cbd5e0',
@@ -267,8 +377,9 @@ const progressTitle = {
 const progressText = {
   color: '#4a5568',
   fontSize: '14px',
-  lineHeight: '1.5',
+  lineHeight: '1.6',
   margin: '0 0 16px',
+  whiteSpace: 'pre-line' as const,
 };
 
 const progressBar = {
@@ -294,6 +405,52 @@ const progressLabel = {
   fontWeight: '500',
   margin: '0',
   textAlign: 'center' as const,
+};
+
+const securityCard = {
+  backgroundColor: '#fef5e7',
+  border: '1px solid #f6e05e',
+  borderRadius: '8px',
+  padding: '20px',
+  margin: '24px 0',
+};
+
+const securityTitle = {
+  color: '#744210',
+  fontSize: '16px',
+  fontWeight: '600',
+  margin: '0 0 12px',
+};
+
+const securityText = {
+  color: '#975a16',
+  fontSize: '14px',
+  lineHeight: '1.6',
+  margin: '0',
+  whiteSpace: 'pre-line' as const,
+};
+
+const contactCard = {
+  backgroundColor: '#f0fff4',
+  border: '1px solid #9ae6b4',
+  borderRadius: '8px',
+  padding: '20px',
+  margin: '24px 0',
+};
+
+const contactTitle = {
+  color: '#22543d',
+  fontSize: '16px',
+  fontWeight: '600',
+  margin: '0 0 12px',
+};
+
+const contactText = {
+  color: '#22543d',
+  fontSize: '14px',
+  lineHeight: '1.6',
+  margin: '0',
+  whiteSpace: 'pre-line' as const,
 };
 
 const thankYou = {

@@ -31,13 +31,13 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
       
       <Text style={text}>
         Nous avons bien reçu votre commande {transactionType === 'buy' ? 'd\'achat' : 'de vente'} USDT. 
-        Voici les détails de votre transaction :
+        Voici les détails complets de votre transaction :
       </Text>
       
       <Section style={orderCard}>
         <div style={cardHeader}>
           <Text style={cardTitle}>
-            📋 Détails de la commande
+            📋 Détails complets de la commande
           </Text>
         </div>
         
@@ -47,48 +47,100 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
             <Column style={value}>#{orderData.id?.slice(-8) || 'N/A'}</Column>
           </Row>
           <Row style={row}>
-            <Column style={label}>Type :</Column>
+            <Column style={label}>Type de transaction :</Column>
             <Column style={valueHighlight}>
               {transactionType === 'buy' ? '💳 Achat USDT' : '💸 Vente USDT'}
             </Column>
           </Row>
           <Row style={row}>
-            <Column style={label}>Montant :</Column>
+            <Column style={label}>Montant payé :</Column>
             <Column style={value}>{orderData.amount || 0} {orderData.currency || 'CFA'}</Column>
           </Row>
           <Row style={row}>
-            <Column style={label}>USDT :</Column>
+            <Column style={label}>Quantité USDT :</Column>
             <Column style={valueHighlight}>{orderData.usdt_amount || 0} USDT</Column>
           </Row>
           <Row style={row}>
             <Column style={label}>Taux de change :</Column>
-            <Column style={value}>{orderData.exchange_rate || 0} CFA/USDT</Column>
+            <Column style={value}>{orderData.exchange_rate || 0} {orderData.currency || 'CFA'}/USDT</Column>
           </Row>
           <Row style={row}>
-            <Column style={label}>Statut :</Column>
-            <Column style={statusPending}>⏳ En attente de traitement</Column>
+            <Column style={label}>Réseau blockchain :</Column>
+            <Column style={value}>{orderData.network || 'TRC20'}</Column>
+          </Row>
+          <Row style={row}>
+            <Column style={label}>Adresse de réception :</Column>
+            <Column style={addressValue}>{orderData.wallet_address || 'N/A'}</Column>
+          </Row>
+          <Row style={row}>
+            <Column style={label}>Méthode de paiement :</Column>
+            <Column style={value}>
+              {orderData.payment_method === 'card' ? '💳 Carte bancaire' : 
+               orderData.payment_method === 'wave' ? '📱 Wave' :
+               orderData.payment_method === 'orange' ? '🟠 Orange Money' : 'Mobile Money'}
+            </Column>
+          </Row>
+          <Row style={row}>
+            <Column style={label}>Date de création :</Column>
+            <Column style={value}>{new Date(orderData.created_at || Date.now()).toLocaleString('fr-FR')}</Column>
+          </Row>
+          <Row style={row}>
+            <Column style={label}>Statut actuel :</Column>
+            <Column style={statusPending}>⏳ En attente de paiement</Column>
+          </Row>
+          <Row style={row}>
+            <Column style={label}>Frais de transaction :</Column>
+            <Column style={value}>Gratuit (0%)</Column>
           </Row>
         </div>
       </Section>
       
       <Section style={instructionCard}>
         <Text style={instructionTitle}>
-          📋 Prochaines étapes
+          📋 Prochaines étapes détaillées
         </Text>
         <Text style={instructionText}>
           {transactionType === 'buy' 
-            ? 'Veuillez effectuer le paiement selon les instructions qui vous seront communiquées.' 
-            : 'Veuillez préparer vos USDT pour le transfert selon les instructions qui vous seront communiquées.'
+            ? `1. Vous allez recevoir les instructions de paiement pour ${orderData.payment_method === 'card' ? 'votre carte bancaire' : orderData.payment_method === 'wave' ? 'Wave' : 'Orange Money'}
+            
+2. Effectuez le paiement de ${orderData.amount || 0} ${orderData.currency || 'CFA'}
+
+3. Votre paiement sera vérifié automatiquement
+
+4. Vous recevrez vos ${orderData.usdt_amount || 0} USDT sur l'adresse : ${orderData.wallet_address || 'votre adresse'}
+
+5. Un email de confirmation vous sera envoyé une fois le transfert effectué` 
+            : `1. Préparez vos ${orderData.usdt_amount || 0} USDT pour le transfert
+
+2. Envoyez vos USDT à l'adresse qui vous sera communiquée
+
+3. Une fois vos USDT reçus et vérifiés, nous procéderons au paiement
+
+4. Vous recevrez ${orderData.amount || 0} ${orderData.currency || 'CFA'} via ${orderData.payment_method === 'card' ? 'virement bancaire' : orderData.payment_method === 'wave' ? 'Wave' : 'Orange Money'}
+
+5. Un email de confirmation vous sera envoyé une fois le paiement effectué`
           }
         </Text>
       </Section>
       
+      <Section style={contactCard}>
+        <Text style={contactTitle}>
+          📞 Informations de contact
+        </Text>
+        <Text style={contactText}>
+          • Support client : support@terex.com
+          • Téléphone : +221 XX XXX XX XX
+          • Horaires : 24h/7j
+          • Temps de réponse moyen : 15 minutes
+        </Text>
+      </Section>
+      
       <Text style={text}>
-        Vous recevrez une notification dès que votre commande sera traitée par notre équipe.
+        Vous recevrez une notification immédiate dès que votre commande sera traitée par notre équipe.
       </Text>
       
       <Text style={thankYou}>
-        🙏 Merci de faire confiance à Terex !
+        🙏 Merci de faire confiance à Terex pour vos échanges USDT !
       </Text>
     </BaseEmail>
   );
@@ -176,6 +228,15 @@ const valueHighlight = {
   width: '60%',
 };
 
+const addressValue = {
+  color: '#2d3748',
+  fontSize: '12px',
+  fontWeight: '600',
+  width: '60%',
+  wordBreak: 'break-all' as const,
+  fontFamily: 'monospace',
+};
+
 const statusPending = {
   color: '#d69e2e',
   fontSize: '14px',
@@ -201,8 +262,32 @@ const instructionTitle = {
 const instructionText = {
   color: '#4a5568',
   fontSize: '14px',
-  lineHeight: '1.5',
+  lineHeight: '1.6',
   margin: '0',
+  whiteSpace: 'pre-line' as const,
+};
+
+const contactCard = {
+  backgroundColor: '#f0fff4',
+  border: '1px solid #9ae6b4',
+  borderRadius: '8px',
+  padding: '20px',
+  margin: '24px 0',
+};
+
+const contactTitle = {
+  color: '#22543d',
+  fontSize: '16px',
+  fontWeight: '600',
+  margin: '0 0 12px',
+};
+
+const contactText = {
+  color: '#22543d',
+  fontSize: '14px',
+  lineHeight: '1.6',
+  margin: '0',
+  whiteSpace: 'pre-line' as const,
 };
 
 const thankYou = {
