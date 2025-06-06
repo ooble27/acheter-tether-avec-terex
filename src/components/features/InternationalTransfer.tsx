@@ -11,7 +11,14 @@ import { useInternationalTransfers } from '@/hooks/useInternationalTransfers';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
+// Importer les nouveaux composants
+import { TransferConfirmation } from './international-transfer/TransferConfirmation';
+import { PaymentInstructions } from './international-transfer/PaymentInstructions';
+import { TransferPending } from './international-transfer/TransferPending';
+import { MobileMoneySelector } from './international-transfer/MobileMoneySelector';
+
 export function InternationalTransfer() {
+  const [currentStep, setCurrentStep] = useState('form');
   const [sendAmount, setSendAmount] = useState('');
   const [recipientCountry, setRecipientCountry] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
@@ -22,6 +29,8 @@ export function InternationalTransfer() {
   const [recipientPhone, setRecipientPhone] = useState('');
   const [recipientAccount, setRecipientAccount] = useState('');
   const [recipientBank, setRecipientBank] = useState('');
+  const [provider, setProvider] = useState('');
+  const [createdTransfer, setCreatedTransfer] = useState<any>(null);
   
   const { createTransfer, loading } = useInternationalTransfers();
   const { user } = useAuth();
@@ -42,7 +51,13 @@ export function InternationalTransfer() {
     { code: 'BJ', name: 'Bénin', flag: '🇧🇯' }
   ];
 
-  const handleCreateTransfer = async () => {
+  const handleMobileMoneyComplete = (selectedProvider: string, phoneNumber: string) => {
+    setProvider(selectedProvider);
+    setRecipientPhone(phoneNumber);
+    setCurrentStep('confirmation');
+  };
+
+  const handleFormSubmit = () => {
     if (!user) {
       toast({
         title: "Connexion requise",
@@ -53,7 +68,7 @@ export function InternationalTransfer() {
     }
 
     if (!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || 
-        !recipientFirstName || !recipientLastName || !recipientPhone) {
+        !recipientFirstName || !recipientLastName) {
       toast({
         title: "Informations manquantes",
         description: "Veuillez remplir tous les champs requis",
@@ -62,6 +77,17 @@ export function InternationalTransfer() {
       return;
     }
 
+    // Si c'est Mobile Money, aller à la sélection du service
+    if (receiveMethod === 'mobile') {
+      setCurrentStep('mobile-money');
+      return;
+    }
+
+    // Sinon, aller directement à la confirmation
+    setCurrentStep('confirmation');
+  };
+
+  const handleTransferConfirm = async () => {
     const transferData = {
       amount: parseFloat(sendAmount),
       from_currency: 'CAD',
@@ -73,12 +99,101 @@ export function InternationalTransfer() {
       recipient_account: recipientAccount || recipientPhone,
       recipient_bank: recipientBank,
       recipient_country: recipientCountry,
+      recipient_phone: recipientPhone,
+      recipient_email: recipientEmail,
+      payment_method: paymentMethod,
+      receive_method: receiveMethod,
+      provider: provider,
       status: 'pending'
     };
 
-    await createTransfer(transferData);
+    const result = await createTransfer(transferData);
+    if (result) {
+      setCreatedTransfer(result);
+      setCurrentStep('payment');
+    }
   };
 
+  const handlePaymentSent = () => {
+    setCurrentStep('pending');
+  };
+
+  const handleBackToDashboard = () => {
+    setCurrentStep('form');
+    // Reset form
+    setSendAmount('');
+    setRecipientCountry('');
+    setPaymentMethod('');
+    setReceiveMethod('');
+    setRecipientFirstName('');
+    setRecipientLastName('');
+    setRecipientEmail('');
+    setRecipientPhone('');
+    setRecipientAccount('');
+    setRecipientBank('');
+    setProvider('');
+    setCreatedTransfer(null);
+  };
+
+  // Rendu conditionnel selon l'étape
+  if (currentStep === 'mobile-money') {
+    return (
+      <MobileMoneySelector
+        onComplete={handleMobileMoneyComplete}
+        onBack={() => setCurrentStep('form')}
+        recipientCountry={recipientCountry}
+      />
+    );
+  }
+
+  if (currentStep === 'confirmation') {
+    const transferData = {
+      sendAmount,
+      receiveAmount,
+      recipientCountry,
+      paymentMethod,
+      receiveMethod,
+      recipientFirstName,
+      recipientLastName,
+      recipientPhone,
+      recipientEmail,
+      recipientAccount,
+      recipientBank,
+      provider,
+      exchangeRate,
+      fees
+    };
+
+    return (
+      <TransferConfirmation
+        transferData={transferData}
+        onConfirm={handleTransferConfirm}
+        onBack={() => setCurrentStep(receiveMethod === 'mobile' ? 'mobile-money' : 'form')}
+        loading={loading}
+      />
+    );
+  }
+
+  if (currentStep === 'payment') {
+    return (
+      <PaymentInstructions
+        transferData={createdTransfer}
+        onPaymentSent={handlePaymentSent}
+        onBack={() => setCurrentStep('confirmation')}
+      />
+    );
+  }
+
+  if (currentStep === 'pending') {
+    return (
+      <TransferPending
+        transferData={createdTransfer}
+        onBackToDashboard={handleBackToDashboard}
+      />
+    );
+  }
+
+  // Formulaire principal
   return (
     <div className="min-h-screen bg-terex-dark p-2 md:p-4">
       <div className="max-w-7xl mx-auto">
@@ -147,7 +262,7 @@ export function InternationalTransfer() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Délai</span>
-                        <span className="text-terex-accent">5 minutes</span>
+                        <span className="text-terex-accent">24-48h</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Total à payer</span>
@@ -260,13 +375,15 @@ export function InternationalTransfer() {
                       onChange={(e) => setRecipientEmail(e.target.value)}
                       className="bg-terex-gray border-terex-gray-light text-white h-12"
                     />
-                    <Input
-                      placeholder="Téléphone"
-                      type="tel"
-                      value={recipientPhone}
-                      onChange={(e) => setRecipientPhone(e.target.value)}
-                      className="bg-terex-gray border-terex-gray-light text-white h-12"
-                    />
+                    {receiveMethod !== 'mobile' && (
+                      <Input
+                        placeholder="Téléphone"
+                        type="tel"
+                        value={recipientPhone}
+                        onChange={(e) => setRecipientPhone(e.target.value)}
+                        className="bg-terex-gray border-terex-gray-light text-white h-12"
+                      />
+                    )}
                   </div>
                   
                   {receiveMethod === 'bank_transfer' && (
@@ -290,8 +407,8 @@ export function InternationalTransfer() {
                 <Button 
                   size="lg"
                   className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                  disabled={!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName || !recipientPhone || loading}
-                  onClick={handleCreateTransfer}
+                  disabled={!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName || (receiveMethod !== 'mobile' && !recipientPhone) || loading}
+                  onClick={handleFormSubmit}
                 >
                   {loading ? 'Traitement...' : 'Continuer le transfert'}
                 </Button>

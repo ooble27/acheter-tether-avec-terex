@@ -4,7 +4,6 @@ import {
   Section,
   Row,
   Column,
-  Img,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 import { BaseEmail } from './base-email.tsx';
@@ -15,7 +14,43 @@ interface TransferConfirmationProps {
 
 export const TransferConfirmationEmail = ({ transferData }: TransferConfirmationProps) => {
   const title = 'Demande de transfert international confirmée';
-  const preview = `Votre demande de transfert #${transferData.id?.slice(-8)} a été confirmée`;
+  const preview = `Votre demande de transfert #TEREX-${transferData.id?.slice(-8)} a été confirmée`;
+  
+  const getCountryName = (code: string) => {
+    const countries = {
+      'SN': 'Sénégal',
+      'CI': 'Côte d\'Ivoire',
+      'ML': 'Mali',
+      'BF': 'Burkina Faso',
+      'NG': 'Nigeria',
+      'BJ': 'Bénin'
+    };
+    return countries[code as keyof typeof countries] || code;
+  };
+
+  const getPaymentMethodName = () => {
+    switch (transferData.payment_method) {
+      case 'card': return '💳 Carte bancaire';
+      case 'bank': return '🏦 Virement bancaire';
+      case 'interac': return '💸 Interac E-Transfer';
+      default: return transferData.payment_method || 'À définir';
+    }
+  };
+
+  const getReceiveMethodName = () => {
+    switch (transferData.receive_method) {
+      case 'mobile': return '📱 Mobile Money';
+      case 'bank_transfer': return '🏦 Virement bancaire';
+      case 'cash_pickup': return '💰 Retrait en espèces';
+      default: return transferData.receive_method || 'À définir';
+    }
+  };
+
+  const getProviderName = () => {
+    if (transferData.provider === 'wave') return 'Wave';
+    if (transferData.provider === 'orange') return 'Orange Money';
+    return '';
+  };
   
   return (
     <BaseEmail preview={preview} title={title}>      
@@ -24,57 +59,49 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
       </div>
       
       <Text style={greeting}>
-        Excellent !
+        Excellent ! Votre transfert international a été confirmé
       </Text>
       
       <Text style={text}>
         Nous avons bien reçu votre demande de transfert international. 
-        Voici tous les détails complets de votre transfert :
+        Voici le récapitulatif de votre transfert :
       </Text>
       
       <Section style={transferCard}>
         <div style={cardHeader}>
           <Text style={cardTitle}>
-            💸 Détails complets du transfert
+            💸 Détails du transfert
           </Text>
         </div>
         
         <div style={cardContent}>
           <Row style={row}>
             <Column style={label}>Numéro de transfert :</Column>
-            <Column style={value}>#TEREX-{transferData.id?.slice(-8) || 'N/A'}</Column>
+            <Column style={value}>TEREX-{transferData.id?.slice(-8)}</Column>
           </Row>
           <Row style={row}>
             <Column style={label}>Date de création :</Column>
             <Column style={value}>{new Date(transferData.created_at || Date.now()).toLocaleString('fr-FR')}</Column>
           </Row>
           <Row style={row}>
-            <Column style={label}>Montant à envoyer :</Column>
+            <Column style={label}>Montant envoyé :</Column>
             <Column style={valueHighlight}>
-              {transferData.amount || 0} {transferData.from_currency || 'USDT'}
+              {transferData.amount} {transferData.from_currency}
             </Column>
           </Row>
           <Row style={row}>
-            <Column style={label}>Devise de destination :</Column>
-            <Column style={value}>{transferData.to_currency || 'N/A'}</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Taux de change appliqué :</Column>
-            <Column style={value}>{transferData.exchange_rate || 0}</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Frais de transfert :</Column>
-            <Column style={value}>{transferData.fees || 0} {transferData.from_currency || 'USDT'}</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Montant total à recevoir :</Column>
+            <Column style={label}>Montant à recevoir :</Column>
             <Column style={totalAmount}>
-              {transferData.total_amount || 0} {transferData.to_currency || 'N/A'}
+              {transferData.total_amount} {transferData.to_currency}
             </Column>
           </Row>
           <Row style={row}>
-            <Column style={label}>Statut actuel :</Column>
-            <Column style={statusPending}>⏳ En attente de traitement</Column>
+            <Column style={label}>Taux de change :</Column>
+            <Column style={value}>1 {transferData.from_currency} = {transferData.exchange_rate} {transferData.to_currency}</Column>
+          </Row>
+          <Row style={row}>
+            <Column style={label}>Frais :</Column>
+            <Column style={value}>{transferData.fees} {transferData.from_currency}</Column>
           </Row>
         </div>
       </Section>
@@ -82,89 +109,78 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
       <Section style={recipientCard}>
         <div style={recipientHeader}>
           <Text style={recipientTitle}>
-            👤 Informations complètes du destinataire
+            👤 Informations du destinataire
           </Text>
         </div>
         
         <div style={cardContent}>
           <Row style={row}>
             <Column style={label}>Nom complet :</Column>
-            <Column style={value}>{transferData.recipient_name || 'N/A'}</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Numéro de compte :</Column>
-            <Column style={accountValue}>{transferData.recipient_account || 'N/A'}</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Nom de la banque :</Column>
-            <Column style={value}>{transferData.recipient_bank || 'N/A'}</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Code SWIFT/BIC :</Column>
-            <Column style={value}>{transferData.swift_code || 'N/A'}</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Adresse de la banque :</Column>
-            <Column style={value}>{transferData.bank_address || 'N/A'}</Column>
+            <Column style={value}>{transferData.recipient_name}</Column>
           </Row>
           <Row style={row}>
             <Column style={label}>Pays de destination :</Column>
-            <Column style={countryValue}>{transferData.recipient_country || 'N/A'}</Column>
+            <Column style={countryValue}>{getCountryName(transferData.recipient_country)}</Column>
           </Row>
-          <Row style={row}>
-            <Column style={label}>Ville :</Column>
-            <Column style={value}>{transferData.recipient_city || 'N/A'}</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Téléphone du destinataire :</Column>
-            <Column style={value}>{transferData.recipient_phone || 'N/A'}</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Adresse postale :</Column>
-            <Column style={value}>{transferData.recipient_address || 'N/A'}</Column>
-          </Row>
+          {transferData.recipient_phone && (
+            <Row style={row}>
+              <Column style={label}>Téléphone :</Column>
+              <Column style={value}>{transferData.recipient_phone}</Column>
+            </Row>
+          )}
+          {transferData.recipient_email && (
+            <Row style={row}>
+              <Column style={label}>Email :</Column>
+              <Column style={value}>{transferData.recipient_email}</Column>
+            </Row>
+          )}
+          {transferData.recipient_account && (
+            <Row style={row}>
+              <Column style={label}>Compte/Numéro :</Column>
+              <Column style={accountValue}>{transferData.recipient_account}</Column>
+            </Row>
+          )}
+          {transferData.recipient_bank && (
+            <Row style={row}>
+              <Column style={label}>Banque :</Column>
+              <Column style={value}>{transferData.recipient_bank}</Column>
+            </Row>
+          )}
         </div>
       </Section>
 
       <Section style={paymentCard}>
         <div style={paymentHeader}>
           <Text style={paymentTitle}>
-            💳 Informations de paiement
+            💳 Méthodes de transfert
           </Text>
         </div>
         
         <div style={cardContent}>
           <Row style={row}>
-            <Column style={label}>Méthode de paiement :</Column>
+            <Column style={label}>Vous payez par :</Column>
+            <Column style={value}>{getPaymentMethodName()}</Column>
+          </Row>
+          <Row style={row}>
+            <Column style={label}>Destinataire reçoit par :</Column>
             <Column style={value}>
-              {transferData.payment_method === 'card' ? '💳 Carte bancaire' : 
-               transferData.payment_method === 'wave' ? '📱 Wave' :
-               transferData.payment_method === 'orange' ? '🟠 Orange Money' : 
-               transferData.payment_method || 'À définir'}
+              {getReceiveMethodName()}
+              {transferData.provider && getProviderName() && ` (${getProviderName()})`}
             </Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Référence de paiement :</Column>
-            <Column style={value}>{transferData.payment_reference || 'Sera fournie'}</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Instructions spéciales :</Column>
-            <Column style={value}>{transferData.special_instructions || 'Aucune'}</Column>
           </Row>
         </div>
       </Section>
       
       <Section style={statusCard}>
         <Text style={statusTitle}>
-          📊 Étapes du transfert
+          📊 Prochaines étapes
         </Text>
         <Text style={statusText}>
-          1. ✅ Demande reçue et confirmée
-          2. ⏳ Vérification des informations en cours
-          3. ⏸️ En attente : Instructions de paiement
-          4. ⏸️ En attente : Traitement du paiement
-          5. ⏸️ En attente : Exécution du transfert
-          6. ⏸️ En attente : Confirmation de réception
+          1. ✅ Demande confirmée et enregistrée
+          2. ⏳ Instructions de paiement en cours d'envoi
+          3. ⏸️ En attente : Réception de votre paiement
+          4. ⏸️ En attente : Traitement et envoi des fonds
+          5. ⏸️ En attente : Confirmation de réception par le destinataire
         </Text>
       </Section>
 
@@ -173,18 +189,18 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
           📞 Support et assistance
         </Text>
         <Text style={contactText}>
-          • Email support : terangaexchange@gmail.com
-          • Téléphone Sénégal : +221 77 397 27 49
-          • WhatsApp : +1 4182619091
-          • Horaires : 24h/7j pour les transferts internationaux
-          • Délai de traitement : 24-48h ouvrables
-          • Numéro de suivi : TEREX-{transferData.id?.slice(-8) || 'N/A'}
+          Email : terangaexchange@gmail.com
+          Téléphone : +221 77 397 27 49
+          WhatsApp : +1 4182619091
+          
+          Numéro de suivi : TEREX-{transferData.id?.slice(-8)}
+          Délai de traitement : 24-48h ouvrables
         </Text>
       </Section>
       
       <Text style={text}>
-        Notre équipe va examiner votre demande et vous contacter dans les plus brefs délais pour finaliser le processus.
-        Vous recevrez une notification à chaque étape du transfert.
+        Vous allez recevoir les instructions de paiement dans quelques instants. 
+        Notre équipe traitera votre transfert dès réception de votre paiement.
       </Text>
       
       <Text style={thankYou}>
