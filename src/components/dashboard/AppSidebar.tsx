@@ -94,7 +94,6 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                 alt="Terex Logo" 
                 className="w-10 h-10 rounded-lg shadow-lg"
               />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-terex-darker"></div>
               <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 to-transparent rounded-lg blur opacity-40"></div>
             </div>
             <div className="flex flex-col">
@@ -103,7 +102,7 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                   TEREX
                 </span>
               </h1>
-              <p className="text-[10px] font-medium text-terex-accent/70 uppercase tracking-wider">Pro Platform</p>
+              <p className="text-[10px] font-medium text-terex-accent/70 uppercase tracking-wider">Teranga Exchange</p>
             </div>
           </div>
         </div>

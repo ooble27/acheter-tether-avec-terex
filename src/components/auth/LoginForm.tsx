@@ -151,7 +151,7 @@ export function LoginForm() {
           {/* Logo Header Style Binance */}
           <div className="text-center">
             <div className="flex items-center justify-center mb-6">
-              <div className="relative flex items-center gap-4 p-6 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-2xl border border-terex-accent/20 backdrop-blur-sm">
+              <div className="relative flex items-center gap-4 p-4 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-2xl border border-terex-accent/20 backdrop-blur-sm">
                 <div className="relative">
                   <img 
                     src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" 
@@ -166,7 +166,7 @@ export function LoginForm() {
                       TEREX
                     </span>
                   </h1>
-                  <p className="text-xs font-medium text-terex-accent/70 uppercase tracking-wider">Exchange</p>
+                  <p className="text-xs font-medium text-terex-accent/70 uppercase tracking-wider">Teranga Exchange</p>
                 </div>
               </div>
             </div>
@@ -233,7 +233,7 @@ export function LoginForm() {
         {/* Logo Header Style Binance */}
         <div className="text-center">
           <div className="flex items-center justify-center mb-6">
-            <div className="relative flex items-center gap-4 p-6 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-2xl border border-terex-accent/20 backdrop-blur-sm">
+            <div className="relative flex items-center gap-4 p-4 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-2xl border border-terex-accent/20 backdrop-blur-sm">
               <div className="relative">
                 <img 
                   src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" 
@@ -248,7 +248,7 @@ export function LoginForm() {
                     TEREX
                   </span>
                 </h1>
-                <p className="text-xs font-medium text-terex-accent/70 uppercase tracking-wider">Exchange</p>
+                <p className="text-xs font-medium text-terex-accent/70 uppercase tracking-wider">Teranga Exchange</p>
               </div>
             </div>
           </div>
