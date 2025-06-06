@@ -23,7 +23,10 @@ interface DashboardProps {
 
 export const Dashboard = ({ user, onLogout }: DashboardProps) => {
   const [activeTab, setActiveTab] = useState("home");
-  const { transactions } = useTransactions();
+  
+  // Utiliser une valeur par défaut si le contexte n'est pas disponible
+  const transactionContext = useTransactions();
+  const transactions = transactionContext?.transactions || [];
 
   const renderContent = () => {
     switch (activeTab) {
