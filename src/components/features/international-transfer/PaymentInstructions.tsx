@@ -28,75 +28,78 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
   };
 
   const renderInteracInstructions = () => (
-    <div className="space-y-6">
-      <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
-        <div className="flex items-start space-x-3">
-          <ExternalLink className="w-5 h-5 text-blue-500 mt-0.5" />
+    <div className="space-y-4 md:space-y-6">
+      <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 md:p-4">
+        <div className="flex items-start space-x-2 md:space-x-3">
+          <ExternalLink className="w-4 h-4 md:w-5 md:h-5 text-blue-500 mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="text-blue-200 font-medium mb-2">Instructions Interac E-Transfer</h3>
-            <div className="space-y-2 text-blue-100 text-sm">
-              <p>1. Connectez-vous à votre banque en ligne ou application mobile</p>
-              <p>2. Sélectionnez "Interac E-Transfer" ou "Virement par courriel"</p>
-              <p>3. Utilisez les informations ci-dessous pour envoyer {transferData.amount} CAD</p>
+            <h3 className="text-blue-200 font-medium mb-1 md:mb-2 text-sm md:text-base">Instructions Interac E-Transfer</h3>
+            <div className="space-y-1 md:space-y-2 text-blue-100 text-xs md:text-sm">
+              <p>1. Connectez-vous à votre banque en ligne</p>
+              <p>2. Sélectionnez "Interac E-Transfer"</p>
+              <p>3. Envoyez {transferData.amount} CAD</p>
             </div>
           </div>
         </div>
       </div>
 
       <Card className="bg-terex-gray border-terex-gray-light">
-        <CardHeader>
-          <CardTitle className="text-white text-lg">Détails du destinataire</CardTitle>
+        <CardHeader className="pb-3 md:pb-4">
+          <CardTitle className="text-white text-base md:text-lg">Détails du destinataire</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-3">
-            <div className="flex justify-between items-center p-3 bg-terex-darker rounded-lg">
-              <div>
-                <span className="text-gray-400 text-sm">Email destinataire</span>
-                <p className="text-white font-medium">payments@terangaexchange.com</p>
+        <CardContent className="space-y-3 md:space-y-4">
+          <div className="space-y-2 md:space-y-3">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center p-3 bg-terex-darker rounded-lg space-y-2 md:space-y-0">
+              <div className="min-w-0 flex-1">
+                <span className="text-gray-400 text-xs md:text-sm block">Email destinataire</span>
+                <p className="text-white font-medium text-sm md:text-base break-all">payments@terangaexchange.com</p>
               </div>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => copyToClipboard('payments@terangaexchange.com', 'Email')}
-                className="text-terex-accent border-terex-accent hover:bg-terex-accent/10"
+                className="text-terex-accent border-terex-accent hover:bg-terex-accent/10 w-full md:w-auto"
               >
                 {copied === 'Email' ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                <span className="ml-2 md:hidden">Copier</span>
               </Button>
             </div>
 
-            <div className="flex justify-between items-center p-3 bg-terex-darker rounded-lg">
-              <div>
-                <span className="text-gray-400 text-sm">Question de sécurité</span>
-                <p className="text-white font-medium">Référence transfert</p>
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center p-3 bg-terex-darker rounded-lg space-y-2 md:space-y-0">
+              <div className="min-w-0 flex-1">
+                <span className="text-gray-400 text-xs md:text-sm block">Question de sécurité</span>
+                <p className="text-white font-medium text-sm md:text-base">Référence transfert</p>
               </div>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => copyToClipboard('Référence transfert', 'Question')}
-                className="text-terex-accent border-terex-accent hover:bg-terex-accent/10"
+                className="text-terex-accent border-terex-accent hover:bg-terex-accent/10 w-full md:w-auto"
               >
                 {copied === 'Question' ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                <span className="ml-2 md:hidden">Copier</span>
               </Button>
             </div>
 
-            <div className="flex justify-between items-center p-3 bg-terex-darker rounded-lg">
-              <div>
-                <span className="text-gray-400 text-sm">Réponse</span>
-                <p className="text-white font-medium">TEREX-{transferData.id?.slice(-8)}</p>
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center p-3 bg-terex-darker rounded-lg space-y-2 md:space-y-0">
+              <div className="min-w-0 flex-1">
+                <span className="text-gray-400 text-xs md:text-sm block">Réponse</span>
+                <p className="text-white font-medium text-sm md:text-base">TEREX-{transferData.id?.slice(-8)}</p>
               </div>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => copyToClipboard(`TEREX-${transferData.id?.slice(-8)}`, 'Réponse')}
-                className="text-terex-accent border-terex-accent hover:bg-terex-accent/10"
+                className="text-terex-accent border-terex-accent hover:bg-terex-accent/10 w-full md:w-auto"
               >
                 {copied === 'Réponse' ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                <span className="ml-2 md:hidden">Copier</span>
               </Button>
             </div>
 
             <div className="p-3 bg-terex-darker rounded-lg">
-              <span className="text-gray-400 text-sm">Montant à envoyer</span>
-              <p className="text-terex-accent font-bold text-xl">{transferData.amount} CAD</p>
+              <span className="text-gray-400 text-xs md:text-sm block">Montant à envoyer</span>
+              <p className="text-terex-accent font-bold text-lg md:text-xl">{transferData.amount} CAD</p>
             </div>
           </div>
         </CardContent>
@@ -105,14 +108,14 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
   );
 
   const renderCardInstructions = () => (
-    <div className="space-y-6">
-      <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
-        <div className="flex items-start space-x-3">
-          <CreditCard className="w-5 h-5 text-green-500 mt-0.5" />
+    <div className="space-y-4 md:space-y-6">
+      <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3 md:p-4">
+        <div className="flex items-start space-x-2 md:space-x-3">
+          <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-green-500 mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="text-green-200 font-medium mb-2">Paiement par carte bancaire</h3>
-            <p className="text-green-100 text-sm">
-              Cliquez sur le bouton ci-dessous pour procéder au paiement sécurisé de {transferData.amount} CAD
+            <h3 className="text-green-200 font-medium mb-1 md:mb-2 text-sm md:text-base">Paiement par carte bancaire</h3>
+            <p className="text-green-100 text-xs md:text-sm">
+              Cliquez ci-dessous pour payer {transferData.amount} CAD de manière sécurisée
             </p>
           </div>
         </div>
@@ -120,9 +123,8 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
 
       <Button
         size="lg"
-        className="w-full gradient-button text-white font-semibold h-12 text-lg"
+        className="w-full gradient-button text-white font-semibold h-12 md:h-14 text-base md:text-lg"
         onClick={() => {
-          // Ici on intégrerait le processeur de paiement (Stripe, etc.)
           toast({
             title: "Redirection",
             description: "Redirection vers la passerelle de paiement...",
@@ -136,40 +138,40 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
   );
 
   const renderBankInstructions = () => (
-    <div className="space-y-6">
-      <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4">
-        <div className="flex items-start space-x-3">
-          <ExternalLink className="w-5 h-5 text-purple-500 mt-0.5" />
+    <div className="space-y-4 md:space-y-6">
+      <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3 md:p-4">
+        <div className="flex items-start space-x-2 md:space-x-3">
+          <ExternalLink className="w-4 h-4 md:w-5 md:h-5 text-purple-500 mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="text-purple-200 font-medium mb-2">Virement bancaire</h3>
-            <p className="text-purple-100 text-sm">
-              Effectuez un virement bancaire vers notre compte avec les détails ci-dessous
+            <h3 className="text-purple-200 font-medium mb-1 md:mb-2 text-sm md:text-base">Virement bancaire</h3>
+            <p className="text-purple-100 text-xs md:text-sm">
+              Effectuez un virement avec les détails ci-dessous
             </p>
           </div>
         </div>
       </div>
 
       <Card className="bg-terex-gray border-terex-gray-light">
-        <CardHeader>
-          <CardTitle className="text-white text-lg">Coordonnées bancaires</CardTitle>
+        <CardHeader className="pb-3 md:pb-4">
+          <CardTitle className="text-white text-base md:text-lg">Coordonnées bancaires</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-3">
+        <CardContent className="space-y-3 md:space-y-4">
+          <div className="space-y-2 md:space-y-3">
             <div className="p-3 bg-terex-darker rounded-lg">
-              <span className="text-gray-400 text-sm">Nom du bénéficiaire</span>
-              <p className="text-white font-medium">Teranga Exchange Inc.</p>
+              <span className="text-gray-400 text-xs md:text-sm block">Nom du bénéficiaire</span>
+              <p className="text-white font-medium text-sm md:text-base">Teranga Exchange Inc.</p>
             </div>
             <div className="p-3 bg-terex-darker rounded-lg">
-              <span className="text-gray-400 text-sm">Numéro de compte</span>
-              <p className="text-white font-medium">1234567890</p>
+              <span className="text-gray-400 text-xs md:text-sm block">Numéro de compte</span>
+              <p className="text-white font-medium text-sm md:text-base">1234567890</p>
             </div>
             <div className="p-3 bg-terex-darker rounded-lg">
-              <span className="text-gray-400 text-sm">Code d'institution</span>
-              <p className="text-white font-medium">001</p>
+              <span className="text-gray-400 text-xs md:text-sm block">Code d'institution</span>
+              <p className="text-white font-medium text-sm md:text-base">001</p>
             </div>
             <div className="p-3 bg-terex-darker rounded-lg">
-              <span className="text-gray-400 text-sm">Référence</span>
-              <p className="text-white font-medium">TEREX-{transferData.id?.slice(-8)}</p>
+              <span className="text-gray-400 text-xs md:text-sm block">Référence</span>
+              <p className="text-white font-medium text-sm md:text-base">TEREX-{transferData.id?.slice(-8)}</p>
             </div>
           </div>
         </CardContent>
@@ -178,40 +180,41 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
   );
 
   return (
-    <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-      <div className="w-full max-w-4xl mx-auto px-2 md:px-0">
-        <div className="mb-6">
+    <div className="min-h-screen bg-terex-dark overflow-x-hidden">
+      <div className="w-full max-w-7xl mx-auto px-3 md:px-6 py-4 md:py-6">
+        <div className="mb-4 md:mb-6">
           <Button
             variant="ghost"
             onClick={onBack}
-            className="text-gray-400 hover:text-white mb-4"
+            className="text-gray-400 hover:text-white mb-3 md:mb-4 -ml-2"
+            size="sm"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Retour
+            <ArrowLeft className="w-4 h-4 mr-1 md:mr-2" />
+            <span className="text-sm md:text-base">Retour</span>
           </Button>
-          <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Instructions de paiement</h1>
+          <h1 className="text-xl md:text-3xl font-bold text-white mb-1 md:mb-2">Instructions de paiement</h1>
           <p className="text-gray-400 text-sm md:text-base">Suivez les instructions pour effectuer votre paiement</p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="lg:col-span-2 order-2 lg:order-1">
             <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center">
-                  <Clock className="w-5 h-5 mr-2 text-terex-accent" />
+              <CardHeader className="pb-3 md:pb-4">
+                <CardTitle className="text-white flex items-center text-base md:text-lg">
+                  <Clock className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
                   Transfert #{transferData.id?.slice(-8)}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4 md:space-y-6">
                 {transferData.payment_method === 'interac' && renderInteracInstructions()}
                 {transferData.payment_method === 'card' && renderCardInstructions()}
                 {transferData.payment_method === 'bank' && renderBankInstructions()}
 
                 <Separator className="bg-terex-gray" />
 
-                <div className="space-y-4">
-                  <h3 className="text-white font-medium">Après avoir effectué le paiement</h3>
-                  <p className="text-gray-400 text-sm">
+                <div className="space-y-3 md:space-y-4">
+                  <h3 className="text-white font-medium text-sm md:text-base">Après avoir effectué le paiement</h3>
+                  <p className="text-gray-400 text-xs md:text-sm">
                     Une fois votre paiement envoyé, cliquez sur le bouton ci-dessous pour nous notifier. 
                     Notre équipe vérifiera votre paiement et procédera au transfert.
                   </p>
@@ -219,7 +222,7 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
                   <Button
                     onClick={onPaymentSent}
                     size="lg"
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold h-12"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold h-12 md:h-14 text-base md:text-lg"
                   >
                     <CheckCircle className="w-5 h-5 mr-2" />
                     J'ai effectué le paiement
@@ -229,22 +232,22 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
             </Card>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6 order-1 lg:order-2">
             <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader>
-                <CardTitle className="text-white text-lg">Récapitulatif</CardTitle>
+              <CardHeader className="pb-3 md:pb-4">
+                <CardTitle className="text-white text-base md:text-lg">Récapitulatif</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-400 text-sm">Montant</span>
+              <CardContent className="space-y-2 md:space-y-3">
+                <div className="flex justify-between text-sm md:text-base">
+                  <span className="text-gray-400">Montant</span>
                   <span className="text-white">{transferData.amount} CAD</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400 text-sm">Frais</span>
+                <div className="flex justify-between text-sm md:text-base">
+                  <span className="text-gray-400">Frais</span>
                   <span className="text-white">{transferData.fees} CAD</span>
                 </div>
                 <Separator className="bg-terex-gray" />
-                <div className="flex justify-between">
+                <div className="flex justify-between text-sm md:text-base">
                   <span className="text-white font-medium">Total</span>
                   <span className="text-terex-accent font-bold">
                     {(parseFloat(transferData.amount) + parseFloat(transferData.fees)).toFixed(2)} CAD
@@ -254,17 +257,17 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
             </Card>
 
             <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader>
-                <CardTitle className="text-white text-lg">Destinataire</CardTitle>
+              <CardHeader className="pb-3 md:pb-4">
+                <CardTitle className="text-white text-base md:text-lg">Destinataire</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <p className="text-white font-medium">
+                <p className="text-white font-medium text-sm md:text-base">
                   {transferData.recipient_name}
                 </p>
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray-400 text-xs md:text-sm break-all">
                   {transferData.recipient_phone}
                 </p>
-                <Badge variant="outline" className="text-terex-accent border-terex-accent">
+                <Badge variant="outline" className="text-terex-accent border-terex-accent text-xs">
                   {transferData.recipient_country}
                 </Badge>
               </CardContent>
