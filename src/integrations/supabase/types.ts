@@ -70,12 +70,17 @@ export type Database = {
           fees: number
           from_currency: string
           id: string
+          payment_method: string | null
           processed_at: string | null
           processed_by: string | null
+          provider: string | null
+          receive_method: string | null
           recipient_account: string
           recipient_bank: string | null
           recipient_country: string
+          recipient_email: string | null
           recipient_name: string
+          recipient_phone: string | null
           reference_number: string | null
           status: string
           to_currency: string
@@ -90,12 +95,17 @@ export type Database = {
           fees?: number
           from_currency?: string
           id?: string
+          payment_method?: string | null
           processed_at?: string | null
           processed_by?: string | null
+          provider?: string | null
+          receive_method?: string | null
           recipient_account: string
           recipient_bank?: string | null
           recipient_country: string
+          recipient_email?: string | null
           recipient_name: string
+          recipient_phone?: string | null
           reference_number?: string | null
           status?: string
           to_currency: string
@@ -110,12 +120,17 @@ export type Database = {
           fees?: number
           from_currency?: string
           id?: string
+          payment_method?: string | null
           processed_at?: string | null
           processed_by?: string | null
+          provider?: string | null
+          receive_method?: string | null
           recipient_account?: string
           recipient_bank?: string | null
           recipient_country?: string
+          recipient_email?: string | null
           recipient_name?: string
+          recipient_phone?: string | null
           reference_number?: string | null
           status?: string
           to_currency?: string
