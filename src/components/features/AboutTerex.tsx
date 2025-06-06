@@ -34,13 +34,13 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                 <div className="rounded-lg overflow-hidden border-4 border-terex-accent">
                   <img 
                     src="/lovable-uploads/abd0d53b-cb36-4edb-91e5-e55da1466079.png" 
-                    alt="Mohamed Lou - Fondateur de Terex" 
+                    alt="Mohamed Lo - Fondateur de Terex" 
                     className="w-full h-auto object-cover"
                   />
                 </div>
               </div>
               <div className="md:col-span-2 space-y-4">
-                <h2 className="text-2xl font-bold text-white">Mohamed Lou</h2>
+                <h2 className="text-2xl font-bold text-white">Mohamed Lo</h2>
                 <h3 className="text-xl font-medium text-terex-accent">Fondateur & CEO</h3>
                 <p className="text-gray-300 text-lg leading-relaxed">
                   "Notre mission est de connecter l'Afrique au monde digital grâce à des solutions 
@@ -54,15 +54,15 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                   </div>
                   <div className="space-y-1">
                     <p className="text-terex-accent font-medium">Nationalité</p>
-                    <p className="text-gray-300">Sénégalaise & Canadienne</p>
+                    <p className="text-gray-300">Sénégalaise</p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-terex-accent font-medium">LinkedIn</p>
-                    <p className="text-terex-accent hover:text-terex-accent-light transition-colors">@mohamed-lou-terex</p>
+                    <p className="text-terex-accent hover:text-terex-accent-light transition-colors">@mohamed-lo-terex</p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-terex-accent font-medium">Contact</p>
-                    <p className="text-gray-300">mohamed@terex.com</p>
+                    <p className="text-gray-300">lomohamed834@gmail.com</p>
                   </div>
                 </div>
               </div>
@@ -79,8 +79,8 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
           </CardHeader>
           <CardContent className="text-gray-300 space-y-4">
             <p className="text-lg">
-              L'histoire de Terex commence avec son fondateur, Mohamed Lou, un entrepreneur visionnaire né au Sénégal et 
-              établi au Canada. Son parcours unique entre deux continents lui a permis d'identifier un besoin crucial: 
+              L'histoire de Terex commence avec son fondateur, Mohamed Lo, un entrepreneur visionnaire né au Sénégal. 
+              Son parcours lui a permis d'identifier un besoin crucial: 
               faciliter les échanges financiers entre l'Afrique et le reste du monde.
             </p>
             
@@ -88,14 +88,14 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
               <div className="space-y-3">
                 <h4 className="text-terex-accent font-medium text-lg">Les défis qui ont inspiré Terex</h4>
                 <p>
-                  En tant qu'immigrant au Canada, Mohamed a personnellement vécu les frustrations liées aux transferts 
+                  En tant qu'entrepreneur au Sénégal, Mohamed a personnellement vécu les frustrations liées aux transferts 
                   d'argent internationaux: frais exorbitants, délais interminables, taux de change défavorables et manque 
-                  de transparence. Il raconte comment un simple envoi d'argent à sa famille au Sénégal pouvait prendre 
+                  de transparence. Il raconte comment un simple envoi d'argent pouvait prendre 
                   plusieurs jours et coûter jusqu'à 10% du montant envoyé.
                 </p>
                 <p>
-                  "J'étudiais l'informatique tout en travaillant à temps partiel, et chaque mois, j'envoyais une partie 
-                  de mon salaire à ma famille. J'étais constamment frustré par les options disponibles, qui semblaient toutes 
+                  "J'étudiais l'informatique tout en travaillant, et je voyais constamment les difficultés 
+                  liées aux transactions financières internationales. J'étais constamment frustré par les options disponibles, qui semblaient toutes 
                   prendre trop de temps et coûter trop cher. C'est là que l'idée de Terex a commencé à germer."
                 </p>
               </div>
@@ -1005,7 +1005,7 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                   chaque transaction, chaque utilisateur nous rapproche de cette vision d'un monde où l'argent circule 
                   aussi librement que l'information."
                 </p>
-                <p className="text-terex-accent">- Mohamed Lou, Fondateur & CEO</p>
+                <p className="text-terex-accent">- Mohamed Lo, Fondateur & CEO</p>
               </div>
             </div>
           </CardContent>
@@ -1021,7 +1021,7 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <div className="text-sm text-gray-400">
-                  📧 Terangaexchange@gmail.com
+                  📧 lomohamed834@gmail.com
                 </div>
                 <div className="text-sm text-gray-400">
                   📞 +1 (418) 261-9091
