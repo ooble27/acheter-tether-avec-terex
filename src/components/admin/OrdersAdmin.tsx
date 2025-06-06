@@ -28,6 +28,8 @@ export function OrdersAdmin() {
   }
 
   const filteredOrders = useMemo(() => {
+    if (!orders || orders.length === 0) return [];
+    
     return orders.filter(order => {
       const matchesSearch = 
         order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -45,16 +47,26 @@ export function OrdersAdmin() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  const dailyOrders = orders.filter(order => 
+  const dailyOrders = orders ? orders.filter(order => 
     new Date(order.created_at).getTime() >= today.getTime()
-  );
+  ) : [];
 
   const stats = useMemo(() => {
+    if (!orders) {
+      return {
+        pendingCount: 0,
+        processingCount: 0,
+        completedCount: 0,
+        dailyVolume: 0,
+        dailyUSDT: 0
+      };
+    }
+
     const pendingCount = orders.filter(order => order.status === 'pending').length;
     const processingCount = orders.filter(order => order.status === 'processing').length;
     const completedCount = orders.filter(order => order.status === 'completed').length;
-    const dailyVolume = dailyOrders.reduce((sum, order) => sum + order.amount, 0);
-    const dailyUSDT = dailyOrders.reduce((sum, order) => sum + order.usdt_amount, 0);
+    const dailyVolume = dailyOrders.reduce((sum, order) => sum + (order.amount || 0), 0);
+    const dailyUSDT = dailyOrders.reduce((sum, order) => sum + (order.usdt_amount || 0), 0);
 
     return {
       pendingCount,
@@ -66,11 +78,14 @@ export function OrdersAdmin() {
   }, [orders, dailyOrders]);
 
   const handleStatusUpdate = async (orderId: string, newStatus: OrderStatus, paymentStatus?: string) => {
-    await updateOrderStatus(orderId, newStatus, paymentStatus);
+    try {
+      await updateOrderStatus(orderId, newStatus, paymentStatus);
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du statut:', error);
+    }
   };
 
   const handleExport = () => {
-    // TODO: Implémenter l'export des données
     console.log('Export des commandes...');
   };
 
@@ -115,7 +130,7 @@ export function OrdersAdmin() {
 
         {/* Footer avec info */}
         <div className="mt-6 text-center text-sm text-gray-500">
-          {filteredOrders.length} commande{filteredOrders.length > 1 ? 's' : ''} affichée{filteredOrders.length > 1 ? 's' : ''} sur {orders.length} au total
+          {filteredOrders.length} commande{filteredOrders.length > 1 ? 's' : ''} affichée{filteredOrders.length > 1 ? 's' : ''} sur {orders ? orders.length : 0} au total
         </div>
       </div>
     </div>

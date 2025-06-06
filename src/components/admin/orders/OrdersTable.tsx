@@ -89,7 +89,7 @@ export function OrdersTable({ orders, onStatusUpdate }: OrdersTableProps) {
     </TableHead>
   );
 
-  if (orders.length === 0) {
+  if (!orders || orders.length === 0) {
     return (
       <div className="bg-white border border-gray-200 rounded-lg p-12 text-center">
         <div className="text-gray-400 mb-4">
@@ -126,10 +126,10 @@ export function OrdersTable({ orders, onStatusUpdate }: OrdersTableProps) {
                 {getTypeBadge(order.type)}
               </TableCell>
               <TableCell className="font-semibold">
-                {order.amount.toLocaleString()} {order.currency}
+                {(order.amount || 0).toLocaleString()} {order.currency || 'CFA'}
               </TableCell>
               <TableCell className="font-semibold text-terex-accent">
-                {order.usdt_amount.toFixed(2)} USDT
+                {(order.usdt_amount || 0).toFixed(2)} USDT
               </TableCell>
               <TableCell className="text-sm text-gray-600">
                 {order.payment_method || 'N/A'}
