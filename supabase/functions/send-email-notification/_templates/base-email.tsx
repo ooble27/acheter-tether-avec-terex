@@ -25,13 +25,8 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => (
     <Preview>{preview}</Preview>
     <Body style={main}>
       <Container style={container}>
-        {/* Header avec logo et branding */}
+        {/* Header avec branding */}
         <Section style={header}>
-          <div style={logoContainer}>
-            <div style={logoCircle}>
-              <Text style={logoText}>T</Text>
-            </div>
-          </div>
           <Heading style={h1}>
             <span style={brandName}>Terex</span>
           </Heading>
@@ -87,31 +82,8 @@ const container = {
 const header = {
   textAlign: 'center' as const,
   padding: '40px 30px 30px',
-  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  background: 'linear-gradient(135deg, #1a202c 0%, #2d3748 100%)',
   color: '#ffffff',
-};
-
-const logoContainer = {
-  marginBottom: '20px',
-};
-
-const logoCircle = {
-  width: '60px',
-  height: '60px',
-  borderRadius: '50%',
-  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  margin: '0 auto',
-  border: '2px solid rgba(255, 255, 255, 0.3)',
-};
-
-const logoText = {
-  fontSize: '28px',
-  fontWeight: 'bold',
-  color: '#ffffff',
-  margin: '0',
 };
 
 const h1 = {

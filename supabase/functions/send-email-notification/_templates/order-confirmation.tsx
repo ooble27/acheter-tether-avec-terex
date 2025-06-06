@@ -1,10 +1,8 @@
-
 import {
   Text,
   Section,
   Row,
   Column,
-  Img,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 import { BaseEmail } from './base-email.tsx';
@@ -20,16 +18,6 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
   
   return (
     <BaseEmail preview={preview} title={title}>
-      <div style={logoContainer}>
-        <Img
-          src="https://mwwjrrduavfcwjiyniuy.supabase.co/storage/v1/object/public/avatars/terex-logo.png"
-          width="120"
-          height="40"
-          alt="Terex"
-          style={logo}
-        />
-      </div>
-      
       <div style={iconContainer}>
         <div style={successIcon}>
           {transactionType === 'buy' ? '💰' : '🚀'}
@@ -63,41 +51,76 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
               {transactionType === 'buy' ? '💳 Achat USDT' : '💸 Vente USDT'}
             </Column>
           </Row>
-          <Row style={row}>
-            <Column style={label}>Montant payé :</Column>
-            <Column style={value}>{orderData.amount || 0} {orderData.currency || 'CFA'}</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Quantité USDT :</Column>
-            <Column style={valueHighlight}>{orderData.usdt_amount || 0} USDT</Column>
-          </Row>
+          
+          {transactionType === 'buy' ? (
+            <>
+              <Row style={row}>
+                <Column style={label}>Montant payé :</Column>
+                <Column style={value}>{orderData.amount || 0} {orderData.currency || 'CFA'}</Column>
+              </Row>
+              <Row style={row}>
+                <Column style={label}>Quantité USDT reçue :</Column>
+                <Column style={valueHighlight}>{orderData.usdt_amount || 0} USDT</Column>
+              </Row>
+              <Row style={row}>
+                <Column style={label}>Adresse de réception :</Column>
+                <Column style={addressValue}>{orderData.wallet_address || 'N/A'}</Column>
+              </Row>
+            </>
+          ) : (
+            <>
+              <Row style={row}>
+                <Column style={label}>Quantité USDT vendue :</Column>
+                <Column style={valueHighlight}>{orderData.usdt_amount || 0} USDT</Column>
+              </Row>
+              <Row style={row}>
+                <Column style={label}>Montant à recevoir :</Column>
+                <Column style={value}>{orderData.amount || 0} {orderData.currency || 'CFA'}</Column>
+              </Row>
+              <Row style={row}>
+                <Column style={label}>Numéro de réception :</Column>
+                <Column style={value}>{orderData.phone_number || 'N/A'}</Column>
+              </Row>
+              <Row style={row}>
+                <Column style={label}>Service de paiement :</Column>
+                <Column style={value}>
+                  {orderData.payment_method === 'wave' ? '📱 Wave' :
+                   orderData.payment_method === 'orange' ? '🟠 Orange Money' : 
+                   orderData.payment_method === 'card' ? '💳 Virement bancaire' : 'Mobile Money'}
+                </Column>
+              </Row>
+            </>
+          )}
+          
           <Row style={row}>
             <Column style={label}>Taux de change :</Column>
             <Column style={value}>{orderData.exchange_rate || 0} {orderData.currency || 'CFA'}/USDT</Column>
           </Row>
-          <Row style={row}>
-            <Column style={label}>Réseau blockchain :</Column>
-            <Column style={value}>{orderData.network || 'TRC20'}</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Adresse de réception :</Column>
-            <Column style={addressValue}>{orderData.wallet_address || 'N/A'}</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Méthode de paiement :</Column>
-            <Column style={value}>
-              {orderData.payment_method === 'card' ? '💳 Carte bancaire' : 
-               orderData.payment_method === 'wave' ? '📱 Wave' :
-               orderData.payment_method === 'orange' ? '🟠 Orange Money' : 'Mobile Money'}
-            </Column>
-          </Row>
+          
+          {transactionType === 'buy' && (
+            <>
+              <Row style={row}>
+                <Column style={label}>Réseau blockchain :</Column>
+                <Column style={value}>{orderData.network || 'TRC20'}</Column>
+              </Row>
+              <Row style={row}>
+                <Column style={label}>Méthode de paiement :</Column>
+                <Column style={value}>
+                  {orderData.payment_method === 'card' ? '💳 Carte bancaire' : 
+                   orderData.payment_method === 'wave' ? '📱 Wave' :
+                   orderData.payment_method === 'orange' ? '🟠 Orange Money' : 'Mobile Money'}
+                </Column>
+              </Row>
+            </>
+          )}
+          
           <Row style={row}>
             <Column style={label}>Date de création :</Column>
             <Column style={value}>{new Date(orderData.created_at || Date.now()).toLocaleString('fr-FR')}</Column>
           </Row>
           <Row style={row}>
             <Column style={label}>Statut actuel :</Column>
-            <Column style={statusPending}>⏳ En attente de paiement</Column>
+            <Column style={statusPending}>⏳ En attente de traitement</Column>
           </Row>
           <Row style={row}>
             <Column style={label}>Frais de transaction :</Column>
@@ -121,15 +144,15 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
 4. Vous recevrez vos ${orderData.usdt_amount || 0} USDT sur l'adresse : ${orderData.wallet_address || 'votre adresse'}
 
 5. Un email de confirmation vous sera envoyé une fois le transfert effectué` 
-            : `1. Préparez vos ${orderData.usdt_amount || 0} USDT pour le transfert
+            : `1. Envoyez vos ${orderData.usdt_amount || 0} USDT à l'adresse qui vous sera communiquée
 
-2. Envoyez vos USDT à l'adresse qui vous sera communiquée
+2. Une fois vos USDT reçus et vérifiés, nous procéderons au paiement
 
-3. Une fois vos USDT reçus et vérifiés, nous procéderons au paiement
+3. Vous recevrez ${orderData.amount || 0} ${orderData.currency || 'CFA'} sur votre ${orderData.payment_method === 'wave' ? 'Wave' : orderData.payment_method === 'orange' ? 'Orange Money' : 'compte bancaire'}
 
-4. Vous recevrez ${orderData.amount || 0} ${orderData.currency || 'CFA'} via le service de paiement choisi
+4. Un email de confirmation vous sera envoyé une fois le paiement effectué
 
-5. Un email de confirmation vous sera envoyé une fois le paiement effectué`
+5. Délai de traitement : maximum 30 minutes`
           }
         </Text>
       </Section>
@@ -139,7 +162,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
           📞 Informations de contact
         </Text>
         <Text style={contactText}>
-          • Support client : support@terex.com
+          • Support client : terangaexchange@gmail.com
           • Téléphone Sénégal : +221 77 397 27 49
           • WhatsApp : +1 4182619091
           • Horaires : 24h/7j
@@ -159,16 +182,6 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
 };
 
 // Styles améliorés avec logo
-const logoContainer = {
-  textAlign: 'center' as const,
-  marginBottom: '20px',
-  paddingTop: '20px',
-};
-
-const logo = {
-  margin: '0 auto',
-};
-
 const iconContainer = {
   textAlign: 'center' as const,
   marginBottom: '24px',
