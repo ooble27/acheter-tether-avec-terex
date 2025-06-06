@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -148,9 +149,16 @@ export function LoginForm() {
       <div className="min-h-screen bg-terex-dark flex items-center justify-center p-4">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-white mb-2">
-              <span className="text-terex-accent">Terex</span>
-            </h1>
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <img 
+                src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" 
+                alt="Terex Logo" 
+                className="w-10 h-10"
+              />
+              <h1 className="text-4xl font-bold text-white">
+                <span className="text-terex-accent">Terex</span>
+              </h1>
+            </div>
             <p className="text-gray-400">Email de connexion envoyé</p>
           </div>
 
@@ -212,9 +220,16 @@ export function LoginForm() {
     <div className="min-h-screen bg-terex-dark flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-2">
-            <span className="text-terex-accent">Terex</span>
-          </h1>
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <img 
+              src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" 
+              alt="Terex Logo" 
+              className="w-10 h-10"
+            />
+            <h1 className="text-4xl font-bold text-white">
+              <span className="text-terex-accent">Terex</span>
+            </h1>
+          </div>
           <p className="text-gray-400">Plateforme d'échange USDT et transferts internationaux</p>
         </div>
 
