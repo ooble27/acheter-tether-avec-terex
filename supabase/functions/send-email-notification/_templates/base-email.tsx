@@ -10,7 +10,6 @@ import {
   Section,
   Hr,
   Link,
-  Img,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 
@@ -26,20 +25,20 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => (
     <Preview>{preview}</Preview>
     <Body style={main}>
       <Container style={container}>
+        {/* Header avec logo et branding */}
         <Section style={header}>
-          <Img
-            src="https://app.terangaexchange.com/placeholder.svg"
-            width="50"
-            height="50"
-            alt="Terex"
-            style={logo}
-          />
+          <div style={logoContainer}>
+            <div style={logoCircle}>
+              <Text style={logoText}>T</Text>
+            </div>
+          </div>
           <Heading style={h1}>
             <span style={brandName}>Terex</span>
           </Heading>
           <Text style={tagline}>Plateforme d'échange USDT et transferts internationaux</Text>
         </Section>
         
+        {/* Contenu principal */}
         <Section style={content}>
           <Heading style={h2}>{title}</Heading>
           {children}
@@ -47,6 +46,7 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => (
         
         <Hr style={hr} />
         
+        {/* Footer */}
         <Section style={footer}>
           <Text style={footerText}>
             Cet email a été envoyé par <strong>Terex</strong><br />
@@ -54,11 +54,11 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => (
           </Text>
           <Text style={footerLinks}>
             <Link href="https://app.terangaexchange.com" style={link}>
-              Accéder à la plateforme
+              🌐 Accéder à la plateforme
             </Link>
-            {' | '}
+            {' • '}
             <Link href="mailto:support@terangaexchange.com" style={link}>
-              Support client
+              💬 Support client
             </Link>
           </Text>
         </Section>
@@ -67,89 +67,111 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => (
   </Html>
 );
 
+// Styles cohérents avec le nouveau design
 const main = {
-  backgroundColor: '#0a0a0a',
+  backgroundColor: '#f8fafc',
   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  padding: '20px 0',
 };
 
 const container = {
   margin: '0 auto',
-  padding: '20px 0 48px',
-  width: '580px',
+  padding: '0',
+  maxWidth: '600px',
+  backgroundColor: '#ffffff',
+  borderRadius: '16px',
+  overflow: 'hidden',
+  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
 };
 
 const header = {
   textAlign: 'center' as const,
-  marginBottom: '40px',
-  padding: '20px',
-  backgroundColor: '#1a1a1a',
-  borderRadius: '12px',
+  padding: '40px 30px 30px',
+  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  color: '#ffffff',
 };
 
-const logo = {
-  margin: '0 auto 16px',
+const logoContainer = {
+  marginBottom: '20px',
+};
+
+const logoCircle = {
+  width: '60px',
+  height: '60px',
+  borderRadius: '50%',
+  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  margin: '0 auto',
+  border: '2px solid rgba(255, 255, 255, 0.3)',
+};
+
+const logoText = {
+  fontSize: '28px',
+  fontWeight: 'bold',
+  color: '#ffffff',
+  margin: '0',
 };
 
 const h1 = {
   color: '#ffffff',
   fontSize: '32px',
   fontWeight: 'bold',
-  margin: '0',
+  margin: '0 0 8px',
   lineHeight: '1.2',
 };
 
 const brandName = {
-  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-  WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
-  backgroundClip: 'text',
+  textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
 };
 
 const tagline = {
-  color: '#888888',
-  fontSize: '14px',
-  margin: '8px 0 0',
+  color: 'rgba(255, 255, 255, 0.9)',
+  fontSize: '16px',
+  margin: '0',
+  fontWeight: '400',
 };
 
 const content = {
-  backgroundColor: '#1a1a1a',
-  padding: '32px',
-  borderRadius: '12px',
-  marginBottom: '24px',
+  padding: '40px 30px',
 };
 
 const h2 = {
-  color: '#ffffff',
-  fontSize: '24px',
-  fontWeight: '600',
+  color: '#1a202c',
+  fontSize: '28px',
+  fontWeight: '700',
   margin: '0 0 24px',
   lineHeight: '1.3',
+  textAlign: 'center' as const,
 };
 
 const hr = {
-  borderColor: '#333333',
+  borderColor: '#e2e8f0',
   margin: '20px 0',
 };
 
 const footer = {
   textAlign: 'center' as const,
-  color: '#666666',
+  padding: '30px',
+  backgroundColor: '#f7fafc',
 };
 
 const footerText = {
-  color: '#666666',
-  fontSize: '12px',
+  color: '#718096',
+  fontSize: '14px',
   lineHeight: '1.4',
-  margin: '0 0 12px',
+  margin: '0 0 16px',
 };
 
 const footerLinks = {
-  color: '#666666',
-  fontSize: '12px',
+  color: '#718096',
+  fontSize: '14px',
   margin: '0',
 };
 
 const link = {
   color: '#667eea',
   textDecoration: 'none',
+  fontWeight: '500',
 };
