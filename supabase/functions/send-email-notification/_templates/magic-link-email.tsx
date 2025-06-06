@@ -26,7 +26,7 @@ export const MagicLinkEmail = ({ magicLink, userEmail }: MagicLinkEmailProps) =>
     <Preview>Votre lien de connexion sécurisé pour Terex</Preview>
     <Body style={main}>
       <Container style={container}>
-        {/* Header avec logo et branding */}
+        {/* Header avec branding Terex */}
         <Section style={header}>
           <div style={logoContainer}>
             <div style={logoCircle}>
@@ -99,7 +99,7 @@ export const MagicLinkEmail = ({ magicLink, userEmail }: MagicLinkEmailProps) =>
               🌐 Accéder à la plateforme
             </Link>
             {' • '}
-            <Link href="mailto:support@terangaexchange.com" style={link}>
+            <Link href="mailto:terangaexchange@gmail.com" style={link}>
               💬 Support client
             </Link>
           </Text>
@@ -109,9 +109,9 @@ export const MagicLinkEmail = ({ magicLink, userEmail }: MagicLinkEmailProps) =>
   </Html>
 );
 
-// Styles améliorés
+// Styles avec les couleurs Terex
 const main = {
-  backgroundColor: '#f8fafc',
+  backgroundColor: '#141414', // Terex dark
   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   padding: '20px 0',
 };
@@ -120,16 +120,17 @@ const container = {
   margin: '0 auto',
   padding: '0',
   maxWidth: '600px',
-  backgroundColor: '#ffffff',
+  backgroundColor: '#1e1e1e', // Terex darker
   borderRadius: '16px',
   overflow: 'hidden',
-  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
+  border: '1px solid #2A2A2A', // Terex gray
 };
 
 const header = {
   textAlign: 'center' as const,
   padding: '40px 30px 30px',
-  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  background: 'linear-gradient(135deg, #3B968F 0%, #4BA89F 100%)', // Terex gradient
   color: '#ffffff',
 };
 
@@ -165,7 +166,7 @@ const h1 = {
 };
 
 const brandName = {
-  textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+  textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
 };
 
 const tagline = {
@@ -177,6 +178,7 @@ const tagline = {
 
 const content = {
   padding: '40px 30px',
+  backgroundColor: '#1e1e1e', // Terex darker
 };
 
 const iconContainer = {
@@ -186,14 +188,14 @@ const iconContainer = {
 
 const lockIcon = {
   fontSize: '48px',
-  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  background: 'linear-gradient(135deg, #3B968F 0%, #4BA89F 100%)', // Terex gradient
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
 };
 
 const h2 = {
-  color: '#1a202c',
+  color: '#ffffff', // White text on dark background
   fontSize: '28px',
   fontWeight: '700',
   margin: '0 0 24px',
@@ -202,23 +204,23 @@ const h2 = {
 };
 
 const greeting = {
-  color: '#2d3748',
+  color: '#ffffff', // White text
   fontSize: '18px',
   fontWeight: '600',
   margin: '0 0 16px',
 };
 
 const text = {
-  color: '#4a5568',
+  color: '#e2e8f0', // Light gray text
   fontSize: '16px',
   lineHeight: '1.6',
   margin: '0 0 16px',
 };
 
 const emailHighlight = {
-  color: '#667eea',
+  color: '#3B968F', // Terex accent
   fontWeight: '600',
-  backgroundColor: '#f7fafc',
+  backgroundColor: '#2A2A2A', // Terex gray
   padding: '2px 6px',
   borderRadius: '4px',
 };
@@ -229,7 +231,7 @@ const buttonContainer = {
 };
 
 const button = {
-  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  background: 'linear-gradient(135deg, #3B968F 0%, #4BA89F 100%)', // Terex gradient
   borderRadius: '12px',
   color: '#ffffff',
   fontSize: '16px',
@@ -240,7 +242,7 @@ const button = {
   lineHeight: '1.5',
   padding: '16px 32px',
   border: 'none',
-  boxShadow: '0 4px 12px rgba(102, 126, 234, 0.4)',
+  boxShadow: '0 4px 12px rgba(59, 150, 143, 0.4)', // Terex accent shadow
   transition: 'all 0.2s ease',
 };
 
@@ -256,15 +258,15 @@ const buttonIcon = {
 };
 
 const securityInfo = {
-  backgroundColor: '#fff5f5',
-  border: '1px solid #fed7d7',
+  backgroundColor: '#3a1f1f', // Dark red tint
+  border: '1px solid #e53e3e',
   borderRadius: '8px',
   padding: '16px',
   margin: '24px 0',
 };
 
 const securityText = {
-  color: '#c53030',
+  color: '#feb2b2', // Light red
   fontSize: '14px',
   margin: '0',
   display: 'flex',
@@ -278,7 +280,7 @@ const warningIcon = {
 };
 
 const disclaimerText = {
-  color: '#718096',
+  color: '#94a3b8', // Light gray
   fontSize: '14px',
   lineHeight: '1.5',
   margin: '0',
@@ -286,31 +288,31 @@ const disclaimerText = {
 };
 
 const hr = {
-  borderColor: '#e2e8f0',
+  borderColor: '#2A2A2A', // Terex gray
   margin: '20px 0',
 };
 
 const footer = {
   textAlign: 'center' as const,
   padding: '30px',
-  backgroundColor: '#f7fafc',
+  backgroundColor: '#2A2A2A', // Terex gray
 };
 
 const footerText = {
-  color: '#718096',
+  color: '#ffffff', // White text
   fontSize: '14px',
   lineHeight: '1.4',
   margin: '0 0 16px',
 };
 
 const footerLinks = {
-  color: '#718096',
+  color: '#ffffff', // White text
   fontSize: '14px',
   margin: '0',
 };
 
 const link = {
-  color: '#667eea',
+  color: '#3B968F', // Terex accent
   textDecoration: 'none',
   fontWeight: '500',
 };
