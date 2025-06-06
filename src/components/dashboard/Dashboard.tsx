@@ -11,6 +11,7 @@ import { Profile } from '@/components/features/Profile';
 import { KYCPage } from '@/components/features/KYCPage';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { OrdersDashboard } from '@/components/admin/orders/OrdersDashboard';
+import { AdminPortal } from '@/components/admin/AdminPortal';
 import { OTC } from '@/components/features/OTC';
 import { TransactionProvider } from '@/contexts/TransactionContext';
 import { useIsMobile } from '@/hooks/use-mobile';
