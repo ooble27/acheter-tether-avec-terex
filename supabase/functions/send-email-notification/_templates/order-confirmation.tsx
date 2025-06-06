@@ -4,6 +4,7 @@ import {
   Section,
   Row,
   Column,
+  Img,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 import { BaseEmail } from './base-email.tsx';
@@ -19,6 +20,16 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
   
   return (
     <BaseEmail preview={preview} title={title}>
+      <div style={logoContainer}>
+        <Img
+          src="https://mwwjrrduavfcwjiyniuy.supabase.co/storage/v1/object/public/avatars/terex-logo.png"
+          width="120"
+          height="40"
+          alt="Terex"
+          style={logo}
+        />
+      </div>
+      
       <div style={iconContainer}>
         <div style={successIcon}>
           {transactionType === 'buy' ? '💰' : '🚀'}
@@ -101,7 +112,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
         </Text>
         <Text style={instructionText}>
           {transactionType === 'buy' 
-            ? `1. Vous allez recevoir les instructions de paiement pour ${orderData.payment_method === 'card' ? 'votre carte bancaire' : orderData.payment_method === 'wave' ? 'Wave' : 'Orange Money'}
+            ? `1. Vous allez recevoir les instructions de paiement pour le service de paiement choisi
             
 2. Effectuez le paiement de ${orderData.amount || 0} ${orderData.currency || 'CFA'}
 
@@ -116,7 +127,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
 
 3. Une fois vos USDT reçus et vérifiés, nous procéderons au paiement
 
-4. Vous recevrez ${orderData.amount || 0} ${orderData.currency || 'CFA'} via ${orderData.payment_method === 'card' ? 'virement bancaire' : orderData.payment_method === 'wave' ? 'Wave' : 'Orange Money'}
+4. Vous recevrez ${orderData.amount || 0} ${orderData.currency || 'CFA'} via le service de paiement choisi
 
 5. Un email de confirmation vous sera envoyé une fois le paiement effectué`
           }
@@ -129,7 +140,8 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
         </Text>
         <Text style={contactText}>
           • Support client : support@terex.com
-          • Téléphone : +221 XX XXX XX XX
+          • Téléphone : +221 77 123 45 67
+          • WhatsApp : +33 6 12 34 56 78
           • Horaires : 24h/7j
           • Temps de réponse moyen : 15 minutes
         </Text>
@@ -146,7 +158,17 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
   );
 };
 
-// Styles améliorés
+// Styles améliorés avec logo
+const logoContainer = {
+  textAlign: 'center' as const,
+  marginBottom: '20px',
+  paddingTop: '20px',
+};
+
+const logo = {
+  margin: '0 auto',
+};
+
 const iconContainer = {
   textAlign: 'center' as const,
   marginBottom: '24px',

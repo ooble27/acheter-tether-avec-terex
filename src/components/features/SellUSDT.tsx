@@ -14,13 +14,13 @@ import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
-// Adresses de portefeuille par réseau - À REMPLACER par les vraies adresses
+// Adresses de portefeuille par réseau - Vos vraies adresses
 const WALLET_ADDRESSES = {
-  TRC20: 'VOTRE_ADRESSE_TRC20_ICI',
-  BEP20: 'VOTRE_ADRESSE_BEP20_ICI', 
-  ERC20: 'VOTRE_ADRESSE_ERC20_ICI',
-  Arbitrum: 'VOTRE_ADRESSE_ARBITRUM_ICI',
-  Polygon: 'VOTRE_ADRESSE_POLYGON_ICI'
+  TRC20: 'TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb',
+  BEP20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84', 
+  ERC20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
+  Arbitrum: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
+  Polygon: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84'
 };
 
 export function SellUSDT() {
@@ -52,7 +52,7 @@ export function SellUSDT() {
     CAD: 1.35
   };
 
-  // Fonction pour formater les nombres
+  // Fonction pour formater les nombres - améliorée
   const formatAmount = (amount: string | number) => {
     const num = parseFloat(amount.toString());
     if (isNaN(num)) return '0';

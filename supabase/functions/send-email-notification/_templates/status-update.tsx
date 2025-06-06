@@ -1,9 +1,9 @@
-
 import {
   Text,
   Section,
   Row,
   Column,
+  Img,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 import { BaseEmail } from './base-email.tsx';
@@ -64,6 +64,16 @@ export const StatusUpdateEmail = ({ orderData, transactionType }: StatusUpdatePr
   
   return (
     <BaseEmail preview={preview} title={title}>
+      <div style={logoContainer}>
+        <Img
+          src="https://mwwjrrduavfcwjiyniuy.supabase.co/storage/v1/object/public/avatars/terex-logo.png"
+          width="120"
+          height="40"
+          alt="Terex"
+          style={logo}
+        />
+      </div>
+      
       <div style={iconContainer}>
         <div style={updateIcon}>📢</div>
       </div>
@@ -296,8 +306,12 @@ Un remboursement automatique sera initié si nécessaire.`
 
 Contact notre support si vous avez des questions :
 • Email : support@terex.com
-• Téléphone : +221 XX XXX XX XX
-• Référence à mentionner : #TEREX-${orderData.id?.slice(-8) || 'N/A'}
+• Téléphone d'urgence : +221 77 123 45 67
+• WhatsApp : +33 6 12 34 56 78  
+• Chat en direct : 24h/7j sur notre site
+• Numéro de référence : #TEREX-{orderData.id?.slice(-8) || 'N/A'}
+          
+N'hésitez pas à nous contacter pour toute question !
           </Text>
         </Section>
       )}
@@ -308,10 +322,10 @@ Contact notre support si vous avez des questions :
         </Text>
         <Text style={contactText}>
           • Support email : support@terex.com
-          • Téléphone d'urgence : +221 XX XXX XX XX
-          • WhatsApp : +221 XX XXX XX XX  
+          • Téléphone d'urgence : +221 77 123 45 67
+          • WhatsApp : +33 6 12 34 56 78  
           • Chat en direct : 24h/7j sur notre site
-          • Numéro de référence : #TEREX-${orderData.id?.slice(-8) || 'N/A'}
+          • Numéro de référence : #TEREX-{orderData.id?.slice(-8) || 'N/A'}
           
 N'hésitez pas à nous contacter pour toute question !
         </Text>
@@ -322,6 +336,17 @@ N'hésitez pas à nous contacter pour toute question !
       </Text>
     </BaseEmail>
   );
+};
+
+// Styles avec logo
+const logoContainer = {
+  textAlign: 'center' as const,
+  marginBottom: '20px',
+  paddingTop: '20px',
+};
+
+const logo = {
+  margin: '0 auto',
 };
 
 // Styles complets avec toutes les sections

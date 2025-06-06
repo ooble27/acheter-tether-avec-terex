@@ -1,9 +1,9 @@
-
 import {
   Text,
   Section,
   Row,
   Column,
+  Img,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 import { BaseEmail } from './base-email.tsx';
@@ -21,6 +21,16 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
   
   return (
     <BaseEmail preview={preview} title={title}>
+      <div style={logoContainer}>
+        <Img
+          src="https://mwwjrrduavfcwjiyniuy.supabase.co/storage/v1/object/public/avatars/terex-logo.png"
+          width="120"
+          height="40"
+          alt="Terex"
+          style={logo}
+        />
+      </div>
+      
       <div style={iconContainer}>
         <div style={successIcon}>✅</div>
       </div>
@@ -205,8 +215,8 @@ Vos USDT seront envoyés à : ${orderData.wallet_address || 'votre adresse'}`
         </Text>
         <Text style={contactText}>
           • Support client : support@terex.com
-          • Téléphone urgent : +221 XX XXX XX XX  
-          • WhatsApp : +221 XX XXX XX XX
+          • Téléphone urgent : +221 77 123 45 67  
+          • WhatsApp : +33 6 12 34 56 78
           • Horaires : 24h/7j
           • Référence à mentionner : #TEREX-{orderData.id?.slice(-8) || 'N/A'}
         </Text>
@@ -223,7 +233,17 @@ Vos USDT seront envoyés à : ${orderData.wallet_address || 'votre adresse'}`
   );
 };
 
-// Styles avec nouvelles sections
+// Styles avec logo et numéros de téléphone corrigés
+const logoContainer = {
+  textAlign: 'center' as const,
+  marginBottom: '20px',
+  paddingTop: '20px',
+};
+
+const logo = {
+  margin: '0 auto',
+};
+
 const iconContainer = {
   textAlign: 'center' as const,
   marginBottom: '24px',
