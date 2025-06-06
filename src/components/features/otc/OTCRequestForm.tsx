@@ -154,7 +154,6 @@ export function OTCRequestForm() {
       </Card>
 
       <div className="space-y-6">
-        {/* Estimation des coûts */}
         <Card className="bg-terex-darker border-terex-gray/30">
           <CardHeader>
             <CardTitle className="text-white flex items-center space-x-2">
@@ -193,7 +192,6 @@ export function OTCRequestForm() {
           </CardContent>
         </Card>
 
-        {/* Avantages */}
         <Card className="bg-terex-darker border-terex-gray/30">
           <CardHeader>
             <CardTitle className="text-white">Avantages OTC</CardTitle>
@@ -220,7 +218,6 @@ export function OTCRequestForm() {
           </CardContent>
         </Card>
 
-        {/* Avertissement */}
         <Card className="bg-yellow-500/10 border-yellow-500/30">
           <CardContent className="p-4">
             <div className="flex items-start space-x-3">
