@@ -2,6 +2,7 @@
 import {
   Text,
   Section,
+  Link,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 import { BaseEmail } from './base-email.tsx';
@@ -12,8 +13,8 @@ interface OrderConfirmationProps {
 }
 
 export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConfirmationProps) => {
-  const title = transactionType === 'buy' ? 'Achat USDT confirmé' : 'Vente USDT confirmée';
-  const preview = `Votre commande #${orderData.id?.slice(-8)} a été confirmée`;
+  const title = transactionType === 'buy' ? 'Demande d\'achat USDT reçue' : 'Demande de vente USDT reçue';
+  const preview = `Votre demande #${orderData.id?.slice(-8)} a été reçue`;
   
   // Parser les notes pour récupérer les informations du client
   let clientInfo = null;
@@ -32,11 +33,11 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
   return (
     <BaseEmail preview={preview} title={title}>
       <Text style={greeting}>
-        🎉 Félicitations ! Votre commande a été confirmée
+        🎉 Félicitations ! Nous avons bien reçu votre demande
       </Text>
       
       <Section style={orderCard}>
-        <Text style={cardTitle}>📋 Détails de votre commande</Text>
+        <Text style={cardTitle}>📋 Détails de votre demande</Text>
         
         <div style={detailRow}>
           <span style={label}>Numéro :</span>
@@ -53,11 +54,11 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
         {transactionType === 'buy' ? (
           <>
             <div style={detailRow}>
-              <span style={label}>Montant payé :</span>
+              <span style={label}>Montant à payer :</span>
               <span style={value}>{orderData.amount || 0} {orderData.currency || 'CFA'}</span>
             </div>
             <div style={detailRow}>
-              <span style={label}>USDT reçu :</span>
+              <span style={label}>USDT à recevoir :</span>
               <span style={highlight}>{orderData.usdt_amount || 0} USDT</span>
             </div>
             <div style={detailRow}>
@@ -68,7 +69,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
         ) : (
           <>
             <div style={detailRow}>
-              <span style={label}>USDT vendu :</span>
+              <span style={label}>USDT à vendre :</span>
               <span style={highlight}>{orderData.usdt_amount || 0} USDT</span>
             </div>
             <div style={detailRow}>
@@ -97,18 +98,18 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
         </div>
       </Section>
       
-      <Section style={instructionCard}>
-        <Text style={instructionTitle}>📋 Prochaines étapes</Text>
-        <Text style={instructionText}>
+      <Section style={processCard}>
+        <Text style={processTitle}>📋 Étapes du processus</Text>
+        <Text style={processText}>
           {transactionType === 'buy' 
-            ? `• Vous recevrez les instructions de paiement\n• Effectuez le paiement de ${orderData.amount || 0} ${orderData.currency || 'CFA'}\n• Recevez vos ${orderData.usdt_amount || 0} USDT` 
-            : `• Envoyez ${orderData.usdt_amount || 0} USDT à l'adresse fournie\n• Recevez ${orderData.amount || 0} ${orderData.currency || 'CFA'} sur ${providerName}\n• Délai maximum : 30 minutes`
+            ? `1. Votre demande d'achat est en cours de traitement\n2. Vous recevrez les instructions de paiement\n3. Effectuez le paiement de ${orderData.amount || 0} ${orderData.currency || 'CFA'}\n4. Recevez vos ${orderData.usdt_amount || 0} USDT sur votre portefeuille` 
+            : `1. Votre demande de vente est en cours de traitement\n2. Envoyez ${orderData.usdt_amount || 0} USDT à l'adresse qui vous sera fournie\n3. Une fois les USDT reçus et confirmés, vous recevrez ${orderData.amount || 0} ${orderData.currency || 'CFA'} sur votre ${providerName} (${phoneNumber})\n4. Délai de traitement : maximum 30 minutes après réception des USDT`
           }
         </Text>
       </Section>
       
       <Section style={contactCard}>
-        <Text style={contactTitle}>📞 Support</Text>
+        <Text style={contactTitle}>📞 Support client</Text>
         <Text style={contactText}>
           Email : terangaexchange@gmail.com{'\n'}
           Téléphone : +221 77 397 27 49{'\n'}
@@ -116,8 +117,18 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
         </Text>
       </Section>
       
+      <Section style={platformCard}>
+        <Text style={platformTitle}>🔐 Accéder à votre compte</Text>
+        <Text style={platformText}>
+          Suivez l'état de votre transaction en temps réel sur votre espace client Terex.
+        </Text>
+        <Link href="https://terex.lovable.app" style={platformLink}>
+          Accéder à la plateforme Terex
+        </Link>
+      </Section>
+      
       <Text style={thankYou}>
-        🙏 Merci de faire confiance à Terex !
+        🙏 Merci de faire confiance à Terex pour vos échanges crypto !
       </Text>
     </BaseEmail>
   );
@@ -181,7 +192,7 @@ const address = {
   wordBreak: 'break-all' as const,
 };
 
-const instructionCard = {
+const processCard = {
   backgroundColor: '#f0fdf4',
   border: '2px solid #3B968F',
   borderRadius: '12px',
@@ -189,14 +200,14 @@ const instructionCard = {
   margin: '24px 0',
 };
 
-const instructionTitle = {
+const processTitle = {
   color: '#3B968F',
   fontSize: '16px',
   fontWeight: '600',
   margin: '0 0 12px 0',
 };
 
-const instructionText = {
+const processText = {
   color: '#374151',
   fontSize: '14px',
   lineHeight: '1.6',
@@ -225,6 +236,41 @@ const contactText = {
   lineHeight: '1.6',
   margin: '0',
   whiteSpace: 'pre-line' as const,
+};
+
+const platformCard = {
+  backgroundColor: '#fef3c7',
+  border: '2px solid #3B968F',
+  borderRadius: '12px',
+  padding: '24px',
+  margin: '24px 0',
+  textAlign: 'center' as const,
+};
+
+const platformTitle = {
+  color: '#3B968F',
+  fontSize: '16px',
+  fontWeight: '600',
+  margin: '0 0 12px 0',
+};
+
+const platformText = {
+  color: '#374151',
+  fontSize: '14px',
+  lineHeight: '1.6',
+  margin: '0 0 16px 0',
+};
+
+const platformLink = {
+  color: '#ffffff',
+  backgroundColor: '#3B968F',
+  fontSize: '14px',
+  fontWeight: '600',
+  textDecoration: 'none',
+  padding: '12px 24px',
+  borderRadius: '8px',
+  display: 'inline-block',
+  margin: '0 auto',
 };
 
 const thankYou = {
