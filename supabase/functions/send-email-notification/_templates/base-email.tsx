@@ -22,9 +22,7 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
       <Preview>{preview}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <div style={logoContainer}>
-            <Heading style={heading}>{title}</Heading>
-          </div>
+          <Heading style={heading}>{title}</Heading>
           {children}
         </Container>
       </Body>
@@ -35,32 +33,21 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
 const main = {
   backgroundColor: '#000000',
   fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
-  minHeight: '100vh',
-  padding: '0',
   margin: '0',
-  width: '100%',
+  padding: '0',
 };
 
 const container = {
   backgroundColor: '#000000',
-  border: '1px solid #3B968F',
-  borderRadius: '8px',
   maxWidth: '600px',
-  margin: '20px auto',
+  margin: '0 auto',
   padding: '40px 20px',
-  width: '100%',
-  boxSizing: 'border-box' as const,
-};
-
-const logoContainer = {
-  textAlign: 'center' as const,
-  marginBottom: '32px',
 };
 
 const heading = {
   color: '#3B968F',
   fontSize: '24px',
   fontWeight: '600',
-  margin: '0',
+  margin: '0 0 32px 0',
   textAlign: 'center' as const,
 };
