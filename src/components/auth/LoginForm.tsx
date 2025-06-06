@@ -148,18 +148,29 @@ export function LoginForm() {
     return (
       <div className="min-h-screen bg-terex-dark flex items-center justify-center p-4">
         <div className="w-full max-w-md space-y-8">
+          {/* Logo Header Style Binance */}
           <div className="text-center">
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <img 
-                src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" 
-                alt="Terex Logo" 
-                className="w-10 h-10"
-              />
-              <h1 className="text-4xl font-bold text-white">
-                <span className="text-terex-accent">Terex</span>
-              </h1>
+            <div className="flex items-center justify-center mb-6">
+              <div className="relative flex items-center gap-4 p-6 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-2xl border border-terex-accent/20 backdrop-blur-sm">
+                <div className="relative">
+                  <img 
+                    src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" 
+                    alt="Terex Logo" 
+                    className="w-12 h-12 drop-shadow-lg"
+                  />
+                  <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 to-transparent rounded-lg blur opacity-60"></div>
+                </div>
+                <div className="flex flex-col">
+                  <h1 className="text-3xl font-black tracking-tight text-white">
+                    <span className="bg-gradient-to-r from-terex-accent to-terex-accent/80 bg-clip-text text-transparent">
+                      TEREX
+                    </span>
+                  </h1>
+                  <p className="text-xs font-medium text-terex-accent/70 uppercase tracking-wider">Exchange</p>
+                </div>
+              </div>
             </div>
-            <p className="text-gray-400">Email de connexion envoyé</p>
+            <p className="text-gray-400 text-sm">Email de connexion envoyé</p>
           </div>
 
           <Card className="bg-terex-darker border-terex-gray">
@@ -219,21 +230,32 @@ export function LoginForm() {
   return (
     <div className="min-h-screen bg-terex-dark flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
+        {/* Logo Header Style Binance */}
         <div className="text-center">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <img 
-              src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" 
-              alt="Terex Logo" 
-              className="w-10 h-10"
-            />
-            <h1 className="text-4xl font-bold text-white">
-              <span className="text-terex-accent">Terex</span>
-            </h1>
+          <div className="flex items-center justify-center mb-6">
+            <div className="relative flex items-center gap-4 p-6 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-2xl border border-terex-accent/20 backdrop-blur-sm">
+              <div className="relative">
+                <img 
+                  src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" 
+                  alt="Terex Logo" 
+                  className="w-12 h-12 drop-shadow-lg"
+                />
+                <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 to-transparent rounded-lg blur opacity-60"></div>
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-3xl font-black tracking-tight text-white">
+                  <span className="bg-gradient-to-r from-terex-accent to-terex-accent/80 bg-clip-text text-transparent">
+                    TEREX
+                  </span>
+                </h1>
+                <p className="text-xs font-medium text-terex-accent/70 uppercase tracking-wider">Exchange</p>
+              </div>
+            </div>
           </div>
           <p className="text-gray-400">Plateforme d'échange USDT et transferts internationaux</p>
         </div>
 
-        <Card className="bg-terex-darker border-terex-gray">
+        <Card className="bg-terex-darker border-terex-gray backdrop-blur-sm">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl text-center text-white">Bienvenue</CardTitle>
             <CardDescription className="text-center text-gray-400">

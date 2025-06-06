@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -58,6 +58,32 @@
   }
 }
 
+/* Style Binance pour le logo et branding */
+.terex-brand {
+  background: linear-gradient(135deg, #3B968F 0%, #4BA89F 50%, #5BC1B8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 30px rgba(59, 150, 143, 0.3);
+}
+
+.logo-glow {
+  position: relative;
+}
+
+.logo-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, #3B968F, #4BA89F, #5BC1B8);
+  border-radius: inherit;
+  filter: blur(8px);
+  opacity: 0.3;
+  z-index: -1;
+}
+
 .gradient-button {
   background: linear-gradient(135deg, #3B968F 0%, #4BA89F 100%);
   transition: all 0.3s ease;
@@ -74,6 +100,13 @@
   box-shadow: none;
 }
 
+/* Glass morphism effect pour les cartes */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .animate-fade-in {
     animation: fade-in 0.4s ease-out;
@@ -85,6 +118,10 @@
   
   .animate-scale-in {
     animation: scale-in 0.2s ease-out;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
   }
 }
 
@@ -107,6 +144,15 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 20px rgba(59, 150, 143, 0.2);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(59, 150, 143, 0.4);
   }
 }
 

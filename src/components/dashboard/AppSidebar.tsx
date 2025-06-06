@@ -1,3 +1,4 @@
+
 import {
   Sidebar,
   SidebarContent,
@@ -84,20 +85,26 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
   return (
     <div className="flex flex-col h-full">
       <SidebarHeader className="p-6 border-b border-terex-gray/30">
+        {/* Logo Header Style Binance dans la Sidebar */}
         <div className="flex items-center space-x-3">
-          <div className="relative">
-            <img 
-              src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-              alt="Terex Logo" 
-              className="w-12 h-12 rounded-lg shadow-lg"
-            />
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-terex-darker"></div>
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-white">
-              <span className="text-terex-accent">Terex</span>
-            </h1>
-            <p className="text-xs text-gray-400 font-medium">Plateforme Pro</p>
+          <div className="relative flex items-center gap-3 p-3 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-xl border border-terex-accent/20">
+            <div className="relative">
+              <img 
+                src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+                alt="Terex Logo" 
+                className="w-10 h-10 rounded-lg shadow-lg"
+              />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-terex-darker"></div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 to-transparent rounded-lg blur opacity-40"></div>
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-xl font-black tracking-tight text-white">
+                <span className="bg-gradient-to-r from-terex-accent to-terex-accent/80 bg-clip-text text-transparent">
+                  TEREX
+                </span>
+              </h1>
+              <p className="text-[10px] font-medium text-terex-accent/70 uppercase tracking-wider">Pro Platform</p>
+            </div>
           </div>
         </div>
       </SidebarHeader>
