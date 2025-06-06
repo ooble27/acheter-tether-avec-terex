@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from './AppSidebar';
@@ -10,6 +11,7 @@ import { TransactionHistory } from '@/components/features/TransactionHistory';
 import { KYCPage } from '@/components/features/KYCPage';
 import { Profile } from '@/components/features/Profile';
 import { FAQ } from '@/components/features/FAQ';
+import { useTransactions } from '@/contexts/TransactionContext';
 
 interface DashboardProps {
   user: {
@@ -21,11 +23,12 @@ interface DashboardProps {
 
 export const Dashboard = ({ user, onLogout }: DashboardProps) => {
   const [activeTab, setActiveTab] = useState("home");
+  const { transactions } = useTransactions();
 
   const renderContent = () => {
     switch (activeTab) {
       case "home":
-        return <DashboardHome />;
+        return <DashboardHome user={user} />;
       case "buy":
         return <BuyUSDT />;
       case "sell":
@@ -35,11 +38,11 @@ export const Dashboard = ({ user, onLogout }: DashboardProps) => {
       case "terex-pay":
         return <TerexPay />;
       case "history":
-        return <TransactionHistory />;
+        return <TransactionHistory transactions={transactions} />;
       case "kyc":
-        return <KYCPage />;
+        return <KYCPage onBack={() => setActiveTab("profile")} />;
       case "profile":
-        return <Profile user={user} />;
+        return <Profile user={user} onLogout={onLogout} />;
       case "faq":
         return <FAQ />;
       case "support":
@@ -50,7 +53,7 @@ export const Dashboard = ({ user, onLogout }: DashboardProps) => {
           </div>
         );
       default:
-        return <DashboardHome />;
+        return <DashboardHome user={user} />;
     }
   };
 
