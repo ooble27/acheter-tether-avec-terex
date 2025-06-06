@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRightLeft, Shield, Clock, CreditCard, Smartphone } from 'lucide-react';
+import { ArrowRightLeft, Shield, Clock, CreditCard } from 'lucide-react';
 import { OrderConfirmation } from '@/components/features/OrderConfirmation';
 import { PaymentPage } from '@/components/features/PaymentPage';
 import { useOrders } from '@/hooks/useOrders';
@@ -161,7 +162,11 @@ export function BuyUSDT() {
                       value="mobile"
                       className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
                     >
-                      <Smartphone className="mr-1 md:mr-2 w-4 h-4" />
+                      <img 
+                        src="/lovable-uploads/52b82a09-1493-4fdf-8589-0e3497357f07.png" 
+                        alt="Wave" 
+                        className="mr-1 md:mr-2 w-4 h-4 rounded-full"
+                      />
                       <span className="hidden sm:inline">Mobile Money</span>
                       <span className="sm:hidden">Mobile</span>
                     </TabsTrigger>

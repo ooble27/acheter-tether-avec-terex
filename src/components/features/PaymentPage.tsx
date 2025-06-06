@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, CreditCard, Smartphone, Shield, Clock, CheckCircle } from 'lucide-react';
+import { ArrowLeft, CreditCard, Shield, Clock, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface PaymentPageProps {
@@ -256,7 +256,11 @@ export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPag
                         onClick={() => setMobileData({...mobileData, provider: 'wave'})}
                       >
                         <div className="flex items-center space-x-3">
-                          <Smartphone className="w-8 h-8 text-blue-500" />
+                          <img 
+                            src="/lovable-uploads/52b82a09-1493-4fdf-8589-0e3497357f07.png" 
+                            alt="Wave" 
+                            className="w-8 h-8 rounded-full"
+                          />
                           <div>
                             <h3 className="text-white font-semibold">Wave</h3>
                             <p className="text-gray-400 text-sm">Paiement instantané</p>
@@ -277,7 +281,9 @@ export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPag
                         onClick={() => setMobileData({...mobileData, provider: 'orange'})}
                       >
                         <div className="flex items-center space-x-3">
-                          <Smartphone className="w-8 h-8 text-orange-500" />
+                          <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                            <span className="text-white font-bold text-sm">OM</span>
+                          </div>
                           <div>
                             <h3 className="text-white font-semibold">Orange Money</h3>
                             <p className="text-gray-400 text-sm">Paiement sécurisé</p>

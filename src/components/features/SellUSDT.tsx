@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -204,8 +205,24 @@ export function SellUSDT() {
                       <SelectValue placeholder="Choisir un service" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="orange">Orange Money</SelectItem>
-                      <SelectItem value="wave">Wave</SelectItem>
+                      <SelectItem value="wave">
+                        <div className="flex items-center space-x-2">
+                          <img 
+                            src="/lovable-uploads/52b82a09-1493-4fdf-8589-0e3497357f07.png" 
+                            alt="Wave" 
+                            className="w-5 h-5 rounded-full"
+                          />
+                          <span>Wave</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="orange">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center">
+                            <span className="text-white font-bold text-xs">OM</span>
+                          </div>
+                          <span>Orange Money</span>
+                        </div>
+                      </SelectItem>
                       <SelectItem value="free">Free Money</SelectItem>
                     </SelectContent>
                   </Select>
