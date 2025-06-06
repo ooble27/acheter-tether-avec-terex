@@ -400,7 +400,7 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                       <span className="text-black font-bold">ML</span>
                     </div>
                     <div>
-                      <p className="text-white font-medium">Mohamed Lou</p>
+                      <p className="text-white font-medium">Mohamed Lo</p>
                       <p className="text-sm">Fondateur & CEO</p>
                     </div>
                   </div>
@@ -713,7 +713,7 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                     "La transparence n'est pas simplement une pratique commerciale, c'est un engagement moral 
                     envers nos utilisateurs. Cacher des frais est la façon la plus rapide de perdre la confiance."
                   </p>
-                  <p className="text-xs text-terex-accent mt-2">- Mohamed Lou, Fondateur</p>
+                  <p className="text-xs text-terex-accent mt-2">- Mohamed Lo, Fondateur</p>
                 </div>
               </div>
               <div className="bg-terex-gray p-4 rounded-lg">
