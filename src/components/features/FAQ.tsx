@@ -1,14 +1,8 @@
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { useContext } from 'react';
 
-interface FAQProps {
-  onNavigateToGuide?: () => void;
-}
-
-export function FAQ({ onNavigateToGuide }: FAQProps) {
+export function FAQ() {
   const faqItems = [
     {
       id: "item-1",
@@ -144,34 +138,18 @@ export function FAQ({ onNavigateToGuide }: FAQProps) {
               <CardTitle className="text-white">Ressources</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Button
-                variant="ghost"
-                onClick={onNavigateToGuide}
-                className="w-full justify-start text-terex-accent hover:text-terex-accent-light hover:bg-terex-gray/50 transition-colors text-sm p-2 h-auto"
-              >
+              <a href="#" className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm">
                 📖 Guide d'utilisation
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={onNavigateToGuide}
-                className="w-full justify-start text-terex-accent hover:text-terex-accent-light hover:bg-terex-gray/50 transition-colors text-sm p-2 h-auto"
-              >
+              </a>
+              <a href="#" className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm">
                 🔒 Politique de sécurité
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={onNavigateToGuide}
-                className="w-full justify-start text-terex-accent hover:text-terex-accent-light hover:bg-terex-gray/50 transition-colors text-sm p-2 h-auto"
-              >
+              </a>
+              <a href="#" className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm">
                 📋 Conditions d'utilisation
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={onNavigateToGuide}
-                className="w-full justify-start text-terex-accent hover:text-terex-accent-light hover:bg-terex-gray/50 transition-colors text-sm p-2 h-auto"
-              >
+              </a>
+              <a href="#" className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm">
                 💡 Blog Terex
-              </Button>
+              </a>
             </CardContent>
           </Card>
         </div>

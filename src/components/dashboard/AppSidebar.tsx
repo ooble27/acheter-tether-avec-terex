@@ -1,4 +1,3 @@
-
 import {
   Sidebar,
   SidebarContent,
@@ -234,18 +233,17 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        
-        {/* Bouton de déconnexion repositionné plus haut */}
-        <div className="mt-6 px-2">
-          <Button 
-            onClick={onLogout}
-            className="w-full h-12 md:h-12 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium"
-          >
-            <LogOut className="mr-3 h-5 w-5" />
-            Déconnexion
-          </Button>
-        </div>
       </SidebarContent>
+      
+      <div className="p-4 border-t border-terex-gray/30 mt-auto">
+        <Button 
+          onClick={onLogout}
+          className="w-full h-16 md:h-16 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium"
+        >
+          <LogOut className="mr-3 h-5 w-5" />
+          Déconnexion
+        </Button>
+      </div>
     </div>
   );
 };
