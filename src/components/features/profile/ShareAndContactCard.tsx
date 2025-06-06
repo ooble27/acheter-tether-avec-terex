@@ -1,91 +1,97 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Share2, MessageCircle } from 'lucide-react';
+import { Share2, Mail, Phone, MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export function ShareAndContactCard() {
   const { toast } = useToast();
 
-  const handleWhatsAppClick = () => {
-    const phoneNumber = '+14182619091';
-    const message = 'Bonjour, je souhaiterais obtenir plus d\'informations sur Terex.';
-    const whatsappUrl = `https://wa.me/${phoneNumber.replace('+', '')}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Terex - Échange crypto et transferts',
+          text: 'Découvrez Terex pour vos échanges USDT et virements internationaux',
+          url: 'https://app.terangaexchange.com'
+        });
+      } catch (error) {
+        console.log('Erreur lors du partage:', error);
+      }
+    } else {
+      // Fallback pour les navigateurs qui ne supportent pas l'API de partage
+      navigator.clipboard.writeText('https://app.terangaexchange.com');
+      toast({
+        title: "Lien copié !",
+        description: "Le lien de Terex a été copié dans le presse-papiers",
+      });
+    }
   };
 
-  const handleShareTerex = async () => {
-    const shareData = {
-      title: 'Terex - Plateforme de change et transfert',
-      text: 'Découvrez Terex - La plateforme de change et de transfert d\'argent',
-      url: window.location.origin
-    };
+  const handleEmailContact = () => {
+    window.open('mailto:lomohamed834@gmail.com?subject=Contact Terex', '_blank');
+  };
 
-    try {
-      // Vérifier si l'API Web Share est supportée
-      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
-        await navigator.share(shareData);
-      } else {
-        // Fallback : copier le lien
-        const textToShare = `${shareData.text} - ${shareData.url}`;
-        await navigator.clipboard.writeText(textToShare);
-        toast({
-          title: "Lien copié !",
-          description: "Le lien Terex a été copié dans le presse-papiers",
-          className: "bg-green-600 text-white border-green-600",
-        });
-      }
-    } catch (error) {
-      console.error('Erreur lors du partage:', error);
-      // Fallback final : copier le lien
-      try {
-        const textToShare = `${shareData.text} - ${shareData.url}`;
-        await navigator.clipboard.writeText(textToShare);
-        toast({
-          title: "Lien copié !",
-          description: "Le lien Terex a été copié dans le presse-papiers",
-          className: "bg-green-600 text-white border-green-600",
-        });
-      } catch (clipboardError) {
-        toast({
-          title: "Erreur",
-          description: "Impossible de partager ou copier le lien",
-          variant: "destructive",
-        });
-      }
-    }
+  const handlePhoneContact = () => {
+    window.open('tel:+221773972749', '_blank');
+  };
+
+  const handleWhatsAppContact = () => {
+    window.open('https://wa.me/14182619091', '_blank');
   };
 
   return (
     <Card className="bg-terex-darker border-terex-gray">
       <CardHeader>
-        <CardTitle className="text-white">Partager Terex</CardTitle>
+        <CardTitle className="text-white">Partager & Contact</CardTitle>
         <CardDescription className="text-gray-400">
-          Partagez Terex avec vos proches et contactez-nous
+          Partagez Terex ou contactez notre équipe
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-3">
-          <Button 
-            onClick={handleShareTerex}
+          <Button
+            onClick={handleShare}
             variant="outline"
-            className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
+            className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray"
           >
             <Share2 className="w-4 h-4 mr-2" />
             Partager Terex
           </Button>
           
-          <Button 
-            onClick={handleWhatsAppClick}
-            className="w-full bg-green-600 hover:bg-green-700 text-white"
-          >
-            <MessageCircle className="w-4 h-4 mr-2" />
-            Nous rejoindre sur WhatsApp
-          </Button>
-        </div>
-        
-        <div className="text-center text-sm text-gray-400 mt-4">
-          <p>Partagez Terex avec vos proches et découvrez tous nos services</p>
+          <div className="space-y-2">
+            <p className="text-white font-medium text-sm">Contactez-nous :</p>
+            
+            <Button
+              onClick={handleEmailContact}
+              variant="outline"
+              size="sm"
+              className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray text-xs"
+            >
+              <Mail className="w-3 h-3 mr-2" />
+              lomohamed834@gmail.com
+            </Button>
+            
+            <Button
+              onClick={handlePhoneContact}
+              variant="outline"
+              size="sm"
+              className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray text-xs"
+            >
+              <Phone className="w-3 h-3 mr-2" />
+              +221 77 397 27 49
+            </Button>
+            
+            <Button
+              onClick={handleWhatsAppContact}
+              variant="outline"
+              size="sm"
+              className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray text-xs"
+            >
+              <MessageCircle className="w-3 h-3 mr-2" />
+              WhatsApp: +1 418 261 9091
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>

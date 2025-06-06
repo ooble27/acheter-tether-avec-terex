@@ -50,8 +50,7 @@ export function SellUSDT() {
   const { toast } = useToast();
 
   const exchangeRates = {
-    CFA: 615,
-    CAD: 1.35
+    CFA: 615
   };
 
   // Fonction pour formater les nombres - améliorée
@@ -252,7 +251,7 @@ export function SellUSDT() {
                       className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
                     >
                       <img 
-                        src="/lovable-uploads/52b82a09-1493-4fdf-8589-0e3497357f07.png" 
+                        src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
                         alt="Wave" 
                         className="mr-1 md:mr-2 w-4 h-4 rounded-full"
                       />
@@ -302,7 +301,6 @@ export function SellUSDT() {
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectItem value="CFA">CFA</SelectItem>
-                                  <SelectItem value="CAD">CAD</SelectItem>
                                 </SelectContent>
                               </Select>
                             </div>
@@ -422,13 +420,13 @@ export function SellUSDT() {
                                 <SelectContent>
                                   <SelectItem value="wave">
                                     <div className="flex items-center space-x-2">
-                                      <img src="/lovable-uploads/52b82a09-1493-4fdf-8589-0e3497357f07.png" alt="Wave" className="w-4 h-4" />
+                                      <img src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" alt="Wave" className="w-4 h-4" />
                                       <span>Wave</span>
                                     </div>
                                   </SelectItem>
                                   <SelectItem value="orange">
                                     <div className="flex items-center space-x-2">
-                                      <img src="/lovable-uploads/62ebb1fa-b6ad-4de9-b63e-14b9a3baaf99.png" alt="Orange Money" className="w-4 h-4" />
+                                      <img src="/lovable-uploads/86b4b50f-9595-46c2-8cce-30343f23454a.png" alt="Orange Money" className="w-4 h-4" />
                                       <span>Orange Money</span>
                                     </div>
                                   </SelectItem>
@@ -482,10 +480,6 @@ export function SellUSDT() {
                 <div className="flex items-center justify-between">
                   <span className="text-gray-400 text-sm">USDT/CFA</span>
                   <span className="text-white font-bold">615 CFA</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-400 text-sm">USDT/CAD</span>
-                  <span className="text-white font-bold">1.35 CAD</span>
                 </div>
               </CardContent>
             </Card>

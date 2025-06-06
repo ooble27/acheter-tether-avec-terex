@@ -144,7 +144,7 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
                   <SelectItem value="mali" className="text-white hover:bg-terex-gray">Mali</SelectItem>
                   <SelectItem value="burkina" className="text-white hover:bg-terex-gray">Burkina Faso</SelectItem>
                   <SelectItem value="cote_ivoire" className="text-white hover:bg-terex-gray">Côte d'Ivoire</SelectItem>
-                  <SelectItem value="canada" className="text-white hover:bg-terex-gray">Canada</SelectItem>
+                  <SelectItem value="niger" className="text-white hover:bg-terex-gray">Niger</SelectItem>
                 </SelectContent>
               </Select>
             </div>

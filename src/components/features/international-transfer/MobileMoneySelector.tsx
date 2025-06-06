@@ -28,13 +28,13 @@ export function MobileMoneySelector({ onComplete, onBack, recipientCountry }: Mo
     {
       id: 'wave',
       name: 'Wave',
-      logo: '/lovable-uploads/496a4b67-cae5-4ddb-8cfd-4f4703af7b18.png',
+      logo: '/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png',
       countries: ['SN', 'CI', 'ML', 'BF']
     },
     {
       id: 'orange',
       name: 'Orange Money',
-      logo: '/lovable-uploads/c5146d55-251c-4d50-b2f8-0abf082fadb8.png',
+      logo: '/lovable-uploads/86b4b50f-9595-46c2-8cce-30343f23454a.png',
       countries: ['SN', 'CI', 'ML', 'BF', 'NG', 'BJ']
     }
   ];
