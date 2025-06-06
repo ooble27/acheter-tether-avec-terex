@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -69,28 +68,40 @@ export function KYCForm({ onComplete }: KYCFormProps) {
 
     setUploading(documentType);
 
-    const result = await uploadDocument(file, documentType);
-    
-    if (result.error) {
+    try {
+      const result = await uploadDocument(file, documentType);
+      
+      if (result.error) {
+        toast({
+          title: "Erreur de téléchargement",
+          description: result.error,
+          variant: "destructive",
+        });
+      } else if (result.url) {
+        handleInputChange(urlField, result.url);
+        toast({
+          title: "Document téléchargé",
+          description: "Le document a été téléchargé avec succès",
+          className: "bg-green-600 text-white border-green-600",
+        });
+      }
+    } catch (error) {
+      console.error('Erreur upload:', error);
       toast({
         title: "Erreur de téléchargement",
-        description: result.error,
+        description: "Une erreur est survenue lors du téléchargement",
         variant: "destructive",
       });
-    } else if (result.url) {
-      handleInputChange(urlField, result.url);
-      toast({
-        title: "Document téléchargé",
-        description: "Le document a été téléchargé avec succès",
-        className: "bg-green-600 text-white border-green-600",
-      });
+    } finally {
+      setUploading(null);
     }
-
-    setUploading(null);
   };
 
-  const handleSubmit = async () => {
-    // Validation des champs requis
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
+    }
+    
     const requiredFields = [
       'first_name', 'last_name', 'date_of_birth', 'nationality',
       'address', 'city', 'country', 'phone_number',
@@ -111,23 +122,32 @@ export function KYCForm({ onComplete }: KYCFormProps) {
 
     setSubmitting(true);
     
-    const result = await submitKYC(formData);
-    
-    if (result?.error) {
+    try {
+      const result = await submitKYC(formData);
+      
+      if (result?.error) {
+        toast({
+          title: "Erreur de soumission",
+          description: result.error,
+          variant: "destructive",
+        });
+      } else {
+        onComplete?.();
+      }
+    } catch (error) {
+      console.error('Erreur soumission:', error);
       toast({
         title: "Erreur de soumission",
-        description: result.error,
+        description: "Une erreur est survenue lors de la soumission",
         variant: "destructive",
       });
-    } else {
-      onComplete?.();
+    } finally {
+      setSubmitting(false);
     }
-    
-    setSubmitting(false);
   };
 
   return (
-    <div className="w-full max-w-none mx-auto space-y-6 md:space-y-8">
+    <form onSubmit={handleSubmit} className="w-full max-w-none mx-auto space-y-6 md:space-y-8">
       {/* Informations personnelles */}
       <Card className="bg-terex-darker border-terex-gray shadow-lg w-full">
         <CardHeader className="pb-4 md:pb-6 px-6 md:px-8 pt-6 md:pt-8">
@@ -384,9 +404,13 @@ export function KYCForm({ onComplete }: KYCFormProps) {
               type="file"
               id="selfie"
               accept="image/*"
+              capture="user"
               onChange={(e) => {
                 const file = e.target.files?.[0];
-                if (file) handleFileUpload(file, 'selfie', 'selfie_url');
+                if (file) {
+                  e.preventDefault();
+                  handleFileUpload(file, 'selfie', 'selfie_url');
+                }
               }}
               className="hidden"
             />
@@ -476,7 +500,7 @@ export function KYCForm({ onComplete }: KYCFormProps) {
       {/* Bouton de soumission */}
       <div className="flex justify-center pt-6 md:pt-8">
         <Button 
-          onClick={handleSubmit}
+          type="submit"
           disabled={submitting}
           className="bg-terex-accent hover:bg-terex-accent/90 text-white font-medium px-12 md:px-16 py-4 md:py-5 text-lg md:text-xl h-auto rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 w-full md:w-auto max-w-md"
         >
@@ -490,6 +514,6 @@ export function KYCForm({ onComplete }: KYCFormProps) {
           )}
         </Button>
       </div>
-    </div>
+    </form>
   );
 }

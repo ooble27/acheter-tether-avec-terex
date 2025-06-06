@@ -55,7 +55,6 @@ export const useKYC = () => {
         throw error;
       }
 
-      // Type assertion pour résoudre le conflit TypeScript avec le status
       setKycData(data as KYCData);
     } catch (error) {
       console.error('Erreur lors de la récupération KYC:', error);
@@ -100,7 +99,6 @@ export const useKYC = () => {
     if (!user) return { error: 'Utilisateur non connecté' };
 
     try {
-      // CORRECTION: Ne soumettre que si toutes les informations requises sont présentes
       const requiredFields = [
         'first_name', 'last_name', 'date_of_birth', 'nationality',
         'address', 'city', 'country', 'phone_number',
@@ -123,9 +121,12 @@ export const useKYC = () => {
         updated_at: new Date().toISOString()
       };
 
+      // Utiliser upsert avec onConflict pour éviter les doublons
       const { data, error } = await supabase
         .from('kyc_verifications')
-        .upsert(submissionData)
+        .upsert(submissionData, {
+          onConflict: 'user_id'
+        })
         .select()
         .single();
 
@@ -134,7 +135,6 @@ export const useKYC = () => {
         return { error: error.message };
       }
 
-      // Type assertion pour résoudre le conflit TypeScript avec le status
       setKycData(data as KYCData);
       
       toast({
