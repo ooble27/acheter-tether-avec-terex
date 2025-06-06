@@ -33,19 +33,23 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
 };
 
 const main = {
-  backgroundColor: '#1A1A1A',
+  backgroundColor: '#000000',
   fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
   minHeight: '100vh',
   padding: '20px 0',
+  margin: '0',
+  width: '100%',
 };
 
 const container = {
-  backgroundColor: '#1A1A1A',
+  backgroundColor: '#000000',
   border: '1px solid #3B968F',
   borderRadius: '8px',
   maxWidth: '600px',
   margin: '0 auto',
   padding: '40px 20px',
+  width: '100%',
+  boxSizing: 'border-box' as const,
 };
 
 const logoContainer = {

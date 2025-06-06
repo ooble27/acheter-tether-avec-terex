@@ -45,13 +45,13 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
       
       <Text style={text}>
         Nous avons bien reçu votre commande {transactionType === 'buy' ? 'd\'achat' : 'de vente'} USDT. 
-        Voici les détails complets de votre transaction :
+        Voici les détails de votre transaction :
       </Text>
       
       <Section style={orderCard}>
         <div style={cardHeader}>
           <Text style={cardTitle}>
-            📋 Détails complets de la commande
+            📋 Détails de la commande
           </Text>
         </div>
         
@@ -61,7 +61,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
             <Column style={value}>#{orderData.id?.slice(-8) || 'N/A'}</Column>
           </Row>
           <Row style={row}>
-            <Column style={label}>Type de transaction :</Column>
+            <Column style={label}>Type :</Column>
             <Column style={valueHighlight}>
               {transactionType === 'buy' ? '💳 Achat USDT' : '💸 Vente USDT'}
             </Column>
@@ -74,18 +74,18 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
                 <Column style={value}>{orderData.amount || 0} {orderData.currency || 'CFA'}</Column>
               </Row>
               <Row style={row}>
-                <Column style={label}>Quantité USDT reçue :</Column>
+                <Column style={label}>USDT reçu :</Column>
                 <Column style={valueHighlight}>{orderData.usdt_amount || 0} USDT</Column>
               </Row>
               <Row style={row}>
-                <Column style={label}>Adresse de réception :</Column>
+                <Column style={label}>Adresse :</Column>
                 <Column style={addressValue}>{orderData.wallet_address || 'N/A'}</Column>
               </Row>
             </>
           ) : (
             <>
               <Row style={row}>
-                <Column style={label}>Quantité USDT vendue :</Column>
+                <Column style={label}>USDT vendu :</Column>
                 <Column style={valueHighlight}>{orderData.usdt_amount || 0} USDT</Column>
               </Row>
               <Row style={row}>
@@ -108,95 +108,51 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
           )}
           
           <Row style={row}>
-            <Column style={label}>Taux de change :</Column>
+            <Column style={label}>Taux :</Column>
             <Column style={value}>{orderData.exchange_rate || 0} {orderData.currency || 'CFA'}/USDT</Column>
           </Row>
-          
-          {transactionType === 'buy' && (
-            <>
-              <Row style={row}>
-                <Column style={label}>Réseau blockchain :</Column>
-                <Column style={value}>{orderData.network || 'TRC20'}</Column>
-              </Row>
-              <Row style={row}>
-                <Column style={label}>Méthode de paiement :</Column>
-                <Column style={value}>
-                  {orderData.payment_method === 'card' ? '💳 Carte bancaire' : 
-                   orderData.payment_method === 'wave' ? '📱 Wave' :
-                   orderData.payment_method === 'orange' ? '🟠 Orange Money' : 'Mobile Money'}
-                </Column>
-              </Row>
-            </>
-          )}
-          
           <Row style={row}>
-            <Column style={label}>Date de création :</Column>
+            <Column style={label}>Date :</Column>
             <Column style={value}>{new Date(orderData.created_at || Date.now()).toLocaleString('fr-FR')}</Column>
           </Row>
           <Row style={row}>
-            <Column style={label}>Statut actuel :</Column>
-            <Column style={statusPending}>⏳ En attente de traitement</Column>
-          </Row>
-          <Row style={row}>
-            <Column style={label}>Frais de transaction :</Column>
-            <Column style={value}>Gratuit (0%)</Column>
+            <Column style={label}>Statut :</Column>
+            <Column style={statusPending}>⏳ En attente</Column>
           </Row>
         </div>
       </Section>
       
       <Section style={instructionCard}>
         <Text style={instructionTitle}>
-          📋 Prochaines étapes détaillées
+          📋 Prochaines étapes
         </Text>
         <Text style={instructionText}>
           {transactionType === 'buy' 
-            ? `1. Vous allez recevoir les instructions de paiement pour le service de paiement choisi
-            
-2. Effectuez le paiement de ${orderData.amount || 0} ${orderData.currency || 'CFA'}
-
-3. Votre paiement sera vérifié automatiquement
-
-4. Vous recevrez vos ${orderData.usdt_amount || 0} USDT sur l'adresse : ${orderData.wallet_address || 'votre adresse'}
-
-5. Un email de confirmation vous sera envoyé une fois le transfert effectué` 
-            : `1. Envoyez vos ${orderData.usdt_amount || 0} USDT à l'adresse qui vous sera communiquée
-
-2. Une fois vos USDT reçus et vérifiés, nous procéderons au paiement
-
-3. Vous recevrez ${orderData.amount || 0} ${orderData.currency || 'CFA'} sur votre ${providerName} au numéro ${phoneNumber}
-
-4. Un email de confirmation vous sera envoyé une fois le paiement effectué
-
-5. Délai de traitement : maximum 30 minutes`
+            ? `• Vous recevrez les instructions de paiement\n• Effectuez le paiement de ${orderData.amount || 0} ${orderData.currency || 'CFA'}\n• Recevez vos ${orderData.usdt_amount || 0} USDT` 
+            : `• Envoyez ${orderData.usdt_amount || 0} USDT à l'adresse fournie\n• Recevez ${orderData.amount || 0} ${orderData.currency || 'CFA'} sur ${providerName}\n• Délai : maximum 30 minutes`
           }
         </Text>
       </Section>
       
       <Section style={contactCard}>
         <Text style={contactTitle}>
-          📞 Informations de contact
+          📞 Contact
         </Text>
         <Text style={contactText}>
-          • Support client : terangaexchange@gmail.com
-          • Téléphone Sénégal : +221 77 397 27 49
-          • WhatsApp : +1 4182619091
-          • Horaires : 24h/7j
-          • Temps de réponse moyen : 15 minutes
+          Support : terangaexchange@gmail.com{'\n'}
+          Téléphone : +221 77 397 27 49{'\n'}
+          WhatsApp : +1 4182619091
         </Text>
       </Section>
       
-      <Text style={text}>
-        Vous recevrez une notification immédiate dès que votre commande sera traitée par notre équipe.
-      </Text>
-      
       <Text style={thankYou}>
-        🙏 Merci de faire confiance à Terex pour vos échanges USDT !
+        🙏 Merci de faire confiance à Terex !
       </Text>
     </BaseEmail>
   );
 };
 
-// Styles avec les couleurs Terex (fond sombre uniquement)
+// Styles avec fond noir complet
 const iconContainer = {
   textAlign: 'center' as const,
   marginBottom: '24px',
@@ -204,10 +160,7 @@ const iconContainer = {
 
 const successIcon = {
   fontSize: '48px',
-  background: 'linear-gradient(135deg, #3B968F 0%, #4BA89F 100%)',
-  WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
-  backgroundClip: 'text',
+  color: '#3B968F',
 };
 
 const greeting = {
@@ -226,12 +179,11 @@ const text = {
 };
 
 const orderCard = {
-  backgroundColor: '#2A2A2A',
+  backgroundColor: '#000000',
   border: '1px solid #3B968F',
   borderRadius: '12px',
   overflow: 'hidden',
   margin: '24px 0',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
 };
 
 const cardHeader = {
@@ -248,12 +200,12 @@ const cardTitle = {
 
 const cardContent = {
   padding: '20px',
-  backgroundColor: '#2A2A2A',
+  backgroundColor: '#000000',
 };
 
 const row = {
   marginBottom: '12px',
-  borderBottom: '1px solid #3A3A3A',
+  borderBottom: '1px solid #333333',
   paddingBottom: '8px',
 };
 
@@ -296,7 +248,7 @@ const statusPending = {
 };
 
 const instructionCard = {
-  backgroundColor: '#2A2A2A',
+  backgroundColor: '#000000',
   border: '1px solid #3B968F',
   borderRadius: '8px',
   padding: '20px',
@@ -319,7 +271,7 @@ const instructionText = {
 };
 
 const contactCard = {
-  backgroundColor: '#1e3a3a',
+  backgroundColor: '#000000',
   border: '1px solid #3B968F',
   borderRadius: '8px',
   padding: '20px',

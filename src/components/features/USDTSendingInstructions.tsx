@@ -61,8 +61,8 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark p-4">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen bg-terex-dark p-2 md:p-4">
+      <div className="w-full max-w-4xl mx-auto px-2 md:px-0">
         <div className="mb-6">
           <Button
             variant="ghost"
@@ -72,20 +72,20 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
             <ArrowLeft className="w-4 h-4 mr-2" />
             Retour
           </Button>
-          <h1 className="text-3xl font-bold text-white mb-2">Instructions d'envoi USDT</h1>
-          <p className="text-gray-400">Suivez ces étapes pour finaliser votre vente</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Instructions d'envoi USDT</h1>
+          <p className="text-gray-400 text-sm md:text-base">Suivez ces étapes pour finaliser votre vente</p>
         </div>
 
         {/* Récapitulatif de la commande */}
-        <Card className="bg-terex-darker border-terex-gray mb-6">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-white flex items-center">
+        <Card className="bg-terex-darker border-terex-gray mb-6 w-full">
+          <CardHeader className="pb-4 p-4 md:p-6">
+            <CardTitle className="text-white flex items-center text-lg md:text-xl">
               <Wallet className="w-5 h-5 mr-2 text-terex-accent" />
               Récapitulatif de votre vente
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <CardContent className="space-y-4 p-4 md:p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <span className="text-gray-400 text-sm">Vous vendez</span>
                 <div className="flex items-center space-x-2">
@@ -107,22 +107,22 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
               </div>
             </div>
             <Separator className="bg-terex-gray" />
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              <div className="space-y-1">
                 <span className="text-gray-400">Numéro de téléphone</span>
-                <div className="text-white font-medium">
+                <div className="text-white font-medium break-all">
                   {orderData.phoneNumber}
                 </div>
               </div>
-              <div>
+              <div className="space-y-1">
                 <span className="text-gray-400">Service de paiement</span>
                 <div className="text-white font-medium">
                   {getProviderName()}
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              <div className="space-y-1">
                 <span className="text-gray-400">Taux</span>
                 <div className="text-white">1 USDT = {orderData.exchangeRate} {orderData.currency}</div>
               </div>
@@ -131,17 +131,17 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
         </Card>
 
         {/* Instructions d'envoi */}
-        <Card className="bg-terex-darker border-terex-gray mb-6">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-white flex items-center">
+        <Card className="bg-terex-darker border-terex-gray mb-6 w-full">
+          <CardHeader className="pb-4 p-4 md:p-6">
+            <CardTitle className="text-white flex items-center text-lg md:text-xl">
               <Send className="w-5 h-5 mr-2 text-terex-accent" />
               Étape 1: Envoyez vos USDT
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4">
+          <CardContent className="space-y-6 p-4 md:p-6">
+            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 w-full">
               <div className="flex items-start space-x-3">
-                <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5" />
+                <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
                 <div className="space-y-2">
                   <p className="text-amber-200 font-medium">Important !</p>
                   <p className="text-amber-100 text-sm">
@@ -155,7 +155,7 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
             <div className="space-y-4">
               <div>
                 <label className="text-white font-medium mb-2 block">Réseau à utiliser</label>
-                <div className="bg-terex-gray rounded-lg p-3">
+                <div className="bg-terex-gray rounded-lg p-3 w-full">
                   <Badge variant="outline" className="text-terex-accent border-terex-accent">
                     {getNetworkName()}
                   </Badge>
@@ -164,29 +164,30 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
 
               <div>
                 <label className="text-white font-medium mb-2 block">Adresse de destination</label>
-                <div className="flex items-center space-x-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
                   <div className="bg-terex-gray rounded-lg p-3 flex-1 text-white font-mono text-sm break-all">
                     {orderData.walletAddress}
                   </div>
                   <Button
                     onClick={() => copyToClipboard(orderData.walletAddress)}
                     size="sm"
-                    className="bg-terex-accent hover:bg-terex-accent/80"
+                    className="bg-terex-accent hover:bg-terex-accent/80 w-full sm:w-auto"
                   >
-                    <Copy className="w-4 h-4" />
+                    <Copy className="w-4 h-4 mr-2 sm:mr-0" />
+                    <span className="sm:hidden">Copier</span>
                   </Button>
                 </div>
               </div>
 
               <div>
                 <label className="text-white font-medium mb-2 block">Montant exact à envoyer</label>
-                <div className="bg-terex-gray rounded-lg p-3 text-terex-accent font-bold text-lg">
+                <div className="bg-terex-gray rounded-lg p-3 text-terex-accent font-bold text-lg w-full">
                   {orderData.usdtAmount} USDT
                 </div>
               </div>
             </div>
 
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 w-full">
               <h4 className="text-blue-200 font-medium mb-2">Comment procéder :</h4>
               <ol className="text-blue-100 text-sm space-y-1 list-decimal list-inside">
                 <li>Ouvrez votre portefeuille crypto (Trust Wallet, MetaMask, etc.)</li>
@@ -200,14 +201,14 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
         </Card>
 
         {/* Bouton de confirmation */}
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-white flex items-center">
+        <Card className="bg-terex-darker border-terex-gray w-full">
+          <CardHeader className="pb-4 p-4 md:p-6">
+            <CardTitle className="text-white flex items-center text-lg md:text-xl">
               <CheckCircle className="w-5 h-5 mr-2 text-terex-accent" />
               Étape 2: Confirmez l'envoi
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 md:p-6">
             <div className="space-y-4">
               <p className="text-gray-300 text-sm">
                 Une fois que vous avez envoyé les USDT à l'adresse indiquée, cliquez sur le bouton ci-dessous 
