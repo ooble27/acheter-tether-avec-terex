@@ -9,7 +9,8 @@ import {
   TrendingUp,
   Eye,
   MoreHorizontal,
-  Copy
+  Copy,
+  DollarSign
 } from 'lucide-react';
 import { UnifiedOrder } from '@/hooks/useOrders';
 import type { Database } from '@/integrations/supabase/types';
