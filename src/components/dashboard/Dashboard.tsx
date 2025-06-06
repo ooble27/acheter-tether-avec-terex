@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
 import { BuyUSDT } from '@/components/features/BuyUSDT';
@@ -28,6 +27,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   const isMobile = useIsMobile();
   const { signOut } = useAuth();
   const { isKYCReviewer, isAdmin } = useUserRole();
+
+  // Effet pour remonter en haut à chaque changement de section
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeSection]);
 
   const handleLogout = async () => {
     try {
