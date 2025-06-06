@@ -80,9 +80,9 @@ export function OrderConfirmation({ orderData, onConfirm, onBack, loading }: Ord
               
               <div className="space-y-2">
                 <span className="text-gray-400">Vous recevez</span>
-                <span className="text-white font-bold text-lg">
+                <div className="text-white font-bold text-lg">
                   {orderData.amount} {orderData.currency}
-                </span>
+                </div>
               </div>
               
               <Separator className="bg-terex-gray" />

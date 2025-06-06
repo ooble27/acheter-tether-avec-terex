@@ -52,7 +52,7 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => (
               🌐 Accéder à la plateforme
             </Link>
             {' • '}
-            <Link href="mailto:support@terangaexchange.com" style={link}>
+            <Link href="mailto:terangaexchange@gmail.com" style={link}>
               💬 Support client
             </Link>
           </Text>
