@@ -3,6 +3,7 @@ import {
   Section,
   Row,
   Column,
+  Img,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 import { BaseEmail } from './base-email.tsx';
@@ -20,6 +21,16 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
   
   return (
     <BaseEmail preview={preview} title={title}>
+      <div style={logoContainer}>
+        <Img
+          src="https://mwwjrrduavfcwjiyniuy.supabase.co/storage/v1/object/public/avatars/terex-logo.png"
+          width="120"
+          height="40"
+          alt="Terex"
+          style={logo}
+        />
+      </div>
+      
       <div style={iconContainer}>
         <div style={successIcon}>✅</div>
       </div>
@@ -203,7 +214,7 @@ Vos USDT seront envoyés à : ${orderData.wallet_address || 'votre adresse'}`
           📞 Besoin d'aide ?
         </Text>
         <Text style={contactText}>
-          • Support client : terangaexchange@gmail.com
+          • Support client : support@terex.com
           • Téléphone Sénégal : +221 77 397 27 49
           • WhatsApp : +1 4182619091
           • Horaires : 24h/7j

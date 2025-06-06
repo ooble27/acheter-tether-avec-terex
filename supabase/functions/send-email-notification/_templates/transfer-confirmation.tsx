@@ -12,22 +12,32 @@ interface TransferConfirmationProps {
 }
 
 export const TransferConfirmationEmail = ({ transferData }: TransferConfirmationProps) => {
-  const title = 'Demande de transfert international reçue';
-  const preview = `Votre transfert international de ${transferData.amount || 0} ${transferData.from_currency || 'USDT'} a été reçu`;
+  const title = 'Demande de transfert international confirmée';
+  const preview = `Votre demande de transfert #${transferData.id?.slice(-8)} a été confirmée`;
   
   return (
     <BaseEmail preview={preview} title={title}>
+      <div style={logoContainer}>
+        <Img
+          src="https://mwwjrrduavfcwjiyniuy.supabase.co/storage/v1/object/public/avatars/terex-logo.png"
+          width="120"
+          height="40"
+          alt="Terex"
+          style={logo}
+        />
+      </div>
+      
       <div style={iconContainer}>
         <div style={transferIcon}>🌍</div>
       </div>
       
       <Text style={greeting}>
-        Transfert international initié !
+        Excellent !
       </Text>
       
       <Text style={text}>
         Nous avons bien reçu votre demande de transfert international. 
-        Voici le récapitulatif complet de votre opération :
+        Voici tous les détails complets de votre transfert :
       </Text>
       
       <Section style={transferCard}>
@@ -168,10 +178,10 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
 
       <Section style={contactCard}>
         <Text style={contactTitle}>
-          📞 Support transferts internationaux
+          📞 Support et assistance
         </Text>
         <Text style={contactText}>
-          • Email support : terangaexchange@gmail.com
+          • Email support : support@terex.com
           • Téléphone Sénégal : +221 77 397 27 49
           • WhatsApp : +1 4182619091
           • Horaires : 24h/7j pour les transferts internationaux
@@ -181,12 +191,12 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
       </Section>
       
       <Text style={text}>
-        Notre équipe spécialisée va traiter votre transfert dans les plus brefs délais. 
-        Vous recevrez une notification à chaque étape du processus.
+        Notre équipe va examiner votre demande et vous contacter dans les plus brefs délais pour finaliser le processus.
+        Vous recevrez une notification à chaque étape du transfert.
       </Text>
       
       <Text style={thankYou}>
-        🌟 Merci de choisir Terex pour vos transferts internationaux !
+        🌟 Merci de faire confiance à Terex pour vos transferts internationaux !
       </Text>
     </BaseEmail>
   );

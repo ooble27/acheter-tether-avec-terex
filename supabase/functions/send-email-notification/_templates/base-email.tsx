@@ -25,8 +25,13 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => (
     <Preview>{preview}</Preview>
     <Body style={main}>
       <Container style={container}>
-        {/* Header avec branding Terex */}
+        {/* Header avec logo et branding */}
         <Section style={header}>
+          <div style={logoContainer}>
+            <div style={logoCircle}>
+              <Text style={logoText}>T</Text>
+            </div>
+          </div>
           <Heading style={h1}>
             <span style={brandName}>Terex</span>
           </Heading>
@@ -52,7 +57,7 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => (
               🌐 Accéder à la plateforme
             </Link>
             {' • '}
-            <Link href="mailto:terangaexchange@gmail.com" style={link}>
+            <Link href="mailto:support@terangaexchange.com" style={link}>
               💬 Support client
             </Link>
           </Text>
@@ -62,7 +67,7 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => (
   </Html>
 );
 
-// Styles avec les couleurs Terex
+// Styles cohérents avec le nouveau design
 const main = {
   backgroundColor: '#f8fafc',
   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
@@ -82,8 +87,31 @@ const container = {
 const header = {
   textAlign: 'center' as const,
   padding: '40px 30px 30px',
-  background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
   color: '#ffffff',
+};
+
+const logoContainer = {
+  marginBottom: '20px',
+};
+
+const logoCircle = {
+  width: '60px',
+  height: '60px',
+  borderRadius: '50%',
+  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  margin: '0 auto',
+  border: '2px solid rgba(255, 255, 255, 0.3)',
+};
+
+const logoText = {
+  fontSize: '28px',
+  fontWeight: 'bold',
+  color: '#ffffff',
+  margin: '0',
 };
 
 const h1 = {
@@ -95,11 +123,7 @@ const h1 = {
 };
 
 const brandName = {
-  textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
-  background: 'linear-gradient(45deg, #667eea, #764ba2)',
-  WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
-  backgroundClip: 'text',
+  textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
 };
 
 const tagline = {
