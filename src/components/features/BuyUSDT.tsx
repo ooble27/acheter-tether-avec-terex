@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRightLeft, Shield, Clock, CreditCard } from 'lucide-react';
+import { ArrowRightLeft, Shield, Clock, CreditCard, CheckCircle } from 'lucide-react';
 import { OrderConfirmation } from '@/components/features/OrderConfirmation';
 import { PaymentPage } from '@/components/features/PaymentPage';
 import { useOrders } from '@/hooks/useOrders';
@@ -21,6 +22,11 @@ export function BuyUSDT() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [mobileData, setMobileData] = useState({
+    phoneNumber: '',
+    provider: 'wave' as 'wave' | 'orange'
+  });
 
   const { createOrder } = useOrders();
   const { user } = useAuth();
@@ -82,7 +88,6 @@ export function BuyUSDT() {
   };
 
   const handlePaymentComplete = () => {
-    // Réinitialiser le formulaire
     setAmount('');
     setWalletAddress('');
     setShowPayment(false);
