@@ -106,8 +106,8 @@ export function OTCRequestForm() {
                   <SelectValue placeholder="Sélectionner un délai" />
                 </SelectTrigger>
                 <SelectContent className="bg-terex-darker border-terex-gray">
-                  <SelectItem value="immediate">Immédiat (< 30 min)</SelectItem>
-                  <SelectItem value="1hour">Dans l'heure</SelectItem>
+                  <SelectItem value="immediate">Immédiat (&lt; 30 min)</SelectItem>
+                  <SelectItem value="1hour">Dans l&apos;heure</SelectItem>
                   <SelectItem value="4hours">Dans les 4 heures</SelectItem>
                   <SelectItem value="24hours">Dans les 24 heures</SelectItem>
                   <SelectItem value="flexible">Flexible</SelectItem>
@@ -186,7 +186,7 @@ export function OTCRequestForm() {
               </div>
             ) : (
               <div className="text-center py-6">
-                <p className="text-gray-400">Entrez un montant ≥ 100,000 USDT pour voir l'estimation</p>
+                <p className="text-gray-400">Entrez un montant ≥ 100,000 USDT pour voir l&apos;estimation</p>
               </div>
             )}
           </CardContent>
