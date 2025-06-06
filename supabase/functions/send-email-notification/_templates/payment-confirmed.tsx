@@ -1,9 +1,9 @@
+
 import {
   Text,
   Section,
   Row,
   Column,
-  Img,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 import { BaseEmail } from './base-email.tsx';
@@ -20,17 +20,7 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
   const preview = 'Votre paiement a été confirmé avec succès';
   
   return (
-    <BaseEmail preview={preview} title={title}>
-      <div style={logoContainer}>
-        <Img
-          src="https://mwwjrrduavfcwjiyniuy.supabase.co/storage/v1/object/public/avatars/terex-logo.png"
-          width="120"
-          height="40"
-          alt="Terex"
-          style={logo}
-        />
-      </div>
-      
+    <BaseEmail preview={preview} title={title}>      
       <div style={iconContainer}>
         <div style={successIcon}>✅</div>
       </div>
@@ -214,7 +204,7 @@ Vos USDT seront envoyés à : ${orderData.wallet_address || 'votre adresse'}`
           📞 Besoin d'aide ?
         </Text>
         <Text style={contactText}>
-          • Support client : support@terex.com
+          • Support client : terangaexchange@gmail.com
           • Téléphone Sénégal : +221 77 397 27 49
           • WhatsApp : +1 4182619091
           • Horaires : 24h/7j
@@ -233,17 +223,7 @@ Vos USDT seront envoyés à : ${orderData.wallet_address || 'votre adresse'}`
   );
 };
 
-// Styles avec logo et numéros de téléphone corrigés
-const logoContainer = {
-  textAlign: 'center' as const,
-  marginBottom: '20px',
-  paddingTop: '20px',
-};
-
-const logo = {
-  margin: '0 auto',
-};
-
+// Styles avec couleurs Terex (sombre et vert)
 const iconContainer = {
   textAlign: 'center' as const,
   marginBottom: '24px',
@@ -254,7 +234,7 @@ const successIcon = {
 };
 
 const greeting = {
-  color: '#1a202c',
+  color: '#ffffff', // White text on dark background
   fontSize: '20px',
   fontWeight: '600',
   margin: '0 0 16px',
@@ -262,15 +242,15 @@ const greeting = {
 };
 
 const text = {
-  color: '#4a5568',
+  color: '#e2e8f0', // Light gray text
   fontSize: '16px',
   lineHeight: '1.6',
   margin: '0 0 24px',
 };
 
 const confirmationBanner = {
-  backgroundColor: '#f0fff4',
-  border: '2px solid #9ae6b4',
+  backgroundColor: '#1e3a3a', // Dark green tint
+  border: '2px solid #3B968F', // Terex accent border
   borderRadius: '12px',
   padding: '20px',
   margin: '24px 0',
@@ -289,23 +269,23 @@ const checkmark = {
 };
 
 const bannerText = {
-  color: '#22543d',
+  color: '#ffffff', // White text
   fontSize: '18px',
   fontWeight: '700',
   margin: '0',
 };
 
 const orderCard = {
-  backgroundColor: '#f7fafc',
-  border: '1px solid #e2e8f0',
+  backgroundColor: '#2A2A2A', // Terex gray
+  border: '1px solid #3A3A3A', // Terex gray light
   borderRadius: '12px',
   overflow: 'hidden',
   margin: '24px 0',
-  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
 };
 
 const cardHeader = {
-  backgroundColor: '#667eea',
+  backgroundColor: '#3B968F', // Terex accent
   padding: '16px 20px',
 };
 
@@ -318,16 +298,17 @@ const cardTitle = {
 
 const cardContent = {
   padding: '20px',
+  backgroundColor: '#2A2A2A', // Terex gray
 };
 
 const row = {
   marginBottom: '12px',
-  borderBottom: '1px solid #e2e8f0',
+  borderBottom: '1px solid #3A3A3A', // Terex gray light
   paddingBottom: '8px',
 };
 
 const label = {
-  color: '#718096',
+  color: '#94a3b8', // Light gray
   fontSize: '14px',
   width: '40%',
   verticalAlign: 'top' as const,
@@ -335,35 +316,35 @@ const label = {
 };
 
 const value = {
-  color: '#2d3748',
+  color: '#ffffff', // White text
   fontSize: '14px',
   fontWeight: '600',
   width: '60%',
 };
 
 const valueHighlight = {
-  color: '#667eea',
+  color: '#3B968F', // Terex accent
   fontSize: '14px',
   fontWeight: '700',
   width: '60%',
 };
 
 const usdtAmount = {
-  color: '#48bb78',
+  color: '#4BA89F', // Terex accent light
   fontSize: '16px',
   fontWeight: '700',
   width: '60%',
 };
 
 const countryValue = {
-  color: '#4299e1',
+  color: '#3B968F', // Terex accent
   fontSize: '14px',
   fontWeight: '600',
   width: '60%',
 };
 
 const addressValue = {
-  color: '#2d3748',
+  color: '#ffffff', // White text
   fontSize: '12px',
   fontWeight: '600',
   width: '60%',
@@ -372,7 +353,7 @@ const addressValue = {
 };
 
 const accountValue = {
-  color: '#2d3748',
+  color: '#ffffff', // White text
   fontSize: '12px',
   fontWeight: '600',
   width: '60%',
@@ -380,22 +361,22 @@ const accountValue = {
 };
 
 const progressCard = {
-  backgroundColor: '#edf2f7',
-  border: '1px solid #cbd5e0',
+  backgroundColor: '#2A2A2A', // Terex gray
+  border: '1px solid #3B968F', // Terex accent border
   borderRadius: '12px',
   padding: '20px',
   margin: '24px 0',
 };
 
 const progressTitle = {
-  color: '#2d3748',
+  color: '#ffffff', // White text
   fontSize: '16px',
   fontWeight: '600',
   margin: '0 0 12px',
 };
 
 const progressText = {
-  color: '#4a5568',
+  color: '#e2e8f0', // Light gray text
   fontSize: '14px',
   lineHeight: '1.6',
   margin: '0 0 16px',
@@ -405,7 +386,7 @@ const progressText = {
 const progressBar = {
   width: '100%',
   height: '8px',
-  backgroundColor: '#e2e8f0',
+  backgroundColor: '#3A3A3A', // Terex gray light
   borderRadius: '4px',
   overflow: 'hidden',
   margin: '16px 0 8px',
@@ -414,13 +395,13 @@ const progressBar = {
 const progressFill = {
   width: '75%',
   height: '100%',
-  background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
+  background: 'linear-gradient(90deg, #3B968F 0%, #4BA89F 100%)', // Terex gradient
   borderRadius: '4px',
   animation: 'pulse 2s infinite',
 };
 
 const progressLabel = {
-  color: '#718096',
+  color: '#94a3b8', // Light gray
   fontSize: '12px',
   fontWeight: '500',
   margin: '0',
@@ -428,22 +409,22 @@ const progressLabel = {
 };
 
 const securityCard = {
-  backgroundColor: '#fef5e7',
-  border: '1px solid #f6e05e',
+  backgroundColor: '#2A2A2A', // Terex gray
+  border: '1px solid #3B968F', // Terex accent border
   borderRadius: '8px',
   padding: '20px',
   margin: '24px 0',
 };
 
 const securityTitle = {
-  color: '#744210',
+  color: '#4BA89F', // Terex accent light
   fontSize: '16px',
   fontWeight: '600',
   margin: '0 0 12px',
 };
 
 const securityText = {
-  color: '#975a16',
+  color: '#ffffff', // White text
   fontSize: '14px',
   lineHeight: '1.6',
   margin: '0',
@@ -451,22 +432,22 @@ const securityText = {
 };
 
 const contactCard = {
-  backgroundColor: '#f0fff4',
-  border: '1px solid #9ae6b4',
+  backgroundColor: '#1e3a3a', // Dark green tint
+  border: '1px solid #3B968F', // Terex accent border
   borderRadius: '8px',
   padding: '20px',
   margin: '24px 0',
 };
 
 const contactTitle = {
-  color: '#22543d',
+  color: '#4BA89F', // Terex accent light
   fontSize: '16px',
   fontWeight: '600',
   margin: '0 0 12px',
 };
 
 const contactText = {
-  color: '#22543d',
+  color: '#ffffff', // White text
   fontSize: '14px',
   lineHeight: '1.6',
   margin: '0',
@@ -474,7 +455,7 @@ const contactText = {
 };
 
 const thankYou = {
-  color: '#48bb78',
+  color: '#3B968F', // Terex accent
   fontSize: '18px',
   fontWeight: '600',
   margin: '24px 0 0',
