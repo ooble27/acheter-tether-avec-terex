@@ -1,7 +1,6 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Building, Target, Users, Globe, Award, Zap, Star, Rocket, BarChart, Calendar, FileText } from 'lucide-react';
+import { ArrowLeft, Building, Target, Users, Globe, Award, Zap, Star, Rocket, BarChart, Calendar, FileText, Scale, CheckCircle, Shield, Trophy } from 'lucide-react';
 
 interface AboutTerexProps {
   onBack: () => void;
