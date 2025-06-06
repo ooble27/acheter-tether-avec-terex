@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
@@ -12,6 +13,10 @@ import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { OrdersDashboard } from '@/components/admin/orders/OrdersDashboard';
 import { AdminPortal } from '@/components/admin/AdminPortal';
 import { OTC } from '@/components/features/OTC';
+import { UserGuide } from '@/components/features/UserGuide';
+import { SecurityPolicy } from '@/components/features/SecurityPolicy';
+import { TermsOfService } from '@/components/features/TermsOfService';
+import { AboutTerex } from '@/components/features/AboutTerex';
 import { TransactionProvider } from '@/contexts/TransactionContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/contexts/AuthContext';
