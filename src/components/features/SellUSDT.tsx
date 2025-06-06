@@ -122,8 +122,14 @@ export function SellUSDT() {
       wallet_address: WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
       status: 'pending' as const,
       payment_status: 'pending',
-      // Ajouter le numéro de téléphone selon la méthode choisie
-      phone_number: paymentMethod === 'mobile' ? mobileData.phoneNumber : bankData.accountNumber
+      // Stocker les informations dans les notes au lieu du champ phone_number qui n'existe pas
+      notes: JSON.stringify({
+        phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : bankData.accountNumber,
+        provider: paymentMethod === 'mobile' ? mobileData.provider : 'bank',
+        paymentMethod: paymentMethod,
+        bankData: paymentMethod === 'bank' ? bankData : null,
+        mobileData: paymentMethod === 'mobile' ? mobileData : null
+      })
     };
 
     const result = await createOrder(orderData);

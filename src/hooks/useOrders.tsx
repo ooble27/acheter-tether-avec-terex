@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -119,6 +120,8 @@ export const useOrders = () => {
     }
 
     try {
+      console.log('Données de commande à créer:', orderData);
+      
       const { data, error } = await supabase
         .from('orders')
         .insert(orderData)
@@ -127,8 +130,15 @@ export const useOrders = () => {
 
       if (error) {
         console.error('Erreur lors de la création de la commande:', error);
+        toast({
+          title: "Erreur",
+          description: `Impossible de créer la commande: ${error.message}`,
+          variant: "destructive",
+        });
         throw error;
       }
+
+      console.log('Commande créée avec succès:', data);
 
       toast({
         title: "Commande créée",
@@ -146,11 +156,6 @@ export const useOrders = () => {
       return data;
     } catch (error) {
       console.error('Erreur:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de créer la commande",
-        variant: "destructive",
-      });
       return null;
     }
   };
