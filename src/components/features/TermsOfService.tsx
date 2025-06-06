@@ -147,7 +147,7 @@ export function TermsOfService({ onBack }: TermsOfServiceProps) {
                     </ul>
                   </div>
                   <div>
-                    <h6 className="text-orange-100 font-medium text-sm">Justificatifs de domicile (< 3 mois)</h6>
+                    <h6 className="text-orange-100 font-medium text-sm">Justificatifs de domicile ({'< 3 mois'})</h6>
                     <ul className="text-orange-100 text-xs mt-1 space-y-1">
                       <li>• Facture d'électricité, gaz ou eau</li>
                       <li>• Relevé bancaire officiel</li>
@@ -215,7 +215,7 @@ export function TermsOfService({ onBack }: TermsOfServiceProps) {
                   <div>
                     <h6 className="text-white font-medium text-sm">Pays de destination</h6>
                     <ul className="text-sm mt-1 space-y-1">
-                      <li>• 🇸🇳 S̩énégal</li>
+                      <li>• 🇸🇳 Sénégal</li>
                       <li>• 🇨🇮 Côte d'Ivoire</li>
                       <li>• 🇲🇱 Mali</li>
                       <li>• 🇧🇫 Burkina Faso</li>
@@ -298,7 +298,7 @@ export function TermsOfService({ onBack }: TermsOfServiceProps) {
                     <li>• Spread: 1.5-3% inclus dans le taux</li>
                     <li>• Frais blockchain inclus</li>
                     <li>• Aucun frais de traitement additionnel</li>
-                    <li>• Volume > 1,000 USDT: taux préférentiels</li>
+                    <li>• Volume {'> 1,000'} USDT: taux préférentiels</li>
                   </ul>
                 </div>
                 <div className="bg-terex-darker p-3 rounded">
