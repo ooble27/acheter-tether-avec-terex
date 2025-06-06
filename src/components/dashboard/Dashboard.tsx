@@ -61,7 +61,15 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'kyc':
         return <KYCPage onBack={() => setActiveSection('profile')} />;
       case 'faq':
-        return <FAQ />;
+        return <FAQ onNavigate={setActiveSection} />;
+      case 'user-guide':
+        return <UserGuide onBack={() => setActiveSection('faq')} />;
+      case 'security-policy':
+        return <SecurityPolicy onBack={() => setActiveSection('faq')} />;
+      case 'terms-of-service':
+        return <TermsOfService onBack={() => setActiveSection('faq')} />;
+      case 'about-terex':
+        return <AboutTerex onBack={() => setActiveSection('faq')} />;
       case 'kyc-admin':
         return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
       case 'orders-admin':

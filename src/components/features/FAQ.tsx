@@ -1,8 +1,11 @@
-
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-export function FAQ() {
+interface FAQProps {
+  onNavigate?: (section: string) => void;
+}
+
+export function FAQ({ onNavigate }: FAQProps) {
   const faqItems = [
     {
       id: "item-1",
@@ -55,6 +58,12 @@ export function FAQ() {
       answer: "Une fois une transaction confirmée et en cours de traitement, elle ne peut pas être annulée. Assurez-vous de vérifier toutes les informations avant de confirmer."
     }
   ];
+
+  const handleResourceClick = (resource: string) => {
+    if (onNavigate) {
+      onNavigate(resource);
+    }
+  };
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -138,18 +147,30 @@ export function FAQ() {
               <CardTitle className="text-white">Ressources</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <a href="#" className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm">
+              <button 
+                onClick={() => handleResourceClick('user-guide')}
+                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left"
+              >
                 📖 Guide d'utilisation
-              </a>
-              <a href="#" className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm">
+              </button>
+              <button 
+                onClick={() => handleResourceClick('security-policy')}
+                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left"
+              >
                 🔒 Politique de sécurité
-              </a>
-              <a href="#" className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm">
+              </button>
+              <button 
+                onClick={() => handleResourceClick('terms-of-service')}
+                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left"
+              >
                 📋 Conditions d'utilisation
-              </a>
-              <a href="#" className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm">
-                💡 Blog Terex
-              </a>
+              </button>
+              <button 
+                onClick={() => handleResourceClick('about-terex')}
+                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left"
+              >
+                💡 À propos de Terex
+              </button>
             </CardContent>
           </Card>
         </div>
