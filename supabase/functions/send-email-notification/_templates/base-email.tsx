@@ -33,15 +33,15 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
 };
 
 const main = {
-  backgroundColor: '#1A1A1A', // Terex dark background
+  backgroundColor: '#1A1A1A',
   fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
   minHeight: '100vh',
   padding: '20px 0',
 };
 
 const container = {
-  backgroundColor: '#1A1A1A', // Terex dark background
-  border: '1px solid #3A3A3A', // Terex gray light border
+  backgroundColor: '#1A1A1A',
+  border: '1px solid #3B968F',
   borderRadius: '8px',
   maxWidth: '600px',
   margin: '0 auto',
@@ -54,7 +54,7 @@ const logoContainer = {
 };
 
 const heading = {
-  color: '#3B968F', // Terex accent color
+  color: '#3B968F',
   fontSize: '24px',
   fontWeight: '600',
   margin: '0',
