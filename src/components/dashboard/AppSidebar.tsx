@@ -83,7 +83,7 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
   const { isKYCReviewer } = useUserRole();
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col min-h-screen h-full">
       <SidebarHeader className="p-6 border-b border-terex-gray/30">
         {/* Logo Header Style Binance dans la Sidebar */}
         <div className="flex items-center space-x-3">
@@ -257,7 +257,7 @@ export function AppSidebar({ activeSection, setActiveSection, onLogout }: AppSid
   }
 
   return (
-    <Sidebar className="bg-terex-darker border-r border-terex-gray/30 shadow-2xl">
+    <Sidebar className="bg-terex-darker border-r border-terex-gray/30 shadow-2xl h-screen">
       <AppSidebarContent 
         activeSection={activeSection} 
         setActiveSection={setActiveSection} 
@@ -285,7 +285,7 @@ export function MobileMenu({ activeSection, setActiveSection, onLogout }: AppSid
           <Menu className="h-6 w-6" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-80 bg-terex-darker border-r border-terex-gray/30 p-0 shadow-2xl">
+      <SheetContent side="left" className="w-80 bg-terex-darker border-r border-terex-gray/30 p-0 shadow-2xl h-screen">
         <AppSidebarContent 
           activeSection={activeSection} 
           setActiveSection={setActiveSection} 

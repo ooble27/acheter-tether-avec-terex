@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -228,7 +227,7 @@ export function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen bg-terex-dark flex items-center justify-center p-4">
+    <div className="min-h-screen w-full bg-terex-dark flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
         {/* Logo Header Style Binance */}
         <div className="text-center">
