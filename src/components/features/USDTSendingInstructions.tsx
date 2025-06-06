@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -85,7 +84,7 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 p-4 md:p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <span className="text-gray-400 text-sm">Vous vendez</span>
                 <div className="flex items-center space-x-2">
@@ -101,9 +100,9 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
               </div>
               <div className="space-y-2">
                 <span className="text-gray-400 text-sm">Vous recevez</span>
-                <span className="text-white font-bold text-lg">
+                <div className="text-white font-bold text-lg">
                   {orderData.amount} {orderData.currency}
-                </span>
+                </div>
               </div>
             </div>
             <Separator className="bg-terex-gray" />

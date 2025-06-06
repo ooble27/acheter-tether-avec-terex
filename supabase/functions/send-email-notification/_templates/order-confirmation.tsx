@@ -124,7 +124,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
 };
 
 const greeting = {
-  color: '#ffffff',
+  color: '#1f2937',
   fontSize: '18px',
   fontWeight: '600',
   margin: '0 0 24px 0',
@@ -132,10 +132,10 @@ const greeting = {
 };
 
 const orderCard = {
-  backgroundColor: '#1a1a1a',
-  border: '1px solid #3B968F',
-  borderRadius: '8px',
-  padding: '20px',
+  backgroundColor: '#f9fafb',
+  border: '2px solid #3B968F',
+  borderRadius: '12px',
+  padding: '24px',
   margin: '24px 0',
 };
 
@@ -150,19 +150,19 @@ const detailRow = {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  padding: '8px 0',
-  borderBottom: '1px solid #333333',
+  padding: '12px 0',
+  borderBottom: '1px solid #e5e7eb',
   marginBottom: '8px',
 };
 
 const label = {
-  color: '#94a3b8',
+  color: '#6b7280',
   fontSize: '14px',
   fontWeight: '500',
 };
 
 const value = {
-  color: '#ffffff',
+  color: '#1f2937',
   fontSize: '14px',
   fontWeight: '600',
 };
@@ -174,7 +174,7 @@ const highlight = {
 };
 
 const address = {
-  color: '#ffffff',
+  color: '#1f2937',
   fontSize: '12px',
   fontWeight: '600',
   fontFamily: 'monospace',
@@ -182,10 +182,10 @@ const address = {
 };
 
 const instructionCard = {
-  backgroundColor: '#1a1a1a',
-  border: '1px solid #3B968F',
-  borderRadius: '8px',
-  padding: '20px',
+  backgroundColor: '#f0fdf4',
+  border: '2px solid #3B968F',
+  borderRadius: '12px',
+  padding: '24px',
   margin: '24px 0',
 };
 
@@ -197,7 +197,7 @@ const instructionTitle = {
 };
 
 const instructionText = {
-  color: '#e2e8f0',
+  color: '#374151',
   fontSize: '14px',
   lineHeight: '1.6',
   margin: '0',
@@ -205,10 +205,10 @@ const instructionText = {
 };
 
 const contactCard = {
-  backgroundColor: '#1a1a1a',
-  border: '1px solid #3B968F',
-  borderRadius: '8px',
-  padding: '20px',
+  backgroundColor: '#f9fafb',
+  border: '2px solid #3B968F',
+  borderRadius: '12px',
+  padding: '24px',
   margin: '24px 0',
 };
 
@@ -220,7 +220,7 @@ const contactTitle = {
 };
 
 const contactText = {
-  color: '#ffffff',
+  color: '#1f2937',
   fontSize: '14px',
   lineHeight: '1.6',
   margin: '0',

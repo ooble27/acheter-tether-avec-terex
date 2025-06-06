@@ -31,14 +31,12 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
 };
 
 const main = {
-  backgroundColor: '#000000',
   fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
   margin: '0',
   padding: '0',
 };
 
 const container = {
-  backgroundColor: '#000000',
   maxWidth: '600px',
   margin: '0 auto',
   padding: '40px 20px',
