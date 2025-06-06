@@ -79,7 +79,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
                 <Column style={value}>{orderData.amount || 0} {orderData.currency || 'CFA'}</Column>
               </Row>
               <Row style={row}>
-                <Column style={label}>Numéro de réception :</Column>
+                <Column style={label}>Numéro de téléphone :</Column>
                 <Column style={value}>{orderData.phone_number || 'N/A'}</Column>
               </Row>
               <Row style={row}>
@@ -149,7 +149,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
 
 2. Une fois vos USDT reçus et vérifiés, nous procéderons au paiement
 
-3. Vous recevrez ${orderData.amount || 0} ${orderData.currency || 'CFA'} sur votre ${orderData.payment_method === 'wave' ? 'Wave' : orderData.payment_method === 'orange' ? 'Orange Money' : 'compte bancaire'}
+3. Vous recevrez ${orderData.amount || 0} ${orderData.currency || 'CFA'} sur votre ${orderData.payment_method === 'wave' ? 'Wave' : orderData.payment_method === 'orange' ? 'Orange Money' : 'compte bancaire'} au numéro ${orderData.phone_number || 'renseigné'}
 
 4. Un email de confirmation vous sera envoyé une fois le paiement effectué
 
@@ -182,7 +182,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
   );
 };
 
-// Styles avec les couleurs Terex
+// Styles avec les couleurs Terex (fond sombre)
 const iconContainer = {
   textAlign: 'center' as const,
   marginBottom: '24px',

@@ -51,8 +51,12 @@ export function USDTSentConfirmation({ orderData, onBackToHome }: USDTSentConfir
                 <span className="text-white font-bold">{orderData.amount} {orderData.currency}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400">Sur {getProviderName()}</span>
+                <span className="text-gray-400">Numéro de téléphone</span>
                 <span className="text-white">{orderData.phoneNumber}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Service de paiement</span>
+                <span className="text-white">{getProviderName()}</span>
               </div>
             </div>
 

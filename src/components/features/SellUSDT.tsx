@@ -121,7 +121,9 @@ export function SellUSDT() {
       network,
       wallet_address: WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
       status: 'pending' as const,
-      payment_status: 'pending'
+      payment_status: 'pending',
+      // Ajouter le numéro de téléphone selon la méthode choisie
+      phone_number: paymentMethod === 'mobile' ? mobileData.phoneNumber : bankData.accountNumber
     };
 
     const result = await createOrder(orderData);
@@ -195,7 +197,9 @@ export function SellUSDT() {
           network,
           walletAddress: WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
           paymentMethod: paymentMethod as 'card' | 'mobile',
-          exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
+          exchangeRate: exchangeRates[currency as keyof typeof exchangeRates],
+          phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : bankData.accountNumber,
+          provider: paymentMethod === 'mobile' ? mobileData.provider : 'bank'
         }}
         onConfirm={handleConfirmOrder}
         onBack={() => setShowConfirmation(false)}

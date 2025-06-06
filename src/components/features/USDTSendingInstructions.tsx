@@ -109,11 +109,19 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
             <Separator className="bg-terex-gray" />
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="text-gray-400">Réception sur</span>
+                <span className="text-gray-400">Numéro de téléphone</span>
                 <div className="text-white font-medium">
-                  {getProviderName()} - {orderData.phoneNumber}
+                  {orderData.phoneNumber}
                 </div>
               </div>
+              <div>
+                <span className="text-gray-400">Service de paiement</span>
+                <div className="text-white font-medium">
+                  {getProviderName()}
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="text-gray-400">Taux</span>
                 <div className="text-white">1 USDT = {orderData.exchangeRate} {orderData.currency}</div>
