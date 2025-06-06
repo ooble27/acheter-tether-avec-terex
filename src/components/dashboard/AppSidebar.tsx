@@ -1,4 +1,3 @@
-
 import {
   Sidebar,
   SidebarContent,
@@ -83,7 +82,7 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
   const { isKYCReviewer } = useUserRole();
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col min-h-screen h-full">
       <SidebarHeader className="p-6 border-b border-terex-gray/30">
         {/* Logo Header Style Binance dans la Sidebar */}
         <div className="flex items-center space-x-3">
@@ -108,7 +107,7 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="flex-1 px-4 py-6 overflow-y-auto">
+      <SidebarContent className="flex-1 px-4 py-6">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-2">
@@ -236,11 +235,10 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
         </SidebarGroup>
       </SidebarContent>
       
-      {/* Bouton de déconnexion repositionné tout en bas */}
       <div className="p-4 border-t border-terex-gray/30 mt-auto">
         <Button 
           onClick={onLogout}
-          className="w-full h-12 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium"
+          className="w-full h-16 md:h-16 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium"
         >
           <LogOut className="mr-3 h-5 w-5" />
           Déconnexion
@@ -258,14 +256,12 @@ export function AppSidebar({ activeSection, setActiveSection, onLogout }: AppSid
   }
 
   return (
-    <Sidebar className="bg-terex-darker border-r border-terex-gray/30 shadow-2xl">
-      <div className="h-screen fixed w-[var(--sidebar-width)] overflow-hidden">
-        <AppSidebarContent 
-          activeSection={activeSection} 
-          setActiveSection={setActiveSection} 
-          onLogout={onLogout} 
-        />
-      </div>
+    <Sidebar className="bg-terex-darker border-r border-terex-gray/30 shadow-2xl h-screen">
+      <AppSidebarContent 
+        activeSection={activeSection} 
+        setActiveSection={setActiveSection} 
+        onLogout={onLogout} 
+      />
     </Sidebar>
   );
 }

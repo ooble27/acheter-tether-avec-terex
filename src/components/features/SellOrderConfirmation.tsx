@@ -7,26 +7,37 @@ import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, CheckCircle, Clock } from 'lucide-react';
 
 interface OrderData {
-  amount: number;
+  amount: string;
+  currency: string;
+  usdtAmount: string;
   network: string;
+  walletAddress: string;
   paymentMethod: string;
-  phoneNumber: string;
-  cfaAmount: number;
   exchangeRate: number;
+  phoneNumber?: string;
+  provider?: string;
 }
 
 interface SellOrderConfirmationProps {
   orderData: OrderData;
+  onConfirm: () => void;
   onBack: () => void;
+  loading?: boolean;
 }
 
-export function SellOrderConfirmation({ orderData, onBack }: SellOrderConfirmationProps) {
+export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }: SellOrderConfirmationProps) {
   const getPaymentMethodName = () => {
     switch (orderData.paymentMethod) {
-      case 'orange-money': return 'Orange Money';
-      case 'wave': return 'Wave';
+      case 'bank': return 'Virement bancaire';
+      case 'mobile': return 'Mobile Money';
       default: return orderData.paymentMethod;
     }
+  };
+
+  const getProviderName = () => {
+    return orderData.provider === 'wave' ? 'Wave' : 
+           orderData.provider === 'orange' ? 'Orange Money' : 
+           orderData.provider === 'bank' ? 'Banque' : 'N/A';
   };
 
   return (
@@ -64,7 +75,7 @@ export function SellOrderConfirmation({ orderData, onBack }: SellOrderConfirmati
                     className="w-5 h-5"
                   />
                   <span className="text-terex-accent font-bold text-lg">
-                    {orderData.amount} USDT
+                    {orderData.usdtAmount} USDT
                   </span>
                 </div>
               </div>
@@ -72,14 +83,14 @@ export function SellOrderConfirmation({ orderData, onBack }: SellOrderConfirmati
               <div className="space-y-2">
                 <span className="text-gray-400 text-sm">Vous recevez</span>
                 <div className="text-white font-bold text-lg">
-                  {orderData.cfaAmount.toLocaleString()} CFA
+                  {orderData.amount} {orderData.currency}
                 </div>
               </div>
               
               <Separator className="bg-terex-gray" />
               <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-400">Taux de change</span>
-                <span className="text-white">1 USDT = {orderData.exchangeRate} CFA</span>
+                <span className="text-white">1 USDT = {orderData.exchangeRate} {orderData.currency}</span>
               </div>
             </div>
 
@@ -88,9 +99,13 @@ export function SellOrderConfirmation({ orderData, onBack }: SellOrderConfirmati
               <h3 className="text-white font-medium">Détails d'envoi USDT</h3>
               <div className="bg-terex-gray rounded-lg p-4 space-y-3 w-full">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                  <span className="text-gray-400 text-sm">Adresse d'envoi</span>
+                  <span className="text-white font-medium break-all text-sm">{orderData.walletAddress}</span>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                   <span className="text-gray-400 text-sm">Réseau</span>
                   <Badge variant="outline" className="text-terex-accent border-terex-accent w-fit">
-                    {orderData.network.toUpperCase()}
+                    {orderData.network}
                   </Badge>
                 </div>
               </div>
@@ -104,10 +119,18 @@ export function SellOrderConfirmation({ orderData, onBack }: SellOrderConfirmati
                   <span className="text-gray-400 text-sm">Réception via</span>
                   <span className="text-white font-medium">{getPaymentMethodName()}</span>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                  <span className="text-gray-400 text-sm">Numéro</span>
-                  <span className="text-white font-medium">{orderData.phoneNumber}</span>
-                </div>
+                {orderData.phoneNumber && (
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                    <span className="text-gray-400 text-sm">{orderData.paymentMethod === 'mobile' ? 'Numéro' : 'Compte'}</span>
+                    <span className="text-white font-medium">{orderData.phoneNumber}</span>
+                  </div>
+                )}
+                {orderData.provider && (
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                    <span className="text-gray-400 text-sm">Service</span>
+                    <span className="text-white font-medium">{getProviderName()}</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -118,8 +141,8 @@ export function SellOrderConfirmation({ orderData, onBack }: SellOrderConfirmati
                 <div className="space-y-1">
                   <p className="text-blue-200 font-medium">Processus de vente</p>
                   <p className="text-blue-100 text-sm">
-                    Après confirmation, vous devrez envoyer vos {orderData.amount} USDT à l'adresse fournie.
-                    Une fois la transaction confirmée sur la blockchain, vous recevrez votre paiement de {orderData.cfaAmount.toLocaleString()} CFA.
+                    Après confirmation, vous devrez envoyer vos {orderData.usdtAmount} USDT à l'adresse fournie.
+                    Une fois la transaction confirmée sur la blockchain, vous recevrez votre paiement de {orderData.amount} {orderData.currency}.
                   </p>
                 </div>
               </div>
@@ -127,11 +150,12 @@ export function SellOrderConfirmation({ orderData, onBack }: SellOrderConfirmati
 
             {/* Bouton de confirmation */}
             <Button
-              onClick={() => {}}
+              onClick={onConfirm}
+              disabled={loading}
               size="lg"
               className="w-full gradient-button text-white font-semibold h-12 text-lg"
             >
-              Confirmer la vente
+              {loading ? 'Création en cours...' : 'Confirmer la vente'}
             </Button>
           </CardContent>
         </Card>
