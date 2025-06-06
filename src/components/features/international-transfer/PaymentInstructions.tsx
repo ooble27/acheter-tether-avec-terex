@@ -44,21 +44,21 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
 
       <Card className="bg-terex-gray border-terex-gray-light">
         <CardHeader className="pb-3 md:pb-4">
-          <CardTitle className="text-white text-lg md:text-xl font-bold">
+          <CardTitle className="text-white text-base md:text-xl font-bold">
             Détails du destinataire Terex Exchange
           </CardTitle>
-          <p className="text-terex-accent text-sm md:text-base font-medium">
+          <p className="text-terex-accent text-xs md:text-base font-medium">
             Informations officielles pour votre virement Interac
           </p>
         </CardHeader>
-        <CardContent className="space-y-4 md:space-y-5">
+        <CardContent className="space-y-3 md:space-y-4">
           <div className="space-y-3 md:space-y-4">
-            <div className="p-4 md:p-5 bg-terex-darker rounded-lg border border-terex-accent/20">
-              <div className="flex flex-col space-y-3">
-                <div className="flex justify-between items-start">
+            <div className="p-3 md:p-5 bg-terex-darker rounded-lg border border-terex-accent/20">
+              <div className="flex flex-col space-y-2">
+                <div className="flex justify-between items-start gap-2">
                   <div className="min-w-0 flex-1">
-                    <span className="text-gray-400 text-sm md:text-base block font-medium">📧 Email destinataire</span>
-                    <p className="text-white font-bold text-lg md:text-xl break-all mt-1">
+                    <span className="text-gray-400 text-xs md:text-sm block font-medium">📧 Email destinataire</span>
+                    <p className="text-white font-bold text-sm md:text-lg break-all mt-1">
                       payments@terangaexchange.com
                     </p>
                   </div>
@@ -66,20 +66,20 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
                     variant="outline"
                     size="sm"
                     onClick={() => copyToClipboard('payments@terangaexchange.com', 'Email')}
-                    className="text-terex-accent border-terex-accent hover:bg-terex-accent/10 ml-2 flex-shrink-0"
+                    className="text-terex-accent border-terex-accent hover:bg-terex-accent/10 flex-shrink-0"
                   >
-                    {copied === 'Email' ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    {copied === 'Email' ? <CheckCircle className="w-3 h-3 md:w-4 md:h-4" /> : <Copy className="w-3 h-3 md:w-4 md:h-4" />}
                   </Button>
                 </div>
               </div>
             </div>
 
-            <div className="p-4 md:p-5 bg-terex-darker rounded-lg border border-green-500/20">
-              <div className="flex flex-col space-y-3">
-                <div className="flex justify-between items-start">
+            <div className="p-3 md:p-5 bg-terex-darker rounded-lg border border-green-500/20">
+              <div className="flex flex-col space-y-2">
+                <div className="flex justify-between items-start gap-2">
                   <div className="min-w-0 flex-1">
-                    <span className="text-gray-400 text-sm md:text-base block font-medium">❓ Question de sécurité</span>
-                    <p className="text-white font-bold text-lg md:text-xl mt-1">
+                    <span className="text-gray-400 text-xs md:text-sm block font-medium">❓ Question de sécurité</span>
+                    <p className="text-white font-bold text-sm md:text-lg mt-1">
                       Référence transfert
                     </p>
                   </div>
@@ -87,20 +87,20 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
                     variant="outline"
                     size="sm"
                     onClick={() => copyToClipboard('Référence transfert', 'Question')}
-                    className="text-green-500 border-green-500 hover:bg-green-500/10 ml-2 flex-shrink-0"
+                    className="text-green-500 border-green-500 hover:bg-green-500/10 flex-shrink-0"
                   >
-                    {copied === 'Question' ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    {copied === 'Question' ? <CheckCircle className="w-3 h-3 md:w-4 md:h-4" /> : <Copy className="w-3 h-3 md:w-4 md:h-4" />}
                   </Button>
                 </div>
               </div>
             </div>
 
-            <div className="p-4 md:p-5 bg-terex-darker rounded-lg border border-yellow-500/20">
-              <div className="flex flex-col space-y-3">
-                <div className="flex justify-between items-start">
+            <div className="p-3 md:p-5 bg-terex-darker rounded-lg border border-yellow-500/20">
+              <div className="flex flex-col space-y-2">
+                <div className="flex justify-between items-start gap-2">
                   <div className="min-w-0 flex-1">
-                    <span className="text-gray-400 text-sm md:text-base block font-medium">✅ Réponse</span>
-                    <p className="text-white font-bold text-lg md:text-xl mt-1">
+                    <span className="text-gray-400 text-xs md:text-sm block font-medium">✅ Réponse</span>
+                    <p className="text-white font-bold text-sm md:text-lg mt-1">
                       TEREX-{transferData.id?.slice(-8)}
                     </p>
                   </div>
@@ -108,17 +108,17 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
                     variant="outline"
                     size="sm"
                     onClick={() => copyToClipboard(`TEREX-${transferData.id?.slice(-8)}`, 'Réponse')}
-                    className="text-yellow-500 border-yellow-500 hover:bg-yellow-500/10 ml-2 flex-shrink-0"
+                    className="text-yellow-500 border-yellow-500 hover:bg-yellow-500/10 flex-shrink-0"
                   >
-                    {copied === 'Réponse' ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    {copied === 'Réponse' ? <CheckCircle className="w-3 h-3 md:w-4 md:h-4" /> : <Copy className="w-3 h-3 md:w-4 md:h-4" />}
                   </Button>
                 </div>
               </div>
             </div>
 
-            <div className="p-4 md:p-5 bg-gradient-to-r from-terex-accent/10 to-terex-accent/5 rounded-lg border border-terex-accent">
-              <span className="text-gray-400 text-sm md:text-base block font-medium">💰 Montant à envoyer</span>
-              <p className="text-terex-accent font-bold text-2xl md:text-3xl mt-1">
+            <div className="p-3 md:p-5 bg-gradient-to-r from-terex-accent/10 to-terex-accent/5 rounded-lg border border-terex-accent">
+              <span className="text-gray-400 text-xs md:text-sm block font-medium">💰 Montant à envoyer</span>
+              <p className="text-terex-accent font-bold text-xl md:text-2xl mt-1">
                 {transferData.amount} CAD
               </p>
             </div>
@@ -201,7 +201,7 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
   );
 
   return (
-    <div className="min-h-screen bg-terex-dark">
+    <div className="min-h-screen bg-terex-dark overflow-x-hidden">
       <div className="w-full max-w-7xl mx-auto px-3 md:px-6 py-4 md:py-6">
         <div className="mb-4 md:mb-6">
           <Button
