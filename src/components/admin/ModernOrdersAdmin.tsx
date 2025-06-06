@@ -19,6 +19,9 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useUserRole } from '@/hooks/useUserRole';
+import type { Database } from '@/integrations/supabase/types';
+
+type OrderStatus = Database['public']['Enums']['order_status'];
 
 interface SimpleOrder {
   id: string;
@@ -184,7 +187,7 @@ export function ModernOrdersAdmin() {
   }, [orders, searchTerm, statusFilter]);
 
   // Mettre à jour le statut d'une commande
-  const updateOrderStatus = async (orderId: string, newStatus: string, orderType: string) => {
+  const updateOrderStatus = async (orderId: string, newStatus: OrderStatus, orderType: string) => {
     try {
       if (orderType === 'transfer') {
         const { error } = await supabase
@@ -444,7 +447,7 @@ export function ModernOrdersAdmin() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => updateOrderStatus(order.id, 'processing', order.type)}
+                              onClick={() => updateOrderStatus(order.id, 'processing' as OrderStatus, order.type)}
                               className="text-blue-700 border-blue-200 hover:bg-blue-50"
                             >
                               <TrendingUp className="w-3 h-3 mr-1" />
@@ -453,7 +456,7 @@ export function ModernOrdersAdmin() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => updateOrderStatus(order.id, 'cancelled', order.type)}
+                              onClick={() => updateOrderStatus(order.id, 'cancelled' as OrderStatus, order.type)}
                               className="text-red-700 border-red-200 hover:bg-red-50"
                             >
                               <XCircle className="w-3 h-3 mr-1" />
@@ -467,7 +470,7 @@ export function ModernOrdersAdmin() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => updateOrderStatus(order.id, 'completed', order.type)}
+                              onClick={() => updateOrderStatus(order.id, 'completed' as OrderStatus, order.type)}
                               className="text-green-700 border-green-200 hover:bg-green-50"
                             >
                               <CheckCircle className="w-3 h-3 mr-1" />
@@ -476,7 +479,7 @@ export function ModernOrdersAdmin() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => updateOrderStatus(order.id, 'cancelled', order.type)}
+                              onClick={() => updateOrderStatus(order.id, 'cancelled' as OrderStatus, order.type)}
                               className="text-red-700 border-red-200 hover:bg-red-50"
                             >
                               <XCircle className="w-3 h-3 mr-1" />
