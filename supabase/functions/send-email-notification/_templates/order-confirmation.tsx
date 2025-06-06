@@ -152,7 +152,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
   );
 };
 
-// Styles avec fond noir complet
+// Styles avec fond noir
 const iconContainer = {
   textAlign: 'center' as const,
   marginBottom: '24px',

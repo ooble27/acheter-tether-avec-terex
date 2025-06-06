@@ -36,7 +36,7 @@ const main = {
   backgroundColor: '#000000',
   fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
   minHeight: '100vh',
-  padding: '20px 0',
+  padding: '0',
   margin: '0',
   width: '100%',
 };
@@ -46,7 +46,7 @@ const container = {
   border: '1px solid #3B968F',
   borderRadius: '8px',
   maxWidth: '600px',
-  margin: '0 auto',
+  margin: '20px auto',
   padding: '40px 20px',
   width: '100%',
   boxSizing: 'border-box' as const,

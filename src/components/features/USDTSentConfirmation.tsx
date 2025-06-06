@@ -22,10 +22,10 @@ export function USDTSentConfirmation({ orderData, onBackToHome }: USDTSentConfir
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark p-2 md:p-4 flex items-center justify-center">
-      <div className="w-full max-w-4xl mx-auto px-2 md:px-0">
-        <Card className="bg-terex-darker border-terex-gray text-center w-full">
-          <CardHeader className="pb-6 p-4 md:p-6">
+    <div className="min-h-screen bg-terex-dark p-1 md:p-4 flex items-center justify-center">
+      <div className="w-full max-w-5xl mx-auto px-1 md:px-0">
+        <Card className="bg-terex-darker border-terex-gray text-center w-full mx-1 md:mx-0">
+          <CardHeader className="pb-6 p-3 md:p-6">
             <div className="flex justify-center mb-4">
               <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center">
                 <CheckCircle className="w-8 h-8 text-green-500" />
@@ -39,7 +39,7 @@ export function USDTSentConfirmation({ orderData, onBackToHome }: USDTSentConfir
             </p>
           </CardHeader>
           
-          <CardContent className="space-y-6 p-4 md:p-6">
+          <CardContent className="space-y-6 p-3 md:p-6">
             {/* Résumé de la transaction */}
             <div className="bg-terex-gray rounded-lg p-4 space-y-3 w-full">
               <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
