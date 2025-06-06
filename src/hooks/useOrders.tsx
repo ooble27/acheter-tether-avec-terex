@@ -152,6 +152,29 @@ export const useOrders = () => {
         await sendSellConfirmation(data, data.id);
       }
 
+      // Notifier l'admin de la nouvelle commande
+      try {
+        await supabase.functions.invoke('send-admin-notification', {
+          body: {
+            notificationType: 'new_order',
+            data: {
+              orderId: data.id,
+              type: data.type,
+              amount: data.amount,
+              currency: data.currency,
+              usdtAmount: data.usdt_amount,
+              paymentMethod: data.payment_method,
+              status: data.status,
+              userId: data.user_id,
+              createdAt: data.created_at
+            }
+          },
+        });
+        console.log('Notification admin envoyée pour nouvelle commande');
+      } catch (adminError) {
+        console.error('Erreur notification admin:', adminError);
+      }
+
       await fetchOrders();
       return data;
     } catch (error) {
@@ -167,6 +190,8 @@ export const useOrders = () => {
       if (!orderToUpdate) {
         throw new Error('Commande non trouvée');
       }
+
+      const oldStatus = orderToUpdate.status;
 
       if (orderToUpdate.type === 'transfer') {
         // Mettre à jour un transfert international
@@ -206,7 +231,27 @@ export const useOrders = () => {
         }
       }
 
-      // Envoyer les notifications email
+      // Notifier l'admin du changement de statut
+      try {
+        await supabase.functions.invoke('send-admin-notification', {
+          body: {
+            notificationType: 'status_update',
+            data: {
+              orderId: orderId,
+              type: orderToUpdate.type,
+              oldStatus: oldStatus,
+              newStatus: status,
+              amount: orderToUpdate.amount,
+              currency: orderToUpdate.currency
+            }
+          },
+        });
+        console.log('Notification admin envoyée pour mise à jour statut');
+      } catch (adminError) {
+        console.error('Erreur notification admin status:', adminError);
+      }
+
+      // Envoyer les notifications email aux clients
       try {
         console.log('Envoi des notifications email pour:', orderId, 'nouveau statut:', status);
         console.log('ID du client:', orderToUpdate.user_id);

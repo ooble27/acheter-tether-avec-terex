@@ -26,7 +26,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   const [activeSection, setActiveSection] = useState('home');
   const isMobile = useIsMobile();
   const { signOut } = useAuth();
-  const { isKYCReviewer } = useUserRole();
+  const { isKYCReviewer, isAdmin } = useUserRole();
 
   const handleLogout = async () => {
     try {
@@ -61,6 +61,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
       case 'orders-admin':
         return isKYCReviewer() ? <OrdersDashboard /> : <div className="text-white">Accès non autorisé</div>;
+      case 'admin-portal':
+        return (isAdmin() || isKYCReviewer()) ? <AdminPortal /> : <div className="text-white">Accès non autorisé</div>;
       default:
         return <DashboardHome user={user} />;
     }
