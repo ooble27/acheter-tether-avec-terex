@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRightLeft, Shield, Clock, CreditCard, CheckCircle } from 'lucide-react';
+import { ArrowRightLeft, Shield, Clock, CreditCard } from 'lucide-react';
 import { OrderConfirmation } from '@/components/features/OrderConfirmation';
 import { PaymentInstructions } from '@/components/features/PaymentInstructions';
 import { PaymentPending } from '@/components/features/PaymentPending';

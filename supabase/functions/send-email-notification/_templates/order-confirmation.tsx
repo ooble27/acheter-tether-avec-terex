@@ -33,7 +33,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
   return (
     <BaseEmail preview={preview} title={title}>
       <Text style={greeting}>
-        🎉 Félicitations ! Nous avons bien reçu votre demande
+        🎉 Félicitations ! Nous avons bien reçu votre demande {transactionType === 'buy' ? 'd\'achat' : 'de vente'} USDT
       </Text>
       
       <Section style={orderCard}>
@@ -77,12 +77,12 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
               <span style={value}>{orderData.amount || 0} {orderData.currency || 'CFA'}</span>
             </div>
             <div style={detailRow}>
-              <span style={label}>Téléphone :</span>
+              <span style={label}>Téléphone/Compte :</span>
               <span style={value}>{phoneNumber}</span>
             </div>
             <div style={detailRow}>
               <span style={label}>Service :</span>
-              <span style={value}>{providerName}</span>
+              <span style={value}>{provider === 'bank' ? 'Banque' : providerName}</span>
             </div>
           </>
         )}
@@ -103,7 +103,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
         <Text style={processText}>
           {transactionType === 'buy' 
             ? `1. Votre demande d'achat est en cours de traitement\n2. Vous recevrez les instructions de paiement\n3. Effectuez le paiement de ${orderData.amount || 0} ${orderData.currency || 'CFA'}\n4. Recevez vos ${orderData.usdt_amount || 0} USDT sur votre portefeuille` 
-            : `1. Votre demande de vente est en cours de traitement\n2. Envoyez ${orderData.usdt_amount || 0} USDT à l'adresse qui vous sera fournie\n3. Une fois les USDT reçus et confirmés, vous recevrez ${orderData.amount || 0} ${orderData.currency || 'CFA'} sur votre ${providerName} (${phoneNumber})\n4. Délai de traitement : maximum 30 minutes après réception des USDT`
+            : `1. Votre demande de vente est en cours de traitement\n2. Envoyez ${orderData.usdt_amount || 0} USDT à l'adresse qui vous sera fournie\n3. Une fois les USDT reçus et confirmés, vous recevrez ${orderData.amount || 0} ${orderData.currency || 'CFA'} sur votre ${provider === 'bank' ? 'compte bancaire' : providerName} (${phoneNumber})\n4. Délai de traitement : maximum 30 minutes après réception des USDT`
           }
         </Text>
       </Section>

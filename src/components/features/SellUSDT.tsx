@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRightLeft, Shield, Clock, CreditCard, CheckCircle, Copy } from 'lucide-react';
-import { OrderConfirmation } from '@/components/features/OrderConfirmation';
+import { SellOrderConfirmation } from '@/components/features/SellOrderConfirmation';
 import { USDTSendingInstructions } from '@/components/features/USDTSendingInstructions';
 import { USDTSentConfirmation } from '@/components/features/USDTSentConfirmation';
 import { useOrders } from '@/hooks/useOrders';
@@ -181,7 +182,7 @@ export function SellUSDT() {
           usdtAmount,
           network,
           walletAddress: WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
-          paymentMethod: paymentMethod as 'card' | 'mobile',
+          paymentMethod: paymentMethod,
           exchangeRate: exchangeRates[currency as keyof typeof exchangeRates],
           phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : bankData.accountNumber,
           provider: paymentMethod === 'mobile' ? mobileData.provider : 'bank'
@@ -195,14 +196,14 @@ export function SellUSDT() {
   // État de confirmation de commande
   if (showConfirmation) {
     return (
-      <OrderConfirmation
+      <SellOrderConfirmation
         orderData={{
           amount: fiatAmount,
           currency,
           usdtAmount,
           network,
           walletAddress: WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
-          paymentMethod: paymentMethod as 'card' | 'mobile',
+          paymentMethod: paymentMethod,
           exchangeRate: exchangeRates[currency as keyof typeof exchangeRates],
           phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : bankData.accountNumber,
           provider: paymentMethod === 'mobile' ? mobileData.provider : 'bank'
