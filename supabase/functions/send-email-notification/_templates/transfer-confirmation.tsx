@@ -1,4 +1,3 @@
-
 import {
   Text,
   Section,
@@ -18,6 +17,16 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
   
   return (
     <BaseEmail preview={preview} title={title}>
+      <div style={logoContainer}>
+        <Img
+          src="https://mwwjrrduavfcwjiyniuy.supabase.co/storage/v1/object/public/avatars/terex-logo.png"
+          width="120"
+          height="40"
+          alt="Terex"
+          style={logo}
+        />
+      </div>
+      
       <div style={iconContainer}>
         <div style={transferIcon}>🌍</div>
       </div>
@@ -173,8 +182,8 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
         </Text>
         <Text style={contactText}>
           • Email support : support@terex.com
-          • Téléphone d'urgence : +221 XX XXX XX XX
-          • WhatsApp : +221 XX XXX XX XX
+          • Téléphone Sénégal : +221 77 397 27 49
+          • WhatsApp : +1 4182619091
           • Horaires : 24h/7j pour les transferts internationaux
           • Délai de traitement : 24-48h ouvrables
           • Numéro de suivi : TEREX-{transferData.id?.slice(-8) || 'N/A'}
@@ -194,6 +203,16 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
 };
 
 // Styles améliorés avec nouvelles sections
+const logoContainer = {
+  textAlign: 'center' as const,
+  marginBottom: '20px',
+  paddingTop: '20px',
+};
+
+const logo = {
+  margin: '0 auto',
+};
+
 const iconContainer = {
   textAlign: 'center' as const,
   marginBottom: '24px',

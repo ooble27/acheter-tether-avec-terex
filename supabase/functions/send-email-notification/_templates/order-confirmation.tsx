@@ -140,8 +140,8 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
         </Text>
         <Text style={contactText}>
           • Support client : support@terex.com
-          • Téléphone : +221 77 123 45 67
-          • WhatsApp : +33 6 12 34 56 78
+          • Téléphone Sénégal : +221 77 397 27 49
+          • WhatsApp : +1 4182619091
           • Horaires : 24h/7j
           • Temps de réponse moyen : 15 minutes
         </Text>

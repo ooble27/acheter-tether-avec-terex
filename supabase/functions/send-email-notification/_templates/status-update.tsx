@@ -306,8 +306,8 @@ Un remboursement automatique sera initié si nécessaire.`
 
 Contact notre support si vous avez des questions :
 • Email : support@terex.com
-• Téléphone d'urgence : +221 77 123 45 67
-• WhatsApp : +33 6 12 34 56 78  
+• Téléphone Sénégal : +221 77 397 27 49
+• WhatsApp : +1 4182619091  
 • Chat en direct : 24h/7j sur notre site
 • Numéro de référence : #TEREX-{orderData.id?.slice(-8) || 'N/A'}
           
@@ -322,8 +322,8 @@ N'hésitez pas à nous contacter pour toute question !
         </Text>
         <Text style={contactText}>
           • Support email : support@terex.com
-          • Téléphone d'urgence : +221 77 123 45 67
-          • WhatsApp : +33 6 12 34 56 78  
+          • Téléphone Sénégal : +221 77 397 27 49
+          • WhatsApp : +1 4182619091  
           • Chat en direct : 24h/7j sur notre site
           • Numéro de référence : #TEREX-{orderData.id?.slice(-8) || 'N/A'}
           
