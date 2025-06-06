@@ -7,18 +7,27 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRightLeft, Shield, Clock, CreditCard, CheckCircle } from 'lucide-react';
+import { ArrowRightLeft, Shield, Clock, CreditCard, CheckCircle, Copy } from 'lucide-react';
 import { OrderConfirmation } from '@/components/features/OrderConfirmation';
 import { PaymentPage } from '@/components/features/PaymentPage';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+
+// Adresses de portefeuille par réseau - À REMPLACER par les vraies adresses
+const WALLET_ADDRESSES = {
+  TRC20: 'VOTRE_ADRESSE_TRC20_ICI',
+  BEP20: 'VOTRE_ADRESSE_BEP20_ICI', 
+  ERC20: 'VOTRE_ADRESSE_ERC20_ICI',
+  Arbitrum: 'VOTRE_ADRESSE_ARBITRUM_ICI',
+  Polygon: 'VOTRE_ADRESSE_POLYGON_ICI'
+};
 
 export function SellUSDT() {
   const [paymentMethod, setPaymentMethod] = useState<'bank' | 'mobile'>('bank');
   const [usdtAmount, setUsdtAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
-  const [walletAddress, setWalletAddress] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -36,13 +45,28 @@ export function SellUSDT() {
 
   const { createOrder } = useOrders();
   const { user } = useAuth();
+  const { toast } = useToast();
 
   const exchangeRates = {
     CFA: 615,
     CAD: 1.35
   };
 
-  const fiatAmount = usdtAmount ? (parseFloat(usdtAmount) * exchangeRates[currency as keyof typeof exchangeRates]).toFixed(2) : '0';
+  // Fonction pour formater les nombres
+  const formatAmount = (amount: string | number) => {
+    const num = parseFloat(amount.toString());
+    if (isNaN(num)) return '0';
+    
+    // Si c'est un nombre entier, ne pas afficher de décimales
+    if (num === Math.floor(num)) {
+      return num.toString();
+    }
+    
+    // Sinon, limiter à 2 décimales et enlever les zéros inutiles
+    return parseFloat(num.toFixed(2)).toString();
+  };
+
+  const fiatAmount = usdtAmount ? formatAmount(parseFloat(usdtAmount) * exchangeRates[currency as keyof typeof exchangeRates]) : '0';
 
   const paymentMethods = [
     { id: 'bank' as const, name: 'Virement bancaire', icon: '🏦', fee: '0%', time: '24-48h' },
@@ -53,8 +77,16 @@ export function SellUSDT() {
     return ['10', '50', '100', '500', '1000'];
   };
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copié !",
+      description: "L'adresse a été copiée dans le presse-papiers",
+    });
+  };
+
   const handleSellClick = () => {
-    if (!usdtAmount || !walletAddress) {
+    if (!usdtAmount) {
       return;
     }
     
@@ -74,6 +106,9 @@ export function SellUSDT() {
     
     setLoading(true);
     
+    // Mapper les méthodes de paiement pour la base de données
+    const dbPaymentMethod = paymentMethod === 'bank' ? 'card' : 'mobile';
+    
     const orderData = {
       user_id: user.id,
       type: 'sell',
@@ -81,9 +116,9 @@ export function SellUSDT() {
       currency,
       usdt_amount: parseFloat(usdtAmount),
       exchange_rate: exchangeRates[currency as keyof typeof exchangeRates],
-      payment_method: paymentMethod,
+      payment_method: dbPaymentMethod as 'card' | 'mobile',
       network,
-      wallet_address: walletAddress,
+      wallet_address: WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
       status: 'pending' as const,
       payment_status: 'pending'
     };
@@ -100,7 +135,6 @@ export function SellUSDT() {
 
   const handlePaymentComplete = () => {
     setUsdtAmount('');
-    setWalletAddress('');
     setBankData({ accountNumber: '', bankName: '', accountHolder: '' });
     setMobileData({ phoneNumber: '', provider: 'wave' });
     setShowPayment(false);
@@ -114,8 +148,8 @@ export function SellUSDT() {
           currency,
           usdtAmount,
           network,
-          walletAddress,
-          paymentMethod,
+          walletAddress: WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
+          paymentMethod: paymentMethod as 'card' | 'mobile',
           exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
         }}
         onBack={() => setShowPayment(false)}
@@ -132,8 +166,8 @@ export function SellUSDT() {
           currency,
           usdtAmount,
           network,
-          walletAddress,
-          paymentMethod,
+          walletAddress: WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
+          paymentMethod: paymentMethod as 'card' | 'mobile',
           exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
         }}
         onConfirm={handleConfirmOrder}
@@ -279,17 +313,26 @@ export function SellUSDT() {
                         </Select>
                       </div>
 
-                      {/* Wallet Address */}
+                      {/* Our Wallet Address */}
                       <div className="space-y-2">
-                        <Label className="text-white text-sm font-medium">Votre adresse USDT</Label>
-                        <Input
-                          type="text"
-                          placeholder="Adresse de votre portefeuille USDT"
-                          value={walletAddress}
-                          onChange={(e) => setWalletAddress(e.target.value)}
-                          className="bg-terex-gray border-terex-gray-light text-white h-12"
-                        />
-                        <p className="text-gray-400 text-xs">Adresse depuis laquelle vous enverrez vos USDT</p>
+                        <Label className="text-white text-sm font-medium">Adresse de réception (Notre portefeuille)</Label>
+                        <div className="flex items-center space-x-2">
+                          <Input
+                            type="text"
+                            value={WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
+                            readOnly
+                            className="bg-terex-gray border-terex-gray-light text-white h-12"
+                          />
+                          <Button
+                            type="button"
+                            size="sm"
+                            onClick={() => copyToClipboard(WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES])}
+                            className="bg-terex-accent hover:bg-terex-accent/80"
+                          >
+                            <Copy className="w-4 h-4" />
+                          </Button>
+                        </div>
+                        <p className="text-gray-400 text-xs">Envoyez vos USDT à cette adresse sur le réseau {network}</p>
                       </div>
 
                       {/* Payment Method Details */}
@@ -330,10 +373,10 @@ export function SellUSDT() {
 
                       {method.id === 'mobile' && (
                         <div className="space-y-4">
-                          <h3 className="text-white font-medium">Mobile Money</h3>
+                          <h3 className="text-white font-medium">Comment souhaitez-vous recevoir l'argent ?</h3>
                           <div className="grid gap-4">
                             <div className="space-y-2">
-                              <Label className="text-white text-sm">Fournisseur</Label>
+                              <Label className="text-white text-sm">Service de paiement</Label>
                               <Select value={mobileData.provider} onValueChange={(value) => setMobileData({...mobileData, provider: value as 'wave' | 'orange'})}>
                                 <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white">
                                   <SelectValue />
@@ -371,7 +414,7 @@ export function SellUSDT() {
                       <Button 
                         size="lg"
                         className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                        disabled={!usdtAmount || !walletAddress || 
+                        disabled={!usdtAmount || 
                           (paymentMethod === 'bank' && (!bankData.accountNumber || !bankData.bankName || !bankData.accountHolder)) ||
                           (paymentMethod === 'mobile' && !mobileData.phoneNumber)
                         }
