@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,7 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRightLeft, Shield, Clock, CreditCard, CheckCircle, Copy } from 'lucide-react';
 import { OrderConfirmation } from '@/components/features/OrderConfirmation';
-import { PaymentPage } from '@/components/features/PaymentPage';
+import { USDTSendingInstructions } from '@/components/features/USDTSendingInstructions';
+import { USDTSentConfirmation } from '@/components/features/USDTSentConfirmation';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -29,7 +29,8 @@ export function SellUSDT() {
   const [currency, setCurrency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [showPayment, setShowPayment] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [showFinalConfirmation, setShowFinalConfirmation] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [bankData, setBankData] = useState({
@@ -127,22 +128,45 @@ export function SellUSDT() {
     
     if (result) {
       setShowConfirmation(false);
-      setShowPayment(true);
+      setShowInstructions(true);
     }
     
     setLoading(false);
   };
 
-  const handlePaymentComplete = () => {
+  const handleUSDTSent = () => {
+    setShowInstructions(false);
+    setShowFinalConfirmation(true);
+  };
+
+  const handleBackToHome = () => {
+    // Réinitialiser tous les états
     setUsdtAmount('');
     setBankData({ accountNumber: '', bankName: '', accountHolder: '' });
     setMobileData({ phoneNumber: '', provider: 'wave' });
-    setShowPayment(false);
+    setShowFinalConfirmation(false);
   };
 
-  if (showPayment) {
+  // État de confirmation finale
+  if (showFinalConfirmation) {
     return (
-      <PaymentPage
+      <USDTSentConfirmation
+        orderData={{
+          amount: fiatAmount,
+          currency,
+          usdtAmount,
+          phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : bankData.accountNumber,
+          provider: paymentMethod === 'mobile' ? mobileData.provider : 'bank'
+        }}
+        onBackToHome={handleBackToHome}
+      />
+    );
+  }
+
+  // État des instructions d'envoi
+  if (showInstructions) {
+    return (
+      <USDTSendingInstructions
         orderData={{
           amount: fiatAmount,
           currency,
@@ -150,14 +174,17 @@ export function SellUSDT() {
           network,
           walletAddress: WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
           paymentMethod: paymentMethod as 'card' | 'mobile',
-          exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
+          exchangeRate: exchangeRates[currency as keyof typeof exchangeRates],
+          phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : bankData.accountNumber,
+          provider: paymentMethod === 'mobile' ? mobileData.provider : 'bank'
         }}
-        onBack={() => setShowPayment(false)}
-        onPaymentComplete={handlePaymentComplete}
+        onBack={() => setShowInstructions(false)}
+        onUSDTSent={handleUSDTSent}
       />
     );
   }
 
+  // État de confirmation de commande
   if (showConfirmation) {
     return (
       <OrderConfirmation
