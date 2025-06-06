@@ -9,7 +9,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRightLeft, Shield, Clock, CreditCard, CheckCircle } from 'lucide-react';
 import { OrderConfirmation } from '@/components/features/OrderConfirmation';
-import { PaymentPage } from '@/components/features/PaymentPage';
+import { PaymentInstructions } from '@/components/features/PaymentInstructions';
+import { PaymentPending } from '@/components/features/PaymentPending';
+import { PaymentSuccess } from '@/components/features/PaymentSuccess';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -19,14 +21,14 @@ export function BuyUSDT() {
   const [currency, setCurrency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
   const [walletAddress, setWalletAddress] = useState('');
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [showPayment, setShowPayment] = useState(false);
+  const [currentStep, setCurrentStep] = useState<'form' | 'confirmation' | 'payment' | 'pending' | 'success'>('form');
   const [loading, setLoading] = useState(false);
-
   const [mobileData, setMobileData] = useState({
     phoneNumber: '',
     provider: 'wave' as 'wave' | 'orange'
   });
+  const [currentOrderId, setCurrentOrderId] = useState('');
+  const [transactionHash, setTransactionHash] = useState('');
 
   const { createOrder } = useOrders();
   const { user } = useAuth();
@@ -55,7 +57,7 @@ export function BuyUSDT() {
     if (!amount || !walletAddress) {
       return;
     }
-    setShowConfirmation(true);
+    setCurrentStep('confirmation');
   };
 
   const handleConfirmOrder = async () => {
@@ -80,57 +82,119 @@ export function BuyUSDT() {
     const result = await createOrder(orderData);
     
     if (result) {
-      setShowConfirmation(false);
-      setShowPayment(true);
+      setCurrentOrderId(result.id);
+      setCurrentStep('payment');
     }
     
     setLoading(false);
   };
-
-  const handlePaymentComplete = () => {
-    setAmount('');
-    setWalletAddress('');
-    setShowPayment(false);
+  
+  const handlePaymentSubmitted = () => {
+    setCurrentStep('pending');
+    
+    // Dans un cas réel, nous vérifierions l'état du paiement via webhook ou polling
+    // Ici, on simule un succès de paiement après 5 secondes
+    setTimeout(() => {
+      // Simuler un hash de transaction pour démonstration
+      setTransactionHash('0x' + Math.random().toString(16).substring(2, 40));
+      setCurrentStep('success');
+    }, 5000);
   };
 
-  if (showPayment) {
-    return (
-      <PaymentPage
-        orderData={{
-          amount,
-          currency: paymentMethod === 'mobile' ? 'CFA' : currency,
-          usdtAmount,
-          network,
-          walletAddress,
-          paymentMethod,
-          exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
-        }}
-        onBack={() => setShowPayment(false)}
-        onPaymentComplete={handlePaymentComplete}
-      />
-    );
-  }
+  const handleBackToHome = () => {
+    // Reset le formulaire et revient à l'état initial
+    setAmount('');
+    setWalletAddress('');
+    setCurrentStep('form');
+  };
+  
+  const handleBuyMore = () => {
+    // Reset le formulaire et revient à l'état initial
+    setAmount('');
+    setWalletAddress('');
+    setCurrentStep('form');
+  };
 
-  if (showConfirmation) {
-    return (
-      <OrderConfirmation
-        orderData={{
-          amount,
-          currency: paymentMethod === 'mobile' ? 'CFA' : currency,
-          usdtAmount,
-          network,
-          walletAddress,
-          paymentMethod,
-          exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
-        }}
-        onConfirm={handleConfirmOrder}
-        onBack={() => setShowConfirmation(false)}
-        loading={loading}
-      />
-    );
-  }
+  // Determine which component to render based on current step
+  const renderCurrentStep = () => {
+    switch(currentStep) {
+      case 'confirmation':
+        return (
+          <OrderConfirmation
+            orderData={{
+              amount,
+              currency: paymentMethod === 'mobile' ? 'CFA' : currency,
+              usdtAmount,
+              network,
+              walletAddress,
+              paymentMethod,
+              exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
+            }}
+            onConfirm={handleConfirmOrder}
+            onBack={() => setCurrentStep('form')}
+            loading={loading}
+          />
+        );
+      
+      case 'payment':
+        return (
+          <PaymentInstructions
+            orderData={{
+              amount,
+              currency: paymentMethod === 'mobile' ? 'CFA' : currency,
+              usdtAmount,
+              network,
+              walletAddress,
+              paymentMethod,
+              exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
+            }}
+            orderId={currentOrderId}
+            onBack={() => setCurrentStep('confirmation')}
+            onPaymentConfirmed={handlePaymentSubmitted}
+          />
+        );
+      
+      case 'pending':
+        return (
+          <PaymentPending
+            orderData={{
+              amount,
+              currency: paymentMethod === 'mobile' ? 'CFA' : currency,
+              usdtAmount,
+              network,
+              walletAddress,
+              paymentMethod,
+              exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
+            }}
+            orderId={currentOrderId}
+            onBackToHome={handleBackToHome}
+          />
+        );
+      
+      case 'success':
+        return (
+          <PaymentSuccess
+            orderData={{
+              amount,
+              currency: paymentMethod === 'mobile' ? 'CFA' : currency,
+              usdtAmount,
+              network,
+              walletAddress,
+            }}
+            orderId={currentOrderId}
+            txHash={transactionHash}
+            onBackToHome={handleBackToHome}
+            onBuyMore={handleBuyMore}
+          />
+        );
+      
+      case 'form':
+      default:
+        return renderBuyForm();
+    }
+  };
 
-  return (
+  const renderBuyForm = () => (
     <div className="min-h-screen bg-terex-dark p-2 md:p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -382,4 +446,6 @@ export function BuyUSDT() {
       </div>
     </div>
   );
+
+  return renderCurrentStep();
 }
