@@ -1,4 +1,3 @@
-
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +10,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, Handshake } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useState } from 'react';
@@ -52,6 +51,12 @@ const menuItems = [
     label: 'Vendre USDT', 
     icon: TrendingDown,
     description: 'Échanger vos USDT'
+  },
+  { 
+    id: 'otc', 
+    label: 'Trading OTC', 
+    icon: Handshake,
+    description: 'Gros volumes & négociation'
   },
   { 
     id: 'transfer', 

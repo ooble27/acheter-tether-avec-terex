@@ -206,6 +206,54 @@ export type Database = {
         }
         Relationships: []
       }
+      merchant_accounts: {
+        Row: {
+          api_key: string
+          business_address: string | null
+          business_email: string
+          business_name: string
+          business_phone: string | null
+          business_type: string
+          commission_rate: number
+          created_at: string
+          id: string
+          is_active: boolean
+          updated_at: string
+          user_id: string
+          webhook_url: string | null
+        }
+        Insert: {
+          api_key?: string
+          business_address?: string | null
+          business_email: string
+          business_name: string
+          business_phone?: string | null
+          business_type: string
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+          user_id: string
+          webhook_url?: string | null
+        }
+        Update: {
+          api_key?: string
+          business_address?: string | null
+          business_email?: string
+          business_name?: string
+          business_phone?: string | null
+          business_type?: string
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+          user_id?: string
+          webhook_url?: string | null
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           amount: number
@@ -269,6 +317,44 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_qr_codes: {
+        Row: {
+          created_at: string
+          data: Json
+          expires_at: string
+          id: string
+          payment_id: string
+          qr_code: string
+          scanned_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          data: Json
+          expires_at: string
+          id?: string
+          payment_id: string
+          qr_code: string
+          scanned_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          expires_at?: string
+          id?: string
+          payment_id?: string
+          qr_code?: string
+          scanned_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_qr_codes_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "terex_payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           country: string | null
@@ -299,6 +385,133 @@ export type Database = {
         }
         Relationships: []
       }
+      refunds: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          payment_id: string
+          processed_at: string | null
+          processed_by: string | null
+          reason: string | null
+          status: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          payment_id: string
+          processed_at?: string | null
+          processed_by?: string | null
+          reason?: string | null
+          status?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          payment_id?: string
+          processed_at?: string | null
+          processed_by?: string | null
+          reason?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "refunds_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "terex_payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      terex_payments: {
+        Row: {
+          amount: number
+          commission: number
+          created_at: string
+          currency: string
+          customer_email: string | null
+          customer_id: string | null
+          customer_phone: string | null
+          description: string | null
+          exchange_rate: number
+          expires_at: string | null
+          id: string
+          merchant_id: string
+          metadata: Json | null
+          net_amount: number
+          paid_at: string | null
+          payment_method: string
+          qr_code_data: string | null
+          reference_number: string
+          status: string
+          updated_at: string
+          usdt_amount: number
+          webhook_response: string | null
+          webhook_sent: boolean
+        }
+        Insert: {
+          amount: number
+          commission: number
+          created_at?: string
+          currency?: string
+          customer_email?: string | null
+          customer_id?: string | null
+          customer_phone?: string | null
+          description?: string | null
+          exchange_rate: number
+          expires_at?: string | null
+          id?: string
+          merchant_id: string
+          metadata?: Json | null
+          net_amount: number
+          paid_at?: string | null
+          payment_method?: string
+          qr_code_data?: string | null
+          reference_number: string
+          status?: string
+          updated_at?: string
+          usdt_amount: number
+          webhook_response?: string | null
+          webhook_sent?: boolean
+        }
+        Update: {
+          amount?: number
+          commission?: number
+          created_at?: string
+          currency?: string
+          customer_email?: string | null
+          customer_id?: string | null
+          customer_phone?: string | null
+          description?: string | null
+          exchange_rate?: number
+          expires_at?: string | null
+          id?: string
+          merchant_id?: string
+          metadata?: Json | null
+          net_amount?: number
+          paid_at?: string | null
+          payment_method?: string
+          qr_code_data?: string | null
+          reference_number?: string
+          status?: string
+          updated_at?: string
+          usdt_amount?: number
+          webhook_response?: string | null
+          webhook_sent?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "terex_payments_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -325,6 +538,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_payment_reference: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       has_role: {
         Args: {
           _user_id: string

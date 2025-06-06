@@ -11,6 +11,7 @@ import { Profile } from '@/components/features/Profile';
 import { KYCPage } from '@/components/features/KYCPage';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { OrdersAdmin } from '@/components/admin/OrdersAdmin';
+import { OTC } from '@/components/features/OTC';
 import { TransactionProvider } from '@/contexts/TransactionContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/contexts/AuthContext';
@@ -46,6 +47,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         return <BuyUSDT />;
       case 'sell':
         return <SellUSDT />;
+      case 'otc':
+        return <OTC />;
       case 'transfer':
         return <InternationalTransfer />;
       case 'profile':
