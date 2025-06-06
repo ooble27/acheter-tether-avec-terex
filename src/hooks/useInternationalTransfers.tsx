@@ -50,14 +50,39 @@ export const useInternationalTransfers = () => {
       return null;
     }
 
+    console.log('Création du transfert avec les données:', transferData);
+
     try {
+      // Validation des données requises
+      if (!transferData.amount || !transferData.recipient_name || !transferData.recipient_country) {
+        throw new Error('Données manquantes pour créer le transfert');
+      }
+
+      const transferPayload = {
+        user_id: user.id,
+        amount: transferData.amount,
+        from_currency: transferData.from_currency || 'CAD',
+        to_currency: transferData.to_currency || 'CFA',
+        exchange_rate: transferData.exchange_rate,
+        fees: transferData.fees,
+        total_amount: transferData.total_amount,
+        recipient_name: transferData.recipient_name,
+        recipient_account: transferData.recipient_account || null,
+        recipient_bank: transferData.recipient_bank || null,
+        recipient_country: transferData.recipient_country,
+        recipient_phone: transferData.recipient_phone || null,
+        recipient_email: transferData.recipient_email || null,
+        payment_method: transferData.payment_method,
+        receive_method: transferData.receive_method,
+        provider: transferData.provider || null,
+        status: 'pending'
+      };
+
+      console.log('Payload à insérer:', transferPayload);
+
       const { data, error } = await supabase
         .from('international_transfers')
-        .insert({
-          ...transferData,
-          user_id: user.id,
-          status: 'pending'
-        })
+        .insert(transferPayload)
         .select()
         .single();
 
@@ -66,25 +91,33 @@ export const useInternationalTransfers = () => {
         throw error;
       }
 
+      console.log('Transfert créé avec succès:', data);
+
       toast({
         title: "Transfert créé",
         description: "Votre transfert international a été créé avec succès",
       });
 
       // Envoyer l'email de confirmation automatiquement
-      await sendTransferNotification(
-        'transfer_confirmation',
-        data,
-        data.id
-      );
+      try {
+        await sendTransferNotification(
+          'transfer_confirmation',
+          data,
+          data.id
+        );
+        console.log('Email de confirmation envoyé');
+      } catch (emailError) {
+        console.error('Erreur lors de l\'envoi de l\'email:', emailError);
+        // Ne pas faire échouer la création du transfert si l'email échoue
+      }
 
       await fetchTransfers();
       return data;
-    } catch (error) {
-      console.error('Erreur:', error);
+    } catch (error: any) {
+      console.error('Erreur complète:', error);
       toast({
         title: "Erreur",
-        description: "Impossible de créer le transfert",
+        description: error.message || "Impossible de créer le transfert",
         variant: "destructive",
       });
       return null;

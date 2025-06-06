@@ -28,13 +28,13 @@ export function MobileMoneySelector({ onComplete, onBack, recipientCountry }: Mo
     {
       id: 'wave',
       name: 'Wave',
-      logo: '🌊',
+      logo: '/lovable-uploads/496a4b67-cae5-4ddb-8cfd-4f4703af7b18.png',
       countries: ['SN', 'CI', 'ML', 'BF']
     },
     {
       id: 'orange',
       name: 'Orange Money',
-      logo: '🟠',
+      logo: '/lovable-uploads/c5146d55-251c-4d50-b2f8-0abf082fadb8.png',
       countries: ['SN', 'CI', 'ML', 'BF', 'NG', 'BJ']
     }
   ];
@@ -99,7 +99,11 @@ export function MobileMoneySelector({ onComplete, onBack, recipientCountry }: Mo
                       htmlFor={provider.id} 
                       className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-terex-gray transition-colors flex-1"
                     >
-                      <span className="text-2xl">{provider.logo}</span>
+                      <img 
+                        src={provider.logo} 
+                        alt={provider.name} 
+                        className="w-8 h-8 rounded-full object-contain"
+                      />
                       <div>
                         <p className="text-white font-medium">{provider.name}</p>
                         <p className="text-gray-400 text-sm">
