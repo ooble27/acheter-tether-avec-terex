@@ -1,77 +1,87 @@
 
-import React, { useState } from 'react';
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from './AppSidebar';
-import { DashboardHome } from './DashboardHome';
+import { useState } from 'react';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
 import { BuyUSDT } from '@/components/features/BuyUSDT';
 import { SellUSDT } from '@/components/features/SellUSDT';
 import { InternationalTransfer } from '@/components/features/InternationalTransfer';
-import { TerexPay } from '@/components/features/TerexPay';
-import { TransactionHistory } from '@/components/features/TransactionHistory';
-import { KYCPage } from '@/components/features/KYCPage';
-import { Profile } from '@/components/features/Profile';
 import { FAQ } from '@/components/features/FAQ';
-import { useTransactions } from '@/contexts/TransactionContext';
+import { DashboardHome } from '@/components/dashboard/DashboardHome';
+import { Profile } from '@/components/features/Profile';
+import { KYCPage } from '@/components/features/KYCPage';
+import { KYCAdmin } from '@/components/admin/KYCAdmin';
+import { OrdersAdmin } from '@/components/admin/OrdersAdmin';
+import { TransactionProvider } from '@/contexts/TransactionContext';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/contexts/AuthContext';
+import { useUserRole } from '@/hooks/useUserRole';
 
 interface DashboardProps {
-  user: {
-    email: string;
-    name: string;
-  };
+  user: { email: string; name: string } | null;
   onLogout: () => void;
 }
 
-export const Dashboard = ({ user, onLogout }: DashboardProps) => {
-  const [activeTab, setActiveTab] = useState("home");
-  
-  // Utiliser une valeur par défaut si le contexte n'est pas disponible
-  const transactionContext = useTransactions();
-  const transactions = transactionContext?.transactions || [];
+export function Dashboard({ user, onLogout }: DashboardProps) {
+  const [activeSection, setActiveSection] = useState('home');
+  const isMobile = useIsMobile();
+  const { signOut } = useAuth();
+  const { isKYCReviewer } = useUserRole();
+
+  const handleLogout = async () => {
+    try {
+      console.log('Dashboard: Starting logout...')
+      await signOut();
+      console.log('Dashboard: Logout completed')
+      // No need to manually redirect, the auth state change will handle it
+    } catch (error) {
+      console.error('Dashboard: Logout error:', error)
+    }
+  };
 
   const renderContent = () => {
-    switch (activeTab) {
-      case "home":
+    switch (activeSection) {
+      case 'home':
         return <DashboardHome user={user} />;
-      case "buy":
+      case 'buy':
         return <BuyUSDT />;
-      case "sell":
+      case 'sell':
         return <SellUSDT />;
-      case "transfer":
+      case 'transfer':
         return <InternationalTransfer />;
-      case "terex-pay":
-        return <TerexPay />;
-      case "history":
-        return <TransactionHistory transactions={transactions} />;
-      case "kyc":
-        return <KYCPage onBack={() => setActiveTab("profile")} />;
-      case "profile":
-        return <Profile user={user} onLogout={onLogout} />;
-      case "faq":
+      case 'profile':
+        return <Profile user={user} onLogout={handleLogout} />;
+      case 'kyc':
+        return <KYCPage onBack={() => setActiveSection('profile')} />;
+      case 'faq':
         return <FAQ />;
-      case "support":
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-white mb-4">Support Client</h2>
-            <p className="text-gray-300">Contactez notre équipe support pour toute assistance.</p>
-          </div>
-        );
+      case 'kyc-admin':
+        return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
+      case 'orders-admin':
+        return isKYCReviewer() ? <OrdersAdmin /> : <div className="text-white">Accès non autorisé</div>;
       default:
         return <DashboardHome user={user} />;
     }
   };
 
   return (
-    <SidebarProvider>
-      <div className="flex h-screen bg-terex-dark text-white">
-        <AppSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-
-        <div className="flex-1 overflow-x-hidden">
-          {/* Main content area */}
-          <div className="p-6">
+    <TransactionProvider>
+      <SidebarProvider>
+        <div className="min-h-screen flex w-full bg-terex-dark">
+          <AppSidebar 
+            activeSection={activeSection}
+            setActiveSection={setActiveSection}
+            onLogout={handleLogout}
+          />
+          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'}`}>
+            <MobileMenu 
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+              onLogout={handleLogout}
+            />
             {renderContent()}
-          </div>
+          </main>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </TransactionProvider>
   );
-};
+}
