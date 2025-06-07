@@ -140,44 +140,27 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
         <div style={timelineContainer}>
           <div style={timelineItem}>
             <span style={timelineIconCompleted}>✅</span>
-            <div style={timelineContent}>
-              <Text style={timelineTitle}>Demande reçue</Text>
-              <Text style={timelineDescription}>Votre demande a été enregistrée</Text>
-            </div>
+            <Text style={timelineText}>Demande reçue</Text>
           </div>
           
           <div style={timelineItem}>
             <span style={timelineIconCompleted}>✅</span>
-            <div style={timelineContent}>
-              <Text style={timelineTitle}>Paiement confirmé</Text>
-              <Text style={timelineDescription}>Nous avons vérifié votre paiement</Text>
-            </div>
+            <Text style={timelineText}>Paiement confirmé</Text>
           </div>
           
           <div style={timelineItem}>
             <span style={timelineIconCurrent}>🔄</span>
-            <div style={timelineContent}>
-              <Text style={timelineTitle}>Traitement final</Text>
-              <Text style={timelineDescription}>
-                {transactionType === 'transfer' 
-                  ? 'Initiation du transfert international'
-                  : `Préparation de l'envoi USDT vers votre portefeuille`
-                }
-              </Text>
-            </div>
+            <Text style={timelineText}>Traitement final</Text>
           </div>
           
           <div style={timelineItem}>
             <span style={timelineIconPending}>⏳</span>
-            <div style={timelineContent}>
-              <Text style={timelineTitle}>Finalisation</Text>
-              <Text style={timelineDescription}>
-                {transactionType === 'transfer' 
-                  ? 'Réception par le destinataire'
-                  : 'USDT envoyés à votre adresse'
-                }
-              </Text>
-            </div>
+            <Text style={timelineText}>
+              {transactionType === 'transfer' 
+                ? 'Réception par le destinataire'
+                : 'USDT envoyés à votre adresse'
+              }
+            </Text>
           </div>
         </div>
       </Section>
@@ -198,30 +181,6 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
         </div>
       </Section>
 
-      {/* Sécurité */}
-      <Section style={securitySection}>
-        <Text style={sectionTitle}>🔒 Garanties de sécurité</Text>
-        
-        <div style={securityGrid}>
-          <div style={securityItem}>
-            <span style={securityIcon}>🛡️</span>
-            <Text style={securityText}>Transaction sécurisée SSL 256-bit</Text>
-          </div>
-          <div style={securityItem}>
-            <span style={securityIcon}>👥</span>
-            <Text style={securityText}>Vérification manuelle par notre équipe</Text>
-          </div>
-          <div style={securityItem}>
-            <span style={securityIcon}>📊</span>
-            <Text style={securityText}>Surveillance 24h/7j des opérations</Text>
-          </div>
-          <div style={securityItem}>
-            <span style={securityIcon}>💎</span>
-            <Text style={securityText}>Fonds protégés en portefeuilles sécurisés</Text>
-          </div>
-        </div>
-      </Section>
-
       {/* Message de remerciement */}
       <Section style={thankYouSection}>
         <Text style={thankYouMessage}>
@@ -235,21 +194,21 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
   );
 };
 
-// Styles optimisés
+// Styles avec couleurs Terex
 const confirmationSection = {
   textAlign: 'center' as const,
   marginBottom: '32px',
   padding: '32px',
-  backgroundColor: '#21262d',
+  backgroundColor: 'rgba(59, 150, 143, 0.1)',
   borderRadius: '12px',
-  border: '2px solid #238636',
+  border: '2px solid #3B968F',
 };
 
 const successBadge = {
   display: 'inline-flex',
   alignItems: 'center',
   gap: '12px',
-  backgroundColor: '#238636',
+  backgroundColor: '#3B968F',
   color: '#ffffff',
   padding: '12px 24px',
   borderRadius: '25px',
@@ -275,7 +234,7 @@ const confirmationMessage = {
 };
 
 const subMessage = {
-  color: '#8b949e',
+  color: '#b0b0b0',
   fontSize: '14px',
   margin: '0',
   lineHeight: '1.5',
@@ -286,7 +245,7 @@ const transactionSection = {
 };
 
 const sectionTitle = {
-  color: '#ffffff',
+  color: '#3B968F',
   fontSize: '18px',
   fontWeight: '600',
   margin: '0 0 20px 0',
@@ -296,8 +255,8 @@ const sectionTitle = {
 };
 
 const transactionCard = {
-  backgroundColor: '#21262d',
-  border: '1px solid #30363d',
+  backgroundColor: 'rgba(59, 150, 143, 0.05)',
+  border: '1px solid rgba(59, 150, 143, 0.3)',
   borderRadius: '12px',
   overflow: 'hidden',
 };
@@ -319,7 +278,7 @@ const transactionNumber = {
 };
 
 const statusBadge = {
-  backgroundColor: '#238636',
+  backgroundColor: '#4BA89F',
   padding: '6px 12px',
   borderRadius: '6px',
 };
@@ -349,7 +308,7 @@ const summaryItem = {
 };
 
 const summaryLabel = {
-  color: '#8b949e',
+  color: '#b0b0b0',
   fontSize: '12px',
   fontWeight: '500',
   margin: '0',
@@ -399,7 +358,7 @@ const progressContainer = {
 const progressTrack = {
   width: '100%',
   height: '8px',
-  backgroundColor: '#30363d',
+  backgroundColor: 'rgba(59, 150, 143, 0.2)',
   borderRadius: '4px',
   overflow: 'hidden',
   marginBottom: '8px',
@@ -413,7 +372,7 @@ const progressFill = {
 };
 
 const progressText = {
-  color: '#8b949e',
+  color: '#b0b0b0',
   fontSize: '12px',
   fontWeight: '500',
   margin: '0',
@@ -431,9 +390,9 @@ const timelineItem = {
   alignItems: 'center',
   gap: '16px',
   padding: '12px',
-  backgroundColor: '#21262d',
+  backgroundColor: 'rgba(59, 150, 143, 0.05)',
   borderRadius: '8px',
-  border: '1px solid #30363d',
+  border: '1px solid rgba(59, 150, 143, 0.3)',
 };
 
 const timelineIconCompleted = {
@@ -448,7 +407,6 @@ const timelineIconCurrent = {
   width: '32px',
   textAlign: 'center' as const,
   flexShrink: '0',
-  animation: 'spin 2s linear infinite',
 };
 
 const timelineIconPending = {
@@ -459,22 +417,12 @@ const timelineIconPending = {
   opacity: '0.5',
 };
 
-const timelineContent = {
-  flex: '1',
-};
-
-const timelineTitle = {
+const timelineText = {
   color: '#ffffff',
   fontSize: '14px',
-  fontWeight: '600',
-  margin: '0 0 4px 0',
-};
-
-const timelineDescription = {
-  color: '#8b949e',
-  fontSize: '12px',
+  fontWeight: '500',
   margin: '0',
-  lineHeight: '1.4',
+  flex: '1',
 };
 
 const timingSection = {
@@ -482,7 +430,7 @@ const timingSection = {
 };
 
 const timingCard = {
-  backgroundColor: '#0d1117',
+  backgroundColor: 'rgba(59, 150, 143, 0.1)',
   border: '1px solid #3B968F',
   borderRadius: '12px',
   padding: '24px',
@@ -504,50 +452,17 @@ const timingValue = {
 };
 
 const timingDescription = {
-  color: '#8b949e',
+  color: '#b0b0b0',
   fontSize: '13px',
   margin: '0',
   lineHeight: '1.5',
-};
-
-const securitySection = {
-  marginBottom: '32px',
-};
-
-const securityGrid = {
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
-  gap: '16px',
-};
-
-const securityItem = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '12px',
-  padding: '16px',
-  backgroundColor: '#21262d',
-  borderRadius: '8px',
-  border: '1px solid #30363d',
-};
-
-const securityIcon = {
-  fontSize: '20px',
-  flexShrink: '0',
-};
-
-const securityText = {
-  color: '#ffffff',
-  fontSize: '13px',
-  fontWeight: '500',
-  margin: '0',
-  lineHeight: '1.4',
 };
 
 const thankYouSection = {
   textAlign: 'center' as const,
   marginTop: '40px',
   padding: '24px',
-  backgroundColor: '#21262d',
+  backgroundColor: 'rgba(59, 150, 143, 0.1)',
   borderRadius: '12px',
   border: '1px solid #3B968F',
 };
@@ -560,7 +475,7 @@ const thankYouMessage = {
 };
 
 const teamMessage = {
-  color: '#8b949e',
+  color: '#b0b0b0',
   fontSize: '14px',
   margin: '0',
   fontStyle: 'italic',
