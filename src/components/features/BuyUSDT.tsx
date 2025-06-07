@@ -13,7 +13,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { KYCProtection } from './KYCProtection';
-import { USDTLivePrice } from '@/components/home/USDTLivePrice';
 
 type PaymentMethodType = 'card' | 'mobile' | 'wave' | 'orange_money' | 'bank' | 'bank_transfer' | 'interac';
 
@@ -154,21 +153,28 @@ export function BuyUSDT() {
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
       {currentStep === 'form' && (
-        <div className="min-h-screen bg-terex-dark p-2 md:p-4">
+        <div className="min-h-screen bg-terex-dark p-2 md:p-6 lg:p-8">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
             <div className="mb-6 md:mb-8">
-              <h1 className="text-3xl font-bold text-white mb-2">Acheter USDT</h1>
+              <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Acheter USDT</h1>
               <p className="text-gray-400">Achetez des USDT avec de l'argent fiat</p>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid lg:grid-cols-12 gap-4 md:gap-6">
               {/* Main Trading Interface */}
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-8">
                 <Card className="bg-terex-darker border-terex-gray shadow-2xl">
                   <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-white text-lg md:text-xl">Acheter USDT</CardTitle>
+                      <CardTitle className="text-white text-lg md:text-xl flex items-center">
+                        <img 
+                          src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
+                          alt="USDT" 
+                          className="w-5 h-5 mr-2"
+                        />
+                        Acheter USDT
+                      </CardTitle>
                       <Badge variant="outline" className="text-terex-accent border-terex-accent">
                         Taux en temps réel
                       </Badge>
@@ -245,42 +251,39 @@ export function BuyUSDT() {
                     <div className="space-y-2">
                       <Label className="text-white text-sm font-medium">Méthode de paiement</Label>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {[
-                          { 
-                            id: 'mobile', 
-                            label: 'Wave', 
-                            icon: '/lovable-uploads/eb9f4e49-56f1-4ae2-9ffc-5a51fb0e5ea1.png', 
-                            desc: 'Paiement mobile Wave' 
-                          },
-                          { 
-                            id: 'card', 
-                            label: 'Carte bancaire', 
-                            icon: '💳', 
-                            desc: 'Visa, Mastercard' 
-                          }
-                        ].map((method) => (
-                          <div
-                            key={method.id}
-                            onClick={() => setPaymentMethod(method.id as PaymentMethodType)}
-                            className={`p-4 rounded-lg border cursor-pointer transition-all ${
-                              paymentMethod === method.id
-                                ? 'border-terex-accent bg-terex-accent/10'
-                                : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
-                            }`}
-                          >
-                            <div className="flex items-center space-x-3">
-                              {method.id === 'mobile' ? (
-                                <img src={method.icon} alt="Wave" className="w-6 h-6" />
-                              ) : (
-                                <span className="text-xl">{method.icon}</span>
-                              )}
-                              <div>
-                                <p className="text-white font-medium text-sm">{method.label}</p>
-                                <p className="text-gray-400 text-xs">{method.desc}</p>
-                              </div>
+                        <div
+                          onClick={() => setPaymentMethod('mobile')}
+                          className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                            paymentMethod === 'mobile'
+                              ? 'border-terex-accent bg-terex-accent/10'
+                              : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
+                          }`}
+                        >
+                          <div className="flex items-center space-x-3">
+                            <div className="w-6 h-6 text-xl">📱</div>
+                            <div>
+                              <p className="text-white font-medium text-sm">Mobile Money</p>
+                              <p className="text-gray-400 text-xs">Wave et Orange Money</p>
                             </div>
                           </div>
-                        ))}
+                        </div>
+                        
+                        <div
+                          onClick={() => setPaymentMethod('card')}
+                          className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                            paymentMethod === 'card'
+                              ? 'border-terex-accent bg-terex-accent/10'
+                              : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
+                          }`}
+                        >
+                          <div className="flex items-center space-x-3">
+                            <CreditCard className="w-6 h-6 text-terex-accent" />
+                            <div>
+                              <p className="text-white font-medium text-sm">Carte bancaire</p>
+                              <p className="text-gray-400 text-xs">Visa, Mastercard</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -318,6 +321,21 @@ export function BuyUSDT() {
                               <span>ARBITRUM</span>
                             </div>
                           </SelectItem>
+                          <SelectItem value="OPTIMISM">
+                            <div className="flex items-center space-x-2">
+                              <span>OPTIMISM</span>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="AVALANCHE">
+                            <div className="flex items-center space-x-2">
+                              <span>AVALANCHE</span>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="SOLANA">
+                            <div className="flex items-center space-x-2">
+                              <span>SOLANA</span>
+                            </div>
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -351,11 +369,8 @@ export function BuyUSDT() {
               </div>
 
               {/* Sidebar */}
-              <div className="space-y-4 md:space-y-6">
-                {/* Live Price Widget */}
-                <USDTLivePrice />
-
-                {/* Market Info */}
+              <div className="lg:col-span-4 space-y-4 md:space-y-6">
+                {/* Nos taux TEREX */}
                 <Card className="bg-terex-darker border-terex-gray">
                   <CardHeader className="p-4">
                     <CardTitle className="text-white text-base md:text-lg flex items-center">
@@ -364,7 +379,7 @@ export function BuyUSDT() {
                         alt="USDT" 
                         className="w-4 h-4 md:w-5 md:h-5 mr-2"
                       />
-                      Prix du marché
+                      Nos taux TEREX
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 p-4 pt-0">
@@ -447,7 +462,7 @@ export function BuyUSDT() {
                   </CardHeader>
                   <CardContent className="space-y-3 p-4 pt-0">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400 text-sm">Wave</span>
+                      <span className="text-gray-400 text-sm">Mobile Money</span>
                       <Badge variant="outline" className="text-green-500 border-green-500 text-xs">
                         5-15 min
                       </Badge>
