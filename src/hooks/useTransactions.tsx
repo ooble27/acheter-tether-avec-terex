@@ -22,7 +22,8 @@ interface Transaction {
 
 export const useTransactions = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const { user } = useAuth();
 
   const fetchTransactions = async () => {
@@ -34,23 +35,24 @@ export const useTransactions = () => {
     try {
       setLoading(true);
 
-      // Récupérer les commandes d'achat/vente
+      // Limiter à 50 transactions récentes pour éviter les problèmes de performance
       const { data: orders, error: ordersError } = await supabase
         .from('orders')
         .select('*')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(50);
 
       if (ordersError) {
         console.error('Erreur lors de la récupération des commandes:', ordersError);
       }
 
-      // Récupérer les transferts internationaux
       const { data: transfers, error: transfersError } = await supabase
         .from('international_transfers')
         .select('*')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(50);
 
       if (transfersError) {
         console.error('Erreur lors de la récupération des transferts:', transfersError);
@@ -96,10 +98,10 @@ export const useTransactions = () => {
         });
       }
 
-      // Trier par date (plus récent en premier)
+      // Trier par date et limiter à 50 pour la performance
       allTransactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-      setTransactions(allTransactions);
+      setTransactions(allTransactions.slice(0, 50));
+      setHasLoaded(true);
     } catch (error) {
       console.error('Erreur lors de la récupération des transactions:', error);
     } finally {
@@ -107,13 +109,18 @@ export const useTransactions = () => {
     }
   };
 
-  useEffect(() => {
-    fetchTransactions();
-  }, [user]);
+  // Ne charger que quand c'est demandé explicitement
+  const loadTransactions = () => {
+    if (!hasLoaded) {
+      fetchTransactions();
+    }
+  };
 
   return {
     transactions,
     loading,
-    refetch: fetchTransactions
+    refetch: fetchTransactions,
+    loadTransactions,
+    hasLoaded
   };
 };

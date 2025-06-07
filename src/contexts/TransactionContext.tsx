@@ -23,15 +23,17 @@ interface TransactionContextType {
   transactions: Transaction[];
   loading: boolean;
   refetch: () => void;
+  loadTransactions: () => void;
+  hasLoaded: boolean;
 }
 
 const TransactionContext = createContext<TransactionContextType | undefined>(undefined);
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
-  const { transactions, loading, refetch } = useTransactionsHook();
+  const { transactions, loading, refetch, loadTransactions, hasLoaded } = useTransactionsHook();
 
   return (
-    <TransactionContext.Provider value={{ transactions, loading, refetch }}>
+    <TransactionContext.Provider value={{ transactions, loading, refetch, loadTransactions, hasLoaded }}>
       {children}
     </TransactionContext.Provider>
   );

@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { useTransactionContext } from '@/contexts/TransactionContext';
 import { KYCAlert } from './KYCAlert';
@@ -17,11 +17,20 @@ interface ProfileProps {
 
 export function Profile({ user, onLogout }: ProfileProps) {
   const [showKYC, setShowKYC] = useState(false);
+  const [activeTab, setActiveTab] = useState('personal');
   const { loading } = useUserProfile();
-  const { transactions, loading: transactionsLoading } = useTransactionContext();
+  const { transactions, loading: transactionsLoading, loadTransactions, hasLoaded } = useTransactionContext();
 
   const handleStartKYC = () => {
     setShowKYC(true);
+  };
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    // Charger les transactions seulement quand l'onglet historique est sélectionné
+    if (value === 'transactions' && !hasLoaded) {
+      loadTransactions();
+    }
   };
 
   if (loading) {
@@ -45,7 +54,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
 
       <KYCAlert status="pending" onStartKYC={handleStartKYC} />
 
-      <Tabs defaultValue="personal" className="w-full">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList className="grid w-full grid-cols-4 bg-terex-darker border-terex-gray">
           <TabsTrigger 
             value="personal" 
