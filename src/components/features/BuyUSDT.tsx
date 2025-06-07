@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -158,13 +157,13 @@ export function BuyUSDT() {
           <div className="max-w-7xl mx-auto w-full">
             {/* Header */}
             <div className="mb-4 md:mb-8">
-              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Acheter USDT</h1>
+              <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">Acheter USDT</h1>
               <p className="text-gray-400 text-sm md:text-base">Achetez des USDT avec de l'argent fiat</p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-              {/* Main Trading Interface - Maintenant lg:col-span-2 comme la page de vente */}
-              <div className="lg:col-span-2 w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
+              {/* Main Trading Interface - Plus large sur desktop */}
+              <div className="lg:col-span-3 w-full">
                 <Card className="bg-terex-darker border-terex-gray shadow-2xl w-full overflow-hidden">
                   <CardHeader className="border-b border-terex-gray p-3 sm:p-4 md:p-6">
                     <div className="flex items-center justify-between flex-wrap gap-2">
@@ -373,7 +372,7 @@ export function BuyUSDT() {
                 </Card>
               </div>
 
-              {/* Sidebar - Maintenant lg:col-span-1 au lieu de lg:col-span-4 */}
+              {/* Sidebar - Plus petit maintenant */}
               <div className="lg:col-span-1 space-y-4 md:space-y-6 w-full">
                 {/* Nos taux TEREX */}
                 <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
