@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -153,49 +154,49 @@ export function BuyUSDT() {
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
       {currentStep === 'form' && (
-        <div className="min-h-screen bg-terex-dark p-2 md:p-6 lg:p-8">
-          <div className="max-w-7xl mx-auto">
+        <div className="min-h-screen bg-terex-dark p-2 sm:p-4 md:p-6 lg:p-8 overflow-x-hidden">
+          <div className="max-w-7xl mx-auto w-full">
             {/* Header */}
-            <div className="mb-6 md:mb-8">
-              <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Acheter USDT</h1>
-              <p className="text-gray-400">Achetez des USDT avec de l'argent fiat</p>
+            <div className="mb-4 md:mb-8">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">Acheter USDT</h1>
+              <p className="text-gray-400 text-sm md:text-base">Achetez des USDT avec de l'argent fiat</p>
             </div>
 
-            <div className="grid lg:grid-cols-12 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
               {/* Main Trading Interface */}
-              <div className="lg:col-span-8">
-                <Card className="bg-terex-darker border-terex-gray shadow-2xl">
-                  <CardHeader className="border-b border-terex-gray p-4 md:p-6">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-white text-lg md:text-xl flex items-center">
+              <div className="lg:col-span-8 w-full">
+                <Card className="bg-terex-darker border-terex-gray shadow-2xl w-full overflow-hidden">
+                  <CardHeader className="border-b border-terex-gray p-3 sm:p-4 md:p-6">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <CardTitle className="text-white text-base sm:text-lg md:text-xl flex items-center">
                         <img 
                           src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                           alt="USDT" 
-                          className="w-5 h-5 mr-2"
+                          className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0"
                         />
-                        Acheter USDT
+                        <span className="truncate">Acheter USDT</span>
                       </CardTitle>
-                      <Badge variant="outline" className="text-terex-accent border-terex-accent">
+                      <Badge variant="outline" className="text-terex-accent border-terex-accent text-xs whitespace-nowrap">
                         Taux en temps réel
                       </Badge>
                     </div>
                   </CardHeader>
-                  <CardContent className="p-4 md:p-6 space-y-6">
+                  <CardContent className="p-3 sm:p-4 md:p-6 space-y-4 md:space-y-6 w-full">
                     {/* Amount Input Section */}
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
+                    <div className="space-y-4 w-full">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 w-full">
+                        <div className="space-y-2 min-w-0">
                           <Label className="text-white text-sm font-medium">Je paie</Label>
-                          <div className="relative">
+                          <div className="relative w-full">
                             <Input
                               type="number"
                               placeholder="0.00"
                               value={amount}
                               onChange={handleAmountChange}
-                              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
+                              className="bg-terex-gray border-terex-gray-light text-white text-base sm:text-lg h-10 sm:h-12 pr-16 sm:pr-20 w-full"
                             />
                             <Select value={currency} onValueChange={handleCurrencyChange}>
-                              <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
+                              <SelectTrigger className="absolute right-1 top-1 w-12 sm:w-16 h-8 sm:h-10 bg-terex-gray-light border-0 text-terex-accent text-xs sm:text-sm">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
@@ -206,54 +207,54 @@ export function BuyUSDT() {
                           </div>
                         </div>
                         
-                        <div className="space-y-2">
+                        <div className="space-y-2 min-w-0">
                           <Label className="text-white text-sm font-medium">Je reçois</Label>
-                          <div className="relative">
+                          <div className="relative w-full">
                             <Input
                               type="text"
                               value={usdtAmount.toFixed(6)}
                               readOnly
-                              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24"
+                              className="bg-terex-gray border-terex-gray-light text-white text-base sm:text-lg h-10 sm:h-12 pr-20 sm:pr-24 w-full"
                             />
-                            <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
+                            <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-1 sm:px-2 py-1">
                               <img 
                                 src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                                 alt="USDT" 
-                                className="w-5 h-5"
+                                className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0"
                               />
-                              <span className="text-terex-accent font-medium text-sm">USDT</span>
+                              <span className="text-terex-accent font-medium text-xs sm:text-sm whitespace-nowrap">USDT</span>
                             </div>
                           </div>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-center">
-                        <ArrowRightLeft className="w-5 h-5 text-terex-accent" />
+                        <ArrowRightLeft className="w-4 h-4 sm:w-5 sm:h-5 text-terex-accent" />
                       </div>
 
-                      <div className="bg-terex-gray rounded-lg p-3">
-                        <div className="flex justify-between text-sm">
+                      <div className="bg-terex-gray rounded-lg p-3 w-full overflow-hidden">
+                        <div className="flex justify-between text-xs sm:text-sm">
                           <span className="text-gray-400">Taux de change</span>
-                          <span className="text-white">1 USDT = {exchangeRates[currency as keyof typeof exchangeRates]} {currency}</span>
+                          <span className="text-white text-right">1 USDT = {exchangeRates[currency as keyof typeof exchangeRates]} {currency}</span>
                         </div>
-                        <div className="flex justify-between text-sm mt-1">
+                        <div className="flex justify-between text-xs sm:text-sm mt-1">
                           <span className="text-gray-400">Frais</span>
                           <span className="text-terex-accent">0%</span>
                         </div>
-                        <div className="flex justify-between text-sm mt-1">
+                        <div className="flex justify-between text-xs sm:text-sm mt-1">
                           <span className="text-gray-400">Temps de traitement</span>
-                          <span className="text-terex-accent">5-15 minutes</span>
+                          <span className="text-terex-accent text-right">5-15 minutes</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Payment Method Selection */}
-                    <div className="space-y-2">
+                    <div className="space-y-2 w-full">
                       <Label className="text-white text-sm font-medium">Méthode de paiement</Label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
                         <div
                           onClick={() => setPaymentMethod('mobile')}
-                          className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                          className={`p-3 sm:p-4 rounded-lg border cursor-pointer transition-all w-full ${
                             paymentMethod === 'mobile'
                               ? 'border-terex-accent bg-terex-accent/10'
                               : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
@@ -263,28 +264,28 @@ export function BuyUSDT() {
                             <img 
                               src="/lovable-uploads/2562d408-8490-4483-894c-a0e6cdd19337.png" 
                               alt="Wave" 
-                              className="w-6 h-6"
+                              className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0"
                             />
-                            <div>
+                            <div className="min-w-0 flex-1">
                               <p className="text-white font-medium text-sm">Mobile Money</p>
-                              <p className="text-gray-400 text-xs">Wave et Orange Money</p>
+                              <p className="text-gray-400 text-xs truncate">Wave et Orange Money</p>
                             </div>
                           </div>
                         </div>
                         
                         <div
                           onClick={() => setPaymentMethod('card')}
-                          className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                          className={`p-3 sm:p-4 rounded-lg border cursor-pointer transition-all w-full ${
                             paymentMethod === 'card'
                               ? 'border-terex-accent bg-terex-accent/10'
                               : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
                           }`}
                         >
                           <div className="flex items-center space-x-3">
-                            <CreditCard className="w-6 h-6 text-terex-accent" />
-                            <div>
+                            <CreditCard className="w-5 h-5 sm:w-6 sm:h-6 text-terex-accent flex-shrink-0" />
+                            <div className="min-w-0 flex-1">
                               <p className="text-white font-medium text-sm">Carte bancaire</p>
-                              <p className="text-gray-400 text-xs">Visa, Mastercard</p>
+                              <p className="text-gray-400 text-xs truncate">Visa, Mastercard</p>
                             </div>
                           </div>
                         </div>
@@ -292,10 +293,10 @@ export function BuyUSDT() {
                     </div>
 
                     {/* Network Selection */}
-                    <div className="space-y-2">
+                    <div className="space-y-2 w-full">
                       <Label className="text-white text-sm font-medium">Réseau de réception</Label>
                       <Select value={network} onValueChange={handleNetworkChange}>
-                        <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
+                        <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-10 sm:h-12 w-full">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -345,14 +346,14 @@ export function BuyUSDT() {
                     </div>
 
                     {/* Wallet Address */}
-                    <div className="space-y-2">
+                    <div className="space-y-2 w-full">
                       <Label className="text-white text-sm font-medium">Votre adresse USDT ({network})</Label>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 w-full">
                         <Input
                           placeholder={`Votre adresse de réception USDT ${network}`}
                           value={walletAddress}
                           onChange={handleWalletAddressChange}
-                          className="bg-terex-gray border-terex-gray-light text-white h-12"
+                          className="bg-terex-gray border-terex-gray-light text-white h-10 sm:h-12 w-full min-w-0"
                         />
                       </div>
                       <p className="text-gray-400 text-xs">Adresse où vous recevrez vos USDT sur le réseau {network}</p>
@@ -361,49 +362,49 @@ export function BuyUSDT() {
                     {/* Buy Button */}
                     <Button 
                       size="lg"
-                      className="w-full gradient-button text-white font-semibold h-12 text-lg"
+                      className="w-full gradient-button text-white font-semibold h-10 sm:h-12 text-base sm:text-lg"
                       disabled={!amount || !paymentMethod || !walletAddress}
                       onClick={handleCreateOrder}
                     >
-                      Continuer vers la confirmation
-                      <ArrowRight className="w-4 h-4 ml-2" />
+                      <span className="truncate">Continuer vers la confirmation</span>
+                      <ArrowRight className="w-4 h-4 ml-2 flex-shrink-0" />
                     </Button>
                   </CardContent>
                 </Card>
               </div>
 
               {/* Sidebar */}
-              <div className="lg:col-span-4 space-y-4 md:space-y-6">
+              <div className="lg:col-span-4 space-y-4 md:space-y-6 w-full">
                 {/* Nos taux TEREX */}
-                <Card className="bg-terex-darker border-terex-gray">
-                  <CardHeader className="p-4">
-                    <CardTitle className="text-white text-base md:text-lg flex items-center">
+                <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
+                  <CardHeader className="p-3 sm:p-4">
+                    <CardTitle className="text-white text-sm sm:text-base md:text-lg flex items-center">
                       <img 
                         src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                         alt="USDT" 
-                        className="w-4 h-4 md:w-5 md:h-5 mr-2"
+                        className="w-4 h-4 md:w-5 md:h-5 mr-2 flex-shrink-0"
                       />
-                      Nos taux TEREX
+                      <span className="truncate">Nos taux TEREX</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3 p-4 pt-0">
+                  <CardContent className="space-y-3 p-3 sm:p-4 pt-0 w-full overflow-hidden">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400 text-sm">USDT/CFA</span>
-                      <span className="text-white font-bold">{exchangeRates.CFA} CFA</span>
+                      <span className="text-gray-400 text-xs sm:text-sm">USDT/CFA</span>
+                      <span className="text-white font-bold text-xs sm:text-sm">{exchangeRates.CFA} CFA</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400 text-sm">USDT/CAD</span>
-                      <span className="text-terex-accent font-bold">${exchangeRates.CAD} CAD</span>
+                      <span className="text-gray-400 text-xs sm:text-sm">USDT/CAD</span>
+                      <span className="text-terex-accent font-bold text-xs sm:text-sm">${exchangeRates.CAD} CAD</span>
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Quick Actions */}
-                <Card className="bg-terex-darker border-terex-gray">
-                  <CardHeader className="p-4">
-                    <CardTitle className="text-white text-base md:text-lg">Montants rapides ({currency})</CardTitle>
+                <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
+                  <CardHeader className="p-3 sm:p-4">
+                    <CardTitle className="text-white text-sm sm:text-base md:text-lg truncate">Montants rapides ({currency})</CardTitle>
                   </CardHeader>
-                  <CardContent className="p-4 pt-0">
+                  <CardContent className="p-3 sm:p-4 pt-0 w-full">
                     <div className="grid grid-cols-2 gap-2">
                       {getQuickAmounts().map((value) => (
                         <Button
@@ -411,12 +412,14 @@ export function BuyUSDT() {
                           variant="outline"
                           size="sm"
                           onClick={() => setAmount(value)}
-                          className="border-terex-gray text-gray-300 hover:bg-terex-gray text-xs"
+                          className="border-terex-gray text-gray-300 hover:bg-terex-gray text-xs w-full min-w-0 h-8 px-1"
                         >
-                          {currency === 'CFA' 
-                            ? `${parseInt(value).toLocaleString()} CFA`
-                            : `$${value} CAD`
-                          }
+                          <span className="truncate">
+                            {currency === 'CFA' 
+                              ? `${parseInt(value).toLocaleString()} CFA`
+                              : `$${value} CAD`
+                            }
+                          </span>
                         </Button>
                       ))}
                     </div>
@@ -424,32 +427,32 @@ export function BuyUSDT() {
                 </Card>
 
                 {/* Security Features */}
-                <Card className="bg-terex-darker border-terex-gray">
-                  <CardHeader className="p-4">
-                    <CardTitle className="text-white text-base md:text-lg flex items-center">
-                      <Shield className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
-                      Sécurité
+                <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
+                  <CardHeader className="p-3 sm:p-4">
+                    <CardTitle className="text-white text-sm sm:text-base md:text-lg flex items-center">
+                      <Shield className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent flex-shrink-0" />
+                      <span className="truncate">Sécurité</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3 p-4 pt-0">
+                  <CardContent className="space-y-3 p-3 sm:p-4 pt-0 w-full overflow-hidden">
                     <div className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
-                      <div>
-                        <p className="text-white text-sm font-medium">Cryptage SSL 256-bit</p>
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-white text-xs sm:text-sm font-medium">Cryptage SSL 256-bit</p>
                         <p className="text-gray-400 text-xs">Vos données sont protégées</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
-                      <div>
-                        <p className="text-white text-sm font-medium">Fonds sécurisés</p>
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-white text-xs sm:text-sm font-medium">Fonds sécurisés</p>
                         <p className="text-gray-400 text-xs">Protection des transactions</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
-                      <div>
-                        <p className="text-white text-sm font-medium">Support 24/7</p>
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-white text-xs sm:text-sm font-medium">Support 24/7</p>
                         <p className="text-gray-400 text-xs">Aide disponible en permanence</p>
                       </div>
                     </div>
@@ -457,23 +460,23 @@ export function BuyUSDT() {
                 </Card>
 
                 {/* Processing Time */}
-                <Card className="bg-terex-darker border-terex-gray">
-                  <CardHeader className="p-4">
-                    <CardTitle className="text-white text-base md:text-lg flex items-center">
-                      <Clock className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
-                      Délais de traitement
+                <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
+                  <CardHeader className="p-3 sm:p-4">
+                    <CardTitle className="text-white text-sm sm:text-base md:text-lg flex items-center">
+                      <Clock className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent flex-shrink-0" />
+                      <span className="truncate">Délais de traitement</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3 p-4 pt-0">
+                  <CardContent className="space-y-3 p-3 sm:p-4 pt-0 w-full overflow-hidden">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400 text-sm">Mobile Money</span>
-                      <Badge variant="outline" className="text-green-500 border-green-500 text-xs">
+                      <span className="text-gray-400 text-xs sm:text-sm">Mobile Money</span>
+                      <Badge variant="outline" className="text-green-500 border-green-500 text-xs whitespace-nowrap">
                         5-15 min
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400 text-sm">Carte bancaire</span>
-                      <Badge variant="outline" className="text-green-500 border-green-500 text-xs">
+                      <span className="text-gray-400 text-xs sm:text-sm">Carte bancaire</span>
+                      <Badge variant="outline" className="text-green-500 border-green-500 text-xs whitespace-nowrap">
                         Instantané
                       </Badge>
                     </div>
