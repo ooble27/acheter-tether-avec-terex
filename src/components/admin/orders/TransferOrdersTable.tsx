@@ -48,6 +48,21 @@ export function TransferOrdersTable({ orders, onStatusUpdate }: TransferOrdersTa
     );
   };
 
+  const getPaymentMethodLabel = (paymentMethod: string) => {
+    switch (paymentMethod) {
+      case 'card':
+        return 'Carte bancaire';
+      case 'interac':
+        return 'Interac E-Transfer';
+      case 'bank':
+        return 'Virement bancaire';
+      case 'mobile':
+        return 'Mobile Money';
+      default:
+        return paymentMethod;
+    }
+  };
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
@@ -184,10 +199,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate }: TransferOrdersTa
                     <div className="flex justify-between">
                       <span className="text-gray-400">Méthode de paiement:</span>
                       <span className="text-white">
-                        {order.payment_method === 'card' ? 'Carte bancaire' : 
-                         order.payment_method === 'interac' ? 'Interac E-Transfer' : 
-                         order.payment_method === 'bank' ? 'Virement bancaire' : 
-                         order.payment_method}
+                        {getPaymentMethodLabel(order.payment_method || 'bank')}
                       </span>
                     </div>
                     <div className="flex justify-between">
