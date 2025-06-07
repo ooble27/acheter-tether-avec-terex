@@ -139,7 +139,7 @@ export function BuyOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: BuyOrd
                     <Button
                       onClick={() => onStatusUpdate(order.id, 'processing' as OrderStatus)}
                       size="sm"
-                      className="bg-blue-600 hover:bg-blue-700"
+                      className="bg-terex-accent hover:bg-terex-accent/80 text-white"
                     >
                       <TrendingUp className="w-4 h-4 mr-2" />
                       Traiter

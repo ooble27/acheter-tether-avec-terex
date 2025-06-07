@@ -11,7 +11,8 @@ import {
   TrendingDown,
   Send,
   Trash2,
-  Archive
+  Archive,
+  Users
 } from 'lucide-react';
 import { useOrders } from '@/hooks/useOrders';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -115,14 +116,13 @@ export function OrdersDashboardNew() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-terex-accent/70 text-sm font-medium">Volume Total</p>
+                <p className="text-terex-accent/70 text-sm font-medium">Clients Actifs</p>
                 <p className="text-3xl font-bold text-white mt-2">
-                  {activeOrders.reduce((sum, order) => sum + order.amount, 0).toLocaleString()}
+                  {new Set(activeOrders.map(order => order.user_id)).size}
                 </p>
-                <p className="text-terex-accent/60 text-xs">CFA</p>
               </div>
               <div className="p-3 bg-terex-accent/20 rounded-full">
-                <TrendingDown className="w-6 h-6 text-terex-accent" />
+                <Users className="w-6 h-6 text-terex-accent" />
               </div>
             </div>
           </CardContent>
