@@ -1,9 +1,11 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import type { Database } from '@/integrations/supabase/types';
 
 type OrderStatus = Database['public']['Enums']['order_status'];
+type DatabasePaymentMethod = Database['public']['Enums']['payment_method'];
 
 export interface UnifiedOrder {
   id: string;
@@ -42,6 +44,21 @@ export interface UnifiedOrder {
   // Propriétés pour les détails de paiement
   payment_details?: string;
 }
+
+// Helper function to map payment methods to database-compatible types
+const mapPaymentMethodToDatabase = (paymentMethod?: string): DatabasePaymentMethod => {
+  switch (paymentMethod) {
+    case 'wave':
+    case 'orange_money':
+      return 'mobile';
+    case 'bank':
+    case 'bank_transfer':
+    case 'interac':
+      return 'card';
+    default:
+      return (paymentMethod as DatabasePaymentMethod) || 'card';
+  }
+};
 
 export function useOrders() {
   const [orders, setOrders] = useState<UnifiedOrder[]>([]);
@@ -147,9 +164,26 @@ export function useOrders() {
 
   const createOrder = async (orderData: Omit<UnifiedOrder, 'id' | 'created_at' | 'updated_at'>) => {
     try {
+      // Map the order data to match database schema
+      const dbOrderData = {
+        user_id: orderData.user_id,
+        type: orderData.type,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        usdt_amount: orderData.usdt_amount || 0,
+        exchange_rate: orderData.exchange_rate,
+        payment_method: mapPaymentMethodToDatabase(orderData.payment_method),
+        payment_reference: orderData.payment_reference,
+        wallet_address: orderData.wallet_address,
+        network: orderData.network || 'TRC20',
+        notes: orderData.notes,
+        status: orderData.status,
+        payment_status: orderData.payment_status
+      };
+
       const { data, error } = await supabase
         .from('orders')
-        .insert([orderData])
+        .insert([dbOrderData])
         .select()
         .single();
 
