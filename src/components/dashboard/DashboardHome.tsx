@@ -1,8 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CryptoPrices } from '@/components/home/CryptoPrices';
-import { CryptoNews } from '@/components/home/CryptoNews';
-import { USDTLivePrice } from '@/components/home/USDTLivePrice';
+import { BlockchainMetrics } from '@/components/home/BlockchainMetrics';
+import { TradingVolume } from '@/components/home/TradingVolume';
 import { Button } from '@/components/ui/button';
 import { 
   TrendingUp, 
@@ -11,8 +10,7 @@ import {
   Globe, 
   ArrowUpRight, 
   Activity,
-  BarChart3,
-  Coins,
+  DollarSign,
   Lock
 } from 'lucide-react';
 
@@ -57,8 +55,8 @@ export function DashboardHome({ user }: DashboardHomeProps) {
             </p>
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center space-x-2 bg-terex-darker/80 backdrop-blur-sm rounded-full px-4 py-2 border border-terex-accent/20">
-                <Shield className="w-4 h-4 text-terex-accent" />
-                <span className="text-white text-sm">Sécurisé par blockchain</span>
+                <DollarSign className="w-4 h-4 text-terex-accent" />
+                <span className="text-white text-sm">Frais gratuits - 0%</span>
               </div>
               <div className="flex items-center space-x-2 bg-green-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/20">
                 <Zap className="w-4 h-4 text-green-400" />
@@ -69,19 +67,16 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         </div>
       </div>
 
-      {/* Prix USDT en temps réel */}
-      <div className="mb-8">
-        <USDTLivePrice />
-      </div>
-
       {/* Services Cards avec design tech */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <Card className="group bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-300 hover:shadow-xl hover:shadow-terex-accent/10 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-terex-accent/20 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
           <CardHeader className="relative z-10">
             <div className="flex items-center justify-between mb-2">
-              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Coins className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                  <span className="text-green-600 font-bold text-xs">₮</span>
+                </div>
               </div>
               <ArrowUpRight className="w-5 h-5 text-terex-accent group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </div>
@@ -105,13 +100,15 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         </Card>
 
         <Card className="group bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-300 hover:shadow-xl hover:shadow-terex-accent/10 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-500/20 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/20 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
           <CardHeader className="relative z-10">
             <div className="flex items-center justify-between mb-2">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                <TrendingUp className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                  <span className="text-blue-600 font-bold text-xs">₮</span>
+                </div>
               </div>
-              <ArrowUpRight className="w-5 h-5 text-green-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              <ArrowUpRight className="w-5 h-5 text-blue-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </div>
             <CardTitle className="text-white text-xl">Vendre USDT</CardTitle>
             <CardDescription className="text-gray-400">
@@ -120,12 +117,12 @@ export function DashboardHome({ user }: DashboardHomeProps) {
           </CardHeader>
           <CardContent className="relative z-10">
             <div className="space-y-2 text-sm">
-              <div className="flex items-center text-green-400">
-                <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+              <div className="flex items-center text-blue-400">
+                <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
                 Réception instantanée
               </div>
-              <div className="flex items-center text-green-400">
-                <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+              <div className="flex items-center text-blue-400">
+                <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
                 Orange Money & Wave
               </div>
             </div>
@@ -133,27 +130,27 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         </Card>
 
         <Card className="group bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-300 hover:shadow-xl hover:shadow-terex-accent/10 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/20 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
           <CardHeader className="relative z-10">
             <div className="flex items-center justify-between mb-2">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Globe className="w-6 h-6 text-white" />
               </div>
-              <ArrowUpRight className="w-5 h-5 text-blue-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              <ArrowUpRight className="w-5 h-5 text-purple-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </div>
-            <CardTitle className="text-white text-xl">Virement International</CardTitle>
+            <CardTitle className="text-white text-xl">Transferts Globaux</CardTitle>
             <CardDescription className="text-gray-400">
               Transferts rapides Canada ↔ Afrique
             </CardDescription>
           </CardHeader>
           <CardContent className="relative z-10">
             <div className="space-y-2 text-sm">
-              <div className="flex items-center text-blue-400">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
-                Frais réduits de 90%
+              <div className="flex items-center text-purple-400">
+                <div className="w-2 h-2 bg-purple-400 rounded-full mr-2"></div>
+                Frais gratuits - 0%
               </div>
-              <div className="flex items-center text-blue-400">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+              <div className="flex items-center text-purple-400">
+                <div className="w-2 h-2 bg-purple-400 rounded-full mr-2"></div>
                 Transfert en quelques minutes
               </div>
             </div>
@@ -161,40 +158,8 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         </Card>
       </div>
 
-      {/* Statistiques avec design blockchain */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/50 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-terex-accent/5 to-transparent"></div>
-          <CardHeader className="relative z-10 border-b border-terex-gray/30">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <CardTitle className="text-white">Analytics Dashboard</CardTitle>
-                <CardDescription className="text-gray-400">Vos métriques en temps réel</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="relative z-10 p-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-4 bg-terex-dark/50 rounded-xl border border-terex-gray/30">
-                <div className="text-2xl font-bold text-terex-accent mb-1">0</div>
-                <div className="text-sm text-gray-400">Transactions</div>
-              </div>
-              <div className="text-center p-4 bg-terex-dark/50 rounded-xl border border-terex-gray/30">
-                <div className="text-2xl font-bold text-terex-accent mb-1">0 USDT</div>
-                <div className="text-sm text-gray-400">Volume total</div>
-              </div>
-            </div>
-            <div className="mt-4 p-3 bg-terex-accent/10 border border-terex-accent/20 rounded-xl">
-              <div className="text-center text-terex-accent text-sm">
-                Prêt à commencer votre première transaction
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
+      {/* Sécurité Blockchain */}
+      <div className="mb-8">
         <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/50 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-transparent"></div>
           <CardHeader className="relative z-10 border-b border-terex-gray/30">
@@ -222,10 +187,10 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         </Card>
       </div>
 
-      {/* Section crypto avec nouveau design */}
+      {/* Nouveaux composants blockchain */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <CryptoPrices />
-        <CryptoNews />
+        <BlockchainMetrics />
+        <TradingVolume />
       </div>
     </div>
   );
