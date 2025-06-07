@@ -1,122 +1,136 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { useEmailNotifications } from '@/hooks/useEmailNotifications';
 import type { Database } from '@/integrations/supabase/types';
 
-type Order = Database['public']['Tables']['orders']['Row'];
-type OrderInsert = Database['public']['Tables']['orders']['Insert'];
-type InternationalTransfer = Database['public']['Tables']['international_transfers']['Row'];
+type OrderStatus = Database['public']['Enums']['order_status'];
 
-// Créer un type unifié pour les "commandes" (orders + transferts)
-export interface UnifiedOrder extends Omit<Order, 'type'> {
+export interface UnifiedOrder {
+  id: string;
+  user_id: string;
   type: 'buy' | 'sell' | 'transfer';
-  // Champs spécifiques aux transferts
-  recipient_name?: string;
-  recipient_country?: string;
-  recipient_phone?: string;
-  recipient_address?: string;
-  from_currency?: string;
-  to_currency?: string;
-  fees?: number;
-  total_amount?: number;
-  transfer_purpose?: string;
-  // Champs pour la gestion de la corbeille
+  status: OrderStatus;
+  amount: number;
+  currency: string;
+  usdt_amount?: number;
+  exchange_rate: number;
+  payment_method?: 'card' | 'mobile' | 'wave' | 'orange_money' | 'bank' | 'bank_transfer' | 'interac';
+  payment_reference?: string;
+  wallet_address?: string;
+  network?: string;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+  processed_at?: string;
+  processed_by?: string;
+  payment_status?: string;
   is_deleted?: boolean;
   deleted_at?: string;
-  // Champs pour les détails de paiement
-  payment_details?: any;
+  
+  // Propriétés spécifiques aux transferts
+  from_currency?: string;
+  to_currency?: string;
+  recipient_name?: string;
+  recipient_phone?: string;
+  recipient_country?: string;
+  recipient_address?: string;
+  recipient_email?: string;
+  total_amount?: number;
+  fees?: number;
+  transfer_purpose?: string;
+  
+  // Propriétés pour les détails de paiement
+  payment_details?: string;
 }
 
-export type { Order };
-
-export const useOrders = () => {
+export function useOrders() {
   const [orders, setOrders] = useState<UnifiedOrder[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
   const { toast } = useToast();
-  const { sendBuyConfirmation, sendSellConfirmation, sendEmailNotification, sendPaymentConfirmation } = useEmailNotifications();
 
   const fetchOrders = async () => {
-    if (!user) return;
-
     try {
-      // Récupérer les commandes normales
+      setLoading(true);
+      
+      // Fetch regular orders
       const { data: ordersData, error: ordersError } = await supabase
         .from('orders')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (ordersError) {
-        console.error('Erreur lors de la récupération des commandes:', ordersError);
+        console.error('Error fetching orders:', ordersError);
         throw ordersError;
       }
 
-      // Récupérer les transferts internationaux
+      // Fetch international transfers
       const { data: transfersData, error: transfersError } = await supabase
         .from('international_transfers')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (transfersError) {
-        console.error('Erreur lors de la récupération des transferts:', transfersError);
+        console.error('Error fetching transfers:', transfersError);
         throw transfersError;
       }
 
-      // Convertir les transferts en format "order" unifié avec type explicite
-      const convertedTransfers: UnifiedOrder[] = (transfersData || []).map((transfer: InternationalTransfer): UnifiedOrder => ({
+      // Transform orders to unified format
+      const transformedOrders: UnifiedOrder[] = ordersData?.map(order => ({
+        id: order.id,
+        user_id: order.user_id,
+        type: order.type as 'buy' | 'sell',
+        status: order.status,
+        amount: Number(order.amount),
+        currency: order.currency,
+        usdt_amount: Number(order.usdt_amount),
+        exchange_rate: Number(order.exchange_rate),
+        payment_method: order.payment_method as any,
+        payment_reference: order.payment_reference,
+        wallet_address: order.wallet_address,
+        network: order.network,
+        notes: order.notes,
+        created_at: order.created_at,
+        updated_at: order.updated_at,
+        processed_at: order.processed_at,
+        processed_by: order.processed_by,
+        payment_status: order.payment_status,
+        is_deleted: false,
+      })) || [];
+
+      // Transform transfers to unified format
+      const transformedTransfers: UnifiedOrder[] = transfersData?.map(transfer => ({
         id: transfer.id,
         user_id: transfer.user_id,
-        amount: transfer.amount,
-        usdt_amount: transfer.amount, // Pour les transferts, c'est le même montant
-        currency: transfer.from_currency || 'USDT',
-        type: 'transfer' as const, // Type explicite
-        status: transfer.status as any,
-        payment_method: 'bank_transfer' as any,
-        payment_status: transfer.status === 'completed' ? 'paid' : 'pending',
-        exchange_rate: transfer.exchange_rate,
-        network: 'TRC20',
-        wallet_address: null,
+        type: 'transfer' as const,
+        status: transfer.status as OrderStatus,
+        amount: Number(transfer.amount),
+        currency: transfer.from_currency,
+        from_currency: transfer.from_currency,
+        to_currency: transfer.to_currency,
+        exchange_rate: Number(transfer.exchange_rate),
+        payment_method: transfer.payment_method as any,
         payment_reference: transfer.reference_number,
-        notes: `Transfert vers ${transfer.recipient_country} - ${transfer.recipient_name}`,
+        recipient_name: transfer.recipient_name,
+        recipient_phone: transfer.recipient_phone,
+        recipient_country: transfer.recipient_country,
+        recipient_address: transfer.recipient_bank || transfer.recipient_account,
+        recipient_email: transfer.recipient_email,
+        total_amount: Number(transfer.total_amount),
+        fees: Number(transfer.fees),
+        notes: `Service: ${transfer.receive_method || 'Mobile Money'}, Téléphone: ${transfer.recipient_phone}, Montant: ${transfer.total_amount} ${transfer.to_currency}`,
         created_at: transfer.created_at,
         updated_at: transfer.updated_at,
         processed_at: transfer.processed_at,
         processed_by: transfer.processed_by,
-        // Champs spécifiques aux transferts
-        recipient_name: transfer.recipient_name,
-        recipient_country: transfer.recipient_country,
-        recipient_phone: transfer.recipient_phone,
-        recipient_address: transfer.recipient_bank, // Using bank field as address for now
-        from_currency: transfer.from_currency,
-        to_currency: transfer.to_currency,
-        fees: transfer.fees,
-        total_amount: transfer.total_amount,
-        transfer_purpose: 'International Transfer', // Default purpose
-        // Champs pour la corbeille
         is_deleted: false,
-        deleted_at: null,
-      }));
+      })) || [];
 
-      // Convertir les commandes normales avec type explicite
-      const convertedOrders: UnifiedOrder[] = (ordersData || []).map((order: Order): UnifiedOrder => ({
-        ...order,
-        type: order.type as 'buy' | 'sell' | 'transfer', // Cast explicite du type
-        // Ajouter les champs manquants
-        is_deleted: false,
-        deleted_at: null,
-        payment_details: null,
-      }));
-
-      // Combiner et trier par date de création
-      const allOrders = [...convertedOrders, ...convertedTransfers]
-        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-
+      // Combine all orders
+      const allOrders = [...transformedOrders, ...transformedTransfers];
       setOrders(allOrders);
+
     } catch (error) {
-      console.error('Erreur:', error);
+      console.error('Error in fetchOrders:', error);
       toast({
         title: "Erreur",
         description: "Impossible de charger les commandes",
@@ -127,115 +141,67 @@ export const useOrders = () => {
     }
   };
 
-  const createOrder = async (orderData: OrderInsert) => {
-    if (!user) {
-      toast({
-        title: "Erreur",
-        description: "Vous devez être connecté pour créer une commande",
-        variant: "destructive",
-      });
-      return null;
-    }
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
+  const createOrder = async (orderData: Partial<UnifiedOrder>) => {
     try {
-      console.log('Données de commande à créer:', orderData);
-      
       const { data, error } = await supabase
         .from('orders')
-        .insert(orderData)
+        .insert([orderData])
         .select()
         .single();
 
-      if (error) {
-        console.error('Erreur lors de la création de la commande:', error);
-        toast({
-          title: "Erreur",
-          description: `Impossible de créer la commande: ${error.message}`,
-          variant: "destructive",
-        });
-        throw error;
-      }
+      if (error) throw error;
 
-      console.log('Commande créée avec succès:', data);
-
+      await fetchOrders(); // Refresh the orders list
+      
       toast({
-        title: "Commande créée",
-        description: "Votre commande a été créée avec succès",
+        title: "Succès",
+        description: "Commande créée avec succès",
       });
 
-      // Envoyer l'email de confirmation selon le type de commande
-      if (data.type === 'buy') {
-        await sendBuyConfirmation(data, data.id);
-      } else if (data.type === 'sell') {
-        await sendSellConfirmation(data, data.id);
-      }
-
-      // Notifier l'admin de la nouvelle commande
-      try {
-        await supabase.functions.invoke('send-admin-notification', {
-          body: {
-            notificationType: 'new_order',
-            data: {
-              orderId: data.id,
-              type: data.type,
-              amount: data.amount,
-              currency: data.currency,
-              usdtAmount: data.usdt_amount,
-              paymentMethod: data.payment_method,
-              status: data.status,
-              userId: data.user_id,
-              createdAt: data.created_at
-            }
-          },
-        });
-        console.log('Notification admin envoyée pour nouvelle commande');
-      } catch (adminError) {
-        console.error('Erreur notification admin:', adminError);
-      }
-
-      await fetchOrders();
       return data;
     } catch (error) {
-      console.error('Erreur:', error);
-      return null;
+      console.error('Error creating order:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de créer la commande",
+        variant: "destructive",
+      });
+      throw error;
     }
   };
 
-  const updateOrderStatus = async (orderId: string, status: Database['public']['Enums']['order_status'], paymentStatus?: string) => {
+  const updateOrderStatus = async (orderId: string, status: OrderStatus, paymentStatus?: string) => {
     try {
-      // Détecter si c'est un transfert ou une commande normale
-      const orderToUpdate = orders.find(o => o.id === orderId);
-      if (!orderToUpdate) {
-        throw new Error('Commande non trouvée');
-      }
+      // Check if it's a transfer or regular order
+      const order = orders.find(o => o.id === orderId);
+      if (!order) return;
 
-      const oldStatus = orderToUpdate.status;
-
-      if (orderToUpdate.type === 'transfer') {
-        // Mettre à jour un transfert international
+      if (order.type === 'transfer') {
         const { error } = await supabase
           .from('international_transfers')
-          .update({
-            status: status,
-            processed_by: user?.id,
-            processed_at: new Date().toISOString()
+          .update({ 
+            status: status as any,
+            processed_at: status === 'completed' ? new Date().toISOString() : null
           })
           .eq('id', orderId);
 
-        if (error) {
-          console.error('Erreur lors de la mise à jour du transfert:', error);
-          throw error;
-        }
+        if (error) throw error;
       } else {
-        // Mettre à jour une commande normale
-        const updateData: Partial<OrderInsert> = { 
+        const updateData: any = { 
           status,
-          processed_by: user?.id,
-          processed_at: new Date().toISOString()
+          updated_at: new Date().toISOString()
         };
         
         if (paymentStatus) {
           updateData.payment_status = paymentStatus;
+        }
+        
+        if (status === 'completed') {
+          updateData.processed_at = new Date().toISOString();
         }
 
         const { error } = await supabase
@@ -243,76 +209,17 @@ export const useOrders = () => {
           .update(updateData)
           .eq('id', orderId);
 
-        if (error) {
-          console.error('Erreur lors de la mise à jour:', error);
-          throw error;
-        }
+        if (error) throw error;
       }
 
-      // Notifier l'admin du changement de statut
-      try {
-        await supabase.functions.invoke('send-admin-notification', {
-          body: {
-            notificationType: 'status_update',
-            data: {
-              orderId: orderId,
-              type: orderToUpdate.type,
-              oldStatus: oldStatus,
-              newStatus: status,
-              amount: orderToUpdate.amount,
-              currency: orderToUpdate.currency
-            }
-          },
-        });
-        console.log('Notification admin envoyée pour mise à jour statut');
-      } catch (adminError) {
-        console.error('Erreur notification admin status:', adminError);
-      }
-
-      // Envoyer les notifications email aux clients
-      try {
-        console.log('Envoi des notifications email pour:', orderId, 'nouveau statut:', status);
-        console.log('ID du client:', orderToUpdate.user_id);
-        
-        // Email de mise à jour de statut
-        await supabase.functions.invoke('send-email-notification', {
-          body: {
-            userId: orderToUpdate.user_id, // ID du CLIENT
-            orderId: orderId,
-            emailAddress: null, // Sera récupéré côté serveur
-            emailType: 'status_update',
-            transactionType: orderToUpdate.type,
-            orderData: { ...orderToUpdate, status }
-          },
-        });
-
-        // Si le statut passe à "processing" avec payment_status "confirmed", envoyer email de paiement confirmé
-        if (status === 'processing' && paymentStatus === 'confirmed') {
-          await supabase.functions.invoke('send-email-notification', {
-            body: {
-              userId: orderToUpdate.user_id, // ID du CLIENT
-              orderId: orderId,
-              emailAddress: null, // Sera récupéré côté serveur
-              emailType: 'payment_confirmed',
-              transactionType: orderToUpdate.type,
-              orderData: { ...orderToUpdate, status }
-            },
-          });
-        }
-
-        console.log('Emails de notification envoyés avec succès au client:', orderToUpdate.user_id);
-      } catch (emailError) {
-        console.error('Erreur lors de l\'envoi des emails:', emailError);
-      }
-
+      await fetchOrders(); // Refresh the orders list
+      
       toast({
-        title: "Statut mis à jour",
-        description: "Le statut de la commande a été mis à jour",
+        title: "Succès",
+        description: "Statut mis à jour avec succès",
       });
-
-      await fetchOrders();
     } catch (error) {
-      console.error('Erreur:', error);
+      console.error('Error updating order status:', error);
       toast({
         title: "Erreur",
         description: "Impossible de mettre à jour le statut",
@@ -321,63 +228,50 @@ export const useOrders = () => {
     }
   };
 
+  // Local simulation for trash functionality (will be replaced with real DB logic later)
   const moveToTrash = async (orderId: string) => {
-    try {
-      // Mettre à jour localement d'abord pour un feedback immédiat
-      setOrders(prev => prev.map(order => 
+    // For now, just update local state
+    setOrders(prevOrders => 
+      prevOrders.map(order => 
         order.id === orderId 
           ? { ...order, is_deleted: true, deleted_at: new Date().toISOString() }
           : order
-      ));
-
-      toast({
-        title: "Commande supprimée",
-        description: "La commande a été déplacée vers la corbeille",
-      });
-    } catch (error) {
-      console.error('Erreur:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de supprimer la commande",
-        variant: "destructive",
-      });
-    }
+      )
+    );
+    
+    toast({
+      title: "Succès",
+      description: "Commande déplacée vers la corbeille",
+    });
   };
 
   const restoreFromTrash = async (orderId: string) => {
-    try {
-      // Restaurer localement d'abord pour un feedback immédiat
-      setOrders(prev => prev.map(order => 
+    // For now, just update local state
+    setOrders(prevOrders => 
+      prevOrders.map(order => 
         order.id === orderId 
-          ? { ...order, is_deleted: false, deleted_at: null }
+          ? { ...order, is_deleted: false, deleted_at: undefined }
           : order
-      ));
-
-      toast({
-        title: "Commande restaurée",
-        description: "La commande a été restaurée depuis la corbeille",
-      });
-    } catch (error) {
-      console.error('Erreur:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de restaurer la commande",
-        variant: "destructive",
-      });
-    }
+      )
+    );
+    
+    toast({
+      title: "Succès",
+      description: "Commande restaurée",
+    });
   };
 
-  useEffect(() => {
+  const refreshOrders = () => {
     fetchOrders();
-  }, [user]);
+  };
 
   return {
     orders,
     loading,
     createOrder,
     updateOrderStatus,
+    refreshOrders,
     moveToTrash,
-    restoreFromTrash,
-    refreshOrders: fetchOrders
+    restoreFromTrash
   };
-};
+}
