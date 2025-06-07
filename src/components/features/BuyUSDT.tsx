@@ -1,4 +1,5 @@
 
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -240,6 +241,16 @@ export function BuyUSDT() {
               return;
             }
 
+            // Ensure paymentMethod is not empty string before creating order
+            if (paymentMethod === '') {
+              toast({
+                title: "Erreur",
+                description: "Méthode de paiement requise.",
+                variant: "destructive",
+              });
+              return;
+            }
+
             try {
               const order = await createOrder({
                 user_id: user.id,
@@ -248,7 +259,7 @@ export function BuyUSDT() {
                 currency: currency,
                 usdt_amount: usdtAmount,
                 exchange_rate: exchangeRate,
-                payment_method: paymentMethod as string,
+                payment_method: paymentMethod,
                 wallet_address: walletAddress,
                 network: network,
                 status: 'pending',
@@ -294,3 +305,4 @@ export function BuyUSDT() {
     </KYCProtection>
   );
 }
+
