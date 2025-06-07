@@ -32,7 +32,7 @@ export function BuyUSDT() {
   const { user } = useAuth();
 
   const exchangeRates = {
-    CFA: 656, // 1 USDT = 656 CFA
+    CFA: 600, // 1 USDT = 600 CFA
     CAD: 1.35  // 1 USDT = 1.35 CAD
   };
 
@@ -193,10 +193,10 @@ export function BuyUSDT() {
                               placeholder="0.00"
                               value={amount}
                               onChange={handleAmountChange}
-                              className="bg-terex-gray border-terex-gray-light text-white text-base sm:text-lg h-10 sm:h-12 pr-16 sm:pr-20 w-full"
+                              className="bg-terex-gray border-terex-gray-light text-white text-base sm:text-lg h-10 sm:h-12 pr-20 sm:pr-24 w-full"
                             />
                             <Select value={currency} onValueChange={handleCurrencyChange}>
-                              <SelectTrigger className="absolute right-1 top-1 w-12 sm:w-16 h-8 sm:h-10 bg-terex-gray-light border-0 text-terex-accent text-xs sm:text-sm">
+                              <SelectTrigger className="absolute right-1 top-1 w-16 sm:w-20 h-8 sm:h-10 bg-terex-gray-light border-0 text-terex-accent text-sm">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
@@ -243,7 +243,7 @@ export function BuyUSDT() {
                         </div>
                         <div className="flex justify-between text-xs sm:text-sm mt-1">
                           <span className="text-gray-400">Temps de traitement</span>
-                          <span className="text-terex-accent text-right">5-15 minutes</span>
+                          <span className="text-terex-accent text-right">5-10 minutes</span>
                         </div>
                       </div>
                     </div>
@@ -471,7 +471,7 @@ export function BuyUSDT() {
                     <div className="flex items-center justify-between">
                       <span className="text-gray-400 text-xs sm:text-sm">Mobile Money</span>
                       <Badge variant="outline" className="text-green-500 border-green-500 text-xs whitespace-nowrap">
-                        5-15 min
+                        5-10 min
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between">
