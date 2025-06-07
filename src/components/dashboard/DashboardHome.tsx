@@ -7,13 +7,16 @@ import {
   Globe, 
   ArrowUpRight, 
   Activity,
-  DollarSign,
   Handshake,
   Clock,
   Users,
   Star,
   Trophy,
-  Target
+  Target,
+  Coins,
+  Shield,
+  Blocks,
+  TrendingDown
 } from 'lucide-react';
 
 interface DashboardHomeProps {
@@ -150,71 +153,88 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         </CardContent>
       </Card>
 
-      {/* Nouvelle section - Statistiques plateforme */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border-terex-gray">
-          <CardHeader>
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-terex-accent/20 rounded-xl flex items-center justify-center">
-                <Users className="w-5 h-5 text-terex-accent" />
-              </div>
+      {/* Section Cryptomonnaies supportées */}
+      <Card className="bg-terex-darker border-terex-gray mb-8">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center">
+            <Coins className="w-5 h-5 mr-2 text-terex-accent" />
+            Cryptomonnaies supportées
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="flex items-center space-x-3 p-3 bg-terex-dark rounded-lg">
+              <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" className="w-8 h-8" />
               <div>
-                <CardTitle className="text-white text-lg">Utilisateurs actifs</CardTitle>
-                <p className="text-gray-400 text-sm">Communauté grandissante</p>
+                <p className="text-white font-medium">USDT</p>
+                <p className="text-gray-400 text-xs">Tether</p>
               </div>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-terex-accent mb-2">12,847+</div>
-            <div className="flex items-center text-green-400 text-sm">
-              <TrendingUp className="w-4 h-4 mr-1" />
-              +15% ce mois
+            <div className="flex items-center space-x-3 p-3 bg-terex-dark rounded-lg">
+              <img src="https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png" alt="Bitcoin" className="w-8 h-8" />
+              <div>
+                <p className="text-white font-medium">BTC</p>
+                <p className="text-gray-400 text-xs">Bitcoin</p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+            <div className="flex items-center space-x-3 p-3 bg-terex-dark rounded-lg">
+              <img src="https://coin-images.coingecko.com/coins/images/279/large/ethereum.png" alt="Ethereum" className="w-8 h-8" />
+              <div>
+                <p className="text-white font-medium">ETH</p>
+                <p className="text-gray-400 text-xs">Ethereum</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3 p-3 bg-terex-dark rounded-lg">
+              <img src="https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png" alt="BNB" className="w-8 h-8" />
+              <div>
+                <p className="text-white font-medium">BNB</p>
+                <p className="text-gray-400 text-xs">Binance Coin</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-        <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border-terex-gray">
-          <CardHeader>
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-green-500/20 rounded-xl flex items-center justify-center">
-                <DollarSign className="w-5 h-5 text-green-400" />
+      {/* Section Blockchain & Sécurité */}
+      <Card className="bg-terex-darker border-terex-gray mb-8">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center">
+            <Blocks className="w-5 h-5 mr-2 text-terex-accent" />
+            Blockchain & Sécurité
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="flex items-start space-x-3">
+              <div className="w-10 h-10 bg-terex-accent/20 rounded-lg flex items-center justify-center mt-1">
+                <Shield className="w-5 h-5 text-terex-accent" />
               </div>
               <div>
-                <CardTitle className="text-white text-lg">Volume traité</CardTitle>
-                <p className="text-gray-400 text-sm">Dernières 24h</p>
+                <h3 className="text-white font-medium mb-1">Sécurité renforcée</h3>
+                <p className="text-gray-400 text-sm">Protection blockchain avancée pour toutes vos transactions</p>
               </div>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-green-400 mb-2">$2.8M+</div>
-            <div className="flex items-center text-green-400 text-sm">
-              <TrendingUp className="w-4 h-4 mr-1" />
-              +8.5% aujourd'hui
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border-terex-gray">
-          <CardHeader>
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center">
-                <Target className="w-5 h-5 text-purple-400" />
+            <div className="flex items-start space-x-3">
+              <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center mt-1">
+                <Activity className="w-5 h-5 text-green-400" />
               </div>
               <div>
-                <CardTitle className="text-white text-lg">Transactions</CardTitle>
-                <p className="text-gray-400 text-sm">Réussies aujourd'hui</p>
+                <h3 className="text-white font-medium mb-1">Réseau décentralisé</h3>
+                <p className="text-gray-400 text-sm">Infrastructure distribuée pour plus de fiabilité</p>
               </div>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-purple-400 mb-2">94,523</div>
-            <div className="flex items-center text-green-400 text-sm">
-              <TrendingUp className="w-4 h-4 mr-1" />
-              99.9% succès
+            <div className="flex items-start space-x-3">
+              <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center mt-1">
+                <Target className="w-5 h-5 text-blue-400" />
+              </div>
+              <div>
+                <h3 className="text-white font-medium mb-1">Transparence totale</h3>
+                <p className="text-gray-400 text-sm">Toutes les transactions sont vérifiables sur la blockchain</p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Section pourquoi choisir Terex */}
       <Card className="bg-terex-darker border-terex-gray">
@@ -227,7 +247,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <div className="w-8 h-8 bg-terex-accent/20 rounded-lg flex items-center justify-center mt-1">
-                  <DollarSign className="w-4 h-4 text-terex-accent" />
+                  <Star className="w-4 h-4 text-terex-accent" />
                 </div>
                 <div>
                   <h3 className="text-white font-medium mb-1">Économies garanties</h3>
