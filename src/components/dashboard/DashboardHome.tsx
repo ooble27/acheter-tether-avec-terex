@@ -13,9 +13,10 @@ import {
   Star,
   Trophy,
   Target,
-  Coins,
   Shield,
   Blocks,
+  CheckCircle,
+  Anchor,
   TrendingDown
 } from 'lucide-react';
 
@@ -116,15 +117,15 @@ export function DashboardHome({ user }: DashboardHomeProps) {
       <Card className="bg-terex-darker border-terex-gray mb-8">
         <CardHeader>
           <CardTitle className="text-white flex items-center">
-            <Trophy className="w-5 h-5 mr-2 text-terex-accent" />
+            <Trophy className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
             Avantages Terex
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-terex-accent/20 rounded-lg flex items-center justify-center">
-                <Star className="w-5 h-5 text-terex-accent" />
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-terex-accent/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Star className="w-4 h-4 md:w-5 md:h-5 text-terex-accent" />
               </div>
               <div>
                 <h3 className="text-white font-medium">Frais gratuits</h3>
@@ -132,8 +133,8 @@ export function DashboardHome({ user }: DashboardHomeProps) {
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
-                <Zap className="w-5 h-5 text-green-400" />
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Zap className="w-4 h-4 md:w-5 md:h-5 text-green-400" />
               </div>
               <div>
                 <h3 className="text-white font-medium">Transactions rapides</h3>
@@ -141,8 +142,8 @@ export function DashboardHome({ user }: DashboardHomeProps) {
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                <Clock className="w-5 h-5 text-blue-400" />
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Clock className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
               </div>
               <div>
                 <h3 className="text-white font-medium">Service 24/7</h3>
@@ -153,42 +154,57 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         </CardContent>
       </Card>
 
-      {/* Section Cryptomonnaies supportées */}
+      {/* Section USDT - Pourquoi nous ne supportons que l'USDT */}
       <Card className="bg-terex-darker border-terex-gray mb-8">
         <CardHeader>
           <CardTitle className="text-white flex items-center">
-            <Coins className="w-5 h-5 mr-2 text-terex-accent" />
-            Cryptomonnaies supportées
+            <TetherLogo className="w-4 h-4 md:w-5 md:h-5 mr-2" />
+            Pourquoi nous ne supportons que l'USDT ?
           </CardTitle>
+          <CardDescription className="text-gray-400">
+            Terex se concentre exclusivement sur l'USDT pour offrir la meilleure expérience possible
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="flex items-center space-x-3 p-3 bg-terex-dark rounded-lg">
-              <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" className="w-8 h-8" />
-              <div>
-                <p className="text-white font-medium">USDT</p>
-                <p className="text-gray-400 text-xs">Tether</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-green-500/20 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
+                  <Anchor className="w-4 h-4 md:w-5 md:h-5 text-green-400" />
+                </div>
+                <div>
+                  <h3 className="text-white font-medium mb-1">Stabilité garantie</h3>
+                  <p className="text-gray-400 text-sm">L'USDT est ancré au dollar américain (1:1), offrant une stabilité incomparable face à la volatilité du marché crypto</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-blue-500/20 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
+                  <Globe className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-white font-medium mb-1">Acceptation mondiale</h3>
+                  <p className="text-gray-400 text-sm">L'USDT est la cryptomonnaie stable la plus utilisée au monde, acceptée sur toutes les plateformes d'échange</p>
+                </div>
               </div>
             </div>
-            <div className="flex items-center space-x-3 p-3 bg-terex-dark rounded-lg">
-              <img src="https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png" alt="Bitcoin" className="w-8 h-8" />
-              <div>
-                <p className="text-white font-medium">BTC</p>
-                <p className="text-gray-400 text-xs">Bitcoin</p>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-terex-accent/20 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
+                  <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-terex-accent" />
+                </div>
+                <div>
+                  <h3 className="text-white font-medium mb-1">Simplicité d'usage</h3>
+                  <p className="text-gray-400 text-sm">Pas besoin de suivre plusieurs cryptomonnaies, une seule devise stable pour tous vos besoins</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center space-x-3 p-3 bg-terex-dark rounded-lg">
-              <img src="https://coin-images.coingecko.com/coins/images/279/large/ethereum.png" alt="Ethereum" className="w-8 h-8" />
-              <div>
-                <p className="text-white font-medium">ETH</p>
-                <p className="text-gray-400 text-xs">Ethereum</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3 p-3 bg-terex-dark rounded-lg">
-              <img src="https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png" alt="BNB" className="w-8 h-8" />
-              <div>
-                <p className="text-white font-medium">BNB</p>
-                <p className="text-gray-400 text-xs">Binance Coin</p>
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-purple-500/20 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
+                  <Zap className="w-4 h-4 md:w-5 md:h-5 text-purple-400" />
+                </div>
+                <div>
+                  <h3 className="text-white font-medium mb-1">Transferts rapides</h3>
+                  <p className="text-gray-400 text-sm">Les transactions USDT sont rapides et peu coûteuses, parfaites pour les virements internationaux</p>
+                </div>
               </div>
             </div>
           </div>
@@ -199,15 +215,15 @@ export function DashboardHome({ user }: DashboardHomeProps) {
       <Card className="bg-terex-darker border-terex-gray mb-8">
         <CardHeader>
           <CardTitle className="text-white flex items-center">
-            <Blocks className="w-5 h-5 mr-2 text-terex-accent" />
+            <Blocks className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
             Blockchain & Sécurité
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="flex items-start space-x-3">
-              <div className="w-10 h-10 bg-terex-accent/20 rounded-lg flex items-center justify-center mt-1">
-                <Shield className="w-5 h-5 text-terex-accent" />
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-terex-accent/20 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
+                <Shield className="w-4 h-4 md:w-5 md:h-5 text-terex-accent" />
               </div>
               <div>
                 <h3 className="text-white font-medium mb-1">Sécurité renforcée</h3>
@@ -215,8 +231,8 @@ export function DashboardHome({ user }: DashboardHomeProps) {
               </div>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center mt-1">
-                <Activity className="w-5 h-5 text-green-400" />
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-green-500/20 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
+                <Activity className="w-4 h-4 md:w-5 md:h-5 text-green-400" />
               </div>
               <div>
                 <h3 className="text-white font-medium mb-1">Réseau décentralisé</h3>
@@ -224,8 +240,8 @@ export function DashboardHome({ user }: DashboardHomeProps) {
               </div>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center mt-1">
-                <Target className="w-5 h-5 text-blue-400" />
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-blue-500/20 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
+                <Target className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
               </div>
               <div>
                 <h3 className="text-white font-medium mb-1">Transparence totale</h3>
@@ -246,8 +262,8 @@ export function DashboardHome({ user }: DashboardHomeProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-terex-accent/20 rounded-lg flex items-center justify-center mt-1">
-                  <Star className="w-4 h-4 text-terex-accent" />
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-terex-accent/20 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
+                  <Star className="w-3 h-3 md:w-4 md:h-4 text-terex-accent" />
                 </div>
                 <div>
                   <h3 className="text-white font-medium mb-1">Économies garanties</h3>
@@ -255,8 +271,8 @@ export function DashboardHome({ user }: DashboardHomeProps) {
                 </div>
               </div>
               <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center mt-1">
-                  <Zap className="w-4 h-4 text-green-400" />
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-green-500/20 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
+                  <Zap className="w-3 h-3 md:w-4 md:h-4 text-green-400" />
                 </div>
                 <div>
                   <h3 className="text-white font-medium mb-1">Rapidité optimale</h3>
@@ -266,8 +282,8 @@ export function DashboardHome({ user }: DashboardHomeProps) {
             </div>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center mt-1">
-                  <Clock className="w-4 h-4 text-blue-400" />
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-blue-500/20 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
+                  <Clock className="w-3 h-3 md:w-4 md:h-4 text-blue-400" />
                 </div>
                 <div>
                   <h3 className="text-white font-medium mb-1">Disponibilité continue</h3>
@@ -275,8 +291,8 @@ export function DashboardHome({ user }: DashboardHomeProps) {
                 </div>
               </div>
               <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center mt-1">
-                  <Users className="w-4 h-4 text-purple-400" />
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-purple-500/20 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
+                  <Users className="w-3 h-3 md:w-4 md:h-4 text-purple-400" />
                 </div>
                 <div>
                   <h3 className="text-white font-medium mb-1">Communauté active</h3>
