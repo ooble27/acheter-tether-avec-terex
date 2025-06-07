@@ -2,6 +2,10 @@
 import {
   Text,
   Section,
+  Hr,
+  Container,
+  Row,
+  Column,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 import { BaseEmail } from './base-email.tsx';
@@ -11,8 +15,8 @@ interface TransferConfirmationProps {
 }
 
 export const TransferConfirmationEmail = ({ transferData }: TransferConfirmationProps) => {
-  const title = 'Transfert international confirmé';
-  const preview = `Votre transfert #TEREX-${transferData.id?.slice(-8)} a été confirmé avec succès`;
+  const title = 'Confirmation de transfert international';
+  const preview = `Votre transfert #TEREX-${transferData.id?.slice(-8)} vers ${transferData.recipient_country} a été confirmé`;
   
   const getCountryName = (code: string) => {
     const countries = {
@@ -26,204 +30,370 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
     return countries[code as keyof typeof countries] || code;
   };
 
-  const getPaymentMethodName = () => {
-    switch (transferData.payment_method) {
-      case 'card': return 'Carte bancaire';
-      case 'bank': return 'Virement bancaire';
-      case 'interac': return 'Interac E-Transfer';
-      default: return transferData.payment_method || 'À définir';
-    }
-  };
-
   const getReceiveMethodName = () => {
-    switch (transferData.receive_method) {
-      case 'mobile': return 'Mobile Money';
-      case 'bank_transfer': return 'Virement bancaire';
-      case 'cash_pickup': return 'Retrait en espèces';
-      default: return transferData.receive_method || 'À définir';
-    }
-  };
-
-  const getProviderName = () => {
     if (transferData.provider === 'wave') return 'Wave';
     if (transferData.provider === 'orange') return 'Orange Money';
-    return '';
+    if (transferData.receive_method === 'mobile') return transferData.provider === 'wave' ? 'Wave' : 'Orange Money';
+    return 'Mobile Money';
   };
   
   return (
     <BaseEmail preview={preview} title={title}>
-      <Text style={confirmationText}>
-        🌍 Parfait ! Votre demande de transfert international a été enregistrée avec succès.
-      </Text>
-
-      <Text style={subText}>
-        Nous allons maintenant traiter votre transfert vers {getCountryName(transferData.recipient_country)}.
-      </Text>
-
-      <Text style={sectionTitle}>RÉSUMÉ DE VOTRE TRANSFERT</Text>
-      
-      <Text style={detailText}>
-        <strong>Numéro de transfert :</strong> #TEREX-{transferData.id?.slice(-8)}
-      </Text>
-      
-      <Text style={detailText}>
-        <strong>Date :</strong> {new Date(transferData.created_at || Date.now()).toLocaleString('fr-FR')}
-      </Text>
-
-      <Text style={detailText}>
-        <strong>Vous envoyez :</strong> {transferData.amount} {transferData.from_currency}
-      </Text>
-      
-      <Text style={detailText}>
-        <strong>Méthode de paiement :</strong> {getPaymentMethodName()}
-      </Text>
-
-      <Text style={detailText}>
-        <strong>Destinataire reçoit :</strong> {transferData.total_amount} {transferData.to_currency}
-      </Text>
-      
-      <Text style={detailText}>
-        <strong>Méthode de réception :</strong> {getReceiveMethodName()} {getProviderName() && `(${getProviderName()})`}
-      </Text>
-
-      <Text style={detailText}>
-        <strong>Taux de change :</strong> 1 {transferData.from_currency} = {transferData.exchange_rate} {transferData.to_currency}
-      </Text>
-      
-      <Text style={detailText}>
-        <strong>Frais de transfert :</strong> {transferData.fees} {transferData.from_currency}
-      </Text>
-
-      <Text style={sectionTitle}>INFORMATIONS DU DESTINATAIRE</Text>
-      
-      <Text style={detailText}>
-        <strong>Nom complet :</strong> {transferData.recipient_name}
-      </Text>
-      
-      <Text style={detailText}>
-        <strong>Pays de destination :</strong> {getCountryName(transferData.recipient_country)}
-      </Text>
-      
-      {transferData.recipient_phone && (
-        <Text style={detailText}>
-          <strong>Téléphone :</strong> {transferData.recipient_phone}
+      {/* Header de confirmation */}
+      <Section style={confirmationHeader}>
+        <Text style={confirmationIcon}>🌍</Text>
+        <Text style={confirmationTitle}>
+          Transfert international confirmé
         </Text>
-      )}
-      
-      {transferData.recipient_account && (
-        <Text style={detailText}>
-          <strong>Numéro de compte/téléphone :</strong> {transferData.recipient_account}
+        <Text style={confirmationSubtitle}>
+          Votre transfert vers {getCountryName(transferData.recipient_country)} est en cours de traitement
         </Text>
-      )}
-      
-      {transferData.recipient_bank && (
-        <Text style={detailText}>
-          <strong>Institution financière :</strong> {transferData.recipient_bank}
-        </Text>
-      )}
+      </Section>
 
-      <Text style={sectionTitle}>PROCESSUS DE TRANSFERT</Text>
-      
-      <Text style={stepText}>1. ✅ Demande confirmée</Text>
-      <Text style={stepText}>2. ⏳ Instructions de paiement</Text>
-      <Text style={stepText}>3. ⏳ Vérification du paiement</Text>
-      <Text style={stepText}>4. ⏳ Traitement du transfert</Text>
-      <Text style={stepText}>5. ⏳ Réception confirmée</Text>
+      <Hr style={divider} />
 
-      <Text style={sectionTitle}>DÉLAIS DE TRAITEMENT</Text>
-      
-      <Text style={timingText}>
-        <strong>Paiement :</strong> Immédiat
-      </Text>
-      <Text style={timingText}>
-        <strong>Vérification :</strong> 2-3 minutes
-      </Text>
-      <Text style={timingText}>
-        <strong>Transfert :</strong> 2-5 minutes
-      </Text>
-      <Text style={timingText}>
-        <strong>Réception :</strong> Immédiate
-      </Text>
+      {/* Informations du transfert */}
+      <Section style={transferDetails}>
+        <Text style={sectionTitle}>📋 DÉTAILS DE VOTRE TRANSFERT</Text>
+        
+        <Container style={detailsContainer}>
+          <Row>
+            <Column style={labelColumn}>
+              <Text style={labelText}>Numéro de référence :</Text>
+            </Column>
+            <Column style={valueColumn}>
+              <Text style={valueText}>#TEREX-{transferData.id?.slice(-8)}</Text>
+            </Column>
+          </Row>
+          
+          <Row>
+            <Column style={labelColumn}>
+              <Text style={labelText}>Date et heure :</Text>
+            </Column>
+            <Column style={valueColumn}>
+              <Text style={valueText}>{new Date(transferData.created_at || Date.now()).toLocaleString('fr-FR')}</Text>
+            </Column>
+          </Row>
+
+          <Row>
+            <Column style={labelColumn}>
+              <Text style={labelText}>Vous envoyez :</Text>
+            </Column>
+            <Column style={valueColumn}>
+              <Text style={amountText}>{transferData.amount} {transferData.from_currency}</Text>
+            </Column>
+          </Row>
+          
+          <Row>
+            <Column style={labelColumn}>
+              <Text style={labelText}>Destinataire reçoit :</Text>
+            </Column>
+            <Column style={valueColumn}>
+              <Text style={amountText}>{transferData.total_amount} {transferData.to_currency}</Text>
+            </Column>
+          </Row>
+
+          <Row>
+            <Column style={labelColumn}>
+              <Text style={labelText}>Méthode de réception :</Text>
+            </Column>
+            <Column style={valueColumn}>
+              <Text style={serviceText}>{getReceiveMethodName()}</Text>
+            </Column>
+          </Row>
+
+          <Row>
+            <Column style={labelColumn}>
+              <Text style={labelText}>Taux de change :</Text>
+            </Column>
+            <Column style={valueColumn}>
+              <Text style={valueText}>1 {transferData.from_currency} = {transferData.exchange_rate} {transferData.to_currency}</Text>
+            </Column>
+          </Row>
+          
+          <Row>
+            <Column style={labelColumn}>
+              <Text style={labelText}>Frais de transfert :</Text>
+            </Column>
+            <Column style={valueColumn}>
+              <Text style={feesText}>{transferData.fees} {transferData.from_currency}</Text>
+            </Column>
+          </Row>
+        </Container>
+      </Section>
+
+      <Hr style={divider} />
+
+      {/* Informations du destinataire */}
+      <Section style={recipientSection}>
+        <Text style={sectionTitle}>👤 INFORMATIONS DU DESTINATAIRE</Text>
+        
+        <Container style={detailsContainer}>
+          <Row>
+            <Column style={labelColumn}>
+              <Text style={labelText}>Nom complet :</Text>
+            </Column>
+            <Column style={valueColumn}>
+              <Text style={valueText}>{transferData.recipient_name}</Text>
+            </Column>
+          </Row>
+          
+          <Row>
+            <Column style={labelColumn}>
+              <Text style={labelText}>Pays de destination :</Text>
+            </Column>
+            <Column style={valueColumn}>
+              <Text style={valueText}>{getCountryName(transferData.recipient_country)}</Text>
+            </Column>
+          </Row>
+          
+          {transferData.recipient_phone && (
+            <Row>
+              <Column style={labelColumn}>
+                <Text style={labelText}>Numéro de téléphone :</Text>
+              </Column>
+              <Column style={valueColumn}>
+                <Text style={phoneText}>{transferData.recipient_phone}</Text>
+              </Column>
+            </Row>
+          )}
+          
+          {transferData.recipient_account && (
+            <Row>
+              <Column style={labelColumn}>
+                <Text style={labelText}>Compte de réception :</Text>
+              </Column>
+              <Column style={valueColumn}>
+                <Text style={phoneText}>{transferData.recipient_account}</Text>
+              </Column>
+            </Row>
+          )}
+        </Container>
+      </Section>
+
+      <Hr style={divider} />
+
+      {/* Processus de transfert */}
+      <Section style={processSection}>
+        <Text style={sectionTitle}>⚡ PROCESSUS DE TRANSFERT</Text>
+        
+        <Container style={stepsContainer}>
+          <Text style={stepCompleted}>1. ✅ Demande confirmée</Text>
+          <Text style={stepPending}>2. ⏳ Instructions de paiement</Text>
+          <Text style={stepPending}>3. ⏳ Vérification du paiement</Text>
+          <Text style={stepPending}>4. ⏳ Traitement du transfert</Text>
+          <Text style={stepPending}>5. ⏳ Réception confirmée chez le destinataire</Text>
+        </Container>
+      </Section>
+
+      <Hr style={divider} />
+
+      {/* Délais de traitement */}
+      <Section style={timingSection}>
+        <Text style={sectionTitle}>⏱️ DÉLAIS DE TRAITEMENT</Text>
+        
+        <Container style={timingContainer}>
+          <Text style={timingText}><strong>📱 Paiement :</strong> Immédiat</Text>
+          <Text style={timingText}><strong>✅ Vérification :</strong> 2-3 minutes</Text>
+          <Text style={timingText}><strong>🔄 Traitement :</strong> 2-5 minutes</Text>
+          <Text style={timingText}><strong>💰 Réception :</strong> Immédiate via {getReceiveMethodName()}</Text>
+        </Container>
+      </Section>
+
+      <Hr style={divider} />
 
       <Text style={thankYouText}>
         🙏 Merci de faire confiance à Terex pour vos transferts internationaux !
       </Text>
       <Text style={teamText}>
-        Vous recevrez une notification à chaque étape du processus.
-      </Text>
-      <Text style={teamSignature}>
-        L'équipe Terex
+        L'équipe Terex - Vos transferts en toute sécurité
       </Text>
     </BaseEmail>
   );
 };
 
-// Styles simples et lisibles
-const confirmationText = {
-  color: '#059669',
-  fontSize: '18px',
-  fontWeight: '600',
+// Styles identiques à order-confirmation mais adaptés pour les transferts
+const confirmationHeader = {
+  textAlign: 'center' as const,
+  padding: '30px 20px',
+  backgroundColor: '#f8fafc',
+  borderRadius: '12px',
+  margin: '0 0 30px 0',
+  border: '2px solid #e2e8f0',
+};
+
+const confirmationIcon = {
+  fontSize: '48px',
   margin: '0 0 15px 0',
+  display: 'block',
+};
+
+const confirmationTitle = {
+  color: '#059669',
+  fontSize: '24px',
+  fontWeight: '700',
+  margin: '0 0 10px 0',
+  lineHeight: '1.3',
+};
+
+const confirmationSubtitle = {
+  color: '#64748b',
+  fontSize: '16px',
+  margin: '0',
   lineHeight: '1.4',
 };
 
-const subText = {
-  color: '#666666',
-  fontSize: '14px',
+const divider = {
+  borderColor: '#e2e8f0',
+  margin: '30px 0',
+  borderWidth: '1px',
+};
+
+const transferDetails = {
   margin: '0 0 30px 0',
-  lineHeight: '1.5',
 };
 
 const sectionTitle = {
-  color: '#2563eb',
-  fontSize: '16px',
+  color: '#1e293b',
+  fontSize: '18px',
   fontWeight: '700',
-  margin: '30px 0 15px 0',
+  margin: '0 0 20px 0',
   textTransform: 'uppercase' as const,
   letterSpacing: '0.5px',
+  borderLeft: '4px solid #2563eb',
+  paddingLeft: '12px',
 };
 
-const detailText = {
-  color: '#333333',
+const detailsContainer = {
+  backgroundColor: '#ffffff',
+  border: '1px solid #e2e8f0',
+  borderRadius: '8px',
+  padding: '20px',
+};
+
+const labelColumn = {
+  width: '40%',
+  paddingRight: '15px',
+  verticalAlign: 'top' as const,
+};
+
+const valueColumn = {
+  width: '60%',
+  verticalAlign: 'top' as const,
+};
+
+const labelText = {
+  color: '#64748b',
   fontSize: '14px',
+  fontWeight: '500',
   margin: '8px 0',
   lineHeight: '1.5',
 };
 
-const stepText = {
-  color: '#333333',
+const valueText = {
+  color: '#1e293b',
+  fontSize: '14px',
+  fontWeight: '600',
+  margin: '8px 0',
+  lineHeight: '1.5',
+};
+
+const amountText = {
+  color: '#059669',
+  fontSize: '16px',
+  fontWeight: '700',
+  margin: '8px 0',
+  lineHeight: '1.5',
+};
+
+const serviceText = {
+  color: '#2563eb',
+  fontSize: '15px',
+  fontWeight: '700',
+  margin: '8px 0',
+  lineHeight: '1.5',
+};
+
+const feesText = {
+  color: '#dc2626',
+  fontSize: '14px',
+  fontWeight: '600',
+  margin: '8px 0',
+  lineHeight: '1.5',
+};
+
+const phoneText = {
+  color: '#1e293b',
+  fontSize: '16px',
+  fontWeight: '700',
+  margin: '8px 0',
+  lineHeight: '1.5',
+  fontFamily: 'monospace',
+};
+
+const recipientSection = {
+  margin: '0 0 30px 0',
+};
+
+const processSection = {
+  margin: '0 0 30px 0',
+};
+
+const stepsContainer = {
+  backgroundColor: '#f8fafc',
+  border: '1px solid #e2e8f0',
+  borderRadius: '8px',
+  padding: '20px',
+};
+
+const stepCompleted = {
+  color: '#059669',
+  fontSize: '14px',
+  fontWeight: '600',
+  margin: '8px 0',
+  lineHeight: '1.5',
+};
+
+const stepPending = {
+  color: '#64748b',
+  fontSize: '14px',
+  fontWeight: '500',
+  margin: '8px 0',
+  lineHeight: '1.5',
+};
+
+const timingSection = {
+  margin: '0 0 30px 0',
+};
+
+const timingContainer = {
+  backgroundColor: '#fef3c7',
+  border: '1px solid #fbbf24',
+  borderRadius: '8px',
+  padding: '20px',
+};
+
+const timingText = {
+  color: '#92400e',
   fontSize: '14px',
   margin: '6px 0',
   lineHeight: '1.5',
 };
 
-const timingText = {
-  color: '#333333',
-  fontSize: '14px',
-  margin: '4px 0',
-  lineHeight: '1.5',
-};
-
 const thankYouText = {
   color: '#2563eb',
-  fontSize: '18px',
-  fontWeight: '600',
-  margin: '30px 0 8px 0',
+  fontSize: '20px',
+  fontWeight: '700',
+  margin: '30px 0 10px 0',
   textAlign: 'center' as const,
+  lineHeight: '1.3',
 };
 
 const teamText = {
-  color: '#666666',
-  fontSize: '14px',
-  margin: '0 0 8px 0',
-  fontStyle: 'italic',
-  textAlign: 'center' as const,
-};
-
-const teamSignature = {
-  color: '#333333',
+  color: '#64748b',
   fontSize: '14px',
   margin: '0',
-  fontWeight: '500',
+  fontStyle: 'italic',
   textAlign: 'center' as const,
+  lineHeight: '1.4',
 };

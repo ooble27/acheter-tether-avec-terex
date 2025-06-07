@@ -165,6 +165,8 @@ export function useOrders() {
 
   const createOrder = async (orderData: Omit<UnifiedOrder, 'id' | 'created_at' | 'updated_at'>) => {
     try {
+      console.log('Création d\'une nouvelle commande:', orderData);
+      
       // Map the order data to match database schema
       const dbOrderData = {
         user_id: orderData.user_id,
@@ -190,7 +192,22 @@ export function useOrders() {
 
       if (error) throw error;
 
-      await fetchOrders(); // Refresh the orders list
+      console.log('Commande créée avec succès:', data);
+
+      // Envoyer l'email de confirmation selon le type de commande
+      try {
+        console.log('Envoi de l\'email de confirmation pour:', orderData.type);
+        await sendEmailNotification('order_confirmation', orderData.type, {
+          ...orderData,
+          id: data.id,
+          created_at: data.created_at,
+          updated_at: data.updated_at
+        }, data.id);
+      } catch (emailError) {
+        console.error('Erreur lors de l\'envoi de l\'email de confirmation:', emailError);
+      }
+
+      await fetchOrders();
       
       toast({
         title: "Succès",

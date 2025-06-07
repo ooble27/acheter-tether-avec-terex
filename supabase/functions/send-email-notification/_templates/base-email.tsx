@@ -1,3 +1,4 @@
+
 import {
   Html,
   Head,
@@ -25,9 +26,13 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
       <Preview>{preview}</Preview>
       <Body style={main}>
         <Container style={container}>
-          {/* Header simple */}
+          {/* Header professionnel inspiré d'Interac */}
           <Section style={header}>
-            <Text style={brandName}>TEREX</Text>
+            <Container style={headerContainer}>
+              <Text style={brandName}>TEREX</Text>
+              <Text style={brandSubtitle}>Plateforme d'échange crypto & transferts internationaux</Text>
+            </Container>
+            <Hr style={headerDivider} />
             <Heading style={titleStyle}>{title}</Heading>
           </Section>
 
@@ -36,40 +41,49 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
             {children}
           </Section>
 
-          {/* Footer avec toutes les informations */}
+          {/* Footer professionnel */}
           <Section style={footer}>
-            <Hr style={separator} />
+            <Hr style={footerDivider} />
             
-            {/* Support client */}
-            <Text style={footerTitle}>📞 Support Client 24h/7j</Text>
-            <Text style={contactText}>📧 terangaexchange@gmail.com</Text>
-            <Text style={contactText}>📱 +221 77 397 27 49</Text>
-            <Text style={contactText}>💬 WhatsApp : +1 418 261 9091</Text>
-            <Text style={contactText}>👨‍💼 lomohamed834@gmail.com</Text>
+            {/* Informations de contact */}
+            <Container style={contactSection}>
+              <Text style={footerTitle}>📞 Support Client 24h/7j</Text>
+              <Text style={contactText}>📧 terangaexchange@gmail.com</Text>
+              <Text style={contactText}>📱 +221 77 397 27 49</Text>
+              <Text style={contactText}>💬 WhatsApp : +1 418 261 9091</Text>
+            </Container>
             
-            <Text style={footerTitle}>🚀 Accédez à votre compte</Text>
-            <Link href="https://app.terangaexchange.com" style={platformLink}>
-              Ouvrir la plateforme Terex →
-            </Link>
+            {/* Accès plateforme */}
+            <Container style={platformSection}>
+              <Text style={footerTitle}>🚀 Accédez à votre compte</Text>
+              <Link href="https://app.terangaexchange.com" style={platformLink}>
+                Ouvrir la plateforme Terex →
+              </Link>
+            </Container>
 
-            <Text style={footerTitle}>🔒 Sécurité & Conformité</Text>
-            <Text style={securityText}>
-              • Cryptage SSL 256-bit{'\n'}
-              • Portefeuilles multi-signatures{'\n'}
-              • Surveillance 24h/7j{'\n'}
-              • Conformité réglementaire internationale
-            </Text>
+            {/* Sécurité */}
+            <Container style={securitySection}>
+              <Text style={footerTitle}>🔒 Sécurité & Conformité</Text>
+              <Text style={securityText}>
+                • Cryptage SSL 256-bit{'\n'}
+                • Portefeuilles multi-signatures{'\n'}
+                • Surveillance 24h/7j{'\n'}
+                • Conformité réglementaire internationale
+              </Text>
+            </Container>
 
             {/* Informations légales */}
-            <Text style={legalText}>
-              <strong>Terex</strong> - Plateforme d'échange crypto et transferts internationaux
-            </Text>
-            <Text style={legalText}>
-              Fondé par Mohamed Lo • Basé au Sénégal, Dakar
-            </Text>
-            <Text style={copyrightText}>
-              © 2025 Terex. Tous droits réservés.
-            </Text>
+            <Container style={legalSection}>
+              <Text style={legalText}>
+                <strong>Terex</strong> - Votre partenaire crypto de confiance
+              </Text>
+              <Text style={legalText}>
+                Fondé par Mohamed Lo • Basé au Sénégal, Dakar
+              </Text>
+              <Text style={copyrightText}>
+                © 2025 Terex. Tous droits réservés.
+              </Text>
+            </Container>
           </Section>
         </Container>
       </Body>
@@ -77,70 +91,103 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
   );
 };
 
-// Styles avec largeur augmentée
+// Styles inspirés des emails Interac - professionnels et modernes
 const main = {
-  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif',
+  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif',
   margin: '0',
   padding: '20px 0',
-  backgroundColor: '#f4f4f4',
-  color: '#333333',
+  backgroundColor: '#f3f4f6',
+  color: '#1f2937',
 };
 
 const container = {
-  maxWidth: '700px', // Augmenté de 600px à 700px
+  maxWidth: '680px',
   margin: '0 auto',
   backgroundColor: '#ffffff',
-  padding: '40px',
+  borderRadius: '12px',
+  overflow: 'hidden',
+  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
 };
 
 const header = {
-  marginBottom: '30px',
+  backgroundColor: '#1e293b',
+  padding: '40px 30px',
   textAlign: 'center' as const,
 };
 
+const headerContainer = {
+  marginBottom: '20px',
+};
+
 const brandName = {
-  color: '#2563eb',
-  fontSize: '28px',
-  fontWeight: '700',
-  margin: '0 0 10px 0',
+  color: '#ffffff',
+  fontSize: '32px',
+  fontWeight: '800',
+  margin: '0 0 8px 0',
   letterSpacing: '2px',
+  textTransform: 'uppercase' as const,
+};
+
+const brandSubtitle = {
+  color: '#94a3b8',
+  fontSize: '14px',
+  margin: '0',
+  fontWeight: '400',
+  letterSpacing: '0.5px',
+};
+
+const headerDivider = {
+  borderColor: '#475569',
+  margin: '20px 0',
+  borderWidth: '1px',
 };
 
 const titleStyle = {
-  color: '#333333',
-  fontSize: '24px',
+  color: '#ffffff',
+  fontSize: '22px',
   fontWeight: '600',
   margin: '0',
-  lineHeight: '1.3',
+  lineHeight: '1.4',
 };
 
 const contentSection = {
-  marginBottom: '40px',
+  padding: '40px 30px',
+  backgroundColor: '#ffffff',
 };
 
 const footer = {
-  borderTop: '2px solid #e5e7eb',
-  paddingTop: '30px',
-  marginTop: '40px',
+  backgroundColor: '#f8fafc',
+  padding: '30px',
+  borderTop: '1px solid #e2e8f0',
 };
 
-const separator = {
-  borderColor: '#e5e7eb',
-  margin: '0 0 20px 0',
+const footerDivider = {
+  borderColor: '#e2e8f0',
+  margin: '0 0 25px 0',
+  borderWidth: '1px',
+};
+
+const contactSection = {
+  marginBottom: '25px',
 };
 
 const footerTitle = {
-  color: '#2563eb',
+  color: '#1e293b',
   fontSize: '16px',
-  fontWeight: '600',
-  margin: '20px 0 8px 0',
+  fontWeight: '700',
+  margin: '0 0 10px 0',
+  letterSpacing: '0.5px',
 };
 
 const contactText = {
-  color: '#666666',
+  color: '#64748b',
   fontSize: '14px',
-  margin: '4px 0',
+  margin: '5px 0',
   fontWeight: '400',
+};
+
+const platformSection = {
+  marginBottom: '25px',
 };
 
 const platformLink = {
@@ -150,44 +197,42 @@ const platformLink = {
   textDecoration: 'none',
   display: 'inline-block',
   margin: '8px 0',
+  padding: '12px 24px',
+  backgroundColor: '#eff6ff',
+  borderRadius: '8px',
+  border: '2px solid #2563eb',
+  transition: 'all 0.2s',
+};
+
+const securitySection = {
+  marginBottom: '25px',
 };
 
 const securityText = {
-  color: '#666666',
+  color: '#64748b',
   fontSize: '13px',
   margin: '8px 0',
-  lineHeight: '1.5',
+  lineHeight: '1.6',
   whiteSpace: 'pre-line' as const,
 };
 
+const legalSection = {
+  textAlign: 'center' as const,
+  borderTop: '1px solid #e2e8f0',
+  paddingTop: '20px',
+};
+
 const legalText = {
-  color: '#888888',
+  color: '#94a3b8',
   fontSize: '12px',
-  margin: '15px 0 5px 0',
+  margin: '8px 0',
   lineHeight: '1.4',
-  textAlign: 'center' as const,
-};
-
-const legalLinks = {
-  margin: '10px 0',
-  textAlign: 'center' as const,
-};
-
-const legalLink = {
-  color: '#2563eb',
-  fontSize: '12px',
-  textDecoration: 'none',
-};
-
-const linkSeparator = {
-  color: '#888888',
-  fontSize: '12px',
 };
 
 const copyrightText = {
-  color: '#999999',
+  color: '#9ca3af',
   fontSize: '11px',
-  margin: '10px 0 0 0',
+  margin: '15px 0 0 0',
   lineHeight: '1.4',
-  textAlign: 'center' as const,
+  fontWeight: '500',
 };
