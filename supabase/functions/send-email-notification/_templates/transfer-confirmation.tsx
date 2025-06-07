@@ -39,14 +39,13 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
   
   return (
     <BaseEmail preview={preview} title={title}>
-      {/* Header de confirmation */}
-      <Section style={confirmationHeader}>
-        <Text style={confirmationIcon}>🌍</Text>
-        <Text style={confirmationTitle}>
-          Transfert international confirmé
+      {/* Message d'introduction simple */}
+      <Section style={introSection}>
+        <Text style={introText}>
+          Bonjour,
         </Text>
-        <Text style={confirmationSubtitle}>
-          Votre transfert vers {getCountryName(transferData.recipient_country)} est en cours de traitement
+        <Text style={mainMessage}>
+          Votre transfert de {transferData.amount} {transferData.from_currency} vers {getCountryName(transferData.recipient_country)} a été confirmé et est en cours de traitement.
         </Text>
       </Section>
 
@@ -54,7 +53,7 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
 
       {/* Informations du transfert */}
       <Section style={transferDetails}>
-        <Text style={sectionTitle}>📋 DÉTAILS DE VOTRE TRANSFERT</Text>
+        <Text style={sectionTitle}>DÉTAILS DE VOTRE TRANSFERT</Text>
         
         <Container style={detailsContainer}>
           <Row>
@@ -95,15 +94,6 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
 
           <Row>
             <Column style={labelColumn}>
-              <Text style={labelText}>Méthode de réception :</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={serviceText}>{getReceiveMethodName()}</Text>
-            </Column>
-          </Row>
-
-          <Row>
-            <Column style={labelColumn}>
               <Text style={labelText}>Taux de change :</Text>
             </Column>
             <Column style={valueColumn}>
@@ -126,7 +116,7 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
 
       {/* Informations du destinataire */}
       <Section style={recipientSection}>
-        <Text style={sectionTitle}>👤 INFORMATIONS DU DESTINATAIRE</Text>
+        <Text style={sectionTitle}>INFORMATIONS DU DESTINATAIRE</Text>
         
         <Container style={detailsContainer}>
           <Row>
@@ -146,6 +136,15 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
               <Text style={valueText}>{getCountryName(transferData.recipient_country)}</Text>
             </Column>
           </Row>
+
+          <Row>
+            <Column style={labelColumn}>
+              <Text style={labelText}>Service de réception :</Text>
+            </Column>
+            <Column style={valueColumn}>
+              <Text style={serviceText}>{getReceiveMethodName()}</Text>
+            </Column>
+          </Row>
           
           {transferData.recipient_phone && (
             <Row>
@@ -157,17 +156,6 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
               </Column>
             </Row>
           )}
-          
-          {transferData.recipient_account && (
-            <Row>
-              <Column style={labelColumn}>
-                <Text style={labelText}>Compte de réception :</Text>
-              </Column>
-              <Column style={valueColumn}>
-                <Text style={phoneText}>{transferData.recipient_account}</Text>
-              </Column>
-            </Row>
-          )}
         </Container>
       </Section>
 
@@ -175,7 +163,7 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
 
       {/* Processus de transfert */}
       <Section style={processSection}>
-        <Text style={sectionTitle}>⚡ PROCESSUS DE TRANSFERT</Text>
+        <Text style={sectionTitle}>PROCESSUS DE TRANSFERT</Text>
         
         <Container style={stepsContainer}>
           <Text style={stepCompleted}>1. ✅ Demande confirmée</Text>
@@ -188,22 +176,8 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
 
       <Hr style={divider} />
 
-      {/* Délais de traitement */}
-      <Section style={timingSection}>
-        <Text style={sectionTitle}>⏱️ DÉLAIS DE TRAITEMENT</Text>
-        
-        <Container style={timingContainer}>
-          <Text style={timingText}><strong>📱 Paiement :</strong> Immédiat</Text>
-          <Text style={timingText}><strong>✅ Vérification :</strong> 2-3 minutes</Text>
-          <Text style={timingText}><strong>🔄 Traitement :</strong> 2-5 minutes</Text>
-          <Text style={timingText}><strong>💰 Réception :</strong> Immédiate via {getReceiveMethodName()}</Text>
-        </Container>
-      </Section>
-
-      <Hr style={divider} />
-
       <Text style={thankYouText}>
-        🙏 Merci de faire confiance à Terex pour vos transferts internationaux !
+        Merci de faire confiance à Terex pour vos transferts internationaux !
       </Text>
       <Text style={teamText}>
         L'équipe Terex - Vos transferts en toute sécurité
@@ -212,34 +186,23 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
   );
 };
 
-// Styles identiques à order-confirmation mais adaptés pour les transferts
-const confirmationHeader = {
-  textAlign: 'center' as const,
-  padding: '30px 20px',
-  backgroundColor: '#f8fafc',
-  borderRadius: '12px',
+// Styles simples et propres
+const introSection = {
   margin: '0 0 30px 0',
-  border: '2px solid #e2e8f0',
 };
 
-const confirmationIcon = {
-  fontSize: '48px',
-  margin: '0 0 15px 0',
-  display: 'block',
-};
-
-const confirmationTitle = {
-  color: '#059669',
-  fontSize: '24px',
-  fontWeight: '700',
-  margin: '0 0 10px 0',
-  lineHeight: '1.3',
-};
-
-const confirmationSubtitle = {
-  color: '#64748b',
+const introText = {
+  color: '#1e293b',
   fontSize: '16px',
-  margin: '0',
+  margin: '0 0 15px 0',
+  lineHeight: '1.4',
+};
+
+const mainMessage = {
+  color: '#1e293b',
+  fontSize: '16px',
+  fontWeight: '500',
+  margin: '0 0 15px 0',
   lineHeight: '1.4',
 };
 
@@ -359,24 +322,6 @@ const stepPending = {
   fontSize: '14px',
   fontWeight: '500',
   margin: '8px 0',
-  lineHeight: '1.5',
-};
-
-const timingSection = {
-  margin: '0 0 30px 0',
-};
-
-const timingContainer = {
-  backgroundColor: '#fef3c7',
-  border: '1px solid #fbbf24',
-  borderRadius: '8px',
-  padding: '20px',
-};
-
-const timingText = {
-  color: '#92400e',
-  fontSize: '14px',
-  margin: '6px 0',
   lineHeight: '1.5',
 };
 

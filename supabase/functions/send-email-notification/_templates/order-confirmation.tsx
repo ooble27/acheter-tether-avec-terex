@@ -16,7 +16,7 @@ interface OrderConfirmationProps {
 }
 
 export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConfirmationProps) => {
-  const title = transactionType === 'buy' ? 'Confirmation de demande d\'achat USDT' : 'Confirmation de demande de vente USDT';
+  const title = transactionType === 'buy' ? 'Confirmation de votre demande d\'achat USDT' : 'Confirmation de votre demande de vente USDT';
   const preview = `Votre demande ${transactionType === 'buy' ? 'd\'achat' : 'de vente'} #TEREX-${orderData.id?.slice(-8)} a été confirmée`;
   
   // Parser les notes pour récupérer les informations du client
@@ -35,14 +35,16 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
   
   return (
     <BaseEmail preview={preview} title={title}>
-      {/* Header de confirmation */}
-      <Section style={confirmationHeader}>
-        <Text style={confirmationIcon}>✅</Text>
-        <Text style={confirmationTitle}>
-          Demande {transactionType === 'buy' ? 'd\'achat' : 'de vente'} USDT confirmée
+      {/* Message d'introduction simple */}
+      <Section style={introSection}>
+        <Text style={introText}>
+          Bonjour,
         </Text>
-        <Text style={confirmationSubtitle}>
-          Nous avons bien reçu votre demande et procédons maintenant au traitement
+        <Text style={mainMessage}>
+          {transactionType === 'buy' 
+            ? `Votre demande d'achat de ${orderData.usdt_amount || 0} USDT a été reçue et est en cours de traitement.`
+            : `Votre demande de vente de ${orderData.usdt_amount || 0} USDT a été reçue et est en cours de traitement.`
+          }
         </Text>
       </Section>
 
@@ -50,7 +52,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
 
       {/* Informations de la transaction */}
       <Section style={transactionDetails}>
-        <Text style={sectionTitle}>📋 DÉTAILS DE VOTRE TRANSACTION</Text>
+        <Text style={sectionTitle}>DÉTAILS DE VOTRE TRANSACTION</Text>
         
         <Container style={detailsContainer}>
           <Row>
@@ -76,7 +78,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
               <Text style={labelText}>Type d'opération :</Text>
             </Column>
             <Column style={valueColumn}>
-              <Text style={valueText}>{transactionType === 'buy' ? '🟢 Achat USDT' : '🔴 Vente USDT'}</Text>
+              <Text style={valueText}>{transactionType === 'buy' ? 'Achat USDT' : 'Vente USDT'}</Text>
             </Column>
           </Row>
 
@@ -97,15 +99,6 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
                 </Column>
                 <Column style={valueColumn}>
                   <Text style={amountText}>{orderData.usdt_amount || 0} USDT</Text>
-                </Column>
-              </Row>
-              
-              <Row>
-                <Column style={labelColumn}>
-                  <Text style={labelText}>Réseau blockchain :</Text>
-                </Column>
-                <Column style={valueColumn}>
-                  <Text style={valueText}>{orderData.network || 'TRC20'}</Text>
                 </Column>
               </Row>
               
@@ -171,9 +164,9 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
 
       <Hr style={divider} />
 
-      {/* Étapes suivantes */}
+      {/* Prochaines étapes */}
       <Section style={processSection}>
-        <Text style={sectionTitle}>⚡ PROCHAINES ÉTAPES</Text>
+        <Text style={sectionTitle}>PROCHAINES ÉTAPES</Text>
         
         <Container style={stepsContainer}>
           <Text style={stepCompleted}>1. ✅ Demande reçue et confirmée</Text>
@@ -195,28 +188,8 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
 
       <Hr style={divider} />
 
-      {/* Informations importantes */}
-      <Section style={infoSection}>
-        <Text style={sectionTitle}>ℹ️ INFORMATIONS IMPORTANTES</Text>
-        
-        <Text style={infoText}>
-          <strong>⏱️ Délai de traitement :</strong> 2-5 minutes après confirmation du paiement
-        </Text>
-        <Text style={infoText}>
-          <strong>🔒 Sécurité :</strong> Transaction sécurisée et surveillée 24h/7j
-        </Text>
-        <Text style={infoText}>
-          <strong>📱 Support :</strong> Notre équipe est disponible pour vous aider
-        </Text>
-        <Text style={infoText}>
-          <strong>📊 Suivi :</strong> Vous pouvez suivre l'état sur la plateforme Terex
-        </Text>
-      </Section>
-
-      <Hr style={divider} />
-
       <Text style={thankYouText}>
-        🙏 Merci de faire confiance à Terex pour vos échanges USDT !
+        Merci de faire confiance à Terex pour vos échanges USDT !
       </Text>
       <Text style={teamText}>
         L'équipe Terex - Votre partenaire crypto de confiance
@@ -225,34 +198,23 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
   );
 };
 
-// Styles inspirés des emails Interac - design professionnel et moderne
-const confirmationHeader = {
-  textAlign: 'center' as const,
-  padding: '30px 20px',
-  backgroundColor: '#f8fafc',
-  borderRadius: '12px',
+// Styles simples et propres
+const introSection = {
   margin: '0 0 30px 0',
-  border: '2px solid #e2e8f0',
 };
 
-const confirmationIcon = {
-  fontSize: '48px',
-  margin: '0 0 15px 0',
-  display: 'block',
-};
-
-const confirmationTitle = {
-  color: '#059669',
-  fontSize: '24px',
-  fontWeight: '700',
-  margin: '0 0 10px 0',
-  lineHeight: '1.3',
-};
-
-const confirmationSubtitle = {
-  color: '#64748b',
+const introText = {
+  color: '#1e293b',
   fontSize: '16px',
-  margin: '0',
+  margin: '0 0 15px 0',
+  lineHeight: '1.4',
+};
+
+const mainMessage = {
+  color: '#1e293b',
+  fontSize: '16px',
+  fontWeight: '500',
+  margin: '0 0 15px 0',
   lineHeight: '1.4',
 };
 
@@ -366,18 +328,6 @@ const stepPending = {
   fontWeight: '500',
   margin: '8px 0',
   lineHeight: '1.5',
-};
-
-const infoSection = {
-  margin: '0 0 30px 0',
-};
-
-const infoText = {
-  color: '#475569',
-  fontSize: '14px',
-  margin: '10px 0',
-  lineHeight: '1.6',
-  padding: '8px 0',
 };
 
 const thankYouText = {

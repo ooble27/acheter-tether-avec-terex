@@ -71,7 +71,13 @@ const handler = async (req: Request): Promise<Response> => {
 
     switch (emailType) {
       case 'order_confirmation':
-        subject = `✅ Commande confirmée #TEREX-${orderData.id?.slice(-8)} - ${transactionType === 'buy' ? 'Achat' : 'Vente'} USDT`;
+        if (transactionType === 'buy') {
+          subject = `Votre demande d'achat de ${orderData.usdt_amount || 0} USDT a été reçue`;
+        } else if (transactionType === 'sell') {
+          subject = `Votre demande de vente de ${orderData.usdt_amount || 0} USDT a été reçue`;
+        } else {
+          subject = `Votre demande a été reçue - TEREX-${orderData.id?.slice(-8)}`;
+        }
         htmlContent = await renderAsync(
           React.createElement(OrderConfirmationEmail, {
             orderData,
@@ -81,10 +87,15 @@ const handler = async (req: Request): Promise<Response> => {
         break;
 
       case 'status_update':
-        const statusText = orderData.status === 'processing' ? 'En cours de traitement' : 
-                          orderData.status === 'completed' ? 'Terminée' : 
-                          orderData.status === 'cancelled' ? 'Annulée' : orderData.status;
-        subject = `🔄 Mise à jour #TEREX-${orderData.id?.slice(-8)} - ${statusText}`;
+        if (transactionType === 'buy') {
+          subject = `Mise à jour de votre achat USDT - En cours de traitement`;
+        } else if (transactionType === 'sell') {
+          subject = `Mise à jour de votre vente USDT - En cours de traitement`;
+        } else if (transactionType === 'transfer') {
+          subject = `Mise à jour de votre transfert - En cours de traitement`;
+        } else {
+          subject = `Mise à jour de votre transaction - En cours de traitement`;
+        }
         htmlContent = await renderAsync(
           React.createElement(StatusUpdateEmail, {
             orderData,
@@ -94,7 +105,15 @@ const handler = async (req: Request): Promise<Response> => {
         break;
 
       case 'payment_confirmed':
-        subject = `💰 Paiement confirmé #TEREX-${orderData.id?.slice(-8)}`;
+        if (transactionType === 'buy') {
+          subject = `Votre achat de ${orderData.usdt_amount || 0} USDT a été finalisé avec succès`;
+        } else if (transactionType === 'sell') {
+          subject = `Votre vente de ${orderData.usdt_amount || 0} USDT a été finalisée avec succès`;
+        } else if (transactionType === 'transfer') {
+          subject = `Votre transfert de ${orderData.amount || 0} ${orderData.from_currency || 'USDT'} à ${orderData.recipient_name} a été déposé avec succès`;
+        } else {
+          subject = `Votre transaction a été finalisée avec succès`;
+        }
         htmlContent = await renderAsync(
           React.createElement(PaymentConfirmedEmail, {
             orderData,
@@ -104,7 +123,7 @@ const handler = async (req: Request): Promise<Response> => {
         break;
 
       case 'transfer_confirmation':
-        subject = `🌍 Transfert confirmé #TEREX-${orderData.id?.slice(-8)}`;
+        subject = `Votre transfert de ${orderData.amount || 0} ${orderData.from_currency || 'USDT'} à ${orderData.recipient_name} a été confirmé`;
         htmlContent = await renderAsync(
           React.createElement(TransferConfirmationEmail, {
             transferData: orderData
