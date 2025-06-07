@@ -10,7 +10,7 @@ import { DashboardHome } from '@/components/dashboard/DashboardHome';
 import { Profile } from '@/components/features/Profile';
 import { KYCPage } from '@/components/features/KYCPage';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
-import { OrdersDashboard } from '@/components/admin/orders/OrdersDashboard';
+import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { AdminPortal } from '@/components/admin/AdminPortal';
 import { OTC } from '@/components/features/OTC';
 import { UserGuide } from '@/components/features/UserGuide';
@@ -78,7 +78,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'kyc-admin':
         return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
       case 'orders-admin':
-        return isKYCReviewer() ? <OrdersDashboard /> : <div className="text-white">Accès non autorisé</div>;
+        return isKYCReviewer() ? <OrdersDashboardNew /> : <div className="text-white">Accès non autorisé</div>;
       case 'admin-portal':
         return (isAdmin() || isKYCReviewer()) ? <AdminPortal /> : <div className="text-white">Accès non autorisé</div>;
       default:

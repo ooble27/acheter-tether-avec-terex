@@ -66,6 +66,6 @@ export default function AdminPage() {
     );
   }
 
-  // Afficher le portail admin
+  // Afficher le portail admin avec la nouvelle page de gestion des commandes
   return <AdminPortal />;
 }
