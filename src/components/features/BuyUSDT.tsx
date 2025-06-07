@@ -162,9 +162,9 @@ export function BuyUSDT() {
               <p className="text-gray-400 text-sm md:text-base">Achetez des USDT avec de l'argent fiat</p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
-              {/* Main Trading Interface */}
-              <div className="lg:col-span-8 w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+              {/* Main Trading Interface - Maintenant lg:col-span-2 comme la page de vente */}
+              <div className="lg:col-span-2 w-full">
                 <Card className="bg-terex-darker border-terex-gray shadow-2xl w-full overflow-hidden">
                   <CardHeader className="border-b border-terex-gray p-3 sm:p-4 md:p-6">
                     <div className="flex items-center justify-between flex-wrap gap-2">
@@ -196,7 +196,7 @@ export function BuyUSDT() {
                               className="bg-terex-gray border-terex-gray-light text-white text-base sm:text-lg h-10 sm:h-12 pr-20 sm:pr-24 w-full"
                             />
                             <Select value={currency} onValueChange={handleCurrencyChange}>
-                              <SelectTrigger className="absolute right-1 top-1 w-16 sm:w-20 h-8 sm:h-10 bg-terex-gray-light border-0 text-terex-accent text-sm">
+                              <SelectTrigger className="absolute right-1 top-1 w-20 sm:w-24 h-8 sm:h-10 bg-terex-gray-light border-0 text-terex-accent text-sm">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
@@ -373,8 +373,8 @@ export function BuyUSDT() {
                 </Card>
               </div>
 
-              {/* Sidebar */}
-              <div className="lg:col-span-4 space-y-4 md:space-y-6 w-full">
+              {/* Sidebar - Maintenant lg:col-span-1 au lieu de lg:col-span-4 */}
+              <div className="lg:col-span-1 space-y-4 md:space-y-6 w-full">
                 {/* Nos taux TEREX */}
                 <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
                   <CardHeader className="p-3 sm:p-4">
