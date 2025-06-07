@@ -49,7 +49,7 @@ export function SellUSDT() {
   const { toast } = useToast();
 
   const exchangeRates = {
-    CFA: 615
+    CFA: 590  // Nous achetons USDT à 590 CFA (10 francs de différence avec le prix de vente)
   };
 
   // Fonction pour formater les nombres - améliorée
@@ -69,8 +69,8 @@ export function SellUSDT() {
   const fiatAmount = usdtAmount ? formatAmount(parseFloat(usdtAmount) * exchangeRates[currency as keyof typeof exchangeRates]) : '0';
 
   const paymentMethods = [
-    { id: 'bank' as const, name: 'Virement bancaire', icon: '🏦', fee: '0%', time: '24-48h' },
-    { id: 'mobile' as const, name: 'Mobile Money', icon: '📱', fee: '0%', time: 'Instantané' }
+    { id: 'bank' as const, name: 'Virement bancaire', icon: '🏦', fee: '0%', time: '2-5 min' },
+    { id: 'mobile' as const, name: 'Mobile Money', icon: '📱', fee: '0%', time: '2-5 min' }
   ];
 
   const getQuickAmounts = () => {
@@ -218,7 +218,7 @@ export function SellUSDT() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6 md:mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Vendre USDT</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Vendre USDT</h1>
           <p className="text-gray-400">Vendez vos USDT et recevez de l'argent fiat</p>
         </div>
 
@@ -478,7 +478,7 @@ export function SellUSDT() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-400 text-sm">USDT/CFA</span>
-                  <span className="text-white font-bold">615 CFA</span>
+                  <span className="text-white font-bold">590 CFA</span>
                 </div>
               </CardContent>
             </Card>

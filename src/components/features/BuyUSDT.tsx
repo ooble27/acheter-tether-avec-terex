@@ -136,7 +136,7 @@ export function BuyUSDT() {
             Retour
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-white">Vérification requise</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">Vérification requise</h1>
             <p className="text-gray-400">Veuillez compléter votre vérification d'identité</p>
           </div>
         </div>
@@ -158,7 +158,7 @@ export function BuyUSDT() {
           <div className="max-w-7xl mx-auto w-full">
             {/* Header */}
             <div className="mb-4 md:mb-8">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">Acheter USDT</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Acheter USDT</h1>
               <p className="text-gray-400 text-sm md:text-base">Achetez des USDT avec de l'argent fiat</p>
             </div>
 
