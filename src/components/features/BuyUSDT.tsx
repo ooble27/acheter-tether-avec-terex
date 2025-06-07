@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ArrowRight, CircleDollarSign, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { ArrowRight, CircleDollarSign, AlertCircle, ArrowLeft, ArrowRightLeft, Shield, Clock, CreditCard, Copy } from 'lucide-react';
 import { OrderConfirmation } from './OrderConfirmation';
 import { PaymentPage } from './PaymentPage';
 import { useToast } from '@/hooks/use-toast';
@@ -63,6 +64,23 @@ export function BuyUSDT() {
 
   const usdtAmount = calculateUSDT();
 
+  const handleKYCRequired = () => {
+    setShowKYC(true);
+  };
+
+  const handlePaymentComplete = () => {
+    toast({
+      title: "Paiement réussi",
+      description: "Votre commande a été traitée avec succès. Vous recevrez vos USDT sous peu.",
+    });
+    setCurrentStep('form');
+    // Reset form
+    setAmount('');
+    setPaymentMethod('');
+    setWalletAddress('');
+    setOrderData(null);
+  };
+
   const handleCreateOrder = async () => {
     if (!amount || !currency || !paymentMethod || !walletAddress || !network) {
       toast({
@@ -86,21 +104,16 @@ export function BuyUSDT() {
     setCurrentStep('confirmation');
   };
 
-  const handleKYCRequired = () => {
-    setShowKYC(true);
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copié !",
+      description: "L'adresse a été copiée dans le presse-papiers",
+    });
   };
 
-  const handlePaymentComplete = () => {
-    toast({
-      title: "Paiement réussi",
-      description: "Votre commande a été traitée avec succès. Vous recevrez vos USDT sous peu.",
-    });
-    setCurrentStep('form');
-    // Reset form
-    setAmount('');
-    setPaymentMethod('');
-    setWalletAddress('');
-    setOrderData(null);
+  const getQuickAmounts = () => {
+    return ['10000', '25000', '50000', '100000', '500000'];
   };
 
   if (showKYC) {
@@ -134,90 +147,273 @@ export function BuyUSDT() {
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
       {currentStep === 'form' && (
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader>
-            <CardTitle className="text-white">Acheter USDT</CardTitle>
-            <CardDescription className="text-gray-400">
-              Remplissez le formulaire pour acheter des USDT
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="amount" className="text-gray-300">Montant</Label>
-              <Input
-                id="amount"
-                placeholder="Entrez le montant"
-                value={amount}
-                onChange={handleAmountChange}
-                className="bg-terex-gray border-terex-gray text-white"
-                type="number"
-              />
+        <div className="min-h-screen bg-terex-dark p-2 md:p-4">
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="mb-6 md:mb-8">
+              <h1 className="text-3xl font-bold text-white mb-2">Acheter USDT</h1>
+              <p className="text-gray-400">Achetez des USDT avec de l'argent fiat</p>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="currency" className="text-gray-300">Devise</Label>
-              <Select value={currency} onValueChange={handleCurrencyChange}>
-                <SelectTrigger className="bg-terex-gray border-terex-gray text-white">
-                  <SelectValue placeholder="Sélectionnez une devise" />
-                </SelectTrigger>
-                <SelectContent className="bg-terex-darker border-terex-gray">
-                  <SelectItem value="CFA" className="text-white hover:bg-terex-gray">CFA</SelectItem>
-                  <SelectItem value="USD" className="text-white hover:bg-terex-gray">USD</SelectItem>
-                  <SelectItem value="EUR" className="text-white hover:bg-terex-gray">EUR</SelectItem>
-                </SelectContent>
-              </Select>
+
+            <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
+              {/* Main Trading Interface */}
+              <div className="lg:col-span-2">
+                <Card className="bg-terex-darker border-terex-gray shadow-2xl">
+                  <CardHeader className="border-b border-terex-gray p-4 md:p-6">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-white text-lg md:text-xl">Acheter USDT</CardTitle>
+                      <Badge variant="outline" className="text-terex-accent border-terex-accent">
+                        Taux en temps réel
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-4 md:p-6 space-y-6">
+                    {/* Amount Input Section */}
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-white text-sm font-medium">Je paie</Label>
+                          <div className="relative">
+                            <Input
+                              type="number"
+                              placeholder="0.00"
+                              value={amount}
+                              onChange={handleAmountChange}
+                              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
+                            />
+                            <Select value={currency} onValueChange={handleCurrencyChange}>
+                              <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="CFA">CFA</SelectItem>
+                                <SelectItem value="USD">USD</SelectItem>
+                                <SelectItem value="EUR">EUR</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label className="text-white text-sm font-medium">Je reçois</Label>
+                          <div className="relative">
+                            <Input
+                              type="text"
+                              value={usdtAmount.toFixed(2)}
+                              readOnly
+                              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24"
+                            />
+                            <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
+                              <img 
+                                src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
+                                alt="USDT" 
+                                className="w-5 h-5"
+                              />
+                              <span className="text-terex-accent font-medium text-sm">USDT</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-center">
+                        <ArrowRightLeft className="w-5 h-5 text-terex-accent" />
+                      </div>
+
+                      <div className="bg-terex-gray rounded-lg p-3">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-400">Taux de change</span>
+                          <span className="text-white">1 USDT = {exchangeRate} CFA</span>
+                        </div>
+                        <div className="flex justify-between text-sm mt-1">
+                          <span className="text-gray-400">Frais</span>
+                          <span className="text-terex-accent">0%</span>
+                        </div>
+                        <div className="flex justify-between text-sm mt-1">
+                          <span className="text-gray-400">Temps de traitement</span>
+                          <span className="text-terex-accent">5-15 minutes</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Payment Method Selection */}
+                    <div className="space-y-2">
+                      <Label className="text-white text-sm font-medium">Méthode de paiement</Label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {[
+                          { id: 'mobile', label: 'Mobile Money', icon: '📱', desc: 'Wave, Orange Money' },
+                          { id: 'card', label: 'Carte bancaire', icon: '💳', desc: 'Visa, Mastercard' }
+                        ].map((method) => (
+                          <div
+                            key={method.id}
+                            onClick={() => setPaymentMethod(method.id as PaymentMethodType)}
+                            className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                              paymentMethod === method.id
+                                ? 'border-terex-accent bg-terex-accent/10'
+                                : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
+                            }`}
+                          >
+                            <div className="flex items-center space-x-3">
+                              <span className="text-xl">{method.icon}</span>
+                              <div>
+                                <p className="text-white font-medium text-sm">{method.label}</p>
+                                <p className="text-gray-400 text-xs">{method.desc}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Network Selection */}
+                    <div className="space-y-2">
+                      <Label className="text-white text-sm font-medium">Réseau de réception</Label>
+                      <Select value={network} onValueChange={handleNetworkChange}>
+                        <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="TRC20">
+                            <div className="flex items-center space-x-2">
+                              <span>TRC20 (Tron)</span>
+                              <Badge variant="secondary" className="text-xs">Recommandé</Badge>
+                            </div>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Wallet Address */}
+                    <div className="space-y-2">
+                      <Label className="text-white text-sm font-medium">Votre adresse USDT (TRC20)</Label>
+                      <div className="flex items-center space-x-2">
+                        <Input
+                          placeholder="Votre adresse de réception USDT"
+                          value={walletAddress}
+                          onChange={handleWalletAddressChange}
+                          className="bg-terex-gray border-terex-gray-light text-white h-12"
+                        />
+                      </div>
+                      <p className="text-gray-400 text-xs">Adresse où vous recevrez vos USDT sur le réseau {network}</p>
+                    </div>
+
+                    {/* Buy Button */}
+                    <Button 
+                      size="lg"
+                      className="w-full gradient-button text-white font-semibold h-12 text-lg"
+                      disabled={!amount || !paymentMethod || !walletAddress}
+                      onClick={handleCreateOrder}
+                    >
+                      Continuer vers la confirmation
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Sidebar */}
+              <div className="space-y-4 md:space-y-6">
+                {/* Market Info */}
+                <Card className="bg-terex-darker border-terex-gray">
+                  <CardHeader className="p-4">
+                    <CardTitle className="text-white text-base md:text-lg flex items-center">
+                      <CircleDollarSign className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
+                      Prix du marché
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 p-4 pt-0">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-400 text-sm">USDT/USD</span>
+                      <span className="text-terex-accent font-bold">$1.00</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-400 text-sm">USDT/CFA</span>
+                      <span className="text-white font-bold">{exchangeRate} CFA</span>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Quick Actions */}
+                <Card className="bg-terex-darker border-terex-gray">
+                  <CardHeader className="p-4">
+                    <CardTitle className="text-white text-base md:text-lg">Montants rapides (CFA)</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4 pt-0">
+                    <div className="grid grid-cols-1 gap-2">
+                      {getQuickAmounts().map((value) => (
+                        <Button
+                          key={value}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setAmount(value)}
+                          className="border-terex-gray text-gray-300 hover:bg-terex-gray text-xs"
+                        >
+                          {parseInt(value).toLocaleString()} CFA
+                        </Button>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Security Features */}
+                <Card className="bg-terex-darker border-terex-gray">
+                  <CardHeader className="p-4">
+                    <CardTitle className="text-white text-base md:text-lg flex items-center">
+                      <Shield className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
+                      Sécurité
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 p-4 pt-0">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                      <div>
+                        <p className="text-white text-sm font-medium">Cryptage SSL 256-bit</p>
+                        <p className="text-gray-400 text-xs">Vos données sont protégées</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                      <div>
+                        <p className="text-white text-sm font-medium">Fonds sécurisés</p>
+                        <p className="text-gray-400 text-xs">Protection des transactions</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                      <div>
+                        <p className="text-white text-sm font-medium">Support 24/7</p>
+                        <p className="text-gray-400 text-xs">Aide disponible en permanence</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Processing Time */}
+                <Card className="bg-terex-darker border-terex-gray">
+                  <CardHeader className="p-4">
+                    <CardTitle className="text-white text-base md:text-lg flex items-center">
+                      <Clock className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
+                      Délais de traitement
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 p-4 pt-0">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-400 text-sm">Mobile Money</span>
+                      <Badge variant="outline" className="text-green-500 border-green-500 text-xs">
+                        5-15 min
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-400 text-sm">Carte bancaire</span>
+                      <Badge variant="outline" className="text-green-500 border-green-500 text-xs">
+                        Instantané
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="paymentMethod" className="text-gray-300">Méthode de paiement</Label>
-              <Select value={paymentMethod} onValueChange={handlePaymentMethodChange}>
-                <SelectTrigger className="bg-terex-gray border-terex-gray text-white">
-                  <SelectValue placeholder="Sélectionnez une méthode de paiement" />
-                </SelectTrigger>
-                <SelectContent className="bg-terex-darker border-terex-gray">
-                  <SelectItem value="mobile" className="text-white hover:bg-terex-gray">Mobile Money</SelectItem>
-                  <SelectItem value="wave" className="text-white hover:bg-terex-gray">Wave</SelectItem>
-                  <SelectItem value="orange_money" className="text-white hover:bg-terex-gray">Orange Money</SelectItem>
-                  <SelectItem value="card" className="text-white hover:bg-terex-gray">Carte bancaire</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="walletAddress" className="text-gray-300">Adresse du portefeuille USDT (TRC20)</Label>
-              <Input
-                id="walletAddress"
-                placeholder="Adresse de réception USDT"
-                value={walletAddress}
-                onChange={handleWalletAddressChange}
-                className="bg-terex-gray border-terex-gray text-white"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="network" className="text-gray-300">Réseau</Label>
-              <Select value={network} onValueChange={handleNetworkChange}>
-                <SelectTrigger className="bg-terex-gray border-terex-gray text-white">
-                  <SelectValue placeholder="Sélectionnez un réseau" />
-                </SelectTrigger>
-                <SelectContent className="bg-terex-darker border-terex-gray">
-                  <SelectItem value="TRC20" className="text-white hover:bg-terex-gray">TRC20</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <p className="text-gray-300">
-                Vous recevrez environ :
-                <span className="font-medium text-terex-accent ml-1">
-                  {usdtAmount.toFixed(2)} USDT
-                </span>
-              </p>
-            </div>
-            <Button
-              onClick={handleCreateOrder}
-              className="bg-terex-accent hover:bg-terex-accent/80 w-full"
-            >
-              Continuer vers la confirmation
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
       
       {currentStep === 'confirmation' && orderData && (
