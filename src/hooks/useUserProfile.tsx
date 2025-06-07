@@ -40,7 +40,7 @@ export const useUserProfile = () => {
           full_name: user.user_metadata?.name || user.email?.split('@')[0] || '',
           phone: '',
           country: '',
-          language: 'fr'
+          language: 'Français'
         };
         
         // Insérer le profil par défaut dans la base de données
@@ -65,7 +65,7 @@ export const useUserProfile = () => {
           full_name: user.user_metadata?.name || user.email?.split('@')[0] || '',
           phone: '',
           country: '',
-          language: 'fr'
+          language: 'Français'
         };
         
         // Créer le profil dans la base de données
@@ -93,40 +93,23 @@ export const useUserProfile = () => {
     try {
       console.log('Mise à jour du profil avec:', updates);
       
-      // Utiliser upsert avec une stratégie de gestion des conflits plus robuste
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('profiles')
         .upsert({
           id: user.id,
           ...updates,
           updated_at: new Date().toISOString()
         }, {
-          onConflict: 'id',
-          ignoreDuplicates: false
-        })
-        .select()
-        .single();
+          onConflict: 'id'
+        });
 
       if (error) {
         console.error('Error updating profile:', error);
-        
-        // Si l'upsert échoue, essayer une mise à jour directe
-        const { error: updateError } = await supabase
-          .from('profiles')
-          .update({
-            ...updates,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', user.id);
-
-        if (updateError) {
-          console.error('Error in direct update:', updateError);
-          return { error: updateError.message };
-        }
+        return { error: error.message };
       }
 
-      // Rafraîchir le profil depuis la base de données
-      await fetchProfile();
+      // Update local state immediately
+      setProfile(prev => prev ? { ...prev, ...updates } : null);
       
       console.log('Profil mis à jour avec succès');
 
