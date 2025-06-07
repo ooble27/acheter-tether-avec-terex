@@ -16,10 +16,18 @@ export interface UnifiedOrder extends Omit<Order, 'type'> {
   // Champs spécifiques aux transferts
   recipient_name?: string;
   recipient_country?: string;
+  recipient_phone?: string;
+  recipient_address?: string;
   from_currency?: string;
   to_currency?: string;
   fees?: number;
   total_amount?: number;
+  transfer_purpose?: string;
+  // Champs pour la gestion de la corbeille
+  is_deleted?: boolean;
+  deleted_at?: string;
+  // Champs pour les détails de paiement
+  payment_details?: any;
 }
 
 export type { Order };
@@ -80,16 +88,26 @@ export const useOrders = () => {
         // Champs spécifiques aux transferts
         recipient_name: transfer.recipient_name,
         recipient_country: transfer.recipient_country,
+        recipient_phone: transfer.recipient_phone,
+        recipient_address: transfer.recipient_bank, // Using bank field as address for now
         from_currency: transfer.from_currency,
         to_currency: transfer.to_currency,
         fees: transfer.fees,
         total_amount: transfer.total_amount,
+        transfer_purpose: 'International Transfer', // Default purpose
+        // Champs pour la corbeille
+        is_deleted: false,
+        deleted_at: null,
       }));
 
       // Convertir les commandes normales avec type explicite
       const convertedOrders: UnifiedOrder[] = (ordersData || []).map((order: Order): UnifiedOrder => ({
         ...order,
         type: order.type as 'buy' | 'sell' | 'transfer', // Cast explicite du type
+        // Ajouter les champs manquants
+        is_deleted: false,
+        deleted_at: null,
+        payment_details: null,
       }));
 
       // Combiner et trier par date de création
@@ -303,6 +321,52 @@ export const useOrders = () => {
     }
   };
 
+  const moveToTrash = async (orderId: string) => {
+    try {
+      // Mettre à jour localement d'abord pour un feedback immédiat
+      setOrders(prev => prev.map(order => 
+        order.id === orderId 
+          ? { ...order, is_deleted: true, deleted_at: new Date().toISOString() }
+          : order
+      ));
+
+      toast({
+        title: "Commande supprimée",
+        description: "La commande a été déplacée vers la corbeille",
+      });
+    } catch (error) {
+      console.error('Erreur:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer la commande",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const restoreFromTrash = async (orderId: string) => {
+    try {
+      // Restaurer localement d'abord pour un feedback immédiat
+      setOrders(prev => prev.map(order => 
+        order.id === orderId 
+          ? { ...order, is_deleted: false, deleted_at: null }
+          : order
+      ));
+
+      toast({
+        title: "Commande restaurée",
+        description: "La commande a été restaurée depuis la corbeille",
+      });
+    } catch (error) {
+      console.error('Erreur:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de restaurer la commande",
+        variant: "destructive",
+      });
+    }
+  };
+
   useEffect(() => {
     fetchOrders();
   }, [user]);
@@ -312,6 +376,8 @@ export const useOrders = () => {
     loading,
     createOrder,
     updateOrderStatus,
+    moveToTrash,
+    restoreFromTrash,
     refreshOrders: fetchOrders
   };
 };
