@@ -18,7 +18,10 @@ export const useUserProfile = () => {
   const { toast } = useToast();
 
   const fetchProfile = async () => {
-    if (!user) return;
+    if (!user) {
+      setLoading(false);
+      return;
+    }
     
     try {
       setLoading(true);
@@ -28,23 +31,54 @@ export const useUserProfile = () => {
         .from('profiles')
         .select('full_name, phone, country, language')
         .eq('id', user.id)
-        .maybeSingle();
+        .single();
 
-      if (error) {
+      if (error && error.code !== 'PGRST116') {
         console.error('Error fetching profile:', error);
-      } else if (data) {
-        console.log('Profil récupéré:', data);
-        setProfile(data);
-      } else {
-        console.log('Aucun profil trouvé, création d\'un profil par défaut');
-        // Create default profile if none exists
+        // Créer un profil par défaut si aucun n'existe
         const defaultProfile = {
           full_name: user.user_metadata?.name || user.email?.split('@')[0] || '',
           phone: '',
           country: '',
           language: 'Français'
         };
+        
+        // Insérer le profil par défaut dans la base de données
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert({
+            id: user.id,
+            ...defaultProfile
+          });
+
+        if (insertError) {
+          console.error('Erreur lors de la création du profil par défaut:', insertError);
+        }
+        
         setProfile(defaultProfile);
+      } else if (data) {
+        console.log('Profil récupéré:', data);
+        setProfile(data);
+      } else {
+        console.log('Aucun profil trouvé, création d\'un profil par défaut');
+        const defaultProfile = {
+          full_name: user.user_metadata?.name || user.email?.split('@')[0] || '',
+          phone: '',
+          country: '',
+          language: 'Français'
+        };
+        
+        // Créer le profil dans la base de données
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert({
+            id: user.id,
+            ...defaultProfile
+          });
+
+        if (!insertError) {
+          setProfile(defaultProfile);
+        }
       }
     } catch (error) {
       console.error('Error in fetchProfile:', error);
@@ -84,9 +118,6 @@ export const useUserProfile = () => {
         description: "Vos informations ont été sauvegardées avec succès",
         className: "bg-green-600 text-white border-green-600",
       });
-
-      // Refresh to ensure data persistence
-      await fetchProfile();
 
       return { error: null };
     } catch (error) {

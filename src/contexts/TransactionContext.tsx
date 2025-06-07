@@ -1,9 +1,10 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
+import { useTransactions } from '@/hooks/useTransactions';
 
-export interface Transaction {
+interface Transaction {
   id: string;
-  type: 'buy' | 'sell';
+  type: 'buy' | 'sell' | 'transfer';
   amount: string;
   currency: string;
   usdtAmount?: string;
@@ -13,47 +14,33 @@ export interface Transaction {
   address?: string;
   status: 'pending' | 'confirmed' | 'completed' | 'failed';
   date: string;
+  recipient_name?: string;
+  recipient_phone?: string;
+  payment_method?: string;
 }
 
 interface TransactionContextType {
   transactions: Transaction[];
-  addTransaction: (transaction: Omit<Transaction, 'id' | 'date'>) => void;
-  updateTransactionStatus: (id: string, status: Transaction['status']) => void;
+  loading: boolean;
+  refetch: () => void;
 }
 
 const TransactionContext = createContext<TransactionContextType | undefined>(undefined);
 
-export function TransactionProvider({ children }: { children: ReactNode }) {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-
-  const addTransaction = (transactionData: Omit<Transaction, 'id' | 'date'>) => {
-    const newTransaction: Transaction = {
-      ...transactionData,
-      id: Date.now().toString(),
-      date: new Date().toISOString(),
-    };
-    setTransactions(prev => [newTransaction, ...prev]);
-  };
-
-  const updateTransactionStatus = (id: string, status: Transaction['status']) => {
-    setTransactions(prev => 
-      prev.map(transaction => 
-        transaction.id === id ? { ...transaction, status } : transaction
-      )
-    );
-  };
+export const TransactionProvider = ({ children }: { children: ReactNode }) => {
+  const { transactions, loading, refetch } = useTransactions();
 
   return (
-    <TransactionContext.Provider value={{ transactions, addTransaction, updateTransactionStatus }}>
+    <TransactionContext.Provider value={{ transactions, loading, refetch }}>
       {children}
     </TransactionContext.Provider>
   );
-}
+};
 
-export function useTransactions() {
+export const useTransactions = () => {
   const context = useContext(TransactionContext);
   if (context === undefined) {
     throw new Error('useTransactions must be used within a TransactionProvider');
   }
   return context;
-}
+};

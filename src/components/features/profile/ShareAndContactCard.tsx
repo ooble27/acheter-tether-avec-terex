@@ -29,7 +29,7 @@ export function ShareAndContactCard() {
   };
 
   const handleEmailContact = () => {
-    window.open('mailto:lomohamed834@gmail.com?subject=Contact Terex', '_blank');
+    window.open('mailto:terangaexchange@gmail.com?subject=Contact Terex', '_blank');
   };
 
   const handlePhoneContact = () => {
@@ -69,7 +69,7 @@ export function ShareAndContactCard() {
               className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray text-xs"
             >
               <Mail className="w-3 h-3 mr-2" />
-              lomohamed834@gmail.com
+              terangaexchange@gmail.com
             </Button>
             
             <Button
