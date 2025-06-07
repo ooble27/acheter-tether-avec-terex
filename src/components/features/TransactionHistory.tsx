@@ -3,11 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { CircleDollarSign, ArrowUp, ArrowDown, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { CircleDollarSign, ArrowUp, ArrowDown, Clock, CheckCircle, XCircle, Send } from 'lucide-react';
 
 interface Transaction {
   id: string;
-  type: 'buy' | 'sell';
+  type: 'buy' | 'sell' | 'transfer';
   amount: string;
   currency: string;
   usdtAmount?: string;
@@ -17,6 +17,9 @@ interface Transaction {
   address?: string;
   status: 'pending' | 'confirmed' | 'completed' | 'failed';
   date: string;
+  recipient_name?: string;
+  recipient_phone?: string;
+  payment_method?: string;
 }
 
 interface TransactionHistoryProps {
@@ -95,11 +98,13 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                   <div className="flex items-center space-x-2">
                     {transaction.type === 'buy' ? (
                       <ArrowDown className="w-5 h-5 text-green-500" />
-                    ) : (
+                    ) : transaction.type === 'sell' ? (
                       <ArrowUp className="w-5 h-5 text-blue-500" />
+                    ) : (
+                      <Send className="w-5 h-5 text-orange-500" />
                     )}
                     <span className="text-white font-medium">
-                      {transaction.type === 'buy' ? 'Achat' : 'Vente'}
+                      {transaction.type === 'buy' ? 'Achat' : transaction.type === 'sell' ? 'Vente' : 'Transfert'}
                     </span>
                   </div>
                   {getStatusBadge(transaction.status)}
@@ -130,6 +135,25 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                         {transaction.fiatAmount} {transaction.receiveCurrency}
                       </span>
                     </div>
+                  )}
+
+                  {transaction.type === 'transfer' && (
+                    <>
+                      {transaction.fiatAmount && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Montant total:</span>
+                          <span className="text-white">
+                            {transaction.fiatAmount} {transaction.receiveCurrency}
+                          </span>
+                        </div>
+                      )}
+                      {transaction.recipient_name && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Destinataire:</span>
+                          <span className="text-white">{transaction.recipient_name}</span>
+                        </div>
+                      )}
+                    </>
                   )}
 
                   <div className="flex justify-between">
@@ -184,11 +208,13 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                   <div className="flex items-center space-x-2">
                     {transaction.type === 'buy' ? (
                       <ArrowDown className="w-4 h-4 text-green-500" />
-                    ) : (
+                    ) : transaction.type === 'sell' ? (
                       <ArrowUp className="w-4 h-4 text-blue-500" />
+                    ) : (
+                      <Send className="w-4 h-4 text-orange-500" />
                     )}
                     <span className="text-white">
-                      {transaction.type === 'buy' ? 'Achat' : 'Vente'}
+                      {transaction.type === 'buy' ? 'Achat' : transaction.type === 'sell' ? 'Vente' : 'Transfert'}
                     </span>
                   </div>
                 </TableCell>

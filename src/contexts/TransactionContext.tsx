@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, ReactNode } from 'react';
-import { useTransactions } from '@/hooks/useTransactions';
+import { useTransactions as useTransactionsHook } from '@/hooks/useTransactions';
 
 interface Transaction {
   id: string;
@@ -28,7 +28,7 @@ interface TransactionContextType {
 const TransactionContext = createContext<TransactionContextType | undefined>(undefined);
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
-  const { transactions, loading, refetch } = useTransactions();
+  const { transactions, loading, refetch } = useTransactionsHook();
 
   return (
     <TransactionContext.Provider value={{ transactions, loading, refetch }}>
@@ -37,10 +37,10 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useTransactions = () => {
+export const useTransactionContext = () => {
   const context = useContext(TransactionContext);
   if (context === undefined) {
-    throw new Error('useTransactions must be used within a TransactionProvider');
+    throw new Error('useTransactionContext must be used within a TransactionProvider');
   }
   return context;
 };

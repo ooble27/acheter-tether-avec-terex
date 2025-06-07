@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,7 +18,7 @@ export function BuyUSDT() {
   const [currentStep, setCurrentStep] = useState<'form' | 'confirmation' | 'payment'>('form');
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
-  const [paymentMethod, setPaymentMethod] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState<'mobile' | 'wave' | 'orange_money' | 'card' | 'bank' | 'bank_transfer' | 'interac'>('mobile');
   const [walletAddress, setWalletAddress] = useState('');
   const [network, setNetwork] = useState('TRC20');
   const [orderData, setOrderData] = useState<any>(null);
@@ -38,7 +39,7 @@ export function BuyUSDT() {
   };
 
   const handlePaymentMethodChange = (value: string) => {
-    setPaymentMethod(value);
+    setPaymentMethod(value as 'mobile' | 'wave' | 'orange_money' | 'card' | 'bank' | 'bank_transfer' | 'interac');
   };
 
   const handleWalletAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -272,6 +273,15 @@ export function BuyUSDT() {
             exchangeRate: exchangeRate,
           }}
           onBack={() => setCurrentStep('confirmation')}
+          onPaymentComplete={() => {
+            toast({
+              title: "Paiement confirmé",
+              description: "Votre commande a été traitée avec succès.",
+            });
+            setCurrentStep('form');
+            setAmount('');
+            setWalletAddress('');
+          }}
         />
       )}
     </KYCProtection>
