@@ -2,8 +2,6 @@
 import {
   Text,
   Section,
-  Row,
-  Column,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 import { BaseEmail } from './base-email.tsx';
@@ -20,444 +18,551 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
   const preview = 'Votre paiement a été confirmé avec succès';
   
   return (
-    <BaseEmail preview={preview} title={title}>      
-      <div style={iconContainer}>
-        <div style={successIcon}>✅</div>
-      </div>
-      
-      <Text style={greeting}>
-        Fantastique !
-      </Text>
-      
-      <Text style={text}>
-        Excellente nouvelle ! Nous avons confirmé la réception de votre paiement.
-        Voici tous les détails de votre transaction :
-      </Text>
-      
-      <Section style={confirmationBanner}>
-        <div style={bannerContent}>
-          <div style={checkmark}>✅</div>
-          <Text style={bannerText}>
-            Paiement confirmé avec succès
+    <BaseEmail preview={preview} title={title}>
+      {/* Message de confirmation */}
+      <Section style={confirmationSection}>
+        <div style={successBadge}>
+          <span style={successIcon}>🎉</span>
+          <Text style={successText}>Paiement confirmé !</Text>
+        </div>
+        <Text style={confirmationMessage}>
+          Excellente nouvelle ! Nous avons confirmé la réception de votre paiement.
+        </Text>
+        <Text style={subMessage}>
+          Votre {transactionType === 'transfer' ? 'transfert' : 'commande'} est maintenant en cours de traitement final.
+        </Text>
+      </Section>
+
+      {/* Détails de la transaction */}
+      <Section style={transactionSection}>
+        <Text style={sectionTitle}>💰 Détails du paiement confirmé</Text>
+        
+        <div style={transactionCard}>
+          <div style={transactionHeader}>
+            <Text style={transactionNumber}>
+              {transactionType === 'transfer' ? 'Transfert' : 'Commande'} #TEREX-{orderData.id?.slice(-8) || 'N/A'}
+            </Text>
+            <div style={statusBadge}>
+              <span style={statusText}>Paiement confirmé</span>
+            </div>
+          </div>
+          
+          <div style={transactionContent}>
+            <div style={summaryGrid}>
+              <div style={summaryItem}>
+                <Text style={summaryLabel}>Date de confirmation</Text>
+                <Text style={summaryValue}>
+                  {new Date(orderData.payment_confirmed_at || Date.now()).toLocaleString('fr-FR')}
+                </Text>
+              </div>
+
+              {transactionType !== 'transfer' && (
+                <>
+                  <div style={summaryItem}>
+                    <Text style={summaryLabel}>Type</Text>
+                    <Text style={summaryValue}>
+                      {orderData.type === 'buy' ? '💳 Achat USDT' : '💸 Vente USDT'}
+                    </Text>
+                  </div>
+                  <div style={summaryItem}>
+                    <Text style={summaryLabel}>Montant payé</Text>
+                    <Text style={amountValue}>{orderData.amount || 0} {orderData.currency || 'CFA'}</Text>
+                  </div>
+                  <div style={summaryItem}>
+                    <Text style={summaryLabel}>USDT à recevoir</Text>
+                    <Text style={usdtValue}>{orderData.usdt_amount || 0} USDT</Text>
+                  </div>
+                  <div style={summaryItem}>
+                    <Text style={summaryLabel}>Réseau</Text>
+                    <Text style={summaryValue}>{orderData.network || 'TRC20'}</Text>
+                  </div>
+                  <div style={summaryItem}>
+                    <Text style={summaryLabel}>Adresse de réception</Text>
+                    <Text style={addressValue}>{orderData.wallet_address || 'N/A'}</Text>
+                  </div>
+                </>
+              )}
+              
+              {transactionType === 'transfer' && (
+                <>
+                  <div style={summaryItem}>
+                    <Text style={summaryLabel}>Montant envoyé</Text>
+                    <Text style={amountValue}>{orderData.amount || 0} {orderData.from_currency || 'USDT'}</Text>
+                  </div>
+                  <div style={summaryItem}>
+                    <Text style={summaryLabel}>Destinataire</Text>
+                    <Text style={summaryValue}>{orderData.recipient_name || 'N/A'}</Text>
+                  </div>
+                  <div style={summaryItem}>
+                    <Text style={summaryLabel}>Pays</Text>
+                    <Text style={summaryValue}>{orderData.recipient_country || 'N/A'}</Text>
+                  </div>
+                  <div style={summaryItem}>
+                    <Text style={summaryLabel}>Montant à recevoir</Text>
+                    <Text style={usdtValue}>{orderData.total_amount || 0} {orderData.to_currency || 'N/A'}</Text>
+                  </div>
+                  <div style={summaryItem}>
+                    <Text style={summaryLabel}>Frais</Text>
+                    <Text style={summaryValue}>{orderData.fees || 0} {orderData.from_currency || 'USDT'}</Text>
+                  </div>
+                </>
+              )}
+              
+              <div style={summaryItem}>
+                <Text style={summaryLabel}>Méthode de paiement</Text>
+                <Text style={summaryValue}>
+                  {orderData.payment_method === 'card' ? '💳 Carte bancaire' : 
+                   orderData.payment_method === 'wave' ? '📱 Wave' :
+                   orderData.payment_method === 'orange' ? '🟠 Orange Money' : 
+                   orderData.payment_method || 'N/A'}
+                </Text>
+              </div>
+              <div style={summaryItem}>
+                <Text style={summaryLabel}>Référence</Text>
+                <Text style={summaryValue}>{orderData.payment_reference || orderData.id?.slice(-8) || 'N/A'}</Text>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      {/* Progression */}
+      <Section style={progressSection}>
+        <Text style={sectionTitle}>🚀 Progression de votre transaction</Text>
+        
+        <div style={progressContainer}>
+          <div style={progressTrack}>
+            <div style={progressFill}></div>
+          </div>
+          <Text style={progressText}>Traitement en cours - 85% terminé</Text>
+        </div>
+
+        <div style={timelineContainer}>
+          <div style={timelineItem}>
+            <span style={timelineIconCompleted}>✅</span>
+            <div style={timelineContent}>
+              <Text style={timelineTitle}>Demande reçue</Text>
+              <Text style={timelineDescription}>Votre demande a été enregistrée</Text>
+            </div>
+          </div>
+          
+          <div style={timelineItem}>
+            <span style={timelineIconCompleted}>✅</span>
+            <div style={timelineContent}>
+              <Text style={timelineTitle}>Paiement confirmé</Text>
+              <Text style={timelineDescription}>Nous avons vérifié votre paiement</Text>
+            </div>
+          </div>
+          
+          <div style={timelineItem}>
+            <span style={timelineIconCurrent}>🔄</span>
+            <div style={timelineContent}>
+              <Text style={timelineTitle}>Traitement final</Text>
+              <Text style={timelineDescription}>
+                {transactionType === 'transfer' 
+                  ? 'Initiation du transfert international'
+                  : `Préparation de l'envoi USDT vers votre portefeuille`
+                }
+              </Text>
+            </div>
+          </div>
+          
+          <div style={timelineItem}>
+            <span style={timelineIconPending}>⏳</span>
+            <div style={timelineContent}>
+              <Text style={timelineTitle}>Finalisation</Text>
+              <Text style={timelineDescription}>
+                {transactionType === 'transfer' 
+                  ? 'Réception par le destinataire'
+                  : 'USDT envoyés à votre adresse'
+                }
+              </Text>
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      {/* Temps estimé */}
+      <Section style={timingSection}>
+        <div style={timingCard}>
+          <Text style={timingTitle}>⏰ Délai estimé restant</Text>
+          <Text style={timingValue}>
+            {transactionType === 'transfer' ? '12-48 heures' : '5-15 minutes'}
+          </Text>
+          <Text style={timingDescription}>
+            {transactionType === 'transfer' 
+              ? 'Les transferts internationaux nécessitent des vérifications supplémentaires'
+              : 'Délai habituel pour les transactions USDT après confirmation du paiement'
+            }
           </Text>
         </div>
       </Section>
-      
-      <Section style={orderCard}>
-        <div style={cardHeader}>
-          <Text style={cardTitle}>
-            📋 Détails complets de la transaction
-          </Text>
-        </div>
+
+      {/* Sécurité */}
+      <Section style={securitySection}>
+        <Text style={sectionTitle}>🔒 Garanties de sécurité</Text>
         
-        <div style={cardContent}>
-          <Row style={row}>
-            <Column style={label}>
-              {transactionType === 'transfer' ? 'Numéro de transfert :' : 'Numéro de commande :'}
-            </Column>
-            <Column style={value}>
-              #TEREX-{orderData.id?.slice(-8) || 'N/A'}
-            </Column>
-          </Row>
-          
-          <Row style={row}>
-            <Column style={label}>Date et heure du paiement :</Column>
-            <Column style={value}>{new Date(orderData.payment_confirmed_at || Date.now()).toLocaleString('fr-FR')}</Column>
-          </Row>
-          
-          {transactionType !== 'transfer' && (
-            <>
-              <Row style={row}>
-                <Column style={label}>Type de transaction :</Column>
-                <Column style={valueHighlight}>
-                  {orderData.type === 'buy' ? '💳 Achat USDT' : '💸 Vente USDT'}
-                </Column>
-              </Row>
-              <Row style={row}>
-                <Column style={label}>Montant payé :</Column>
-                <Column style={value}>{orderData.amount || 0} {orderData.currency || 'CFA'}</Column>
-              </Row>
-              <Row style={row}>
-                <Column style={label}>Quantité USDT à recevoir :</Column>
-                <Column style={usdtAmount}>{orderData.usdt_amount || 0} USDT</Column>
-              </Row>
-              <Row style={row}>
-                <Column style={label}>Réseau de réception :</Column>
-                <Column style={value}>{orderData.network || 'TRC20'}</Column>
-              </Row>
-              <Row style={row}>
-                <Column style={label}>Adresse de réception :</Column>
-                <Column style={addressValue}>{orderData.wallet_address || 'N/A'}</Column>
-              </Row>
-              <Row style={row}>
-                <Column style={label}>Taux de change appliqué :</Column>
-                <Column style={value}>{orderData.exchange_rate || 0} {orderData.currency || 'CFA'}/USDT</Column>
-              </Row>
-            </>
-          )}
-          
-          {transactionType === 'transfer' && (
-            <>
-              <Row style={row}>
-                <Column style={label}>Montant envoyé :</Column>
-                <Column style={valueHighlight}>
-                  {orderData.amount || 0} {orderData.from_currency || 'USDT'}
-                </Column>
-              </Row>
-              <Row style={row}>
-                <Column style={label}>Nom du destinataire :</Column>
-                <Column style={value}>{orderData.recipient_name || 'N/A'}</Column>
-              </Row>
-              <Row style={row}>
-                <Column style={label}>Compte destinataire :</Column>
-                <Column style={accountValue}>{orderData.recipient_account || 'N/A'}</Column>
-              </Row>
-              <Row style={row}>
-                <Column style={label}>Banque destinataire :</Column>
-                <Column style={value}>{orderData.recipient_bank || 'N/A'}</Column>
-              </Row>
-              <Row style={row}>
-                <Column style={label}>Pays de destination :</Column>
-                <Column style={countryValue}>{orderData.recipient_country || 'N/A'}</Column>
-              </Row>
-              <Row style={row}>
-                <Column style={label}>Montant à recevoir :</Column>
-                <Column style={usdtAmount}>{orderData.total_amount || 0} {orderData.to_currency || 'N/A'}</Column>
-              </Row>
-              <Row style={row}>
-                <Column style={label}>Frais de transfert :</Column>
-                <Column style={value}>{orderData.fees || 0} {orderData.from_currency || 'USDT'}</Column>
-              </Row>
-            </>
-          )}
-          
-          <Row style={row}>
-            <Column style={label}>Méthode de paiement :</Column>
-            <Column style={value}>
-              {orderData.payment_method === 'card' ? '💳 Carte bancaire' : 
-               orderData.payment_method === 'wave' ? '📱 Wave' :
-               orderData.payment_method === 'orange' ? '🟠 Orange Money' : 
-               orderData.payment_method || 'N/A'}
-            </Column>
-          </Row>
-          
-          <Row style={row}>
-            <Column style={label}>Référence de paiement :</Column>
-            <Column style={value}>{orderData.payment_reference || orderData.id?.slice(-8) || 'N/A'}</Column>
-          </Row>
+        <div style={securityGrid}>
+          <div style={securityItem}>
+            <span style={securityIcon}>🛡️</span>
+            <Text style={securityText}>Transaction sécurisée SSL 256-bit</Text>
+          </div>
+          <div style={securityItem}>
+            <span style={securityIcon}>👥</span>
+            <Text style={securityText}>Vérification manuelle par notre équipe</Text>
+          </div>
+          <div style={securityItem}>
+            <span style={securityIcon}>📊</span>
+            <Text style={securityText}>Surveillance 24h/7j des opérations</Text>
+          </div>
+          <div style={securityItem}>
+            <span style={securityIcon}>💎</span>
+            <Text style={securityText}>Fonds protégés en portefeuilles sécurisés</Text>
+          </div>
         </div>
       </Section>
-      
-      <Section style={progressCard}>
-        <Text style={progressTitle}>
-          🚀 Étape suivante
+
+      {/* Message de remerciement */}
+      <Section style={thankYouSection}>
+        <Text style={thankYouMessage}>
+          🌟 Merci de faire confiance à Terex !
         </Text>
-        <Text style={progressText}>
-          {transactionType === 'transfer' 
-            ? `Votre transfert international est maintenant en cours de traitement. 
-
-• Vérification des informations du destinataire ✅
-• Traitement du paiement ✅  
-• Initiation du transfert 🔄 EN COURS
-• Réception par le destinataire ⏳ En attente
-
-Délai estimé : 24-48h ouvrables
-
-Le destinataire sera notifié dès réception des fonds.`
-            : `Votre transaction USDT est maintenant en cours de finalisation.
-
-• Réception du paiement ✅
-• Vérification du paiement ✅
-• Préparation du transfert USDT 🔄 EN COURS  
-• Envoi vers votre portefeuille ⏳ En attente
-
-Délai estimé : 5-15 minutes
-
-Vos USDT seront envoyés à : ${orderData.wallet_address || 'votre adresse'}`
-          }
-        </Text>
-        
-        <div style={progressBar}>
-          <div style={progressFill}></div>
-        </div>
-        
-        <Text style={progressLabel}>
-          Traitement en cours - 75% complété
+        <Text style={teamMessage}>
+          Vous recevrez une notification immédiate dès que votre {transactionType === 'transfer' ? 'transfert sera terminé' : 'USDT sera envoyé'}.
         </Text>
       </Section>
-
-      <Section style={securityCard}>
-        <Text style={securityTitle}>
-          🔒 Informations de sécurité
-        </Text>
-        <Text style={securityText}>
-          • Transaction sécurisée par cryptage SSL 256-bit
-          • Vérification automatique des paiements
-          • Fonds protégés par portefeuilles multi-signatures
-          • Surveillance 24h/7j de toutes les transactions
-          • Support client disponible à tout moment
-        </Text>
-      </Section>
-
-      <Section style={contactCard}>
-        <Text style={contactTitle}>
-          📞 Besoin d'aide ?
-        </Text>
-        <Text style={contactText}>
-          • Support client : terangaexchange@gmail.com
-          • Téléphone Sénégal : +221 77 397 27 49
-          • WhatsApp : +1 4182619091
-          • Horaires : 24h/7j
-          • Référence à mentionner : #TEREX-{orderData.id?.slice(-8) || 'N/A'}
-        </Text>
-      </Section>
-      
-      <Text style={text}>
-        Vous recevrez une notification immédiate dès que la transaction sera terminée.
-      </Text>
-      
-      <Text style={thankYou}>
-        🌟 Merci de faire confiance à Terex pour vos {transactionType === 'transfer' ? 'transferts internationaux' : 'échanges USDT'} !
-      </Text>
     </BaseEmail>
   );
 };
 
-// Styles avec couleurs Terex (sombre et vert)
-const iconContainer = {
+// Styles optimisés
+const confirmationSection = {
   textAlign: 'center' as const,
-  marginBottom: '24px',
+  marginBottom: '32px',
+  padding: '32px',
+  backgroundColor: '#21262d',
+  borderRadius: '12px',
+  border: '2px solid #238636',
+};
+
+const successBadge = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '12px',
+  backgroundColor: '#238636',
+  color: '#ffffff',
+  padding: '12px 24px',
+  borderRadius: '25px',
+  marginBottom: '20px',
 };
 
 const successIcon = {
-  fontSize: '64px',
-};
-
-const greeting = {
-  color: '#ffffff', // White text on dark background
-  fontSize: '20px',
-  fontWeight: '600',
-  margin: '0 0 16px',
-  textAlign: 'center' as const,
-};
-
-const text = {
-  color: '#e2e8f0', // Light gray text
-  fontSize: '16px',
-  lineHeight: '1.6',
-  margin: '0 0 24px',
-};
-
-const confirmationBanner = {
-  backgroundColor: '#1e3a3a', // Dark green tint
-  border: '2px solid #3B968F', // Terex accent border
-  borderRadius: '12px',
-  padding: '20px',
-  margin: '24px 0',
-  textAlign: 'center' as const,
-};
-
-const bannerContent = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '12px',
-};
-
-const checkmark = {
   fontSize: '24px',
 };
 
-const bannerText = {
-  color: '#ffffff', // White text
+const successText = {
+  fontSize: '16px',
+  fontWeight: '700',
+  margin: '0',
+};
+
+const confirmationMessage = {
+  color: '#ffffff',
+  fontSize: '20px',
+  fontWeight: '600',
+  margin: '0 0 12px 0',
+  lineHeight: '1.4',
+};
+
+const subMessage = {
+  color: '#8b949e',
+  fontSize: '14px',
+  margin: '0',
+  lineHeight: '1.5',
+};
+
+const transactionSection = {
+  marginBottom: '32px',
+};
+
+const sectionTitle = {
+  color: '#ffffff',
+  fontSize: '18px',
+  fontWeight: '600',
+  margin: '0 0 20px 0',
+  borderBottom: '2px solid #3B968F',
+  paddingBottom: '8px',
+  display: 'inline-block',
+};
+
+const transactionCard = {
+  backgroundColor: '#21262d',
+  border: '1px solid #30363d',
+  borderRadius: '12px',
+  overflow: 'hidden',
+};
+
+const transactionHeader = {
+  backgroundColor: '#3B968F',
+  padding: '20px',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+};
+
+const transactionNumber = {
+  color: '#ffffff',
   fontSize: '18px',
   fontWeight: '700',
   margin: '0',
+  fontFamily: 'monospace',
 };
 
-const orderCard = {
-  backgroundColor: '#2A2A2A', // Terex gray
-  border: '1px solid #3A3A3A', // Terex gray light
-  borderRadius: '12px',
-  overflow: 'hidden',
-  margin: '24px 0',
-  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+const statusBadge = {
+  backgroundColor: '#238636',
+  padding: '6px 12px',
+  borderRadius: '6px',
 };
 
-const cardHeader = {
-  backgroundColor: '#3B968F', // Terex accent
-  padding: '16px 20px',
-};
-
-const cardTitle = {
+const statusText = {
   color: '#ffffff',
-  fontSize: '16px',
+  fontSize: '12px',
   fontWeight: '600',
+  margin: '0',
+  textTransform: 'uppercase' as const,
+};
+
+const transactionContent = {
+  padding: '24px',
+};
+
+const summaryGrid = {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gap: '20px',
+};
+
+const summaryItem = {
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: '6px',
+};
+
+const summaryLabel = {
+  color: '#8b949e',
+  fontSize: '12px',
+  fontWeight: '500',
+  margin: '0',
+  textTransform: 'uppercase' as const,
+  letterSpacing: '0.5px',
+};
+
+const summaryValue = {
+  color: '#ffffff',
+  fontSize: '14px',
+  fontWeight: '600',
+  margin: '0',
+  wordBreak: 'break-word' as const,
+};
+
+const amountValue = {
+  color: '#ffa657',
+  fontSize: '16px',
+  fontWeight: '700',
   margin: '0',
 };
 
-const cardContent = {
-  padding: '20px',
-  backgroundColor: '#2A2A2A', // Terex gray
-};
-
-const row = {
-  marginBottom: '12px',
-  borderBottom: '1px solid #3A3A3A', // Terex gray light
-  paddingBottom: '8px',
-};
-
-const label = {
-  color: '#94a3b8', // Light gray
-  fontSize: '14px',
-  width: '40%',
-  verticalAlign: 'top' as const,
-  fontWeight: '500',
-};
-
-const value = {
-  color: '#ffffff', // White text
-  fontSize: '14px',
-  fontWeight: '600',
-  width: '60%',
-};
-
-const valueHighlight = {
-  color: '#3B968F', // Terex accent
-  fontSize: '14px',
-  fontWeight: '700',
-  width: '60%',
-};
-
-const usdtAmount = {
-  color: '#4BA89F', // Terex accent light
+const usdtValue = {
+  color: '#4BA89F',
   fontSize: '16px',
   fontWeight: '700',
-  width: '60%',
-};
-
-const countryValue = {
-  color: '#3B968F', // Terex accent
-  fontSize: '14px',
-  fontWeight: '600',
-  width: '60%',
+  margin: '0',
 };
 
 const addressValue = {
-  color: '#ffffff', // White text
+  color: '#58a6ff',
   fontSize: '12px',
   fontWeight: '600',
-  width: '60%',
+  fontFamily: 'monospace',
+  margin: '0',
   wordBreak: 'break-all' as const,
-  fontFamily: 'monospace',
 };
 
-const accountValue = {
-  color: '#ffffff', // White text
-  fontSize: '12px',
-  fontWeight: '600',
-  width: '60%',
-  fontFamily: 'monospace',
+const progressSection = {
+  marginBottom: '32px',
 };
 
-const progressCard = {
-  backgroundColor: '#2A2A2A', // Terex gray
-  border: '1px solid #3B968F', // Terex accent border
-  borderRadius: '12px',
-  padding: '20px',
-  margin: '24px 0',
+const progressContainer = {
+  marginBottom: '24px',
 };
 
-const progressTitle = {
-  color: '#ffffff', // White text
-  fontSize: '16px',
-  fontWeight: '600',
-  margin: '0 0 12px',
-};
-
-const progressText = {
-  color: '#e2e8f0', // Light gray text
-  fontSize: '14px',
-  lineHeight: '1.6',
-  margin: '0 0 16px',
-  whiteSpace: 'pre-line' as const,
-};
-
-const progressBar = {
+const progressTrack = {
   width: '100%',
   height: '8px',
-  backgroundColor: '#3A3A3A', // Terex gray light
+  backgroundColor: '#30363d',
   borderRadius: '4px',
   overflow: 'hidden',
-  margin: '16px 0 8px',
+  marginBottom: '8px',
 };
 
 const progressFill = {
-  width: '75%',
+  width: '85%',
   height: '100%',
-  background: 'linear-gradient(90deg, #3B968F 0%, #4BA89F 100%)', // Terex gradient
+  background: 'linear-gradient(90deg, #3B968F 0%, #4BA89F 100%)',
   borderRadius: '4px',
-  animation: 'pulse 2s infinite',
 };
 
-const progressLabel = {
-  color: '#94a3b8', // Light gray
+const progressText = {
+  color: '#8b949e',
   fontSize: '12px',
   fontWeight: '500',
   margin: '0',
   textAlign: 'center' as const,
 };
 
-const securityCard = {
-  backgroundColor: '#2A2A2A', // Terex gray
-  border: '1px solid #3B968F', // Terex accent border
-  borderRadius: '8px',
-  padding: '20px',
-  margin: '24px 0',
+const timelineContainer = {
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: '16px',
 };
 
-const securityTitle = {
-  color: '#4BA89F', // Terex accent light
+const timelineItem = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '16px',
+  padding: '12px',
+  backgroundColor: '#21262d',
+  borderRadius: '8px',
+  border: '1px solid #30363d',
+};
+
+const timelineIconCompleted = {
+  fontSize: '20px',
+  width: '32px',
+  textAlign: 'center' as const,
+  flexShrink: '0',
+};
+
+const timelineIconCurrent = {
+  fontSize: '20px',
+  width: '32px',
+  textAlign: 'center' as const,
+  flexShrink: '0',
+  animation: 'spin 2s linear infinite',
+};
+
+const timelineIconPending = {
+  fontSize: '20px',
+  width: '32px',
+  textAlign: 'center' as const,
+  flexShrink: '0',
+  opacity: '0.5',
+};
+
+const timelineContent = {
+  flex: '1',
+};
+
+const timelineTitle = {
+  color: '#ffffff',
+  fontSize: '14px',
+  fontWeight: '600',
+  margin: '0 0 4px 0',
+};
+
+const timelineDescription = {
+  color: '#8b949e',
+  fontSize: '12px',
+  margin: '0',
+  lineHeight: '1.4',
+};
+
+const timingSection = {
+  marginBottom: '32px',
+};
+
+const timingCard = {
+  backgroundColor: '#0d1117',
+  border: '1px solid #3B968F',
+  borderRadius: '12px',
+  padding: '24px',
+  textAlign: 'center' as const,
+};
+
+const timingTitle = {
+  color: '#4BA89F',
   fontSize: '16px',
   fontWeight: '600',
-  margin: '0 0 12px',
+  margin: '0 0 8px 0',
+};
+
+const timingValue = {
+  color: '#ffffff',
+  fontSize: '24px',
+  fontWeight: '700',
+  margin: '0 0 8px 0',
+};
+
+const timingDescription = {
+  color: '#8b949e',
+  fontSize: '13px',
+  margin: '0',
+  lineHeight: '1.5',
+};
+
+const securitySection = {
+  marginBottom: '32px',
+};
+
+const securityGrid = {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gap: '16px',
+};
+
+const securityItem = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '12px',
+  padding: '16px',
+  backgroundColor: '#21262d',
+  borderRadius: '8px',
+  border: '1px solid #30363d',
+};
+
+const securityIcon = {
+  fontSize: '20px',
+  flexShrink: '0',
 };
 
 const securityText = {
-  color: '#ffffff', // White text
-  fontSize: '14px',
-  lineHeight: '1.6',
+  color: '#ffffff',
+  fontSize: '13px',
+  fontWeight: '500',
   margin: '0',
-  whiteSpace: 'pre-line' as const,
+  lineHeight: '1.4',
 };
 
-const contactCard = {
-  backgroundColor: '#1e3a3a', // Dark green tint
-  border: '1px solid #3B968F', // Terex accent border
-  borderRadius: '8px',
-  padding: '20px',
-  margin: '24px 0',
+const thankYouSection = {
+  textAlign: 'center' as const,
+  marginTop: '40px',
+  padding: '24px',
+  backgroundColor: '#21262d',
+  borderRadius: '12px',
+  border: '1px solid #3B968F',
 };
 
-const contactTitle = {
-  color: '#4BA89F', // Terex accent light
-  fontSize: '16px',
-  fontWeight: '600',
-  margin: '0 0 12px',
-};
-
-const contactText = {
-  color: '#ffffff', // White text
-  fontSize: '14px',
-  lineHeight: '1.6',
-  margin: '0',
-  whiteSpace: 'pre-line' as const,
-};
-
-const thankYou = {
-  color: '#3B968F', // Terex accent
+const thankYouMessage = {
+  color: '#4BA89F',
   fontSize: '18px',
   fontWeight: '600',
-  margin: '24px 0 0',
-  textAlign: 'center' as const,
+  margin: '0 0 8px 0',
+};
+
+const teamMessage = {
+  color: '#8b949e',
+  fontSize: '14px',
+  margin: '0',
+  fontStyle: 'italic',
+  lineHeight: '1.5',
 };

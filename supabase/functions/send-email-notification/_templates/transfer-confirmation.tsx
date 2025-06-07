@@ -2,8 +2,6 @@
 import {
   Text,
   Section,
-  Row,
-  Column,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 import { BaseEmail } from './base-email.tsx';
@@ -53,551 +51,679 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
   };
   
   return (
-    <BaseEmail preview={preview} title={title}>      
-      <div style={successContainer}>
-        <div style={successIcon}>🎉</div>
-        <Text style={successMessage}>
-          Excellent ! Votre transfert international est confirmé
+    <BaseEmail preview={preview} title={title}>
+      {/* Message de confirmation */}
+      <Section style={confirmationSection}>
+        <div style={successBadge}>
+          <span style={successIcon}>🌍</span>
+          <Text style={successText}>Transfert confirmé !</Text>
+        </div>
+        <Text style={confirmationMessage}>
+          Parfait ! Votre demande de transfert international a été enregistrée avec succès.
         </Text>
         <Text style={subMessage}>
-          Nous avons enregistré votre demande avec succès. Voici tous les détails :
+          Nous allons maintenant traiter votre transfert vers {getCountryName(transferData.recipient_country)}.
         </Text>
-      </div>
-      
-      <Section style={primaryCard}>
-        <div style={cardHeader}>
-          <Text style={cardTitle}>
-            💸 Détails du transfert
-          </Text>
-          <div style={transferNumber}>
-            #TEREX-{transferData.id?.slice(-8)}
+      </Section>
+
+      {/* Résumé du transfert */}
+      <Section style={transferSummarySection}>
+        <Text style={sectionTitle}>💸 Résumé de votre transfert</Text>
+        
+        <div style={summaryCard}>
+          <div style={summaryHeader}>
+            <Text style={transferNumber}>Transfert #TEREX-{transferData.id?.slice(-8)}</Text>
+            <Text style={transferDate}>{new Date(transferData.created_at || Date.now()).toLocaleString('fr-FR')}</Text>
+          </div>
+          
+          <div style={summaryContent}>
+            <div style={amountFlow}>
+              <div style={fromAmount}>
+                <Text style={amountLabel}>Vous envoyez</Text>
+                <Text style={amountValue}>
+                  {transferData.amount} {transferData.from_currency}
+                </Text>
+                <Text style={methodText}>{getPaymentMethodName()}</Text>
+              </div>
+              
+              <div style={exchangeIndicator}>
+                <span style={exchangeArrow}>→</span>
+                <Text style={exchangeRate}>
+                  1 {transferData.from_currency} = {transferData.exchange_rate} {transferData.to_currency}
+                </Text>
+              </div>
+              
+              <div style={toAmount}>
+                <Text style={amountLabel}>Destinataire reçoit</Text>
+                <Text style={finalAmountValue}>
+                  {transferData.total_amount} {transferData.to_currency}
+                </Text>
+                <Text style={methodText}>
+                  {getReceiveMethodName()} {getProviderName() && `(${getProviderName()})`}
+                </Text>
+              </div>
+            </div>
+            
+            <div style={feesRow}>
+              <Text style={feesLabel}>Frais de transfert</Text>
+              <Text style={feesValue}>{transferData.fees} {transferData.from_currency}</Text>
+            </div>
           </div>
         </div>
+      </Section>
+
+      {/* Informations du destinataire */}
+      <Section style={recipientSection}>
+        <Text style={sectionTitle}>👤 Informations du destinataire</Text>
         
-        <div style={cardContent}>
-          <div style={amountSection}>
-            <div style={amountRow}>
-              <span style={amountLabel}>Vous envoyez</span>
-              <span style={amountValue}>
-                {transferData.amount} {transferData.from_currency}
-              </span>
+        <div style={recipientCard}>
+          <div style={recipientDetails}>
+            <div style={recipientField}>
+              <Text style={fieldLabel}>Nom complet</Text>
+              <Text style={fieldValue}>{transferData.recipient_name}</Text>
             </div>
-            <div style={exchangeRow}>
-              <span style={exchangeIcon}>⇄</span>
-              <span style={exchangeText}>
-                1 {transferData.from_currency} = {transferData.exchange_rate} {transferData.to_currency}
-              </span>
+            
+            <div style={recipientField}>
+              <Text style={fieldLabel}>Pays de destination</Text>
+              <Text style={fieldValue}>{getCountryName(transferData.recipient_country)}</Text>
             </div>
-            <div style={amountRow}>
-              <span style={amountLabel}>Destinataire reçoit</span>
-              <span style={finalAmount}>
-                {transferData.total_amount} {transferData.to_currency}
-              </span>
+            
+            {transferData.recipient_phone && (
+              <div style={recipientField}>
+                <Text style={fieldLabel}>Téléphone</Text>
+                <Text style={fieldValue}>{transferData.recipient_phone}</Text>
+              </div>
+            )}
+            
+            {transferData.recipient_account && (
+              <div style={recipientField}>
+                <Text style={fieldLabel}>Numéro de compte/téléphone</Text>
+                <Text style={accountValue}>{transferData.recipient_account}</Text>
+              </div>
+            )}
+            
+            {transferData.recipient_bank && (
+              <div style={recipientField}>
+                <Text style={fieldLabel}>Institution financière</Text>
+                <Text style={fieldValue}>{transferData.recipient_bank}</Text>
+              </div>
+            )}
+          </div>
+        </div>
+      </Section>
+
+      {/* Étapes du processus */}
+      <Section style={processSection}>
+        <Text style={sectionTitle}>📋 Processus de transfert</Text>
+        
+        <div style={stepsContainer}>
+          <div style={stepCompleted}>
+            <span style={stepNumber}>1</span>
+            <div style={stepContent}>
+              <Text style={stepTitle}>Demande confirmée</Text>
+              <Text style={stepDescription}>Votre transfert a été enregistré avec succès</Text>
+            </div>
+            <span style={stepStatusCompleted}>✅</span>
+          </div>
+
+          <div style={stepPending}>
+            <span style={stepNumber}>2</span>
+            <div style={stepContent}>
+              <Text style={stepTitle}>Instructions de paiement</Text>
+              <Text style={stepDescription}>Vous allez recevoir les détails pour effectuer votre paiement</Text>
+            </div>
+            <span style={stepStatusPending}>⏳</span>
+          </div>
+
+          <div style={stepPending}>
+            <span style={stepNumber}>3</span>
+            <div style={stepContent}>
+              <Text style={stepTitle}>Vérification du paiement</Text>
+              <Text style={stepDescription}>Confirmation de la réception de votre paiement</Text>
+            </div>
+            <span style={stepStatusPending}>⏳</span>
+          </div>
+
+          <div style={stepPending}>
+            <span style={stepNumber}>4</span>
+            <div style={stepContent}>
+              <Text style={stepTitle}>Traitement du transfert</Text>
+              <Text style={stepDescription}>Initiation du transfert vers {getCountryName(transferData.recipient_country)}</Text>
+            </div>
+            <span style={stepStatusPending}>⏳</span>
+          </div>
+
+          <div style={stepPending}>
+            <span style={stepNumber}>5</span>
+            <div style={stepContent}>
+              <Text style={stepTitle}>Réception confirmée</Text>
+              <Text style={stepDescription}>{transferData.recipient_name} reçoit {transferData.total_amount} {transferData.to_currency}</Text>
+            </div>
+            <span style={stepStatusPending}>⏳</span>
+          </div>
+        </div>
+      </Section>
+
+      {/* Délais et informations */}
+      <Section style={timingSection}>
+        <Text style={sectionTitle}>⏰ Délais de traitement</Text>
+        
+        <div style={timingGrid}>
+          <div style={timingCard}>
+            <span style={timingIcon}>💳</span>
+            <Text style={timingTitle}>Paiement</Text>
+            <Text style={timingValue}>Immédiat</Text>
+            <Text style={timingDescription}>Après réception des instructions</Text>
+          </div>
+          
+          <div style={timingCard}>
+            <span style={timingIcon}>🔍</span>
+            <Text style={timingTitle}>Vérification</Text>
+            <Text style={timingValue}>1-2 heures</Text>
+            <Text style={timingDescription}>Validation de votre paiement</Text>
+          </div>
+          
+          <div style={timingCard}>
+            <span style={timingIcon}>🚀</span>
+            <Text style={timingTitle}>Transfert</Text>
+            <Text style={timingValue}>2-6 heures</Text>
+            <Text style={timingDescription}>Envoi vers {getCountryName(transferData.recipient_country)}</Text>
+          </div>
+          
+          <div style={timingCard}>
+            <span style={timingIcon}>✅</span>
+            <Text style={timingTitle}>Réception</Text>
+            <Text style={timingValue}>Immédiate</Text>
+            <Text style={timingDescription}>Après traitement complet</Text>
+          </div>
+        </div>
+      </Section>
+
+      {/* Sécurité et garanties */}
+      <Section style={securitySection}>
+        <Text style={sectionTitle}>🔒 Sécurité et garanties</Text>
+        
+        <div style={securityGrid}>
+          <div style={securityFeature}>
+            <span style={securityIcon}>🛡️</span>
+            <div style={securityContent}>
+              <Text style={securityTitle}>Transfert sécurisé</Text>
+              <Text style={securityDescription}>Cryptage SSL 256-bit et protocoles bancaires</Text>
             </div>
           </div>
           
-          <div style={feeSection}>
-            <div style={feeRow}>
-              <span style={feeLabel}>Frais de transfert</span>
-              <span style={feeValue}>{transferData.fees} {transferData.from_currency}</span>
+          <div style={securityFeature}>
+            <span style={securityIcon}>👥</span>
+            <div style={securityContent}>
+              <Text style={securityTitle}>Vérification manuelle</Text>
+              <Text style={securityDescription}>Chaque transfert vérifié par notre équipe</Text>
             </div>
           </div>
-        </div>
-      </Section>
-      
-      <Section style={recipientCard}>
-        <div style={cardHeaderSecondary}>
-          <Text style={cardTitleSecondary}>
-            👤 Destinataire
-          </Text>
-        </div>
-        
-        <div style={cardContent}>
-          <div style={recipientInfo}>
-            <div style={infoRow}>
-              <span style={infoIcon}>👤</span>
-              <div style={infoContent}>
-                <span style={infoLabel}>Nom complet</span>
-                <span style={infoValue}>{transferData.recipient_name}</span>
-              </div>
+          
+          <div style={securityFeature}>
+            <span style={securityIcon}>📱</span>
+            <div style={securityContent}>
+              <Text style={securityTitle}>Notifications en temps réel</Text>
+              <Text style={securityDescription}>Suivi complet à chaque étape</Text>
             </div>
-            <div style={infoRow}>
-              <span style={infoIcon}>🌍</span>
-              <div style={infoContent}>
-                <span style={infoLabel}>Destination</span>
-                <span style={infoValue}>{getCountryName(transferData.recipient_country)}</span>
-              </div>
+          </div>
+          
+          <div style={securityFeature}>
+            <span style={securityIcon}>💼</span>
+            <div style={securityContent}>
+              <Text style={securityTitle}>Conformité réglementaire</Text>
+              <Text style={securityDescription}>Respect des lois de transfert d'argent</Text>
             </div>
-            {transferData.recipient_phone && (
-              <div style={infoRow}>
-                <span style={infoIcon}>📱</span>
-                <div style={infoContent}>
-                  <span style={infoLabel}>Téléphone</span>
-                  <span style={infoValue}>{transferData.recipient_phone}</span>
-                </div>
-              </div>
-            )}
-            {transferData.recipient_account && (
-              <div style={infoRow}>
-                <span style={infoIcon}>💳</span>
-                <div style={infoContent}>
-                  <span style={infoLabel}>Compte</span>
-                  <span style={accountNumber}>{transferData.recipient_account}</span>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </Section>
 
-      <Section style={methodCard}>
-        <div style={cardHeaderTertiary}>
-          <Text style={cardTitleTertiary}>
-            🔄 Méthodes de paiement
-          </Text>
-        </div>
-        
-        <div style={cardContent}>
-          <div style={methodRow}>
-            <div style={methodItem}>
-              <span style={methodLabel}>Vous payez par</span>
-              <span style={methodValue}>{getPaymentMethodName()}</span>
-            </div>
-            <div style={methodArrow}>→</div>
-            <div style={methodItem}>
-              <span style={methodLabel}>Destinataire reçoit par</span>
-              <span style={methodValue}>
-                {getReceiveMethodName()}
-                {transferData.provider && getProviderName() && (
-                  <span style={providerBadge}>{getProviderName()}</span>
-                )}
-              </span>
-            </div>
-          </div>
-        </div>
-      </Section>
-      
-      <Section style={statusCard}>
-        <div style={statusHeader}>
-          <Text style={statusTitle}>
-            📋 Prochaines étapes
-          </Text>
-        </div>
-        <div style={stepsContainer}>
-          <div style={stepCompleted}>
-            <span style={stepIcon}>✅</span>
-            <span style={stepText}>Demande confirmée et enregistrée</span>
-          </div>
-          <div style={stepPending}>
-            <span style={stepIcon}>⏳</span>
-            <span style={stepText}>Instructions de paiement en cours d'envoi</span>
-          </div>
-          <div style={stepPending}>
-            <span style={stepIcon}>💰</span>
-            <span style={stepText}>En attente de votre paiement</span>
-          </div>
-          <div style={stepPending}>
-            <span style={stepIcon}>🚀</span>
-            <span style={stepText}>Traitement et envoi des fonds</span>
-          </div>
-          <div style={stepPending}>
-            <span style={stepIcon}>🎯</span>
-            <span style={stepText}>Confirmation de réception</span>
-          </div>
-        </div>
-      </Section>
-
-      <Section style={timelineCard}>
-        <Text style={timelineTitle}>
-          ⏰ Délais de traitement
+      {/* Message de remerciement */}
+      <Section style={thankYouSection}>
+        <Text style={thankYouMessage}>
+          🙏 Merci de faire confiance à Terex pour vos transferts internationaux !
         </Text>
-        <Text style={timelineText}>
-          • Validation du paiement : <strong>1-2 heures</strong><br/>
-          • Traitement du transfert : <strong>2-6 heures</strong><br/>
-          • Réception par le destinataire : <strong>Immédiate après traitement</strong>
+        <Text style={teamMessage}>
+          Vous recevrez une notification à chaque étape du processus.
+        </Text>
+        <Text style={teamSignature}>
+          L'équipe Terex
         </Text>
       </Section>
-      
-      <Text style={finalMessage}>
-        Vous recevrez les instructions de paiement dans quelques instants. 
-        Notre équipe traitera votre transfert dès réception de votre paiement.
-      </Text>
-      
-      <div style={ctaContainer}>
-        <Text style={ctaText}>
-          💫 Merci de faire confiance à Terex pour vos transferts internationaux !
-        </Text>
-      </div>
     </BaseEmail>
   );
 };
 
-// Styles modernes avec design sombre
-const successContainer = {
+// Styles optimisés pour le transfert international
+const confirmationSection = {
   textAlign: 'center' as const,
   marginBottom: '32px',
-  padding: '24px',
-  backgroundColor: 'rgba(59, 150, 143, 0.1)',
+  padding: '32px',
+  backgroundColor: '#21262d',
   borderRadius: '12px',
-  border: '1px solid rgba(59, 150, 143, 0.2)',
+  border: '2px solid #3B968F',
+};
+
+const successBadge = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '12px',
+  backgroundColor: '#3B968F',
+  color: '#ffffff',
+  padding: '12px 24px',
+  borderRadius: '25px',
+  marginBottom: '20px',
 };
 
 const successIcon = {
-  fontSize: '48px',
-  marginBottom: '16px',
+  fontSize: '24px',
 };
 
-const successMessage = {
-  color: '#ffffff',
-  fontSize: '22px',
+const successText = {
+  fontSize: '16px',
   fontWeight: '700',
-  margin: '0 0 12px',
-  textAlign: 'center' as const,
+  margin: '0',
+};
+
+const confirmationMessage = {
+  color: '#ffffff',
+  fontSize: '20px',
+  fontWeight: '600',
+  margin: '0 0 12px 0',
+  lineHeight: '1.4',
 };
 
 const subMessage = {
-  color: '#cccccc',
-  fontSize: '16px',
+  color: '#8b949e',
+  fontSize: '14px',
   margin: '0',
-  textAlign: 'center' as const,
   lineHeight: '1.5',
 };
 
-const primaryCard = {
-  backgroundColor: '#252525',
-  border: '1px solid #3B968F',
-  borderRadius: '16px',
-  overflow: 'hidden',
-  margin: '24px 0',
-  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3)',
+const transferSummarySection = {
+  marginBottom: '32px',
 };
 
-const cardHeader = {
-  background: 'linear-gradient(135deg, #3B968F 0%, #4BA89F 100%)',
-  padding: '20px 24px',
+const sectionTitle = {
+  color: '#ffffff',
+  fontSize: '18px',
+  fontWeight: '600',
+  margin: '0 0 20px 0',
+  borderBottom: '2px solid #3B968F',
+  paddingBottom: '8px',
+  display: 'inline-block',
+};
+
+const summaryCard = {
+  backgroundColor: '#21262d',
+  border: '1px solid #30363d',
+  borderRadius: '12px',
+  overflow: 'hidden',
+};
+
+const summaryHeader = {
+  backgroundColor: '#3B968F',
+  padding: '20px',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-};
-
-const cardTitle = {
-  color: '#ffffff',
-  fontSize: '18px',
-  fontWeight: '700',
-  margin: '0',
 };
 
 const transferNumber = {
   color: '#ffffff',
-  fontSize: '14px',
-  fontWeight: '600',
-  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-  padding: '4px 12px',
-  borderRadius: '20px',
-  fontFamily: 'monospace',
-};
-
-const cardContent = {
-  padding: '24px',
-  backgroundColor: '#252525',
-};
-
-const amountSection = {
-  marginBottom: '24px',
-};
-
-const amountRow = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginBottom: '12px',
-  padding: '12px 16px',
-  backgroundColor: '#2a2a2a',
-  borderRadius: '8px',
-};
-
-const amountLabel = {
-  color: '#999999',
-  fontSize: '14px',
-  fontWeight: '500',
-};
-
-const amountValue = {
-  color: '#ffffff',
-  fontSize: '16px',
+  fontSize: '18px',
   fontWeight: '700',
-};
-
-const exchangeRow = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  margin: '16px 0',
-  padding: '8px',
-};
-
-const exchangeIcon = {
-  color: '#3B968F',
-  fontSize: '18px',
-  marginRight: '8px',
-};
-
-const exchangeText = {
-  color: '#cccccc',
-  fontSize: '14px',
-  fontWeight: '500',
-};
-
-const finalAmount = {
-  color: '#4BA89F',
-  fontSize: '18px',
-  fontWeight: '900',
-};
-
-const feeSection = {
-  borderTop: '1px solid #333333',
-  paddingTop: '16px',
-};
-
-const feeRow = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-};
-
-const feeLabel = {
-  color: '#999999',
-  fontSize: '14px',
-};
-
-const feeValue = {
-  color: '#ffb84d',
-  fontSize: '14px',
-  fontWeight: '600',
-};
-
-const recipientCard = {
-  backgroundColor: '#252525',
-  border: '1px solid #444444',
-  borderRadius: '16px',
-  overflow: 'hidden',
-  margin: '24px 0',
-};
-
-const cardHeaderSecondary = {
-  backgroundColor: '#333333',
-  padding: '16px 24px',
-};
-
-const cardTitleSecondary = {
-  color: '#ffffff',
-  fontSize: '16px',
-  fontWeight: '600',
   margin: '0',
-};
-
-const recipientInfo = {
-  display: 'flex',
-  flexDirection: 'column' as const,
-  gap: '16px',
-};
-
-const infoRow = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '12px',
-  padding: '12px 0',
-  borderBottom: '1px solid #333333',
-};
-
-const infoIcon = {
-  fontSize: '20px',
-  width: '24px',
-  textAlign: 'center' as const,
-};
-
-const infoContent = {
-  display: 'flex',
-  flexDirection: 'column' as const,
-  flex: '1',
-};
-
-const infoLabel = {
-  color: '#999999',
-  fontSize: '12px',
-  fontWeight: '500',
-  marginBottom: '4px',
-};
-
-const infoValue = {
-  color: '#ffffff',
-  fontSize: '14px',
-  fontWeight: '600',
-};
-
-const accountNumber = {
-  color: '#4BA89F',
-  fontSize: '14px',
-  fontWeight: '600',
   fontFamily: 'monospace',
 };
 
-const methodCard = {
-  backgroundColor: '#252525',
-  border: '1px solid #444444',
-  borderRadius: '16px',
-  overflow: 'hidden',
-  margin: '24px 0',
-};
-
-const cardHeaderTertiary = {
-  backgroundColor: '#2d4a47',
-  padding: '16px 24px',
-};
-
-const cardTitleTertiary = {
+const transferDate = {
   color: '#ffffff',
-  fontSize: '16px',
-  fontWeight: '600',
+  fontSize: '12px',
   margin: '0',
+  opacity: '0.9',
 };
 
-const methodRow = {
+const summaryContent = {
+  padding: '24px',
+};
+
+const amountFlow = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
+  marginBottom: '24px',
   gap: '16px',
 };
 
-const methodItem = {
-  display: 'flex',
-  flexDirection: 'column' as const,
+const fromAmount = {
   flex: '1',
   textAlign: 'center' as const,
+  padding: '16px',
+  backgroundColor: '#0d1117',
+  borderRadius: '8px',
+  border: '1px solid #30363d',
 };
 
-const methodLabel = {
-  color: '#999999',
-  fontSize: '12px',
-  marginBottom: '8px',
+const toAmount = {
+  flex: '1',
+  textAlign: 'center' as const,
+  padding: '16px',
+  backgroundColor: '#0d1117',
+  borderRadius: '8px',
+  border: '1px solid #3B968F',
 };
 
-const methodValue = {
-  color: '#ffffff',
-  fontSize: '14px',
-  fontWeight: '600',
+const exchangeIndicator = {
+  display: 'flex',
+  flexDirection: 'column' as const,
+  alignItems: 'center',
+  gap: '4px',
 };
 
-const methodArrow = {
+const exchangeArrow = {
+  fontSize: '24px',
   color: '#3B968F',
-  fontSize: '20px',
   fontWeight: 'bold',
 };
 
-const providerBadge = {
-  display: 'block',
-  color: '#4BA89F',
+const exchangeRate = {
+  color: '#8b949e',
+  fontSize: '11px',
+  margin: '0',
+  textAlign: 'center' as const,
+  fontWeight: '500',
+};
+
+const amountLabel = {
+  color: '#8b949e',
   fontSize: '12px',
-  marginTop: '4px',
+  fontWeight: '500',
+  margin: '0 0 8px 0',
+  textTransform: 'uppercase' as const,
 };
 
-const statusCard = {
-  backgroundColor: '#1a2e2a',
-  border: '1px solid #3B968F',
-  borderRadius: '16px',
-  margin: '24px 0',
-  overflow: 'hidden',
+const amountValue = {
+  color: '#ffa657',
+  fontSize: '18px',
+  fontWeight: '700',
+  margin: '0 0 8px 0',
 };
 
-const statusHeader = {
-  backgroundColor: '#3B968F',
-  padding: '16px 24px',
+const finalAmountValue = {
+  color: '#4BA89F',
+  fontSize: '20px',
+  fontWeight: '700',
+  margin: '0 0 8px 0',
 };
 
-const statusTitle = {
+const methodText = {
   color: '#ffffff',
-  fontSize: '16px',
+  fontSize: '12px',
+  margin: '0',
+  fontWeight: '500',
+};
+
+const feesRow = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '16px',
+  backgroundColor: '#0d1117',
+  borderRadius: '8px',
+  border: '1px solid #30363d',
+};
+
+const feesLabel = {
+  color: '#8b949e',
+  fontSize: '14px',
+  fontWeight: '500',
+  margin: '0',
+};
+
+const feesValue = {
+  color: '#f85149',
+  fontSize: '14px',
   fontWeight: '600',
   margin: '0',
 };
 
+const recipientSection = {
+  marginBottom: '32px',
+};
+
+const recipientCard = {
+  backgroundColor: '#21262d',
+  border: '1px solid #30363d',
+  borderRadius: '12px',
+  padding: '24px',
+};
+
+const recipientDetails = {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gap: '20px',
+};
+
+const recipientField = {
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: '6px',
+};
+
+const fieldLabel = {
+  color: '#8b949e',
+  fontSize: '12px',
+  fontWeight: '500',
+  margin: '0',
+  textTransform: 'uppercase' as const,
+};
+
+const fieldValue = {
+  color: '#ffffff',
+  fontSize: '14px',
+  fontWeight: '600',
+  margin: '0',
+};
+
+const accountValue = {
+  color: '#58a6ff',
+  fontSize: '14px',
+  fontWeight: '600',
+  fontFamily: 'monospace',
+  margin: '0',
+};
+
+const processSection = {
+  marginBottom: '32px',
+};
+
 const stepsContainer = {
-  padding: '20px 24px',
+  display: 'flex',
+  flexDirection: 'column' as const,
+  gap: '12px',
 };
 
 const stepCompleted = {
   display: 'flex',
   alignItems: 'center',
-  gap: '12px',
-  marginBottom: '12px',
-  padding: '8px 0',
+  gap: '16px',
+  padding: '16px',
+  backgroundColor: '#21262d',
+  border: '1px solid #238636',
+  borderRadius: '8px',
 };
 
 const stepPending = {
   display: 'flex',
   alignItems: 'center',
-  gap: '12px',
-  marginBottom: '12px',
-  padding: '8px 0',
-  opacity: '0.6',
+  gap: '16px',
+  padding: '16px',
+  backgroundColor: '#21262d',
+  border: '1px solid #30363d',
+  borderRadius: '8px',
+  opacity: '0.7',
 };
 
-const stepIcon = {
-  fontSize: '16px',
-  width: '20px',
-};
-
-const stepText = {
+const stepNumber = {
+  width: '32px',
+  height: '32px',
+  borderRadius: '50%',
+  backgroundColor: '#3B968F',
   color: '#ffffff',
   fontSize: '14px',
-  fontWeight: '500',
+  fontWeight: '700',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: '0',
 };
 
-const timelineCard = {
-  backgroundColor: '#2a2a2a',
-  border: '1px solid #444444',
-  borderRadius: '12px',
-  padding: '20px',
-  margin: '24px 0',
+const stepContent = {
+  flex: '1',
 };
 
-const timelineTitle = {
-  color: '#4BA89F',
-  fontSize: '16px',
-  fontWeight: '600',
-  margin: '0 0 12px',
-};
-
-const timelineText = {
-  color: '#cccccc',
+const stepTitle = {
+  color: '#ffffff',
   fontSize: '14px',
+  fontWeight: '600',
+  margin: '0 0 4px 0',
+};
+
+const stepDescription = {
+  color: '#8b949e',
+  fontSize: '12px',
   margin: '0',
-  lineHeight: '1.6',
+  lineHeight: '1.4',
 };
 
-const finalMessage = {
-  color: '#cccccc',
-  fontSize: '16px',
-  lineHeight: '1.6',
-  margin: '24px 0',
-  textAlign: 'center' as const,
-  padding: '20px',
-  backgroundColor: '#2a2a2a',
-  borderRadius: '12px',
+const stepStatusCompleted = {
+  fontSize: '20px',
+  flexShrink: '0',
 };
 
-const ctaContainer = {
+const stepStatusPending = {
+  fontSize: '20px',
+  flexShrink: '0',
+  opacity: '0.5',
+};
+
+const timingSection = {
+  marginBottom: '32px',
+};
+
+const timingGrid = {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr 1fr 1fr',
+  gap: '16px',
+};
+
+const timingCard = {
   textAlign: 'center' as const,
-  margin: '32px 0 0',
+  padding: '20px 12px',
+  backgroundColor: '#21262d',
+  border: '1px solid #30363d',
+  borderRadius: '8px',
+};
+
+const timingIcon = {
+  fontSize: '24px',
+  marginBottom: '8px',
+  display: 'block',
+};
+
+const timingTitle = {
+  color: '#ffffff',
+  fontSize: '12px',
+  fontWeight: '600',
+  margin: '0 0 4px 0',
+  textTransform: 'uppercase' as const,
+};
+
+const timingValue = {
+  color: '#4BA89F',
+  fontSize: '14px',
+  fontWeight: '700',
+  margin: '0 0 4px 0',
+};
+
+const timingDescription = {
+  color: '#8b949e',
+  fontSize: '10px',
+  margin: '0',
+  lineHeight: '1.3',
+};
+
+const securitySection = {
+  marginBottom: '32px',
+};
+
+const securityGrid = {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gap: '16px',
+};
+
+const securityFeature = {
+  display: 'flex',
+  alignItems: 'flex-start',
+  gap: '12px',
+  padding: '16px',
+  backgroundColor: '#21262d',
+  border: '1px solid #30363d',
+  borderRadius: '8px',
+};
+
+const securityIcon = {
+  fontSize: '20px',
+  flexShrink: '0',
+  marginTop: '2px',
+};
+
+const securityContent = {
+  flex: '1',
+};
+
+const securityTitle = {
+  color: '#ffffff',
+  fontSize: '13px',
+  fontWeight: '600',
+  margin: '0 0 4px 0',
+};
+
+const securityDescription = {
+  color: '#8b949e',
+  fontSize: '11px',
+  margin: '0',
+  lineHeight: '1.4',
+};
+
+const thankYouSection = {
+  textAlign: 'center' as const,
+  marginTop: '40px',
   padding: '24px',
-  background: 'linear-gradient(135deg, rgba(59, 150, 143, 0.1) 0%, rgba(75, 168, 159, 0.1) 100%)',
+  backgroundColor: '#21262d',
   borderRadius: '12px',
-  border: '1px solid rgba(59, 150, 143, 0.2)',
+  border: '1px solid #3B968F',
 };
 
-const ctaText = {
+const thankYouMessage = {
   color: '#4BA89F',
   fontSize: '18px',
   fontWeight: '600',
+  margin: '0 0 12px 0',
+};
+
+const teamMessage = {
+  color: '#8b949e',
+  fontSize: '14px',
+  margin: '0 0 8px 0',
+  fontStyle: 'italic',
+};
+
+const teamSignature = {
+  color: '#ffffff',
+  fontSize: '14px',
   margin: '0',
+  fontWeight: '500',
 };
