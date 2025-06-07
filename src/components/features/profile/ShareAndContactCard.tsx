@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Share2, Mail, Phone, MessageCircle } from 'lucide-react';
+import { Share2, Mail, Phone, MessageCircle, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export function ShareAndContactCard() {
@@ -19,7 +19,6 @@ export function ShareAndContactCard() {
         console.log('Erreur lors du partage:', error);
       }
     } else {
-      // Fallback pour les navigateurs qui ne supportent pas l'API de partage
       navigator.clipboard.writeText('https://app.terangaexchange.com');
       toast({
         title: "Lien copié !",
@@ -41,57 +40,72 @@ export function ShareAndContactCard() {
   };
 
   return (
-    <Card className="bg-terex-darker border-terex-gray">
-      <CardHeader>
-        <CardTitle className="text-white">Partager & Contact</CardTitle>
+    <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border-terex-gray shadow-2xl">
+      <CardHeader className="bg-gradient-to-r from-terex-accent/10 to-transparent border-b border-terex-gray/50">
+        <CardTitle className="text-white flex items-center">
+          <Share2 className="w-5 h-5 mr-2 text-terex-accent" />
+          Partager & Contact
+        </CardTitle>
         <CardDescription className="text-gray-400">
           Partagez Terex ou contactez notre équipe
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-3">
+      <CardContent className="space-y-6 p-6">
+        {/* Partage */}
+        <div className="p-4 bg-gradient-to-r from-terex-accent/10 to-terex-accent/5 rounded-xl border border-terex-accent/20">
           <Button
             onClick={handleShare}
             variant="outline"
-            className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray"
+            className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
           >
             <Share2 className="w-4 h-4 mr-2" />
-            Partager Terex
+            Partager Terex avec vos amis
+          </Button>
+        </div>
+        
+        {/* Contact */}
+        <div className="space-y-3">
+          <h4 className="text-white font-medium text-sm mb-3">Contactez notre équipe :</h4>
+          
+          <Button
+            onClick={handleEmailContact}
+            variant="outline"
+            size="sm"
+            className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray justify-start"
+          >
+            <Mail className="w-4 h-4 mr-3" />
+            <span className="flex-1 text-left">terangaexchange@gmail.com</span>
+            <ExternalLink className="w-3 h-3" />
           </Button>
           
-          <div className="space-y-2">
-            <p className="text-white font-medium text-sm">Contactez-nous :</p>
-            
-            <Button
-              onClick={handleEmailContact}
-              variant="outline"
-              size="sm"
-              className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray text-xs"
-            >
-              <Mail className="w-3 h-3 mr-2" />
-              terangaexchange@gmail.com
-            </Button>
-            
-            <Button
-              onClick={handlePhoneContact}
-              variant="outline"
-              size="sm"
-              className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray text-xs"
-            >
-              <Phone className="w-3 h-3 mr-2" />
-              +221 77 397 27 49
-            </Button>
-            
-            <Button
-              onClick={handleWhatsAppContact}
-              variant="outline"
-              size="sm"
-              className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray text-xs"
-            >
-              <MessageCircle className="w-3 h-3 mr-2" />
-              WhatsApp: +1 418 261 9091
-            </Button>
-          </div>
+          <Button
+            onClick={handlePhoneContact}
+            variant="outline"
+            size="sm"
+            className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray justify-start"
+          >
+            <Phone className="w-4 h-4 mr-3" />
+            <span className="flex-1 text-left">+221 77 397 27 49</span>
+            <ExternalLink className="w-3 h-3" />
+          </Button>
+          
+          <Button
+            onClick={handleWhatsAppContact}
+            variant="outline"
+            size="sm"
+            className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray justify-start"
+          >
+            <MessageCircle className="w-4 h-4 mr-3" />
+            <span className="flex-1 text-left">WhatsApp Support</span>
+            <ExternalLink className="w-3 h-3" />
+          </Button>
+        </div>
+
+        {/* Support disponible */}
+        <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-xl">
+          <p className="text-green-400 text-sm text-center">
+            💬 Support disponible 24h/7j
+          </p>
         </div>
       </CardContent>
     </Card>
