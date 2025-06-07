@@ -55,6 +55,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate }: TransferOrdersTa
       case 'interac':
         return 'Interac E-Transfer';
       case 'bank':
+      case 'bank_transfer':
         return 'Virement bancaire';
       case 'mobile':
         return 'Mobile Money';
@@ -119,7 +120,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate }: TransferOrdersTa
                 </div>
               </div>
 
-              {/* Amount Info */}
+              {/* Amount Info - Pas d'USDT pour les transferts */}
               <div className="text-right">
                 <div className="text-2xl font-bold text-white">
                   {order.amount.toLocaleString()} {order.from_currency || order.currency}
@@ -199,7 +200,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate }: TransferOrdersTa
                     <div className="flex justify-between">
                       <span className="text-gray-400">Méthode de paiement:</span>
                       <span className="text-white">
-                        {getPaymentMethodLabel(order.payment_method || 'bank')}
+                        {getPaymentMethodLabel(order.payment_method || 'bank_transfer')}
                       </span>
                     </div>
                     <div className="flex justify-between">
