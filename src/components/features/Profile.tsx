@@ -1,13 +1,13 @@
 
 import { useState } from 'react';
 import { useUserProfile } from '@/hooks/useUserProfile';
+import { useKYC } from '@/hooks/useKYC';
 import { KYCAlert } from './KYCAlert';
 import { KYCPage } from './KYCPage';
 import { PersonalInfoCard } from './profile/PersonalInfoCard';
 import { ShareAndContactCard } from './profile/ShareAndContactCard';
-import { ProfileStatsCard } from './profile/ProfileStatsCard';
 import { SecuritySettingsCard } from './profile/SecuritySettingsCard';
-import { User, Shield, Settings, Share2, Star, Award } from 'lucide-react';
+import { User, Star, Award } from 'lucide-react';
 
 interface ProfileProps {
   user: { email: string; name: string } | null;
@@ -17,12 +17,13 @@ interface ProfileProps {
 export function Profile({ user, onLogout }: ProfileProps) {
   const [showKYC, setShowKYC] = useState(false);
   const { loading } = useUserProfile();
+  const { kycData, loading: kycLoading } = useKYC();
 
   const handleStartKYC = () => {
     setShowKYC(true);
   };
 
-  if (loading) {
+  if (loading || kycLoading) {
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-white">Chargement...</div>
@@ -33,6 +34,9 @@ export function Profile({ user, onLogout }: ProfileProps) {
   if (showKYC) {
     return <KYCPage onBack={() => setShowKYC(false)} />;
   }
+
+  const isKYCVerified = kycData?.status === 'approved';
+  const showKYCAlert = !isKYCVerified && kycData?.status !== 'submitted' && kycData?.status !== 'under_review';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark animate-fade-in">
@@ -62,18 +66,17 @@ export function Profile({ user, onLogout }: ProfileProps) {
         </div>
       </div>
 
-      {/* KYC Alert */}
-      <div className="mb-8">
-        <KYCAlert status="pending" onStartKYC={handleStartKYC} />
-      </div>
+      {/* KYC Alert - Seulement si pas vérifié et pas en cours */}
+      {showKYCAlert && (
+        <div className="mb-8">
+          <KYCAlert status={kycData?.status || 'pending'} onStartKYC={handleStartKYC} />
+        </div>
+      )}
 
       {/* Grille des cartes */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Colonne principale */}
         <div className="lg:col-span-2 space-y-8">
-          {/* Statistiques du profil */}
-          <ProfileStatsCard />
-          
           {/* Informations personnelles */}
           <PersonalInfoCard user={user} />
         </div>
@@ -81,7 +84,11 @@ export function Profile({ user, onLogout }: ProfileProps) {
         {/* Colonne secondaire */}
         <div className="space-y-8">
           {/* Paramètres de sécurité */}
-          <SecuritySettingsCard onStartKYC={handleStartKYC} />
+          <SecuritySettingsCard 
+            onStartKYC={handleStartKYC} 
+            kycData={kycData}
+            isKYCVerified={isKYCVerified}
+          />
           
           {/* Partage et contact */}
           <ShareAndContactCard />
