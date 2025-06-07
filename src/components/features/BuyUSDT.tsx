@@ -162,7 +162,7 @@ export function BuyUSDT() {
               <p className="text-gray-400 text-sm md:text-base">Achetez des USDT avec de l'argent fiat</p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Main Trading Interface - Même largeur que VendreUSDT et InternationalTransfer */}
               <div className="lg:col-span-2 w-full">
                 <Card className="bg-terex-darker border-terex-gray shadow-2xl w-full overflow-hidden">
