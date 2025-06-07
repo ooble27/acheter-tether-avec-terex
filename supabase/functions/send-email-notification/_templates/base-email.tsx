@@ -26,14 +26,9 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
       <Preview>{preview}</Preview>
       <Body style={main}>
         <Container style={container}>
-          {/* Header simple avec logo et titre */}
+          {/* Header simple */}
           <Section style={header}>
-            <div style={logoContainer}>
-              <div style={logoCircle}>
-                <span style={logoText}>T</span>
-              </div>
-              <Text style={brandName}>TEREX</Text>
-            </div>
+            <Text style={brandName}>TEREX</Text>
             <Heading style={titleStyle}>{title}</Heading>
           </Section>
 
@@ -47,54 +42,42 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
             <Hr style={separator} />
             
             {/* Support client */}
-            <div style={footerBlock}>
-              <Text style={footerTitle}>📞 Support Client 24h/7j</Text>
-              <div style={contactGrid}>
-                <Text style={contactText}>📧 terangaexchange@gmail.com</Text>
-                <Text style={contactText}>📱 +221 77 397 27 49</Text>
-                <Text style={contactText}>💬 WhatsApp : +1 418 261 9091</Text>
-                <Text style={contactText}>👨‍💼 lomohamed834@gmail.com</Text>
-              </div>
-            </div>
+            <Text style={footerTitle}>📞 Support Client 24h/7j</Text>
+            <Text style={contactText}>📧 terangaexchange@gmail.com</Text>
+            <Text style={contactText}>📱 +221 77 397 27 49</Text>
+            <Text style={contactText}>💬 WhatsApp : +1 418 261 9091</Text>
+            <Text style={contactText}>👨‍💼 lomohamed834@gmail.com</Text>
+            
+            <Text style={footerTitle}>🚀 Accédez à votre compte</Text>
+            <Link href="https://app.terangaexchange.com" style={platformLink}>
+              Ouvrir la plateforme Terex →
+            </Link>
 
-            {/* Accès plateforme */}
-            <div style={footerBlock}>
-              <Text style={footerTitle}>🚀 Accédez à votre compte</Text>
-              <Link href="https://app.terangaexchange.com" style={platformLink}>
-                Ouvrir la plateforme Terex →
-              </Link>
-            </div>
-
-            {/* Sécurité */}
-            <div style={footerBlock}>
-              <Text style={footerTitle}>🔒 Sécurité & Conformité</Text>
-              <Text style={securityText}>
-                • Cryptage SSL 256-bit{'\n'}
-                • Portefeuilles multi-signatures{'\n'}
-                • Surveillance 24h/7j{'\n'}
-                • Conformité réglementaire internationale
-              </Text>
-            </div>
+            <Text style={footerTitle}>🔒 Sécurité & Conformité</Text>
+            <Text style={securityText}>
+              • Cryptage SSL 256-bit{'\n'}
+              • Portefeuilles multi-signatures{'\n'}
+              • Surveillance 24h/7j{'\n'}
+              • Conformité réglementaire internationale
+            </Text>
 
             {/* Informations légales */}
-            <div style={legalBlock}>
-              <Text style={legalText}>
-                <strong>Terex</strong> - Plateforme d'échange crypto et transferts internationaux
-              </Text>
-              <Text style={legalText}>
-                Fondé par Mohamed Lo • Basé au Sénégal, Dakar
-              </Text>
-              <div style={legalLinks}>
-                <Link href="https://app.terangaexchange.com/terms" style={legalLink}>Conditions</Link>
-                <span style={linkSeparator}> • </span>
-                <Link href="https://app.terangaexchange.com/privacy" style={legalLink}>Confidentialité</Link>
-                <span style={linkSeparator}> • </span>
-                <Link href="https://app.terangaexchange.com/security" style={legalLink}>Sécurité</Link>
-              </div>
-              <Text style={copyrightText}>
-                © 2024 Terex. Tous droits réservés.
-              </Text>
+            <Text style={legalText}>
+              <strong>Terex</strong> - Plateforme d'échange crypto et transferts internationaux
+            </Text>
+            <Text style={legalText}>
+              Fondé par Mohamed Lo • Basé au Sénégal, Dakar
+            </Text>
+            <div style={legalLinks}>
+              <Link href="https://app.terangaexchange.com/terms" style={legalLink}>Conditions</Link>
+              <span style={linkSeparator}> • </span>
+              <Link href="https://app.terangaexchange.com/privacy" style={legalLink}>Confidentialité</Link>
+              <span style={linkSeparator}> • </span>
+              <Link href="https://app.terangaexchange.com/security" style={legalLink}>Sécurité</Link>
             </div>
+            <Text style={copyrightText}>
+              © 2024 Terex. Tous droits réservés.
+            </Text>
           </Section>
         </Container>
       </Body>
@@ -102,61 +85,37 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
   );
 };
 
-// Styles modernes avec couleurs Terex
+// Styles simples et lisibles
 const main = {
   fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif',
   margin: '0',
   padding: '20px 0',
-  backgroundColor: 'transparent',
-  color: '#ffffff',
+  backgroundColor: '#f4f4f4',
+  color: '#333333',
 };
 
 const container = {
   maxWidth: '600px',
   margin: '0 auto',
-  backgroundColor: 'transparent',
+  backgroundColor: '#ffffff',
+  padding: '40px',
 };
 
 const header = {
-  marginBottom: '32px',
+  marginBottom: '30px',
   textAlign: 'center' as const,
 };
 
-const logoContainer = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '12px',
-  marginBottom: '20px',
-};
-
-const logoCircle = {
-  width: '40px',
-  height: '40px',
-  borderRadius: '50%',
-  background: 'linear-gradient(135deg, #3B968F 0%, #4BA89F 100%)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
-
-const logoText = {
-  color: '#ffffff',
-  fontSize: '20px',
-  fontWeight: '900',
-  letterSpacing: '1px',
-};
-
 const brandName = {
-  color: '#3B968F',
-  fontSize: '24px',
+  color: '#2563eb',
+  fontSize: '28px',
   fontWeight: '700',
-  margin: '0',
+  margin: '0 0 10px 0',
   letterSpacing: '2px',
 };
 
 const titleStyle = {
-  color: '#ffffff',
+  color: '#333333',
   fontSize: '24px',
   fontWeight: '600',
   margin: '0',
@@ -168,91 +127,75 @@ const contentSection = {
 };
 
 const footer = {
-  borderTop: '1px solid #3B968F',
-  paddingTop: '32px',
+  borderTop: '2px solid #e5e7eb',
+  paddingTop: '30px',
+  marginTop: '40px',
 };
 
 const separator = {
-  borderColor: '#3B968F',
-  margin: '0 0 24px 0',
-};
-
-const footerBlock = {
-  marginBottom: '24px',
+  borderColor: '#e5e7eb',
+  margin: '0 0 20px 0',
 };
 
 const footerTitle = {
-  color: '#3B968F',
+  color: '#2563eb',
   fontSize: '16px',
   fontWeight: '600',
-  margin: '0 0 12px 0',
-};
-
-const contactGrid = {
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
-  gap: '8px',
+  margin: '20px 0 8px 0',
 };
 
 const contactText = {
-  color: '#e0e0e0',
+  color: '#666666',
   fontSize: '14px',
-  margin: '0',
+  margin: '4px 0',
   fontWeight: '400',
 };
 
 const platformLink = {
-  color: '#3B968F',
+  color: '#2563eb',
   fontSize: '16px',
   fontWeight: '600',
   textDecoration: 'none',
   display: 'inline-block',
-  padding: '12px 24px',
-  backgroundColor: 'rgba(59, 150, 143, 0.1)',
-  borderRadius: '8px',
-  border: '1px solid #3B968F',
+  margin: '8px 0',
 };
 
 const securityText = {
-  color: '#e0e0e0',
+  color: '#666666',
   fontSize: '13px',
-  margin: '0',
+  margin: '8px 0',
   lineHeight: '1.5',
   whiteSpace: 'pre-line' as const,
 };
 
-const legalBlock = {
-  textAlign: 'center' as const,
-  marginTop: '32px',
-  paddingTop: '20px',
-  borderTop: '1px solid rgba(59, 150, 143, 0.3)',
-};
-
 const legalText = {
-  color: '#b0b0b0',
+  color: '#888888',
   fontSize: '12px',
-  margin: '0 0 8px 0',
+  margin: '15px 0 5px 0',
   lineHeight: '1.4',
+  textAlign: 'center' as const,
 };
 
 const legalLinks = {
-  margin: '12px 0',
+  margin: '10px 0',
+  textAlign: 'center' as const,
 };
 
 const legalLink = {
-  color: '#3B968F',
+  color: '#2563eb',
   fontSize: '12px',
   textDecoration: 'none',
 };
 
 const linkSeparator = {
-  color: '#b0b0b0',
+  color: '#888888',
   fontSize: '12px',
 };
 
 const copyrightText = {
-  color: '#888888',
+  color: '#999999',
   fontSize: '11px',
-  margin: '12px 0 0 0',
+  margin: '10px 0 0 0',
   lineHeight: '1.4',
+  textAlign: 'center' as const,
 };
