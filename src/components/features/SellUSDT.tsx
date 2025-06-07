@@ -14,6 +14,7 @@ import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { KYCProtection } from './KYCProtection';
+import { KYCPage } from './KYCPage';
 
 // Adresses de portefeuille par réseau - Vos vraies adresses
 const WALLET_ADDRESSES = {
@@ -25,6 +26,7 @@ const WALLET_ADDRESSES = {
 };
 
 export function SellUSDT() {
+  const [showKYCPage, setShowKYCPage] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'bank' | 'mobile'>('bank');
   const [usdtAmount, setUsdtAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
@@ -156,9 +158,13 @@ export function SellUSDT() {
   };
 
   const handleKYCRequired = () => {
-    // Navigation vers la page KYC - vous pouvez ajuster selon votre routing
-    window.location.href = '/dashboard?tab=kyc';
+    setShowKYCPage(true);
   };
+
+  // Si on est sur la page KYC
+  if (showKYCPage) {
+    return <KYCPage onBack={() => setShowKYCPage(false)} />;
+  }
 
   // État de confirmation finale
   if (showFinalConfirmation) {

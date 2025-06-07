@@ -16,8 +16,10 @@ import { PaymentInstructions } from './international-transfer/PaymentInstruction
 import { TransferPending } from './international-transfer/TransferPending';
 import { MobileMoneySelector } from './international-transfer/MobileMoneySelector';
 import { KYCProtection } from './KYCProtection';
+import { KYCPage } from './KYCPage';
 
 export function InternationalTransfer() {
+  const [showKYCPage, setShowKYCPage] = useState(false);
   const [currentStep, setCurrentStep] = useState('form');
   const [sendAmount, setSendAmount] = useState('');
   const [recipientCountry, setRecipientCountry] = useState('');
@@ -58,8 +60,7 @@ export function InternationalTransfer() {
   };
 
   const handleKYCRequired = () => {
-    // Navigation vers la page KYC - vous pouvez ajuster selon votre routing
-    window.location.href = '/dashboard?tab=kyc';
+    setShowKYCPage(true);
   };
 
   const handleFormSubmit = () => {
@@ -141,6 +142,10 @@ export function InternationalTransfer() {
   };
 
   // Rendu conditionnel selon l'étape
+  if (showKYCPage) {
+    return <KYCPage onBack={() => setShowKYCPage(false)} />;
+  }
+
   if (currentStep === 'mobile-money') {
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
