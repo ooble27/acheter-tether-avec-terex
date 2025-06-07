@@ -260,7 +260,11 @@ export function BuyUSDT() {
                           }`}
                         >
                           <div className="flex items-center space-x-3">
-                            <div className="w-6 h-6 text-xl">📱</div>
+                            <img 
+                              src="/lovable-uploads/2562d408-8490-4483-894c-a0e6cdd19337.png" 
+                              alt="Wave" 
+                              className="w-6 h-6"
+                            />
                             <div>
                               <p className="text-white font-medium text-sm">Mobile Money</p>
                               <p className="text-gray-400 text-xs">Wave et Orange Money</p>
