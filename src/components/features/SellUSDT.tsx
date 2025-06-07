@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -199,7 +198,7 @@ export function SellUSDT() {
         <USDTSendingInstructions
           orderData={orderData}
           onBack={() => setCurrentStep('confirmation')}
-          onComplete={() => {
+          onUSDTSent={() => {
             toast({
               title: "Commande créée",
               description: "Votre ordre de vente a été enregistré.",

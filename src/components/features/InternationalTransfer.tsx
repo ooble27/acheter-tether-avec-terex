@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -208,16 +207,16 @@ export function InternationalTransfer() {
                 }
 
                 const newOrderData = {
-                  amount: parseFloat(amount),
-                  fromCurrency,
-                  toCurrency,
-                  recipientName,
-                  recipientPhone,
+                  sendAmount: amount,
+                  receiveAmount: (parseFloat(amount) * (exchangeRates[`${fromCurrency}-${toCurrency}` as keyof typeof exchangeRates] || 0)).toFixed(0),
                   recipientCountry,
                   paymentMethod,
                   receiveMethod,
-                  exchangeRate: exchangeRates[`${fromCurrency}-${toCurrency}` as keyof typeof exchangeRates],
-                  totalAmount: parseFloat(amount) * (exchangeRates[`${fromCurrency}-${toCurrency}` as keyof typeof exchangeRates] || 0),
+                  recipientFirstName: recipientName.split(' ')[0] || '',
+                  recipientLastName: recipientName.split(' ').slice(1).join(' ') || '',
+                  recipientPhone,
+                  exchangeRate: exchangeRates[`${fromCurrency}-${toCurrency}` as keyof typeof exchangeRates] || 0,
+                  fees: '0',
                 };
 
                 setOrderData(newOrderData);
@@ -234,20 +233,20 @@ export function InternationalTransfer() {
       
       {currentStep === 'confirmation' && orderData && (
         <TransferConfirmation
-          orderData={orderData}
+          transferData={orderData}
           onConfirm={async () => {
             try {
               const transfer = await createTransfer({
-                amount: orderData.amount,
-                from_currency: orderData.fromCurrency,
-                to_currency: orderData.toCurrency,
-                recipient_name: orderData.recipientName,
+                amount: parseFloat(orderData.sendAmount),
+                from_currency: fromCurrency,
+                to_currency: toCurrency,
+                recipient_name: `${orderData.recipientFirstName} ${orderData.recipientLastName}`,
                 recipient_phone: orderData.recipientPhone,
                 recipient_country: orderData.recipientCountry,
                 payment_method: orderData.paymentMethod,
                 receive_method: orderData.receiveMethod,
                 exchange_rate: orderData.exchangeRate,
-                total_amount: orderData.totalAmount,
+                total_amount: parseFloat(orderData.receiveAmount),
                 fees: 0
               });
 
@@ -268,8 +267,8 @@ export function InternationalTransfer() {
       
       {currentStep === 'pending' && orderData && (
         <TransferPending
-          orderData={orderData}
-          onNewTransfer={() => {
+          transferData={orderData}
+          onBackToDashboard={() => {
             setCurrentStep('form');
             setAmount('');
             setRecipientName('');
