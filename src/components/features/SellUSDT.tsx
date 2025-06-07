@@ -199,7 +199,7 @@ export function SellUSDT() {
         <USDTSendingInstructions
           orderData={orderData}
           onBack={() => setCurrentStep('confirmation')}
-          onComplete={() => {
+          onUSDTSent={() => {
             toast({
               title: "Commande créée",
               description: "Votre ordre de vente a été enregistré.",
