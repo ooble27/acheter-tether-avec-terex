@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { KYCProtection } from './KYCProtection';
-import { KYCPage };
+import { KYCPage } from './KYCPage';
 
 type PaymentMethodType = 'card' | 'mobile' | 'wave' | 'orange_money' | 'bank' | 'bank_transfer' | 'interac';
 
