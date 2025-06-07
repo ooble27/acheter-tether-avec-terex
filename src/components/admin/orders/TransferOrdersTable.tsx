@@ -8,7 +8,8 @@ import {
   TrendingUp,
   Eye,
   Copy,
-  Send
+  Send,
+  Trash2
 } from 'lucide-react';
 import { UnifiedOrder } from '@/hooks/useOrders';
 import type { Database } from '@/integrations/supabase/types';
@@ -18,9 +19,10 @@ type OrderStatus = Database['public']['Enums']['order_status'];
 interface TransferOrdersTableProps {
   orders: UnifiedOrder[];
   onStatusUpdate: (orderId: string, status: OrderStatus, paymentStatus?: string) => void;
+  onMoveToTrash: (orderId: string) => void;
 }
 
-export function TransferOrdersTable({ orders, onStatusUpdate }: TransferOrdersTableProps) {
+export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: TransferOrdersTableProps) {
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
   const getStatusBadge = (status: string) => {
@@ -59,6 +61,10 @@ export function TransferOrdersTable({ orders, onStatusUpdate }: TransferOrdersTa
         return 'Virement bancaire';
       case 'mobile':
         return 'Mobile Money';
+      case 'wave':
+        return 'Wave';
+      case 'orange_money':
+        return 'Orange Money';
       default:
         return paymentMethod;
     }
@@ -85,14 +91,14 @@ export function TransferOrdersTable({ orders, onStatusUpdate }: TransferOrdersTa
       {orders.map((order) => (
         <div 
           key={order.id} 
-          className="bg-terex-gray/30 rounded-lg border border-terex-gray/50 overflow-hidden"
+          className="bg-terex-darker rounded-xl border border-terex-gray/50 overflow-hidden hover:border-terex-accent/30 transition-all duration-300"
         >
           {/* Order Header */}
           <div className="p-6">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
               {/* Order Info */}
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
                   <Send className="w-6 h-6 text-blue-500" />
                 </div>
                 
@@ -103,7 +109,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate }: TransferOrdersTa
                     </h3>
                     <button
                       onClick={() => copyToClipboard(`TEREX-${order.id.slice(-8)}`)}
-                      className="text-gray-400 hover:text-white"
+                      className="text-gray-400 hover:text-terex-accent transition-colors"
                     >
                       <Copy className="w-4 h-4" />
                     </button>
@@ -120,7 +126,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate }: TransferOrdersTa
                 </div>
               </div>
 
-              {/* Amount Info - Pas d'USDT pour les transferts */}
+              {/* Amount Info */}
               <div className="text-right">
                 <div className="text-2xl font-bold text-white">
                   {order.amount.toLocaleString()} {order.from_currency || order.currency}
@@ -143,6 +149,15 @@ export function TransferOrdersTable({ orders, onStatusUpdate }: TransferOrdersTa
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   {expandedOrder === order.id ? 'Masquer' : 'Détails'}
+                </Button>
+
+                <Button
+                  onClick={() => onMoveToTrash(order.id)}
+                  variant="outline"
+                  size="sm"
+                  className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                >
+                  <Trash2 className="w-4 h-4" />
                 </Button>
 
                 {order.status === 'pending' && (
@@ -193,10 +208,10 @@ export function TransferOrdersTable({ orders, onStatusUpdate }: TransferOrdersTa
           {/* Expanded Details */}
           {expandedOrder === order.id && (
             <div className="border-t border-terex-gray/50 bg-terex-gray/20 p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div>
-                  <h4 className="text-sm font-medium text-gray-400 mb-2">Informations d'envoi</h4>
-                  <div className="space-y-2 text-sm">
+                  <h4 className="text-sm font-medium text-terex-accent mb-3">Informations d'envoi</h4>
+                  <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-400">Méthode de paiement:</span>
                       <span className="text-white">
@@ -204,44 +219,92 @@ export function TransferOrdersTable({ orders, onStatusUpdate }: TransferOrdersTa
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Taux:</span>
-                      <span className="text-white">{order.exchange_rate}</span>
+                      <span className="text-gray-400">Taux de change:</span>
+                      <span className="text-white font-medium">{order.exchange_rate}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Frais:</span>
+                      <span className="text-gray-400">Frais de transfert:</span>
                       <span className="text-white">{order.fees} {order.from_currency}</span>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="text-sm font-medium text-gray-400 mb-2">Destinataire</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Nom:</span>
-                      <span className="text-white">{order.recipient_name}</span>
+                  <h4 className="text-sm font-medium text-terex-accent mb-3">Informations du destinataire</h4>
+                  <div className="space-y-3 text-sm">
+                    <div>
+                      <span className="text-gray-400 block mb-1">Nom complet:</span>
+                      <span className="text-white font-medium">{order.recipient_name}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Pays:</span>
+                    
+                    <div>
+                      <span className="text-gray-400 block mb-1">Pays de destination:</span>
                       <span className="text-white">{order.recipient_country}</span>
                     </div>
-                    {order.payment_reference && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Référence:</span>
-                        <span className="text-white">{order.payment_reference}</span>
+
+                    {order.recipient_phone && (
+                      <div>
+                        <span className="text-gray-400 block mb-1">Numéro de téléphone:</span>
+                        <div className="flex items-center justify-between bg-terex-gray/50 p-2 rounded">
+                          <span className="text-white font-mono">{order.recipient_phone}</span>
+                          <Button
+                            onClick={() => copyToClipboard(order.recipient_phone)}
+                            size="sm"
+                            variant="outline"
+                            className="h-6 w-6 p-0 border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-white"
+                          >
+                            <Copy className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {order.recipient_address && (
+                      <div>
+                        <span className="text-gray-400 block mb-1">Adresse:</span>
+                        <span className="text-white text-xs">{order.recipient_address}</span>
                       </div>
                     )}
                   </div>
                 </div>
 
-                {order.notes && (
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-2">Notes</h4>
-                    <div className="bg-terex-gray/50 p-3 rounded text-sm text-white">
-                      {order.notes}
-                    </div>
+                <div>
+                  <h4 className="text-sm font-medium text-terex-accent mb-3">Détails du transfert</h4>
+                  <div className="space-y-3 text-sm">
+                    {order.payment_reference && (
+                      <div>
+                        <span className="text-gray-400 block mb-1">Référence de paiement:</span>
+                        <div className="flex items-center justify-between bg-terex-gray/50 p-2 rounded">
+                          <span className="text-white font-mono text-xs">{order.payment_reference}</span>
+                          <Button
+                            onClick={() => copyToClipboard(order.payment_reference)}
+                            size="sm"
+                            variant="outline"
+                            className="h-6 w-6 p-0 border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-white"
+                          >
+                            <Copy className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {order.transfer_purpose && (
+                      <div>
+                        <span className="text-gray-400 block mb-1">Motif du transfert:</span>
+                        <span className="text-white">{order.transfer_purpose}</span>
+                      </div>
+                    )}
+
+                    {order.notes && (
+                      <div>
+                        <span className="text-gray-400 block mb-1">Notes:</span>
+                        <div className="bg-terex-gray/50 p-3 rounded text-white">
+                          {order.notes}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             </div>
           )}

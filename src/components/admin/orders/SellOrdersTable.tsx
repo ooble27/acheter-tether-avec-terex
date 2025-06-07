@@ -8,7 +8,8 @@ import {
   TrendingUp,
   Eye,
   Copy,
-  TrendingDown
+  TrendingDown,
+  Trash2
 } from 'lucide-react';
 import { UnifiedOrder } from '@/hooks/useOrders';
 import type { Database } from '@/integrations/supabase/types';
@@ -18,9 +19,10 @@ type OrderStatus = Database['public']['Enums']['order_status'];
 interface SellOrdersTableProps {
   orders: UnifiedOrder[];
   onStatusUpdate: (orderId: string, status: OrderStatus, paymentStatus?: string) => void;
+  onMoveToTrash: (orderId: string) => void;
 }
 
-export function SellOrdersTable({ orders, onStatusUpdate }: SellOrdersTableProps) {
+export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellOrdersTableProps) {
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
   const getStatusBadge = (status: string) => {
@@ -52,6 +54,21 @@ export function SellOrdersTable({ orders, onStatusUpdate }: SellOrdersTableProps
     navigator.clipboard.writeText(text);
   };
 
+  const getPaymentServiceLabel = (paymentMethod: string, paymentDetails?: any) => {
+    switch (paymentMethod) {
+      case 'mobile':
+        return paymentDetails?.service || 'Mobile Money';
+      case 'bank':
+        return 'Virement bancaire';
+      case 'wave':
+        return 'Wave';
+      case 'orange_money':
+        return 'Orange Money';
+      default:
+        return paymentMethod;
+    }
+  };
+
   if (orders.length === 0) {
     return (
       <div className="text-center py-12">
@@ -69,14 +86,14 @@ export function SellOrdersTable({ orders, onStatusUpdate }: SellOrdersTableProps
       {orders.map((order) => (
         <div 
           key={order.id} 
-          className="bg-terex-gray/30 rounded-lg border border-terex-gray/50 overflow-hidden"
+          className="bg-terex-darker rounded-xl border border-terex-gray/50 overflow-hidden hover:border-terex-accent/30 transition-all duration-300"
         >
           {/* Order Header */}
           <div className="p-6">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
               {/* Order Info */}
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center">
                   <TrendingDown className="w-6 h-6 text-red-500" />
                 </div>
                 
@@ -87,7 +104,7 @@ export function SellOrdersTable({ orders, onStatusUpdate }: SellOrdersTableProps
                     </h3>
                     <button
                       onClick={() => copyToClipboard(`TEREX-${order.id.slice(-8)}`)}
-                      className="text-gray-400 hover:text-white"
+                      className="text-gray-400 hover:text-terex-accent transition-colors"
                     >
                       <Copy className="w-4 h-4" />
                     </button>
@@ -112,7 +129,7 @@ export function SellOrdersTable({ orders, onStatusUpdate }: SellOrdersTableProps
                 </div>
               </div>
 
-              {/* Actions - same as BuyOrdersTable */}
+              {/* Actions */}
               <div className="flex items-center space-x-2">
                 <Button
                   onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
@@ -122,6 +139,15 @@ export function SellOrdersTable({ orders, onStatusUpdate }: SellOrdersTableProps
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   {expandedOrder === order.id ? 'Masquer' : 'Détails'}
+                </Button>
+
+                <Button
+                  onClick={() => onMoveToTrash(order.id)}
+                  variant="outline"
+                  size="sm"
+                  className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                >
+                  <Trash2 className="w-4 h-4" />
                 </Button>
 
                 {order.status === 'pending' && (
@@ -172,34 +198,77 @@ export function SellOrdersTable({ orders, onStatusUpdate }: SellOrdersTableProps
           {/* Expanded Details */}
           {expandedOrder === order.id && (
             <div className="border-t border-terex-gray/50 bg-terex-gray/20 p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div>
-                  <h4 className="text-sm font-medium text-gray-400 mb-2">Informations de paiement</h4>
-                  <div className="space-y-2 text-sm">
+                  <h4 className="text-sm font-medium text-terex-accent mb-3">Informations de transaction</h4>
+                  <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Méthode:</span>
-                      <span className="text-white">{order.payment_method}</span>
+                      <span className="text-gray-400">Taux de change:</span>
+                      <span className="text-white font-medium">{order.exchange_rate}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Taux:</span>
-                      <span className="text-white">{order.exchange_rate}</span>
+                      <span className="text-gray-400">Date:</span>
+                      <span className="text-white">{new Date(order.created_at).toLocaleDateString('fr-FR')}</span>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="text-sm font-medium text-gray-400 mb-2">Compte de réception</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Référence:</span>
-                      <span className="text-white">{order.payment_reference || 'Non spécifié'}</span>
+                  <h4 className="text-sm font-medium text-terex-accent mb-3">Détails de réception</h4>
+                  <div className="space-y-3 text-sm">
+                    <div>
+                      <span className="text-gray-400 block mb-1">Service de paiement:</span>
+                      <span className="text-white font-medium">
+                        {getPaymentServiceLabel(order.payment_method, order.payment_details)}
+                      </span>
                     </div>
+                    
+                    {order.recipient_phone && (
+                      <div>
+                        <span className="text-gray-400 block mb-1">Numéro de réception:</span>
+                        <div className="flex items-center justify-between bg-terex-gray/50 p-2 rounded">
+                          <span className="text-white font-mono">{order.recipient_phone}</span>
+                          <Button
+                            onClick={() => copyToClipboard(order.recipient_phone)}
+                            size="sm"
+                            variant="outline"
+                            className="h-6 w-6 p-0 border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-white"
+                          >
+                            <Copy className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {order.recipient_name && (
+                      <div>
+                        <span className="text-gray-400 block mb-1">Nom du bénéficiaire:</span>
+                        <span className="text-white">{order.recipient_name}</span>
+                      </div>
+                    )}
+
+                    {order.payment_reference && (
+                      <div>
+                        <span className="text-gray-400 block mb-1">Référence:</span>
+                        <div className="flex items-center justify-between bg-terex-gray/50 p-2 rounded">
+                          <span className="text-white font-mono text-xs">{order.payment_reference}</span>
+                          <Button
+                            onClick={() => copyToClipboard(order.payment_reference)}
+                            size="sm"
+                            variant="outline"
+                            className="h-6 w-6 p-0 border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-white"
+                          >
+                            <Copy className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {order.notes && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-2">Notes</h4>
+                    <h4 className="text-sm font-medium text-terex-accent mb-3">Notes</h4>
                     <div className="bg-terex-gray/50 p-3 rounded text-sm text-white">
                       {order.notes}
                     </div>

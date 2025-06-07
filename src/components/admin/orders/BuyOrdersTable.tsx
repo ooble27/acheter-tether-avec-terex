@@ -8,7 +8,7 @@ import {
   TrendingUp,
   Eye,
   Copy,
-  DollarSign
+  Trash2
 } from 'lucide-react';
 import { UnifiedOrder } from '@/hooks/useOrders';
 import type { Database } from '@/integrations/supabase/types';
@@ -18,9 +18,10 @@ type OrderStatus = Database['public']['Enums']['order_status'];
 interface BuyOrdersTableProps {
   orders: UnifiedOrder[];
   onStatusUpdate: (orderId: string, status: OrderStatus, paymentStatus?: string) => void;
+  onMoveToTrash: (orderId: string) => void;
 }
 
-export function BuyOrdersTable({ orders, onStatusUpdate }: BuyOrdersTableProps) {
+export function BuyOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: BuyOrdersTableProps) {
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
   const getStatusBadge = (status: string) => {
@@ -56,7 +57,7 @@ export function BuyOrdersTable({ orders, onStatusUpdate }: BuyOrdersTableProps) 
     return (
       <div className="text-center py-12">
         <div className="w-16 h-16 mx-auto mb-4 bg-terex-gray/30 rounded-full flex items-center justify-center">
-          <DollarSign className="w-8 h-8 text-gray-400" />
+          <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-8 h-8" />
         </div>
         <h3 className="text-lg font-medium text-white mb-2">Aucun achat USDT</h3>
         <p className="text-gray-400">Il n'y a aucune commande d'achat à afficher.</p>
@@ -69,15 +70,15 @@ export function BuyOrdersTable({ orders, onStatusUpdate }: BuyOrdersTableProps) 
       {orders.map((order) => (
         <div 
           key={order.id} 
-          className="bg-terex-gray/30 rounded-lg border border-terex-gray/50 overflow-hidden"
+          className="bg-terex-darker rounded-xl border border-terex-gray/50 overflow-hidden hover:border-terex-accent/30 transition-all duration-300"
         >
           {/* Order Header */}
           <div className="p-6">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
               {/* Order Info */}
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center">
-                  <DollarSign className="w-6 h-6 text-green-500" />
+                <div className="w-12 h-12 bg-terex-accent/20 rounded-lg flex items-center justify-center">
+                  <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-6 h-6" />
                 </div>
                 
                 <div>
@@ -87,7 +88,7 @@ export function BuyOrdersTable({ orders, onStatusUpdate }: BuyOrdersTableProps) 
                     </h3>
                     <button
                       onClick={() => copyToClipboard(`TEREX-${order.id.slice(-8)}`)}
-                      className="text-gray-400 hover:text-white"
+                      className="text-gray-400 hover:text-terex-accent transition-colors"
                     >
                       <Copy className="w-4 h-4" />
                     </button>
@@ -107,7 +108,7 @@ export function BuyOrdersTable({ orders, onStatusUpdate }: BuyOrdersTableProps) 
                 <div className="text-2xl font-bold text-white">
                   {order.amount.toLocaleString()} {order.currency}
                 </div>
-                <div className="text-sm text-green-500">
+                <div className="text-sm text-terex-accent">
                   → {order.usdt_amount} USDT
                 </div>
               </div>
@@ -122,6 +123,15 @@ export function BuyOrdersTable({ orders, onStatusUpdate }: BuyOrdersTableProps) 
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   {expandedOrder === order.id ? 'Masquer' : 'Détails'}
+                </Button>
+
+                <Button
+                  onClick={() => onMoveToTrash(order.id)}
+                  variant="outline"
+                  size="sm"
+                  className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                >
+                  <Trash2 className="w-4 h-4" />
                 </Button>
 
                 {order.status === 'pending' && (
@@ -174,7 +184,7 @@ export function BuyOrdersTable({ orders, onStatusUpdate }: BuyOrdersTableProps) 
             <div className="border-t border-terex-gray/50 bg-terex-gray/20 p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
-                  <h4 className="text-sm font-medium text-gray-400 mb-2">Informations de paiement</h4>
+                  <h4 className="text-sm font-medium text-terex-accent mb-2">Informations de paiement</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-400">Méthode:</span>
@@ -192,15 +202,29 @@ export function BuyOrdersTable({ orders, onStatusUpdate }: BuyOrdersTableProps) 
                 </div>
 
                 <div>
-                  <h4 className="text-sm font-medium text-gray-400 mb-2">Portefeuille de réception</h4>
-                  <div className="bg-terex-gray/50 p-2 rounded font-mono text-xs text-white break-all">
-                    {order.wallet_address || 'Non spécifié'}
+                  <h4 className="text-sm font-medium text-terex-accent mb-2">Portefeuille de réception</h4>
+                  <div className="bg-terex-gray/50 p-3 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <p className="font-mono text-xs text-white break-all flex-1 mr-2">
+                        {order.wallet_address || 'Non spécifié'}
+                      </p>
+                      {order.wallet_address && (
+                        <Button
+                          onClick={() => copyToClipboard(order.wallet_address)}
+                          size="sm"
+                          variant="outline"
+                          className="h-8 w-8 p-0 border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-white"
+                        >
+                          <Copy className="w-3 h-3" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
                 {order.notes && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-2">Notes</h4>
+                    <h4 className="text-sm font-medium text-terex-accent mb-2">Notes</h4>
                     <div className="bg-terex-gray/50 p-3 rounded text-sm text-white">
                       {order.notes}
                     </div>
