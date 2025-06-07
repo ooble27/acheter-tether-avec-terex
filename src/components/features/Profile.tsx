@@ -46,38 +46,34 @@ export function Profile({ user, onLogout }: ProfileProps) {
       <KYCAlert status="pending" onStartKYC={handleStartKYC} />
 
       <Tabs defaultValue="personal" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 bg-terex-darker border-terex-gray overflow-hidden">
+        <TabsList className="grid w-full grid-cols-4 bg-terex-darker border-terex-gray">
           <TabsTrigger 
             value="personal" 
-            className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-gray-300 text-xs sm:text-sm px-2 py-2 truncate"
+            className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-gray-300"
           >
-            <User className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-            <span className="hidden sm:inline">Informations</span>
-            <span className="sm:hidden">Info</span>
+            <User className="w-4 h-4 mr-2" />
+            Informations
           </TabsTrigger>
           <TabsTrigger 
             value="transactions" 
-            className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-gray-300 text-xs sm:text-sm px-2 py-2 truncate"
+            className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-gray-300"
           >
-            <History className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-            <span className="hidden sm:inline">Historique</span>
-            <span className="sm:hidden">Hist.</span>
+            <History className="w-4 h-4 mr-2" />
+            Historique
           </TabsTrigger>
           <TabsTrigger 
             value="security" 
-            className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-gray-300 text-xs sm:text-sm px-2 py-2 truncate"
+            className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-gray-300"
           >
-            <Shield className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-            <span className="hidden sm:inline">Sécurité</span>
-            <span className="sm:hidden">Sécu.</span>
+            <Shield className="w-4 h-4 mr-2" />
+            Sécurité
           </TabsTrigger>
           <TabsTrigger 
             value="contact" 
-            className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-gray-300 text-xs sm:text-sm px-2 py-2 truncate"
+            className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-gray-300"
           >
-            <Settings className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-            <span className="hidden sm:inline">Contact</span>
-            <span className="sm:hidden">Cont.</span>
+            <Settings className="w-4 h-4 mr-2" />
+            Contact
           </TabsTrigger>
         </TabsList>
 

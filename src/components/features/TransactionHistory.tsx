@@ -161,13 +161,10 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                     <span className="text-white">{transaction.network}</span>
                   </div>
 
-                  {/* Correction pour l'affichage de l'adresse selon le type */}
                   {transaction.address && (
                     <div className="flex justify-between">
-                      <span className="text-gray-400">
-                        {transaction.type === 'sell' ? 'Numéro de réception:' : 'Adresse:'}
-                      </span>
-                      <span className="text-white text-xs break-all">{transaction.address}</span>
+                      <span className="text-gray-400">Adresse:</span>
+                      <span className="text-white text-xs">{transaction.address}</span>
                     </div>
                   )}
 
@@ -193,66 +190,56 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-terex-gray">
-                <TableHead className="text-gray-300">Type</TableHead>
-                <TableHead className="text-gray-300">Montant</TableHead>
-                <TableHead className="text-gray-300">USDT/Reçu</TableHead>
-                <TableHead className="text-gray-300">Réseau</TableHead>
-                <TableHead className="text-gray-300">Adresse/N°</TableHead>
-                <TableHead className="text-gray-300">Statut</TableHead>
-                <TableHead className="text-gray-300">Date</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {transactions.map((transaction) => (
-                <TableRow key={transaction.id} className="border-terex-gray hover:bg-terex-gray/20">
-                  <TableCell>
-                    <div className="flex items-center space-x-2">
-                      {transaction.type === 'buy' ? (
-                        <ArrowDown className="w-4 h-4 text-green-500" />
-                      ) : transaction.type === 'sell' ? (
-                        <ArrowUp className="w-4 h-4 text-blue-500" />
-                      ) : (
-                        <Send className="w-4 h-4 text-orange-500" />
-                      )}
-                      <span className="text-white">
-                        {transaction.type === 'buy' ? 'Achat' : transaction.type === 'sell' ? 'Vente' : 'Transfert'}
-                      </span>
+        <Table>
+          <TableHeader>
+            <TableRow className="border-terex-gray">
+              <TableHead className="text-gray-300">Type</TableHead>
+              <TableHead className="text-gray-300">Montant</TableHead>
+              <TableHead className="text-gray-300">USDT/Reçu</TableHead>
+              <TableHead className="text-gray-300">Réseau</TableHead>
+              <TableHead className="text-gray-300">Statut</TableHead>
+              <TableHead className="text-gray-300">Date</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {transactions.map((transaction) => (
+              <TableRow key={transaction.id} className="border-terex-gray hover:bg-terex-gray/20">
+                <TableCell>
+                  <div className="flex items-center space-x-2">
+                    {transaction.type === 'buy' ? (
+                      <ArrowDown className="w-4 h-4 text-green-500" />
+                    ) : transaction.type === 'sell' ? (
+                      <ArrowUp className="w-4 h-4 text-blue-500" />
+                    ) : (
+                      <Send className="w-4 h-4 text-orange-500" />
+                    )}
+                    <span className="text-white">
+                      {transaction.type === 'buy' ? 'Achat' : transaction.type === 'sell' ? 'Vente' : 'Transfert'}
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell className="text-white">
+                  {transaction.amount} {transaction.currency}
+                </TableCell>
+                <TableCell>
+                  {transaction.type === 'buy' && transaction.usdtAmount ? (
+                    <div className="flex items-center space-x-1">
+                      <CircleDollarSign className="w-4 h-4 text-terex-accent" />
+                      <span className="text-terex-accent">{transaction.usdtAmount} USDT</span>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-white">
-                    {transaction.amount} {transaction.currency}
-                  </TableCell>
-                  <TableCell>
-                    {transaction.type === 'buy' && transaction.usdtAmount ? (
-                      <div className="flex items-center space-x-1">
-                        <CircleDollarSign className="w-4 h-4 text-terex-accent" />
-                        <span className="text-terex-accent">{transaction.usdtAmount} USDT</span>
-                      </div>
-                    ) : transaction.fiatAmount ? (
-                      <span className="text-white">{transaction.fiatAmount} {transaction.receiveCurrency}</span>
-                    ) : (
-                      <span className="text-gray-400">-</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-white">{transaction.network}</TableCell>
-                  <TableCell className="text-white max-w-32">
-                    {transaction.address ? (
-                      <span className="text-xs break-all">{transaction.address}</span>
-                    ) : (
-                      <span className="text-gray-400">-</span>
-                    )}
-                  </TableCell>
-                  <TableCell>{getStatusBadge(transaction.status)}</TableCell>
-                  <TableCell className="text-white text-sm">{formatDate(transaction.date)}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+                  ) : transaction.fiatAmount ? (
+                    <span className="text-white">{transaction.fiatAmount} {transaction.receiveCurrency}</span>
+                  ) : (
+                    <span className="text-gray-400">-</span>
+                  )}
+                </TableCell>
+                <TableCell className="text-white">{transaction.network}</TableCell>
+                <TableCell>{getStatusBadge(transaction.status)}</TableCell>
+                <TableCell className="text-white text-sm">{formatDate(transaction.date)}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );
