@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ExternalLink, Calendar } from 'lucide-react';
+import { ExternalLink, Calendar, Newspaper } from 'lucide-react';
 
 interface NewsItem {
   id: string;
@@ -19,7 +19,6 @@ export function CryptoNews() {
   useEffect(() => {
     const fetchCryptoNews = async () => {
       try {
-        // Simulation d'actualités crypto (en attendant une vraie API)
         const mockNews: NewsItem[] = [
           {
             id: '1',
@@ -44,6 +43,14 @@ export function CryptoNews() {
             url: 'https://coinmarketcap.com/alexandria/article/usdt-stability-confirmed',
             published_at: new Date(Date.now() - 7200000).toISOString(),
             source: 'CoinMarketCap'
+          },
+          {
+            id: '4',
+            title: 'DeFi : Croissance continue',
+            summary: 'Les protocoles DeFi maintiennent leur croissance avec de nouveaux records...',
+            url: 'https://coinmarketcap.com/alexandria/article/defi-continued-growth',
+            published_at: new Date(Date.now() - 10800000).toISOString(),
+            source: 'DeFiPulse'
           }
         ];
         
@@ -56,6 +63,8 @@ export function CryptoNews() {
     };
 
     fetchCryptoNews();
+    const interval = setInterval(fetchCryptoNews, 300000); // Actualise toutes les 5 minutes
+    return () => clearInterval(interval);
   }, []);
 
   const formatDate = (dateString: string) => {
@@ -71,49 +80,63 @@ export function CryptoNews() {
 
   if (loading) {
     return (
-      <Card className="bg-terex-darker border-terex-gray">
-        <CardHeader>
+      <Card className="bg-terex-darker border-terex-gray h-full">
+        <CardHeader className="border-b border-terex-gray/30">
           <CardTitle className="text-white flex items-center">
-            <span className="mr-2">📰</span>
+            <Newspaper className="w-5 h-5 mr-2 text-terex-accent" />
             Actualités Crypto
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="text-gray-400">Chargement des actualités...</p>
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="h-4 bg-terex-gray rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-terex-gray rounded w-full mb-1"></div>
+                <div className="h-3 bg-terex-gray rounded w-1/2"></div>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="bg-terex-darker border-terex-gray">
-      <CardHeader>
+    <Card className="bg-terex-darker border-terex-gray h-full">
+      <CardHeader className="border-b border-terex-gray/30">
         <CardTitle className="text-white flex items-center">
-          <span className="mr-2">📰</span>
+          <Newspaper className="w-5 h-5 mr-2 text-terex-accent" />
           Actualités Crypto
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {news.map((article) => (
-          <div key={article.id} className="p-4 bg-terex-dark rounded-lg hover:bg-terex-gray transition-colors cursor-pointer" onClick={() => window.open(article.url, '_blank')}>
-            <div className="flex items-start justify-between mb-2">
-              <h3 className="text-white font-medium text-sm line-clamp-2 flex-1">
-                {article.title}
-              </h3>
-              <ExternalLink className="w-4 h-4 text-gray-400 ml-2 flex-shrink-0" />
-            </div>
-            <p className="text-gray-400 text-xs mb-3 line-clamp-2">
-              {article.summary}
-            </p>
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-terex-accent">{article.source}</span>
-              <div className="flex items-center text-gray-500">
-                <Calendar className="w-3 h-3 mr-1" />
-                {formatDate(article.published_at)}
+      <CardContent className="p-6">
+        <div className="space-y-4">
+          {news.map((article) => (
+            <div 
+              key={article.id} 
+              className="p-3 bg-terex-dark rounded-lg hover:bg-terex-gray/30 transition-colors cursor-pointer group"
+              onClick={() => window.open(article.url, '_blank')}
+            >
+              <div className="flex items-start justify-between mb-2">
+                <h3 className="text-white font-medium text-sm line-clamp-2 flex-1 group-hover:text-terex-accent transition-colors">
+                  {article.title}
+                </h3>
+                <ExternalLink className="w-4 h-4 text-gray-400 ml-2 flex-shrink-0 group-hover:text-terex-accent transition-colors" />
+              </div>
+              <p className="text-gray-400 text-xs mb-3 line-clamp-2">
+                {article.summary}
+              </p>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-terex-accent">{article.source}</span>
+                <div className="flex items-center text-gray-500">
+                  <Calendar className="w-3 h-3 mr-1" />
+                  {formatDate(article.published_at)}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
