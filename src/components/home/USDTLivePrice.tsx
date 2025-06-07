@@ -80,7 +80,7 @@ export function USDTLivePrice() {
   }
 
   return (
-    <Card className="bg-terex-darker border-terex-gray">
+    <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-accent/30 shadow-xl shadow-terex-accent/10">
       <CardHeader>
         <CardTitle className="text-white flex items-center justify-between">
           <span className="flex items-center">
@@ -96,16 +96,16 @@ export function USDTLivePrice() {
         {usdtData && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="text-center p-3 bg-terex-dark rounded-lg">
-                <p className="text-gray-400 text-sm">USD</p>
-                <p className="text-white font-bold text-lg">
+              <div className="text-center p-4 bg-gradient-to-br from-terex-dark to-terex-gray/30 rounded-xl border border-terex-gray/50">
+                <p className="text-gray-400 text-sm mb-1">USD</p>
+                <p className="text-white font-bold text-xl">
                   ${usdtData.usd_price.toFixed(4)}
                 </p>
               </div>
               
-              <div className="text-center p-3 bg-terex-dark rounded-lg">
-                <p className="text-gray-400 text-sm">FCFA</p>
-                <p className="text-terex-accent font-bold text-lg">
+              <div className="text-center p-4 bg-gradient-to-br from-terex-accent/20 to-terex-accent/5 rounded-xl border border-terex-accent/30">
+                <p className="text-gray-400 text-sm mb-1">FCFA</p>
+                <p className="text-terex-accent font-bold text-xl">
                   {usdtData.fcfa_price.toLocaleString('fr-FR', {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0
@@ -113,16 +113,17 @@ export function USDTLivePrice() {
                 </p>
               </div>
               
-              <div className="text-center p-3 bg-terex-dark rounded-lg">
-                <p className="text-gray-400 text-sm">CAD</p>
-                <p className="text-green-400 font-bold text-lg">
+              <div className="text-center p-4 bg-gradient-to-br from-green-500/20 to-green-500/5 rounded-xl border border-green-500/30">
+                <p className="text-gray-400 text-sm mb-1">CAD</p>
+                <p className="text-green-400 font-bold text-xl">
                   ${usdtData.cad_price.toFixed(4)} CAD
                 </p>
               </div>
             </div>
             
-            <div className="text-center text-xs text-gray-500">
-              Dernière mise à jour : {formatTime(lastUpdate)}
+            <div className="text-center text-xs text-gray-500 flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 bg-terex-accent rounded-full animate-pulse"></div>
+              <span>Dernière mise à jour : {formatTime(lastUpdate)}</span>
             </div>
           </>
         )}

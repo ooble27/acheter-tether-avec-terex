@@ -1,6 +1,20 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CryptoPrices } from '@/components/home/CryptoPrices';
 import { CryptoNews } from '@/components/home/CryptoNews';
+import { USDTLivePrice } from '@/components/home/USDTLivePrice';
+import { Button } from '@/components/ui/button';
+import { 
+  TrendingUp, 
+  Shield, 
+  Zap, 
+  Globe, 
+  ArrowUpRight, 
+  Activity,
+  BarChart3,
+  Coins,
+  Lock
+} from 'lucide-react';
 
 interface DashboardHomeProps {
   user: { email: string; name: string } | null;
@@ -8,112 +22,207 @@ interface DashboardHomeProps {
 
 export function DashboardHome({ user }: DashboardHomeProps) {
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">
-          Bienvenue, <span className="text-terex-accent">{user?.name}</span> !
-        </h1>
-        <p className="text-gray-400">
-          Gérez vos transactions USDT et vos transferts internationaux en toute simplicité.
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark animate-fade-in">
+      {/* Hero Section with Grid Background */}
+      <div className="relative overflow-hidden rounded-2xl mb-8">
+        {/* Animated Grid Background */}
+        <div className="absolute inset-0 bg-gradient-to-r from-terex-accent/10 via-transparent to-terex-accent/5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `
+              linear-gradient(rgba(59, 150, 143, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(59, 150, 143, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px'
+          }}></div>
+        </div>
+        
+        {/* Floating Elements */}
+        <div className="absolute top-10 right-10 w-20 h-20 bg-terex-accent/20 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute bottom-10 left-10 w-32 h-32 bg-terex-accent/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        
+        <div className="relative z-10 p-8">
+          <div className="max-w-4xl">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-xl flex items-center justify-center">
+                <Activity className="w-6 h-6 text-white" />
+              </div>
+              <div className="h-8 w-1 bg-terex-accent"></div>
+              <h1 className="text-4xl font-bold">
+                <span className="text-white">Bienvenue,</span>{' '}
+                <span className="terex-brand">{user?.name}</span>
+              </h1>
+            </div>
+            <p className="text-xl text-gray-300 mb-6 leading-relaxed">
+              Plateforme décentralisée pour vos transactions USDT et transferts internationaux
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <div className="flex items-center space-x-2 bg-terex-darker/80 backdrop-blur-sm rounded-full px-4 py-2 border border-terex-accent/20">
+                <Shield className="w-4 h-4 text-terex-accent" />
+                <span className="text-white text-sm">Sécurisé par blockchain</span>
+              </div>
+              <div className="flex items-center space-x-2 bg-green-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/20">
+                <Zap className="w-4 h-4 text-green-400" />
+                <span className="text-green-400 text-sm">Transactions instantanées</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent transition-colors">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <span className="mr-2 text-2xl">💰</span>
-              Acheter USDT
-            </CardTitle>
-            <CardDescription className="text-gray-400">
-              Achetez des USDT avec des francs CFA ou des dollars canadiens
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-terex-accent font-medium">Taux compétitifs • Transactions sécurisées</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent transition-colors">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <span className="mr-2 text-2xl">💸</span>
-              Vendre USDT
-            </CardTitle>
-            <CardDescription className="text-gray-400">
-              Convertissez vos USDT en francs CFA instantanément
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-terex-accent font-medium">Réception rapide • Orange Money & Wave</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent transition-colors">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <span className="mr-2 text-2xl">🌍</span>
-              Virement International
-            </CardTitle>
-            <CardDescription className="text-gray-400">
-              Envoyez de l'argent vers l'Afrique depuis le Canada
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-terex-accent font-medium">Frais réduits • Transfert rapide</p>
-          </CardContent>
-        </Card>
+      {/* Prix USDT en temps réel */}
+      <div className="mb-8">
+        <USDTLivePrice />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader>
-            <CardTitle className="text-white">Statistiques</CardTitle>
+      {/* Services Cards avec design tech */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <Card className="group bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-300 hover:shadow-xl hover:shadow-terex-accent/10 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-terex-accent/20 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
+          <CardHeader className="relative z-10">
+            <div className="flex items-center justify-between mb-2">
+              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Coins className="w-6 h-6 text-white" />
+              </div>
+              <ArrowUpRight className="w-5 h-5 text-terex-accent group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            </div>
+            <CardTitle className="text-white text-xl">Acheter USDT</CardTitle>
             <CardDescription className="text-gray-400">
-              Vos activités récentes
+              Achetez des USDT avec vos devises locales
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-300">Transactions ce mois</span>
-              <span className="text-terex-accent font-bold">0</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-300">Volume total échangé</span>
-              <span className="text-terex-accent font-bold">0 USDT</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-300">Dernière transaction</span>
-              <span className="text-gray-400">Aucune</span>
+          <CardContent className="relative z-10">
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center text-terex-accent">
+                <div className="w-2 h-2 bg-terex-accent rounded-full mr-2"></div>
+                Taux compétitifs en temps réel
+              </div>
+              <div className="flex items-center text-terex-accent">
+                <div className="w-2 h-2 bg-terex-accent rounded-full mr-2"></div>
+                Transactions sécurisées
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader>
-            <CardTitle className="text-white">Informations importantes</CardTitle>
+        <Card className="group bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-300 hover:shadow-xl hover:shadow-terex-accent/10 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-500/20 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
+          <CardHeader className="relative z-10">
+            <div className="flex items-center justify-between mb-2">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <TrendingUp className="w-6 h-6 text-white" />
+              </div>
+              <ArrowUpRight className="w-5 h-5 text-green-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            </div>
+            <CardTitle className="text-white text-xl">Vendre USDT</CardTitle>
+            <CardDescription className="text-gray-400">
+              Convertissez vos USDT en francs CFA
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="p-3 bg-terex-accent/10 border border-terex-accent/20 rounded-lg">
-              <p className="text-terex-accent text-sm">
-                ✓ Plateforme sécurisée et régulée
-              </p>
+          <CardContent className="relative z-10">
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center text-green-400">
+                <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                Réception instantanée
+              </div>
+              <div className="flex items-center text-green-400">
+                <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                Orange Money & Wave
+              </div>
             </div>
-            <div className="p-3 bg-terex-accent/10 border border-terex-accent/20 rounded-lg">
-              <p className="text-terex-accent text-sm">
-                ✓ Support client 24/7 disponible
-              </p>
+          </CardContent>
+        </Card>
+
+        <Card className="group bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-300 hover:shadow-xl hover:shadow-terex-accent/10 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/20 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
+          <CardHeader className="relative z-10">
+            <div className="flex items-center justify-between mb-2">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Globe className="w-6 h-6 text-white" />
+              </div>
+              <ArrowUpRight className="w-5 h-5 text-blue-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </div>
-            <div className="p-3 bg-terex-accent/10 border border-terex-accent/20 rounded-lg">
-              <p className="text-terex-accent text-sm">
-                ✓ Transactions traitées en temps réel
-              </p>
+            <CardTitle className="text-white text-xl">Virement International</CardTitle>
+            <CardDescription className="text-gray-400">
+              Transferts rapides Canada ↔ Afrique
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center text-blue-400">
+                <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                Frais réduits de 90%
+              </div>
+              <div className="flex items-center text-blue-400">
+                <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                Transfert en quelques minutes
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Section des fonctionnalités crypto */}
+      {/* Statistiques avec design blockchain */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/50 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-terex-accent/5 to-transparent"></div>
+          <CardHeader className="relative z-10 border-b border-terex-gray/30">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <CardTitle className="text-white">Analytics Dashboard</CardTitle>
+                <CardDescription className="text-gray-400">Vos métriques en temps réel</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="relative z-10 p-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center p-4 bg-terex-dark/50 rounded-xl border border-terex-gray/30">
+                <div className="text-2xl font-bold text-terex-accent mb-1">0</div>
+                <div className="text-sm text-gray-400">Transactions</div>
+              </div>
+              <div className="text-center p-4 bg-terex-dark/50 rounded-xl border border-terex-gray/30">
+                <div className="text-2xl font-bold text-terex-accent mb-1">0 USDT</div>
+                <div className="text-sm text-gray-400">Volume total</div>
+              </div>
+            </div>
+            <div className="mt-4 p-3 bg-terex-accent/10 border border-terex-accent/20 rounded-xl">
+              <div className="text-center text-terex-accent text-sm">
+                Prêt à commencer votre première transaction
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/50 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-transparent"></div>
+          <CardHeader className="relative z-10 border-b border-terex-gray/30">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                <Lock className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <CardTitle className="text-white">Sécurité Blockchain</CardTitle>
+                <CardDescription className="text-gray-400">Protection avancée</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="relative z-10 p-6 space-y-3">
+            <div className="flex items-center justify-between p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
+              <span className="text-green-400 text-sm">✓ Cryptage de niveau militaire</span>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
+              <span className="text-green-400 text-sm">✓ Authentification multi-facteurs</span>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
+              <span className="text-green-400 text-sm">✓ Audit de sécurité continu</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Section crypto avec nouveau design */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <CryptoPrices />
         <CryptoNews />
