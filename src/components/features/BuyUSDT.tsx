@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -161,9 +162,9 @@ export function BuyUSDT() {
               <p className="text-gray-400 text-sm md:text-base">Achetez des USDT avec de l'argent fiat</p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
-              {/* Main Trading Interface - Plus large sur desktop */}
-              <div className="lg:col-span-3 w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+              {/* Main Trading Interface - Même largeur que VendreUSDT et InternationalTransfer */}
+              <div className="lg:col-span-2 w-full">
                 <Card className="bg-terex-darker border-terex-gray shadow-2xl w-full overflow-hidden">
                   <CardHeader className="border-b border-terex-gray p-3 sm:p-4 md:p-6">
                     <div className="flex items-center justify-between flex-wrap gap-2">
@@ -372,7 +373,7 @@ export function BuyUSDT() {
                 </Card>
               </div>
 
-              {/* Sidebar - Plus petit maintenant */}
+              {/* Sidebar - Même largeur que les autres pages */}
               <div className="lg:col-span-1 space-y-4 md:space-y-6 w-full">
                 {/* Nos taux TEREX */}
                 <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
