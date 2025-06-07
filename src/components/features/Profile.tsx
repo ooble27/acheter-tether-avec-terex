@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { useUserProfile } from '@/hooks/useUserProfile';
-import { useTransactions } from '@/contexts/TransactionContext';
+import { useTransactionContext } from '@/contexts/TransactionContext';
 import { KYCAlert } from './KYCAlert';
 import { KYCPage } from './KYCPage';
 import { TransactionHistory } from './TransactionHistory';
@@ -18,7 +18,7 @@ interface ProfileProps {
 export function Profile({ user, onLogout }: ProfileProps) {
   const [showKYC, setShowKYC] = useState(false);
   const { loading } = useUserProfile();
-  const { transactions, loading: transactionsLoading } = useTransactions();
+  const { transactions, loading: transactionsLoading } = useTransactionContext();
 
   const handleStartKYC = () => {
     setShowKYC(true);

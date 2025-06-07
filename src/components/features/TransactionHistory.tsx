@@ -3,11 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { CircleDollarSign, ArrowUp, ArrowDown, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { CircleDollarSign, ArrowUp, ArrowDown, ArrowLeftRight, Clock, CheckCircle, XCircle } from 'lucide-react';
 
 interface Transaction {
   id: string;
-  type: 'buy' | 'sell';
+  type: 'buy' | 'sell' | 'transfer';
   amount: string;
   currency: string;
   usdtAmount?: string;
@@ -17,6 +17,9 @@ interface Transaction {
   address?: string;
   status: 'pending' | 'confirmed' | 'completed' | 'failed';
   date: string;
+  recipient_name?: string;
+  recipient_phone?: string;
+  payment_method?: string;
 }
 
 interface TransactionHistoryProps {
@@ -43,6 +46,32 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
         <span>{config.label}</span>
       </Badge>
     );
+  };
+
+  const getTransactionIcon = (type: string) => {
+    switch (type) {
+      case 'buy':
+        return <ArrowDown className="w-4 h-4 text-green-500" />;
+      case 'sell':
+        return <ArrowUp className="w-4 h-4 text-blue-500" />;
+      case 'transfer':
+        return <ArrowLeftRight className="w-4 h-4 text-purple-500" />;
+      default:
+        return <ArrowDown className="w-4 h-4 text-green-500" />;
+    }
+  };
+
+  const getTransactionLabel = (type: string) => {
+    switch (type) {
+      case 'buy':
+        return 'Achat';
+      case 'sell':
+        return 'Vente';
+      case 'transfer':
+        return 'Transfert';
+      default:
+        return 'Achat';
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -93,13 +122,9 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    {transaction.type === 'buy' ? (
-                      <ArrowDown className="w-5 h-5 text-green-500" />
-                    ) : (
-                      <ArrowUp className="w-5 h-5 text-blue-500" />
-                    )}
+                    {getTransactionIcon(transaction.type)}
                     <span className="text-white font-medium">
-                      {transaction.type === 'buy' ? 'Achat' : 'Vente'}
+                      {getTransactionLabel(transaction.type)}
                     </span>
                   </div>
                   {getStatusBadge(transaction.status)}
@@ -123,12 +148,19 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                     </div>
                   )}
 
-                  {transaction.type === 'sell' && transaction.fiatAmount && (
+                  {(transaction.type === 'sell' || transaction.type === 'transfer') && transaction.fiatAmount && (
                     <div className="flex justify-between">
                       <span className="text-gray-400">Montant reçu:</span>
                       <span className="text-white">
                         {transaction.fiatAmount} {transaction.receiveCurrency}
                       </span>
+                    </div>
+                  )}
+
+                  {transaction.type === 'transfer' && transaction.recipient_name && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Destinataire:</span>
+                      <span className="text-white">{transaction.recipient_name}</span>
                     </div>
                   )}
 
@@ -182,13 +214,9 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
               <TableRow key={transaction.id} className="border-terex-gray hover:bg-terex-gray/20">
                 <TableCell>
                   <div className="flex items-center space-x-2">
-                    {transaction.type === 'buy' ? (
-                      <ArrowDown className="w-4 h-4 text-green-500" />
-                    ) : (
-                      <ArrowUp className="w-4 h-4 text-blue-500" />
-                    )}
+                    {getTransactionIcon(transaction.type)}
                     <span className="text-white">
-                      {transaction.type === 'buy' ? 'Achat' : 'Vente'}
+                      {getTransactionLabel(transaction.type)}
                     </span>
                   </div>
                 </TableCell>
