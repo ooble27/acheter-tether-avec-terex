@@ -1,5 +1,3 @@
-
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { KYCProtection } from './KYCProtection';
+import { USDTLivePrice } from '@/components/home/USDTLivePrice';
 
 type PaymentMethodType = 'card' | 'mobile' | 'wave' | 'orange_money' | 'bank' | 'bank_transfer' | 'interac';
 
@@ -32,7 +31,10 @@ export function BuyUSDT() {
   const { createOrder } = useOrders();
   const { user } = useAuth();
 
-  const exchangeRate = 656; // 1 USDT = 656 CFA
+  const exchangeRates = {
+    CFA: 656, // 1 USDT = 656 CFA
+    CAD: 1.35  // 1 USDT = 1.35 CAD
+  };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(e.target.value);
@@ -59,7 +61,8 @@ export function BuyUSDT() {
     if (isNaN(parsedAmount)) {
       return 0;
     }
-    return parsedAmount / exchangeRate;
+    const rate = exchangeRates[currency as keyof typeof exchangeRates] || exchangeRates.CFA;
+    return parsedAmount / rate;
   };
 
   const usdtAmount = calculateUSDT();
@@ -113,7 +116,11 @@ export function BuyUSDT() {
   };
 
   const getQuickAmounts = () => {
-    return ['10000', '25000', '50000', '100000', '500000'];
+    if (currency === 'CFA') {
+      return ['10000', '25000', '50000', '100000'];
+    } else {
+      return ['15', '40', '75', '150'];
+    }
   };
 
   if (showKYC) {
@@ -187,8 +194,7 @@ export function BuyUSDT() {
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="CFA">CFA</SelectItem>
-                                <SelectItem value="USD">USD</SelectItem>
-                                <SelectItem value="EUR">EUR</SelectItem>
+                                <SelectItem value="CAD">CAD</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
@@ -199,7 +205,7 @@ export function BuyUSDT() {
                           <div className="relative">
                             <Input
                               type="text"
-                              value={usdtAmount.toFixed(2)}
+                              value={usdtAmount.toFixed(6)}
                               readOnly
                               className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24"
                             />
@@ -222,7 +228,7 @@ export function BuyUSDT() {
                       <div className="bg-terex-gray rounded-lg p-3">
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-400">Taux de change</span>
-                          <span className="text-white">1 USDT = {exchangeRate} CFA</span>
+                          <span className="text-white">1 USDT = {exchangeRates[currency as keyof typeof exchangeRates]} {currency}</span>
                         </div>
                         <div className="flex justify-between text-sm mt-1">
                           <span className="text-gray-400">Frais</span>
@@ -240,8 +246,18 @@ export function BuyUSDT() {
                       <Label className="text-white text-sm font-medium">Méthode de paiement</Label>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {[
-                          { id: 'mobile', label: 'Mobile Money', icon: '📱', desc: 'Wave, Orange Money' },
-                          { id: 'card', label: 'Carte bancaire', icon: '💳', desc: 'Visa, Mastercard' }
+                          { 
+                            id: 'mobile', 
+                            label: 'Wave', 
+                            icon: '/lovable-uploads/eb9f4e49-56f1-4ae2-9ffc-5a51fb0e5ea1.png', 
+                            desc: 'Paiement mobile Wave' 
+                          },
+                          { 
+                            id: 'card', 
+                            label: 'Carte bancaire', 
+                            icon: '💳', 
+                            desc: 'Visa, Mastercard' 
+                          }
                         ].map((method) => (
                           <div
                             key={method.id}
@@ -253,7 +269,11 @@ export function BuyUSDT() {
                             }`}
                           >
                             <div className="flex items-center space-x-3">
-                              <span className="text-xl">{method.icon}</span>
+                              {method.id === 'mobile' ? (
+                                <img src={method.icon} alt="Wave" className="w-6 h-6" />
+                              ) : (
+                                <span className="text-xl">{method.icon}</span>
+                              )}
                               <div>
                                 <p className="text-white font-medium text-sm">{method.label}</p>
                                 <p className="text-gray-400 text-xs">{method.desc}</p>
@@ -278,16 +298,36 @@ export function BuyUSDT() {
                               <Badge variant="secondary" className="text-xs">Recommandé</Badge>
                             </div>
                           </SelectItem>
+                          <SelectItem value="BEP20">
+                            <div className="flex items-center space-x-2">
+                              <span>BEP20 (Binance Smart Chain)</span>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="ERC20">
+                            <div className="flex items-center space-x-2">
+                              <span>ERC20 (Ethereum)</span>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="POLYGON">
+                            <div className="flex items-center space-x-2">
+                              <span>POLYGON (Matic)</span>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="ARBITRUM">
+                            <div className="flex items-center space-x-2">
+                              <span>ARBITRUM</span>
+                            </div>
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
                     {/* Wallet Address */}
                     <div className="space-y-2">
-                      <Label className="text-white text-sm font-medium">Votre adresse USDT (TRC20)</Label>
+                      <Label className="text-white text-sm font-medium">Votre adresse USDT ({network})</Label>
                       <div className="flex items-center space-x-2">
                         <Input
-                          placeholder="Votre adresse de réception USDT"
+                          placeholder={`Votre adresse de réception USDT ${network}`}
                           value={walletAddress}
                           onChange={handleWalletAddressChange}
                           className="bg-terex-gray border-terex-gray-light text-white h-12"
@@ -312,22 +352,29 @@ export function BuyUSDT() {
 
               {/* Sidebar */}
               <div className="space-y-4 md:space-y-6">
+                {/* Live Price Widget */}
+                <USDTLivePrice />
+
                 {/* Market Info */}
                 <Card className="bg-terex-darker border-terex-gray">
                   <CardHeader className="p-4">
                     <CardTitle className="text-white text-base md:text-lg flex items-center">
-                      <CircleDollarSign className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
+                      <img 
+                        src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
+                        alt="USDT" 
+                        className="w-4 h-4 md:w-5 md:h-5 mr-2"
+                      />
                       Prix du marché
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 p-4 pt-0">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400 text-sm">USDT/USD</span>
-                      <span className="text-terex-accent font-bold">$1.00</span>
+                      <span className="text-gray-400 text-sm">USDT/CFA</span>
+                      <span className="text-white font-bold">{exchangeRates.CFA} CFA</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400 text-sm">USDT/CFA</span>
-                      <span className="text-white font-bold">{exchangeRate} CFA</span>
+                      <span className="text-gray-400 text-sm">USDT/CAD</span>
+                      <span className="text-terex-accent font-bold">${exchangeRates.CAD} CAD</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -335,10 +382,10 @@ export function BuyUSDT() {
                 {/* Quick Actions */}
                 <Card className="bg-terex-darker border-terex-gray">
                   <CardHeader className="p-4">
-                    <CardTitle className="text-white text-base md:text-lg">Montants rapides (CFA)</CardTitle>
+                    <CardTitle className="text-white text-base md:text-lg">Montants rapides ({currency})</CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 pt-0">
-                    <div className="grid grid-cols-1 gap-2">
+                    <div className="grid grid-cols-2 gap-2">
                       {getQuickAmounts().map((value) => (
                         <Button
                           key={value}
@@ -347,7 +394,10 @@ export function BuyUSDT() {
                           onClick={() => setAmount(value)}
                           className="border-terex-gray text-gray-300 hover:bg-terex-gray text-xs"
                         >
-                          {parseInt(value).toLocaleString()} CFA
+                          {currency === 'CFA' 
+                            ? `${parseInt(value).toLocaleString()} CFA`
+                            : `$${value} CAD`
+                          }
                         </Button>
                       ))}
                     </div>
@@ -397,7 +447,7 @@ export function BuyUSDT() {
                   </CardHeader>
                   <CardContent className="space-y-3 p-4 pt-0">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400 text-sm">Mobile Money</span>
+                      <span className="text-gray-400 text-sm">Wave</span>
                       <Badge variant="outline" className="text-green-500 border-green-500 text-xs">
                         5-15 min
                       </Badge>
@@ -424,8 +474,8 @@ export function BuyUSDT() {
             paymentMethod: orderData.paymentMethod,
             walletAddress: orderData.walletAddress,
             network: orderData.network,
-            usdtAmount: usdtAmount.toFixed(2),
-            exchangeRate: exchangeRate,
+            usdtAmount: usdtAmount.toFixed(6),
+            exchangeRate: exchangeRates[currency as keyof typeof exchangeRates],
           }}
           onConfirm={async () => {
             if (!user) {
@@ -437,7 +487,6 @@ export function BuyUSDT() {
               return;
             }
 
-            // Ensure paymentMethod is not empty string before creating order
             if (paymentMethod === '') {
               toast({
                 title: "Erreur",
@@ -454,7 +503,7 @@ export function BuyUSDT() {
                 amount: parseFloat(amount),
                 currency: currency,
                 usdt_amount: usdtAmount,
-                exchange_rate: exchangeRate,
+                exchange_rate: exchangeRates[currency as keyof typeof exchangeRates],
                 payment_method: paymentMethod,
                 wallet_address: walletAddress,
                 network: network,
@@ -491,8 +540,8 @@ export function BuyUSDT() {
             paymentMethod: orderData.paymentMethod,
             walletAddress: orderData.walletAddress,
             network: orderData.network,
-            usdtAmount: usdtAmount.toFixed(2),
-            exchangeRate: exchangeRate,
+            usdtAmount: usdtAmount.toFixed(6),
+            exchangeRate: exchangeRates[currency as keyof typeof exchangeRates],
           }}
           onBack={() => setCurrentStep('confirmation')}
           onPaymentComplete={handlePaymentComplete}
@@ -501,4 +550,3 @@ export function BuyUSDT() {
     </KYCProtection>
   );
 }
-
