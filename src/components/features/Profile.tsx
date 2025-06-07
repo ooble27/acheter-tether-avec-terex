@@ -5,6 +5,7 @@ import { useKYC } from '@/hooks/useKYC';
 import { KYCAlert } from './KYCAlert';
 import { KYCPage } from './KYCPage';
 import { PersonalInfoCard } from './profile/PersonalInfoCard';
+import { ContactCard } from './profile/ContactCard';
 import { ShareAndContactCard } from './profile/ShareAndContactCard';
 import { SecuritySettingsCard } from './profile/SecuritySettingsCard';
 import { User, Star, Award } from 'lucide-react';
@@ -79,6 +80,9 @@ export function Profile({ user, onLogout }: ProfileProps) {
         <div className="lg:col-span-2 space-y-8">
           {/* Informations personnelles */}
           <PersonalInfoCard user={user} />
+          
+          {/* Contact */}
+          <ContactCard user={user} />
         </div>
 
         {/* Colonne secondaire */}

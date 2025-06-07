@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,6 +25,17 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
     email: user?.email || ''
   });
 
+  // Mettre à jour formData quand le profil change
+  useState(() => {
+    setFormData({
+      name: profile?.full_name || user?.name || '',
+      phone: profile?.phone || '',
+      country: profile?.country || '',
+      language: profile?.language || 'fr',
+      email: user?.email || ''
+    });
+  });
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -35,16 +45,27 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
 
   const handleSave = async () => {
     try {
-      await updateProfile({
+      const result = await updateProfile({
         full_name: formData.name,
         phone: formData.phone,
         country: formData.country,
         language: formData.language
       });
+
+      if (result.error) {
+        toast({
+          title: "Erreur",
+          description: result.error,
+          variant: "destructive",
+        });
+        return;
+      }
+
       setIsEditing(false);
       toast({
         title: "Profil mis à jour",
         description: "Vos informations ont été sauvegardées avec succès.",
+        className: "bg-green-600 text-white border-green-600",
       });
     } catch (error) {
       toast({

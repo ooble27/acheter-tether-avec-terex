@@ -37,10 +37,10 @@ export const useUserProfile = () => {
         console.error('Error fetching profile:', error);
         // Créer un profil par défaut si aucun n'existe
         const defaultProfile = {
-          full_name: user.user_metadata?.name || user.email?.split('@')[0] || '',
-          phone: '',
-          country: '',
-          language: 'Français'
+          full_name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || '',
+          phone: user.user_metadata?.phone || '',
+          country: user.user_metadata?.country || '',
+          language: 'fr'
         };
         
         // Insérer le profil par défaut dans la base de données
@@ -62,10 +62,10 @@ export const useUserProfile = () => {
       } else {
         console.log('Aucun profil trouvé, création d\'un profil par défaut');
         const defaultProfile = {
-          full_name: user.user_metadata?.name || user.email?.split('@')[0] || '',
-          phone: '',
-          country: '',
-          language: 'Français'
+          full_name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || '',
+          phone: user.user_metadata?.phone || '',
+          country: user.user_metadata?.country || '',
+          language: 'fr'
         };
         
         // Créer le profil dans la base de données
@@ -108,17 +108,10 @@ export const useUserProfile = () => {
         return { error: error.message };
       }
 
-      // Update local state immediately
+      // Update local state immediately for better UX
       setProfile(prev => prev ? { ...prev, ...updates } : null);
       
       console.log('Profil mis à jour avec succès');
-
-      toast({
-        title: "Profil mis à jour",
-        description: "Vos informations ont été sauvegardées avec succès",
-        className: "bg-green-600 text-white border-green-600",
-      });
-
       return { error: null };
     } catch (error) {
       console.error('Error in updateProfile:', error);
