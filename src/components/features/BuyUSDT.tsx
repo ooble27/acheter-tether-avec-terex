@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,11 +14,13 @@ import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { KYCProtection } from './KYCProtection';
 
+type PaymentMethodType = 'card' | 'mobile' | 'wave' | 'orange_money' | 'bank' | 'bank_transfer' | 'interac';
+
 export function BuyUSDT() {
   const [currentStep, setCurrentStep] = useState<'form' | 'confirmation' | 'payment'>('form');
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
-  const [paymentMethod, setPaymentMethod] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType | ''>('');
   const [walletAddress, setWalletAddress] = useState('');
   const [network, setNetwork] = useState('TRC20');
   const [orderData, setOrderData] = useState<any>(null);
@@ -38,7 +41,7 @@ export function BuyUSDT() {
   };
 
   const handlePaymentMethodChange = (value: string) => {
-    setPaymentMethod(value);
+    setPaymentMethod(value as PaymentMethodType);
   };
 
   const handleWalletAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,6 +87,19 @@ export function BuyUSDT() {
 
   const handleKYCRequired = () => {
     setShowKYC(true);
+  };
+
+  const handlePaymentComplete = () => {
+    toast({
+      title: "Paiement réussi",
+      description: "Votre commande a été traitée avec succès. Vous recevrez vos USDT sous peu.",
+    });
+    setCurrentStep('form');
+    // Reset form
+    setAmount('');
+    setPaymentMethod('');
+    setWalletAddress('');
+    setOrderData(null);
   };
 
   if (showKYC) {
@@ -232,7 +248,7 @@ export function BuyUSDT() {
                 currency: currency,
                 usdt_amount: usdtAmount,
                 exchange_rate: exchangeRate,
-                payment_method: paymentMethod,
+                payment_method: paymentMethod as string,
                 wallet_address: walletAddress,
                 network: network,
                 status: 'pending',
@@ -272,6 +288,7 @@ export function BuyUSDT() {
             exchangeRate: exchangeRate,
           }}
           onBack={() => setCurrentStep('confirmation')}
+          onPaymentComplete={handlePaymentComplete}
         />
       )}
     </KYCProtection>
