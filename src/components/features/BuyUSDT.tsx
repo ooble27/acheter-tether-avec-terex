@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,10 +13,12 @@ import { useToast } from '@/hooks/use-toast';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { KYCProtection } from './KYCProtection';
+import { KYCPage };
 
 type PaymentMethodType = 'card' | 'mobile' | 'wave' | 'orange_money' | 'bank' | 'bank_transfer' | 'interac';
 
 export function BuyUSDT() {
+  const [showKYCPage, setShowKYCPage] = useState(false);
   const [currentStep, setCurrentStep] = useState<'form' | 'confirmation' | 'payment'>('form');
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
@@ -25,7 +26,6 @@ export function BuyUSDT() {
   const [walletAddress, setWalletAddress] = useState('');
   const [network, setNetwork] = useState('TRC20');
   const [orderData, setOrderData] = useState<any>(null);
-  const [showKYC, setShowKYC] = useState(false);
   
   const { toast } = useToast();
   const { createOrder } = useOrders();
@@ -68,7 +68,7 @@ export function BuyUSDT() {
   const usdtAmount = calculateUSDT();
 
   const handleKYCRequired = () => {
-    setShowKYC(true);
+    setShowKYCPage(true);
   };
 
   const handlePaymentComplete = () => {
@@ -123,32 +123,8 @@ export function BuyUSDT() {
     }
   };
 
-  if (showKYC) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center space-x-4">
-          <Button
-            variant="outline"
-            onClick={() => setShowKYC(false)}
-            className="border-terex-gray text-gray-300 hover:bg-terex-gray"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Retour
-          </Button>
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white">Vérification requise</h1>
-            <p className="text-gray-400">Veuillez compléter votre vérification d'identité</p>
-          </div>
-        </div>
-        <Alert className="border-terex-gray bg-terex-darker">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription className="text-gray-300">
-            Vous devez vérifier votre identité pour effectuer des achats d'USDT. 
-            Rendez-vous dans votre profil pour commencer la vérification.
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
+  if (showKYCPage) {
+    return <KYCPage onBack={() => setShowKYCPage(false)} />;
   }
 
   return (
