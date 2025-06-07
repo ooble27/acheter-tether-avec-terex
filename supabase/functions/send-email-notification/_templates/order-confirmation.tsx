@@ -1,4 +1,3 @@
-
 import {
   Text,
   Section,
@@ -106,7 +105,7 @@ export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConf
       <Text style={sectionTitle}>INFORMATIONS IMPORTANTES</Text>
       
       <Text style={infoText}>
-        <strong>Délai de traitement :</strong> 5-30 minutes après confirmation du paiement
+        <strong>Délai de traitement :</strong> 2-5 minutes après confirmation du paiement
       </Text>
       <Text style={infoText}>
         <strong>Support disponible :</strong> Notre équipe est disponible 24h/7j

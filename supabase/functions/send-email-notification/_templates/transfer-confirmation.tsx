@@ -136,10 +136,10 @@ export const TransferConfirmationEmail = ({ transferData }: TransferConfirmation
         <strong>Paiement :</strong> Immédiat
       </Text>
       <Text style={timingText}>
-        <strong>Vérification :</strong> 1-2 heures
+        <strong>Vérification :</strong> 2-3 minutes
       </Text>
       <Text style={timingText}>
-        <strong>Transfert :</strong> 2-6 heures
+        <strong>Transfert :</strong> 2-5 minutes
       </Text>
       <Text style={timingText}>
         <strong>Réception :</strong> Immédiate

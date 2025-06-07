@@ -1,4 +1,3 @@
-
 import {
   Html,
   Head,
@@ -68,15 +67,8 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
             <Text style={legalText}>
               Fondé par Mohamed Lo • Basé au Sénégal, Dakar
             </Text>
-            <div style={legalLinks}>
-              <Link href="https://app.terangaexchange.com/terms" style={legalLink}>Conditions</Link>
-              <span style={linkSeparator}> • </span>
-              <Link href="https://app.terangaexchange.com/privacy" style={legalLink}>Confidentialité</Link>
-              <span style={linkSeparator}> • </span>
-              <Link href="https://app.terangaexchange.com/security" style={legalLink}>Sécurité</Link>
-            </div>
             <Text style={copyrightText}>
-              © 2024 Terex. Tous droits réservés.
+              © 2025 Terex. Tous droits réservés.
             </Text>
           </Section>
         </Container>
@@ -85,7 +77,7 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
   );
 };
 
-// Styles simples et lisibles
+// Styles avec largeur augmentée
 const main = {
   fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif',
   margin: '0',
@@ -95,7 +87,7 @@ const main = {
 };
 
 const container = {
-  maxWidth: '600px',
+  maxWidth: '700px', // Augmenté de 600px à 700px
   margin: '0 auto',
   backgroundColor: '#ffffff',
   padding: '40px',

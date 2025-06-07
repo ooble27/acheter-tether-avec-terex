@@ -1,6 +1,6 @@
 
-import { AdminPortal } from '@/components/admin/AdminPortal';
+import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 
 export function AdminDashboard() {
-  return <AdminPortal />;
+  return <OrdersDashboardNew />;
 }

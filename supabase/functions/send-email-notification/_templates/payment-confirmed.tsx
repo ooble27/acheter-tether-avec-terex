@@ -107,11 +107,11 @@ export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentCon
       <Text style={sectionTitle}>DÉLAI ESTIMÉ RESTANT</Text>
       
       <Text style={timingText}>
-        <strong>{transactionType === 'transfer' ? '12-48 heures' : '5-15 minutes'}</strong>
+        <strong>{transactionType === 'transfer' ? '2-5 minutes' : '2-5 minutes'}</strong>
       </Text>
       <Text style={timingDescription}>
         {transactionType === 'transfer' 
-          ? 'Les transferts internationaux nécessitent des vérifications supplémentaires'
+          ? 'Les transferts sont traités très rapidement'
           : 'Délai habituel pour les transactions USDT après confirmation du paiement'
         }
       </Text>
