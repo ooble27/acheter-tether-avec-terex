@@ -145,7 +145,7 @@ export function useOrders() {
     fetchOrders();
   }, []);
 
-  const createOrder = async (orderData: Partial<UnifiedOrder>) => {
+  const createOrder = async (orderData: Omit<UnifiedOrder, 'id' | 'created_at' | 'updated_at'>) => {
     try {
       const { data, error } = await supabase
         .from('orders')

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,7 +12,7 @@ import {
   Users,
   TrendingUp
 } from 'lucide-react';
-import { useOrders, Order } from '@/hooks/useOrders';
+import { useOrders, UnifiedOrder } from '@/hooks/useOrders';
 import { useUserRole } from '@/hooks/useUserRole';
 import type { Database } from '@/integrations/supabase/types';
 
@@ -22,7 +21,7 @@ type OrderStatus = Database['public']['Enums']['order_status'];
 export function OrdersAdmin() {
   const { orders, loading, updateOrderStatus } = useOrders();
   const { isAdmin, isKYCReviewer } = useUserRole();
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<UnifiedOrder | null>(null);
 
   if (!isAdmin() && !isKYCReviewer()) {
     return (
@@ -198,7 +197,7 @@ export function OrdersAdmin() {
 }
 
 interface OrdersListProps {
-  orders: Order[];
+  orders: UnifiedOrder[];
   onStatusUpdate: (orderId: string, status: OrderStatus, paymentStatus?: string) => void;
   showActions: boolean;
 }

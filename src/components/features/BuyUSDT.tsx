@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -67,7 +66,7 @@ export function BuyUSDT() {
     
     const orderData = {
       user_id: user.id,
-      type: 'buy',
+      type: 'buy' as const,
       amount: parseFloat(amount),
       currency: paymentMethod === 'mobile' ? 'CFA' : currency,
       usdt_amount: parseFloat(usdtAmount),
@@ -88,7 +87,7 @@ export function BuyUSDT() {
     
     setLoading(false);
   };
-  
+
   const handlePaymentSubmitted = () => {
     setCurrentStep('pending');
     

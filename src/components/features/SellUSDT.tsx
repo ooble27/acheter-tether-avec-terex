@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -112,7 +111,7 @@ export function SellUSDT() {
     
     const orderData = {
       user_id: user.id,
-      type: 'sell',
+      type: 'sell' as const,
       amount: parseFloat(fiatAmount),
       currency,
       usdt_amount: parseFloat(usdtAmount),
@@ -496,15 +495,15 @@ export function SellUSDT() {
                 <div className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
                   <div>
-                    <p className="text-white text-sm font-medium">Vérification des transactions</p>
-                    <p className="text-gray-400 text-xs">Toutes les transactions sont vérifiées</p>
+                    <p className="text-white text-sm font-medium">Cryptage SSL 256-bit</p>
+                    <p className="text-gray-400 text-xs">Vos données sont protégées</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
                   <div>
-                    <p className="text-white text-sm font-medium">Paiements sécurisés</p>
-                    <p className="text-gray-400 text-xs">Vos fonds sont protégés</p>
+                    <p className="text-white text-sm font-medium">Fonds sécurisés</p>
+                    <p className="text-gray-400 text-xs">Portefeuilles multi-signatures</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
