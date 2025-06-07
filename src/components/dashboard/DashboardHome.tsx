@@ -34,7 +34,7 @@ const TetherLogo = ({ className }: { className?: string }) => (
 
 export function DashboardHome({ user }: DashboardHomeProps) {
   return (
-    <div className="min-h-screen bg-terex-dark p-6">
+    <div className="min-h-screen bg-terex-dark p-4 md:p-6">
       {/* Header Section */}
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
@@ -42,7 +42,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
             <Activity className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-xl md:text-3xl font-bold text-white">
               Bienvenue, <span className="text-terex-accent">{user?.name}</span>
             </h1>
             <p className="text-gray-400">Plateforme décentralisée pour vos transactions USDT</p>
@@ -51,7 +51,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
       </div>
 
       {/* Services rapides */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
         <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors group cursor-pointer">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
@@ -122,7 +122,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 md:w-10 md:h-10 bg-terex-accent/20 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Star className="w-4 h-4 md:w-5 md:h-5 text-terex-accent" />
@@ -154,19 +154,19 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         </CardContent>
       </Card>
 
-      {/* Section USDT - Pourquoi nous ne supportons que l'USDT */}
+      {/* Section USDT - Pourquoi nous ne supportons que Tether */}
       <Card className="bg-terex-darker border-terex-gray mb-8">
         <CardHeader>
-          <CardTitle className="text-white flex items-center">
+          <CardTitle className="text-white flex items-center text-lg md:text-xl">
             <TetherLogo className="w-4 h-4 md:w-5 md:h-5 mr-2" />
-            Pourquoi nous ne supportons que l'USDT ?
+            Pourquoi nous ne supportons que Tether ?
           </CardTitle>
           <CardDescription className="text-gray-400">
-            Terex se concentre exclusivement sur l'USDT pour offrir la meilleure expérience possible
+            Terex se concentre exclusivement sur le Tether (USDT) pour offrir la meilleure expérience possible
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <div className="w-8 h-8 md:w-10 md:h-10 bg-green-500/20 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
@@ -174,7 +174,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
                 </div>
                 <div>
                   <h3 className="text-white font-medium mb-1">Stabilité garantie</h3>
-                  <p className="text-gray-400 text-sm">L'USDT est ancré au dollar américain (1:1), offrant une stabilité incomparable face à la volatilité du marché crypto</p>
+                  <p className="text-gray-400 text-sm">Tether est ancré au dollar américain (1:1), offrant une stabilité incomparable face à la volatilité du marché crypto</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
@@ -194,7 +194,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
                 </div>
                 <div>
                   <h3 className="text-white font-medium mb-1">Simplicité d'usage</h3>
-                  <p className="text-gray-400 text-sm">Pas besoin de suivre plusieurs cryptomonnaies, une seule devise stable pour tous vos besoins</p>
+                  <p className="text-gray-400 text-sm">Pas besoin de suivre plusieurs cryptomonnaies, Tether seul pour tous vos besoins</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
@@ -203,7 +203,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
                 </div>
                 <div>
                   <h3 className="text-white font-medium mb-1">Transferts rapides</h3>
-                  <p className="text-gray-400 text-sm">Les transactions USDT sont rapides et peu coûteuses, parfaites pour les virements internationaux</p>
+                  <p className="text-gray-400 text-sm">Les transactions Tether sont rapides et peu coûteuses, parfaites pour les virements internationaux</p>
                 </div>
               </div>
             </div>
@@ -214,13 +214,13 @@ export function DashboardHome({ user }: DashboardHomeProps) {
       {/* Section Blockchain & Sécurité */}
       <Card className="bg-terex-darker border-terex-gray mb-8">
         <CardHeader>
-          <CardTitle className="text-white flex items-center">
+          <CardTitle className="text-white flex items-center text-lg md:text-xl">
             <Blocks className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
             Blockchain & Sécurité
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             <div className="flex items-start space-x-3">
               <div className="w-8 h-8 md:w-10 md:h-10 bg-terex-accent/20 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
                 <Shield className="w-4 h-4 md:w-5 md:h-5 text-terex-accent" />
@@ -258,8 +258,8 @@ export function DashboardHome({ user }: DashboardHomeProps) {
           <CardTitle className="text-white text-xl text-center">Pourquoi choisir Terex ?</CardTitle>
           <p className="text-gray-400 text-center">La plateforme de confiance pour vos transactions USDT</p>
         </CardHeader>
-        <CardContent className="p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <CardContent className="p-6 md:p-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 md:items-start">
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <div className="w-6 h-6 md:w-8 md:h-8 bg-terex-accent/20 rounded-lg flex items-center justify-center mt-1 flex-shrink-0">
