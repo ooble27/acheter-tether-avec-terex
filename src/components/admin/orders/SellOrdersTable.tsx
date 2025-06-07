@@ -1,4 +1,5 @@
 
+
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -56,22 +57,48 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
 
   const getPaymentServiceInfo = (order: UnifiedOrder) => {
     // Extraire les informations du service de paiement depuis les notes ou payment_details
+    let serviceInfo = { service: 'Mobile Money', phone: order.recipient_phone };
+    
     if (order.notes) {
-      if (order.notes.includes('Wave')) return { service: 'Wave', phone: order.recipient_phone };
-      if (order.notes.includes('Orange Money')) return { service: 'Orange Money', phone: order.recipient_phone };
+      try {
+        const parsedNotes = JSON.parse(order.notes);
+        if (parsedNotes.provider === 'wave') {
+          serviceInfo.service = 'Wave';
+          serviceInfo.phone = parsedNotes.phoneNumber || order.recipient_phone;
+        } else if (parsedNotes.provider === 'orange') {
+          serviceInfo.service = 'Orange Money';
+          serviceInfo.phone = parsedNotes.phoneNumber || order.recipient_phone;
+        }
+      } catch (e) {
+        // Si les notes ne sont pas en JSON, chercher dans le texte
+        if (order.notes.includes('Wave')) {
+          serviceInfo.service = 'Wave';
+        } else if (order.notes.includes('Orange Money')) {
+          serviceInfo.service = 'Orange Money';
+        }
+      }
     }
     
-    // Si pas d'info spécifique, utiliser payment_method
-    switch (order.payment_method) {
-      case 'wave':
-        return { service: 'Wave', phone: order.recipient_phone };
-      case 'orange_money':
-        return { service: 'Orange Money', phone: order.recipient_phone };
-      case 'mobile':
-        return { service: 'Mobile Money', phone: order.recipient_phone };
-      default:
-        return { service: 'Mobile Money', phone: order.recipient_phone };
+    // Utiliser payment_method comme fallback
+    if (serviceInfo.service === 'Mobile Money') {
+      switch (order.payment_method) {
+        case 'wave':
+          serviceInfo.service = 'Wave';
+          break;
+        case 'orange_money':
+          serviceInfo.service = 'Orange Money';
+          break;
+        default:
+          serviceInfo.service = 'Mobile Money';
+      }
     }
+    
+    return serviceInfo;
+  };
+
+  const handleStatusUpdate = async (orderId: string, status: OrderStatus, paymentStatus?: string) => {
+    // Empêcher le rechargement de la page
+    await onStatusUpdate(orderId, status, paymentStatus);
   };
 
   if (orders.length === 0) {
@@ -129,18 +156,20 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
                   </div>
                 </div>
 
-                {/* Amount Info */}
+                {/* Amount Info - Amélioration de l'alignement */}
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-white">
-                    {order.usdt_amount} USDT
-                  </div>
-                  <div className="text-sm text-red-500">
-                    → {order.amount.toLocaleString()} {order.currency}
+                  <div className="flex flex-col items-end space-y-1">
+                    <div className="text-xl font-bold text-white">
+                      {order.usdt_amount} USDT
+                    </div>
+                    <div className="text-sm text-red-500 flex items-center">
+                      <span>→ {order.amount.toLocaleString()} {order.currency}</span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 flex-wrap">
                   <Button
                     onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
                     variant="outline"
@@ -163,7 +192,7 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
                   {order.status === 'pending' && (
                     <>
                       <Button
-                        onClick={() => onStatusUpdate(order.id, 'processing' as OrderStatus)}
+                        onClick={() => handleStatusUpdate(order.id, 'processing' as OrderStatus)}
                         size="sm"
                         className="bg-terex-accent hover:bg-terex-accent/80 text-white"
                       >
@@ -171,7 +200,7 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
                         Traiter
                       </Button>
                       <Button
-                        onClick={() => onStatusUpdate(order.id, 'cancelled' as OrderStatus)}
+                        onClick={() => handleStatusUpdate(order.id, 'cancelled' as OrderStatus)}
                         size="sm"
                         variant="destructive"
                       >
@@ -184,7 +213,7 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
                   {order.status === 'processing' && (
                     <>
                       <Button
-                        onClick={() => onStatusUpdate(order.id, 'completed' as OrderStatus, 'paid')}
+                        onClick={() => handleStatusUpdate(order.id, 'completed' as OrderStatus, 'paid')}
                         size="sm"
                         className="bg-green-600 hover:bg-green-700"
                       >
@@ -192,7 +221,7 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
                         Terminer
                       </Button>
                       <Button
-                        onClick={() => onStatusUpdate(order.id, 'cancelled' as OrderStatus)}
+                        onClick={() => handleStatusUpdate(order.id, 'cancelled' as OrderStatus)}
                         size="sm"
                         variant="destructive"
                       >

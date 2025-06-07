@@ -1,7 +1,7 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useEmailNotifications } from '@/hooks/useEmailNotifications';
 import type { Database } from '@/integrations/supabase/types';
 
 type OrderStatus = Database['public']['Enums']['order_status'];
@@ -64,6 +64,7 @@ export function useOrders() {
   const [orders, setOrders] = useState<UnifiedOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const { sendEmailNotification } = useEmailNotifications();
 
   const fetchOrders = async () => {
     try {
@@ -244,6 +245,17 @@ export function useOrders() {
           .eq('id', orderId);
 
         if (error) throw error;
+      }
+
+      // Envoyer l'email de notification selon le statut
+      if (order) {
+        if (status === 'processing') {
+          await sendEmailNotification('status_update', order.type, { ...order, status }, orderId);
+        } else if (status === 'completed') {
+          await sendEmailNotification('payment_confirmed', order.type, { ...order, status }, orderId);
+        } else if (status === 'cancelled') {
+          await sendEmailNotification('status_update', order.type, { ...order, status }, orderId);
+        }
       }
 
       await fetchOrders(); // Refresh the orders list

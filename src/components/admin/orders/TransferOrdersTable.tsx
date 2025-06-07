@@ -1,4 +1,5 @@
 
+
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -50,39 +51,28 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
     );
   };
 
-  const getPaymentMethodLabel = (paymentMethod: string) => {
-    switch (paymentMethod) {
-      case 'card':
-        return 'Carte bancaire';
-      case 'interac':
-        return 'Interac E-Transfer';
-      case 'bank':
-      case 'bank_transfer':
-        return 'Virement bancaire';
-      case 'mobile':
-        return 'Mobile Money';
-      case 'wave':
-        return 'Wave';
-      case 'orange_money':
-        return 'Orange Money';
-      default:
-        return paymentMethod;
-    }
-  };
-
-  const getReceiveService = (order: UnifiedOrder) => {
-    // Détermine le service de réception basé sur le pays et la méthode
-    if (order.recipient_country?.toLowerCase().includes('sénégal') || 
-        order.recipient_country?.toLowerCase().includes('senegal')) {
-      return order.payment_method === 'wave' ? 'Wave' : 'Orange Money';
-    }
-    
-    // Pour d'autres pays, utiliser la méthode de paiement
-    return getPaymentMethodLabel(order.payment_method || 'bank_transfer');
-  };
-
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
+  };
+
+  const getReceiveMethodName = (order: UnifiedOrder) => {
+    // Extraire le service de réception depuis les notes
+    if (order.notes) {
+      if (order.notes.includes('Wave')) return 'Wave';
+      if (order.notes.includes('Orange Money')) return 'Orange Money';
+    }
+    
+    // Utiliser les propriétés spécifiques aux transferts
+    if (order.payment_method === 'wave') return 'Wave';
+    if (order.payment_method === 'orange_money') return 'Orange Money';
+    
+    // Fallback par défaut
+    return 'Wave';
+  };
+
+  const handleStatusUpdate = async (orderId: string, status: OrderStatus, paymentStatus?: string) => {
+    // Empêcher le rechargement de la page
+    await onStatusUpdate(orderId, status, paymentStatus);
   };
 
   if (orders.length === 0) {
@@ -91,7 +81,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
         <div className="w-16 h-16 mx-auto mb-4 bg-terex-gray/30 rounded-full flex items-center justify-center">
           <Send className="w-8 h-8 text-gray-400" />
         </div>
-        <h3 className="text-lg font-medium text-white mb-2">Aucun transfert</h3>
+        <h3 className="text-lg font-medium text-white mb-2">Aucun transfert international</h3>
         <p className="text-gray-400">Il n'y a aucun transfert à afficher.</p>
       </div>
     );
@@ -100,7 +90,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
   return (
     <div className="space-y-4">
       {orders.map((order) => {
-        const receiveService = getReceiveService(order);
+        const receiveMethod = getReceiveMethodName(order);
         
         return (
           <div 
@@ -112,8 +102,8 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
                 {/* Order Info */}
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                    <Send className="w-6 h-6 text-blue-500" />
+                  <div className="w-12 h-12 bg-terex-accent/20 rounded-lg flex items-center justify-center">
+                    <Send className="w-6 h-6 text-terex-accent" />
                   </div>
                   
                   <div>
@@ -133,30 +123,27 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                     <div className="flex items-center space-x-4 mt-1 text-sm text-gray-400">
                       <span>{new Date(order.created_at).toLocaleDateString('fr-FR')}</span>
                       <span>•</span>
-                      <span>Transfert International</span>
+                      <span>Transfert</span>
                       <span>•</span>
-                      <span>{order.recipient_country}</span>
-                      <span>•</span>
-                      <span>{receiveService}</span>
+                      <span>{receiveMethod}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Amount Info */}
+                {/* Amount Info - Amélioration de l'alignement */}
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-white">
-                    {order.amount.toLocaleString()} {order.from_currency || order.currency}
-                  </div>
-                  <div className="text-sm text-blue-500">
-                    → {order.total_amount?.toLocaleString()} {order.to_currency}
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    vers {order.recipient_name}
+                  <div className="flex flex-col items-end space-y-1">
+                    <div className="text-lg font-bold text-white">
+                      {order.amount} {order.from_currency}
+                    </div>
+                    <div className="text-sm text-terex-accent flex items-center">
+                      <span>→ {order.total_amount} {order.to_currency}</span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 flex-wrap">
                   <Button
                     onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
                     variant="outline"
@@ -179,7 +166,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                   {order.status === 'pending' && (
                     <>
                       <Button
-                        onClick={() => onStatusUpdate(order.id, 'processing' as OrderStatus)}
+                        onClick={() => handleStatusUpdate(order.id, 'processing' as OrderStatus)}
                         size="sm"
                         className="bg-terex-accent hover:bg-terex-accent/80 text-white"
                       >
@@ -187,7 +174,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                         Traiter
                       </Button>
                       <Button
-                        onClick={() => onStatusUpdate(order.id, 'cancelled' as OrderStatus)}
+                        onClick={() => handleStatusUpdate(order.id, 'cancelled' as OrderStatus)}
                         size="sm"
                         variant="destructive"
                       >
@@ -200,7 +187,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                   {order.status === 'processing' && (
                     <>
                       <Button
-                        onClick={() => onStatusUpdate(order.id, 'completed' as OrderStatus, 'paid')}
+                        onClick={() => handleStatusUpdate(order.id, 'completed' as OrderStatus, 'paid')}
                         size="sm"
                         className="bg-green-600 hover:bg-green-700"
                       >
@@ -208,7 +195,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                         Terminer
                       </Button>
                       <Button
-                        onClick={() => onStatusUpdate(order.id, 'cancelled' as OrderStatus)}
+                        onClick={() => handleStatusUpdate(order.id, 'cancelled' as OrderStatus)}
                         size="sm"
                         variant="destructive"
                       >
@@ -226,21 +213,23 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
               <div className="border-t border-terex-gray/50 bg-terex-gray/20 p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   <div>
-                    <h4 className="text-sm font-medium text-terex-accent mb-3">Informations d'envoi</h4>
+                    <h4 className="text-sm font-medium text-terex-accent mb-3">Détails du transfert</h4>
                     <div className="space-y-3 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Méthode de paiement:</span>
-                        <span className="text-white">
-                          {getPaymentMethodLabel(order.payment_method || 'bank_transfer')}
-                        </span>
+                        <span className="text-gray-400">Montant envoyé:</span>
+                        <span className="text-white font-medium">{order.amount} {order.from_currency}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Taux de change:</span>
-                        <span className="text-white font-medium">{order.exchange_rate}</span>
+                        <span className="text-gray-400">Montant à recevoir:</span>
+                        <span className="text-white font-medium">{order.total_amount} {order.to_currency}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Frais de transfert:</span>
+                        <span className="text-gray-400">Frais:</span>
                         <span className="text-white">{order.fees} {order.from_currency}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Taux:</span>
+                        <span className="text-white">{order.exchange_rate}</span>
                       </div>
                     </div>
                   </div>
@@ -254,15 +243,10 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                       </div>
                       
                       <div>
-                        <span className="text-gray-400 block mb-1">Pays de destination:</span>
-                        <span className="text-white">{order.recipient_country}</span>
-                      </div>
-
-                      <div>
                         <span className="text-gray-400 block mb-1">Service de réception:</span>
-                        <span className="text-white font-medium">{receiveService}</span>
+                        <span className="text-white font-medium">{receiveMethod}</span>
                       </div>
-
+                      
                       {order.recipient_phone && (
                         <div>
                           <span className="text-gray-400 block mb-1">Numéro de téléphone:</span>
@@ -280,21 +264,35 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                         </div>
                       )}
 
-                      {order.recipient_address && (
+                      {order.recipient_country && (
                         <div>
-                          <span className="text-gray-400 block mb-1">Adresse/Banque:</span>
-                          <span className="text-white text-xs">{order.recipient_address}</span>
+                          <span className="text-gray-400 block mb-1">Pays:</span>
+                          <span className="text-white">{order.recipient_country}</span>
                         </div>
                       )}
                     </div>
                   </div>
 
                   <div>
-                    <h4 className="text-sm font-medium text-terex-accent mb-3">Détails du transfert</h4>
+                    <h4 className="text-sm font-medium text-terex-accent mb-3">Détails de paiement</h4>
                     <div className="space-y-3 text-sm">
+                      <div>
+                        <span className="text-gray-400 block mb-1">Méthode de paiement:</span>
+                        <span className="text-white">
+                          {order.payment_method === 'card' ? 'Carte bancaire' : 
+                           order.payment_method === 'interac' ? 'Interac E-Transfer' : 
+                           order.payment_method || 'N/A'}
+                        </span>
+                      </div>
+                      
+                      <div>
+                        <span className="text-gray-400 block mb-1">Date:</span>
+                        <span className="text-white">{new Date(order.created_at).toLocaleDateString('fr-FR')}</span>
+                      </div>
+
                       {order.payment_reference && (
                         <div>
-                          <span className="text-gray-400 block mb-1">Référence de paiement:</span>
+                          <span className="text-gray-400 block mb-1">Référence:</span>
                           <div className="flex items-center justify-between bg-terex-gray/50 p-2 rounded">
                             <span className="text-white font-mono text-xs">{order.payment_reference}</span>
                             <Button
@@ -305,34 +303,6 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                             >
                               <Copy className="w-3 h-3" />
                             </Button>
-                          </div>
-                        </div>
-                      )}
-
-                      {order.transfer_purpose && (
-                        <div>
-                          <span className="text-gray-400 block mb-1">Motif du transfert:</span>
-                          <span className="text-white">{order.transfer_purpose}</span>
-                        </div>
-                      )}
-
-                      <div>
-                        <span className="text-gray-400 block mb-1">Montant total à recevoir:</span>
-                        <div className="bg-terex-gray/50 p-3 rounded">
-                          <div className="text-white font-medium">
-                            {order.total_amount?.toLocaleString()} {order.to_currency}
-                          </div>
-                          <div className="text-xs text-gray-400 mt-1">
-                            via {receiveService}
-                          </div>
-                        </div>
-                      </div>
-
-                      {order.notes && (
-                        <div>
-                          <span className="text-gray-400 block mb-1">Notes:</span>
-                          <div className="bg-terex-gray/50 p-3 rounded text-white">
-                            {order.notes}
                           </div>
                         </div>
                       )}
