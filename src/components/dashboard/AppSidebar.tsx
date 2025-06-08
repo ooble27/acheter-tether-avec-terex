@@ -1,3 +1,4 @@
+
 import {
   Sidebar,
   SidebarContent,
@@ -82,7 +83,7 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
   const { isKYCReviewer } = useUserRole();
 
   return (
-    <div className="flex flex-col min-h-screen h-full">
+    <div className="flex flex-col h-full min-h-0">
       <SidebarHeader className="p-6 border-b border-terex-gray/30">
         {/* Logo Header Style Binance dans la Sidebar */}
         <div className="flex items-center space-x-3">
@@ -107,7 +108,7 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="flex-1 px-4 py-6">
+      <SidebarContent className="flex-1 px-4 py-6 overflow-y-auto">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-2">
@@ -235,12 +236,12 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
         </SidebarGroup>
       </SidebarContent>
       
-      <div className="p-4 border-t border-terex-gray/30 mt-auto">
+      <div className="p-4 border-t border-terex-gray/30 mt-auto flex-shrink-0">
         <Button 
           onClick={onLogout}
-          className="w-full h-16 md:h-16 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium"
+          className="w-full h-10 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
         >
-          <LogOut className="mr-3 h-5 w-5" />
+          <LogOut className="mr-2 h-4 w-4" />
           Déconnexion
         </Button>
       </div>
@@ -256,7 +257,7 @@ export function AppSidebar({ activeSection, setActiveSection, onLogout }: AppSid
   }
 
   return (
-    <Sidebar className="bg-terex-darker border-r border-terex-gray/30 shadow-2xl h-screen">
+    <Sidebar className="bg-terex-darker border-r border-terex-gray/30 shadow-2xl">
       <AppSidebarContent 
         activeSection={activeSection} 
         setActiveSection={setActiveSection} 
@@ -284,13 +285,22 @@ export function MobileMenu({ activeSection, setActiveSection, onLogout }: AppSid
           <Menu className="h-6 w-6" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-80 bg-terex-darker border-r border-terex-gray/30 p-0 shadow-2xl h-screen">
-        <AppSidebarContent 
-          activeSection={activeSection} 
-          setActiveSection={setActiveSection} 
-          onLogout={onLogout}
-          onItemClick={handleItemClick}
-        />
+      <SheetContent 
+        side="left" 
+        className="w-80 bg-terex-darker border-r border-terex-gray/30 p-0 shadow-2xl"
+        style={{ 
+          height: '100dvh',
+          maxHeight: '100dvh'
+        }}
+      >
+        <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column' }}>
+          <AppSidebarContent 
+            activeSection={activeSection} 
+            setActiveSection={setActiveSection} 
+            onLogout={onLogout}
+            onItemClick={handleItemClick}
+          />
+        </div>
       </SheetContent>
     </Sheet>
   );

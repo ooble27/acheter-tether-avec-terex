@@ -132,7 +132,7 @@ export const StatusUpdateEmail = ({ orderData, transactionType }: StatusUpdatePr
           <Text style={progressText}>⏳ Traitement en cours - 70% terminé</Text>
           <Text style={detailText}>
             Notre équipe traite activement votre {transactionType === 'transfer' ? 'transfert' : 'commande'}.{'\n'}
-            Délai estimé restant : {transactionType === 'transfer' ? '6-24 heures' : '5-15 minutes'}{'\n'}
+            Délai estimé restant : 5 minutes{'\n'}
             Vous serez notifié immédiatement une fois le traitement terminé.
           </Text>
         </>
