@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, Handshake } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, GraduationCap } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -55,10 +55,10 @@ const menuItems = [
     description: 'Échanger vos USDT'
   },
   { 
-    id: 'otc', 
-    label: 'Trading OTC', 
-    icon: Handshake,
-    description: 'Gros volumes & négociation'
+    id: 'academy', 
+    label: 'Formation & Académie', 
+    icon: GraduationCap,
+    description: 'Apprendre la blockchain'
   },
   { 
     id: 'transfer', 

@@ -12,7 +12,7 @@ import { KYCPage } from '@/components/features/KYCPage';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { AdminPortal } from '@/components/admin/AdminPortal';
-import { OTC } from '@/components/features/OTC';
+import { Academy } from '@/components/features/Academy';
 import { UserGuide } from '@/components/features/UserGuide';
 import { SecurityPolicy } from '@/components/features/SecurityPolicy';
 import { TermsOfService } from '@/components/features/TermsOfService';
@@ -61,8 +61,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         return <BuyUSDT />;
       case 'sell':
         return <SellUSDT />;
-      case 'otc':
-        return <OTC />;
+      case 'academy':
+        return <Academy />;
       case 'transfer':
         return <InternationalTransfer />;
       case 'profile':
