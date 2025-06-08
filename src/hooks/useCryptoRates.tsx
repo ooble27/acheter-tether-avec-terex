@@ -73,8 +73,8 @@ export function useCryptoRates() {
   useEffect(() => {
     fetchRates();
     
-    // Mise à jour toutes les 5 minutes
-    const interval = setInterval(fetchRates, 5 * 60 * 1000);
+    // Mise à jour toutes les 20 secondes
+    const interval = setInterval(fetchRates, 20 * 1000);
     
     return () => clearInterval(interval);
   }, []);

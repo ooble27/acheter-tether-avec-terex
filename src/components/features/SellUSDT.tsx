@@ -6,7 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRightLeft, Shield, Clock, CreditCard, CheckCircle, Copy } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ArrowRightLeft, Shield, Clock, CreditCard, CheckCircle, Copy, RefreshCw, AlertCircle } from 'lucide-react';
 import { SellOrderConfirmation } from '@/components/features/SellOrderConfirmation';
 import { USDTSendingInstructions } from '@/components/features/USDTSendingInstructions';
 import { USDTSentConfirmation } from '@/components/features/USDTSentConfirmation';
@@ -15,6 +16,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { KYCProtection } from './KYCProtection';
 import { KYCPage } from './KYCPage';
+import { useTerexRates } from '@/hooks/useTerexRates';
 
 // Adresses de portefeuille par réseau - Vos vraies adresses
 const WALLET_ADDRESSES = {
@@ -51,8 +53,25 @@ export function SellUSDT() {
   const { user } = useAuth();
   const { toast } = useToast();
 
+  // Utilisation des taux automatiques pour les achats USDT (TEREX achète)
+  const { 
+    terexBuyRateCfa, 
+    terexBuyRateCad, 
+    marketRateCfa, 
+    marketRateCad, 
+    loading: ratesLoading, 
+    error: ratesError,
+    lastUpdated,
+    refresh: refreshRates
+  } = useTerexRates(2);
+
   const exchangeRates = {
-    CFA: 590  // Nous achetons USDT à 590 CFA (10 francs de différence avec le prix de vente)
+    CFA: terexBuyRateCfa
+  };
+
+  const marketRates = {
+    CFA: marketRateCfa,
+    CAD: marketRateCad
   };
 
   // Fonction pour formater les nombres - améliorée
@@ -331,7 +350,7 @@ export function SellUSDT() {
 
                           <div className="bg-terex-gray rounded-lg p-3">
                             <div className="flex justify-between text-sm">
-                              <span className="text-gray-400">Taux de change</span>
+                              <span className="text-gray-400">Taux TEREX (achat)</span>
                               <span className="text-white">1 USDT = {exchangeRates[currency as keyof typeof exchangeRates]} {currency}</span>
                             </div>
                             <div className="flex justify-between text-sm mt-1">
@@ -485,19 +504,75 @@ export function SellUSDT() {
 
             {/* Sidebar */}
             <div className="space-y-4 md:space-y-6">
+              {/* Taux du jour */}
+              <Card className="bg-terex-darker border-terex-gray">
+                <CardHeader className="p-4">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-white text-base md:text-lg flex items-center">
+                      <img 
+                        src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
+                        alt="USDT" 
+                        className="w-4 h-4 md:w-5 md:h-5 mr-2"
+                      />
+                      Taux du jour
+                    </CardTitle>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={refreshRates}
+                      disabled={ratesLoading}
+                      className="h-8 w-8 p-0 text-terex-accent hover:bg-terex-accent/10"
+                    >
+                      <RefreshCw className={`w-4 h-4 ${ratesLoading ? 'animate-spin' : ''}`} />
+                    </Button>
+                  </div>
+                  {lastUpdated && (
+                    <p className="text-xs text-gray-400">
+                      Mis à jour: {lastUpdated.toLocaleTimeString('fr-FR')}
+                    </p>
+                  )}
+                </CardHeader>
+                <CardContent className="space-y-3 p-4 pt-0">
+                  {ratesError && (
+                    <Alert className="border-yellow-500/50 bg-yellow-500/10">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription className="text-yellow-200 text-xs">
+                        {ratesError}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-400 text-sm">Marché USDT/CFA</span>
+                      <span className="text-gray-300 font-medium text-sm">{marketRates.CFA.toLocaleString()} CFA</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-400 text-sm">Marché USDT/CAD</span>
+                      <span className="text-gray-300 font-medium text-sm">${marketRates.CAD} CAD</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Market Info */}
               <Card className="bg-terex-darker border-terex-gray">
                 <CardHeader className="p-4">
-                  <CardTitle className="text-white text-base md:text-lg">Prix du marché</CardTitle>
+                  <CardTitle className="text-white text-base md:text-lg flex items-center">
+                    <img 
+                      src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
+                      alt="USDT" 
+                      className="w-4 h-4 md:w-5 md:h-5 mr-2"
+                    />
+                    Nos taux TEREX (achat)
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 p-4 pt-0">
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-400 text-sm">USDT/USD</span>
-                    <span className="text-terex-accent font-bold">$1.00</span>
-                  </div>
-                  <div className="flex items-center justify-between">
                     <span className="text-gray-400 text-sm">USDT/CFA</span>
-                    <span className="text-white font-bold">590 CFA</span>
+                    <span className="text-white font-bold text-sm">{terexBuyRateCfa.toLocaleString()} CFA</span>
+                  </div>
+                  <div className="text-xs text-gray-500 mt-2">
+                    * Nous achetons vos USDT à ce taux
                   </div>
                 </CardContent>
               </Card>
