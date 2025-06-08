@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, Handshake } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useState } from 'react';
 
@@ -81,6 +82,7 @@ const menuItems = [
 
 const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemClick }: AppSidebarProps & { onItemClick?: () => void }) => {
   const { isKYCReviewer } = useUserRole();
+  const isTablet = useIsTablet();
 
   return (
     <div className="flex flex-col h-full min-h-0">
@@ -236,15 +238,18 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
         </SidebarGroup>
       </SidebarContent>
       
-      <div className="p-4 border-t border-terex-gray/30 mt-auto flex-shrink-0">
-        <Button 
-          onClick={onLogout}
-          className="w-full h-10 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
-        >
-          <LogOut className="mr-2 h-4 w-4" />
-          Déconnexion
-        </Button>
-      </div>
+      {/* Bouton de déconnexion - masqué sur tablette */}
+      {!isTablet && (
+        <div className="p-4 border-t border-terex-gray/30 mt-auto flex-shrink-0">
+          <Button 
+            onClick={onLogout}
+            className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
+          >
+            <LogOut className="mr-2 h-5 w-5" />
+            Déconnexion
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
