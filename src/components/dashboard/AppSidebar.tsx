@@ -1,4 +1,3 @@
-
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +10,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, GraduationCap } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -53,12 +52,6 @@ const menuItems = [
     label: 'Vendre USDT', 
     icon: TrendingDown,
     description: 'Échanger vos USDT'
-  },
-  { 
-    id: 'academy', 
-    label: 'Formation & Académie', 
-    icon: GraduationCap,
-    description: 'Apprendre la blockchain'
   },
   { 
     id: 'transfer', 
