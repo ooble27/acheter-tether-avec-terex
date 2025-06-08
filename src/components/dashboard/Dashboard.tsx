@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
@@ -20,8 +21,6 @@ import { TransactionProvider } from '@/contexts/TransactionContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserRole } from '@/hooks/useUserRole';
-import { Button } from '@/components/ui/button';
-import { LogOut } from 'lucide-react';
 
 interface DashboardProps {
   user: { email: string; name: string } | null;
@@ -30,26 +29,9 @@ interface DashboardProps {
 
 export function Dashboard({ user, onLogout }: DashboardProps) {
   const [activeSection, setActiveSection] = useState('home');
-  const [isTablet, setIsTablet] = useState(false);
   const isMobile = useIsMobile();
   const { signOut } = useAuth();
   const { isKYCReviewer, isAdmin } = useUserRole();
-
-  // Détection spécifique pour iPad/tablettes
-  useEffect(() => {
-    const checkIsTablet = () => {
-      const userAgent = navigator.userAgent;
-      const isIPad = /iPad/.test(userAgent) || (/Macintosh/.test(userAgent) && 'ontouchend' in document);
-      const isAndroidTablet = /Android/.test(userAgent) && !/Mobile/.test(userAgent);
-      const isTabletSize = window.innerWidth >= 768 && window.innerWidth <= 1024;
-      
-      setIsTablet((isIPad || isAndroidTablet) && isTabletSize);
-    };
-
-    checkIsTablet();
-    window.addEventListener('resize', checkIsTablet);
-    return () => window.removeEventListener('resize', checkIsTablet);
-  }, []);
 
   // Effet pour remonter en haut à chaque changement de section
   useEffect(() => {
@@ -107,23 +89,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   return (
     <TransactionProvider>
       <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-terex-dark relative">
-          {/* Bouton de déconnexion flottant pour tablettes uniquement */}
-          {isTablet && (
-            <Button 
-              onClick={handleLogout}
-              className="fixed top-4 right-4 z-[100] w-12 h-12 rounded-full bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 p-0 shadow-lg"
-              title="Déconnexion"
-            >
-              <LogOut className="h-5 w-5" />
-            </Button>
-          )}
-          
+        <div className="min-h-screen flex w-full bg-terex-dark">
           <AppSidebar 
             activeSection={activeSection}
             setActiveSection={setActiveSection}
             onLogout={handleLogout}
-            hideLogoutButton={isTablet}
           />
           <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'}`}>
             <MobileMenu 

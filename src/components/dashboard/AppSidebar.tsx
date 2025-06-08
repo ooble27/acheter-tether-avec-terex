@@ -1,3 +1,4 @@
+
 import {
   Sidebar,
   SidebarContent,
@@ -19,7 +20,6 @@ interface AppSidebarProps {
   activeSection: string;
   setActiveSection: (section: string) => void;
   onLogout: () => void;
-  hideLogoutButton?: boolean;
 }
 
 const TetherLogo = ({ className, isActive, color }: { className?: string, isActive?: boolean, color?: string }) => (
@@ -79,7 +79,7 @@ const menuItems = [
   },
 ];
 
-const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemClick, hideLogoutButton }: AppSidebarProps & { onItemClick?: () => void }) => {
+const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemClick }: AppSidebarProps & { onItemClick?: () => void }) => {
   const { isKYCReviewer } = useUserRole();
 
   return (
@@ -236,23 +236,20 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
         </SidebarGroup>
       </SidebarContent>
       
-      {/* Bouton déconnexion - masqué sur tablettes */}
-      {!hideLogoutButton && (
-        <div className="p-4 border-t border-terex-gray/30 mt-auto flex-shrink-0">
-          <Button 
-            onClick={onLogout}
-            className="w-full h-8 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-xs"
-          >
-            <LogOut className="mr-2 h-3 w-3" />
-            Déconnexion
-          </Button>
-        </div>
-      )}
+      <div className="p-4 border-t border-terex-gray/30 mt-auto flex-shrink-0">
+        <Button 
+          onClick={onLogout}
+          className="w-full h-10 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          Déconnexion
+        </Button>
+      </div>
     </div>
   );
 };
 
-export function AppSidebar({ activeSection, setActiveSection, onLogout, hideLogoutButton }: AppSidebarProps) {
+export function AppSidebar({ activeSection, setActiveSection, onLogout }: AppSidebarProps) {
   const isMobile = useIsMobile();
 
   if (isMobile) {
@@ -265,13 +262,12 @@ export function AppSidebar({ activeSection, setActiveSection, onLogout, hideLogo
         activeSection={activeSection} 
         setActiveSection={setActiveSection} 
         onLogout={onLogout} 
-        hideLogoutButton={hideLogoutButton}
       />
     </Sidebar>
   );
 }
 
-export function MobileMenu({ activeSection, setActiveSection, onLogout }: Omit<AppSidebarProps, 'hideLogoutButton'>) {
+export function MobileMenu({ activeSection, setActiveSection, onLogout }: AppSidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleItemClick = () => {
