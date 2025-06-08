@@ -257,7 +257,7 @@ export function AppSidebar({ activeSection, setActiveSection, onLogout }: AppSid
   }
 
   return (
-    <Sidebar className="bg-terex-darker border-r border-terex-gray/30 shadow-2xl">
+    <Sidebar className="bg-terex-darker border-r border-terex-gray/30 shadow-2xl fixed left-0 top-0 h-screen z-50">
       <AppSidebarContent 
         activeSection={activeSection} 
         setActiveSection={setActiveSection} 
@@ -287,13 +287,17 @@ export function MobileMenu({ activeSection, setActiveSection, onLogout }: AppSid
       </SheetTrigger>
       <SheetContent 
         side="left" 
-        className="w-80 bg-terex-darker border-r border-terex-gray/30 p-0 shadow-2xl"
+        className="w-80 bg-terex-darker border-r border-terex-gray/30 p-0 shadow-2xl fixed"
         style={{ 
           height: '100dvh',
-          maxHeight: '100dvh'
+          maxHeight: '100dvh',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: 9999
         }}
       >
-        <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
           <AppSidebarContent 
             activeSection={activeSection} 
             setActiveSection={setActiveSection} 
