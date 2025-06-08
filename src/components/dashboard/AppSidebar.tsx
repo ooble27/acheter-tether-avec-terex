@@ -86,7 +86,7 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <SidebarHeader className="p-6 border-b border-terex-gray/30">
+      <SidebarHeader className="p-6 border-b border-sidebar-border">
         {/* Logo Header Style Binance dans la Sidebar */}
         <div className="flex items-center space-x-3">
           <div className="relative flex items-center gap-3 p-3 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-xl border border-terex-accent/20">
@@ -99,7 +99,7 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
               <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 to-transparent rounded-lg blur opacity-40"></div>
             </div>
             <div className="flex flex-col">
-              <h1 className="text-xl font-black tracking-tight text-white">
+              <h1 className="text-xl font-black tracking-tight text-sidebar-foreground">
                 <span className="bg-gradient-to-r from-terex-accent to-terex-accent/80 bg-clip-text text-transparent">
                   TEREX
                 </span>
@@ -126,14 +126,14 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                       className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${
                         activeSection === item.id
                           ? 'bg-gradient-to-r from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/25'
-                          : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'
+                          : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-md'
                       }`}
                     >
                       <div className="flex items-center space-x-4 w-full">
                         <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
                           activeSection === item.id 
                             ? 'bg-white/20' 
-                            : 'bg-terex-gray/30 group-hover:bg-terex-accent/20'
+                            : 'bg-sidebar-accent group-hover:bg-terex-accent/20'
                         }`}>
                           {item.isCustomIcon ? (
                             <IconComponent 
@@ -164,9 +164,9 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                 <>
                   <div className="pt-6 pb-2">
                     <div className="flex items-center space-x-2 px-4">
-                      <div className="h-px bg-terex-gray/40 flex-1"></div>
-                      <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Administration</span>
-                      <div className="h-px bg-terex-gray/40 flex-1"></div>
+                      <div className="h-px bg-sidebar-border flex-1"></div>
+                      <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Administration</span>
+                      <div className="h-px bg-sidebar-border flex-1"></div>
                     </div>
                   </div>
                   
@@ -179,14 +179,14 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                       className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${
                         activeSection === 'kyc-admin'
                           ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/25'
-                          : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'
+                          : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-md'
                       }`}
                     >
                       <div className="flex items-center space-x-4 w-full">
                         <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
                           activeSection === 'kyc-admin' 
                             ? 'bg-white/20' 
-                            : 'bg-terex-gray/30 group-hover:bg-orange-500/20'
+                            : 'bg-sidebar-accent group-hover:bg-orange-500/20'
                         }`}>
                           <Shield className="h-6 w-6" />
                         </div>
@@ -210,14 +210,14 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                       className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${
                         activeSection === 'orders-admin'
                           ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/25'
-                          : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'
+                          : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-md'
                       }`}
                     >
                       <div className="flex items-center space-x-4 w-full">
                         <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
                           activeSection === 'orders-admin' 
                             ? 'bg-white/20' 
-                            : 'bg-terex-gray/30 group-hover:bg-purple-500/20'
+                            : 'bg-sidebar-accent group-hover:bg-purple-500/20'
                         }`}>
                           <ShoppingCart className="h-6 w-6" />
                         </div>
@@ -240,12 +240,12 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
       
       {/* Bouton de déconnexion - masqué sur tablette */}
       {!isTablet && (
-        <div className="p-4 border-t border-terex-gray/30 mt-auto flex-shrink-0">
+        <div className="p-4 border-t border-sidebar-border mt-auto flex-shrink-0">
           <Button 
             onClick={onLogout}
-            className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
+            className="w-full h-12 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
           >
-            <LogOut className="mr-2 h-5 w-5" />
+            <LogOut className="mr-2 h-4 w-4" />
             Déconnexion
           </Button>
         </div>
