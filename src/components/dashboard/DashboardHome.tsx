@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
@@ -70,7 +69,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors group cursor-pointer">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center group-hover:bg-green-500/30 transition-colors">
+              <div className="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center group-hover:bg-red-500/30 transition-colors">
                 <TetherLogo className="w-8 h-8" />
               </div>
               <ArrowUpRight className="w-5 h-5 text-terex-accent group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
