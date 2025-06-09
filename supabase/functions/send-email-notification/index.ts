@@ -58,7 +58,7 @@ const handler = async (req: Request): Promise<Response> => {
       }
       
       finalEmailAddress = authUser.user.email;
-      console.log('Email trouvé:', finalEmailAddress);
+      console.log('Email trouvé pour l\'utilisateur:', userId, '-> Email:', finalEmailAddress);
     }
 
     if (!finalEmailAddress) {
@@ -136,17 +136,24 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Sauvegarder la notification dans la base de données
+    // CORRECTION: Ne pas insérer order_id pour les transferts internationaux
+    const notificationData: any = {
+      user_id: userId,
+      email_address: finalEmailAddress,
+      email_type: emailType,
+      transaction_type: transactionType,
+      subject: subject,
+      status: 'pending'
+    };
+
+    // Seulement ajouter order_id si ce n'est pas un transfert international
+    if (transactionType !== 'transfer' && orderId) {
+      notificationData.order_id = orderId;
+    }
+
     const { data: notification, error: notificationError } = await supabase
       .from('email_notifications')
-      .insert({
-        user_id: userId,
-        order_id: orderId,
-        email_address: finalEmailAddress,
-        email_type: emailType,
-        transaction_type: transactionType,
-        subject: subject,
-        status: 'pending'
-      })
+      .insert(notificationData)
       .select()
       .single();
 
