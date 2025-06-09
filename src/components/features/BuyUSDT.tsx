@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -325,11 +326,11 @@ export function BuyUSDT() {
                           'border-yellow-500/50 bg-yellow-500/10'
                         }>
                           {limitMessage.type === 'error' ? (
-                            <AlertTriangle className="h-4 w-4" />
+                            <AlertTriangle className="h-4 w-4 text-red-400" />
                           ) : limitMessage.type === 'max-reached' ? (
-                            <AlertTriangle className="h-4 w-4" />
+                            <AlertTriangle className="h-4 w-4 text-orange-400" />
                           ) : (
-                            <Info className="h-4 w-4" />
+                            <Info className="h-4 w-4 text-yellow-400" />
                           )}
                           <AlertDescription className={
                             limitMessage.type === 'error' ? 'text-red-200' :
