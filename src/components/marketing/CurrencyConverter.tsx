@@ -25,11 +25,6 @@ export function CurrencyConverter() {
     refresh: refreshRates
   } = useTerexRates(2);
 
-  const exchangeRates = {
-    CFA: mode === 'buy' ? terexRateCfa : terexBuyRateCfa,
-    CAD: mode === 'buy' ? terexRateCad : terexBuyRateCad
-  };
-
   const formatAmount = (amount: string | number) => {
     const num = parseFloat(amount.toString());
     if (isNaN(num)) return '0';
@@ -41,7 +36,20 @@ export function CurrencyConverter() {
     return parseFloat(num.toFixed(2)).toString();
   };
 
-  const usdtAmount = amount ? formatAmount(parseFloat(amount) / exchangeRates[currency as keyof typeof exchangeRates]) : '0';
+  // Logique pour calculer le montant converti
+  const getConvertedAmount = () => {
+    if (mode === 'buy') {
+      // Mode achat : client paie en CFA/CAD, reçoit USDT
+      const exchangeRate = currency === 'CFA' ? terexRateCfa : terexRateCad;
+      return amount ? formatAmount(parseFloat(amount) / exchangeRate) : '0';
+    } else {
+      // Mode vente : client vend USDT, reçoit CFA/CAD
+      const exchangeRate = currency === 'CFA' ? terexBuyRateCfa : terexBuyRateCad;
+      return amount ? formatAmount(parseFloat(amount) * exchangeRate) : '0';
+    }
+  };
+
+  const convertedAmount = getConvertedAmount();
 
   const handleStartTrading = () => {
     navigate('/auth');
@@ -101,55 +109,105 @@ export function CurrencyConverter() {
         </div>
 
         <div className="space-y-3">
-          <div className="space-y-2">
-            <Label className="text-white text-sm">
-              {mode === 'buy' ? 'Je paie' : 'Je reçois'}
-            </Label>
-            <div className="relative">
-              <Input
-                type="number"
-                placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
-              />
-              <Select value={currency} onValueChange={setCurrency}>
-                <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="CFA">CFA</SelectItem>
-                  <SelectItem value="CAD">CAD</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-center">
-            <ArrowRightLeft className="w-5 h-5 text-terex-accent" />
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-white text-sm">
-              {mode === 'buy' ? 'Je reçois' : 'J\'envoie'}
-            </Label>
-            <div className="relative">
-              <Input
-                type="text"
-                value={usdtAmount}
-                readOnly
-                className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24"
-              />
-              <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
-                <img 
-                  src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                  alt="USDT" 
-                  className="w-5 h-5"
-                />
-                <span className="text-terex-accent font-medium text-sm">USDT</span>
+          {mode === 'buy' ? (
+            // Mode Achat : Je paie en CFA/CAD, je reçois USDT
+            <>
+              <div className="space-y-2">
+                <Label className="text-white text-sm">Je paie</Label>
+                <div className="relative">
+                  <Input
+                    type="number"
+                    placeholder="0.00"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
+                  />
+                  <Select value={currency} onValueChange={setCurrency}>
+                    <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="CFA">CFA</SelectItem>
+                      <SelectItem value="CAD">CAD</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-            </div>
-          </div>
+
+              <div className="flex items-center justify-center">
+                <ArrowRightLeft className="w-5 h-5 text-terex-accent" />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-white text-sm">Je reçois</Label>
+                <div className="relative">
+                  <Input
+                    type="text"
+                    value={convertedAmount}
+                    readOnly
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24"
+                  />
+                  <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
+                    <img 
+                      src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
+                      alt="USDT" 
+                      className="w-5 h-5"
+                    />
+                    <span className="text-terex-accent font-medium text-sm">USDT</span>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            // Mode Vente : Je vends USDT, je reçois CFA/CAD
+            <>
+              <div className="space-y-2">
+                <Label className="text-white text-sm">Je vends</Label>
+                <div className="relative">
+                  <Input
+                    type="number"
+                    placeholder="0.00"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24"
+                  />
+                  <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
+                    <img 
+                      src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
+                      alt="USDT" 
+                      className="w-5 h-5"
+                    />
+                    <span className="text-terex-accent font-medium text-sm">USDT</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center">
+                <ArrowRightLeft className="w-5 h-5 text-terex-accent" />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-white text-sm">Je reçois</Label>
+                <div className="relative">
+                  <Input
+                    type="text"
+                    value={convertedAmount}
+                    readOnly
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
+                  />
+                  <Select value={currency} onValueChange={setCurrency}>
+                    <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="CFA">CFA</SelectItem>
+                      <SelectItem value="CAD">CAD</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="bg-terex-gray rounded-lg p-3">
@@ -158,7 +216,10 @@ export function CurrencyConverter() {
               Taux TEREX ({mode === 'buy' ? 'achat' : 'vente'})
             </span>
             <span className="text-white">
-              1 USDT = {exchangeRates[currency as keyof typeof exchangeRates]} {currency}
+              1 USDT = {mode === 'buy' 
+                ? (currency === 'CFA' ? terexRateCfa : terexRateCad)
+                : (currency === 'CFA' ? terexBuyRateCfa : terexBuyRateCad)
+              } {currency}
             </span>
           </div>
           <div className="flex justify-between text-sm mt-1">
