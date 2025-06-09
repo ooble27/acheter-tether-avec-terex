@@ -55,10 +55,10 @@ export function BuyUSDT() {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Utilisation des taux automatiques pour les ventes USDT (TEREX vend)
+  // Correction: utiliser les bonnes propriétés du hook
   const { 
-    terexSellRateCfa, 
-    terexSellRateCad, 
+    terexRateCfa, 
+    terexRateCad, 
     marketRateCfa, 
     marketRateCad, 
     loading: ratesLoading, 
@@ -67,8 +67,10 @@ export function BuyUSDT() {
     refresh: refreshRates
   } = useTerexRates(2);
 
+  // Correction: ajouter CAD aux taux d'échange
   const exchangeRates = {
-    CFA: terexSellRateCfa
+    CFA: terexRateCfa,
+    CAD: terexRateCad
   };
 
   const marketRates = {
@@ -200,8 +202,9 @@ export function BuyUSDT() {
             currency,
             usdtAmount,
             network,
-            phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : cardData.number,
-            provider: paymentMethod === 'mobile' ? mobileData.provider : 'card'
+            walletAddress: '', // Correction: ajouter la propriété manquante
+            paymentMethod: paymentMethod,
+            exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
           }}
           onBackToHome={handleBackToHome}
         />
@@ -219,10 +222,9 @@ export function BuyUSDT() {
             currency,
             usdtAmount,
             network,
+            walletAddress: '', // Correction: ajouter la propriété manquante
             paymentMethod: paymentMethod,
-            exchangeRate: exchangeRates[currency as keyof typeof exchangeRates],
-            phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : cardData.number,
-            provider: paymentMethod === 'mobile' ? mobileData.provider : 'card'
+            exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
           }}
           onBack={() => setShowInstructions(false)}
           onPaymentSent={handlePaymentSent}
@@ -241,10 +243,9 @@ export function BuyUSDT() {
             currency,
             usdtAmount,
             network,
+            walletAddress: '', // Correction: ajouter la propriété manquante
             paymentMethod: paymentMethod,
-            exchangeRate: exchangeRates[currency as keyof typeof exchangeRates],
-            phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : cardData.number,
-            provider: paymentMethod === 'mobile' ? mobileData.provider : 'card'
+            exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
           }}
           onConfirm={handleConfirmOrder}
           onBack={() => setShowConfirmation(false)}
