@@ -41,18 +41,16 @@ const handler = async (req: Request): Promise<Response> => {
       userId,
       emailType,
       transactionType,
-      emailAddress
+      emailAddress,
+      orderData: orderData ? 'présent' : 'absent'
     });
 
     let finalEmailAddress = emailAddress;
     let targetUserId = userId;
 
-    // CORRECTION CRITIQUE: S'assurer qu'on utilise le bon userId
-    // Pour les transferts, userId doit être l'ID du CLIENT, pas de l'admin
-    if (transactionType === 'transfer' && orderData?.user_id) {
-      targetUserId = orderData.user_id;
-      console.log('Transfert détecté - utilisation de l\'ID du client:', targetUserId);
-    }
+    // Pour les transferts, le userId passé doit déjà être celui du client
+    // Pas besoin de le modifier, juste s'assurer qu'on l'utilise correctement
+    console.log('Utilisation de l\'ID utilisateur:', targetUserId);
 
     // Récupérer l'email de l'utilisateur s'il n'est pas fourni
     if (!emailAddress && targetUserId) {
@@ -145,7 +143,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Sauvegarder la notification dans la base de données
     const notificationData: any = {
-      user_id: targetUserId, // UTILISER LE BON USER ID ICI AUSSI
+      user_id: targetUserId,
       email_address: finalEmailAddress,
       email_type: emailType,
       transaction_type: transactionType,

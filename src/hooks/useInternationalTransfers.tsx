@@ -151,7 +151,7 @@ export const useInternationalTransfers = () => {
         console.log('Envoi des notifications email pour le transfert:', transferId, 'nouveau statut:', status);
         console.log('Données du transfert pour email:', transferDetails);
         
-        // CORRECTION: Envoyer directement à la fonction edge avec les bonnes données
+        // Envoyer les emails au CLIENT (user_id du transfert)
         try {
           // Email de mise à jour de statut pour le CLIENT
           await supabase.functions.invoke('send-email-notification', {
@@ -161,7 +161,7 @@ export const useInternationalTransfers = () => {
               emailAddress: null, // Sera récupéré côté serveur avec l'userId
               emailType: 'status_update',
               transactionType: 'transfer',
-              orderData: transferDetails // Contient transferDetails.user_id
+              orderData: transferDetails
             },
           });
 
@@ -174,7 +174,7 @@ export const useInternationalTransfers = () => {
                 emailAddress: null, // Sera récupéré côté serveur avec l'userId
                 emailType: 'payment_confirmed',
                 transactionType: 'transfer',
-                orderData: transferDetails // Contient transferDetails.user_id
+                orderData: transferDetails
               },
             });
           }
