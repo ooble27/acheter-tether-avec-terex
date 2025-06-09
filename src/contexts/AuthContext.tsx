@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
@@ -46,15 +45,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.log('AuthProvider: Mode PWA détecté');
     }
     
-    // Listen for auth changes first
+    // Configurer l'écoute des changements d'état d'authentification AVANT de récupérer la session
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('AuthProvider: Auth state change:', event, session?.user?.email || 'no user');
+        
+        // Mettre à jour l'état immédiatement
         setSession(session)
         setUser(session?.user ?? null)
         setLoading(false)
 
-        // Synchroniser avec localStorage pour PWA - avec plus de détails
+        // Synchroniser avec localStorage pour PWA
         if (session?.user) {
           console.log('AuthProvider: Sauvegarde session pour PWA');
           localStorage.setItem('terex-session-active', 'true');
@@ -64,6 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           // En mode PWA, marquer que la session est synchronisée
           if (isStandalone) {
             localStorage.setItem('terex-pwa-session-synced', 'true');
+            console.log('AuthProvider: Session PWA marquée comme synchronisée');
           }
         } else {
           console.log('AuthProvider: Nettoyage session localStorage');
@@ -75,23 +77,32 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     )
 
-    // Get initial session - avec retry en mode PWA
+    // Récupérer la session initiale avec retry en mode PWA
     const getInitialSession = async (retryCount = 0) => {
       try {
+        console.log('AuthProvider: Récupération session initiale, tentative', retryCount + 1);
+        
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
           console.error('AuthProvider: Erreur récupération session initiale:', error);
-          if (isStandalone && retryCount < 3) {
-            console.log(`AuthProvider: Retry ${retryCount + 1} en mode PWA`);
-            setTimeout(() => getInitialSession(retryCount + 1), 2000);
+          
+          // En mode PWA, essayer plus de fois
+          if (isStandalone && retryCount < 5) {
+            console.log(`AuthProvider: Retry ${retryCount + 1} en mode PWA dans 1 seconde`);
+            setTimeout(() => getInitialSession(retryCount + 1), 1000);
             return;
           }
         }
         
         console.log('AuthProvider: Session initiale:', session?.user?.email || 'aucune session');
-        setSession(session)
-        setUser(session?.user ?? null)
+        
+        // Ne mettre à jour que si on n'a pas encore de session
+        if (!user || !session) {
+          setSession(session)
+          setUser(session?.user ?? null)
+        }
+        
         setLoading(false)
 
         // Synchroniser avec localStorage pour PWA
@@ -106,21 +117,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
 
-    getInitialSession();
+    // Délai pour laisser le temps à l'auth state change de se configurer
+    setTimeout(() => {
+      getInitialSession();
+    }, 100);
 
     // Écouter les changements de session depuis d'autres onglets (pour PWA)
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'terex-session-active' && e.newValue === 'true' && !user) {
         console.log('AuthProvider: Session détectée depuis un autre onglet');
-        setTimeout(() => {
-          supabase.auth.getSession().then(({ data: { session } }) => {
+        setTimeout(async () => {
+          try {
+            const { data: { session } } = await supabase.auth.getSession();
             if (session && !user) {
               console.log('AuthProvider: Session récupérée depuis autre onglet');
-              setSession(session);
-              setUser(session.user);
+              // L'auth state change se chargera de mettre à jour l'état
             }
-          });
-        }, 1000);
+          } catch (error) {
+            console.error('AuthProvider: Erreur lors de la récupération depuis storage change:', error);
+          }
+        }, 500);
       }
     };
 
@@ -130,7 +146,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       subscription.unsubscribe();
       window.removeEventListener('storage', handleStorageChange);
     }
-  }, [user])
+  }, []) // Retirer user de la dépendance pour éviter les boucles
 
   const signUp = async (email: string, password: string, name: string) => {
     console.log('AuthProvider: Starting sign up for:', email)

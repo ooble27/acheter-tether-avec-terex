@@ -83,25 +83,29 @@ const AuthCallback = () => {
             // Marquer la session comme active pour PWA avec plus d'informations
             localStorage.setItem('terex-session-active', 'true');
             localStorage.setItem('terex-last-session-update', Date.now().toString());
+            localStorage.setItem('terex-user-email', data.session.user.email || '');
             localStorage.setItem('terex-auth-method', 'email-link');
             
             toast({
-              title: "Connexion réussie !",
+              title: "✅ Connexion réussie !",
               description: "Vous êtes maintenant connecté à Terex.",
               className: "bg-green-600 text-white border-green-600",
             });
 
-            // Attendre un peu puis rediriger et donner des instructions PWA
+            // Attendre un peu puis donner des instructions PWA
             setTimeout(() => {
               toast({
-                title: "💡 Astuce PWA",
-                description: "Retournez maintenant à l'app Terex sur votre écran d'accueil pour une session synchronisée !",
+                title: "📱 Retournez à l'app Terex",
+                description: "Ouvrez maintenant l'app Terex depuis votre écran d'accueil pour continuer avec votre session !",
                 className: "bg-blue-600 text-white border-blue-600",
-                duration: 8000,
+                duration: 10000,
               });
             }, 2000);
             
-            navigate('/');
+            // Attendre encore un peu avant de rediriger
+            setTimeout(() => {
+              navigate('/');
+            }, 3000);
             return;
           }
         }
@@ -129,24 +133,27 @@ const AuthCallback = () => {
           // Marquer la session comme active pour PWA
           localStorage.setItem('terex-session-active', 'true');
           localStorage.setItem('terex-last-session-update', Date.now().toString());
+          localStorage.setItem('terex-user-email', data.session.user.email || '');
           localStorage.setItem('terex-auth-method', 'signup-confirmation');
           
           toast({
-            title: "Email confirmé !",
+            title: "✅ Email confirmé !",
             description: "Votre compte a été activé avec succès.",
             className: "bg-green-600 text-white border-green-600",
           });
           
           setTimeout(() => {
             toast({
-              title: "💡 Conseil",
-              description: "Ouvrez maintenant l'app Terex depuis votre écran d'accueil !",
+              title: "📱 Ouvrez l'app Terex",
+              description: "Retournez à l'app Terex sur votre écran d'accueil pour continuer !",
               className: "bg-blue-600 text-white border-blue-600",
-              duration: 6000,
+              duration: 8000,
             });
           }, 2000);
           
-          navigate('/');
+          setTimeout(() => {
+            navigate('/');
+          }, 3000);
           return;
         }
 
@@ -157,24 +164,27 @@ const AuthCallback = () => {
           // Marquer la session comme active pour PWA
           localStorage.setItem('terex-session-active', 'true');
           localStorage.setItem('terex-last-session-update', Date.now().toString());
+          localStorage.setItem('terex-user-email', data.session.user.email || '');
           localStorage.setItem('terex-auth-method', 'magic-link');
           
           toast({
-            title: "Connexion réussie !",
+            title: "✅ Connexion réussie !",
             description: "Vous êtes maintenant connecté.",
             className: "bg-green-600 text-white border-green-600",
           });
           
           setTimeout(() => {
             toast({
-              title: "🚀 Retournez à l'app Terex",
-              description: "Ouvrez l'app Terex depuis votre écran d'accueil pour continuer !",
+              title: "📱 Retournez à l'app Terex",
+              description: "Ouvrez l'app Terex depuis votre écran d'accueil pour continuer avec votre session !",
               className: "bg-blue-600 text-white border-blue-600",
-              duration: 8000,
+              duration: 10000,
             });
           }, 2000);
           
-          navigate('/');
+          setTimeout(() => {
+            navigate('/');
+          }, 3000);
           return;
         }
 
@@ -185,14 +195,18 @@ const AuthCallback = () => {
           // Marquer la session comme active pour PWA
           localStorage.setItem('terex-session-active', 'true');
           localStorage.setItem('terex-last-session-update', Date.now().toString());
+          localStorage.setItem('terex-user-email', data.session.user.email || '');
           localStorage.setItem('terex-auth-method', 'existing-session');
           
           toast({
-            title: "Connexion réussie !",
+            title: "✅ Connexion réussie !",
             description: "Bienvenue sur Terex.",
             className: "bg-green-600 text-white border-green-600",
           });
-          navigate('/');
+          
+          setTimeout(() => {
+            navigate('/');
+          }, 1500);
           return;
         }
 
@@ -226,7 +240,7 @@ const AuthCallback = () => {
         <div className="text-white text-lg">Connexion en cours...</div>
         <div className="text-gray-400 text-sm mt-2">Vérification du lien de connexion...</div>
         <div className="text-gray-400 text-xs mt-4 max-w-xs mx-auto">
-          💡 Astuce : Une fois connecté, retournez à l'app Terex sur votre écran d'accueil pour une expérience optimale
+          💡 Après connexion, retournez à l'app Terex sur votre écran d'accueil pour une expérience optimale
         </div>
       </div>
     </div>
