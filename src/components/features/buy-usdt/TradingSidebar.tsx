@@ -2,8 +2,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Shield, Clock, RefreshCw, AlertCircle } from 'lucide-react';
+import { Shield, Clock, RefreshCw, AlertCircle, Zap } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { QuickAmounts } from './QuickAmounts';
 
 interface TradingSidebarProps {
   exchangeRates: {
@@ -18,6 +19,8 @@ interface TradingSidebarProps {
   ratesError: string | null;
   lastUpdated: Date | null;
   refreshRates: () => void;
+  currency: string;
+  setFiatAmount: (amount: string) => void;
 }
 
 export function TradingSidebar({
@@ -26,7 +29,9 @@ export function TradingSidebar({
   ratesLoading,
   ratesError,
   lastUpdated,
-  refreshRates
+  refreshRates,
+  currency,
+  setFiatAmount
 }: TradingSidebarProps) {
   return (
     <div className="lg:col-span-1 space-y-4 md:space-y-6 w-full">
@@ -107,6 +112,46 @@ export function TradingSidebar({
         </CardContent>
       </Card>
 
+      {/* Montants rapides */}
+      <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
+        <CardHeader className="p-3 sm:p-4">
+          <CardTitle className="text-white text-sm sm:text-base md:text-lg flex items-center">
+            <Zap className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent flex-shrink-0" />
+            <span className="truncate">Montants rapides</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-3 sm:p-4 pt-0 w-full overflow-hidden">
+          <QuickAmounts
+            currency={currency}
+            setFiatAmount={setFiatAmount}
+          />
+        </CardContent>
+      </Card>
+
+      {/* Délais de traitement */}
+      <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
+        <CardHeader className="p-3 sm:p-4">
+          <CardTitle className="text-white text-sm sm:text-base md:text-lg flex items-center">
+            <Clock className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent flex-shrink-0" />
+            <span className="truncate">Délais de traitement</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 p-3 sm:p-4 pt-0 w-full overflow-hidden">
+          <div className="flex items-center justify-between">
+            <span className="text-gray-400 text-xs sm:text-sm">Mobile Money</span>
+            <Badge variant="outline" className="text-green-500 border-green-500 text-xs whitespace-nowrap">
+              5-10 min
+            </Badge>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-gray-400 text-xs sm:text-sm">Carte bancaire</span>
+            <Badge variant="outline" className="text-green-500 border-green-500 text-xs whitespace-nowrap">
+              Instantané
+            </Badge>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Security Features */}
       <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
         <CardHeader className="p-3 sm:p-4">
@@ -136,30 +181,6 @@ export function TradingSidebar({
               <p className="text-white text-xs sm:text-sm font-medium">Support 24/7</p>
               <p className="text-gray-400 text-xs">Aide disponible en permanence</p>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Processing Time */}
-      <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
-        <CardHeader className="p-3 sm:p-4">
-          <CardTitle className="text-white text-sm sm:text-base md:text-lg flex items-center">
-            <Clock className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent flex-shrink-0" />
-            <span className="truncate">Délais de traitement</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3 p-3 sm:p-4 pt-0 w-full overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-gray-400 text-xs sm:text-sm">Mobile Money</span>
-            <Badge variant="outline" className="text-green-500 border-green-500 text-xs whitespace-nowrap">
-              5-10 min
-            </Badge>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-gray-400 text-xs sm:text-sm">Carte bancaire</span>
-            <Badge variant="outline" className="text-green-500 border-green-500 text-xs whitespace-nowrap">
-              Instantané
-            </Badge>
           </div>
         </CardContent>
       </Card>
