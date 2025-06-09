@@ -228,9 +228,15 @@ export function useOrders() {
 
   const updateOrderStatus = async (orderId: string, status: OrderStatus, paymentStatus?: string) => {
     try {
-      // Check if it's a transfer or regular order
+      // IMPORTANT: Récupérer les données de la commande AVANT la mise à jour
       const order = orders.find(o => o.id === orderId);
-      if (!order) return;
+      if (!order) {
+        console.error('Commande non trouvée:', orderId);
+        return;
+      }
+
+      console.log('Mise à jour du statut pour la commande:', orderId, 'Nouveau statut:', status);
+      console.log('Commande trouvée - Client ID:', order.user_id, 'Type:', order.type);
 
       if (order.type === 'transfer') {
         const { error } = await supabase
@@ -264,15 +270,51 @@ export function useOrders() {
         if (error) throw error;
       }
 
-      // Envoyer l'email de notification selon le statut
-      if (order) {
+      // CORRECTION: Envoyer l'email au CLIENT avec son ID, pas l'admin connecté
+      console.log('Envoi de l\'email de notification au client:', order.user_id);
+      
+      try {
         if (status === 'processing') {
-          await sendEmailNotification('status_update', order.type, { ...order, status }, orderId);
+          // Email de mise à jour de statut - utiliser l'ID du CLIENT
+          await supabase.functions.invoke('send-email-notification', {
+            body: {
+              userId: order.user_id, // UTILISER L'ID DU CLIENT, PAS L'ADMIN
+              orderId: orderId,
+              emailAddress: null, // Sera récupéré côté serveur
+              emailType: 'status_update',
+              transactionType: order.type,
+              orderData: { ...order, status }
+            },
+          });
         } else if (status === 'completed') {
-          await sendEmailNotification('payment_confirmed', order.type, { ...order, status }, orderId);
+          // Email de confirmation de paiement - utiliser l'ID du CLIENT
+          await supabase.functions.invoke('send-email-notification', {
+            body: {
+              userId: order.user_id, // UTILISER L'ID DU CLIENT, PAS L'ADMIN
+              orderId: orderId,
+              emailAddress: null, // Sera récupéré côté serveur
+              emailType: 'payment_confirmed',
+              transactionType: order.type,
+              orderData: { ...order, status }
+            },
+          });
         } else if (status === 'cancelled') {
-          await sendEmailNotification('status_update', order.type, { ...order, status }, orderId);
+          // Email d'annulation - utiliser l'ID du CLIENT
+          await supabase.functions.invoke('send-email-notification', {
+            body: {
+              userId: order.user_id, // UTILISER L'ID DU CLIENT, PAS L'ADMIN
+              orderId: orderId,
+              emailAddress: null, // Sera récupéré côté serveur
+              emailType: 'status_update',
+              transactionType: order.type,
+              orderData: { ...order, status }
+            },
+          });
         }
+        
+        console.log('Email de notification envoyé avec succès au client:', order.user_id);
+      } catch (emailError) {
+        console.error('Erreur lors de l\'envoi de l\'email de notification:', emailError);
       }
 
       await fetchOrders(); // Refresh the orders list
