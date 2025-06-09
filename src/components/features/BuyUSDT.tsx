@@ -3,10 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { CreditCard } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { CreditCard, AlertTriangle, Info } from 'lucide-react';
 import { OrderConfirmation } from '@/components/features/OrderConfirmation';
 import { PaymentInstructions } from '@/components/features/PaymentInstructions';
 import { PaymentPending } from '@/components/features/PaymentPending';
+import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -18,9 +20,11 @@ import { NetworkSelector } from './buy-usdt/NetworkSelector';
 import { WalletAddressInput } from './buy-usdt/WalletAddressInput';
 import { PaymentMethodForm } from './buy-usdt/PaymentMethodForm';
 import { TradingSidebar } from './buy-usdt/TradingSidebar';
+import { LimitsValidator, getLimitMessage } from './buy-usdt/LimitsValidator';
 
 export function BuyUSDT() {
   const [showKYCPage, setShowKYCPage] = useState(false);
+  const [showHighVolumeRequest, setShowHighVolumeRequest] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'mobile'>('card');
   const [fiatAmount, setFiatAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
@@ -92,6 +96,13 @@ export function BuyUSDT() {
     { id: 'card' as const, name: 'Carte bancaire', icon: '💳', fee: '3%', time: '2-5 min' },
     { id: 'mobile' as const, name: 'Mobile Money', icon: '📱', fee: '2%', time: '2-5 min' }
   ];
+
+  // Gestion des limites
+  const limitMessage = getLimitMessage(fiatAmount, currency);
+
+  const handleLimitExceeded = (amount: string) => {
+    setShowHighVolumeRequest(true);
+  };
 
   const handleBuyClick = () => {
     if (!fiatAmount || !walletAddress) {
@@ -173,6 +184,16 @@ export function BuyUSDT() {
   // Si on est sur la page KYC
   if (showKYCPage) {
     return <KYCPage onBack={() => setShowKYCPage(false)} />;
+  }
+
+  // État de confirmation finale
+  if (showHighVolumeRequest) {
+    return (
+      <HighVolumeRequest 
+        onBack={() => setShowHighVolumeRequest(false)}
+        requestedAmount={fiatAmount}
+      />
+    );
   }
 
   // État de confirmation finale
@@ -263,82 +284,102 @@ export function BuyUSDT() {
                   </div>
                 </CardHeader>
                 <CardContent className="p-4 md:p-6">
-                  <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'card' | 'mobile')} className="space-y-6">
-                    <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
-                      <TabsTrigger 
-                        value="card"
-                        className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
-                      >
-                        <CreditCard className="mr-1 md:mr-2 w-4 h-4" />
-                        <span className="hidden sm:inline">Carte bancaire</span>
-                        <span className="sm:hidden">Carte</span>
-                      </TabsTrigger>
-                      <TabsTrigger 
-                        value="mobile"
-                        className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
-                      >
-                        <img 
-                          src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
-                          alt="Wave" 
-                          className="mr-1 md:mr-2 w-4 h-4 rounded-full"
-                        />
-                        <span className="hidden sm:inline">Mobile Money</span>
-                        <span className="sm:hidden">Mobile</span>
-                      </TabsTrigger>
-                    </TabsList>
-
-                    {paymentMethods.map((method) => (
-                      <TabsContent key={method.id} value={method.id} className="space-y-6">
-                        {/* Amount Input Section */}
-                        <BuyAmountInput
-                          fiatAmount={fiatAmount}
-                          setFiatAmount={setFiatAmount}
-                          currency={currency}
-                          setCurrency={setCurrency}
-                          usdtAmount={usdtAmount}
-                          exchangeRate={exchangeRates[currency as keyof typeof exchangeRates]}
-                          paymentMethod={paymentMethod}
-                          processingTime={method.time}
-                          fee={method.fee}
-                        />
-
-                        {/* Network Selection */}
-                        <NetworkSelector
-                          network={network}
-                          setNetwork={setNetwork}
-                        />
-
-                        {/* Wallet Address Input */}
-                        <WalletAddressInput
-                          walletAddress={walletAddress}
-                          setWalletAddress={setWalletAddress}
-                          network={network}
-                        />
-
-                        {/* Payment Method Details */}
-                        <PaymentMethodForm
-                          paymentMethod={paymentMethod}
-                          cardData={cardData}
-                          setCardData={setCardData}
-                          mobileData={mobileData}
-                          setMobileData={setMobileData}
-                        />
-
-                        {/* Buy Button */}
-                        <Button 
-                          size="lg"
-                          className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                          disabled={!fiatAmount || !walletAddress || 
-                            (paymentMethod === 'card' && (!cardData.number || !cardData.expiryMonth || !cardData.expiryYear || !cardData.cvv || !cardData.name)) ||
-                            (paymentMethod === 'mobile' && !mobileData.phoneNumber)
-                          }
-                          onClick={handleBuyClick}
+                  <LimitsValidator 
+                    amount={fiatAmount} 
+                    currency={currency} 
+                    onLimitExceeded={handleLimitExceeded}
+                  >
+                    <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'card' | 'mobile')} className="space-y-6">
+                      <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
+                        <TabsTrigger 
+                          value="card"
+                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
                         >
-                          Continuer l'achat
-                        </Button>
-                      </TabsContent>
-                    ))}
-                  </Tabs>
+                          <CreditCard className="mr-1 md:mr-2 w-4 h-4" />
+                          <span className="hidden sm:inline">Carte bancaire</span>
+                          <span className="sm:hidden">Carte</span>
+                        </TabsTrigger>
+                        <TabsTrigger 
+                          value="mobile"
+                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
+                        >
+                          <img 
+                            src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
+                            alt="Wave" 
+                            className="mr-1 md:mr-2 w-4 h-4 rounded-full"
+                          />
+                          <span className="hidden sm:inline">Mobile Money</span>
+                          <span className="sm:hidden">Mobile</span>
+                        </TabsTrigger>
+                      </TabsList>
+
+                      {/* Affichage des messages de limite */}
+                      {limitMessage.type && (
+                        <Alert className={limitMessage.type === 'error' ? 'border-red-500/50 bg-red-500/10' : 'border-yellow-500/50 bg-yellow-500/10'}>
+                          {limitMessage.type === 'error' ? (
+                            <AlertTriangle className="h-4 w-4" />
+                          ) : (
+                            <Info className="h-4 w-4" />
+                          )}
+                          <AlertDescription className={limitMessage.type === 'error' ? 'text-red-200' : 'text-yellow-200'}>
+                            {limitMessage.message}
+                          </AlertDescription>
+                        </Alert>
+                      )}
+
+                      {paymentMethods.map((method) => (
+                        <TabsContent key={method.id} value={method.id} className="space-y-6">
+                          {/* Amount Input Section */}
+                          <BuyAmountInput
+                            fiatAmount={fiatAmount}
+                            setFiatAmount={setFiatAmount}
+                            currency={currency}
+                            setCurrency={setCurrency}
+                            usdtAmount={usdtAmount}
+                            exchangeRate={exchangeRates[currency as keyof typeof exchangeRates]}
+                            paymentMethod={paymentMethod}
+                            processingTime={method.time}
+                            fee={method.fee}
+                          />
+
+                          {/* Network Selection */}
+                          <NetworkSelector
+                            network={network}
+                            setNetwork={setNetwork}
+                          />
+
+                          {/* Wallet Address Input */}
+                          <WalletAddressInput
+                            walletAddress={walletAddress}
+                            setWalletAddress={setWalletAddress}
+                            network={network}
+                          />
+
+                          {/* Payment Method Details */}
+                          <PaymentMethodForm
+                            paymentMethod={paymentMethod}
+                            cardData={cardData}
+                            setCardData={setCardData}
+                            mobileData={mobileData}
+                            setMobileData={setMobileData}
+                          />
+
+                          {/* Buy Button */}
+                          <Button 
+                            size="lg"
+                            className="w-full gradient-button text-white font-semibold h-12 text-lg"
+                            disabled={!fiatAmount || !walletAddress || limitMessage.type === 'error' ||
+                              (paymentMethod === 'card' && (!cardData.number || !cardData.expiryMonth || !cardData.expiryYear || !cardData.cvv || !cardData.name)) ||
+                              (paymentMethod === 'mobile' && !mobileData.phoneNumber)
+                            }
+                            onClick={handleBuyClick}
+                          >
+                            Continuer l'achat
+                          </Button>
+                        </TabsContent>
+                      ))}
+                    </Tabs>
+                  </LimitsValidator>
                 </CardContent>
               </Card>
             </div>
