@@ -48,8 +48,8 @@ export function LoginForm() {
       if (result.success) {
         setMagicLinkSent(true);
         
-        // Log des métriques pour monitoring
-        if (result.fastAuth) {
+        // Log des métriques pour monitoring - vérifier si timing existe
+        if (result.fastAuth && 'timing' in result) {
           console.log('Fast Auth utilisé - Temps:', result.timing, 'ms');
         } else {
           console.log('Système classique utilisé');
@@ -85,7 +85,6 @@ export function LoginForm() {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
     try {
       const { error: signUpError } = await signUp(email, password, name);
@@ -120,8 +119,6 @@ export function LoginForm() {
         description: "Une erreur inattendue s'est produite",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
