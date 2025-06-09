@@ -46,10 +46,9 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     let finalEmailAddress = emailAddress;
-    let targetUserId = userId;
-
-    // Pour les transferts, le userId passé doit déjà être celui du client
-    // Pas besoin de le modifier, juste s'assurer qu'on l'utilise correctement
+    
+    // Pour les transferts, utiliser directement l'userId passé (qui est celui du client)
+    const targetUserId = userId;
     console.log('Utilisation de l\'ID utilisateur:', targetUserId);
 
     // Récupérer l'email de l'utilisateur s'il n'est pas fourni
@@ -120,9 +119,20 @@ const handler = async (req: Request): Promise<Response> => {
         } else {
           subject = `Votre transaction a été finalisée avec succès`;
         }
+        
+        // Pour les transferts, créer un objet compatible avec PaymentConfirmedEmail
+        let emailData = orderData;
+        if (transactionType === 'transfer') {
+          emailData = {
+            ...orderData,
+            notes: null, // Pas de notes pour les transferts internationaux
+            type: 'transfer'
+          };
+        }
+        
         htmlContent = await renderAsync(
           React.createElement(PaymentConfirmedEmail, {
-            orderData,
+            orderData: emailData,
             transactionType
           })
         );

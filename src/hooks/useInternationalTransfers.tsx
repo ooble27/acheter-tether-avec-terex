@@ -151,12 +151,12 @@ export const useInternationalTransfers = () => {
         console.log('Envoi des notifications email pour le transfert:', transferId, 'nouveau statut:', status);
         console.log('Données du transfert pour email:', transferDetails);
         
-        // Envoyer les emails au CLIENT (user_id du transfert)
+        // Envoyer les emails au CLIENT (user_id du transfert) - PAS l'admin connecté
         try {
           // Email de mise à jour de statut pour le CLIENT
           await supabase.functions.invoke('send-email-notification', {
             body: {
-              userId: transferDetails.user_id, // L'ID du CLIENT qui a créé le transfert
+              userId: transferDetails.user_id, // IMPORTANT: utiliser l'ID du CLIENT
               orderId: null,
               emailAddress: null, // Sera récupéré côté serveur avec l'userId
               emailType: 'status_update',
@@ -169,7 +169,7 @@ export const useInternationalTransfers = () => {
           if (status === 'processing') {
             await supabase.functions.invoke('send-email-notification', {
               body: {
-                userId: transferDetails.user_id, // L'ID du CLIENT qui a créé le transfert
+                userId: transferDetails.user_id, // IMPORTANT: utiliser l'ID du CLIENT
                 orderId: null,
                 emailAddress: null, // Sera récupéré côté serveur avec l'userId
                 emailType: 'payment_confirmed',
