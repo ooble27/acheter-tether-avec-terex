@@ -32,8 +32,8 @@ const testimonials = [
     name: "Aissatou Sow",
     location: "Thiès, Sénégal",
     rating: 5,
-    text: "Support client réactif et processus KYC simple. J'utilise Terex pour tous mes virements vers l'Europe. Service de qualité !",
-    transaction: "Virement international CFA → EUR"
+    text: "Support client réactif et processus KYC simple. J'utilise Terex pour tous mes virements vers le Canada. Service de qualité !",
+    transaction: "Virement international CFA → CAD"
   }
 ];
 
