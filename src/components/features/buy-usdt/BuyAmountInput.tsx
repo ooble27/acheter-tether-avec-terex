@@ -29,13 +29,6 @@ export function BuyAmountInput({
   processingTime,
   fee
 }: BuyAmountInputProps) {
-  const getQuickAmounts = () => {
-    if (currency === 'CFA') {
-      return ['10000', '25000', '50000', '100000', '250000'];
-    }
-    return ['25', '50', '100', '250', '500'];
-  };
-
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -97,29 +90,6 @@ export function BuyAmountInput({
         <div className="flex justify-between text-sm mt-1">
           <span className="text-gray-400">Temps de traitement</span>
           <span className="text-terex-accent">{processingTime}</span>
-        </div>
-      </div>
-
-      {/* Quick amounts - positioned at the very bottom */}
-      <div className="space-y-2">
-        <Label className="text-white text-sm font-medium">Montants rapides ({currency})</Label>
-        <div className="grid grid-cols-2 gap-2">
-          {getQuickAmounts().map((value) => (
-            <Button
-              key={value}
-              variant="outline"
-              size="sm"
-              onClick={() => setFiatAmount(value)}
-              className="border-terex-gray text-gray-300 hover:bg-terex-gray text-xs w-full min-w-0 h-8 px-1"
-            >
-              <span className="truncate">
-                {currency === 'CFA' 
-                  ? `${parseInt(value).toLocaleString()} CFA`
-                  : `$${value} CAD`
-                }
-              </span>
-            </Button>
-          ))}
         </div>
       </div>
     </div>

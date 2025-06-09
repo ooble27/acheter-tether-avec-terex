@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,6 +18,7 @@ import { NetworkSelector } from './buy-usdt/NetworkSelector';
 import { WalletAddressInput } from './buy-usdt/WalletAddressInput';
 import { PaymentMethodForm } from './buy-usdt/PaymentMethodForm';
 import { TradingSidebar } from './buy-usdt/TradingSidebar';
+import { QuickAmounts } from './buy-usdt/QuickAmounts';
 
 export function BuyUSDT() {
   const [showKYCPage, setShowKYCPage] = useState(false);
@@ -323,6 +323,12 @@ export function BuyUSDT() {
                           setCardData={setCardData}
                           mobileData={mobileData}
                           setMobileData={setMobileData}
+                        />
+
+                        {/* Quick Amounts - positioned at the very bottom */}
+                        <QuickAmounts
+                          currency={currency}
+                          setFiatAmount={setFiatAmount}
                         />
 
                         {/* Buy Button */}
