@@ -14,7 +14,7 @@ export function StoryTemplate() {
       visual: (
         <div className="bg-gradient-to-b from-terex-accent via-terex-accent/90 to-terex-accent/70 w-64 h-96 mx-auto rounded-3xl p-6 text-black relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
-            <div className="w-full h-full bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23000000\" fill-opacity=\"0.1\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"4\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+            <div className="w-full h-full bg-gray-200 rounded-3xl"></div>
           </div>
           
           <div className="relative z-10 h-full flex flex-col">
