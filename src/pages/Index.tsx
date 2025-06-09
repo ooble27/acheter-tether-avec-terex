@@ -1,6 +1,6 @@
+
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { LoginForm } from '@/components/auth/LoginForm';
 import { Dashboard } from '@/components/dashboard/Dashboard';
 import { useNavigate } from 'react-router-dom';
 import { PublicHome } from '@/components/marketing/PublicHome';
@@ -34,11 +34,7 @@ const Index = () => {
   } : null;
 
   const handleGetStarted = () => {
-    // Faire défiler vers le composant de connexion ou déclencher l'ouverture du modal
-    const loginForm = document.querySelector('.login-form');
-    if (loginForm) {
-      loginForm.scrollIntoView({ behavior: 'smooth' });
-    }
+    navigate('/auth');
   };
 
   // Si l'utilisateur est connecté, afficher le dashboard
@@ -46,17 +42,8 @@ const Index = () => {
     return <Dashboard user={userWithName} onLogout={() => {}} />;
   }
 
-  // Sinon, afficher la landing page publique avec le formulaire de connexion
-  return (
-    <div>
-      <PublicHome onGetStarted={handleGetStarted} />
-      <div className="login-form bg-terex-darker py-20">
-        <div className="max-w-md mx-auto px-4">
-          <LoginForm />
-        </div>
-      </div>
-    </div>
-  );
+  // Sinon, afficher la landing page publique
+  return <PublicHome onGetStarted={handleGetStarted} />;
 };
 
 export default Index;
