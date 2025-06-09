@@ -13,13 +13,11 @@ export function StoryTemplate() {
       title: "Story USDT - Format vertical",
       visual: (
         <div className="bg-gradient-to-b from-terex-accent via-terex-accent/90 to-terex-accent/70 w-64 h-96 mx-auto rounded-3xl p-6 text-black relative overflow-hidden">
-          {/* Background pattern */}
           <div className="absolute inset-0 opacity-10">
-            <div className="w-full h-full bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23000000" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+            <div className="w-full h-full bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23000000\" fill-opacity=\"0.1\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"4\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
           </div>
           
           <div className="relative z-10 h-full flex flex-col">
-            {/* Header */}
             <div className="flex items-center space-x-2 mb-6">
               <img 
                 src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
@@ -32,7 +30,6 @@ export function StoryTemplate() {
               </div>
             </div>
 
-            {/* Main content */}
             <div className="flex-1 flex flex-col justify-center text-center">
               <div className="text-4xl mb-3">💰</div>
               <h2 className="text-xl font-bold mb-2">
@@ -54,7 +51,6 @@ export function StoryTemplate() {
               </div>
             </div>
 
-            {/* CTA */}
             <div className="bg-black/30 rounded-2xl p-4 text-center">
               <div className="font-bold text-sm mb-1">Swipe up</div>
               <div className="text-xs">terex.lovable.app</div>
@@ -71,7 +67,6 @@ export function StoryTemplate() {
       visual: (
         <div className="bg-gradient-to-b from-green-600 via-green-700 to-green-800 w-64 h-96 mx-auto rounded-3xl p-6 text-white relative overflow-hidden">
           <div className="relative z-10 h-full flex flex-col">
-            {/* Header */}
             <div className="flex items-center space-x-2 mb-6">
               <img 
                 src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
@@ -84,7 +79,6 @@ export function StoryTemplate() {
               </div>
             </div>
 
-            {/* Main content */}
             <div className="flex-1 flex flex-col justify-center text-center">
               <div className="text-4xl mb-3">🌍</div>
               <h2 className="text-xl font-bold mb-2">
@@ -115,7 +109,6 @@ export function StoryTemplate() {
               </div>
             </div>
 
-            {/* CTA */}
             <div className="bg-black/30 rounded-2xl p-4 text-center">
               <div className="font-bold text-sm mb-1">Commencez</div>
               <div className="text-xs">terex.lovable.app</div>
@@ -149,7 +142,6 @@ export function StoryTemplate() {
         <Card key={story.id} className="bg-terex-gray/20 border-terex-gray/30">
           <CardContent className="p-6">
             <div className="grid lg:grid-cols-2 gap-6">
-              {/* Aperçu story */}
               <div>
                 <h3 className="text-white font-semibold mb-3">{story.title}</h3>
                 <div className="flex justify-center">
@@ -167,7 +159,6 @@ export function StoryTemplate() {
                 </div>
               </div>
               
-              {/* Texte et instructions */}
               <div>
                 <h4 className="text-white font-semibold mb-3">Texte pour story</h4>
                 <div className="bg-terex-darker/50 border border-terex-gray/30 rounded-lg p-4 mb-4">
