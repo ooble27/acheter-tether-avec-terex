@@ -40,20 +40,13 @@ export function LoginForm() {
     e.preventDefault();
 
     try {
-      console.log('Tentative de connexion Magic Link pour:', email);
+      console.log('Connexion par email pour:', email);
       
-      // Utiliser le système Fast Auth qui détecte automatiquement la région
+      // Utiliser uniquement le système classique
       const result = await sendFastAuthEmail(email);
       
       if (result.success) {
         setMagicLinkSent(true);
-        
-        // Log des métriques pour monitoring - vérifier si timing existe
-        if (result.fastAuth && 'timing' in result) {
-          console.log('Fast Auth utilisé - Temps:', result.timing, 'ms');
-        } else {
-          console.log('Système classique utilisé');
-        }
       }
       
     } catch (error: any) {
@@ -126,7 +119,7 @@ export function LoginForm() {
     return (
       <div className="min-h-screen bg-terex-dark flex items-center justify-center p-4">
         <div className="w-full max-w-md space-y-8">
-          {/* Logo Header Style Binance */}
+          {/* Logo Header */}
           <div className="text-center">
             <div className="flex items-center justify-center mb-6">
               <div className="relative flex items-center gap-4 p-4 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-2xl border border-terex-accent/20 backdrop-blur-sm">
@@ -164,7 +157,7 @@ export function LoginForm() {
             <CardContent className="space-y-4">
               <div className="bg-terex-gray/50 p-4 rounded-lg border border-terex-gray-light">
                 <p className="text-sm text-gray-300 text-center">
-                  ⏰ Le lien est valable pendant <strong className="text-terex-accent">5 minutes</strong>
+                  ⏰ Le lien est valable pendant <strong className="text-terex-accent">60 minutes</strong>
                 </p>
                 <p className="text-xs text-gray-400 text-center mt-2">
                   📧 Vérifiez vos spams si le message ne s'affiche pas
@@ -208,7 +201,7 @@ export function LoginForm() {
   return (
     <div className="min-h-screen w-full bg-terex-dark flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
-        {/* Logo Header Style Binance */}
+        {/* Logo Header */}
         <div className="text-center">
           <div className="flex items-center justify-center mb-6">
             <div className="relative flex items-center gap-4 p-4 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-2xl border border-terex-accent/20 backdrop-blur-sm">
@@ -270,7 +263,7 @@ export function LoginForm() {
                   <div className="bg-terex-gray/50 p-3 rounded-md border border-terex-gray-light">
                     <div className="flex items-center gap-2 mb-2">
                       <Mail className="h-4 w-4 text-terex-accent" />
-                      <span className="text-sm font-medium text-white">Connexion simplifiée :</span>
+                      <span className="text-sm font-medium text-white">Connexion par email :</span>
                     </div>
                     <p className="text-xs text-gray-300">
                       Entrez votre email et recevez un lien de connexion sécurisé. 
