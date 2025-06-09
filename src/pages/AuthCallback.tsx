@@ -80,9 +80,10 @@ const AuthCallback = () => {
           if (data.session) {
             console.log('AuthCallback: Session créée avec succès');
             
-            // Marquer la session comme active pour PWA
+            // Marquer la session comme active pour PWA avec plus d'informations
             localStorage.setItem('terex-session-active', 'true');
             localStorage.setItem('terex-last-session-update', Date.now().toString());
+            localStorage.setItem('terex-auth-method', 'email-link');
             
             toast({
               title: "Connexion réussie !",
@@ -90,19 +91,15 @@ const AuthCallback = () => {
               className: "bg-green-600 text-white border-green-600",
             });
 
-            // Vérifier si on peut rediriger vers PWA
-            const isPWAAvailable = window.matchMedia('(display-mode: standalone)').matches ||
-                                  (window.navigator as any).standalone;
-            
-            if (isPWAAvailable) {
-              // Essayer de rediriger vers PWA si possible
-              const pwaUrl = window.location.origin + '/';
+            // Attendre un peu puis rediriger et donner des instructions PWA
+            setTimeout(() => {
               toast({
-                title: "Retournez à l'app Terex",
-                description: "Ouvrez l'app Terex depuis votre écran d'accueil pour une session synchronisée.",
+                title: "💡 Astuce PWA",
+                description: "Retournez maintenant à l'app Terex sur votre écran d'accueil pour une session synchronisée !",
                 className: "bg-blue-600 text-white border-blue-600",
+                duration: 8000,
               });
-            }
+            }, 2000);
             
             navigate('/');
             return;
@@ -132,12 +129,23 @@ const AuthCallback = () => {
           // Marquer la session comme active pour PWA
           localStorage.setItem('terex-session-active', 'true');
           localStorage.setItem('terex-last-session-update', Date.now().toString());
+          localStorage.setItem('terex-auth-method', 'signup-confirmation');
           
           toast({
             title: "Email confirmé !",
             description: "Votre compte a été activé avec succès.",
             className: "bg-green-600 text-white border-green-600",
           });
+          
+          setTimeout(() => {
+            toast({
+              title: "💡 Conseil",
+              description: "Ouvrez maintenant l'app Terex depuis votre écran d'accueil !",
+              className: "bg-blue-600 text-white border-blue-600",
+              duration: 6000,
+            });
+          }, 2000);
+          
           navigate('/');
           return;
         }
@@ -149,12 +157,23 @@ const AuthCallback = () => {
           // Marquer la session comme active pour PWA
           localStorage.setItem('terex-session-active', 'true');
           localStorage.setItem('terex-last-session-update', Date.now().toString());
+          localStorage.setItem('terex-auth-method', 'magic-link');
           
           toast({
             title: "Connexion réussie !",
             description: "Vous êtes maintenant connecté.",
             className: "bg-green-600 text-white border-green-600",
           });
+          
+          setTimeout(() => {
+            toast({
+              title: "🚀 Retournez à l'app Terex",
+              description: "Ouvrez l'app Terex depuis votre écran d'accueil pour continuer !",
+              className: "bg-blue-600 text-white border-blue-600",
+              duration: 8000,
+            });
+          }, 2000);
+          
           navigate('/');
           return;
         }
@@ -166,6 +185,7 @@ const AuthCallback = () => {
           // Marquer la session comme active pour PWA
           localStorage.setItem('terex-session-active', 'true');
           localStorage.setItem('terex-last-session-update', Date.now().toString());
+          localStorage.setItem('terex-auth-method', 'existing-session');
           
           toast({
             title: "Connexion réussie !",
