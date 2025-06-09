@@ -37,6 +37,7 @@ export function BuyUSDT() {
   const [showInstructions, setShowInstructions] = useState(false);
   const [showPending, setShowPending] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [currentOrderId, setCurrentOrderId] = useState('');
 
   const [cardData, setCardData] = useState({
     number: '',
@@ -163,6 +164,7 @@ export function BuyUSDT() {
     const result = await createOrder(orderData);
     
     if (result) {
+      setCurrentOrderId(result.id);
       setShowConfirmation(false);
       setShowInstructions(true);
     }
@@ -170,7 +172,7 @@ export function BuyUSDT() {
     setLoading(false);
   };
 
-  const handlePaymentSent = () => {
+  const handlePaymentConfirmed = () => {
     setShowInstructions(false);
     setShowPending(true);
   };
@@ -181,6 +183,7 @@ export function BuyUSDT() {
     setCardData({ number: '', expiryMonth: '', expiryYear: '', cvv: '', name: '' });
     setMobileData({ phoneNumber: '', provider: 'wave' });
     setShowPending(false);
+    setCurrentOrderId('');
   };
 
   const handleKYCRequired = () => {
@@ -206,6 +209,7 @@ export function BuyUSDT() {
             paymentMethod: paymentMethod,
             exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
           }}
+          orderId={currentOrderId}
           onBackToHome={handleBackToHome}
         />
       </KYCProtection>
@@ -226,8 +230,9 @@ export function BuyUSDT() {
             paymentMethod: paymentMethod,
             exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
           }}
+          orderId={currentOrderId}
           onBack={() => setShowInstructions(false)}
-          onPaymentSent={handlePaymentSent}
+          onPaymentConfirmed={handlePaymentConfirmed}
         />
       </KYCProtection>
     );
