@@ -45,12 +45,20 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     let finalEmailAddress = emailAddress;
+    let targetUserId = userId;
+
+    // CORRECTION CRITIQUE: S'assurer qu'on utilise le bon userId
+    // Pour les transferts, userId doit être l'ID du CLIENT, pas de l'admin
+    if (transactionType === 'transfer' && orderData?.user_id) {
+      targetUserId = orderData.user_id;
+      console.log('Transfert détecté - utilisation de l\'ID du client:', targetUserId);
+    }
 
     // Récupérer l'email de l'utilisateur s'il n'est pas fourni
-    if (!emailAddress && userId) {
-      console.log('Récupération de l\'email pour l\'utilisateur:', userId);
+    if (!emailAddress && targetUserId) {
+      console.log('Récupération de l\'email pour l\'utilisateur:', targetUserId);
       
-      const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(userId);
+      const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(targetUserId);
       
       if (authError || !authUser.user?.email) {
         console.error('Erreur lors de la récupération de l\'utilisateur:', authError);
@@ -58,7 +66,7 @@ const handler = async (req: Request): Promise<Response> => {
       }
       
       finalEmailAddress = authUser.user.email;
-      console.log('Email trouvé pour l\'utilisateur:', userId, '-> Email:', finalEmailAddress);
+      console.log('Email trouvé pour l\'utilisateur:', targetUserId, '-> Email:', finalEmailAddress);
     }
 
     if (!finalEmailAddress) {
@@ -136,9 +144,8 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Sauvegarder la notification dans la base de données
-    // CORRECTION: Ne pas insérer order_id pour les transferts internationaux
     const notificationData: any = {
-      user_id: userId,
+      user_id: targetUserId, // UTILISER LE BON USER ID ICI AUSSI
       email_address: finalEmailAddress,
       email_type: emailType,
       transaction_type: transactionType,

@@ -149,19 +149,19 @@ export const useInternationalTransfers = () => {
 
       if (transferDetails) {
         console.log('Envoi des notifications email pour le transfert:', transferId, 'nouveau statut:', status);
-        console.log('ID du client du transfert:', transferDetails.user_id);
+        console.log('Données du transfert pour email:', transferDetails);
         
-        // CORRECTION IMPORTANTE: Utiliser l'ID du CLIENT qui a créé le transfert, pas l'admin
+        // CORRECTION: Envoyer directement à la fonction edge avec les bonnes données
         try {
           // Email de mise à jour de statut pour le CLIENT
           await supabase.functions.invoke('send-email-notification', {
             body: {
-              userId: transferDetails.user_id, // ID du CLIENT, pas de l'admin
-              orderId: null, // Pas d'orderId pour les transferts
-              emailAddress: null, // Sera récupéré côté serveur
+              userId: transferDetails.user_id, // L'ID du CLIENT qui a créé le transfert
+              orderId: null,
+              emailAddress: null, // Sera récupéré côté serveur avec l'userId
               emailType: 'status_update',
               transactionType: 'transfer',
-              orderData: { ...transferDetails, status }
+              orderData: transferDetails // Contient transferDetails.user_id
             },
           });
 
@@ -169,12 +169,12 @@ export const useInternationalTransfers = () => {
           if (status === 'processing') {
             await supabase.functions.invoke('send-email-notification', {
               body: {
-                userId: transferDetails.user_id, // ID du CLIENT, pas de l'admin
-                orderId: null, // Pas d'orderId pour les transferts
-                emailAddress: null, // Sera récupéré côté serveur
+                userId: transferDetails.user_id, // L'ID du CLIENT qui a créé le transfert
+                orderId: null,
+                emailAddress: null, // Sera récupéré côté serveur avec l'userId
                 emailType: 'payment_confirmed',
                 transactionType: 'transfer',
-                orderData: { ...transferDetails, status }
+                orderData: transferDetails // Contient transferDetails.user_id
               },
             });
           }
