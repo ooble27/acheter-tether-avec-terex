@@ -22,8 +22,8 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
     <div className="min-h-screen bg-terex-dark">
       <HeroSection />
       
-      {/* Section Comment ça marche avec effets blockchain */}
-      <section id="how-it-works" className="py-16 sm:py-20 bg-gradient-to-br from-terex-darker to-terex-dark relative overflow-hidden">
+      {/* Section Comment ça marche */}
+      <section id="how-it-works" className="py-16 sm:py-20 bg-terex-dark relative overflow-hidden">
         {/* Background tech pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(94,234,212,0.02)_50%,transparent_50%)] bg-[length:20px_20px]"></div>
         <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(94,234,212,0.02)_50%,transparent_50%)] bg-[length:20px_20px]"></div>
@@ -67,7 +67,7 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
                 </div>
                 <h3 className="text-base sm:text-lg font-bold text-white mb-3">Choisissez votre service</h3>
                 <p className="text-gray-300 mb-4 text-sm">
-                  Achat/vente d'USDT ou virement international. Interface intuitive pour tous vos besoins.
+                  Achat/vente crypto ou virement international. Interface intuitive pour tous vos besoins.
                 </p>
                 <div className="flex items-center justify-center space-x-2 text-terex-accent">
                   <CheckCircle className="w-4 h-4" />
@@ -98,8 +98,8 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
 
       <StatsSection />
       
-      {/* Section Méthodes de paiement optimisée mobile */}
-      <section className="py-16 sm:py-20 bg-gradient-to-br from-terex-darker to-terex-dark">
+      {/* Section Méthodes de paiement */}
+      <section className="py-16 sm:py-20 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
@@ -140,8 +140,8 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
 
       <TestimonialsSection />
       
-      {/* Section CTA finale optimisée mobile */}
-      <section className="py-16 sm:py-20 bg-gradient-to-br from-terex-darker to-terex-dark relative overflow-hidden">
+      {/* Section CTA finale */}
+      <section className="py-16 sm:py-20 bg-terex-dark relative overflow-hidden">
         {/* Background effects */}
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(94,234,212,0.02)_50%,transparent_50%)] bg-[length:20px_20px]"></div>
         <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(94,234,212,0.02)_50%,transparent_50%)] bg-[length:20px_20px]"></div>
