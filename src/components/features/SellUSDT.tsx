@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,15 @@ const WALLET_ADDRESSES = {
   ERC20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
   Arbitrum: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
   Polygon: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84'
+};
+
+// Logos des réseaux blockchain
+const NETWORK_LOGOS = {
+  TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png', // Tron
+  BEP20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png', // BSC/BNB
+  ERC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', // Ethereum
+  Arbitrum: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11841.png', // Arbitrum
+  Polygon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png' // Polygon
 };
 
 export function SellUSDT() {
@@ -364,7 +374,7 @@ export function SellUSDT() {
                           </div>
                         </div>
 
-                        {/* Network Selection */}
+                        {/* Network Selection with Logos */}
                         <div className="space-y-2">
                           <Label className="text-white text-sm font-medium">Réseau d'envoi</Label>
                           <Select value={network} onValueChange={setNetwork}>
@@ -373,15 +383,51 @@ export function SellUSDT() {
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="TRC20">
-                                <div className="flex items-center space-x-2">
-                                  <span>TRC20 (Tron)</span>
-                                  <Badge variant="secondary" className="text-xs">Recommandé</Badge>
+                                <div className="flex items-center space-x-3">
+                                  <img src={NETWORK_LOGOS.TRC20} alt="Tron" className="w-6 h-6 rounded-full" />
+                                  <div className="flex flex-col">
+                                    <span>TRC20 (Tron)</span>
+                                    <span className="text-xs text-gray-400">Frais faibles</span>
+                                  </div>
+                                  <Badge variant="secondary" className="text-xs ml-auto">Recommandé</Badge>
                                 </div>
                               </SelectItem>
-                              <SelectItem value="BEP20">BEP20 (BSC)</SelectItem>
-                              <SelectItem value="ERC20">ERC20 (Ethereum)</SelectItem>
-                              <SelectItem value="Arbitrum">Arbitrum</SelectItem>
-                              <SelectItem value="Polygon">Polygon</SelectItem>
+                              <SelectItem value="BEP20">
+                                <div className="flex items-center space-x-3">
+                                  <img src={NETWORK_LOGOS.BEP20} alt="BSC" className="w-6 h-6 rounded-full" />
+                                  <div className="flex flex-col">
+                                    <span>BEP20 (BSC)</span>
+                                    <span className="text-xs text-gray-400">Rapide et abordable</span>
+                                  </div>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="ERC20">
+                                <div className="flex items-center space-x-3">
+                                  <img src={NETWORK_LOGOS.ERC20} alt="Ethereum" className="w-6 h-6 rounded-full" />
+                                  <div className="flex flex-col">
+                                    <span>ERC20 (Ethereum)</span>
+                                    <span className="text-xs text-gray-400">Réseau principal</span>
+                                  </div>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="Arbitrum">
+                                <div className="flex items-center space-x-3">
+                                  <img src={NETWORK_LOGOS.Arbitrum} alt="Arbitrum" className="w-6 h-6 rounded-full" />
+                                  <div className="flex flex-col">
+                                    <span>Arbitrum</span>
+                                    <span className="text-xs text-gray-400">Layer 2 Ethereum</span>
+                                  </div>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="Polygon">
+                                <div className="flex items-center space-x-3">
+                                  <img src={NETWORK_LOGOS.Polygon} alt="Polygon" className="w-6 h-6 rounded-full" />
+                                  <div className="flex flex-col">
+                                    <span>Polygon</span>
+                                    <span className="text-xs text-gray-400">Frais très faibles</span>
+                                  </div>
+                                </div>
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
