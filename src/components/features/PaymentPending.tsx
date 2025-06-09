@@ -24,6 +24,10 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
   const [dots, setDots] = useState('');
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
     // Animation des points de chargement
     const dotsInterval = setInterval(() => {
       setDots(prev => prev.length >= 3 ? '' : prev + '.');

@@ -27,6 +27,10 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
   const { toast } = useToast();
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {

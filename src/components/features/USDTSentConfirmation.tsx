@@ -1,4 +1,5 @@
 
+import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Clock, MessageCircle, Home } from 'lucide-react';
@@ -17,6 +18,10 @@ interface USDTSentConfirmationProps {
 }
 
 export function USDTSentConfirmation({ orderData, onBackToHome }: USDTSentConfirmationProps) {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const getProviderName = () => {
     return orderData.provider === 'wave' ? 'Wave' : 'Orange Money';
   };
