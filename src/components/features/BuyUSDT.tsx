@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -33,6 +34,7 @@ export function BuyUSDT() {
   const [fiatAmount, setFiatAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
+  const [walletAddress, setWalletAddress] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showPending, setShowPending] = useState(false);
@@ -116,7 +118,7 @@ export function BuyUSDT() {
   };
 
   const handleBuyClick = () => {
-    if (!fiatAmount) {
+    if (!fiatAmount || !walletAddress) {
       return;
     }
     
@@ -145,6 +147,7 @@ export function BuyUSDT() {
       exchange_rate: exchangeRates[currency as keyof typeof exchangeRates],
       payment_method: paymentMethod,
       network,
+      wallet_address: walletAddress,
       status: 'pending' as const,
       payment_status: 'pending',
       // Stocker les informations dans les notes
@@ -180,6 +183,7 @@ export function BuyUSDT() {
   const handleBackToHome = () => {
     // Réinitialiser tous les états
     setFiatAmount('');
+    setWalletAddress('');
     setCardData({ number: '', expiryMonth: '', expiryYear: '', cvv: '', name: '' });
     setMobileData({ phoneNumber: '', provider: 'wave' });
     setShowPending(false);
@@ -205,7 +209,7 @@ export function BuyUSDT() {
             currency,
             usdtAmount,
             network,
-            walletAddress: '', // Correction: ajouter la propriété manquante
+            walletAddress: walletAddress,
             paymentMethod: paymentMethod,
             exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
           }}
@@ -226,7 +230,7 @@ export function BuyUSDT() {
             currency,
             usdtAmount,
             network,
-            walletAddress: '', // Correction: ajouter la propriété manquante
+            walletAddress: walletAddress,
             paymentMethod: paymentMethod,
             exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
           }}
@@ -248,7 +252,7 @@ export function BuyUSDT() {
             currency,
             usdtAmount,
             network,
-            walletAddress: '', // Correction: ajouter la propriété manquante
+            walletAddress: walletAddress,
             paymentMethod: paymentMethod,
             exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
           }}
@@ -381,44 +385,59 @@ export function BuyUSDT() {
                             <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent className="bg-terex-darker border-terex-gray">
+                            <SelectContent className="bg-terex-darker border-terex-gray max-w-xs">
                               <SelectItem value="TRC20">
-                                <div className="flex items-center justify-between w-full min-w-0">
-                                  <div className="flex items-center space-x-3 min-w-0 flex-1">
-                                    <img src={NETWORK_LOGOS.TRC20} alt="Tron" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                    <span className="truncate">TRC20 (Tron)</span>
+                                <div className="flex items-center justify-between w-full">
+                                  <div className="flex items-center space-x-3">
+                                    <img src={NETWORK_LOGOS.TRC20} alt="Tron" className="w-5 h-5 rounded-full" />
+                                    <span>TRC20 (Tron)</span>
                                   </div>
-                                  <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
+                                  <Badge variant="secondary" className="text-xs ml-2">
                                     Recommandé
                                   </Badge>
                                 </div>
                               </SelectItem>
                               <SelectItem value="BEP20">
                                 <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.BEP20} alt="BSC" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                  <span className="truncate">BEP20 (BSC)</span>
+                                  <img src={NETWORK_LOGOS.BEP20} alt="BSC" className="w-5 h-5 rounded-full" />
+                                  <span>BEP20 (BSC)</span>
                                 </div>
                               </SelectItem>
                               <SelectItem value="ERC20">
                                 <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.ERC20} alt="Ethereum" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                  <span className="truncate">ERC20 (Ethereum)</span>
+                                  <img src={NETWORK_LOGOS.ERC20} alt="Ethereum" className="w-5 h-5 rounded-full" />
+                                  <span>ERC20 (Ethereum)</span>
                                 </div>
                               </SelectItem>
                               <SelectItem value="Arbitrum">
                                 <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.Arbitrum} alt="Arbitrum" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                  <span className="truncate">Arbitrum</span>
+                                  <img src={NETWORK_LOGOS.Arbitrum} alt="Arbitrum" className="w-5 h-5 rounded-full" />
+                                  <span>Arbitrum</span>
                                 </div>
                               </SelectItem>
                               <SelectItem value="Polygon">
                                 <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.Polygon} alt="Polygon" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                  <span className="truncate">Polygon</span>
+                                  <img src={NETWORK_LOGOS.Polygon} alt="Polygon" className="w-5 h-5 rounded-full" />
+                                  <span>Polygon</span>
                                 </div>
                               </SelectItem>
                             </SelectContent>
                           </Select>
+                        </div>
+
+                        {/* Wallet Address Input */}
+                        <div className="space-y-2">
+                          <Label className="text-white text-sm font-medium">Votre adresse de réception {network}</Label>
+                          <Input
+                            type="text"
+                            placeholder={`Votre adresse ${network} pour recevoir les USDT`}
+                            value={walletAddress}
+                            onChange={(e) => setWalletAddress(e.target.value)}
+                            className="bg-terex-gray border-terex-gray-light text-white h-12"
+                          />
+                          <p className="text-gray-400 text-xs">
+                            Entrez l'adresse de votre portefeuille {network} où vous souhaitez recevoir vos USDT
+                          </p>
                         </div>
 
                         {/* Payment Method Details */}
@@ -533,7 +552,7 @@ export function BuyUSDT() {
                         <Button 
                           size="lg"
                           className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                          disabled={!fiatAmount || 
+                          disabled={!fiatAmount || !walletAddress || 
                             (paymentMethod === 'card' && (!cardData.number || !cardData.expiryMonth || !cardData.expiryYear || !cardData.cvv || !cardData.name)) ||
                             (paymentMethod === 'mobile' && !mobileData.phoneNumber)
                           }
