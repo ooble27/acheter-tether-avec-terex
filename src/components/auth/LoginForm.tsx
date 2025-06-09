@@ -167,10 +167,7 @@ export function LoginForm() {
                   ⏰ Le lien est valable pendant <strong className="text-terex-accent">5 minutes</strong>
                 </p>
                 <p className="text-xs text-gray-400 text-center mt-2">
-                  📧 Vérifiez aussi vos spams si vous ne recevez pas l'email
-                </p>
-                <p className="text-xs text-green-400 text-center mt-2">
-                  🚀 Optimisé pour une réception ultra-rapide
+                  📧 Vérifiez vos spams si le message ne s'affiche pas
                 </p>
               </div>
               
@@ -279,11 +276,8 @@ export function LoginForm() {
                       Entrez votre email et recevez un lien de connexion sécurisé. 
                       Plus besoin de retenir votre mot de passe !
                     </p>
-                    <p className="text-xs text-green-400 mt-1">
-                      🚀 Optimisé pour l'Afrique - Réception ultra-rapide
-                    </p>
                     <p className="text-xs text-yellow-400 mt-1">
-                      💡 Astuce : Ajoutez noreply@terangaexchange.com à vos contacts pour éviter les spams
+                      📧 Vérifiez vos spams si le message ne s'affiche pas
                     </p>
                   </div>
 
