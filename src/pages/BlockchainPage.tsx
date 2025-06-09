@@ -70,7 +70,7 @@ const BlockchainPage = () => {
       </section>
 
       {/* Qu'est-ce que la blockchain */}
-      <section className="py-16 bg-terex-dark">
+      <section className="py-8 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -139,11 +139,10 @@ const BlockchainPage = () => {
             <Card className="bg-terex-darker/80 border-terex-accent/30 hover:border-terex-accent/50 transition-all duration-300">
               <CardContent className="p-6 text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <img 
-                    src="https://cryptologos.cc/logos/tether-usdt-logo.png" 
-                    alt="USDT Logo" 
-                    className="w-8 h-8"
-                  />
+                  <svg className="w-8 h-8" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="16" r="16" fill="#26A17B"/>
+                    <path d="M17.922 17.383v-.002c-.11.008-.677.042-1.942.042-1.01 0-1.721-.03-1.971-.042v.003c-3.888-.171-6.79-.848-6.79-1.658 0-.809 2.902-1.486 6.79-1.66v2.644c.254.018.982.061 1.988.061 1.207 0 1.812-.05 1.925-.06v-2.643c3.88.173 6.775.85 6.775 1.658 0 .81-2.895 1.485-6.775 1.657m0-3.59v-2.366h5.414V7.819H8.595v3.608h5.414v2.365c-4.4.202-7.709 1.074-7.709 2.148 0 1.074 3.309 1.945 7.709 2.147v7.582h3.913v-7.584c4.393-.202 7.694-1.073 7.694-2.147 0-1.073-3.301-1.944-7.694-2.145" fill="white"/>
+                  </svg>
                 </div>
                 <h3 className="text-lg font-bold text-white mb-3">Stabilité du prix</h3>
                 <p className="text-gray-300 text-sm">
