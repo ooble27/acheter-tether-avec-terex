@@ -18,6 +18,10 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
     navigate('/auth');
   };
 
+  const handleBlockchainInfo = () => {
+    navigate('/blockchain');
+  };
+
   return (
     <div className="min-h-screen bg-terex-dark">
       <HeroSection />
@@ -60,7 +64,7 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
                 </div>
                 <h3 className="text-base sm:text-lg font-bold text-white mb-3">Choisissez votre service</h3>
                 <p className="text-gray-300 mb-4 text-sm">
-                  Achat/vente crypto ou virement international. Interface intuitive pour tous vos besoins.
+                  Achat/vente USDT ou virement international. Interface intuitive pour tous vos besoins.
                 </p>
                 <div className="flex items-center justify-center space-x-2 text-terex-accent">
                   <CheckCircle className="w-4 h-4" />
@@ -84,6 +88,17 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
                 </div>
               </CardContent>
             </Card>
+          </div>
+          
+          <div className="text-center mt-12">
+            <Button 
+              onClick={handleBlockchainInfo}
+              variant="outline" 
+              size="lg"
+              className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-base rounded-xl backdrop-blur-sm max-w-xs sm:max-w-none"
+            >
+              En savoir plus sur la blockchain
+            </Button>
           </div>
         </div>
       </section>
@@ -139,12 +154,12 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
             Prêt à commencer avec <span className="text-terex-accent">Terex</span> ?
           </h2>
           <p className="text-lg sm:text-xl text-gray-300 mb-8">
-            Rejoignez des milliers d'utilisateurs qui nous font confiance pour leurs échanges crypto et virements internationaux.
+            Rejoignez des milliers d'utilisateurs qui nous font confiance pour leurs échanges USDT et virements internationaux.
           </p>
           <Button 
             onClick={handleGetStarted}
             size="lg" 
-            className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-full sm:w-auto"
+            className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-3 sm:px-8 py-2 sm:py-4 text-xs sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 max-w-xs sm:max-w-none mx-auto"
           >
             Créer mon compte gratuitement
             <ArrowRight className="ml-2 w-4 h-4" />

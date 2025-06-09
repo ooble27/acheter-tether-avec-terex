@@ -7,34 +7,34 @@ const testimonials = [
     id: 1,
     name: "Amadou Diallo",
     location: "Dakar, Sénégal",
-    avatar: "https://images.unsplash.com/photo-1566753323558-f4e0952af115?w=100&h=100&fit=crop&crop=face",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
     rating: 5,
     text: "Terex a révolutionné mes transferts d'argent. En 5 minutes, j'ai pu envoyer de l'argent à ma famille au Canada. Service exceptionnel !",
     transaction: "Virement international CAD → CFA"
   },
   {
     id: 2,
-    name: "Marie Dubois",
+    name: "Fatou Ba",
     location: "Montréal, Canada",
-    avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face",
+    avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&h=100&fit=crop&crop=face",
     rating: 5,
     text: "Interface très intuitive pour acheter des USDT. Les taux sont compétitifs et les transactions sont sécurisées. Je recommande vivement !",
     transaction: "Achat USDT - 500 CAD"
   },
   {
     id: 3,
-    name: "Omar Hassan",
-    location: "Casablanca, Maroc",
-    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face",
+    name: "Moussa Traoré",
+    location: "Bamako, Mali",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
     rating: 5,
-    text: "Enfin une plateforme qui comprend nos besoins en Afrique. Rapide, fiable et sans commission cachée. Parfait pour mes échanges crypto !",
-    transaction: "Vente USDT - 2000 MAD"
+    text: "Enfin une plateforme qui comprend nos besoins en Afrique. Rapide, fiable et sans commission cachée. Parfait pour mes échanges USDT !",
+    transaction: "Vente USDT - 2000 XOF"
   },
   {
     id: 4,
-    name: "Fatou Sow",
-    location: "Abidjan, Côte d'Ivoire",
-    avatar: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=100&h=100&fit=crop&crop=face",
+    name: "Aissatou Sow",
+    location: "Thiès, Sénégal",
+    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b602?w=100&h=100&fit=crop&crop=face",
     rating: 5,
     text: "Support client réactif et processus KYC simple. J'utilise Terex pour tous mes virements vers l'Europe. Service de qualité !",
     transaction: "Virement international CFA → EUR"

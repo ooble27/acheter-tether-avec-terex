@@ -46,7 +46,7 @@ export function HeroSection() {
           </div>
           
           <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-            L'échange crypto et les virements
+            L'échange USDT Tether et les virements
             <br />
             <span className="text-terex-accent relative">
               sans frontières
@@ -54,7 +54,7 @@ export function HeroSection() {
           </h2>
           
           <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Achetez et vendez des cryptomonnaies facilement, 
+            Achetez et vendez des USDT facilement, 
             effectuez des virements internationaux instantanés. Rapide, sécurisé et sans commission.
           </p>
           
@@ -62,7 +62,7 @@ export function HeroSection() {
             <Button 
               onClick={handleGetStarted}
               size="lg" 
-              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105"
+              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-base rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 max-w-xs sm:max-w-none"
             >
               Commencer maintenant
             </Button>
@@ -70,7 +70,7 @@ export function HeroSection() {
               onClick={handleHowItWorks}
               variant="outline" 
               size="lg"
-              className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base rounded-xl backdrop-blur-sm"
+              className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-base rounded-xl backdrop-blur-sm max-w-xs sm:max-w-none"
             >
               Voir comment ça marche
             </Button>
@@ -81,10 +81,14 @@ export function HeroSection() {
             <Card className="bg-terex-darker/60 border-terex-accent/30 backdrop-blur-sm hover:bg-terex-darker/80 transition-all duration-300 hover:scale-105 group">
               <CardContent className="p-4 sm:p-6 text-center">
                 <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <div className="w-6 h-6 bg-terex-accent rounded-full"></div>
+                  <img 
+                    src="https://cryptologos.cc/logos/tether-usdt-logo.png" 
+                    alt="USDT Logo" 
+                    className="w-6 h-6"
+                  />
                 </div>
-                <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Échange crypto</h3>
-                <p className="text-gray-400 text-xs sm:text-sm">Achetez et vendez vos cryptos au meilleur taux</p>
+                <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Échange USDT Tether</h3>
+                <p className="text-gray-400 text-xs sm:text-sm">Achetez et vendez vos USDT au meilleur taux</p>
               </CardContent>
             </Card>
             
