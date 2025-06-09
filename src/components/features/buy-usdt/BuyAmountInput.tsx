@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { ArrowRightLeft } from 'lucide-react';
+import { enforceMaxLimit } from './LimitsValidator';
 
 interface BuyAmountInputProps {
   fiatAmount: string;
@@ -29,6 +30,14 @@ export function BuyAmountInput({
   processingTime,
   fee
 }: BuyAmountInputProps) {
+  
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Appliquer la limite maximale
+    const limitedValue = enforceMaxLimit(value, currency);
+    setFiatAmount(limitedValue);
+  };
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -39,7 +48,7 @@ export function BuyAmountInput({
               type="number"
               placeholder="0.00"
               value={fiatAmount}
-              onChange={(e) => setFiatAmount(e.target.value)}
+              onChange={handleAmountChange}
               className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
             />
             <Select value={currency} onValueChange={setCurrency}>
@@ -48,6 +57,7 @@ export function BuyAmountInput({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="CFA">CFA</SelectItem>
+                <SelectItem value="CAD">CAD</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -2,7 +2,7 @@
 interface LimitsValidatorProps {
   amount: string;
   currency: string;
-  onLimitExceeded: (amount: string) => void;
+  onHighVolumeRequest: () => void;
   children: React.ReactNode;
 }
 
@@ -17,24 +17,11 @@ export const PURCHASE_LIMITS = {
   }
 };
 
-export function LimitsValidator({ amount, currency, onLimitExceeded, children }: LimitsValidatorProps) {
-  const numericAmount = parseFloat(amount) || 0;
-  const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
-  
-  if (!limits) return <>{children}</>;
-  
-  const isOverLimit = numericAmount > limits.max;
-  const isUnderLimit = numericAmount > 0 && numericAmount < limits.min;
-  
-  if (isOverLimit) {
-    onLimitExceeded(amount);
-    return null;
-  }
-  
+export function LimitsValidator({ amount, currency, onHighVolumeRequest, children }: LimitsValidatorProps) {
   return <>{children}</>;
 }
 
-export function getLimitMessage(amount: string, currency: string): { type: 'error' | 'warning' | null; message: string } {
+export function getLimitMessage(amount: string, currency: string): { type: 'error' | 'warning' | 'max-reached' | null; message: string } {
   const numericAmount = parseFloat(amount) || 0;
   const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
   
@@ -42,8 +29,8 @@ export function getLimitMessage(amount: string, currency: string): { type: 'erro
   
   if (numericAmount > limits.max) {
     return {
-      type: 'error',
-      message: `Montant maximum : ${limits.max.toLocaleString()} ${currency}. Pour des montants supérieurs, contactez notre équipe VIP.`
+      type: 'max-reached',
+      message: `Vous avez atteint la limite maximale de ${limits.max.toLocaleString()} ${currency}. Pour des montants supérieurs, contactez notre équipe VIP.`
     };
   }
   
@@ -63,4 +50,17 @@ export function getLimitMessage(amount: string, currency: string): { type: 'erro
   }
   
   return { type: null, message: '' };
+}
+
+export function enforceMaxLimit(value: string, currency: string): string {
+  const numericValue = parseFloat(value) || 0;
+  const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
+  
+  if (!limits) return value;
+  
+  if (numericValue > limits.max) {
+    return limits.max.toString();
+  }
+  
+  return value;
 }

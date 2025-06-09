@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -36,7 +35,7 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
       
       toast({
         title: "Demande envoyée !",
-        description: "Notre équipe vous contactera dans les 24h pour traiter votre demande.",
+        description: "Notre équipe analysera votre demande et vous recevrez soit un appel soit un email pour discuter des conditions.",
       });
 
       // Réinitialiser le formulaire
@@ -84,7 +83,11 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
         <Card className="bg-terex-darker border-terex-gray">
           <CardHeader>
             <CardTitle className="text-white flex items-center">
-              <DollarSign className="w-5 h-5 mr-2 text-terex-accent" />
+              <img 
+                src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
+                alt="USDT" 
+                className="w-5 h-5 mr-2"
+              />
               Formulaire de demande spéciale
             </CardTitle>
           </CardHeader>
@@ -191,7 +194,7 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
                   </li>
                   <li className="flex items-start">
                     <span className="text-terex-accent mr-2">•</span>
-                    Vous recevrez un appel pour discuter des conditions spéciales
+                    Vous recevrez soit un appel soit un email pour discuter des conditions
                   </li>
                   <li className="flex items-start">
                     <span className="text-terex-accent mr-2">•</span>
@@ -226,11 +229,11 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="text-gray-400">Email VIP</p>
-                <p className="text-white">vip@terex.com</p>
+                <p className="text-white">vip@terangexchange.com</p>
               </div>
               <div>
-                <p className="text-gray-400">WhatsApp Business</p>
-                <p className="text-white">+221 XX XXX XX XX</p>
+                <p className="text-gray-400">WhatsApp</p>
+                <p className="text-white">+1 418-261-9091</p>
               </div>
             </div>
           </CardContent>

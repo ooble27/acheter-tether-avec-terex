@@ -100,6 +100,10 @@ export function BuyUSDT() {
   // Gestion des limites
   const limitMessage = getLimitMessage(fiatAmount, currency);
 
+  const handleHighVolumeRequest = () => {
+    setShowHighVolumeRequest(true);
+  };
+
   const handleLimitExceeded = (amount: string) => {
     setShowHighVolumeRequest(true);
   };
@@ -287,7 +291,7 @@ export function BuyUSDT() {
                   <LimitsValidator 
                     amount={fiatAmount} 
                     currency={currency} 
-                    onLimitExceeded={handleLimitExceeded}
+                    onHighVolumeRequest={handleHighVolumeRequest}
                   >
                     <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'card' | 'mobile')} className="space-y-6">
                       <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
@@ -315,14 +319,35 @@ export function BuyUSDT() {
 
                       {/* Affichage des messages de limite */}
                       {limitMessage.type && (
-                        <Alert className={limitMessage.type === 'error' ? 'border-red-500/50 bg-red-500/10' : 'border-yellow-500/50 bg-yellow-500/10'}>
+                        <Alert className={
+                          limitMessage.type === 'error' ? 'border-red-500/50 bg-red-500/10' :
+                          limitMessage.type === 'max-reached' ? 'border-orange-500/50 bg-orange-500/10' :
+                          'border-yellow-500/50 bg-yellow-500/10'
+                        }>
                           {limitMessage.type === 'error' ? (
+                            <AlertTriangle className="h-4 w-4" />
+                          ) : limitMessage.type === 'max-reached' ? (
                             <AlertTriangle className="h-4 w-4" />
                           ) : (
                             <Info className="h-4 w-4" />
                           )}
-                          <AlertDescription className={limitMessage.type === 'error' ? 'text-red-200' : 'text-yellow-200'}>
-                            {limitMessage.message}
+                          <AlertDescription className={
+                            limitMessage.type === 'error' ? 'text-red-200' :
+                            limitMessage.type === 'max-reached' ? 'text-orange-200' :
+                            'text-yellow-200'
+                          }>
+                            <div className="flex flex-col space-y-3">
+                              <span>{limitMessage.message}</span>
+                              {limitMessage.type === 'max-reached' && (
+                                <Button 
+                                  onClick={handleHighVolumeRequest}
+                                  className="bg-terex-accent hover:bg-terex-accent/90 text-white w-fit"
+                                  size="sm"
+                                >
+                                  Demande de gros volume
+                                </Button>
+                              )}
+                            </div>
                           </AlertDescription>
                         </Alert>
                       )}
@@ -368,7 +393,7 @@ export function BuyUSDT() {
                           <Button 
                             size="lg"
                             className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                            disabled={!fiatAmount || !walletAddress || limitMessage.type === 'error' ||
+                            disabled={!fiatAmount || !walletAddress || limitMessage.type === 'error' || limitMessage.type === 'max-reached' ||
                               (paymentMethod === 'card' && (!cardData.number || !cardData.expiryMonth || !cardData.expiryYear || !cardData.cvv || !cardData.name)) ||
                               (paymentMethod === 'mobile' && !mobileData.phoneNumber)
                             }
