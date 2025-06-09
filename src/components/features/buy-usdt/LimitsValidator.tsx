@@ -27,7 +27,8 @@ export function getLimitMessage(amount: string, currency: string): { type: 'erro
   
   if (!limits || numericAmount === 0) return { type: null, message: '' };
   
-  if (numericAmount > limits.max) {
+  // Si l'utilisateur a atteint exactement la limite ou essaie de la dépasser
+  if (numericAmount >= limits.max) {
     return {
       type: 'max-reached',
       message: `Vous avez atteint la limite maximale de ${limits.max.toLocaleString()} ${currency}. Pour des montants supérieurs, contactez notre équipe VIP.`
@@ -41,7 +42,7 @@ export function getLimitMessage(amount: string, currency: string): { type: 'erro
     };
   }
   
-  // Warning quand on approche de la limite
+  // Warning quand on approche de la limite (90% de la limite)
   if (numericAmount > limits.max * 0.9) {
     return {
       type: 'warning',
@@ -58,6 +59,7 @@ export function enforceMaxLimit(value: string, currency: string): string {
   
   if (!limits) return value;
   
+  // Bloquer à la limite maximale
   if (numericValue > limits.max) {
     return limits.max.toString();
   }
