@@ -7,19 +7,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Eye, EyeOff, Info, Mail } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { useFastAuth } from '@/hooks/useFastAuth';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('login');
   const [showPassword, setShowPassword] = useState(false);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   
   const { signUp } = useAuth();
   const { toast } = useToast();
+  const { sendFastAuthEmail, isLoading } = useFastAuth();
 
   const validatePassword = (password: string) => {
     const requirements = {
@@ -38,66 +38,48 @@ export function LoginForm() {
 
   const handleMagicLinkLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
     try {
       console.log('Tentative de connexion Magic Link pour:', email);
       
-      const { error } = await supabase.auth.signInWithOtp({
-        email: email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-          shouldCreateUser: false,
-          // Utiliser le template personnalisé et augmenter la durée de vie
-          data: {
-            site_url: window.location.origin
-          }
-        }
-      });
-
-      console.log('Résultat Magic Link:', { error });
-
-      if (error) {
-        console.error('Erreur Magic Link:', error);
-        if (error.message.includes("User not found") || 
-            error.message.includes("Invalid email") ||
-            error.message.includes("Unable to validate email address")) {
-          toast({
-            title: "Compte introuvable",
-            description: "Aucun compte n'existe avec cet email. Veuillez créer un compte d'abord.",
-            variant: "destructive",
-          });
-          setActiveTab('register');
-        } else if (error.message.includes("For security purposes")) {
-          toast({
-            title: "Trop de tentatives",
-            description: "Veuillez attendre quelques minutes avant de réessayer.",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Erreur",
-            description: error.message,
-            variant: "destructive",
-          });
-        }
-      } else {
+      // Utiliser le système Fast Auth qui détecte automatiquement la région
+      const result = await sendFastAuthEmail(email);
+      
+      if (result.success) {
         setMagicLinkSent(true);
+        
+        // Log des métriques pour monitoring
+        if (result.fastAuth) {
+          console.log('Fast Auth utilisé - Temps:', result.timing, 'ms');
+        } else {
+          console.log('Système classique utilisé');
+        }
+      }
+      
+    } catch (error: any) {
+      console.error('Erreur Magic Link:', error);
+      if (error.message.includes("User not found") || 
+          error.message.includes("Invalid email") ||
+          error.message.includes("Unable to validate email address")) {
         toast({
-          title: "Email envoyé !",
-          description: "Vérifiez votre boîte mail pour vous connecter. Le lien est valable 10 minutes.",
-          className: "bg-green-600 text-white border-green-600",
+          title: "Compte introuvable",
+          description: "Aucun compte n'existe avec cet email. Veuillez créer un compte d'abord.",
+          variant: "destructive",
+        });
+        setActiveTab('register');
+      } else if (error.message.includes("For security purposes")) {
+        toast({
+          title: "Trop de tentatives",
+          description: "Veuillez attendre quelques minutes avant de réessayer.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erreur",
+          description: error.message,
+          variant: "destructive",
         });
       }
-    } catch (error) {
-      console.error('Erreur inattendue Magic Link:', error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur inattendue s'est produite",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -185,10 +167,13 @@ export function LoginForm() {
             <CardContent className="space-y-4">
               <div className="bg-terex-gray/50 p-4 rounded-lg border border-terex-gray-light">
                 <p className="text-sm text-gray-300 text-center">
-                  ⏰ Le lien est valable pendant <strong className="text-terex-accent">10 minutes</strong>
+                  ⏰ Le lien est valable pendant <strong className="text-terex-accent">5 minutes</strong>
                 </p>
                 <p className="text-xs text-gray-400 text-center mt-2">
                   📧 Vérifiez aussi vos spams si vous ne recevez pas l'email
+                </p>
+                <p className="text-xs text-green-400 text-center mt-2">
+                  🚀 Optimisé pour une réception ultra-rapide
                 </p>
               </div>
               
@@ -296,6 +281,9 @@ export function LoginForm() {
                     <p className="text-xs text-gray-300">
                       Entrez votre email et recevez un lien de connexion sécurisé. 
                       Plus besoin de retenir votre mot de passe !
+                    </p>
+                    <p className="text-xs text-green-400 mt-1">
+                      🚀 Optimisé pour l'Afrique - Réception ultra-rapide
                     </p>
                     <p className="text-xs text-yellow-400 mt-1">
                       💡 Astuce : Ajoutez noreply@terangaexchange.com à vos contacts pour éviter les spams
