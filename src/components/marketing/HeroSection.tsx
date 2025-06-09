@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Shield, Zap, Globe, TrendingUp, DollarSign } from 'lucide-react';
+import { Shield, Zap, Globe, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function HeroSection() {
@@ -86,7 +86,6 @@ export function HeroSection() {
               size="lg" 
               className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105"
             >
-              <DollarSign className="w-5 h-5 mr-2" />
               Commencer maintenant
             </Button>
             <Button 
