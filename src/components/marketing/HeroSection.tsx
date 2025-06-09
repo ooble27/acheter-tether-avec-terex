@@ -62,7 +62,7 @@ export function HeroSection() {
             <Button 
               onClick={handleGetStarted}
               size="lg" 
-              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-base rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 max-w-xs sm:max-w-none"
+              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-6 py-3 text-sm sm:text-base rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-full sm:w-auto"
             >
               Commencer maintenant
             </Button>
@@ -70,7 +70,7 @@ export function HeroSection() {
               onClick={handleHowItWorks}
               variant="outline" 
               size="lg"
-              className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-base rounded-xl backdrop-blur-sm max-w-xs sm:max-w-none"
+              className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-6 py-3 text-sm sm:text-base rounded-xl backdrop-blur-sm w-full sm:w-auto"
             >
               Voir comment ça marche
             </Button>
@@ -81,11 +81,15 @@ export function HeroSection() {
             <Card className="bg-terex-darker/60 border-terex-accent/30 backdrop-blur-sm hover:bg-terex-darker/80 transition-all duration-300 hover:scale-105 group">
               <CardContent className="p-4 sm:p-6 text-center">
                 <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <img 
-                    src="https://cryptologos.cc/logos/tether-usdt-logo.png" 
-                    alt="USDT Logo" 
-                    className="w-6 h-6"
-                  />
+                  {/* Logo USDT intégré en SVG */}
+                  <svg className="w-6 h-6" viewBox="0 0 339 295" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M169.5 0L339 295H0L169.5 0Z" fill="#50AF95"/>
+                    <path d="M169.5 65L169.5 230" stroke="#FFFFFF" strokeWidth="8"/>
+                    <path d="M169.5 65L240 185" stroke="#FFFFFF" strokeWidth="8"/>
+                    <path d="M169.5 65L99 185" stroke="#FFFFFF" strokeWidth="8"/>
+                    <circle cx="169.5" cy="147.5" r="50" fill="#FFFFFF"/>
+                    <text x="169.5" y="157" textAnchor="middle" fill="#50AF95" fontSize="20" fontWeight="bold">₮</text>
+                  </svg>
                 </div>
                 <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Échange USDT Tether</h3>
                 <p className="text-gray-400 text-xs sm:text-sm">Achetez et vendez vos USDT au meilleur taux</p>

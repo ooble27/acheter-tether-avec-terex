@@ -1,13 +1,12 @@
 
 import { Card, CardContent } from '@/components/ui/card';
-import { Star, Quote } from 'lucide-react';
+import { Star, Quote, User } from 'lucide-react';
 
 const testimonials = [
   {
     id: 1,
     name: "Amadou Diallo",
     location: "Dakar, Sénégal",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
     rating: 5,
     text: "Terex a révolutionné mes transferts d'argent. En 5 minutes, j'ai pu envoyer de l'argent à ma famille au Canada. Service exceptionnel !",
     transaction: "Virement international CAD → CFA"
@@ -16,7 +15,6 @@ const testimonials = [
     id: 2,
     name: "Fatou Ba",
     location: "Montréal, Canada",
-    avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&h=100&fit=crop&crop=face",
     rating: 5,
     text: "Interface très intuitive pour acheter des USDT. Les taux sont compétitifs et les transactions sont sécurisées. Je recommande vivement !",
     transaction: "Achat USDT - 500 CAD"
@@ -25,7 +23,6 @@ const testimonials = [
     id: 3,
     name: "Moussa Traoré",
     location: "Bamako, Mali",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
     rating: 5,
     text: "Enfin une plateforme qui comprend nos besoins en Afrique. Rapide, fiable et sans commission cachée. Parfait pour mes échanges USDT !",
     transaction: "Vente USDT - 2000 XOF"
@@ -34,7 +31,6 @@ const testimonials = [
     id: 4,
     name: "Aissatou Sow",
     location: "Thiès, Sénégal",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b602?w=100&h=100&fit=crop&crop=face",
     rating: 5,
     text: "Support client réactif et processus KYC simple. J'utilise Terex pour tous mes virements vers l'Europe. Service de qualité !",
     transaction: "Virement international CFA → EUR"
@@ -66,11 +62,9 @@ export function TestimonialsSection() {
                 </div>
                 
                 <div className="flex items-center space-x-4">
-                  <img 
-                    src={testimonial.avatar} 
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
+                  <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center">
+                    <User className="w-6 h-6 text-terex-accent" />
+                  </div>
                   <div className="flex-1">
                     <h4 className="text-white font-semibold">{testimonial.name}</h4>
                     <p className="text-terex-accent text-sm">{testimonial.location}</p>
