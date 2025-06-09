@@ -21,13 +21,13 @@ export function HeroSection() {
       {/* Floating USDT logos */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-1/4 w-12 h-12 opacity-10 animate-bounce" style={{animationDelay: '0s', animationDuration: '3s'}}>
-          <img src="/lovable-uploads/496a4b67-cae5-4ddb-8cfd-4f4703af7b18.png" alt="USDT" className="w-full h-full" />
+          <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-full h-full" />
         </div>
         <div className="absolute top-1/3 right-1/4 w-8 h-8 opacity-10 animate-bounce" style={{animationDelay: '1s', animationDuration: '4s'}}>
-          <img src="/lovable-uploads/496a4b67-cae5-4ddb-8cfd-4f4703af7b18.png" alt="USDT" className="w-full h-full" />
+          <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-full h-full" />
         </div>
         <div className="absolute bottom-1/3 left-1/6 w-10 h-10 opacity-10 animate-bounce" style={{animationDelay: '2s', animationDuration: '5s'}}>
-          <img src="/lovable-uploads/496a4b67-cae5-4ddb-8cfd-4f4703af7b18.png" alt="USDT" className="w-full h-full" />
+          <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-full h-full" />
         </div>
         
         {/* Animated particles */}
@@ -61,7 +61,7 @@ export function HeroSection() {
               Teranga Exchange
             </p>
             <div className="flex items-center space-x-2">
-              <img src="/lovable-uploads/496a4b67-cae5-4ddb-8cfd-4f4703af7b18.png" alt="USDT" className="w-6 h-6" />
+              <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-6 h-6" />
               <span className="text-terex-accent font-bold">USDT</span>
             </div>
           </div>
@@ -103,7 +103,7 @@ export function HeroSection() {
             <Card className="bg-terex-darker/60 border-terex-accent/30 backdrop-blur-sm hover:bg-terex-darker/80 transition-all duration-300 hover:scale-105 group">
               <CardContent className="p-4 sm:p-6 text-center">
                 <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <img src="/lovable-uploads/496a4b67-cae5-4ddb-8cfd-4f4703af7b18.png" alt="USDT" className="w-6 h-6" />
+                  <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-6 h-6" />
                 </div>
                 <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Échange USDT</h3>
                 <p className="text-gray-400 text-xs sm:text-sm">Achetez et vendez vos USDT au meilleur taux</p>
