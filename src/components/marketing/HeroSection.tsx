@@ -46,23 +46,23 @@ export function HeroSection() {
           </div>
           
           <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-            L'échange USDT Tether et les virements
+            L'échange USDT Tether et les transferts
             <br />
             <span className="text-terex-accent relative">
-              sans frontières
+              vers l'Afrique
             </span>
           </h2>
           
           <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
             Achetez et vendez des USDT facilement, 
-            effectuez des virements internationaux instantanés. Rapide, sécurisé et sans commission.
+            effectuez des transferts d'argent vers l'Afrique instantanément. Rapide, sécurisé et sans commission.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-16">
             <Button 
               onClick={handleGetStarted}
               size="lg" 
-              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-6 py-3 text-sm sm:text-base rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-full sm:w-auto"
+              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-6 py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto"
             >
               Commencer maintenant
             </Button>
@@ -70,7 +70,7 @@ export function HeroSection() {
               onClick={handleHowItWorks}
               variant="outline" 
               size="lg"
-              className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-6 py-3 text-sm sm:text-base rounded-xl backdrop-blur-sm w-full sm:w-auto"
+              className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-6 py-4 text-base sm:text-lg rounded-xl backdrop-blur-sm w-64 sm:w-auto mx-auto h-12 sm:h-auto"
             >
               Voir comment ça marche
             </Button>
@@ -97,8 +97,8 @@ export function HeroSection() {
                 <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                   <Globe className="w-6 h-6 text-terex-accent" />
                 </div>
-                <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Virements internationaux</h3>
-                <p className="text-gray-400 text-xs sm:text-sm">Transférez de l'argent partout dans le monde</p>
+                <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Transferts vers l'Afrique</h3>
+                <p className="text-gray-400 text-xs sm:text-sm">Transférez de l'argent partout en Afrique</p>
               </CardContent>
             </Card>
             

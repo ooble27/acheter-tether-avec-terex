@@ -5,21 +5,21 @@ import { TrendingUp, Users, Globe, Shield } from 'lucide-react';
 const stats = [
   {
     icon: TrendingUp,
-    value: "50M+ CAD",
+    value: "10M+ CFA",
     label: "Volume traité mensuellement",
     description: "Transactions sécurisées chaque mois"
   },
   {
     icon: Users,
-    value: "5000+",
+    value: "500+",
     label: "Utilisateurs actifs",
     description: "Nous font confiance pour leurs échanges"
   },
   {
     icon: Globe,
-    value: "25+",
+    value: "5",
     label: "Pays couverts",
-    description: "Virements internationaux disponibles"
+    description: "Transferts vers l'Afrique disponibles"
   },
   {
     icon: Shield,
@@ -35,10 +35,10 @@ export function StatsSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-            Nos chiffres parlent <span className="text-terex-accent">d'eux-mêmes</span>
+            Une plateforme de confiance <span className="text-terex-accent">en croissance</span>
           </h2>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Une plateforme de confiance utilisée par des milliers d'utilisateurs à travers le monde
+            Terex démarre avec des bases solides pour servir la communauté africaine
           </p>
         </div>
         

@@ -36,7 +36,7 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
               </span> ?
             </h2>
             <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
-              Trois étapes simples pour commencer vos échanges et virements
+              Trois étapes simples pour commencer vos échanges et transferts vers l'Afrique
             </p>
           </div>
           
@@ -64,7 +64,7 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
                 </div>
                 <h3 className="text-base sm:text-lg font-bold text-white mb-3">Choisissez votre service</h3>
                 <p className="text-gray-300 mb-4 text-sm">
-                  Achat/vente USDT ou virement international. Interface intuitive pour tous vos besoins.
+                  Achat/vente USDT ou transfert vers l'Afrique. Interface intuitive pour tous vos besoins.
                 </p>
                 <div className="flex items-center justify-center space-x-2 text-terex-accent">
                   <CheckCircle className="w-4 h-4" />
@@ -95,7 +95,7 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
               onClick={handleBlockchainInfo}
               variant="outline" 
               size="lg"
-              className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-base rounded-xl backdrop-blur-sm max-w-xs sm:max-w-none"
+              className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-6 py-4 text-base sm:text-lg rounded-xl backdrop-blur-sm w-64 sm:w-auto mx-auto h-12 sm:h-auto"
             >
               En savoir plus sur la blockchain
             </Button>
@@ -122,7 +122,7 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
               <CardContent className="p-4 sm:p-6">
                 <CreditCard className="w-8 h-8 sm:w-10 sm:h-10 text-terex-accent mx-auto mb-3" />
                 <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Virement bancaire</h3>
-                <p className="text-gray-400 text-xs">Virements SEPA et internationaux</p>
+                <p className="text-gray-400 text-xs">Virements SEPA et vers l'Afrique</p>
               </CardContent>
             </Card>
             
@@ -154,12 +154,12 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
             Prêt à commencer avec <span className="text-terex-accent">Terex</span> ?
           </h2>
           <p className="text-lg sm:text-xl text-gray-300 mb-8">
-            Rejoignez des milliers d'utilisateurs qui nous font confiance pour leurs échanges USDT et virements internationaux.
+            Rejoignez des milliers d'utilisateurs qui nous font confiance pour leurs échanges USDT et transferts vers l'Afrique.
           </p>
           <Button 
             onClick={handleGetStarted}
             size="lg" 
-            className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-3 sm:px-8 py-2 sm:py-4 text-xs sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 max-w-xs sm:max-w-none mx-auto"
+            className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-8 py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto"
           >
             Créer mon compte gratuitement
             <ArrowRight className="ml-2 w-4 h-4" />
