@@ -1,4 +1,4 @@
-
+import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +19,10 @@ interface PaymentSuccessProps {
 }
 
 export function PaymentSuccess({ orderData, orderId, txHash, onBackToHome, onBuyMore }: PaymentSuccessProps) {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   // Explorer URL selon le réseau
   const getExplorerUrl = () => {
     if (!txHash) return '';

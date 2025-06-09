@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,6 +26,10 @@ export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPag
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   // Card payment form
   const [cardData, setCardData] = useState({
     cardNumber: '',
@@ -44,13 +47,11 @@ export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPag
   const handleCardPayment = async () => {
     setLoading(true);
     try {
-      // TODO: Intégrer Stripe ici
       toast({
         title: "Paiement en cours",
         description: "Redirection vers Stripe...",
       });
       
-      // Simulation pour l'instant
       setTimeout(() => {
         setPaymentStep('processing');
         setTimeout(() => {
@@ -71,13 +72,11 @@ export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPag
   const handleMobilePayment = async () => {
     setLoading(true);
     try {
-      // TODO: Intégrer API Wave/Orange Money
       toast({
         title: "Paiement en cours",
         description: `Redirection vers ${mobileData.provider === 'wave' ? 'Wave' : 'Orange Money'}...`,
       });
       
-      // Simulation pour l'instant
       setTimeout(() => {
         setPaymentStep('processing');
         setTimeout(() => {
