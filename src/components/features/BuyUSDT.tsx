@@ -2,13 +2,9 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ArrowRightLeft, Shield, Clock, CreditCard, CheckCircle, Copy, RefreshCw, AlertCircle } from 'lucide-react';
+import { CreditCard } from 'lucide-react';
 import { OrderConfirmation } from '@/components/features/OrderConfirmation';
 import { PaymentInstructions } from '@/components/features/PaymentInstructions';
 import { PaymentPending } from '@/components/features/PaymentPending';
@@ -18,15 +14,11 @@ import { useToast } from '@/hooks/use-toast';
 import { KYCProtection } from './KYCProtection';
 import { KYCPage } from './KYCPage';
 import { useTerexRates } from '@/hooks/useTerexRates';
-
-// Logos des réseaux blockchain
-const NETWORK_LOGOS = {
-  TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png', // Tron
-  BEP20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png', // BSC/BNB
-  ERC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', // Ethereum
-  Arbitrum: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11841.png', // Arbitrum
-  Polygon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png' // Polygon
-};
+import { BuyAmountInput } from './buy-usdt/BuyAmountInput';
+import { NetworkSelector } from './buy-usdt/NetworkSelector';
+import { WalletAddressInput } from './buy-usdt/WalletAddressInput';
+import { PaymentMethodForm } from './buy-usdt/PaymentMethodForm';
+import { TradingSidebar } from './buy-usdt/TradingSidebar';
 
 export function BuyUSDT() {
   const [showKYCPage, setShowKYCPage] = useState(false);
@@ -101,21 +93,6 @@ export function BuyUSDT() {
     { id: 'card' as const, name: 'Carte bancaire', icon: '💳', fee: '3%', time: '2-5 min' },
     { id: 'mobile' as const, name: 'Mobile Money', icon: '📱', fee: '2%', time: '2-5 min' }
   ];
-
-  const getQuickAmounts = () => {
-    if (currency === 'CFA') {
-      return ['10000', '25000', '50000', '100000', '250000'];
-    }
-    return ['25', '50', '100', '250', '500'];
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast({
-      title: "Copié !",
-      description: "L'adresse a été copiée dans le presse-papiers",
-    });
-  };
 
   const handleBuyClick = () => {
     if (!fiatAmount || !walletAddress) {
@@ -314,239 +291,39 @@ export function BuyUSDT() {
                     {paymentMethods.map((method) => (
                       <TabsContent key={method.id} value={method.id} className="space-y-6">
                         {/* Amount Input Section */}
-                        <div className="space-y-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                              <Label className="text-white text-sm font-medium">Je paie</Label>
-                              <div className="relative">
-                                <Input
-                                  type="number"
-                                  placeholder="0.00"
-                                  value={fiatAmount}
-                                  onChange={(e) => setFiatAmount(e.target.value)}
-                                  className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
-                                />
-                                <Select value={currency} onValueChange={setCurrency}>
-                                  <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="CFA">CFA</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                            </div>
-                            
-                            <div className="space-y-2">
-                              <Label className="text-white text-sm font-medium">Je reçois</Label>
-                              <div className="relative">
-                                <Input
-                                  type="text"
-                                  value={usdtAmount}
-                                  readOnly
-                                  className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24"
-                                />
-                                <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
-                                  <img 
-                                    src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                                    alt="USDT" 
-                                    className="w-5 h-5"
-                                  />
-                                  <span className="text-terex-accent font-medium text-sm">USDT</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                        <BuyAmountInput
+                          fiatAmount={fiatAmount}
+                          setFiatAmount={setFiatAmount}
+                          currency={currency}
+                          setCurrency={setCurrency}
+                          usdtAmount={usdtAmount}
+                          exchangeRate={exchangeRates[currency as keyof typeof exchangeRates]}
+                          paymentMethod={paymentMethod}
+                          processingTime={method.time}
+                          fee={method.fee}
+                        />
 
-                          <div className="flex items-center justify-center">
-                            <ArrowRightLeft className="w-5 h-5 text-terex-accent" />
-                          </div>
-
-                          <div className="bg-terex-gray rounded-lg p-3">
-                            <div className="flex justify-between text-sm">
-                              <span className="text-gray-400">Taux TEREX (vente)</span>
-                              <span className="text-white">1 USDT = {exchangeRates[currency as keyof typeof exchangeRates]} {currency}</span>
-                            </div>
-                            <div className="flex justify-between text-sm mt-1">
-                              <span className="text-gray-400">Frais</span>
-                              <span className="text-terex-accent">{method.fee}</span>
-                            </div>
-                            <div className="flex justify-between text-sm mt-1">
-                              <span className="text-gray-400">Temps de traitement</span>
-                              <span className="text-terex-accent">{method.time}</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Network Selection with Logos */}
-                        <div className="space-y-2">
-                          <Label className="text-white text-sm font-medium">Réseau de réception</Label>
-                          <Select value={network} onValueChange={setNetwork}>
-                            <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-terex-darker border-terex-gray max-w-xs">
-                              <SelectItem value="TRC20">
-                                <div className="flex items-center justify-between w-full">
-                                  <div className="flex items-center space-x-3">
-                                    <img src={NETWORK_LOGOS.TRC20} alt="Tron" className="w-5 h-5 rounded-full" />
-                                    <span>TRC20 (Tron)</span>
-                                  </div>
-                                  <Badge variant="secondary" className="text-xs ml-2">
-                                    Recommandé
-                                  </Badge>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="BEP20">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.BEP20} alt="BSC" className="w-5 h-5 rounded-full" />
-                                  <span>BEP20 (BSC)</span>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="ERC20">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.ERC20} alt="Ethereum" className="w-5 h-5 rounded-full" />
-                                  <span>ERC20 (Ethereum)</span>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="Arbitrum">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.Arbitrum} alt="Arbitrum" className="w-5 h-5 rounded-full" />
-                                  <span>Arbitrum</span>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="Polygon">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.Polygon} alt="Polygon" className="w-5 h-5 rounded-full" />
-                                  <span>Polygon</span>
-                                </div>
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
+                        {/* Network Selection */}
+                        <NetworkSelector
+                          network={network}
+                          setNetwork={setNetwork}
+                        />
 
                         {/* Wallet Address Input */}
-                        <div className="space-y-2">
-                          <Label className="text-white text-sm font-medium">Votre adresse de réception {network}</Label>
-                          <Input
-                            type="text"
-                            placeholder={`Votre adresse ${network} pour recevoir les USDT`}
-                            value={walletAddress}
-                            onChange={(e) => setWalletAddress(e.target.value)}
-                            className="bg-terex-gray border-terex-gray-light text-white h-12"
-                          />
-                          <p className="text-gray-400 text-xs">
-                            Entrez l'adresse de votre portefeuille {network} où vous souhaitez recevoir vos USDT
-                          </p>
-                        </div>
+                        <WalletAddressInput
+                          walletAddress={walletAddress}
+                          setWalletAddress={setWalletAddress}
+                          network={network}
+                        />
 
                         {/* Payment Method Details */}
-                        {method.id === 'card' && (
-                          <div className="space-y-4">
-                            <h3 className="text-white font-medium">Informations de carte</h3>
-                            <div className="grid gap-4">
-                              <div className="space-y-2">
-                                <Label className="text-white text-sm">Nom sur la carte</Label>
-                                <Input
-                                  value={cardData.name}
-                                  onChange={(e) => setCardData({...cardData, name: e.target.value})}
-                                  className="bg-terex-gray border-terex-gray-light text-white"
-                                  placeholder="John Doe"
-                                />
-                              </div>
-                              <div className="space-y-2">
-                                <Label className="text-white text-sm">Numéro de carte</Label>
-                                <Input
-                                  value={cardData.number}
-                                  onChange={(e) => setCardData({...cardData, number: e.target.value})}
-                                  className="bg-terex-gray border-terex-gray-light text-white"
-                                  placeholder="1234 5678 9012 3456"
-                                />
-                              </div>
-                              <div className="grid grid-cols-3 gap-4">
-                                <div className="space-y-2">
-                                  <Label className="text-white text-sm">Mois</Label>
-                                  <Select value={cardData.expiryMonth} onValueChange={(value) => setCardData({...cardData, expiryMonth: value})}>
-                                    <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white">
-                                      <SelectValue placeholder="MM" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {Array.from({length: 12}, (_, i) => (
-                                        <SelectItem key={i + 1} value={String(i + 1).padStart(2, '0')}>
-                                          {String(i + 1).padStart(2, '0')}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                                <div className="space-y-2">
-                                  <Label className="text-white text-sm">Année</Label>
-                                  <Select value={cardData.expiryYear} onValueChange={(value) => setCardData({...cardData, expiryYear: value})}>
-                                    <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white">
-                                      <SelectValue placeholder="AA" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {Array.from({length: 10}, (_, i) => (
-                                        <SelectItem key={i} value={String(new Date().getFullYear() + i).slice(-2)}>
-                                          {String(new Date().getFullYear() + i).slice(-2)}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                                <div className="space-y-2">
-                                  <Label className="text-white text-sm">CVV</Label>
-                                  <Input
-                                    value={cardData.cvv}
-                                    onChange={(e) => setCardData({...cardData, cvv: e.target.value})}
-                                    className="bg-terex-gray border-terex-gray-light text-white"
-                                    placeholder="123"
-                                    maxLength={3}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {method.id === 'mobile' && (
-                          <div className="space-y-4">
-                            <h3 className="text-white font-medium">Comment souhaitez-vous payer ?</h3>
-                            <div className="grid gap-4">
-                              <div className="space-y-2">
-                                <Label className="text-white text-sm">Service de paiement</Label>
-                                <Select value={mobileData.provider} onValueChange={(value) => setMobileData({...mobileData, provider: value as 'wave' | 'orange'})}>
-                                  <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white">
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="wave">
-                                      <div className="flex items-center space-x-2">
-                                        <img src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" alt="Wave" className="w-4 h-4" />
-                                        <span>Wave</span>
-                                      </div>
-                                    </SelectItem>
-                                    <SelectItem value="orange">
-                                      <div className="flex items-center space-x-2">
-                                        <img src="/lovable-uploads/86b4b50f-9595-46c2-8cce-30343f23454a.png" alt="Orange Money" className="w-4 h-4" />
-                                        <span>Orange Money</span>
-                                      </div>
-                                    </SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                              <div className="space-y-2">
-                                <Label className="text-white text-sm">Numéro de téléphone</Label>
-                                <Input
-                                  value={mobileData.phoneNumber}
-                                  onChange={(e) => setMobileData({...mobileData, phoneNumber: e.target.value})}
-                                  className="bg-terex-gray border-terex-gray-light text-white"
-                                  placeholder="+221 XX XXX XX XX"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        )}
+                        <PaymentMethodForm
+                          paymentMethod={paymentMethod}
+                          cardData={cardData}
+                          setCardData={setCardData}
+                          mobileData={mobileData}
+                          setMobileData={setMobileData}
+                        />
 
                         {/* Buy Button */}
                         <Button 
@@ -568,168 +345,14 @@ export function BuyUSDT() {
             </div>
 
             {/* Sidebar */}
-            <div className="lg:col-span-1 space-y-4 md:space-y-6 w-full">
-              {/* Taux du jour */}
-              <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
-                <CardHeader className="p-3 sm:p-4">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-white text-sm sm:text-base md:text-lg flex items-center">
-                      <img 
-                        src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                        alt="USDT" 
-                        className="w-4 h-4 md:w-5 md:h-5 mr-2 flex-shrink-0"
-                      />
-                      <span className="truncate">Taux du jour</span>
-                    </CardTitle>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={refreshRates}
-                      disabled={ratesLoading}
-                      className="h-8 w-8 p-0 text-terex-accent hover:bg-terex-accent/10"
-                    >
-                      <RefreshCw className={`w-4 h-4 ${ratesLoading ? 'animate-spin' : ''}`} />
-                    </Button>
-                  </div>
-                  {lastUpdated && (
-                    <p className="text-xs text-gray-400">
-                      Mis à jour: {lastUpdated.toLocaleTimeString('fr-FR')}
-                    </p>
-                  )}
-                </CardHeader>
-                <CardContent className="space-y-3 p-3 sm:p-4 pt-0 w-full overflow-hidden">
-                  {ratesError && (
-                    <Alert className="border-yellow-500/50 bg-yellow-500/10">
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertDescription className="text-yellow-200 text-xs">
-                        {ratesError}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-400 text-xs sm:text-sm">Marché USDT/CFA</span>
-                      <span className="text-gray-300 font-medium text-xs sm:text-sm">{marketRates.CFA.toLocaleString()} CFA</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-400 text-xs sm:text-sm">Marché USDT/CAD</span>
-                      <span className="text-gray-300 font-medium text-xs sm:text-sm">${marketRates.CAD} CAD</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Nos taux TEREX */}
-              <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
-                <CardHeader className="p-3 sm:p-4">
-                  <CardTitle className="text-white text-sm sm:text-base md:text-lg flex items-center">
-                    <img 
-                      src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                      alt="USDT" 
-                      className="w-4 h-4 md:w-5 md:h-5 mr-2 flex-shrink-0"
-                    />
-                    <span className="truncate">Nos taux TEREX</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 p-3 sm:p-4 pt-0 w-full overflow-hidden">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-400 text-xs sm:text-sm">USDT/CFA</span>
-                    <span className="text-white font-bold text-xs sm:text-sm">{exchangeRates.CFA.toLocaleString()} CFA</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-400 text-xs sm:text-sm">USDT/CAD</span>
-                    <span className="text-terex-accent font-bold text-xs sm:text-sm">${exchangeRates.CAD} CAD</span>
-                  </div>
-                  <div className="text-xs text-gray-500 mt-2">
-                    * Taux marché + 2% de commission
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Quick Actions */}
-              <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
-                <CardHeader className="p-3 sm:p-4">
-                  <CardTitle className="text-white text-sm sm:text-base md:text-lg truncate">Montants rapides ({currency})</CardTitle>
-                </CardHeader>
-                <CardContent className="p-3 sm:p-4 pt-0 w-full">
-                  <div className="grid grid-cols-2 gap-2">
-                    {getQuickAmounts().map((value) => (
-                      <Button
-                        key={value}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setFiatAmount(value)}
-                        className="border-terex-gray text-gray-300 hover:bg-terex-gray text-xs w-full min-w-0 h-8 px-1"
-                      >
-                        <span className="truncate">
-                          {currency === 'CFA' 
-                            ? `${parseInt(value).toLocaleString()} CFA`
-                            : `$${value} CAD`
-                          }
-                        </span>
-                      </Button>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Security Features */}
-              <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
-                <CardHeader className="p-3 sm:p-4">
-                  <CardTitle className="text-white text-sm sm:text-base md:text-lg flex items-center">
-                    <Shield className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent flex-shrink-0" />
-                    <span className="truncate">Sécurité</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 p-3 sm:p-4 pt-0 w-full overflow-hidden">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-white text-xs sm:text-sm font-medium">Cryptage SSL 256-bit</p>
-                      <p className="text-gray-400 text-xs">Vos données sont protégées</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-white text-xs sm:text-sm font-medium">Fonds sécurisés</p>
-                      <p className="text-gray-400 text-xs">Protection des transactions</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-white text-xs sm:text-sm font-medium">Support 24/7</p>
-                      <p className="text-gray-400 text-xs">Aide disponible en permanence</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Processing Time */}
-              <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
-                <CardHeader className="p-3 sm:p-4">
-                  <CardTitle className="text-white text-sm sm:text-base md:text-lg flex items-center">
-                    <Clock className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent flex-shrink-0" />
-                    <span className="truncate">Délais de traitement</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 p-3 sm:p-4 pt-0 w-full overflow-hidden">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-400 text-xs sm:text-sm">Mobile Money</span>
-                    <Badge variant="outline" className="text-green-500 border-green-500 text-xs whitespace-nowrap">
-                      5-10 min
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-400 text-xs sm:text-sm">Carte bancaire</span>
-                    <Badge variant="outline" className="text-green-500 border-green-500 text-xs whitespace-nowrap">
-                      Instantané
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            <TradingSidebar
+              exchangeRates={exchangeRates}
+              marketRates={marketRates}
+              ratesLoading={ratesLoading}
+              ratesError={ratesError}
+              lastUpdated={lastUpdated}
+              refreshRates={refreshRates}
+            />
           </div>
         </div>
       </div>
