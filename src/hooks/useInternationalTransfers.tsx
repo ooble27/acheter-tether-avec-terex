@@ -64,7 +64,7 @@ export const useInternationalTransfers = () => {
         from_currency: transferData.from_currency || 'CAD',
         to_currency: transferData.to_currency || 'CFA',
         exchange_rate: transferData.exchange_rate,
-        fees: transferData.fees,
+        fees: 0, // TRX - Transferts gratuits
         total_amount: transferData.total_amount,
         recipient_name: transferData.recipient_name,
         recipient_account: transferData.recipient_account || null,
