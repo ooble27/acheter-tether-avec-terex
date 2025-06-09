@@ -9,7 +9,7 @@ export const useAdminNotifications = () => {
   const { toast } = useToast();
 
   const sendAdminNotification = async (
-    notificationType: 'new_order' | 'kyc_submission' | 'status_update',
+    notificationType: 'new_order' | 'kyc_submission' | 'status_update' | 'high_volume_request',
     data: any
   ) => {
     try {
@@ -69,6 +69,7 @@ export const useAdminNotifications = () => {
   };
 
   return {
+    sendAdminNotification,
     notifyNewOrder,
     notifyKYCSubmission,
     notifyStatusUpdate
