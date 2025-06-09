@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -26,6 +26,10 @@ interface OrderConfirmationProps {
 }
 
 export function OrderConfirmation({ orderData, onConfirm, onBack, loading }: OrderConfirmationProps) {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const getPaymentMethodName = () => {
     switch (orderData.paymentMethod) {
       case 'card': return 'Carte bancaire';

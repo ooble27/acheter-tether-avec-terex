@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -31,6 +31,10 @@ interface TransferConfirmationProps {
 }
 
 export function TransferConfirmation({ transferData, onConfirm, onBack, loading }: TransferConfirmationProps) {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const getPaymentMethodName = () => {
     switch (transferData.paymentMethod) {
       case 'card': return 'Carte bancaire';
