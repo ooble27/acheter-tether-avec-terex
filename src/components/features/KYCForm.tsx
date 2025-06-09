@@ -132,7 +132,17 @@ export function KYCForm({ onComplete }: KYCFormProps) {
           variant: "destructive",
         });
       } else {
-        onComplete?.();
+        // Toast de succès plus compact
+        toast({
+          title: "✅ KYC soumis",
+          description: "Votre dossier est en cours de traitement",
+          className: "bg-green-600 text-white border-green-600",
+        });
+        
+        // Redirection automatique après soumission réussie
+        setTimeout(() => {
+          onComplete?.();
+        }, 1500); // Délai pour laisser voir le toast
       }
     } catch (error) {
       console.error('Erreur soumission:', error);

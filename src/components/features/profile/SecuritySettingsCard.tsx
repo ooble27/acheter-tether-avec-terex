@@ -29,8 +29,8 @@ export function SecuritySettingsCard({ onStartKYC, kycData, isKYCVerified }: Sec
       case 'under_review':
         return {
           icon: Clock,
-          title: 'Vérification en cours',
-          description: 'Vos documents sont en cours d\'examen. Nous vous contacterons sous 1-3 jours ouvrables.',
+          title: 'Vérification en cours de traitement',
+          description: 'Votre demande de vérification a été soumise avec succès. Nous examinerons vos documents sous 1-3 jours ouvrables.',
           bgColor: 'bg-yellow-500/10',
           borderColor: 'border-yellow-500/20',
           iconColor: 'text-yellow-400',
@@ -50,8 +50,8 @@ export function SecuritySettingsCard({ onStartKYC, kycData, isKYCVerified }: Sec
       default:
         return {
           icon: AlertTriangle,
-          title: 'Vérification KYC',
-          description: 'Complétez votre vérification d\'identité pour débloquer toutes les fonctionnalités',
+          title: 'Vérification KYC requise',
+          description: 'Complétez votre vérification d\'identité pour débloquer toutes les fonctionnalités de Terex',
           bgColor: 'bg-orange-500/10',
           borderColor: 'border-orange-500/20',
           iconColor: 'text-orange-400',
