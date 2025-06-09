@@ -7,7 +7,7 @@ const testimonials = [
     id: 1,
     name: "Amadou Diallo",
     location: "Dakar, Sénégal",
-    avatar: "/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
     rating: 5,
     text: "Terex a révolutionné mes transferts d'argent. En 5 minutes, j'ai pu envoyer de l'argent à ma famille au Canada. Service exceptionnel !",
     transaction: "Virement international CAD → CFA"
@@ -16,7 +16,7 @@ const testimonials = [
     id: 2,
     name: "Marie Dubois",
     location: "Montréal, Canada",
-    avatar: "/lovable-uploads/26b3437e-c333-4387-aeb9-731aa705f282.png",
+    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b647?w=100&h=100&fit=crop&crop=face",
     rating: 5,
     text: "Interface très intuitive pour acheter des USDT. Les taux sont compétitifs et les transactions sont sécurisées. Je recommande vivement !",
     transaction: "Achat USDT - 500 CAD"
@@ -25,7 +25,7 @@ const testimonials = [
     id: 3,
     name: "Omar Hassan",
     location: "Casablanca, Maroc",
-    avatar: "/lovable-uploads/52b82a09-1493-4fdf-8589-0e3497357f07.png",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
     rating: 5,
     text: "Enfin une plateforme qui comprend nos besoins en Afrique. Rapide, fiable et sans commission cachée. Parfait pour mes échanges crypto !",
     transaction: "Vente USDT - 2000 MAD"
@@ -34,7 +34,7 @@ const testimonials = [
     id: 4,
     name: "Fatou Sow",
     location: "Abidjan, Côte d'Ivoire",
-    avatar: "/lovable-uploads/86b4b50f-9595-46c2-8cce-30343f23454a.png",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
     rating: 5,
     text: "Support client réactif et processus KYC simple. J'utilise Terex pour tous mes virements vers l'Europe. Service de qualité !",
     transaction: "Virement international CFA → EUR"
@@ -43,7 +43,7 @@ const testimonials = [
 
 export function TestimonialsSection() {
   return (
-    <section className="py-20 bg-terex-dark">
+    <section className="py-20 bg-gradient-to-br from-terex-darker to-terex-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">

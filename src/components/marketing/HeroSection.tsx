@@ -11,12 +11,19 @@ export function HeroSection() {
     navigate('/auth');
   };
 
+  const handleHowItWorks = () => {
+    // Scroll to "Comment ça marche" section
+    const element = document.getElementById('how-it-works');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark min-h-screen">
-      {/* Advanced Background Effects */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(94,234,212,0.15),transparent_60%)]"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(94,234,212,0.1),transparent_50%)]"></div>
-      <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(94,234,212,0.03)_25%,transparent_25%,transparent_75%,rgba(94,234,212,0.03)_75%)] bg-[length:20px_20px]"></div>
+    <div className="relative overflow-hidden bg-gradient-to-br from-terex-darker to-terex-dark min-h-screen">
+      {/* Simplified Background Effects */}
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(94,234,212,0.02)_50%,transparent_50%)] bg-[length:20px_20px]"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(94,234,212,0.02)_50%,transparent_50%)] bg-[length:20px_20px]"></div>
       
       {/* Floating USDT logos */}
       <div className="absolute inset-0 overflow-hidden">
@@ -60,10 +67,6 @@ export function HeroSection() {
             <p className="text-lg text-terex-accent/80 font-medium uppercase tracking-wider">
               Teranga Exchange
             </p>
-            <div className="flex items-center space-x-2">
-              <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-6 h-6" />
-              <span className="text-terex-accent font-bold">USDT</span>
-            </div>
           </div>
           
           <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
@@ -84,14 +87,15 @@ export function HeroSection() {
             <Button 
               onClick={handleGetStarted}
               size="lg" 
-              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105"
+              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105"
             >
               Commencer maintenant
             </Button>
             <Button 
+              onClick={handleHowItWorks}
               variant="outline" 
               size="lg"
-              className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-xl backdrop-blur-sm"
+              className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg rounded-xl backdrop-blur-sm"
             >
               Voir comment ça marche
             </Button>
