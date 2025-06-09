@@ -64,7 +64,7 @@ export function TransferSidebar({
               <span className="text-terex-accent font-bold">{exchangeRate} CFA</span>
             </div>
             <div className="text-xs text-gray-500">
-              * Taux en temps réel - Aucune commission TRX
+              * Taux en temps réel - Aucune commission
             </div>
           </div>
         </CardContent>
