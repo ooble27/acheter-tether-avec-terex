@@ -23,17 +23,12 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
       <HeroSection />
       
       {/* Section Comment ça marche */}
-      <section id="how-it-works" className="py-16 sm:py-20 bg-terex-dark relative overflow-hidden">
-        {/* Background tech pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(94,234,212,0.02)_50%,transparent_50%)] bg-[length:20px_20px]"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(94,234,212,0.02)_50%,transparent_50%)] bg-[length:20px_20px]"></div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="how-it-works" className="py-16 sm:py-20 bg-terex-dark">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
               Comment ça <span className="text-terex-accent relative">
                 marche
-                <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-terex-accent rounded-full"></div>
               </span> ?
             </h2>
             <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
@@ -42,11 +37,10 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
           </div>
           
           <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
-            <Card className="bg-gradient-to-br from-terex-dark/80 to-terex-darker/80 border-terex-accent/30 hover:border-terex-accent/50 transition-all duration-300 hover:scale-105 backdrop-blur-sm">
+            <Card className="bg-terex-darker/80 border-terex-accent/30 hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
               <CardContent className="p-4 sm:p-6 text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4 relative">
+                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-xl font-bold text-terex-accent">1</span>
-                  <div className="absolute -inset-2 bg-terex-accent/10 rounded-2xl blur"></div>
                 </div>
                 <h3 className="text-base sm:text-lg font-bold text-white mb-3">Inscription gratuite</h3>
                 <p className="text-gray-300 mb-4 text-sm">
@@ -59,11 +53,10 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
               </CardContent>
             </Card>
             
-            <Card className="bg-gradient-to-br from-terex-dark/80 to-terex-darker/80 border-terex-accent/30 hover:border-terex-accent/50 transition-all duration-300 hover:scale-105 backdrop-blur-sm">
+            <Card className="bg-terex-darker/80 border-terex-accent/30 hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
               <CardContent className="p-4 sm:p-6 text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4 relative">
+                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-xl font-bold text-terex-accent">2</span>
-                  <div className="absolute -inset-2 bg-terex-accent/10 rounded-2xl blur"></div>
                 </div>
                 <h3 className="text-base sm:text-lg font-bold text-white mb-3">Choisissez votre service</h3>
                 <p className="text-gray-300 mb-4 text-sm">
@@ -76,11 +69,10 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
               </CardContent>
             </Card>
             
-            <Card className="bg-gradient-to-br from-terex-dark/80 to-terex-darker/80 border-terex-accent/30 hover:border-terex-accent/50 transition-all duration-300 hover:scale-105 backdrop-blur-sm">
+            <Card className="bg-terex-darker/80 border-terex-accent/30 hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
               <CardContent className="p-4 sm:p-6 text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4 relative">
+                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-xl font-bold text-terex-accent">3</span>
-                  <div className="absolute -inset-2 bg-terex-accent/10 rounded-2xl blur"></div>
                 </div>
                 <h3 className="text-base sm:text-lg font-bold text-white mb-3">Transaction sécurisée</h3>
                 <p className="text-gray-300 mb-4 text-sm">
@@ -111,7 +103,7 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            <Card className="bg-gradient-to-br from-terex-darker/80 to-terex-dark/80 border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300 hover:scale-105 backdrop-blur-sm">
+            <Card className="bg-terex-darker/80 border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
               <CardContent className="p-4 sm:p-6">
                 <CreditCard className="w-8 h-8 sm:w-10 sm:h-10 text-terex-accent mx-auto mb-3" />
                 <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Virement bancaire</h3>
@@ -119,7 +111,7 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
               </CardContent>
             </Card>
             
-            <Card className="bg-gradient-to-br from-terex-darker/80 to-terex-dark/80 border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300 hover:scale-105 backdrop-blur-sm">
+            <Card className="bg-terex-darker/80 border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
               <CardContent className="p-4 sm:p-6">
                 <Smartphone className="w-8 h-8 sm:w-10 sm:h-10 text-terex-accent mx-auto mb-3" />
                 <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Mobile Money</h3>
@@ -127,7 +119,7 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
               </CardContent>
             </Card>
             
-            <Card className="bg-gradient-to-br from-terex-darker/80 to-terex-dark/80 border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300 hover:scale-105 backdrop-blur-sm sm:col-span-2 lg:col-span-1">
+            <Card className="bg-terex-darker/80 border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300 hover:scale-105 sm:col-span-2 lg:col-span-1">
               <CardContent className="p-4 sm:p-6">
                 <Banknote className="w-8 h-8 sm:w-10 sm:h-10 text-terex-accent mx-auto mb-3" />
                 <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Espèces</h3>
@@ -141,12 +133,8 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
       <TestimonialsSection />
       
       {/* Section CTA finale */}
-      <section className="py-16 sm:py-20 bg-terex-dark relative overflow-hidden">
-        {/* Background effects */}
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(94,234,212,0.02)_50%,transparent_50%)] bg-[length:20px_20px]"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(94,234,212,0.02)_50%,transparent_50%)] bg-[length:20px_20px]"></div>
-        
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-16 sm:py-20 bg-terex-dark">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
             Prêt à commencer avec <span className="text-terex-accent">Terex</span> ?
           </h2>

@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Shield, Zap, Globe } from 'lucide-react';
+import { Shield, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function HeroSection() {
@@ -20,21 +20,10 @@ export function HeroSection() {
   };
 
   return (
-    <div className="relative overflow-hidden bg-terex-dark min-h-screen">
-      {/* Simplified Background Effects */}
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(94,234,212,0.02)_50%,transparent_50%)] bg-[length:20px_20px]"></div>
-      <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(94,234,212,0.02)_50%,transparent_50%)] bg-[length:20px_20px]"></div>
-      
-      {/* Animated particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/3 w-2 h-2 bg-terex-accent/30 rounded-full animate-ping" style={{animationDelay: '0.5s'}}></div>
-        <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-terex-accent/40 rounded-full animate-pulse" style={{animationDelay: '1.5s'}}></div>
-        <div className="absolute top-1/2 left-3/4 w-3 h-3 bg-terex-accent/20 rounded-full animate-bounce" style={{animationDelay: '2.5s'}}></div>
-      </div>
-      
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+    <div className="bg-terex-dark min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
         <div className="text-center">
-          {/* Logo et titre principal avec effets blockchain */}
+          {/* Logo et titre principal */}
           <div className="flex justify-center items-center space-x-4 mb-8">
             <div className="relative">
               <img 
@@ -42,11 +31,9 @@ export function HeroSection() {
                 alt="Terex Logo" 
                 className="w-16 h-16 lg:w-20 lg:h-20 rounded-xl shadow-2xl"
               />
-              <div className="absolute -inset-3 bg-gradient-to-r from-terex-accent/30 via-terex-accent/10 to-transparent rounded-xl blur-lg opacity-60 animate-pulse"></div>
-              <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 to-transparent rounded-xl"></div>
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight">
-              <span className="bg-gradient-to-r from-terex-accent via-terex-accent/80 to-terex-accent bg-clip-text text-transparent animate-pulse">
+              <span className="bg-gradient-to-r from-terex-accent via-terex-accent/80 to-terex-accent bg-clip-text text-transparent">
                 TEREX
               </span>
             </h1>
@@ -63,7 +50,6 @@ export function HeroSection() {
             <br />
             <span className="text-terex-accent relative">
               sans frontières
-              <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-terex-accent/50 via-terex-accent to-terex-accent/50 rounded-full"></div>
             </span>
           </h2>
           
@@ -76,7 +62,7 @@ export function HeroSection() {
             <Button 
               onClick={handleGetStarted}
               size="lg" 
-              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-6 py-3 text-base rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105"
+              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105"
             >
               Commencer maintenant
             </Button>
@@ -84,7 +70,7 @@ export function HeroSection() {
               onClick={handleHowItWorks}
               variant="outline" 
               size="lg"
-              className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-6 py-3 text-base rounded-xl backdrop-blur-sm"
+              className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base rounded-xl backdrop-blur-sm"
             >
               Voir comment ça marche
             </Button>
@@ -95,7 +81,7 @@ export function HeroSection() {
             <Card className="bg-terex-darker/60 border-terex-accent/30 backdrop-blur-sm hover:bg-terex-darker/80 transition-all duration-300 hover:scale-105 group">
               <CardContent className="p-4 sm:p-6 text-center">
                 <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-6 h-6" />
+                  <div className="w-6 h-6 bg-terex-accent rounded-full"></div>
                 </div>
                 <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Échange crypto</h3>
                 <p className="text-gray-400 text-xs sm:text-sm">Achetez et vendez vos cryptos au meilleur taux</p>
