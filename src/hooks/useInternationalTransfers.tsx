@@ -151,9 +151,9 @@ export const useInternationalTransfers = () => {
         console.log('Envoi des notifications email pour le transfert:', transferId, 'nouveau statut:', status);
         console.log('ID du client du transfert:', transferDetails.user_id);
         
-        // CORRECTION IMPORTANTE: Utiliser l'ID du client qui a créé le transfert, pas l'admin
+        // CORRECTION IMPORTANTE: Utiliser l'ID du CLIENT qui a créé le transfert, pas l'admin
         try {
-          // Email de mise à jour de statut
+          // Email de mise à jour de statut pour le CLIENT
           await supabase.functions.invoke('send-email-notification', {
             body: {
               userId: transferDetails.user_id, // ID du CLIENT, pas de l'admin
