@@ -68,17 +68,22 @@ export const useEmailNotifications = () => {
     transferData: any,
     transferId?: string
   ) => {
-    if (!user?.email) {
-      console.log('Pas d\'adresse email utilisateur disponible');
+    // CORRECTION: Pour les transferts, utiliser l'ID du CLIENT qui a créé le transfert
+    const clientUserId = transferData.user_id || user?.id;
+    
+    if (!clientUserId) {
+      console.log('Pas d\'ID utilisateur disponible pour le transfert');
       return;
     }
 
     try {
+      console.log('Envoi de notification de transfert pour le client:', clientUserId);
+      
       const { data, error } = await supabase.functions.invoke('send-email-notification', {
         body: {
-          userId: user.id,
+          userId: clientUserId, // Utiliser l'ID du CLIENT, pas l'admin connecté
           orderId: null, // Pas d'orderId pour les transferts
-          emailAddress: user.email,
+          emailAddress: null, // Sera récupéré côté serveur
           emailType,
           transactionType: 'transfer',
           orderData: transferData
@@ -90,7 +95,7 @@ export const useEmailNotifications = () => {
         throw error;
       }
 
-      console.log('Email de transfert envoyé avec succès:', data);
+      console.log('Email de transfert envoyé avec succès au client:', clientUserId, data);
       return data;
     } catch (error) {
       console.error('Erreur lors de l\'envoi de la notification de transfert:', error);
