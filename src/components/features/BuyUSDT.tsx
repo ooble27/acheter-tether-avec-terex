@@ -381,51 +381,40 @@ export function BuyUSDT() {
                             <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-terex-darker border-terex-gray">
                               <SelectItem value="TRC20">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.TRC20} alt="Tron" className="w-6 h-6 rounded-full" />
-                                  <div className="flex flex-col">
-                                    <span>TRC20 (Tron)</span>
-                                    <span className="text-xs text-gray-400">Frais faibles</span>
+                                <div className="flex items-center justify-between w-full min-w-0">
+                                  <div className="flex items-center space-x-3 min-w-0 flex-1">
+                                    <img src={NETWORK_LOGOS.TRC20} alt="Tron" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <span className="truncate">TRC20 (Tron)</span>
                                   </div>
-                                  <Badge variant="secondary" className="text-xs ml-auto">Recommandé</Badge>
+                                  <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
+                                    Recommandé
+                                  </Badge>
                                 </div>
                               </SelectItem>
                               <SelectItem value="BEP20">
                                 <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.BEP20} alt="BSC" className="w-6 h-6 rounded-full" />
-                                  <div className="flex flex-col">
-                                    <span>BEP20 (BSC)</span>
-                                    <span className="text-xs text-gray-400">Rapide et abordable</span>
-                                  </div>
+                                  <img src={NETWORK_LOGOS.BEP20} alt="BSC" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                  <span className="truncate">BEP20 (BSC)</span>
                                 </div>
                               </SelectItem>
                               <SelectItem value="ERC20">
                                 <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.ERC20} alt="Ethereum" className="w-6 h-6 rounded-full" />
-                                  <div className="flex flex-col">
-                                    <span>ERC20 (Ethereum)</span>
-                                    <span className="text-xs text-gray-400">Réseau principal</span>
-                                  </div>
+                                  <img src={NETWORK_LOGOS.ERC20} alt="Ethereum" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                  <span className="truncate">ERC20 (Ethereum)</span>
                                 </div>
                               </SelectItem>
                               <SelectItem value="Arbitrum">
                                 <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.Arbitrum} alt="Arbitrum" className="w-6 h-6 rounded-full" />
-                                  <div className="flex flex-col">
-                                    <span>Arbitrum</span>
-                                    <span className="text-xs text-gray-400">Layer 2 Ethereum</span>
-                                  </div>
+                                  <img src={NETWORK_LOGOS.Arbitrum} alt="Arbitrum" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                  <span className="truncate">Arbitrum</span>
                                 </div>
                               </SelectItem>
                               <SelectItem value="Polygon">
                                 <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.Polygon} alt="Polygon" className="w-6 h-6 rounded-full" />
-                                  <div className="flex flex-col">
-                                    <span>Polygon</span>
-                                    <span className="text-xs text-gray-400">Frais très faibles</span>
-                                  </div>
+                                  <img src={NETWORK_LOGOS.Polygon} alt="Polygon" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                  <span className="truncate">Polygon</span>
                                 </div>
                               </SelectItem>
                             </SelectContent>
