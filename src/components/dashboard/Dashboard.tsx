@@ -38,7 +38,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
   // Effet pour remonter en haut à chaque changement de section
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeSection]);
 
   const handleLogout = async () => {
