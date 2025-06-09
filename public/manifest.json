@@ -1,0 +1,68 @@
+
+{
+  "name": "Terex - Échanges USDT & Transferts Afrique",
+  "short_name": "Terex",
+  "description": "Achetez et vendez des USDT, effectuez des transferts d'argent vers l'Afrique instantanément",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0D1117",
+  "theme_color": "#5EEAD4",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "fr",
+  "categories": ["finance", "business"],
+  "icons": [
+    {
+      "src": "/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "apple-touch-icon"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Acheter USDT",
+      "short_name": "Acheter",
+      "description": "Acheter des USDT rapidement",
+      "url": "/auth?tab=buy",
+      "icons": [
+        {
+          "src": "/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Vendre USDT",
+      "short_name": "Vendre",
+      "description": "Vendre des USDT rapidement",
+      "url": "/auth?tab=sell",
+      "icons": [
+        {
+          "src": "/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}

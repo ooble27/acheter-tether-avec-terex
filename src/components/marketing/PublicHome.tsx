@@ -3,6 +3,7 @@ import { HeroSection } from './HeroSection';
 import { TestimonialsSection } from './TestimonialsSection';
 import { StatsSection } from './StatsSection';
 import { CurrencyConverter } from './CurrencyConverter';
+import { PWAInstallPrompt } from '../PWAInstallPrompt';
 import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle, ArrowRight, Smartphone, CreditCard, Banknote } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +25,7 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
 
   return (
     <div className="min-h-screen bg-terex-dark">
+      <PWAInstallPrompt />
       <HeroSection />
       
       {/* Section Convertisseur */}

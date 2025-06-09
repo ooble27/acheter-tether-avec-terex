@@ -1,9 +1,20 @@
 
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="application-name" content="Terex" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Terex" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="msapplication-config" content="none" />
+    <meta name="msapplication-TileColor" content="#5EEAD4" />
+    <meta name="msapplication-tap-highlight" content="no" />
     
     <!-- Favicon Terex pour tous les appareils avec cache busting -->
     <link rel="icon" type="image/png" sizes="32x32" href="/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png?v=5">
@@ -11,14 +22,72 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png?v=5">
     <link rel="icon" type="image/png" sizes="192x192" href="/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png?v=5">
     <link rel="icon" type="image/png" sizes="512x512" href="/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png?v=5">
-    <!-- Favicon spécifique pour appareils mobiles et tablettes -->
-    <link rel="manifest" href="data:application/json,{&quot;icons&quot;:[{&quot;src&quot;:&quot;/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png?v=5&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/png&quot;}]}">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png">
+    
+    <!-- Apple Splash Screens -->
+    <link rel="apple-touch-startup-image" href="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-startup-image" href="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+    
     <meta name="theme-color" content="#5EEAD4">
+    <meta name="background-color" content="#0D1117">
     
     <title>Terex - Échanges crypto & Transferts internationaux</title>
+    <meta name="description" content="Achetez et vendez des USDT facilement, effectuez des transferts d'argent vers l'Afrique instantanément. Rapide, sécurisé et sans commission.">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Terex - Échanges crypto & Transferts internationaux">
+    <meta property="og:description" content="Achetez et vendez des USDT facilement, effectuez des transferts d'argent vers l'Afrique instantanément.">
+    <meta property="og:image" content="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Terex - Échanges crypto & Transferts internationaux">
+    <meta name="twitter:description" content="Achetez et vendez des USDT facilement, effectuez des transferts d'argent vers l'Afrique instantanément.">
+    <meta name="twitter:image" content="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png">
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+    
+    <!-- PWA Install Prompt -->
+    <script>
+      let deferredPrompt;
+      
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Empêcher le prompt automatique
+        e.preventDefault();
+        // Stocker l'événement pour l'utiliser plus tard
+        deferredPrompt = e;
+        console.log('PWA install prompt available');
+      });
+      
+      window.addEventListener('appinstalled', (evt) => {
+        console.log('PWA was installed');
+      });
+    </script>
   </body>
 </html>
