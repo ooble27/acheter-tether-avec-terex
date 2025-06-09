@@ -79,11 +79,31 @@ const AuthCallback = () => {
           
           if (data.session) {
             console.log('AuthCallback: Session créée avec succès');
+            
+            // Marquer la session comme active pour PWA
+            localStorage.setItem('terex-session-active', 'true');
+            localStorage.setItem('terex-last-session-update', Date.now().toString());
+            
             toast({
               title: "Connexion réussie !",
               description: "Vous êtes maintenant connecté à Terex.",
               className: "bg-green-600 text-white border-green-600",
             });
+
+            // Vérifier si on peut rediriger vers PWA
+            const isPWAAvailable = window.matchMedia('(display-mode: standalone)').matches ||
+                                  (window.navigator as any).standalone;
+            
+            if (isPWAAvailable) {
+              // Essayer de rediriger vers PWA si possible
+              const pwaUrl = window.location.origin + '/';
+              toast({
+                title: "Retournez à l'app Terex",
+                description: "Ouvrez l'app Terex depuis votre écran d'accueil pour une session synchronisée.",
+                className: "bg-blue-600 text-white border-blue-600",
+              });
+            }
+            
             navigate('/');
             return;
           }
@@ -108,6 +128,11 @@ const AuthCallback = () => {
         // Si c'est une confirmation d'email (première inscription)
         if (type === 'signup' && data.session) {
           console.log('AuthCallback: Email confirmé lors de l\'inscription');
+          
+          // Marquer la session comme active pour PWA
+          localStorage.setItem('terex-session-active', 'true');
+          localStorage.setItem('terex-last-session-update', Date.now().toString());
+          
           toast({
             title: "Email confirmé !",
             description: "Votre compte a été activé avec succès.",
@@ -120,6 +145,11 @@ const AuthCallback = () => {
         // Si c'est un Magic Link (connexion par email)
         if (type === 'magiclink' && data.session) {
           console.log('AuthCallback: Magic Link utilisé avec succès');
+          
+          // Marquer la session comme active pour PWA
+          localStorage.setItem('terex-session-active', 'true');
+          localStorage.setItem('terex-last-session-update', Date.now().toString());
+          
           toast({
             title: "Connexion réussie !",
             description: "Vous êtes maintenant connecté.",
@@ -132,6 +162,11 @@ const AuthCallback = () => {
         // Si nous avons une session active
         if (data.session) {
           console.log('AuthCallback: Session active détectée');
+          
+          // Marquer la session comme active pour PWA
+          localStorage.setItem('terex-session-active', 'true');
+          localStorage.setItem('terex-last-session-update', Date.now().toString());
+          
           toast({
             title: "Connexion réussie !",
             description: "Bienvenue sur Terex.",
@@ -170,6 +205,9 @@ const AuthCallback = () => {
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-terex-accent mx-auto mb-4"></div>
         <div className="text-white text-lg">Connexion en cours...</div>
         <div className="text-gray-400 text-sm mt-2">Vérification du lien de connexion...</div>
+        <div className="text-gray-400 text-xs mt-4 max-w-xs mx-auto">
+          💡 Astuce : Une fois connecté, retournez à l'app Terex sur votre écran d'accueil pour une expérience optimale
+        </div>
       </div>
     </div>
   );

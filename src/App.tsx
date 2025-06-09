@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { PWASessionSync } from "@/components/PWASessionSync";
 import Index from "./pages/Index";
 import AuthCallback from "./pages/AuthCallback";
 import AuthPage from "./pages/AuthPage";
@@ -18,6 +19,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <PWASessionSync />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
