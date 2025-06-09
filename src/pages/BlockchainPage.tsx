@@ -1,11 +1,16 @@
-
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Shield, Zap, Globe, Lock, TrendingUp, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const BlockchainPage = () => {
   const navigate = useNavigate();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const handleGetStarted = () => {
     navigate('/auth');
@@ -18,9 +23,9 @@ const BlockchainPage = () => {
   return (
     <div className="min-h-screen bg-terex-dark">
       {/* Hero Section */}
-      <section className="py-20 bg-terex-dark">
+      <section className="py-12 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <div className="flex justify-center items-center space-x-4 mb-8">
               <img 
                 src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
@@ -65,7 +70,7 @@ const BlockchainPage = () => {
       </section>
 
       {/* Qu'est-ce que la blockchain */}
-      <section className="py-20 bg-terex-dark">
+      <section className="py-16 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>

@@ -9,6 +9,11 @@ const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   useEffect(() => {
     // Vérifier si on est sur le sous-domaine admin
     const isAdminDomain = window.location.hostname.includes('admin.');
