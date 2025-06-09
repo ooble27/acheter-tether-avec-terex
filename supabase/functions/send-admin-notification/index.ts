@@ -29,7 +29,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log('Notification admin:', { notificationType, data });
 
-    // Email admin fixe
+    // Email admin fixe - VOTRE ADRESSE EMAIL PERSONNELLE ICI
     const adminEmail = "terangaexchange@gmail.com";
 
     let subject = '';
@@ -53,6 +53,16 @@ const handler = async (req: Request): Promise<Response> => {
         emailContent = await renderAsync(
           React.createElement(AdminNotificationEmail, {
             notificationType: 'kyc_submission',
+            data
+          })
+        );
+        break;
+
+      case 'high_volume_request':
+        subject = `💰 Demande de gros volume - ${data.clientInfo?.firstName} ${data.clientInfo?.lastName} - ${data.clientInfo?.amount} CFA`;
+        emailContent = await renderAsync(
+          React.createElement(AdminNotificationEmail, {
+            notificationType: 'high_volume_request',
             data
           })
         );

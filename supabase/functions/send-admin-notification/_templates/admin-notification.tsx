@@ -1,113 +1,130 @@
 
+import * as React from 'npm:react@18.3.1';
 import {
-  Html,
-  Head,
   Body,
   Container,
+  Head,
   Heading,
-  Text,
-  Button,
-  Section,
+  Html,
+  Link,
   Preview,
+  Text,
 } from 'npm:@react-email/components@0.0.22';
-import * as React from 'npm:react@18.3.1';
 
 interface AdminNotificationEmailProps {
-  notificationType: 'new_order' | 'kyc_submission' | 'status_update';
+  notificationType: string;
   data: any;
 }
 
 export const AdminNotificationEmail = ({ notificationType, data }: AdminNotificationEmailProps) => {
-  const getPreviewText = () => {
-    switch (notificationType) {
-      case 'new_order':
-        return `Nouvelle commande ${data.type} - ${data.amount} ${data.currency}`;
-      case 'kyc_submission':
-        return `Vérification KYC en attente - ${data.firstName} ${data.lastName}`;
-      case 'status_update':
-        return `Statut mis à jour: ${data.newStatus}`;
-      default:
-        return 'Notification admin Terex';
-    }
-  };
+  let previewText = '';
+  let content = null;
 
-  const renderOrderDetails = () => (
-    <Section style={section}>
-      <Text style={heading}>🛒 Nouvelle Commande</Text>
-      <div style={detailBox}>
-        <Text style={detail}><strong>Type:</strong> {data.type === 'buy' ? 'Achat USDT' : data.type === 'sell' ? 'Vente USDT' : 'Transfert International'}</Text>
-        <Text style={detail}><strong>Montant:</strong> {data.amount?.toLocaleString()} {data.currency}</Text>
-        <Text style={detail}><strong>USDT:</strong> {data.usdtAmount} USDT</Text>
-        <Text style={detail}><strong>Méthode:</strong> {data.paymentMethod}</Text>
-        <Text style={detail}><strong>Statut:</strong> {data.status}</Text>
-        <Text style={detail}><strong>ID Commande:</strong> #{data.orderId?.slice(-8)}</Text>
-        <Text style={detail}><strong>Date:</strong> {new Date(data.createdAt).toLocaleString('fr-FR')}</Text>
-      </div>
-      <Button
-        href={`https://app.terangaexchange.com`}
-        style={button}
-      >
-        🔗 Gérer la commande
-      </Button>
-    </Section>
-  );
+  switch (notificationType) {
+    case 'new_order':
+      previewText = `Nouvelle commande ${data.type} - ${data.amount} ${data.currency}`;
+      content = (
+        <>
+          <Heading style={h1}>🔔 Nouvelle commande</Heading>
+          <Text style={text}>
+            Une nouvelle commande a été créée :
+          </Text>
+          <div style={orderBox}>
+            <Text style={orderText}><strong>Type :</strong> {data.type === 'buy' ? 'Achat USDT' : data.type === 'sell' ? 'Vente USDT' : 'Transfert International'}</Text>
+            <Text style={orderText}><strong>Montant :</strong> {data.amount} {data.currency}</Text>
+            <Text style={orderText}><strong>USDT :</strong> {data.usdt_amount || 'N/A'}</Text>
+            <Text style={orderText}><strong>Méthode de paiement :</strong> {data.payment_method}</Text>
+            <Text style={orderText}><strong>Réseau :</strong> {data.network || 'N/A'}</Text>
+            <Text style={orderText}><strong>Statut :</strong> {data.status}</Text>
+          </div>
+        </>
+      );
+      break;
 
-  const renderKYCDetails = () => (
-    <Section style={section}>
-      <Text style={heading}>🆔 Nouvelle Vérification KYC</Text>
-      <div style={detailBox}>
-        <Text style={detail}><strong>Nom:</strong> {data.firstName} {data.lastName}</Text>
-        <Text style={detail}><strong>Statut:</strong> {data.status}</Text>
-        <Text style={detail}><strong>Soumis le:</strong> {new Date(data.submittedAt).toLocaleString('fr-FR')}</Text>
-        <Text style={detail}><strong>ID Utilisateur:</strong> {data.userId?.slice(-8)}</Text>
-      </div>
-      <Button
-        href={`https://app.terangaexchange.com`}
-        style={button}
-      >
-        🔍 Examiner KYC
-      </Button>
-    </Section>
-  );
+    case 'kyc_submission':
+      previewText = `Nouvelle vérification KYC - ${data.firstName} ${data.lastName}`;
+      content = (
+        <>
+          <Heading style={h1}>🆔 Nouvelle vérification KYC</Heading>
+          <Text style={text}>
+            Une nouvelle demande de vérification KYC a été soumise :
+          </Text>
+          <div style={orderBox}>
+            <Text style={orderText}><strong>Nom :</strong> {data.firstName} {data.lastName}</Text>
+            <Text style={orderText}><strong>Email :</strong> {data.email}</Text>
+            <Text style={orderText}><strong>Téléphone :</strong> {data.phone}</Text>
+            <Text style={orderText}><strong>Date de naissance :</strong> {data.dateOfBirth}</Text>
+            <Text style={orderText}><strong>Nationalité :</strong> {data.nationality}</Text>
+            <Text style={orderText}><strong>Type de document :</strong> {data.documentType}</Text>
+          </div>
+        </>
+      );
+      break;
 
-  const renderStatusUpdate = () => (
-    <Section style={section}>
-      <Text style={heading}>📊 Mise à Jour de Statut</Text>
-      <div style={detailBox}>
-        <Text style={detail}><strong>Commande:</strong> #{data.orderId?.slice(-8)}</Text>
-        <Text style={detail}><strong>Type:</strong> {data.type}</Text>
-        <Text style={detail}><strong>Ancien statut:</strong> {data.oldStatus}</Text>
-        <Text style={detail}><strong>Nouveau statut:</strong> {data.newStatus}</Text>
-        <Text style={detail}><strong>Montant:</strong> {data.amount} {data.currency}</Text>
-      </div>
-    </Section>
-  );
+    case 'high_volume_request':
+      previewText = `Demande de gros volume - ${data.clientInfo?.firstName} ${data.clientInfo?.lastName}`;
+      content = (
+        <>
+          <Heading style={h1}>💰 Demande de gros volume</Heading>
+          <Text style={text}>
+            Une nouvelle demande de gros volume a été reçue :
+          </Text>
+          <div style={orderBox}>
+            <Text style={orderText}><strong>Client :</strong> {data.clientInfo?.firstName} {data.clientInfo?.lastName}</Text>
+            <Text style={orderText}><strong>Email :</strong> {data.clientInfo?.email}</Text>
+            <Text style={orderText}><strong>Téléphone :</strong> {data.clientInfo?.phone}</Text>
+            <Text style={orderText}><strong>Montant souhaité :</strong> {data.clientInfo?.amount} CFA</Text>
+            <Text style={orderText}><strong>Objectif :</strong> {data.clientInfo?.purpose}</Text>
+            {data.clientInfo?.additionalInfo && (
+              <Text style={orderText}><strong>Informations complémentaires :</strong> {data.clientInfo?.additionalInfo}</Text>
+            )}
+          </div>
+          <Text style={text}>
+            <strong>Action requise :</strong> Contactez le client soit par appel soit par email pour discuter des conditions.
+          </Text>
+        </>
+      );
+      break;
+
+    case 'status_update':
+      previewText = `Mise à jour commande #${data.orderId?.slice(-8)} - ${data.newStatus}`;
+      content = (
+        <>
+          <Heading style={h1}>📊 Mise à jour de commande</Heading>
+          <Text style={text}>
+            Le statut d'une commande a été mis à jour :
+          </Text>
+          <div style={orderBox}>
+            <Text style={orderText}><strong>ID Commande :</strong> #{data.orderId?.slice(-8)}</Text>
+            <Text style={orderText}><strong>Nouveau statut :</strong> {data.newStatus}</Text>
+            <Text style={orderText}><strong>Ancien statut :</strong> {data.oldStatus}</Text>
+          </div>
+        </>
+      );
+      break;
+
+    default:
+      previewText = 'Notification admin';
+      content = (
+        <>
+          <Heading style={h1}>📧 Notification</Heading>
+          <Text style={text}>Une nouvelle notification a été générée.</Text>
+        </>
+      );
+  }
 
   return (
     <Html>
       <Head />
-      <Preview>{getPreviewText()}</Preview>
+      <Preview>{previewText}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <div style={header}>
-            <div style={logo}>TEREX ADMIN</div>
-            <Text style={headerText}>Notification Administrateur</Text>
-          </div>
-          
-          <div style={content}>
-            {notificationType === 'new_order' && renderOrderDetails()}
-            {notificationType === 'kyc_submission' && renderKYCDetails()}
-            {notificationType === 'status_update' && renderStatusUpdate()}
-          </div>
-
-          <div style={footer}>
-            <Text style={footerText}>
-              📧 admin@terangaexchange.com | 📞 +221 77 397 27 49
-            </Text>
-            <Text style={footerText}>
-              💬 WhatsApp: +1 4182619091
-            </Text>
-          </div>
+          {content}
+          <Text style={footer}>
+            <Link href="https://terangaexchange.com" target="_blank" style={{...link, color: '#898989'}}>
+              Terex - Terang Exchange
+            </Link>
+          </Text>
         </Container>
       </Body>
     </Html>
@@ -115,90 +132,55 @@ export const AdminNotificationEmail = ({ notificationType, data }: AdminNotifica
 };
 
 const main = {
-  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
-  margin: '0',
-  padding: '0',
-  backgroundColor: '#0f0f0f',
+  backgroundColor: '#ffffff',
+  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif',
 };
 
 const container = {
-  maxWidth: '600px',
   margin: '0 auto',
-  backgroundColor: '#1a1a1a',
-  borderRadius: '16px',
-  overflow: 'hidden',
-  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
+  padding: '20px 0 48px',
+  maxWidth: '560px',
 };
 
-const header = {
-  background: 'linear-gradient(135deg, #DC2626 0%, #EF4444 50%, #B91C1C 100%)',
-  padding: '30px',
-  textAlign: 'center' as const,
+const h1 = {
+  color: '#333',
+  fontSize: '24px',
+  fontWeight: 'bold',
+  margin: '40px 0',
+  padding: '0',
 };
 
-const logo = {
-  fontSize: '28px',
-  fontWeight: '900',
-  color: '#ffffff',
-  letterSpacing: '2px',
-  marginBottom: '10px',
-};
-
-const headerText = {
-  color: '#ffffff',
-  fontSize: '16px',
-  margin: '0',
-};
-
-const content = {
-  padding: '30px',
-};
-
-const section = {
-  marginBottom: '25px',
-};
-
-const heading = {
-  fontSize: '20px',
-  fontWeight: '600',
-  color: '#ffffff',
-  margin: '0 0 15px 0',
-};
-
-const detailBox = {
-  backgroundColor: '#2a2a2a',
-  padding: '20px',
-  borderRadius: '12px',
-  border: '1px solid #333333',
-  marginBottom: '20px',
-};
-
-const detail = {
-  color: '#cccccc',
+const text = {
+  color: '#333',
   fontSize: '14px',
-  margin: '8px 0',
+  margin: '24px 0',
   lineHeight: '1.5',
 };
 
-const button = {
-  backgroundColor: '#3B968F',
-  color: '#ffffff',
-  padding: '12px 24px',
+const orderBox = {
+  backgroundColor: '#f9f9f9',
+  border: '1px solid #eee',
   borderRadius: '8px',
-  textDecoration: 'none',
-  fontWeight: '600',
+  padding: '16px',
+  margin: '16px 0',
+};
+
+const orderText = {
+  color: '#333',
   fontSize: '14px',
-  display: 'inline-block',
+  margin: '8px 0',
+  lineHeight: '1.4',
+};
+
+const link = {
+  color: '#2754C5',
+  textDecoration: 'underline',
 };
 
 const footer = {
-  backgroundColor: '#0f0f0f',
-  padding: '20px',
-  textAlign: 'center' as const,
-};
-
-const footerText = {
-  color: '#888888',
+  color: '#898989',
   fontSize: '12px',
-  margin: '5px 0',
+  lineHeight: '22px',
+  marginTop: '12px',
+  marginBottom: '24px',
 };

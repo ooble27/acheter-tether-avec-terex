@@ -6,6 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Phone, Mail, DollarSign } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAdminNotifications } from '@/hooks/useAdminNotifications';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface HighVolumeRequestProps {
   onBack: () => void;
@@ -24,14 +26,21 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
   });
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { sendAdminNotification } = useAdminNotifications();
+  const { user } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // Ici vous pourrez intégrer l'envoi vers votre backend
-      console.log('Demande de gros volume:', formData);
+      // Envoyer une notification admin pour la demande de gros volume
+      await sendAdminNotification('high_volume_request', {
+        userId: user?.id,
+        clientInfo: formData,
+        requestType: 'high_volume_purchase',
+        timestamp: new Date().toISOString()
+      });
       
       toast({
         title: "Demande envoyée !",
