@@ -100,7 +100,7 @@ export function BuyAmountInput({
         </div>
       </div>
 
-      {/* Quick amounts - moved to the bottom */}
+      {/* Quick amounts - positioned at the very bottom */}
       <div className="space-y-2">
         <Label className="text-white text-sm font-medium">Montants rapides ({currency})</Label>
         <div className="grid grid-cols-2 gap-2">
