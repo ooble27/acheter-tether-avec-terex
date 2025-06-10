@@ -9,29 +9,29 @@
     --background: 0 0% 7%; /* Fond noir profond comme dans l'image */
     --foreground: 0 0% 95%;
 
-    --card: 210 6% 25%; /* Gris plus clair que #2E2F30 */
+    --card: 210 6% 23%; /* #3A3B3C converti en HSL */
     --card-foreground: 0 0% 95%;
 
-    --popover: 210 6% 25%; /* Gris plus clair pour les popovers */
+    --popover: 210 6% 23%; /* #3A3B3C pour les popovers */
     --popover-foreground: 0 0% 95%;
 
     --primary: 142.1 76.2% 36.3%;
     --primary-foreground: 355.7 100% 97.3%;
 
-    --secondary: 210 6% 25%; /* Gris plus clair pour secondary */
+    --secondary: 210 6% 23%; /* #3A3B3C pour secondary */
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 210 6% 25%;
+    --muted: 210 6% 23%;
     --muted-foreground: 240 5% 64.9%;
 
-    --accent: 210 6% 25%;
+    --accent: 210 6% 23%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 0 0% 30%; /* Bordures plus claires */
-    --input: 210 6% 25%; /* Gris plus clair pour les inputs */
+    --input: 210 6% 23%; /* #3A3B3C pour les inputs */
     --ring: 142.4 71.8% 29.2%;
 
     --radius: 0.75rem;
@@ -140,6 +140,23 @@
     .text-gray-400 {
       @apply text-gray-500;
     }
+  }
+
+  /* Effets de survol pour les contenants en mode sombre */
+  [data-theme="dark"] .bg-card:hover,
+  [data-theme="dark"] .bg-secondary:hover,
+  [data-theme="dark"] .bg-muted:hover,
+  [data-theme="dark"] .bg-accent:hover,
+  [data-theme="dark"] form:hover,
+  [data-theme="dark"] .glass-card:hover {
+    @apply brightness-110 transition-all duration-200;
+  }
+
+  /* Effet de survol pour les cartes */
+  [data-theme="dark"] .rounded-lg:hover,
+  [data-theme="dark"] .rounded-xl:hover,
+  [data-theme="dark"] .rounded-md:hover {
+    @apply shadow-lg shadow-primary/5 transition-all duration-200;
   }
 }
 
