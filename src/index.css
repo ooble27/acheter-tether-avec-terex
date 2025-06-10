@@ -141,23 +141,6 @@
       @apply text-gray-500;
     }
   }
-
-  /* Effets de survol pour les contenants en mode sombre */
-  [data-theme="dark"] .bg-card:hover,
-  [data-theme="dark"] .bg-secondary:hover,
-  [data-theme="dark"] .bg-muted:hover,
-  [data-theme="dark"] .bg-accent:hover,
-  [data-theme="dark"] form:hover,
-  [data-theme="dark"] .glass-card:hover {
-    @apply brightness-110 transition-all duration-200;
-  }
-
-  /* Effet de survol pour les cartes */
-  [data-theme="dark"] .rounded-lg:hover,
-  [data-theme="dark"] .rounded-xl:hover,
-  [data-theme="dark"] .rounded-md:hover {
-    @apply shadow-lg shadow-primary/5 transition-all duration-200;
-  }
 }
 
 /* Style Binance pour le logo et branding */
