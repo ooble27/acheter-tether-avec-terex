@@ -6,32 +6,32 @@
 
 @layer base {
   :root {
-    --background: 20 14.3% 8%; /* Fond de page moins foncé */
+    --background: 0 0% 7%; /* Fond noir profond comme dans l'image */
     --foreground: 0 0% 95%;
 
-    --card: 240 3.7% 15%; /* Cards en gris */
+    --card: 0 0% 12%; /* Cards en gris foncé comme dans l'image */
     --card-foreground: 0 0% 95%;
 
-    --popover: 240 3.7% 15%; /* Popovers en gris */
+    --popover: 0 0% 12%; /* Popovers en gris foncé */
     --popover-foreground: 0 0% 95%;
 
     --primary: 142.1 76.2% 36.3%;
     --primary-foreground: 355.7 100% 97.3%;
 
-    --secondary: 240 3.7% 18%; /* Secondary un peu plus clair */
+    --secondary: 0 0% 15%; /* Secondary gris foncé */
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 240 3.7% 18%;
+    --muted: 0 0% 15%;
     --muted-foreground: 240 5% 64.9%;
 
-    --accent: 240 3.7% 18%;
+    --accent: 0 0% 15%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 3.7% 20%; /* Bordures plus claires */
-    --input: 240 3.7% 15%; /* Inputs en gris */
+    --border: 0 0% 20%; /* Bordures grises */
+    --input: 0 0% 12%; /* Inputs gris foncé */
     --ring: 142.4 71.8% 29.2%;
 
     --radius: 0.75rem;
