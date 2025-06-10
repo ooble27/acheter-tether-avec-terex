@@ -6,32 +6,32 @@
 
 @layer base {
   :root {
-    --background: 0 0% 7%; /* Fond noir profond comme dans l'image */
+    --background: 20 14.3% 4.1%;
     --foreground: 0 0% 95%;
 
-    --card: 210 6% 23%; /* #3A3B3C converti en HSL */
+    --card: 20 14.3% 4.1%;
     --card-foreground: 0 0% 95%;
 
-    --popover: 210 6% 23%; /* #3A3B3C pour les popovers */
+    --popover: 20 14.3% 4.1%;
     --popover-foreground: 0 0% 95%;
 
     --primary: 142.1 76.2% 36.3%;
     --primary-foreground: 355.7 100% 97.3%;
 
-    --secondary: 210 6% 23%; /* #3A3B3C pour secondary */
+    --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 210 6% 23%;
+    --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
 
-    --accent: 210 6% 23%;
+    --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 30%; /* Bordures plus claires */
-    --input: 210 6% 23%; /* #3A3B3C pour les inputs */
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
     --ring: 142.4 71.8% 29.2%;
 
     --radius: 0.75rem;
@@ -45,46 +45,6 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 142.4 71.8% 29.2%;
   }
-
-  /* Mode clair */
-  [data-theme="light"] {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 0 0% 98%;
-
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 84% 4.9%;
-
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 142.4 71.8% 29.2%;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 222.2 84% 4.9%;
-    --sidebar-primary: 142.1 76.2% 36.3%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 210 40% 96%;
-    --sidebar-accent-foreground: 222.2 84% 4.9%;
-    --sidebar-border: 214.3 31.8% 91.4%;
-    --sidebar-ring: 142.4 71.8% 29.2%;
-  }
 }
 
 @layer base {
@@ -93,7 +53,7 @@
   }
 
   html, body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-terex-dark text-foreground font-sans;
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
     height: 100%;
@@ -102,55 +62,6 @@
   #root {
     min-height: 100vh;
     height: 100%;
-  }
-
-  /* Application des couleurs de la landing page aux autres cartes et formulaires */
-  .bg-card {
-    background: rgba(58, 59, 60, 0.8) !important;
-    border-color: rgba(59, 150, 143, 0.3) !important;
-  }
-
-  /* Suppression des arrière-plans gris/sombres des composants pour tous les modes */
-  .bg-terex-dark,
-  .bg-terex-darker,
-  .bg-terex-gray,
-  .bg-terex-gray\/30 {
-    @apply bg-transparent !important;
-  }
-
-  /* Mode clair - même traitement transparent */
-  [data-theme="light"] {
-    .bg-terex-dark,
-    .bg-terex-darker,
-    .bg-terex-gray,
-    .bg-terex-gray\/30 {
-      @apply bg-transparent !important;
-    }
-    
-    .border-terex-gray {
-      @apply border-gray-200;
-    }
-    
-    .border-terex-gray\/30 {
-      @apply border-gray-300/30;
-    }
-    
-    .text-white {
-      @apply text-gray-900;
-    }
-    
-    .text-gray-300 {
-      @apply text-gray-600;
-    }
-    
-    .text-gray-400 {
-      @apply text-gray-500;
-    }
-
-    .bg-card {
-      background: white !important;
-      border-color: rgba(214, 211, 209, 0.3) !important;
-    }
   }
 }
 
@@ -196,17 +107,11 @@
   box-shadow: none;
 }
 
-/* Glass morphism effect pour les cartes - complètement transparent */
+/* Glass morphism effect pour les cartes */
 .glass-card {
-  background: transparent !important;
-  backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-[data-theme="light"] .glass-card {
-  background: transparent !important;
-  backdrop-filter: none;
-  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 @media (prefers-reduced-motion: no-preference) {

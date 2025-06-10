@@ -79,27 +79,25 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <SidebarHeader className="p-6 border-b border-sidebar-border/30">
-        {/* Logo Header sans le toggle de thème */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="relative flex items-center gap-3 p-3 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-xl border border-terex-accent/20">
-              <div className="relative">
-                <img 
-                  src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-                  alt="Terex Logo" 
-                  className="w-10 h-10 rounded-lg shadow-lg"
-                />
-                <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 to-transparent rounded-lg blur opacity-40"></div>
-              </div>
-              <div className="flex flex-col">
-                <h1 className="text-xl font-black tracking-tight text-sidebar-foreground">
-                  <span className="bg-gradient-to-r from-terex-accent to-terex-accent/80 bg-clip-text text-transparent">
-                    TEREX
-                  </span>
-                </h1>
-                <p className="text-[10px] font-medium text-terex-accent/70 uppercase tracking-wider">Teranga Exchange</p>
-              </div>
+      <SidebarHeader className="p-6 border-b border-terex-gray/30">
+        {/* Logo Header Style Binance dans la Sidebar */}
+        <div className="flex items-center space-x-3">
+          <div className="relative flex items-center gap-3 p-3 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-xl border border-terex-accent/20">
+            <div className="relative">
+              <img 
+                src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+                alt="Terex Logo" 
+                className="w-10 h-10 rounded-lg shadow-lg"
+              />
+              <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 to-transparent rounded-lg blur opacity-40"></div>
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-xl font-black tracking-tight text-white">
+                <span className="bg-gradient-to-r from-terex-accent to-terex-accent/80 bg-clip-text text-transparent">
+                  TEREX
+                </span>
+              </h1>
+              <p className="text-[10px] font-medium text-terex-accent/70 uppercase tracking-wider">Teranga Exchange</p>
             </div>
           </div>
         </div>
@@ -121,14 +119,14 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                       className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${
                         activeSection === item.id
                           ? 'bg-gradient-to-r from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/25'
-                          : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground hover:shadow-md'
+                          : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'
                       }`}
                     >
                       <div className="flex items-center space-x-4 w-full">
                         <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
                           activeSection === item.id 
                             ? 'bg-white/20' 
-                            : 'bg-sidebar-accent/30 group-hover:bg-terex-accent/20'
+                            : 'bg-terex-gray/30 group-hover:bg-terex-accent/20'
                         }`}>
                           {item.isCustomIcon ? (
                             <IconComponent 
@@ -159,9 +157,9 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                 <>
                   <div className="pt-6 pb-2">
                     <div className="flex items-center space-x-2 px-4">
-                      <div className="h-px bg-sidebar-border/40 flex-1"></div>
-                      <span className="text-xs font-medium text-sidebar-foreground/50 uppercase tracking-wider">Administration</span>
-                      <div className="h-px bg-sidebar-border/40 flex-1"></div>
+                      <div className="h-px bg-terex-gray/40 flex-1"></div>
+                      <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Administration</span>
+                      <div className="h-px bg-terex-gray/40 flex-1"></div>
                     </div>
                   </div>
                   
@@ -174,14 +172,14 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                       className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${
                         activeSection === 'kyc-admin'
                           ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/25'
-                          : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground hover:shadow-md'
+                          : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'
                       }`}
                     >
                       <div className="flex items-center space-x-4 w-full">
                         <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
                           activeSection === 'kyc-admin' 
                             ? 'bg-white/20' 
-                            : 'bg-sidebar-accent/30 group-hover:bg-orange-500/20'
+                            : 'bg-terex-gray/30 group-hover:bg-orange-500/20'
                         }`}>
                           <Shield className="h-6 w-6" />
                         </div>
@@ -205,14 +203,14 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                       className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${
                         activeSection === 'orders-admin'
                           ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/25'
-                          : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground hover:shadow-md'
+                          : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'
                       }`}
                     >
                       <div className="flex items-center space-x-4 w-full">
                         <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
                           activeSection === 'orders-admin' 
                             ? 'bg-white/20' 
-                            : 'bg-sidebar-accent/30 group-hover:bg-purple-500/20'
+                            : 'bg-terex-gray/30 group-hover:bg-purple-500/20'
                         }`}>
                           <ShoppingCart className="h-6 w-6" />
                         </div>
@@ -235,7 +233,7 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
       
       {/* Bouton de déconnexion - masqué sur tablette */}
       {!isTablet && (
-        <div className="p-4 border-t border-sidebar-border/30 mt-auto flex-shrink-0">
+        <div className="p-4 border-t border-terex-gray/30 mt-auto flex-shrink-0">
           <Button 
             onClick={onLogout}
             className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
@@ -257,7 +255,7 @@ export function AppSidebar({ activeSection, setActiveSection, onLogout }: AppSid
   }
 
   return (
-    <Sidebar className="bg-sidebar border-r border-sidebar-border/30 shadow-2xl fixed left-0 top-0 h-screen z-50">
+    <Sidebar className="bg-terex-darker border-r border-terex-gray/30 shadow-2xl fixed left-0 top-0 h-screen z-50">
       <AppSidebarContent 
         activeSection={activeSection} 
         setActiveSection={setActiveSection} 
@@ -280,14 +278,14 @@ export function MobileMenu({ activeSection, setActiveSection, onLogout }: AppSid
         <Button 
           variant="ghost" 
           size="icon"
-          className="md:hidden fixed top-4 left-4 z-50 bg-sidebar/95 backdrop-blur-sm border border-sidebar-border/50 text-sidebar-foreground hover:bg-sidebar-accent/80 shadow-lg rounded-xl w-12 h-12"
+          className="md:hidden fixed top-4 left-4 z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12"
         >
           <Menu className="h-6 w-6" />
         </Button>
       </SheetTrigger>
       <SheetContent 
         side="left" 
-        className="w-80 bg-sidebar border-r border-sidebar-border/30 p-0 shadow-2xl fixed"
+        className="w-80 bg-terex-darker border-r border-terex-gray/30 p-0 shadow-2xl fixed"
         style={{ 
           height: '100dvh',
           maxHeight: '100dvh',

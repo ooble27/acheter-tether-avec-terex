@@ -23,7 +23,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 interface DashboardProps {
   user: { email: string; name: string } | null;
@@ -78,11 +77,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'about-terex':
         return <AboutTerex onBack={() => setActiveSection('faq')} />;
       case 'kyc-admin':
-        return isKYCReviewer() ? <KYCAdmin /> : <div className="text-foreground">Accès non autorisé</div>;
+        return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
       case 'orders-admin':
-        return isKYCReviewer() ? <OrdersDashboardNew /> : <div className="text-foreground">Accès non autorisé</div>;
+        return isKYCReviewer() ? <OrdersDashboardNew /> : <div className="text-white">Accès non autorisé</div>;
       case 'admin-portal':
-        return (isAdmin() || isKYCReviewer()) ? <AdminPortal /> : <div className="text-foreground">Accès non autorisé</div>;
+        return (isAdmin() || isKYCReviewer()) ? <AdminPortal /> : <div className="text-white">Accès non autorisé</div>;
       default:
         return <DashboardHome user={user} />;
     }
@@ -91,7 +90,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   return (
     <TransactionProvider>
       <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-background">
+        <div className="min-h-screen flex w-full bg-terex-dark">
           <AppSidebar 
             activeSection={activeSection}
             setActiveSection={setActiveSection}
@@ -104,16 +103,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               onLogout={handleLogout}
             />
             
-            {/* Bouton toggle de thème en haut à droite */}
-            <div className="fixed top-6 right-6 z-50">
-              <ThemeToggle />
-            </div>
-            
             {/* Bouton de déconnexion flottant uniquement sur tablette */}
             {isTablet && (
               <Button 
                 onClick={handleLogout}
-                className="fixed top-6 right-20 z-50 h-14 px-6 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm shadow-lg"
+                className="fixed top-6 right-6 z-50 h-14 px-6 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm shadow-lg"
               >
                 <LogOut className="mr-2 h-5 w-5" />
                 Déconnexion
