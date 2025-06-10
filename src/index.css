@@ -104,6 +104,12 @@
     height: 100%;
   }
 
+  /* Application des couleurs de la landing page aux autres cartes et formulaires */
+  .bg-card {
+    background: rgba(58, 59, 60, 0.8) !important;
+    border-color: rgba(59, 150, 143, 0.3) !important;
+  }
+
   /* Suppression des arrière-plans gris/sombres des composants pour tous les modes */
   .bg-terex-dark,
   .bg-terex-darker,
@@ -139,6 +145,11 @@
     
     .text-gray-400 {
       @apply text-gray-500;
+    }
+
+    .bg-card {
+      background: white !important;
+      border-color: rgba(214, 211, 209, 0.3) !important;
     }
   }
 }
