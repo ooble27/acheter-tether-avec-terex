@@ -97,7 +97,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             setActiveSection={setActiveSection}
             onLogout={handleLogout}
           />
-          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'} relative`}>
+          <main className={`flex-1 ${isMobile ? 'pt-16' : ''} relative`}>
             <MobileMenu 
               activeSection={activeSection}
               setActiveSection={setActiveSection}
