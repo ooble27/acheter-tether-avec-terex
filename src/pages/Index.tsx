@@ -26,8 +26,8 @@ const Index = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-terex-dark flex items-center justify-center">
-        <div className="text-white text-lg">Chargement...</div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-foreground text-lg">Chargement...</div>
       </div>
     );
   }

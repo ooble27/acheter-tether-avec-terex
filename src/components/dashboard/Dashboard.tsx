@@ -77,11 +77,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'about-terex':
         return <AboutTerex onBack={() => setActiveSection('faq')} />;
       case 'kyc-admin':
-        return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
+        return isKYCReviewer() ? <KYCAdmin /> : <div className="text-foreground">Accès non autorisé</div>;
       case 'orders-admin':
-        return isKYCReviewer() ? <OrdersDashboardNew /> : <div className="text-white">Accès non autorisé</div>;
+        return isKYCReviewer() ? <OrdersDashboardNew /> : <div className="text-foreground">Accès non autorisé</div>;
       case 'admin-portal':
-        return (isAdmin() || isKYCReviewer()) ? <AdminPortal /> : <div className="text-white">Accès non autorisé</div>;
+        return (isAdmin() || isKYCReviewer()) ? <AdminPortal /> : <div className="text-foreground">Accès non autorisé</div>;
       default:
         return <DashboardHome user={user} />;
     }
@@ -90,7 +90,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   return (
     <TransactionProvider>
       <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-terex-dark">
+        <div className="min-h-screen flex w-full bg-background">
           <AppSidebar 
             activeSection={activeSection}
             setActiveSection={setActiveSection}
