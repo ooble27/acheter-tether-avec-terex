@@ -27,7 +27,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
   if (loading || kycLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="text-white">Chargement...</div>
+        <div className="text-foreground">Chargement...</div>
       </div>
     );
   }
@@ -40,9 +40,9 @@ export function Profile({ user, onLogout }: ProfileProps) {
   const showKYCAlert = !isKYCVerified && kycData?.status !== 'submitted' && kycData?.status !== 'under_review';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark animate-fade-in">
-      {/* Header avec gradient */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-terex-accent/20 via-terex-accent/10 to-transparent rounded-2xl mb-8 p-8">
+    <div className="min-h-screen bg-background animate-fade-in">
+      {/* Header avec gradient adaptatif */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-terex-accent/20 via-terex-accent/10 to-transparent rounded-2xl mb-8 p-8 border border-border">
         <div className="absolute inset-0 bg-gradient-to-r from-terex-accent/5 to-transparent"></div>
         <div className="relative z-10">
           <div className="flex items-center space-x-4 mb-4">
@@ -50,16 +50,16 @@ export function Profile({ user, onLogout }: ProfileProps) {
               <User className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-white mb-2">Mon Profil</h1>
-              <p className="text-gray-300 text-lg">Bienvenue {user?.name || 'Utilisateur'}</p>
+              <h1 className="text-4xl font-bold text-foreground mb-2">Mon Profil</h1>
+              <p className="text-muted-foreground text-lg">Bienvenue {user?.name || 'Utilisateur'}</p>
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2 bg-terex-darker/50 backdrop-blur-sm rounded-full px-4 py-2">
+            <div className="flex items-center space-x-2 bg-card/50 backdrop-blur-sm rounded-full px-4 py-2 border border-border">
               <Star className="w-4 h-4 text-terex-accent" />
-              <span className="text-white text-sm">Membre Terex</span>
+              <span className="text-foreground text-sm">Membre Terex</span>
             </div>
-            <div className="flex items-center space-x-2 bg-green-500/20 backdrop-blur-sm rounded-full px-4 py-2">
+            <div className="flex items-center space-x-2 bg-green-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-green-500/30">
               <Award className="w-4 h-4 text-green-400" />
               <span className="text-green-400 text-sm">Compte Actif</span>
             </div>

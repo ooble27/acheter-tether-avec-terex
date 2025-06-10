@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
@@ -23,6 +22,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 interface DashboardProps {
   user: { email: string; name: string } | null;
@@ -103,11 +103,16 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               onLogout={handleLogout}
             />
             
+            {/* Toggle de thème en haut à droite */}
+            <div className="fixed top-6 right-6 z-50">
+              <ThemeToggle />
+            </div>
+            
             {/* Bouton de déconnexion flottant uniquement sur tablette */}
             {isTablet && (
               <Button 
                 onClick={handleLogout}
-                className="fixed top-6 right-6 z-50 h-14 px-6 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm shadow-lg"
+                className="fixed top-6 right-20 z-50 h-14 px-6 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
               >
                 <LogOut className="mr-2 h-5 w-5" />
                 Déconnexion

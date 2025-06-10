@@ -1,4 +1,3 @@
-
 import {
   Sidebar,
   SidebarContent,
@@ -12,7 +11,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut } from 'lucide-react';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -82,8 +80,8 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
   return (
     <div className="flex flex-col h-full min-h-0">
       <SidebarHeader className="p-6 border-b border-sidebar-border/30">
-        {/* Logo Header avec toggle de thème */}
-        <div className="flex items-center justify-between">
+        {/* Logo Header sans toggle de thème */}
+        <div className="flex items-center">
           <div className="flex items-center space-x-3">
             <div className="relative flex items-center gap-3 p-3 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-xl border border-terex-accent/20">
               <div className="relative">
@@ -104,7 +102,6 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
               </div>
             </div>
           </div>
-          <ThemeToggle />
         </div>
       </SidebarHeader>
       

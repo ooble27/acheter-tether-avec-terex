@@ -104,42 +104,37 @@
     height: 100%;
   }
 
-  /* Adaptations pour le mode clair */
+  /* Améliorations pour la visibilité en mode clair */
   [data-theme="light"] {
-    .bg-terex-dark {
-      @apply bg-gray-50;
+    /* Messages d'erreur et validation plus visibles */
+    .text-red-500 {
+      @apply text-red-600;
     }
     
-    .bg-terex-darker {
-      @apply bg-white;
+    .text-red-400 {
+      @apply text-red-500;
     }
     
+    .text-green-500 {
+      @apply text-green-600;
+    }
+    
+    .text-green-400 {
+      @apply text-green-500;
+    }
+    
+    /* Sélecteurs plus clairs */
     .bg-terex-gray {
-      @apply bg-gray-100;
+      @apply bg-white border border-gray-200;
     }
     
     .bg-terex-gray\/30 {
-      @apply bg-gray-200/30;
+      @apply bg-gray-50 border border-gray-200;
     }
     
-    .border-terex-gray {
-      @apply border-gray-200;
-    }
-    
-    .border-terex-gray\/30 {
-      @apply border-gray-300/30;
-    }
-    
-    .text-white {
-      @apply text-gray-900;
-    }
-    
-    .text-gray-300 {
-      @apply text-gray-600;
-    }
-    
-    .text-gray-400 {
-      @apply text-gray-500;
+    /* Correction des fonds de sélecteurs */
+    .bg-terex-darker {
+      @apply bg-white;
     }
   }
 }

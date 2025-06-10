@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -88,14 +89,14 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
   };
 
   return (
-    <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border-terex-gray shadow-2xl">
-      <CardHeader className="bg-gradient-to-r from-terex-accent/10 to-transparent border-b border-terex-gray/50">
+    <Card className="bg-card border-border shadow-lg">
+      <CardHeader className="bg-gradient-to-r from-terex-accent/10 to-transparent border-b border-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <User className="w-5 h-5 mr-2 text-terex-accent" />
             <div>
-              <CardTitle className="text-white">Informations personnelles</CardTitle>
-              <CardDescription className="text-gray-400">
+              <CardTitle className="text-card-foreground">Informations personnelles</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Gérez vos informations de base
               </CardDescription>
             </div>
@@ -117,91 +118,91 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
         {!isEditing ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <div className="p-4 bg-terex-gray/30 rounded-xl">
-                <Label className="text-gray-400 text-sm">Nom complet</Label>
-                <p className="text-white font-medium mt-1">{formData.name || 'Non renseigné'}</p>
+              <div className="p-4 bg-muted/30 rounded-xl border border-border">
+                <Label className="text-muted-foreground text-sm">Nom complet</Label>
+                <p className="text-foreground font-medium mt-1">{formData.name || 'Non renseigné'}</p>
               </div>
-              <div className="p-4 bg-terex-gray/30 rounded-xl">
-                <Label className="text-gray-400 text-sm">Email</Label>
-                <p className="text-white font-medium mt-1">{formData.email}</p>
+              <div className="p-4 bg-muted/30 rounded-xl border border-border">
+                <Label className="text-muted-foreground text-sm">Email</Label>
+                <p className="text-foreground font-medium mt-1">{formData.email}</p>
               </div>
             </div>
             
             <div className="space-y-4">
-              <div className="p-4 bg-terex-gray/30 rounded-xl">
-                <Label className="text-gray-400 text-sm">Téléphone</Label>
-                <p className="text-white font-medium mt-1">{formData.phone || 'Non renseigné'}</p>
+              <div className="p-4 bg-muted/30 rounded-xl border border-border">
+                <Label className="text-muted-foreground text-sm">Téléphone</Label>
+                <p className="text-foreground font-medium mt-1">{formData.phone || 'Non renseigné'}</p>
               </div>
-              <div className="p-4 bg-terex-gray/30 rounded-xl">
-                <Label className="text-gray-400 text-sm">Pays</Label>
-                <p className="text-white font-medium mt-1">{formData.country || 'Non renseigné'}</p>
+              <div className="p-4 bg-muted/30 rounded-xl border border-border">
+                <Label className="text-muted-foreground text-sm">Pays</Label>
+                <p className="text-foreground font-medium mt-1">{formData.country || 'Non renseigné'}</p>
               </div>
             </div>
             
-            <div className="p-4 bg-terex-gray/30 rounded-xl">
-              <Label className="text-gray-400 text-sm">Langue</Label>
-              <p className="text-white font-medium mt-1">{formData.language === 'fr' ? 'Français' : 'English'}</p>
+            <div className="p-4 bg-muted/30 rounded-xl border border-border">
+              <Label className="text-muted-foreground text-sm">Langue</Label>
+              <p className="text-foreground font-medium mt-1">{formData.language === 'fr' ? 'Français' : 'English'}</p>
             </div>
           </div>
         ) : (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="name" className="text-gray-300">Nom complet</Label>
+                <Label htmlFor="name" className="text-foreground">Nom complet</Label>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="bg-terex-gray border-terex-gray text-white mt-1"
+                  className="bg-background border-border text-foreground mt-1"
                 />
               </div>
               <div>
-                <Label htmlFor="phone" className="text-gray-300">Téléphone</Label>
+                <Label htmlFor="phone" className="text-foreground">Téléphone</Label>
                 <Input
                   id="phone"
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
-                  className="bg-terex-gray border-terex-gray text-white mt-1"
+                  className="bg-background border-border text-foreground mt-1"
                   placeholder="+221 XX XXX XX XX"
                 />
               </div>
             </div>
 
             <div>
-              <Label htmlFor="email" className="text-gray-300">Email</Label>
+              <Label htmlFor="email" className="text-foreground">Email</Label>
               <Input
                 id="email"
                 value={formData.email}
                 disabled
-                className="bg-terex-gray border-terex-gray text-gray-400 mt-1"
+                className="bg-muted border-border text-muted-foreground mt-1"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="country" className="text-gray-300">Pays</Label>
+                <Label htmlFor="country" className="text-foreground">Pays</Label>
                 <Select value={formData.country} onValueChange={(value) => handleInputChange('country', value)}>
-                  <SelectTrigger className="bg-terex-gray border-terex-gray text-white mt-1">
+                  <SelectTrigger className="bg-background border-border text-foreground mt-1">
                     <SelectValue placeholder="Sélectionnez votre pays" />
                   </SelectTrigger>
-                  <SelectContent className="bg-terex-darker border-terex-gray">
-                    <SelectItem value="senegal" className="text-white hover:bg-terex-gray">Sénégal</SelectItem>
-                    <SelectItem value="mali" className="text-white hover:bg-terex-gray">Mali</SelectItem>
-                    <SelectItem value="burkina" className="text-white hover:bg-terex-gray">Burkina Faso</SelectItem>
-                    <SelectItem value="cote_ivoire" className="text-white hover:bg-terex-gray">Côte d'Ivoire</SelectItem>
-                    <SelectItem value="niger" className="text-white hover:bg-terex-gray">Niger</SelectItem>
+                  <SelectContent className="bg-popover border-border">
+                    <SelectItem value="senegal" className="text-popover-foreground hover:bg-accent">Sénégal</SelectItem>
+                    <SelectItem value="mali" className="text-popover-foreground hover:bg-accent">Mali</SelectItem>
+                    <SelectItem value="burkina" className="text-popover-foreground hover:bg-accent">Burkina Faso</SelectItem>
+                    <SelectItem value="cote_ivoire" className="text-popover-foreground hover:bg-accent">Côte d'Ivoire</SelectItem>
+                    <SelectItem value="niger" className="text-popover-foreground hover:bg-accent">Niger</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label htmlFor="language" className="text-gray-300">Langue</Label>
+                <Label htmlFor="language" className="text-foreground">Langue</Label>
                 <Select value={formData.language} onValueChange={(value) => handleInputChange('language', value)}>
-                  <SelectTrigger className="bg-terex-gray border-terex-gray text-white mt-1">
+                  <SelectTrigger className="bg-background border-border text-foreground mt-1">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-terex-darker border-terex-gray">
-                    <SelectItem value="fr" className="text-white hover:bg-terex-gray">Français</SelectItem>
-                    <SelectItem value="en" className="text-white hover:bg-terex-gray">English</SelectItem>
+                  <SelectContent className="bg-popover border-border">
+                    <SelectItem value="fr" className="text-popover-foreground hover:bg-accent">Français</SelectItem>
+                    <SelectItem value="en" className="text-popover-foreground hover:bg-accent">English</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -218,7 +219,7 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
               <Button 
                 onClick={handleCancel}
                 variant="outline"
-                className="border-terex-gray text-gray-300 hover:bg-terex-gray flex-1"
+                className="border-border text-muted-foreground hover:bg-accent flex-1"
               >
                 <X className="w-4 h-4 mr-2" />
                 Annuler
