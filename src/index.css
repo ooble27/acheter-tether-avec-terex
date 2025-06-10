@@ -104,21 +104,39 @@
     height: 100%;
   }
 
-  /* Suppression des arrière-plans gris/sombres des composants pour tous les modes */
-  .bg-terex-dark,
-  .bg-terex-darker,
-  .bg-terex-gray,
+  /* Suppression des arrière-plans gris/sombres des composants */
+  .bg-terex-dark {
+    @apply bg-transparent;
+  }
+  
+  .bg-terex-darker {
+    @apply bg-transparent;
+  }
+  
+  .bg-terex-gray {
+    @apply bg-transparent;
+  }
+  
   .bg-terex-gray\/30 {
-    @apply bg-transparent !important;
+    @apply bg-transparent;
   }
 
-  /* Mode clair - même traitement transparent */
+  /* Adaptations pour le mode clair */
   [data-theme="light"] {
-    .bg-terex-dark,
-    .bg-terex-darker,
-    .bg-terex-gray,
+    .bg-terex-dark {
+      @apply bg-transparent;
+    }
+    
+    .bg-terex-darker {
+      @apply bg-transparent;
+    }
+    
+    .bg-terex-gray {
+      @apply bg-transparent;
+    }
+    
     .bg-terex-gray\/30 {
-      @apply bg-transparent !important;
+      @apply bg-transparent;
     }
     
     .border-terex-gray {
@@ -185,15 +203,15 @@
   box-shadow: none;
 }
 
-/* Glass morphism effect pour les cartes - complètement transparent */
+/* Glass morphism effect pour les cartes - rendu transparent */
 .glass-card {
-  background: transparent !important;
+  background: transparent;
   backdrop-filter: none;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 [data-theme="light"] .glass-card {
-  background: transparent !important;
+  background: transparent;
   backdrop-filter: none;
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
