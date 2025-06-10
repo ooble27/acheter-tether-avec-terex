@@ -104,12 +104,36 @@
     height: 100%;
   }
 
-  /* Suppression des arrière-plans gris/sombres des composants pour tous les modes */
-  .bg-terex-dark,
+  /* UNIFORMISATION DES COULEURS - Même style que la landing page */
+  
+  /* Mode sombre - toutes les cartes utilisent les mêmes couleurs que la landing page */
+  .bg-card,
+  .bg-secondary,
+  .bg-muted,
+  .bg-accent,
   .bg-terex-darker,
+  .bg-terex-darker\/50,
+  .bg-terex-darker\/60,
+  .bg-terex-darker\/80,
+  .bg-terex-dark,
+  .bg-terex-dark\/50,
   .bg-terex-gray,
   .bg-terex-gray\/30 {
-    @apply bg-transparent !important;
+    background-color: rgba(58, 59, 60, 0.8) !important; /* terex-darker/80 comme sur la landing page */
+  }
+
+  /* Bordures uniformes comme sur la landing page */
+  [data-theme="dark"] .border-card,
+  [data-theme="dark"] .border-secondary,
+  [data-theme="dark"] .border-muted,
+  [data-theme="dark"] .border-accent,
+  [data-theme="dark"] .border-terex-gray,
+  [data-theme="dark"] .border-terex-gray\/30,
+  [data-theme="dark"] .border-terex-accent\/20,
+  [data-theme="dark"] .border-terex-accent\/30,
+  [data-theme="dark"] .border-terex-accent\/40,
+  [data-theme="dark"] .border-terex-accent\/50 {
+    border-color: rgba(59, 150, 143, 0.3) !important; /* terex-accent/30 comme sur la landing page */
   }
 
   /* Mode clair - même traitement transparent */
@@ -185,11 +209,11 @@
   box-shadow: none;
 }
 
-/* Glass morphism effect pour les cartes - complètement transparent */
+/* Glass morphism effect pour les cartes - même style que landing page */
 .glass-card {
-  background: transparent !important;
-  backdrop-filter: none;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(58, 59, 60, 0.8) !important; /* Même couleur que landing page */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(59, 150, 143, 0.3); /* Même bordure que landing page */
 }
 
 [data-theme="light"] .glass-card {
