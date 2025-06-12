@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useCryptoRates } from '@/hooks/useCryptoRates';
 
-// Import components
+// Importer les nouveaux composants
 import { TransferConfirmation } from './international-transfer/TransferConfirmation';
 import { PaymentInstructions } from './international-transfer/PaymentInstructions';
 import { TransferPending } from './international-transfer/TransferPending';
@@ -19,7 +19,6 @@ import { RecipientForm } from './international-transfer/RecipientForm';
 import { TransferSidebar } from './international-transfer/TransferSidebar';
 
 export function InternationalTransfer() {
-  // State hooks
   const [showKYCPage, setShowKYCPage] = useState(false);
   const [currentStep, setCurrentStep] = useState('form');
   const [sendAmount, setSendAmount] = useState('');
@@ -35,7 +34,6 @@ export function InternationalTransfer() {
   const [provider, setProvider] = useState('');
   const [createdTransfer, setCreatedTransfer] = useState<any>(null);
   
-  // Custom hooks
   const { createTransfer, loading } = useInternationalTransfers();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -46,48 +44,7 @@ export function InternationalTransfer() {
   const usdToCfa = usdtToCfa || 600;
   const exchangeRate = Math.round(cadToUsd * usdToCfa * 100) / 100;
   
-  // Calcul du montant reçu avec déduction automatique des frais tiers
-  const calculateReceiveAmount = () => {
-    if (!sendAmount) return '0.00';
-    
-    const baseAmount = parseFloat(sendAmount) * exchangeRate;
-    
-    // Si c'est Mobile Money, déduire les frais selon le provider sélectionné
-    if (receiveMethod === 'mobile' && provider) {
-      let feeRate = 0;
-      if (provider === 'wave') {
-        feeRate = 0.01; // 1% pour Wave
-      } else if (provider === 'orange') {
-        feeRate = 0.008; // 0.8% pour Orange Money
-      }
-      
-      // Déduction automatique des frais du montant final
-      const finalAmount = baseAmount * (1 - feeRate);
-      return finalAmount.toFixed(2);
-    }
-    
-    return baseAmount.toFixed(2);
-  };
-
-  // Calcul des frais déduits pour affichage
-  const calculateDeductedFees = () => {
-    if (!sendAmount || receiveMethod !== 'mobile' || !provider) return '0.00';
-    
-    const baseAmount = parseFloat(sendAmount) * exchangeRate;
-    let feeRate = 0;
-    
-    if (provider === 'wave') {
-      feeRate = 0.01; // 1%
-    } else if (provider === 'orange') {
-      feeRate = 0.008; // 0.8%
-    }
-    
-    const feesAmount = baseAmount * feeRate;
-    return feesAmount.toFixed(2);
-  };
-
-  const receiveAmount = calculateReceiveAmount();
-  const deductedFees = calculateDeductedFees();
+  const receiveAmount = sendAmount ? (parseFloat(sendAmount) * exchangeRate).toFixed(2) : '0.00';
   const fees = '0.00'; // Gratuit avec TRX
 
   const handleMobileMoneyComplete = (selectedProvider: string, phoneNumber: string) => {
@@ -279,8 +236,6 @@ export function InternationalTransfer() {
                     setReceiveMethod={setReceiveMethod}
                     exchangeRate={exchangeRate}
                     fees={fees}
-                    provider={provider}
-                    deductedFees={deductedFees}
                   />
 
                   <RecipientForm
