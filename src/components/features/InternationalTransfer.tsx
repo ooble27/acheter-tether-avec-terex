@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -44,7 +43,26 @@ export function InternationalTransfer() {
   const usdToCfa = usdtToCfa || 600;
   const exchangeRate = Math.round(cadToUsd * usdToCfa * 100) / 100;
   
-  const receiveAmount = sendAmount ? (parseFloat(sendAmount) * exchangeRate).toFixed(2) : '0.00';
+  // Calcul du montant à recevoir avec déduction automatique des frais
+  const calculateReceiveAmount = () => {
+    if (!sendAmount) return '0.00';
+    
+    const baseAmount = parseFloat(sendAmount) * exchangeRate;
+    
+    if (receiveMethod === 'mobile') {
+      if (provider === 'wave') {
+        // Déduction de 1% pour Wave
+        return (baseAmount * 0.99).toFixed(2);
+      } else if (provider === 'orange') {
+        // Déduction de 0.8% pour Orange Money
+        return (baseAmount * 0.992).toFixed(2);
+      }
+    }
+    
+    return baseAmount.toFixed(2);
+  };
+  
+  const receiveAmount = calculateReceiveAmount();
   const fees = '0.00'; // Gratuit avec TRX
 
   const handleMobileMoneyComplete = (selectedProvider: string, phoneNumber: string) => {
@@ -236,6 +254,7 @@ export function InternationalTransfer() {
                     setReceiveMethod={setReceiveMethod}
                     exchangeRate={exchangeRate}
                     fees={fees}
+                    provider={provider}
                   />
 
                   <RecipientForm

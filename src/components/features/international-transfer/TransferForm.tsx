@@ -17,6 +17,7 @@ interface TransferFormProps {
   setReceiveMethod: (value: string) => void;
   exchangeRate: number;
   fees: string;
+  provider: string;
 }
 
 const availableCountries = [
@@ -39,10 +40,62 @@ export function TransferForm({
   receiveMethod,
   setReceiveMethod,
   exchangeRate,
-  fees
+  fees,
+  provider
 }: TransferFormProps) {
+  // Calcul des frais selon le service choisi
+  const calculateFinalAmount = () => {
+    if (!sendAmount || !receiveMethod) return '0.00';
+    
+    const baseAmount = parseFloat(sendAmount) * exchangeRate;
+    
+    if (receiveMethod === 'mobile') {
+      if (provider === 'wave') {
+        // Déduction de 1% pour Wave
+        return (baseAmount * 0.99).toFixed(2);
+      } else if (provider === 'orange') {
+        // Déduction de 0.8% pour Orange Money
+        return (baseAmount * 0.992).toFixed(2);
+      }
+    }
+    
+    return baseAmount.toFixed(2);
+  };
+
+  const finalReceiveAmount = calculateFinalAmount();
+
   return (
     <div className="space-y-6">
+      {/* Méthode de réception - MAINTENANT EN PREMIER */}
+      <div className="space-y-2">
+        <Label className="text-white text-sm font-medium">Comment le destinataire reçoit-il l'argent ?</Label>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {[
+            { id: 'mobile', label: 'Mobile Money', icon: Smartphone, desc: 'Orange Money, Wave' },
+            { id: 'bank_transfer', label: 'Virement bancaire', icon: MapPin, desc: 'Directement sur le compte' },
+            { id: 'cash_pickup', label: 'Retrait en espèces', icon: Phone, desc: 'Points de retrait' }
+          ].map((method) => (
+            <div
+              key={method.id}
+              onClick={() => setReceiveMethod(method.id)}
+              className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                receiveMethod === method.id
+                  ? 'border-terex-accent bg-terex-accent/10'
+                  : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
+              }`}
+            >
+              <div className="flex items-center space-x-3">
+                <method.icon className="w-5 h-5 text-terex-accent" />
+                <div>
+                  <p className="text-white font-medium text-sm">{method.label}</p>
+                  <p className="text-gray-400 text-xs">{method.desc}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Montant et devises */}
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -67,7 +120,7 @@ export function TransferForm({
             <div className="flex space-x-2">
               <Input
                 type="text"
-                value={receiveAmount}
+                value={finalReceiveAmount}
                 readOnly
                 className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 flex-1"
               />
@@ -89,7 +142,7 @@ export function TransferForm({
               <span className="text-white">1 CAD = {exchangeRate} CFA</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">Frais</span>
+              <span className="text-gray-400">Frais Terex</span>
               <span className="text-green-500 font-medium">GRATUIT</span>
             </div>
             <div className="flex justify-between">
@@ -101,6 +154,23 @@ export function TransferForm({
               <span className="text-white font-semibold">{sendAmount || '0.00'} CAD</span>
             </div>
           </div>
+          
+          {receiveMethod === 'mobile' && (provider === 'wave' || provider === 'orange') && (
+            <div className="mt-3 pt-3 border-t border-terex-gray-light">
+              <div className="flex justify-between text-sm">
+                <span className="text-yellow-400">
+                  Frais {provider === 'wave' ? 'Wave (1%)' : 'Orange Money (0.8%)'}
+                </span>
+                <span className="text-yellow-400">
+                  -{(parseFloat(sendAmount || '0') * exchangeRate * (provider === 'wave' ? 0.01 : 0.008)).toFixed(2)} CFA
+                </span>
+              </div>
+              <div className="flex justify-between text-sm font-semibold mt-1">
+                <span className="text-white">Montant final reçu</span>
+                <span className="text-terex-accent">{finalReceiveAmount} CFA</span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -138,36 +208,6 @@ export function TransferForm({
               onClick={() => setPaymentMethod(method.id)}
               className={`p-4 rounded-lg border cursor-pointer transition-all ${
                 paymentMethod === method.id
-                  ? 'border-terex-accent bg-terex-accent/10'
-                  : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
-              }`}
-            >
-              <div className="flex items-center space-x-3">
-                <method.icon className="w-5 h-5 text-terex-accent" />
-                <div>
-                  <p className="text-white font-medium text-sm">{method.label}</p>
-                  <p className="text-gray-400 text-xs">{method.desc}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Méthode de réception */}
-      <div className="space-y-2">
-        <Label className="text-white text-sm font-medium">Comment le destinataire reçoit-il l'argent ?</Label>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {[
-            { id: 'mobile', label: 'Mobile Money', icon: Smartphone, desc: 'Orange Money, Wave' },
-            { id: 'bank_transfer', label: 'Virement bancaire', icon: MapPin, desc: 'Directement sur le compte' },
-            { id: 'cash_pickup', label: 'Retrait en espèces', icon: Phone, desc: 'Points de retrait' }
-          ].map((method) => (
-            <div
-              key={method.id}
-              onClick={() => setReceiveMethod(method.id)}
-              className={`p-4 rounded-lg border cursor-pointer transition-all ${
-                receiveMethod === method.id
                   ? 'border-terex-accent bg-terex-accent/10'
                   : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
               }`}
