@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -51,7 +52,7 @@ export function InternationalTransfer() {
     
     const baseAmount = parseFloat(sendAmount) * exchangeRate;
     
-    // Si c'est Mobile Money, déduire les frais selon le provider
+    // Si c'est Mobile Money, déduire les frais selon le provider sélectionné
     if (receiveMethod === 'mobile' && provider) {
       let feeRate = 0;
       if (provider === 'wave') {
@@ -60,6 +61,7 @@ export function InternationalTransfer() {
         feeRate = 0.008; // 0.8% pour Orange Money
       }
       
+      // Déduction automatique des frais du montant final
       const finalAmount = baseAmount * (1 - feeRate);
       return finalAmount.toFixed(2);
     }
@@ -67,7 +69,25 @@ export function InternationalTransfer() {
     return baseAmount.toFixed(2);
   };
 
+  // Calcul des frais déduits pour affichage
+  const calculateDeductedFees = () => {
+    if (!sendAmount || receiveMethod !== 'mobile' || !provider) return '0.00';
+    
+    const baseAmount = parseFloat(sendAmount) * exchangeRate;
+    let feeRate = 0;
+    
+    if (provider === 'wave') {
+      feeRate = 0.01; // 1%
+    } else if (provider === 'orange') {
+      feeRate = 0.008; // 0.8%
+    }
+    
+    const feesAmount = baseAmount * feeRate;
+    return feesAmount.toFixed(2);
+  };
+
   const receiveAmount = calculateReceiveAmount();
+  const deductedFees = calculateDeductedFees();
   const fees = '0.00'; // Gratuit avec TRX
 
   const handleMobileMoneyComplete = (selectedProvider: string, phoneNumber: string) => {
@@ -259,6 +279,8 @@ export function InternationalTransfer() {
                     setReceiveMethod={setReceiveMethod}
                     exchangeRate={exchangeRate}
                     fees={fees}
+                    provider={provider}
+                    deductedFees={deductedFees}
                   />
 
                   <RecipientForm

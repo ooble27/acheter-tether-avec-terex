@@ -1,4 +1,3 @@
-
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -17,6 +16,8 @@ interface TransferFormProps {
   setReceiveMethod: (method: string) => void;
   exchangeRate: number;
   fees: string;
+  provider?: string;
+  deductedFees?: string;
 }
 
 const countries = [
@@ -39,10 +40,24 @@ export function TransferForm({
   receiveMethod,
   setReceiveMethod,
   exchangeRate,
-  fees
+  fees,
+  provider,
+  deductedFees
 }: TransferFormProps) {
   const getQuickAmounts = () => {
     return ['50', '100', '200', '500', '1000'];
+  };
+
+  const getProviderName = () => {
+    if (provider === 'wave') return 'Wave';
+    if (provider === 'orange') return 'Orange Money';
+    return null;
+  };
+
+  const getProviderFeeRate = () => {
+    if (provider === 'wave') return '1%';
+    if (provider === 'orange') return '0,8%';
+    return '0%';
   };
 
   return (
@@ -54,6 +69,15 @@ export function TransferForm({
           <strong>Chez Terex, les frais sont gratuits.</strong> Cependant, les services tiers appliquent leurs propres frais :
           <br />• Wave : 1 % du montant reçu
           <br />• Orange Money : 0,8 % du montant reçu
+          {provider && (
+            <div className="mt-2 p-2 bg-terex-accent/20 rounded">
+              <strong>Service sélectionné : {getProviderName()}</strong>
+              <br />Frais appliqués : {getProviderFeeRate()} 
+              {deductedFees && parseFloat(deductedFees) > 0 && (
+                <span> (soit {deductedFees} CFA déduits automatiquement)</span>
+              )}
+            </div>
+          )}
         </AlertDescription>
       </Alert>
 
@@ -76,7 +100,14 @@ export function TransferForm({
         </div>
         
         <div className="space-y-2">
-          <Label className="text-white text-sm font-medium">Le destinataire reçoit</Label>
+          <Label className="text-white text-sm font-medium">
+            Le destinataire reçoit
+            {provider && deductedFees && parseFloat(deductedFees) > 0 && (
+              <span className="text-orange-400 text-xs ml-1">
+                (après déduction frais {getProviderName()})
+              </span>
+            )}
+          </Label>
           <div className="relative">
             <Input
               type="text"
@@ -122,6 +153,12 @@ export function TransferForm({
           <span className="text-gray-400">Frais Terex</span>
           <span className="text-terex-accent">{fees} CAD (Gratuit)</span>
         </div>
+        {provider && deductedFees && parseFloat(deductedFees) > 0 && (
+          <div className="flex justify-between text-sm mt-1">
+            <span className="text-gray-400">Frais {getProviderName()}</span>
+            <span className="text-orange-400">-{deductedFees} CFA (déduit)</span>
+          </div>
+        )}
       </div>
 
       {/* Country Selection */}
