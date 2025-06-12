@@ -13,32 +13,42 @@ import AuthPage from "./pages/AuthPage";
 import AdminPage from "./pages/AdminPage";
 import BlockchainPage from "./pages/BlockchainPage";
 import NotFound from "./pages/NotFound";
+import React from 'react';
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <PWASessionSync />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/admin" element={<AdminPage />} />
-              <Route path="/blockchain" element={<BlockchainPage />} />
-              <Route path="/auth/callback" element={<AuthCallback />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
+// Create a wrapper component to ensure proper React context
+const AppContent = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/auth" element={<AuthPage />} />
+      <Route path="/admin" element={<AdminPage />} />
+      <Route path="/blockchain" element={<BlockchainPage />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
+      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </BrowserRouter>
 );
+
+const App = () => {
+  return (
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AuthProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <PWASessionSync />
+              <AppContent />
+            </TooltipProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </React.StrictMode>
+  );
+};
 
 export default App;
