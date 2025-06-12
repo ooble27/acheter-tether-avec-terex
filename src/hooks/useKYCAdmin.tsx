@@ -108,7 +108,24 @@ export const useKYCAdmin = () => {
 
   const approveVerification = async (verificationId: string, comment?: string) => {
     try {
-      // Utiliser une requête directe au lieu de RPC pour éviter les problèmes de types
+      // D'abord, récupérer les informations de la vérification pour l'email
+      const { data: verificationData, error: fetchError } = await supabase
+        .from('kyc_verifications')
+        .select('user_id, first_name, last_name')
+        .eq('id', verificationId)
+        .single();
+
+      if (fetchError) {
+        console.error('Erreur lors de la récupération des données de vérification:', fetchError);
+        toast({
+          title: "Erreur",
+          description: "Impossible de récupérer les informations de vérification",
+          variant: "destructive"
+        });
+        return { error: fetchError.message };
+      }
+
+      // Mettre à jour le statut de la vérification
       const { error } = await supabase
         .from('kyc_verifications')
         .update({
@@ -130,9 +147,37 @@ export const useKYCAdmin = () => {
         return { error: error.message };
       }
 
+      // Envoyer l'email d'approbation KYC avec lien de connexion
+      try {
+        console.log('Envoi de l\'email d\'approbation KYC pour l\'utilisateur:', verificationData.user_id);
+        
+        const { error: emailError } = await supabase.functions.invoke('send-email-notification', {
+          body: {
+            userId: verificationData.user_id,
+            emailType: 'kyc_approved',
+            transactionType: 'kyc',
+            orderData: {
+              first_name: verificationData.first_name,
+              last_name: verificationData.last_name,
+              comment: comment || null
+            }
+          },
+        });
+
+        if (emailError) {
+          console.error('Erreur lors de l\'envoi de l\'email d\'approbation:', emailError);
+          // Ne pas bloquer l'approbation même si l'email échoue
+        } else {
+          console.log('Email d\'approbation KYC envoyé avec succès');
+        }
+      } catch (emailError) {
+        console.error('Erreur inattendue lors de l\'envoi de l\'email:', emailError);
+        // Ne pas bloquer l'approbation même si l'email échoue
+      }
+
       toast({
         title: "Vérification approuvée",
-        description: "La vérification d'identité a été approuvée avec succès",
+        description: "La vérification d'identité a été approuvée avec succès et l'utilisateur a été notifié par email",
         className: "bg-green-600 text-white border-green-600"
       });
 

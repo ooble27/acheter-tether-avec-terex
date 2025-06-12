@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.0.0";
 import { Resend } from "npm:resend@2.0.0";
@@ -10,6 +9,7 @@ import { OrderConfirmationEmail } from './_templates/order-confirmation.tsx';
 import { StatusUpdateEmail } from './_templates/status-update.tsx';
 import { PaymentConfirmedEmail } from './_templates/payment-confirmed.tsx';
 import { TransferConfirmationEmail } from './_templates/transfer-confirmation.tsx';
+import { KYCApprovedEmail } from './_templates/kyc-approved-email.tsx';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -143,6 +143,32 @@ const handler = async (req: Request): Promise<Response> => {
         htmlContent = await renderAsync(
           React.createElement(TransferConfirmationEmail, {
             transferData: orderData
+          })
+        );
+        break;
+
+      case 'kyc_approved':
+        subject = `🎉 Félicitations ! Votre vérification d'identité a été approuvée - Accédez à votre compte Terex`;
+        
+        // Générer un lien de connexion magique pour l'utilisateur
+        const { data: magicLinkData, error: magicLinkError } = await supabase.auth.admin.generateLink({
+          type: 'magiclink',
+          email: finalEmailAddress,
+          options: {
+            redirectTo: `${supabaseUrl.replace('.supabase.co', '.supabase.co')}/auth/callback?redirect_to=${encodeURIComponent('https://app.terangaexchange.com/')}`
+          }
+        });
+
+        if (magicLinkError) {
+          console.error('Erreur lors de la génération du lien magique:', magicLinkError);
+          throw new Error('Impossible de générer le lien de connexion');
+        }
+
+        htmlContent = await renderAsync(
+          React.createElement(KYCApprovedEmail, {
+            magicLink: magicLinkData.properties?.action_link || '#',
+            userFirstName: orderData.first_name || 'Cher utilisateur',
+            userLastName: orderData.last_name || ''
           })
         );
         break;
