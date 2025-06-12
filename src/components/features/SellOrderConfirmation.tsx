@@ -6,20 +6,16 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, CheckCircle, Clock } from 'lucide-react';
 
-interface OrderData {
+interface SellOrderData {
   amount: string;
   currency: string;
   usdtAmount: string;
   network: string;
-  walletAddress: string;
-  paymentMethod: string;
   exchangeRate: number;
-  phoneNumber?: string;
-  provider?: string;
 }
 
 interface SellOrderConfirmationProps {
-  orderData: OrderData;
+  orderData: SellOrderData;
   onConfirm: () => void;
   onBack: () => void;
   loading?: boolean;
@@ -29,20 +25,6 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
-
-  const getPaymentMethodName = () => {
-    switch (orderData.paymentMethod) {
-      case 'bank': return 'Virement bancaire';
-      case 'mobile': return 'Mobile Money';
-      default: return orderData.paymentMethod;
-    }
-  };
-
-  const getProviderName = () => {
-    return orderData.provider === 'wave' ? 'Wave' : 
-           orderData.provider === 'orange' ? 'Orange Money' : 
-           orderData.provider === 'bank' ? 'Banque' : 'N/A';
-  };
 
   return (
     <div className="min-h-screen bg-terex-dark p-2 md:p-4">
@@ -103,10 +85,6 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
               <h3 className="text-white font-medium">Détails d'envoi USDT</h3>
               <div className="bg-terex-gray rounded-lg p-4 space-y-3 w-full">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                  <span className="text-gray-400 text-sm">Adresse d'envoi</span>
-                  <span className="text-white font-medium break-all text-sm">{orderData.walletAddress}</span>
-                </div>
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                   <span className="text-gray-400 text-sm">Réseau</span>
                   <Badge variant="outline" className="text-terex-accent border-terex-accent w-fit">
                     {orderData.network}
@@ -121,20 +99,8 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
               <div className="bg-terex-gray rounded-lg p-4 space-y-3 w-full">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                   <span className="text-gray-400 text-sm">Réception via</span>
-                  <span className="text-white font-medium">{getPaymentMethodName()}</span>
+                  <span className="text-white font-medium">Virement bancaire</span>
                 </div>
-                {orderData.phoneNumber && (
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                    <span className="text-gray-400 text-sm">{orderData.paymentMethod === 'mobile' ? 'Numéro' : 'Compte'}</span>
-                    <span className="text-white font-medium">{orderData.phoneNumber}</span>
-                  </div>
-                )}
-                {orderData.provider && (
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                    <span className="text-gray-400 text-sm">Service</span>
-                    <span className="text-white font-medium">{getProviderName()}</span>
-                  </div>
-                )}
               </div>
             </div>
 

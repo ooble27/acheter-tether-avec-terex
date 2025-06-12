@@ -4,27 +4,24 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Clock, MessageCircle, Home } from 'lucide-react';
 
-interface OrderData {
+interface SellOrderData {
   amount: string;
   currency: string;
   usdtAmount: string;
-  phoneNumber?: string;
-  provider?: string;
+  network: string;
+  exchangeRate: number;
 }
 
 interface USDTSentConfirmationProps {
-  orderData: OrderData;
+  orderData: SellOrderData;
+  orderId: string;
   onBackToHome: () => void;
 }
 
-export function USDTSentConfirmation({ orderData, onBackToHome }: USDTSentConfirmationProps) {
+export function USDTSentConfirmation({ orderData, orderId, onBackToHome }: USDTSentConfirmationProps) {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
-
-  const getProviderName = () => {
-    return orderData.provider === 'wave' ? 'Wave' : 'Orange Money';
-  };
 
   return (
     <div className="min-h-screen bg-terex-dark p-1 md:p-4 flex items-center justify-center">
@@ -56,12 +53,12 @@ export function USDTSentConfirmation({ orderData, onBackToHome }: USDTSentConfir
                 <span className="text-white font-bold">{orderData.amount} {orderData.currency}</span>
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
-                <span className="text-gray-400 text-sm">Numéro de téléphone</span>
-                <span className="text-white break-all">{orderData.phoneNumber}</span>
+                <span className="text-gray-400 text-sm">Réseau utilisé</span>
+                <span className="text-white">{orderData.network}</span>
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
-                <span className="text-gray-400 text-sm">Service de paiement</span>
-                <span className="text-white">{getProviderName()}</span>
+                <span className="text-gray-400 text-sm">ID Commande</span>
+                <span className="text-white font-mono text-xs break-all">{orderId}</span>
               </div>
             </div>
 
@@ -89,7 +86,7 @@ export function USDTSentConfirmation({ orderData, onBackToHome }: USDTSentConfir
                   <div className="flex-1">
                     <p className="text-gray-300 font-medium">Traitement du paiement</p>
                     <p className="text-gray-400 text-sm">
-                      Une fois confirmé, nous procéderons au transfert sur votre {getProviderName()}
+                      Une fois confirmé, nous procéderons au virement bancaire
                     </p>
                   </div>
                 </div>

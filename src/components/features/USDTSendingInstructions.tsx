@@ -7,31 +7,40 @@ import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Copy, Send, CheckCircle, AlertCircle, Wallet } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-interface OrderData {
+interface SellOrderData {
   amount: string;
   currency: string;
   usdtAmount: string;
   network: string;
-  walletAddress: string;
-  paymentMethod: string;
   exchangeRate: number;
-  phoneNumber?: string;
-  provider?: string;
 }
 
 interface USDTSendingInstructionsProps {
-  orderData: OrderData;
+  orderData: SellOrderData;
+  orderId: string;
   onBack: () => void;
   onUSDTSent: () => void;
 }
 
-export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTSendingInstructionsProps) {
+export function USDTSendingInstructions({ orderData, orderId, onBack, onUSDTSent }: USDTSendingInstructionsProps) {
   const [confirmingSent, setConfirmingSent] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
+
+  // Adresses de réception par réseau (reprises du SellNetworkSelector)
+  const NETWORK_ADDRESSES = {
+    TRC20: 'TGzz8gjYiYRqpfmDwnLxfgPuLVNmpCswVp',
+    BEP20: '0x742Db8cCd3e67890e6fcA0e2E2C8E29e5Aa1DE5d',
+    ERC20: '0x742Db8cCd3e67890e6fcA0e2E2C8E29e5Aa1DE5d',
+    Arbitrum: '0x742Db8cCd3e67890e6fcA0e2E2C8E29e5Aa1DE5d',
+    Polygon: '0x742Db8cCd3e67890e6fcA0e2E2C8E29e5Aa1DE5d',
+    Solana: '8ES2hxsfqZVX3cjxWLBJ8jCdzSu9hTBYELSkX82UdnhN'
+  };
+
+  const walletAddress = NETWORK_ADDRESSES[orderData.network as keyof typeof NETWORK_ADDRESSES] || '';
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -48,12 +57,9 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
       case 'ERC20': return 'ERC20 (Ethereum)';
       case 'Arbitrum': return 'Arbitrum';
       case 'Polygon': return 'Polygon';
+      case 'Solana': return 'Solana';
       default: return orderData.network;
     }
-  };
-
-  const getProviderName = () => {
-    return orderData.provider === 'wave' ? 'Wave' : 'Orange Money';
   };
 
   const handleUSDTSent = () => {
@@ -113,22 +119,12 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
             <Separator className="bg-terex-gray" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               <div className="space-y-1">
-                <span className="text-gray-400">Numéro de téléphone</span>
-                <div className="text-white font-medium break-all">
-                  {orderData.phoneNumber}
-                </div>
-              </div>
-              <div className="space-y-1">
-                <span className="text-gray-400">Service de paiement</span>
-                <div className="text-white font-medium">
-                  {getProviderName()}
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              <div className="space-y-1">
                 <span className="text-gray-400">Taux</span>
                 <div className="text-white">1 USDT = {orderData.exchangeRate} {orderData.currency}</div>
+              </div>
+              <div className="space-y-1">
+                <span className="text-gray-400">ID Commande</span>
+                <div className="text-white font-mono text-xs break-all">{orderId}</div>
               </div>
             </div>
           </CardContent>
@@ -170,10 +166,10 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
                 <label className="text-white font-medium mb-2 block">Adresse de destination</label>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
                   <div className="bg-terex-gray rounded-lg p-3 flex-1 text-white font-mono text-sm break-all">
-                    {orderData.walletAddress}
+                    {walletAddress}
                   </div>
                   <Button
-                    onClick={() => copyToClipboard(orderData.walletAddress)}
+                    onClick={() => copyToClipboard(walletAddress)}
                     size="sm"
                     className="bg-terex-accent hover:bg-terex-accent/80 w-full sm:w-auto"
                   >
@@ -217,7 +213,7 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
               <p className="text-gray-300 text-sm">
                 Une fois que vous avez envoyé les USDT à l'adresse indiquée, cliquez sur le bouton ci-dessous 
                 pour nous notifier. Nous traiterons votre commande dans les 30 minutes et vous recevrez 
-                votre argent sur {getProviderName()}.
+                votre argent par virement bancaire.
               </p>
               
               <Button

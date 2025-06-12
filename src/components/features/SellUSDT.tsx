@@ -18,6 +18,15 @@ import { KYCPage } from './KYCPage';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { SellNetworkSelector } from './sell-usdt/SellNetworkSelector';
 
+// Type spécifique pour les données de vente
+interface SellOrderData {
+  amount: string;
+  currency: string;
+  usdtAmount: string;
+  network: string;
+  exchangeRate: number;
+}
+
 export function SellUSDT() {
   const [showKYCPage, setShowKYCPage] = useState(false);
   const [usdtAmount, setUsdtAmount] = useState('');
@@ -92,7 +101,7 @@ export function SellUSDT() {
       currency,
       usdt_amount: parseFloat(usdtAmount),
       exchange_rate: exchangeRates[currency as keyof typeof exchangeRates],
-      payment_method: 'crypto',
+      payment_method: 'bank' as const, // Pour les ventes, c'est toujours virement bancaire
       network,
       status: 'pending' as const,
       payment_status: 'pending'
@@ -124,6 +133,14 @@ export function SellUSDT() {
     setShowKYCPage(true);
   };
 
+  const sellOrderData: SellOrderData = {
+    amount: fiatAmount,
+    currency,
+    usdtAmount,
+    network,
+    exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
+  };
+
   if (showKYCPage) {
     return <KYCPage onBack={() => setShowKYCPage(false)} />;
   }
@@ -132,13 +149,7 @@ export function SellUSDT() {
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
         <USDTSentConfirmation
-          orderData={{
-            amount: fiatAmount,
-            currency,
-            usdtAmount,
-            network,
-            exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
-          }}
+          orderData={sellOrderData}
           orderId={currentOrderId}
           onBackToHome={handleBackToHome}
         />
@@ -150,13 +161,7 @@ export function SellUSDT() {
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
         <USDTSendingInstructions
-          orderData={{
-            amount: fiatAmount,
-            currency,
-            usdtAmount,
-            network,
-            exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
-          }}
+          orderData={sellOrderData}
           orderId={currentOrderId}
           onBack={() => setShowInstructions(false)}
           onUSDTSent={handleUSDTSent}
@@ -169,13 +174,7 @@ export function SellUSDT() {
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
         <SellOrderConfirmation
-          orderData={{
-            amount: fiatAmount,
-            currency,
-            usdtAmount,
-            network,
-            exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
-          }}
+          orderData={sellOrderData}
           onConfirm={handleConfirmOrder}
           onBack={() => setShowConfirmation(false)}
           loading={loading}
