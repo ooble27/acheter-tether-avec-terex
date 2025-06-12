@@ -24,7 +24,8 @@ const WALLET_ADDRESSES = {
   BEP20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84', 
   ERC20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
   Arbitrum: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
-  Polygon: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84'
+  Polygon: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
+  Solana: '8ES2hxsfqZVX3cjxWLBJ8jCdzSu9hTBYELSkX82UdnhN'
 };
 
 // Logos des réseaux blockchain
@@ -33,7 +34,8 @@ const NETWORK_LOGOS = {
   BEP20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png', // BSC/BNB
   ERC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', // Ethereum
   Arbitrum: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11841.png', // Arbitrum
-  Polygon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png' // Polygon
+  Polygon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png', // Polygon
+  Solana: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png' // Solana
 };
 
 export function SellUSDT() {
@@ -414,6 +416,12 @@ export function SellUSDT() {
                                 <div className="flex items-center space-x-3">
                                   <img src={NETWORK_LOGOS.Polygon} alt="Polygon" className="w-5 h-5 rounded-full flex-shrink-0" />
                                   <span className="truncate">Polygon</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="Solana">
+                                <div className="flex items-center space-x-3">
+                                  <img src={NETWORK_LOGOS.Solana} alt="Solana" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                  <span className="truncate">Solana</span>
                                 </div>
                               </SelectItem>
                             </SelectContent>
