@@ -18,6 +18,7 @@ interface TransferFormProps {
   exchangeRate: number;
   fees: string;
   provider: string;
+  setProvider: (value: string) => void;
 }
 
 const availableCountries = [
@@ -41,7 +42,8 @@ export function TransferForm({
   setReceiveMethod,
   exchangeRate,
   fees,
-  provider
+  provider,
+  setProvider
 }: TransferFormProps) {
   // Calcul des frais selon le service choisi
   const calculateFinalAmount = () => {
@@ -77,7 +79,12 @@ export function TransferForm({
           ].map((method) => (
             <div
               key={method.id}
-              onClick={() => setReceiveMethod(method.id)}
+              onClick={() => {
+                setReceiveMethod(method.id);
+                if (method.id !== 'mobile') {
+                  setProvider(''); // Reset provider si ce n'est pas mobile money
+                }
+              }}
               className={`p-4 rounded-lg border cursor-pointer transition-all ${
                 receiveMethod === method.id
                   ? 'border-terex-accent bg-terex-accent/10'
@@ -95,6 +102,48 @@ export function TransferForm({
           ))}
         </div>
       </div>
+
+      {/* Sélection Wave/Orange Money si Mobile Money est sélectionné */}
+      {receiveMethod === 'mobile' && (
+        <div className="space-y-2">
+          <Label className="text-white text-sm font-medium">Quel service Mobile Money ?</Label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div
+              onClick={() => setProvider('wave')}
+              className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                provider === 'wave'
+                  ? 'border-terex-accent bg-terex-accent/10'
+                  : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
+              }`}
+            >
+              <div className="flex items-center space-x-3">
+                <Smartphone className="w-5 h-5 text-terex-accent" />
+                <div>
+                  <p className="text-white font-medium text-sm">Wave</p>
+                  <p className="text-gray-400 text-xs">Frais: 1%</p>
+                </div>
+              </div>
+            </div>
+            
+            <div
+              onClick={() => setProvider('orange')}
+              className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                provider === 'orange'
+                  ? 'border-terex-accent bg-terex-accent/10'
+                  : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
+              }`}
+            >
+              <div className="flex items-center space-x-3">
+                <Smartphone className="w-5 h-5 text-terex-accent" />
+                <div>
+                  <p className="text-white font-medium text-sm">Orange Money</p>
+                  <p className="text-gray-400 text-xs">Frais: 0.8%</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Montant et devises */}
       <div className="space-y-4">

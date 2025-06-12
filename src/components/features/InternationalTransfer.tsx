@@ -255,6 +255,7 @@ export function InternationalTransfer() {
                     exchangeRate={exchangeRate}
                     fees={fees}
                     provider={provider}
+                    setProvider={setProvider}
                   />
 
                   <RecipientForm
@@ -276,7 +277,7 @@ export function InternationalTransfer() {
                   <Button 
                     size="lg"
                     className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                    disabled={!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName || (receiveMethod !== 'mobile' && !recipientPhone) || loading}
+                    disabled={!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName || (receiveMethod !== 'mobile' && !recipientPhone) || loading || (receiveMethod === 'mobile' && !provider)}
                     onClick={handleFormSubmit}
                   >
                     {loading ? 'Traitement...' : 'Continuer le transfert'}
