@@ -55,7 +55,9 @@ export function TransferForm({
 
   const serviceFees = getServiceFees();
   const serviceFeeRate = parseFloat(serviceFees) / 100;
-  const totalAmountAfterFees = receiveAmount ? (parseFloat(receiveAmount) * (1 - serviceFeeRate)).toFixed(2) : '0.00';
+  const grossReceiveAmount = sendAmount ? (parseFloat(sendAmount) * exchangeRate) : 0;
+  const serviceFeeAmount = grossReceiveAmount * serviceFeeRate;
+  const netReceiveAmount = grossReceiveAmount - serviceFeeAmount;
 
   return (
     <div className="space-y-6">
@@ -83,7 +85,7 @@ export function TransferForm({
             <div className="flex space-x-2">
               <Input
                 type="text"
-                value={totalAmountAfterFees}
+                value={netReceiveAmount.toFixed(2)}
                 readOnly
                 className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 flex-1"
               />
@@ -109,15 +111,27 @@ export function TransferForm({
               <span className="text-green-500 font-medium">GRATUIT</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">Frais service</span>
+              <span className="text-gray-400">Frais service tiers</span>
               <span className="text-orange-400 font-medium">{serviceFees}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Délai</span>
               <span className="text-terex-accent">3-5 min</span>
             </div>
-            <div className="flex justify-between col-span-2">
-              <span className="text-gray-400">Total à payer</span>
+            {serviceFeeRate > 0 && (
+              <div className="flex justify-between col-span-2">
+                <span className="text-gray-400">Montant brut</span>
+                <span className="text-gray-300">{grossReceiveAmount.toFixed(2)} CFA</span>
+              </div>
+            )}
+            {serviceFeeRate > 0 && (
+              <div className="flex justify-between col-span-2">
+                <span className="text-gray-400">Frais prélevés</span>
+                <span className="text-orange-400">-{serviceFeeAmount.toFixed(2)} CFA</span>
+              </div>
+            )}
+            <div className="flex justify-between col-span-2 border-t border-terex-gray-light pt-2">
+              <span className="text-gray-400 font-medium">Total à payer</span>
               <span className="text-white font-semibold">{sendAmount || '0.00'} CAD</span>
             </div>
           </div>
