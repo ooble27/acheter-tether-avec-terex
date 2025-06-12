@@ -173,7 +173,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
                 </div>
                 <div>
                   <h3 className="text-white font-medium mb-1">Stabilité garantie</h3>
-                  <p className="text-gray-400 text-sm">Tether est ancré au dollar américain (1:1), offrant une stabilité incomparable face à la volatilité du marché crypto</p>
+                  <p className="text-gray-400 text-sm">Tether est adossé au dollar américain (1:1), offrant une stabilité incomparable face à la volatilité du marché crypto</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
