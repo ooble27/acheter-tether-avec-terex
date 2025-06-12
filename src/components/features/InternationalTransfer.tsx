@@ -44,7 +44,29 @@ export function InternationalTransfer() {
   const usdToCfa = usdtToCfa || 600;
   const exchangeRate = Math.round(cadToUsd * usdToCfa * 100) / 100;
   
-  const receiveAmount = sendAmount ? (parseFloat(sendAmount) * exchangeRate).toFixed(2) : '0.00';
+  // Calcul du montant reçu avec déduction automatique des frais tiers
+  const calculateReceiveAmount = () => {
+    if (!sendAmount) return '0.00';
+    
+    const baseAmount = parseFloat(sendAmount) * exchangeRate;
+    
+    // Si c'est Mobile Money, déduire les frais selon le provider
+    if (receiveMethod === 'mobile' && provider) {
+      let feeRate = 0;
+      if (provider === 'wave') {
+        feeRate = 0.01; // 1% pour Wave
+      } else if (provider === 'orange') {
+        feeRate = 0.008; // 0.8% pour Orange Money
+      }
+      
+      const finalAmount = baseAmount * (1 - feeRate);
+      return finalAmount.toFixed(2);
+    }
+    
+    return baseAmount.toFixed(2);
+  };
+
+  const receiveAmount = calculateReceiveAmount();
   const fees = '0.00'; // Gratuit avec TRX
 
   const handleMobileMoneyComplete = (selectedProvider: string, phoneNumber: string) => {

@@ -1,27 +1,27 @@
 
-import React from 'react';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowRightLeft, CreditCard, Smartphone, MapPin, Phone } from 'lucide-react';
+import { ArrowRightLeft, Info } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface TransferFormProps {
   sendAmount: string;
-  setSendAmount: (value: string) => void;
+  setSendAmount: (amount: string) => void;
   receiveAmount: string;
   recipientCountry: string;
-  setRecipientCountry: (value: string) => void;
+  setRecipientCountry: (country: string) => void;
   paymentMethod: string;
-  setPaymentMethod: (value: string) => void;
+  setPaymentMethod: (method: string) => void;
   receiveMethod: string;
-  setReceiveMethod: (value: string) => void;
+  setReceiveMethod: (method: string) => void;
   exchangeRate: number;
   fees: string;
 }
 
-const availableCountries = [
+const countries = [
   { code: 'SN', name: 'Sénégal', flag: '🇸🇳' },
-  { code: 'CI', name: 'Côte d\'Ivoire', flag: '🇨🇮' },
+  { code: 'CI', name: "Côte d'Ivoire", flag: '🇨🇮' },
   { code: 'ML', name: 'Mali', flag: '🇲🇱' },
   { code: 'BF', name: 'Burkina Faso', flag: '🇧🇫' },
   { code: 'NG', name: 'Nigeria', flag: '🇳🇬' },
@@ -41,78 +41,98 @@ export function TransferForm({
   exchangeRate,
   fees
 }: TransferFormProps) {
+  const getQuickAmounts = () => {
+    return ['50', '100', '200', '500', '1000'];
+  };
+
   return (
     <div className="space-y-6">
-      {/* Montant et devises */}
-      <div className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label className="text-white text-sm font-medium">Vous envoyez</Label>
-            <div className="flex space-x-2">
-              <Input
-                type="number"
-                placeholder="0.00"
-                value={sendAmount}
-                onChange={(e) => setSendAmount(e.target.value)}
-                className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 flex-1"
-              />
-              <div className="bg-terex-gray border border-terex-gray-light text-white h-12 w-24 flex items-center justify-center rounded">
-                CAD
-              </div>
-            </div>
-          </div>
-          
-          <div className="space-y-2">
-            <Label className="text-white text-sm font-medium">Destinataire</Label>
-            <div className="flex space-x-2">
-              <Input
-                type="text"
-                value={receiveAmount}
-                readOnly
-                className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 flex-1"
-              />
-              <div className="bg-terex-gray border border-terex-gray-light text-white h-12 w-24 flex items-center justify-center rounded">
-                CFA
-              </div>
+      {/* Frais Information */}
+      <Alert className="border-terex-accent/30 bg-terex-accent/10">
+        <Info className="h-4 w-4 text-terex-accent" />
+        <AlertDescription className="text-terex-accent">
+          <strong>Chez Terex, les frais sont gratuits.</strong> Cependant, les services tiers appliquent leurs propres frais :
+          <br />• Wave : 1 % du montant reçu
+          <br />• Orange Money : 0,8 % du montant reçu
+        </AlertDescription>
+      </Alert>
+
+      {/* Amount Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label className="text-white text-sm font-medium">J'envoie</Label>
+          <div className="relative">
+            <Input
+              type="number"
+              placeholder="0.00"
+              value={sendAmount}
+              onChange={(e) => setSendAmount(e.target.value)}
+              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-16"
+            />
+            <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
+              <span className="text-terex-accent font-medium text-sm">CAD</span>
             </div>
           </div>
         </div>
-
-        <div className="flex items-center justify-center">
-          <ArrowRightLeft className="w-5 h-5 text-terex-accent" />
-        </div>
-
-        <div className="bg-terex-gray rounded-lg p-4">
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-400">Taux de change</span>
-              <span className="text-white">1 CAD = {exchangeRate} CFA</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Frais</span>
-              <span className="text-green-500 font-medium">GRATUIT</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Délai</span>
-              <span className="text-terex-accent">3-5 min</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Total à payer</span>
-              <span className="text-white font-semibold">{sendAmount || '0.00'} CAD</span>
+        
+        <div className="space-y-2">
+          <Label className="text-white text-sm font-medium">Le destinataire reçoit</Label>
+          <div className="relative">
+            <Input
+              type="text"
+              value={receiveAmount}
+              readOnly
+              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-16"
+            />
+            <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
+              <span className="text-terex-accent font-medium text-sm">CFA</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Pays de destination */}
+      <div className="flex items-center justify-center">
+        <ArrowRightLeft className="w-5 h-5 text-terex-accent" />
+      </div>
+
+      {/* Quick amounts */}
+      <div className="space-y-2">
+        <Label className="text-white text-sm font-medium">Montants rapides</Label>
+        <div className="grid grid-cols-5 gap-2">
+          {getQuickAmounts().map((amount) => (
+            <button
+              key={amount}
+              type="button"
+              onClick={() => setSendAmount(amount)}
+              className="bg-terex-gray hover:bg-terex-gray-light border border-terex-gray-light text-white text-sm py-2 rounded transition-colors"
+            >
+              {amount} CAD
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Exchange rate info */}
+      <div className="bg-terex-gray rounded-lg p-3">
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-400">Taux de change</span>
+          <span className="text-white">1 CAD = {exchangeRate.toFixed(2)} CFA</span>
+        </div>
+        <div className="flex justify-between text-sm mt-1">
+          <span className="text-gray-400">Frais Terex</span>
+          <span className="text-terex-accent">{fees} CAD (Gratuit)</span>
+        </div>
+      </div>
+
+      {/* Country Selection */}
       <div className="space-y-2">
         <Label className="text-white text-sm font-medium">Pays de destination</Label>
         <Select value={recipientCountry} onValueChange={setRecipientCountry}>
           <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
-            <SelectValue placeholder="Sélectionner un pays" />
+            <SelectValue placeholder="Sélectionnez un pays" />
           </SelectTrigger>
-          <SelectContent>
-            {availableCountries.map((country) => (
+          <SelectContent className="bg-terex-darker border-terex-gray">
+            {countries.map((country) => (
               <SelectItem key={country.code} value={country.code}>
                 <div className="flex items-center space-x-2">
                   <span>{country.flag}</span>
@@ -124,64 +144,64 @@ export function TransferForm({
         </Select>
       </div>
 
-      {/* Méthode de paiement */}
+      {/* Payment Method */}
       <div className="space-y-2">
-        <Label className="text-white text-sm font-medium">Comment payez-vous ?</Label>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {[
-            { id: 'card', label: 'Carte bancaire', icon: CreditCard, desc: 'Visa, Mastercard' },
-            { id: 'bank', label: 'Virement bancaire', icon: MapPin, desc: 'Depuis votre banque' },
-            { id: 'interac', label: 'Interac E-Transfer', icon: Smartphone, desc: 'Interac' }
-          ].map((method) => (
-            <div
-              key={method.id}
-              onClick={() => setPaymentMethod(method.id)}
-              className={`p-4 rounded-lg border cursor-pointer transition-all ${
-                paymentMethod === method.id
-                  ? 'border-terex-accent bg-terex-accent/10'
-                  : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
-              }`}
-            >
-              <div className="flex items-center space-x-3">
-                <method.icon className="w-5 h-5 text-terex-accent" />
-                <div>
-                  <p className="text-white font-medium text-sm">{method.label}</p>
-                  <p className="text-gray-400 text-xs">{method.desc}</p>
-                </div>
+        <Label className="text-white text-sm font-medium">Mode de paiement (depuis le Canada)</Label>
+        <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+          <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
+            <SelectValue placeholder="Choisissez votre mode de paiement" />
+          </SelectTrigger>
+          <SelectContent className="bg-terex-darker border-terex-gray">
+            <SelectItem value="interac">
+              <div className="flex items-center space-x-2">
+                <span>💳</span>
+                <span>Interac E-Transfer</span>
               </div>
-            </div>
-          ))}
-        </div>
+            </SelectItem>
+            <SelectItem value="card">
+              <div className="flex items-center space-x-2">
+                <span>💰</span>
+                <span>Carte bancaire</span>
+              </div>
+            </SelectItem>
+            <SelectItem value="bank">
+              <div className="flex items-center space-x-2">
+                <span>🏦</span>
+                <span>Virement bancaire</span>
+              </div>
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      {/* Méthode de réception */}
+      {/* Receive Method */}
       <div className="space-y-2">
-        <Label className="text-white text-sm font-medium">Comment le destinataire reçoit-il l'argent ?</Label>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {[
-            { id: 'mobile', label: 'Mobile Money', icon: Smartphone, desc: 'Orange Money, Wave' },
-            { id: 'bank_transfer', label: 'Virement bancaire', icon: MapPin, desc: 'Directement sur le compte' },
-            { id: 'cash_pickup', label: 'Retrait en espèces', icon: Phone, desc: 'Points de retrait' }
-          ].map((method) => (
-            <div
-              key={method.id}
-              onClick={() => setReceiveMethod(method.id)}
-              className={`p-4 rounded-lg border cursor-pointer transition-all ${
-                receiveMethod === method.id
-                  ? 'border-terex-accent bg-terex-accent/10'
-                  : 'border-terex-gray-light bg-terex-gray hover:border-terex-accent/50'
-              }`}
-            >
-              <div className="flex items-center space-x-3">
-                <method.icon className="w-5 h-5 text-terex-accent" />
-                <div>
-                  <p className="text-white font-medium text-sm">{method.label}</p>
-                  <p className="text-gray-400 text-xs">{method.desc}</p>
-                </div>
+        <Label className="text-white text-sm font-medium">Mode de réception (en Afrique)</Label>
+        <Select value={receiveMethod} onValueChange={setReceiveMethod}>
+          <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
+            <SelectValue placeholder="Comment le destinataire recevra l'argent" />
+          </SelectTrigger>
+          <SelectContent className="bg-terex-darker border-terex-gray">
+            <SelectItem value="mobile">
+              <div className="flex items-center space-x-2">
+                <span>📱</span>
+                <span>Mobile Money (Wave, Orange Money)</span>
               </div>
-            </div>
-          ))}
-        </div>
+            </SelectItem>
+            <SelectItem value="bank">
+              <div className="flex items-center space-x-2">
+                <span>🏦</span>
+                <span>Compte bancaire</span>
+              </div>
+            </SelectItem>
+            <SelectItem value="cash">
+              <div className="flex items-center space-x-2">
+                <span>💵</span>
+                <span>Retrait en espèces</span>
+              </div>
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
