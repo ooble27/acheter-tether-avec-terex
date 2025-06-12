@@ -117,7 +117,11 @@ export function TransferForm({
               }`}
             >
               <div className="flex items-center space-x-3">
-                <Smartphone className="w-5 h-5 text-terex-accent" />
+                <img 
+                  src="/lovable-uploads/6399d0b4-abb9-4b62-97ad-516c0213a601.png" 
+                  alt="Wave" 
+                  className="w-8 h-8 rounded-full object-contain"
+                />
                 <div>
                   <p className="text-white font-medium text-sm">Wave</p>
                   <p className="text-gray-400 text-xs">Frais: 1%</p>
@@ -134,7 +138,11 @@ export function TransferForm({
               }`}
             >
               <div className="flex items-center space-x-3">
-                <Smartphone className="w-5 h-5 text-terex-accent" />
+                <img 
+                  src="/lovable-uploads/49a20f85-382b-4dd2-aefe-98214bea6069.png" 
+                  alt="Orange Money" 
+                  className="w-8 h-8 rounded-full object-contain"
+                />
                 <div>
                   <p className="text-white font-medium text-sm">Orange Money</p>
                   <p className="text-gray-400 text-xs">Frais: 0.8%</p>
