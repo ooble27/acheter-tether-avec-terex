@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -53,6 +54,7 @@ export function BuyUSDT() {
   const { user } = useAuth();
   const { toast } = useToast();
 
+  // Correction: utiliser les bonnes propriétés du hook
   const { 
     terexRateCfa, 
     terexRateCad, 
@@ -64,6 +66,7 @@ export function BuyUSDT() {
     refresh: refreshRates
   } = useTerexRates(2);
 
+  // Correction: ajouter CAD aux taux d'échange
   const exchangeRates = {
     CFA: terexRateCfa,
     CAD: terexRateCad
@@ -74,14 +77,17 @@ export function BuyUSDT() {
     CAD: marketRateCad
   };
 
+  // Fonction pour formater les nombres - améliorée
   const formatAmount = (amount: string | number) => {
     const num = parseFloat(amount.toString());
     if (isNaN(num)) return '0';
     
+    // Si c'est un nombre entier, ne pas afficher de décimales
     if (num === Math.floor(num)) {
       return num.toString();
     }
     
+    // Sinon, limiter à 2 décimales et enlever les zéros inutiles
     return parseFloat(num.toFixed(2)).toString();
   };
 
@@ -92,7 +98,8 @@ export function BuyUSDT() {
     { id: 'mobile' as const, name: 'Mobile Money', icon: '📱', fee: '2%', time: '2-5 min' }
   ];
 
-  const limitMessage = getLimitMessage(fiatAmount, currency, paymentMethod);
+  // Gestion des limites
+  const limitMessage = getLimitMessage(fiatAmount, currency);
 
   const handleHighVolumeRequest = () => {
     setShowHighVolumeRequest(true);
@@ -135,14 +142,15 @@ export function BuyUSDT() {
       wallet_address: walletAddress,
       status: 'pending' as const,
       payment_status: 'pending',
+      // Stocker les informations dans les notes
       notes: JSON.stringify({
         phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : null,
         provider: paymentMethod === 'mobile' ? mobileData.provider : null,
         paymentMethod: paymentMethod,
         cardData: paymentMethod === 'card' ? {
           ...cardData,
-          number: cardData.number.slice(-4),
-          cvv: '***'
+          number: cardData.number.slice(-4), // Stocker seulement les 4 derniers chiffres
+          cvv: '***' // Ne pas stocker le CVV
         } : null,
         mobileData: paymentMethod === 'mobile' ? mobileData : null
       })
@@ -165,6 +173,7 @@ export function BuyUSDT() {
   };
 
   const handleBackToHome = () => {
+    // Réinitialiser tous les états
     setFiatAmount('');
     setWalletAddress('');
     setCardData({ number: '', expiryMonth: '', expiryYear: '', cvv: '', name: '' });
@@ -177,10 +186,12 @@ export function BuyUSDT() {
     setShowKYCPage(true);
   };
 
+  // Si on est sur la page KYC
   if (showKYCPage) {
     return <KYCPage onBack={() => setShowKYCPage(false)} />;
   }
 
+  // État de confirmation finale
   if (showHighVolumeRequest) {
     return (
       <HighVolumeRequest 
@@ -190,6 +201,7 @@ export function BuyUSDT() {
     );
   }
 
+  // État de confirmation finale
   if (showPending) {
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
@@ -210,6 +222,7 @@ export function BuyUSDT() {
     );
   }
 
+  // État des instructions de paiement
   if (showInstructions) {
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
@@ -231,6 +244,7 @@ export function BuyUSDT() {
     );
   }
 
+  // État de confirmation de commande
   if (showConfirmation) {
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
@@ -256,12 +270,14 @@ export function BuyUSDT() {
     <KYCProtection onKYCRequired={handleKYCRequired}>
       <div className="min-h-screen bg-terex-dark p-2 md:p-4">
         <div className="max-w-7xl mx-auto">
+          {/* Header */}
           <div className="mb-6 md:mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Acheter USDT</h1>
             <p className="text-gray-400">Achetez des USDT avec de l'argent fiat</p>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
+            {/* Main Trading Interface */}
             <div className="lg:col-span-2">
               <Card className="bg-terex-darker border-terex-gray shadow-2xl">
                 <CardHeader className="border-b border-terex-gray p-4 md:p-6">
@@ -277,7 +293,6 @@ export function BuyUSDT() {
                     amount={fiatAmount} 
                     currency={currency} 
                     onHighVolumeRequest={handleHighVolumeRequest}
-                    paymentMethod={paymentMethod}
                   >
                     <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'card' | 'mobile')} className="space-y-6">
                       <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
@@ -303,6 +318,7 @@ export function BuyUSDT() {
                         </TabsTrigger>
                       </TabsList>
 
+                      {/* Affichage des messages de limite */}
                       {limitMessage.type && (
                         <Alert className={
                           limitMessage.type === 'error' ? 'border-red-500/50 bg-red-500/10' :
@@ -339,6 +355,7 @@ export function BuyUSDT() {
 
                       {paymentMethods.map((method) => (
                         <TabsContent key={method.id} value={method.id} className="space-y-6">
+                          {/* Amount Input Section */}
                           <BuyAmountInput
                             fiatAmount={fiatAmount}
                             setFiatAmount={setFiatAmount}
@@ -351,17 +368,20 @@ export function BuyUSDT() {
                             fee={method.fee}
                           />
 
+                          {/* Network Selection */}
                           <NetworkSelector
                             network={network}
                             setNetwork={setNetwork}
                           />
 
+                          {/* Wallet Address Input */}
                           <WalletAddressInput
                             walletAddress={walletAddress}
                             setWalletAddress={setWalletAddress}
                             network={network}
                           />
 
+                          {/* Payment Method Details */}
                           <PaymentMethodForm
                             paymentMethod={paymentMethod}
                             cardData={cardData}
@@ -370,6 +390,7 @@ export function BuyUSDT() {
                             setMobileData={setMobileData}
                           />
 
+                          {/* Buy Button */}
                           <Button 
                             size="lg"
                             className="w-full gradient-button text-white font-semibold h-12 text-lg"
@@ -389,6 +410,7 @@ export function BuyUSDT() {
               </Card>
             </div>
 
+            {/* Sidebar */}
             <TradingSidebar
               exchangeRates={exchangeRates}
               marketRates={marketRates}

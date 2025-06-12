@@ -4,40 +4,34 @@ interface LimitsValidatorProps {
   currency: string;
   onHighVolumeRequest: () => void;
   children: React.ReactNode;
-  paymentMethod?: string;
 }
 
 export const PURCHASE_LIMITS = {
   CFA: {
     min: 50000,
-    max: 2000000,
-    maxCard: 5000000 // 5 millions pour les cartes bancaires
+    max: 2000000
   },
   CAD: {
     min: 100,
-    max: 4000,
-    maxCard: 10000 // Équivalent en CAD pour les cartes bancaires
+    max: 4000
   }
 };
 
-export function LimitsValidator({ amount, currency, onHighVolumeRequest, children, paymentMethod }: LimitsValidatorProps) {
+export function LimitsValidator({ amount, currency, onHighVolumeRequest, children }: LimitsValidatorProps) {
   return <>{children}</>;
 }
 
-export function getLimitMessage(amount: string, currency: string, paymentMethod?: string): { type: 'error' | 'warning' | 'max-reached' | null; message: string } {
+export function getLimitMessage(amount: string, currency: string): { type: 'error' | 'warning' | 'max-reached' | null; message: string } {
   const numericAmount = parseFloat(amount) || 0;
   const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
   
   if (!limits || numericAmount === 0) return { type: null, message: '' };
   
-  // Utiliser la limite élevée pour les cartes bancaires
-  const maxLimit = paymentMethod === 'card' ? limits.maxCard : limits.max;
-  
   // Si l'utilisateur a atteint exactement la limite ou essaie de la dépasser
-  if (numericAmount >= maxLimit) {
+  if (numericAmount >= limits.max) {
     return {
       type: 'max-reached',
-      message: `Vous avez atteint la limite maximale de ${maxLimit.toLocaleString()} ${currency}. Pour des montants supérieurs, contactez notre équipe VIP.`
+      message: `Vous avez atteint la limite maximale de ${limits.max.toLocaleString()} ${currency}. Pour des montants supérieurs, contactez notre équipe VIP.`
     };
   }
   
@@ -49,28 +43,25 @@ export function getLimitMessage(amount: string, currency: string, paymentMethod?
   }
   
   // Warning quand on approche de la limite (90% de la limite)
-  if (numericAmount > maxLimit * 0.9) {
+  if (numericAmount > limits.max * 0.9) {
     return {
       type: 'warning',
-      message: `Vous approchez de la limite maximale (${maxLimit.toLocaleString()} ${currency})`
+      message: `Vous approchez de la limite maximale (${limits.max.toLocaleString()} ${currency})`
     };
   }
   
   return { type: null, message: '' };
 }
 
-export function enforceMaxLimit(value: string, currency: string, paymentMethod?: string): string {
+export function enforceMaxLimit(value: string, currency: string): string {
   const numericValue = parseFloat(value) || 0;
   const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
   
   if (!limits) return value;
   
-  // Utiliser la limite élevée pour les cartes bancaires
-  const maxLimit = paymentMethod === 'card' ? limits.maxCard : limits.max;
-  
   // Bloquer à la limite maximale
-  if (numericValue > maxLimit) {
-    return maxLimit.toString();
+  if (numericValue > limits.max) {
+    return limits.max.toString();
   }
   
   return value;
