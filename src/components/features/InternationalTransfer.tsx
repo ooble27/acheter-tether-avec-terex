@@ -44,8 +44,23 @@ export function InternationalTransfer() {
   const usdToCfa = usdtToCfa || 600;
   const exchangeRate = Math.round(cadToUsd * usdToCfa * 100) / 100;
   
-  const receiveAmount = sendAmount ? (parseFloat(sendAmount) * exchangeRate).toFixed(2) : '0.00';
-  const fees = '0.00'; // Gratuit avec TRX
+  // Calcul du montant brut (avant frais de service)
+  const grossReceiveAmount = sendAmount ? (parseFloat(sendAmount) * exchangeRate) : 0;
+  
+  // Calcul des frais de service selon le provider
+  const getServiceFeeRate = () => {
+    if (receiveMethod === 'mobile') {
+      if (provider === 'wave') return 0.01; // 1%
+      if (provider === 'orange') return 0.008; // 0.8%
+    }
+    return 0; // 0% pour les autres méthodes
+  };
+  
+  const serviceFeeRate = getServiceFeeRate();
+  const serviceFees = grossReceiveAmount * serviceFeeRate;
+  const netReceiveAmount = grossReceiveAmount - serviceFees;
+  const receiveAmount = netReceiveAmount.toFixed(2);
+  const fees = '0.00'; // TRX gratuit
 
   const handleMobileMoneyComplete = (selectedProvider: string, phoneNumber: string) => {
     setProvider(selectedProvider);
@@ -93,8 +108,8 @@ export function InternationalTransfer() {
       from_currency: 'CAD',
       to_currency: 'CFA',
       exchange_rate: exchangeRate,
-      fees: 0, // Gratuit
-      total_amount: parseFloat(receiveAmount),
+      fees: serviceFees, // Frais du service tiers
+      total_amount: parseFloat(receiveAmount), // Montant net après frais
       recipient_name: `${recipientFirstName} ${recipientLastName}`,
       recipient_account: recipientAccount || recipientPhone,
       recipient_bank: recipientBank,
@@ -167,7 +182,8 @@ export function InternationalTransfer() {
       recipientBank,
       provider,
       exchangeRate,
-      fees
+      fees,
+      serviceFees: serviceFees.toFixed(2)
     };
 
     return (
@@ -236,6 +252,7 @@ export function InternationalTransfer() {
                     setReceiveMethod={setReceiveMethod}
                     exchangeRate={exchangeRate}
                     fees={fees}
+                    provider={provider}
                   />
 
                   <RecipientForm

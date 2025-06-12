@@ -17,6 +17,7 @@ interface TransferFormProps {
   setReceiveMethod: (value: string) => void;
   exchangeRate: number;
   fees: string;
+  provider?: string;
 }
 
 const availableCountries = [
@@ -39,8 +40,23 @@ export function TransferForm({
   receiveMethod,
   setReceiveMethod,
   exchangeRate,
-  fees
+  fees,
+  provider
 }: TransferFormProps) {
+  
+  // Calcul des frais des services tiers
+  const getServiceFees = () => {
+    if (receiveMethod === 'mobile') {
+      if (provider === 'wave') return '1%';
+      if (provider === 'orange') return '0.8%';
+    }
+    return '0%';
+  };
+
+  const serviceFees = getServiceFees();
+  const serviceFeeRate = parseFloat(serviceFees) / 100;
+  const totalAmountAfterFees = receiveAmount ? (parseFloat(receiveAmount) * (1 - serviceFeeRate)).toFixed(2) : '0.00';
+
   return (
     <div className="space-y-6">
       {/* Montant et devises */}
@@ -63,11 +79,11 @@ export function TransferForm({
           </div>
           
           <div className="space-y-2">
-            <Label className="text-white text-sm font-medium">Destinataire</Label>
+            <Label className="text-white text-sm font-medium">Destinataire reçoit</Label>
             <div className="flex space-x-2">
               <Input
                 type="text"
-                value={receiveAmount}
+                value={totalAmountAfterFees}
                 readOnly
                 className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 flex-1"
               />
@@ -89,14 +105,18 @@ export function TransferForm({
               <span className="text-white">1 CAD = {exchangeRate} CFA</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">Frais</span>
+              <span className="text-gray-400">Frais TRX</span>
               <span className="text-green-500 font-medium">GRATUIT</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Frais service</span>
+              <span className="text-orange-400 font-medium">{serviceFees}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Délai</span>
               <span className="text-terex-accent">3-5 min</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between col-span-2">
               <span className="text-gray-400">Total à payer</span>
               <span className="text-white font-semibold">{sendAmount || '0.00'} CAD</span>
             </div>
