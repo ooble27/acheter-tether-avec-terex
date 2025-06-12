@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useCryptoRates } from '@/hooks/useCryptoRates';
 
-// Importer les nouveaux composants
+// Import components
 import { TransferConfirmation } from './international-transfer/TransferConfirmation';
 import { PaymentInstructions } from './international-transfer/PaymentInstructions';
 import { TransferPending } from './international-transfer/TransferPending';
@@ -19,6 +18,7 @@ import { RecipientForm } from './international-transfer/RecipientForm';
 import { TransferSidebar } from './international-transfer/TransferSidebar';
 
 export function InternationalTransfer() {
+  // State hooks
   const [showKYCPage, setShowKYCPage] = useState(false);
   const [currentStep, setCurrentStep] = useState('form');
   const [sendAmount, setSendAmount] = useState('');
@@ -34,6 +34,7 @@ export function InternationalTransfer() {
   const [provider, setProvider] = useState('');
   const [createdTransfer, setCreatedTransfer] = useState<any>(null);
   
+  // Custom hooks
   const { createTransfer, loading } = useInternationalTransfers();
   const { user } = useAuth();
   const { toast } = useToast();
