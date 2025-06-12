@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -30,7 +31,11 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
     <div className="space-y-4 md:space-y-6">
       <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 md:p-4">
         <div className="flex items-start space-x-2 md:space-x-3">
-          <ExternalLink className="w-4 h-4 md:w-5 md:h-5 text-blue-500 mt-0.5 flex-shrink-0" />
+          <img 
+            src="/lovable-uploads/ae10f8c7-fb15-4996-8f3e-d8a28fe8f89e.png" 
+            alt="Interac" 
+            className="w-4 h-4 md:w-5 md:h-5 mt-0.5 flex-shrink-0"
+          />
           <div>
             <h3 className="text-blue-200 font-medium mb-1 md:mb-2 text-sm md:text-base">Instructions Interac E-Transfer</h3>
             <div className="space-y-1 md:space-y-2 text-blue-100 text-xs md:text-sm">
