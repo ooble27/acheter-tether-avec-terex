@@ -57,12 +57,12 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
         </CardHeader>
         <CardContent className="space-y-3 md:space-y-4">
           <div className="space-y-3 md:space-y-4">
-            <div className="p-3 md:p-6 bg-terex-darker rounded-lg border border-terex-accent/20">
+            <div className="p-4 md:p-6 bg-terex-darker rounded-lg border border-terex-accent/20">
               <div className="flex flex-col space-y-3">
                 <div className="flex justify-between items-start gap-2">
                   <div className="min-w-0 flex-1 overflow-hidden">
-                    <span className="text-gray-400 text-xs md:text-base block font-medium">📧 Email destinataire</span>
-                    <p className="text-white font-bold text-sm md:text-xl mt-2 break-all whitespace-nowrap overflow-x-auto">
+                    <span className="text-gray-400 text-sm md:text-base block font-medium">📧 Email destinataire</span>
+                    <p className="text-white font-bold text-base md:text-xl mt-2 whitespace-nowrap overflow-x-auto">
                       mohalaval4@gmail.com
                     </p>
                   </div>
@@ -78,12 +78,12 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
               </div>
             </div>
 
-            <div className="p-3 md:p-6 bg-terex-darker rounded-lg border border-green-500/20">
+            <div className="p-4 md:p-6 bg-terex-darker rounded-lg border border-green-500/20">
               <div className="flex flex-col space-y-3">
                 <div className="flex justify-between items-start gap-2">
                   <div className="min-w-0 flex-1 overflow-hidden">
-                    <span className="text-gray-400 text-xs md:text-base block font-medium">❓ Question de sécurité</span>
-                    <p className="text-white font-bold text-sm md:text-xl mt-2 whitespace-nowrap overflow-x-auto">
+                    <span className="text-gray-400 text-sm md:text-base block font-medium">❓ Question de sécurité</span>
+                    <p className="text-white font-bold text-base md:text-xl mt-2 whitespace-nowrap overflow-x-auto">
                       Référence transfert
                     </p>
                   </div>
@@ -99,12 +99,12 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
               </div>
             </div>
 
-            <div className="p-3 md:p-6 bg-terex-darker rounded-lg border border-yellow-500/20">
+            <div className="p-4 md:p-6 bg-terex-darker rounded-lg border border-yellow-500/20">
               <div className="flex flex-col space-y-3">
                 <div className="flex justify-between items-start gap-2">
                   <div className="min-w-0 flex-1 overflow-hidden">
-                    <span className="text-gray-400 text-xs md:text-base block font-medium">✅ Réponse</span>
-                    <p className="text-white font-bold text-sm md:text-xl mt-2 whitespace-nowrap overflow-x-auto">
+                    <span className="text-gray-400 text-sm md:text-base block font-medium">✅ Réponse</span>
+                    <p className="text-white font-bold text-base md:text-xl mt-2 whitespace-nowrap overflow-x-auto">
                       TEREX-{transferData.id?.slice(-8)}
                     </p>
                   </div>
