@@ -57,7 +57,7 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
         </CardHeader>
         <CardContent className="space-y-3 md:space-y-4">
           <div className="space-y-3 md:space-y-4">
-            <div className="p-4 md:p-6 bg-terex-darker rounded-lg border border-terex-accent/20">
+            <div className="p-6 md:p-6 bg-terex-darker rounded-lg border border-terex-accent/20">
               <div className="flex flex-col space-y-3">
                 <div className="flex justify-between items-start gap-2">
                   <div className="min-w-0 flex-1 overflow-hidden">
@@ -78,7 +78,7 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
               </div>
             </div>
 
-            <div className="p-4 md:p-6 bg-terex-darker rounded-lg border border-green-500/20">
+            <div className="p-6 md:p-6 bg-terex-darker rounded-lg border border-green-500/20">
               <div className="flex flex-col space-y-3">
                 <div className="flex justify-between items-start gap-2">
                   <div className="min-w-0 flex-1 overflow-hidden">
@@ -99,7 +99,7 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
               </div>
             </div>
 
-            <div className="p-4 md:p-6 bg-terex-darker rounded-lg border border-yellow-500/20">
+            <div className="p-6 md:p-6 bg-terex-darker rounded-lg border border-yellow-500/20">
               <div className="flex flex-col space-y-3">
                 <div className="flex justify-between items-start gap-2">
                   <div className="min-w-0 flex-1 overflow-hidden">
@@ -120,7 +120,7 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
               </div>
             </div>
 
-            <div className="p-4 md:p-6 bg-gradient-to-r from-terex-accent/10 to-terex-accent/5 rounded-lg border border-terex-accent">
+            <div className="p-6 md:p-6 bg-gradient-to-r from-terex-accent/10 to-terex-accent/5 rounded-lg border border-terex-accent">
               <span className="text-gray-400 text-sm md:text-base block font-medium">💰 Montant à envoyer</span>
               <p className="text-terex-accent font-bold text-2xl md:text-3xl mt-2">
                 {transferData.amount} CAD
