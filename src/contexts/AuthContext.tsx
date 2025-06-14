@@ -1,5 +1,5 @@
 
-import React from 'react'
+import * as React from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 
@@ -30,49 +30,25 @@ export const useAuth = () => {
 }
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  console.log('AuthProvider: Initializing...');
+  
   const [user, setUser] = React.useState<User | null>(null)
   const [session, setSession] = React.useState<Session | null>(null)
   const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
-    console.log('AuthProvider: Initializing...')
+    console.log('AuthProvider: Setting up auth listener...')
     
-    // Configurer l'écoute des changements d'état d'authentification
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('AuthProvider: Auth state change:', event, session?.user?.email || 'no user');
-        
-        setSession(session)
-        setUser(session?.user ?? null)
-        setLoading(false)
-
-        // Synchroniser avec localStorage pour PWA
-        if (session?.user) {
-          console.log('AuthProvider: Sauvegarde session pour PWA');
-          localStorage.setItem('terex-session-active', 'true');
-          localStorage.setItem('terex-last-session-update', Date.now().toString());
-          localStorage.setItem('terex-user-email', session.user.email || '');
-        } else {
-          console.log('AuthProvider: Nettoyage session localStorage');
-          localStorage.removeItem('terex-session-active');
-          localStorage.removeItem('terex-last-session-update');
-          localStorage.removeItem('terex-user-email');
-          localStorage.removeItem('terex-pwa-session-synced');
-        }
-      }
-    )
-
-    // Récupérer la session initiale
+    // Get initial session
     const getInitialSession = async () => {
       try {
-        console.log('AuthProvider: Récupération session initiale');
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('AuthProvider: Erreur récupération session initiale:', error);
+          console.error('AuthProvider: Error getting initial session:', error);
         }
         
-        console.log('AuthProvider: Session initiale:', session?.user?.email || 'aucune session');
+        console.log('AuthProvider: Initial session:', session?.user?.email || 'no session');
         
         setSession(session)
         setUser(session?.user ?? null)
@@ -84,17 +60,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           localStorage.setItem('terex-user-email', session.user.email || '');
         }
       } catch (error) {
-        console.error('AuthProvider: Erreur inattendue:', error);
+        console.error('AuthProvider: Unexpected error:', error);
         setLoading(false);
       }
     };
 
     getInitialSession();
 
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log('AuthProvider: Auth state change:', event, session?.user?.email || 'no user');
+        
+        setSession(session)
+        setUser(session?.user ?? null)
+        setLoading(false)
+
+        if (session?.user) {
+          localStorage.setItem('terex-session-active', 'true');
+          localStorage.setItem('terex-last-session-update', Date.now().toString());
+          localStorage.setItem('terex-user-email', session.user.email || '');
+        } else {
+          localStorage.removeItem('terex-session-active');
+          localStorage.removeItem('terex-last-session-update');
+          localStorage.removeItem('terex-user-email');
+          localStorage.removeItem('terex-pwa-session-synced');
+        }
+      }
+    )
+
     return () => {
       subscription.unsubscribe();
     }
-  }, []) // Removed user dependency to prevent circular issues
+  }, [])
 
   const signUp = async (email: string, password: string, name: string) => {
     console.log('AuthProvider: Starting sign up for:', email)
@@ -166,6 +164,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signOut,
     resendVerification,
   }), [user, session, loading])
+
+  console.log('AuthProvider: Rendering with user:', user?.email || 'no user');
 
   return (
     <AuthContext.Provider value={value}>
