@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -214,10 +213,10 @@ Si le problème persiste, contactez notre support :
   };
 
   const quickActions = [
-    { icon: ShoppingCart, text: "Acheter USDT", message: "Je veux acheter des USDT" },
-    { icon: TrendingUp, text: "Vendre USDT", message: "Je veux vendre mes USDT" },
-    { icon: SendIcon, text: "Virement international", message: "Je veux envoyer de l'argent" },
-    { icon: Info, text: "Mes transactions", message: "Montre-moi mes dernières transactions" }
+    { icon: ShoppingCart, text: "Acheter", message: "Je veux acheter des USDT" },
+    { icon: TrendingUp, text: "Vendre", message: "Je veux vendre mes USDT" },
+    { icon: SendIcon, text: "Envoyer", message: "Je veux envoyer de l'argent" },
+    { icon: Info, text: "Historique", message: "Montre-moi mes dernières transactions" }
   ];
 
   const intelligentSuggestions = [
@@ -231,7 +230,7 @@ Si le problème persiste, contactez notre support :
 
   return (
     <Card className={`bg-terex-darker border-terex-gray flex flex-col ${
-      isMobile ? 'w-full h-[400px]' : 'w-96 h-[600px]'
+      isMobile ? 'w-[90vw] max-w-sm h-[400px]' : 'w-96 h-[600px]'
     }`}>
       <CardHeader className="pb-3">
         <div className="flex items-center space-x-3">
@@ -240,12 +239,8 @@ Si le problème persiste, contactez notre support :
           </div>
           <div className="flex-1">
             <CardTitle className="text-white">
-              Assistant Terex IA
+              Assistant Terex
             </CardTitle>
-            <div className="flex items-center space-x-2 mt-1">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-green-400">Intelligence artificielle</span>
-            </div>
           </div>
         </div>
       </CardHeader>
@@ -291,25 +286,16 @@ Si le problème persiste, contactez notre support :
                   )}
                 </div>
 
-                {/* Boutons d'action pour les intentions détectées */}
+                {/* Bouton d'action unique pour les intentions détectées */}
                 {message.intent && message.intent.needsConfirmation && (
                   <div className="flex justify-center mt-2">
-                    <div className="flex space-x-2">
-                      <Button
-                        size="sm"
-                        onClick={() => handleActionConfirm(message.intent)}
-                        className="bg-terex-accent hover:bg-terex-accent/80 text-white"
-                      >
-                        Oui, procéder
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-terex-gray text-gray-300 hover:bg-terex-gray/50"
-                      >
-                        Non, merci
-                      </Button>
-                    </div>
+                    <Button
+                      size="sm"
+                      onClick={() => handleActionConfirm(message.intent)}
+                      className="bg-terex-accent hover:bg-terex-accent/80 text-white"
+                    >
+                      Créer automatiquement
+                    </Button>
                   </div>
                 )}
               </div>
@@ -347,10 +333,10 @@ Si le problème persiste, contactez notre support :
                     variant="outline"
                     size="sm"
                     onClick={() => setInputMessage(action.message)}
-                    className="text-xs h-8 border-terex-gray/50 text-gray-300 hover:bg-terex-gray/50 hover:text-white justify-start"
+                    className="text-xs h-8 border-terex-gray/50 text-gray-300 hover:bg-terex-gray/50 hover:text-white justify-start px-2"
                   >
-                    <action.icon className="w-3 h-3 mr-1" />
-                    {action.text}
+                    <action.icon className="w-3 h-3 mr-1 flex-shrink-0" />
+                    <span className="truncate">{action.text}</span>
                   </Button>
                 ))}
               </div>
