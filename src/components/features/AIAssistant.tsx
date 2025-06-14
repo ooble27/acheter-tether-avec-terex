@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -41,9 +40,9 @@ export function AIAssistant() {
       role: 'assistant',
       content: `Bonjour ! Je suis votre assistant Terex.
 
-Je peux vous aider à créer vos commandes d'achat/vente USDT, organiser vos virements internationaux et répondre à toutes vos questions.
+Je peux vous aider avec vos questions sur nos services.
 
-Dites-moi simplement ce que vous voulez faire !`,
+Dites-moi simplement ce que vous voulez savoir !`,
       timestamp: new Date()
     }
   ]);
@@ -202,7 +201,7 @@ Si le problème persiste, contactez notre support :
     <Card className={`border-terex-gray flex flex-col ${
       isMobile 
         ? 'w-[85vw] max-w-sm h-[400px] bg-white' 
-        : 'w-96 h-[600px] bg-terex-darker'
+        : 'w-96 h-[600px] bg-white'
     }`}>
       <CardHeader className="pb-3">
         <div className="flex items-center space-x-3">
@@ -210,7 +209,7 @@ Si le problème persiste, contactez notre support :
             <Bot className="w-6 h-6 text-terex-accent" />
           </div>
           <div className="flex-1">
-            <CardTitle className={isMobile ? "text-black" : "text-white"}>
+            <CardTitle className="text-black">
               Assistant Terex
             </CardTitle>
           </div>
@@ -237,17 +236,13 @@ Si le problème persiste, contactez notre support :
                     className={`max-w-[80%] p-3 rounded-lg ${
                       message.role === 'user'
                         ? 'bg-terex-accent text-white'
-                        : isMobile 
-                          ? 'bg-gray-100 text-gray-900'
-                          : 'bg-terex-gray text-gray-100'
+                        : 'bg-gray-100 text-gray-900'
                     }`}
                   >
                     <div className="text-sm leading-relaxed whitespace-pre-wrap">
                       {message.content}
                     </div>
-                    <span className={`text-xs opacity-70 mt-1 block ${
-                      message.role === 'assistant' && isMobile ? 'text-gray-600' : ''
-                    }`}>
+                    <span className="text-xs opacity-70 mt-1 block text-gray-600">
                       {message.timestamp.toLocaleTimeString('fr-FR', {
                         hour: '2-digit',
                         minute: '2-digit'
@@ -282,14 +277,10 @@ Si le problème persiste, contactez notre support :
                 <div className="p-2 bg-terex-accent/20 rounded-full">
                   <Bot className="w-4 h-4 text-terex-accent" />
                 </div>
-                <div className={`p-3 rounded-lg ${
-                  isMobile ? 'bg-gray-100' : 'bg-terex-gray'
-                }`}>
+                <div className="p-3 rounded-lg bg-gray-100">
                   <div className="flex items-center space-x-2">
                     <Loader2 className="w-4 h-4 animate-spin text-terex-accent" />
-                    <span className={`text-sm ${
-                      isMobile ? 'text-gray-700' : 'text-gray-300'
-                    }`}>
+                    <span className="text-sm text-gray-700">
                       Analyse en cours...
                     </span>
                   </div>
@@ -307,11 +298,7 @@ Si le problème persiste, contactez notre support :
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Dites-moi ce que vous voulez faire..."
-            className={`border-terex-gray focus:border-terex-accent ${
-              isMobile 
-                ? 'bg-white text-black placeholder-gray-500' 
-                : 'bg-terex-gray text-white placeholder-gray-400'
-            }`}
+            className="border-terex-gray focus:border-terex-accent bg-white text-black placeholder-gray-500"
             disabled={isLoading}
           />
           <Button
@@ -330,11 +317,7 @@ Si le problème persiste, contactez notre support :
               onClick={handleRetry}
               variant="outline"
               size="icon"
-              className={`hover:bg-terex-gray/50 ${
-                isMobile 
-                  ? 'border-gray-300 text-gray-600 hover:text-black hover:bg-gray-100' 
-                  : 'border-terex-gray/50 text-gray-400 hover:text-white'
-              }`}
+              className="border-gray-300 text-gray-600 hover:text-black hover:bg-gray-100"
               title="Réessayer la dernière question"
             >
               <RefreshCw className="w-4 h-4" />
