@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import * as React from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 
@@ -12,7 +12,7 @@ interface AuthContextType {
   resendVerification: (email: string) => Promise<{ error: any }>
 }
 
-const AuthContext = createContext<AuthContextType>({
+const AuthContext = React.createContext<AuthContextType>({
   user: null,
   session: null,
   loading: true,
@@ -22,7 +22,7 @@ const AuthContext = createContext<AuthContextType>({
 })
 
 export const useAuth = () => {
-  const context = useContext(AuthContext)
+  const context = React.useContext(AuthContext)
   if (!context) {
     throw new Error('useAuth must be used within AuthProvider')
   }
@@ -30,11 +30,11 @@ export const useAuth = () => {
 }
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = React.useState<User | null>(null)
+  const [session, setSession] = React.useState<Session | null>(null)
+  const [loading, setLoading] = React.useState(true)
 
-  useEffect(() => {
+  React.useEffect(() => {
     console.log('AuthProvider: Initializing...')
     
     // Vérifier si on est en mode PWA
@@ -214,14 +214,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error }
   }
 
-  const value = {
+  const value = React.useMemo(() => ({
     user,
     session,
     loading,
     signUp,
     signOut,
     resendVerification,
-  }
+  }), [user, session, loading])
 
   return (
     <AuthContext.Provider value={value}>
