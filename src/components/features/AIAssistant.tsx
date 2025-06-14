@@ -199,8 +199,10 @@ Si le problème persiste, contactez notre support :
   };
 
   return (
-    <Card className={`bg-terex-darker border-terex-gray flex flex-col ${
-      isMobile ? 'w-[85vw] max-w-sm h-[400px]' : 'w-96 h-[600px]'
+    <Card className={`border-terex-gray flex flex-col ${
+      isMobile 
+        ? 'w-[85vw] max-w-sm h-[400px] bg-terex-dark' 
+        : 'w-96 h-[600px] bg-terex-darker'
     }`}>
       <CardHeader className="pb-3">
         <div className="flex items-center space-x-3">
@@ -235,7 +237,9 @@ Si le problème persiste, contactez notre support :
                     className={`max-w-[80%] p-3 rounded-lg ${
                       message.role === 'user'
                         ? 'bg-terex-accent text-white'
-                        : 'bg-terex-gray text-gray-100'
+                        : isMobile 
+                          ? 'bg-terex-gray text-gray-100'
+                          : 'bg-terex-gray text-gray-100'
                     }`}
                   >
                     <div className="text-sm leading-relaxed whitespace-pre-wrap">
