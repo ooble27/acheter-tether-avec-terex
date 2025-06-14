@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,11 +9,7 @@ import {
   User, 
   Send, 
   Loader2, 
-  RefreshCw,
-  ShoppingCart,
-  TrendingUp,
-  Send as SendIcon,
-  Info
+  RefreshCw
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -42,20 +39,11 @@ export function AIAssistant() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      content: `Bonjour ! Je suis votre assistant Terex intelligent.
+      content: `Bonjour ! Je suis votre assistant Terex.
 
-Je peux vous aider à :
-• Créer automatiquement vos commandes d'achat/vente USDT
-• Organiser vos virements internationaux
-• Répondre à toutes vos questions sur nos services
-• Accéder à votre historique de transactions
+Je peux vous aider à créer vos commandes d'achat/vente USDT, organiser vos virements internationaux et répondre à toutes vos questions.
 
-Dites-moi simplement ce que vous voulez faire en langage naturel !
-
-Exemples :
-"Je veux acheter 500$ d'USDT"
-"Envoie 1000$ à Moussa au Sénégal"
-"Vends mes USDT pour 200$"`,
+Dites-moi simplement ce que vous voulez faire !`,
       timestamp: new Date()
     }
   ]);
@@ -99,7 +87,7 @@ Exemples :
         body: {
           message: messageToSend,
           conversationHistory,
-          userId: user?.id // Envoyer l'ID utilisateur pour la personnalisation
+          userId: user?.id
         }
       });
 
@@ -122,11 +110,10 @@ Exemples :
         
         setMessages(prev => [...prev, assistantMessage]);
 
-        // Si l'IA a détecté une intention d'action, afficher des boutons d'action
+        // Si l'IA a détecté une intention d'action, afficher un bouton d'action
         if (aiResponse.intent && aiResponse.intent.needsConfirmation) {
           console.log('Action détectée:', aiResponse.intent);
           
-          // Ajouter un message avec des boutons d'action
           setTimeout(() => {
             const actionMessage: ChatMessage = {
               role: 'assistant',
@@ -171,7 +158,6 @@ Si le problème persiste, contactez notre support :
   };
 
   const handleActionConfirm = (intent: any) => {
-    // Ici, vous pourriez naviguer vers la page appropriée ou ouvrir un modal
     console.log('Action confirmée:', intent);
     
     let message = '';
@@ -212,25 +198,9 @@ Si le problème persiste, contactez notre support :
     }
   };
 
-  const quickActions = [
-    { icon: ShoppingCart, text: "Acheter", message: "Je veux acheter des USDT" },
-    { icon: TrendingUp, text: "Vendre", message: "Je veux vendre mes USDT" },
-    { icon: SendIcon, text: "Envoyer", message: "Je veux envoyer de l'argent" },
-    { icon: Info, text: "Historique", message: "Montre-moi mes dernières transactions" }
-  ];
-
-  const intelligentSuggestions = [
-    "Achète-moi 500$ d'USDT sur TRC20",
-    "Envoie 1000$ à Moussa au Sénégal",
-    "Vends 200 USDT via Orange Money",
-    "Quels sont mes frais avec mon niveau KYC ?",
-    "Quel est le meilleur réseau pour économiser ?",
-    "Comment augmenter mes limites ?"
-  ];
-
   return (
     <Card className={`bg-terex-darker border-terex-gray flex flex-col ${
-      isMobile ? 'w-[90vw] max-w-sm h-[400px]' : 'w-96 h-[600px]'
+      isMobile ? 'w-[85vw] max-w-sm h-[400px]' : 'w-96 h-[600px]'
     }`}>
       <CardHeader className="pb-3">
         <div className="flex items-center space-x-3">
@@ -320,47 +290,6 @@ Si le problème persiste, contactez notre support :
             <div ref={messagesEndRef} />
           </div>
         </ScrollArea>
-
-        {messages.length === 1 && !isLoading && (
-          <div className="space-y-3">
-            {/* Actions rapides */}
-            <div className="space-y-2">
-              <p className="text-xs text-gray-400 text-center">Actions rapides :</p>
-              <div className="grid grid-cols-2 gap-2">
-                {quickActions.map((action, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setInputMessage(action.message)}
-                    className="text-xs h-8 border-terex-gray/50 text-gray-300 hover:bg-terex-gray/50 hover:text-white justify-start px-2"
-                  >
-                    <action.icon className="w-3 h-3 mr-1 flex-shrink-0" />
-                    <span className="truncate">{action.text}</span>
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* Suggestions intelligentes */}
-            <div className="space-y-2">
-              <p className="text-xs text-gray-400 text-center">Essayez ces exemples :</p>
-              <div className="space-y-1">
-                {intelligentSuggestions.slice(0, 3).map((suggestion, index) => (
-                  <Button
-                    key={index}
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setInputMessage(suggestion)}
-                    className="w-full text-xs h-6 text-gray-400 hover:bg-terex-gray/30 hover:text-white justify-start px-2"
-                  >
-                    "{suggestion}"
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
 
         <div className="flex space-x-2">
           <Input
