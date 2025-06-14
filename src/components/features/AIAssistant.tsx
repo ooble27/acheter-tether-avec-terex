@@ -9,7 +9,6 @@ import {
   User, 
   Send, 
   Loader2, 
-  MessageCircle,
   RefreshCw
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -26,7 +25,7 @@ export function AIAssistant() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      content: 'Bonjour ! Je suis votre assistant Terex, spécialisé dans les transactions USDT et virements internationaux.\n\nComment puis-je vous aider aujourd\'hui ?',
+      content: 'Bonjour ! Je suis votre assistant Terex, spécialisé dans les transactions USDT et virements internationaux.\n\nComment puis-je vous aider ?',
       timestamp: new Date()
     }
   ]);
@@ -38,7 +37,7 @@ export function AIAssistant() {
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
-  // Auto-scroll vers le bas à chaque nouveau message ou streaming
+  // Auto-scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, streamingMessage]);
@@ -47,7 +46,6 @@ export function AIAssistant() {
     const messageToSend = retryMessage || inputMessage;
     if (!messageToSend.trim() || isLoading) return;
 
-    // Ajouter le message utilisateur seulement si ce n'est pas un retry
     if (!retryMessage) {
       const userMessage: ChatMessage = {
         role: 'user',
@@ -62,16 +60,10 @@ export function AIAssistant() {
     setStreamingMessage('');
 
     try {
-      // Garder un historique de 10 messages pour le contexte
-      const conversationHistory = messages.slice(-10).map(msg => ({
+      const conversationHistory = messages.slice(-8).map(msg => ({
         role: msg.role,
         content: msg.content
       }));
-
-      console.log('Sending message to AI:', { 
-        messageLength: messageToSend.length, 
-        historyLength: conversationHistory.length 
-      });
 
       const { data, error } = await supabase.functions.invoke('terex-ai-assistant', {
         body: {
@@ -81,12 +73,11 @@ export function AIAssistant() {
       });
 
       if (error) {
-        console.error('Supabase function error:', error);
+        console.error('Erreur fonction Supabase:', error);
         throw error;
       }
 
-      // Traitement du streaming
-      if (data && data instanceof ReadableStream) {
+      if (data && typeof data.readable !== 'undefined') {
         const reader = data.getReader();
         const decoder = new TextDecoder();
         let fullContent = '';
@@ -100,44 +91,16 @@ export function AIAssistant() {
           const lines = chunk.split('\n');
           
           for (const line of lines) {
-            if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+            if (line.startsWith('data: ')) {
               try {
-                const data = JSON.parse(line.slice(6));
-                if (data.content) {
-                  fullContent += data.content;
+                const parsed = JSON.parse(line.slice(6));
+                if (parsed.content) {
+                  fullContent += parsed.content;
                   setStreamingMessage(fullContent);
                 }
               } catch (e) {
-                // Ignore parsing errors for streaming
+                // Ignorer les erreurs de parsing
               }
-            }
-          }
-        }
-
-        // Ajouter le message complet une fois terminé
-        if (fullContent) {
-          const assistantMessage: ChatMessage = {
-            role: 'assistant',
-            content: fullContent,
-            timestamp: new Date()
-          };
-          setMessages(prev => [...prev, assistantMessage]);
-        }
-      } else if (data && typeof data === 'string') {
-        // Fallback pour les réponses non-streaming
-        const lines = data.split('\n');
-        let fullContent = '';
-        
-        for (const line of lines) {
-          if (line.startsWith('data: ') && line !== 'data: [DONE]') {
-            try {
-              const chunk = JSON.parse(line.slice(6));
-              if (chunk.content) {
-                fullContent += chunk.content;
-                setStreamingMessage(fullContent);
-              }
-            } catch (e) {
-              // Ignore parsing errors
             }
           }
         }
@@ -149,35 +112,24 @@ export function AIAssistant() {
             timestamp: new Date()
           };
           setMessages(prev => [...prev, assistantMessage]);
+          setStreamingMessage('');
         }
-      } else if (data && data.message) {
-        // Fallback pour les réponses directes
-        const assistantMessage: ChatMessage = {
-          role: 'assistant',
-          content: data.message,
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, assistantMessage]);
       }
 
-      setStreamingMessage('');
-
     } catch (error) {
-      console.error('Error sending message to AI:', error);
-      
-      const errorMessage = error.message || 'Erreur de communication avec l\'assistant';
+      console.error('Erreur envoi message:', error);
       
       const assistantErrorMessage: ChatMessage = {
         role: 'assistant',
-        content: `❌ **Erreur temporaire**\n\n${errorMessage}\n\nVeuillez réessayer.`,
+        content: `❌ Erreur temporaire. Veuillez réessayer.`,
         timestamp: new Date()
       };
 
       setMessages(prev => [...prev, assistantErrorMessage]);
 
       toast({
-        title: "Erreur de l'assistant IA",
-        description: errorMessage,
+        title: "Erreur de connexion",
+        description: "Veuillez réessayer dans quelques instants.",
         variant: "destructive"
       });
     } finally {
@@ -204,11 +156,11 @@ export function AIAssistant() {
 
   const quickQuestions = [
     "Comment acheter des USDT ?",
-    "Quels sont vos frais et taux ?",
+    "Quels sont vos frais ?",
     "Quel réseau choisir ?",
     "Comment fonctionne le KYC ?",
-    "Comment faire un virement international ?",
-    "Conseils sécurité crypto"
+    "Virement international ?",
+    "Conseils sécurité"
   ];
 
   return (
@@ -274,7 +226,6 @@ export function AIAssistant() {
               </div>
             ))}
 
-            {/* Message en cours de streaming */}
             {streamingMessage && (
               <div className="flex items-start space-x-3">
                 <div className="p-2 bg-terex-accent/20 rounded-full">
@@ -305,7 +256,6 @@ export function AIAssistant() {
               </div>
             )}
 
-            {/* Référence pour l'auto-scroll */}
             <div ref={messagesEndRef} />
           </div>
         </ScrollArea>

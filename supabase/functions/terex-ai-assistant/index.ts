@@ -83,7 +83,6 @@ RÉPONDRE UNIQUEMENT SUR TEREX. Si on te pose des questions hors sujet, redirige
 `;
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -91,16 +90,14 @@ serve(async (req) => {
   try {
     const { message, conversationHistory = [] }: ChatRequest = await req.json();
 
-    console.log('AI Assistant request:', { message, historyLength: conversationHistory.length });
+    console.log('Requête AI Assistant:', { message, historyLength: conversationHistory.length });
 
     if (!openAIApiKey) {
-      throw new Error('OpenAI API key not configured');
+      throw new Error('Clé API OpenAI non configurée');
     }
 
-    // Garder les 10 derniers messages pour le contexte
-    const recentHistory = conversationHistory.slice(-10);
+    const recentHistory = conversationHistory.slice(-6);
 
-    // Build conversation with enhanced system prompt
     const messages: ChatMessage[] = [
       {
         role: 'system',
@@ -113,7 +110,6 @@ serve(async (req) => {
       }
     ];
 
-    // Appel à l'API OpenAI avec streaming activé
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -121,27 +117,22 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-2025-04-14',
+        model: 'gpt-4o-mini',
         messages,
-        max_tokens: 600,
-        temperature: 0.2,
-        top_p: 0.9,
-        presence_penalty: 0.1,
-        frequency_penalty: 0.2,
+        max_tokens: 400,
+        temperature: 0.1,
         stream: true,
       }),
     });
 
     if (!response.ok) {
-      const errorData = await response.text();
-      console.error(`OpenAI API error: ${response.status} - ${errorData}`);
-      throw new Error(`OpenAI API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`Erreur API OpenAI: ${response.status} - ${errorText}`);
+      throw new Error(`Erreur API OpenAI: ${response.status}`);
     }
 
-    // Configuration pour le streaming
     const encoder = new TextEncoder();
-    const decoder = new TextDecoder();
-
+    
     const stream = new ReadableStream({
       async start(controller) {
         const reader = response.body?.getReader();
@@ -150,9 +141,9 @@ serve(async (req) => {
           return;
         }
 
+        const decoder = new TextDecoder();
+        
         try {
-          let buffer = '';
-          
           while (true) {
             const { done, value } = await reader.read();
             
@@ -161,31 +152,33 @@ serve(async (req) => {
               break;
             }
 
-            buffer += decoder.decode(value, { stream: true });
-            const lines = buffer.split('\n');
-            buffer = lines.pop() || '';
-
+            const chunk = decoder.decode(value);
+            const lines = chunk.split('\n');
+            
             for (const line of lines) {
-              if (line.trim() === '') continue;
-              if (line.trim() === 'data: [DONE]') continue;
-              
               if (line.startsWith('data: ')) {
+                const data = line.slice(6);
+                
+                if (data === '[DONE]') {
+                  continue;
+                }
+                
                 try {
-                  const data = JSON.parse(line.slice(6));
-                  const content = data.choices?.[0]?.delta?.content;
+                  const parsed = JSON.parse(data);
+                  const content = parsed.choices?.[0]?.delta?.content;
                   
                   if (content) {
-                    const chunk = encoder.encode(`data: ${JSON.stringify({ content })}\n\n`);
-                    controller.enqueue(chunk);
+                    const sseData = `data: ${JSON.stringify({ content })}\n\n`;
+                    controller.enqueue(encoder.encode(sseData));
                   }
                 } catch (e) {
-                  console.error('Error parsing SSE data:', e);
+                  // Ignorer les erreurs de parsing
                 }
               }
             }
           }
         } catch (error) {
-          console.error('Streaming error:', error);
+          console.error('Erreur de streaming:', error);
           controller.error(error);
         }
       }
@@ -201,16 +194,11 @@ serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('Error in terex-ai-assistant function:', error);
-    
-    const errorMessage = error.message.includes('OpenAI API error') 
-      ? 'Erreur temporaire du service IA. Veuillez réessayer.'
-      : 'Erreur lors de la génération de la réponse IA.';
+    console.error('Erreur dans la fonction terex-ai-assistant:', error);
     
     return new Response(JSON.stringify({ 
-      error: errorMessage,
-      success: false,
-      details: error.message 
+      error: 'Erreur temporaire du service IA. Veuillez réessayer.',
+      success: false
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
