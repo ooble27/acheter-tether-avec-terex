@@ -1,3 +1,4 @@
+
 import {
   Sidebar,
   SidebarContent,
@@ -10,7 +11,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, Bot } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -58,6 +59,12 @@ const menuItems = [
     label: 'Virement International', 
     icon: Globe,
     description: 'Transferts mondiaux'
+  },
+  { 
+    id: 'ai-assistant', 
+    label: 'Assistant IA', 
+    icon: Bot,
+    description: 'Aide intelligente'
   },
   { 
     id: 'profile', 
@@ -118,7 +125,9 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                       }}
                       className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${
                         activeSection === item.id
-                          ? 'bg-gradient-to-r from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/25'
+                          ? item.id === 'ai-assistant'
+                            ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg shadow-purple-500/25'
+                            : 'bg-gradient-to-r from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/25'
                           : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'
                       }`}
                     >
@@ -126,7 +135,9 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                         <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
                           activeSection === item.id 
                             ? 'bg-white/20' 
-                            : 'bg-terex-gray/30 group-hover:bg-terex-accent/20'
+                            : item.id === 'ai-assistant'
+                              ? 'bg-terex-gray/30 group-hover:bg-purple-500/20'
+                              : 'bg-terex-gray/30 group-hover:bg-terex-accent/20'
                         }`}>
                           {item.isCustomIcon ? (
                             <IconComponent 
