@@ -37,21 +37,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   React.useEffect(() => {
     console.log('AuthProvider: Initializing...')
     
-    // Vérifier si on est en mode PWA
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
-                        (window.navigator as any).standalone ||
-                        document.referrer.includes('android-app://');
-    
-    if (isStandalone) {
-      console.log('AuthProvider: Mode PWA détecté');
-    }
-    
-    // Configurer l'écoute des changements d'état d'authentification AVANT de récupérer la session
+    // Configurer l'écoute des changements d'état d'authentification
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('AuthProvider: Auth state change:', event, session?.user?.email || 'no user');
         
-        // Mettre à jour l'état immédiatement
         setSession(session)
         setUser(session?.user ?? null)
         setLoading(false)
@@ -62,12 +52,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           localStorage.setItem('terex-session-active', 'true');
           localStorage.setItem('terex-last-session-update', Date.now().toString());
           localStorage.setItem('terex-user-email', session.user.email || '');
-          
-          // En mode PWA, marquer que la session est synchronisée
-          if (isStandalone) {
-            localStorage.setItem('terex-pwa-session-synced', 'true');
-            console.log('AuthProvider: Session PWA marquée comme synchronisée');
-          }
         } else {
           console.log('AuthProvider: Nettoyage session localStorage');
           localStorage.removeItem('terex-session-active');
@@ -78,35 +62,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     )
 
-    // Récupérer la session initiale avec retry en mode PWA
-    const getInitialSession = async (retryCount = 0) => {
+    // Récupérer la session initiale
+    const getInitialSession = async () => {
       try {
-        console.log('AuthProvider: Récupération session initiale, tentative', retryCount + 1);
-        
+        console.log('AuthProvider: Récupération session initiale');
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
           console.error('AuthProvider: Erreur récupération session initiale:', error);
-          
-          // En mode PWA, essayer plus de fois
-          if (isStandalone && retryCount < 5) {
-            console.log(`AuthProvider: Retry ${retryCount + 1} en mode PWA dans 1 seconde`);
-            setTimeout(() => getInitialSession(retryCount + 1), 1000);
-            return;
-          }
         }
         
         console.log('AuthProvider: Session initiale:', session?.user?.email || 'aucune session');
         
-        // Ne mettre à jour que si on n'a pas encore de session
-        if (!user || !session) {
-          setSession(session)
-          setUser(session?.user ?? null)
-        }
-        
+        setSession(session)
+        setUser(session?.user ?? null)
         setLoading(false)
 
-        // Synchroniser avec localStorage pour PWA
         if (session?.user) {
           localStorage.setItem('terex-session-active', 'true');
           localStorage.setItem('terex-last-session-update', Date.now().toString());
@@ -118,36 +89,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     };
 
-    // Délai pour laisser le temps à l'auth state change de se configurer
-    setTimeout(() => {
-      getInitialSession();
-    }, 100);
-
-    // Écouter les changements de session depuis d'autres onglets (pour PWA)
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'terex-session-active' && e.newValue === 'true' && !user) {
-        console.log('AuthProvider: Session détectée depuis un autre onglet');
-        setTimeout(async () => {
-          try {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session && !user) {
-              console.log('AuthProvider: Session récupérée depuis autre onglet');
-              // L'auth state change se chargera de mettre à jour l'état
-            }
-          } catch (error) {
-            console.error('AuthProvider: Erreur lors de la récupération depuis storage change:', error);
-          }
-        }, 500);
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
+    getInitialSession();
 
     return () => {
       subscription.unsubscribe();
-      window.removeEventListener('storage', handleStorageChange);
     }
-  }, []) // Retirer user de la dépendance pour éviter les boucles
+  }, []) // Removed user dependency to prevent circular issues
 
   const signUp = async (email: string, password: string, name: string) => {
     console.log('AuthProvider: Starting sign up for:', email)
@@ -180,18 +127,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('AuthProvider: Sign out successful')
       }
       
-      // Force clear the state regardless of error
       setUser(null)
       setSession(null)
       
-      // Nettoyer localStorage
       localStorage.removeItem('terex-session-active');
       localStorage.removeItem('terex-last-session-update');
       localStorage.removeItem('terex-user-email');
       localStorage.removeItem('terex-pwa-session-synced');
     } catch (error) {
       console.error('AuthProvider: Error during sign out:', error)
-      // Force clear the state even on error
       setUser(null)
       setSession(null)
       localStorage.removeItem('terex-session-active');
