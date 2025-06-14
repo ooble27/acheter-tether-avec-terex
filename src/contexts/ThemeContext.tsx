@@ -1,5 +1,5 @@
 
-import * as React from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 
 type Theme = 'dark' | 'light';
 
@@ -8,20 +8,20 @@ interface ThemeContextType {
   setTheme: (theme: Theme) => void;
 }
 
-const ThemeContext = React.createContext<ThemeContextType | undefined>(undefined);
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   console.log('ThemeProvider: Initializing...');
   
-  const [theme, setTheme] = React.useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>('dark');
 
-  React.useEffect(() => {
+  useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
   }, [theme]);
 
-  const value = React.useMemo(() => ({
+  const value = useMemo(() => ({
     theme,
     setTheme,
   }), [theme]);
@@ -34,7 +34,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useTheme() {
-  const context = React.useContext(ThemeContext);
+  const context = useContext(ThemeContext);
   if (context === undefined) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
