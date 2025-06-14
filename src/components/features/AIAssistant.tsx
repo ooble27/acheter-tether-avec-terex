@@ -26,14 +26,13 @@ export function AIAssistant() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      content: 'Bonjour ! Je suis l\'assistant Terex, spécialisé dans les transactions USDT et virements internationaux.\n\nComment puis-je vous aider aujourd\'hui ?',
+      content: 'Bonjour ! Je suis votre assistant Terex, spécialisé dans les transactions USDT et virements internationaux.\n\nComment puis-je vous aider aujourd\'hui ?',
       timestamp: new Date()
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [streamingMessage, setStreamingMessage] = useState('');
-  const [retryCount, setRetryCount] = useState(0);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -69,7 +68,7 @@ export function AIAssistant() {
         content: msg.content
       }));
 
-      console.log('Sending message to AI with streaming:', { 
+      console.log('Sending message to AI:', { 
         messageLength: messageToSend.length, 
         historyLength: conversationHistory.length 
       });
@@ -87,21 +86,30 @@ export function AIAssistant() {
       }
 
       // Traitement du streaming
-      if (data && typeof data === 'string') {
-        // Si c'est du streaming (EventSource format)
-        const lines = data.split('\n');
+      if (data && data instanceof ReadableStream) {
+        const reader = data.getReader();
+        const decoder = new TextDecoder();
         let fullContent = '';
         
-        for (const line of lines) {
-          if (line.startsWith('data: ') && line !== 'data: [DONE]') {
-            try {
-              const chunk = JSON.parse(line.slice(6));
-              if (chunk.content) {
-                fullContent += chunk.content;
-                setStreamingMessage(fullContent);
+        while (true) {
+          const { done, value } = await reader.read();
+          
+          if (done) break;
+          
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+          
+          for (const line of lines) {
+            if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+              try {
+                const data = JSON.parse(line.slice(6));
+                if (data.content) {
+                  fullContent += data.content;
+                  setStreamingMessage(fullContent);
+                }
+              } catch (e) {
+                // Ignore parsing errors for streaming
               }
-            } catch (e) {
-              // Ignore parsing errors for streaming
             }
           }
         }
@@ -115,8 +123,35 @@ export function AIAssistant() {
           };
           setMessages(prev => [...prev, assistantMessage]);
         }
-      } else if (data && data.message) {
+      } else if (data && typeof data === 'string') {
         // Fallback pour les réponses non-streaming
+        const lines = data.split('\n');
+        let fullContent = '';
+        
+        for (const line of lines) {
+          if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+            try {
+              const chunk = JSON.parse(line.slice(6));
+              if (chunk.content) {
+                fullContent += chunk.content;
+                setStreamingMessage(fullContent);
+              }
+            } catch (e) {
+              // Ignore parsing errors
+            }
+          }
+        }
+
+        if (fullContent) {
+          const assistantMessage: ChatMessage = {
+            role: 'assistant',
+            content: fullContent,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, assistantMessage]);
+        }
+      } else if (data && data.message) {
+        // Fallback pour les réponses directes
         const assistantMessage: ChatMessage = {
           role: 'assistant',
           content: data.message,
@@ -125,7 +160,6 @@ export function AIAssistant() {
         setMessages(prev => [...prev, assistantMessage]);
       }
 
-      setRetryCount(0);
       setStreamingMessage('');
 
     } catch (error) {
@@ -163,7 +197,6 @@ export function AIAssistant() {
     if (messages.length > 0) {
       const lastUserMessage = [...messages].reverse().find(msg => msg.role === 'user');
       if (lastUserMessage) {
-        setRetryCount(prev => prev + 1);
         sendMessage(lastUserMessage.content);
       }
     }
@@ -265,7 +298,7 @@ export function AIAssistant() {
                   <div className="flex items-center space-x-2">
                     <Loader2 className="w-4 h-4 animate-spin text-terex-accent" />
                     <span className="text-sm text-gray-300">
-                      {retryCount > 0 ? `Nouvelle tentative (${retryCount})...` : 'Réflexion...'}
+                      Réflexion...
                     </span>
                   </div>
                 </div>
@@ -289,7 +322,6 @@ export function AIAssistant() {
                   onClick={() => setInputMessage(question)}
                   className="text-xs h-8 border-terex-gray/50 text-gray-300 hover:bg-terex-gray/50 hover:text-white justify-start"
                 >
-                  <MessageCircle className="w-3 h-3 mr-2" />
                   {question}
                 </Button>
               ))}

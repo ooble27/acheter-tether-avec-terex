@@ -91,7 +91,11 @@ serve(async (req) => {
   try {
     const { message, conversationHistory = [] }: ChatRequest = await req.json();
 
-    console.log('AI Assistant request (streaming):', { message, historyLength: conversationHistory.length });
+    console.log('AI Assistant request:', { message, historyLength: conversationHistory.length });
+
+    if (!openAIApiKey) {
+      throw new Error('OpenAI API key not configured');
+    }
 
     // Garder les 10 derniers messages pour le contexte
     const recentHistory = conversationHistory.slice(-10);
@@ -119,12 +123,12 @@ serve(async (req) => {
       body: JSON.stringify({
         model: 'gpt-4.1-2025-04-14',
         messages,
-        max_tokens: 800, // Réduit pour des réponses plus concises
-        temperature: 0.2, // Plus bas pour plus de précision
+        max_tokens: 600,
+        temperature: 0.2,
         top_p: 0.9,
         presence_penalty: 0.1,
-        frequency_penalty: 0.1,
-        stream: true, // Activation du streaming
+        frequency_penalty: 0.2,
+        stream: true,
       }),
     });
 
