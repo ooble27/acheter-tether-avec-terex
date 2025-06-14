@@ -13,15 +13,10 @@ import AuthPage from "./pages/AuthPage";
 import AdminPage from "./pages/AdminPage";
 import BlockchainPage from "./pages/BlockchainPage";
 import NotFound from "./pages/NotFound";
-import React from 'react';
-
-console.log('App.tsx: File loaded, React:', React);
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  console.log('App: Component rendering');
-  
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
@@ -47,7 +42,5 @@ const App = () => {
     </QueryClientProvider>
   );
 };
-
-console.log('App: Component defined');
 
 export default App;
