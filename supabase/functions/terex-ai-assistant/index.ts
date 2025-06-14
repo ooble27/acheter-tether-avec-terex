@@ -24,6 +24,8 @@ interface ChatRequest {
   message: string;
   conversationHistory?: ChatMessage[];
   userId?: string;
+  enableTransactions?: boolean;
+  executeIntent?: any;
 }
 
 interface UserContext {
@@ -34,7 +36,32 @@ interface UserContext {
 }
 
 const ENHANCED_TEREX_KNOWLEDGE = `
-Tu es l'assistant IA ultra-intelligent de TEREX (Teranga Exchange), capable de comprendre les intentions des utilisateurs et d'effectuer des actions automatiquement.
+Tu es l'assistant IA ultra-intelligent de TEREX (Teranga Exchange), capable de comprendre les intentions des utilisateurs et d'EXÉCUTER AUTOMATIQUEMENT des transactions réelles.
+
+NOUVELLES CAPACITÉS TRANSACTIONNELLES :
+Tu peux maintenant VRAIMENT créer et exécuter des transactions quand l'utilisateur te donne toutes les informations nécessaires :
+
+EXEMPLES D'EXÉCUTION AUTOMATIQUE :
+1. "Je veux acheter 500$ d'USDT avec TRC20, mon adresse est TXyz123... paiement par Wave +221 77 123 45 67"
+   → EXÉCUTER automatiquement la commande d'achat
+   → Créer l'ordre dans la base de données
+   → Confirmer l'exécution à l'utilisateur
+
+2. "Envoie 1000 CAD à Moussa Diop au +221 77 555 66 77 au Sénégal via Orange Money, son email moussa@email.com"
+   → EXÉCUTER automatiquement le transfert international
+   → Créer la transaction dans la base de données
+   → Confirmer l'envoi à l'utilisateur
+
+3. "Vends mes 200 USDT TRC20, je veux recevoir sur Wave +221 77 888 99 00"
+   → EXÉCUTER automatiquement la vente USDT
+   → Créer l'ordre de vente
+   → Confirmer le traitement
+
+RÈGLES D'EXÉCUTION :
+- Si l'utilisateur donne TOUTES les informations nécessaires, EXÉCUTE automatiquement
+- Si des informations manquent, demande-les clairement
+- Toujours confirmer ce qui a été exécuté
+- En cas d'erreur, expliquer clairement le problème
 
 RÈGLES DE FORMATAGE IMPORTANTES :
 - N'utilise JAMAIS de # (dièses) pour les titres
@@ -42,22 +69,6 @@ RÈGLES DE FORMATAGE IMPORTANTES :
 - Utilise un formatage simple et propre
 - Structure tes réponses avec des lignes vides et des retours à la ligne
 - Utilise des tirets (-) ou des puces (•) pour les listes
-
-CAPACITÉS INTELLIGENTES :
-Tu peux analyser les demandes en langage naturel et proposer des actions automatiques :
-
-EXEMPLES DE TRAITEMENT INTELLIGENT :
-1. "Je veux envoyer 1000$ à Moussa au Sénégal"
-   → Proposer de créer automatiquement un transfert international
-   → Demander confirmation pour les détails manquants
-
-2. "Achète-moi 500$ d'USDT"
-   → Proposer de créer automatiquement une commande d'achat
-   → Suggérer le meilleur réseau (TRC20 recommandé)
-
-3. "Vends mes USDT pour 200$"
-   → Proposer de créer automatiquement une commande de vente
-   → Expliquer le processus de réception via mobile money
 
 INFORMATIONS COMPLÈTES SUR TEREX :
 
@@ -162,6 +173,7 @@ SUPPORT MULTICANAL :
 INNOVATIONS RÉCENTES :
 • IA conversationnelle pour assistance instantanée
 • Reconnaissance d'intention pour actions automatiques
+• EXÉCUTION AUTOMATIQUE DES TRANSACTIONS
 • Notifications push en temps réel
 • Interface mobile optimisée
 • API pour développeurs et marchands
@@ -187,35 +199,49 @@ INSTRUCTIONS COMPORTEMENTALES :
 - Réponds UNIQUEMENT aux questions liées à Terex et aux crypto-monnaies
 - Si une question est hors sujet, redirige poliment vers les services Terex
 - Analyse l'intention derrière chaque message
-- Propose des actions concrètes quand possible
+- EXÉCUTE automatiquement les actions quand tu as toutes les informations
 - Utilise les informations du profil utilisateur pour personnaliser
 - Sois proactif dans tes suggestions
 - Explique clairement chaque étape des processus
 - Mentionne toujours les frais et délais
+- Confirme TOUJOURS ce qui a été exécuté automatiquement
 `;
 
 const analyzeUserIntent = (message: string, userContext: UserContext) => {
   const msg = message.toLowerCase();
   
-  // Analyse des intentions d'achat
+  // Analyse des intentions d'achat avec détection d'informations complètes
   if (msg.includes('acheter') || msg.includes('achète') || msg.includes('buy')) {
     const amount = extractAmount(message);
+    const walletAddress = extractWalletAddress(message);
+    const network = extractNetwork(message);
+    const paymentInfo = extractPaymentInfo(message);
+    
+    const hasAllInfo = amount && walletAddress && network && paymentInfo;
+    
     return {
       intent: 'buy_usdt',
-      action: 'create_buy_order',
-      parameters: { amount },
-      needsConfirmation: true
+      action: hasAllInfo ? 'execute_buy_order' : 'create_buy_order',
+      parameters: { amount, walletAddress, network, paymentInfo },
+      needsConfirmation: !hasAllInfo,
+      canExecute: hasAllInfo
     };
   }
   
   // Analyse des intentions de vente
   if (msg.includes('vendre') || msg.includes('vends') || msg.includes('sell')) {
     const amount = extractAmount(message);
+    const mobileInfo = extractMobileMoneyInfo(message);
+    const network = extractNetwork(message) || 'TRC20';
+    
+    const hasAllInfo = amount && mobileInfo;
+    
     return {
       intent: 'sell_usdt',
-      action: 'create_sell_order',
-      parameters: { amount },
-      needsConfirmation: true
+      action: hasAllInfo ? 'execute_sell_order' : 'create_sell_order',
+      parameters: { amount, mobileInfo, network },
+      needsConfirmation: !hasAllInfo,
+      canExecute: hasAllInfo
     };
   }
   
@@ -224,11 +250,18 @@ const analyzeUserIntent = (message: string, userContext: UserContext) => {
     const amount = extractAmount(message);
     const recipient = extractRecipient(message);
     const country = extractCountry(message);
+    const phone = extractPhoneNumber(message);
+    const email = extractEmail(message);
+    const provider = extractProvider(message);
+    
+    const hasAllInfo = amount && recipient && country && phone;
+    
     return {
       intent: 'international_transfer',
-      action: 'create_transfer',
-      parameters: { amount, recipient, country },
-      needsConfirmation: true
+      action: hasAllInfo ? 'execute_transfer' : 'create_transfer',
+      parameters: { amount, recipient, country, phone, email, provider },
+      needsConfirmation: !hasAllInfo,
+      canExecute: hasAllInfo
     };
   }
   
@@ -238,7 +271,8 @@ const analyzeUserIntent = (message: string, userContext: UserContext) => {
       intent: 'account_info',
       action: 'show_history',
       parameters: {},
-      needsConfirmation: false
+      needsConfirmation: false,
+      canExecute: false
     };
   }
   
@@ -246,18 +280,54 @@ const analyzeUserIntent = (message: string, userContext: UserContext) => {
     intent: 'general_inquiry',
     action: 'provide_info',
     parameters: {},
-    needsConfirmation: false
+    needsConfirmation: false,
+    canExecute: false
   };
 };
 
+// Fonctions d'extraction améliorées
 const extractAmount = (message: string): string | null => {
-  const amountRegex = /(\d+(?:[.,]\d+)?)\s*(?:\$|dollars?|cfa|usdt|euros?)/i;
+  const amountRegex = /(\d+(?:[.,]\d+)?)\s*(?:\$|dollars?|cfa|usdt|euros?|cad)/i;
   const match = message.match(amountRegex);
   return match ? match[1].replace(',', '.') : null;
 };
 
+const extractWalletAddress = (message: string): string | null => {
+  // Détecte les adresses crypto (commence par T, 0x, bc1, etc.)
+  const walletRegex = /\b([T][A-Za-z0-9]{33}|0x[a-fA-F0-9]{40}|bc1[a-zA-Z0-9]{39,59}|[13][a-km-zA-HJ-NP-Z1-9]{25,34})\b/;
+  const match = message.match(walletRegex);
+  return match ? match[1] : null;
+};
+
+const extractNetwork = (message: string): string | null => {
+  const msg = message.toLowerCase();
+  if (msg.includes('trc20') || msg.includes('tron')) return 'TRC20';
+  if (msg.includes('bep20') || msg.includes('bsc') || msg.includes('binance')) return 'BEP20';
+  if (msg.includes('erc20') || msg.includes('ethereum')) return 'ERC20';
+  if (msg.includes('polygon') || msg.includes('matic')) return 'POLYGON';
+  if (msg.includes('arbitrum')) return 'ARBITRUM';
+  return null;
+};
+
+const extractPaymentInfo = (message: string): any | null => {
+  const phoneRegex = /\+?(\d{1,4}[\s\-]?)?\(?\d{1,4}\)?[\s\-]?\d{1,4}[\s\-]?\d{1,9}/g;
+  const phones = message.match(phoneRegex);
+  const msg = message.toLowerCase();
+  
+  let provider = null;
+  if (msg.includes('wave')) provider = 'wave';
+  else if (msg.includes('orange')) provider = 'orange';
+  else if (msg.includes('free money')) provider = 'free';
+  
+  return phones && phones.length > 0 ? { phone: phones[0], provider } : null;
+};
+
+const extractMobileMoneyInfo = (message: string): any | null => {
+  return extractPaymentInfo(message);
+};
+
 const extractRecipient = (message: string): string | null => {
-  const recipientRegex = /(?:à|pour)\s+([A-Za-zÀ-ÿ\s]+?)(?:\s+(?:au|en|qui|,))/i;
+  const recipientRegex = /(?:à|pour|envoyer à)\s+([A-Za-zÀ-ÿ\s]+?)(?:\s+(?:au|en|qui|,|\+|\d))/i;
   const match = message.match(recipientRegex);
   return match ? match[1].trim() : null;
 };
@@ -267,10 +337,203 @@ const extractCountry = (message: string): string | null => {
   const msg = message.toLowerCase();
   for (const country of countries) {
     if (msg.includes(country)) {
-      return country;
+      return country === 'sénégal' || country === 'senegal' ? 'SN' :
+             country === 'côte d\'ivoire' ? 'CI' :
+             country === 'mali' ? 'ML' :
+             country === 'burkina' ? 'BF' : 'NE';
     }
   }
   return null;
+};
+
+const extractPhoneNumber = (message: string): string | null => {
+  const phoneRegex = /\+?(\d{1,4}[\s\-]?)?\(?\d{2,4}\)?[\s\-]?\d{2,4}[\s\-]?\d{2,9}/g;
+  const phones = message.match(phoneRegex);
+  return phones && phones.length > 0 ? phones[0] : null;
+};
+
+const extractEmail = (message: string): string | null => {
+  const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/;
+  const match = message.match(emailRegex);
+  return match ? match[0] : null;
+};
+
+const extractProvider = (message: string): string | null => {
+  const msg = message.toLowerCase();
+  if (msg.includes('wave')) return 'wave';
+  if (msg.includes('orange')) return 'orange';
+  if (msg.includes('free money')) return 'free';
+  if (msg.includes('mtn')) return 'mtn';
+  return null;
+};
+
+// Fonction pour exécuter les transactions automatiquement
+const executeTransaction = async (intent: any, userId: string): Promise<any> => {
+  console.log('Exécution de transaction automatique:', intent);
+  
+  try {
+    switch (intent.intent) {
+      case 'buy_usdt':
+        return await executeBuyOrder(intent.parameters, userId);
+      case 'sell_usdt':
+        return await executeSellOrder(intent.parameters, userId);
+      case 'international_transfer':
+        return await executeTransfer(intent.parameters, userId);
+      default:
+        throw new Error('Type de transaction non supporté');
+    }
+  } catch (error) {
+    console.error('Erreur lors de l\'exécution de la transaction:', error);
+    throw error;
+  }
+};
+
+const executeBuyOrder = async (params: any, userId: string) => {
+  const exchangeRate = 587; // Taux de change actuel
+  const amount = parseFloat(params.amount);
+  const usdtAmount = amount / exchangeRate;
+  
+  const orderData = {
+    user_id: userId,
+    type: 'buy',
+    amount: amount,
+    currency: 'CFA',
+    usdt_amount: usdtAmount,
+    exchange_rate: exchangeRate,
+    payment_method: 'mobile',
+    network: params.network || 'TRC20',
+    wallet_address: params.walletAddress,
+    status: 'pending',
+    payment_status: 'pending',
+    notes: JSON.stringify({
+      phoneNumber: params.paymentInfo?.phone,
+      provider: params.paymentInfo?.provider,
+      paymentMethod: 'mobile',
+      auto_created: true
+    })
+  };
+  
+  const { data, error } = await supabase
+    .from('orders')
+    .insert(orderData)
+    .select()
+    .single();
+    
+  if (error) throw error;
+  
+  return {
+    success: true,
+    orderId: data.id,
+    message: `Commande d'achat créée automatiquement !
+
+Détails :
+• Montant : ${amount} CFA
+• USDT à recevoir : ${usdtAmount.toFixed(2)} USDT
+• Réseau : ${params.network || 'TRC20'}
+• Adresse : ${params.walletAddress}
+• Paiement : ${params.paymentInfo?.provider || 'Mobile Money'}
+
+Votre commande est en cours de traitement. Vous recevrez vos USDT dès confirmation du paiement.`
+  };
+};
+
+const executeSellOrder = async (params: any, userId: string) => {
+  const exchangeRate = 565; // Taux de change de vente
+  const usdtAmount = parseFloat(params.amount);
+  const cfaAmount = usdtAmount * exchangeRate;
+  
+  const orderData = {
+    user_id: userId,
+    type: 'sell',
+    amount: cfaAmount,
+    currency: 'CFA',
+    usdt_amount: usdtAmount,
+    exchange_rate: exchangeRate,
+    payment_method: 'mobile',
+    network: params.network || 'TRC20',
+    wallet_address: 'TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb', // Adresse Terex
+    status: 'pending',
+    payment_status: 'pending',
+    notes: JSON.stringify({
+      phoneNumber: params.mobileInfo?.phone,
+      provider: params.mobileInfo?.provider,
+      paymentMethod: 'mobile',
+      auto_created: true
+    })
+  };
+  
+  const { data, error } = await supabase
+    .from('orders')
+    .insert(orderData)
+    .select()
+    .single();
+    
+  if (error) throw error;
+  
+  return {
+    success: true,
+    orderId: data.id,
+    message: `Commande de vente créée automatiquement !
+
+Détails :
+• USDT à vendre : ${usdtAmount} USDT
+• Montant à recevoir : ${cfaAmount.toLocaleString()} CFA
+• Réseau : ${params.network || 'TRC20'}
+• Réception : ${params.mobileInfo?.provider || 'Mobile Money'} ${params.mobileInfo?.phone}
+
+Envoyez vos USDT à l'adresse Terex pour recevoir vos CFA automatiquement.`
+  };
+};
+
+const executeTransfer = async (params: any, userId: string) => {
+  const exchangeRate = 445.5; // Taux CAD vers CFA
+  const amount = parseFloat(params.amount);
+  const totalAmount = amount * exchangeRate;
+  const fees = amount * 0.02; // 2% de frais
+  
+  const transferData = {
+    user_id: userId,
+    amount: amount,
+    from_currency: 'CAD',
+    to_currency: 'CFA',
+    recipient_name: params.recipient,
+    recipient_account: params.phone,
+    recipient_country: params.country || 'SN',
+    recipient_phone: params.phone,
+    recipient_email: params.email,
+    exchange_rate: exchangeRate,
+    fees: fees,
+    total_amount: totalAmount,
+    status: 'pending',
+    payment_method: 'interac',
+    receive_method: 'mobile',
+    provider: params.provider || 'orange'
+  };
+  
+  const { data, error } = await supabase
+    .from('international_transfers')
+    .insert(transferData)
+    .select()
+    .single();
+    
+  if (error) throw error;
+  
+  return {
+    success: true,
+    transferId: data.id,
+    message: `Transfert international créé automatiquement !
+
+Détails :
+• Montant envoyé : ${amount} CAD
+• Bénéficiaire : ${params.recipient}
+• Pays : ${params.country || 'Sénégal'}
+• Téléphone : ${params.phone}
+• Service : ${params.provider || 'Orange Money'}
+• Montant reçu : ${totalAmount.toLocaleString()} CFA
+• Frais : ${fees.toFixed(2)} CAD
+
+Le transfert sera traité sous 15 minutes après confirmation du paiement Interac.`
+  };
 };
 
 const getUserContext = async (userId: string): Promise<UserContext> => {
@@ -323,12 +586,36 @@ serve(async (req) => {
   }
 
   try {
-    const { message, conversationHistory = [], userId }: ChatRequest = await req.json();
+    const { message, conversationHistory = [], userId, enableTransactions = false, executeIntent }: ChatRequest = await req.json();
 
-    console.log('Requête AI Assistant Avancé:', { message, userId, historyLength: conversationHistory.length });
+    console.log('Requête AI Assistant Transactionnel:', { message, userId, enableTransactions, executeIntent });
 
     if (!openAIApiKey) {
       throw new Error('Clé API OpenAI non configurée');
+    }
+
+    // Si on demande l'exécution directe d'une action
+    if (executeIntent && enableTransactions) {
+      try {
+        const result = await executeTransaction(executeIntent, userId);
+        return new Response(JSON.stringify({
+          content: result.message,
+          transactionExecuted: true,
+          transactionResult: result,
+          success: true
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      } catch (error) {
+        console.error('Erreur exécution transaction:', error);
+        return new Response(JSON.stringify({
+          content: `Erreur lors de l'exécution de la transaction : ${error.message}`,
+          transactionExecuted: false,
+          success: false
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
     }
 
     // Récupérer le contexte utilisateur si un userId est fourni
@@ -355,7 +642,27 @@ Utilise ces informations pour personnaliser tes réponses.`;
     const intentAnalysis = analyzeUserIntent(message, userContext);
     console.log('Analyse d\'intention:', intentAnalysis);
 
-    const recentHistory = conversationHistory.slice(-8);
+    // Si on peut exécuter automatiquement et que les transactions sont activées
+    if (intentAnalysis.canExecute && enableTransactions) {
+      try {
+        const result = await executeTransaction(intentAnalysis, userId);
+        return new Response(JSON.stringify({
+          content: result.message,
+          intent: intentAnalysis,
+          transactionExecuted: true,
+          transactionResult: result,
+          userContext: userId ? userContext : null,
+          success: true
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      } catch (error) {
+        console.error('Erreur exécution auto:', error);
+        // Continuer avec la réponse IA normale en cas d'erreur
+      }
+    }
+
+    const recentHistory = conversationHistory.slice(-12);
 
     const systemMessage = ENHANCED_TEREX_KNOWLEDGE + personalizedInfo + `
 
@@ -363,9 +670,15 @@ ANALYSE DE L'INTENTION ACTUELLE :
 L'utilisateur semble vouloir : ${intentAnalysis.intent}
 Action suggérée : ${intentAnalysis.action}
 Paramètres détectés : ${JSON.stringify(intentAnalysis.parameters)}
+Peut exécuter automatiquement : ${intentAnalysis.canExecute}
 
-Si des paramètres ont été détectés (montant, destinataire, pays), propose de créer automatiquement la transaction correspondante.
-Demande confirmation avant de procéder et explique chaque étape clairement.`;
+${intentAnalysis.canExecute ? 
+  'TOUTES les informations sont disponibles - tu peux EXÉCUTER automatiquement cette transaction.' :
+  'Informations manquantes - demande les détails manquants avant d\'exécuter.'
+}
+
+Si des paramètres ont été détectés mais ne sont pas complets, demande clairement les informations manquantes.
+Si tu as TOUTES les informations, confirme que tu vas exécuter automatiquement.`;
 
     const messages: ChatMessage[] = [
       {
@@ -415,6 +728,7 @@ Demande confirmation avant de procéder et explique chaque étape clairement.`;
       content: assistantResponse,
       intent: intentAnalysis,
       userContext: userId ? userContext : null,
+      transactionExecuted: false,
       success: true
     }), {
       headers: {

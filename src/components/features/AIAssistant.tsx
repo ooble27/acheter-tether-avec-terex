@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -32,31 +33,100 @@ interface AIResponse {
   };
   userContext?: any;
   success: boolean;
+  transactionExecuted?: boolean;
+  transactionResult?: any;
 }
 
 export function AIAssistant() {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      role: 'assistant',
-      content: `Bonjour ! Je suis votre assistant Terex.
-
-Je peux vous aider avec vos questions sur nos services.
-
-Dites-moi simplement ce que vous voulez savoir !`,
-      timestamp: new Date()
-    }
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [conversationLoaded, setConversationLoaded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const { user } = useAuth();
 
+  // Charger l'historique des conversations au démarrage
+  useEffect(() => {
+    if (user && !conversationLoaded) {
+      loadConversationHistory();
+    }
+  }, [user, conversationLoaded]);
+
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
+
+  const loadConversationHistory = async () => {
+    try {
+      const { data: conversations, error } = await supabase
+        .from('ai_conversations')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: true });
+
+      if (error) {
+        console.error('Erreur chargement conversations:', error);
+        setDefaultWelcomeMessage();
+        return;
+      }
+
+      if (conversations && conversations.length > 0) {
+        const loadedMessages: ChatMessage[] = conversations.map(conv => ({
+          role: conv.message_role as 'user' | 'assistant',
+          content: conv.message_content,
+          timestamp: new Date(conv.created_at),
+          intent: conv.intent_data
+        }));
+        
+        setMessages(loadedMessages);
+        console.log(`${conversations.length} messages de conversation chargés`);
+      } else {
+        setDefaultWelcomeMessage();
+      }
+      
+      setConversationLoaded(true);
+    } catch (error) {
+      console.error('Erreur lors du chargement:', error);
+      setDefaultWelcomeMessage();
+      setConversationLoaded(true);
+    }
+  };
+
+  const setDefaultWelcomeMessage = () => {
+    const welcomeMessage: ChatMessage = {
+      role: 'assistant',
+      content: `Bonjour ! Je suis votre assistant Terex intelligent.
+
+Je peux vous aider avec vos questions ET exécuter automatiquement vos transactions :
+
+• Achat/Vente USDT
+• Virements internationaux 
+• Consultation de votre historique
+
+Donnez-moi simplement toutes les informations nécessaires et je peux traiter votre demande directement !`,
+      timestamp: new Date()
+    };
+    setMessages([welcomeMessage]);
+    saveMessageToDatabase(welcomeMessage);
+  };
+
+  const saveMessageToDatabase = async (message: ChatMessage) => {
+    if (!user) return;
+
+    try {
+      await supabase.from('ai_conversations').insert({
+        user_id: user.id,
+        message_role: message.role,
+        message_content: message.content,
+        intent_data: message.intent || null
+      });
+    } catch (error) {
+      console.error('Erreur sauvegarde message:', error);
+    }
+  };
 
   const sendMessage = async (retryMessage?: string) => {
     const messageToSend = retryMessage || inputMessage;
@@ -69,15 +139,16 @@ Dites-moi simplement ce que vous voulez savoir !`,
         timestamp: new Date()
       };
       setMessages(prev => [...prev, userMessage]);
+      await saveMessageToDatabase(userMessage);
       setInputMessage('');
     }
 
     setIsLoading(true);
 
     try {
-      console.log('Envoi du message avec IA avancée:', messageToSend);
+      console.log('Envoi du message avec IA avancée et transactionnelle:', messageToSend);
 
-      const conversationHistory = messages.slice(-8).map(msg => ({
+      const conversationHistory = messages.slice(-15).map(msg => ({
         role: msg.role,
         content: msg.content
       }));
@@ -86,7 +157,8 @@ Dites-moi simplement ce que vous voulez savoir !`,
         body: {
           message: messageToSend,
           conversationHistory,
-          userId: user?.id
+          userId: user?.id,
+          enableTransactions: true
         }
       });
 
@@ -108,10 +180,20 @@ Dites-moi simplement ce que vous voulez savoir !`,
         };
         
         setMessages(prev => [...prev, assistantMessage]);
+        await saveMessageToDatabase(assistantMessage);
 
-        // Si l'IA a détecté une intention d'action, afficher un bouton d'action
-        if (aiResponse.intent && aiResponse.intent.needsConfirmation) {
-          console.log('Action détectée:', aiResponse.intent);
+        // Afficher une notification spéciale si une transaction a été exécutée
+        if (aiResponse.transactionExecuted) {
+          toast({
+            title: "Transaction exécutée !",
+            description: "Votre opération a été traitée automatiquement.",
+            variant: "default"
+          });
+        }
+
+        // Si l'IA a détecté une intention d'action et n'a pas encore exécuté
+        if (aiResponse.intent && aiResponse.intent.needsConfirmation && !aiResponse.transactionExecuted) {
+          console.log('Action détectée nécessitant confirmation:', aiResponse.intent);
           
           setTimeout(() => {
             const actionMessage: ChatMessage = {
@@ -125,6 +207,7 @@ Voulez-vous procéder ?`,
               intent: aiResponse.intent
             };
             setMessages(prev => [...prev, actionMessage]);
+            saveMessageToDatabase(actionMessage);
           }, 1000);
         }
       } else {
@@ -145,6 +228,7 @@ Si le problème persiste, contactez notre support :
       };
 
       setMessages(prev => [...prev, assistantErrorMessage]);
+      await saveMessageToDatabase(assistantErrorMessage);
 
       toast({
         title: "Erreur de connexion",
@@ -156,29 +240,59 @@ Si le problème persiste, contactez notre support :
     }
   };
 
-  const handleActionConfirm = (intent: any) => {
+  const handleActionConfirm = async (intent: any) => {
     console.log('Action confirmée:', intent);
     
-    let message = '';
-    if (intent.intent === 'buy_usdt') {
-      message = `Parfait ! Je vous redirige vers la page d'achat USDT${intent.parameters.amount ? ` avec un montant de ${intent.parameters.amount}$` : ''}.`;
-    } else if (intent.intent === 'sell_usdt') {
-      message = `Parfait ! Je vous redirige vers la page de vente USDT${intent.parameters.amount ? ` avec un montant de ${intent.parameters.amount}$` : ''}.`;
-    } else if (intent.intent === 'international_transfer') {
-      message = `Parfait ! Je vous redirige vers la page de virement international${intent.parameters.amount ? ` pour ${intent.parameters.amount}$` : ''}${intent.parameters.recipient ? ` à ${intent.parameters.recipient}` : ''}${intent.parameters.country ? ` au ${intent.parameters.country}` : ''}.`;
+    setIsLoading(true);
+    
+    try {
+      // Appeler l'IA pour exécuter l'action confirmée
+      const { data, error } = await supabase.functions.invoke('terex-ai-assistant', {
+        body: {
+          message: "EXÉCUTER_ACTION_CONFIRMÉE",
+          conversationHistory: [],
+          userId: user?.id,
+          enableTransactions: true,
+          executeIntent: intent
+        }
+      });
+
+      if (error) throw error;
+
+      if (data && data.transactionExecuted) {
+        const confirmMessage: ChatMessage = {
+          role: 'assistant',
+          content: data.content || "Transaction exécutée avec succès !",
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, confirmMessage]);
+        await saveMessageToDatabase(confirmMessage);
+
+        toast({
+          title: "Transaction exécutée !",
+          description: "Votre opération a été traitée automatiquement.",
+        });
+      } else {
+        throw new Error('Échec de l\'exécution de la transaction');
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'exécution:', error);
+      const errorMessage: ChatMessage = {
+        role: 'assistant',
+        content: "Désolé, une erreur s'est produite lors de l'exécution de votre transaction. Veuillez réessayer ou contacter le support.",
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+      await saveMessageToDatabase(errorMessage);
+
+      toast({
+        title: "Erreur d'exécution",
+        description: "Impossible d'exécuter la transaction automatiquement.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
     }
-
-    const confirmMessage: ChatMessage = {
-      role: 'assistant',
-      content: message,
-      timestamp: new Date()
-    };
-    setMessages(prev => [...prev, confirmMessage]);
-
-    toast({
-      title: "Action confirmée",
-      description: "Redirection en cours...",
-    });
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -197,6 +311,33 @@ Si le problème persiste, contactez notre support :
     }
   };
 
+  const clearConversation = async () => {
+    if (!user) return;
+    
+    try {
+      // Supprimer toutes les conversations de la base de données
+      await supabase
+        .from('ai_conversations')
+        .delete()
+        .eq('user_id', user.id);
+      
+      // Réinitialiser l'interface
+      setDefaultWelcomeMessage();
+      
+      toast({
+        title: "Conversation effacée",
+        description: "L'historique des conversations a été supprimé.",
+      });
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer l'historique.",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <Card className={`border-terex-gray flex flex-col ${
       isMobile 
@@ -210,9 +351,18 @@ Si le problème persiste, contactez notre support :
           </div>
           <div className="flex-1">
             <CardTitle className="text-black">
-              Assistant Terex
+              Assistant Terex IA
             </CardTitle>
+            <p className="text-xs text-gray-500">Transactionnel & Mémorisé</p>
           </div>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={clearConversation}
+            className="text-gray-500 hover:text-red-500 text-xs"
+          >
+            Effacer
+          </Button>
         </div>
       </CardHeader>
 
@@ -264,8 +414,9 @@ Si le problème persiste, contactez notre support :
                       size="sm"
                       onClick={() => handleActionConfirm(message.intent)}
                       className="bg-terex-accent hover:bg-terex-accent/80 text-white"
+                      disabled={isLoading}
                     >
-                      Créer automatiquement
+                      Exécuter automatiquement
                     </Button>
                   </div>
                 )}
@@ -281,7 +432,7 @@ Si le problème persiste, contactez notre support :
                   <div className="flex items-center space-x-2">
                     <Loader2 className="w-4 h-4 animate-spin text-terex-accent" />
                     <span className="text-sm text-gray-700">
-                      Analyse en cours...
+                      Analyse et traitement en cours...
                     </span>
                   </div>
                 </div>
