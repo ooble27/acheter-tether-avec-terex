@@ -1,4 +1,7 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
+
+console.log('ThemeContext.tsx: File loaded, React:', React);
 
 type Theme = 'dark' | 'light';
 
@@ -10,9 +13,14 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  console.log('ThemeProvider: Component rendering, React:', React);
+  console.log('ThemeProvider: useState available:', typeof useState);
+  
   const [theme, setTheme] = useState<Theme>('dark');
+  console.log('ThemeProvider: useState called successfully, theme:', theme);
 
   useEffect(() => {
+    console.log('ThemeProvider: useEffect running, theme:', theme);
     // Apply theme to document
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
@@ -23,6 +31,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     theme,
     setTheme,
   };
+
+  console.log('ThemeProvider: Rendering with value:', value);
 
   return (
     <ThemeContext.Provider value={value}>
