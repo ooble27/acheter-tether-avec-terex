@@ -1,3 +1,4 @@
+
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -20,7 +21,7 @@ export function FAQ({ onNavigate }: FAQProps) {
     {
       id: "item-3",
       question: "Combien de temps prend une transaction ?",
-      answer: "Les achats d'USDT sont traités sous 15 minutes après confirmation du paiement. Les ventes d'USDT et virements internationaux sont traités sous 5 à 15 minutes."
+      answer: "Toutes nos transactions sont traitées sous 5 minutes après confirmation du paiement. Cela inclut les achats d'USDT, les ventes d'USDT et les virements internationaux."
     },
     {
       id: "item-4",
@@ -40,7 +41,7 @@ export function FAQ({ onNavigate }: FAQProps) {
     {
       id: "item-7",
       question: "Quels sont les montants minimum et maximum ?",
-      answer: "Minimum : 10,000 CFA ou 15 CAD pour l'achat d'USDT, 10 USDT pour la vente, 25 CAD pour les virements internationaux. Les maximums dépendent de votre niveau de vérification."
+      answer: "Minimum : 5,000 CFA ou 10 CAD pour l'achat d'USDT, 5 USDT pour la vente, 10 CAD pour les virements internationaux. Les maximums dépendent de votre niveau de vérification."
     },
     {
       id: "item-8",
