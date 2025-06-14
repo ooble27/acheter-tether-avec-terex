@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React from 'react';
 
 console.log('ThemeContext.tsx: File loaded, React:', React);
 
@@ -10,17 +10,17 @@ interface ThemeContextType {
   setTheme: (theme: Theme) => void;
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const ThemeContext = React.createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   console.log('ThemeProvider: Component rendering, React:', React);
-  console.log('ThemeProvider: useState available:', typeof useState);
+  console.log('ThemeProvider: useState available:', typeof React.useState);
   console.log('ThemeProvider: React version check:', React.version);
   
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = React.useState<Theme>('dark');
   console.log('ThemeProvider: useState called successfully, theme:', theme);
 
-  useEffect(() => {
+  React.useEffect(() => {
     console.log('ThemeProvider: useEffect running, theme:', theme);
     // Apply theme to document
     const root = window.document.documentElement;
@@ -43,7 +43,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useTheme() {
-  const context = useContext(ThemeContext);
+  const context = React.useContext(ThemeContext);
   if (context === undefined) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
