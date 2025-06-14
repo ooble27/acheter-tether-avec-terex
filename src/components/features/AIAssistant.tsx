@@ -28,7 +28,7 @@ export function AIAssistant() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      content: 'Bonjour ! Je suis l\'assistant IA expert de Terex, maintenant propulsé par GPT-4 pour vous offrir une assistance encore plus précise ! 🚀\n\nJe peux vous aider avec :\n• Vos transactions USDT (achat/vente)\n• Virements internationaux\n• Questions KYC et vérifications\n• Optimisation des frais et réseaux\n• Conseils sécurité\n\nComment puis-je vous accompagner aujourd\'hui ?',
+      content: 'Bonjour ! Je suis l\'assistant IA expert de Terex, maintenant propulsé par GPT-4.1 pour vous offrir une assistance ultra-précise ! 🚀✨\n\nJe peux vous aider avec :\n• Vos transactions USDT (achat/vente)\n• Virements internationaux\n• Questions KYC et vérifications\n• Optimisation des frais et réseaux\n• Conseils sécurité\n\nComment puis-je vous accompagner aujourd\'hui ?',
       timestamp: new Date()
     }
   ]);
@@ -69,7 +69,7 @@ export function AIAssistant() {
         content: msg.content
       }));
 
-      console.log('Sending message to AI with enhanced context:', { 
+      console.log('Sending message to AI with GPT-4.1:', { 
         messageLength: messageToSend.length, 
         historyLength: conversationHistory.length 
       });
@@ -101,7 +101,7 @@ export function AIAssistant() {
 
       // Log des métadonnées pour le monitoring
       if (data.metadata) {
-        console.log('AI Response metadata:', data.metadata);
+        console.log('AI Response metadata (GPT-4.1):', data.metadata);
       }
 
     } catch (error) {
@@ -167,13 +167,13 @@ export function AIAssistant() {
             <CardTitle className="text-white flex items-center gap-2">
               Assistant Terex
               <Sparkles className="w-4 h-4 text-terex-accent" />
-              <Badge className="bg-purple-600/20 text-purple-300 text-xs border-purple-600/30">
-                GPT-4
+              <Badge className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 text-purple-300 text-xs border-purple-600/30">
+                GPT-4.1
               </Badge>
             </CardTitle>
             <div className="flex items-center space-x-2 mt-1">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-green-400">IA Optimisée</span>
+              <span className="text-xs text-green-400">IA Ultra-Précise</span>
             </div>
           </div>
         </div>

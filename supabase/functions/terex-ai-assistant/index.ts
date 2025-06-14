@@ -108,9 +108,9 @@ serve(async (req) => {
   try {
     const { message, conversationHistory = [] }: ChatRequest = await req.json();
 
-    console.log('AI Assistant request:', { message, historyLength: conversationHistory.length });
+    console.log('AI Assistant request (GPT-4.1):', { message, historyLength: conversationHistory.length });
 
-    // Amélioration de la gestion de l'historique : garder les 15 derniers messages pour plus de contexte
+    // Garder les 15 derniers messages pour plus de contexte
     const recentHistory = conversationHistory.slice(-15);
 
     // Build conversation with enhanced system prompt
@@ -126,7 +126,7 @@ serve(async (req) => {
       }
     ];
 
-    // Appel à l'API OpenAI avec GPT-4 et paramètres optimisés
+    // Appel à l'API OpenAI avec GPT-4.1 et paramètres optimisés
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -134,14 +134,14 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4', // Changement vers GPT-4 pour de meilleures performances
+        model: 'gpt-4.1-2025-04-14', // Modèle GPT-4.1 le plus récent
         messages,
-        max_tokens: 1000, // Augmenté pour des réponses plus complètes
-        temperature: 0.3, // Réduit pour plus de cohérence et précision
-        top_p: 0.9, // Maintenu pour un bon équilibre créativité/précision
-        presence_penalty: 0.2, // Réduit pour éviter la répétition excessive
-        frequency_penalty: 0.1, // Réduit pour plus de fluidité
-        stream: false, // Désactivé pour l'instant, peut être activé plus tard
+        max_tokens: 1200, // Augmenté pour des réponses plus complètes avec GPT-4.1
+        temperature: 0.25, // Optimisé pour la précision maximale
+        top_p: 0.9, // Maintenu pour un bon équilibre
+        presence_penalty: 0.15, // Légèrement ajusté pour GPT-4.1
+        frequency_penalty: 0.1, // Maintenu pour la fluidité
+        stream: false,
       }),
     });
 
@@ -160,8 +160,8 @@ serve(async (req) => {
 
     const assistantMessage = data.choices[0].message.content;
 
-    console.log('AI Assistant response generated successfully', {
-      model: 'gpt-4',
+    console.log('AI Assistant response generated successfully (GPT-4.1)', {
+      model: 'gpt-4.1-2025-04-14',
       tokens_used: data.usage?.total_tokens || 'unknown',
       response_length: assistantMessage.length
     });
@@ -170,7 +170,7 @@ serve(async (req) => {
       message: assistantMessage,
       success: true,
       metadata: {
-        model: 'gpt-4',
+        model: 'gpt-4.1-2025-04-14',
         tokens_used: data.usage?.total_tokens,
         conversation_length: messages.length
       }
