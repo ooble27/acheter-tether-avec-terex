@@ -97,7 +97,7 @@ export function AIAssistant() {
   const setDefaultWelcomeMessage = () => {
     const welcomeMessage: ChatMessage = {
       role: 'assistant',
-      content: `Bonjour ! Je suis votre assistant Terex intelligent.
+      content: `Bonjour ! Je suis Moussa, votre assistant Terex intelligent.
 
 Je peux vous aider avec vos questions ET exécuter automatiquement vos transactions :
 

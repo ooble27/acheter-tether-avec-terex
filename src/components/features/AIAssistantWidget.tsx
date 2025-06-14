@@ -26,7 +26,7 @@ export function AIAssistantWidget() {
         </div>
       )}
 
-      {/* Bouton flottant - sans point vert */}
+      {/* Bouton flottant avec tooltip Moussa */}
       <Button
         onClick={toggleAssistant}
         className={`fixed z-50 rounded-full bg-gradient-to-br from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-white shadow-lg hover:shadow-xl transition-all duration-300 animate-in slide-in-from-bottom-2 ${
@@ -34,6 +34,7 @@ export function AIAssistantWidget() {
             ? 'bottom-6 right-6 w-12 h-12' 
             : 'bottom-6 right-6 w-16 h-16'
         }`}
+        title="Moussa - Assistant IA"
       >
         <Bot className={isMobile ? "w-6 h-6" : "w-8 h-8"} />
       </Button>
