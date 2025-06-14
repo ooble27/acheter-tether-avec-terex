@@ -20,7 +20,14 @@ interface ChatRequest {
 }
 
 const TEREX_KNOWLEDGE_BASE = `
-Tu es l'assistant virtuel expert de TEREX (Teranga Exchange), une plateforme leader d'échange de crypto-monnaies spécialisée dans l'USDT. Tu es conçu pour fournir des réponses précises, détaillées et personnalisées.
+Tu es l'assistant virtuel expert de TEREX (Teranga Exchange), une plateforme leader d'échange de crypto-monnaies spécialisée dans l'USDT. Tu es conçu pour fournir des réponses PRÉCISES, CONCISES et DIRECTES.
+
+STYLE DE RÉPONSE EXIGÉ :
+- Réponses COURTES et DIRECTES (maximum 3-4 phrases par point)
+- Utilise des LISTES à puces pour clarifier
+- Évite les répétitions
+- Va DROIT AU BUT
+- Reste PROFESSIONNEL et PRÉCIS
 
 INFORMATIONS CLÉS SUR TEREX :
 
@@ -50,53 +57,29 @@ PAYS SUPPORTÉS POUR VIREMENTS :
 🇧🇫 Burkina Faso - Orange Money, Wave
 🇳🇪 Niger - Orange Money, Airtel Money
 
-TEMPS DE TRAITEMENT OPTIMISÉS :
+TEMPS DE TRAITEMENT :
 ⚡ Achats USDT : 5-15 minutes après confirmation paiement
 ⚡ Ventes USDT : 3-10 minutes (instantané avec Orange Money)
 ⚡ Virements internationaux : 2-15 minutes
-⚡ Vérification KYC : 12-24h (accéléré pour dossiers complets)
-
-PROCESSUS KYC DÉTAILLÉ :
-📋 Niveau 1 : Pièce d'identité + selfie (limite 50k CFA/mois)
-📋 Niveau 2 : + justificatif domicile (limite 500k CFA/mois)
-📋 Niveau 3 : + justificatif revenus (illimité)
-✅ Vérification : 12-24h pour dossiers complets
-❌ Rejet : Documents illisibles, informations incohérentes
 
 TAUX DE CHANGE :
-💱 Taux compétitifs mis à jour en temps réel
 💱 CFA/USDT : Environ 600-650 CFA par USDT
 💱 CAD/USDT : Environ 1.35-1.40 CAD par USDT
 💱 Frais transparents : 1-3% selon volume et méthode
 
-SÉCURITÉ RENFORCÉE :
-🔐 Chiffrement SSL/TLS 256-bit
-🔐 Authentification 2FA obligatoire
-🔐 Cold storage pour 95% des fonds
-🔐 Surveillance 24/7 anti-fraude
-🔐 Assurance sur les fonds clients
-
-SUPPORT CLIENT PREMIUM :
+SUPPORT CLIENT :
 📞 Téléphone : +1 (418) 261-9091
 📧 Email : Terangaexchange@gmail.com
 💬 Chat en direct : Disponible 24/7
-🕐 Temps de réponse : Moins de 2h en moyenne
 
-CONSEILS PRATIQUES :
-💡 Utilisez TRC20 pour minimiser les frais
-💡 Vérifiez toujours l'adresse de réception
-💡 Complétez votre KYC pour des limites plus élevées
-💡 Surveillez les taux en temps réel avant vos transactions
-💡 Gardez vos clés privées sécurisées
+RÈGLES IMPORTANTES :
+- Réponses COURTES et PRÉCISES uniquement
+- Maximum 2-3 lignes par information
+- Utilise des listes à puces
+- Pas de répétitions
+- DIRECTEMENT au point
 
-Tu dois TOUJOURS :
-- Être précis et détaillé dans tes réponses
-- Proposer des solutions concrètes
-- Expliquer les avantages/inconvénients
-- Guider étape par étape
-- Être proactif en suggérant des optimisations
-
-RÉPONDRE UNIQUEMENT SUR TEREX. Si on te pose des questions hors sujet, redirige poliment vers les services Terex en expliquant comment ils peuvent t'aider.
+RÉPONDRE UNIQUEMENT SUR TEREX. Si on te pose des questions hors sujet, redirige poliment vers les services Terex.
 `;
 
 serve(async (req) => {
@@ -108,10 +91,10 @@ serve(async (req) => {
   try {
     const { message, conversationHistory = [] }: ChatRequest = await req.json();
 
-    console.log('AI Assistant request (GPT-4.1):', { message, historyLength: conversationHistory.length });
+    console.log('AI Assistant request (streaming):', { message, historyLength: conversationHistory.length });
 
-    // Garder les 15 derniers messages pour plus de contexte
-    const recentHistory = conversationHistory.slice(-15);
+    // Garder les 10 derniers messages pour le contexte
+    const recentHistory = conversationHistory.slice(-10);
 
     // Build conversation with enhanced system prompt
     const messages: ChatMessage[] = [
@@ -126,7 +109,7 @@ serve(async (req) => {
       }
     ];
 
-    // Appel à l'API OpenAI avec GPT-4.1 et paramètres optimisés
+    // Appel à l'API OpenAI avec streaming activé
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -134,14 +117,14 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-2025-04-14', // Modèle GPT-4.1 le plus récent
+        model: 'gpt-4.1-2025-04-14',
         messages,
-        max_tokens: 1200, // Augmenté pour des réponses plus complètes avec GPT-4.1
-        temperature: 0.25, // Optimisé pour la précision maximale
-        top_p: 0.9, // Maintenu pour un bon équilibre
-        presence_penalty: 0.15, // Légèrement ajusté pour GPT-4.1
-        frequency_penalty: 0.1, // Maintenu pour la fluidité
-        stream: false,
+        max_tokens: 800, // Réduit pour des réponses plus concises
+        temperature: 0.2, // Plus bas pour plus de précision
+        top_p: 0.9,
+        presence_penalty: 0.1,
+        frequency_penalty: 0.1,
+        stream: true, // Activation du streaming
       }),
     });
 
@@ -151,40 +134,74 @@ serve(async (req) => {
       throw new Error(`OpenAI API error: ${response.status}`);
     }
 
-    const data = await response.json();
-    
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      console.error('Invalid OpenAI response structure:', data);
-      throw new Error('Invalid response from OpenAI API');
-    }
+    // Configuration pour le streaming
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
 
-    const assistantMessage = data.choices[0].message.content;
+    const stream = new ReadableStream({
+      async start(controller) {
+        const reader = response.body?.getReader();
+        if (!reader) {
+          controller.close();
+          return;
+        }
 
-    console.log('AI Assistant response generated successfully (GPT-4.1)', {
-      model: 'gpt-4.1-2025-04-14',
-      tokens_used: data.usage?.total_tokens || 'unknown',
-      response_length: assistantMessage.length
+        try {
+          let buffer = '';
+          
+          while (true) {
+            const { done, value } = await reader.read();
+            
+            if (done) {
+              controller.close();
+              break;
+            }
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || '';
+
+            for (const line of lines) {
+              if (line.trim() === '') continue;
+              if (line.trim() === 'data: [DONE]') continue;
+              
+              if (line.startsWith('data: ')) {
+                try {
+                  const data = JSON.parse(line.slice(6));
+                  const content = data.choices?.[0]?.delta?.content;
+                  
+                  if (content) {
+                    const chunk = encoder.encode(`data: ${JSON.stringify({ content })}\n\n`);
+                    controller.enqueue(chunk);
+                  }
+                } catch (e) {
+                  console.error('Error parsing SSE data:', e);
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Streaming error:', error);
+          controller.error(error);
+        }
+      }
     });
 
-    return new Response(JSON.stringify({ 
-      message: assistantMessage,
-      success: true,
-      metadata: {
-        model: 'gpt-4.1-2025-04-14',
-        tokens_used: data.usage?.total_tokens,
-        conversation_length: messages.length
-      }
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    return new Response(stream, {
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      },
     });
 
   } catch (error) {
     console.error('Error in terex-ai-assistant function:', error);
     
-    // Message d'erreur plus informatif
     const errorMessage = error.message.includes('OpenAI API error') 
-      ? 'Erreur temporaire du service IA. Veuillez réessayer dans quelques instants.'
-      : 'Erreur lors de la génération de la réponse IA. Notre équipe technique a été notifiée.';
+      ? 'Erreur temporaire du service IA. Veuillez réessayer.'
+      : 'Erreur lors de la génération de la réponse IA.';
     
     return new Response(JSON.stringify({ 
       error: errorMessage,

@@ -4,13 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
 import { 
   Bot, 
   User, 
   Send, 
   Loader2, 
-  Sparkles,
   MessageCircle,
   RefreshCw
 } from 'lucide-react';
@@ -28,22 +26,23 @@ export function AIAssistant() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      content: 'Bonjour ! Je suis l\'assistant IA expert de Terex, maintenant propulsé par GPT-4.1 pour vous offrir une assistance ultra-précise ! 🚀✨\n\nJe peux vous aider avec :\n• Vos transactions USDT (achat/vente)\n• Virements internationaux\n• Questions KYC et vérifications\n• Optimisation des frais et réseaux\n• Conseils sécurité\n\nComment puis-je vous accompagner aujourd\'hui ?',
+      content: 'Bonjour ! Je suis l\'assistant Terex, spécialisé dans les transactions USDT et virements internationaux.\n\nComment puis-je vous aider aujourd\'hui ?',
       timestamp: new Date()
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [streamingMessage, setStreamingMessage] = useState('');
   const [retryCount, setRetryCount] = useState(0);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
+  // Auto-scroll vers le bas à chaque nouveau message ou streaming
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
-    }
-  }, [messages]);
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, streamingMessage]);
 
   const sendMessage = async (retryMessage?: string) => {
     const messageToSend = retryMessage || inputMessage;
@@ -61,15 +60,16 @@ export function AIAssistant() {
     }
 
     setIsLoading(true);
+    setStreamingMessage('');
 
     try {
-      // Garder un historique plus long pour le contexte (15 derniers messages)
-      const conversationHistory = messages.slice(-15).map(msg => ({
+      // Garder un historique de 10 messages pour le contexte
+      const conversationHistory = messages.slice(-10).map(msg => ({
         role: msg.role,
         content: msg.content
       }));
 
-      console.log('Sending message to AI with GPT-4.1:', { 
+      console.log('Sending message to AI with streaming:', { 
         messageLength: messageToSend.length, 
         historyLength: conversationHistory.length 
       });
@@ -86,33 +86,56 @@ export function AIAssistant() {
         throw error;
       }
 
-      if (!data.success) {
-        throw new Error(data.error || 'Erreur inconnue');
+      // Traitement du streaming
+      if (data && typeof data === 'string') {
+        // Si c'est du streaming (EventSource format)
+        const lines = data.split('\n');
+        let fullContent = '';
+        
+        for (const line of lines) {
+          if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+            try {
+              const chunk = JSON.parse(line.slice(6));
+              if (chunk.content) {
+                fullContent += chunk.content;
+                setStreamingMessage(fullContent);
+              }
+            } catch (e) {
+              // Ignore parsing errors for streaming
+            }
+          }
+        }
+
+        // Ajouter le message complet une fois terminé
+        if (fullContent) {
+          const assistantMessage: ChatMessage = {
+            role: 'assistant',
+            content: fullContent,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, assistantMessage]);
+        }
+      } else if (data && data.message) {
+        // Fallback pour les réponses non-streaming
+        const assistantMessage: ChatMessage = {
+          role: 'assistant',
+          content: data.message,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, assistantMessage]);
       }
 
-      const assistantMessage: ChatMessage = {
-        role: 'assistant',
-        content: data.message,
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, assistantMessage]);
-      setRetryCount(0); // Reset retry count on success
-
-      // Log des métadonnées pour le monitoring
-      if (data.metadata) {
-        console.log('AI Response metadata (GPT-4.1):', data.metadata);
-      }
+      setRetryCount(0);
+      setStreamingMessage('');
 
     } catch (error) {
       console.error('Error sending message to AI:', error);
       
       const errorMessage = error.message || 'Erreur de communication avec l\'assistant';
       
-      // Message d'erreur plus informatif
       const assistantErrorMessage: ChatMessage = {
         role: 'assistant',
-        content: `❌ **Erreur temporaire**\n\n${errorMessage}\n\nVeuillez réessayer. Si le problème persiste, contactez notre support à Terangaexchange@gmail.com`,
+        content: `❌ **Erreur temporaire**\n\n${errorMessage}\n\nVeuillez réessayer.`,
         timestamp: new Date()
       };
 
@@ -125,6 +148,7 @@ export function AIAssistant() {
       });
     } finally {
       setIsLoading(false);
+      setStreamingMessage('');
     }
   };
 
@@ -146,12 +170,12 @@ export function AIAssistant() {
   };
 
   const quickQuestions = [
-    "💰 Comment acheter des USDT ?",
-    "📊 Quels sont vos frais et taux ?",
-    "⚡ Quel réseau choisir (TRC20, ERC20...) ?",
-    "🔒 Comment fonctionne le KYC ?",
-    "🌍 Comment faire un virement international ?",
-    "🔐 Conseils sécurité crypto"
+    "Comment acheter des USDT ?",
+    "Quels sont vos frais et taux ?",
+    "Quel réseau choisir ?",
+    "Comment fonctionne le KYC ?",
+    "Comment faire un virement international ?",
+    "Conseils sécurité crypto"
   ];
 
   return (
@@ -164,16 +188,12 @@ export function AIAssistant() {
             <Bot className="w-6 h-6 text-terex-accent" />
           </div>
           <div className="flex-1">
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-white">
               Assistant Terex
-              <Sparkles className="w-4 h-4 text-terex-accent" />
-              <Badge className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 text-purple-300 text-xs border-purple-600/30">
-                GPT-4.1
-              </Badge>
             </CardTitle>
             <div className="flex items-center space-x-2 mt-1">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs text-green-400">IA Ultra-Précise</span>
+              <span className="text-xs text-green-400">En ligne</span>
             </div>
           </div>
         </div>
@@ -220,8 +240,23 @@ export function AIAssistant() {
                 )}
               </div>
             ))}
+
+            {/* Message en cours de streaming */}
+            {streamingMessage && (
+              <div className="flex items-start space-x-3">
+                <div className="p-2 bg-terex-accent/20 rounded-full">
+                  <Bot className="w-4 h-4 text-terex-accent" />
+                </div>
+                <div className="bg-terex-gray p-3 rounded-lg max-w-[80%]">
+                  <div className="text-sm leading-relaxed whitespace-pre-wrap text-gray-100">
+                    {streamingMessage}
+                    <span className="animate-pulse">|</span>
+                  </div>
+                </div>
+              </div>
+            )}
             
-            {isLoading && (
+            {isLoading && !streamingMessage && (
               <div className="flex items-start space-x-3">
                 <div className="p-2 bg-terex-accent/20 rounded-full">
                   <Bot className="w-4 h-4 text-terex-accent" />
@@ -230,12 +265,15 @@ export function AIAssistant() {
                   <div className="flex items-center space-x-2">
                     <Loader2 className="w-4 h-4 animate-spin text-terex-accent" />
                     <span className="text-sm text-gray-300">
-                      {retryCount > 0 ? `Nouvelle tentative (${retryCount})...` : 'L\'IA GPT-4 réfléchit...'}
+                      {retryCount > 0 ? `Nouvelle tentative (${retryCount})...` : 'Réflexion...'}
                     </span>
                   </div>
                 </div>
               </div>
             )}
+
+            {/* Référence pour l'auto-scroll */}
+            <div ref={messagesEndRef} />
           </div>
         </ScrollArea>
 
@@ -264,7 +302,7 @@ export function AIAssistant() {
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Posez votre question détaillée..."
+            placeholder="Posez votre question..."
             className="bg-terex-gray border-terex-gray text-white placeholder-gray-400 focus:border-terex-accent"
             disabled={isLoading}
           />
