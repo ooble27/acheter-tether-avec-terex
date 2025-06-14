@@ -201,7 +201,7 @@ Si le problème persiste, contactez notre support :
   return (
     <Card className={`border-terex-gray flex flex-col ${
       isMobile 
-        ? 'w-[85vw] max-w-sm h-[400px] bg-terex-dark' 
+        ? 'w-[85vw] max-w-sm h-[400px] bg-white' 
         : 'w-96 h-[600px] bg-terex-darker'
     }`}>
       <CardHeader className="pb-3">
@@ -210,7 +210,7 @@ Si le problème persiste, contactez notre support :
             <Bot className="w-6 h-6 text-terex-accent" />
           </div>
           <div className="flex-1">
-            <CardTitle className="text-white">
+            <CardTitle className={isMobile ? "text-black" : "text-white"}>
               Assistant Terex
             </CardTitle>
           </div>
@@ -238,14 +238,16 @@ Si le problème persiste, contactez notre support :
                       message.role === 'user'
                         ? 'bg-terex-accent text-white'
                         : isMobile 
-                          ? 'bg-terex-gray text-gray-100'
+                          ? 'bg-gray-100 text-gray-900'
                           : 'bg-terex-gray text-gray-100'
                     }`}
                   >
                     <div className="text-sm leading-relaxed whitespace-pre-wrap">
                       {message.content}
                     </div>
-                    <span className="text-xs opacity-70 mt-1 block">
+                    <span className={`text-xs opacity-70 mt-1 block ${
+                      message.role === 'assistant' && isMobile ? 'text-gray-600' : ''
+                    }`}>
                       {message.timestamp.toLocaleTimeString('fr-FR', {
                         hour: '2-digit',
                         minute: '2-digit'
@@ -280,10 +282,14 @@ Si le problème persiste, contactez notre support :
                 <div className="p-2 bg-terex-accent/20 rounded-full">
                   <Bot className="w-4 h-4 text-terex-accent" />
                 </div>
-                <div className="bg-terex-gray p-3 rounded-lg">
+                <div className={`p-3 rounded-lg ${
+                  isMobile ? 'bg-gray-100' : 'bg-terex-gray'
+                }`}>
                   <div className="flex items-center space-x-2">
                     <Loader2 className="w-4 h-4 animate-spin text-terex-accent" />
-                    <span className="text-sm text-gray-300">
+                    <span className={`text-sm ${
+                      isMobile ? 'text-gray-700' : 'text-gray-300'
+                    }`}>
                       Analyse en cours...
                     </span>
                   </div>
@@ -301,7 +307,11 @@ Si le problème persiste, contactez notre support :
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Dites-moi ce que vous voulez faire..."
-            className="bg-terex-gray border-terex-gray text-white placeholder-gray-400 focus:border-terex-accent"
+            className={`border-terex-gray focus:border-terex-accent ${
+              isMobile 
+                ? 'bg-white text-black placeholder-gray-500' 
+                : 'bg-terex-gray text-white placeholder-gray-400'
+            }`}
             disabled={isLoading}
           />
           <Button
@@ -320,7 +330,11 @@ Si le problème persiste, contactez notre support :
               onClick={handleRetry}
               variant="outline"
               size="icon"
-              className="border-terex-gray/50 text-gray-400 hover:text-white hover:bg-terex-gray/50"
+              className={`hover:bg-terex-gray/50 ${
+                isMobile 
+                  ? 'border-gray-300 text-gray-600 hover:text-black hover:bg-gray-100' 
+                  : 'border-terex-gray/50 text-gray-400 hover:text-white'
+              }`}
               title="Réessayer la dernière question"
             >
               <RefreshCw className="w-4 h-4" />
