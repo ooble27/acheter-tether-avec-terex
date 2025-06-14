@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -351,9 +350,8 @@ Si le problème persiste, contactez notre support :
           </div>
           <div className="flex-1">
             <CardTitle className="text-black">
-              Assistant Terex IA
+              Moussa
             </CardTitle>
-            <p className="text-xs text-gray-500">Transactionnel & Mémorisé</p>
           </div>
           <Button
             size="sm"
