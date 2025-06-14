@@ -16,6 +16,7 @@ import { UserGuide } from '@/components/features/UserGuide';
 import { SecurityPolicy } from '@/components/features/SecurityPolicy';
 import { TermsOfService } from '@/components/features/TermsOfService';
 import { AboutTerex } from '@/components/features/AboutTerex';
+import { AIAssistant } from '@/components/features/AIAssistant';
 import { AIAssistantWidget } from '@/components/features/AIAssistantWidget';
 import { TransactionProvider } from '@/contexts/TransactionContext';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -77,6 +78,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         return <TermsOfService onBack={() => setActiveSection('faq')} />;
       case 'about-terex':
         return <AboutTerex onBack={() => setActiveSection('faq')} />;
+      case 'ai-assistant':
+        return <AIAssistant />;
       case 'kyc-admin':
         return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
       case 'orders-admin':
