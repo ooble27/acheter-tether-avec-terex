@@ -15,6 +15,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   console.log('ThemeProvider: Component rendering, React:', React);
   console.log('ThemeProvider: useState available:', typeof useState);
+  console.log('ThemeProvider: React version check:', React.version);
   
   const [theme, setTheme] = useState<Theme>('dark');
   console.log('ThemeProvider: useState called successfully, theme:', theme);
