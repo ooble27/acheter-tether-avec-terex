@@ -1,4 +1,3 @@
-
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +10,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, Bot } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -59,12 +58,6 @@ const menuItems = [
     label: 'Virement International', 
     icon: Globe,
     description: 'Transferts mondiaux'
-  },
-  { 
-    id: 'ai-assistant', 
-    label: 'Assistant IA', 
-    icon: Bot,
-    description: 'Aide intelligente'
   },
   { 
     id: 'profile', 
