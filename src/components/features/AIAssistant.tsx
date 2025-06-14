@@ -11,12 +11,11 @@ import {
   Send, 
   Loader2, 
   Sparkles,
-  MessageCircle,
-  Minimize2,
-  Maximize2
+  MessageCircle
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -24,12 +23,7 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-interface AIAssistantProps {
-  isMinimized?: boolean;
-  onToggleMinimize?: () => void;
-}
-
-export function AIAssistant({ isMinimized = false, onToggleMinimize }: AIAssistantProps) {
+export function AIAssistant() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
@@ -41,6 +35,7 @@ export function AIAssistant({ isMinimized = false, onToggleMinimize }: AIAssista
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -110,63 +105,25 @@ export function AIAssistant({ isMinimized = false, onToggleMinimize }: AIAssista
     "Comment fonctionne le KYC ?"
   ];
 
-  if (isMinimized) {
-    return (
-      <Card className="bg-terex-darker border-terex-gray w-80 h-16">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="p-2 bg-terex-accent/20 rounded-full">
-                <Bot className="w-4 h-4 text-terex-accent" />
-              </div>
-              <span className="text-white font-medium">Assistant IA</span>
-              <Badge variant="secondary" className="bg-green-500/20 text-green-400">
-                En ligne
-              </Badge>
-            </div>
-            <Button
-              onClick={onToggleMinimize}
-              variant="ghost"
-              size="icon"
-              className="text-gray-400 hover:text-white"
-            >
-              <Maximize2 className="w-4 h-4" />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
-    <Card className="bg-terex-darker border-terex-gray w-96 h-[600px] flex flex-col">
+    <Card className={`bg-terex-darker border-terex-gray flex flex-col ${
+      isMobile ? 'w-full h-[400px]' : 'w-96 h-[600px]'
+    }`}>
       <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-gradient-to-br from-terex-accent/20 to-terex-accent/10 rounded-full">
-              <Bot className="w-6 h-6 text-terex-accent" />
-            </div>
-            <div>
-              <CardTitle className="text-white flex items-center gap-2">
-                Assistant Terex
-                <Sparkles className="w-4 h-4 text-terex-accent" />
-              </CardTitle>
-              <div className="flex items-center space-x-2 mt-1">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-xs text-green-400">En ligne</span>
-              </div>
+        <div className="flex items-center space-x-3">
+          <div className="p-2 bg-gradient-to-br from-terex-accent/20 to-terex-accent/10 rounded-full">
+            <Bot className="w-6 h-6 text-terex-accent" />
+          </div>
+          <div>
+            <CardTitle className="text-white flex items-center gap-2">
+              Assistant Terex
+              <Sparkles className="w-4 h-4 text-terex-accent" />
+            </CardTitle>
+            <div className="flex items-center space-x-2 mt-1">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-xs text-green-400">En ligne</span>
             </div>
           </div>
-          {onToggleMinimize && (
-            <Button
-              onClick={onToggleMinimize}
-              variant="ghost"
-              size="icon"
-              className="text-gray-400 hover:text-white"
-            >
-              <Minimize2 className="w-4 h-4" />
-            </Button>
-          )}
         </div>
       </CardHeader>
 

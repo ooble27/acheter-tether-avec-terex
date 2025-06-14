@@ -7,20 +7,10 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 export function AIAssistantWidget() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
   const isMobile = useIsMobile();
 
   const toggleAssistant = () => {
-    if (!isOpen) {
-      setIsOpen(true);
-      setIsMinimized(false);
-    } else {
-      setIsOpen(false);
-    }
-  };
-
-  const toggleMinimize = () => {
-    setIsMinimized(!isMinimized);
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -29,13 +19,10 @@ export function AIAssistantWidget() {
       {isOpen && (
         <div className={`fixed z-50 animate-in slide-in-from-bottom-2 ${
           isMobile 
-            ? 'bottom-20 right-4 left-4' 
+            ? 'bottom-20 right-2 left-2' 
             : 'bottom-20 right-6'
         }`}>
-          <AIAssistant 
-            isMinimized={isMinimized}
-            onToggleMinimize={toggleMinimize}
-          />
+          <AIAssistant />
         </div>
       )}
 
