@@ -1,4 +1,3 @@
-
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -41,7 +40,7 @@ export function FAQ({ onNavigate }: FAQProps) {
     {
       id: "item-7",
       question: "Quels sont les montants minimum et maximum ?",
-      answer: "Minimum : 5,000 CFA ou 10 CAD pour l'achat d'USDT, 5 USDT pour la vente, 10 CAD pour les virements internationaux. Les maximums dépendent de votre niveau de vérification."
+      answer: "Minimum : 50,000 CFA pour l'achat d'USDT via Mobile Money, 10 CAD pour l'achat via carte bancaire, aucune limite minimum pour la vente d'USDT, 10 CAD pour les virements internationaux. Les maximums dépendent de votre niveau de vérification."
     },
     {
       id: "item-8",
