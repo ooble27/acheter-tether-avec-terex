@@ -31,16 +31,14 @@ export function AIAssistant() {
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [streamingMessage, setStreamingMessage] = useState('');
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
-  // Auto-scroll
+  // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, streamingMessage]);
+  }, [messages, isLoading]);
 
   const sendMessage = async (retryMessage?: string) => {
     const messageToSend = retryMessage || inputMessage;
@@ -57,9 +55,10 @@ export function AIAssistant() {
     }
 
     setIsLoading(true);
-    setStreamingMessage('');
 
     try {
+      console.log('Envoi du message:', messageToSend);
+
       const conversationHistory = messages.slice(-8).map(msg => ({
         role: msg.role,
         content: msg.content
@@ -72,48 +71,22 @@ export function AIAssistant() {
         }
       });
 
+      console.log('Réponse reçue:', data);
+
       if (error) {
         console.error('Erreur fonction Supabase:', error);
         throw error;
       }
 
-      if (data && typeof data.readable !== 'undefined') {
-        const reader = data.getReader();
-        const decoder = new TextDecoder();
-        let fullContent = '';
-        
-        while (true) {
-          const { done, value } = await reader.read();
-          
-          if (done) break;
-          
-          const chunk = decoder.decode(value);
-          const lines = chunk.split('\n');
-          
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              try {
-                const parsed = JSON.parse(line.slice(6));
-                if (parsed.content) {
-                  fullContent += parsed.content;
-                  setStreamingMessage(fullContent);
-                }
-              } catch (e) {
-                // Ignorer les erreurs de parsing
-              }
-            }
-          }
-        }
-
-        if (fullContent) {
-          const assistantMessage: ChatMessage = {
-            role: 'assistant',
-            content: fullContent,
-            timestamp: new Date()
-          };
-          setMessages(prev => [...prev, assistantMessage]);
-          setStreamingMessage('');
-        }
+      if (data && data.content) {
+        const assistantMessage: ChatMessage = {
+          role: 'assistant',
+          content: data.content,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, assistantMessage]);
+      } else {
+        throw new Error('Réponse invalide du serveur');
       }
 
     } catch (error) {
@@ -134,7 +107,6 @@ export function AIAssistant() {
       });
     } finally {
       setIsLoading(false);
-      setStreamingMessage('');
     }
   };
 
@@ -185,7 +157,7 @@ export function AIAssistant() {
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col space-y-4 min-h-0">
-        <ScrollArea className="flex-1 pr-4" ref={scrollAreaRef}>
+        <ScrollArea className="flex-1 pr-4">
           <div className="space-y-4">
             {messages.map((message, index) => (
               <div
@@ -226,21 +198,7 @@ export function AIAssistant() {
               </div>
             ))}
 
-            {streamingMessage && (
-              <div className="flex items-start space-x-3">
-                <div className="p-2 bg-terex-accent/20 rounded-full">
-                  <Bot className="w-4 h-4 text-terex-accent" />
-                </div>
-                <div className="bg-terex-gray p-3 rounded-lg max-w-[80%]">
-                  <div className="text-sm leading-relaxed whitespace-pre-wrap text-gray-100">
-                    {streamingMessage}
-                    <span className="animate-pulse">|</span>
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            {isLoading && !streamingMessage && (
+            {isLoading && (
               <div className="flex items-start space-x-3">
                 <div className="p-2 bg-terex-accent/20 rounded-full">
                   <Bot className="w-4 h-4 text-terex-accent" />

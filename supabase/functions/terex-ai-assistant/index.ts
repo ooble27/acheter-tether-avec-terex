@@ -23,7 +23,7 @@ const TEREX_KNOWLEDGE_BASE = `
 Tu es l'assistant virtuel expert de TEREX (Teranga Exchange), une plateforme leader d'échange de crypto-monnaies spécialisée dans l'USDT. Tu es conçu pour fournir des réponses PRÉCISES, CONCISES et DIRECTES.
 
 STYLE DE RÉPONSE EXIGÉ :
-- Réponses COURTES et DIRECTES (maximum 3-4 phrases par point)
+- Réponses COURTES et DIRECTES (maximum 2-3 phrases par point)
 - Utilise des LISTES à puces pour clarifier
 - Évite les répétitions
 - Va DROIT AU BUT
@@ -110,6 +110,8 @@ serve(async (req) => {
       }
     ];
 
+    console.log('Appel à OpenAI avec', messages.length, 'messages');
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -119,9 +121,9 @@ serve(async (req) => {
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages,
-        max_tokens: 400,
+        max_tokens: 300,
         temperature: 0.1,
-        stream: true,
+        stream: false,
       }),
     });
 
@@ -131,65 +133,22 @@ serve(async (req) => {
       throw new Error(`Erreur API OpenAI: ${response.status}`);
     }
 
-    const encoder = new TextEncoder();
-    
-    const stream = new ReadableStream({
-      async start(controller) {
-        const reader = response.body?.getReader();
-        if (!reader) {
-          controller.close();
-          return;
-        }
+    const data = await response.json();
+    console.log('Réponse OpenAI reçue:', data.choices?.[0]?.message?.content?.substring(0, 100));
 
-        const decoder = new TextDecoder();
-        
-        try {
-          while (true) {
-            const { done, value } = await reader.read();
-            
-            if (done) {
-              controller.close();
-              break;
-            }
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      throw new Error('Réponse OpenAI invalide');
+    }
 
-            const chunk = decoder.decode(value);
-            const lines = chunk.split('\n');
-            
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                const data = line.slice(6);
-                
-                if (data === '[DONE]') {
-                  continue;
-                }
-                
-                try {
-                  const parsed = JSON.parse(data);
-                  const content = parsed.choices?.[0]?.delta?.content;
-                  
-                  if (content) {
-                    const sseData = `data: ${JSON.stringify({ content })}\n\n`;
-                    controller.enqueue(encoder.encode(sseData));
-                  }
-                } catch (e) {
-                  // Ignorer les erreurs de parsing
-                }
-              }
-            }
-          }
-        } catch (error) {
-          console.error('Erreur de streaming:', error);
-          controller.error(error);
-        }
-      }
-    });
+    const assistantResponse = data.choices[0].message.content;
 
-    return new Response(stream, {
+    return new Response(JSON.stringify({ 
+      content: assistantResponse,
+      success: true
+    }), {
       headers: {
         ...corsHeaders,
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
+        'Content-Type': 'application/json',
       },
     });
 
