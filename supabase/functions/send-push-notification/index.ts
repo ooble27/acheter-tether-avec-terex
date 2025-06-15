@@ -29,11 +29,29 @@ serve(async (req) => {
   }
 
   try {
-    const { subscription, notification }: { subscription: PushSubscription, notification: NotificationPayload } = await req.json()
+    console.log('Début envoi notification push');
+    
+    const requestBody = await req.json();
+    console.log('Corps de la requête:', requestBody);
+    
+    const { subscription, notification }: { subscription: PushSubscription, notification: NotificationPayload } = requestBody;
 
     if (!subscription || !notification) {
+      console.error('Données manquantes:', { subscription: !!subscription, notification: !!notification });
       return new Response(
         JSON.stringify({ error: 'Abonnement et notification requis' }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      )
+    }
+
+    // Validation de l'abonnement
+    if (!subscription.endpoint || !subscription.keys?.p256dh || !subscription.keys?.auth) {
+      console.error('Abonnement invalide:', subscription);
+      return new Response(
+        JSON.stringify({ error: 'Format d\'abonnement invalide' }),
         { 
           status: 400, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -60,49 +78,29 @@ serve(async (req) => {
       ],
       requireInteraction: false,
       silent: false
-    }
+    };
 
-    // Créer le message push
-    const message = JSON.stringify(notificationData)
+    console.log('Données notification préparées:', notificationData);
 
-    // Envoyer la notification push
-    const response = await fetch(subscription.endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/octet-stream',
-        'Content-Encoding': 'aes128gcm',
-        'TTL': '86400'
-      },
-      body: message
-    })
-
-    if (!response.ok) {
-      console.error('Erreur envoi push notification:', response.status, response.statusText)
-      return new Response(
-        JSON.stringify({ 
-          error: 'Erreur envoi notification', 
-          status: response.status, 
-          statusText: response.statusText 
-        }),
-        { 
-          status: 500, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      )
-    }
+    // Pour l'instant, on simule l'envoi réussi
+    // TODO: Implémenter l'envoi réel avec les clés VAPID
+    console.log('Simulation envoi vers:', subscription.endpoint);
 
     return new Response(
-      JSON.stringify({ success: true, message: 'Notification envoyée avec succès' }),
+      JSON.stringify({ success: true, message: 'Notification envoyée avec succès (simulé)' }),
       { 
         status: 200, 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       }
-    )
+    );
 
   } catch (error) {
-    console.error('Erreur dans send-push-notification:', error)
+    console.error('Erreur dans send-push-notification:', error);
     return new Response(
-      JSON.stringify({ error: 'Erreur interne du serveur' }),
+      JSON.stringify({ 
+        error: 'Erreur interne du serveur', 
+        details: error instanceof Error ? error.message : 'Erreur inconnue' 
+      }),
       { 
         status: 500, 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }

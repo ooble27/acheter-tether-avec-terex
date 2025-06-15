@@ -31,10 +31,14 @@ export const usePushNotifications = () => {
       try {
         const registration = await navigator.serviceWorker.register('/sw.js');
         console.log('Service Worker enregistré:', registration);
+        
+        // Attendre que le service worker soit prêt
+        await navigator.serviceWorker.ready;
+        
         return registration;
       } catch (error) {
         console.error('Erreur d\'enregistrement du Service Worker:', error);
-        throw error;
+        throw new Error('Service Worker non disponible');
       }
     }
     throw new Error('Service Worker non supporté');
@@ -42,17 +46,23 @@ export const usePushNotifications = () => {
 
   const requestPermission = async () => {
     if (!isSupported) {
-      throw new Error('Les notifications push ne sont pas supportées');
+      throw new Error('Les notifications push ne sont pas supportées par ce navigateur');
     }
 
-    const result = await Notification.requestPermission();
-    setPermission(result);
-    
-    if (result !== 'granted') {
-      throw new Error('Permission refusée pour les notifications');
+    try {
+      const result = await Notification.requestPermission();
+      console.log('Permission result:', result);
+      setPermission(result);
+      
+      if (result !== 'granted') {
+        throw new Error('Permission refusée pour les notifications');
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('Erreur demande permission:', error);
+      throw new Error('Impossible de demander la permission pour les notifications');
     }
-    
-    return result;
   };
 
   const subscribeToNotifications = async () => {
@@ -61,11 +71,19 @@ export const usePushNotifications = () => {
         throw new Error('Utilisateur non connecté');
       }
 
+      console.log('Début de la souscription aux notifications...');
+
       // Demander la permission
       await requestPermission();
 
       // Enregistrer le service worker
       const registration = await registerServiceWorker();
+      console.log('Service Worker prêt');
+
+      // Vérifier si le pushManager est disponible
+      if (!registration.pushManager) {
+        throw new Error('Push Manager non disponible');
+      }
 
       // Créer l'abonnement push
       const pushSubscription = await registration.pushManager.subscribe({
@@ -75,28 +93,44 @@ export const usePushNotifications = () => {
         )
       });
 
+      console.log('Push subscription créé:', pushSubscription);
+
+      // Extraire les clés
+      const p256dhKey = pushSubscription.getKey('p256dh');
+      const authKey = pushSubscription.getKey('auth');
+
+      if (!p256dhKey || !authKey) {
+        throw new Error('Impossible d\'obtenir les clés de chiffrement');
+      }
+
+      const subscriptionData = {
+        user_id: user.id,
+        endpoint: pushSubscription.endpoint,
+        p256dh: arrayBufferToBase64(p256dhKey),
+        auth: arrayBufferToBase64(authKey)
+      };
+
+      console.log('Sauvegarde abonnement en base...', subscriptionData);
+
       // Sauvegarder l'abonnement en base
       const { error } = await supabase
         .from('push_subscriptions')
-        .upsert({
-          user_id: user.id,
-          endpoint: pushSubscription.endpoint,
-          p256dh: arrayBufferToBase64(pushSubscription.getKey('p256dh')!),
-          auth: arrayBufferToBase64(pushSubscription.getKey('auth')!)
-        }, {
+        .upsert(subscriptionData, {
           onConflict: 'user_id,endpoint'
         });
 
       if (error) {
         console.error('Erreur sauvegarde abonnement:', error);
-        throw error;
+        throw new Error(`Erreur base de données: ${error.message}`);
       }
+
+      console.log('Abonnement sauvegardé avec succès');
 
       setSubscription({
         endpoint: pushSubscription.endpoint,
         keys: {
-          p256dh: arrayBufferToBase64(pushSubscription.getKey('p256dh')!),
-          auth: arrayBufferToBase64(pushSubscription.getKey('auth')!)
+          p256dh: arrayBufferToBase64(p256dhKey),
+          auth: arrayBufferToBase64(authKey)
         }
       });
 
@@ -109,9 +143,15 @@ export const usePushNotifications = () => {
       return pushSubscription;
     } catch (error) {
       console.error('Erreur abonnement notifications:', error);
+      
+      let errorMessage = "Impossible d'activer les notifications";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
       toast({
         title: "Erreur",
-        description: "Impossible d'activer les notifications",
+        description: errorMessage,
         variant: "destructive",
       });
       throw error;
