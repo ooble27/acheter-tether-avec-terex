@@ -1,6 +1,6 @@
 
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react'
-import { User, Session } from '@supabase/supabase-js'
+import { createContext, useContext, useState, useEffect, useMemo } from 'react'
+import type { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 
 interface AuthContextType {
@@ -29,10 +29,13 @@ export const useAuth = () => {
   return context
 }
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface AuthProviderProps {
+  children: React.ReactNode
+}
+
+export function AuthProvider({ children }: AuthProviderProps) {
   console.log('AuthProvider: Initializing...');
   
-  // Initialize state with default values to prevent dispatcher issues
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
@@ -40,7 +43,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     console.log('AuthProvider: Setting up auth listener...')
     
-    // Get initial session
     const getInitialSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -68,7 +70,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     getInitialSession();
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('AuthProvider: Auth state change:', event, session?.user?.email || 'no user');
