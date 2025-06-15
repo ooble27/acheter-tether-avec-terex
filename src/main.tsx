@@ -19,21 +19,12 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Ensure React is properly loaded before rendering
-const initializeApp = () => {
-  const rootElement = document.getElementById("root");
-
-  if (rootElement) {
-    const root = createRoot(rootElement);
-    root.render(
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    );
-  } else {
-    console.error('Root element not found');
-  }
-};
-
 // Initialize the app
-initializeApp();
+const rootElement = document.getElementById("root");
+
+if (rootElement) {
+  const root = createRoot(rootElement);
+  root.render(<App />);
+} else {
+  console.error('Root element not found');
+}
