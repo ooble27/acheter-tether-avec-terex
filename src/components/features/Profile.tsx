@@ -8,6 +8,7 @@ import { PersonalInfoCard } from './profile/PersonalInfoCard';
 import { ContactCard } from './profile/ContactCard';
 import { ShareAndContactCard } from './profile/ShareAndContactCard';
 import { SecuritySettingsCard } from './profile/SecuritySettingsCard';
+import { NotificationCard } from './profile/NotificationCard';
 import { User, Star, Award } from 'lucide-react';
 
 interface ProfileProps {
@@ -83,6 +84,9 @@ export function Profile({ user, onLogout }: ProfileProps) {
           
           {/* Contact */}
           <ContactCard user={user} />
+          
+          {/* Notifications */}
+          <NotificationCard />
         </div>
 
         {/* Colonne secondaire */}
