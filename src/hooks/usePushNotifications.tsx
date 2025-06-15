@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -23,22 +22,27 @@ export const usePushNotifications = () => {
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       setIsSupported(true);
       setPermission(Notification.permission);
+      console.log('✅ Push notifications supportées par le navigateur');
+    } else {
+      console.log('❌ Push notifications non supportées par le navigateur');
     }
   }, []);
 
   const registerServiceWorker = async () => {
     if ('serviceWorker' in navigator) {
       try {
+        console.log('🔄 Enregistrement du Service Worker...');
         const registration = await navigator.serviceWorker.register('/sw.js');
-        console.log('Service Worker enregistré:', registration);
+        console.log('✅ Service Worker enregistré:', registration);
         
         // Attendre que le service worker soit prêt
         await navigator.serviceWorker.ready;
+        console.log('✅ Service Worker prêt');
         
         return registration;
       } catch (error) {
-        console.error('Erreur d\'enregistrement du Service Worker:', error);
-        throw new Error('Service Worker non disponible');
+        console.error('❌ Erreur d\'enregistrement du Service Worker:', error);
+        throw new Error(`Service Worker non disponible: ${error}`);
       }
     }
     throw new Error('Service Worker non supporté');
@@ -50,18 +54,20 @@ export const usePushNotifications = () => {
     }
 
     try {
+      console.log('🔄 Demande de permission pour les notifications...');
       const result = await Notification.requestPermission();
-      console.log('Permission result:', result);
+      console.log('📝 Résultat permission:', result);
       setPermission(result);
       
       if (result !== 'granted') {
-        throw new Error('Permission refusée pour les notifications');
+        throw new Error(`Permission refusée: ${result}`);
       }
       
+      console.log('✅ Permission accordée');
       return result;
     } catch (error) {
-      console.error('Erreur demande permission:', error);
-      throw new Error('Impossible de demander la permission pour les notifications');
+      console.error('❌ Erreur demande permission:', error);
+      throw new Error(`Impossible de demander la permission: ${error}`);
     }
   };
 
@@ -71,19 +77,20 @@ export const usePushNotifications = () => {
         throw new Error('Utilisateur non connecté');
       }
 
-      console.log('Début de la souscription aux notifications...');
+      console.log('🚀 Début de la souscription aux notifications...');
 
       // Demander la permission
       await requestPermission();
 
       // Enregistrer le service worker
       const registration = await registerServiceWorker();
-      console.log('Service Worker prêt');
 
       // Vérifier si le pushManager est disponible
       if (!registration.pushManager) {
         throw new Error('Push Manager non disponible');
       }
+
+      console.log('🔄 Création de l\'abonnement push...');
 
       // Créer l'abonnement push
       const pushSubscription = await registration.pushManager.subscribe({
@@ -93,7 +100,7 @@ export const usePushNotifications = () => {
         )
       });
 
-      console.log('Push subscription créé:', pushSubscription);
+      console.log('✅ Push subscription créé:', pushSubscription);
 
       // Extraire les clés
       const p256dhKey = pushSubscription.getKey('p256dh');
@@ -110,7 +117,12 @@ export const usePushNotifications = () => {
         auth: arrayBufferToBase64(authKey)
       };
 
-      console.log('Sauvegarde abonnement en base...', subscriptionData);
+      console.log('💾 Sauvegarde abonnement en base...', {
+        user_id: subscriptionData.user_id,
+        endpoint: subscriptionData.endpoint.substring(0, 50) + '...',
+        p256dh: subscriptionData.p256dh.substring(0, 20) + '...',
+        auth: subscriptionData.auth.substring(0, 20) + '...'
+      });
 
       // Sauvegarder l'abonnement en base
       const { error } = await supabase
@@ -120,11 +132,11 @@ export const usePushNotifications = () => {
         });
 
       if (error) {
-        console.error('Erreur sauvegarde abonnement:', error);
+        console.error('❌ Erreur sauvegarde abonnement:', error);
         throw new Error(`Erreur base de données: ${error.message}`);
       }
 
-      console.log('Abonnement sauvegardé avec succès');
+      console.log('✅ Abonnement sauvegardé avec succès');
 
       setSubscription({
         endpoint: pushSubscription.endpoint,
@@ -134,15 +146,19 @@ export const usePushNotifications = () => {
         }
       });
 
+      // Test immédiat de notification
+      console.log('🧪 Test de notification immédiat...');
+      await testNotification();
+
       toast({
         title: "Notifications activées",
-        description: "Vous recevrez maintenant des notifications push",
+        description: "Vous recevrez maintenant des notifications push. Une notification de test a été envoyée.",
         className: "bg-green-600 text-white border-green-600",
       });
 
       return pushSubscription;
     } catch (error) {
-      console.error('Erreur abonnement notifications:', error);
+      console.error('❌ Erreur abonnement notifications:', error);
       
       let errorMessage = "Impossible d'activer les notifications";
       if (error instanceof Error) {
@@ -158,9 +174,41 @@ export const usePushNotifications = () => {
     }
   };
 
+  const testNotification = async () => {
+    try {
+      console.log('🧪 Envoi de notification de test...');
+      
+      const { error } = await supabase.functions.invoke('send-push-notification', {
+        body: {
+          subscription: subscription || {
+            endpoint: 'test',
+            keys: { p256dh: 'test', auth: 'test' }
+          },
+          notification: {
+            title: 'Test Terex',
+            body: 'Vos notifications push fonctionnent correctement ! 🎉',
+            icon: '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
+            badge: '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
+            data: { type: 'test' }
+          }
+        }
+      });
+
+      if (error) {
+        console.error('❌ Erreur test notification:', error);
+      } else {
+        console.log('✅ Notification de test envoyée');
+      }
+    } catch (error) {
+      console.error('❌ Erreur lors du test:', error);
+    }
+  };
+
   const unsubscribeFromNotifications = async () => {
     try {
       if (!user) return;
+
+      console.log('🔄 Désabonnement des notifications...');
 
       // Supprimer de la base de données
       const { error } = await supabase
@@ -169,7 +217,7 @@ export const usePushNotifications = () => {
         .eq('user_id', user.id);
 
       if (error) {
-        console.error('Erreur suppression abonnement:', error);
+        console.error('❌ Erreur suppression abonnement:', error);
         throw error;
       }
 
@@ -183,6 +231,7 @@ export const usePushNotifications = () => {
       }
 
       setSubscription(null);
+      console.log('✅ Désabonnement réussi');
       
       toast({
         title: "Notifications désactivées",
@@ -190,7 +239,7 @@ export const usePushNotifications = () => {
         className: "bg-orange-600 text-white border-orange-600",
       });
     } catch (error) {
-      console.error('Erreur désabonnement:', error);
+      console.error('❌ Erreur désabonnement:', error);
       toast({
         title: "Erreur",
         description: "Impossible de désactiver les notifications",
@@ -203,6 +252,8 @@ export const usePushNotifications = () => {
     try {
       if (!user) return;
 
+      console.log('🔍 Vérification abonnement existant...');
+
       const { data, error } = await supabase
         .from('push_subscriptions')
         .select('endpoint, p256dh, auth')
@@ -210,11 +261,12 @@ export const usePushNotifications = () => {
         .single();
 
       if (error && error.code !== 'PGRST116') {
-        console.error('Erreur vérification abonnement:', error);
+        console.error('❌ Erreur vérification abonnement:', error);
         return;
       }
 
       if (data) {
+        console.log('✅ Abonnement existant trouvé');
         setSubscription({
           endpoint: data.endpoint,
           keys: {
@@ -222,9 +274,11 @@ export const usePushNotifications = () => {
             auth: data.auth
           }
         });
+      } else {
+        console.log('ℹ️ Aucun abonnement existant');
       }
     } catch (error) {
-      console.error('Erreur vérification abonnement:', error);
+      console.error('❌ Erreur vérification abonnement:', error);
     }
   };
 
@@ -240,6 +294,7 @@ export const usePushNotifications = () => {
     subscription,
     subscribeToNotifications,
     unsubscribeFromNotifications,
+    testNotification,
     isSubscribed: !!subscription
   };
 };

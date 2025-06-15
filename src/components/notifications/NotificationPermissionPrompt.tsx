@@ -2,12 +2,12 @@
 import { useState, useEffect } from 'react';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { Button } from '@/components/ui/button';
-import { Bell, BellOff, X } from 'lucide-react';
+import { Bell, BellOff, X, TestTube } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
 export function NotificationPermissionPrompt() {
   const [showPrompt, setShowPrompt] = useState(false);
-  const { isSupported, permission, subscribeToNotifications, isSubscribed } = usePushNotifications();
+  const { isSupported, permission, subscribeToNotifications, testNotification, isSubscribed } = usePushNotifications();
 
   useEffect(() => {
     // Afficher le prompt seulement si les notifications sont supportées,
@@ -31,6 +31,14 @@ export function NotificationPermissionPrompt() {
     }
   };
 
+  const handleTestNotification = async () => {
+    try {
+      await testNotification();
+    } catch (error) {
+      console.error('Erreur test notification:', error);
+    }
+  };
+
   const handleDismiss = () => {
     setShowPrompt(false);
     // Ne plus afficher pendant cette session
@@ -42,7 +50,45 @@ export function NotificationPermissionPrompt() {
     return null;
   }
 
-  if (!showPrompt || !isSupported || permission !== 'default' || isSubscribed) {
+  // Si l'utilisateur est déjà abonné, afficher un bouton de test
+  if (isSubscribed) {
+    return (
+      <div className="fixed bottom-4 right-4 z-50 max-w-sm">
+        <Card className="bg-terex-darker border-terex-accent/30 shadow-2xl">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-2">
+                <Bell className="w-5 h-5 text-green-400" />
+                <h3 className="text-white font-medium text-sm">Notifications actives</h3>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowPrompt(false)}
+                className="h-6 w-6 p-0 text-gray-400 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            <p className="text-gray-300 text-xs mb-4">
+              Vos notifications push sont configurées. Testez le système !
+            </p>
+            
+            <Button
+              onClick={handleTestNotification}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs h-8"
+            >
+              <TestTube className="w-3 h-3 mr-1" />
+              Tester les notifications
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!showPrompt || !isSupported || permission !== 'default') {
     return null;
   }
 
