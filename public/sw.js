@@ -74,33 +74,88 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Gestion des notifications push (pour futur usage)
+// Gestion des notifications push
 self.addEventListener('push', (event) => {
+  console.log('Push notification reçue:', event);
+  
   if (event.data) {
-    const data = event.data.json();
-    const options = {
-      body: data.body,
-      icon: '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
-      badge: '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
-      vibrate: [100, 50, 100],
-      data: {
-        url: data.url
-      }
-    };
-    
-    event.waitUntil(
-      self.registration.showNotification(data.title, options)
-    );
+    try {
+      const data = event.data.json();
+      console.log('Données push:', data);
+      
+      const options = {
+        body: data.body,
+        icon: data.icon || '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
+        badge: data.badge || '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
+        vibrate: [100, 50, 100],
+        data: data.data || {},
+        actions: data.actions || [
+          {
+            action: 'open',
+            title: 'Ouvrir',
+            icon: '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png'
+          }
+        ],
+        requireInteraction: false,
+        silent: false,
+        tag: data.tag || 'terex-notification'
+      };
+      
+      event.waitUntil(
+        self.registration.showNotification(data.title, options)
+      );
+    } catch (error) {
+      console.error('Erreur traitement push notification:', error);
+      
+      // Notification de fallback
+      event.waitUntil(
+        self.registration.showNotification('Terex', {
+          body: 'Vous avez une nouvelle notification',
+          icon: '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
+          badge: '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png'
+        })
+      );
+    }
   }
 });
 
 // Gestion des clics sur notifications
 self.addEventListener('notificationclick', (event) => {
+  console.log('Clic sur notification:', event);
+  
   event.notification.close();
   
-  if (event.notification.data && event.notification.data.url) {
-    event.waitUntil(
-      clients.openWindow(event.notification.data.url)
-    );
+  const urlToOpen = event.notification.data?.url || '/';
+  
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        // Vérifier si l'application est déjà ouverte
+        for (const client of clientList) {
+          if (client.url.includes(self.location.origin) && 'focus' in client) {
+            // Naviguer vers l'URL de la notification
+            client.postMessage({
+              type: 'NOTIFICATION_CLICK',
+              url: urlToOpen,
+              data: event.notification.data
+            });
+            return client.focus();
+          }
+        }
+        
+        // Ouvrir une nouvelle fenêtre si l'application n'est pas ouverte
+        if (clients.openWindow) {
+          return clients.openWindow(urlToOpen);
+        }
+      })
+  );
+});
+
+// Gestion des messages du client
+self.addEventListener('message', (event) => {
+  console.log('Message reçu dans SW:', event.data);
+  
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
   }
 });
