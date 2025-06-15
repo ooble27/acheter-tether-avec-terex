@@ -44,6 +44,10 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     }
   };
 
+  const handleBackToHome = () => {
+    setActiveView('home');
+  };
+
   const renderContent = () => {
     switch (activeView) {
       case 'buy':
@@ -53,23 +57,23 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'transfer':
         return <InternationalTransfer />;
       case 'history':
-        return <TransactionHistory />;
+        return <TransactionHistory transactions={[]} />;
       case 'profile':
         return <Profile user={user} onLogout={handleLogout} />;
       case 'about':
-        return <AboutTerex />;
+        return <AboutTerex onBack={handleBackToHome} />;
       case 'faq':
         return <FAQ />;
       case 'guide':
-        return <UserGuide />;
+        return <UserGuide onBack={handleBackToHome} />;
       case 'security':
-        return <SecurityPolicy />;
+        return <SecurityPolicy onBack={handleBackToHome} />;
       case 'terms':
-        return <TermsOfService />;
+        return <TermsOfService onBack={handleBackToHome} />;
       case 'volume':
-        return <HighVolumeRequest />;
+        return <HighVolumeRequest onBack={handleBackToHome} requestedAmount="" />;
       default:
-        return <DashboardHome />;
+        return <DashboardHome user={user} />;
     }
   };
 
@@ -77,9 +81,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-terex-dark">
         <AppSidebar 
-          user={user} 
-          activeView={activeView} 
-          onViewChange={setActiveView}
+          activeSection={activeView} 
+          setActiveSection={setActiveView}
           onLogout={handleLogout}
         />
         <SidebarInset className="flex-1">
