@@ -21,29 +21,27 @@ const App = () => {
   console.log('App: Rendering...');
   
   return (
-    <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <ThemeProvider>
-            <AuthProvider>
-              <TooltipProvider delayDuration={200} skipDelayDuration={300}>
-                <Toaster />
-                <Sonner />
-                <PWASessionSync />
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/auth" element={<AuthPage />} />
-                  <Route path="/admin" element={<AdminPage />} />
-                  <Route path="/blockchain" element={<BlockchainPage />} />
-                  <Route path="/auth/callback" element={<AuthCallback />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </TooltipProvider>
-            </AuthProvider>
-          </ThemeProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <ThemeProvider>
+          <AuthProvider>
+            <TooltipProvider delayDuration={200} skipDelayDuration={300}>
+              <Toaster />
+              <Sonner />
+              <PWASessionSync />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/admin" element={<AdminPage />} />
+                <Route path="/blockchain" element={<BlockchainPage />} />
+                <Route path="/auth/callback" element={<AuthCallback />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </TooltipProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 };
 

@@ -29,7 +29,7 @@ export const useAuth = () => {
   return context
 }
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   console.log('AuthProvider: Initializing...');
   
   // Initialize state with default values to prevent dispatcher issues
