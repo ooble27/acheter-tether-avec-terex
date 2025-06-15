@@ -74,32 +74,18 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Gestion des notifications push
+// Gestion des notifications push (pour futur usage)
 self.addEventListener('push', (event) => {
-  console.log('Push event received:', event);
-  
   if (event.data) {
     const data = event.data.json();
-    console.log('Push notification data:', data);
-    
     const options = {
       body: data.body,
-      icon: data.icon || '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
-      badge: data.badge || '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
+      icon: '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
+      badge: '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
       vibrate: [100, 50, 100],
-      data: data.data || {},
-      actions: [
-        {
-          action: 'open',
-          title: 'Ouvrir Terex'
-        },
-        {
-          action: 'close',
-          title: 'Fermer'
-        }
-      ],
-      requireInteraction: true,
-      silent: false
+      data: {
+        url: data.url
+      }
     };
     
     event.waitUntil(
@@ -110,35 +96,11 @@ self.addEventListener('push', (event) => {
 
 // Gestion des clics sur notifications
 self.addEventListener('notificationclick', (event) => {
-  console.log('Notification click received:', event);
-  
   event.notification.close();
   
-  if (event.action === 'close') {
-    return;
+  if (event.notification.data && event.notification.data.url) {
+    event.waitUntil(
+      clients.openWindow(event.notification.data.url)
+    );
   }
-  
-  // Ouvrir ou focuser l'application
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true })
-      .then((clientList) => {
-        // Si l'app est déjà ouverte, la focuser
-        for (const client of clientList) {
-          if (client.url.includes(self.location.origin) && 'focus' in client) {
-            return client.focus();
-          }
-        }
-        
-        // Sinon ouvrir une nouvelle fenêtre
-        if (clients.openWindow) {
-          const url = event.notification.data?.url || '/';
-          return clients.openWindow(url);
-        }
-      })
-  );
-});
-
-// Gestion de la fermeture des notifications
-self.addEventListener('notificationclose', (event) => {
-  console.log('Notification closed:', event.notification.tag);
 });

@@ -1,99 +1,127 @@
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useNotificationTrigger } from '@/hooks/useNotificationTrigger';
-import { DashboardHome } from './DashboardHome';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
 import { BuyUSDT } from '@/components/features/BuyUSDT';
 import { SellUSDT } from '@/components/features/SellUSDT';
 import { InternationalTransfer } from '@/components/features/InternationalTransfer';
-import { TransactionHistory } from '@/components/features/TransactionHistory';
-import { Profile } from '@/components/features/Profile';
-import { AboutTerex } from '@/components/features/AboutTerex';
 import { FAQ } from '@/components/features/FAQ';
+import { DashboardHome } from '@/components/dashboard/DashboardHome';
+import { Profile } from '@/components/features/Profile';
+import { KYCPage } from '@/components/features/KYCPage';
+import { KYCAdmin } from '@/components/admin/KYCAdmin';
+import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
+import { AdminPortal } from '@/components/admin/AdminPortal';
 import { UserGuide } from '@/components/features/UserGuide';
 import { SecurityPolicy } from '@/components/features/SecurityPolicy';
 import { TermsOfService } from '@/components/features/TermsOfService';
-import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
-import { AppSidebar } from './AppSidebar';
-import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import { AboutTerex } from '@/components/features/AboutTerex';
 import { AIAssistantWidget } from '@/components/features/AIAssistantWidget';
-
-export interface DashboardUser {
-  email: string;
-  name: string;
-}
+import { TransactionProvider } from '@/contexts/TransactionContext';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsTablet } from '@/hooks/use-tablet';
+import { useAuth } from '@/contexts/AuthContext';
+import { useUserRole } from '@/hooks/useUserRole';
+import { Button } from '@/components/ui/button';
+import { LogOut } from 'lucide-react';
 
 interface DashboardProps {
-  user: DashboardUser;
+  user: { email: string; name: string } | null;
   onLogout: () => void;
 }
 
 export function Dashboard({ user, onLogout }: DashboardProps) {
-  const [activeView, setActiveView] = useState('home');
+  const [activeSection, setActiveSection] = useState('home');
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
   const { signOut } = useAuth();
+  const { isKYCReviewer, isAdmin } = useUserRole();
 
-  // Activer les notifications push
-  useNotificationTrigger();
+  // Effet pour remonter en haut à chaque changement de section
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeSection]);
 
   const handleLogout = async () => {
     try {
+      console.log('Dashboard: Starting logout...')
       await signOut();
-      onLogout();
+      console.log('Dashboard: Logout completed')
+      // No need to manually redirect, the auth state change will handle it
     } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
+      console.error('Dashboard: Logout error:', error)
     }
   };
 
-  const handleBackToHome = () => {
-    setActiveView('home');
-  };
-
   const renderContent = () => {
-    switch (activeView) {
+    switch (activeSection) {
+      case 'home':
+        return <DashboardHome user={user} />;
       case 'buy':
         return <BuyUSDT />;
       case 'sell':
         return <SellUSDT />;
       case 'transfer':
         return <InternationalTransfer />;
-      case 'history':
-        return <TransactionHistory transactions={[]} />;
       case 'profile':
         return <Profile user={user} onLogout={handleLogout} />;
-      case 'about':
-        return <AboutTerex onBack={handleBackToHome} />;
+      case 'kyc':
+        return <KYCPage onBack={() => setActiveSection('profile')} />;
       case 'faq':
-        return <FAQ />;
-      case 'guide':
-        return <UserGuide onBack={handleBackToHome} />;
-      case 'security':
-        return <SecurityPolicy onBack={handleBackToHome} />;
-      case 'terms':
-        return <TermsOfService onBack={handleBackToHome} />;
-      case 'volume':
-        return <HighVolumeRequest onBack={handleBackToHome} requestedAmount="" />;
+        return <FAQ onNavigate={setActiveSection} />;
+      case 'user-guide':
+        return <UserGuide onBack={() => setActiveSection('faq')} />;
+      case 'security-policy':
+        return <SecurityPolicy onBack={() => setActiveSection('faq')} />;
+      case 'terms-of-service':
+        return <TermsOfService onBack={() => setActiveSection('faq')} />;
+      case 'about-terex':
+        return <AboutTerex onBack={() => setActiveSection('faq')} />;
+      case 'kyc-admin':
+        return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
+      case 'orders-admin':
+        return isKYCReviewer() ? <OrdersDashboardNew /> : <div className="text-white">Accès non autorisé</div>;
+      case 'admin-portal':
+        return (isAdmin() || isKYCReviewer()) ? <AdminPortal /> : <div className="text-white">Accès non autorisé</div>;
       default:
         return <DashboardHome user={user} />;
     }
   };
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-terex-dark">
-        <AppSidebar 
-          activeSection={activeView} 
-          setActiveSection={setActiveView}
-          onLogout={handleLogout}
-        />
-        <SidebarInset className="flex-1">
-          <main className="flex-1 overflow-auto">
-            <div className="container mx-auto p-6">
-              {renderContent()}
-            </div>
+    <TransactionProvider>
+      <SidebarProvider>
+        <div className="min-h-screen flex w-full bg-terex-dark">
+          <AppSidebar 
+            activeSection={activeSection}
+            setActiveSection={setActiveSection}
+            onLogout={handleLogout}
+          />
+          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'} relative`}>
+            <MobileMenu 
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+              onLogout={handleLogout}
+            />
+            
+            {/* Bouton de déconnexion flottant uniquement sur tablette */}
+            {isTablet && (
+              <Button 
+                onClick={handleLogout}
+                className="fixed top-6 right-6 z-50 h-14 px-6 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm shadow-lg"
+              >
+                <LogOut className="mr-2 h-5 w-5" />
+                Déconnexion
+              </Button>
+            )}
+            
+            {renderContent()}
           </main>
-        </SidebarInset>
-        <AIAssistantWidget />
-      </div>
-    </SidebarProvider>
+
+          {/* Widget Assistant IA flottant */}
+          <AIAssistantWidget />
+        </div>
+      </SidebarProvider>
+    </TransactionProvider>
   );
 }
