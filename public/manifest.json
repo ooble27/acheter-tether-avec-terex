@@ -1,8 +1,8 @@
 
 {
-  "name": "Terex - Échanges USDT & Transferts Afrique",
+  "name": "Terex - Échange de devises & Transferts Afrique",
   "short_name": "Terex",
-  "description": "Achetez et vendez des USDT, effectuez des transferts d'argent vers l'Afrique instantanément",
+  "description": "Effectuez vos transactions et transferts d'argent vers l'Afrique facilement",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0D1117",
@@ -41,9 +41,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Acheter USDT",
-      "short_name": "Acheter",
-      "description": "Acheter des USDT rapidement",
+      "name": "Effectuer une transaction",
+      "short_name": "Transaction",
+      "description": "Effectuer une transaction rapidement",
       "url": "/auth?tab=buy",
       "icons": [
         {
@@ -53,9 +53,9 @@
       ]
     },
     {
-      "name": "Vendre USDT",
-      "short_name": "Vendre",
-      "description": "Vendre des USDT rapidement",
+      "name": "Transfert Afrique",
+      "short_name": "Transfert",
+      "description": "Transférer de l'argent vers l'Afrique",
       "url": "/auth?tab=sell",
       "icons": [
         {
