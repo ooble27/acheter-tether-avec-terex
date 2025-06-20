@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 export function CurrencyConverter() {
   const [amount, setAmount] = useState('100');
+  const [usdtAmount, setUsdtAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
   const [mode, setMode] = useState<'buy' | 'sell'>('buy');
   const navigate = useNavigate();
@@ -49,7 +50,32 @@ export function CurrencyConverter() {
     }
   };
 
-  const convertedAmount = getConvertedAmount();
+  // Calculer le montant fiat basé sur l'USDT saisi
+  const getFiatFromUSDT = () => {
+    if (mode === 'buy') {
+      // Mode achat : calcul inverse - USDT vers CFA/CAD
+      const exchangeRate = currency === 'CFA' ? terexRateCfa : terexRateCad;
+      return usdtAmount ? formatAmount(parseFloat(usdtAmount) * exchangeRate) : '0';
+    } else {
+      // Mode vente : calcul inverse - USDT vers CFA/CAD
+      const exchangeRate = currency === 'CFA' ? terexBuyRateCfa : terexBuyRateCad;
+      return usdtAmount ? formatAmount(parseFloat(usdtAmount) * exchangeRate) : '0';
+    }
+  };
+
+  const handleFiatAmountChange = (value: string) => {
+    setAmount(value);
+    setUsdtAmount(''); // Réinitialiser l'USDT quand on change le fiat
+  };
+
+  const handleUSDTAmountChange = (value: string) => {
+    setUsdtAmount(value);
+    setAmount(''); // Réinitialiser le fiat quand on change l'USDT
+  };
+
+  // Déterminer quel montant afficher
+  const displayedFiatAmount = usdtAmount ? getFiatFromUSDT() : (amount || '0');
+  const displayedUSDTAmount = amount ? getConvertedAmount() : (usdtAmount || '0');
 
   const handleStartTrading = () => {
     navigate('/auth');
@@ -119,7 +145,7 @@ export function CurrencyConverter() {
                     type="number"
                     placeholder="0.00"
                     value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
+                    onChange={(e) => handleFiatAmountChange(e.target.value)}
                     className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
                   />
                   <Select value={currency} onValueChange={setCurrency}>
@@ -142,9 +168,10 @@ export function CurrencyConverter() {
                 <Label className="text-white text-sm">Je reçois</Label>
                 <div className="relative">
                   <Input
-                    type="text"
-                    value={convertedAmount}
-                    readOnly
+                    type="number"
+                    placeholder="0.00"
+                    value={usdtAmount}
+                    onChange={(e) => handleUSDTAmountChange(e.target.value)}
                     className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24"
                   />
                   <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
@@ -167,8 +194,8 @@ export function CurrencyConverter() {
                   <Input
                     type="number"
                     placeholder="0.00"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
+                    value={usdtAmount}
+                    onChange={(e) => handleUSDTAmountChange(e.target.value)}
                     className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24"
                   />
                   <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
@@ -190,9 +217,10 @@ export function CurrencyConverter() {
                 <Label className="text-white text-sm">Je reçois</Label>
                 <div className="relative">
                   <Input
-                    type="text"
-                    value={convertedAmount}
-                    readOnly
+                    type="number"
+                    placeholder="0.00"
+                    value={amount}
+                    onChange={(e) => handleFiatAmountChange(e.target.value)}
                     className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
                   />
                   <Select value={currency} onValueChange={setCurrency}>
