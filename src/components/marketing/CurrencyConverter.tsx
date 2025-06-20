@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -59,7 +58,7 @@ export function CurrencyConverter() {
     } else {
       // Mode vente : calcul inverse - USDT vers CFA/CAD
       const exchangeRate = currency === 'CFA' ? terexBuyRateCfa : terexBuyRateCad;
-      return usdtAmount ? formatAmount(parseFloat(usdtAmount) / exchangeRate) : '0';
+      return usdtAmount ? formatAmount(parseFloat(usdtAmount) * exchangeRate) : '0';
     }
   };
 
