@@ -79,28 +79,32 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Illustration moderne USDT et crypto */}
+          {/* Illustration claire d'échange USDT */}
           <div className="relative">
             <div className="relative bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-3xl p-8 backdrop-blur-sm border border-terex-accent/20">
               <img 
-                src="https://images.unsplash.com/photo-1640340434855-6084b1f4901c?auto=format&fit=crop&w=800&q=80" 
-                alt="USDT Tether et cryptomonnaies - Trading moderne et sécurisé"
+                src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=800&q=80" 
+                alt="Échange et transfert USDT - Interface moderne et sécurisée"
                 className="w-full h-80 object-cover rounded-2xl shadow-2xl"
               />
               
               {/* Overlay avec éléments USDT */}
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-white/90 to-transparent rounded-b-2xl p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-white/95 to-transparent rounded-b-2xl p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
                     <img 
                       src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                       alt="USDT" 
-                      className="w-8 h-8"
+                      className="w-10 h-10"
                     />
                     <div>
                       <h3 className="text-lg font-bold text-gray-900">USDT Tether</h3>
-                      <p className="text-gray-600 text-sm">Stablecoin de référence</p>
+                      <p className="text-gray-600 text-sm">Échange instantané</p>
                     </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-bold text-green-600">↔</p>
+                    <p className="text-xs text-gray-500">Transfert sécurisé</p>
                   </div>
                 </div>
               </div>
