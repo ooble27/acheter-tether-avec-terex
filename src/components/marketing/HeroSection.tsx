@@ -1,8 +1,8 @@
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { PhoneAnimation } from './PhoneAnimation';
 
 export function HeroSection() {
   const navigate = useNavigate();
@@ -79,39 +79,14 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Illustration claire d'échange USDT */}
+          {/* Animation 3D du smartphone */}
           <div className="relative">
             <div className="relative bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-3xl p-8 backdrop-blur-sm border border-terex-accent/20">
-              <img 
-                src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=800&q=80" 
-                alt="Échange et transfert USDT - Interface moderne et sécurisée"
-                className="w-full h-80 object-cover rounded-2xl shadow-2xl"
-              />
-              
-              {/* Overlay avec éléments USDT */}
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-white/95 to-transparent rounded-b-2xl p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <img 
-                      src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                      alt="USDT" 
-                      className="w-10 h-10"
-                    />
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">USDT Tether</h3>
-                      <p className="text-gray-600 text-sm">Échange instantané</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-bold text-green-600">↔</p>
-                    <p className="text-xs text-gray-500">Transfert sécurisé</p>
-                  </div>
-                </div>
-              </div>
+              <PhoneAnimation />
               
               {/* Badge flottant */}
               <div className="absolute -top-4 -right-4 bg-terex-accent text-black px-4 py-2 rounded-full font-bold text-sm shadow-lg">
-                Taux en temps réel
+                Interface en temps réel
               </div>
             </div>
             

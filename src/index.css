@@ -114,6 +114,11 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Gradient radial pour les effets de lueur */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .animate-fade-in {
     animation: fade-in 0.4s ease-out;
