@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
@@ -111,11 +112,6 @@
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Gradient radial pour l'effet de glow */
-.bg-gradient-radial {
-  background: radial-gradient(circle, var(--tw-gradient-stops));
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -1,10 +1,8 @@
-
 import { Button } from '@/components/ui/button';
 import { HeroSection } from './HeroSection';
 import { TestimonialsSection } from './TestimonialsSection';
 import { StatsSection } from './StatsSection';
 import { CurrencyConverter } from './CurrencyConverter';
-import { AcademySection } from './AcademySection';
 import { PWAInstallPrompt } from '../PWAInstallPrompt';
 import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle, ArrowRight, Smartphone, CreditCard, Banknote } from 'lucide-react';
@@ -126,9 +124,6 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
       </section>
 
       <StatsSection />
-      
-      {/* Nouvelle section Academy inspirée de Binance */}
-      <AcademySection />
       
       {/* Section Méthodes de paiement */}
       <section className="py-16 sm:py-20 bg-terex-dark">
