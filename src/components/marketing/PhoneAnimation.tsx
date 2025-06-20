@@ -2,10 +2,11 @@
 import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, RoundedBox, Text } from '@react-three/drei';
+import * as THREE from 'three';
 
 function Phone() {
-  const phoneRef = useRef<any>(null);
-  const screenRef = useRef<any>(null);
+  const phoneRef = useRef<THREE.Group>(null);
+  const screenRef = useRef<THREE.Mesh>(null);
   
   useFrame((state) => {
     if (phoneRef.current) {
