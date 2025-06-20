@@ -1,4 +1,5 @@
 
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -45,37 +46,58 @@ export function CurrencyConverter() {
       return amount ? formatAmount(parseFloat(amount) / exchangeRate) : '0';
     } else {
       // Mode vente : client vend USDT, reçoit CFA/CAD
+      // 1 USDT = terexBuyRateCfa CFA (ou terexBuyRateCad CAD)
       const exchangeRate = currency === 'CFA' ? terexBuyRateCfa : terexBuyRateCad;
       return amount ? formatAmount(parseFloat(amount) * exchangeRate) : '0';
     }
   };
 
-  // Calculer le montant fiat basé sur l'USDT saisi
-  const getFiatFromUSDT = () => {
+  // Calculer le montant USDT basé sur le montant fiat saisi dans "Je reçois"
+  const getUSDTFromFiat = () => {
     if (mode === 'buy') {
       // Mode achat : calcul inverse - USDT vers CFA/CAD
       const exchangeRate = currency === 'CFA' ? terexRateCfa : terexRateCad;
       return usdtAmount ? formatAmount(parseFloat(usdtAmount) * exchangeRate) : '0';
     } else {
-      // Mode vente : calcul inverse - CFA/CAD vers USDT (diviser par le taux)
+      // Mode vente : calcul inverse - CFA/CAD vers USDT
+      // Si client veut recevoir X CFA, il doit vendre X/taux USDT
       const exchangeRate = currency === 'CFA' ? terexBuyRateCfa : terexBuyRateCad;
       return usdtAmount ? formatAmount(parseFloat(usdtAmount) / exchangeRate) : '0';
     }
   };
 
   const handleFiatAmountChange = (value: string) => {
-    setAmount(value);
-    setUsdtAmount(''); // Réinitialiser l'USDT quand on change le fiat
+    if (mode === 'sell') {
+      // En mode vente, si on change "Je reçois", on calcule "Je vends"
+      setUsdtAmount(value);
+      setAmount(''); // Réinitialiser l'USDT
+    } else {
+      // En mode achat, comportement normal
+      setAmount(value);
+      setUsdtAmount(''); // Réinitialiser l'USDT quand on change le fiat
+    }
   };
 
   const handleUSDTAmountChange = (value: string) => {
-    setUsdtAmount(value);
-    setAmount(''); // Réinitialiser le fiat quand on change l'USDT
+    if (mode === 'sell') {
+      // En mode vente, si on change "Je vends", on calcule "Je reçois"
+      setAmount(value);
+      setUsdtAmount(''); // Réinitialiser le fiat
+    } else {
+      // En mode achat, comportement normal
+      setUsdtAmount(value);
+      setAmount(''); // Réinitialiser le fiat quand on change l'USDT
+    }
   };
 
   // Déterminer quel montant afficher
-  const displayedFiatAmount = amount || (usdtAmount ? getFiatFromUSDT() : '');
-  const displayedUSDTAmount = usdtAmount || (amount ? getConvertedAmount() : '');
+  const displayedFiatAmount = mode === 'buy' 
+    ? (amount || (usdtAmount ? getUSDTFromFiat() : ''))
+    : (usdtAmount || (amount ? getConvertedAmount() : ''));
+    
+  const displayedUSDTAmount = mode === 'buy'
+    ? (usdtAmount || (amount ? getConvertedAmount() : ''))
+    : (amount || (usdtAmount ? getUSDTFromFiat() : ''));
 
   const handleStartTrading = () => {
     navigate('/auth');
@@ -268,3 +290,4 @@ export function CurrencyConverter() {
     </Card>
   );
 }
+
