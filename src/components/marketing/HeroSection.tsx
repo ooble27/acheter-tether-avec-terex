@@ -79,26 +79,35 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Illustration des utilisateurs diversifiés */}
+          {/* Illustration moderne USDT et crypto */}
           <div className="relative">
             <div className="relative bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-3xl p-8 backdrop-blur-sm border border-terex-accent/20">
               <img 
-                src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=800&q=80" 
-                alt="Utilisateurs diversifiés de Terex - Communauté africaine et diaspora"
+                src="https://images.unsplash.com/photo-1640340434855-6084b1f4901c?auto=format&fit=crop&w=800&q=80" 
+                alt="USDT Tether et cryptomonnaies - Trading moderne et sécurisé"
                 className="w-full h-80 object-cover rounded-2xl shadow-2xl"
               />
               
-              {/* Overlay avec statistiques */}
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-terex-dark/90 to-transparent rounded-b-2xl p-6">
-                <div className="text-white space-y-2">
-                  <h3 className="text-xl font-bold">+10,000 utilisateurs</h3>
-                  <p className="text-gray-300">dans 25+ pays africains</p>
+              {/* Overlay avec éléments USDT */}
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-white/90 to-transparent rounded-b-2xl p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <img 
+                      src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
+                      alt="USDT" 
+                      className="w-8 h-8"
+                    />
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-900">USDT Tether</h3>
+                      <p className="text-gray-600 text-sm">Stablecoin de référence</p>
+                    </div>
+                  </div>
                 </div>
               </div>
               
               {/* Badge flottant */}
               <div className="absolute -top-4 -right-4 bg-terex-accent text-black px-4 py-2 rounded-full font-bold text-sm shadow-lg">
-                Confiance & Sécurité
+                Taux en temps réel
               </div>
             </div>
             
