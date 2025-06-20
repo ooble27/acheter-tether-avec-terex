@@ -59,7 +59,7 @@ export function CurrencyConverter() {
     } else {
       // Mode vente : calcul inverse - USDT vers CFA/CAD
       const exchangeRate = currency === 'CFA' ? terexBuyRateCfa : terexBuyRateCad;
-      return usdtAmount ? formatAmount(parseFloat(usdtAmount) * exchangeRate) : '0';
+      return usdtAmount ? formatAmount(parseFloat(usdtAmount) / exchangeRate) : '0';
     }
   };
 
@@ -73,9 +73,9 @@ export function CurrencyConverter() {
     setAmount(''); // Réinitialiser le fiat quand on change l'USDT
   };
 
-  // Déterminer quel montant afficher
-  const displayedFiatAmount = usdtAmount ? getFiatFromUSDT() : (amount || '0');
-  const displayedUSDTAmount = amount ? getConvertedAmount() : (usdtAmount || '0');
+  // Déterminer quel montant afficher - CORRECTION ICI
+  const displayedFiatAmount = amount || (usdtAmount ? getFiatFromUSDT() : '');
+  const displayedUSDTAmount = usdtAmount || (amount ? getConvertedAmount() : '');
 
   const handleStartTrading = () => {
     navigate('/auth');
@@ -144,7 +144,7 @@ export function CurrencyConverter() {
                   <Input
                     type="number"
                     placeholder="0.00"
-                    value={amount}
+                    value={displayedFiatAmount}
                     onChange={(e) => handleFiatAmountChange(e.target.value)}
                     className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
                   />
@@ -170,7 +170,7 @@ export function CurrencyConverter() {
                   <Input
                     type="number"
                     placeholder="0.00"
-                    value={usdtAmount}
+                    value={displayedUSDTAmount}
                     onChange={(e) => handleUSDTAmountChange(e.target.value)}
                     className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24"
                   />
@@ -194,7 +194,7 @@ export function CurrencyConverter() {
                   <Input
                     type="number"
                     placeholder="0.00"
-                    value={usdtAmount}
+                    value={displayedUSDTAmount}
                     onChange={(e) => handleUSDTAmountChange(e.target.value)}
                     className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24"
                   />
@@ -219,7 +219,7 @@ export function CurrencyConverter() {
                   <Input
                     type="number"
                     placeholder="0.00"
-                    value={amount}
+                    value={displayedFiatAmount}
                     onChange={(e) => handleFiatAmountChange(e.target.value)}
                     className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
                   />
