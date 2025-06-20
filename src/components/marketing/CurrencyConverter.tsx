@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -56,9 +57,9 @@ export function CurrencyConverter() {
       const exchangeRate = currency === 'CFA' ? terexRateCfa : terexRateCad;
       return usdtAmount ? formatAmount(parseFloat(usdtAmount) * exchangeRate) : '0';
     } else {
-      // Mode vente : calcul inverse - USDT vers CFA/CAD
+      // Mode vente : calcul inverse - CFA/CAD vers USDT (diviser par le taux)
       const exchangeRate = currency === 'CFA' ? terexBuyRateCfa : terexBuyRateCad;
-      return usdtAmount ? formatAmount(parseFloat(usdtAmount) * exchangeRate) : '0';
+      return usdtAmount ? formatAmount(parseFloat(usdtAmount) / exchangeRate) : '0';
     }
   };
 
@@ -72,7 +73,7 @@ export function CurrencyConverter() {
     setAmount(''); // Réinitialiser le fiat quand on change l'USDT
   };
 
-  // Déterminer quel montant afficher - CORRECTION ICI
+  // Déterminer quel montant afficher
   const displayedFiatAmount = amount || (usdtAmount ? getFiatFromUSDT() : '');
   const displayedUSDTAmount = usdtAmount || (amount ? getConvertedAmount() : '');
 
