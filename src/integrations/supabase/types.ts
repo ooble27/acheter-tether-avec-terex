@@ -677,6 +677,51 @@ export type Database = {
         }
         Relationships: []
       }
+      user_wallets: {
+        Row: {
+          address: string | null
+          created_at: string
+          email: string | null
+          id: string
+          is_default: boolean
+          network: string | null
+          updated_at: string
+          user_id: string
+          username: string | null
+          wallet_id: string | null
+          wallet_name: string
+          wallet_type: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_default?: boolean
+          network?: string | null
+          updated_at?: string
+          user_id: string
+          username?: string | null
+          wallet_id?: string | null
+          wallet_name: string
+          wallet_type: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_default?: boolean
+          network?: string | null
+          updated_at?: string
+          user_id?: string
+          username?: string | null
+          wallet_id?: string | null
+          wallet_name?: string
+          wallet_type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

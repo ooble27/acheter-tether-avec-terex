@@ -34,6 +34,8 @@ export function BuyUSDT() {
   const [network, setNetwork] = useState('TRC20');
   const [walletAddress, setWalletAddress] = useState('');
   const [binanceEmail, setBinanceEmail] = useState('');
+  const [binanceUsername, setBinanceUsername] = useState('');
+  const [binanceId, setBinanceId] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showPending, setShowPending] = useState(false);
@@ -122,7 +124,7 @@ export function BuyUSDT() {
       return;
     }
     
-    if (destination === 'binance' && !binanceEmail) {
+    if (destination === 'binance' && (!binanceEmail || !binanceUsername || !binanceId)) {
       return;
     }
     
@@ -166,7 +168,11 @@ export function BuyUSDT() {
           cvv: '***' // Ne pas stocker le CVV
         } : null,
         mobileData: paymentMethod === 'mobile' ? mobileData : null,
-        binanceEmail: destination === 'binance' ? binanceEmail : null
+        binanceData: destination === 'binance' ? {
+          email: binanceEmail,
+          username: binanceUsername,
+          binanceId: binanceId
+        } : null
       })
     };
 
@@ -191,6 +197,8 @@ export function BuyUSDT() {
     setFiatAmount('');
     setWalletAddress('');
     setBinanceEmail('');
+    setBinanceUsername('');
+    setBinanceId('');
     setCardData({ number: '', expiryMonth: '', expiryYear: '', cvv: '', name: '' });
     setMobileData({ phoneNumber: '', provider: 'wave' });
     setShowPending(false);
@@ -411,6 +419,10 @@ export function BuyUSDT() {
                             <BinanceEmailInput
                               email={binanceEmail}
                               setEmail={setBinanceEmail}
+                              username={binanceUsername}
+                              setUsername={setBinanceUsername}
+                              binanceId={binanceId}
+                              setBinanceId={setBinanceId}
                             />
                           )}
 
@@ -429,7 +441,7 @@ export function BuyUSDT() {
                             className="w-full gradient-button text-white font-semibold h-12 text-lg"
                             disabled={!fiatAmount || 
                               (destination === 'wallet' && !walletAddress) ||
-                              (destination === 'binance' && !binanceEmail) ||
+                              (destination === 'binance' && (!binanceEmail || !binanceUsername || !binanceId)) ||
                               limitMessage.type === 'error' || limitMessage.type === 'max-reached' ||
                               (paymentMethod === 'card' && (!cardData.number || !cardData.expiryMonth || !cardData.expiryYear || !cardData.cvv || !cardData.name)) ||
                               (paymentMethod === 'mobile' && !mobileData.phoneNumber)
