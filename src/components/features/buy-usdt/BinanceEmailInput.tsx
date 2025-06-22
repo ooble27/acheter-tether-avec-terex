@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -46,6 +45,8 @@ export function BinanceEmailInput({
         email,
         username,
         wallet_id: binanceId,
+        address: null, // Binance wallets don't use address
+        network: null, // Binance wallets don't use network
         is_default: binanceWallets.length === 0 // Premier wallet = défaut
       });
       
