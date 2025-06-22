@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,6 +18,8 @@ import { useTerexRates } from '@/hooks/useTerexRates';
 import { BuyAmountInput } from './buy-usdt/BuyAmountInput';
 import { NetworkSelector } from './buy-usdt/NetworkSelector';
 import { WalletAddressInput } from './buy-usdt/WalletAddressInput';
+import { DestinationSelector } from './buy-usdt/DestinationSelector';
+import { BinanceEmailInput } from './buy-usdt/BinanceEmailInput';
 import { PaymentMethodForm } from './buy-usdt/PaymentMethodForm';
 import { TradingSidebar } from './buy-usdt/TradingSidebar';
 import { LimitsValidator, getLimitMessage } from './buy-usdt/LimitsValidator';
@@ -29,8 +30,10 @@ export function BuyUSDT() {
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'mobile'>('card');
   const [fiatAmount, setFiatAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
+  const [destination, setDestination] = useState<'wallet' | 'binance'>('wallet');
   const [network, setNetwork] = useState('TRC20');
   const [walletAddress, setWalletAddress] = useState('');
+  const [binanceEmail, setBinanceEmail] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showPending, setShowPending] = useState(false);
@@ -110,7 +113,16 @@ export function BuyUSDT() {
   };
 
   const handleBuyClick = () => {
-    if (!fiatAmount || !walletAddress) {
+    if (!fiatAmount) {
+      return;
+    }
+    
+    // Validation selon la destination
+    if (destination === 'wallet' && !walletAddress) {
+      return;
+    }
+    
+    if (destination === 'binance' && !binanceEmail) {
       return;
     }
     
@@ -138,12 +150,13 @@ export function BuyUSDT() {
       usdt_amount: parseFloat(usdtAmount),
       exchange_rate: exchangeRates[currency as keyof typeof exchangeRates],
       payment_method: paymentMethod,
-      network,
-      wallet_address: walletAddress,
+      network: destination === 'wallet' ? network : 'BINANCE',
+      wallet_address: destination === 'wallet' ? walletAddress : binanceEmail,
       status: 'pending' as const,
       payment_status: 'pending',
       // Stocker les informations dans les notes
       notes: JSON.stringify({
+        destination,
         phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : null,
         provider: paymentMethod === 'mobile' ? mobileData.provider : null,
         paymentMethod: paymentMethod,
@@ -152,7 +165,8 @@ export function BuyUSDT() {
           number: cardData.number.slice(-4), // Stocker seulement les 4 derniers chiffres
           cvv: '***' // Ne pas stocker le CVV
         } : null,
-        mobileData: paymentMethod === 'mobile' ? mobileData : null
+        mobileData: paymentMethod === 'mobile' ? mobileData : null,
+        binanceEmail: destination === 'binance' ? binanceEmail : null
       })
     };
 
@@ -176,6 +190,7 @@ export function BuyUSDT() {
     // Réinitialiser tous les états
     setFiatAmount('');
     setWalletAddress('');
+    setBinanceEmail('');
     setCardData({ number: '', expiryMonth: '', expiryYear: '', cvv: '', name: '' });
     setMobileData({ phoneNumber: '', provider: 'wave' });
     setShowPending(false);
@@ -210,8 +225,8 @@ export function BuyUSDT() {
             amount: fiatAmount,
             currency,
             usdtAmount,
-            network,
-            walletAddress: walletAddress,
+            network: destination === 'wallet' ? network : 'BINANCE',
+            walletAddress: destination === 'wallet' ? walletAddress : binanceEmail,
             paymentMethod: paymentMethod,
             exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
           }}
@@ -231,8 +246,8 @@ export function BuyUSDT() {
             amount: fiatAmount,
             currency,
             usdtAmount,
-            network,
-            walletAddress: walletAddress,
+            network: destination === 'wallet' ? network : 'BINANCE',
+            walletAddress: destination === 'wallet' ? walletAddress : binanceEmail,
             paymentMethod: paymentMethod,
             exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
           }}
@@ -253,8 +268,8 @@ export function BuyUSDT() {
             amount: fiatAmount,
             currency,
             usdtAmount,
-            network,
-            walletAddress: walletAddress,
+            network: destination === 'wallet' ? network : 'BINANCE',
+            walletAddress: destination === 'wallet' ? walletAddress : binanceEmail,
             paymentMethod: paymentMethod,
             exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
           }}
@@ -368,18 +383,36 @@ export function BuyUSDT() {
                             fee={method.fee}
                           />
 
-                          {/* Network Selection */}
-                          <NetworkSelector
-                            network={network}
-                            setNetwork={setNetwork}
+                          {/* Destination Selection */}
+                          <DestinationSelector
+                            destination={destination}
+                            setDestination={setDestination}
                           />
 
-                          {/* Wallet Address Input */}
-                          <WalletAddressInput
-                            walletAddress={walletAddress}
-                            setWalletAddress={setWalletAddress}
-                            network={network}
-                          />
+                          {/* Conditional rendering based on destination */}
+                          {destination === 'wallet' && (
+                            <>
+                              {/* Network Selection */}
+                              <NetworkSelector
+                                network={network}
+                                setNetwork={setNetwork}
+                              />
+
+                              {/* Wallet Address Input */}
+                              <WalletAddressInput
+                                walletAddress={walletAddress}
+                                setWalletAddress={setWalletAddress}
+                                network={network}
+                              />
+                            </>
+                          )}
+
+                          {destination === 'binance' && (
+                            <BinanceEmailInput
+                              email={binanceEmail}
+                              setEmail={setBinanceEmail}
+                            />
+                          )}
 
                           {/* Payment Method Details */}
                           <PaymentMethodForm
@@ -394,7 +427,10 @@ export function BuyUSDT() {
                           <Button 
                             size="lg"
                             className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                            disabled={!fiatAmount || !walletAddress || limitMessage.type === 'error' || limitMessage.type === 'max-reached' ||
+                            disabled={!fiatAmount || 
+                              (destination === 'wallet' && !walletAddress) ||
+                              (destination === 'binance' && !binanceEmail) ||
+                              limitMessage.type === 'error' || limitMessage.type === 'max-reached' ||
                               (paymentMethod === 'card' && (!cardData.number || !cardData.expiryMonth || !cardData.expiryYear || !cardData.cvv || !cardData.name)) ||
                               (paymentMethod === 'mobile' && !mobileData.phoneNumber)
                             }
