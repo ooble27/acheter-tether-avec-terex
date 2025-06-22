@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -196,8 +195,8 @@ export function BinanceEmailInput({
           <div className="flex items-center justify-between">
             <Label className="text-white text-sm font-medium flex items-center space-x-2">
               <Wallet className="w-4 h-4" />
-              <span className="hidden sm:inline">Comptes Binance sauvegardés ({binanceWallets.length})</span>
-              <span className="sm:hidden">Comptes ({binanceWallets.length})</span>
+              <span className="hidden sm:inline">Wallets Binance sauvegardés ({binanceWallets.length})</span>
+              <span className="sm:hidden">Wallets ({binanceWallets.length})</span>
             </Label>
             {!showInputFields && (
               <Button
@@ -215,14 +214,14 @@ export function BinanceEmailInput({
           <div className="space-y-2">
             {binanceWallets.map((wallet) => (
               <div key={wallet.id} className={`
-                flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 rounded-lg border transition-colors cursor-pointer
+                flex flex-col p-2 sm:p-3 rounded-lg border transition-colors cursor-pointer overflow-hidden
                 ${selectedWalletId === wallet.id 
                   ? 'border-terex-accent bg-terex-accent/10' 
                   : 'border-terex-gray-light hover:border-terex-accent/50'
                 }
               `}>
                 {editingWallet === wallet.id ? (
-                  <div className="w-full space-y-3">
+                  <div className="w-full space-y-2">
                     <div className="space-y-2">
                       <Input
                         value={editWalletName}
@@ -249,11 +248,11 @@ export function BinanceEmailInput({
                         placeholder="ID Binance"
                       />
                     </div>
-                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                    <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-2">
                       <Button
                         size="sm"
                         onClick={() => handleSaveEditWallet(wallet.id)}
-                        className="bg-terex-accent hover:bg-terex-accent/90 text-white h-8 text-xs"
+                        className="bg-terex-accent hover:bg-terex-accent/90 text-white h-7 text-xs"
                       >
                         <Save className="w-3 h-3 mr-1" />
                         Sauvegarder
@@ -262,39 +261,39 @@ export function BinanceEmailInput({
                         variant="outline"
                         size="sm"
                         onClick={handleCancelEdit}
-                        className="text-gray-400 border-terex-gray-light hover:bg-terex-gray hover:text-white h-8 text-xs"
+                        className="text-gray-400 border-terex-gray-light hover:bg-terex-gray hover:text-white h-7 text-xs"
                       >
                         Annuler
                       </Button>
                     </div>
                   </div>
                 ) : (
-                  <>
+                  <div className="flex items-center justify-between">
                     <div 
-                      className="flex-1 cursor-pointer"
+                      className="flex-1 cursor-pointer min-w-0"
                       onClick={() => handleSelectWallet(wallet.id)}
                     >
                       <div className="flex items-center space-x-2 mb-1">
                         <span className="text-white font-medium text-sm truncate">{wallet.wallet_name}</span>
                         {wallet.is_default && (
-                          <span className="text-xs bg-terex-accent text-white px-2 py-0.5 rounded">
-                            Par défaut
+                          <span className="text-xs bg-terex-accent text-white px-1.5 py-0.5 rounded flex-shrink-0">
+                            Défaut
                           </span>
                         )}
                       </div>
-                      <div className="text-gray-400 text-xs space-y-1 sm:space-y-0">
+                      <div className="text-gray-400 text-xs space-y-0.5">
                         <div className="truncate">{wallet.email}</div>
                         <div className="truncate">ID: {wallet.wallet_id}</div>
                       </div>
                     </div>
                     
-                    <div className="flex items-center justify-end space-x-1 mt-2 sm:mt-0">
+                    <div className="flex items-center space-x-1 flex-shrink-0 ml-2">
                       {!showInputFields && (
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleStartEditWallet(wallet)}
-                          className="text-gray-400 hover:text-white h-8 w-8 p-0"
+                          className="text-gray-400 hover:text-white h-7 w-7 p-0"
                         >
                           <Edit3 className="w-3 h-3" />
                         </Button>
@@ -305,7 +304,7 @@ export function BinanceEmailInput({
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-8 w-8 p-0"
+                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-7 w-7 p-0"
                           >
                             <Trash2 className="w-3 h-3" />
                           </Button>
@@ -334,7 +333,7 @@ export function BinanceEmailInput({
                         </AlertDialogContent>
                       </AlertDialog>
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
             ))}
