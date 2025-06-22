@@ -31,6 +31,8 @@ export function BinanceEmailInput({
   const [selectedWalletId, setSelectedWalletId] = useState<string>('');
   const [editingWallet, setEditingWallet] = useState<string | null>(null);
   const [editWalletName, setEditWalletName] = useState('');
+  const [showInputFields, setShowInputFields] = useState(false);
+  const [editingMode, setEditingMode] = useState(false);
   
   const { 
     binanceWallets, 
@@ -39,6 +41,9 @@ export function BinanceEmailInput({
     deleteWallet,
     updateWallet 
   } = useUserWallets();
+
+  // Déterminer si on doit afficher les champs par défaut
+  const shouldShowInputFields = binanceWallets.length === 0 || showInputFields;
 
   const handleSaveWallet = async () => {
     if (!email || !username || !binanceId || !walletName) return;
@@ -50,13 +55,15 @@ export function BinanceEmailInput({
         email,
         username,
         wallet_id: binanceId,
-        address: null, // Binance wallets don't use address
-        network: null, // Binance wallets don't use network
-        is_default: binanceWallets.length === 0 // Premier wallet = défaut
+        address: null,
+        network: null,
+        is_default: binanceWallets.length === 0
       });
       
       setWalletName('');
       setShowSaveDialog(false);
+      setShowInputFields(false);
+      setEditingMode(false);
     } catch (error) {
       console.error('Error saving wallet:', error);
     }
@@ -98,15 +105,43 @@ export function BinanceEmailInput({
     }
   };
 
-  const clearForm = () => {
+  const handleNewWallet = () => {
     setEmail('');
     setUsername('');
     setBinanceId('');
     setSelectedWalletId('');
+    setShowInputFields(true);
+    setEditingMode(false);
+  };
+
+  const handleEditExistingWallet = (wallet: any) => {
+    setEmail(wallet.email || '');
+    setUsername(wallet.username || '');
+    setBinanceId(wallet.wallet_id || '');
+    setSelectedWalletId(wallet.id);
+    setShowInputFields(true);
+    setEditingMode(true);
+  };
+
+  const handleCancelEdit = () => {
+    setShowInputFields(false);
+    setEditingMode(false);
+    if (selectedWalletId) {
+      const wallet = binanceWallets.find(w => w.id === selectedWalletId);
+      if (wallet) {
+        setEmail(wallet.email || '');
+        setUsername(wallet.username || '');
+        setBinanceId(wallet.wallet_id || '');
+      }
+    } else {
+      setEmail('');
+      setUsername('');
+      setBinanceId('');
+    }
   };
 
   const canSave = email && username && binanceId && !binanceWallets.some(w => 
-    w.email === email && w.username === username && w.wallet_id === binanceId
+    w.email === email && w.username === username && w.wallet_id === binanceId && w.id !== selectedWalletId
   );
 
   return (
@@ -128,15 +163,17 @@ export function BinanceEmailInput({
               <Wallet className="w-4 h-4" />
               <span>Comptes Binance sauvegardés ({binanceWallets.length})</span>
             </Label>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={clearForm}
-              className="text-terex-accent border-terex-accent hover:bg-terex-accent hover:text-white"
-            >
-              <Plus className="w-4 h-4 mr-1" />
-              Nouveau
-            </Button>
+            {!showInputFields && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleNewWallet}
+                className="text-terex-accent border-terex-accent hover:bg-terex-accent hover:text-white"
+              >
+                <Plus className="w-4 h-4 mr-1" />
+                Nouveau
+              </Button>
+            )}
           </div>
           
           <div className="space-y-2">
@@ -195,6 +232,17 @@ export function BinanceEmailInput({
                 </div>
                 
                 <div className="flex items-center space-x-1">
+                  {editingWallet !== wallet.id && !showInputFields && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleEditExistingWallet(wallet)}
+                      className="text-gray-400 hover:text-white h-8 w-8 p-0"
+                    >
+                      <Edit3 className="w-3 h-3" />
+                    </Button>
+                  )}
+                  
                   {editingWallet !== wallet.id && (
                     <Button
                       variant="ghost"
@@ -249,49 +297,67 @@ export function BinanceEmailInput({
         </div>
       )}
 
-      {/* Champs de saisie */}
-      <div className="space-y-3">
-        <div>
-          <Label className="text-white text-xs">Email Binance</Label>
-          <Input
-            type="email"
-            placeholder="votre-email@exemple.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="bg-terex-gray border-terex-gray-light text-white h-12"
-          />
-        </div>
+      {/* Champs de saisie - affichés conditionnellement */}
+      {shouldShowInputFields && (
+        <div className="space-y-3">
+          {binanceWallets.length > 0 && (
+            <div className="flex items-center justify-between mb-4">
+              <Label className="text-white text-sm font-medium">
+                {editingMode ? 'Modifier le compte Binance' : 'Nouveau compte Binance'}
+              </Label>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCancelEdit}
+                className="text-gray-400 border-terex-gray-light hover:bg-terex-gray hover:text-white"
+              >
+                Annuler
+              </Button>
+            </div>
+          )}
 
-        <div>
-          <Label className="text-white text-xs">Pseudo Binance</Label>
-          <Input
-            type="text"
-            placeholder="VotrePseudo"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="bg-terex-gray border-terex-gray-light text-white h-12"
-          />
-        </div>
+          <div>
+            <Label className="text-white text-xs">Email Binance</Label>
+            <Input
+              type="email"
+              placeholder="votre-email@exemple.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="bg-terex-gray border-terex-gray-light text-white h-12"
+            />
+          </div>
 
-        <div>
-          <Label className="text-white text-xs">ID Binance</Label>
-          <Input
-            type="text"
-            placeholder="123456789"
-            value={binanceId}
-            onChange={(e) => setBinanceId(e.target.value)}
-            className="bg-terex-gray border-terex-gray-light text-white h-12"
-          />
+          <div>
+            <Label className="text-white text-xs">Pseudo Binance</Label>
+            <Input
+              type="text"
+              placeholder="VotrePseudo"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="bg-terex-gray border-terex-gray-light text-white h-12"
+            />
+          </div>
+
+          <div>
+            <Label className="text-white text-xs">ID Binance</Label>
+            <Input
+              type="text"
+              placeholder="123456789"
+              value={binanceId}
+              onChange={(e) => setBinanceId(e.target.value)}
+              className="bg-terex-gray border-terex-gray-light text-white h-12"
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Bouton de sauvegarde - Plus visible */}
-      {canSave && (
+      {canSave && shouldShowInputFields && (
         <div className="bg-terex-accent/10 border border-terex-accent/30 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-white text-sm font-medium">
-                Sauvegarder ce compte Binance
+                {editingMode ? 'Mettre à jour ce compte Binance' : 'Sauvegarder ce compte Binance'}
               </p>
               <p className="text-gray-400 text-xs">
                 Pour ne plus avoir à retaper ces informations
@@ -303,12 +369,14 @@ export function BinanceEmailInput({
                   className="bg-terex-accent hover:bg-terex-accent/90 text-white"
                 >
                   <Save className="w-4 h-4 mr-2" />
-                  Enregistrer
+                  {editingMode ? 'Mettre à jour' : 'Enregistrer'}
                 </Button>
               </DialogTrigger>
               <DialogContent className="bg-terex-darker border-terex-gray">
                 <DialogHeader>
-                  <DialogTitle className="text-white">Sauvegarder le compte Binance</DialogTitle>
+                  <DialogTitle className="text-white">
+                    {editingMode ? 'Mettre à jour le compte Binance' : 'Sauvegarder le compte Binance'}
+                  </DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
@@ -330,7 +398,7 @@ export function BinanceEmailInput({
                       className="flex-1 bg-terex-accent hover:bg-terex-accent/90 text-white"
                     >
                       <Save className="w-4 h-4 mr-2" />
-                      {loading ? 'Sauvegarde...' : 'Sauvegarder'}
+                      {loading ? 'Sauvegarde...' : editingMode ? 'Mettre à jour' : 'Sauvegarder'}
                     </Button>
                     <Button
                       variant="outline"
@@ -347,9 +415,17 @@ export function BinanceEmailInput({
         </div>
       )}
 
-      <p className="text-gray-400 text-xs">
-        Entrez les informations de votre compte Binance pour recevoir vos USDT directement
-      </p>
+      {!shouldShowInputFields && binanceWallets.length > 0 && (
+        <p className="text-gray-400 text-xs">
+          Sélectionnez un compte Binance sauvegardé ou créez-en un nouveau
+        </p>
+      )}
+
+      {shouldShowInputFields && (
+        <p className="text-gray-400 text-xs">
+          Entrez les informations de votre compte Binance pour recevoir vos USDT directement
+        </p>
+      )}
     </div>
   );
 }
