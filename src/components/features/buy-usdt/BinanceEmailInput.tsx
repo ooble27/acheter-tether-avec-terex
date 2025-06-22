@@ -31,6 +31,9 @@ export function BinanceEmailInput({
   const [selectedWalletId, setSelectedWalletId] = useState<string>('');
   const [editingWallet, setEditingWallet] = useState<string | null>(null);
   const [editWalletName, setEditWalletName] = useState('');
+  const [editWalletEmail, setEditWalletEmail] = useState('');
+  const [editWalletUsername, setEditWalletUsername] = useState('');
+  const [editWalletId, setEditWalletId] = useState('');
   const [showInputFields, setShowInputFields] = useState(false);
   const [editingMode, setEditingMode] = useState(false);
   
@@ -93,16 +96,48 @@ export function BinanceEmailInput({
     }
   };
 
-  const handleEditWallet = async (walletId: string) => {
-    if (!editWalletName.trim()) return;
+  const handleStartEditWallet = (wallet: any) => {
+    setEditingWallet(wallet.id);
+    setEditWalletName(wallet.wallet_name);
+    setEditWalletEmail(wallet.email || '');
+    setEditWalletUsername(wallet.username || '');
+    setEditWalletId(wallet.wallet_id || '');
+  };
+
+  const handleSaveEditWallet = async (walletId: string) => {
+    if (!editWalletName.trim() || !editWalletEmail || !editWalletUsername || !editWalletId) return;
     
     try {
-      await updateWallet(walletId, { wallet_name: editWalletName });
+      await updateWallet(walletId, { 
+        wallet_name: editWalletName,
+        email: editWalletEmail,
+        username: editWalletUsername,
+        wallet_id: editWalletId
+      });
+      
+      // Mettre à jour les champs principaux si c'est le wallet sélectionné
+      if (selectedWalletId === walletId) {
+        setEmail(editWalletEmail);
+        setUsername(editWalletUsername);
+        setBinanceId(editWalletId);
+      }
+      
       setEditingWallet(null);
       setEditWalletName('');
+      setEditWalletEmail('');
+      setEditWalletUsername('');
+      setEditWalletId('');
     } catch (error) {
       console.error('Error updating wallet:', error);
     }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingWallet(null);
+    setEditWalletName('');
+    setEditWalletEmail('');
+    setEditWalletUsername('');
+    setEditWalletId('');
   };
 
   const handleNewWallet = () => {
@@ -123,7 +158,7 @@ export function BinanceEmailInput({
     setEditingMode(true);
   };
 
-  const handleCancelEdit = () => {
+  const handleCancelInputEdit = () => {
     setShowInputFields(false);
     setEditingMode(false);
     if (selectedWalletId) {
@@ -157,21 +192,22 @@ export function BinanceEmailInput({
 
       {/* Section des wallets sauvegardés */}
       {binanceWallets.length > 0 && (
-        <div className="bg-terex-gray/30 rounded-lg p-4 space-y-3">
+        <div className="bg-terex-gray/30 rounded-lg p-3 sm:p-4 space-y-3">
           <div className="flex items-center justify-between">
             <Label className="text-white text-sm font-medium flex items-center space-x-2">
               <Wallet className="w-4 h-4" />
-              <span>Comptes Binance sauvegardés ({binanceWallets.length})</span>
+              <span className="hidden sm:inline">Comptes Binance sauvegardés ({binanceWallets.length})</span>
+              <span className="sm:hidden">Comptes ({binanceWallets.length})</span>
             </Label>
             {!showInputFields && (
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleNewWallet}
-                className="text-terex-accent border-terex-accent hover:bg-terex-accent hover:text-white"
+                className="text-terex-accent border-terex-accent hover:bg-terex-accent hover:text-white text-xs sm:text-sm px-2 sm:px-3"
               >
-                <Plus className="w-4 h-4 mr-1" />
-                Nouveau
+                <Plus className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                <span className="hidden sm:inline">Nouveau</span>
               </Button>
             )}
           </div>
@@ -179,118 +215,127 @@ export function BinanceEmailInput({
           <div className="space-y-2">
             {binanceWallets.map((wallet) => (
               <div key={wallet.id} className={`
-                flex items-center justify-between p-3 rounded-lg border transition-colors cursor-pointer
+                flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 rounded-lg border transition-colors cursor-pointer
                 ${selectedWalletId === wallet.id 
                   ? 'border-terex-accent bg-terex-accent/10' 
                   : 'border-terex-gray-light hover:border-terex-accent/50'
                 }
               `}>
-                <div 
-                  className="flex-1 flex items-center space-x-3"
-                  onClick={() => handleSelectWallet(wallet.id)}
-                >
-                  <div className="flex-1">
-                    {editingWallet === wallet.id ? (
-                      <div className="flex items-center space-x-2">
-                        <Input
-                          value={editWalletName}
-                          onChange={(e) => setEditWalletName(e.target.value)}
-                          className="bg-terex-darker border-terex-gray-light text-white h-8"
-                          placeholder="Nom du wallet"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleEditWallet(wallet.id);
-                            if (e.key === 'Escape') {
-                              setEditingWallet(null);
-                              setEditWalletName('');
-                            }
-                          }}
-                        />
-                        <Button
-                          size="sm"
-                          onClick={() => handleEditWallet(wallet.id)}
-                          className="bg-terex-accent hover:bg-terex-accent/90 text-white h-8 px-2"
-                        >
-                          <Save className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    ) : (
-                      <>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-white font-medium">{wallet.wallet_name}</span>
-                          {wallet.is_default && (
-                            <span className="text-xs bg-terex-accent text-white px-2 py-0.5 rounded">
-                              Par défaut
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-gray-400 text-xs">
-                          {wallet.email} • ID: {wallet.wallet_id}
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="flex items-center space-x-1">
-                  {editingWallet !== wallet.id && !showInputFields && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleEditExistingWallet(wallet)}
-                      className="text-gray-400 hover:text-white h-8 w-8 p-0"
-                    >
-                      <Edit3 className="w-3 h-3" />
-                    </Button>
-                  )}
-                  
-                  {editingWallet !== wallet.id && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setEditingWallet(wallet.id);
-                        setEditWalletName(wallet.wallet_name);
-                      }}
-                      className="text-gray-400 hover:text-white h-8 w-8 p-0"
-                    >
-                      <Edit3 className="w-3 h-3" />
-                    </Button>
-                  )}
-                  
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
+                {editingWallet === wallet.id ? (
+                  <div className="w-full space-y-3">
+                    <div className="space-y-2">
+                      <Input
+                        value={editWalletName}
+                        onChange={(e) => setEditWalletName(e.target.value)}
+                        className="bg-terex-darker border-terex-gray-light text-white h-8 text-sm"
+                        placeholder="Nom du wallet"
+                      />
+                      <Input
+                        value={editWalletEmail}
+                        onChange={(e) => setEditWalletEmail(e.target.value)}
+                        className="bg-terex-darker border-terex-gray-light text-white h-8 text-sm"
+                        placeholder="Email Binance"
+                      />
+                      <Input
+                        value={editWalletUsername}
+                        onChange={(e) => setEditWalletUsername(e.target.value)}
+                        className="bg-terex-darker border-terex-gray-light text-white h-8 text-sm"
+                        placeholder="Pseudo Binance"
+                      />
+                      <Input
+                        value={editWalletId}
+                        onChange={(e) => setEditWalletId(e.target.value)}
+                        className="bg-terex-darker border-terex-gray-light text-white h-8 text-sm"
+                        placeholder="ID Binance"
+                      />
+                    </div>
+                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                       <Button
-                        variant="ghost"
                         size="sm"
-                        className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-8 w-8 p-0"
+                        onClick={() => handleSaveEditWallet(wallet.id)}
+                        className="bg-terex-accent hover:bg-terex-accent/90 text-white h-8 text-xs"
                       >
-                        <Trash2 className="w-3 h-3" />
+                        <Save className="w-3 h-3 mr-1" />
+                        Sauvegarder
                       </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="bg-terex-darker border-terex-gray">
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="text-white">
-                          Supprimer le wallet Binance
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="text-gray-400">
-                          Êtes-vous sûr de vouloir supprimer "{wallet.wallet_name}" ? 
-                          Cette action est irréversible.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel className="text-white border-terex-gray-light">
-                          Annuler
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDeleteWallet(wallet.id)}
-                          className="bg-red-500 hover:bg-red-600 text-white"
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleCancelEdit}
+                        className="text-gray-400 border-terex-gray-light hover:bg-terex-gray hover:text-white h-8 text-xs"
+                      >
+                        Annuler
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div 
+                      className="flex-1 cursor-pointer"
+                      onClick={() => handleSelectWallet(wallet.id)}
+                    >
+                      <div className="flex items-center space-x-2 mb-1">
+                        <span className="text-white font-medium text-sm truncate">{wallet.wallet_name}</span>
+                        {wallet.is_default && (
+                          <span className="text-xs bg-terex-accent text-white px-2 py-0.5 rounded">
+                            Par défaut
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-gray-400 text-xs space-y-1 sm:space-y-0">
+                        <div className="truncate">{wallet.email}</div>
+                        <div className="truncate">ID: {wallet.wallet_id}</div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-end space-x-1 mt-2 sm:mt-0">
+                      {!showInputFields && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleStartEditWallet(wallet)}
+                          className="text-gray-400 hover:text-white h-8 w-8 p-0"
                         >
-                          Supprimer
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
+                          <Edit3 className="w-3 h-3" />
+                        </Button>
+                      )}
+                      
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-8 w-8 p-0"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="bg-terex-darker border-terex-gray">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="text-white">
+                              Supprimer le wallet Binance
+                            </AlertDialogTitle>
+                            <AlertDialogDescription className="text-gray-400">
+                              Êtes-vous sûr de vouloir supprimer "{wallet.wallet_name}" ? 
+                              Cette action est irréversible.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel className="text-white border-terex-gray-light">
+                              Annuler
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDeleteWallet(wallet.id)}
+                              className="bg-red-500 hover:bg-red-600 text-white"
+                            >
+                              Supprimer
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </>
+                )}
               </div>
             ))}
           </div>
@@ -308,8 +353,8 @@ export function BinanceEmailInput({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={handleCancelEdit}
-                className="text-gray-400 border-terex-gray-light hover:bg-terex-gray hover:text-white"
+                onClick={handleCancelInputEdit}
+                className="text-gray-400 border-terex-gray-light hover:bg-terex-gray hover:text-white text-xs"
               >
                 Annuler
               </Button>
@@ -354,7 +399,7 @@ export function BinanceEmailInput({
       {/* Bouton de sauvegarde - Plus visible */}
       {canSave && shouldShowInputFields && (
         <div className="bg-terex-accent/10 border border-terex-accent/30 rounded-lg p-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
             <div>
               <p className="text-white text-sm font-medium">
                 {editingMode ? 'Mettre à jour ce compte Binance' : 'Sauvegarder ce compte Binance'}
@@ -366,7 +411,7 @@ export function BinanceEmailInput({
             <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
               <DialogTrigger asChild>
                 <Button
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-white"
+                  className="bg-terex-accent hover:bg-terex-accent/90 text-white w-full sm:w-auto"
                 >
                   <Save className="w-4 h-4 mr-2" />
                   {editingMode ? 'Mettre à jour' : 'Enregistrer'}
@@ -391,7 +436,7 @@ export function BinanceEmailInput({
                       Choisissez un nom qui vous permettra de reconnaître facilement ce compte
                     </p>
                   </div>
-                  <div className="flex space-x-2">
+                  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                     <Button
                       onClick={handleSaveWallet}
                       disabled={!walletName || loading}
