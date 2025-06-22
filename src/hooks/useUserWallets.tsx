@@ -3,21 +3,10 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { Tables } from '@/integrations/supabase/types';
 
-export interface UserWallet {
-  id: string;
-  user_id: string;
-  wallet_type: 'binance' | 'personal';
-  wallet_name: string;
-  email?: string;
-  username?: string;
-  wallet_id?: string;
-  address?: string;
-  network?: string;
-  is_default: boolean;
-  created_at: string;
-  updated_at: string;
-}
+// Utiliser le type généré par Supabase au lieu de définir notre propre interface
+export type UserWallet = Tables<'user_wallets'>;
 
 export function useUserWallets() {
   const [wallets, setWallets] = useState<UserWallet[]>([]);
