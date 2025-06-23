@@ -84,123 +84,129 @@ export function OrdersDashboardNew() {
   }
 
   return (
-    <div className="min-h-screen bg-terex-dark p-6 space-y-8">
-      {/* Header redesigné avec le style Terex */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-terex-accent/20 to-terex-dark rounded-2xl p-8 border border-terex-gray/30">
+    <div className="min-h-screen bg-terex-dark p-3 sm:p-6 space-y-4 sm:space-y-8">
+      {/* Header redesigné avec responsive mobile */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-terex-accent/20 to-terex-dark rounded-xl sm:rounded-2xl p-4 sm:p-8 border border-terex-gray/30">
         <div className="relative z-10">
-          <h1 className="text-4xl font-bold text-white mb-3">Gestion des Commandes</h1>
-          <p className="text-terex-accent/80 text-lg">Gérez efficacement toutes vos transactions</p>
+          <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2 sm:mb-3">Gestion des Commandes</h1>
+          <p className="text-terex-accent/80 text-sm sm:text-lg">Gérez efficacement toutes vos transactions</p>
         </div>
         
-        <div className="absolute top-0 right-0 w-64 h-64 bg-terex-accent/10 rounded-full -translate-y-32 translate-x-32"></div>
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-terex-accent/5 rounded-full translate-y-16 -translate-x-16"></div>
+        <div className="absolute top-0 right-0 w-32 sm:w-64 h-32 sm:h-64 bg-terex-accent/10 rounded-full -translate-y-16 sm:-translate-y-32 translate-x-16 sm:translate-x-32"></div>
+        <div className="absolute bottom-0 left-0 w-16 sm:w-32 h-16 sm:h-32 bg-terex-accent/5 rounded-full translate-y-8 sm:translate-y-16 -translate-x-8 sm:-translate-x-16"></div>
       </div>
 
-      {/* Stats Cards redesignées */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Stats Cards redesignées pour mobile */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
         <Card className="bg-terex-darker border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-300">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-terex-accent/70 text-sm font-medium">Commandes Actives</p>
-                <p className="text-3xl font-bold text-white mt-2">{activeOrders.length}</p>
+          <CardContent className="p-3 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+              <div className="min-w-0">
+                <p className="text-terex-accent/70 text-xs sm:text-sm font-medium truncate">Commandes Actives</p>
+                <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">{activeOrders.length}</p>
               </div>
-              <div className="p-3 bg-terex-accent/20 rounded-full">
-                <ShoppingCart className="w-6 h-6 text-terex-accent" />
+              <div className="p-2 sm:p-3 bg-terex-accent/20 rounded-full self-center">
+                <ShoppingCart className="w-4 h-4 sm:w-6 sm:h-6 text-terex-accent" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card className="bg-terex-darker border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-300">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-terex-accent/70 text-sm font-medium">Clients Actifs</p>
-                <p className="text-3xl font-bold text-white mt-2">
+          <CardContent className="p-3 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+              <div className="min-w-0">
+                <p className="text-terex-accent/70 text-xs sm:text-sm font-medium truncate">Clients Actifs</p>
+                <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">
                   {new Set(activeOrders.map(order => order.user_id)).size}
                 </p>
               </div>
-              <div className="p-3 bg-terex-accent/20 rounded-full">
-                <Users className="w-6 h-6 text-terex-accent" />
+              <div className="p-2 sm:p-3 bg-terex-accent/20 rounded-full self-center">
+                <Users className="w-4 h-4 sm:w-6 sm:h-6 text-terex-accent" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-terex-darker border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-300">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-terex-accent/70 text-sm font-medium">En Attente</p>
-                <p className="text-3xl font-bold text-white mt-2">
+        <Card className="bg-terex-darker border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-300 col-span-2 md:col-span-1">
+          <CardContent className="p-3 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+              <div className="min-w-0">
+                <p className="text-terex-accent/70 text-xs sm:text-sm font-medium truncate">En Attente</p>
+                <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">
                   {activeOrders.filter(o => o.status === 'pending').length}
                 </p>
               </div>
-              <div className="p-3 bg-yellow-500/20 rounded-full">
-                <RefreshCw className="w-6 h-6 text-yellow-500" />
+              <div className="p-2 sm:p-3 bg-yellow-500/20 rounded-full self-center">
+                <RefreshCw className="w-4 h-4 sm:w-6 sm:h-6 text-yellow-500" />
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Barre de recherche */}
+      {/* Barre de recherche optimisée mobile */}
       <Card className="bg-terex-darker border-terex-gray/50">
-        <CardContent className="p-6">
-          <div className="flex items-center space-x-4">
+        <CardContent className="p-3 sm:p-6">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-terex-accent/60 w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-terex-accent/60 w-4 h-4 sm:w-5 sm:h-5" />
               <Input
-                placeholder="Rechercher par ID, adresse, nom du destinataire..."
+                placeholder="Rechercher par ID, adresse..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 bg-terex-gray/50 border-terex-gray/50 text-white placeholder-terex-accent/40 focus:border-terex-accent"
+                className="pl-10 sm:pl-12 bg-terex-gray/50 border-terex-gray/50 text-white placeholder-terex-accent/40 focus:border-terex-accent text-sm sm:text-base h-10 sm:h-auto"
               />
             </div>
             <Button
               onClick={refreshOrders}
               variant="outline"
-              className="border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
+              size="sm"
+              className="border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white text-xs sm:text-sm px-3 py-2 h-10 sm:h-auto"
             >
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Actualiser
+              <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Actualiser</span>
+              <span className="sm:hidden">Actualiser</span>
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      {/* Tabs redesignés */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <div className="bg-terex-darker rounded-lg p-2 border border-terex-gray/50">
-          <TabsList className="bg-transparent w-full grid grid-cols-4 gap-2">
+      {/* Tabs redesignés pour mobile */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
+        <div className="bg-terex-darker rounded-lg p-1 sm:p-2 border border-terex-gray/50 overflow-x-auto">
+          <TabsList className="bg-transparent w-full grid grid-cols-4 gap-1 sm:gap-2 min-w-max">
             <TabsTrigger 
               value="buy" 
-              className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-lg"
+              className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap"
             >
-              <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-4 h-4 mr-2" />
-              <span>Achats ({buyOrders.length})</span>
+              <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+              <span className="hidden sm:inline">Achats ({buyOrders.length})</span>
+              <span className="sm:hidden">Achats</span>
             </TabsTrigger>
             <TabsTrigger 
               value="sell" 
-              className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-lg"
+              className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap"
             >
-              <TrendingDown className="w-4 h-4 mr-2" />
-              <span>Ventes ({sellOrders.length})</span>
+              <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+              <span className="hidden sm:inline">Ventes ({sellOrders.length})</span>
+              <span className="sm:hidden">Ventes</span>
             </TabsTrigger>
             <TabsTrigger 
               value="transfer" 
-              className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-lg"
+              className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap"
             >
-              <Send className="w-4 h-4 mr-2" />
-              <span>Transferts ({transferOrders.length})</span>
+              <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+              <span className="hidden sm:inline">Transferts ({transferOrders.length})</span>
+              <span className="sm:hidden">Transferts</span>
             </TabsTrigger>
             <TabsTrigger 
               value="trash" 
-              className="data-[state=active]:bg-red-600 data-[state=active]:text-white text-red-400 border border-transparent data-[state=active]:border-red-500/50 rounded-lg"
+              className="data-[state=active]:bg-red-600 data-[state=active]:text-white text-red-400 border border-transparent data-[state=active]:border-red-500/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap"
             >
-              <Trash2 className="w-4 h-4 mr-2" />
-              <span>Corbeille ({trashedOrders.length})</span>
+              <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+              <span className="hidden sm:inline">Corbeille ({trashedOrders.length})</span>
+              <span className="sm:hidden">Corbeille</span>
             </TabsTrigger>
           </TabsList>
         </div>
