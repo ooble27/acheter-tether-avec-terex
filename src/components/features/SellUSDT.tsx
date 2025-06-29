@@ -154,6 +154,7 @@ export function SellUSDT() {
       wallet_address: WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
       status: 'pending' as const,
       payment_status: 'pending',
+      // Stocker les informations dans les notes au lieu du champ phone_number qui n'existe pas
       notes: JSON.stringify({
         phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : bankData.accountNumber,
         provider: paymentMethod === 'mobile' ? mobileData.provider : 'bank',
@@ -374,7 +375,7 @@ export function SellUSDT() {
                           </div>
                         </div>
 
-                        {/* Network Selection */}
+                        {/* Network Selection with Logos */}
                         <div className="space-y-2">
                           <Label className="text-white text-sm font-medium">Réseau d'envoi</Label>
                           <Select value={network} onValueChange={setNetwork}>
@@ -446,9 +447,7 @@ export function SellUSDT() {
                               <Copy className="w-4 h-4" />
                             </Button>
                           </div>
-                          <p className="text-gray-400 text-xs">
-                            Envoyez vos USDT à cette adresse sur le réseau {network}
-                          </p>
+                          <p className="text-gray-400 text-xs">Envoyez vos USDT à cette adresse sur le réseau {network}</p>
                         </div>
 
                         {/* Payment Method Details */}

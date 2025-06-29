@@ -101,7 +101,6 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
             {/* Détails d'envoi */}
             <div className="space-y-4">
               <h3 className="text-white font-medium">Détails d'envoi USDT</h3>
-              
               <div className="bg-terex-gray rounded-lg p-4 space-y-3 w-full">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                   <span className="text-gray-400 text-sm">Adresse d'envoi</span>
