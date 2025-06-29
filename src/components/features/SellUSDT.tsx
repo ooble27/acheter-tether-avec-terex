@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,6 @@ import { ArrowRightLeft, Shield, Clock, CreditCard, CheckCircle, Copy, RefreshCw
 import { SellOrderConfirmation } from '@/components/features/SellOrderConfirmation';
 import { USDTSendingInstructions } from '@/components/features/USDTSendingInstructions';
 import { USDTSentConfirmation } from '@/components/features/USDTSentConfirmation';
-import { BinancePayOption } from '@/components/features/BinancePayOption';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -40,20 +38,12 @@ const NETWORK_LOGOS = {
   Solana: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png' // Solana
 };
 
-// Informations Binance Pay de TEREX
-const TEREX_BINANCE_INFO = {
-  email: 'terex.payments@binance.com',
-  binanceId: '123456789',
-  displayName: 'TEREX Payments'
-};
-
 export function SellUSDT() {
   const [showKYCPage, setShowKYCPage] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'bank' | 'mobile'>('bank');
   const [usdtAmount, setUsdtAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
-  const [useBinancePay, setUseBinancePay] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showFinalConfirmation, setShowFinalConfirmation] = useState(false);
@@ -133,12 +123,6 @@ export function SellUSDT() {
       return;
     }
     
-    // Si Binance Pay est utilisé, pas besoin de vérifier les autres champs
-    if (useBinancePay) {
-      setShowConfirmation(true);
-      return;
-    }
-    
     if (paymentMethod === 'bank' && (!bankData.accountNumber || !bankData.bankName || !bankData.accountHolder)) {
       return;
     }
@@ -167,13 +151,11 @@ export function SellUSDT() {
       exchange_rate: exchangeRates[currency as keyof typeof exchangeRates],
       payment_method: dbPaymentMethod as 'card' | 'mobile',
       network,
-      wallet_address: useBinancePay ? null : WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
+      wallet_address: WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
       status: 'pending' as const,
       payment_status: 'pending',
-      // Stocker les informations dans les notes
+      // Stocker les informations dans les notes au lieu du champ phone_number qui n'existe pas
       notes: JSON.stringify({
-        useBinancePay,
-        binanceInfo: useBinancePay ? TEREX_BINANCE_INFO : null,
         phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : bankData.accountNumber,
         provider: paymentMethod === 'mobile' ? mobileData.provider : 'bank',
         paymentMethod: paymentMethod,
@@ -393,167 +375,154 @@ export function SellUSDT() {
                           </div>
                         </div>
 
-                        {/* Option Binance Pay */}
-                        <BinancePayOption
-                          enabled={useBinancePay}
-                          onToggle={setUseBinancePay}
-                          usdtAmount={usdtAmount}
-                        />
-
-                        {/* Network Selection - Only show if not using Binance Pay */}
-                        {!useBinancePay && (
-                          <div className="space-y-2">
-                            <Label className="text-white text-sm font-medium">Réseau d'envoi</Label>
-                            <Select value={network} onValueChange={setNetwork}>
-                              <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent className="bg-terex-darker border-terex-gray">
-                                <SelectItem value="TRC20">
-                                  <div className="flex items-center space-x-3 min-w-0">
+                        {/* Network Selection with Logos */}
+                        <div className="space-y-2">
+                          <Label className="text-white text-sm font-medium">Réseau d'envoi</Label>
+                          <Select value={network} onValueChange={setNetwork}>
+                            <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-terex-darker border-terex-gray">
+                              <SelectItem value="TRC20">
+                                <div className="flex items-center justify-between w-full min-w-0">
+                                  <div className="flex items-center space-x-3 min-w-0 flex-1">
                                     <img src={NETWORK_LOGOS.TRC20} alt="Tron" className="w-5 h-5 rounded-full flex-shrink-0" />
                                     <span className="truncate">TRC20 (Tron)</span>
-                                    <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
-                                      Recommandé
-                                    </Badge>
                                   </div>
-                                </SelectItem>
-                                <SelectItem value="BEP20">
-                                  <div className="flex items-center space-x-3">
-                                    <img src={NETWORK_LOGOS.BEP20} alt="BSC" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                    <span className="truncate">BEP20 (BSC)</span>
-                                  </div>
-                                </SelectItem>
-                                <SelectItem value="ERC20">
-                                  <div className="flex items-center space-x-3">
-                                    <img src={NETWORK_LOGOS.ERC20} alt="Ethereum" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                    <span className="truncate">ERC20 (Ethereum)</span>
-                                  </div>
-                                </SelectItem>
-                                <SelectItem value="Arbitrum">
-                                  <div className="flex items-center space-x-3">
-                                    <img src={NETWORK_LOGOS.Arbitrum} alt="Arbitrum" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                    <span className="truncate">Arbitrum</span>
-                                  </div>
-                                </SelectItem>
-                                <SelectItem value="Polygon">
-                                  <div className="flex items-center space-x-3">
-                                    <img src={NETWORK_LOGOS.Polygon} alt="Polygon" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                    <span className="truncate">Polygon</span>
-                                  </div>
-                                </SelectItem>
-                                <SelectItem value="Solana">
-                                  <div className="flex items-center space-x-3">
-                                    <img src={NETWORK_LOGOS.Solana} alt="Solana" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                    <span className="truncate">Solana</span>
-                                  </div>
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        )}
+                                  <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
+                                    Recommandé
+                                  </Badge>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="BEP20">
+                                <div className="flex items-center space-x-3">
+                                  <img src={NETWORK_LOGOS.BEP20} alt="BSC" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                  <span className="truncate">BEP20 (BSC)</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="ERC20">
+                                <div className="flex items-center space-x-3">
+                                  <img src={NETWORK_LOGOS.ERC20} alt="Ethereum" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                  <span className="truncate">ERC20 (Ethereum)</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="Arbitrum">
+                                <div className="flex items-center space-x-3">
+                                  <img src={NETWORK_LOGOS.Arbitrum} alt="Arbitrum" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                  <span className="truncate">Arbitrum</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="Polygon">
+                                <div className="flex items-center space-x-3">
+                                  <img src={NETWORK_LOGOS.Polygon} alt="Polygon" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                  <span className="truncate">Polygon</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="Solana">
+                                <div className="flex items-center space-x-3">
+                                  <img src={NETWORK_LOGOS.Solana} alt="Solana" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                  <span className="truncate">Solana</span>
+                                </div>
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
 
-                        {/* Our Wallet Address - Only show if not using Binance Pay */}
-                        {!useBinancePay && (
-                          <div className="space-y-2">
-                            <Label className="text-white text-sm font-medium">Adresse de réception (Notre portefeuille)</Label>
-                            <div className="flex items-center space-x-2">
-                              <Input
-                                type="text"
-                                value={WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
-                                readOnly
-                                className="bg-terex-gray border-terex-gray-light text-white h-12"
-                              />
-                              <Button
-                                type="button"
-                                size="sm"
-                                onClick={() => copyToClipboard(WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES])}
-                                className="bg-terex-accent hover:bg-terex-accent/80"
-                              >
-                                <Copy className="w-4 h-4" />
-                              </Button>
+                        {/* Our Wallet Address */}
+                        <div className="space-y-2">
+                          <Label className="text-white text-sm font-medium">Adresse de réception (Notre portefeuille)</Label>
+                          <div className="flex items-center space-x-2">
+                            <Input
+                              type="text"
+                              value={WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
+                              readOnly
+                              className="bg-terex-gray border-terex-gray-light text-white h-12"
+                            />
+                            <Button
+                              type="button"
+                              size="sm"
+                              onClick={() => copyToClipboard(WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES])}
+                              className="bg-terex-accent hover:bg-terex-accent/80"
+                            >
+                              <Copy className="w-4 h-4" />
+                            </Button>
+                          </div>
+                          <p className="text-gray-400 text-xs">Envoyez vos USDT à cette adresse sur le réseau {network}</p>
+                        </div>
+
+                        {/* Payment Method Details */}
+                        {method.id === 'bank' && (
+                          <div className="space-y-4">
+                            <h3 className="text-white font-medium">Informations bancaires</h3>
+                            <div className="grid gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-white text-sm">Nom du titulaire du compte</Label>
+                                <Input
+                                  value={bankData.accountHolder}
+                                  onChange={(e) => setBankData({...bankData, accountHolder: e.target.value})}
+                                  className="bg-terex-gray border-terex-gray-light text-white"
+                                  placeholder="Votre nom complet"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-white text-sm">Numéro de compte</Label>
+                                <Input
+                                  value={bankData.accountNumber}
+                                  onChange={(e) => setBankData({...bankData, accountNumber: e.target.value})}
+                                  className="bg-terex-gray border-terex-gray-light text-white"
+                                  placeholder="Votre numéro de compte"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-white text-sm">Nom de la banque</Label>
+                                <Input
+                                  value={bankData.bankName}
+                                  onChange={(e) => setBankData({...bankData, bankName: e.target.value})}
+                                  className="bg-terex-gray border-terex-gray-light text-white"
+                                  placeholder="Nom de votre banque"
+                                />
+                              </div>
                             </div>
-                            <p className="text-gray-400 text-xs">Envoyez vos USDT à cette adresse sur le réseau {network}</p>
                           </div>
                         )}
 
-                        {/* Payment Method Details - Only show if not using Binance Pay */}
-                        {!useBinancePay && (
-                          <>
-                            {method.id === 'bank' && (
-                              <div className="space-y-4">
-                                <h3 className="text-white font-medium">Informations bancaires</h3>
-                                <div className="grid gap-4">
-                                  <div className="space-y-2">
-                                    <Label className="text-white text-sm">Nom du titulaire du compte</Label>
-                                    <Input
-                                      value={bankData.accountHolder}
-                                      onChange={(e) => setBankData({...bankData, accountHolder: e.target.value})}
-                                      className="bg-terex-gray border-terex-gray-light text-white"
-                                      placeholder="Votre nom complet"
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label className="text-white text-sm">Numéro de compte</Label>
-                                    <Input
-                                      value={bankData.accountNumber}
-                                      onChange={(e) => setBankData({...bankData, accountNumber: e.target.value})}
-                                      className="bg-terex-gray border-terex-gray-light text-white"
-                                      placeholder="Votre numéro de compte"
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label className="text-white text-sm">Nom de la banque</Label>
-                                    <Input
-                                      value={bankData.bankName}
-                                      onChange={(e) => setBankData({...bankData, bankName: e.target.value})}
-                                      className="bg-terex-gray border-terex-gray-light text-white"
-                                      placeholder="Nom de votre banque"
-                                    />
-                                  </div>
-                                </div>
+                        {method.id === 'mobile' && (
+                          <div className="space-y-4">
+                            <h3 className="text-white font-medium">Comment souhaitez-vous recevoir l'argent ?</h3>
+                            <div className="grid gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-white text-sm">Service de paiement</Label>
+                                <Select value={mobileData.provider} onValueChange={(value) => setMobileData({...mobileData, provider: value as 'wave' | 'orange'})}>
+                                  <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="wave">
+                                      <div className="flex items-center space-x-2">
+                                        <img src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" alt="Wave" className="w-4 h-4" />
+                                        <span>Wave</span>
+                                      </div>
+                                    </SelectItem>
+                                    <SelectItem value="orange">
+                                      <div className="flex items-center space-x-2">
+                                        <img src="/lovable-uploads/86b4b50f-9595-46c2-8cce-30343f23454a.png" alt="Orange Money" className="w-4 h-4" />
+                                        <span>Orange Money</span>
+                                      </div>
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
                               </div>
-                            )}
-
-                            {method.id === 'mobile' && (
-                              <div className="space-y-4">
-                                <h3 className="text-white font-medium">Comment souhaitez-vous recevoir l'argent ?</h3>
-                                <div className="grid gap-4">
-                                  <div className="space-y-2">
-                                    <Label className="text-white text-sm">Service de paiement</Label>
-                                    <Select value={mobileData.provider} onValueChange={(value) => setMobileData({...mobileData, provider: value as 'wave' | 'orange'})}>
-                                      <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white">
-                                        <SelectValue />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="wave">
-                                          <div className="flex items-center space-x-2">
-                                            <img src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" alt="Wave" className="w-4 h-4" />
-                                            <span>Wave</span>
-                                          </div>
-                                        </SelectItem>
-                                        <SelectItem value="orange">
-                                          <div className="flex items-center space-x-2">
-                                            <img src="/lovable-uploads/86b4b50f-9595-46c2-8cce-30343f23454a.png" alt="Orange Money" className="w-4 h-4" />
-                                            <span>Orange Money</span>
-                                          </div>
-                                        </SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label className="text-white text-sm">Numéro de téléphone</Label>
-                                    <Input
-                                      value={mobileData.phoneNumber}
-                                      onChange={(e) => setMobileData({...mobileData, phoneNumber: e.target.value})}
-                                      className="bg-terex-gray border-terex-gray-light text-white"
-                                      placeholder="+221 XX XXX XX XX"
-                                    />
-                                  </div>
-                                </div>
+                              <div className="space-y-2">
+                                <Label className="text-white text-sm">Numéro de téléphone</Label>
+                                <Input
+                                  value={mobileData.phoneNumber}
+                                  onChange={(e) => setMobileData({...mobileData, phoneNumber: e.target.value})}
+                                  className="bg-terex-gray border-terex-gray-light text-white"
+                                  placeholder="+221 XX XXX XX XX"
+                                />
                               </div>
-                            )}
-                          </>
+                            </div>
+                          </div>
                         )}
 
                         {/* Sell Button */}
@@ -561,10 +530,8 @@ export function SellUSDT() {
                           size="lg"
                           className="w-full gradient-button text-white font-semibold h-12 text-lg"
                           disabled={!usdtAmount || 
-                            (!useBinancePay && (
-                              (paymentMethod === 'bank' && (!bankData.accountNumber || !bankData.bankName || !bankData.accountHolder)) ||
-                              (paymentMethod === 'mobile' && !mobileData.phoneNumber)
-                            ))
+                            (paymentMethod === 'bank' && (!bankData.accountNumber || !bankData.bankName || !bankData.accountHolder)) ||
+                            (paymentMethod === 'mobile' && !mobileData.phoneNumber)
                           }
                           onClick={handleSellClick}
                         >
