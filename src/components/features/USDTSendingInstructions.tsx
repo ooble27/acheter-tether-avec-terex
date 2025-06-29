@@ -1,250 +1,354 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Copy, Send, CheckCircle, AlertCircle, Wallet } from 'lucide-react';
+import { ArrowLeft, Copy, CheckCircle, Clock, AlertCircle, Wallet } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-interface OrderData {
-  amount: string;
-  currency: string;
-  usdtAmount: string;
-  network: string;
-  walletAddress: string;
-  paymentMethod: string;
-  exchangeRate: number;
-  phoneNumber?: string;
-  provider?: string;
-}
-
 interface USDTSendingInstructionsProps {
-  orderData: OrderData;
+  orderData: {
+    amount: string;
+    currency: string;
+    usdtAmount: string;
+    network?: string;
+    walletAddress?: string;
+    paymentMethod: 'bank' | 'mobile';
+    exchangeRate: number;
+    phoneNumber?: string;
+    provider?: string;
+    useBinancePay?: boolean;
+    binanceInfo?: {
+      email: string;
+      binanceId: string;
+      displayName: string;
+    };
+  };
   onBack: () => void;
   onUSDTSent: () => void;
 }
 
 export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTSendingInstructionsProps) {
-  const [confirmingSent, setConfirmingSent] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState(30 * 60); // 30 minutes
   const { toast } = useToast();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const copyToClipboard = (text: string) => {
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const copyToClipboard = (text: string, field: string) => {
     navigator.clipboard.writeText(text);
+    setCopied(field);
     toast({
       title: "Copié !",
-      description: "L'adresse a été copiée dans le presse-papiers",
+      description: `${field} copié dans le presse-papiers`,
     });
-  };
-
-  const getNetworkName = () => {
-    switch (orderData.network) {
-      case 'TRC20': return 'TRC20 (Tron)';
-      case 'BEP20': return 'BEP20 (BSC)';
-      case 'ERC20': return 'ERC20 (Ethereum)';
-      case 'Arbitrum': return 'Arbitrum';
-      case 'Polygon': return 'Polygon';
-      default: return orderData.network;
-    }
-  };
-
-  const getProviderName = () => {
-    return orderData.provider === 'wave' ? 'Wave' : 'Orange Money';
-  };
-
-  const handleUSDTSent = () => {
-    setConfirmingSent(true);
-    // Simuler un délai pour l'effet visuel
-    setTimeout(() => {
-      onUSDTSent();
-    }, 1000);
+    setTimeout(() => setCopied(null), 2000);
   };
 
   return (
     <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-      <div className="w-full max-w-4xl mx-auto px-2 md:px-0">
-        <div className="mb-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-6 flex items-center space-x-4">
           <Button
             variant="ghost"
             onClick={onBack}
-            className="text-gray-400 hover:text-white mb-4"
+            className="text-gray-400 hover:text-white"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className="w-5 h-5 mr-2" />
             Retour
           </Button>
-          <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Instructions d'envoi USDT</h1>
-          <p className="text-gray-400 text-sm md:text-base">Suivez ces étapes pour finaliser votre vente</p>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-white">
+              {orderData.useBinancePay ? 'Envoyer via Binance Pay' : 'Envoyer les USDT'}
+            </h1>
+            <p className="text-gray-400">Suivez les instructions pour compléter votre vente</p>
+          </div>
         </div>
 
-        {/* Récapitulatif de la commande */}
-        <Card className="bg-terex-darker border-terex-gray mb-6 w-full">
-          <CardHeader className="pb-4 p-4 md:p-6">
-            <CardTitle className="text-white flex items-center text-lg md:text-xl">
-              <Wallet className="w-5 h-5 mr-2 text-terex-accent" />
-              Récapitulatif de votre vente
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 p-4 md:p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <span className="text-gray-400 text-sm">Vous vendez</span>
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Instructions d'envoi */}
+          <div className="lg:col-span-2 space-y-6">
+            <Card className="bg-terex-darker border-terex-gray">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  {orderData.useBinancePay ? (
+                    <img 
+                      src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" 
+                      alt="Binance" 
+                      className="w-6 h-6 mr-3 rounded"
+                    />
+                  ) : (
+                    <Wallet className="w-6 h-6 mr-3 text-terex-accent" />
+                  )}
+                  {orderData.useBinancePay ? 'Instructions Binance Pay' : `Instructions d'envoi ${orderData.network}`}
+                </CardTitle>
                 <div className="flex items-center space-x-2">
-                  <img 
-                    src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                    alt="USDT" 
-                    className="w-5 h-5"
-                  />
-                  <span className="text-terex-accent font-bold text-lg">
-                    {orderData.usdtAmount} USDT
+                  <Clock className="w-4 h-4 text-orange-500" />
+                  <span className="text-orange-500 font-medium">
+                    Temps restant : {formatTime(timeLeft)}
                   </span>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <span className="text-gray-400 text-sm">Vous recevez</span>
-                <div className="text-white font-bold text-lg">
-                  {orderData.amount} {orderData.currency}
-                </div>
-              </div>
-            </div>
-            <Separator className="bg-terex-gray" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              <div className="space-y-1">
-                <span className="text-gray-400">Numéro de téléphone</span>
-                <div className="text-white font-medium break-all">
-                  {orderData.phoneNumber}
-                </div>
-              </div>
-              <div className="space-y-1">
-                <span className="text-gray-400">Service de paiement</span>
-                <div className="text-white font-medium">
-                  {getProviderName()}
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              <div className="space-y-1">
-                <span className="text-gray-400">Taux</span>
-                <div className="text-white">1 USDT = {orderData.exchangeRate} {orderData.currency}</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Instructions d'envoi */}
-        <Card className="bg-terex-darker border-terex-gray mb-6 w-full">
-          <CardHeader className="pb-4 p-4 md:p-6">
-            <CardTitle className="text-white flex items-center text-lg md:text-xl">
-              <Send className="w-5 h-5 mr-2 text-terex-accent" />
-              Étape 1: Envoyez vos USDT
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6 p-4 md:p-6">
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 w-full">
-              <div className="flex items-start space-x-3">
-                <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
-                <div className="space-y-2">
-                  <p className="text-amber-200 font-medium">Important !</p>
-                  <p className="text-amber-100 text-sm">
-                    Envoyez exactement <strong>{orderData.usdtAmount} USDT</strong> sur le réseau <strong>{getNetworkName()}</strong>. 
-                    Tout envoi incorrect pourrait retarder ou annuler votre transaction.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="text-white font-medium mb-2 block">Réseau à utiliser</label>
-                <div className="bg-terex-gray rounded-lg p-3 w-full">
-                  <Badge variant="outline" className="text-terex-accent border-terex-accent">
-                    {getNetworkName()}
-                  </Badge>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-white font-medium mb-2 block">Adresse de destination</label>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
-                  <div className="bg-terex-gray rounded-lg p-3 flex-1 text-white font-mono text-sm break-all">
-                    {orderData.walletAddress}
-                  </div>
-                  <Button
-                    onClick={() => copyToClipboard(orderData.walletAddress)}
-                    size="sm"
-                    className="bg-terex-accent hover:bg-terex-accent/80 w-full sm:w-auto"
-                  >
-                    <Copy className="w-4 h-4 mr-2 sm:mr-0" />
-                    <span className="sm:hidden">Copier</span>
-                  </Button>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-white font-medium mb-2 block">Montant exact à envoyer</label>
-                <div className="bg-terex-gray rounded-lg p-3 text-terex-accent font-bold text-lg w-full">
-                  {orderData.usdtAmount} USDT
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 w-full">
-              <h4 className="text-blue-200 font-medium mb-2">Comment procéder :</h4>
-              <ol className="text-blue-100 text-sm space-y-1 list-decimal list-inside">
-                <li>Ouvrez votre portefeuille crypto (Trust Wallet, MetaMask, etc.)</li>
-                <li>Sélectionnez USDT sur le réseau {getNetworkName()}</li>
-                <li>Copiez l'adresse de destination ci-dessus</li>
-                <li>Envoyez exactement {orderData.usdtAmount} USDT</li>
-                <li>Revenez ici et cliquez sur "USDT Envoyé"</li>
-              </ol>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Bouton de confirmation */}
-        <Card className="bg-terex-darker border-terex-gray w-full">
-          <CardHeader className="pb-4 p-4 md:p-6">
-            <CardTitle className="text-white flex items-center text-lg md:text-xl">
-              <CheckCircle className="w-5 h-5 mr-2 text-terex-accent" />
-              Étape 2: Confirmez l'envoi
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-4 md:p-6">
-            <div className="space-y-4">
-              <p className="text-gray-300 text-sm">
-                Une fois que vous avez envoyé les USDT à l'adresse indiquée, cliquez sur le bouton ci-dessous 
-                pour nous notifier. Nous traiterons votre commande dans les 30 minutes et vous recevrez 
-                votre argent sur {getProviderName()}.
-              </p>
-              
-              <Button
-                onClick={handleUSDTSent}
-                disabled={confirmingSent}
-                size="lg"
-                className="w-full gradient-button text-white font-semibold h-12 text-lg"
-              >
-                {confirmingSent ? (
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {orderData.useBinancePay ? (
+                  // Instructions Binance Pay
                   <>
-                    <CheckCircle className="w-5 h-5 mr-2 animate-spin" />
-                    Confirmation en cours...
+                    <div className="space-y-3">
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-xs font-bold">1</span>
+                        </div>
+                        <p className="text-gray-300">Ouvrez votre application Binance</p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-xs font-bold">2</span>
+                        </div>
+                        <p className="text-gray-300">Allez dans "Pay" puis "Envoyer"</p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-xs font-bold">3</span>
+                        </div>
+                        <p className="text-gray-300">Utilisez l'email ou l'ID Binance ci-dessous</p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-xs font-bold">4</span>
+                        </div>
+                        <p className="text-gray-300">Montant: <strong className="text-white">{orderData.usdtAmount} USDT</strong></p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-xs font-bold">5</span>
+                        </div>
+                        <p className="text-gray-300">Confirmez et envoyez la transaction</p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-xs font-bold">6</span>
+                        </div>
+                        <p className="text-gray-300">Cliquez sur "J'ai envoyé" ci-dessous</p>
+                      </div>
+                    </div>
                   </>
                 ) : (
+                  // Instructions Wallet classique
                   <>
-                    <Send className="w-5 h-5 mr-2" />
-                    USDT Envoyé
+                    <div className="space-y-3">
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-xs font-bold">1</span>
+                        </div>
+                        <p className="text-gray-300">
+                          Envoyez exactement <strong>{orderData.usdtAmount} USDT</strong>
+                        </p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-xs font-bold">2</span>
+                        </div>
+                        <p className="text-gray-300">
+                          Utilisez le réseau <strong>{orderData.network}</strong>
+                        </p>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-xs font-bold">3</span>
+                        </div>
+                        <p className="text-gray-300">
+                          À l'adresse suivante :
+                        </p>
+                      </div>
+                    </div>
                   </>
                 )}
-              </Button>
+              </CardContent>
+            </Card>
 
-              <p className="text-gray-400 text-xs text-center">
-                En cliquant sur ce bouton, vous confirmez avoir envoyé les USDT à l'adresse indiquée
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+            {orderData.useBinancePay && orderData.binanceInfo ? (
+              // Informations de réception Binance Pay
+              <Card className="bg-terex-darker border-terex-gray">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <img 
+                      src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" 
+                      alt="Binance" 
+                      className="w-5 h-5 mr-2 rounded"
+                    />
+                    Informations de réception TEREX
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label className="text-gray-400 text-sm">Email Binance</Label>
+                    <div className="flex items-center justify-between bg-terex-gray rounded-lg p-4 mt-1">
+                      <span className="text-white font-mono text-lg">{orderData.binanceInfo.email}</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyToClipboard(orderData.binanceInfo!.email, 'Email')}
+                        className="border-terex-gray text-white hover:bg-terex-gray"
+                      >
+                        {copied === 'Email' ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label className="text-gray-400 text-sm">ID Binance</Label>
+                    <div className="flex items-center justify-between bg-terex-gray rounded-lg p-4 mt-1">
+                      <span className="text-white font-mono text-lg">{orderData.binanceInfo.binanceId}</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyToClipboard(orderData.binanceInfo!.binanceId, 'ID')}
+                        className="border-terex-gray text-white hover:bg-terex-gray"
+                      >
+                        {copied === 'ID' ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label className="text-gray-400 text-sm">Nom du destinataire</Label>
+                    <div className="bg-terex-gray rounded-lg p-4 mt-1">
+                      <span className="text-white font-medium">{orderData.binanceInfo.displayName}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              // Adresse de réception classique (si pas Binance Pay)
+              orderData.walletAddress && (
+                <Card className="bg-terex-darker border-terex-gray">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center">
+                      <Wallet className="w-5 h-5 mr-2 text-terex-accent" />
+                      Adresse de réception
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between bg-terex-gray rounded-lg p-4">
+                      <span className="text-white font-mono text-sm break-all">{orderData.walletAddress}</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyToClipboard(orderData.walletAddress!, 'Adresse')}
+                        className="border-terex-gray text-white hover:bg-terex-gray ml-2"
+                      >
+                        {copied === 'Adresse' ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            )}
+
+            {/* Avertissement */}
+            <Card className="bg-amber-500/10 border-amber-500/30">
+              <CardContent className="p-4">
+                <div className="flex items-start space-x-3">
+                  <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5" />
+                  <div className="space-y-2">
+                    <p className="text-amber-200 font-medium">Important</p>
+                    <ul className="text-amber-100 text-sm space-y-1">
+                      <li>• Envoyez exactement <strong>{orderData.usdtAmount} USDT</strong></li>
+                      {orderData.useBinancePay ? (
+                        <li>• Utilisez uniquement Binance Pay (pas un transfert wallet classique)</li>
+                      ) : (
+                        <li>• Utilisez uniquement le réseau <strong>{orderData.network}</strong></li>
+                      )}
+                      <li>• L'envoi doit être effectué dans les 30 minutes</li>
+                      <li>• Ne fermez pas cette page avant confirmation</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Button
+              onClick={onUSDTSent}
+              size="lg"
+              className="w-full gradient-button text-white font-semibold h-12"
+            >
+              {orderData.useBinancePay ? "J'ai envoyé via Binance Pay" : "J'ai envoyé les USDT"}
+            </Button>
+          </div>
+
+          {/* Sidebar - Récapitulatif */}
+          <div className="space-y-6">
+            <Card className="bg-terex-darker border-terex-gray">
+              <CardHeader>
+                <CardTitle className="text-white">Récapitulatif</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">À envoyer</span>
+                    <span className="text-white font-bold">
+                      {orderData.usdtAmount} USDT
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Vous recevrez</span>
+                    <span className="text-terex-accent font-bold">
+                      {orderData.amount} {orderData.currency}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Méthode</span>
+                    <Badge variant="outline" className="text-terex-accent border-terex-accent">
+                      {orderData.useBinancePay ? 'Binance Pay' : orderData.network}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Réception</span>
+                    <span className="text-white text-sm">
+                      {orderData.paymentMethod === 'mobile' ? 'Mobile Money' : 'Virement bancaire'}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Informations de sécurité */}
+            <Card className="bg-green-500/10 border-green-500/30">
+              <CardContent className="p-4">
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                  <div className="space-y-1">
+                    <p className="text-green-200 font-medium text-sm">Traitement automatique</p>
+                    <p className="text-green-100 text-xs">
+                      Votre paiement sera traité automatiquement après réception des USDT
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
