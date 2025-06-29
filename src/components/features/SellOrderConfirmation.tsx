@@ -16,6 +16,7 @@ interface OrderData {
   exchangeRate: number;
   phoneNumber?: string;
   provider?: string;
+  useBinancePay?: boolean;
 }
 
 interface SellOrderConfirmationProps {
@@ -100,19 +101,45 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
 
             {/* Détails d'envoi */}
             <div className="space-y-4">
-              <h3 className="text-white font-medium">Détails d'envoi USDT</h3>
-              <div className="bg-terex-gray rounded-lg p-4 space-y-3 w-full">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                  <span className="text-gray-400 text-sm">Adresse d'envoi</span>
-                  <span className="text-white font-medium break-all text-sm">{orderData.walletAddress}</span>
+              <h3 className="text-white font-medium">
+                {orderData.useBinancePay ? 'Détails Binance Pay' : 'Détails d\'envoi USDT'}
+              </h3>
+              
+              {orderData.useBinancePay ? (
+                <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 space-y-3 w-full">
+                  <div className="flex items-center space-x-2 mb-3">
+                    <img 
+                      src="/lovable-uploads/26b3437e-c333-4387-aeb9-731aa705f282.png" 
+                      alt="Binance Pay" 
+                      className="w-6 h-6"
+                    />
+                    <Badge variant="outline" className="text-yellow-500 border-yellow-500">
+                      Binance Pay
+                    </Badge>
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                    <span className="text-gray-400 text-sm">Méthode d'envoi</span>
+                    <span className="text-white font-medium">Transfert direct via Binance Pay</span>
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                    <span className="text-gray-400 text-sm">Frais</span>
+                    <span className="text-green-400 font-medium">Gratuit</span>
+                  </div>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                  <span className="text-gray-400 text-sm">Réseau</span>
-                  <Badge variant="outline" className="text-terex-accent border-terex-accent w-fit">
-                    {orderData.network}
-                  </Badge>
+              ) : (
+                <div className="bg-terex-gray rounded-lg p-4 space-y-3 w-full">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                    <span className="text-gray-400 text-sm">Adresse d'envoi</span>
+                    <span className="text-white font-medium break-all text-sm">{orderData.walletAddress}</span>
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                    <span className="text-gray-400 text-sm">Réseau</span>
+                    <Badge variant="outline" className="text-terex-accent border-terex-accent w-fit">
+                      {orderData.network}
+                    </Badge>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Méthode de paiement */}
@@ -145,8 +172,17 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
                 <div className="space-y-1">
                   <p className="text-blue-200 font-medium">Processus de vente</p>
                   <p className="text-blue-100 text-sm">
-                    Après confirmation, vous devrez envoyer vos {orderData.usdtAmount} USDT à l'adresse fournie.
-                    Une fois la transaction confirmée sur la blockchain, vous recevrez votre paiement de {orderData.amount} {orderData.currency}.
+                    {orderData.useBinancePay ? (
+                      <>
+                        Après confirmation, vous serez redirigé vers Binance Pay pour effectuer le transfert de {orderData.usdtAmount} USDT.
+                        Une fois la transaction confirmée, vous recevrez votre paiement de {orderData.amount} {orderData.currency}.
+                      </>
+                    ) : (
+                      <>
+                        Après confirmation, vous devrez envoyer vos {orderData.usdtAmount} USDT à l'adresse fournie.
+                        Une fois la transaction confirmée sur la blockchain, vous recevrez votre paiement de {orderData.amount} {orderData.currency}.
+                      </>
+                    )}
                   </p>
                 </div>
               </div>
