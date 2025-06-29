@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -412,44 +413,44 @@ export function SellUSDT() {
                                   <div className="flex items-center space-x-3 min-w-0">
                                     <img src={NETWORK_LOGOS.TRC20} alt="Tron" className="w-5 h-5 rounded-full flex-shrink-0" />
                                     <span className="truncate">TRC20 (Tron)</span>
+                                    <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
+                                      Recommandé
+                                    </Badge>
                                   </div>
-                                  <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
-                                    Recommandé
-                                  </Badge>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="BEP20">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.BEP20} alt="BSC" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                  <span className="truncate">BEP20 (BSC)</span>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="ERC20">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.ERC20} alt="Ethereum" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                  <span className="truncate">ERC20 (Ethereum)</span>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="Arbitrum">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.Arbitrum} alt="Arbitrum" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                  <span className="truncate">Arbitrum</span>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="Polygon">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.Polygon} alt="Polygon" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                  <span className="truncate">Polygon</span>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="Solana">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.Solana} alt="Solana" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                  <span className="truncate">Solana</span>
-                                </div>
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
+                                </SelectItem>
+                                <SelectItem value="BEP20">
+                                  <div className="flex items-center space-x-3">
+                                    <img src={NETWORK_LOGOS.BEP20} alt="BSC" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <span className="truncate">BEP20 (BSC)</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="ERC20">
+                                  <div className="flex items-center space-x-3">
+                                    <img src={NETWORK_LOGOS.ERC20} alt="Ethereum" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <span className="truncate">ERC20 (Ethereum)</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="Arbitrum">
+                                  <div className="flex items-center space-x-3">
+                                    <img src={NETWORK_LOGOS.Arbitrum} alt="Arbitrum" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <span className="truncate">Arbitrum</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="Polygon">
+                                  <div className="flex items-center space-x-3">
+                                    <img src={NETWORK_LOGOS.Polygon} alt="Polygon" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <span className="truncate">Polygon</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="Solana">
+                                  <div className="flex items-center space-x-3">
+                                    <img src={NETWORK_LOGOS.Solana} alt="Solana" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <span className="truncate">Solana</span>
+                                  </div>
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
                         )}
 
                         {/* Our Wallet Address - Only show if not using Binance Pay */}
