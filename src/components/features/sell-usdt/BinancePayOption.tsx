@@ -16,11 +16,9 @@ export function BinancePayOption({ enabled, onToggle }: BinancePayOptionProps) {
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <img 
-              src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" 
-              alt="Binance" 
-              className="w-6 h-6"
-            />
+            <div className="w-6 h-6 bg-yellow-400 rounded flex items-center justify-center">
+              <span className="text-black font-bold text-xs">B</span>
+            </div>
             <div>
               <Label className="text-white font-medium">Envoyer via Binance Pay</Label>
               <p className="text-gray-400 text-sm">Transfert direct sans frais réseau</p>
