@@ -34,6 +34,7 @@ const TEREX_BINANCE_INFO = {
 
 export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTSendingInstructionsProps) {
   const [confirmingSent, setConfirmingSent] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -64,30 +65,24 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
   };
 
   const handleBinanceRedirect = () => {
-    // Construction de l'URL Binance Pay avec les paramètres
     const binanceUrl = `https://www.binance.com/fr/pay/checkout?merchantCode=${TEREX_BINANCE_INFO.payId}&amount=${orderData.usdtAmount}&currency=USDT`;
     
-    // Détection mobile pour ouvrir l'app
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     if (isMobile) {
-      // Essai d'ouvrir l'app Binance
       const binanceAppUrl = `binance://pay?to=${TEREX_BINANCE_INFO.payId}&amount=${orderData.usdtAmount}&asset=USDT`;
       window.location.href = binanceAppUrl;
       
-      // Fallback vers le navigateur après 2 secondes
       setTimeout(() => {
         window.open(binanceUrl, '_blank');
       }, 2000);
     } else {
-      // Sur desktop, ouvrir dans un nouvel onglet
       window.open(binanceUrl, '_blank');
     }
   };
 
   const handleUSDTSent = () => {
     setConfirmingSent(true);
-    // Simuler un délai pour l'effet visuel
     setTimeout(() => {
       onUSDTSent();
     }, 1000);
@@ -229,11 +224,18 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
                     size="lg"
                     className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold h-12 text-lg"
                   >
-                    <img 
-                      src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/302.png" 
-                      alt="Binance" 
-                      className="w-5 h-5 mr-2"
-                    />
+                    {!imageError ? (
+                      <img 
+                        src="/lovable-uploads/72ce0703-a66b-4a87-869b-8e9b7a022eb4.png" 
+                        alt="Binance" 
+                        className="w-5 h-5 mr-2"
+                        onError={() => setImageError(true)}
+                      />
+                    ) : (
+                      <div className="w-5 h-5 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded flex items-center justify-center mr-2">
+                        <span className="text-black font-bold text-xs">B</span>
+                      </div>
+                    )}
                     Ouvrir Binance Pay
                     <ExternalLink className="w-4 h-4 ml-2" />
                   </Button>

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,6 +26,8 @@ interface SellOrderConfirmationProps {
 }
 
 export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }: SellOrderConfirmationProps) {
+  const [imageError, setImageError] = useState(false);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
@@ -69,7 +70,6 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-4 md:p-6">
-            {/* Montants */}
             <div className="space-y-4">
               <div className="space-y-2">
                 <span className="text-gray-400 text-sm">Vous vendez</span>
@@ -99,7 +99,6 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
               </div>
             </div>
 
-            {/* Détails d'envoi */}
             <div className="space-y-4">
               <h3 className="text-white font-medium">
                 {orderData.useBinancePay ? 'Envoi via Binance Pay' : 'Détails d\'envoi USDT'}
@@ -110,11 +109,18 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                       <span className="text-gray-400 text-sm">Méthode d'envoi</span>
                       <div className="flex items-center space-x-2">
-                        <img 
-                          src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/302.png" 
-                          alt="Binance" 
-                          className="w-5 h-5"
-                        />
+                        {!imageError ? (
+                          <img 
+                            src="/lovable-uploads/72ce0703-a66b-4a87-869b-8e9b7a022eb4.png" 
+                            alt="Binance" 
+                            className="w-5 h-5"
+                            onError={() => setImageError(true)}
+                          />
+                        ) : (
+                          <div className="w-5 h-5 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded flex items-center justify-center">
+                            <span className="text-black font-bold text-xs">B</span>
+                          </div>
+                        )}
                         <span className="text-white font-medium">Binance Pay</span>
                       </div>
                     </div>
@@ -140,7 +146,6 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
               </div>
             </div>
 
-            {/* Méthode de paiement */}
             <div className="space-y-4">
               <h3 className="text-white font-medium">Méthode de réception</h3>
               <div className="bg-terex-gray rounded-lg p-4 space-y-3 w-full">
@@ -163,7 +168,6 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
               </div>
             </div>
 
-            {/* Informations importantes */}
             <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 w-full">
               <div className="flex items-start space-x-3">
                 <CheckCircle className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
@@ -187,7 +191,6 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
               </div>
             </div>
 
-            {/* Bouton de confirmation */}
             <Button
               onClick={onConfirm}
               disabled={loading}
