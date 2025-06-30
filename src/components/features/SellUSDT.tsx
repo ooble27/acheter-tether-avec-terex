@@ -11,6 +11,7 @@ import { ArrowRightLeft, Shield, Clock, CreditCard, CheckCircle, Copy, RefreshCw
 import { SellOrderConfirmation } from '@/components/features/SellOrderConfirmation';
 import { USDTSendingInstructions } from '@/components/features/USDTSendingInstructions';
 import { USDTSentConfirmation } from '@/components/features/USDTSentConfirmation';
+import { BinancePayOption } from '@/components/features/sell-usdt/BinancePayOption';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -44,6 +45,7 @@ export function SellUSDT() {
   const [usdtAmount, setUsdtAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
+  const [useBinancePay, setUseBinancePay] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showFinalConfirmation, setShowFinalConfirmation] = useState(false);
@@ -139,7 +141,6 @@ export function SellUSDT() {
     
     setLoading(true);
     
-    // Mapper les méthodes de paiement pour la base de données
     const dbPaymentMethod = paymentMethod === 'bank' ? 'card' : 'mobile';
     
     const orderData = {
@@ -150,17 +151,17 @@ export function SellUSDT() {
       usdt_amount: parseFloat(usdtAmount),
       exchange_rate: exchangeRates[currency as keyof typeof exchangeRates],
       payment_method: dbPaymentMethod as 'card' | 'mobile',
-      network,
-      wallet_address: WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
+      network: useBinancePay ? 'Binance Pay' : network,
+      wallet_address: useBinancePay ? 'Binance Pay Transfer' : WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
       status: 'pending' as const,
       payment_status: 'pending',
-      // Stocker les informations dans les notes au lieu du champ phone_number qui n'existe pas
       notes: JSON.stringify({
         phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : bankData.accountNumber,
         provider: paymentMethod === 'mobile' ? mobileData.provider : 'bank',
         paymentMethod: paymentMethod,
         bankData: paymentMethod === 'bank' ? bankData : null,
-        mobileData: paymentMethod === 'mobile' ? mobileData : null
+        mobileData: paymentMethod === 'mobile' ? mobileData : null,
+        useBinancePay: useBinancePay
       })
     };
 
@@ -228,7 +229,8 @@ export function SellUSDT() {
             paymentMethod: paymentMethod,
             exchangeRate: exchangeRates[currency as keyof typeof exchangeRates],
             phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : bankData.accountNumber,
-            provider: paymentMethod === 'mobile' ? mobileData.provider : 'bank'
+            provider: paymentMethod === 'mobile' ? mobileData.provider : 'bank',
+            useBinancePay: useBinancePay
           }}
           onBack={() => setShowInstructions(false)}
           onUSDTSent={handleUSDTSent}
@@ -251,7 +253,8 @@ export function SellUSDT() {
             paymentMethod: paymentMethod,
             exchangeRate: exchangeRates[currency as keyof typeof exchangeRates],
             phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : bankData.accountNumber,
-            provider: paymentMethod === 'mobile' ? mobileData.provider : 'bank'
+            provider: paymentMethod === 'mobile' ? mobileData.provider : 'bank',
+            useBinancePay: useBinancePay
           }}
           onConfirm={handleConfirmOrder}
           onBack={() => setShowConfirmation(false)}
@@ -375,80 +378,90 @@ export function SellUSDT() {
                           </div>
                         </div>
 
-                        {/* Network Selection with Logos */}
-                        <div className="space-y-2">
-                          <Label className="text-white text-sm font-medium">Réseau d'envoi</Label>
-                          <Select value={network} onValueChange={setNetwork}>
-                            <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-terex-darker border-terex-gray">
-                              <SelectItem value="TRC20">
-                                <div className="flex items-center justify-between w-full min-w-0">
-                                  <div className="flex items-center space-x-3 min-w-0 flex-1">
-                                    <img src={NETWORK_LOGOS.TRC20} alt="Tron" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                    <span className="truncate">TRC20 (Tron)</span>
-                                  </div>
-                                  <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
-                                    Recommandé
-                                  </Badge>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="BEP20">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.BEP20} alt="BSC" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                  <span className="truncate">BEP20 (BSC)</span>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="ERC20">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.ERC20} alt="Ethereum" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                  <span className="truncate">ERC20 (Ethereum)</span>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="Arbitrum">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.Arbitrum} alt="Arbitrum" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                  <span className="truncate">Arbitrum</span>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="Polygon">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.Polygon} alt="Polygon" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                  <span className="truncate">Polygon</span>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="Solana">
-                                <div className="flex items-center space-x-3">
-                                  <img src={NETWORK_LOGOS.Solana} alt="Solana" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                  <span className="truncate">Solana</span>
-                                </div>
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
+                        {/* Binance Pay Option */}
+                        <BinancePayOption 
+                          enabled={useBinancePay}
+                          onToggle={setUseBinancePay}
+                        />
 
-                        {/* Our Wallet Address */}
-                        <div className="space-y-2">
-                          <Label className="text-white text-sm font-medium">Adresse de réception (Notre portefeuille)</Label>
-                          <div className="flex items-center space-x-2">
-                            <Input
-                              type="text"
-                              value={WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
-                              readOnly
-                              className="bg-terex-gray border-terex-gray-light text-white h-12"
-                            />
-                            <Button
-                              type="button"
-                              size="sm"
-                              onClick={() => copyToClipboard(WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES])}
-                              className="bg-terex-accent hover:bg-terex-accent/80"
-                            >
-                              <Copy className="w-4 h-4" />
-                            </Button>
+                        {/* Network Selection - only show if not using Binance Pay */}
+                        {!useBinancePay && (
+                          <div className="space-y-2">
+                            <Label className="text-white text-sm font-medium">Réseau d'envoi</Label>
+                            <Select value={network} onValueChange={setNetwork}>
+                              <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-terex-darker border-terex-gray">
+                                <SelectItem value="TRC20">
+                                  <div className="flex items-center justify-between w-full min-w-0">
+                                    <div className="flex items-center space-x-3 min-w-0 flex-1">
+                                      <img src={NETWORK_LOGOS.TRC20} alt="Tron" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                      <span className="truncate">TRC20 (Tron)</span>
+                                    </div>
+                                    <Badge variant="secondary" className="text-xs ml-2 flex-shrink-0">
+                                      Recommandé
+                                    </Badge>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="BEP20">
+                                  <div className="flex items-center space-x-3">
+                                    <img src={NETWORK_LOGOS.BEP20} alt="BSC" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <span className="truncate">BEP20 (BSC)</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="ERC20">
+                                  <div className="flex items-center space-x-3">
+                                    <img src={NETWORK_LOGOS.ERC20} alt="Ethereum" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <span className="truncate">ERC20 (Ethereum)</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="Arbitrum">
+                                  <div className="flex items-center space-x-3">
+                                    <img src={NETWORK_LOGOS.Arbitrum} alt="Arbitrum" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <span className="truncate">Arbitrum</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="Polygon">
+                                  <div className="flex items-center space-x-3">
+                                    <img src={NETWORK_LOGOS.Polygon} alt="Polygon" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <span className="truncate">Polygon</span>
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="Solana">
+                                  <div className="flex items-center space-x-3">
+                                    <img src={NETWORK_LOGOS.Solana} alt="Solana" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <span className="truncate">Solana</span>
+                                  </div>
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
                           </div>
-                          <p className="text-gray-400 text-xs">Envoyez vos USDT à cette adresse sur le réseau {network}</p>
-                        </div>
+                        )}
+
+                        {/* Our Wallet Address - only show if not using Binance Pay */}
+                        {!useBinancePay && (
+                          <div className="space-y-2">
+                            <Label className="text-white text-sm font-medium">Adresse de réception (Notre portefeuille)</Label>
+                            <div className="flex items-center space-x-2">
+                              <Input
+                                type="text"
+                                value={WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
+                                readOnly
+                                className="bg-terex-gray border-terex-gray-light text-white h-12"
+                              />
+                              <Button
+                                type="button"
+                                size="sm"
+                                onClick={() => copyToClipboard(WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES])}
+                                className="bg-terex-accent hover:bg-terex-accent/80"
+                              >
+                                <Copy className="w-4 h-4" />
+                              </Button>
+                            </div>
+                            <p className="text-gray-400 text-xs">Envoyez vos USDT à cette adresse sur le réseau {network}</p>
+                          </div>
+                        )}
 
                         {/* Payment Method Details */}
                         {method.id === 'bank' && (

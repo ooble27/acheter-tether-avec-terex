@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Copy, Send, CheckCircle, AlertCircle, Wallet } from 'lucide-react';
+import { ArrowLeft, Copy, Send, CheckCircle, AlertCircle, Wallet, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface OrderData {
@@ -17,6 +16,7 @@ interface OrderData {
   exchangeRate: number;
   phoneNumber?: string;
   provider?: string;
+  useBinancePay?: boolean;
 }
 
 interface USDTSendingInstructionsProps {
@@ -24,6 +24,13 @@ interface USDTSendingInstructionsProps {
   onBack: () => void;
   onUSDTSent: () => void;
 }
+
+// Informations Binance de TEREX (à configurer avec vos vraies informations)
+const TEREX_BINANCE_INFO = {
+  email: 'votre-email-binance@example.com',
+  id: 'VOTRE_BINANCE_ID',
+  payId: 'VOTRE_BINANCE_PAY_ID'
+};
 
 export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTSendingInstructionsProps) {
   const [confirmingSent, setConfirmingSent] = useState(false);
@@ -37,7 +44,7 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
     navigator.clipboard.writeText(text);
     toast({
       title: "Copié !",
-      description: "L'adresse a été copiée dans le presse-papiers",
+      description: "L'information a été copiée dans le presse-papiers",
     });
   };
 
@@ -54,6 +61,28 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
 
   const getProviderName = () => {
     return orderData.provider === 'wave' ? 'Wave' : 'Orange Money';
+  };
+
+  const handleBinanceRedirect = () => {
+    // Construction de l'URL Binance Pay avec les paramètres
+    const binanceUrl = `https://www.binance.com/fr/pay/checkout?merchantCode=${TEREX_BINANCE_INFO.payId}&amount=${orderData.usdtAmount}&currency=USDT`;
+    
+    // Détection mobile pour ouvrir l'app
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (isMobile) {
+      // Essai d'ouvrir l'app Binance
+      const binanceAppUrl = `binance://pay?to=${TEREX_BINANCE_INFO.payId}&amount=${orderData.usdtAmount}&asset=USDT`;
+      window.location.href = binanceAppUrl;
+      
+      // Fallback vers le navigateur après 2 secondes
+      setTimeout(() => {
+        window.open(binanceUrl, '_blank');
+      }, 2000);
+    } else {
+      // Sur desktop, ouvrir dans un nouvel onglet
+      window.open(binanceUrl, '_blank');
+    }
   };
 
   const handleUSDTSent = () => {
@@ -139,68 +168,150 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
           <CardHeader className="pb-4 p-4 md:p-6">
             <CardTitle className="text-white flex items-center text-lg md:text-xl">
               <Send className="w-5 h-5 mr-2 text-terex-accent" />
-              Étape 1: Envoyez vos USDT
+              Étape 1: {orderData.useBinancePay ? 'Envoyez via Binance Pay' : 'Envoyez vos USDT'}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-4 md:p-6">
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 w-full">
-              <div className="flex items-start space-x-3">
-                <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
-                <div className="space-y-2">
-                  <p className="text-amber-200 font-medium">Important !</p>
-                  <p className="text-amber-100 text-sm">
-                    Envoyez exactement <strong>{orderData.usdtAmount} USDT</strong> sur le réseau <strong>{getNetworkName()}</strong>. 
-                    Tout envoi incorrect pourrait retarder ou annuler votre transaction.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="text-white font-medium mb-2 block">Réseau à utiliser</label>
-                <div className="bg-terex-gray rounded-lg p-3 w-full">
-                  <Badge variant="outline" className="text-terex-accent border-terex-accent">
-                    {getNetworkName()}
-                  </Badge>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-white font-medium mb-2 block">Adresse de destination</label>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
-                  <div className="bg-terex-gray rounded-lg p-3 flex-1 text-white font-mono text-sm break-all">
-                    {orderData.walletAddress}
+            {orderData.useBinancePay ? (
+              <>
+                <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 w-full">
+                  <div className="flex items-start space-x-3">
+                    <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
+                    <div className="space-y-2">
+                      <p className="text-amber-200 font-medium">Transfert Binance Pay</p>
+                      <p className="text-amber-100 text-sm">
+                        Envoyez exactement <strong>{orderData.usdtAmount} USDT</strong> via Binance Pay. 
+                        Le transfert est instantané et sans frais.
+                      </p>
+                    </div>
                   </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-white font-medium mb-2 block">Informations du destinataire (TEREX)</label>
+                    <div className="bg-terex-gray rounded-lg p-4 space-y-3 w-full">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                        <span className="text-gray-400 text-sm">Email Binance</span>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-white break-all text-sm">{TEREX_BINANCE_INFO.email}</span>
+                          <Button
+                            onClick={() => copyToClipboard(TEREX_BINANCE_INFO.email)}
+                            size="sm"
+                            className="bg-terex-accent hover:bg-terex-accent/80 h-6 w-6 p-0"
+                          >
+                            <Copy className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                        <span className="text-gray-400 text-sm">Binance ID</span>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-white text-sm">{TEREX_BINANCE_INFO.id}</span>
+                          <Button
+                            onClick={() => copyToClipboard(TEREX_BINANCE_INFO.id)}
+                            size="sm"
+                            className="bg-terex-accent hover:bg-terex-accent/80 h-6 w-6 p-0"
+                          >
+                            <Copy className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                        <span className="text-gray-400 text-sm">Montant à envoyer</span>
+                        <span className="text-terex-accent font-bold">{orderData.usdtAmount} USDT</span>
+                      </div>
+                    </div>
+                  </div>
+
                   <Button
-                    onClick={() => copyToClipboard(orderData.walletAddress)}
-                    size="sm"
-                    className="bg-terex-accent hover:bg-terex-accent/80 w-full sm:w-auto"
+                    onClick={handleBinanceRedirect}
+                    size="lg"
+                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold h-12 text-lg"
                   >
-                    <Copy className="w-4 h-4 mr-2 sm:mr-0" />
-                    <span className="sm:hidden">Copier</span>
+                    <img 
+                      src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/302.png" 
+                      alt="Binance" 
+                      className="w-5 h-5 mr-2"
+                    />
+                    Ouvrir Binance Pay
+                    <ExternalLink className="w-4 h-4 ml-2" />
                   </Button>
                 </div>
-              </div>
 
-              <div>
-                <label className="text-white font-medium mb-2 block">Montant exact à envoyer</label>
-                <div className="bg-terex-gray rounded-lg p-3 text-terex-accent font-bold text-lg w-full">
-                  {orderData.usdtAmount} USDT
+                <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 w-full">
+                  <h4 className="text-blue-200 font-medium mb-2">Comment procéder :</h4>
+                  <ol className="text-blue-100 text-sm space-y-1 list-decimal list-inside">
+                    <li>Cliquez sur "Ouvrir Binance Pay" ci-dessus</li>
+                    <li>Connectez-vous à votre compte Binance</li>
+                    <li>Envoyez {orderData.usdtAmount} USDT à l'ID : {TEREX_BINANCE_INFO.id}</li>
+                    <li>Confirmez le transfert</li>
+                    <li>Revenez ici et cliquez sur "USDT Envoyé"</li>
+                  </ol>
                 </div>
-              </div>
-            </div>
+              </>
+            ) : (
+              <>
+                <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 w-full">
+                  <div className="flex items-start space-x-3">
+                    <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
+                    <div className="space-y-2">
+                      <p className="text-amber-200 font-medium">Important !</p>
+                      <p className="text-amber-100 text-sm">
+                        Envoyez exactement <strong>{orderData.usdtAmount} USDT</strong> sur le réseau <strong>{getNetworkName()}</strong>. 
+                        Tout envoi incorrect pourrait retarder ou annuler votre transaction.
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 w-full">
-              <h4 className="text-blue-200 font-medium mb-2">Comment procéder :</h4>
-              <ol className="text-blue-100 text-sm space-y-1 list-decimal list-inside">
-                <li>Ouvrez votre portefeuille crypto (Trust Wallet, MetaMask, etc.)</li>
-                <li>Sélectionnez USDT sur le réseau {getNetworkName()}</li>
-                <li>Copiez l'adresse de destination ci-dessus</li>
-                <li>Envoyez exactement {orderData.usdtAmount} USDT</li>
-                <li>Revenez ici et cliquez sur "USDT Envoyé"</li>
-              </ol>
-            </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-white font-medium mb-2 block">Réseau à utiliser</label>
+                    <div className="bg-terex-gray rounded-lg p-3 w-full">
+                      <Badge variant="outline" className="text-terex-accent border-terex-accent">
+                        {getNetworkName()}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-white font-medium mb-2 block">Adresse de destination</label>
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                      <div className="bg-terex-gray rounded-lg p-3 flex-1 text-white font-mono text-sm break-all">
+                        {orderData.walletAddress}
+                      </div>
+                      <Button
+                        onClick={() => copyToClipboard(orderData.walletAddress)}
+                        size="sm"
+                        className="bg-terex-accent hover:bg-terex-accent/80 w-full sm:w-auto"
+                      >
+                        <Copy className="w-4 h-4 mr-2 sm:mr-0" />
+                        <span className="sm:hidden">Copier</span>
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-white font-medium mb-2 block">Montant exact à envoyer</label>
+                    <div className="bg-terex-gray rounded-lg p-3 text-terex-accent font-bold text-lg w-full">
+                      {orderData.usdtAmount} USDT
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 w-full">
+                  <h4 className="text-blue-200 font-medium mb-2">Comment procéder :</h4>
+                  <ol className="text-blue-100 text-sm space-y-1 list-decimal list-inside">
+                    <li>Ouvrez votre portefeuille crypto (Trust Wallet, MetaMask, etc.)</li>
+                    <li>Sélectionnez USDT sur le réseau {getNetworkName()}</li>
+                    <li>Copiez l'adresse de destination ci-dessus</li>
+                    <li>Envoyez exactement {orderData.usdtAmount} USDT</li>
+                    <li>Revenez ici et cliquez sur "USDT Envoyé"</li>
+                  </ol>
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
 
