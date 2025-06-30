@@ -20,7 +20,7 @@ export function BinancePayOption({ enabled, onToggle }: BinancePayOptionProps) {
           <div className="flex items-center space-x-3">
             {!imageError ? (
               <img 
-                src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" 
+                src="/lovable-uploads/72ce0703-a66b-4a87-869b-8e9b7a022eb4.png" 
                 alt="Binance" 
                 className="w-6 h-6 rounded"
                 onError={() => setImageError(true)}
