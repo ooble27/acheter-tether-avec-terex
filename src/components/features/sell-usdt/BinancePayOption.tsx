@@ -17,7 +17,7 @@ export function BinancePayOption({ enabled, onToggle }: BinancePayOptionProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <img 
-              src="/lovable-uploads/2962c334-a431-4aec-afc8-3057aedfb37f.png" 
+              src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/302.png" 
               alt="Binance" 
               className="w-6 h-6"
             />
