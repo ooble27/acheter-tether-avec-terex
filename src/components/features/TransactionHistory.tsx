@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -134,15 +135,15 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
   if (!transactions || transactions.length === 0) {
     return (
       <Card className="bg-terex-darker border-terex-gray">
-        <CardHeader>
-          <CardTitle className="text-white">Historique des transactions</CardTitle>
-          <CardDescription className="text-gray-400">
+        <CardHeader className={isMobile ? "p-4" : ""}>
+          <CardTitle className={`text-white ${isMobile ? "text-lg" : ""}`}>Historique des transactions</CardTitle>
+          <CardDescription className={`text-gray-400 ${isMobile ? "text-sm" : ""}`}>
             Consultez toutes vos transactions passées
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="text-center py-8">
-            <p className="text-gray-400">Aucune transaction pour le moment</p>
+        <CardContent className={isMobile ? "p-4 pt-0" : ""}>
+          <div className="text-center py-6">
+            <p className={`text-gray-400 ${isMobile ? "text-sm" : ""}`}>Aucune transaction pour le moment</p>
           </div>
         </CardContent>
       </Card>
@@ -151,11 +152,11 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
 
   if (isMobile) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-3">
         <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader>
-            <CardTitle className="text-white">Historique des transactions</CardTitle>
-            <CardDescription className="text-gray-400">
+          <CardHeader className="p-4 pb-2">
+            <CardTitle className="text-white text-lg">Historique des transactions</CardTitle>
+            <CardDescription className="text-gray-400 text-sm">
               Consultez toutes vos transactions passées
             </CardDescription>
           </CardHeader>
@@ -163,12 +164,12 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
 
         {transactions.map((transaction) => (
           <Card key={transaction.id} className="bg-terex-darker border-terex-gray">
-            <CardContent className="p-4">
-              <div className="space-y-3">
+            <CardContent className="p-3">
+              <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     {getTransactionIcon(transaction.type)}
-                    <span className={`font-medium ${getTransactionLabelColor(transaction.type)}`}>
+                    <span className={`font-medium text-sm ${getTransactionLabelColor(transaction.type)}`}>
                       {getTransactionLabel(transaction.type)}
                     </span>
                   </div>
@@ -178,50 +179,50 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Montant envoyé:</span>
-                    <span className="text-white">
+                <div className="space-y-1.5">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400 text-xs">Montant envoyé:</span>
+                    <span className="text-white text-sm font-medium">
                       {transaction.amount} {transaction.currency}
                     </span>
                   </div>
                   
                   {transaction.type === 'buy' && transaction.usdtAmount && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">USDT reçu:</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400 text-xs">USDT reçu:</span>
                       <div className="flex items-center space-x-1">
-                        <USDTLogo className="w-4 h-4" />
-                        <span className="text-terex-accent">{transaction.usdtAmount} USDT</span>
+                        <USDTLogo className="w-3 h-3" />
+                        <span className="text-terex-accent text-sm font-medium">{transaction.usdtAmount} USDT</span>
                       </div>
                     </div>
                   )}
 
                   {(transaction.type === 'sell' || transaction.type === 'transfer') && transaction.fiatAmount && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Montant reçu:</span>
-                      <span className="text-white">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400 text-xs">Montant reçu:</span>
+                      <span className="text-white text-sm font-medium">
                         {transaction.fiatAmount} {transaction.receiveCurrency}
                       </span>
                     </div>
                   )}
 
                   {transaction.type === 'transfer' && transaction.recipient_name && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Destinataire:</span>
-                      <span className="text-white">{transaction.recipient_name}</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400 text-xs">Destinataire:</span>
+                      <span className="text-white text-sm truncate max-w-[140px]">{transaction.recipient_name}</span>
                     </div>
                   )}
 
                   {transaction.type !== 'transfer' && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Réseau:</span>
-                      <span className="text-white">{transaction.network}</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400 text-xs">Réseau:</span>
+                      <span className="text-white text-sm">{transaction.network}</span>
                     </div>
                   )}
 
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Date:</span>
-                    <span className="text-white text-sm">{formatDate(transaction.date)}</span>
+                  <div className="flex justify-between items-center pt-1 border-t border-terex-gray/30">
+                    <span className="text-gray-400 text-xs">Date:</span>
+                    <span className="text-white text-xs">{formatDate(transaction.date)}</span>
                   </div>
                 </div>
               </div>
