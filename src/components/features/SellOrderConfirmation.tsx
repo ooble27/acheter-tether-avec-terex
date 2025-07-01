@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -48,7 +49,7 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
 
   return (
     <div className="min-h-screen bg-terex-dark p-1 md:p-4">
-      <div className="w-full max-w-5xl mx-auto px-1 md:px-0">
+      <div className="w-full max-w-5xl md:max-w-4xl mx-auto px-1 md:px-2">
         <div className="mb-6">
           <Button
             variant="ghost"
