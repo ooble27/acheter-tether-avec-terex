@@ -17,7 +17,7 @@ export function DestinationSelector({ destination, setDestination }: Destination
           <RadioGroupItem value="wallet" id="wallet" className="text-terex-accent" />
           <div className="flex items-center space-x-2 flex-1">
             <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-md flex items-center justify-center">
-              <Wallet className="w-4 h-4 text-white" />
+              <Wallet className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
             </div>
             <div>
               <Label htmlFor="wallet" className="text-white font-medium cursor-pointer">
