@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -76,13 +75,13 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
   const getTransactionIcon = (type: string) => {
     switch (type) {
       case 'buy':
-        return <ArrowDown className="w-4 h-4 text-green-600" />;
+        return <ArrowDown className="w-4 h-4 text-terex-accent" />;
       case 'sell':
         return <ArrowUp className="w-4 h-4 text-red-600" />;
       case 'transfer':
         return <Send className="w-4 h-4 text-orange-600" />;
       default:
-        return <ArrowDown className="w-4 h-4 text-green-600" />;
+        return <ArrowDown className="w-4 h-4 text-terex-accent" />;
     }
   };
 
@@ -102,13 +101,13 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
   const getTransactionLabelColor = (type: string) => {
     switch (type) {
       case 'buy':
-        return 'text-green-600';
+        return 'text-terex-accent';
       case 'sell':
         return 'text-red-600';
       case 'transfer':
         return 'text-orange-600';
       default:
-        return 'text-green-600';
+        return 'text-terex-accent';
     }
   };
 
