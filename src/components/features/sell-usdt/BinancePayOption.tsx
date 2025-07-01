@@ -38,7 +38,7 @@ export function BinancePayOption({ enabled, onToggle }: BinancePayOptionProps) {
           <Switch
             checked={enabled}
             onCheckedChange={onToggle}
-            className="data-[state=checked]:bg-terex-accent"
+            className="data-[state=checked]:bg-terex-accent data-[state=unchecked]:bg-gray-600 border-2 border-gray-500 data-[state=checked]:border-terex-accent shadow-lg"
           />
         </div>
         
