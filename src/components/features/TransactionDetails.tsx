@@ -1,8 +1,10 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Eye, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Transaction {
   id: string;
@@ -34,6 +36,8 @@ const USDTLogo = ({ className }: { className?: string }) => (
 );
 
 export function TransactionDetails({ transaction }: TransactionDetailsProps) {
+  const isMobile = useIsMobile();
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
@@ -87,6 +91,124 @@ export function TransactionDetails({ transaction }: TransactionDetailsProps) {
     }
   };
 
+  const detailsContent = (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <span className="text-gray-400">ID Transaction:</span>
+        <span className="text-white text-sm">{transaction.id.slice(0, 8)}...</span>
+      </div>
+
+      <div className="flex justify-between items-center">
+        <span className="text-gray-400">Type:</span>
+        <span className={`font-medium ${
+          transaction.type === 'buy' ? 'text-terex-accent' : 
+          transaction.type === 'sell' ? 'text-red-400' : 
+          'text-orange-400'
+        }`}>
+          {transaction.type === 'buy' ? 'Achat' : 
+           transaction.type === 'sell' ? 'Vente' : 
+           'Transfert'}
+        </span>
+      </div>
+
+      <div className="flex justify-between items-center">
+        <span className="text-gray-400">Montant envoyé:</span>
+        <span className="text-white">
+          {transaction.amount} {transaction.currency}
+        </span>
+      </div>
+
+      {transaction.type === 'buy' && transaction.usdtAmount && (
+        <div className="flex justify-between items-center">
+          <span className="text-gray-400">USDT reçu:</span>
+          <div className="flex items-center space-x-1">
+            <USDTLogo className="w-4 h-4" />
+            <span className="text-terex-accent">{transaction.usdtAmount} USDT</span>
+          </div>
+        </div>
+      )}
+
+      {(transaction.type === 'sell' || transaction.type === 'transfer') && transaction.fiatAmount && (
+        <div className="flex justify-between items-center">
+          <span className="text-gray-400">Montant reçu:</span>
+          <span className="text-white">
+            {transaction.fiatAmount} {transaction.receiveCurrency}
+          </span>
+        </div>
+      )}
+
+      {transaction.recipient_name && (
+        <div className="flex justify-between items-center">
+          <span className="text-gray-400">Destinataire:</span>
+          <span className="text-white">{transaction.recipient_name}</span>
+        </div>
+      )}
+
+      {transaction.recipient_phone && (
+        <div className="flex justify-between items-center">
+          <span className="text-gray-400">Téléphone:</span>
+          <span className="text-white">{transaction.recipient_phone}</span>
+        </div>
+      )}
+
+      {transaction.payment_method && (
+        <div className="flex justify-between items-center">
+          <span className="text-gray-400">Méthode de paiement:</span>
+          <span className="text-white">{transaction.payment_method}</span>
+        </div>
+      )}
+
+      {transaction.type !== 'transfer' && (
+        <div className="flex justify-between items-center">
+          <span className="text-gray-400">Réseau:</span>
+          <span className="text-white">{transaction.network}</span>
+        </div>
+      )}
+
+      {transaction.address && (
+        <div className="flex justify-between items-start">
+          <span className="text-gray-400">Adresse:</span>
+          <span className="text-white text-xs text-right max-w-[200px] break-all">
+            {transaction.address}
+          </span>
+        </div>
+      )}
+
+      <div className="flex justify-between items-center">
+        <span className="text-gray-400">Statut:</span>
+        {getStatusBadge(transaction.status)}
+      </div>
+
+      <div className="flex justify-between items-center">
+        <span className="text-gray-400">Date:</span>
+        <span className="text-white text-sm">{formatDate(transaction.date)}</span>
+      </div>
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant="ghost" size="sm" className="text-terex-accent hover:bg-terex-gray/20">
+            <Eye className="w-4 h-4" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent 
+          side="bottom" 
+          className="bg-terex-darker border-terex-gray rounded-t-3xl border-t-2 border-x-2 border-b-0 max-h-[85vh] overflow-y-auto"
+        >
+          <SheetHeader className="pb-4">
+            <SheetTitle className="text-white text-center">Détails de la transaction</SheetTitle>
+          </SheetHeader>
+          <div className="px-2">
+            {detailsContent}
+          </div>
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -98,99 +220,7 @@ export function TransactionDetails({ transaction }: TransactionDetailsProps) {
         <DialogHeader>
           <DialogTitle className="text-white">Détails de la transaction</DialogTitle>
         </DialogHeader>
-        
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-gray-400">ID Transaction:</span>
-            <span className="text-white text-sm">{transaction.id.slice(0, 8)}...</span>
-          </div>
-
-          <div className="flex justify-between items-center">
-            <span className="text-gray-400">Type:</span>
-            <span className={`font-medium ${
-              transaction.type === 'buy' ? 'text-green-400' : 
-              transaction.type === 'sell' ? 'text-red-400' : 
-              'text-blue-400'
-            }`}>
-              {transaction.type === 'buy' ? 'Achat' : 
-               transaction.type === 'sell' ? 'Vente' : 
-               'Transfert'}
-            </span>
-          </div>
-
-          <div className="flex justify-between items-center">
-            <span className="text-gray-400">Montant envoyé:</span>
-            <span className="text-white">
-              {transaction.amount} {transaction.currency}
-            </span>
-          </div>
-
-          {transaction.type === 'buy' && transaction.usdtAmount && (
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">USDT reçu:</span>
-              <div className="flex items-center space-x-1">
-                <USDTLogo className="w-4 h-4" />
-                <span className="text-terex-accent">{transaction.usdtAmount} USDT</span>
-              </div>
-            </div>
-          )}
-
-          {(transaction.type === 'sell' || transaction.type === 'transfer') && transaction.fiatAmount && (
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Montant reçu:</span>
-              <span className="text-white">
-                {transaction.fiatAmount} {transaction.receiveCurrency}
-              </span>
-            </div>
-          )}
-
-          {transaction.recipient_name && (
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Destinataire:</span>
-              <span className="text-white">{transaction.recipient_name}</span>
-            </div>
-          )}
-
-          {transaction.recipient_phone && (
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Téléphone:</span>
-              <span className="text-white">{transaction.recipient_phone}</span>
-            </div>
-          )}
-
-          {transaction.payment_method && (
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Méthode de paiement:</span>
-              <span className="text-white">{transaction.payment_method}</span>
-            </div>
-          )}
-
-          {transaction.type !== 'transfer' && (
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Réseau:</span>
-              <span className="text-white">{transaction.network}</span>
-            </div>
-          )}
-
-          {transaction.address && (
-            <div className="flex justify-between items-start">
-              <span className="text-gray-400">Adresse:</span>
-              <span className="text-white text-xs text-right max-w-[200px] break-all">
-                {transaction.address}
-              </span>
-            </div>
-          )}
-
-          <div className="flex justify-between items-center">
-            <span className="text-gray-400">Statut:</span>
-            {getStatusBadge(transaction.status)}
-          </div>
-
-          <div className="flex justify-between items-center">
-            <span className="text-gray-400">Date:</span>
-            <span className="text-white text-sm">{formatDate(transaction.date)}</span>
-          </div>
-        </div>
+        {detailsContent}
       </DialogContent>
     </Dialog>
   );
