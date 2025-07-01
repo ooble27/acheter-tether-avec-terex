@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { CircleDollarSign, ArrowUp, ArrowDown, ArrowLeftRight, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { ArrowUp, ArrowDown, ArrowLeftRight, Clock, CheckCircle, XCircle } from 'lucide-react';
 
 interface Transaction {
   id: string;
@@ -26,22 +26,48 @@ interface TransactionHistoryProps {
   transactions: Transaction[];
 }
 
+// Logo USDT component
+const USDTLogo = ({ className }: { className?: string }) => (
+  <img 
+    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
+    alt="USDT"
+    className={className}
+  />
+);
+
 export function TransactionHistory({ transactions = [] }: TransactionHistoryProps) {
   const isMobile = useIsMobile();
 
   const getStatusBadge = (status: string) => {
-    const statusConfig = {
-      pending: { label: 'En attente', variant: 'secondary', icon: Clock },
-      confirmed: { label: 'Confirmée', variant: 'default', icon: CheckCircle },
-      completed: { label: 'Terminée', variant: 'default', icon: CheckCircle },
-      failed: { label: 'Échouée', variant: 'destructive', icon: XCircle },
+    // Configuration avec valeurs par défaut pour éviter les erreurs
+    let config = {
+      label: 'Inconnu',
+      variant: 'secondary' as const,
+      icon: Clock
     };
 
-    const config = statusConfig[status as keyof typeof statusConfig];
+    switch (status) {
+      case 'pending':
+        config = { label: 'En attente', variant: 'secondary' as const, icon: Clock };
+        break;
+      case 'confirmed':
+        config = { label: 'Confirmée', variant: 'default' as const, icon: CheckCircle };
+        break;
+      case 'completed':
+        config = { label: 'Terminée', variant: 'default' as const, icon: CheckCircle };
+        break;
+      case 'failed':
+        config = { label: 'Échouée', variant: 'destructive' as const, icon: XCircle };
+        break;
+      default:
+        config = { label: status, variant: 'secondary' as const, icon: Clock };
+        break;
+    }
+
     const Icon = config.icon;
 
     return (
-      <Badge variant={config.variant as any} className="flex items-center space-x-1">
+      <Badge variant={config.variant} className="flex items-center space-x-1">
         <Icon className="w-3 h-3" />
         <span>{config.label}</span>
       </Badge>
@@ -53,7 +79,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
       case 'buy':
         return <ArrowDown className="w-4 h-4 text-green-500" />;
       case 'sell':
-        return <ArrowUp className="w-4 h-4 text-blue-500" />;
+        return <ArrowUp className="w-4 h-4 text-red-500" />;
       case 'transfer':
         return <ArrowLeftRight className="w-4 h-4 text-purple-500" />;
       default:
@@ -71,6 +97,19 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
         return 'Transfert';
       default:
         return 'Achat';
+    }
+  };
+
+  const getTransactionLabelColor = (type: string) => {
+    switch (type) {
+      case 'buy':
+        return 'text-green-500';
+      case 'sell':
+        return 'text-red-500';
+      case 'transfer':
+        return 'text-purple-500';
+      default:
+        return 'text-green-500';
     }
   };
 
@@ -123,7 +162,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     {getTransactionIcon(transaction.type)}
-                    <span className="text-white font-medium">
+                    <span className={`font-medium ${getTransactionLabelColor(transaction.type)}`}>
                       {getTransactionLabel(transaction.type)}
                     </span>
                   </div>
@@ -142,7 +181,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                     <div className="flex justify-between">
                       <span className="text-gray-400">USDT reçu:</span>
                       <div className="flex items-center space-x-1">
-                        <CircleDollarSign className="w-4 h-4 text-terex-accent" />
+                        <USDTLogo className="w-4 h-4" />
                         <span className="text-terex-accent">{transaction.usdtAmount} USDT</span>
                       </div>
                     </div>
@@ -215,7 +254,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                 <TableCell>
                   <div className="flex items-center space-x-2">
                     {getTransactionIcon(transaction.type)}
-                    <span className="text-white">
+                    <span className={getTransactionLabelColor(transaction.type)}>
                       {getTransactionLabel(transaction.type)}
                     </span>
                   </div>
@@ -226,7 +265,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                 <TableCell>
                   {transaction.type === 'buy' && transaction.usdtAmount ? (
                     <div className="flex items-center space-x-1">
-                      <CircleDollarSign className="w-4 h-4 text-terex-accent" />
+                      <USDTLogo className="w-4 h-4" />
                       <span className="text-terex-accent">{transaction.usdtAmount} USDT</span>
                     </div>
                   ) : transaction.fiatAmount ? (
