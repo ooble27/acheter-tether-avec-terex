@@ -94,8 +94,8 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-      <div className="w-full max-w-4xl mx-auto px-2 md:px-0">
+    <div className="min-h-screen bg-terex-dark p-1 md:p-4">
+      <div className="w-full max-w-5xl mx-auto px-1 md:px-0">
         <div className="mb-6">
           <Button
             variant="ghost"
@@ -110,7 +110,7 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
         </div>
 
         {/* Récapitulatif de la commande */}
-        <Card className="bg-terex-darker border-terex-gray mb-6 w-full">
+        <Card className="bg-terex-darker border-terex-gray mb-6 w-full mx-1 md:mx-0">
           <CardHeader className="pb-4 p-4 md:p-6">
             <CardTitle className="text-white flex items-center text-lg md:text-xl">
               <Wallet className="w-5 h-5 mr-2 text-terex-accent" />
@@ -164,7 +164,7 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
         </Card>
 
         {/* Instructions d'envoi */}
-        <Card className="bg-terex-darker border-terex-gray mb-6 w-full">
+        <Card className="bg-terex-darker border-terex-gray mb-6 w-full mx-1 md:mx-0">
           <CardHeader className="pb-4 p-4 md:p-6">
             <CardTitle className="text-white flex items-center text-lg md:text-xl">
               <Send className="w-5 h-5 mr-2 text-terex-accent" />
@@ -323,7 +323,7 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
         </Card>
 
         {/* Bouton de confirmation */}
-        <Card className="bg-terex-darker border-terex-gray w-full">
+        <Card className="bg-terex-darker border-terex-gray w-full mx-1 md:mx-0">
           <CardHeader className="pb-4 p-4 md:p-6">
             <CardTitle className="text-white flex items-center text-lg md:text-xl">
               <CheckCircle className="w-5 h-5 mr-2 text-terex-accent" />
