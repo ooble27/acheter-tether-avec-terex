@@ -2,8 +2,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { TransactionDetails } from './TransactionDetails';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ArrowUp, ArrowDown, ArrowLeftRight, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { ArrowUp, ArrowDown, Send, Clock, CheckCircle, XCircle } from 'lucide-react';
 
 interface Transaction {
   id: string;
@@ -75,13 +76,13 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
   const getTransactionIcon = (type: string) => {
     switch (type) {
       case 'buy':
-        return <ArrowDown className="w-4 h-4 text-green-500" />;
+        return <ArrowDown className="w-4 h-4 text-green-600" />;
       case 'sell':
-        return <ArrowUp className="w-4 h-4 text-red-500" />;
+        return <ArrowUp className="w-4 h-4 text-red-600" />;
       case 'transfer':
-        return <ArrowLeftRight className="w-4 h-4 text-purple-500" />;
+        return <Send className="w-4 h-4 text-blue-600" />;
       default:
-        return <ArrowDown className="w-4 h-4 text-green-500" />;
+        return <ArrowDown className="w-4 h-4 text-green-600" />;
     }
   };
 
@@ -101,13 +102,13 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
   const getTransactionLabelColor = (type: string) => {
     switch (type) {
       case 'buy':
-        return 'text-green-500';
+        return 'text-green-600';
       case 'sell':
-        return 'text-red-500';
+        return 'text-red-600';
       case 'transfer':
-        return 'text-purple-500';
+        return 'text-blue-600';
       default:
-        return 'text-green-500';
+        return 'text-green-600';
     }
   };
 
@@ -172,18 +173,18 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                       {getTransactionLabel(transaction.type)}
                     </span>
                   </div>
-                  {getStatusBadge(transaction.status)}
+                  <div className="flex items-center space-x-2">
+                    {getStatusBadge(transaction.status)}
+                    <TransactionDetails transaction={transaction} />
+                  </div>
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Montant:</span>
-                    <div className="flex items-center space-x-1">
-                      <USDTLogo className="w-4 h-4" />
-                      <span className="text-white">
-                        {transaction.amount} {transaction.currency}
-                      </span>
-                    </div>
+                    <span className="text-gray-400">Montant envoyé:</span>
+                    <span className="text-white">
+                      {transaction.amount} {transaction.currency}
+                    </span>
                   </div>
                   
                   {transaction.type === 'buy' && transaction.usdtAmount && (
@@ -199,12 +200,9 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                   {(transaction.type === 'sell' || transaction.type === 'transfer') && transaction.fiatAmount && (
                     <div className="flex justify-between">
                       <span className="text-gray-400">Montant reçu:</span>
-                      <div className="flex items-center space-x-1">
-                        <USDTLogo className="w-4 h-4" />
-                        <span className="text-white">
-                          {transaction.fiatAmount} {transaction.receiveCurrency}
-                        </span>
-                      </div>
+                      <span className="text-white">
+                        {transaction.fiatAmount} {transaction.receiveCurrency}
+                      </span>
                     </div>
                   )}
 
@@ -215,15 +213,10 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                     </div>
                   )}
 
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Réseau:</span>
-                    <span className="text-white">{transaction.network}</span>
-                  </div>
-
-                  {transaction.address && (
+                  {transaction.type !== 'transfer' && (
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Adresse:</span>
-                      <span className="text-white text-xs">{transaction.address}</span>
+                      <span className="text-gray-400">Réseau:</span>
+                      <span className="text-white">{transaction.network}</span>
                     </div>
                   )}
 
@@ -253,11 +246,12 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
           <TableHeader>
             <TableRow className="border-terex-gray">
               <TableHead className="text-gray-300">Type</TableHead>
-              <TableHead className="text-gray-300">Montant</TableHead>
-              <TableHead className="text-gray-300">USDT/Reçu</TableHead>
-              <TableHead className="text-gray-300">Réseau</TableHead>
+              <TableHead className="text-gray-300">Montant envoyé</TableHead>
+              <TableHead className="text-gray-300">Reçu</TableHead>
+              <TableHead className="text-gray-300">Détails</TableHead>
               <TableHead className="text-gray-300">Statut</TableHead>
               <TableHead className="text-gray-300">Date</TableHead>
+              <TableHead className="text-gray-300">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -272,12 +266,9 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center space-x-1">
-                    <USDTLogo className="w-4 h-4" />
-                    <span className="text-white">
-                      {transaction.amount} {transaction.currency}
-                    </span>
-                  </div>
+                  <span className="text-white">
+                    {transaction.amount} {transaction.currency}
+                  </span>
                 </TableCell>
                 <TableCell>
                   {transaction.type === 'buy' && transaction.usdtAmount ? (
@@ -286,17 +277,23 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                       <span className="text-terex-accent">{transaction.usdtAmount} USDT</span>
                     </div>
                   ) : transaction.fiatAmount ? (
-                    <div className="flex items-center space-x-1">
-                      <USDTLogo className="w-4 h-4" />
-                      <span className="text-white">{transaction.fiatAmount} {transaction.receiveCurrency}</span>
-                    </div>
+                    <span className="text-white">{transaction.fiatAmount} {transaction.receiveCurrency}</span>
                   ) : (
                     <span className="text-gray-400">-</span>
                   )}
                 </TableCell>
-                <TableCell className="text-white">{transaction.network}</TableCell>
+                <TableCell className="text-white text-sm">
+                  {transaction.type === 'transfer' && transaction.recipient_name ? 
+                    transaction.recipient_name : 
+                    transaction.type !== 'transfer' ? transaction.network : 
+                    'Transfert'
+                  }
+                </TableCell>
                 <TableCell>{getStatusBadge(transaction.status)}</TableCell>
                 <TableCell className="text-white text-sm">{formatDate(transaction.date)}</TableCell>
+                <TableCell>
+                  <TransactionDetails transaction={transaction} />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
