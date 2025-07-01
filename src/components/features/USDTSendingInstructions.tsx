@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,11 +25,11 @@ interface USDTSendingInstructionsProps {
   onUSDTSent: () => void;
 }
 
-// Informations Binance de TEREX (à configurer avec vos vraies informations)
+// Informations Binance de TEREX
 const TEREX_BINANCE_INFO = {
-  email: 'votre-email-binance@example.com',
-  id: 'VOTRE_BINANCE_ID',
-  payId: 'VOTRE_BINANCE_PAY_ID'
+  email: 'lomohamed834@gmail.com',
+  id: '450715599',
+  payId: '450715599'
 };
 
 export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTSendingInstructionsProps) {
@@ -110,7 +109,6 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
           <p className="text-gray-400 text-sm md:text-base">Suivez ces étapes pour finaliser votre vente</p>
         </div>
 
-        {/* Récapitulatif de la commande */}
         <Card className="bg-terex-darker border-terex-gray mb-6 w-full mx-1 md:mx-0">
           <CardHeader className="pb-4 p-4 md:p-6">
             <CardTitle className="text-white flex items-center text-lg md:text-xl">
@@ -164,7 +162,6 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
           </CardContent>
         </Card>
 
-        {/* Instructions d'envoi */}
         <Card className="bg-terex-darker border-terex-gray mb-6 w-full mx-1 md:mx-0">
           <CardHeader className="pb-4 p-4 md:p-6">
             <CardTitle className="text-white flex items-center text-lg md:text-xl">
@@ -323,7 +320,6 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
           </CardContent>
         </Card>
 
-        {/* Bouton de confirmation */}
         <Card className="bg-terex-darker border-terex-gray w-full mx-1 md:mx-0">
           <CardHeader className="pb-4 p-4 md:p-6">
             <CardTitle className="text-white flex items-center text-lg md:text-xl">
