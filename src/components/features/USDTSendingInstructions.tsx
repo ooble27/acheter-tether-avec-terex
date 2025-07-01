@@ -65,19 +65,22 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
   };
 
   const handleBinanceRedirect = () => {
-    const binanceUrl = `https://www.binance.com/fr/pay/checkout?merchantCode=${TEREX_BINANCE_INFO.payId}&amount=${orderData.usdtAmount}&currency=USDT`;
+    // Redirection vers la page Binance Pay officielle
+    const binancePayUrl = 'https://www.binance.com/en/pay';
     
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     if (isMobile) {
-      const binanceAppUrl = `binance://pay?to=${TEREX_BINANCE_INFO.payId}&amount=${orderData.usdtAmount}&asset=USDT`;
+      // Essayer d'ouvrir l'app Binance si elle est installée
+      const binanceAppUrl = 'binance://pay';
       window.location.href = binanceAppUrl;
       
+      // Fallback vers le navigateur après 2 secondes
       setTimeout(() => {
-        window.open(binanceUrl, '_blank');
+        window.open(binancePayUrl, '_blank');
       }, 2000);
     } else {
-      window.open(binanceUrl, '_blank');
+      window.open(binancePayUrl, '_blank');
     }
   };
 
@@ -222,7 +225,7 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
                   <Button
                     onClick={handleBinanceRedirect}
                     size="lg"
-                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold h-12 text-lg"
+                    className="w-full bg-terex-accent hover:bg-terex-accent/80 text-white font-semibold h-12 text-lg"
                   >
                     {!imageError ? (
                       <img 
