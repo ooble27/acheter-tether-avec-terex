@@ -1,6 +1,7 @@
 
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Wallet } from 'lucide-react';
 
 interface DestinationSelectorProps {
   destination: 'wallet' | 'binance';
@@ -16,7 +17,7 @@ export function DestinationSelector({ destination, setDestination }: Destination
           <RadioGroupItem value="wallet" id="wallet" className="text-terex-accent" />
           <div className="flex items-center space-x-2 flex-1">
             <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-md flex items-center justify-center">
-              <span className="text-white text-xs font-bold">W</span>
+              <Wallet className="w-4 h-4 text-white" />
             </div>
             <div>
               <Label htmlFor="wallet" className="text-white font-medium cursor-pointer">
