@@ -17,6 +17,7 @@ import { SecurityPolicy } from '@/components/features/SecurityPolicy';
 import { TermsOfService } from '@/components/features/TermsOfService';
 import { AboutTerex } from '@/components/features/AboutTerex';
 import { AIAssistantWidget } from '@/components/features/AIAssistantWidget';
+import { TransactionHistoryPage } from '@/components/features/TransactionHistoryPage';
 import { NotificationPermissionPrompt } from '@/components/notifications/NotificationPermissionPrompt';
 import { TransactionProvider } from '@/contexts/TransactionContext';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -68,6 +69,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         return <SellUSDT />;
       case 'transfer':
         return <InternationalTransfer />;
+      case 'history':
+        return <TransactionHistoryPage />;
       case 'profile':
         return <Profile user={user} onLogout={handleLogout} />;
       case 'kyc':
