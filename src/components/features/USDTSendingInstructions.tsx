@@ -65,22 +65,22 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
   };
 
   const handleBinanceRedirect = () => {
-    // Redirection vers la page Binance Pay officielle
-    const binancePayUrl = 'https://www.binance.com/en/pay';
+    // Redirection vers la page d'accueil de Binance
+    const binanceUrl = 'https://www.binance.com';
     
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     if (isMobile) {
       // Essayer d'ouvrir l'app Binance si elle est installée
-      const binanceAppUrl = 'binance://pay';
+      const binanceAppUrl = 'binance://';
       window.location.href = binanceAppUrl;
       
       // Fallback vers le navigateur après 2 secondes
       setTimeout(() => {
-        window.open(binancePayUrl, '_blank');
+        window.open(binanceUrl, '_blank');
       }, 2000);
     } else {
-      window.open(binancePayUrl, '_blank');
+      window.open(binanceUrl, '_blank');
     }
   };
 
