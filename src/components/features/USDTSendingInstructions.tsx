@@ -65,22 +65,24 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
   };
 
   const handleBinanceRedirect = () => {
-    // Redirection vers la page d'accueil de Binance
-    const binanceUrl = 'https://www.binance.com';
-    
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     if (isMobile) {
-      // Essayer d'ouvrir l'app Binance si elle est installée
-      const binanceAppUrl = 'binance://';
-      window.location.href = binanceAppUrl;
+      // Essayer d'ouvrir l'app Binance directement
+      window.location.href = 'binance://';
       
-      // Fallback vers le navigateur après 2 secondes
+      // Fallback vers le store approprié si l'app n'est pas installée
       setTimeout(() => {
-        window.open(binanceUrl, '_blank');
-      }, 2000);
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        if (isIOS) {
+          window.open('https://apps.apple.com/app/binance-buy-bitcoin-crypto/id1436799971', '_blank');
+        } else {
+          window.open('https://play.google.com/store/apps/details?id=com.binance.dev', '_blank');
+        }
+      }, 1000);
     } else {
-      window.open(binanceUrl, '_blank');
+      // Sur desktop, ouvrir Binance dans le navigateur
+      window.open('https://www.binance.com', '_blank');
     }
   };
 
