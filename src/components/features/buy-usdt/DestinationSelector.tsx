@@ -1,7 +1,6 @@
 
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Wallet } from 'lucide-react';
 
 interface DestinationSelectorProps {
   destination: 'wallet' | 'binance';
@@ -16,9 +15,11 @@ export function DestinationSelector({ destination, setDestination }: Destination
         <div className="flex items-center space-x-3 p-3 border border-terex-gray-light rounded-lg hover:border-terex-accent/50 transition-colors">
           <RadioGroupItem value="wallet" id="wallet" className="text-terex-accent" />
           <div className="flex items-center space-x-2 flex-1">
-            <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-md flex items-center justify-center">
-              <Wallet className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-            </div>
+            <img 
+              src="https://cdn-icons-png.flaticon.com/512/1168/1168610.png" 
+              alt="Wallet" 
+              className="w-6 h-6"
+            />
             <div>
               <Label htmlFor="wallet" className="text-white font-medium cursor-pointer">
                 Mon portefeuille personnel
