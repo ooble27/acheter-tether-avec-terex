@@ -80,7 +80,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
       case 'sell':
         return <ArrowUp className="w-4 h-4 text-red-600" />;
       case 'transfer':
-        return <Send className="w-4 h-4 text-blue-600" />;
+        return <Send className="w-4 h-4 text-orange-600" />;
       default:
         return <ArrowDown className="w-4 h-4 text-green-600" />;
     }
@@ -106,7 +106,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
       case 'sell':
         return 'text-red-600';
       case 'transfer':
-        return 'text-blue-600';
+        return 'text-orange-600';
       default:
         return 'text-green-600';
     }
