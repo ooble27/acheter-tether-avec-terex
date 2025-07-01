@@ -16,7 +16,7 @@ export function DestinationSelector({ destination, setDestination }: Destination
           <RadioGroupItem value="wallet" id="wallet" className="text-terex-accent" />
           <div className="flex items-center space-x-2 flex-1">
             <img 
-              src="/lovable-uploads/864b9cf2-9cbb-4d58-a0b8-606dd1bd76fc.png" 
+              src="/lovable-uploads/fd6ef582-8a7f-41bf-8fe3-9492808d66fb.png" 
               alt="Wallet" 
               className="w-6 h-6"
             />
