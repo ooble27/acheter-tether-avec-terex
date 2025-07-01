@@ -39,39 +39,37 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
   const isMobile = useIsMobile();
 
   const getStatusBadge = (status: string) => {
-    // Configuration avec valeurs par défaut pour éviter les erreurs
-    let config = {
-      label: 'Inconnu',
-      variant: 'secondary' as const,
-      icon: Clock
-    };
-
     switch (status) {
       case 'pending':
-        config = { label: 'En attente', variant: 'secondary' as const, icon: Clock };
-        break;
+        return (
+          <Badge variant="secondary" className="flex items-center space-x-1">
+            <Clock className="w-3 h-3" />
+            <span>En attente</span>
+          </Badge>
+        );
       case 'confirmed':
-        config = { label: 'Confirmée', variant: 'default' as const, icon: CheckCircle };
-        break;
       case 'completed':
-        config = { label: 'Terminée', variant: 'default' as const, icon: CheckCircle };
-        break;
+        return (
+          <Badge variant="outline" className="flex items-center space-x-1 border-green-500 text-green-500">
+            <CheckCircle className="w-3 h-3" />
+            <span>Confirmée</span>
+          </Badge>
+        );
       case 'failed':
-        config = { label: 'Échouée', variant: 'destructive' as const, icon: XCircle };
-        break;
+        return (
+          <Badge variant="outline" className="flex items-center space-x-1 border-red-500 text-red-500">
+            <XCircle className="w-3 h-3" />
+            <span>Échouée</span>
+          </Badge>
+        );
       default:
-        config = { label: status, variant: 'secondary' as const, icon: Clock };
-        break;
+        return (
+          <Badge variant="secondary" className="flex items-center space-x-1">
+            <Clock className="w-3 h-3" />
+            <span>{status}</span>
+          </Badge>
+        );
     }
-
-    const Icon = config.icon;
-
-    return (
-      <Badge variant={config.variant} className="flex items-center space-x-1">
-        <Icon className="w-3 h-3" />
-        <span>{config.label}</span>
-      </Badge>
-    );
   };
 
   const getTransactionIcon = (type: string) => {
@@ -114,14 +112,22 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
   };
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return 'Date invalide';
+      }
+      return date.toLocaleString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      console.error('Erreur formatage date:', error);
+      return 'Date invalide';
+    }
   };
 
   // Handle empty transactions
@@ -172,9 +178,12 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-gray-400">Montant:</span>
-                    <span className="text-white">
-                      {transaction.amount} {transaction.currency}
-                    </span>
+                    <div className="flex items-center space-x-1">
+                      <USDTLogo className="w-4 h-4" />
+                      <span className="text-white">
+                        {transaction.amount} {transaction.currency}
+                      </span>
+                    </div>
                   </div>
                   
                   {transaction.type === 'buy' && transaction.usdtAmount && (
@@ -190,9 +199,12 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                   {(transaction.type === 'sell' || transaction.type === 'transfer') && transaction.fiatAmount && (
                     <div className="flex justify-between">
                       <span className="text-gray-400">Montant reçu:</span>
-                      <span className="text-white">
-                        {transaction.fiatAmount} {transaction.receiveCurrency}
-                      </span>
+                      <div className="flex items-center space-x-1">
+                        <USDTLogo className="w-4 h-4" />
+                        <span className="text-white">
+                          {transaction.fiatAmount} {transaction.receiveCurrency}
+                        </span>
+                      </div>
                     </div>
                   )}
 
@@ -259,8 +271,13 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                     </span>
                   </div>
                 </TableCell>
-                <TableCell className="text-white">
-                  {transaction.amount} {transaction.currency}
+                <TableCell>
+                  <div className="flex items-center space-x-1">
+                    <USDTLogo className="w-4 h-4" />
+                    <span className="text-white">
+                      {transaction.amount} {transaction.currency}
+                    </span>
+                  </div>
                 </TableCell>
                 <TableCell>
                   {transaction.type === 'buy' && transaction.usdtAmount ? (
@@ -269,7 +286,10 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                       <span className="text-terex-accent">{transaction.usdtAmount} USDT</span>
                     </div>
                   ) : transaction.fiatAmount ? (
-                    <span className="text-white">{transaction.fiatAmount} {transaction.receiveCurrency}</span>
+                    <div className="flex items-center space-x-1">
+                      <USDTLogo className="w-4 h-4" />
+                      <span className="text-white">{transaction.fiatAmount} {transaction.receiveCurrency}</span>
+                    </div>
                   ) : (
                     <span className="text-gray-400">-</span>
                   )}
