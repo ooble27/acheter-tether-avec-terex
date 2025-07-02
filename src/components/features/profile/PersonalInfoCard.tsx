@@ -95,8 +95,8 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
       <CardHeader className="bg-gradient-to-r from-terex-accent/10 to-transparent border-b border-terex-gray/30 rounded-t-xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <div className="w-10 h-10 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-xl flex items-center justify-center mr-3">
-              <User className="w-5 h-5 text-white" />
+            <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-xl flex items-center justify-center mr-3">
+              <User className="w-6 h-6 md:w-7 md:h-7 text-white" />
             </div>
             <div>
               <CardTitle className="text-white">Informations personnelles</CardTitle>

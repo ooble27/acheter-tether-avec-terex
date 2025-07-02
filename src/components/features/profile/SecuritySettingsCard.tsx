@@ -68,8 +68,8 @@ export function SecuritySettingsCard({ onStartKYC, kycData, isKYCVerified }: Sec
     <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/30 shadow-2xl backdrop-blur-sm">
       <CardHeader className="bg-gradient-to-r from-terex-accent/10 to-transparent border-b border-terex-gray/30 rounded-t-xl">
         <CardTitle className="text-white flex items-center">
-          <div className="w-10 h-10 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-xl flex items-center justify-center mr-3">
-            <Shield className="w-5 h-5 text-white" />
+          <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-xl flex items-center justify-center mr-3">
+            <Shield className="w-6 h-6 md:w-7 md:h-7 text-white" />
           </div>
           <div>
             <div className="text-white">Sécurité & Vérification</div>
