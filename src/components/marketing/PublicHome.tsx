@@ -1,4 +1,5 @@
 
+
 import { Button } from '@/components/ui/button';
 import { HeroSection } from './HeroSection';
 import { TestimonialsSection } from './TestimonialsSection';
@@ -117,7 +118,7 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
           {/* Image du Trezor Safe 5 en PNG pur */}
           <div className="flex justify-center mb-12">
             <img 
-              src="/lovable-uploads/0c8019a3-6ee0-40f5-817b-7fedf3dccbaf.png" 
+              src="/lovable-uploads/6a172626-e81f-4a46-b547-c09040acb9a9.png" 
               alt="Trezor Safe 5 - Wallet Hardware Sécurisé"
               className="w-auto h-64 object-contain"
             />
