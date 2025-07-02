@@ -1,5 +1,4 @@
 
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
@@ -56,34 +55,13 @@
   html, body {
     @apply bg-terex-dark text-foreground font-sans;
     font-family: 'Inter', sans-serif;
-    background-color: #1a1a1a !important;
+    min-height: 100vh;
+    height: 100%;
   }
 
   #root {
-    background-color: #1a1a1a !important;
-  }
-
-  /* Forcer le fond noir sur tous les éléments */
-  body, html, #root {
-    background-color: #1a1a1a !important;
-    background: #1a1a1a !important;
-  }
-
-  /* Styles mobiles spécifiques pour le scroll */
-  @media (max-width: 768px) {
-    html, body {
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-    }
-    
-    body {
-      position: relative;
-    }
-    
-    /* Supprimer toute limitation de hauteur sur mobile */
-    .min-h-screen {
-      min-height: auto !important;
-    }
+    min-height: 100vh;
+    height: 100%;
   }
 }
 
