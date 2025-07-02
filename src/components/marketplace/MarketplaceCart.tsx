@@ -22,7 +22,7 @@ export function MarketplaceCart({ open, onOpenChange, onCheckout }: MarketplaceC
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:w-96 bg-terex-darker border-l border-terex-accent/20">
+      <SheetContent side="right" className="w-full sm:w-96 bg-terex-darker border-l border-terex-accent/20 flex flex-col">
         <SheetHeader>
           <SheetTitle className="text-white flex items-center">
             <ShoppingCart className="w-5 h-5 mr-2" />
@@ -30,7 +30,7 @@ export function MarketplaceCart({ open, onOpenChange, onCheckout }: MarketplaceC
           </SheetTitle>
         </SheetHeader>
 
-        <div className="flex flex-col h-full mt-6">
+        <div className="flex flex-col flex-1 mt-6 overflow-hidden">
           {cartItems.length === 0 ? (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
@@ -41,7 +41,7 @@ export function MarketplaceCart({ open, onOpenChange, onCheckout }: MarketplaceC
           ) : (
             <>
               {/* Articles du panier */}
-              <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+              <div className="flex-1 overflow-y-auto space-y-4 pr-2 mb-4">
                 {cartItems.map((item) => (
                   <div key={item.id} className="bg-terex-dark p-4 rounded-lg">
                     <div className="flex items-start space-x-3">
@@ -105,8 +105,8 @@ export function MarketplaceCart({ open, onOpenChange, onCheckout }: MarketplaceC
                 ))}
               </div>
 
-              {/* Total et checkout */}
-              <div className="border-t border-terex-accent/20 pt-4 mt-4">
+              {/* Total et checkout - fixé en bas */}
+              <div className="border-t border-terex-accent/20 pt-4 bg-terex-darker">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-white font-semibold">Total:</span>
                   <span className="text-terex-accent font-bold text-lg">

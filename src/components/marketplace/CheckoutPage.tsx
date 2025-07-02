@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 
 export function CheckoutPage() {
   const navigate = useNavigate();
-  const { cartItems, getCartTotal } = useMarketplace();
+  const { cartItems, getCartTotal, clearCart } = useMarketplace();
   const { toast } = useToast();
   const [paymentMethod, setPaymentMethod] = useState('wave');
   const [loading, setLoading] = useState(false);
@@ -27,6 +27,10 @@ export function CheckoutPage() {
   const total = getCartTotal();
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('fr-FR').format(price);
+  };
+
+  const handleBack = () => {
+    navigate('/marketplace');
   };
 
   const handlePayment = async () => {
@@ -44,11 +48,31 @@ export function CheckoutPage() {
       // Simuler le traitement du paiement
       await new Promise(resolve => setTimeout(resolve, 2000));
       
+      // Créer la commande
+      const orderData = {
+        items: cartItems,
+        total: total,
+        paymentMethod: paymentMethod,
+        shippingInfo: shippingInfo,
+        status: 'confirmed',
+        createdAt: new Date().toISOString()
+      };
+
+      // Sauvegarder la commande localement (en attendant la base de données)
+      const existingOrders = JSON.parse(localStorage.getItem('terex_orders') || '[]');
+      existingOrders.push({ ...orderData, id: Date.now().toString() });
+      localStorage.setItem('terex_orders', JSON.stringify(existingOrders));
+      
       toast({
         title: "Commande confirmée !",
-        description: `Paiement via ${paymentMethod === 'wave' ? 'Wave' : paymentMethod === 'orange' ? 'Orange Money' : 'USDT'} réussi`,
+        description: `Paiement via ${paymentMethod === 'wave' ? 'Wave' : paymentMethod === 'orange' ? 'Orange Money' : 'USDT'} réussi. Numéro de commande: #${Date.now()}`,
         className: "bg-green-600 text-white border-green-600",
       });
+
+      // Vider le panier
+      if (clearCart) {
+        await clearCart();
+      }
       
       navigate('/marketplace');
     } catch (error) {
@@ -69,7 +93,7 @@ export function CheckoutPage() {
           <CardContent className="p-8 text-center">
             <h3 className="text-xl font-semibold text-white mb-4">Panier vide</h3>
             <p className="text-gray-400 mb-6">Votre panier est vide</p>
-            <Button onClick={() => navigate('/marketplace')} className="bg-terex-accent text-black">
+            <Button onClick={handleBack} className="bg-terex-accent text-black">
               Retourner à la boutique
             </Button>
           </CardContent>
@@ -84,7 +108,7 @@ export function CheckoutPage() {
         {/* Header */}
         <div className="mb-6 flex items-center space-x-4">
           <Button
-            onClick={() => navigate('/marketplace')}
+            onClick={handleBack}
             variant="ghost"
             size="sm"
             className="text-gray-300 hover:text-white"
@@ -228,9 +252,11 @@ export function CheckoutPage() {
                     <div className="flex items-center space-x-2 p-4 border border-terex-accent/30 rounded-lg">
                       <RadioGroupItem value="usdt" id="usdt" />
                       <label htmlFor="usdt" className="flex items-center space-x-3 cursor-pointer flex-1">
-                        <div className="w-8 h-8 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center">
-                          <Wallet className="w-4 h-4 text-terex-accent" />
-                        </div>
+                        <img 
+                          src="/lovable-uploads/631f288e-7499-4396-b3dc-936d11ae8c00.png" 
+                          alt="USDT Tether" 
+                          className="w-8 h-8 rounded-full"
+                        />
                         <div>
                           <p className="text-white font-medium">USDT (Tether)</p>
                           <p className="text-gray-400 text-sm">Paiement en cryptomonnaie</p>
