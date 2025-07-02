@@ -253,7 +253,7 @@ export function CheckoutPage() {
                       <RadioGroupItem value="usdt" id="usdt" />
                       <label htmlFor="usdt" className="flex items-center space-x-3 cursor-pointer flex-1">
                         <img 
-                          src="https://cryptologos.cc/logos/tether-usdt-logo.png" 
+                          src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                           alt="USDT Tether" 
                           className="w-8 h-8 rounded-full"
                         />
