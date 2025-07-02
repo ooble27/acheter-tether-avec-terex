@@ -98,7 +98,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
   return (
     <TransactionProvider>
-      <div className="w-full" style={{ backgroundColor: '#1a1a1a' }}>
+      <div style={{ backgroundColor: '#1a1a1a' }}>
         <SidebarProvider>
           <div className="flex w-full" style={{ backgroundColor: '#1a1a1a' }}>
             <AppSidebar 
@@ -124,7 +124,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                 </Button>
               )}
               
-              <div className="w-full">
+              <div>
                 {renderContent()}
               </div>
             </main>
