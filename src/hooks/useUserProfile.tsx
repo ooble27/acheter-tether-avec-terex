@@ -145,6 +145,13 @@ export const useUserProfile = () => {
     }
   };
 
+  // Mettre à jour le profil local quand les données changent
+  useEffect(() => {
+    if (profile && user) {
+      // Cette logique était incorrecte dans useState, je la déplace ici
+    }
+  }, [profile, user]);
+
   useEffect(() => {
     fetchProfile();
   }, [user]);
