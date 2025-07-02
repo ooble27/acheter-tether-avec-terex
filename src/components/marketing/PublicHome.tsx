@@ -1,5 +1,3 @@
-
-
 import { Button } from '@/components/ui/button';
 import { HeroSection } from './HeroSection';
 import { TestimonialsSection } from './TestimonialsSection';
@@ -7,7 +5,7 @@ import { StatsSection } from './StatsSection';
 import { CurrencyConverter } from './CurrencyConverter';
 import { PWAInstallPrompt } from '../PWAInstallPrompt';
 import { Card, CardContent } from '@/components/ui/card';
-import { CheckCircle, ArrowRight, Smartphone, CreditCard, Banknote, User, LogOut } from 'lucide-react';
+import { CheckCircle, ArrowRight, Smartphone, CreditCard, Banknote, User, LogOut, Wallet, GraduationCap, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -104,7 +102,7 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       <HeroSection />
       
       {/* Section Marketplace Crypto */}
-      <section className="py-16 sm:py-20 bg-terex-darker">
+      <section className="py-16 sm:py-20 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
@@ -125,25 +123,31 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <Card className="bg-terex-dark border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300">
+            <Card className="bg-terex-darker/80 border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
               <CardContent className="p-6">
-                <div className="text-4xl mb-4">🔐</div>
+                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Wallet className="w-6 h-6 text-terex-accent" />
+                </div>
                 <h3 className="text-white font-semibold mb-2">Wallets Hardware</h3>
                 <p className="text-gray-400 text-sm">Trezor Safe 5, Ledger et autres portefeuilles sécurisés</p>
               </CardContent>
             </Card>
             
-            <Card className="bg-terex-dark border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300">
+            <Card className="bg-terex-darker/80 border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
               <CardContent className="p-6">
-                <div className="text-4xl mb-4">🎓</div>
+                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <GraduationCap className="w-6 h-6 text-terex-accent" />
+                </div>
                 <h3 className="text-white font-semibold mb-2">Formations</h3>
                 <p className="text-gray-400 text-sm">Guides complets pour maîtriser la crypto</p>
               </CardContent>
             </Card>
             
-            <Card className="bg-terex-dark border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300">
+            <Card className="bg-terex-darker/80 border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
               <CardContent className="p-6">
-                <div className="text-4xl mb-4">💳</div>
+                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <ShoppingBag className="w-6 h-6 text-terex-accent" />
+                </div>
                 <h3 className="text-white font-semibold mb-2">Accessoires</h3>
                 <p className="text-gray-400 text-sm">Cartes crypto et gadgets essentiels</p>
               </CardContent>
