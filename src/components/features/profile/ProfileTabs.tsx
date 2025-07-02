@@ -16,31 +16,31 @@ interface ProfileTabsProps {
 export function ProfileTabs({ user, onStartKYC, kycData, isKYCVerified }: ProfileTabsProps) {
   return (
     <Tabs defaultValue="profile" className="w-full">
-      <TabsList className="grid w-full grid-cols-3 bg-terex-darker border-terex-gray">
+      <TabsList className="grid w-full grid-cols-3 bg-gray-100 dark:bg-terex-gray/30 h-12 rounded-lg p-1">
         <TabsTrigger 
           value="profile" 
-          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-gray-400"
+          className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm dark:data-[state=active]:bg-terex-accent dark:data-[state=active]:text-white text-gray-600 dark:text-gray-400 font-medium"
         >
           <User className="w-4 h-4 mr-2" />
-          Mon Profil
+          Profil
         </TabsTrigger>
         <TabsTrigger 
           value="security" 
-          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-gray-400"
+          className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm dark:data-[state=active]:bg-terex-accent dark:data-[state=active]:text-white text-gray-600 dark:text-gray-400 font-medium"
         >
           <Shield className="w-4 h-4 mr-2" />
           Sécurité
         </TabsTrigger>
         <TabsTrigger 
           value="support" 
-          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-gray-400"
+          className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm dark:data-[state=active]:bg-terex-accent dark:data-[state=active]:text-white text-gray-600 dark:text-gray-400 font-medium"
         >
           <MessageCircle className="w-4 h-4 mr-2" />
           Support
         </TabsTrigger>
       </TabsList>
 
-      <div className="mt-6">
+      <div className="mt-8">
         <TabsContent value="profile" className="mt-0">
           <PersonalInfoSection user={user} />
         </TabsContent>
