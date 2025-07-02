@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +8,7 @@ import { Search, ShoppingCart, Filter, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { MarketplaceCart } from '@/components/marketplace/MarketplaceCart';
 import { ProductModal } from '@/components/marketplace/ProductModal';
+import { CheckoutPage } from '@/components/marketplace/CheckoutPage';
 
 export function MarketplacePage() {
   const navigate = useNavigate();
@@ -17,6 +17,12 @@ export function MarketplacePage() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [showCart, setShowCart] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showCheckout, setShowCheckout] = useState(false);
+
+  // Si on est en mode checkout
+  if (showCheckout) {
+    return <CheckoutPage />;
+  }
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -48,7 +54,7 @@ export function MarketplacePage() {
                 Retour
               </Button>
               <h1 className="text-xl font-bold text-white">
-                Marketplace <span className="text-terex-accent">Crypto</span>
+                Terex <span className="text-terex-accent">Shop</span>
               </h1>
             </div>
             
@@ -183,10 +189,14 @@ export function MarketplacePage() {
         )}
       </div>
 
-      {/* Panier modal */}
+      {/* Panier modal avec bouton checkout */}
       <MarketplaceCart
         open={showCart}
         onOpenChange={setShowCart}
+        onCheckout={() => {
+          setShowCart(false);
+          setShowCheckout(true);
+        }}
       />
 
       {/* Modal produit */}

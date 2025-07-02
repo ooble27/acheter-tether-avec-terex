@@ -13,14 +13,14 @@ export function MarketplaceCryptoSection({ onMarketplaceClick }: MarketplaceCryp
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-            Boutique <span className="text-terex-accent">Crypto</span>
+            <span className="text-terex-accent">Terex</span> Shop
           </h2>
           <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto mb-8">
-            Découvrez notre sélection de wallets hardware, accessoires crypto et formations pour sécuriser vos investissements
+            Découvrez notre sélection de wallets hardware Trezor, accessoires crypto et formations pour sécuriser vos investissements
           </p>
         </div>
         
-        {/* Image du Trezor Safe 5 en PNG pur */}
+        {/* Image du Trezor Safe 5 */}
         <div className="flex justify-center mb-12">
           <img 
             src="/lovable-uploads/6a172626-e81f-4a46-b547-c09040acb9a9.png" 
@@ -67,7 +67,7 @@ export function MarketplaceCryptoSection({ onMarketplaceClick }: MarketplaceCryp
             size="lg"
             className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-8 py-4 text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105"
           >
-            <span>Découvrir la boutique</span>
+            <span>Découvrir Terex Shop</span>
             <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
         </div>
