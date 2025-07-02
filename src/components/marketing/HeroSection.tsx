@@ -4,11 +4,22 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-export function HeroSection() {
+interface HeroSectionProps {
+  user?: { email: string; name: string } | null;
+  onShowDashboard?: () => void;
+}
+
+export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
   const navigate = useNavigate();
 
   const handleGetStarted = () => {
     navigate('/auth');
+  };
+
+  const handleDashboard = () => {
+    if (onShowDashboard) {
+      onShowDashboard();
+    }
   };
 
   const handleHowItWorks = () => {
@@ -59,13 +70,23 @@ export function HeroSection() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-16">
-            <Button 
-              onClick={handleGetStarted}
-              size="lg" 
-              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-6 py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto"
-            >
-              Commencer maintenant
-            </Button>
+            {user ? (
+              <Button 
+                onClick={handleDashboard}
+                size="lg" 
+                className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-6 py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto"
+              >
+                Aller au Dashboard
+              </Button>
+            ) : (
+              <Button 
+                onClick={handleGetStarted}
+                size="lg" 
+                className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-6 py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto"
+              >
+                Commencer maintenant
+              </Button>
+            )}
             <Button 
               onClick={handleHowItWorks}
               variant="outline" 

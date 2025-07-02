@@ -64,7 +64,7 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
         onLogout={handleLogout}
       />
       
-      <HeroSection />
+      <HeroSection user={user} onShowDashboard={onShowDashboard} />
       
       <MarketplaceCryptoSection onMarketplaceClick={handleMarketplace} />
       
