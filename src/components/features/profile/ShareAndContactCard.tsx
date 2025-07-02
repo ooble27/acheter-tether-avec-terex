@@ -40,15 +40,19 @@ export function ShareAndContactCard() {
   };
 
   return (
-    <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border-terex-gray shadow-2xl">
-      <CardHeader className="bg-gradient-to-r from-terex-accent/10 to-transparent border-b border-terex-gray/50">
+    <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/30 shadow-2xl backdrop-blur-sm">
+      <CardHeader className="bg-gradient-to-r from-terex-accent/10 to-transparent border-b border-terex-gray/30 rounded-t-xl">
         <CardTitle className="text-white flex items-center">
-          <Share2 className="w-5 h-5 mr-2 text-terex-accent" />
-          Partager & Contact
+          <div className="w-10 h-10 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-xl flex items-center justify-center mr-3">
+            <Share2 className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <div className="text-white">Partager & Contact</div>
+            <CardDescription className="text-gray-400">
+              Partagez Terex ou contactez notre équipe
+            </CardDescription>
+          </div>
         </CardTitle>
-        <CardDescription className="text-gray-400">
-          Partagez Terex ou contactez notre équipe
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6 p-6">
         {/* Partage */}
@@ -71,7 +75,7 @@ export function ShareAndContactCard() {
             onClick={handleEmailContact}
             variant="outline"
             size="sm"
-            className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray justify-start"
+            className="w-full border-terex-gray/30 text-gray-300 hover:bg-terex-gray/30 justify-start"
           >
             <Mail className="w-4 h-4 mr-3" />
             <span className="flex-1 text-left">terangaexchange@gmail.com</span>
@@ -82,7 +86,7 @@ export function ShareAndContactCard() {
             onClick={handlePhoneContact}
             variant="outline"
             size="sm"
-            className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray justify-start"
+            className="w-full border-terex-gray/30 text-gray-300 hover:bg-terex-gray/30 justify-start"
           >
             <Phone className="w-4 h-4 mr-3" />
             <span className="flex-1 text-left">+221 77 397 27 49</span>
@@ -93,7 +97,7 @@ export function ShareAndContactCard() {
             onClick={handleWhatsAppContact}
             variant="outline"
             size="sm"
-            className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray justify-start"
+            className="w-full border-terex-gray/30 text-gray-300 hover:bg-terex-gray/30 justify-start"
           >
             <MessageCircle className="w-4 h-4 mr-3" />
             <span className="flex-1 text-left">WhatsApp Support</span>

@@ -79,7 +79,7 @@ export function ContactCard({ user }: ContactCardProps) {
               value={formData.subject}
               onChange={(e) => handleInputChange('subject', e.target.value)}
               placeholder="Objet de votre message"
-              className="bg-terex-gray/50 border-terex-gray/30 text-white mt-2 focus:border-terex-accent transition-colors"
+              className="bg-terex-darker/50 border-terex-gray/30 text-white mt-2 focus:border-terex-accent transition-colors"
               required
             />
           </div>
@@ -91,12 +91,12 @@ export function ContactCard({ user }: ContactCardProps) {
               value={formData.message}
               onChange={(e) => handleInputChange('message', e.target.value)}
               placeholder="Décrivez votre demande ou vos besoins..."
-              className="bg-terex-gray/50 border-terex-gray/30 text-white mt-2 min-h-[120px] resize-none focus:border-terex-accent transition-colors"
+              className="bg-terex-darker/50 border-terex-gray/30 text-white mt-2 min-h-[120px] resize-none focus:border-terex-accent transition-colors"
               required
             />
           </div>
 
-          <div className="bg-gradient-to-br from-terex-gray/40 to-terex-gray/20 rounded-xl p-4 border border-terex-gray/20">
+          <div className="bg-terex-darker/50 rounded-xl p-4 border border-terex-gray/20">
             <p className="text-gray-400 text-sm mb-2 font-medium">Informations de contact :</p>
             <p className="text-white text-sm"><strong>Email :</strong> {user?.email}</p>
             <p className="text-white text-sm"><strong>Nom :</strong> {profile?.full_name || user?.name || 'Non renseigné'}</p>

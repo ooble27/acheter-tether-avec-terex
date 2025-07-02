@@ -65,15 +65,19 @@ export function SecuritySettingsCard({ onStartKYC, kycData, isKYCVerified }: Sec
   const Icon = kycStatus.icon;
 
   return (
-    <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border-terex-gray shadow-2xl">
-      <CardHeader className="bg-gradient-to-r from-terex-accent/10 to-transparent border-b border-terex-gray/50">
+    <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/30 shadow-2xl backdrop-blur-sm">
+      <CardHeader className="bg-gradient-to-r from-terex-accent/10 to-transparent border-b border-terex-gray/30 rounded-t-xl">
         <CardTitle className="text-white flex items-center">
-          <Shield className="w-5 h-5 mr-2 text-terex-accent" />
-          Sécurité & Vérification
+          <div className="w-10 h-10 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-xl flex items-center justify-center mr-3">
+            <Shield className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <div className="text-white">Sécurité & Vérification</div>
+            <CardDescription className="text-gray-400">
+              Protégez votre compte avec nos mesures de sécurité
+            </CardDescription>
+          </div>
         </CardTitle>
-        <CardDescription className="text-gray-400">
-          Protégez votre compte avec nos mesures de sécurité
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 p-6">
         {/* KYC Status */}
@@ -100,7 +104,7 @@ export function SecuritySettingsCard({ onStartKYC, kycData, isKYCVerified }: Sec
 
         {/* Security Features */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between p-3 bg-terex-gray/30 rounded-lg">
+          <div className="flex items-center justify-between p-3 bg-terex-darker/50 rounded-lg border border-terex-gray/20">
             <div className="flex items-center space-x-3">
               <Lock className="w-4 h-4 text-green-400" />
               <span className="text-white text-sm">Authentification par email</span>
@@ -108,7 +112,7 @@ export function SecuritySettingsCard({ onStartKYC, kycData, isKYCVerified }: Sec
             <CheckCircle className="w-4 h-4 text-green-400" />
           </div>
           
-          <div className="flex items-center justify-between p-3 bg-terex-gray/30 rounded-lg">
+          <div className="flex items-center justify-between p-3 bg-terex-darker/50 rounded-lg border border-terex-gray/20">
             <div className="flex items-center space-x-3">
               <Eye className="w-4 h-4 text-blue-400" />
               <span className="text-white text-sm">Surveillance des transactions</span>

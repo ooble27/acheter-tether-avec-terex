@@ -122,28 +122,28 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
         {!isEditing ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <div className="p-4 bg-gradient-to-br from-terex-gray/40 to-terex-gray/20 rounded-xl border border-terex-gray/20 backdrop-blur-sm">
+              <div className="p-4 bg-terex-darker/50 rounded-xl border border-terex-gray/20 backdrop-blur-sm">
                 <Label className="text-gray-400 text-sm font-medium">Nom complet</Label>
                 <p className="text-white font-medium mt-1">{formData.name || 'Non renseigné'}</p>
               </div>
-              <div className="p-4 bg-gradient-to-br from-terex-gray/40 to-terex-gray/20 rounded-xl border border-terex-gray/20 backdrop-blur-sm">
+              <div className="p-4 bg-terex-darker/50 rounded-xl border border-terex-gray/20 backdrop-blur-sm">
                 <Label className="text-gray-400 text-sm font-medium">Email</Label>
                 <p className="text-white font-medium mt-1">{formData.email}</p>
               </div>
             </div>
             
             <div className="space-y-4">
-              <div className="p-4 bg-gradient-to-br from-terex-gray/40 to-terex-gray/20 rounded-xl border border-terex-gray/20 backdrop-blur-sm">
+              <div className="p-4 bg-terex-darker/50 rounded-xl border border-terex-gray/20 backdrop-blur-sm">
                 <Label className="text-gray-400 text-sm font-medium">Téléphone</Label>
                 <p className="text-white font-medium mt-1">{formData.phone || 'Non renseigné'}</p>
               </div>
-              <div className="p-4 bg-gradient-to-br from-terex-gray/40 to-terex-gray/20 rounded-xl border border-terex-gray/20 backdrop-blur-sm">
+              <div className="p-4 bg-terex-darker/50 rounded-xl border border-terex-gray/20 backdrop-blur-sm">
                 <Label className="text-gray-400 text-sm font-medium">Pays</Label>
                 <p className="text-white font-medium mt-1">{formData.country || 'Non renseigné'}</p>
               </div>
             </div>
             
-            <div className="p-4 bg-gradient-to-br from-terex-gray/40 to-terex-gray/20 rounded-xl border border-terex-gray/20 backdrop-blur-sm">
+            <div className="p-4 bg-terex-darker/50 rounded-xl border border-terex-gray/20 backdrop-blur-sm">
               <Label className="text-gray-400 text-sm font-medium">Langue</Label>
               <p className="text-white font-medium mt-1">{formData.language === 'fr' ? 'Français' : 'English'}</p>
             </div>
@@ -157,7 +157,7 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
                   id="name"
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="bg-terex-gray/50 border-terex-gray/30 text-white mt-2 focus:border-terex-accent transition-colors"
+                  className="bg-terex-darker/50 border-terex-gray/30 text-white mt-2 focus:border-terex-accent transition-colors"
                 />
               </div>
               <div>
@@ -166,7 +166,7 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
                   id="phone"
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
-                  className="bg-terex-gray/50 border-terex-gray/30 text-white mt-2 focus:border-terex-accent transition-colors"
+                  className="bg-terex-darker/50 border-terex-gray/30 text-white mt-2 focus:border-terex-accent transition-colors"
                   placeholder="+221 XX XXX XX XX"
                 />
               </div>
@@ -178,7 +178,7 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
                 id="email"
                 value={formData.email}
                 disabled
-                className="bg-terex-gray/30 border-terex-gray/20 text-gray-400 mt-2"
+                className="bg-terex-darker/30 border-terex-gray/20 text-gray-400 mt-2"
               />
             </div>
 
@@ -186,7 +186,7 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
               <div>
                 <Label htmlFor="country" className="text-gray-300 font-medium">Pays</Label>
                 <Select value={formData.country} onValueChange={(value) => handleInputChange('country', value)}>
-                  <SelectTrigger className="bg-terex-gray/50 border-terex-gray/30 text-white mt-2 focus:border-terex-accent">
+                  <SelectTrigger className="bg-terex-darker/50 border-terex-gray/30 text-white mt-2 focus:border-terex-accent">
                     <SelectValue placeholder="Sélectionnez votre pays" />
                   </SelectTrigger>
                   <SelectContent className="bg-terex-darker border-terex-gray/30 backdrop-blur-sm">
@@ -201,7 +201,7 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
               <div>
                 <Label htmlFor="language" className="text-gray-300 font-medium">Langue</Label>
                 <Select value={formData.language} onValueChange={(value) => handleInputChange('language', value)}>
-                  <SelectTrigger className="bg-terex-gray/50 border-terex-gray/30 text-white mt-2 focus:border-terex-accent">
+                  <SelectTrigger className="bg-terex-darker/50 border-terex-gray/30 text-white mt-2 focus:border-terex-accent">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-terex-darker border-terex-gray/30 backdrop-blur-sm">

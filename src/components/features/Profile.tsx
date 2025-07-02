@@ -40,8 +40,8 @@ export function Profile({ user, onLogout }: ProfileProps) {
   const showKYCAlert = !isKYCVerified && kycData?.status !== 'submitted' && kycData?.status !== 'under_review';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark animate-fade-in">
-      {/* Header avec gradient et contenants bien définis */}
+    <div className="min-h-screen bg-terex-dark p-4 md:p-6 lg:p-8 animate-fade-in">
+      {/* Header avec design uniforme */}
       <div className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/30 rounded-2xl mb-8 p-8 shadow-2xl backdrop-blur-sm">
         <div className="relative">
           <div className="flex items-center space-x-4 mb-4">
@@ -73,7 +73,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
         </div>
       )}
 
-      {/* Grille des cartes avec contenants bien définis */}
+      {/* Grille des cartes avec design uniforme */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Colonne principale */}
         <div className="lg:col-span-2 space-y-8">
