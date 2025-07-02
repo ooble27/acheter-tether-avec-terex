@@ -52,6 +52,29 @@ export const useContactMessages = () => {
         return { error: error.message };
       }
 
+      // Envoyer l'email de confirmation au client et notification à l'équipe
+      try {
+        await supabase.functions.invoke('send-email-notification', {
+          body: {
+            userId: user.id,
+            emailAddress: messageData.user_email,
+            emailType: 'contact_message',
+            transactionType: 'contact',
+            orderData: {
+              user_name: messageData.user_name,
+              user_email: messageData.user_email,
+              user_phone: messageData.user_phone,
+              subject: messageData.subject,
+              message: messageData.message
+            }
+          },
+        });
+        console.log('Email de confirmation envoyé');
+      } catch (emailError) {
+        console.error('Erreur lors de l\'envoi de l\'email:', emailError);
+        // Ne pas faire échouer l'envoi du message si l'email échoue
+      }
+
       toast({
         title: "Message envoyé",
         description: "Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.",

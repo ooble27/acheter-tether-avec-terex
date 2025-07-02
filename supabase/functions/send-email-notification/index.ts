@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.0.0";
 import { Resend } from "npm:resend@2.0.0";
@@ -10,6 +11,7 @@ import { StatusUpdateEmail } from './_templates/status-update.tsx';
 import { PaymentConfirmedEmail } from './_templates/payment-confirmed.tsx';
 import { TransferConfirmationEmail } from './_templates/transfer-confirmation.tsx';
 import { KYCApprovedEmail } from './_templates/kyc-approved-email.tsx';
+import { ContactNotificationEmail } from './_templates/contact-notification.tsx';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -145,6 +147,69 @@ const handler = async (req: Request): Promise<Response> => {
             transferData: orderData
           })
         );
+        break;
+
+      case 'contact_message':
+        // Email de confirmation pour le client
+        subject = `Nous avons bien reçu votre message - ${orderData.subject}`;
+        htmlContent = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px; text-align: center;">
+              <h1 style="margin: 0; font-size: 28px;">Merci pour votre message !</h1>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 20px 0;">
+              <h2 style="color: #333; margin-bottom: 20px;">Bonjour ${orderData.user_name},</h2>
+              
+              <p style="color: #555; line-height: 1.6; margin-bottom: 20px;">
+                Nous avons bien reçu votre message concernant "<strong>${orderData.subject}</strong>" et nous vous remercions de nous avoir contactés.
+              </p>
+              
+              <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea; margin: 20px 0;">
+                <h3 style="color: #333; margin-top: 0;">Votre message :</h3>
+                <p style="color: #555; line-height: 1.6; font-style: italic;">"${orderData.message}"</p>
+              </div>
+              
+              <p style="color: #555; line-height: 1.6; margin-bottom: 20px;">
+                Notre équipe va examiner votre demande et vous répondra dans les plus brefs délais, généralement sous 24 heures.
+              </p>
+              
+              <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <p style="color: #1976d2; margin: 0; text-align: center;">
+                  💬 <strong>Besoin d'une réponse urgente ?</strong><br>
+                  Contactez-nous sur WhatsApp : <a href="https://wa.me/14182619091" style="color: #1976d2;">+1 418 261 9091</a>
+                </p>
+              </div>
+            </div>
+            
+            <div style="text-align: center; padding: 20px; color: #666; font-size: 14px;">
+              <p>Cordialement,<br><strong>L'équipe Terex</strong></p>
+              <p style="margin-top: 20px;">
+                <a href="https://app.terangaexchange.com" style="color: #667eea; text-decoration: none;">app.terangaexchange.com</a>
+              </p>
+            </div>
+          </div>
+        `;
+
+        // Envoyer aussi une notification à l'équipe Terex
+        try {
+          const teamNotificationHtml = await renderAsync(
+            React.createElement(ContactNotificationEmail, {
+              contactData: orderData
+            })
+          );
+
+          await resend.emails.send({
+            from: "Terex <noreply@terangaexchange.com>",
+            to: ["terangaexchange@gmail.com"],
+            subject: `🔔 Nouveau message de contact - ${orderData.subject}`,
+            html: teamNotificationHtml,
+          });
+
+          console.log('Notification envoyée à l\'équipe Terex');
+        } catch (teamError) {
+          console.error('Erreur lors de l\'envoi de la notification équipe:', teamError);
+        }
         break;
 
       case 'kyc_approved':
