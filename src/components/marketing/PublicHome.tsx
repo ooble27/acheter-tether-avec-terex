@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { HeroSection } from './HeroSection';
 import { TestimonialsSection } from './TestimonialsSection';
@@ -114,16 +113,13 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
             </p>
           </div>
           
-          {/* Image principale du Trezor Safe 5 */}
+          {/* Image du Trezor Safe 5 en PNG pur */}
           <div className="flex justify-center mb-12">
-            <div className="relative">
-              <img 
-                src="/lovable-uploads/29969ee7-eb01-43e8-9722-d2aa5b959735.png" 
-                alt="Trezor Safe 5 - Wallet Hardware Sécurisé"
-                className="w-64 h-auto rounded-2xl shadow-2xl shadow-terex-accent/20 hover:shadow-terex-accent/40 transition-all duration-300 hover:scale-105"
-              />
-              <div className="absolute -inset-4 bg-gradient-to-r from-terex-accent/20 to-transparent rounded-3xl blur opacity-30"></div>
-            </div>
+            <img 
+              src="/lovable-uploads/631f288e-7499-4396-b3dc-936d11ae8c00.png" 
+              alt="Trezor Safe 5 - Wallet Hardware Sécurisé"
+              className="w-auto h-64 object-contain"
+            />
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
