@@ -8,6 +8,7 @@ import { PublicHome } from '@/components/marketing/PublicHome';
 const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const [showDashboard, setShowDashboard] = useState(false);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -42,13 +43,21 @@ const Index = () => {
     navigate('/auth');
   };
 
-  // Si l'utilisateur est connecté, afficher le dashboard
-  if (userWithName) {
-    return <Dashboard user={userWithName} onLogout={() => {}} />;
+  const handleShowDashboard = () => {
+    setShowDashboard(true);
+  };
+
+  const handleBackToHome = () => {
+    setShowDashboard(false);
+  };
+
+  // Si l'utilisateur est connecté et veut voir le dashboard
+  if (userWithName && showDashboard) {
+    return <Dashboard user={userWithName} onLogout={handleBackToHome} />;
   }
 
-  // Sinon, afficher la landing page publique
-  return <PublicHome onGetStarted={handleGetStarted} />;
+  // Sinon, afficher la landing page (même pour les utilisateurs connectés)
+  return <PublicHome onGetStarted={handleGetStarted} user={userWithName} onShowDashboard={handleShowDashboard} />;
 };
 
 export default Index;

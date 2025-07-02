@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { HeroSection } from './HeroSection';
 import { TestimonialsSection } from './TestimonialsSection';
@@ -5,15 +6,20 @@ import { StatsSection } from './StatsSection';
 import { CurrencyConverter } from './CurrencyConverter';
 import { PWAInstallPrompt } from '../PWAInstallPrompt';
 import { Card, CardContent } from '@/components/ui/card';
-import { CheckCircle, ArrowRight, Smartphone, CreditCard, Banknote } from 'lucide-react';
+import { CheckCircle, ArrowRight, Smartphone, CreditCard, Banknote, User, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface PublicHomeProps {
   onGetStarted: () => void;
+  user?: { email: string; name: string } | null;
+  onShowDashboard?: () => void;
 }
 
-export function PublicHome({ onGetStarted }: PublicHomeProps) {
+export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomeProps) {
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleGetStarted = () => {
     navigate('/auth');
@@ -27,9 +33,73 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
     navigate('/marketplace');
   };
 
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de se déconnecter",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Déconnexion réussie",
+        description: "Vous avez été déconnecté avec succès",
+        className: "bg-green-600 text-white border-green-600",
+      });
+      // Recharger la page pour réinitialiser l'état
+      window.location.reload();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-terex-dark">
       <PWAInstallPrompt />
+      
+      {/* Header avec menu utilisateur si connecté */}
+      {user && (
+        <header className="bg-terex-darker border-b border-terex-accent/20 sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+              <div className="flex items-center space-x-4">
+                <h1 className="text-xl font-bold text-white">
+                  <span className="text-terex-accent">Terex</span> Exchange
+                </h1>
+              </div>
+              
+              <div className="flex items-center space-x-4">
+                <Button
+                  onClick={handleMarketplace}
+                  variant="ghost"
+                  className="text-gray-300 hover:text-white"
+                >
+                  Boutique
+                </Button>
+                <Button
+                  onClick={onShowDashboard}
+                  variant="ghost"
+                  className="text-gray-300 hover:text-white"
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Dashboard
+                </Button>
+                <div className="flex items-center space-x-2 text-gray-300">
+                  <span className="text-sm">{user.name}</span>
+                  <Button
+                    onClick={handleLogout}
+                    variant="ghost"
+                    size="sm"
+                    className="text-gray-400 hover:text-red-400"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+      )}
+      
       <HeroSection />
       
       {/* Section Marketplace Crypto */}
@@ -226,22 +296,34 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
       <section className="py-16 sm:py-20 bg-terex-dark">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-            Prêt à commencer avec <span className="text-terex-accent">Terex</span> ?
+            {user ? (
+              <>Continuez votre expérience avec <span className="text-terex-accent">Terex</span></>
+            ) : (
+              <>Prêt à commencer avec <span className="text-terex-accent">Terex</span> ?</>
+            )}
           </h2>
           <p className="text-lg sm:text-xl text-gray-300 mb-8">
-            Rejoignez des milliers d'utilisateurs qui nous font confiance pour leurs échanges USDT et transferts vers l'Afrique.
+            {user ? (
+              "Explorez nos services d'échange USDT et de transferts vers l'Afrique, ou découvrez notre boutique crypto."
+            ) : (
+              "Rejoignez des milliers d'utilisateurs qui nous font confiance pour leurs échanges USDT et transferts vers l'Afrique."
+            )}
           </p>
-          <Button 
-            onClick={handleGetStarted}
-            size="lg" 
-            className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-4 sm:px-8 py-3 sm:py-4 text-sm sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-full max-w-80 sm:max-w-none sm:w-auto mx-auto"
-          >
-            <span className="truncate">Créer mon compte gratuitement</span>
-            <ArrowRight className="ml-2 w-4 h-4 flex-shrink-0" />
-          </Button>
-          <p className="text-gray-400 text-sm mt-4">
-            Inscription gratuite • Vérification en 24h • Support 24/7
-          </p>
+          {!user && (
+            <>
+              <Button 
+                onClick={handleGetStarted}
+                size="lg" 
+                className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-4 sm:px-8 py-3 sm:py-4 text-sm sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-full max-w-80 sm:max-w-none sm:w-auto mx-auto"
+              >
+                <span className="truncate">Créer mon compte gratuitement</span>
+                <ArrowRight className="ml-2 w-4 h-4 flex-shrink-0" />
+              </Button>
+              <p className="text-gray-400 text-sm mt-4">
+                Inscription gratuite • Vérification en 24h • Support 24/7
+              </p>
+            </>
+          )}
         </div>
       </section>
     </div>
