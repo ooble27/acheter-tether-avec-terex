@@ -6,8 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useUserProfile } from '@/hooks/useUserProfile';
-import { MessageCircle, Send, AlertTriangle } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useContactMessages } from '@/hooks/useContactMessages';
+import { MessageCircle, Send } from 'lucide-react';
 
 interface ContactCardProps {
   user: { email: string; name: string } | null;
@@ -15,7 +15,7 @@ interface ContactCardProps {
 
 export function ContactCard({ user }: ContactCardProps) {
   const { profile } = useUserProfile();
-  const { toast } = useToast();
+  const { sendMessage, loading } = useContactMessages();
   
   const [formData, setFormData] = useState({
     subject: '',
@@ -36,21 +36,23 @@ export function ContactCard({ user }: ContactCardProps) {
       return;
     }
 
-    // Temporairement désactivé - ne pas envoyer le message
-    toast({
-      title: "Service temporairement indisponible",
-      description: "L'envoi de messages est temporairement désactivé. Veuillez réessayer plus tard.",
-      variant: "destructive",
-    });
-
-    console.log('Formulaire de contact désactivé temporairement');
-    console.log('Données du message:', {
+    const messageData = {
       subject: formData.subject,
       message: formData.message,
-      user_email: user?.email,
-      user_name: profile?.full_name || user?.name,
-      user_phone: profile?.phone
-    });
+      user_email: user?.email || '',
+      user_name: profile?.full_name || user?.name || '',
+      user_phone: profile?.phone || undefined
+    };
+
+    const result = await sendMessage(messageData);
+
+    if (!result.error) {
+      // Reset form on success
+      setFormData({
+        subject: '',
+        message: ''
+      });
+    }
   };
 
   return (
@@ -69,14 +71,6 @@ export function ContactCard({ user }: ContactCardProps) {
         </div>
       </CardHeader>
       <CardContent className="p-6">
-        {/* Alerte temporaire */}
-        <div className="flex items-center space-x-3 p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl mb-6">
-          <AlertTriangle className="w-5 h-5 text-orange-400 flex-shrink-0" />
-          <p className="text-orange-300 text-sm">
-            Service temporairement indisponible. L'envoi de messages sera bientôt rétabli.
-          </p>
-        </div>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="subject" className="text-gray-300 font-medium">Sujet</Label>
@@ -113,11 +107,11 @@ export function ContactCard({ user }: ContactCardProps) {
 
           <Button 
             type="submit"
-            disabled={!formData.subject.trim() || !formData.message.trim()}
+            disabled={!formData.subject.trim() || !formData.message.trim() || loading}
             className="w-full bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-white transition-all duration-200 disabled:opacity-50"
           >
             <Send className="w-4 h-4 mr-2" />
-            Envoyer le message
+            {loading ? 'Envoi en cours...' : 'Envoyer le message'}
           </Button>
         </form>
       </CardContent>
