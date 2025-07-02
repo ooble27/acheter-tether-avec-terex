@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,7 +26,7 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
   });
 
   // Mettre à jour formData quand le profil change
-  useEffect(() => {
+  useState(() => {
     setFormData({
       name: profile?.full_name || user?.name || '',
       phone: profile?.phone || '',
@@ -34,7 +34,7 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
       language: profile?.language || 'fr',
       email: user?.email || ''
     });
-  }, [profile, user]);
+  });
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
