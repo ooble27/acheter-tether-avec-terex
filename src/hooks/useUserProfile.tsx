@@ -43,6 +43,8 @@ export const useUserProfile = () => {
           language: 'fr'
         };
         
+        console.log('Création d\'un profil par défaut:', defaultProfile);
+        
         // Insérer le profil par défaut dans la base de données
         const { error: insertError } = await supabase
           .from('profiles')
@@ -54,6 +56,7 @@ export const useUserProfile = () => {
         if (insertError) {
           console.error('Erreur lors de la création du profil par défaut:', insertError);
         } else {
+          console.log('Profil par défaut créé avec succès');
           setProfile(defaultProfile);
         }
       } else if (data) {
@@ -77,7 +80,10 @@ export const useUserProfile = () => {
           });
 
         if (!insertError) {
+          console.log('Nouveau profil créé:', defaultProfile);
           setProfile(defaultProfile);
+        } else {
+          console.error('Erreur lors de la création du profil:', insertError);
         }
       }
     } catch (error) {
@@ -93,14 +99,21 @@ export const useUserProfile = () => {
     try {
       console.log('Mise à jour du profil avec:', updates);
       
+      // Préparer les données à mettre à jour
+      const updateData = {
+        id: user.id,
+        full_name: updates.full_name || profile?.full_name || '',
+        phone: updates.phone || profile?.phone || '',
+        country: updates.country || profile?.country || '',
+        language: updates.language || profile?.language || 'fr',
+        updated_at: new Date().toISOString()
+      };
+
+      console.log('Données à sauvegarder:', updateData);
+      
       const { error } = await supabase
         .from('profiles')
-        .upsert({
-          id: user.id,
-          ...profile,
-          ...updates,
-          updated_at: new Date().toISOString()
-        }, {
+        .upsert(updateData, {
           onConflict: 'id'
         });
 
@@ -109,11 +122,16 @@ export const useUserProfile = () => {
         return { error: error.message };
       }
 
-      // Update local state
-      setProfile(prev => prev ? { ...prev, ...updates } : null);
+      // Update local state immédiatement
+      const newProfile = {
+        full_name: updateData.full_name,
+        phone: updateData.phone,
+        country: updateData.country,
+        language: updateData.language
+      };
       
-      // Refetch to ensure consistency
-      await fetchProfile();
+      console.log('Mise à jour du state local avec:', newProfile);
+      setProfile(newProfile);
       
       console.log('Profil mis à jour avec succès');
       return { error: null };

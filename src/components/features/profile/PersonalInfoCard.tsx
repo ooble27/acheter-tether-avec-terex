@@ -16,27 +16,28 @@ interface PersonalInfoCardProps {
 export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const { toast } = useToast();
-  const { profile, updateProfile } = useUserProfile();
+  const { profile, updateProfile, loading } = useUserProfile();
 
   const [formData, setFormData] = useState({
-    name: profile?.full_name || user?.name || '',
-    phone: profile?.phone || '',
-    country: profile?.country || '',
-    language: profile?.language || 'fr',
-    email: user?.email || ''
+    name: '',
+    phone: '',
+    country: '',
+    language: 'fr',
+    email: ''
   });
 
-  // Mettre à jour formData quand le profil change
+  // Mettre à jour formData quand le profil change OU quand user change
   useEffect(() => {
-    if (profile) {
-      setFormData({
-        name: profile.full_name || user?.name || '',
-        phone: profile.phone || '',
-        country: profile.country || '',
-        language: profile.language || 'fr',
-        email: user?.email || ''
-      });
-    }
+    console.log('Profile data:', profile);
+    console.log('User data:', user);
+    
+    setFormData({
+      name: profile?.full_name || user?.name || '',
+      phone: profile?.phone || '',
+      country: profile?.country || '',
+      language: profile?.language || 'fr',
+      email: user?.email || ''
+    });
   }, [profile, user]);
 
   const handleInputChange = (field: string, value: string) => {
@@ -48,6 +49,13 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
 
   const handleSave = async () => {
     try {
+      console.log('Saving profile data:', {
+        full_name: formData.name,
+        phone: formData.phone,
+        country: formData.country,
+        language: formData.language
+      });
+
       const result = await updateProfile({
         full_name: formData.name,
         phone: formData.phone,
@@ -56,6 +64,7 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
       });
 
       if (result.error) {
+        console.error('Erreur lors de la sauvegarde:', result.error);
         toast({
           title: "Erreur",
           description: result.error,
@@ -70,7 +79,10 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
         description: "Vos informations ont été sauvegardées avec succès.",
         className: "bg-green-600 text-white border-green-600",
       });
+      
+      console.log('Profile saved successfully');
     } catch (error) {
+      console.error('Erreur lors de la sauvegarde:', error);
       toast({
         title: "Erreur",
         description: "Impossible de mettre à jour le profil.",
@@ -80,6 +92,7 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
   };
 
   const handleCancel = () => {
+    // Réinitialiser avec les données du profil actuel
     setFormData({
       name: profile?.full_name || user?.name || '',
       phone: profile?.phone || '',
@@ -89,6 +102,16 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
     });
     setIsEditing(false);
   };
+
+  if (loading) {
+    return (
+      <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/30 shadow-2xl backdrop-blur-sm">
+        <CardContent className="p-6">
+          <div className="text-white text-center">Chargement...</div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/30 shadow-2xl backdrop-blur-sm">
@@ -110,10 +133,11 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
               onClick={() => setIsEditing(true)}
               variant="outline"
               size="sm"
-              className="border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-white transition-all duration-200"
+              className="border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-white transition-all duration-200 text-xs md:text-sm px-2 md:px-3 py-1 md:py-2 h-7 md:h-9"
             >
-              <Edit3 className="w-4 h-4 mr-2" />
-              Modifier
+              <Edit3 className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
+              <span className="hidden sm:inline">Modifier</span>
+              <span className="sm:hidden">Modif</span>
             </Button>
           )}
         </div>
@@ -195,6 +219,9 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
                     <SelectItem value="burkina" className="text-white hover:bg-terex-gray/50">Burkina Faso</SelectItem>
                     <SelectItem value="cote_ivoire" className="text-white hover:bg-terex-gray/50">Côte d'Ivoire</SelectItem>
                     <SelectItem value="niger" className="text-white hover:bg-terex-gray/50">Niger</SelectItem>
+                    <SelectItem value="ghana" className="text-white hover:bg-terex-gray/50">Ghana</SelectItem>
+                    <SelectItem value="togo" className="text-white hover:bg-terex-gray/50">Togo</SelectItem>
+                    <SelectItem value="benin" className="text-white hover:bg-terex-gray/50">Bénin</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
