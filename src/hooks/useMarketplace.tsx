@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -37,8 +36,9 @@ interface Category {
   image_url?: string;
 }
 
-// Données de produits par défaut avec photos réelles
+// Données de produits par défaut avec photos réelles - VERSION ÉTENDUE
 const defaultProducts: Product[] = [
+  // Wallets Hardware
   {
     id: '1',
     name: 'Trezor Safe 5',
@@ -95,6 +95,8 @@ const defaultProducts: Product[] = [
     is_active: true,
     created_at: new Date().toISOString()
   },
+
+  // Vêtements Crypto
   {
     id: '5',
     name: 'T-shirt Bitcoin Orange',
@@ -124,6 +126,36 @@ const defaultProducts: Product[] = [
     created_at: new Date().toISOString()
   },
   {
+    id: '15',
+    name: 'Hoodie Bitcoin Deluxe',
+    description: 'Sweat à capuche premium avec logo Bitcoin embossé, très confortable',
+    price: 45000,
+    currency: 'CFA',
+    category_id: 'clothing',
+    brand: 'Terex',
+    stock_quantity: 25,
+    images: ['/lovable-uploads/29969ee7-eb01-43e8-9722-d2aa5b959735.png'],
+    specifications: { material: '80% Coton, 20% Polyester', sizes: 'S, M, L, XL' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '16',
+    name: 'Casquette Crypto Trader',
+    description: 'Casquette ajustable avec broderie "HODL" et logo crypto',
+    price: 12000,
+    currency: 'CFA',
+    category_id: 'clothing',
+    brand: 'Terex',
+    stock_quantity: 60,
+    images: ['/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png'],
+    specifications: { material: 'Coton/Polyester', adjustable: 'Oui' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+
+  // Accessoires
+  {
     id: '7',
     name: 'Carte Crypto Steel',
     description: 'Carte en acier inoxydable pour sauvegarder vos phrases de récupération',
@@ -138,6 +170,36 @@ const defaultProducts: Product[] = [
     created_at: new Date().toISOString()
   },
   {
+    id: '17',
+    name: 'Clé USB Crypto Sécurisée',
+    description: 'Clé USB chiffrée 32GB spécialement conçue pour stocker vos wallets',
+    price: 25000,
+    currency: 'CFA',
+    category_id: 'accessories',
+    brand: 'SecureStick',
+    stock_quantity: 40,
+    images: ['/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png'],
+    specifications: { capacity: '32GB', encryption: 'AES 256', compatibility: 'Windows/Mac/Linux' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '18',
+    name: 'Porte-clés Bitcoin',
+    description: 'Porte-clés en métal avec logo Bitcoin gravé, parfait pour les HODLers',
+    price: 5000,
+    currency: 'CFA',
+    category_id: 'accessories',
+    brand: 'Terex',
+    stock_quantity: 100,
+    images: ['/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png'],
+    specifications: { material: 'Métal', dimensions: '5x3cm' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+
+  // Formations
+  {
     id: '8',
     name: 'Formation Crypto Complète',
     description: 'Cours en ligne complet sur la cryptomonnaie et la blockchain (accès à vie)',
@@ -150,6 +212,94 @@ const defaultProducts: Product[] = [
     specifications: { duration: '20 heures', language: 'Français', access: 'À vie' },
     is_active: true,
     created_at: new Date().toISOString()
+  },
+  {
+    id: '19',
+    name: 'Masterclass Trading Crypto',
+    description: 'Formation avancée en trading de cryptomonnaies avec stratégies professionnelles',
+    price: 150000,
+    currency: 'CFA',
+    category_id: 'training',
+    brand: 'Terex Academy',
+    stock_quantity: 50,
+    images: ['/lovable-uploads/26b3437e-c333-4387-aeb9-731aa705f282.png'],
+    specifications: { duration: '35 heures', level: 'Avancé', support: '6 mois' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '20',
+    name: 'Guide DeFi pour Débutants',
+    description: 'Apprenez les bases de la finance décentralisée (DeFi) étape par étape',
+    price: 45000,
+    currency: 'CFA',
+    category_id: 'training',
+    brand: 'Terex Academy',
+    stock_quantity: 75,
+    images: ['/lovable-uploads/26b3437e-c333-4387-aeb9-731aa705f282.png'],
+    specifications: { duration: '12 heures', level: 'Débutant', format: 'Vidéo + PDF' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+
+  // Équipement Mining (Nouvelle catégorie)
+  {
+    id: '21',
+    name: 'Antminer S19 Pro',
+    description: 'Mineur ASIC Bitcoin haute performance 110 TH/s, efficacité énergétique optimale',
+    price: 2500000,
+    currency: 'CFA',
+    category_id: 'mining',
+    brand: 'Bitmain',
+    stock_quantity: 5,
+    images: ['/lovable-uploads/6a172626-e81f-4a46-b547-c09040acb9a9.png'],
+    specifications: { hashrate: '110 TH/s', power: '3250W', efficiency: '29.5 J/TH' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '22',
+    name: 'Kit Mining GPU 6x RTX 4070',
+    description: 'Rig de mining complet avec 6 cartes RTX 4070, prêt à utiliser',
+    price: 4500000,
+    currency: 'CFA',
+    category_id: 'mining',
+    brand: 'Terex Mining',
+    stock_quantity: 3,
+    images: ['/lovable-uploads/6a172626-e81f-4a46-b547-c09040acb9a9.png'],
+    specifications: { gpus: '6x RTX 4070', power: '2400W', hashrate: '480 MH/s ETH' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+
+  // Livres (Nouvelle catégorie)
+  {
+    id: '23',
+    name: 'Bitcoin Standard - Livre',
+    description: 'Le livre de référence sur Bitcoin par Saifedean Ammous (version française)',
+    price: 25000,
+    currency: 'CFA',
+    category_id: 'books',
+    brand: 'Éditions Crypto',
+    stock_quantity: 30,
+    images: ['/lovable-uploads/26b3437e-c333-4387-aeb9-731aa705f282.png'],
+    specifications: { pages: '320', language: 'Français', format: 'Broché' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '24',
+    name: 'Mastering Bitcoin',
+    description: 'Guide technique complet pour comprendre Bitcoin et la blockchain',
+    price: 35000,
+    currency: 'CFA',
+    category_id: 'books',
+    brand: 'O\'Reilly',
+    stock_quantity: 20,
+    images: ['/lovable-uploads/26b3437e-c333-4387-aeb9-731aa705f282.png'],
+    specifications: { pages: '415', language: 'Anglais', level: 'Technique' },
+    is_active: true,
+    created_at: new Date().toISOString()
   }
 ];
 
@@ -157,7 +307,9 @@ const defaultCategories: Category[] = [
   { id: 'wallets', name: 'Wallets Hardware', description: 'Portefeuilles physiques sécurisés' },
   { id: 'clothing', name: 'Vêtements Crypto', description: 'T-shirts et accessoires Bitcoin/Crypto' },
   { id: 'accessories', name: 'Accessoires', description: 'Cartes de sauvegarde et gadgets' },
-  { id: 'training', name: 'Formations', description: 'Cours et guides crypto' }
+  { id: 'training', name: 'Formations', description: 'Cours et guides crypto' },
+  { id: 'mining', name: 'Équipement Mining', description: 'Matériel de minage crypto' },
+  { id: 'books', name: 'Livres', description: 'Ouvrages sur Bitcoin et crypto' }
 ];
 
 export const useMarketplace = () => {
