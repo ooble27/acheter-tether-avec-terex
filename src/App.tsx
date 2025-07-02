@@ -1,18 +1,19 @@
+
 import {
   BrowserRouter as Router,
   Routes,
   Route,
 } from "react-router-dom";
-import { Index } from "./pages/Index";
-import { AuthPage } from "./pages/AuthPage";
-import { AuthCallback } from "./pages/AuthCallback";
-import { NotFound } from "./pages/NotFound";
-import { ThemeProvider } from "./components/ui/theme-provider";
+import Index from "./pages/Index";
+import AuthPage from "./pages/AuthPage";
+import AuthCallback from "./pages/AuthCallback";
+import NotFound from "./pages/NotFound";
+import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MarketingPage } from "./pages/MarketingPage";
-import { AdminPage } from "./pages/AdminPage";
+import AdminPage from "./pages/AdminPage";
 import { Toaster } from "@/components/ui/toaster"
-import { BlockchainPage } from "./pages/BlockchainPage";
+import BlockchainPage from "./pages/BlockchainPage";
 import { TransactionProvider } from "./contexts/TransactionContext";
 import { PWASessionSync } from "./components/PWASessionSync";
 import { MarketplacePage } from '@/pages/MarketplacePage';

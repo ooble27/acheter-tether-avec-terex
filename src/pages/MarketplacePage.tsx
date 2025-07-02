@@ -124,8 +124,12 @@ export function MarketplacePage() {
                         alt={product.name}
                         className="w-full h-full object-cover rounded-lg"
                         onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'flex';
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const nextElement = target.nextElementSibling as HTMLElement;
+                          if (nextElement) {
+                            nextElement.style.display = 'flex';
+                          }
                         }}
                       />
                     ) : (
