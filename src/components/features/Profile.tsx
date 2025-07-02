@@ -42,7 +42,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
   return (
     <div className="min-h-screen bg-terex-dark p-4 md:p-6 lg:p-8 animate-fade-in">
       {/* Header avec design uniforme */}
-      <div className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/30 rounded-2xl mb-8 p-8 shadow-2xl backdrop-blur-sm">
+      <div className="bg-gradient-to-br from-terex-darker/95 to-terex-dark/95 border border-white/10 rounded-2xl mb-8 p-8 shadow-2xl backdrop-blur-sm">
         <div className="relative">
           <div className="flex items-center space-x-4 mb-4">
             <div className="w-16 h-16 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-2xl flex items-center justify-center shadow-lg">
@@ -73,27 +73,27 @@ export function Profile({ user, onLogout }: ProfileProps) {
         </div>
       )}
 
-      {/* Grille des cartes avec design uniforme */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Colonne principale */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Informations personnelles */}
+      {/* Grille des cartes avec design uniforme - Tailles augmentées sur Desktop */}
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-8">
+        {/* Colonne principale - Plus large sur Desktop */}
+        <div className="xl:col-span-3 space-y-8">
+          {/* Informations personnelles - Plus large */}
           <PersonalInfoCard user={user} />
           
-          {/* Contact */}
+          {/* Contact - Plus large */}
           <ContactCard user={user} />
         </div>
 
-        {/* Colonne secondaire */}
-        <div className="space-y-8">
-          {/* Paramètres de sécurité */}
+        {/* Colonne secondaire - Plus large sur Desktop */}
+        <div className="xl:col-span-2 space-y-8">
+          {/* Paramètres de sécurité - Plus large */}
           <SecuritySettingsCard 
             onStartKYC={handleStartKYC} 
             kycData={kycData}
             isKYCVerified={isKYCVerified}
           />
           
-          {/* Partage et contact */}
+          {/* Partage et contact - Plus large */}
           <ShareAndContactCard />
         </div>
       </div>
