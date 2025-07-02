@@ -23,10 +23,65 @@ export function PublicHome({ onGetStarted }: PublicHomeProps) {
     navigate('/blockchain');
   };
 
+  const handleMarketplace = () => {
+    navigate('/marketplace');
+  };
+
   return (
     <div className="min-h-screen bg-terex-dark">
       <PWAInstallPrompt />
       <HeroSection />
+      
+      {/* Section Marketplace Crypto */}
+      <section className="py-16 sm:py-20 bg-terex-darker">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+              Boutique <span className="text-terex-accent">Crypto</span>
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto mb-8">
+              Découvrez notre sélection de wallets hardware, accessoires crypto et formations pour sécuriser vos investissements
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <Card className="bg-terex-dark border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="text-4xl mb-4">🔐</div>
+                <h3 className="text-white font-semibold mb-2">Wallets Hardware</h3>
+                <p className="text-gray-400 text-sm">Ledger, Trezor et autres portefeuilles sécurisés</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-terex-dark border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="text-4xl mb-4">🎓</div>
+                <h3 className="text-white font-semibold mb-2">Formations</h3>
+                <p className="text-gray-400 text-sm">Guides complets pour maîtriser la crypto</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-terex-dark border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="text-4xl mb-4">💳</div>
+                <h3 className="text-white font-semibold mb-2">Accessoires</h3>
+                <p className="text-gray-400 text-sm">Cartes crypto et gadgets essentiels</p>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <div className="text-center">
+            <Button 
+              onClick={handleMarketplace}
+              size="lg"
+              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-8 py-4 text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105"
+            >
+              <span>Découvrir la boutique</span>
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+      </section>
       
       {/* Section Convertisseur */}
       <section className="py-16 sm:py-20 bg-terex-dark">
