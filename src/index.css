@@ -62,10 +62,22 @@
     background-color: #1a1a1a !important;
   }
 
-  /* Supprimer les couleurs indésirables sur Safari/mobile */
+  /* Forcer le fond noir sur tous les éléments */
   body, html, #root, .min-h-screen {
     background-color: #1a1a1a !important;
     background: #1a1a1a !important;
+  }
+
+  /* Styles mobiles pour permettre le scroll */
+  @media (max-width: 768px) {
+    html, body {
+      -webkit-overflow-scrolling: touch;
+      overflow-x: hidden;
+    }
+    
+    body {
+      position: relative;
+    }
   }
 }
 

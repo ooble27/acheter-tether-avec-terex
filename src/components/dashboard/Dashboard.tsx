@@ -98,41 +98,45 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
   return (
     <TransactionProvider>
-      <SidebarProvider>
-        <div className="flex w-full bg-terex-dark" style={{ backgroundColor: '#1a1a1a' }}>
-          <AppSidebar 
-            activeSection={activeSection}
-            setActiveSection={setActiveSection}
-            onLogout={handleLogout}
-          />
-          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'}`} style={{ backgroundColor: '#1a1a1a' }}>
-            <MobileMenu 
+      <div className="w-full" style={{ backgroundColor: '#1a1a1a' }}>
+        <SidebarProvider>
+          <div className="flex w-full" style={{ backgroundColor: '#1a1a1a' }}>
+            <AppSidebar 
               activeSection={activeSection}
               setActiveSection={setActiveSection}
               onLogout={handleLogout}
             />
-            
-            {/* Bouton de déconnexion flottant uniquement sur tablette */}
-            {isTablet && (
-              <Button 
-                onClick={handleLogout}
-                className="fixed top-6 right-6 z-50 h-14 px-6 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm shadow-lg"
-              >
-                <LogOut className="mr-2 h-5 w-5" />
-                Déconnexion
-              </Button>
-            )}
-            
-            {renderContent()}
-          </main>
+            <main className={`flex-1 w-full ${isMobile ? 'p-4 pt-16' : 'p-6'}`} style={{ backgroundColor: '#1a1a1a' }}>
+              <MobileMenu 
+                activeSection={activeSection}
+                setActiveSection={setActiveSection}
+                onLogout={handleLogout}
+              />
+              
+              {/* Bouton de déconnexion flottant uniquement sur tablette */}
+              {isTablet && (
+                <Button 
+                  onClick={handleLogout}
+                  className="fixed top-6 right-6 z-50 h-14 px-6 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm shadow-lg"
+                >
+                  <LogOut className="mr-2 h-5 w-5" />
+                  Déconnexion
+                </Button>
+              )}
+              
+              <div className="w-full">
+                {renderContent()}
+              </div>
+            </main>
+          </div>
+        </SidebarProvider>
 
-          {/* Widget Assistant IA flottant */}
-          <AIAssistantWidget />
-          
-          {/* Prompt de permission pour les notifications push */}
-          <NotificationPermissionPrompt />
-        </div>
-      </SidebarProvider>
+        {/* Widget Assistant IA flottant */}
+        <AIAssistantWidget />
+        
+        {/* Prompt de permission pour les notifications push */}
+        <NotificationPermissionPrompt />
+      </div>
     </TransactionProvider>
   );
 }
