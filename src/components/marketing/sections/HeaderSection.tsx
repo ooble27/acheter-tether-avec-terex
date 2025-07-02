@@ -1,6 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { User, LogOut } from 'lucide-react';
+import { MobileDrawer } from './MobileDrawer';
 
 interface HeaderSectionProps {
   user?: { email: string; name: string } | null;
@@ -21,6 +22,14 @@ export function HeaderSection({ user, onShowDashboard, onMarketplace, onLogout }
               <span className="text-terex-accent">Terex</span>
             </h1>
           </div>
+          
+          {/* Mobile drawer */}
+          <MobileDrawer 
+            user={user}
+            onShowDashboard={onShowDashboard}
+            onMarketplace={onMarketplace}
+            onLogout={onLogout}
+          />
           
           {/* Desktop navigation - hidden on mobile */}
           <div className="hidden md:flex items-center space-x-4">
