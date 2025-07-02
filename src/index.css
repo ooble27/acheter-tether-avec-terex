@@ -57,11 +57,52 @@
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
     height: 100%;
+    /* Forcer le fond noir sur tous les navigateurs */
+    background-color: #1a1a1a !important;
+    /* Assurer le scroll sur mobile */
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   #root {
     min-height: 100vh;
     height: 100%;
+    background-color: #1a1a1a !important;
+    /* Permettre le scroll */
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  /* Supprimer les couleurs indésirables sur Safari/mobile */
+  body, html, #root, .min-h-screen {
+    background-color: #1a1a1a !important;
+    background: #1a1a1a !important;
+  }
+
+  /* Corriger le scroll sur mobile */
+  @media (max-width: 768px) {
+    body {
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      height: auto;
+      min-height: 100vh;
+    }
+
+    #root {
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+      height: auto;
+      min-height: 100vh;
+    }
+
+    .min-h-screen {
+      min-height: 100vh;
+      height: auto;
+    }
   }
 }
 

@@ -99,13 +99,13 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   return (
     <TransactionProvider>
       <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-terex-dark">
+        <div className="min-h-screen flex w-full bg-terex-dark" style={{ backgroundColor: '#1a1a1a' }}>
           <AppSidebar 
             activeSection={activeSection}
             setActiveSection={setActiveSection}
             onLogout={handleLogout}
           />
-          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'} relative`}>
+          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'} relative overflow-y-auto`} style={{ backgroundColor: '#1a1a1a' }}>
             <MobileMenu 
               activeSection={activeSection}
               setActiveSection={setActiveSection}

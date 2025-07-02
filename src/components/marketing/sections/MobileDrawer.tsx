@@ -38,13 +38,13 @@ export function MobileDrawer({ user, onShowDashboard, onMarketplace, onLogout }:
           <Menu className="h-5 w-5" />
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="bg-terex-darker border-terex-accent/20">
+      <DrawerContent className="bg-terex-darker border-terex-accent/20 max-h-[80vh] overflow-y-auto">
         <DrawerHeader className="text-left">
           <DrawerTitle className="text-white">
             <span className="text-terex-accent">Terex</span> Navigation
           </DrawerTitle>
         </DrawerHeader>
-        <div className="p-4 space-y-3">
+        <div className="p-4 space-y-3 pb-8">
           <Button
             onClick={() => handleNavigation(onMarketplace)}
             variant="ghost"
