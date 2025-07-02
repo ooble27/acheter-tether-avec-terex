@@ -114,12 +114,24 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
             </p>
           </div>
           
+          {/* Image principale du Trezor Safe 5 */}
+          <div className="flex justify-center mb-12">
+            <div className="relative">
+              <img 
+                src="/lovable-uploads/29969ee7-eb01-43e8-9722-d2aa5b959735.png" 
+                alt="Trezor Safe 5 - Wallet Hardware Sécurisé"
+                className="w-64 h-auto rounded-2xl shadow-2xl shadow-terex-accent/20 hover:shadow-terex-accent/40 transition-all duration-300 hover:scale-105"
+              />
+              <div className="absolute -inset-4 bg-gradient-to-r from-terex-accent/20 to-transparent rounded-3xl blur opacity-30"></div>
+            </div>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             <Card className="bg-terex-dark border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300">
               <CardContent className="p-6">
                 <div className="text-4xl mb-4">🔐</div>
                 <h3 className="text-white font-semibold mb-2">Wallets Hardware</h3>
-                <p className="text-gray-400 text-sm">Ledger, Trezor et autres portefeuilles sécurisés</p>
+                <p className="text-gray-400 text-sm">Trezor Safe 5, Ledger et autres portefeuilles sécurisés</p>
               </CardContent>
             </Card>
             
