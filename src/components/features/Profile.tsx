@@ -73,10 +73,10 @@ export function Profile({ user, onLogout }: ProfileProps) {
         </div>
       )}
 
-      {/* Grille des cartes avec hiérarchie des tailles */}
-      <div className="grid grid-cols-1 xl:grid-cols-7 gap-8">
-        {/* Colonne principale - Blocs plus larges (Informations personnelles et Contact) */}
-        <div className="xl:col-span-4 space-y-8">
+      {/* Grille des cartes avec hiérarchie des tailles - 12 colonnes pour plus de contrôle */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+        {/* Colonne principale - Blocs plus larges (7 colonnes sur 12) */}
+        <div className="xl:col-span-7 space-y-8">
           {/* Informations personnelles - Plus large */}
           <PersonalInfoCard user={user} />
           
@@ -84,8 +84,8 @@ export function Profile({ user, onLogout }: ProfileProps) {
           <ContactCard user={user} />
         </div>
 
-        {/* Colonne secondaire - Blocs plus petits mais cohérents */}
-        <div className="xl:col-span-3 space-y-8">
+        {/* Colonne secondaire - Blocs plus petits (5 colonnes sur 12) */}
+        <div className="xl:col-span-5 space-y-8">
           {/* Paramètres de sécurité */}
           <SecuritySettingsCard 
             onStartKYC={handleStartKYC} 
