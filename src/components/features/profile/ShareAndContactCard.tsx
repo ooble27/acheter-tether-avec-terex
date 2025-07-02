@@ -60,10 +60,10 @@ export function ShareAndContactCard() {
           <Button
             onClick={handleShare}
             variant="outline"
-            className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
+            className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white text-sm px-2"
           >
-            <Share2 className="w-4 h-4 mr-2" />
-            Partager Terex avec vos amis
+            <Share2 className="w-4 h-4 mr-2 flex-shrink-0" />
+            <span className="truncate">Partager Terex</span>
           </Button>
         </div>
         
@@ -75,11 +75,11 @@ export function ShareAndContactCard() {
             onClick={handleEmailContact}
             variant="outline"
             size="sm"
-            className="w-full border-terex-gray/30 text-gray-300 hover:bg-terex-gray/30 justify-start"
+            className="w-full border-terex-gray/30 text-gray-300 hover:bg-terex-gray/30 justify-start min-w-0"
           >
-            <Mail className="w-4 h-4 mr-3" />
-            <span className="flex-1 text-left">terangaexchange@gmail.com</span>
-            <ExternalLink className="w-3 h-3" />
+            <Mail className="w-4 h-4 mr-3 flex-shrink-0" />
+            <span className="flex-1 text-left truncate text-xs">terangaexchange@gmail.com</span>
+            <ExternalLink className="w-3 h-3 flex-shrink-0" />
           </Button>
           
           <Button
@@ -88,9 +88,9 @@ export function ShareAndContactCard() {
             size="sm"
             className="w-full border-terex-gray/30 text-gray-300 hover:bg-terex-gray/30 justify-start"
           >
-            <Phone className="w-4 h-4 mr-3" />
+            <Phone className="w-4 h-4 mr-3 flex-shrink-0" />
             <span className="flex-1 text-left">+221 77 397 27 49</span>
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink className="w-3 h-3 flex-shrink-0" />
           </Button>
           
           <Button
@@ -99,9 +99,9 @@ export function ShareAndContactCard() {
             size="sm"
             className="w-full border-terex-gray/30 text-gray-300 hover:bg-terex-gray/30 justify-start"
           >
-            <MessageCircle className="w-4 h-4 mr-3" />
+            <MessageCircle className="w-4 h-4 mr-3 flex-shrink-0" />
             <span className="flex-1 text-left">WhatsApp Support</span>
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink className="w-3 h-3 flex-shrink-0" />
           </Button>
         </div>
 
