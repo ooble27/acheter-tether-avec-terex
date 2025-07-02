@@ -53,9 +53,9 @@ export const useUserProfile = () => {
 
         if (insertError) {
           console.error('Erreur lors de la création du profil par défaut:', insertError);
+        } else {
+          setProfile(defaultProfile);
         }
-        
-        setProfile(defaultProfile);
       } else if (data) {
         console.log('Profil récupéré:', data);
         setProfile(data);
@@ -97,6 +97,7 @@ export const useUserProfile = () => {
         .from('profiles')
         .upsert({
           id: user.id,
+          ...profile,
           ...updates,
           updated_at: new Date().toISOString()
         }, {
@@ -108,8 +109,11 @@ export const useUserProfile = () => {
         return { error: error.message };
       }
 
-      // Update local state immediately for better UX
+      // Update local state
       setProfile(prev => prev ? { ...prev, ...updates } : null);
+      
+      // Refetch to ensure consistency
+      await fetchProfile();
       
       console.log('Profil mis à jour avec succès');
       return { error: null };

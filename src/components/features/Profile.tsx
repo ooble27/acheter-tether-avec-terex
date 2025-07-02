@@ -41,12 +41,11 @@ export function Profile({ user, onLogout }: ProfileProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark animate-fade-in">
-      {/* Header avec gradient */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-terex-accent/20 via-terex-accent/10 to-transparent rounded-2xl mb-8 p-8">
-        <div className="absolute inset-0 bg-gradient-to-r from-terex-accent/5 to-transparent"></div>
-        <div className="relative z-10">
+      {/* Header avec gradient et contenants bien définis */}
+      <div className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/30 rounded-2xl mb-8 p-8 shadow-2xl backdrop-blur-sm">
+        <div className="relative">
           <div className="flex items-center space-x-4 mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-2xl flex items-center justify-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-2xl flex items-center justify-center shadow-lg">
               <User className="w-8 h-8 text-white" />
             </div>
             <div>
@@ -55,11 +54,11 @@ export function Profile({ user, onLogout }: ProfileProps) {
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2 bg-terex-darker/50 backdrop-blur-sm rounded-full px-4 py-2">
+            <div className="flex items-center space-x-2 bg-terex-darker/80 backdrop-blur-sm rounded-full px-4 py-2 border border-terex-gray/20">
               <Star className="w-4 h-4 text-terex-accent" />
               <span className="text-white text-sm">Membre Terex</span>
             </div>
-            <div className="flex items-center space-x-2 bg-green-500/20 backdrop-blur-sm rounded-full px-4 py-2">
+            <div className="flex items-center space-x-2 bg-green-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-green-500/30">
               <Award className="w-4 h-4 text-green-400" />
               <span className="text-green-400 text-sm">Compte Actif</span>
             </div>
@@ -74,7 +73,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
         </div>
       )}
 
-      {/* Grille des cartes */}
+      {/* Grille des cartes avec contenants bien définis */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Colonne principale */}
         <div className="lg:col-span-2 space-y-8">
