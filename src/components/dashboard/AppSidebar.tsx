@@ -1,4 +1,3 @@
-
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +10,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -83,6 +82,10 @@ const menuItems = [
 const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemClick }: AppSidebarProps & { onItemClick?: () => void }) => {
   const { isKYCReviewer } = useUserRole();
   const isTablet = useIsTablet();
+
+  const handleExternalNavigation = (url: string) => {
+    window.location.href = url;
+  };
 
   return (
     <div className="flex flex-col h-full min-h-0">
@@ -162,6 +165,57 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                   </SidebarMenuItem>
                 );
               })}
+
+              {/* Section Navigation externe */}
+              <div className="pt-6 pb-2">
+                <div className="flex items-center space-x-2 px-4">
+                  <div className="h-px bg-terex-gray/40 flex-1"></div>
+                  <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Navigation</span>
+                  <div className="h-px bg-terex-gray/40 flex-1"></div>
+                </div>
+              </div>
+              
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  onClick={() => {
+                    handleExternalNavigation('/marketplace');
+                    onItemClick?.();
+                  }}
+                  className="group relative w-full p-4 h-auto rounded-xl transition-all duration-200 text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md"
+                >
+                  <div className="flex items-center space-x-4 w-full">
+                    <div className="flex-shrink-0 p-2 rounded-lg transition-colors bg-terex-gray/30 group-hover:bg-terex-accent/20">
+                      <ShoppingCart className="h-6 w-6" />
+                    </div>
+                    <div className="flex-1 text-left min-w-0">
+                      <div className="font-semibold text-sm truncate">Boutique Crypto</div>
+                      <div className="text-xs opacity-75 truncate">Wallets & Formations</div>
+                    </div>
+                    <ExternalLink className="w-4 h-4 opacity-50" />
+                  </div>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  onClick={() => {
+                    handleExternalNavigation('/');
+                    onItemClick?.();
+                  }}
+                  className="group relative w-full p-4 h-auto rounded-xl transition-all duration-200 text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md"
+                >
+                  <div className="flex items-center space-x-4 w-full">
+                    <div className="flex-shrink-0 p-2 rounded-lg transition-colors bg-terex-gray/30 group-hover:bg-terex-accent/20">
+                      <Globe className="h-6 w-6" />
+                    </div>
+                    <div className="flex-1 text-left min-w-0">
+                      <div className="font-semibold text-sm truncate">Landing Page</div>
+                      <div className="text-xs opacity-75 truncate">Accueil & Informations</div>
+                    </div>
+                    <ExternalLink className="w-4 h-4 opacity-50" />
+                  </div>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               
               {/* Section Administration */}
               {isKYCReviewer() && (
