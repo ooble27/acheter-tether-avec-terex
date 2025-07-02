@@ -39,9 +39,9 @@ export function Profile({ user, onLogout }: ProfileProps) {
   const showKYCAlert = !isKYCVerified && kycData?.status !== 'submitted' && kycData?.status !== 'under_review';
 
   return (
-    <div className="min-h-screen bg-terex-dark p-6 md:p-6 lg:p-8 animate-fade-in">
+    <div className="min-h-screen bg-terex-dark p-2 md:p-6 lg:p-8 animate-fade-in">
       {/* Header avec design uniforme */}
-      <div className="bg-gradient-to-br from-terex-darker/95 to-terex-dark/95 border border-white/10 rounded-2xl mb-8 md:mb-8 p-8 md:p-8 shadow-2xl backdrop-blur-sm">
+      <div className="bg-gradient-to-br from-terex-darker/95 to-terex-dark/95 border border-white/10 rounded-2xl mb-6 md:mb-8 p-4 md:p-8 shadow-2xl backdrop-blur-sm">
         <div className="relative">
           <div className="flex items-center space-x-4 mb-4">
             <div className="w-16 h-16 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-2xl flex items-center justify-center shadow-lg">
@@ -67,15 +67,15 @@ export function Profile({ user, onLogout }: ProfileProps) {
 
       {/* KYC Alert - Seulement si pas vérifié et pas en cours */}
       {showKYCAlert && (
-        <div className="mb-8 md:mb-8">
+        <div className="mb-6 md:mb-8">
           <KYCAlert status={kycData?.status || 'pending'} onStartKYC={handleStartKYC} />
         </div>
       )}
 
       {/* Grille des cartes avec hiérarchie des tailles - 12 colonnes pour plus de contrôle */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 md:gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 md:gap-8">
         {/* Colonne principale - Blocs plus larges (8 colonnes sur 12) */}
-        <div className="xl:col-span-8 space-y-8 md:space-y-8">
+        <div className="xl:col-span-8 space-y-6 md:space-y-8">
           {/* Informations personnelles - Plus large */}
           <PersonalInfoCard user={user} />
           
@@ -84,7 +84,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
         </div>
 
         {/* Colonne secondaire - Blocs plus petits (4 colonnes sur 12) */}
-        <div className="xl:col-span-4 space-y-8 md:space-y-8">
+        <div className="xl:col-span-4 space-y-6 md:space-y-8">
           {/* Paramètres de sécurité */}
           <SecuritySettingsCard 
             onStartKYC={handleStartKYC} 
