@@ -34,36 +34,40 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
     <div className="bg-terex-dark min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
         <div className="text-center">
-          {/* Logo et titre principal */}
-          <div className="flex justify-center items-center space-x-4 mb-8">
-            <div className="relative">
-              <img 
-                src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-                alt="Terex Logo" 
-                className="w-16 h-16 lg:w-20 lg:h-20 rounded-xl shadow-2xl"
-                loading="eager"
-                fetchPriority="high"
-                style={{
-                  imageRendering: 'crisp-edges',
-                  backfaceVisibility: 'hidden',
-                  transform: 'translateZ(0)'
-                }}
-              />
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight">
-              <span className="bg-gradient-to-r from-terex-accent via-terex-accent/80 to-terex-accent bg-clip-text text-transparent">
-                TEREX
-              </span>
-            </h1>
-          </div>
+          {/* Logo et titre principal - masqués si l'utilisateur est connecté */}
+          {!user && (
+            <>
+              <div className="flex justify-center items-center space-x-4 mb-8">
+                <div className="relative">
+                  <img 
+                    src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+                    alt="Terex Logo" 
+                    className="w-16 h-16 lg:w-20 lg:h-20 rounded-xl shadow-2xl"
+                    loading="eager"
+                    fetchPriority="high"
+                    style={{
+                      imageRendering: 'crisp-edges',
+                      backfaceVisibility: 'hidden',
+                      transform: 'translateZ(0)'
+                    }}
+                  />
+                </div>
+                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight">
+                  <span className="bg-gradient-to-r from-terex-accent via-terex-accent/80 to-terex-accent bg-clip-text text-transparent">
+                    TEREX
+                  </span>
+                </h1>
+              </div>
+              
+              <div className="flex justify-center items-center space-x-3 mb-6">
+                <p className="text-lg text-terex-accent/80 font-medium uppercase tracking-wider">
+                  Teranga Exchange
+                </p>
+              </div>
+            </>
+          )}
           
-          <div className="flex justify-center items-center space-x-3 mb-6">
-            <p className="text-lg text-terex-accent/80 font-medium uppercase tracking-wider">
-              Teranga Exchange
-            </p>
-          </div>
-          
-          <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+          <h2 className={`text-3xl sm:text-4xl lg:text-6xl font-bold text-white ${user ? 'mb-8 mt-16' : 'mb-6'} leading-tight`}>
             L'échange USDT Tether et les transferts
             <br />
             <span className="text-terex-accent relative">

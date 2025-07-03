@@ -16,11 +16,19 @@ export function HeaderSection({ user, onShowDashboard, onMarketplace, onLogout }
 
   if (!user) return null;
 
+  const handleLogout = async () => {
+    try {
+      await onLogout();
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
+    }
+  };
+
   return (
     <header className="bg-terex-darker border-b border-terex-accent/20 sticky top-0 z-50 pt-safe">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
             <img 
               src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
               alt="Terex Logo" 
@@ -52,7 +60,7 @@ export function HeaderSection({ user, onShowDashboard, onMarketplace, onLogout }
               <div className="flex items-center space-x-2 text-gray-300">
                 <span className="text-sm">{user.name}</span>
                 <Button
-                  onClick={onLogout}
+                  onClick={handleLogout}
                   variant="ghost"
                   size="sm"
                   className="text-gray-400 hover:text-red-400"
@@ -117,7 +125,7 @@ export function HeaderSection({ user, onShowDashboard, onMarketplace, onLogout }
                   {/* Footer avec déconnexion */}
                   <div className="p-6 border-t border-terex-accent/20 pb-safe">
                     <Button
-                      onClick={onLogout}
+                      onClick={handleLogout}
                       variant="ghost"
                       className="w-full justify-start text-red-400 hover:bg-red-600/20 h-14 text-lg"
                     >
