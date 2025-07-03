@@ -44,20 +44,15 @@ export function MarketplacePage() {
       <header className="bg-terex-darker border-b border-terex-accent/20 sticky top-0 z-40 pt-safe">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <Button
-                onClick={() => navigate('/')}
-                variant="ghost"
-                size="sm"
-                className="text-gray-300 hover:text-white"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Retour
-              </Button>
-              <h1 className="text-xl font-bold text-white">
-                Terex <span className="text-terex-accent">Shop</span>
-              </h1>
-            </div>
+            <Button
+              onClick={() => navigate('/')}
+              variant="ghost"
+              size="sm"
+              className="text-gray-300 hover:text-white"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Retour
+            </Button>
             
             <Button
               onClick={() => setShowCart(true)}
