@@ -108,8 +108,8 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </Button>
           </div>
           
-          {/* Cartes des fonctionnalités */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          {/* Cartes des fonctionnalités - espacées différemment selon l'état de connexion */}
+          <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 ${user ? 'lg:mt-20' : ''}`}>
             <Card className="bg-terex-darker/60 border-terex-accent/30 backdrop-blur-sm hover:bg-terex-darker/80 transition-all duration-300 hover:scale-105 group">
               <CardContent className="p-4 sm:p-6 text-center">
                 <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
