@@ -17,7 +17,7 @@ export function HeaderSection({ user, onShowDashboard, onMarketplace, onLogout }
   if (!user) return null;
 
   return (
-    <header className="bg-terex-darker border-b border-terex-accent/20 sticky top-0 z-50 pt-safe-top">
+    <header className="bg-terex-darker border-b border-terex-accent/20 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-4">
@@ -72,11 +72,11 @@ export function HeaderSection({ user, onShowDashboard, onMarketplace, onLogout }
               </SheetTrigger>
               <SheetContent 
                 side="right" 
-                className="w-80 bg-terex-darker border-l border-terex-accent/20 p-0 pt-safe-top"
+                className="w-80 bg-terex-darker border-l border-terex-accent/20 p-0"
               >
                 <div className="flex flex-col h-full">
                   {/* Header du menu mobile */}
-                  <div className="p-6 border-b border-terex-accent/20 mt-4">
+                  <div className="p-6 border-b border-terex-accent/20">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-terex-accent rounded-full flex items-center justify-center">
                         <User className="w-6 h-6 text-white" />
@@ -110,7 +110,7 @@ export function HeaderSection({ user, onShowDashboard, onMarketplace, onLogout }
                   </div>
 
                   {/* Footer avec déconnexion */}
-                  <div className="p-6 border-t border-terex-accent/20 pb-safe-bottom">
+                  <div className="p-6 border-t border-terex-accent/20">
                     <Button
                       onClick={onLogout}
                       variant="ghost"
