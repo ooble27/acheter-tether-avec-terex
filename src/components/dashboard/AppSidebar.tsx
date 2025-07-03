@@ -1,3 +1,4 @@
+
 import {
   Sidebar,
   SidebarContent,
@@ -89,9 +90,9 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <SidebarHeader className="p-6 border-b border-terex-gray/30">
+      <SidebarHeader className="p-6 border-b border-terex-gray/30 pt-safe-top">
         {/* Logo Header Style Binance dans la Sidebar */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 mt-4">
           <div className="relative flex items-center gap-3 p-3 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-xl border border-terex-accent/20">
             <div className="relative">
               <img 
@@ -298,7 +299,7 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
       
       {/* Bouton de déconnexion - masqué sur tablette */}
       {!isTablet && (
-        <div className="p-4 border-t border-terex-gray/30 mt-auto flex-shrink-0">
+        <div className="p-4 border-t border-terex-gray/30 mt-auto flex-shrink-0 pb-safe-bottom">
           <Button 
             onClick={onLogout}
             className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
@@ -343,14 +344,14 @@ export function MobileMenu({ activeSection, setActiveSection, onLogout }: AppSid
         <Button 
           variant="ghost" 
           size="icon"
-          className="md:hidden fixed top-4 left-4 z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12"
+          className="md:hidden fixed top-4 left-4 z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12 mt-safe-top"
         >
           <Menu className="h-6 w-6" />
         </Button>
       </SheetTrigger>
       <SheetContent 
         side="left" 
-        className="w-80 bg-terex-darker border-r border-terex-gray/30 p-0 shadow-2xl fixed"
+        className="w-80 bg-terex-darker border-r border-terex-gray/30 p-0 shadow-2xl fixed pt-safe-top"
         style={{ 
           height: '100dvh',
           maxHeight: '100dvh',
@@ -360,7 +361,7 @@ export function MobileMenu({ activeSection, setActiveSection, onLogout }: AppSid
           zIndex: 9999
         }}
       >
-        <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+        <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', position: 'relative', paddingTop: 'env(safe-area-inset-top)' }}>
           <AppSidebarContent 
             activeSection={activeSection} 
             setActiveSection={setActiveSection} 
