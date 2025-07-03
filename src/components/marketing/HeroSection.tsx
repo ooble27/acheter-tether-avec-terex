@@ -41,6 +41,13 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
                 alt="Terex Logo" 
                 className="w-16 h-16 lg:w-20 lg:h-20 rounded-xl shadow-2xl"
+                loading="eager"
+                fetchPriority="high"
+                style={{
+                  imageRendering: 'crisp-edges',
+                  backfaceVisibility: 'hidden',
+                  transform: 'translateZ(0)'
+                }}
               />
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight">
