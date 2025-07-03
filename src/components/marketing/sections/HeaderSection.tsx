@@ -21,6 +21,8 @@ export function HeaderSection({ user, onShowDashboard, onMarketplace, onLogout }
       await onLogout();
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);
+      // Force reload on error to ensure clean state
+      window.location.reload();
     }
   };
 
@@ -28,14 +30,14 @@ export function HeaderSection({ user, onShowDashboard, onMarketplace, onLogout }
     <header className="bg-terex-darker border-b border-terex-accent/20 sticky top-0 z-50 pt-safe">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
             <img 
               src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
               alt="Terex Logo" 
               className="w-8 h-8 rounded-lg"
             />
             <h1 className="text-xl font-bold text-white">
-              <span className="text-terex-accent">Terex</span>
+              Terex
             </h1>
           </div>
           
