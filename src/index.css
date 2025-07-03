@@ -65,6 +65,33 @@
   }
 }
 
+/* Classes utilitaires pour les safe areas iOS PWA */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .pl-safe {
+    padding-left: env(safe-area-inset-left);
+  }
+  
+  .pr-safe {
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  .mt-safe {
+    margin-top: env(safe-area-inset-top);
+  }
+  
+  .mb-safe {
+    margin-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 /* Style Binance pour le logo et branding */
 .terex-brand {
   background: linear-gradient(135deg, #3B968F 0%, #4BA89F 50%, #5BC1B8 100%);
