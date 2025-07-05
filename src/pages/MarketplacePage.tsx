@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,6 +36,10 @@ export function MarketplacePage() {
   };
 
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+  const handleProductClick = (product: any) => {
+    navigate(`/marketplace/product/${product.id}`);
+  };
 
   return (
     <div className="min-h-screen bg-terex-dark">
@@ -116,15 +119,15 @@ export function MarketplacePage() {
               <Card 
                 key={product.id}
                 className="bg-terex-darker border-terex-accent/30 hover:border-terex-accent/50 transition-all duration-300 cursor-pointer group"
-                onClick={() => setSelectedProduct(product)}
+                onClick={() => handleProductClick(product)}
               >
                 <CardHeader className="p-4">
-                  <div className="aspect-square bg-terex-dark rounded-lg mb-3 flex items-center justify-center">
+                  <div className="aspect-square bg-terex-dark rounded-lg mb-3 flex items-center justify-center overflow-hidden">
                     {product.images[0] ? (
                       <img 
                         src={product.images[0]} 
                         alt={product.name}
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.style.display = 'none';

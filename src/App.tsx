@@ -17,6 +17,7 @@ import BlockchainPage from "./pages/BlockchainPage";
 import { TransactionProvider } from "./contexts/TransactionContext";
 import { PWASessionSync } from "./components/PWASessionSync";
 import { MarketplacePage } from '@/pages/MarketplacePage';
+import { ProductDetailPage } from '@/pages/ProductDetailPage';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
               <Route path="/marketing" element={<MarketingPage />} />
               <Route path="/admin/*" element={<AdminPage />} />
               <Route path="/marketplace" element={<MarketplacePage />} />
+              <Route path="/marketplace/product/:productId" element={<ProductDetailPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </TransactionProvider>
