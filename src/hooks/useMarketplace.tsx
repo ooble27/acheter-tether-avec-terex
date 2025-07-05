@@ -36,7 +36,7 @@ interface Category {
   image_url?: string;
 }
 
-// Données de produits par défaut avec photos réelles uploadées
+// Données de produits par défaut avec les nouvelles photos uploadées
 const defaultProducts: Product[] = [
   {
     id: '1',
@@ -47,7 +47,10 @@ const defaultProducts: Product[] = [
     category_id: 'wallets',
     brand: 'Trezor',
     stock_quantity: 15,
-    images: ['/lovable-uploads/6a172626-e81f-4a46-b547-c09040acb9a9.png'],
+    images: [
+      '/lovable-uploads/99eec0e6-2e12-41a7-b71d-dbc871a5362e.png',
+      '/lovable-uploads/b326471e-efd2-423e-b396-98ebe830eb9a.png'
+    ],
     specifications: { connectivity: 'USB-C', screen: 'Tactile couleur' },
     is_active: true,
     created_at: new Date().toISOString()
@@ -61,22 +64,28 @@ const defaultProducts: Product[] = [
     category_id: 'wallets',
     brand: 'Trezor',
     stock_quantity: 25,
-    images: ['/lovable-uploads/109de98a-a26f-4bbf-b8f0-8f33c50d1a7a.png'],
+    images: [
+      '/lovable-uploads/f9a810b1-b421-4c66-abc8-6ff1158d7866.png',
+      '/lovable-uploads/6d76b078-0579-4506-b2a6-33ee439a62c1.png'
+    ],
     specifications: { connectivity: 'USB-C', screen: 'OLED' },
     is_active: true,
     created_at: new Date().toISOString()
   },
   {
     id: '3',
-    name: 'Ledger Nano S Plus',
-    description: 'Wallet hardware Ledger avec écran et support de 5500+ cryptomonnaies',
-    price: 79000,
+    name: 'Trezor Model One',
+    description: 'Le wallet hardware original de Trezor, simple et efficace pour débuter en sécurité crypto',
+    price: 59000,
     currency: 'CFA',
     category_id: 'wallets',
-    brand: 'Ledger',
-    stock_quantity: 20,
-    images: ['/lovable-uploads/2962c334-a431-4aec-afc8-3057aedfb37f.png'],
-    specifications: { connectivity: 'USB-C', screen: 'LCD' },
+    brand: 'Trezor',
+    stock_quantity: 30,
+    images: [
+      '/lovable-uploads/c8b57eb3-8db7-4624-84db-f69c8a39c034.png',
+      '/lovable-uploads/f6157130-037c-4cfe-9f93-6eafb39ef66b.png'
+    ],
+    specifications: { connectivity: 'USB', screen: 'OLED Monochrome' },
     is_active: true,
     created_at: new Date().toISOString()
   },
