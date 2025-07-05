@@ -48,8 +48,8 @@ const defaultProducts: Product[] = [
     brand: 'Trezor',
     stock_quantity: 15,
     images: [
-      '/lovable-uploads/99eec0e6-2e12-41a7-b71d-dbc871a5362e.png',
-      '/lovable-uploads/b326471e-efd2-423e-b396-98ebe830eb9a.png'
+      'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=400&fit=crop'
     ],
     specifications: { connectivity: 'USB-C', screen: 'Tactile couleur' },
     is_active: true,
@@ -65,8 +65,8 @@ const defaultProducts: Product[] = [
     brand: 'Trezor',
     stock_quantity: 25,
     images: [
-      '/lovable-uploads/f9a810b1-b421-4c66-abc8-6ff1158d7866.png',
-      '/lovable-uploads/6d76b078-0579-4506-b2a6-33ee439a62c1.png'
+      'https://images.unsplash.com/photo-1605792657660-596af9009e82?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400&h=400&fit=crop'
     ],
     specifications: { connectivity: 'USB-C', screen: 'OLED' },
     is_active: true,
@@ -82,8 +82,8 @@ const defaultProducts: Product[] = [
     brand: 'Trezor',
     stock_quantity: 30,
     images: [
-      '/lovable-uploads/c8b57eb3-8db7-4624-84db-f69c8a39c034.png',
-      '/lovable-uploads/f6157130-037c-4cfe-9f93-6eafb39ef66b.png'
+      'https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=400&h=400&fit=crop'
     ],
     specifications: { connectivity: 'USB', screen: 'OLED Monochrome' },
     is_active: true,
@@ -98,7 +98,7 @@ const defaultProducts: Product[] = [
     category_id: 'wallets',
     brand: 'Ledger',
     stock_quantity: 12,
-    images: ['/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png'],
+    images: ['https://images.unsplash.com/photo-1639322537504-6427a16b0a28?w=400&h=400&fit=crop'],
     specifications: { connectivity: 'USB-C/Bluetooth', screen: 'LCD HD' },
     is_active: true,
     created_at: new Date().toISOString()
@@ -112,7 +112,7 @@ const defaultProducts: Product[] = [
     category_id: 'clothing',
     brand: 'Terex',
     stock_quantity: 50,
-    images: ['/lovable-uploads/29969ee7-eb01-43e8-9722-d2aa5b959735.png'],
+    images: ['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop'],
     specifications: { material: '100% Coton', sizes: 'S, M, L, XL' },
     is_active: true,
     created_at: new Date().toISOString()
@@ -126,7 +126,7 @@ const defaultProducts: Product[] = [
     category_id: 'clothing',
     brand: 'Terex',
     stock_quantity: 40,
-    images: ['/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png'],
+    images: ['https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=400&fit=crop'],
     specifications: { material: '100% Coton', sizes: 'S, M, L, XL, XXL' },
     is_active: true,
     created_at: new Date().toISOString()
@@ -140,7 +140,7 @@ const defaultProducts: Product[] = [
     category_id: 'accessories',
     brand: 'CryptoSteel',
     stock_quantity: 30,
-    images: ['/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png'],
+    images: ['https://images.unsplash.com/photo-1617957848587-01062d2bb7b1?w=400&h=400&fit=crop'],
     specifications: { material: 'Acier inoxydable', resistance: 'Feu/Eau' },
     is_active: true,
     created_at: new Date().toISOString()
@@ -154,7 +154,7 @@ const defaultProducts: Product[] = [
     category_id: 'training',
     brand: 'Terex Academy',
     stock_quantity: 100,
-    images: ['/lovable-uploads/26b3437e-c333-4387-aeb9-731aa705f282.png'],
+    images: ['https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=400&fit=crop'],
     specifications: { duration: '20 heures', language: 'Français', access: 'À vie' },
     is_active: true,
     created_at: new Date().toISOString()
