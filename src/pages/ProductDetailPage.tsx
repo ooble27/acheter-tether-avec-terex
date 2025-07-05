@@ -15,15 +15,33 @@ export function ProductDetailPage() {
   const navigate = useNavigate();
   const { products, addToCart } = useMarketplace();
   const [quantity, setQuantity] = useState(1);
-  const [selectedSpecs, setSelectedSpecs] = useState<string>('');
+
+  console.log('ProductDetailPage - productId:', productId);
+  console.log('ProductDetailPage - products:', products);
 
   const product = products.find(p => p.id === productId);
+  
+  console.log('ProductDetailPage - found product:', product);
 
   useEffect(() => {
-    if (!product) {
+    if (!productId) {
+      console.log('No product ID, navigating to marketplace');
       navigate('/marketplace');
     }
-  }, [product, navigate]);
+  }, [productId, navigate]);
+
+  if (!product && products.length > 0) {
+    return (
+      <div className="min-h-screen bg-terex-dark flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-300 mb-4">Produit non trouvé</p>
+          <Button onClick={() => navigate('/marketplace')}>
+            Retour à la boutique
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -81,7 +99,7 @@ export function ProductDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           {/* Galerie d'images */}
           <div>
-            <ProductImageGallery images={product.images} productName={product.name} />
+            <ProductImageGallery images={product.images || []} productName={product.name} />
           </div>
 
           {/* Informations produit */}

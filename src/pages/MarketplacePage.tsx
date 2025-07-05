@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -38,6 +39,7 @@ export function MarketplacePage() {
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   const handleProductClick = (product: any) => {
+    console.log('Navigating to product:', product.id);
     navigate(`/marketplace/product/${product.id}`);
   };
 
@@ -123,7 +125,7 @@ export function MarketplacePage() {
               >
                 <CardHeader className="p-4">
                   <div className="aspect-square bg-terex-dark rounded-lg mb-3 flex items-center justify-center overflow-hidden">
-                    {product.images[0] ? (
+                    {product.images && product.images[0] ? (
                       <img 
                         src={product.images[0]} 
                         alt={product.name}
@@ -131,9 +133,9 @@ export function MarketplacePage() {
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.style.display = 'none';
-                          const nextElement = target.nextElementSibling as HTMLElement;
-                          if (nextElement) {
-                            nextElement.style.display = 'flex';
+                          const parent = target.parentElement;
+                          if (parent) {
+                            parent.innerHTML = '<div class="text-gray-500 text-4xl">📦</div>';
                           }
                         }}
                       />
