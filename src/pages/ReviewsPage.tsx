@@ -107,6 +107,9 @@ export function ReviewsPage() {
     );
   };
 
+  // Calculate product average rating from reviews
+  const productAvgRating = averageRating;
+
   return (
     <div className="min-h-screen bg-terex-dark">
       {/* Header */}
@@ -171,13 +174,11 @@ export function ReviewsPage() {
               <div className="flex-1">
                 <h2 className="text-white font-semibold">{product.name}</h2>
                 <p className="text-gray-400 text-sm">{product.brand}</p>
-                {"avg_rating" in product && (
-                  <div className="flex items-center space-x-2 mt-1">
-                    {renderStars(product.avg_rating as number)}
-                    <span className="text-yellow-400 font-semibold">{product.avg_rating}</span>
-                    <span className="text-gray-400 text-sm">({reviews.length} avis)</span>
-                  </div>
-                )}
+                <div className="flex items-center space-x-2 mt-1">
+                  {renderStars(Math.round(productAvgRating))}
+                  <span className="text-yellow-400 font-semibold">{productAvgRating.toFixed(1)}</span>
+                  <span className="text-gray-400 text-sm">({reviews.length} avis)</span>
+                </div>
               </div>
             </div>
           </CardContent>
