@@ -84,6 +84,14 @@ export function ProductDetailPage() {
             </Button>
             
             <div className="flex items-center space-x-2">
+              <Button 
+                onClick={() => navigate(`/marketplace/product/${product.id}/reviews`)}
+                variant="ghost" 
+                size="sm" 
+                className="text-gray-300 hover:text-white"
+              >
+                ⭐ Avis clients
+              </Button>
               <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
                 <Heart className="w-4 h-4" />
               </Button>

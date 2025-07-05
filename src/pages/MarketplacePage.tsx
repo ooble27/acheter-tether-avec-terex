@@ -59,19 +59,46 @@ export function MarketplacePage() {
               Retour
             </Button>
             
-            <Button
-              onClick={() => setShowCart(true)}
-              variant="outline"
-              className="relative border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10"
-            >
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              Panier
-              {cartItemsCount > 0 && (
-                <Badge className="absolute -top-2 -right-2 bg-terex-accent text-black px-1 min-w-[20px] h-5 flex items-center justify-center rounded-full text-xs">
-                  {cartItemsCount}
-                </Badge>
-              )}
-            </Button>
+            <div className="flex items-center space-x-4">
+              <Button
+                onClick={() => navigate('/marketplace/search')}
+                variant="ghost"
+                size="sm"
+                className="text-gray-300 hover:text-white"
+              >
+                <Search className="w-4 h-4 mr-2" />
+                Recherche
+              </Button>
+              <Button
+                onClick={() => navigate('/marketplace/wishlist')}
+                variant="ghost"
+                size="sm"
+                className="text-gray-300 hover:text-white"
+              >
+                ❤️ Liste
+              </Button>
+              <Button
+                onClick={() => navigate('/marketplace/compare')}
+                variant="ghost"
+                size="sm"
+                className="text-gray-300 hover:text-white"
+              >
+                📊 Comparer
+              </Button>
+              <Button
+                onClick={() => setShowCart(true)}
+                variant="outline"
+                className="relative border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10"
+              >
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Panier
+                {cartItemsCount > 0 && (
+                  <Badge className="absolute -top-2 -right-2 bg-terex-accent text-black px-1 min-w-[20px] h-5 flex items-center justify-center rounded-full text-xs">
+                    {cartItemsCount}
+                  </Badge>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </header>

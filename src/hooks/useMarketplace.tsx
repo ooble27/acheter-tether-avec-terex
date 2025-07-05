@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -37,7 +36,7 @@ interface Category {
   image_url?: string;
 }
 
-// Données de produits par défaut avec photos réelles
+// Données de produits par défaut avec photos réelles uploadées
 const defaultProducts: Product[] = [
   {
     id: '1',
