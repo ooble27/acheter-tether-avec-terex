@@ -91,6 +91,10 @@ export function MarketplacePage() {
     }
   };
 
+  const handlePriceChange = (min: number, max: number) => {
+    setPriceRange([min, max]);
+  };
+
   const clearFilters = () => {
     setSelectedCategory('');
     setSelectedBrands([]);
@@ -158,7 +162,7 @@ export function MarketplacePage() {
               minPrice={minPrice}
               maxPrice={maxPrice}
               priceRange={priceRange}
-              onPriceChange={setPriceRange}
+              onPriceChange={handlePriceChange}
             />
 
             {/* Brand Filter */}
