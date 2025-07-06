@@ -36,7 +36,7 @@ interface Category {
   image_url?: string;
 }
 
-// Données de produits par défaut avec les nouvelles photos uploadées
+// Données de produits par défaut avec de vraies images de produits crypto
 const defaultProducts: Product[] = [
   {
     id: '1',
@@ -48,10 +48,10 @@ const defaultProducts: Product[] = [
     brand: 'Trezor',
     stock_quantity: 15,
     images: [
-      'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=400&fit=crop'
+      'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=500&h=500&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?w=500&h=500&fit=crop&crop=center'
     ],
-    specifications: { connectivity: 'USB-C', screen: 'Tactile couleur' },
+    specifications: { connectivity: 'USB-C', screen: 'Tactile couleur', coins: '8000+' },
     is_active: true,
     created_at: new Date().toISOString()
   },
@@ -65,107 +65,169 @@ const defaultProducts: Product[] = [
     brand: 'Trezor',
     stock_quantity: 25,
     images: [
-      'https://images.unsplash.com/photo-1605792657660-596af9009e82?w=400&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400&h=400&fit=crop'
+      'https://images.unsplash.com/photo-1605792657660-596af9009e82?w=500&h=500&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=500&h=500&fit=crop&crop=center'
     ],
-    specifications: { connectivity: 'USB-C', screen: 'OLED' },
+    specifications: { connectivity: 'USB-C', screen: 'OLED', coins: '5000+' },
     is_active: true,
     created_at: new Date().toISOString()
   },
   {
     id: '3',
-    name: 'Trezor Model One',
-    description: 'Le wallet hardware original de Trezor, simple et efficace pour débuter en sécurité crypto',
-    price: 59000,
-    currency: 'CFA',
-    category_id: 'wallets',
-    brand: 'Trezor',
-    stock_quantity: 30,
-    images: [
-      'https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?w=400&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=400&h=400&fit=crop'
-    ],
-    specifications: { connectivity: 'USB', screen: 'OLED Monochrome' },
-    is_active: true,
-    created_at: new Date().toISOString()
-  },
-  {
-    id: '4',
     name: 'Ledger Nano X',
-    description: 'Wallet hardware premium avec Bluetooth et écran haute résolution',
+    description: 'Wallet hardware premium avec Bluetooth et écran haute résolution pour plus de 5500 cryptomonnaies',
     price: 149000,
     currency: 'CFA',
     category_id: 'wallets',
     brand: 'Ledger',
     stock_quantity: 12,
-    images: ['https://images.unsplash.com/photo-1639322537504-6427a16b0a28?w=400&h=400&fit=crop'],
-    specifications: { connectivity: 'USB-C/Bluetooth', screen: 'LCD HD' },
+    images: [
+      'https://images.unsplash.com/photo-1639322537504-6427a16b0a28?w=500&h=500&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?w=500&h=500&fit=crop&crop=center'
+    ],
+    specifications: { connectivity: 'USB-C/Bluetooth', screen: 'LCD HD', coins: '5500+' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '4',
+    name: 'Ledger Nano S Plus',
+    description: 'Version améliorée du Nano S avec plus de stockage et support étendu des cryptomonnaies',
+    price: 89000,
+    currency: 'CFA',
+    category_id: 'wallets',
+    brand: 'Ledger',
+    stock_quantity: 20,
+    images: [
+      'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=500&h=500&fit=crop&crop=center'
+    ],
+    specifications: { connectivity: 'USB-C', screen: 'OLED', coins: '5500+' },
     is_active: true,
     created_at: new Date().toISOString()
   },
   {
     id: '5',
-    name: 'T-shirt Bitcoin Orange',
-    description: 'T-shirt premium 100% coton avec logo Bitcoin stylisé',
-    price: 15000,
+    name: 'T-shirt Bitcoin Orange Premium',
+    description: 'T-shirt premium 100% coton biologique avec logo Bitcoin brodé main, édition limitée',
+    price: 25000,
     currency: 'CFA',
     category_id: 'clothing',
-    brand: 'Terex',
+    brand: 'Terex Fashion',
     stock_quantity: 50,
-    images: ['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop'],
-    specifications: { material: '100% Coton', sizes: 'S, M, L, XL' },
+    images: [
+      'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&h=500&fit=crop&crop=center'
+    ],
+    specifications: { material: '100% Coton Bio', sizes: 'S, M, L, XL, XXL', care: 'Lavage 30°' },
     is_active: true,
     created_at: new Date().toISOString()
   },
   {
     id: '6',
-    name: 'T-shirt Ethereum Noir',
-    description: 'T-shirt élégant avec logo Ethereum brodé, coupe moderne',
-    price: 18000,
+    name: 'Hoodie Ethereum Noir',
+    description: 'Sweat à capuche premium avec logo Ethereum brodé, doublure polaire douce',
+    price: 45000,
     currency: 'CFA',
     category_id: 'clothing',
-    brand: 'Terex',
-    stock_quantity: 40,
-    images: ['https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=400&fit=crop'],
-    specifications: { material: '100% Coton', sizes: 'S, M, L, XL, XXL' },
+    brand: 'Terex Fashion',
+    stock_quantity: 30,
+    images: [
+      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500&h=500&fit=crop&crop=center'
+    ],
+    specifications: { material: '80% Coton 20% Polyester', sizes: 'S, M, L, XL, XXL', features: 'Capuche doublée' },
     is_active: true,
     created_at: new Date().toISOString()
   },
   {
     id: '7',
-    name: 'Carte Crypto Steel',
-    description: 'Carte en acier inoxydable pour sauvegarder vos phrases de récupération',
-    price: 35000,
+    name: 'CryptoSteel Capsule Solo',
+    description: 'Carte en acier inoxydable pour sauvegarder vos phrases de récupération, résistant au feu et à l\'eau',
+    price: 65000,
     currency: 'CFA',
     category_id: 'accessories',
     brand: 'CryptoSteel',
-    stock_quantity: 30,
-    images: ['https://images.unsplash.com/photo-1617957848587-01062d2bb7b1?w=400&h=400&fit=crop'],
-    specifications: { material: 'Acier inoxydable', resistance: 'Feu/Eau' },
+    stock_quantity: 25,
+    images: [
+      'https://images.unsplash.com/photo-1617957848587-01062d2bb7b1?w=500&h=500&fit=crop&crop=center'
+    ],
+    specifications: { material: 'Acier inoxydable 303', resistance: 'Feu 1000°C, Eau, Corrosion', capacity: '24 mots' },
     is_active: true,
     created_at: new Date().toISOString()
   },
   {
     id: '8',
-    name: 'Formation Crypto Complète',
-    description: 'Cours en ligne complet sur la cryptomonnaie et la blockchain (accès à vie)',
-    price: 89000,
+    name: 'Formation Crypto Masterclass',
+    description: 'Formation complète sur les cryptomonnaies et DeFi avec certificat, accès à vie et communauté privée',
+    price: 149000,
     currency: 'CFA',
     category_id: 'training',
     brand: 'Terex Academy',
     stock_quantity: 100,
-    images: ['https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=400&fit=crop'],
-    specifications: { duration: '20 heures', language: 'Français', access: 'À vie' },
+    images: [
+      'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&h=500&fit=crop&crop=center'
+    ],
+    specifications: { duration: '40 heures', modules: '12 modules', language: 'Français', certificate: 'Inclus' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '9',
+    name: 'Yubikey 5C NFC',
+    description: 'Clé de sécurité hardware pour authentification 2FA ultra-sécurisée',
+    price: 75000,
+    currency: 'CFA',
+    category_id: 'accessories',
+    brand: 'Yubico',
+    stock_quantity: 18,
+    images: [
+      'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?w=500&h=500&fit=crop&crop=center'
+    ],
+    specifications: { connectivity: 'USB-C, NFC', protocols: 'FIDO2, U2F, OTP', compatibility: 'Multi-plateforme' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '10',
+    name: 'Casquette Bitcoin Snapback',
+    description: 'Casquette ajustable avec logo Bitcoin brodé, visière plate, style streetwear',
+    price: 18000,
+    currency: 'CFA',
+    category_id: 'clothing',
+    brand: 'Terex Fashion',
+    stock_quantity: 45,
+    images: [
+      'https://images.unsplash.com/photo-1588117260148-b47818741c74?w=500&h=500&fit=crop&crop=center'
+    ],
+    specifications: { material: '100% Coton', style: 'Snapback', colors: 'Noir, Orange', fit: 'Ajustable' },
     is_active: true,
     created_at: new Date().toISOString()
   }
 ];
 
 const defaultCategories: Category[] = [
-  { id: 'wallets', name: 'Wallets Hardware', description: 'Portefeuilles physiques sécurisés' },
-  { id: 'clothing', name: 'Vêtements Crypto', description: 'T-shirts et accessoires Bitcoin/Crypto' },
-  { id: 'accessories', name: 'Accessoires', description: 'Cartes de sauvegarde et gadgets' },
-  { id: 'training', name: 'Formations', description: 'Cours et guides crypto' }
+  { 
+    id: 'wallets', 
+    name: 'Wallets Hardware', 
+    description: 'Portefeuilles physiques ultra-sécurisés pour cryptomonnaies',
+    image_url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=300&h=200&fit=crop'
+  },
+  { 
+    id: 'clothing', 
+    name: 'Mode Crypto', 
+    description: 'Vêtements et accessoires tendance pour les passionnés de crypto',
+    image_url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=200&fit=crop'
+  },
+  { 
+    id: 'accessories', 
+    name: 'Sécurité & Accessoires', 
+    description: 'Outils de sécurité et accessoires pour protéger vos actifs numériques',
+    image_url: 'https://images.unsplash.com/photo-1617957848587-01062d2bb7b1?w=300&h=200&fit=crop'
+  },
+  { 
+    id: 'training', 
+    name: 'Formation & Éducation', 
+    description: 'Cours et formations pour maîtriser l\'univers des cryptomonnaies',
+    image_url: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300&h=200&fit=crop'
+  }
 ];
 
 export const useMarketplace = () => {
@@ -176,7 +238,6 @@ export const useMarketplace = () => {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Charger les produits
   const fetchProducts = async (categoryId?: string) => {
     try {
       setLoading(true);
@@ -212,7 +273,6 @@ export const useMarketplace = () => {
     }
   };
 
-  // Charger les catégories
   const fetchCategories = async () => {
     try {
       const { data, error } = await supabase
@@ -232,10 +292,8 @@ export const useMarketplace = () => {
     }
   };
 
-  // Charger le panier
   const fetchCart = async () => {
     if (!user) {
-      // Charger le panier depuis localStorage si pas connecté
       const localCart = localStorage.getItem('terex_cart');
       if (localCart) {
         const cartData = JSON.parse(localCart);
@@ -267,13 +325,11 @@ export const useMarketplace = () => {
     }
   };
 
-  // Ajouter au panier
   const addToCart = async (productId: string, quantity: number = 1) => {
     const product = products.find(p => p.id === productId);
     if (!product) return;
 
     if (!user) {
-      // Panier local pour utilisateurs non connectés
       const localCart = JSON.parse(localStorage.getItem('terex_cart') || '[]');
       const existingItem = localCart.find((item: any) => item.product_id === productId);
       
@@ -292,19 +348,17 @@ export const useMarketplace = () => {
       setCartItems(localCart);
       
       toast({
-        title: "Ajouté au panier",
-        description: "L'article a été ajouté à votre panier",
+        title: "✅ Ajouté au panier",
+        description: `${product.name} a été ajouté à votre panier`,
         className: "bg-green-600 text-white border-green-600",
       });
       return;
     }
 
     try {
-      // Vérifier si le produit est déjà dans le panier
       const existingItem = cartItems.find(item => item.product_id === productId);
 
       if (existingItem) {
-        // Mettre à jour la quantité
         const { error } = await supabase
           .from('cart_items')
           .update({ quantity: existingItem.quantity + quantity })
@@ -312,7 +366,6 @@ export const useMarketplace = () => {
 
         if (error) throw error;
       } else {
-        // Ajouter un nouvel article
         const { error } = await supabase
           .from('cart_items')
           .insert({
@@ -326,21 +379,20 @@ export const useMarketplace = () => {
 
       await fetchCart();
       toast({
-        title: "Ajouté au panier",
-        description: "L'article a été ajouté à votre panier",
+        title: "✅ Ajouté au panier",
+        description: `${product.name} a été ajouté à votre panier`,
         className: "bg-green-600 text-white border-green-600",
       });
     } catch (error) {
       console.error('Erreur lors de l\'ajout au panier:', error);
       toast({
-        title: "Erreur",
+        title: "❌ Erreur",
         description: "Impossible d'ajouter l'article au panier",
         variant: "destructive",
       });
     }
   };
 
-  // Supprimer du panier
   const removeFromCart = async (cartItemId: string) => {
     if (!user) {
       const localCart = JSON.parse(localStorage.getItem('terex_cart') || '[]');
@@ -368,7 +420,6 @@ export const useMarketplace = () => {
     }
   };
 
-  // Mettre à jour la quantité
   const updateQuantity = async (cartItemId: string, quantity: number) => {
     if (quantity <= 0) {
       await removeFromCart(cartItemId);
@@ -404,7 +455,6 @@ export const useMarketplace = () => {
     }
   };
 
-  // Vider le panier
   const clearCart = async () => {
     if (!user) {
       localStorage.removeItem('terex_cart');
@@ -425,7 +475,6 @@ export const useMarketplace = () => {
     }
   };
 
-  // Calculer le total du panier
   const getCartTotal = () => {
     return cartItems.reduce((total, item) => {
       return total + (item.product?.price || 0) * item.quantity;
