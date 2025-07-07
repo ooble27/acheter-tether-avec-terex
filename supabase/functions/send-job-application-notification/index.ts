@@ -47,8 +47,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Email pour l'admin
     const adminEmailResponse = await resend.emails.send({
-      from: "Terex Careers <careers@terex.app>",
-      to: ["Terangaexchange@gmail.com"],
+      from: "Terex Careers <onboarding@resend.dev>",
+      to: ["terangaexchange@gmail.com"],
       subject: `Nouvelle candidature : ${applicationData.position}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -86,10 +86,10 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    // Email de confirmation pour le candidat
+    // Email de confirmation pour le candidat (temporairement vers admin en test)
     const candidateEmailResponse = await resend.emails.send({
-      from: "Terex Careers <careers@terex.app>",
-      to: [applicationData.email],
+      from: "Terex Careers <onboarding@resend.dev>",
+      to: ["terangaexchange@gmail.com"], // En test, remplacer par applicationData.email une fois domaine vérifié
       subject: `Candidature reçue - ${applicationData.position} chez Terex`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
