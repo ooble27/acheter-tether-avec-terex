@@ -1,6 +1,7 @@
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, CheckCircle, Users, Globe, TrendingUp, Shield, Zap, Award } from 'lucide-react';
+import { ArrowRight, CheckCircle, Users, Globe, TrendingUp, Shield, Zap, Award, Target } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';

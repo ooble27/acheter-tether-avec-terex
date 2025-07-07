@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Phone, Mail, MessageCircle, Send } from 'lucide-react';
+import { MapPin, Phone, Mail, MessageCircle, Send, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -17,7 +17,7 @@ const ContactPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { createContactMessage } = useContactMessages();
+  const { sendMessage } = useContactMessages();
 
   // Scroll to top when component mounts
   useEffect(() => {
