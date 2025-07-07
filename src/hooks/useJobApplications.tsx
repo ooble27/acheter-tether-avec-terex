@@ -27,8 +27,12 @@ export const useJobApplications = () => {
     setIsSubmitting(true);
     
     try {
-      // Récupérer l'utilisateur actuel ou permettre candidature anonyme
+      // Récupérer l'utilisateur actuel - connexion obligatoire
       const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("Vous devez être connecté pour postuler");
+      }
       
       let cvUrl = null;
       
@@ -36,7 +40,7 @@ export const useJobApplications = () => {
       if (applicationData.cv_file) {
         const fileExt = applicationData.cv_file.name.split('.').pop();
         const fileName = `${Date.now()}-${applicationData.first_name}-${applicationData.last_name}.${fileExt}`;
-        const filePath = user?.id ? `${user.id}/${fileName}` : `anonymous/${fileName}`;
+        const filePath = `${user.id}/${fileName}`;
         
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from('cvs')
@@ -58,7 +62,7 @@ export const useJobApplications = () => {
         .insert({
           ...dataToInsert,
           cv_url: cvUrl,
-          user_id: user?.id || null,
+          user_id: user.id,
         });
 
       if (dbError) {

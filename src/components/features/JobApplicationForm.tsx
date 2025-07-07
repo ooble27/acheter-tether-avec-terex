@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useJobApplications, JobApplication } from '@/hooks/useJobApplications';
+import { useAuth } from '@/contexts/AuthContext';
 import { Send } from 'lucide-react';
 
 interface JobApplicationFormProps {
@@ -15,12 +16,13 @@ interface JobApplicationFormProps {
 
 export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProps) => {
   const { submitApplication, isSubmitting } = useJobApplications();
+  const { user } = useAuth();
   
   const [formData, setFormData] = useState<JobApplication>({
     position,
     first_name: '',
     last_name: '',
-    email: '',
+    email: user?.email || '',
     phone: '',
     location: '',
     experience_years: undefined,
@@ -99,7 +101,9 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 className="bg-terex-gray border-terex-accent/30 text-white"
                 placeholder="votre@email.com"
+                disabled
               />
+              <p className="text-gray-400 text-sm">Email de votre compte Terex</p>
             </div>
             
             <div className="space-y-2">
