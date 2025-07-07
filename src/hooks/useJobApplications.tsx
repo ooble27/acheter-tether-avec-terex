@@ -69,13 +69,20 @@ export const useJobApplications = () => {
         throw dbError;
       }
 
-      // Envoyer les emails de notification
+      // Envoyer les emails de notification via le système existant
       const { data: emailData, error: emailError } = await supabase.functions.invoke(
-        'send-job-application-notification',
+        'send-email-notification',
         {
           body: {
-            ...dataToInsert,
-            cv_url: cvUrl,
+            userId: user.id,
+            orderId: null,
+            emailAddress: user.email,
+            emailType: 'job_application',
+            transactionType: 'application',
+            orderData: {
+              ...dataToInsert,
+              cv_url: cvUrl,
+            }
           },
         }
       );

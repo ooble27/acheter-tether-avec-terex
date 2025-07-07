@@ -238,6 +238,101 @@ const handler = async (req: Request): Promise<Response> => {
         );
         break;
 
+      case 'job_application':
+        // Email de confirmation pour le candidat
+        subject = `Candidature reçue - ${orderData.position} chez Terex`;
+        htmlContent = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: linear-gradient(135deg, #0FA958 0%, #08a045 100%); color: white; padding: 30px; border-radius: 10px; text-align: center;">
+              <h1 style="margin: 0; font-size: 28px;">Candidature reçue avec succès</h1>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 20px 0;">
+              <h2 style="color: #333; margin-bottom: 20px;">Bonjour ${orderData.first_name},</h2>
+              
+              <p style="color: #555; line-height: 1.6; margin-bottom: 20px;">
+                Nous avons bien reçu votre candidature pour le poste de <strong>${orderData.position}</strong> chez Terex.
+              </p>
+              
+              <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="color: #1976d2; margin-top: 0;">Prochaines étapes</h3>
+                <ul style="color: #555; line-height: 1.6;">
+                  <li>Notre équipe RH va examiner votre candidature dans les 48 heures</li>
+                  <li>Si votre profil correspond à nos besoins, nous vous contacterons pour un premier entretien</li>
+                  <li>Le processus de recrutement comprend généralement 2-3 étapes d'entretiens</li>
+                </ul>
+              </div>
+              
+              <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #0FA958; margin: 20px 0;">
+                <h3 style="color: #0FA958; margin-top: 0;">À propos de ${orderData.position}</h3>
+                <p style="color: #555; line-height: 1.6;">Un rôle clé pour contribuer à notre mission de révolutionner les transferts d'argent en Afrique.</p>
+              </div>
+              
+              <p style="color: #555; line-height: 1.6; margin-bottom: 20px;">
+                En attendant, n'hésitez pas à nous suivre sur nos réseaux sociaux pour rester informé de nos actualités.
+              </p>
+            </div>
+            
+            <div style="text-align: center; padding: 20px; color: #666; font-size: 14px;">
+              <p>Cordialement,<br><strong>L'équipe Terex</strong></p>
+              <p style="margin-top: 20px;">
+                <a href="https://app.terangaexchange.com" style="color: #0FA958; text-decoration: none;">app.terangaexchange.com</a>
+              </p>
+            </div>
+          </div>
+        `;
+
+        // Envoyer aussi une notification à l'équipe RH Terex
+        try {
+          const adminNotificationHtml = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <div style="background: linear-gradient(135deg, #0FA958 0%, #08a045 100%); color: white; padding: 30px; border-radius: 10px; text-align: center;">
+                <h1 style="margin: 0; font-size: 28px;">Nouvelle Candidature</h1>
+              </div>
+              
+              <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 20px 0;">
+                <h2 style="color: #333; margin-bottom: 20px;">Poste : ${orderData.position}</h2>
+                
+                <h3 style="color: #0FA958; margin-top: 30px;">Informations du candidat</h3>
+                <p><strong>Nom :</strong> ${orderData.first_name} ${orderData.last_name}</p>
+                <p><strong>Email :</strong> ${orderData.email}</p>
+                ${orderData.phone ? `<p><strong>Téléphone :</strong> ${orderData.phone}</p>` : ''}
+                ${orderData.location ? `<p><strong>Localisation :</strong> ${orderData.location}</p>` : ''}
+                ${orderData.experience_years ? `<p><strong>Années d'expérience :</strong> ${orderData.experience_years}</p>` : ''}
+                ${orderData.availability ? `<p><strong>Disponibilité :</strong> ${orderData.availability}</p>` : ''}
+                ${orderData.salary_expectation ? `<p><strong>Prétentions salariales :</strong> ${orderData.salary_expectation}</p>` : ''}
+                ${orderData.linkedin_profile ? `<p><strong>LinkedIn :</strong> <a href="${orderData.linkedin_profile}">${orderData.linkedin_profile}</a></p>` : ''}
+                ${orderData.portfolio_url ? `<p><strong>Portfolio :</strong> <a href="${orderData.portfolio_url}">${orderData.portfolio_url}</a></p>` : ''}
+              </div>
+              
+              ${orderData.cover_letter ? `
+                <div style="background: white; padding: 20px; border-left: 4px solid #0FA958; margin: 20px 0;">
+                  <h3 style="color: #0FA958; margin-top: 0;">Lettre de motivation</h3>
+                  <p style="white-space: pre-wrap; color: #555; line-height: 1.6;">${orderData.cover_letter}</p>
+                </div>
+              ` : ''}
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="https://app.terangaexchange.com/admin" style="background: #0FA958; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                  Voir dans l'admin
+                </a>
+              </div>
+            </div>
+          `;
+
+          await resend.emails.send({
+            from: "Terex Careers <noreply@terangaexchange.com>",
+            to: ["terangaexchange@gmail.com"],
+            subject: `🔔 Nouvelle candidature : ${orderData.position}`,
+            html: adminNotificationHtml,
+          });
+
+          console.log('Notification RH envoyée à l\'équipe Terex');
+        } catch (teamError) {
+          console.error('Erreur lors de l\'envoi de la notification RH:', teamError);
+        }
+        break;
+
       default:
         throw new Error(`Type d'email non supporté: ${emailType}`);
     }
