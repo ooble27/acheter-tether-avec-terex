@@ -33,6 +33,18 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const applicationData: JobApplicationRequest = await req.json();
 
+    // Description du poste selon le titre
+    const getJobDescription = (position: string) => {
+      const descriptions = {
+        "Community Manager": "Community Manager - Développer et animer notre communauté crypto en Afrique francophone",
+        "Spécialiste Opérations Crypto": "Spécialiste Opérations Crypto - Traiter et superviser les transactions crypto-fiat en temps réel",
+        "Développeur Frontend React": "Développeur Frontend React - Développer l'interface utilisateur de notre plateforme d'échange crypto",
+        "Responsable Marketing Digital": "Responsable Marketing Digital - Piloter la stratégie marketing digital de Terex",
+        "Analyste Financier Crypto": "Analyste Financier Crypto - Analyser les marchés crypto et optimiser les stratégies financières"
+      };
+      return descriptions[position as keyof typeof descriptions] || position;
+    };
+
     // Email pour l'admin
     const adminEmailResponse = await resend.emails.send({
       from: "Terex Careers <careers@terex.app>",
@@ -85,7 +97,7 @@ const handler = async (req: Request): Promise<Response> => {
           
           <p>Bonjour ${applicationData.first_name},</p>
           
-          <p>Nous avons bien reçu votre candidature pour le poste de <strong>${applicationData.position}</strong> chez Terex.</p>
+          <p>Nous avons bien reçu votre candidature pour le poste de <strong>${getJobDescription(applicationData.position)}</strong> chez Terex.</p>
           
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3 style="color: #0FA958; margin-top: 0;">Prochaines étapes</h3>
@@ -97,8 +109,8 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="color: #1976d2; margin-top: 0;">À propos de Terex</h3>
-            <p>Terex est la première plateforme d'échange crypto-fiat dédiée à l'Afrique francophone et au Canada. Nous révolutionnons les transferts d'argent avec des solutions rapides, sécurisées et transparentes.</p>
+            <h3 style="color: #1976d2; margin-top: 0;">À propos de ${applicationData.position}</h3>
+            <p>${getJobDescription(applicationData.position)} - Un rôle clé pour contribuer à notre mission de révolutionner les transferts d'argent en Afrique.</p>
           </div>
           
           <p>En attendant, n'hésitez pas à nous suivre sur nos réseaux sociaux pour rester informé de nos actualités :</p>

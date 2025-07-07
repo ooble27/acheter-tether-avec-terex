@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { JobApplicationForm } from '@/components/features/JobApplicationForm';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 const CareersPage = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const CareersPage = () => {
   const { toast } = useToast();
   const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
+  const [expandedPositions, setExpandedPositions] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -51,12 +53,22 @@ const CareersPage = () => {
     setShowApplicationForm(true);
   };
 
+  const toggleExpanded = (index: number) => {
+    const newExpanded = new Set(expandedPositions);
+    if (newExpanded.has(index)) {
+      newExpanded.delete(index);
+    } else {
+      newExpanded.add(index);
+    }
+    setExpandedPositions(newExpanded);
+  };
+
   const openPositions = [
     {
       title: "Community Manager",
       type: "Temps plein",
-      location: "Remote / Dakar",
-      salary: "30 000 - 45 000 CFA",
+      location: "Dakar / Remote",
+      salary: "45 000 - 60 000 CFA",
       description: "Nous recherchons un(e) Community Manager passionné(e) pour développer et animer notre communauté crypto en Afrique francophone.",
       responsibilities: [
         "Gérer et animer nos réseaux sociaux (Twitter, LinkedIn, Telegram, Discord)",
@@ -83,10 +95,10 @@ const CareersPage = () => {
       ]
     },
     {
-      title: "Opérateur de Transactions",
+      title: "Spécialiste Opérations Crypto",
       type: "Temps plein",
-      location: "Dakar / Canada",
-      salary: "25 000 - 40 000 CFA",
+      location: "Dakar / Remote",
+      salary: "50 000 - 70 000 CFA",
       description: "Rejoignez notre équipe opérationnelle pour traiter et superviser les transactions crypto-fiat en temps réel.",
       responsibilities: [
         "Traiter les ordres d'achat et de vente d'USDT",
@@ -110,6 +122,96 @@ const CareersPage = () => {
         "Prime de performance mensuelle",
         "Évolution vers des postes de supervision",
         "Assurance santé complète"
+      ]
+    },
+    {
+      title: "Développeur Frontend React",
+      type: "Temps plein",
+      location: "Remote / Dakar",
+      salary: "60 000 - 90 000 CFA",
+      description: "Développez l'interface utilisateur de notre plateforme d'échange crypto avec les dernières technologies web.",
+      responsibilities: [
+        "Développer des interfaces utilisateur modernes avec React/TypeScript",
+        "Intégrer les API de blockchain et de paiement",
+        "Optimiser les performances et l'expérience utilisateur",
+        "Maintenir et améliorer l'architecture frontend",
+        "Collaborer avec l'équipe design et backend",
+        "Implémenter les tests unitaires et d'intégration"
+      ],
+      requirements: [
+        "3+ années d'expérience en développement React",
+        "Maîtrise de TypeScript, JavaScript ES6+",
+        "Expérience avec les API REST et WebSocket",
+        "Connaissance des outils de build (Vite, Webpack)",
+        "Familiarité avec les cryptomonnaies et DeFi",
+        "Capacité à travailler en équipe agile"
+      ],
+      benefits: [
+        "Environnement de travail moderne",
+        "Formation continue aux nouvelles technologies",
+        "Équipement de développement fourni",
+        "Horaires flexibles et télétravail",
+        "Participation aux projets innovants"
+      ]
+    },
+    {
+      title: "Responsable Marketing Digital",
+      type: "Temps plein",
+      location: "Dakar / Remote",
+      salary: "55 000 - 75 000 CFA",
+      description: "Pilotez la stratégie marketing digital de Terex pour conquérir le marché africain des cryptomonnaies.",
+      responsibilities: [
+        "Développer et exécuter la stratégie marketing digital",
+        "Gérer les campagnes publicitaires multi-canaux",
+        "Analyser les performances et optimiser le ROI",
+        "Créer du contenu marketing pour différents supports",
+        "Gérer les partenariats et collaborations",
+        "Superviser l'équipe marketing et community"
+      ],
+      requirements: [
+        "5+ années d'expérience en marketing digital",
+        "Excellente connaissance des réseaux sociaux",
+        "Maîtrise des outils d'analytics et de tracking",
+        "Expérience dans le secteur fintech ou crypto",
+        "Capacités de leadership et de gestion d'équipe",
+        "Créativité et sens stratégique"
+      ],
+      benefits: [
+        "Poste à responsabilités avec autonomie",
+        "Budget marketing conséquent",
+        "Formation aux dernières tendances marketing",
+        "Opportunités de networking internationales",
+        "Participation à la croissance de l'entreprise"
+      ]
+    },
+    {
+      title: "Analyste Financier Crypto",
+      type: "Temps plein",
+      location: "Dakar / Remote",
+      salary: "50 000 - 70 000 CFA",
+      description: "Analysez les marchés crypto et optimisez les stratégies financières pour maximiser la rentabilité.",
+      responsibilities: [
+        "Analyser les tendances et mouvements des marchés crypto",
+        "Établir les stratégies de pricing et de liquidité",
+        "Suivre et optimiser les performances financières",
+        "Préparer les rapports financiers réguliers",
+        "Gérer les risques de change et de marché",
+        "Proposer des améliorations des processus financiers"
+      ],
+      requirements: [
+        "Formation en finance, économie ou mathématiques",
+        "2+ années d'expérience en analyse financière",
+        "Connaissance approfondie des marchés crypto",
+        "Maîtrise des outils d'analyse (Excel, Python, R)",
+        "Capacités analytiques et de synthèse",
+        "Rigueur et attention aux détails"
+      ],
+      benefits: [
+        "Accès aux données de marché en temps réel",
+        "Formation continue sur les marchés financiers",
+        "Environnement de travail stimulant",
+        "Opportunités d'évolution rapide",
+        "Bonus liés aux performances"
       ]
     }
   ];
@@ -165,10 +267,10 @@ const CareersPage = () => {
             </p>
 
             <div className="flex justify-center space-x-8 text-center">
-              <div>
-                <div className="text-3xl font-bold text-terex-accent">2</div>
-                <div className="text-gray-300">Postes ouverts</div>
-              </div>
+            <div>
+              <div className="text-3xl font-bold text-terex-accent">5</div>
+              <div className="text-gray-300">Postes ouverts</div>
+            </div>
               <div>
                 <div className="text-3xl font-bold text-terex-accent">5+</div>
                 <div className="text-gray-300">Pays couverts</div>
@@ -220,81 +322,102 @@ const CareersPage = () => {
             </p>
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-6">
             {openPositions.map((position, index) => (
-              <Card key={index} className="bg-gradient-to-br from-terex-dark to-terex-gray/20 border-terex-accent/20 hover:border-terex-accent/40 transition-all duration-300">
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-3 mb-3">
-                        <CardTitle className="text-white text-2xl">{position.title}</CardTitle>
-                        <Badge className="bg-terex-accent text-black font-medium">{position.type}</Badge>
+              <Collapsible 
+                key={index} 
+                open={expandedPositions.has(index)}
+                onOpenChange={() => toggleExpanded(index)}
+              >
+                <Card className="bg-gradient-to-br from-terex-dark to-terex-gray/20 border-terex-accent/20 hover:border-terex-accent/40 transition-all duration-300">
+                  <CollapsibleTrigger asChild>
+                    <CardHeader className="cursor-pointer hover:bg-terex-accent/5 transition-colors">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-3">
+                            <CardTitle className="text-white text-2xl">{position.title}</CardTitle>
+                            <Badge className="bg-terex-accent text-black font-medium">{position.type}</Badge>
+                          </div>
+                          
+                          <div className="flex items-center space-x-6 text-gray-300 mb-4">
+                            <div className="flex items-center space-x-2">
+                              <MapPin className="w-4 h-4" />
+                              <span>{position.location}</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <span>{position.salary} / mois</span>
+                            </div>
+                          </div>
+                          
+                          <CardDescription className="text-gray-300 text-base">
+                            {position.description}
+                          </CardDescription>
+                        </div>
+                        
+                        <div className="flex items-center space-x-4 ml-6">
+                          <Button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleApply(position.title);
+                            }}
+                            className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold"
+                          >
+                            <Send className="w-4 h-4 mr-2" />
+                            Postuler
+                          </Button>
+                          <Button 
+                            variant="outline"
+                            size="sm"
+                            className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10"
+                          >
+                            {expandedPositions.has(index) ? 'Réduire' : 'Détails'}
+                          </Button>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </CollapsibleTrigger>
+                  
+                  <CollapsibleContent>
+                    <CardContent className="space-y-6 pt-0">
+                      <div>
+                        <h4 className="text-white font-semibold mb-3">Responsabilités :</h4>
+                        <ul className="space-y-2 text-gray-300">
+                          {position.responsibilities.map((resp, idx) => (
+                            <li key={idx} className="flex items-start space-x-2">
+                              <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
+                              <span>{resp}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                       
-                      <div className="flex items-center space-x-6 text-gray-300 mb-4">
-                        <div className="flex items-center space-x-2">
-                          <MapPin className="w-4 h-4" />
-                          <span>{position.location}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <DollarSign className="w-4 h-4" />
-                          <span>{position.salary}</span>
-                        </div>
+                      <div>
+                        <h4 className="text-white font-semibold mb-3">Prérequis :</h4>
+                        <ul className="space-y-2 text-gray-300">
+                          {position.requirements.map((req, idx) => (
+                            <li key={idx} className="flex items-start space-x-2">
+                              <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
+                              <span>{req}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                       
-                      <CardDescription className="text-gray-300 text-base">
-                        {position.description}
-                      </CardDescription>
-                    </div>
-                    
-                    <Button 
-                      onClick={() => handleApply(position.title)}
-                      className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold ml-6"
-                    >
-                      <Send className="w-4 h-4 mr-2" />
-                      Postuler
-                    </Button>
-                  </div>
-                </CardHeader>
-                
-                <CardContent className="space-y-6">
-                  <div>
-                    <h4 className="text-white font-semibold mb-3">Responsabilités :</h4>
-                    <ul className="space-y-2 text-gray-300">
-                      {position.responsibilities.map((resp, idx) => (
-                        <li key={idx} className="flex items-start space-x-2">
-                          <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
-                          <span>{resp}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-white font-semibold mb-3">Prérequis :</h4>
-                    <ul className="space-y-2 text-gray-300">
-                      {position.requirements.map((req, idx) => (
-                        <li key={idx} className="flex items-start space-x-2">
-                          <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
-                          <span>{req}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-white font-semibold mb-3">Avantages :</h4>
-                    <ul className="space-y-2 text-gray-300">
-                      {position.benefits.map((benefit, idx) => (
-                        <li key={idx} className="flex items-start space-x-2">
-                          <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
-                          <span>{benefit}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
+                      <div>
+                        <h4 className="text-white font-semibold mb-3">Avantages :</h4>
+                        <ul className="space-y-2 text-gray-300">
+                          {position.benefits.map((benefit, idx) => (
+                            <li key={idx} className="flex items-start space-x-2">
+                              <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
+                              <span>{benefit}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </CollapsibleContent>
+                </Card>
+              </Collapsible>
             ))}
           </div>
 

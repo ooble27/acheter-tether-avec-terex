@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useJobApplications, JobApplication } from '@/hooks/useJobApplications';
-import { Send, Upload } from 'lucide-react';
+import { Send } from 'lucide-react';
 
 interface JobApplicationFormProps {
   position: string;
@@ -31,7 +31,7 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
     salary_expectation: '',
   });
 
-  const handleInputChange = (field: keyof JobApplication, value: string | number) => {
+  const handleInputChange = (field: keyof JobApplication, value: string | number | File) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -110,7 +110,7 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
                 className="bg-terex-gray border-terex-accent/30 text-white"
-                placeholder="+33 1 23 45 67 89"
+                placeholder="+221 77 123 45 67"
               />
             </div>
           </div>
@@ -146,10 +146,27 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
             </div>
           </div>
 
+          {/* CV Upload */}
+          <div className="space-y-2">
+            <Label htmlFor="cv_file" className="text-white">CV *</Label>
+            <Input
+              id="cv_file"
+              type="file"
+              accept=".pdf,.doc,.docx"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleInputChange('cv_file', file);
+              }}
+              className="bg-terex-gray border-terex-accent/30 text-white"
+              required
+            />
+            <p className="text-gray-400 text-sm">Formats acceptés: PDF, DOC, DOCX</p>
+          </div>
+
           {/* Liens professionnels */}
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="linkedin_profile" className="text-white">Profil LinkedIn</Label>
+              <Label htmlFor="linkedin_profile" className="text-white">Profil LinkedIn (optionnel)</Label>
               <Input
                 id="linkedin_profile"
                 type="url"
@@ -161,7 +178,7 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="portfolio_url" className="text-white">Portfolio / Site web</Label>
+              <Label htmlFor="portfolio_url" className="text-white">Portfolio / Site web (optionnel)</Label>
               <Input
                 id="portfolio_url"
                 type="url"
@@ -200,7 +217,7 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
                 value={formData.salary_expectation}
                 onChange={(e) => handleInputChange('salary_expectation', e.target.value)}
                 className="bg-terex-gray border-terex-accent/30 text-white"
-                placeholder="Ex: 40 000 € / an"
+                placeholder="Ex: 40 000 CFA / mois"
               />
             </div>
           </div>
@@ -216,17 +233,6 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
               className="bg-terex-gray border-terex-accent/30 text-white min-h-[120px]"
               placeholder="Parlez-nous de votre motivation, de votre expérience et de ce que vous pouvez apporter à Terex..."
             />
-          </div>
-
-          {/* Note CV */}
-          <div className="bg-terex-accent/10 border border-terex-accent/20 rounded-lg p-4">
-            <div className="flex items-center space-x-2 text-terex-accent">
-              <Upload className="w-5 h-5" />
-              <span className="font-medium">CV</span>
-            </div>
-            <p className="text-gray-300 text-sm mt-1">
-              Veuillez envoyer votre CV à <strong>Terangaexchange@gmail.com</strong> en mentionnant le poste "{position}" en objet.
-            </p>
           </div>
 
           {/* Boutons */}

@@ -10,6 +10,7 @@ export interface JobApplication {
   phone?: string;
   location?: string;
   experience_years?: number;
+  cv_file?: File;
   cv_url?: string;
   cover_letter?: string;
   linkedin_profile?: string;
@@ -29,11 +30,34 @@ export const useJobApplications = () => {
       // Récupérer l'utilisateur actuel ou permettre candidature anonyme
       const { data: { user } } = await supabase.auth.getUser();
       
+      let cvUrl = null;
+      
+      // Upload du CV si fourni
+      if (applicationData.cv_file) {
+        const fileExt = applicationData.cv_file.name.split('.').pop();
+        const fileName = `${Date.now()}-${applicationData.first_name}-${applicationData.last_name}.${fileExt}`;
+        const filePath = user?.id ? `${user.id}/${fileName}` : `anonymous/${fileName}`;
+        
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('cvs')
+          .upload(filePath, applicationData.cv_file);
+        
+        if (uploadError) {
+          throw uploadError;
+        }
+        
+        cvUrl = uploadData.path;
+      }
+      
+      // Préparer les données sans le fichier
+      const { cv_file, ...dataToInsert } = applicationData;
+      
       // Insérer la candidature dans la base de données
       const { error: dbError } = await supabase
         .from('job_applications')
         .insert({
-          ...applicationData,
+          ...dataToInsert,
+          cv_url: cvUrl,
           user_id: user?.id || null,
         });
 
