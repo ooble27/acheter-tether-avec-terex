@@ -45,7 +45,6 @@ export function MarketplacePage() {
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const target = e.target as HTMLImageElement;
-    console.log('Image failed to load:', target.src);
     target.style.display = 'none';
     const parent = target.parentElement;
     if (parent) {
@@ -168,9 +167,6 @@ export function MarketplacePage() {
                         alt={product.name}
                         className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
                         onError={handleImageError}
-                        onLoad={(e) => {
-                          console.log('Image loaded successfully:', (e.target as HTMLImageElement).src);
-                        }}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-500 text-4xl bg-terex-dark rounded-lg">📦</div>

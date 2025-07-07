@@ -49,8 +49,7 @@ const defaultProducts: Product[] = [
     brand: 'Trezor',
     stock_quantity: 15,
     images: [
-      '/lovable-uploads/3b629363-7f80-4e8f-9ac2-a362ff23e036.png',
-      'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=400&fit=crop'
+      'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=400&fit=crop&auto=format'
     ],
     specifications: { connectivity: 'USB-C', screen: 'Tactile couleur' },
     is_active: true,
@@ -66,8 +65,7 @@ const defaultProducts: Product[] = [
     brand: 'Trezor',
     stock_quantity: 25,
     images: [
-      'https://images.unsplash.com/photo-1605792657660-596af9009e82?w=400&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400&h=400&fit=crop'
+      'https://images.unsplash.com/photo-1605792657660-596af9009e82?w=400&h=400&fit=crop&auto=format'
     ],
     specifications: { connectivity: 'USB-C', screen: 'OLED' },
     is_active: true,
@@ -83,8 +81,7 @@ const defaultProducts: Product[] = [
     brand: 'Trezor',
     stock_quantity: 30,
     images: [
-      'https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?w=400&h=400&fit=crop',
-      'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=400&h=400&fit=crop'
+      'https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?w=400&h=400&fit=crop&auto=format'
     ],
     specifications: { connectivity: 'USB', screen: 'OLED Monochrome' },
     is_active: true,

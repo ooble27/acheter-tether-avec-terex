@@ -26,12 +26,10 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
   };
 
   const handleImageError = (index: number) => {
-    console.log(`Image ${index} failed to load:`, displayImages[index]);
     setImageLoadErrors(prev => ({ ...prev, [index]: true }));
   };
 
   const handleImageLoad = (index: number) => {
-    console.log(`Image ${index} loaded successfully:`, displayImages[index]);
     setImageLoadErrors(prev => ({ ...prev, [index]: false }));
   };
 
