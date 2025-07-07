@@ -12,6 +12,9 @@ import PartnersPage from "./pages/PartnersPage";
 import AboutPage from "./pages/AboutPage";
 import CareersPage from "./pages/CareersPage";
 import NewsPage from "./pages/NewsPage";
+import SupportPage from "./pages/SupportPage";
+import ContactPage from "./pages/ContactPage";
+import FAQPage from "./pages/FAQPage";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MarketingPage } from "./pages/MarketingPage";
@@ -39,6 +42,9 @@ function App() {
               <Route path="/about" element={<AboutPage />} />
               <Route path="/careers" element={<CareersPage />} />
               <Route path="/news" element={<NewsPage />} />
+              <Route path="/support" element={<SupportPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/faq" element={<FAQPage />} />
               <Route path="/admin/*" element={<AdminPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
