@@ -66,16 +66,21 @@ export const useJobApplications = () => {
       }
 
       // Envoyer les emails de notification
-      const { error: emailError } = await supabase.functions.invoke(
+      const { data: emailData, error: emailError } = await supabase.functions.invoke(
         'send-job-application-notification',
         {
-          body: applicationData,
+          body: {
+            ...dataToInsert,
+            cv_url: cvUrl,
+          },
         }
       );
 
       if (emailError) {
         console.error('Email notification error:', emailError);
         // On ne fait pas échouer la candidature si l'email échoue
+      } else {
+        console.log('Email sent successfully:', emailData);
       }
 
       toast({
