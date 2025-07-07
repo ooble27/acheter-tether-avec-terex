@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -50,7 +49,7 @@ const defaultProducts: Product[] = [
     brand: 'Trezor',
     stock_quantity: 15,
     images: [
-      'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=400&fit=crop',
+      '/lovable-uploads/3b629363-7f80-4e8f-9ac2-a362ff23e036.png',
       'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=400&fit=crop'
     ],
     specifications: { connectivity: 'USB-C', screen: 'Tactile couleur' },
