@@ -7,11 +7,11 @@ import { HeroSection } from './HeroSection';
 import { TestimonialsSection } from './TestimonialsSection';
 import { StatsSection } from './StatsSection';
 import { HeaderSection } from './sections/HeaderSection';
-
 import { CurrencyConverterSection } from './sections/CurrencyConverterSection';
 import { HowItWorksSection } from './sections/HowItWorksSection';
 import { PaymentMethodsSection } from './sections/PaymentMethodsSection';
 import { CTASection } from './sections/CTASection';
+import { FooterSection } from './sections/FooterSection';
 
 interface PublicHomeProps {
   onGetStarted: () => void;
@@ -30,7 +30,6 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
   const handleBlockchainInfo = () => {
     navigate('/blockchain');
   };
-
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -73,6 +72,8 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       <TestimonialsSection />
       
       <CTASection user={user} onGetStarted={handleGetStarted} />
+
+      <FooterSection />
     </div>
   );
 }
