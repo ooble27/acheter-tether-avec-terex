@@ -1,11 +1,46 @@
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Clock, Users, Zap, Heart, Trophy, Mail, ArrowRight, Star, Globe, Code, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
+import { HeaderSection } from '@/components/marketing/sections/HeaderSection';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 const CareersPage = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const { user } = useAuth();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de se déconnecter",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Déconnexion réussie",
+        description: "Vous avez été déconnecté avec succès",
+        className: "bg-green-600 text-white border-green-600",
+      });
+      window.location.reload();
+    }
+  };
+
+  const handleShowDashboard = () => {
+    navigate('/');
+  };
 
   const openPositions = [
     {
@@ -42,6 +77,15 @@ const CareersPage = () => {
 
   return (
     <div className="min-h-screen bg-terex-dark">
+      <HeaderSection 
+        user={user ? {
+          email: user.email || '',
+          name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
+        } : null}
+        onShowDashboard={handleShowDashboard}
+        onLogout={handleLogout}
+      />
+
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-terex-darker via-terex-dark to-terex-darker">
         <div className="absolute inset-0">

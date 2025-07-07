@@ -1,20 +1,28 @@
-
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { MapPin, Phone, Mail, Clock, Globe, MessageCircle, ArrowRight } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { MapPin, Phone, Mail, MessageCircle, Send } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { HeaderSection } from '@/components/marketing/sections/HeaderSection';
+import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
+import { HeaderSection } from '@/components/marketing/sections/HeaderSection';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { useContactMessages } from '@/hooks/useContactMessages';
 
 const ContactPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { createContactMessage } = useContactMessages();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -190,7 +198,7 @@ const ContactPage = () => {
                   
                   <Button className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold h-12">
                     Envoyer le Message
-                    <ArrowRight className="ml-2 w-4 h-4" />
+                    <Send className="ml-2 w-4 h-4" />
                   </Button>
                 </form>
               </Card>

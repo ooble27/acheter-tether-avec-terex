@@ -1,13 +1,11 @@
-
-import { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { HelpCircle, Search, ChevronDown, MessageCircle, Phone, Mail } from 'lucide-react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Input } from '@/components/ui/input';
+import { Search, MessageCircle, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { HeaderSection } from '@/components/marketing/sections/HeaderSection';
+import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
+import { HeaderSection } from '@/components/marketing/sections/HeaderSection';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -16,8 +14,61 @@ const FAQPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const [searchTerm, setSearchTerm] = useState('');
-  const [openItems, setOpenItems] = useState<number[]>([]);
+
+  const faqs = [
+    {
+      question: "Qu'est-ce que Terex et comment ça marche ?",
+      answer: "Terex est une plateforme d'échange crypto-fiat qui permet aux utilisateurs d'acheter, de vendre et de transférer des cryptomonnaies en utilisant les monnaies locales africaines. Nous offrons une solution simple et sécurisée pour accéder aux marchés des cryptomonnaies."
+    },
+    {
+      question: "Quelles cryptomonnaies puis-je échanger sur Terex ?",
+      answer: "Nous supportons les principales cryptomonnaies telles que Bitcoin, Ethereum, USDT et d'autres. La liste complète est disponible sur notre plateforme."
+    },
+    {
+      question: "Quels sont les frais de transaction sur Terex ?",
+      answer: "Nos frais de transaction sont transparents et compétitifs. Ils varient en fonction de la paire de devises et du volume d'échange. Consultez notre page de tarification pour plus de détails."
+    },
+    {
+      question: "Comment puis-je sécuriser mon compte Terex ?",
+      answer: "Nous utilisons des mesures de sécurité avancées, notamment l'authentification à deux facteurs (2FA), le cryptage des données et la surveillance constante des transactions. Activez 2FA et utilisez un mot de passe fort pour protéger votre compte."
+    },
+    {
+      question: "Comment puis-je déposer et retirer des fonds de mon compte Terex ?",
+      answer: "Vous pouvez déposer et retirer des fonds en utilisant les méthodes de paiement locales disponibles dans votre pays, telles que les virements bancaires, les paiements mobiles et les cartes de crédit/débit."
+    },
+    {
+      question: "Terex est-il disponible dans mon pays ?",
+      answer: "Nous sommes en expansion constante en Afrique. Consultez notre liste de pays pris en charge sur notre site web."
+    },
+    {
+      question: "Comment puis-je contacter le support client de Terex ?",
+      answer: "Vous pouvez contacter notre support client par e-mail, chat en direct ou téléphone. Consultez notre page de contact pour plus d'informations."
+    },
+    {
+      question: "Terex est-il réglementé ?",
+      answer: "Nous sommes conformes aux réglementations locales et internationales en matière de cryptomonnaies et de services financiers. Nous travaillons en étroite collaboration avec les autorités pour assurer la sécurité et la transparence de nos opérations."
+    },
+    {
+      question: "Comment puis-je devenir partenaire de Terex ?",
+      answer: "Si vous êtes intéressé par un partenariat, veuillez nous contacter via notre page de partenariat. Nous sommes toujours à la recherche de partenaires stratégiques pour développer notre réseau."
+    },
+    {
+      question: "Comment puis-je suivre l'actualité de Terex ?",
+      answer: "Suivez-nous sur nos réseaux sociaux et consultez notre blog pour les dernières nouvelles, mises à jour et annonces."
+    }
+  ];
+
+  const filteredFaqs = faqs.filter(faq =>
+    faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    faq.answer.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -41,93 +92,6 @@ const FAQPage = () => {
     navigate('/');
   };
 
-  const toggleItem = (index: number) => {
-    setOpenItems(prev => 
-      prev.includes(index) 
-        ? prev.filter(i => i !== index)
-        : [...prev, index]
-    );
-  };
-
-  const faqCategories = [
-    {
-      title: "Général",
-      questions: [
-        {
-          question: "Qu'est-ce que Terex ?",
-          answer: "Terex est une plateforme d'échange crypto-fiat leader en Afrique qui permet d'acheter et vendre des USDT contre des devises locales africaines en toute sécurité."
-        },
-        {
-          question: "Dans quels pays Terex est-il disponible ?",
-          answer: "Terex est actuellement disponible dans 15+ pays africains incluant le Sénégal, la Côte d'Ivoire, le Mali, le Burkina Faso, et continue d'étendre sa couverture."
-        },
-        {
-          question: "Comment Terex assure-t-il la sécurité des transactions ?",
-          answer: "Nous utilisons un système de vérification KYC/AML, des portefeuilles multi-signatures, et nous sommes régulés par les autorités financières locales."
-        }
-      ]
-    },
-    {
-      title: "Achat & Vente",
-      questions: [
-        {
-          question: "Comment acheter des USDT sur Terex ?",
-          answer: "Créez un compte, complétez votre vérification KYC, choisissez le montant d'USDT à acheter, sélectionnez votre méthode de paiement et suivez les instructions."
-        },
-        {
-          question: "Quels sont les frais de transaction ?",
-          answer: "Nos frais sont transparents : 1.5% pour l'achat d'USDT, 1.2% pour la vente, et des frais de réseau variables selon la blockchain utilisée."
-        },
-        {
-          question: "Combien de temps prennent les transactions ?",
-          answer: "Les achats sont généralement traités en 5-15 minutes après confirmation du paiement. Les ventes peuvent prendre 10-30 minutes selon la méthode de retrait."
-        }
-      ]
-    },
-    {
-      title: "Vérification & Sécurité",
-      questions: [
-        {
-          question: "Pourquoi dois-je compléter la vérification KYC ?",
-          answer: "La vérification KYC est obligatoire pour respecter les réglementations financières et assurer la sécurité de tous les utilisateurs de la plateforme."
-        },
-        {
-          question: "Quels documents sont requis pour le KYC ?",
-          answer: "Vous devez fournir une pièce d'identité valide (passeport ou carte d'identité), un justificatif de domicile récent, et prendre un selfie."
-        },
-        {
-          question: "Que faire si ma vérification KYC est rejetée ?",
-          answer: "Contactez notre support avec des documents plus clairs. Notre équipe vous guidera pour résoudre les problèmes et finaliser votre vérification."
-        }
-      ]
-    },
-    {
-      title: "Paiements & Retraits",
-      questions: [
-        {
-          question: "Quelles méthodes de paiement acceptez-vous ?",
-          answer: "Nous acceptons les virements bancaires, Mobile Money (Orange Money, MTN Money, Moov Money), et les cartes bancaires selon votre pays."
-        },
-        {
-          question: "Y a-t-il des limites de transaction ?",
-          answer: "Oui, les limites varient selon votre niveau de vérification : 500€/jour pour les comptes basiques, 5000€/jour pour les comptes vérifiés."
-        },
-        {
-          question: "Comment retirer mes fonds ?",
-          answer: "Allez dans votre portefeuille, sélectionnez 'Retirer', choisissez votre méthode (banque ou Mobile Money), entrez le montant et confirmez."
-        }
-      ]
-    }
-  ];
-
-  const filteredFAQs = faqCategories.map(category => ({
-    ...category,
-    questions: category.questions.filter(
-      q => q.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           q.answer.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  })).filter(category => category.questions.length > 0);
-
   return (
     <div className="min-h-screen bg-terex-dark">
       <HeaderSection 
@@ -139,124 +103,56 @@ const FAQPage = () => {
         onLogout={handleLogout}
       />
 
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-terex-darker via-terex-dark to-terex-darker">
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-terex-accent/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-terex-accent/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-6 py-3 mb-8 border border-terex-accent/20">
-              <HelpCircle className="w-5 h-5 text-terex-accent mr-2" />
-              <span className="text-terex-accent font-medium">Questions Fréquentes</span>
-            </div>
-            
-            <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
-              Foire Aux <span className="text-terex-accent">Questions</span>
-            </h1>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
-              Trouvez rapidement les réponses à vos questions sur Terex et les échanges crypto-fiat.
+      <div className="py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-4">Foire aux Questions (FAQ)</h2>
+            <p className="text-gray-300 text-lg">
+              Trouvez les réponses aux questions les plus fréquemment posées sur Terex.
             </p>
-            
-            {/* Search Bar */}
-            <div className="flex justify-center">
-              <div className="relative max-w-2xl w-full">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <Input 
-                  placeholder="Rechercher une question..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="bg-terex-darker border-terex-accent/30 text-white placeholder:text-gray-400 pl-12 h-14 text-lg"
-                />
-              </div>
+          </div>
+
+          <div className="max-w-3xl mx-auto mb-12">
+            <div className="relative">
+              <Input
+                type="text"
+                placeholder="Rechercher une question..."
+                className="bg-terex-darker text-white border-terex-accent/30 rounded-full py-3 px-6 focus:border-terex-accent focus-visible:ring-transparent"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <Search className="absolute top-1/2 right-5 -translate-y-1/2 w-5 h-5 text-gray-400" />
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* FAQ Content */}
-      <div className="py-24 bg-terex-dark">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {filteredFAQs.map((category, categoryIndex) => (
-            <div key={categoryIndex} className="mb-12">
-              <h2 className="text-2xl font-bold text-white mb-8 pb-4 border-b border-terex-accent/20">
-                {category.title}
-              </h2>
-              
-              <div className="space-y-4">
-                {category.questions.map((faq, index) => {
-                  const globalIndex = categoryIndex * 100 + index;
-                  const isOpen = openItems.includes(globalIndex);
-                  
-                  return (
-                    <Card key={index} className="bg-gradient-to-br from-terex-darker to-terex-gray/30 border-terex-accent/20 overflow-hidden">
-                      <Collapsible open={isOpen} onOpenChange={() => toggleItem(globalIndex)}>
-                        <CollapsibleTrigger className="w-full p-6 text-left hover:bg-terex-accent/5 transition-colors duration-200">
-                          <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-semibold text-white pr-4">{faq.question}</h3>
-                            <ChevronDown className={`w-5 h-5 text-terex-accent transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
-                          </div>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent className="px-6 pb-6">
-                          <div className="pt-4 border-t border-terex-gray/30">
-                            <p className="text-gray-300 leading-relaxed">{faq.answer}</p>
-                          </div>
-                        </CollapsibleContent>
-                      </Collapsible>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+          <Accordion type="single" collapsible className="max-w-3xl mx-auto">
+            {filteredFaqs.map((faq, index) => (
+              <AccordionItem key={index} value={`item-${index}`}>
+                <AccordionTrigger className="text-white font-semibold text-lg hover:no-underline flex items-center justify-between px-4 py-3">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-300 px-4 py-3">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
 
-          {filteredFAQs.length === 0 && searchTerm && (
-            <div className="text-center py-12">
-              <HelpCircle className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">Aucun résultat trouvé</h3>
-              <p className="text-gray-400 mb-6">Essayez avec d'autres mots-clés ou contactez notre support.</p>
-              <Button 
-                onClick={() => navigate('/contact')}
-                className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold"
-              >
-                Contacter le Support
-              </Button>
+          {filteredFaqs.length === 0 && (
+            <div className="text-center mt-8">
+              <MessageCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-400">Aucune question ne correspond à votre recherche.</p>
             </div>
           )}
 
-          {/* Contact Support Section */}
-          <div className="mt-16 pt-12 border-t border-terex-accent/20">
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-white mb-4">Vous ne trouvez pas votre réponse ?</h3>
-              <p className="text-gray-300 mb-8">Notre équipe de support est là pour vous aider 24/7</p>
-              
-              <div className="grid md:grid-cols-3 gap-6">
-                <Button 
-                  onClick={() => navigate('/contact')}
-                  variant="outline" 
-                  className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent hover:text-black h-16"
-                >
-                  <MessageCircle className="w-5 h-5 mr-2" />
-                  Chat en Direct
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent hover:text-black h-16"
-                >
-                  <Mail className="w-5 h-5 mr-2" />
-                  Email Support
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent hover:text-black h-16"
-                >
-                  <Phone className="w-5 h-5 mr-2" />
-                  +221 77 123 4567
-                </Button>
-              </div>
-            </div>
+          <div className="text-center mt-16">
+            <h3 className="text-2xl font-bold text-white mb-4">Vous n'avez pas trouvé votre réponse ?</h3>
+            <p className="text-gray-300 mb-6">
+              Contactez notre équipe de support pour obtenir de l'aide personnalisée.
+            </p>
+            <Button onClick={() => navigate('/contact')} className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold">
+              Contactez-nous <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
           </div>
         </div>
       </div>

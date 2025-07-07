@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Users, Target, Award, Globe, Shield, TrendingUp, ArrowRight, CheckCircle, Star } from 'lucide-react';
+import { ArrowRight, CheckCircle, Users, Globe, TrendingUp, Shield, Zap, Award } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
 import { HeaderSection } from '@/components/marketing/sections/HeaderSection';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,6 +13,11 @@ const AboutPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();

@@ -1,13 +1,10 @@
-
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircle, Phone, Mail, Clock, FileText, HelpCircle, Search, ArrowRight, CheckCircle } from 'lucide-react';
+import { MessageCircle, Phone, Mail, Clock, CheckCircle, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { HeaderSection } from '@/components/marketing/sections/HeaderSection';
+import { useEffect } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
+import { HeaderSection } from '@/components/marketing/sections/HeaderSection';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -16,6 +13,11 @@ const SupportPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -39,30 +41,6 @@ const SupportPage = () => {
     navigate('/');
   };
 
-  const supportOptions = [
-    {
-      icon: MessageCircle,
-      title: "Chat en Direct",
-      description: "Obtenez une aide immédiate via notre chat 24/7",
-      action: "Démarrer le chat",
-      available: true
-    },
-    {
-      icon: Phone,
-      title: "Support Téléphonique",
-      description: "Appelez-nous pour une assistance personnalisée",
-      action: "+221 77 123 4567",
-      available: true
-    },
-    {
-      icon: Mail,
-      title: "Email Support",
-      description: "Envoyez-nous vos questions détaillées",
-      action: "support@terex.com",
-      available: true
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-terex-dark">
       <HeaderSection 
@@ -84,26 +62,134 @@ const SupportPage = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
             <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-6 py-3 mb-8 border border-terex-accent/20">
-              <HelpCircle className="w-5 h-5 text-terex-accent mr-2" />
-              <span className="text-terex-accent font-medium">Centre d'Aide</span>
+              <MessageCircle className="w-5 h-5 text-terex-accent mr-2" />
+              <span className="text-terex-accent font-medium">Besoin d'Aide ?</span>
             </div>
             
             <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
-              Comment pouvons-nous <span className="text-terex-accent">vous aider</span> ?
+              Notre <span className="text-terex-accent">Support</span> est là pour vous
             </h1>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
-              Notre équipe de support est disponible 24/7 pour vous accompagner dans toutes vos opérations crypto-fiat.
+            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              Contactez notre équipe d'assistance dédiée pour toute question ou problème. 
+              Nous sommes disponibles 24h/7j pour vous aider.
             </p>
             
-            <div className="flex justify-center">
-              <div className="relative max-w-2xl w-full">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <Input 
-                  placeholder="Rechercher dans notre base de connaissances..."
-                  className="bg-terex-darker border-terex-accent/30 text-white placeholder:text-gray-400 pl-12 h-14 text-lg"
-                />
-                <Button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-terex-accent hover:bg-terex-accent/90 text-black">
-                  Rechercher
+            <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto mt-12">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-terex-accent mb-2">24/7</div>
+                <div className="text-gray-400">Disponibilité</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-terex-accent mb-2">5 min</div>
+                <div className="text-gray-400">Temps de réponse moyen</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-terex-accent mb-2">99%</div>
+                <div className="text-gray-400">Satisfaction client</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Contact Options */}
+      <div className="py-24 bg-terex-dark">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-4">Comment pouvons-nous vous aider ?</h2>
+            <p className="text-gray-300 text-lg">Choisissez l'option qui vous convient le mieux</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Live Chat */}
+            <div className="group relative">
+              <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 via-terex-accent/10 to-terex-accent/20 rounded-2xl blur opacity-25 group-hover:opacity-75 transition-all duration-500"></div>
+              
+              <div className="relative bg-gradient-to-br from-terex-darker to-terex-gray/30 rounded-2xl p-8 border border-terex-gray/50 group-hover:border-terex-accent/50">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-terex-accent/20 rounded-xl flex items-center justify-center mr-4">
+                    <MessageCircle className="w-6 h-6 text-terex-accent" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white">Chat en direct</h3>
+                </div>
+                
+                <p className="text-gray-300 mb-6 leading-relaxed">
+                  Discutez instantanément avec un agent de support.
+                </p>
+                
+                <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+                  <Clock className="w-3 h-3 mr-1" />
+                  Réponse en 5 minutes
+                </Badge>
+                
+                <Button 
+                  className="mt-6 bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-6 py-3 w-full"
+                  onClick={() => window.location.href = 'https://tawk.to/chat/648c9fcc9d60534e2d0e39ca/1h3qjes2u'}
+                >
+                  Démarrer le chat
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Email Support */}
+            <div className="group relative">
+              <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 via-terex-accent/10 to-terex-accent/20 rounded-2xl blur opacity-25 group-hover:opacity-75 transition-all duration-500"></div>
+              
+              <div className="relative bg-gradient-to-br from-terex-darker to-terex-gray/30 rounded-2xl p-8 border border-terex-gray/50 group-hover:border-terex-accent/50">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-terex-accent/20 rounded-xl flex items-center justify-center mr-4">
+                    <Mail className="w-6 h-6 text-terex-accent" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white">Support par email</h3>
+                </div>
+                
+                <p className="text-gray-300 mb-6 leading-relaxed">
+                  Envoyez-nous un email et nous vous répondrons rapidement.
+                </p>
+                
+                <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">
+                  <Clock className="w-3 h-3 mr-1" />
+                  Réponse en 24 heures
+                </Badge>
+                
+                <Button 
+                  className="mt-6 bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-6 py-3 w-full"
+                  onClick={() => window.location.href = 'mailto:support@terex.com'}
+                >
+                  Envoyer un email
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Phone Support */}
+            <div className="group relative">
+              <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 via-terex-accent/10 to-terex-accent/20 rounded-2xl blur opacity-25 group-hover:opacity-75 transition-all duration-500"></div>
+              
+              <div className="relative bg-gradient-to-br from-terex-darker to-terex-gray/30 rounded-2xl p-8 border border-terex-gray/50 group-hover:border-terex-accent/50">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-terex-accent/20 rounded-xl flex items-center justify-center mr-4">
+                    <Phone className="w-6 h-6 text-terex-accent" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white">Support téléphonique</h3>
+                </div>
+                
+                <p className="text-gray-300 mb-6 leading-relaxed">
+                  Appelez-nous pour une assistance immédiate.
+                </p>
+                
+                <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+                  <Clock className="w-3 h-3 mr-1" />
+                  Disponible de 9h à 17h
+                </Badge>
+                
+                <Button 
+                  className="mt-6 bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-6 py-3 w-full"
+                  onClick={() => window.location.href = 'tel:+33756987456'}
+                >
+                  Appeler
+                  <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </div>
             </div>
@@ -111,69 +197,47 @@ const SupportPage = () => {
         </div>
       </div>
 
-      {/* Support Options */}
-      <div className="py-24 bg-terex-dark">
+      {/* Why Terex Support */}
+      <div className="py-24 bg-gradient-to-br from-terex-darker via-terex-dark to-terex-darker border-t border-terex-accent/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Contactez Notre Support</h2>
-            <p className="text-gray-300 text-lg">Choisissez le moyen qui vous convient le mieux</p>
+            <h2 className="text-4xl font-bold text-white mb-4">Pourquoi choisir le support Terex ?</h2>
+            <p className="text-gray-300 text-lg">Un support client de qualité pour une expérience optimale</p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            {supportOptions.map((option, index) => {
-              const IconComponent = option.icon;
-              return (
-                <Card key={index} className="bg-gradient-to-br from-terex-darker to-terex-gray/30 border-terex-accent/20 p-8 text-center hover:border-terex-accent/50 transition-all duration-300">
-                  <div className="w-16 h-16 bg-terex-accent/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <IconComponent className="w-8 h-8 text-terex-accent" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-4">{option.title}</h3>
-                  <p className="text-gray-300 mb-6">{option.description}</p>
-                  <Button className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold">
-                    {option.action}
-                  </Button>
-                </Card>
-              );
-            })}
-          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Expertise */}
+            <div className="text-center">
+              <div className="w-16 h-16 bg-terex-accent/20 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                <CheckCircle className="w-8 h-8 text-terex-accent" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-2">Expertise</h3>
+              <p className="text-gray-300 leading-relaxed">
+                Nos agents sont formés pour répondre à toutes vos questions.
+              </p>
+            </div>
 
-          {/* Contact Form */}
-          <div className="max-w-4xl mx-auto">
-            <Card className="bg-gradient-to-br from-terex-darker to-terex-gray/30 border-terex-accent/20 p-12">
-              <div className="text-center mb-8">
-                <h3 className="text-3xl font-bold text-white mb-4">Envoyez-nous un Message</h3>
-                <p className="text-gray-300">Notre équipe vous répondra dans les plus brefs délais</p>
+            {/* Rapidité */}
+            <div className="text-center">
+              <div className="w-16 h-16 bg-terex-accent/20 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                <Clock className="w-8 h-8 text-terex-accent" />
               </div>
-              
-              <div className="grid md:grid-cols-2 gap-6 mb-6">
-                <div>
-                  <label className="block text-white font-medium mb-2">Nom complet</label>
-                  <Input className="bg-terex-dark border-terex-gray text-white" placeholder="Votre nom" />
-                </div>
-                <div>
-                  <label className="block text-white font-medium mb-2">Email</label>
-                  <Input type="email" className="bg-terex-dark border-terex-gray text-white" placeholder="votre@email.com" />
-                </div>
+              <h3 className="text-2xl font-bold text-white mb-2">Rapidité</h3>
+              <p className="text-gray-300 leading-relaxed">
+                Nous nous engageons à vous répondre dans les plus brefs délais.
+              </p>
+            </div>
+
+            {/* Disponibilité */}
+            <div className="text-center">
+              <div className="w-16 h-16 bg-terex-accent/20 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                <MessageCircle className="w-8 h-8 text-terex-accent" />
               </div>
-              
-              <div className="mb-6">
-                <label className="block text-white font-medium mb-2">Sujet</label>
-                <Input className="bg-terex-dark border-terex-gray text-white" placeholder="Objet de votre message" />
-              </div>
-              
-              <div className="mb-8">
-                <label className="block text-white font-medium mb-2">Message</label>
-                <Textarea 
-                  className="bg-terex-dark border-terex-gray text-white min-h-32" 
-                  placeholder="Décrivez votre problème en détail..."
-                />
-              </div>
-              
-              <Button className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold h-14 text-lg">
-                Envoyer le Message
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </Card>
+              <h3 className="text-2xl font-bold text-white mb-2">Disponibilité</h3>
+              <p className="text-gray-300 leading-relaxed">
+                Notre équipe est disponible 24h/7j pour vous assister.
+              </p>
+            </div>
           </div>
         </div>
       </div>
