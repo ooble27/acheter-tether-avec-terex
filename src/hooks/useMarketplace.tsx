@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -36,7 +37,7 @@ interface Category {
   image_url?: string;
 }
 
-// Données de produits étendues avec une large gamme de produits crypto
+// Données de produits étendues avec des images Unsplash fonctionnelles
 const defaultProducts: Product[] = [
   // Hardware Wallets
   {
