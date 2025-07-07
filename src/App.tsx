@@ -8,10 +8,8 @@ import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
 import AuthCallback from "./pages/AuthCallback";
 import NotFound from "./pages/NotFound";
-import PartnersPage from "./pages/PartnersPage";
 import AboutPage from "./pages/AboutPage";
 import CareersPage from "./pages/CareersPage";
-import NewsPage from "./pages/NewsPage";
 import SupportPage from "./pages/SupportPage";
 import ContactPage from "./pages/ContactPage";
 import FAQPage from "./pages/FAQPage";
@@ -44,10 +42,8 @@ function App() {
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/blockchain" element={<BlockchainPage />} />
               <Route path="/marketing" element={<MarketingPage />} />
-              <Route path="/partners" element={<PartnersPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/careers" element={<CareersPage />} />
-              <Route path="/news" element={<NewsPage />} />
               <Route path="/support" element={<SupportPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/faq" element={<FAQPage />} />
