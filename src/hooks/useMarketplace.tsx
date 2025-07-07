@@ -36,8 +36,9 @@ interface Category {
   image_url?: string;
 }
 
-// Données de produits par défaut avec les nouvelles photos uploadées
+// Données de produits étendues avec une large gamme de produits crypto
 const defaultProducts: Product[] = [
+  // Hardware Wallets
   {
     id: '1',
     name: 'Trezor Safe 5',
@@ -105,6 +106,36 @@ const defaultProducts: Product[] = [
   },
   {
     id: '5',
+    name: 'Ledger Nano S Plus',
+    description: 'Version améliorée du Nano S avec plus de stockage et écran plus grand',
+    price: 89000,
+    currency: 'CFA',
+    category_id: 'wallets',
+    brand: 'Ledger',
+    stock_quantity: 20,
+    images: ['https://images.unsplash.com/photo-1605792657660-596af9009e82?w=400&h=400&fit=crop'],
+    specifications: { connectivity: 'USB-C', screen: 'OLED 128x64' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '6',
+    name: 'SafePal S1',
+    description: 'Wallet hardware sans fil avec écran couleur et caméra pour QR codes',
+    price: 65000,
+    currency: 'CFA',
+    category_id: 'wallets',
+    brand: 'SafePal',
+    stock_quantity: 18,
+    images: ['https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=400&fit=crop'],
+    specifications: { connectivity: 'Sans fil', screen: 'Couleur tactile', camera: 'QR Scanner' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+
+  // Vêtements et Merchandising
+  {
+    id: '7',
     name: 'T-shirt Bitcoin Orange',
     description: 'T-shirt premium 100% coton avec logo Bitcoin stylisé',
     price: 15000,
@@ -118,7 +149,7 @@ const defaultProducts: Product[] = [
     created_at: new Date().toISOString()
   },
   {
-    id: '6',
+    id: '8',
     name: 'T-shirt Ethereum Noir',
     description: 'T-shirt élégant avec logo Ethereum brodé, coupe moderne',
     price: 18000,
@@ -132,7 +163,51 @@ const defaultProducts: Product[] = [
     created_at: new Date().toISOString()
   },
   {
-    id: '7',
+    id: '9',
+    name: 'Hoodie "HODL" Premium',
+    description: 'Sweat à capuche confortable avec broderie "HODL" et logo crypto discret',
+    price: 35000,
+    currency: 'CFA',
+    category_id: 'clothing',
+    brand: 'Terex',
+    stock_quantity: 25,
+    images: ['https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop'],
+    specifications: { material: '80% Coton 20% Polyester', sizes: 'S, M, L, XL, XXL' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '10',
+    name: 'Casquette Bitcoin Snapback',
+    description: 'Casquette ajustable avec logo Bitcoin brodé, style urbain',
+    price: 12000,
+    currency: 'CFA',
+    category_id: 'clothing',
+    brand: 'Terex',
+    stock_quantity: 35,
+    images: ['https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&h=400&fit=crop'],
+    specifications: { material: 'Coton/Polyester', adjustment: 'Snapback' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '11',
+    name: 'Mug "Crypto Trader"',
+    description: 'Mug en céramique de qualité avec designs crypto inspirants',
+    price: 8500,
+    currency: 'CFA',
+    category_id: 'clothing',
+    brand: 'Terex',
+    stock_quantity: 60,
+    images: ['https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&h=400&fit=crop'],
+    specifications: { material: 'Céramique', capacity: '350ml', design: 'Double face' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+
+  // Accessoires et Sécurité
+  {
+    id: '12',
     name: 'Carte Crypto Steel',
     description: 'Carte en acier inoxydable pour sauvegarder vos phrases de récupération',
     price: 35000,
@@ -146,7 +221,51 @@ const defaultProducts: Product[] = [
     created_at: new Date().toISOString()
   },
   {
-    id: '8',
+    id: '13',
+    name: 'Kit de Gravure Seed Phrase',
+    description: 'Kit complet pour graver vos phrases de récupération sur métal',
+    price: 25000,
+    currency: 'CFA',
+    category_id: 'accessories',
+    brand: 'SecureStamp',
+    stock_quantity: 45,
+    images: ['https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=400&fit=crop'],
+    specifications: { includes: 'Plaques métal + Poinçons + Guide', material: 'Acier inoxydable' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '14',
+    name: 'Clé USB Cryptée 32GB',
+    description: 'Clé USB avec chiffrement matériel pour stockage sécurisé',
+    price: 45000,
+    currency: 'CFA',
+    category_id: 'accessories',
+    brand: 'SecureUSB',
+    stock_quantity: 22,
+    images: ['https://images.unsplash.com/photo-1586816001966-79b736744398?w=400&h=400&fit=crop'],
+    specifications: { capacity: '32GB', encryption: 'AES-256', connector: 'USB 3.0' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '15',
+    name: 'Pochette Anti-RFID',
+    description: 'Pochette de protection RFID pour cartes et wallets hardware',
+    price: 15000,
+    currency: 'CFA',
+    category_id: 'accessories',
+    brand: 'BlockWave',
+    stock_quantity: 55,
+    images: ['https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop'],
+    specifications: { material: 'Tissu blindé', protection: 'RFID/NFC', size: 'Multiple slots' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+
+  // Formations et Éducation
+  {
+    id: '16',
     name: 'Formation Crypto Complète',
     description: 'Cours en ligne complet sur la cryptomonnaie et la blockchain (accès à vie)',
     price: 89000,
@@ -158,14 +277,132 @@ const defaultProducts: Product[] = [
     specifications: { duration: '20 heures', language: 'Français', access: 'À vie' },
     is_active: true,
     created_at: new Date().toISOString()
+  },
+  {
+    id: '17',
+    name: 'Guide Trading DeFi Avancé',
+    description: 'Formation spécialisée sur le trading DeFi et les stratégies yield farming',
+    price: 65000,
+    currency: 'CFA',
+    category_id: 'training',
+    brand: 'Terex Academy',
+    stock_quantity: 100,
+    images: ['https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&h=400&fit=crop'],
+    specifications: { duration: '15 heures', level: 'Avancé', includes: 'Templates Excel' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '18',
+    name: 'Masterclass NFT & Métaverse',
+    description: 'Formation complète sur les NFT, création, trading et opportunités métaverse',
+    price: 45000,
+    currency: 'CFA',
+    category_id: 'training',
+    brand: 'Terex Academy',
+    stock_quantity: 100,
+    images: ['https://images.unsplash.com/photo-1617791160536-598cf32026fb?w=400&h=400&fit=crop'],
+    specifications: { duration: '12 heures', includes: 'Outils création NFT', bonus: 'Templates' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '19',
+    name: 'eBook: Fiscalité Crypto 2024',
+    description: 'Guide complet sur la fiscalité des cryptomonnaies en Afrique',
+    price: 25000,
+    currency: 'CFA',
+    category_id: 'training',
+    brand: 'Terex Legal',
+    stock_quantity: 500,
+    images: ['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop'],
+    specifications: { format: 'PDF', pages: '150+', updates: 'Annuelles', language: 'Français' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+
+  // Mining et Équipements
+  {
+    id: '20',
+    name: 'ASIC Miner Antminer S19',
+    description: 'Mineur Bitcoin professionnel haute performance 95TH/s',
+    price: 1250000,
+    currency: 'CFA',
+    category_id: 'mining',
+    brand: 'Bitmain',
+    stock_quantity: 5,
+    images: ['https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=400&fit=crop'],
+    specifications: { hashrate: '95 TH/s', power: '3250W', efficiency: '34.2 J/TH' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '21',
+    name: 'GPU RTX 4070 Mining Rig',
+    description: 'Carte graphique optimisée pour le mining Ethereum et altcoins',
+    price: 850000,
+    currency: 'CFA',
+    category_id: 'mining',
+    brand: 'NVIDIA',
+    stock_quantity: 8,
+    images: ['https://images.unsplash.com/photo-1591488320449-011701bb6704?w=400&h=400&fit=crop'],
+    specifications: { memory: '12GB GDDR6X', hashrate: '62 MH/s ETH', power: '200W' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '22',
+    name: 'Helium Hotspot Miner',
+    description: 'Mineur IoT pour le réseau Helium, gagner des HNT en fournissant une couverture',
+    price: 295000,
+    currency: 'CFA',
+    category_id: 'mining',
+    brand: 'Bobcat',
+    stock_quantity: 12,
+    images: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop'],
+    specifications: { network: 'LoRaWAN', frequency: '868MHz', range: '15km', earnings: 'HNT' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+
+  // Livres et Ressources
+  {
+    id: '23',
+    name: 'Livre: "Bitcoin Standard" FR',
+    description: 'Traduction française du livre de référence sur Bitcoin par Saifedean Ammous',
+    price: 35000,
+    currency: 'CFA',
+    category_id: 'books',
+    brand: 'Terex Éditions',
+    stock_quantity: 75,
+    images: ['https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=400&fit=crop'],
+    specifications: { pages: '320', format: 'Papier', language: 'Français', edition: '2024' },
+    is_active: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '24',
+    name: 'Collection: Top 100 Crypto',
+    description: 'Guide détaillé des 100 meilleures cryptomonnaies avec analyses techniques',
+    price: 55000,
+    currency: 'CFA',
+    category_id: 'books',
+    brand: 'Crypto Analytics',
+    stock_quantity: 40,
+    images: ['https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=400&fit=crop'],
+    specifications: { format: 'Livre + PDF', pages: '450', updates: 'Trimestrielles' },
+    is_active: true,
+    created_at: new Date().toISOString()
   }
 ];
 
 const defaultCategories: Category[] = [
   { id: 'wallets', name: 'Wallets Hardware', description: 'Portefeuilles physiques sécurisés' },
-  { id: 'clothing', name: 'Vêtements Crypto', description: 'T-shirts et accessoires Bitcoin/Crypto' },
-  { id: 'accessories', name: 'Accessoires', description: 'Cartes de sauvegarde et gadgets' },
-  { id: 'training', name: 'Formations', description: 'Cours et guides crypto' }
+  { id: 'clothing', name: 'Vêtements & Goodies', description: 'T-shirts, hoodies et accessoires crypto' },
+  { id: 'accessories', name: 'Accessoires Sécurité', description: 'Outils de sauvegarde et protection' },
+  { id: 'training', name: 'Formations', description: 'Cours et guides crypto' },
+  { id: 'mining', name: 'Mining & Hardware', description: 'Équipements de minage crypto' },
+  { id: 'books', name: 'Livres & Ressources', description: 'Littérature et guides crypto' }
 ];
 
 export const useMarketplace = () => {
