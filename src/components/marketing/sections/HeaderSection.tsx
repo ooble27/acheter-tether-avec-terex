@@ -1,17 +1,16 @@
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { User, LogOut, Menu, ShoppingCart } from 'lucide-react';
+import { User, LogOut, Menu } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface HeaderSectionProps {
   user?: { email: string; name: string } | null;
   onShowDashboard?: () => void;
-  onMarketplace: () => void;
   onLogout: () => void;
 }
 
-export function HeaderSection({ user, onShowDashboard, onMarketplace, onLogout }: HeaderSectionProps) {
+export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSectionProps) {
   const isMobile = useIsMobile();
 
   if (!user) return null;
@@ -44,13 +43,6 @@ export function HeaderSection({ user, onShowDashboard, onMarketplace, onLogout }
           {/* Desktop Navigation */}
           {!isMobile && (
             <div className="flex items-center space-x-4">
-              <Button
-                onClick={onMarketplace}
-                variant="ghost"
-                className="text-gray-300 hover:text-white"
-              >
-                Boutique
-              </Button>
               <Button
                 onClick={onShowDashboard}
                 variant="ghost"
@@ -112,15 +104,6 @@ export function HeaderSection({ user, onShowDashboard, onMarketplace, onLogout }
                     >
                       <User className="w-6 h-6 mr-3" />
                       Dashboard
-                    </Button>
-                    
-                    <Button
-                      onClick={onMarketplace}
-                      variant="ghost"
-                      className="w-full justify-start text-white hover:bg-terex-accent/20 h-14 text-lg"
-                    >
-                      <ShoppingCart className="w-6 h-6 mr-3" />
-                      Boutique
                     </Button>
                   </div>
 

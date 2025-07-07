@@ -7,7 +7,7 @@ import { HeroSection } from './HeroSection';
 import { TestimonialsSection } from './TestimonialsSection';
 import { StatsSection } from './StatsSection';
 import { HeaderSection } from './sections/HeaderSection';
-import { MarketplaceCryptoSection } from './sections/MarketplaceCryptoSection';
+
 import { CurrencyConverterSection } from './sections/CurrencyConverterSection';
 import { HowItWorksSection } from './sections/HowItWorksSection';
 import { PaymentMethodsSection } from './sections/PaymentMethodsSection';
@@ -31,9 +31,6 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
     navigate('/blockchain');
   };
 
-  const handleMarketplace = () => {
-    navigate('/marketplace');
-  };
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -60,13 +57,10 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       <HeaderSection 
         user={user}
         onShowDashboard={onShowDashboard}
-        onMarketplace={handleMarketplace}
         onLogout={handleLogout}
       />
       
       <HeroSection user={user} onShowDashboard={onShowDashboard} />
-      
-      <MarketplaceCryptoSection onMarketplaceClick={handleMarketplace} />
       
       <CurrencyConverterSection />
 

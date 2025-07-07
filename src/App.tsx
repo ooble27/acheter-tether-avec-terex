@@ -16,12 +16,6 @@ import { Toaster } from "@/components/ui/toaster"
 import BlockchainPage from "./pages/BlockchainPage";
 import { TransactionProvider } from "./contexts/TransactionContext";
 import { PWASessionSync } from "./components/PWASessionSync";
-import { MarketplacePage } from '@/pages/MarketplacePage';
-import { ProductDetailPage } from '@/pages/ProductDetailPage';
-import { SearchPage } from '@/pages/SearchPage';
-import { WishlistPage } from '@/pages/WishlistPage';
-import { ComparePage } from '@/pages/ComparePage';
-import { ReviewsPage } from '@/pages/ReviewsPage';
 
 function App() {
   return (
@@ -38,12 +32,6 @@ function App() {
               <Route path="/blockchain" element={<BlockchainPage />} />
               <Route path="/marketing" element={<MarketingPage />} />
               <Route path="/admin/*" element={<AdminPage />} />
-              <Route path="/marketplace" element={<MarketplacePage />} />
-              <Route path="/marketplace/product/:productId" element={<ProductDetailPage />} />
-              <Route path="/marketplace/search" element={<SearchPage />} />
-              <Route path="/marketplace/wishlist" element={<WishlistPage />} />
-              <Route path="/marketplace/compare" element={<ComparePage />} />
-              <Route path="/marketplace/product/:productId/reviews" element={<ReviewsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </TransactionProvider>
