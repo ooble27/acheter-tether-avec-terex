@@ -176,26 +176,6 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                 </div>
               </div>
               
-              <SidebarMenuItem>
-                <SidebarMenuButton 
-                  onClick={() => {
-                    handleExternalNavigation('/marketplace');
-                    onItemClick?.();
-                  }}
-                  className="group relative w-full p-4 h-auto rounded-xl transition-all duration-200 text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md"
-                >
-                  <div className="flex items-center space-x-4 w-full">
-                    <div className="flex-shrink-0 p-2 rounded-lg transition-colors bg-terex-gray/30 group-hover:bg-terex-accent/20">
-                      <ShoppingCart className="h-6 w-6" />
-                    </div>
-                    <div className="flex-1 text-left min-w-0">
-                      <div className="font-semibold text-sm truncate">Boutique Crypto</div>
-                      <div className="text-xs opacity-75 truncate">Wallets & Formations</div>
-                    </div>
-                    <ExternalLink className="w-4 h-4 opacity-50" />
-                  </div>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
 
               <SidebarMenuItem>
                 <SidebarMenuButton 
