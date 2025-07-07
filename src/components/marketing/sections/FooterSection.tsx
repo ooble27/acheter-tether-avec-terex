@@ -23,8 +23,6 @@ export function FooterSection() {
       links: [
         { label: "À Propos", href: "/about" },
         { label: "Carrières", href: "/careers" },
-        { label: "Partenaires", href: "/partners" },
-        { label: "Actualités", href: "/news" },
         { label: "Investisseurs", href: "/investors" }
       ]
     },
