@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Input } from '@/components/ui/input';
@@ -254,33 +255,33 @@ const FAQPage = () => {
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-terex-darker via-terex-dark to-terex-darker">
         <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-terex-accent/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-terex-accent/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-1/4 left-1/4 w-32 h-32 md:w-64 md:h-64 bg-terex-accent/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 md:w-96 md:h-96 bg-terex-accent/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24">
           <div className="text-center">
-            <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-6 py-3 mb-8 border border-terex-accent/20">
-              <MessageCircle className="w-5 h-5 text-terex-accent mr-2" />
-              <span className="text-terex-accent font-medium">Foire aux Questions</span>
+            <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-4 py-2 md:px-6 md:py-3 mb-6 md:mb-8 border border-terex-accent/20">
+              <MessageCircle className="w-4 h-4 md:w-5 md:h-5 text-terex-accent mr-2" />
+              <span className="text-terex-accent font-medium text-sm md:text-base">Foire aux Questions</span>
             </div>
             
-            <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight">
               Tout ce que vous devez <span className="text-terex-accent">savoir</span> sur Terex
             </h1>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
+            <p className="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8 md:mb-12 px-2">
               Des réponses complètes et détaillées à toutes vos questions sur notre plateforme d'échange crypto-fiat.
             </p>
 
             {/* Search Bar */}
-            <div className="max-w-2xl mx-auto mb-16">
+            <div className="max-w-2xl mx-auto mb-8 md:mb-16 px-4">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 md:w-5 md:h-5" />
                 <Input
                   placeholder="Rechercher dans la FAQ..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 h-14 bg-terex-darker border-terex-accent/30 text-white placeholder:text-gray-400 text-lg rounded-full"
+                  className="pl-10 md:pl-12 h-12 md:h-14 bg-terex-darker border-terex-accent/30 text-white placeholder:text-gray-400 text-base md:text-lg rounded-full"
                 />
               </div>
             </div>
@@ -289,31 +290,31 @@ const FAQPage = () => {
       </div>
 
       {/* FAQ Sections */}
-      <div className="py-24 bg-terex-dark">
+      <div className="py-12 md:py-24 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-8">
+          <div className="space-y-6 md:space-y-8">
             {filteredSections.map((section, sectionIndex) => (
-              <div key={sectionIndex} className={`bg-gradient-to-br ${section.color} rounded-2xl border ${section.borderColor} p-8 hover:border-terex-accent/40 transition-all duration-300`}>
-                <div className="flex items-center space-x-4 mb-8">
-                  <div className="text-4xl">{section.icon}</div>
+              <div key={sectionIndex} className={`bg-gradient-to-br ${section.color} rounded-xl md:rounded-2xl border ${section.borderColor} p-4 md:p-8 hover:border-terex-accent/40 transition-all duration-300`}>
+                <div className="flex items-center space-x-3 md:space-x-4 mb-6 md:mb-8">
+                  <div className="text-2xl md:text-4xl">{section.icon}</div>
                   <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">{section.title}</h2>
-                    <p className="text-gray-300">{section.faqs.length} questions dans cette section</p>
+                    <h2 className="text-xl md:text-3xl font-bold text-white mb-1 md:mb-2">{section.title}</h2>
+                    <p className="text-gray-300 text-sm md:text-base">{section.faqs.length} questions dans cette section</p>
                   </div>
                 </div>
                 
-                <Accordion type="single" collapsible className="space-y-4">
+                <Accordion type="single" collapsible className="space-y-3 md:space-y-4">
                   {section.faqs.map((faq, faqIndex) => (
                     <AccordionItem 
                       key={faqIndex} 
                       value={`section-${sectionIndex}-faq-${faqIndex}`}
-                      className="bg-terex-darker/50 rounded-xl border border-terex-gray/30 overflow-hidden"
+                      className="bg-terex-darker/50 rounded-lg md:rounded-xl border border-terex-gray/30 overflow-hidden"
                     >
-                      <AccordionTrigger className="text-white font-semibold text-lg hover:no-underline px-6 py-4 hover:bg-terex-darker/70 transition-colors">
+                      <AccordionTrigger className="text-white font-semibold text-base md:text-lg hover:no-underline px-4 md:px-6 py-3 md:py-4 hover:bg-terex-darker/70 transition-colors text-left">
                         {faq.question}
                       </AccordionTrigger>
-                      <AccordionContent className="text-gray-300 px-6 py-4 border-t border-terex-gray/20 bg-terex-darker/30">
-                        <div className="text-base leading-relaxed">
+                      <AccordionContent className="text-gray-300 px-4 md:px-6 py-3 md:py-4 border-t border-terex-gray/20 bg-terex-darker/30">
+                        <div className="text-sm md:text-base leading-relaxed">
                           {faq.answer}
                         </div>
                       </AccordionContent>
@@ -325,15 +326,15 @@ const FAQPage = () => {
           </div>
 
           {filteredSections.length === 0 && (
-            <div className="text-center mt-16">
-              <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-6" />
-              <h3 className="text-2xl font-bold text-white mb-4">Aucun résultat trouvé</h3>
-              <p className="text-gray-400 text-lg mb-8">
+            <div className="text-center mt-12 md:mt-16 px-4">
+              <MessageCircle className="w-12 h-12 md:w-16 md:h-16 text-gray-400 mx-auto mb-4 md:mb-6" />
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">Aucun résultat trouvé</h3>
+              <p className="text-gray-400 text-base md:text-lg mb-6 md:mb-8">
                 Aucune question ne correspond à votre recherche "{searchTerm}".
               </p>
               <Button 
                 onClick={() => setSearchTerm('')}
-                className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold"
+                className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-6 py-2 md:px-8 md:py-3"
               >
                 Voir toutes les questions
               </Button>
@@ -341,24 +342,24 @@ const FAQPage = () => {
           )}
 
           {/* Contact Support */}
-          <div className="mt-20 text-center">
-            <div className="bg-gradient-to-br from-terex-darker to-terex-gray/30 rounded-2xl border border-terex-accent/20 p-12">
-              <h3 className="text-3xl font-bold text-white mb-4">Une question spécifique ?</h3>
-              <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+          <div className="mt-12 md:mt-20 text-center px-4">
+            <div className="bg-gradient-to-br from-terex-darker to-terex-gray/30 rounded-xl md:rounded-2xl border border-terex-accent/20 p-6 md:p-12">
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 md:mb-4">Une question spécifique ?</h3>
+              <p className="text-gray-300 text-base md:text-lg mb-6 md:mb-8 max-w-2xl mx-auto">
                 Notre équipe de support est disponible 24/7 pour répondre à toutes vos questions personnalisées.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
                 <Button 
                   onClick={() => navigate('/contact')}
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-8 py-3 text-lg"
+                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-6 py-3 md:px-8 md:py-3 text-base md:text-lg"
                 >
-                  <MessageCircle className="w-5 h-5 mr-2" />
+                  <MessageCircle className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                   Contacter le Support
-                  <ArrowRight className="w-5 h-5 ml-2" />
+                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5 ml-2" />
                 </Button>
                 <Button 
                   variant="outline"
-                  className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-8 py-3 text-lg"
+                  className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-6 py-3 md:px-8 md:py-3 text-base md:text-lg"
                   onClick={() => window.open('tel:+14182619091')}
                 >
                   📞 +1 (418) 261-9091
