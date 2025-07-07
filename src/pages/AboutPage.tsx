@@ -84,17 +84,84 @@ const AboutPage = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Hero Section avec statistiques */}
+        <section className="mb-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-4xl font-bold text-white mb-6">Notre Mission</h2>
+              <p className="text-gray-300 text-lg mb-6 leading-relaxed">
+                Chez Terex, nous croyons que chaque africain mérite un accès simple et sécurisé aux 
+                services financiers numériques. Notre plateforme connecte les crypto-monnaies aux 
+                monnaies traditionnelles, facilitant les échanges et les transferts internationaux.
+              </p>
+              <p className="text-gray-300 text-lg mb-8 leading-relaxed">
+                Fondée en 2024, Terex s'appuie sur la technologie blockchain pour offrir des solutions 
+                innovantes qui répondent aux besoins spécifiques du marché africain.
+              </p>
+              
+              {/* Key metrics */}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="bg-terex-darker rounded-xl p-4 border border-terex-accent/20">
+                  <div className="text-2xl font-bold text-terex-accent">99.9%</div>
+                  <div className="text-gray-300 text-sm">Disponibilité</div>
+                </div>
+                <div className="bg-terex-darker rounded-xl p-4 border border-terex-accent/20">
+                  <div className="text-2xl font-bold text-terex-accent">24/7</div>
+                  <div className="text-gray-300 text-sm">Support Client</div>
+                </div>
+                <div className="bg-terex-darker rounded-xl p-4 border border-terex-accent/20">
+                  <div className="text-2xl font-bold text-terex-accent">&lt; 5min</div>
+                  <div className="text-gray-300 text-sm">Temps moyen</div>
+                </div>
+                <div className="bg-terex-darker rounded-xl p-4 border border-terex-accent/20">
+                  <div className="text-2xl font-bold text-terex-accent">ISO 27001</div>
+                  <div className="text-gray-300 text-sm">Certification</div>
+                </div>
+              </div>
+            </div>
+            <div className="relative">
+              <div className="bg-gradient-to-br from-terex-accent/20 to-terex-accent/5 rounded-2xl p-8 border border-terex-accent/30">
+                <Target className="w-16 h-16 text-terex-accent mb-6" />
+                <h3 className="text-2xl font-bold text-white mb-4">Vision 2030</h3>
+                <p className="text-gray-300 mb-6">
+                  Devenir la référence africaine pour les échanges crypto-fiat et 
+                  les transferts d'argent, en servant plus de 1 million d'utilisateurs 
+                  à travers 50 pays africains.
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center text-gray-300">
+                    <div className="w-2 h-2 bg-terex-accent rounded-full mr-3"></div>
+                    50+ pays couverts
+                  </div>
+                  <div className="flex items-center text-gray-300">
+                    <div className="w-2 h-2 bg-terex-accent rounded-full mr-3"></div>
+                    1M+ utilisateurs actifs
+                  </div>
+                  <div className="flex items-center text-gray-300">
+                    <div className="w-2 h-2 bg-terex-accent rounded-full mr-3"></div>
+                    $1B+ de volume traité
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Stats Section */}
-        <section className="mb-16">
+        <section className="mb-20">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-white mb-4">Terex en chiffres</h2>
+            <p className="text-gray-300 text-lg">Des résultats qui parlent d'eux-mêmes</p>
+          </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
-                <Card key={index} className="bg-terex-darker border-terex-gray text-center">
-                  <CardContent className="p-6">
-                    <IconComponent className="w-8 h-8 text-terex-accent mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
-                    <div className="text-gray-300 text-sm">{stat.label}</div>
+                <Card key={index} className="bg-terex-darker border-terex-gray text-center hover:border-terex-accent/50 transition-all duration-300 hover:shadow-lg hover:shadow-terex-accent/10">
+                  <CardContent className="p-8">
+                    <IconComponent className="w-12 h-12 text-terex-accent mx-auto mb-4" />
+                    <div className="text-3xl font-bold text-white mb-2">{stat.value}</div>
+                    <div className="text-gray-300">{stat.label}</div>
                   </CardContent>
                 </Card>
               );
@@ -103,35 +170,6 @@ const AboutPage = () => {
         </section>
 
         {/* Mission Section */}
-        <section className="mb-16">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl font-bold text-white mb-6">Notre Mission</h2>
-              <p className="text-gray-300 text-lg mb-6 leading-relaxed">
-                Chez Terex, nous croyons que chaque africain mérite un accès simple et sécurisé aux 
-                services financiers numériques. Notre plateforme connecte les crypto-monnaies aux 
-                monnaies traditionnelles, facilitant les échanges et les transferts internationaux.
-              </p>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                Fondée en 2024, Terex s'appuie sur la technologie blockchain pour offrir des solutions 
-                innovantes qui répondent aux besoins spécifiques du marché africain.
-              </p>
-            </div>
-            <div className="relative">
-              <div className="bg-gradient-to-br from-terex-accent/20 to-terex-accent/5 rounded-2xl p-8 border border-terex-accent/30">
-                <Target className="w-16 h-16 text-terex-accent mb-6" />
-                <h3 className="text-xl font-bold text-white mb-4">Vision 2030</h3>
-                <p className="text-gray-300">
-                  Devenir la référence africaine pour les échanges crypto-fiat et 
-                  les transferts d'argent, en servant plus de 1 million d'utilisateurs 
-                  à travers 50 pays africains.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Values Section */}
         <section className="mb-16">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-4">Nos Valeurs</h2>
@@ -157,7 +195,7 @@ const AboutPage = () => {
         </section>
 
         {/* Team Section */}
-        <section className="mb-16">
+        <section className="mb-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-4">Notre Équipe</h2>
             <p className="text-gray-300 text-lg">

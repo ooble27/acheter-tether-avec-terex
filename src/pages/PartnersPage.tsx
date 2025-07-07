@@ -10,42 +10,51 @@ const PartnersPage = () => {
   const bankingPartners = [
     {
       name: "Banque Atlantique",
-      description: "Transferts vers l'Afrique de l'Ouest",
-      countries: ["Sénégal", "Côte d'Ivoire", "Mali"],
-      logo: "/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
+      description: "Premier réseau bancaire de l'Afrique de l'Ouest avec plus de 140 agences",
+      countries: ["Sénégal", "Côte d'Ivoire", "Mali", "Burkina Faso", "Niger", "Bénin", "Togo"],
+      logo: "/partners/banque-atlantique-logo.png",
+      features: ["Virements SWIFT", "Mobile Banking", "Cartes Visa", "Crédit commercial"],
+      volume: "2.5M+ clients"
     },
     {
       name: "UBA Group",
-      description: "Réseau panafricain de référence",
-      countries: ["Nigeria", "Ghana", "Cameroun"],
-      logo: "/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
+      description: "United Bank for Africa - Leader panafricain présent dans 20 pays africains",
+      countries: ["Nigeria", "Ghana", "Cameroun", "Sénégal", "Côte d'Ivoire", "Kenya"],
+      logo: "/partners/uba-logo.png",
+      features: ["UBA Mobile", "Leo AI Assistant", "Diaspora Banking", "Trade Finance"],
+      volume: "25M+ clients"
     },
     {
       name: "Ecobank",
-      description: "Leader bancaire africain",
-      countries: ["Burkina Faso", "Togo", "Bénin"],
-      logo: "/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
+      description: "Première banque panafricaine avec présence dans 33 pays africains",
+      countries: ["Burkina Faso", "Togo", "Bénin", "Ghana", "Nigeria", "Cameroun"],
+      logo: "/partners/ecobank-logo.png",
+      features: ["Rapidtransfer", "Xpresspoint", "Omni Lite", "Corporate Banking"],
+      volume: "32M+ clients"
     }
   ];
 
   const cryptoPartners = [
     {
       name: "Binance",
-      description: "Plateforme d'échange crypto mondiale",
-      services: ["USDT/EUR", "P2P Trading"],
-      logo: "/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
+      description: "Plus grande plateforme d'échange crypto au monde - Volume quotidien $76B+",
+      services: ["USDT/EUR Trading", "P2P Marketplace", "Binance Pay", "Custody Solutions"],
+      logo: "/partners/binance-logo.png",
+      stats: "120M+ utilisateurs, 350+ cryptos"
     },
     {
       name: "Coinbase",
-      description: "Exchange institutionnel",
-      services: ["Custody", "API Trading"],
-      logo: "/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
+      description: "Plateforme institutionnelle leader basée aux États-Unis - Cotée NASDAQ",
+      services: ["Professional Trading", "Custody", "Prime Services", "Coinbase Pay"],
+      logo: "/partners/coinbase-logo.png",
+      stats: "110M+ utilisateurs vérifiés"
     },
     {
       name: "Tether",
-      description: "Émetteur officiel USDT",
-      services: ["Réserves", "Audit"],
-      logo: "/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
+      description: "Émetteur officiel d'USDT - Première stablecoin mondiale par capitalisation",
+      services: ["USDT Issuance", "Reserves Attestation", "Multi-chain Support", "Institutional API"],
+      logo: "/partners/tether-logo.png",
+      stats: "$120B+ de capitalisation"
     }
   ];
 
@@ -100,23 +109,39 @@ const PartnersPage = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {bankingPartners.map((partner, index) => (
-              <Card key={index} className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
-                <CardHeader className="text-center">
-                  <div className="w-16 h-16 bg-white rounded-lg mx-auto mb-4 flex items-center justify-center">
-                    <img src={partner.logo} alt={partner.name} className="w-10 h-10" />
+              <Card key={index} className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-all duration-300 hover:shadow-lg hover:shadow-terex-accent/10">
+                <CardHeader className="text-center pb-4">
+                  <div className="w-20 h-20 bg-white rounded-xl mx-auto mb-4 flex items-center justify-center p-2 shadow-lg">
+                    <img src={partner.logo} alt={partner.name} className="w-full h-full object-contain" />
                   </div>
-                  <CardTitle className="text-white">{partner.name}</CardTitle>
+                  <CardTitle className="text-white text-xl">{partner.name}</CardTitle>
+                  <p className="text-terex-accent font-medium text-sm">{partner.volume}</p>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-300 mb-4">{partner.description}</p>
-                  <div className="space-y-2">
-                    <p className="text-terex-accent font-medium">Pays desservis :</p>
-                    <div className="flex flex-wrap gap-2">
-                      {partner.countries.map((country, idx) => (
-                        <span key={idx} className="bg-terex-accent/20 text-terex-accent px-2 py-1 rounded text-sm">
-                          {country}
-                        </span>
-                      ))}
+                  <p className="text-gray-300 mb-4 leading-relaxed">{partner.description}</p>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-terex-accent font-medium mb-2">Pays desservis :</p>
+                      <div className="flex flex-wrap gap-2">
+                        {partner.countries.map((country, idx) => (
+                          <span key={idx} className="bg-terex-accent/20 text-terex-accent px-3 py-1 rounded-full text-sm font-medium">
+                            {country}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <p className="text-white font-medium mb-2">Services :</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {partner.features.map((feature, idx) => (
+                          <div key={idx} className="flex items-center text-gray-300 text-sm">
+                            <div className="w-1.5 h-1.5 bg-terex-accent rounded-full mr-2"></div>
+                            {feature}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -137,22 +162,24 @@ const PartnersPage = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {cryptoPartners.map((partner, index) => (
-              <Card key={index} className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
-                <CardHeader className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-terex-accent/20 to-terex-accent/10 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                    <img src={partner.logo} alt={partner.name} className="w-10 h-10" />
+              <Card key={index} className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-all duration-300 hover:shadow-lg hover:shadow-terex-accent/10">
+                <CardHeader className="text-center pb-4">
+                  <div className="w-20 h-20 bg-gradient-to-br from-terex-accent/20 to-terex-accent/10 rounded-xl mx-auto mb-4 flex items-center justify-center p-2">
+                    <img src={partner.logo} alt={partner.name} className="w-full h-full object-contain" />
                   </div>
-                  <CardTitle className="text-white">{partner.name}</CardTitle>
+                  <CardTitle className="text-white text-xl">{partner.name}</CardTitle>
+                  <p className="text-terex-accent font-medium text-sm">{partner.stats}</p>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-300 mb-4">{partner.description}</p>
-                  <div className="space-y-2">
-                    <p className="text-terex-accent font-medium">Services :</p>
-                    <div className="flex flex-wrap gap-2">
+                  <p className="text-gray-300 mb-4 leading-relaxed">{partner.description}</p>
+                  <div className="space-y-3">
+                    <p className="text-white font-medium">Services intégrés :</p>
+                    <div className="grid grid-cols-1 gap-2">
                       {partner.services.map((service, idx) => (
-                        <span key={idx} className="bg-terex-accent/20 text-terex-accent px-2 py-1 rounded text-sm">
+                        <div key={idx} className="flex items-center text-gray-300 text-sm bg-terex-gray/30 rounded-lg px-3 py-2">
+                          <div className="w-2 h-2 bg-terex-accent rounded-full mr-3"></div>
                           {service}
-                        </span>
+                        </div>
                       ))}
                     </div>
                   </div>

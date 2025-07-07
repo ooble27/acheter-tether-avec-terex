@@ -23,8 +23,6 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
-  if (!user) return null;
-
   const handleLogout = async () => {
     try {
       await onLogout();
@@ -84,25 +82,36 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                 </NavigationMenuList>
               </NavigationMenu>
 
-              <Button
-                onClick={onShowDashboard}
-                variant="ghost"
-                className="text-gray-300 hover:text-white"
-              >
-                <User className="w-4 h-4 mr-2" />
-                Dashboard
-              </Button>
-              <div className="flex items-center space-x-2 text-gray-300">
-                <span className="text-sm">{user.name}</span>
+              {user ? (
+                <>
+                  <Button
+                    onClick={onShowDashboard}
+                    variant="ghost"
+                    className="text-gray-300 hover:text-white"
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    Dashboard
+                  </Button>
+                  <div className="flex items-center space-x-2 text-gray-300">
+                    <span className="text-sm">{user.name}</span>
+                    <Button
+                      onClick={handleLogout}
+                      variant="ghost"
+                      size="sm"
+                      className="text-gray-400 hover:text-red-400"
+                    >
+                      <LogOut className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </>
+              ) : (
                 <Button
-                  onClick={handleLogout}
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-400 hover:text-red-400"
+                  onClick={() => navigate('/auth')}
+                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold"
                 >
-                  <LogOut className="w-4 h-4" />
+                  Se Connecter
                 </Button>
-              </div>
+              )}
             </div>
           )}
 
@@ -124,28 +133,32 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
               >
                 <div className="flex flex-col h-full pt-safe">
                   {/* Header du menu mobile */}
-                  <div className="p-6 border-b border-terex-accent/20">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-terex-accent rounded-full flex items-center justify-center">
-                        <User className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <p className="text-white font-medium">{user.name}</p>
-                        <p className="text-gray-400 text-sm">{user.email}</p>
+                  {user && (
+                    <div className="p-6 border-b border-terex-accent/20">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-terex-accent rounded-full flex items-center justify-center">
+                          <User className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <p className="text-white font-medium">{user.name}</p>
+                          <p className="text-gray-400 text-sm">{user.email}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Menu Items */}
                   <div className="flex-1 p-6 space-y-4">
-                    <Button
-                      onClick={onShowDashboard}
-                      variant="ghost"
-                      className="w-full justify-start text-white hover:bg-terex-accent/20 h-14 text-lg"
-                    >
-                      <User className="w-6 h-6 mr-3" />
-                      Dashboard
-                    </Button>
+                    {user && (
+                      <Button
+                        onClick={onShowDashboard}
+                        variant="ghost"
+                        className="w-full justify-start text-white hover:bg-terex-accent/20 h-14 text-lg"
+                      >
+                        <User className="w-6 h-6 mr-3" />
+                        Dashboard
+                      </Button>
+                    )}
 
                     {/* Navigation Items */}
                     <div className="space-y-2">
@@ -161,19 +174,30 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                         </Button>
                       ))}
                     </div>
+
+                    {!user && (
+                      <Button
+                        onClick={() => navigate('/auth')}
+                        className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold h-14 text-lg"
+                      >
+                        Se Connecter
+                      </Button>
+                    )}
                   </div>
 
                   {/* Footer avec déconnexion */}
-                  <div className="p-6 border-t border-terex-accent/20 pb-safe">
-                    <Button
-                      onClick={handleLogout}
-                      variant="ghost"
-                      className="w-full justify-start text-red-400 hover:bg-red-600/20 h-14 text-lg"
-                    >
-                      <LogOut className="w-6 h-6 mr-3" />
-                      Déconnexion
-                    </Button>
-                  </div>
+                  {user && (
+                    <div className="p-6 border-t border-terex-accent/20 pb-safe">
+                      <Button
+                        onClick={handleLogout}
+                        variant="ghost"
+                        className="w-full justify-start text-red-400 hover:bg-red-600/20 h-14 text-lg"
+                      >
+                        <LogOut className="w-6 h-6 mr-3" />
+                        Déconnexion
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>

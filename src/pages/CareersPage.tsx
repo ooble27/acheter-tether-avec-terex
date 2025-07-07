@@ -118,11 +118,11 @@ const CareersPage = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Why Join Us */}
-        <section className="mb-16">
+        <section className="mb-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-4">Pourquoi Terex ?</h2>
             <p className="text-gray-300 text-lg">
-              Une mission inspirante, des défis techniques passionnants et un impact réel
+              Une mission inspirante, des défis techniques passionnants et un impact réel sur l'Afrique
             </p>
           </div>
           
@@ -130,15 +130,39 @@ const CareersPage = () => {
             {benefits.map((benefit, index) => {
               const IconComponent = benefit.icon;
               return (
-                <Card key={index} className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
-                  <CardContent className="p-6 text-center">
-                    <IconComponent className="w-10 h-10 text-terex-accent mx-auto mb-4" />
-                    <h3 className="text-white font-semibold mb-3">{benefit.title}</h3>
-                    <p className="text-gray-300 text-sm leading-relaxed">{benefit.description}</p>
+                <Card key={index} className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-all duration-300 hover:shadow-lg hover:shadow-terex-accent/10">
+                  <CardContent className="p-8 text-center">
+                    <IconComponent className="w-12 h-12 text-terex-accent mx-auto mb-4" />
+                    <h3 className="text-white font-semibold mb-3 text-lg">{benefit.title}</h3>
+                    <p className="text-gray-300 leading-relaxed">{benefit.description}</p>
                   </CardContent>
                 </Card>
               );
             })}
+          </div>
+
+          {/* Company Culture Highlight */}
+          <div className="mt-16 bg-gradient-to-r from-terex-accent/10 to-terex-accent/5 rounded-2xl p-8 border border-terex-accent/30">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-white mb-4">Une startup qui change la donne</h3>
+              <p className="text-gray-300 text-lg mb-6">
+                Rejoignez une équipe qui révolutionne les services financiers en Afrique avec des technologies de pointe
+              </p>
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-terex-accent mb-2">Series A</div>
+                  <p className="text-gray-300">Financement levé</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-terex-accent mb-2">15+</div>
+                  <p className="text-gray-300">Pays d'activité</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-terex-accent mb-2">500%</div>
+                  <p className="text-gray-300">Croissance annuelle</p>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
