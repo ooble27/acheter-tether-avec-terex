@@ -211,6 +211,72 @@ export type Database = {
         }
         Relationships: []
       }
+      job_applications: {
+        Row: {
+          admin_notes: string | null
+          availability: string | null
+          cover_letter: string | null
+          created_at: string
+          cv_url: string | null
+          email: string
+          experience_years: number | null
+          first_name: string
+          id: string
+          last_name: string
+          linkedin_profile: string | null
+          location: string | null
+          phone: string | null
+          portfolio_url: string | null
+          position: string
+          salary_expectation: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          availability?: string | null
+          cover_letter?: string | null
+          created_at?: string
+          cv_url?: string | null
+          email: string
+          experience_years?: number | null
+          first_name: string
+          id?: string
+          last_name: string
+          linkedin_profile?: string | null
+          location?: string | null
+          phone?: string | null
+          portfolio_url?: string | null
+          position: string
+          salary_expectation?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          availability?: string | null
+          cover_letter?: string | null
+          created_at?: string
+          cv_url?: string | null
+          email?: string
+          experience_years?: number | null
+          first_name?: string
+          id?: string
+          last_name?: string
+          linkedin_profile?: string | null
+          location?: string | null
+          phone?: string | null
+          portfolio_url?: string | null
+          position?: string
+          salary_expectation?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       kyc_verifications: {
         Row: {
           address: string | null

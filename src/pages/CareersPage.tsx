@@ -1,21 +1,25 @@
 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Clock, Users, Zap, Heart, Trophy, Mail, ArrowRight, Star, Globe, Code, Shield } from 'lucide-react';
+import { MapPin, Clock, Users, DollarSign, Briefcase, Heart, ArrowRight, Send } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
 import { HeaderSection } from '@/components/marketing/sections/HeaderSection';
+import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
+import { JobApplicationForm } from '@/components/features/JobApplicationForm';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const CareersPage = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { user } = useAuth();
+  const { toast } = useToast();
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
+  const [showApplicationForm, setShowApplicationForm] = useState(false);
 
-  // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
@@ -42,36 +46,89 @@ const CareersPage = () => {
     navigate('/');
   };
 
+  const handleApply = (position: string) => {
+    setSelectedPosition(position);
+    setShowApplicationForm(true);
+  };
+
   const openPositions = [
     {
-      title: "Développeur Full-Stack Senior",
-      department: "Technique",
-      location: "Dakar / Remote",
-      type: "CDI",
-      experience: "5+ ans",
-      salary: "€60k - €80k",
-      description: "Développement de nouvelles fonctionnalités sur notre plateforme d'échange crypto-fiat avec des technologies de pointe",
-      skills: ["React", "Node.js", "PostgreSQL", "Blockchain", "AWS"]
+      title: "Community Manager",
+      type: "Temps plein",
+      location: "Remote / Dakar",
+      salary: "30 000 - 45 000 CFA",
+      description: "Nous recherchons un(e) Community Manager passionné(e) pour développer et animer notre communauté crypto en Afrique francophone.",
+      responsibilities: [
+        "Gérer et animer nos réseaux sociaux (Twitter, LinkedIn, Telegram, Discord)",
+        "Créer du contenu éducatif sur les cryptomonnaies et DeFi",
+        "Organiser des événements virtuels et AMA (Ask Me Anything)",
+        "Répondre aux questions de la communauté et fournir un support client",
+        "Collaborer avec l'équipe marketing pour les campagnes",
+        "Analyser les métriques d'engagement et proposer des améliorations"
+      ],
+      requirements: [
+        "2+ années d'expérience en community management",
+        "Excellente maîtrise du français et de l'anglais",
+        "Connaissance approfondie des cryptomonnaies et blockchain",
+        "Expérience avec les outils de gestion de réseaux sociaux",
+        "Créativité et capacité à créer du contenu engageant",
+        "Disponibilité pour travailler en horaires flexibles"
+      ],
+      benefits: [
+        "Salaire compétitif + bonus performance",
+        "Formation continue sur les technologies blockchain",
+        "Opportunité de voyager pour des événements crypto",
+        "Équipe internationale et dynamique",
+        "Participation aux profits de l'entreprise"
+      ]
     },
     {
-      title: "Responsable Conformité",
-      department: "Compliance",
-      location: "Dakar",
-      type: "CDI",
-      experience: "3+ ans",
-      salary: "€45k - €60k",
-      description: "Supervision des processus KYC/AML et conformité réglementaire pour l'expansion africaine",
-      skills: ["AML/KYC", "Réglementation", "Audit", "Risk Management", "BCEAO"]
+      title: "Opérateur de Transactions",
+      type: "Temps plein",
+      location: "Dakar / Canada",
+      salary: "25 000 - 40 000 CFA",
+      description: "Rejoignez notre équipe opérationnelle pour traiter et superviser les transactions crypto-fiat en temps réel.",
+      responsibilities: [
+        "Traiter les ordres d'achat et de vente d'USDT",
+        "Vérifier et valider les paiements Mobile Money et virements",
+        "Superviser les transferts internationaux",
+        "Gérer les portefeuilles crypto et les adresses de réception",
+        "Assurer le support client pour les transactions",
+        "Maintenir les registres et rapports de transactions"
+      ],
+      requirements: [
+        "Expérience en finance ou en opérations bancaires",
+        "Connaissance des cryptomonnaies et wallets",
+        "Maîtrise des systèmes de paiement Mobile Money",
+        "Attention aux détails et rigueur",
+        "Capacité à travailler sous pression",
+        "Disponibilité 6j/7 (rotation d'équipes)"
+      ],
+      benefits: [
+        "Formation complète aux opérations crypto",
+        "Horaires flexibles avec rotation",
+        "Prime de performance mensuelle",
+        "Évolution vers des postes de supervision",
+        "Assurance santé complète"
+      ]
+    }
+  ];
+
+  const companyValues = [
+    {
+      icon: <Heart className="w-8 h-8 text-terex-accent" />,
+      title: "Innovation",
+      description: "Nous révolutionnons les transferts d'argent en Afrique avec les technologies blockchain les plus avancées."
     },
     {
-      title: "Chef de Produit Crypto",
-      department: "Produit",
-      location: "Remote",
-      type: "CDI",
-      experience: "4+ ans",
-      salary: "€55k - €75k",
-      description: "Pilotage de la roadmap produit et stratégie crypto pour les marchés africains",
-      skills: ["Product Management", "Crypto", "Analytics", "UX", "Agile"]
+      icon: <Users className="w-8 h-8 text-terex-accent" />,
+      title: "Diversité",
+      description: "Notre équipe multiculturelle reflète la richesse de nos marchés africains et canadiens."
+    },
+    {
+      icon: <Briefcase className="w-8 h-8 text-terex-accent" />,
+      title: "Excellence",
+      description: "Nous visons l'excellence dans chaque transaction et chaque interaction avec nos clients."
     }
   ];
 
@@ -96,102 +153,188 @@ const CareersPage = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
             <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-6 py-3 mb-8 border border-terex-accent/20">
-              <Users className="w-5 h-5 text-terex-accent mr-2" />
-              <span className="text-terex-accent font-medium">Rejoignez Notre Équipe</span>
+              <Briefcase className="w-5 h-5 text-terex-accent mr-2" />
+              <span className="text-terex-accent font-medium">Carrières chez Terex</span>
             </div>
             
             <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
-              Carrières chez <span className="text-terex-accent">Terex</span>
+              Construisons l'avenir de la <span className="text-terex-accent">finance digitale</span> ensemble
             </h1>
             <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
-              Rejoignez notre équipe et construisons ensemble l'avenir de la fintech africaine. 
-              Nous recherchons des talents passionnés pour révolutionner les services financiers numériques.
+              Rejoignez l'équipe qui révolutionne les transferts d'argent entre l'Afrique et le monde. Nous recherchons des talents passionnés pour notre croissance.
             </p>
-            
-            <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-terex-accent mb-2">Series A</div>
-                <div className="text-gray-400">Financement</div>
+
+            <div className="flex justify-center space-x-8 text-center">
+              <div>
+                <div className="text-3xl font-bold text-terex-accent">2</div>
+                <div className="text-gray-300">Postes ouverts</div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-terex-accent mb-2">15+</div>
-                <div className="text-gray-400">Pays d'activité</div>
+              <div>
+                <div className="text-3xl font-bold text-terex-accent">5+</div>
+                <div className="text-gray-300">Pays couverts</div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-terex-accent mb-2">500%</div>
-                <div className="text-gray-400">Croissance annuelle</div>
+              <div>
+                <div className="text-3xl font-bold text-terex-accent">24/7</div>
+                <div className="text-gray-300">Service continu</div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Open Positions */}
-      <div className="py-24 bg-terex-dark">
+      {/* Valeurs de l'entreprise */}
+      <div className="py-20 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Postes Ouverts</h2>
-            <p className="text-gray-300 text-lg">Découvrez nos opportunités actuelles</p>
+            <h2 className="text-4xl font-bold text-white mb-6">Nos Valeurs</h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Découvrez l'esprit Terex et ce qui nous unit dans notre mission de transformation financière.
+            </p>
           </div>
-          
-          <div className="grid gap-8">
-            {openPositions.map((position, index) => (
-              <div key={index} className="group relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 via-terex-accent/10 to-terex-accent/20 rounded-2xl blur opacity-25 group-hover:opacity-75 transition-all duration-500"></div>
-                
-                <div className="relative bg-gradient-to-br from-terex-darker to-terex-gray/30 rounded-2xl p-8 border border-terex-gray/50 group-hover:border-terex-accent/50">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
-                    <div className="mb-4 lg:mb-0">
-                      <h3 className="text-2xl font-bold text-white mb-3">{position.title}</h3>
-                      <div className="flex flex-wrap gap-3">
-                        <Badge className="bg-terex-accent/20 text-terex-accent border-terex-accent/30">
-                          {position.department}
-                        </Badge>
-                        <Badge variant="outline" className="border-gray-500 text-gray-300">
-                          <MapPin className="w-3 h-3 mr-1" />
-                          {position.location}
-                        </Badge>
-                        <Badge variant="outline" className="border-gray-500 text-gray-300">
-                          <Clock className="w-3 h-3 mr-1" />
-                          {position.type}
-                        </Badge>
-                        <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                          {position.salary}
-                        </Badge>
-                      </div>
-                    </div>
-                    <Button 
-                      className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-8 py-3"
-                      onClick={() => window.location.href = 'mailto:careers@terex.com?subject=Candidature - ' + position.title}
-                    >
-                      Postuler
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {companyValues.map((value, index) => (
+              <Card key={index} className="bg-gradient-to-br from-terex-darker to-terex-gray/30 border-terex-accent/20 hover:border-terex-accent/40 transition-all duration-300">
+                <CardHeader className="text-center">
+                  <div className="mx-auto mb-4 p-3 bg-terex-accent/10 rounded-full w-fit">
+                    {value.icon}
                   </div>
-                  
-                  <p className="text-gray-300 mb-6 leading-relaxed">{position.description}</p>
-                  
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <p className="text-terex-accent font-medium mb-2">Expérience requise : {position.experience}</p>
-                    </div>
-                    <div>
-                      <p className="text-white font-medium mb-3">Compétences clés :</p>
-                      <div className="flex flex-wrap gap-2">
-                        {position.skills.map((skill, idx) => (
-                          <span key={idx} className="bg-terex-accent/20 text-terex-accent px-3 py-1 rounded-full text-sm font-medium">
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  <CardTitle className="text-white text-xl">{value.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-300 text-center">{value.description}</p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
       </div>
+
+      {/* Postes ouverts */}
+      <div className="py-24 bg-terex-darker">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-6">Postes Ouverts</h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Découvrez nos opportunités actuelles et rejoignez une équipe qui façonne l'avenir de la finance en Afrique.
+            </p>
+          </div>
+
+          <div className="space-y-8">
+            {openPositions.map((position, index) => (
+              <Card key={index} className="bg-gradient-to-br from-terex-dark to-terex-gray/20 border-terex-accent/20 hover:border-terex-accent/40 transition-all duration-300">
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-3 mb-3">
+                        <CardTitle className="text-white text-2xl">{position.title}</CardTitle>
+                        <Badge className="bg-terex-accent text-black font-medium">{position.type}</Badge>
+                      </div>
+                      
+                      <div className="flex items-center space-x-6 text-gray-300 mb-4">
+                        <div className="flex items-center space-x-2">
+                          <MapPin className="w-4 h-4" />
+                          <span>{position.location}</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <DollarSign className="w-4 h-4" />
+                          <span>{position.salary}</span>
+                        </div>
+                      </div>
+                      
+                      <CardDescription className="text-gray-300 text-base">
+                        {position.description}
+                      </CardDescription>
+                    </div>
+                    
+                    <Button 
+                      onClick={() => handleApply(position.title)}
+                      className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold ml-6"
+                    >
+                      <Send className="w-4 h-4 mr-2" />
+                      Postuler
+                    </Button>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="space-y-6">
+                  <div>
+                    <h4 className="text-white font-semibold mb-3">Responsabilités :</h4>
+                    <ul className="space-y-2 text-gray-300">
+                      {position.responsibilities.map((resp, idx) => (
+                        <li key={idx} className="flex items-start space-x-2">
+                          <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
+                          <span>{resp}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-white font-semibold mb-3">Prérequis :</h4>
+                    <ul className="space-y-2 text-gray-300">
+                      {position.requirements.map((req, idx) => (
+                        <li key={idx} className="flex items-start space-x-2">
+                          <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
+                          <span>{req}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-white font-semibold mb-3">Avantages :</h4>
+                    <ul className="space-y-2 text-gray-300">
+                      {position.benefits.map((benefit, idx) => (
+                        <li key={idx} className="flex items-start space-x-2">
+                          <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
+                          <span>{benefit}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Contact HR */}
+          <div className="mt-16 text-center">
+            <Card className="bg-gradient-to-br from-terex-darker to-terex-gray/20 border-terex-accent/20 p-8 max-w-2xl mx-auto">
+              <CardHeader>
+                <CardTitle className="text-white text-2xl mb-4">Questions sur nos postes ?</CardTitle>
+                <CardDescription className="text-gray-300 text-lg">
+                  Notre équipe RH est là pour répondre à toutes vos questions sur les opportunités chez Terex.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button 
+                  onClick={() => window.location.href = 'mailto:Terangaexchange@gmail.com?subject=Question%20Carrières%20Terex'}
+                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold"
+                >
+                  Contacter les RH
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+
+      {/* Dialog pour le formulaire de candidature */}
+      <Dialog open={showApplicationForm} onOpenChange={setShowApplicationForm}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-terex-dark border-terex-accent/20">
+          <DialogHeader>
+            <DialogTitle className="text-white text-2xl">Candidature - {selectedPosition}</DialogTitle>
+          </DialogHeader>
+          {selectedPosition && (
+            <JobApplicationForm 
+              position={selectedPosition} 
+              onClose={() => setShowApplicationForm(false)} 
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
       <FooterSection />
     </div>
