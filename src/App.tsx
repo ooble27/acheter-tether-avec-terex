@@ -15,6 +15,12 @@ import NewsPage from "./pages/NewsPage";
 import SupportPage from "./pages/SupportPage";
 import ContactPage from "./pages/ContactPage";
 import FAQPage from "./pages/FAQPage";
+import HelpPage from "./pages/HelpPage";
+import GuidePage from "./pages/GuidePage";
+import StatusPage from "./pages/StatusPage";
+import TermsPage from "./pages/TermsPage";
+import PrivacyPage from "./pages/PrivacyPage";
+import SecurityPage from "./pages/SecurityPage";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MarketingPage } from "./pages/MarketingPage";
@@ -45,6 +51,12 @@ function App() {
               <Route path="/support" element={<SupportPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/faq" element={<FAQPage />} />
+              <Route path="/help" element={<HelpPage />} />
+              <Route path="/guide" element={<GuidePage />} />
+              <Route path="/status" element={<StatusPage />} />
+              <Route path="/terms" element={<TermsPage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/security" element={<SecurityPage />} />
               <Route path="/admin/*" element={<AdminPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
