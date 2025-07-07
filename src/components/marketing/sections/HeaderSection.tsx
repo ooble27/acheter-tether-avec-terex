@@ -1,8 +1,17 @@
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { User, LogOut, Menu } from 'lucide-react';
+import { User, LogOut, Menu, ChevronDown } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { 
+  NavigationMenu, 
+  NavigationMenuContent, 
+  NavigationMenuItem, 
+  NavigationMenuList, 
+  NavigationMenuTrigger,
+  NavigationMenuLink 
+} from '@/components/ui/navigation-menu';
+import { useNavigate } from 'react-router-dom';
 
 interface HeaderSectionProps {
   user?: { email: string; name: string } | null;
@@ -12,6 +21,7 @@ interface HeaderSectionProps {
 
 export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSectionProps) {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
   if (!user) return null;
 
@@ -24,6 +34,13 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
       window.location.reload();
     }
   };
+
+  const navigationItems = [
+    { label: 'Partenaires', href: '/partners' },
+    { label: 'À propos', href: '/about' },
+    { label: 'Carrières', href: '/careers' },
+    { label: 'Actualités', href: '/news' }
+  ];
 
   return (
     <header className="bg-terex-darker border-b border-terex-accent/20 sticky top-0 z-50 pt-safe">
@@ -42,7 +59,31 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
           
           {/* Desktop Navigation */}
           {!isMobile && (
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
+              {/* Navigation Menu */}
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="bg-transparent text-gray-300 hover:text-white">
+                      Navigation
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <div className="grid w-48 p-2">
+                        {navigationItems.map((item) => (
+                          <NavigationMenuLink
+                            key={item.href}
+                            onClick={() => navigate(item.href)}
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer"
+                          >
+                            <div className="text-sm font-medium leading-none">{item.label}</div>
+                          </NavigationMenuLink>
+                        ))}
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+
               <Button
                 onClick={onShowDashboard}
                 variant="ghost"
@@ -105,6 +146,21 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                       <User className="w-6 h-6 mr-3" />
                       Dashboard
                     </Button>
+
+                    {/* Navigation Items */}
+                    <div className="space-y-2">
+                      <p className="text-gray-400 text-sm font-medium px-3">Navigation</p>
+                      {navigationItems.map((item) => (
+                        <Button
+                          key={item.href}
+                          onClick={() => navigate(item.href)}
+                          variant="ghost"
+                          className="w-full justify-start text-white hover:bg-terex-accent/20 h-12"
+                        >
+                          {item.label}
+                        </Button>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Footer avec déconnexion */}
