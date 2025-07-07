@@ -1,4 +1,3 @@
-
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +10,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -265,6 +264,37 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                           <div className="text-xs opacity-75 truncate">Ordres et transactions</div>
                         </div>
                         {activeSection === 'orders-admin' && (
+                          <div className="w-1 h-8 bg-white rounded-full opacity-60"></div>
+                        )}
+                      </div>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+
+                  <SidebarMenuItem>
+                    <SidebarMenuButton 
+                      onClick={() => {
+                        setActiveSection('admin-portal');
+                        onItemClick?.();
+                      }}
+                      className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${
+                        activeSection === 'admin-portal'
+                          ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/25'
+                          : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-4 w-full">
+                        <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
+                          activeSection === 'admin-portal' 
+                            ? 'bg-white/20' 
+                            : 'bg-terex-gray/30 group-hover:bg-emerald-500/20'
+                        }`}>
+                          <UserCheck className="h-6 w-6" />
+                        </div>
+                        <div className="flex-1 text-left min-w-0">
+                          <div className="font-semibold text-sm truncate">Portail Admin</div>
+                          <div className="text-xs opacity-75 truncate">Candidatures & Global</div>
+                        </div>
+                        {activeSection === 'admin-portal' && (
                           <div className="w-1 h-8 bg-white rounded-full opacity-60"></div>
                         )}
                       </div>

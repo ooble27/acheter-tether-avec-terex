@@ -9,10 +9,12 @@ import {
   FileCheck, 
   Settings,
   BarChart3,
-  Shield
+  Shield,
+  UserCheck
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
+import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
 import { useUserRole } from '@/hooks/useUserRole';
 
 export function AdminPortal() {
@@ -42,7 +44,7 @@ export function AdminPortal() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-terex-gray grid grid-cols-2 w-full max-w-md">
+          <TabsList className="bg-terex-gray grid grid-cols-3 w-full max-w-2xl">
             <TabsTrigger 
               value="orders" 
               className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
@@ -57,6 +59,13 @@ export function AdminPortal() {
               <FileCheck className="w-4 h-4" />
               <span>Vérifications KYC</span>
             </TabsTrigger>
+            <TabsTrigger 
+              value="applications" 
+              className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
+            >
+              <UserCheck className="w-4 h-4" />
+              <span>Candidatures</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
@@ -65,6 +74,10 @@ export function AdminPortal() {
 
           <TabsContent value="kyc">
             <KYCAdmin />
+          </TabsContent>
+
+          <TabsContent value="applications">
+            <JobApplicationsAdmin />
           </TabsContent>
         </Tabs>
       </div>
