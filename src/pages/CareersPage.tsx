@@ -248,36 +248,36 @@ const CareersPage = () => {
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-terex-darker via-terex-dark to-terex-darker">
         <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-terex-accent/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-terex-accent/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-1/4 left-1/4 w-32 md:w-64 h-32 md:h-64 bg-terex-accent/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-48 md:w-96 h-48 md:h-96 bg-terex-accent/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24">
           <div className="text-center">
-            <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-6 py-3 mb-8 border border-terex-accent/20">
-              <Briefcase className="w-5 h-5 text-terex-accent mr-2" />
-              <span className="text-terex-accent font-medium">Carrières chez Terex</span>
+            <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-4 md:px-6 py-2 md:py-3 mb-6 md:mb-8 border border-terex-accent/20">
+              <Briefcase className="w-4 md:w-5 h-4 md:h-5 text-terex-accent mr-2" />
+              <span className="text-terex-accent font-medium text-sm md:text-base">Carrières chez Terex</span>
             </div>
             
-            <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 px-4">
               Construisons l'avenir de la <span className="text-terex-accent">finance digitale</span> ensemble
             </h1>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
+            <p className="text-base md:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8 md:mb-12 px-4">
               Rejoignez l'équipe qui révolutionne les transferts d'argent entre l'Afrique et le monde. Nous recherchons des talents passionnés pour notre croissance.
             </p>
 
-            <div className="flex justify-center space-x-8 text-center">
-            <div>
-              <div className="text-3xl font-bold text-terex-accent">5</div>
-              <div className="text-gray-300">Postes ouverts</div>
-            </div>
+            <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 text-center px-4">
               <div>
-                <div className="text-3xl font-bold text-terex-accent">5+</div>
-                <div className="text-gray-300">Pays couverts</div>
+                <div className="text-2xl md:text-3xl font-bold text-terex-accent">5</div>
+                <div className="text-gray-300 text-sm md:text-base">Postes ouverts</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-terex-accent">24/7</div>
-                <div className="text-gray-300">Service continu</div>
+                <div className="text-2xl md:text-3xl font-bold text-terex-accent">5+</div>
+                <div className="text-gray-300 text-sm md:text-base">Pays couverts</div>
+              </div>
+              <div>
+                <div className="text-2xl md:text-3xl font-bold text-terex-accent">24/7</div>
+                <div className="text-gray-300 text-sm md:text-base">Service continu</div>
               </div>
             </div>
           </div>
@@ -332,35 +332,35 @@ const CareersPage = () => {
                 <Card className="bg-gradient-to-br from-terex-dark to-terex-gray/20 border-terex-accent/20 hover:border-terex-accent/40 transition-all duration-300">
                   <CollapsibleTrigger asChild>
                     <CardHeader className="cursor-pointer hover:bg-terex-accent/5 transition-colors">
-                      <div className="flex justify-between items-start">
+                      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
                         <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-3">
-                            <CardTitle className="text-white text-2xl">{position.title}</CardTitle>
-                            <Badge className="bg-terex-accent text-black font-medium">{position.type}</Badge>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
+                            <CardTitle className="text-white text-xl md:text-2xl">{position.title}</CardTitle>
+                            <Badge className="bg-terex-accent text-black font-medium w-fit">{position.type}</Badge>
                           </div>
                           
-                          <div className="flex items-center space-x-6 text-gray-300 mb-4">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 text-gray-300 mb-4">
                             <div className="flex items-center space-x-2">
-                              <MapPin className="w-4 h-4" />
-                              <span>{position.location}</span>
+                              <MapPin className="w-4 h-4 flex-shrink-0" />
+                              <span className="text-sm md:text-base">{position.location}</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <span>{position.salary} / mois</span>
+                              <span className="text-sm md:text-base">{position.salary} / mois</span>
                             </div>
                           </div>
                           
-                          <CardDescription className="text-gray-300 text-base">
+                          <CardDescription className="text-gray-300 text-sm md:text-base">
                             {position.description}
                           </CardDescription>
                         </div>
                         
-                        <div className="flex items-center space-x-4 ml-6">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mt-4 sm:mt-0 sm:ml-6">
                           <Button 
                             onClick={(e) => {
                               e.stopPropagation();
                               handleApply(position.title);
                             }}
-                            className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold"
+                            className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold w-full sm:w-auto"
                           >
                             <Send className="w-4 h-4 mr-2" />
                             Postuler
@@ -368,7 +368,7 @@ const CareersPage = () => {
                           <Button 
                             variant="outline"
                             size="sm"
-                            className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10"
+                            className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 w-full sm:w-auto"
                           >
                             {expandedPositions.has(index) ? 'Réduire' : 'Détails'}
                           </Button>

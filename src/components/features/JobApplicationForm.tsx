@@ -60,7 +60,7 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Informations personnelles */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="first_name" className="text-white">Prénom *</Label>
               <Input
@@ -88,7 +88,7 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-white">Email *</Label>
               <Input
@@ -115,7 +115,7 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="location" className="text-white">Localisation</Label>
               <Input
@@ -191,7 +191,7 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
           </div>
 
           {/* Disponibilité et salaire */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="availability" className="text-white">Disponibilité</Label>
               <Select onValueChange={(value) => handleInputChange('availability', value)}>
@@ -236,13 +236,13 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
           </div>
 
           {/* Boutons */}
-          <div className="flex justify-between pt-6">
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-4 pt-6">
             {onClose && (
               <Button
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10"
+                className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 w-full sm:w-auto"
               >
                 Annuler
               </Button>
@@ -251,7 +251,7 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold ml-auto"
+              className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold w-full sm:w-auto sm:ml-auto"
             >
               {isSubmitting ? (
                 "Envoi en cours..."
