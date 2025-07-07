@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useEmailNotifications } from '@/hooks/useEmailNotifications';
 
 export interface JobApplicationAdmin {
   id: string;
@@ -29,6 +30,7 @@ export const useJobApplicationsAdmin = () => {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const { toast } = useToast();
+  const { sendEmailNotification } = useEmailNotifications();
 
   const fetchApplications = async () => {
     setLoading(true);
@@ -58,6 +60,9 @@ export const useJobApplicationsAdmin = () => {
   const updateApplicationStatus = async (id: string, status: string, adminNotes?: string) => {
     setUpdating(true);
     try {
+      // Récupérer l'application actuelle pour comparaison
+      const currentApplication = applications.find(app => app.id === id);
+      
       const { error } = await supabase
         .from('job_applications')
         .update({ 
@@ -79,6 +84,31 @@ export const useJobApplicationsAdmin = () => {
             : app
         )
       );
+
+      // Envoyer un email de notification si le statut a changé
+      if (currentApplication && currentApplication.status !== status) {
+        console.log('Envoi de notification email pour changement de statut:', {
+          currentStatus: currentApplication.status,
+          newStatus: status,
+          email: currentApplication.email
+        });
+
+        try {
+          await sendEmailNotification(
+            'job_application_status_update',
+            'job_application',
+            {
+              ...currentApplication,
+              status: status,
+              admin_notes: adminNotes
+            }
+          );
+          console.log('Email de notification envoyé avec succès');
+        } catch (emailError) {
+          console.error('Erreur lors de l\'envoi de l\'email:', emailError);
+          // Ne pas faire échouer la mise à jour pour une erreur d'email
+        }
+      }
 
       toast({
         title: "Succès",

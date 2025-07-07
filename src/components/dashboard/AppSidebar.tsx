@@ -273,28 +273,28 @@ const AppSidebarContent = ({ activeSection, setActiveSection, onLogout, onItemCl
                   <SidebarMenuItem>
                     <SidebarMenuButton 
                       onClick={() => {
-                        setActiveSection('admin-portal');
+                        setActiveSection('job-applications');
                         onItemClick?.();
                       }}
                       className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${
-                        activeSection === 'admin-portal'
+                        activeSection === 'job-applications'
                           ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/25'
                           : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'
                       }`}
                     >
                       <div className="flex items-center space-x-4 w-full">
                         <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
-                          activeSection === 'admin-portal' 
+                          activeSection === 'job-applications' 
                             ? 'bg-white/20' 
                             : 'bg-terex-gray/30 group-hover:bg-emerald-500/20'
                         }`}>
                           <UserCheck className="h-6 w-6" />
                         </div>
                         <div className="flex-1 text-left min-w-0">
-                          <div className="font-semibold text-sm truncate">Portail Admin</div>
-                          <div className="text-xs opacity-75 truncate">Candidatures & Global</div>
+                          <div className="font-semibold text-sm truncate">Candidatures</div>
+                          <div className="text-xs opacity-75 truncate">Gestion des candidatures</div>
                         </div>
-                        {activeSection === 'admin-portal' && (
+                        {activeSection === 'job-applications' && (
                           <div className="w-1 h-8 bg-white rounded-full opacity-60"></div>
                         )}
                       </div>
