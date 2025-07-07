@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.0.0";
 import { Resend } from "npm:resend@2.0.0";
@@ -241,151 +242,400 @@ const handler = async (req: Request): Promise<Response> => {
         // Email de confirmation pour le candidat
         subject = `Candidature reçue - ${orderData.position} chez Terex`;
         htmlContent = `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
-            <!-- Header avec gradient Terex -->
-            <div style="background: linear-gradient(135deg, #3B968F 0%, #4BA89F 100%); color: white; padding: 40px 30px; text-align: center;">
-              <div style="margin-bottom: 20px;">
-                <h1 style="margin: 0; font-size: 32px; font-weight: 800; letter-spacing: 2px;">TEREX</h1>
-                <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.9; font-weight: 400;">Plateforme d'échange crypto & transferts internationaux</p>
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 650px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);">
+            
+            <!-- Header moderne avec gradient Terex -->
+            <div style="background: linear-gradient(135deg, #3B968F 0%, #2D7B73 50%, #1E5A54 100%); position: relative; overflow: hidden;">
+              <!-- Motif géométrique subtil -->
+              <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTAgMzBMMzAgMEw2MCAzMEwzMCA2MEwwIDMwWiIgZmlsbD0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjAzKSIvPgo8L3N2Zz4K') repeat; opacity: 0.1;"></div>
+              
+              <div style="position: relative; z-index: 1; padding: 50px 40px; text-align: center; color: white;">
+                <div style="margin-bottom: 24px;">
+                  <h1 style="margin: 0; font-size: 42px; font-weight: 800; letter-spacing: 3px; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">TEREX</h1>
+                  <p style="margin: 8px 0 0 0; font-size: 15px; opacity: 0.9; font-weight: 400; letter-spacing: 1px;">Fintech • Crypto • Transferts Internationaux</p>
+                </div>
+                
+                <div style="width: 80px; height: 3px; background: linear-gradient(90deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 100%); margin: 30px auto; border-radius: 2px;"></div>
+                
+                <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border-radius: 16px; padding: 24px; margin: 20px 0; border: 1px solid rgba(255, 255, 255, 0.2);">
+                  <h2 style="margin: 0; font-size: 28px; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">✨ Candidature Reçue</h2>
+                  <p style="margin: 12px 0 0 0; font-size: 16px; opacity: 0.95; font-weight: 500;">Nous avons bien reçu votre candidature !</p>
+                </div>
               </div>
-              <div style="width: 60px; height: 2px; background: rgba(255, 255, 255, 0.3); margin: 20px auto;"></div>
-              <h2 style="margin: 0; font-size: 24px; font-weight: 600;">Candidature reçue avec succès</h2>
             </div>
             
-            <!-- Contenu principal -->
-            <div style="padding: 40px 30px;">
-              <div style="background: #f8fafc; padding: 30px; border-radius: 12px; border-left: 4px solid #3B968F; margin-bottom: 30px;">
-                <h3 style="color: #1e293b; margin: 0 0 15px 0; font-size: 20px; font-weight: 600;">Bonjour ${orderData.first_name},</h3>
+            <!-- Corps du message avec design moderne -->
+            <div style="padding: 45px 40px;">
+              
+              <!-- Salutation personnalisée -->
+              <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 32px; border-radius: 16px; margin-bottom: 35px; border-left: 5px solid #3B968F; position: relative;">
+                <div style="position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; background: linear-gradient(135deg, #3B968F, #4BA89F); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; font-weight: bold;">👋</div>
+                <h3 style="color: #1e293b; margin: 0 0 18px 0; font-size: 24px; font-weight: 700;">Bonjour ${orderData.first_name},</h3>
                 
-                <p style="color: #475569; line-height: 1.6; margin-bottom: 20px; font-size: 16px;">
-                  Nous avons bien reçu votre candidature pour le poste de <strong style="color: #3B968F;">${orderData.position}</strong> chez Terex.
+                <p style="color: #475569; line-height: 1.7; margin-bottom: 24px; font-size: 16px;">
+                  Merci d'avoir postulé chez <strong style="color: #3B968F;">Terex</strong> ! Nous avons bien reçu votre candidature pour le poste de <strong style="color: #1e293b; background: #e0f2f1; padding: 2px 8px; border-radius: 6px;">${orderData.position}</strong>.
                 </p>
                 
-                <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin: 20px 0;">
-                  <h4 style="color: #3B968F; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">📋 Récapitulatif de votre candidature</h4>
-                  <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <p style="margin: 0; color: #475569; font-size: 14px;"><strong>Poste :</strong> ${orderData.position}</p>
-                    <p style="margin: 0; color: #475569; font-size: 14px;"><strong>Nom :</strong> ${orderData.first_name} ${orderData.last_name}</p>
-                    <p style="margin: 0; color: #475569; font-size: 14px;"><strong>Email :</strong> ${orderData.email}</p>
-                    ${orderData.experience_years ? `<p style="margin: 0; color: #475569; font-size: 14px;"><strong>Expérience :</strong> ${orderData.experience_years} années</p>` : ''}
-                    ${orderData.location ? `<p style="margin: 0; color: #475569; font-size: 14px;"><strong>Localisation :</strong> ${orderData.location}</p>` : ''}
+                <!-- Récapitulatif de la candidature avec design moderne -->
+                <div style="background: #ffffff; padding: 28px; border-radius: 12px; border: 1px solid #e2e8f0; margin: 24px 0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);">
+                  <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #3B968F, #4BA89F); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                      <span style="color: white; font-size: 16px; font-weight: bold;">📋</span>
+                    </div>
+                    <h4 style="color: #1e293b; margin: 0; font-size: 20px; font-weight: 700;">Récapitulatif de votre candidature</h4>
+                  </div>
+                  
+                  <div style="display: grid; gap: 12px;">
+                    <div style="display: flex; padding: 8px 0; border-bottom: 1px solid #f1f5f9;">
+                      <span style="color: #64748b; font-weight: 600; width: 140px; font-size: 14px;">Poste :</span>
+                      <span style="color: #1e293b; font-weight: 500; font-size: 14px;">${orderData.position}</span>
+                    </div>
+                    <div style="display: flex; padding: 8px 0; border-bottom: 1px solid #f1f5f9;">
+                      <span style="color: #64748b; font-weight: 600; width: 140px; font-size: 14px;">Candidat :</span>
+                      <span style="color: #1e293b; font-weight: 500; font-size: 14px;">${orderData.first_name} ${orderData.last_name}</span>
+                    </div>
+                    <div style="display: flex; padding: 8px 0; border-bottom: 1px solid #f1f5f9;">
+                      <span style="color: #64748b; font-weight: 600; width: 140px; font-size: 14px;">Email :</span>
+                      <span style="color: #1e293b; font-weight: 500; font-size: 14px;">${orderData.email}</span>
+                    </div>
+                    ${orderData.experience_years ? `
+                    <div style="display: flex; padding: 8px 0; border-bottom: 1px solid #f1f5f9;">
+                      <span style="color: #64748b; font-weight: 600; width: 140px; font-size: 14px;">Expérience :</span>
+                      <span style="color: #1e293b; font-weight: 500; font-size: 14px;">${orderData.experience_years} années</span>
+                    </div>
+                    ` : ''}
+                    ${orderData.location ? `
+                    <div style="display: flex; padding: 8px 0;">
+                      <span style="color: #64748b; font-weight: 600; width: 140px; font-size: 14px;">Localisation :</span>
+                      <span style="color: #1e293b; font-weight: 500; font-size: 14px;">${orderData.location}</span>
+                    </div>
+                    ` : ''}
                   </div>
                 </div>
               </div>
               
-              <!-- Prochaines étapes -->
-              <div style="background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%); padding: 25px; border-radius: 12px; margin: 25px 0; border: 1px solid #bfdbfe;">
-                <h4 style="color: #1e40af; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">🚀 Prochaines étapes</h4>
-                <ul style="color: #475569; line-height: 1.6; margin: 0; padding-left: 20px;">
-                  <li style="margin-bottom: 8px;">Notre équipe RH va examiner votre candidature dans les <strong>48 heures</strong></li>
-                  <li style="margin-bottom: 8px;">Si votre profil correspond à nos besoins, nous vous contacterons pour un premier entretien</li>
-                  <li style="margin-bottom: 8px;">Le processus de recrutement comprend généralement 2-3 étapes d'entretiens</li>
-                  <li>Vous recevrez une notification par email à chaque étape</li>
-                </ul>
+              <!-- Étapes du processus avec timeline moderne -->
+              <div style="background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%); padding: 32px; border-radius: 16px; margin: 35px 0; border: 1px solid #fde047; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: radial-gradient(circle, rgba(251, 191, 36, 0.1) 0%, transparent 70%);"></div>
+                
+                <div style="position: relative; z-index: 1;">
+                  <div style="display: flex; align-items: center; margin-bottom: 24px;">
+                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 16px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
+                      <span style="color: white; font-size: 18px; font-weight: bold;">🚀</span>
+                    </div>
+                    <h4 style="color: #92400e; margin: 0; font-size: 22px; font-weight: 700;">Prochaines étapes</h4>
+                  </div>
+                  
+                  <div style="position: relative; padding-left: 24px;">
+                    <!-- Timeline verticale -->
+                    <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(to bottom, #f59e0b, #d97706); border-radius: 2px;"></div>
+                    
+                    <div style="position: relative; margin-bottom: 20px;">
+                      <div style="position: absolute; left: -11px; top: 6px; width: 20px; height: 20px; background: #f59e0b; border-radius: 50%; border: 3px solid #fef3c7;"></div>
+                      <p style="color: #92400e; line-height: 1.6; margin: 0; font-size: 15px; font-weight: 500; padding-left: 16px;">
+                        <strong>Examen de votre candidature</strong> dans les <strong>48 heures</strong> par notre équipe RH
+                      </p>
+                    </div>
+                    
+                    <div style="position: relative; margin-bottom: 20px;">
+                      <div style="position: absolute; left: -11px; top: 6px; width: 20px; height: 20px; background: #d97706; border-radius: 50%; border: 3px solid #fef3c7;"></div>
+                      <p style="color: #92400e; line-height: 1.6; margin: 0; font-size: 15px; font-weight: 500; padding-left: 16px;">
+                        <strong>Contact téléphonique</strong> si votre profil correspond à nos besoins
+                      </p>
+                    </div>
+                    
+                    <div style="position: relative; margin-bottom: 20px;">
+                      <div style="position: absolute; left: -11px; top: 6px; width: 20px; height: 20px; background: #b45309; border-radius: 50%; border: 3px solid #fef3c7;"></div>
+                      <p style="color: #92400e; line-height: 1.6; margin: 0; font-size: 15px; font-weight: 500; padding-left: 16px;">
+                        <strong>Processus d'entretiens</strong> en 2-3 étapes (technique + culturel + final)
+                      </p>
+                    </div>
+                    
+                    <div style="position: relative;">
+                      <div style="position: absolute; left: -11px; top: 6px; width: 20px; height: 20px; background: #92400e; border-radius: 50%; border: 3px solid #fef3c7;"></div>
+                      <p style="color: #92400e; line-height: 1.6; margin: 0; font-size: 15px; font-weight: 500; padding-left: 16px;">
+                        <strong>Décision finale</strong> et proposition d'embauche
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
               
-              <!-- À propos du poste -->
-              <div style="background: linear-gradient(135deg, #f0fdf4 0%, #f7fee7 100%); padding: 25px; border-radius: 12px; margin: 25px 0; border: 1px solid #bbf7d0;">
-                <h4 style="color: #15803d; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">💼 À propos de ${orderData.position}</h4>
-                <p style="color: #475569; line-height: 1.6; margin: 0;">
-                  Un rôle clé pour contribuer à notre mission de révolutionner les transferts d'argent et les échanges crypto en Afrique. 
-                  Rejoignez une équipe passionnée et innovante qui façonne l'avenir de la fintech africaine.
+              <!-- Section à propos du poste avec design attractif -->
+              <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 32px; border-radius: 16px; margin: 35px 0; border: 1px solid #bbf7d0; position: relative;">
+                <div style="position: absolute; top: 20px; right: 20px; width: 60px; height: 60px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(21, 128, 61, 0.1)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                  <span style="font-size: 24px;">💼</span>
+                </div>
+                
+                <h4 style="color: #15803d; margin: 0 0 20px 0; font-size: 22px; font-weight: 700;">À propos du poste : ${orderData.position}</h4>
+                <p style="color: #166534; line-height: 1.7; margin: 0; font-size: 16px; font-weight: 500;">
+                  Un rôle clé pour contribuer à notre mission de <strong>révolutionner les transferts d'argent et les échanges crypto en Afrique</strong>. 
+                  Rejoignez une équipe passionnée et innovante qui façonne l'avenir de la fintech africaine avec des technologies de pointe.
                 </p>
+                
+                <div style="background: rgba(255, 255, 255, 0.7); padding: 20px; border-radius: 12px; margin-top: 20px; border: 1px solid rgba(34, 197, 94, 0.2);">
+                  <p style="color: #15803d; margin: 0; font-size: 14px; font-weight: 600; text-align: center;">
+                    💡 <strong>Pourquoi Terex ?</strong> Impact social • Innovation technologique • Équipe internationale • Croissance rapide
+                  </p>
+                </div>
               </div>
               
-              <!-- Support -->
-              <div style="background: #fef3c7; padding: 20px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #f59e0b;">
-                <p style="color: #92400e; margin: 0; text-align: center; font-size: 14px;">
-                  <strong>💬 Des questions sur votre candidature ?</strong><br>
-                  Contactez-nous : <a href="mailto:terangaexchange@gmail.com" style="color: #b45309; text-decoration: none;">terangaexchange@gmail.com</a> | 
-                  WhatsApp : <a href="https://wa.me/14182619091" style="color: #b45309; text-decoration: none;">+1 418 261 9091</a>
-                </p>
+              <!-- Section support avec design moderne -->
+              <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); padding: 28px; border-radius: 16px; margin: 35px 0; border: 1px solid #bfdbfe; text-align: center;">
+                <div style="margin-bottom: 20px;">
+                  <span style="font-size: 32px; margin-bottom: 16px; display: block;">💬</span>
+                  <h4 style="color: #1e40af; margin: 0 0 12px 0; font-size: 20px; font-weight: 700;">Des questions sur votre candidature ?</h4>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                  <a href="mailto:terangaexchange@gmail.com" style="color: #1e40af; text-decoration: none; background: rgba(255, 255, 255, 0.8); padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; border: 1px solid #bfdbfe; transition: all 0.2s;">
+                    📧 Email Support
+                  </a>
+                  <a href="https://wa.me/14182619091" style="color: #1e40af; text-decoration: none; background: rgba(255, 255, 255, 0.8); padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; border: 1px solid #bfdbfe; transition: all 0.2s;">
+                    📱 WhatsApp
+                  </a>
+                </div>
               </div>
             </div>
             
-            <!-- Footer -->
-            <div style="background: #f1f5f9; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
-              <p style="color: #64748b; margin: 0 0 10px 0; font-size: 16px; font-weight: 600;">
-                Cordialement,<br><span style="color: #3B968F; font-weight: 700;">L'équipe Terex</span>
-              </p>
-              <p style="color: #64748b; margin: 10px 0 0 0; font-size: 14px;">
-                <a href="https://app.terangaexchange.com" style="color: #3B968F; text-decoration: none; font-weight: 500;">app.terangaexchange.com</a>
-              </p>
-              <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-                <p style="color: #94a3b8; font-size: 12px; margin: 0;">
-                  © 2025 Terex. Tous droits réservés.<br>
-                  Fondé par Mohamed Lo • Basé au Sénégal, Dakar
-                </p>
+            <!-- Footer moderne et professionnel -->
+            <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); padding: 40px; text-align: center; position: relative; overflow: hidden;">
+              <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjA1KSIvPgo8L3N2Zz4K') repeat; opacity: 0.1;"></div>
+              
+              <div style="position: relative; z-index: 1;">
+                <div style="margin-bottom: 24px;">
+                  <h3 style="color: #ffffff; margin: 0 0 8px 0; font-size: 20px; font-weight: 700; letter-spacing: 1px;">L'équipe Terex</h3>
+                  <p style="color: #94a3b8; margin: 0; font-size: 14px; font-weight: 500;">Votre partenaire fintech de confiance</p>
+                </div>
+                
+                <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 12px; margin: 24px 0; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);">
+                  <a href="https://app.terangaexchange.com" style="color: #60a5fa; text-decoration: none; font-weight: 600; font-size: 16px; display: inline-flex; align-items: center; gap: 8px;">
+                    🚀 Découvrir la plateforme Terex
+                  </a>
+                </div>
+                
+                <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 24px; margin-top: 24px;">
+                  <p style="color: #64748b; margin: 0 0 8px 0; font-size: 13px; font-weight: 500;">
+                    © 2025 Terex. Tous droits réservés.
+                  </p>
+                  <p style="color: #64748b; margin: 0; font-size: 12px; font-weight: 400;">
+                    Fondé par Mohamed Lo • Basé au Sénégal, Dakar
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         `;
 
-        // Envoyer aussi une notification à l'équipe RH Terex
+        // Envoyer aussi une notification à l'équipe RH Terex avec design moderne
         try {
           const adminNotificationHtml = `
-            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
-              <!-- Header Admin -->
-              <div style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; padding: 30px; text-align: center;">
-                <h1 style="margin: 0; font-size: 28px; font-weight: 700;">🔔 NOUVELLE CANDIDATURE</h1>
-                <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Système de recrutement Terex</p>
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 650px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);">
+              
+              <!-- Header Admin avec design moderne -->
+              <div style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%); position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTAgMzBMMzAgMEw2MCAzMEwzMCA2MEwwIDMwWiIgZmlsbD0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjAzKSIvPgo8L3N2Zz4K') repeat; opacity: 0.1;"></div>
+                
+                <div style="position: relative; z-index: 1; padding: 45px 40px; text-align: center; color: white;">
+                  <div style="width: 80px; height: 80px; background: rgba(255, 255, 255, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; backdrop-filter: blur(10px); border: 2px solid rgba(255, 255, 255, 0.2);">
+                    <span style="font-size: 36px;">🔔</span>
+                  </div>
+                  <h1 style="margin: 0 0 12px 0; font-size: 32px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">NOUVELLE CANDIDATURE</h1>
+                  <p style="margin: 0; font-size: 16px; opacity: 0.9; font-weight: 500; letter-spacing: 0.5px;">Système de recrutement Terex</p>
+                </div>
               </div>
               
-              <div style="padding: 30px;">
-                <div style="background: #f8fafc; padding: 25px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid #3B968F;">
-                  <h2 style="color: #1e293b; margin: 0 0 20px 0; font-size: 22px; font-weight: 600;">
-                    Poste : ${orderData.position}
-                  </h2>
-                  
-                  <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
-                    <h3 style="color: #3B968F; margin: 0 0 15px 0; font-size: 18px;">👤 Informations du candidat</h3>
-                    <div style="display: grid; gap: 10px;">
-                      <p style="margin: 0; color: #475569;"><strong>Nom complet :</strong> ${orderData.first_name} ${orderData.last_name}</p>
-                      <p style="margin: 0; color: #475569;"><strong>Email :</strong> <a href="mailto:${orderData.email}" style="color: #3B968F;">${orderData.email}</a></p>
-                      ${orderData.phone ? `<p style="margin: 0; color: #475569;"><strong>Téléphone :</strong> <a href="tel:${orderData.phone}" style="color: #3B968F;">${orderData.phone}</a></p>` : ''}
-                      ${orderData.location ? `<p style="margin: 0; color: #475569;"><strong>Localisation :</strong> ${orderData.location}</p>` : ''}
-                      ${orderData.experience_years ? `<p style="margin: 0; color: #475569;"><strong>Années d'expérience :</strong> ${orderData.experience_years}</p>` : ''}
-                      ${orderData.availability ? `<p style="margin: 0; color: #475569;"><strong>Disponibilité :</strong> ${orderData.availability}</p>` : ''}
-                      ${orderData.salary_expectation ? `<p style="margin: 0; color: #475569;"><strong>Prétentions salariales :</strong> ${orderData.salary_expectation}</p>` : ''}
-                    </div>
+              <!-- Corps du message admin -->
+              <div style="padding: 45px 40px;">
+                
+                <!-- Alerte priorité haute -->
+                <div style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); padding: 24px; border-radius: 12px; margin-bottom: 32px; border-left: 5px solid #dc2626;">
+                  <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                    <span style="font-size: 20px; margin-right: 12px;">⚡</span>
+                    <h2 style="color: #dc2626; margin: 0; font-size: 24px; font-weight: 700;">
+                      Poste : ${orderData.position}
+                    </h2>
                   </div>
-                  
-                  ${orderData.linkedin_profile || orderData.portfolio_url ? `
-                    <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
-                      <h3 style="color: #3B968F; margin: 0 0 15px 0; font-size: 18px;">🔗 Liens professionnels</h3>
-                      ${orderData.linkedin_profile ? `<p style="margin: 0 0 10px 0; color: #475569;"><strong>LinkedIn :</strong> <a href="${orderData.linkedin_profile}" style="color: #0077b5;" target="_blank">${orderData.linkedin_profile}</a></p>` : ''}
-                      ${orderData.portfolio_url ? `<p style="margin: 0; color: #475569;"><strong>Portfolio :</strong> <a href="${orderData.portfolio_url}" style="color: #3B968F;" target="_blank">${orderData.portfolio_url}</a></p>` : ''}
-                    </div>
-                  ` : ''}
+                  <p style="color: #7f1d1d; margin: 0; font-size: 14px; font-weight: 600;">
+                    📅 Reçu le ${new Date().toLocaleDateString('fr-FR', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </p>
                 </div>
                 
-                ${orderData.cover_letter ? `
-                  <div style="background: #ffffff; padding: 25px; border-radius: 12px; border-left: 4px solid #f59e0b; margin: 25px 0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
-                    <h3 style="color: #d97706; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">📝 Lettre de motivation</h3>
-                    <div style="background: #fefce8; padding: 20px; border-radius: 8px; border: 1px solid #fde047;">
-                      <p style="white-space: pre-wrap; color: #713f12; line-height: 1.6; margin: 0; font-size: 15px;">${orderData.cover_letter}</p>
+                <!-- Informations candidat avec design moderne -->
+                <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 32px; border-radius: 16px; margin-bottom: 32px; border: 1px solid #e2e8f0;">
+                  <div style="display: flex; align-items: center; margin-bottom: 24px;">
+                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #3B968F, #4BA89F); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 16px; box-shadow: 0 4px 12px rgba(59, 150, 143, 0.3);">
+                      <span style="color: white; font-size: 20px; font-weight: bold;">👤</span>
+                    </div>
+                    <h3 style="color: #1e293b; margin: 0; font-size: 22px; font-weight: 700;">Profil du candidat</h3>
+                  </div>
+                  
+                  <div style="background: #ffffff; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);">
+                    <div style="display: grid; gap: 16px;">
+                      <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                        <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3B968F, #4BA89F); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                          <span style="color: white; font-size: 14px; font-weight: bold;">👨</span>
+                        </div>
+                        <div>
+                          <span style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Nom complet</span>
+                          <p style="margin: 2px 0 0 0; color: #1e293b; font-weight: 600; font-size: 16px;">${orderData.first_name} ${orderData.last_name}</p>
+                        </div>
+                      </div>
+                      
+                      <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                        <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3B968F, #4BA89F); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                          <span style="color: white; font-size: 14px; font-weight: bold;">📧</span>
+                        </div>
+                        <div>
+                          <span style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Email</span>
+                          <p style="margin: 2px 0 0 0; color: #1e293b; font-weight: 600; font-size: 16px;">
+                            <a href="mailto:${orderData.email}" style="color: #3B968F; text-decoration: none;">${orderData.email}</a>
+                          </p>
+                        </div>
+                      </div>
+                      
+                      ${orderData.phone ? `
+                      <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                        <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3B968F, #4BA89F); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                          <span style="color: white; font-size: 14px; font-weight: bold;">📱</span>
+                        </div>
+                        <div>
+                          <span style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Téléphone</span>
+                          <p style="margin: 2px 0 0 0; color: #1e293b; font-weight: 600; font-size: 16px;">
+                            <a href="tel:${orderData.phone}" style="color: #3B968F; text-decoration: none;">${orderData.phone}</a>
+                          </p>
+                        </div>
+                      </div>
+                      ` : ''}
+                      
+                      ${orderData.location ? `
+                      <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                        <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3B968F, #4BA89F); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                          <span style="color: white; font-size: 14px; font-weight: bold;">📍</span>
+                        </div>
+                        <div>
+                          <span style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Localisation</span>
+                          <p style="margin: 2px 0 0 0; color: #1e293b; font-weight: 600; font-size: 16px;">${orderData.location}</p>
+                        </div>
+                      </div>
+                      ` : ''}
+                      
+                      ${orderData.experience_years ? `
+                      <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                        <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3B968F, #4BA89F); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                          <span style="color: white; font-size: 14px; font-weight: bold;">⭐</span>
+                        </div>
+                        <div>
+                          <span style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Expérience</span>
+                          <p style="margin: 2px 0 0 0; color: #1e293b; font-weight: 600; font-size: 16px;">${orderData.experience_years} années</p>
+                        </div>
+                      </div>
+                      ` : ''}
+                      
+                      ${orderData.availability ? `
+                      <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                        <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3B968F, #4BA89F); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                          <span style="color: white; font-size: 14px; font-weight: bold;">⏰</span>
+                        </div>
+                        <div>
+                          <span style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Disponibilité</span>
+                          <p style="margin: 2px 0 0 0; color: #1e293b; font-weight: 600; font-size: 16px;">${orderData.availability}</p>
+                        </div>
+                      </div>
+                      ` : ''}
+                      
+                      ${orderData.salary_expectation ? `
+                      <div style="display: flex; align-items: center; padding: 12px 0;">
+                        <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3B968F, #4BA89F); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                          <span style="color: white; font-size: 14px; font-weight: bold;">💰</span>
+                        </div>
+                        <div>
+                          <span style="color: #64748b; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Prétentions salariales</span>
+                          <p style="margin: 2px 0 0 0; color: #1e293b; font-weight: 600; font-size: 16px;">${orderData.salary_expectation}</p>
+                        </div>
+                      </div>
+                      ` : ''}
                     </div>
                   </div>
+                </div>
+                
+                ${orderData.linkedin_profile || orderData.portfolio_url ? `
+                <!-- Liens professionnels -->
+                <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 28px; border-radius: 16px; margin: 32px 0; border: 1px solid #bae6fd;">
+                  <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #0ea5e9, #0284c7); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                      <span style="color: white; font-size: 18px; font-weight: bold;">🔗</span>
+                    </div>
+                    <h3 style="color: #0c4a6e; margin: 0; font-size: 20px; font-weight: 700;">Liens professionnels</h3>
+                  </div>
+                  
+                  <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                    ${orderData.linkedin_profile ? `
+                    <a href="${orderData.linkedin_profile}" style="color: #0077b5; text-decoration: none; background: rgba(255, 255, 255, 0.8); padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; border: 1px solid #bae6fd; display: inline-flex; align-items: center; gap: 8px;" target="_blank">
+                      <span style="color: #0077b5;">💼</span> LinkedIn
+                    </a>
+                    ` : ''}
+                    ${orderData.portfolio_url ? `
+                    <a href="${orderData.portfolio_url}" style="color: #3B968F; text-decoration: none; background: rgba(255, 255, 255, 0.8); padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; border: 1px solid #bae6fd; display: inline-flex; align-items: center; gap: 8px;" target="_blank">
+                      <span style="color: #3B968F;">🎨</span> Portfolio
+                    </a>
+                    ` : ''}
+                  </div>
+                </div>
                 ` : ''}
                 
-                <div style="text-align: center; margin: 30px 0;">
-                  <a href="https://app.terangaexchange.com/admin" style="background: linear-gradient(135deg, #3B968F 0%, #4BA89F 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(59, 150, 143, 0.3);">
-                    🚀 Voir dans l'admin
+                ${orderData.cover_letter ? `
+                <!-- Lettre de motivation avec design moderne -->
+                <div style="background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%); padding: 32px; border-radius: 16px; margin: 32px 0; border: 1px solid #fde047; position: relative; overflow: hidden;">
+                  <div style="position: absolute; top: 0; right: 0; width: 120px; height: 120px; background: radial-gradient(circle, rgba(251, 191, 36, 0.1) 0%, transparent 70%);"></div>
+                  
+                  <div style="position: relative; z-index: 1;">
+                    <div style="display: flex; align-items: center; margin-bottom: 24px;">
+                      <div style="width: 44px; height: 44px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 16px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
+                        <span style="color: white; font-size: 20px; font-weight: bold;">📝</span>
+                      </div>
+                      <h3 style="color: #92400e; margin: 0; font-size: 22px; font-weight: 700;">Lettre de motivation</h3>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.8); padding: 24px; border-radius: 12px; border: 1px solid #fde047; backdrop-filter: blur(5px);">
+                      <p style="white-space: pre-wrap; color: #92400e; line-height: 1.7; margin: 0; font-size: 15px; font-weight: 500;">${orderData.cover_letter}</p>
+                    </div>
+                  </div>
+                </div>
+                ` : ''}
+                
+                <!-- Action rapide -->
+                <div style="text-align: center; margin: 40px 0;">
+                  <a href="https://app.terangaexchange.com/admin" style="background: linear-gradient(135deg, #3B968F 0%, #4BA89F 100%); color: white; padding: 18px 36px; text-decoration: none; border-radius: 12px; display: inline-block; font-weight: 700; font-size: 16px; box-shadow: 0 6px 20px rgba(59, 150, 143, 0.4); transition: all 0.3s;">
+                    🚀 Examiner dans l'admin
                   </a>
                 </div>
               </div>
               
-              <div style="background: #f1f5f9; padding: 20px; text-align: center; border-top: 1px solid #e2e8f0;">
-                <p style="color: #64748b; margin: 0; font-size: 14px;">
-                  <strong>Système de recrutement Terex</strong> - Notification automatique<br>
-                  Reçu le ${new Date().toLocaleDateString('fr-FR', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
-                </p>
+              <!-- Footer admin -->
+              <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); padding: 32px; text-align: center;">
+                <div style="margin-bottom: 16px;">
+                  <h4 style="color: #ffffff; margin: 0 0 8px 0; font-size: 18px; font-weight: 700;">Système de recrutement Terex</h4>
+                  <p style="color: #94a3b8; margin: 0; font-size: 14px;">Notification automatique</p>
+                </div>
+                
+                <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px;">
+                  <p style="color: #64748b; margin: 0; font-size: 13px;">
+                    Reçu le ${new Date().toLocaleDateString('fr-FR', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </p>
+                </div>
               </div>
             </div>
           `;
