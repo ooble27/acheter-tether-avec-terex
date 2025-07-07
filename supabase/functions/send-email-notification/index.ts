@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.0.0";
 import { Resend } from "npm:resend@2.0.0";
@@ -242,42 +241,82 @@ const handler = async (req: Request): Promise<Response> => {
         // Email de confirmation pour le candidat
         subject = `Candidature reçue - ${orderData.position} chez Terex`;
         htmlContent = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background: linear-gradient(135deg, #0FA958 0%, #08a045 100%); color: white; padding: 30px; border-radius: 10px; text-align: center;">
-              <h1 style="margin: 0; font-size: 28px;">Candidature reçue avec succès</h1>
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+            <!-- Header avec gradient Terex -->
+            <div style="background: linear-gradient(135deg, #3B968F 0%, #4BA89F 100%); color: white; padding: 40px 30px; text-align: center;">
+              <div style="margin-bottom: 20px;">
+                <h1 style="margin: 0; font-size: 32px; font-weight: 800; letter-spacing: 2px;">TEREX</h1>
+                <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.9; font-weight: 400;">Plateforme d'échange crypto & transferts internationaux</p>
+              </div>
+              <div style="width: 60px; height: 2px; background: rgba(255, 255, 255, 0.3); margin: 20px auto;"></div>
+              <h2 style="margin: 0; font-size: 24px; font-weight: 600;">Candidature reçue avec succès</h2>
             </div>
             
-            <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 20px 0;">
-              <h2 style="color: #333; margin-bottom: 20px;">Bonjour ${orderData.first_name},</h2>
+            <!-- Contenu principal -->
+            <div style="padding: 40px 30px;">
+              <div style="background: #f8fafc; padding: 30px; border-radius: 12px; border-left: 4px solid #3B968F; margin-bottom: 30px;">
+                <h3 style="color: #1e293b; margin: 0 0 15px 0; font-size: 20px; font-weight: 600;">Bonjour ${orderData.first_name},</h3>
+                
+                <p style="color: #475569; line-height: 1.6; margin-bottom: 20px; font-size: 16px;">
+                  Nous avons bien reçu votre candidature pour le poste de <strong style="color: #3B968F;">${orderData.position}</strong> chez Terex.
+                </p>
+                
+                <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin: 20px 0;">
+                  <h4 style="color: #3B968F; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">📋 Récapitulatif de votre candidature</h4>
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <p style="margin: 0; color: #475569; font-size: 14px;"><strong>Poste :</strong> ${orderData.position}</p>
+                    <p style="margin: 0; color: #475569; font-size: 14px;"><strong>Nom :</strong> ${orderData.first_name} ${orderData.last_name}</p>
+                    <p style="margin: 0; color: #475569; font-size: 14px;"><strong>Email :</strong> ${orderData.email}</p>
+                    ${orderData.experience_years ? `<p style="margin: 0; color: #475569; font-size: 14px;"><strong>Expérience :</strong> ${orderData.experience_years} années</p>` : ''}
+                    ${orderData.location ? `<p style="margin: 0; color: #475569; font-size: 14px;"><strong>Localisation :</strong> ${orderData.location}</p>` : ''}
+                  </div>
+                </div>
+              </div>
               
-              <p style="color: #555; line-height: 1.6; margin-bottom: 20px;">
-                Nous avons bien reçu votre candidature pour le poste de <strong>${orderData.position}</strong> chez Terex.
-              </p>
-              
-              <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <h3 style="color: #1976d2; margin-top: 0;">Prochaines étapes</h3>
-                <ul style="color: #555; line-height: 1.6;">
-                  <li>Notre équipe RH va examiner votre candidature dans les 48 heures</li>
-                  <li>Si votre profil correspond à nos besoins, nous vous contacterons pour un premier entretien</li>
-                  <li>Le processus de recrutement comprend généralement 2-3 étapes d'entretiens</li>
+              <!-- Prochaines étapes -->
+              <div style="background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%); padding: 25px; border-radius: 12px; margin: 25px 0; border: 1px solid #bfdbfe;">
+                <h4 style="color: #1e40af; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">🚀 Prochaines étapes</h4>
+                <ul style="color: #475569; line-height: 1.6; margin: 0; padding-left: 20px;">
+                  <li style="margin-bottom: 8px;">Notre équipe RH va examiner votre candidature dans les <strong>48 heures</strong></li>
+                  <li style="margin-bottom: 8px;">Si votre profil correspond à nos besoins, nous vous contacterons pour un premier entretien</li>
+                  <li style="margin-bottom: 8px;">Le processus de recrutement comprend généralement 2-3 étapes d'entretiens</li>
+                  <li>Vous recevrez une notification par email à chaque étape</li>
                 </ul>
               </div>
               
-              <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #0FA958; margin: 20px 0;">
-                <h3 style="color: #0FA958; margin-top: 0;">À propos de ${orderData.position}</h3>
-                <p style="color: #555; line-height: 1.6;">Un rôle clé pour contribuer à notre mission de révolutionner les transferts d'argent en Afrique.</p>
+              <!-- À propos du poste -->
+              <div style="background: linear-gradient(135deg, #f0fdf4 0%, #f7fee7 100%); padding: 25px; border-radius: 12px; margin: 25px 0; border: 1px solid #bbf7d0;">
+                <h4 style="color: #15803d; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">💼 À propos de ${orderData.position}</h4>
+                <p style="color: #475569; line-height: 1.6; margin: 0;">
+                  Un rôle clé pour contribuer à notre mission de révolutionner les transferts d'argent et les échanges crypto en Afrique. 
+                  Rejoignez une équipe passionnée et innovante qui façonne l'avenir de la fintech africaine.
+                </p>
               </div>
               
-              <p style="color: #555; line-height: 1.6; margin-bottom: 20px;">
-                En attendant, n'hésitez pas à nous suivre sur nos réseaux sociaux pour rester informé de nos actualités.
-              </p>
+              <!-- Support -->
+              <div style="background: #fef3c7; padding: 20px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #f59e0b;">
+                <p style="color: #92400e; margin: 0; text-align: center; font-size: 14px;">
+                  <strong>💬 Des questions sur votre candidature ?</strong><br>
+                  Contactez-nous : <a href="mailto:terangaexchange@gmail.com" style="color: #b45309; text-decoration: none;">terangaexchange@gmail.com</a> | 
+                  WhatsApp : <a href="https://wa.me/14182619091" style="color: #b45309; text-decoration: none;">+1 418 261 9091</a>
+                </p>
+              </div>
             </div>
             
-            <div style="text-align: center; padding: 20px; color: #666; font-size: 14px;">
-              <p>Cordialement,<br><strong>L'équipe Terex</strong></p>
-              <p style="margin-top: 20px;">
-                <a href="https://app.terangaexchange.com" style="color: #0FA958; text-decoration: none;">app.terangaexchange.com</a>
+            <!-- Footer -->
+            <div style="background: #f1f5f9; padding: 30px; text-align: center; border-top: 1px solid #e2e8f0;">
+              <p style="color: #64748b; margin: 0 0 10px 0; font-size: 16px; font-weight: 600;">
+                Cordialement,<br><span style="color: #3B968F; font-weight: 700;">L'équipe Terex</span>
               </p>
+              <p style="color: #64748b; margin: 10px 0 0 0; font-size: 14px;">
+                <a href="https://app.terangaexchange.com" style="color: #3B968F; text-decoration: none; font-weight: 500;">app.terangaexchange.com</a>
+              </p>
+              <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+                <p style="color: #94a3b8; font-size: 12px; margin: 0;">
+                  © 2025 Terex. Tous droits réservés.<br>
+                  Fondé par Mohamed Lo • Basé au Sénégal, Dakar
+                </p>
+              </div>
             </div>
           </div>
         `;
@@ -285,37 +324,68 @@ const handler = async (req: Request): Promise<Response> => {
         // Envoyer aussi une notification à l'équipe RH Terex
         try {
           const adminNotificationHtml = `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-              <div style="background: linear-gradient(135deg, #0FA958 0%, #08a045 100%); color: white; padding: 30px; border-radius: 10px; text-align: center;">
-                <h1 style="margin: 0; font-size: 28px;">Nouvelle Candidature</h1>
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+              <!-- Header Admin -->
+              <div style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; padding: 30px; text-align: center;">
+                <h1 style="margin: 0; font-size: 28px; font-weight: 700;">🔔 NOUVELLE CANDIDATURE</h1>
+                <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Système de recrutement Terex</p>
               </div>
               
-              <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 20px 0;">
-                <h2 style="color: #333; margin-bottom: 20px;">Poste : ${orderData.position}</h2>
-                
-                <h3 style="color: #0FA958; margin-top: 30px;">Informations du candidat</h3>
-                <p><strong>Nom :</strong> ${orderData.first_name} ${orderData.last_name}</p>
-                <p><strong>Email :</strong> ${orderData.email}</p>
-                ${orderData.phone ? `<p><strong>Téléphone :</strong> ${orderData.phone}</p>` : ''}
-                ${orderData.location ? `<p><strong>Localisation :</strong> ${orderData.location}</p>` : ''}
-                ${orderData.experience_years ? `<p><strong>Années d'expérience :</strong> ${orderData.experience_years}</p>` : ''}
-                ${orderData.availability ? `<p><strong>Disponibilité :</strong> ${orderData.availability}</p>` : ''}
-                ${orderData.salary_expectation ? `<p><strong>Prétentions salariales :</strong> ${orderData.salary_expectation}</p>` : ''}
-                ${orderData.linkedin_profile ? `<p><strong>LinkedIn :</strong> <a href="${orderData.linkedin_profile}">${orderData.linkedin_profile}</a></p>` : ''}
-                ${orderData.portfolio_url ? `<p><strong>Portfolio :</strong> <a href="${orderData.portfolio_url}">${orderData.portfolio_url}</a></p>` : ''}
-              </div>
-              
-              ${orderData.cover_letter ? `
-                <div style="background: white; padding: 20px; border-left: 4px solid #0FA958; margin: 20px 0;">
-                  <h3 style="color: #0FA958; margin-top: 0;">Lettre de motivation</h3>
-                  <p style="white-space: pre-wrap; color: #555; line-height: 1.6;">${orderData.cover_letter}</p>
+              <div style="padding: 30px;">
+                <div style="background: #f8fafc; padding: 25px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid #3B968F;">
+                  <h2 style="color: #1e293b; margin: 0 0 20px 0; font-size: 22px; font-weight: 600;">
+                    Poste : ${orderData.position}
+                  </h2>
+                  
+                  <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+                    <h3 style="color: #3B968F; margin: 0 0 15px 0; font-size: 18px;">👤 Informations du candidat</h3>
+                    <div style="display: grid; gap: 10px;">
+                      <p style="margin: 0; color: #475569;"><strong>Nom complet :</strong> ${orderData.first_name} ${orderData.last_name}</p>
+                      <p style="margin: 0; color: #475569;"><strong>Email :</strong> <a href="mailto:${orderData.email}" style="color: #3B968F;">${orderData.email}</a></p>
+                      ${orderData.phone ? `<p style="margin: 0; color: #475569;"><strong>Téléphone :</strong> <a href="tel:${orderData.phone}" style="color: #3B968F;">${orderData.phone}</a></p>` : ''}
+                      ${orderData.location ? `<p style="margin: 0; color: #475569;"><strong>Localisation :</strong> ${orderData.location}</p>` : ''}
+                      ${orderData.experience_years ? `<p style="margin: 0; color: #475569;"><strong>Années d'expérience :</strong> ${orderData.experience_years}</p>` : ''}
+                      ${orderData.availability ? `<p style="margin: 0; color: #475569;"><strong>Disponibilité :</strong> ${orderData.availability}</p>` : ''}
+                      ${orderData.salary_expectation ? `<p style="margin: 0; color: #475569;"><strong>Prétentions salariales :</strong> ${orderData.salary_expectation}</p>` : ''}
+                    </div>
+                  </div>
+                  
+                  ${orderData.linkedin_profile || orderData.portfolio_url ? `
+                    <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+                      <h3 style="color: #3B968F; margin: 0 0 15px 0; font-size: 18px;">🔗 Liens professionnels</h3>
+                      ${orderData.linkedin_profile ? `<p style="margin: 0 0 10px 0; color: #475569;"><strong>LinkedIn :</strong> <a href="${orderData.linkedin_profile}" style="color: #0077b5;" target="_blank">${orderData.linkedin_profile}</a></p>` : ''}
+                      ${orderData.portfolio_url ? `<p style="margin: 0; color: #475569;"><strong>Portfolio :</strong> <a href="${orderData.portfolio_url}" style="color: #3B968F;" target="_blank">${orderData.portfolio_url}</a></p>` : ''}
+                    </div>
+                  ` : ''}
                 </div>
-              ` : ''}
+                
+                ${orderData.cover_letter ? `
+                  <div style="background: #ffffff; padding: 25px; border-radius: 12px; border-left: 4px solid #f59e0b; margin: 25px 0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                    <h3 style="color: #d97706; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">📝 Lettre de motivation</h3>
+                    <div style="background: #fefce8; padding: 20px; border-radius: 8px; border: 1px solid #fde047;">
+                      <p style="white-space: pre-wrap; color: #713f12; line-height: 1.6; margin: 0; font-size: 15px;">${orderData.cover_letter}</p>
+                    </div>
+                  </div>
+                ` : ''}
+                
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="https://app.terangaexchange.com/admin" style="background: linear-gradient(135deg, #3B968F 0%, #4BA89F 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px; box-shadow: 0 4px 12px rgba(59, 150, 143, 0.3);">
+                    🚀 Voir dans l'admin
+                  </a>
+                </div>
+              </div>
               
-              <div style="text-align: center; margin: 30px 0;">
-                <a href="https://app.terangaexchange.com/admin" style="background: #0FA958; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-                  Voir dans l'admin
-                </a>
+              <div style="background: #f1f5f9; padding: 20px; text-align: center; border-top: 1px solid #e2e8f0;">
+                <p style="color: #64748b; margin: 0; font-size: 14px;">
+                  <strong>Système de recrutement Terex</strong> - Notification automatique<br>
+                  Reçu le ${new Date().toLocaleDateString('fr-FR', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </p>
               </div>
             </div>
           `;
@@ -323,7 +393,7 @@ const handler = async (req: Request): Promise<Response> => {
           await resend.emails.send({
             from: "Terex Careers <noreply@terangaexchange.com>",
             to: ["terangaexchange@gmail.com"],
-            subject: `🔔 Nouvelle candidature : ${orderData.position}`,
+            subject: `🔔 Nouvelle candidature : ${orderData.position} - ${orderData.first_name} ${orderData.last_name}`,
             html: adminNotificationHtml,
           });
 
