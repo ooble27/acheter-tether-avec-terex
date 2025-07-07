@@ -14,9 +14,6 @@ import { MarketingPage } from "./pages/MarketingPage";
 import AdminPage from "./pages/AdminPage";
 import { Toaster } from "@/components/ui/toaster"
 import BlockchainPage from "./pages/BlockchainPage";
-import PartnersPage from "./pages/PartnersPage";
-import AboutPage from "./pages/AboutPage";
-import CareersPage from "./pages/CareersPage";
 import { TransactionProvider } from "./contexts/TransactionContext";
 import { PWASessionSync } from "./components/PWASessionSync";
 
@@ -33,9 +30,6 @@ function App() {
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/blockchain" element={<BlockchainPage />} />
-              <Route path="/partners" element={<PartnersPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/careers" element={<CareersPage />} />
               <Route path="/marketing" element={<MarketingPage />} />
               <Route path="/admin/*" element={<AdminPage />} />
               <Route path="*" element={<NotFound />} />
