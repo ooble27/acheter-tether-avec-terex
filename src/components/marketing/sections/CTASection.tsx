@@ -1,6 +1,5 @@
-
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles, Zap, Shield } from 'lucide-react';
+import { ArrowRight, Sparkles, Zap, Shield, CheckCircle } from 'lucide-react';
 
 interface CTASectionProps {
   user?: { email: string; name: string } | null;
