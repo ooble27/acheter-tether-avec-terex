@@ -1,16 +1,8 @@
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { User, LogOut, Menu, ChevronDown } from 'lucide-react';
+import { User, LogOut, Menu } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { 
-  NavigationMenu, 
-  NavigationMenuContent, 
-  NavigationMenuItem, 
-  NavigationMenuList, 
-  NavigationMenuTrigger,
-  NavigationMenuLink 
-} from '@/components/ui/navigation-menu';
 import { useNavigate } from 'react-router-dom';
 
 interface HeaderSectionProps {
@@ -34,84 +26,79 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   };
 
   const navigationItems = [
+    { label: 'Accueil', href: '/' },
     { label: 'Partenaires', href: '/partners' },
     { label: 'À propos', href: '/about' },
     { label: 'Carrières', href: '/careers' },
-    { label: 'Actualités', href: '/news' }
+    { label: 'Actualités', href: '/news' },
+    { label: 'Support', href: '/support' },
+    { label: 'Contact', href: '/contact' },
+    { label: 'FAQ', href: '/faq' }
   ];
 
   return (
     <header className="bg-terex-darker border-b border-terex-accent/20 sticky top-0 z-50 pt-safe">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-1">
+          {/* Logo seul */}
+          <div className="flex items-center">
             <img 
               src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
               alt="Terex Logo" 
-              className="w-8 h-8 rounded-lg"
+              className="w-10 h-10 rounded-lg cursor-pointer"
+              onClick={() => navigate('/')}
             />
-            <h1 className="text-xl font-bold text-white">
-              Terex
-            </h1>
           </div>
           
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Navigation étalée */}
           {!isMobile && (
-            <div className="flex items-center space-x-6">
-              {/* Navigation Menu */}
-              <NavigationMenu>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="bg-transparent text-gray-300 hover:text-white">
-                      Navigation
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <div className="grid w-48 p-2">
-                        {navigationItems.map((item) => (
-                          <NavigationMenuLink
-                            key={item.href}
-                            onClick={() => navigate(item.href)}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer"
-                          >
-                            <div className="text-sm font-medium leading-none">{item.label}</div>
-                          </NavigationMenuLink>
-                        ))}
-                      </div>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-
-              {user ? (
-                <>
-                  <Button
-                    onClick={onShowDashboard}
-                    variant="ghost"
-                    className="text-gray-300 hover:text-white"
+            <div className="flex items-center space-x-8">
+              {/* Navigation Links */}
+              <nav className="flex items-center space-x-6">
+                {navigationItems.map((item) => (
+                  <button
+                    key={item.href}
+                    onClick={() => navigate(item.href)}
+                    className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm font-medium"
                   >
-                    <User className="w-4 h-4 mr-2" />
-                    Dashboard
-                  </Button>
-                  <div className="flex items-center space-x-2 text-gray-300">
-                    <span className="text-sm">{user.name}</span>
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+
+              {/* User Actions */}
+              <div className="flex items-center space-x-4 ml-8 border-l border-terex-gray/30 pl-8">
+                {user ? (
+                  <>
                     <Button
-                      onClick={handleLogout}
+                      onClick={onShowDashboard}
                       variant="ghost"
-                      size="sm"
-                      className="text-gray-400 hover:text-red-400"
+                      className="text-gray-300 hover:text-white"
                     >
-                      <LogOut className="w-4 h-4" />
+                      <User className="w-4 h-4 mr-2" />
+                      Dashboard
                     </Button>
-                  </div>
-                </>
-              ) : (
-                <Button
-                  onClick={() => navigate('/auth')}
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold"
-                >
-                  Se Connecter
-                </Button>
-              )}
+                    <div className="flex items-center space-x-2 text-gray-300">
+                      <span className="text-sm">{user.name}</span>
+                      <Button
+                        onClick={handleLogout}
+                        variant="ghost"
+                        size="sm"
+                        className="text-gray-400 hover:text-red-400"
+                      >
+                        <LogOut className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <Button
+                    onClick={() => navigate('/auth')}
+                    className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold"
+                  >
+                    Se Connecter
+                  </Button>
+                )}
+              </div>
             </div>
           )}
 
