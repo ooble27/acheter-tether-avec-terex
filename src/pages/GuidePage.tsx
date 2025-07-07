@@ -4,17 +4,19 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Play, Clock, User, CheckCircle, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
 import { HeaderSection } from '@/components/marketing/sections/HeaderSection';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { UserGuide } from '@/components/features/UserGuide';
 
 const GuidePage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
+  const [showDetailedGuide, setShowDetailedGuide] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -41,6 +43,27 @@ const GuidePage = () => {
   const handleShowDashboard = () => {
     navigate('/');
   };
+
+  if (showDetailedGuide) {
+    return (
+      <div className="min-h-screen bg-terex-dark">
+        <HeaderSection 
+          user={user ? {
+            email: user.email || '',
+            name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
+          } : null}
+          onShowDashboard={handleShowDashboard}
+          onLogout={handleLogout}
+        />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <UserGuide onBack={() => setShowDetailedGuide(false)} />
+        </div>
+        
+        <FooterSection />
+      </div>
+    );
+  }
 
   const guides = [
     {
@@ -137,6 +160,16 @@ const GuidePage = () => {
             <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
               Des guides détaillés pour vous accompagner dans toutes vos opérations crypto-fiat.
             </p>
+
+            {/* Guide complet button */}
+            <Button 
+              onClick={() => setShowDetailedGuide(true)}
+              size="lg"
+              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-8 py-4 text-lg rounded-xl mb-8"
+            >
+              📖 Guide Complet avec Captures d'Écran
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
           </div>
         </div>
       </div>
@@ -180,7 +213,10 @@ const GuidePage = () => {
                       </div>
                     ))}
                   </div>
-                  <Button className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold">
+                  <Button 
+                    onClick={() => setShowDetailedGuide(true)}
+                    className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold"
+                  >
                     <Play className="w-4 h-4 mr-2" />
                     Commencer le Guide
                     <ArrowRight className="w-4 h-4 ml-2" />
