@@ -1,8 +1,19 @@
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { 
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from '@/components/ui/navigation-menu';
 import { User, LogOut, Menu } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useNavigate } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
 interface HeaderSectionProps {
   user?: { email: string; name: string } | null;
@@ -12,8 +23,7 @@ interface HeaderSectionProps {
 
 export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSectionProps) {
   const isMobile = useIsMobile();
-
-  if (!user) return null;
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -33,36 +43,128 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
             <img 
               src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
               alt="Terex Logo" 
-              className="w-8 h-8 rounded-lg"
+              className="w-8 h-8 rounded-lg cursor-pointer"
+              onClick={() => navigate('/')}
             />
-            <h1 className="text-xl font-bold text-white">
+            <h1 className="text-xl font-bold text-white cursor-pointer" onClick={() => navigate('/')}>
               Terex
             </h1>
           </div>
           
           {/* Desktop Navigation */}
           {!isMobile && (
-            <div className="flex items-center space-x-4">
-              <Button
-                onClick={onShowDashboard}
-                variant="ghost"
-                className="text-gray-300 hover:text-white"
-              >
-                <User className="w-4 h-4 mr-2" />
-                Dashboard
-              </Button>
-              <div className="flex items-center space-x-2 text-gray-300">
-                <span className="text-sm">{user.name}</span>
-                <Button
-                  onClick={handleLogout}
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-400 hover:text-red-400"
-                >
-                  <LogOut className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
+            <>
+              {!user && (
+                <NavigationMenu>
+                  <NavigationMenuList>
+                    <NavigationMenuItem>
+                      <NavigationMenuTrigger className="bg-transparent text-gray-300 hover:text-white">
+                        Explorer
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <div className="grid gap-3 p-6 w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                          <div className="row-span-3">
+                            <NavigationMenuLink asChild>
+                              <div
+                                className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-terex-accent/20 to-terex-accent/5 p-6 no-underline outline-none focus:shadow-md cursor-pointer"
+                                onClick={() => navigate('/blockchain')}
+                              >
+                                <div className="mb-2 mt-4 text-lg font-medium text-white">
+                                  Blockchain Info
+                                </div>
+                                <p className="text-sm leading-tight text-gray-300">
+                                  Découvrez les métriques et données de la blockchain en temps réel.
+                                </p>
+                              </div>
+                            </NavigationMenuLink>
+                          </div>
+                          <div
+                            className="cursor-pointer select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-terex-accent/10 hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            onClick={() => navigate('/partners')}
+                          >
+                            <div className="text-sm font-medium leading-none text-white">Partenaires</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-gray-400">
+                              Nos partenaires bancaires et wallets crypto.
+                            </p>
+                          </div>
+                          <div
+                            className="cursor-pointer select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-terex-accent/10 hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            onClick={() => navigate('/about')}
+                          >
+                            <div className="text-sm font-medium leading-none text-white">À propos</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-gray-400">
+                              Notre mission et l'équipe derrière Terex.
+                            </p>
+                          </div>
+                          <div
+                            className="cursor-pointer select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-terex-accent/10 hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            onClick={() => navigate('/careers')}
+                          >
+                            <div className="text-sm font-medium leading-none text-white">Carrières</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-gray-400">
+                              Rejoignez notre équipe et construisons l'avenir ensemble.
+                            </p>
+                          </div>
+                        </div>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  </NavigationMenuList>
+                </NavigationMenu>
+              )}
+
+              {user && (
+                <div className="flex items-center space-x-4">
+                  <NavigationMenu>
+                    <NavigationMenuList>
+                      <NavigationMenuItem>
+                        <NavigationMenuLink 
+                          className={cn(navigationMenuTriggerStyle(), "bg-transparent text-gray-300 hover:text-white cursor-pointer")}
+                          onClick={() => navigate('/partners')}
+                        >
+                          Partenaires
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                      <NavigationMenuItem>
+                        <NavigationMenuLink 
+                          className={cn(navigationMenuTriggerStyle(), "bg-transparent text-gray-300 hover:text-white cursor-pointer")}
+                          onClick={() => navigate('/about')}
+                        >
+                          À propos
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                      <NavigationMenuItem>
+                        <NavigationMenuLink 
+                          className={cn(navigationMenuTriggerStyle(), "bg-transparent text-gray-300 hover:text-white cursor-pointer")}
+                          onClick={() => navigate('/careers')}
+                        >
+                          Carrières
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    </NavigationMenuList>
+                  </NavigationMenu>
+                  
+                  <Button
+                    onClick={onShowDashboard}
+                    variant="ghost"
+                    className="text-gray-300 hover:text-white"
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    Dashboard
+                  </Button>
+                  <div className="flex items-center space-x-2 text-gray-300">
+                    <span className="text-sm">{user.name}</span>
+                    <Button
+                      onClick={handleLogout}
+                      variant="ghost"
+                      size="sm"
+                      className="text-gray-400 hover:text-red-400"
+                    >
+                      <LogOut className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
           {/* Mobile Hamburger Menu */}
@@ -97,13 +199,47 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
 
                   {/* Menu Items */}
                   <div className="flex-1 p-6 space-y-4">
+                    {user && (
+                      <Button
+                        onClick={onShowDashboard}
+                        variant="ghost"
+                        className="w-full justify-start text-white hover:bg-terex-accent/20 h-14 text-lg"
+                      >
+                        <User className="w-6 h-6 mr-3" />
+                        Dashboard
+                      </Button>
+                    )}
+                    
                     <Button
-                      onClick={onShowDashboard}
+                      onClick={() => navigate('/partners')}
                       variant="ghost"
                       className="w-full justify-start text-white hover:bg-terex-accent/20 h-14 text-lg"
                     >
-                      <User className="w-6 h-6 mr-3" />
-                      Dashboard
+                      Partenaires
+                    </Button>
+                    
+                    <Button
+                      onClick={() => navigate('/about')}
+                      variant="ghost"
+                      className="w-full justify-start text-white hover:bg-terex-accent/20 h-14 text-lg"
+                    >
+                      À propos
+                    </Button>
+                    
+                    <Button
+                      onClick={() => navigate('/careers')}
+                      variant="ghost"
+                      className="w-full justify-start text-white hover:bg-terex-accent/20 h-14 text-lg"
+                    >
+                      Carrières
+                    </Button>
+                    
+                    <Button
+                      onClick={() => navigate('/blockchain')}
+                      variant="ghost"
+                      className="w-full justify-start text-white hover:bg-terex-accent/20 h-14 text-lg"
+                    >
+                      Blockchain Info
                     </Button>
                   </div>
 
