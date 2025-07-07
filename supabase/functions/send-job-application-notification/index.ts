@@ -47,7 +47,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Email pour l'admin
     const adminEmailResponse = await resend.emails.send({
-      from: "Terex Careers <onboarding@resend.dev>",
+      from: "Terex Careers <careers@terex.app>",
       to: ["Terangaexchange@gmail.com"],
       subject: `Nouvelle candidature : ${applicationData.position}`,
       html: `
@@ -88,7 +88,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Email de confirmation pour le candidat
     const candidateEmailResponse = await resend.emails.send({
-      from: "Terex Careers <onboarding@resend.dev>",
+      from: "Terex Careers <careers@terex.app>",
       to: [applicationData.email],
       subject: `Candidature reçue - ${applicationData.position} chez Terex`,
       html: `
