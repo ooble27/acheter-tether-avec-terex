@@ -43,6 +43,16 @@ export function MarketplacePage() {
     navigate(`/marketplace/product/${product.id}`);
   };
 
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.target as HTMLImageElement;
+    console.log('Image failed to load:', target.src);
+    target.style.display = 'none';
+    const parent = target.parentElement;
+    if (parent) {
+      parent.innerHTML = '<div class="w-full h-full flex items-center justify-center text-gray-500 text-4xl bg-terex-dark rounded-lg">📦</div>';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-terex-dark">
       {/* Header */}
@@ -157,17 +167,13 @@ export function MarketplacePage() {
                         src={product.images[0]} 
                         alt={product.name}
                         className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.style.display = 'none';
-                          const parent = target.parentElement;
-                          if (parent) {
-                            parent.innerHTML = '<div class="text-gray-500 text-4xl">📦</div>';
-                          }
+                        onError={handleImageError}
+                        onLoad={(e) => {
+                          console.log('Image loaded successfully:', (e.target as HTMLImageElement).src);
                         }}
                       />
                     ) : (
-                      <div className="text-gray-500 text-4xl">📦</div>
+                      <div className="w-full h-full flex items-center justify-center text-gray-500 text-4xl bg-terex-dark rounded-lg">📦</div>
                     )}
                   </div>
                   <CardTitle className="text-white text-sm group-hover:text-terex-accent transition-colors">

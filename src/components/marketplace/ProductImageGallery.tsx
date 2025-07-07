@@ -11,9 +11,10 @@ interface ProductImageGalleryProps {
 
 export function ProductImageGallery({ images, productName }: ProductImageGalleryProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [imageLoadErrors, setImageLoadErrors] = useState<{[key: number]: boolean}>({});
   
   // Utiliser la première image ou une image par défaut
-  const displayImages = images.length > 0 ? images : ['/placeholder-product.jpg'];
+  const displayImages = images.length > 0 ? images : [];
   const currentImage = displayImages[selectedImageIndex];
 
   const nextImage = () => {
@@ -24,19 +25,41 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
     setSelectedImageIndex((prev) => (prev - 1 + displayImages.length) % displayImages.length);
   };
 
+  const handleImageError = (index: number) => {
+    console.log(`Image ${index} failed to load:`, displayImages[index]);
+    setImageLoadErrors(prev => ({ ...prev, [index]: true }));
+  };
+
+  const handleImageLoad = (index: number) => {
+    console.log(`Image ${index} loaded successfully:`, displayImages[index]);
+    setImageLoadErrors(prev => ({ ...prev, [index]: false }));
+  };
+
+  if (displayImages.length === 0) {
+    return (
+      <div className="aspect-square bg-terex-darker rounded-lg flex items-center justify-center">
+        <div className="text-gray-500 text-6xl">📦</div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       {/* Image principale */}
       <div className="relative aspect-square bg-terex-darker rounded-lg overflow-hidden group">
-        <img
-          src={currentImage}
-          alt={productName}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = '/placeholder-product.jpg';
-          }}
-        />
+        {imageLoadErrors[selectedImageIndex] ? (
+          <div className="w-full h-full flex items-center justify-center text-gray-500 text-6xl bg-terex-darker rounded-lg">
+            📦
+          </div>
+        ) : (
+          <img
+            src={currentImage}
+            alt={productName}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={() => handleImageError(selectedImageIndex)}
+            onLoad={() => handleImageLoad(selectedImageIndex)}
+          />
+        )}
         
         {/* Navigation des images */}
         {displayImages.length > 1 && (
@@ -61,24 +84,26 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
         )}
 
         {/* Bouton zoom */}
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <ZoomIn className="w-5 h-5" />
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-4xl bg-terex-darker border-terex-accent/30">
-            <img
-              src={currentImage}
-              alt={productName}
-              className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
-            />
-          </DialogContent>
-        </Dialog>
+        {!imageLoadErrors[selectedImageIndex] && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <ZoomIn className="w-5 h-5" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl bg-terex-darker border-terex-accent/30">
+              <img
+                src={currentImage}
+                alt={productName}
+                className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
+              />
+            </DialogContent>
+          </Dialog>
+        )}
 
         {/* Indicateur d'images multiples */}
         {displayImages.length > 1 && (
@@ -111,15 +136,19 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
                   : 'hover:opacity-80'
               }`}
             >
-              <img
-                src={image}
-                alt={`${productName} ${index + 1}`}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/placeholder-product.jpg';
-                }}
-              />
+              {imageLoadErrors[index] ? (
+                <div className="w-full h-full flex items-center justify-center text-gray-500 text-2xl bg-terex-darker">
+                  📦
+                </div>
+              ) : (
+                <img
+                  src={image}
+                  alt={`${productName} ${index + 1}`}
+                  className="w-full h-full object-cover"
+                  onError={() => handleImageError(index)}
+                  onLoad={() => handleImageLoad(index)}
+                />
+              )}
             </button>
           ))}
         </div>
