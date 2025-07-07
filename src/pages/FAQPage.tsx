@@ -26,8 +26,8 @@ const FAQPage = () => {
     {
       title: "Démarrage et Compte",
       icon: "👤",
-      color: "from-blue-500/20 to-blue-600/20",
-      borderColor: "border-blue-500/30",
+      color: "from-terex-accent/20 to-terex-accent-light/20",
+      borderColor: "border-terex-accent/30",
       faqs: [
         {
           question: "Qu'est-ce que Terex et comment ça marche ?",
@@ -54,8 +54,8 @@ const FAQPage = () => {
     {
       title: "Achat d'USDT",
       icon: "💰",
-      color: "from-green-500/20 to-green-600/20",
-      borderColor: "border-green-500/30",
+      color: "from-terex-accent/20 to-terex-accent-light/20",
+      borderColor: "border-terex-accent/30",
       faqs: [
         {
           question: "Comment acheter des USDT sur Terex ?",
@@ -86,8 +86,8 @@ const FAQPage = () => {
     {
       title: "Vente d'USDT",
       icon: "💸",
-      color: "from-orange-500/20 to-orange-600/20",
-      borderColor: "border-orange-500/30",
+      color: "from-terex-accent/20 to-terex-accent-light/20",
+      borderColor: "border-terex-accent/30",
       faqs: [
         {
           question: "Comment vendre mes USDT sur Terex ?",
@@ -114,8 +114,8 @@ const FAQPage = () => {
     {
       title: "Transferts Internationaux",
       icon: "🌍",
-      color: "from-purple-500/20 to-purple-600/20",
-      borderColor: "border-purple-500/30",
+      color: "from-terex-accent/20 to-terex-accent-light/20",
+      borderColor: "border-terex-accent/30",
       faqs: [
         {
           question: "Vers quels pays puis-je envoyer de l'argent ?",
@@ -146,8 +146,8 @@ const FAQPage = () => {
     {
       title: "Sécurité et Conformité",
       icon: "🔒",
-      color: "from-red-500/20 to-red-600/20",
-      borderColor: "border-red-500/30",
+      color: "from-terex-accent/20 to-terex-accent-light/20",
+      borderColor: "border-terex-accent/30",
       faqs: [
         {
           question: "Comment Terex protège-t-il mes fonds et données ?",
@@ -174,8 +174,8 @@ const FAQPage = () => {
     {
       title: "Support et Assistance",
       icon: "🎧",
-      color: "from-cyan-500/20 to-cyan-600/20",
-      borderColor: "border-cyan-500/30",
+      color: "from-terex-accent/20 to-terex-accent-light/20",
+      borderColor: "border-terex-accent/30",
       faqs: [
         {
           question: "Comment contacter le support client ?",
