@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,12 +18,21 @@ const ContactPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { sendMessage } = useContactMessages();
+  const { sendMessage, loading } = useContactMessages();
 
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: ''
+  });
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -46,29 +56,71 @@ const ContactPage = () => {
     navigate('/');
   };
 
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.email.trim() || !formData.subject.trim() || !formData.message.trim()) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez remplir tous les champs obligatoires",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const messageData = {
+      subject: formData.subject,
+      message: formData.message,
+      user_email: formData.email,
+      user_name: `${formData.firstName} ${formData.lastName}`,
+      user_phone: formData.phone || undefined
+    };
+
+    const result = await sendMessage(messageData);
+
+    if (!result.error) {
+      // Reset form on success
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
+      });
+    }
+  };
+
   const contactInfo = [
     {
       icon: MapPin,
       title: "Adresse",
       content: "Dakar, Sénégal\nPlateau, Avenue Léopold Sédar Senghor",
-      subtext: "Siège social et bureau principal"
+      subtext: "Siège social"
     },
     {
       icon: Phone,
       title: "Téléphone",
-      content: "+221 77 123 4567\n+221 70 987 6543",
+      content: "+1 (418) 261-9091\nWhatsApp disponible",
       subtext: "Disponible 24/7"
     },
     {
       icon: Mail,
       title: "Email",
-      content: "contact@terex.com\nsupport@terex.com",
+      content: "terangaexchange@gmail.com",
       subtext: "Réponse sous 2h"
     },
     {
       icon: Clock,
       title: "Horaires",
-      content: "24/7 Support\nBureau: 8h - 18h WAT",
+      content: "24/7 Support\nService client continu",
       subtext: "Lun - Dim"
     }
   ];
@@ -141,13 +193,26 @@ const ContactPage = () => {
 
               {/* Social Links */}
               <div className="pt-8 border-t border-terex-gray/30">
-                <h3 className="text-white font-semibold mb-4">Suivez-nous</h3>
-                <div className="flex space-x-4">
-                  {['Twitter', 'LinkedIn', 'Facebook', 'Instagram'].map((social) => (
-                    <Button key={social} variant="outline" size="sm" className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent hover:text-black">
-                      {social}
-                    </Button>
-                  ))}
+                <h3 className="text-white font-semibold mb-4">Contactez-nous directement</h3>
+                <div className="flex flex-col space-y-4">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="border-green-500/30 text-green-400 hover:bg-green-500 hover:text-white justify-start"
+                    onClick={() => window.open('https://wa.me/14182619091', '_blank')}
+                  >
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    WhatsApp: +1 (418) 261-9091
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent hover:text-black justify-start"
+                    onClick={() => window.location.href = 'mailto:terangaexchange@gmail.com'}
+                  >
+                    <Mail className="w-4 h-4 mr-2" />
+                    terangaexchange@gmail.com
+                  </Button>
                 </div>
               </div>
             </div>
@@ -160,32 +225,62 @@ const ContactPage = () => {
                   <p className="text-gray-300">Remplissez le formulaire ci-dessous et nous vous répondrons rapidement.</p>
                 </div>
                 
-                <form className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-white font-medium mb-2">Prénom *</label>
-                      <Input className="bg-terex-dark border-terex-gray text-white" placeholder="Votre prénom" />
+                      <Input 
+                        className="bg-terex-dark border-terex-gray text-white" 
+                        placeholder="Votre prénom" 
+                        value={formData.firstName}
+                        onChange={(e) => handleInputChange('firstName', e.target.value)}
+                        required
+                      />
                     </div>
                     <div>
                       <label className="block text-white font-medium mb-2">Nom *</label>
-                      <Input className="bg-terex-dark border-terex-gray text-white" placeholder="Votre nom" />
+                      <Input 
+                        className="bg-terex-dark border-terex-gray text-white" 
+                        placeholder="Votre nom" 
+                        value={formData.lastName}
+                        onChange={(e) => handleInputChange('lastName', e.target.value)}
+                        required
+                      />
                     </div>
                   </div>
                   
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-white font-medium mb-2">Email *</label>
-                      <Input type="email" className="bg-terex-dark border-terex-gray text-white" placeholder="votre@email.com" />
+                      <Input 
+                        type="email" 
+                        className="bg-terex-dark border-terex-gray text-white" 
+                        placeholder="votre@email.com" 
+                        value={formData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        required
+                      />
                     </div>
                     <div>
                       <label className="block text-white font-medium mb-2">Téléphone</label>
-                      <Input className="bg-terex-dark border-terex-gray text-white" placeholder="+221 XX XXX XXXX" />
+                      <Input 
+                        className="bg-terex-dark border-terex-gray text-white" 
+                        placeholder="+221 XX XXX XXXX" 
+                        value={formData.phone}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                      />
                     </div>
                   </div>
                   
                   <div>
                     <label className="block text-white font-medium mb-2">Sujet *</label>
-                    <Input className="bg-terex-dark border-terex-gray text-white" placeholder="Objet de votre message" />
+                    <Input 
+                      className="bg-terex-dark border-terex-gray text-white" 
+                      placeholder="Objet de votre message" 
+                      value={formData.subject}
+                      onChange={(e) => handleInputChange('subject', e.target.value)}
+                      required
+                    />
                   </div>
                   
                   <div>
@@ -193,11 +288,18 @@ const ContactPage = () => {
                     <Textarea 
                       className="bg-terex-dark border-terex-gray text-white min-h-32" 
                       placeholder="Décrivez votre demande en détail..."
+                      value={formData.message}
+                      onChange={(e) => handleInputChange('message', e.target.value)}
+                      required
                     />
                   </div>
                   
-                  <Button className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold h-12">
-                    Envoyer le Message
+                  <Button 
+                    type="submit" 
+                    disabled={loading}
+                    className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold h-12"
+                  >
+                    {loading ? 'Envoi en cours...' : 'Envoyer le Message'}
                     <Send className="ml-2 w-4 h-4" />
                   </Button>
                 </form>

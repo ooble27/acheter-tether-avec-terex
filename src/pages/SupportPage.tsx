@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MessageCircle, Phone, Mail, Clock, CheckCircle, ArrowRight } from 'lucide-react';
@@ -101,32 +102,32 @@ const SupportPage = () => {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Live Chat */}
+            {/* WhatsApp Support */}
             <div className="group relative">
               <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 via-terex-accent/10 to-terex-accent/20 rounded-2xl blur opacity-25 group-hover:opacity-75 transition-all duration-500"></div>
               
               <div className="relative bg-gradient-to-br from-terex-darker to-terex-gray/30 rounded-2xl p-8 border border-terex-gray/50 group-hover:border-terex-accent/50">
                 <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 bg-terex-accent/20 rounded-xl flex items-center justify-center mr-4">
-                    <MessageCircle className="w-6 h-6 text-terex-accent" />
+                  <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mr-4">
+                    <MessageCircle className="w-6 h-6 text-green-400" />
                   </div>
-                  <h3 className="text-2xl font-bold text-white">Chat en direct</h3>
+                  <h3 className="text-2xl font-bold text-white">WhatsApp</h3>
                 </div>
                 
                 <p className="text-gray-300 mb-6 leading-relaxed">
-                  Discutez instantanément avec un agent de support.
+                  Contactez-nous directement sur WhatsApp pour une assistance rapide.
                 </p>
                 
                 <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
                   <Clock className="w-3 h-3 mr-1" />
-                  Réponse en 5 minutes
+                  Réponse immédiate
                 </Badge>
                 
                 <Button 
-                  className="mt-6 bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-6 py-3 w-full"
-                  onClick={() => window.location.href = 'https://tawk.to/chat/648c9fcc9d60534e2d0e39ca/1h3qjes2u'}
+                  className="mt-6 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 w-full"
+                  onClick={() => window.open('https://wa.me/14182619091', '_blank')}
                 >
-                  Démarrer le chat
+                  +1 (418) 261-9091
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </div>
@@ -155,9 +156,9 @@ const SupportPage = () => {
                 
                 <Button 
                   className="mt-6 bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-6 py-3 w-full"
-                  onClick={() => window.location.href = 'mailto:support@terex.com'}
+                  onClick={() => window.location.href = 'mailto:terangaexchange@gmail.com'}
                 >
-                  Envoyer un email
+                  terangaexchange@gmail.com
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </div>
@@ -176,19 +177,19 @@ const SupportPage = () => {
                 </div>
                 
                 <p className="text-gray-300 mb-6 leading-relaxed">
-                  Appelez-nous pour une assistance immédiate.
+                  Appelez-nous pour une assistance immédiate (Canada/International).
                 </p>
                 
                 <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
                   <Clock className="w-3 h-3 mr-1" />
-                  Disponible de 9h à 17h
+                  Disponible 24/7
                 </Badge>
                 
                 <Button 
                   className="mt-6 bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-6 py-3 w-full"
-                  onClick={() => window.location.href = 'tel:+33756987456'}
+                  onClick={() => window.location.href = 'tel:+14182619091'}
                 >
-                  Appeler
+                  +1 (418) 261-9091
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </div>
