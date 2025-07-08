@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, CheckCircle, Users, Globe, TrendingUp, Shield, Zap, Award, Target } from 'lucide-react';
+import { ArrowRight, CheckCircle, Users, Globe, TrendingUp, Shield, Zap, Award, Target, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -43,32 +43,29 @@ const AboutPage = () => {
   };
 
   const stats = [
-    { label: "Utilisateurs Actifs", value: "10K+", icon: Users, color: "from-blue-500/20 to-blue-600/10" },
-    { label: "Pays Desservis", value: "25+", icon: Globe, color: "from-green-500/20 to-green-600/10" },
-    { label: "Volume Mensuel", value: "$5M+", icon: TrendingUp, color: "from-purple-500/20 to-purple-600/10" },
-    { label: "Taux de Satisfaction", value: "98%", icon: Award, color: "from-yellow-500/20 to-yellow-600/10" }
+    { label: "Volume Traité", value: "10M+", icon: TrendingUp },
+    { label: "Utilisateurs", value: "500+", icon: Users },
+    { label: "Pays Desservis", value: "5", icon: Globe },
+    { label: "Disponibilité", value: "99.99%", icon: Award }
   ];
 
   const team = [
     {
-      name: "Amadou Diallo",
+      name: "Mohamed Lo",
       role: "CEO & Fondateur",
-      bio: "Expert fintech avec 15 ans d'expérience dans les services financiers en Afrique",
-      image: "/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png",
-      specialties: ["Leadership", "Fintech", "Stratégie"]
+      bio: "Expert fintech avec plus de 10 ans d'expérience dans les services financiers numériques en Afrique et au Canada",
+      specialties: ["Leadership", "Fintech", "Vision Stratégique"]
     },
     {
       name: "Fatou Sow",
       role: "CTO",
       bio: "Ingénieure blockchain spécialisée dans les solutions de paiement décentralisées",
-      image: "/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png",
       specialties: ["Blockchain", "Architecture", "Crypto"]
     },
     {
       name: "Omar Ba",
       role: "Head of Compliance",
       bio: "Expert en réglementation financière et conformité AML/KYC",
-      image: "/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png",
       specialties: ["Compliance", "AML/KYC", "Réglementation"]
     }
   ];
@@ -77,26 +74,22 @@ const AboutPage = () => {
     {
       icon: Shield,
       title: "Sécurité",
-      description: "Protection maximale de vos fonds et données personnelles avec les dernières technologies de chiffrement.",
-      gradient: "from-red-500/10 to-pink-500/5"
+      description: "Protection maximale de vos fonds et données personnelles avec les dernières technologies de chiffrement."
     },
     {
       icon: Target,
       title: "Transparence",
-      description: "Tarifs clairs, processus transparent et communication honnête avec nos utilisateurs.",
-      gradient: "from-blue-500/10 to-cyan-500/5"
+      description: "Tarifs clairs, processus transparent et communication honnête avec nos utilisateurs."
     },
     {
       icon: Globe,
       title: "Accessibilité",
-      description: "Démocratiser l'accès aux services financiers numériques partout en Afrique.",
-      gradient: "from-green-500/10 to-emerald-500/5"
+      description: "Démocratiser l'accès aux services financiers numériques partout en Afrique."
     },
     {
       icon: Users,
       title: "Communauté",
-      description: "Construire une communauté forte autour de l'inclusion financière africaine.",
-      gradient: "from-purple-500/10 to-violet-500/5"
+      description: "Construire une communauté forte autour de l'inclusion financière africaine."
     }
   ];
 
@@ -226,7 +219,7 @@ const AboutPage = () => {
         </div>
       </div>
 
-      {/* Stats Section - Creative Layout */}
+      {/* Stats Section - Same green color scheme */}
       <div className="py-20 bg-gradient-to-r from-terex-darker via-terex-dark to-terex-darker">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -239,7 +232,7 @@ const AboutPage = () => {
               const IconComponent = stat.icon;
               return (
                 <div key={index} className="group text-center">
-                  <div className={`bg-gradient-to-br ${stat.color} backdrop-blur-sm rounded-2xl p-8 border border-white/10 group-hover:border-terex-accent/50 transition-all duration-500 group-hover:scale-105`}>
+                  <div className="bg-gradient-to-br from-terex-accent/10 to-transparent backdrop-blur-sm rounded-2xl p-8 border border-terex-accent/20 group-hover:border-terex-accent/50 transition-all duration-500 group-hover:scale-105">
                     <IconComponent className="w-12 h-12 text-terex-accent mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
                     <div className="text-4xl font-bold text-white mb-2 group-hover:text-terex-accent transition-colors duration-300">
                       {stat.value}
@@ -285,7 +278,7 @@ const AboutPage = () => {
         </div>
       </div>
 
-      {/* Values Section - Flowing Layout */}
+      {/* Values Section - Same green color scheme */}
       <div className="py-24 bg-gradient-to-b from-terex-darker to-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -297,7 +290,7 @@ const AboutPage = () => {
             {values.map((value, index) => {
               const IconComponent = value.icon;
               return (
-                <div key={index} className={`bg-gradient-to-br ${value.gradient} backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-terex-accent/50 transition-all duration-500 hover:scale-[1.02]`}>
+                <div key={index} className="bg-gradient-to-br from-terex-accent/10 to-transparent backdrop-blur-sm rounded-2xl p-8 border border-terex-accent/20 hover:border-terex-accent/50 transition-all duration-500 hover:scale-[1.02]">
                   <IconComponent className="w-12 h-12 text-terex-accent mb-6" />
                   <h3 className="text-white font-bold text-xl mb-4">{value.title}</h3>
                   <p className="text-gray-300 leading-relaxed">{value.description}</p>
@@ -308,7 +301,7 @@ const AboutPage = () => {
         </div>
       </div>
 
-      {/* Team Section - Modern Layout */}
+      {/* Team Section - Using person icons */}
       <div className="py-24 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -319,10 +312,10 @@ const AboutPage = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {team.map((member, index) => (
               <div key={index} className="group">
-                <div className="bg-gradient-to-br from-terex-darker to-terex-gray/50 rounded-2xl p-8 border border-terex-gray hover:border-terex-accent/50 transition-all duration-500 hover:scale-105">
+                <div className="bg-gradient-to-br from-terex-accent/10 to-transparent rounded-2xl p-8 border border-terex-accent/20 hover:border-terex-accent/50 transition-all duration-500 hover:scale-105">
                   <div className="relative mb-6">
                     <div className="w-24 h-24 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full mx-auto flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <img src={member.image} alt={member.name} className="w-20 h-20 rounded-full" />
+                      <User className="w-12 h-12 text-terex-accent" />
                     </div>
                   </div>
                   
