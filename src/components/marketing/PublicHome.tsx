@@ -1,4 +1,3 @@
-
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -12,6 +11,7 @@ import { HowItWorksSection } from './sections/HowItWorksSection';
 import { PaymentMethodsSection } from './sections/PaymentMethodsSection';
 import { CTASection } from './sections/CTASection';
 import { FooterSection } from './sections/FooterSection';
+import { PhoneMockupSection } from './sections/PhoneMockupSection';
 
 interface PublicHomeProps {
   onGetStarted: () => void;
@@ -62,6 +62,8 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       <HeroSection user={user} onShowDashboard={onShowDashboard} />
       
       <CurrencyConverterSection />
+
+      <PhoneMockupSection />
 
       <HowItWorksSection onBlockchainInfoClick={handleBlockchainInfo} />
 
