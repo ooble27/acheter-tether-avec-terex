@@ -1,9 +1,8 @@
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { AfricaMap3D } from './AfricaMap3D';
+import { CryptoVisualization } from './CryptoVisualization';
 
 interface HeroSectionProps {
   user?: { email: string; name: string } | null;
@@ -97,9 +96,9 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
           </div>
           
-          {/* Colonne de droite - Carte de l'Afrique 3D */}
+          {/* Colonne de droite - Visualisation crypto moderne */}
           <div className="order-1 lg:order-2 flex justify-center">
-            <AfricaMap3D />
+            <CryptoVisualization />
           </div>
         </div>
         

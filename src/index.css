@@ -548,3 +548,369 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
+
+/* Nouvelle visualisation crypto moderne */
+.crypto-visualization-container {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* Cercles concentriques */
+.crypto-circles {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.crypto-circle {
+  position: absolute;
+  border: 2px solid rgba(59, 150, 143, 0.3);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.circle-1 {
+  width: 100px;
+  height: 100px;
+  animation: pulse-circle 3s ease-in-out infinite;
+}
+
+.circle-2 {
+  width: 180px;
+  height: 180px;
+  animation: pulse-circle 3s ease-in-out infinite 0.5s;
+}
+
+.circle-3 {
+  width: 260px;
+  height: 260px;
+  animation: pulse-circle 3s ease-in-out infinite 1s;
+}
+
+.circle-4 {
+  width: 340px;
+  height: 340px;
+  animation: pulse-circle 3s ease-in-out infinite 1.5s;
+}
+
+/* Logo USDT central */
+.central-usdt-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.usdt-glow-effect {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 150, 143, 0.1) 0%, transparent 70%);
+  animation: central-glow 4s ease-in-out infinite;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(59, 150, 143, 0.2);
+}
+
+/* Hexagones flottants */
+.floating-hexagons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hexagon {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: rgba(20, 14, 4, 0.8);
+  border: 2px solid rgba(59, 150, 143, 0.4);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.hexagon:hover {
+  border-color: #3B968F;
+  transform: scale(1.1);
+  background: rgba(59, 150, 143, 0.1);
+}
+
+.hexagon-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hex-1 {
+  top: 10%;
+  left: 20%;
+  animation: float-hex 6s ease-in-out infinite;
+}
+
+.hex-2 {
+  top: 15%;
+  right: 15%;
+  animation: float-hex 6s ease-in-out infinite 1s;
+}
+
+.hex-3 {
+  top: 60%;
+  left: 10%;
+  animation: float-hex 6s ease-in-out infinite 2s;
+}
+
+.hex-4 {
+  bottom: 20%;
+  right: 20%;
+  animation: float-hex 6s ease-in-out infinite 3s;
+}
+
+.hex-5 {
+  top: 45%;
+  left: 5%;
+  animation: float-hex 6s ease-in-out infinite 4s;
+}
+
+.hex-6 {
+  top: 35%;
+  right: 8%;
+  animation: float-hex 6s ease-in-out infinite 5s;
+}
+
+/* Lignes de connexion */
+.connection-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.connections-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.connection-line {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: draw-line 4s ease-in-out infinite;
+}
+
+.line-1 { animation-delay: 0s; }
+.line-2 { animation-delay: 0.5s; }
+.line-3 { animation-delay: 1s; }
+.line-4 { animation-delay: 1.5s; }
+.line-5 { animation-delay: 2s; }
+.line-6 { animation-delay: 2.5s; }
+
+/* Particules flottantes */
+.floating-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #3B968F;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+.particle-1 {
+  top: 20%;
+  left: 30%;
+  animation: float-particle 8s linear infinite;
+}
+
+.particle-2 {
+  top: 70%;
+  left: 60%;
+  animation: float-particle 10s linear infinite reverse;
+}
+
+.particle-3 {
+  top: 40%;
+  left: 80%;
+  animation: float-particle 12s linear infinite;
+}
+
+.particle-4 {
+  top: 80%;
+  left: 20%;
+  animation: float-particle 9s linear infinite reverse;
+}
+
+.particle-5 {
+  top: 10%;
+  left: 70%;
+  animation: float-particle 11s linear infinite;
+}
+
+.particle-6 {
+  top: 60%;
+  left: 10%;
+  animation: float-particle 7s linear infinite reverse;
+}
+
+.particle-7 {
+  top: 30%;
+  left: 50%;
+  animation: float-particle 13s linear infinite;
+}
+
+.particle-8 {
+  top: 90%;
+  left: 40%;
+  animation: float-particle 6s linear infinite reverse;
+}
+
+/* Données flottantes */
+.floating-data {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.data-point {
+  position: absolute;
+  background: rgba(59, 150, 143, 0.1);
+  border: 1px solid rgba(59, 150, 143, 0.3);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #3B968F;
+  backdrop-filter: blur(10px);
+  animation: data-float 5s ease-in-out infinite;
+}
+
+.data-1 {
+  top: 25%;
+  left: 75%;
+  animation-delay: 0s;
+}
+
+.data-2 {
+  top: 65%;
+  left: 75%;
+  animation-delay: 1s;
+}
+
+.data-3 {
+  top: 75%;
+  left: 25%;
+  animation-delay: 2s;
+}
+
+.data-4 {
+  top: 25%;
+  left: 15%;
+  animation-delay: 3s;
+}
+
+/* Animations */
+@keyframes pulse-circle {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 0.6;
+  }
+}
+
+@keyframes central-glow {
+  0%, 100% {
+    box-shadow: 0 0 30px rgba(59, 150, 143, 0.3);
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    box-shadow: 0 0 50px rgba(59, 150, 143, 0.6);
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+@keyframes float-hex {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-10px) rotate(120deg);
+  }
+  66% {
+    transform: translateY(5px) rotate(240deg);
+  }
+}
+
+@keyframes draw-line {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -100;
+    opacity: 0;
+  }
+}
+
+@keyframes data-float {
+  0%, 100% {
+    transform: translateY(0px);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .crypto-visualization-container {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .hexagon {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .data-point {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}
