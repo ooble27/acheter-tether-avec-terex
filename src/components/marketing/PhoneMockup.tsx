@@ -1,29 +1,12 @@
-
 import { Card, CardContent } from '@/components/ui/card';
-import { 
-  TrendingUp, 
-  Globe, 
-  Handshake,
-  Star,
-  Zap,
-  Clock,
-  Activity,
-  Shield,
-  Users,
-  Award
-} from 'lucide-react';
-
-const TetherLogo = ({ className }: { className?: string }) => (
-  <img 
-    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
-    alt="Tether Logo"
-    className={className}
-  />
-);
-
+import { TrendingUp, Globe, Handshake, Star, Zap, Clock, Activity, Shield, Users, Award } from 'lucide-react';
+const TetherLogo = ({
+  className
+}: {
+  className?: string;
+}) => <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="Tether Logo" className={className} />;
 export function PhoneMockup() {
-  return (
-    <div className="relative mx-auto">
+  return <div className="relative mx-auto">
       {/* Phone Frame */}
       <div className="relative w-[280px] h-[560px] bg-gradient-to-br from-terex-accent/20 to-terex-accent/10 rounded-[3rem] p-2 shadow-2xl border border-terex-accent/30">
         {/* Screen bezel */}
@@ -54,7 +37,7 @@ export function PhoneMockup() {
                   <h1 className="text-sm font-bold text-white">
                     Bienvenue, <span className="text-terex-accent">Mohamed</span>
                   </h1>
-                  <p className="text-gray-400 text-xs">Plateforme USDT</p>
+                  <p className="text-gray-400 text-xs text-left">Plateforme USDT</p>
                 </div>
               </div>
 
@@ -67,8 +50,8 @@ export function PhoneMockup() {
                         <TetherLogo className="w-4 h-4" />
                       </div>
                     </div>
-                    <h3 className="text-white text-xs font-medium">Acheter USDT</h3>
-                    <p className="text-gray-400 text-xs">Achat rapide</p>
+                    <h3 className="text-white text-xs font-medium text-left">Acheter USDT</h3>
+                    <p className="text-gray-400 text-xs text-left">Achat rapide</p>
                   </CardContent>
                 </Card>
 
@@ -79,8 +62,8 @@ export function PhoneMockup() {
                         <TetherLogo className="w-4 h-4" />
                       </div>
                     </div>
-                    <h3 className="text-white text-xs font-medium">Vendre USDT</h3>
-                    <p className="text-gray-400 text-xs">Vente rapide</p>
+                    <h3 className="text-white text-xs font-medium text-left">Vendre USDT</h3>
+                    <p className="text-gray-400 text-xs text-left">Vente rapide</p>
                   </CardContent>
                 </Card>
 
@@ -91,8 +74,8 @@ export function PhoneMockup() {
                         <Handshake className="w-3 h-3 text-purple-400" />
                       </div>
                     </div>
-                    <h3 className="text-white text-xs font-medium">Trading OTC</h3>
-                    <p className="text-gray-400 text-xs">Gros volumes</p>
+                    <h3 className="text-white text-xs font-medium text-left">Trading OTC</h3>
+                    <p className="text-gray-400 text-xs text-left">Gros volumes</p>
                   </CardContent>
                 </Card>
 
@@ -103,8 +86,8 @@ export function PhoneMockup() {
                         <Globe className="w-3 h-3 text-terex-accent" />
                       </div>
                     </div>
-                    <h3 className="text-white text-xs font-medium">Virements</h3>
-                    <p className="text-gray-400 text-xs">International</p>
+                    <h3 className="text-white text-xs font-medium text-left">Virements</h3>
+                    <p className="text-gray-400 text-xs text-left">International</p>
                   </CardContent>
                 </Card>
               </div>
@@ -118,29 +101,29 @@ export function PhoneMockup() {
                   </h3>
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center">
+                      <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center flex-shrink-0">
                         <Star className="w-2 h-2 text-terex-accent" />
                       </div>
-                      <div>
+                      <div className="flex-1">
                         <p className="text-white text-xs">Frais gratuits</p>
-                        <p className="text-gray-400 text-xs">0% de frais</p>
+                        <p className="text-gray-400 text-xs text-left">0% de frais</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-green-500/20 rounded flex items-center justify-center">
+                      <div className="w-4 h-4 bg-green-500/20 rounded flex items-center justify-center flex-shrink-0">
                         <Zap className="w-2 h-2 text-green-400" />
                       </div>
-                      <div>
-                        <p className="text-white text-xs">Rapide</p>
+                      <div className="flex-1">
+                        <p className="text-white text-xs text-left">Rapide</p>
                         <p className="text-gray-400 text-xs">Instantané</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-blue-500/20 rounded flex items-center justify-center">
+                      <div className="w-4 h-4 bg-blue-500/20 rounded flex items-center justify-center flex-shrink-0">
                         <Clock className="w-2 h-2 text-blue-400" />
                       </div>
-                      <div>
-                        <p className="text-white text-xs">24/7</p>
+                      <div className="flex-1">
+                        <p className="text-white text-xs text-left">24/7</p>
                         <p className="text-gray-400 text-xs">Toujours disponible</p>
                       </div>
                     </div>
@@ -157,29 +140,29 @@ export function PhoneMockup() {
                   </h3>
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-blue-500/20 rounded flex items-center justify-center">
+                      <div className="w-4 h-4 bg-blue-500/20 rounded flex items-center justify-center flex-shrink-0">
                         <Shield className="w-2 h-2 text-blue-400" />
                       </div>
-                      <div>
-                        <p className="text-white text-xs">Sécurisé</p>
+                      <div className="flex-1">
+                        <p className="text-white text-xs text-left">Sécurisé</p>
                         <p className="text-gray-400 text-xs">Cryptage SSL</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-yellow-500/20 rounded flex items-center justify-center">
+                      <div className="w-4 h-4 bg-yellow-500/20 rounded flex items-center justify-center flex-shrink-0">
                         <Award className="w-2 h-2 text-yellow-400" />
                       </div>
-                      <div>
-                        <p className="text-white text-xs">Certifié</p>
+                      <div className="flex-1">
+                        <p className="text-white text-xs text-left">Certifié</p>
                         <p className="text-gray-400 text-xs">Plateforme agréée</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center">
+                      <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center flex-shrink-0">
                         <Users className="w-2 h-2 text-terex-accent" />
                       </div>
-                      <div>
-                        <p className="text-white text-xs">Support</p>
+                      <div className="flex-1">
+                        <p className="text-white text-xs text-left">Support</p>
                         <p className="text-gray-400 text-xs">Équipe dédiée</p>
                       </div>
                     </div>
@@ -193,6 +176,5 @@ export function PhoneMockup() {
         {/* Home indicator */}
         <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-white rounded-full opacity-60"></div>
       </div>
-    </div>
-  );
+    </div>;
 }
