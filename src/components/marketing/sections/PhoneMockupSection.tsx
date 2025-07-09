@@ -12,7 +12,7 @@ export function PhoneMockupSection() {
               <span className="text-terex-accent font-medium text-sm">Interface Mobile</span>
             </div>
             
-            <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 md:mb-8 leading-tight">
+            <h2 className="text-3xl md:text-4xl xl:text-6xl font-bold text-white mb-6 md:mb-8 leading-tight lg:text-5xl">
               L'expérience <span className="text-terex-accent">Terex</span> dans votre poche
             </h2>
 
