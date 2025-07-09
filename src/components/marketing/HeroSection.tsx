@@ -1,8 +1,9 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { WalkingPersonVisualization } from './WalkingPersonVisualization';
+import { ModernWalkingPerson } from './ModernWalkingPerson';
 
 interface HeroSectionProps {
   user?: { email: string; name: string } | null;
@@ -96,9 +97,9 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
           </div>
           
-          {/* Colonne de droite - Visualisation de la personne qui marche */}
+          {/* Colonne de droite - Animation moderne de la personne qui marche */}
           <div className="order-1 lg:order-2 flex justify-center">
-            <WalkingPersonVisualization />
+            <ModernWalkingPerson />
           </div>
         </div>
         

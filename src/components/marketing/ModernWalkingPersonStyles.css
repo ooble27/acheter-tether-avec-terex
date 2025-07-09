@@ -1,0 +1,242 @@
+
+/* Modern Walking Person Animation Styles */
+
+.person-walking {
+  width: 120px;
+  height: 200px;
+  animation: person-forward-walk 2s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+/* Head animation */
+.head-animation {
+  animation: head-nod 1.5s ease-in-out infinite;
+}
+
+/* Body animation */
+.body-animation {
+  animation: body-sway 2s ease-in-out infinite;
+}
+
+/* Arm animations */
+.arm-left-animation {
+  transform-origin: top center;
+  animation: arm-swing-left 1.5s ease-in-out infinite;
+}
+
+.arm-right-animation {
+  transform-origin: top center;
+  animation: arm-swing-right 1.5s ease-in-out infinite;
+}
+
+/* Leg animations */
+.leg-left-animation {
+  transform-origin: top center;
+  animation: leg-walk-left 1.5s ease-in-out infinite;
+}
+
+.leg-right-animation {
+  transform-origin: top center;
+  animation: leg-walk-right 1.5s ease-in-out infinite;
+}
+
+/* Phone glow effect */
+.phone-glow {
+  animation: phone-activity 2s ease-in-out infinite;
+}
+
+/* Phone screen animation */
+.phone-screen {
+  animation: screen-activity 3s ease-in-out infinite;
+}
+
+/* USDT particles */
+.usdt-particle {
+  animation: usdt-flow 4s ease-out infinite;
+}
+
+/* Shadow animation */
+.shadow-animation {
+  animation: shadow-move 1.5s ease-in-out infinite;
+}
+
+/* Floating particles */
+.floating-particle {
+  animation: float-ambient 6s ease-in-out infinite;
+}
+
+/* Keyframe animations */
+@keyframes person-forward-walk {
+  0%, 100% {
+    transform: translateZ(0px) translateY(0px) scale(1);
+  }
+  25% {
+    transform: translateZ(10px) translateY(-5px) scale(1.02);
+  }
+  50% {
+    transform: translateZ(20px) translateY(-8px) scale(1.05);
+  }
+  75% {
+    transform: translateZ(10px) translateY(-5px) scale(1.02);
+  }
+}
+
+@keyframes head-nod {
+  0%, 100% {
+    transform: translateX(-50%) rotateY(0deg) rotateX(0deg);
+  }
+  25% {
+    transform: translateX(-50%) rotateY(-2deg) rotateX(2deg);
+  }
+  75% {
+    transform: translateX(-50%) rotateY(2deg) rotateX(-2deg);
+  }
+}
+
+@keyframes body-sway {
+  0%, 100% {
+    transform: translateX(-50%) rotateZ(0deg);
+  }
+  50% {
+    transform: translateX(-50%) rotateZ(1deg);
+  }
+}
+
+@keyframes arm-swing-left {
+  0%, 100% {
+    transform: rotateX(20deg) rotateZ(-5deg);
+  }
+  50% {
+    transform: rotateX(-15deg) rotateZ(5deg);
+  }
+}
+
+@keyframes arm-swing-right {
+  0%, 100% {
+    transform: rotateX(-10deg) rotateZ(5deg);
+  }
+  25% {
+    transform: rotateX(-20deg) rotateZ(8deg);
+  }
+  75% {
+    transform: rotateX(-5deg) rotateZ(2deg);
+  }
+}
+
+@keyframes leg-walk-left {
+  0%, 100% {
+    transform: rotateX(-25deg);
+  }
+  50% {
+    transform: rotateX(25deg);
+  }
+}
+
+@keyframes leg-walk-right {
+  0%, 100% {
+    transform: rotateX(25deg);
+  }
+  50% {
+    transform: rotateX(-25deg);
+  }
+}
+
+@keyframes phone-activity {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(59, 150, 143, 0.6), 0 0 20px rgba(59, 150, 143, 0.4);
+  }
+}
+
+@keyframes screen-activity {
+  0%, 100% {
+    background: linear-gradient(to bottom, #60a5fa, #2563eb);
+  }
+  33% {
+    background: linear-gradient(to bottom, #34d399, #059669);
+  }
+  66% {
+    background: linear-gradient(to bottom, #60a5fa, #2563eb);
+  }
+}
+
+@keyframes usdt-flow {
+  0% {
+    transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(-80px) translateY(-40px) scale(1.3) rotate(180deg);
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(-160px) translateY(-80px) scale(0.8) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes shadow-move {
+  0%, 100% {
+    transform: translateX(-50%) scaleX(1) scaleY(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateX(-50%) scaleX(1.1) scaleY(0.9);
+    opacity: 0.2;
+  }
+}
+
+@keyframes float-ambient {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+    opacity: 0.4;
+  }
+  33% {
+    transform: translateY(-15px) translateX(10px) rotate(120deg);
+    opacity: 0.8;
+  }
+  66% {
+    transform: translateY(-5px) translateX(-8px) rotate(240deg);
+    opacity: 0.6;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .person-walking {
+    width: 100px;
+    height: 160px;
+  }
+  
+  .usdt-particle .w-6 {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .person-walking,
+  .head-animation,
+  .body-animation,
+  .arm-left-animation,
+  .arm-right-animation,
+  .leg-left-animation,
+  .leg-right-animation,
+  .phone-glow,
+  .phone-screen,
+  .usdt-particle,
+  .shadow-animation,
+  .floating-particle {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
