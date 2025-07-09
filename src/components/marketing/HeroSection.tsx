@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { CryptoVisualization } from './CryptoVisualization';
+import { WalkingPersonVisualization } from './WalkingPersonVisualization';
 
 interface HeroSectionProps {
   user?: { email: string; name: string } | null;
@@ -82,23 +82,23 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             {/* Stats rapides */}
             <div className="grid grid-cols-3 gap-4 text-center lg:text-left">
               <div>
-                <div className="text-2xl font-bold text-terex-accent">5min</div>
-                <div className="text-sm text-gray-400">Transfert rapide</div>
+                <div className="text-2xl font-bold text-terex-accent">Rapide</div>
+                <div className="text-sm text-gray-400">Transfert instantané</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-terex-accent">6</div>
-                <div className="text-sm text-gray-400">Pays supportés</div>
+                <div className="text-2xl font-bold text-terex-accent">Sécurisé</div>
+                <div className="text-sm text-gray-400">Protection totale</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-terex-accent">24/7</div>
-                <div className="text-sm text-gray-400">Disponibilité</div>
+                <div className="text-2xl font-bold text-terex-accent">Simple</div>
+                <div className="text-sm text-gray-400">Facile d'utilisation</div>
               </div>
             </div>
           </div>
           
-          {/* Colonne de droite - Visualisation crypto moderne */}
+          {/* Colonne de droite - Visualisation de la personne qui marche */}
           <div className="order-1 lg:order-2 flex justify-center">
-            <CryptoVisualization />
+            <WalkingPersonVisualization />
           </div>
         </div>
         
@@ -110,7 +110,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 {/* Logo USDT correct */}
                 <svg className="w-8 h-8" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="16" cy="16" r="16" fill="#26A17B"/>
-                  <path d="M17.922 17.383v-.002c-.11.008-.677.042-1.942.042-1.01 0-1.721-.03-1.971-.042v.003c-3.888-.171-6.79-.848-6.79-1.658 0-.809 2.902-1.486 6.79-1.66v2.644c.254.018.982.061 1.988.061 1.207 0 1.812-.05 1.925-.06v-2.643c3.88.173 6.775.85 6.775 1.658 0 .81-2.895 1.485-6.775 1.657m0-3.59v-2.366h5.414V7.819H8.595v3.608h5.414v2.365c-4.4.202-7.709 1.074-7.709 2.148 0 1.074 3.309 1.945 7.709 2.147v7.582h3.913v-7.584c4.393-.202 7.694-1.073 7.694-2.147 0-1.073-3.301-1.944-7.694-2.145" fill="white"/>
+                  <path d="M17.922 17.383v-.002c-.11.008-.677.042-1.942.042-1.01 0-1.721-.03-1.971-.042v.003c-3.888-.171-6.79-.848-6.79-1.658 0-.809 2.902-1.486 6.79-1.66v2.644c.254.018.982.061 1.988.061 1.207 0 1.812-.05 1.925-.06v-2.643c3.88.173 6.775.85 6.775 1.658 0 .81-2.895 1.485-6.775 1.657m0-3.59v-2.366h5.414V7.819H8.595v3.608h5.414v2.365c-4.4.202-7.709 1.074-7.709 2.148 0 1.074 3.309 1.945 7.709 2.147v7.582h3.913v-7.584c4.393-.202 7.694-1.073 7.694-2.145" fill="white"/>
                 </svg>
               </div>
               <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Échange USDT Tether</h3>
@@ -123,8 +123,8 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <Globe className="w-6 h-6 text-terex-accent" />
               </div>
-              <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Transferts vers l'Afrique</h3>
-              <p className="text-gray-400 text-xs sm:text-sm">Transférez de l'argent partout en Afrique</p>
+              <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Transferts internationaux</h3>
+              <p className="text-gray-400 text-xs sm:text-sm">Envoyez de l'argent partout dans le monde</p>
             </CardContent>
           </Card>
           
@@ -134,7 +134,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 <Shield className="w-6 h-6 text-terex-accent" />
               </div>
               <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">100% Sécurisé</h3>
-              <p className="text-gray-400 text-xs sm:text-sm">Chiffrement 256-bit et conformité réglementaire</p>
+              <p className="text-gray-400 text-xs sm:text-sm">Chiffrement avancé et conformité réglementaire</p>
             </CardContent>
           </Card>
         </div>

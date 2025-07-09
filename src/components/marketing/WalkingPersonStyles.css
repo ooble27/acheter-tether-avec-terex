@@ -1,0 +1,462 @@
+
+/* Container principal pour la personne qui marche */
+.walking-person-container {
+  width: 500px;
+  height: 500px;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+/* Lignes de mouvement en arrière-plan */
+.movement-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.movement-line {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(139, 69, 19, 0.3) 20%, 
+    rgba(160, 82, 45, 0.5) 50%, 
+    rgba(139, 69, 19, 0.3) 80%, 
+    transparent 100%);
+  animation: move-lines 3s linear infinite;
+}
+
+.line-1 {
+  top: 20%;
+  width: 100px;
+  animation-delay: 0s;
+}
+
+.line-2 {
+  top: 40%;
+  width: 80px;
+  animation-delay: 0.5s;
+}
+
+.line-3 {
+  top: 60%;
+  width: 120px;
+  animation-delay: 1s;
+}
+
+.line-4 {
+  top: 80%;
+  width: 90px;
+  animation-delay: 1.5s;
+}
+
+/* Personne qui marche */
+.walking-person {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateZ(50px);
+  z-index: 10;
+  animation: person-walking 2s ease-in-out infinite;
+}
+
+.person-body {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+/* Tête */
+.person-head {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #D2691E, #CD853F);
+  border-radius: 50%;
+  position: relative;
+  margin: 0 auto 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: head-bob 1s ease-in-out infinite;
+}
+
+/* Torse */
+.person-torso {
+  width: 50px;
+  height: 80px;
+  background: linear-gradient(135deg, #8B4513, #A0522D);
+  border-radius: 25px 25px 15px 15px;
+  position: relative;
+  margin: 0 auto;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Bras */
+.person-arm {
+  position: absolute;
+  width: 12px;
+  height: 60px;
+  background: linear-gradient(135deg, #D2691E, #CD853F);
+  border-radius: 6px;
+  top: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.person-arm-left {
+  left: -15px;
+  animation: arm-swing-left 1s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+.person-arm-right {
+  right: -15px;
+  animation: arm-swing-right 1s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+/* Téléphone */
+.phone {
+  position: absolute;
+  bottom: -20px;
+  right: -8px;
+  width: 18px;
+  height: 32px;
+  background: linear-gradient(135deg, #2C2C2C, #1A1A1A);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  animation: phone-glow 2s ease-in-out infinite;
+}
+
+.phone-screen {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  background: linear-gradient(135deg, #4A90E2, #357ABD);
+  border-radius: 2px;
+}
+
+.app-interface {
+  position: absolute;
+  top: 2px;
+  left: 1px;
+  right: 1px;
+  bottom: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 4px;
+  color: white;
+}
+
+.balance-display {
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.transaction-button {
+  background: #26A17B;
+  padding: 1px 2px;
+  border-radius: 1px;
+  font-size: 3px;
+}
+
+/* Jambes */
+.person-leg {
+  position: absolute;
+  width: 14px;
+  height: 70px;
+  background: linear-gradient(135deg, #8B4513, #A0522D);
+  border-radius: 7px;
+  bottom: -70px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.person-leg-left {
+  left: 8px;
+  animation: leg-walk-left 1s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+.person-leg-right {
+  right: 8px;
+  animation: leg-walk-right 1s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+/* Particules USDT */
+.usdt-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.usdt-particle {
+  position: absolute;
+  animation: usdt-float 4s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(38, 161, 123, 0.4));
+}
+
+.particle-1 {
+  top: 25%;
+  left: 60%;
+  animation-delay: 0s;
+}
+
+.particle-2 {
+  top: 35%;
+  left: 70%;
+  animation-delay: 0.5s;
+}
+
+.particle-3 {
+  top: 45%;
+  left: 65%;
+  animation-delay: 1s;
+}
+
+.particle-4 {
+  top: 30%;
+  left: 75%;
+  animation-delay: 1.5s;
+}
+
+.particle-5 {
+  top: 50%;
+  left: 72%;
+  animation-delay: 2s;
+}
+
+.particle-6 {
+  top: 40%;
+  left: 68%;
+  animation-delay: 2.5s;
+}
+
+/* Ombre au sol */
+.ground-shadow {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 30px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: shadow-walk 1s ease-in-out infinite;
+}
+
+/* Particules d'ambiance */
+.ambient-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.ambient-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, rgba(160, 82, 45, 0.6) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: ambient-float 6s ease-in-out infinite;
+}
+
+.particle-ambient-1 {
+  top: 15%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.particle-ambient-2 {
+  top: 70%;
+  left: 80%;
+  animation-delay: 2s;
+}
+
+.particle-ambient-3 {
+  top: 30%;
+  left: 15%;
+  animation-delay: 4s;
+}
+
+.particle-ambient-4 {
+  top: 85%;
+  left: 25%;
+  animation-delay: 1s;
+}
+
+/* Animations */
+@keyframes person-walking {
+  0%, 100% {
+    transform: translate(-50%, -50%) translateZ(50px) translateY(0px);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateZ(50px) translateY(-5px);
+  }
+}
+
+@keyframes head-bob {
+  0%, 100% {
+    transform: translateY(0px) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-2px) rotateY(5deg);
+  }
+}
+
+@keyframes arm-swing-left {
+  0%, 100% {
+    transform: rotateX(20deg);
+  }
+  50% {
+    transform: rotateX(-20deg);
+  }
+}
+
+@keyframes arm-swing-right {
+  0%, 100% {
+    transform: rotateX(-10deg);
+  }
+  25% {
+    transform: rotateX(-20deg);
+  }
+  75% {
+    transform: rotateX(-5deg);
+  }
+}
+
+@keyframes leg-walk-left {
+  0%, 100% {
+    transform: rotateX(-30deg);
+  }
+  50% {
+    transform: rotateX(30deg);
+  }
+}
+
+@keyframes leg-walk-right {
+  0%, 100% {
+    transform: rotateX(30deg);
+  }
+  50% {
+    transform: rotateX(-30deg);
+  }
+}
+
+@keyframes phone-glow {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 15px rgba(38, 161, 123, 0.6);
+  }
+}
+
+@keyframes usdt-float {
+  0% {
+    transform: translateY(0px) translateX(0px) rotateZ(0deg) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-50px) translateX(-20px) rotateZ(180deg) scale(1.2);
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) translateX(-40px) rotateZ(360deg) scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes move-lines {
+  0% {
+    transform: translateX(-200px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(500px);
+    opacity: 0;
+  }
+}
+
+@keyframes shadow-walk {
+  0%, 100% {
+    transform: translateX(-50%) scaleX(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateX(-50%) scaleX(1.1);
+    opacity: 0.2;
+  }
+}
+
+@keyframes ambient-float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-30px) translateX(20px);
+    opacity: 0.8;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .walking-person-container {
+    width: 350px;
+    height: 350px;
+  }
+  
+  .person-head {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .person-torso {
+    width: 40px;
+    height: 60px;
+  }
+  
+  .phone {
+    width: 14px;
+    height: 24px;
+  }
+  
+  .usdt-particle svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .walking-person-container *,
+  .walking-person-container *::before,
+  .walking-person-container *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
