@@ -7,7 +7,10 @@ import {
   Star,
   Zap,
   Clock,
-  Activity
+  Activity,
+  Shield,
+  Users,
+  Award
 } from 'lucide-react';
 
 const TetherLogo = ({ className }: { className?: string }) => (
@@ -22,7 +25,7 @@ export function PhoneMockup() {
   return (
     <div className="relative mx-auto">
       {/* Phone Frame */}
-      <div className="relative w-[280px] h-[560px] bg-gray-900 rounded-[3rem] p-2 shadow-2xl">
+      <div className="relative w-[280px] h-[560px] bg-gradient-to-br from-terex-accent/20 to-terex-accent/10 rounded-[3rem] p-2 shadow-2xl border border-terex-accent/30">
         {/* Screen bezel */}
         <div className="w-full h-full bg-black rounded-[2.5rem] p-1">
           {/* Notch */}
@@ -41,7 +44,7 @@ export function PhoneMockup() {
             </div>
 
             {/* Dashboard Content */}
-            <div className="p-3 space-y-3 text-xs">
+            <div className="p-3 space-y-3 text-xs overflow-y-auto h-full pb-8">
               {/* Header */}
               <div className="flex items-center space-x-2 mb-3">
                 <div className="w-6 h-6 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
@@ -107,7 +110,7 @@ export function PhoneMockup() {
               </div>
 
               {/* Avantages Terex */}
-              <Card className="bg-terex-darker border-terex-gray">
+              <Card className="bg-terex-darker border-terex-gray mb-3">
                 <CardContent className="p-2">
                   <h3 className="text-white text-xs font-medium mb-2 flex items-center">
                     <Star className="w-3 h-3 mr-1 text-terex-accent" />
@@ -139,6 +142,45 @@ export function PhoneMockup() {
                       <div>
                         <p className="text-white text-xs">24/7</p>
                         <p className="text-gray-400 text-xs">Toujours disponible</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Section Sécurité et Confiance */}
+              <Card className="bg-terex-darker border-terex-gray">
+                <CardContent className="p-2">
+                  <h3 className="text-white text-xs font-medium mb-2 flex items-center">
+                    <Shield className="w-3 h-3 mr-1 text-blue-400" />
+                    Sécurité & Confiance
+                  </h3>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-blue-500/20 rounded flex items-center justify-center">
+                        <Shield className="w-2 h-2 text-blue-400" />
+                      </div>
+                      <div>
+                        <p className="text-white text-xs">Sécurisé</p>
+                        <p className="text-gray-400 text-xs">Cryptage SSL</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-yellow-500/20 rounded flex items-center justify-center">
+                        <Award className="w-2 h-2 text-yellow-400" />
+                      </div>
+                      <div>
+                        <p className="text-white text-xs">Certifié</p>
+                        <p className="text-gray-400 text-xs">Plateforme agréée</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center">
+                        <Users className="w-2 h-2 text-terex-accent" />
+                      </div>
+                      <div>
+                        <p className="text-white text-xs">Support</p>
+                        <p className="text-gray-400 text-xs">Équipe dédiée</p>
                       </div>
                     </div>
                   </div>
