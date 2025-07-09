@@ -65,6 +65,95 @@
   }
 }
 
+/* 3D Dashboard Animations */
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+  
+  .rotateY-10 {
+    transform: rotateY(10deg);
+  }
+  
+  .rotateY-25 {
+    transform: rotateY(25deg);
+  }
+  
+  .rotateX-5 {
+    transform: rotateX(5deg);
+  }
+  
+  .rotateX-10 {
+    transform: rotateX(10deg);
+  }
+  
+  .translate-z-20 {
+    transform: translateZ(20px);
+  }
+  
+  @keyframes float-rotate {
+    0%, 100% {
+      transform: rotateY(0deg) rotateX(0deg);
+    }
+    25% {
+      transform: rotateY(5deg) rotateX(2deg);
+    }
+    50% {
+      transform: rotateY(0deg) rotateX(5deg);
+    }
+    75% {
+      transform: rotateY(-5deg) rotateX(2deg);
+    }
+  }
+  
+  @keyframes float-particle {
+    0%, 100% {
+      transform: translateY(0px) translateX(0px);
+      opacity: 0.3;
+    }
+    50% {
+      transform: translateY(-20px) translateX(10px);
+      opacity: 0.8;
+    }
+  }
+  
+  @keyframes grow-bar {
+    0% {
+      height: 0;
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  .animate-float-rotate {
+    animation: float-rotate 8s ease-in-out infinite;
+  }
+  
+  .animate-float-particle {
+    animation: float-particle 3s ease-in-out infinite;
+  }
+  
+  .animate-grow-bar {
+    animation: grow-bar 1s ease-out forwards;
+  }
+  
+  .dashboard-3d-container:hover .dashboard-screen {
+    transform: rotateY(15deg) rotateX(8deg);
+    transition: transform 0.5s ease;
+  }
+  
+  .dashboard-3d-container:hover .dashboard-screen-2 {
+    transform: rotateY(30deg) rotateX(15deg) translateZ(30px) scale(0.95);
+    transition: transform 0.5s ease;
+  }
+}
+
 /* Classe pour masquer la barre de défilement */
 @layer utilities {
   .scrollbar-hide {
@@ -220,4 +309,3 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
-
