@@ -78,7 +78,7 @@ function USDTParticles() {
   });
 
   const particles = useMemo(() => {
-    const positions = [
+    const positions: [number, number, number][] = [
       [3, 0.5, 0],
       [-2.5, 1, 1],
       [1.5, -1, 2],
@@ -88,7 +88,11 @@ function USDTParticles() {
     
     return positions.map((pos, index) => (
       <Sphere key={index} args={[0.1, 16, 16]} position={pos}>
-        <meshBasicMaterial color="#26A17B" emissive="#26A17B" emissiveIntensity={0.5} />
+        <meshStandardMaterial 
+          color="#26A17B" 
+          emissive="#26A17B" 
+          emissiveIntensity={0.5} 
+        />
       </Sphere>
     ));
   }, []);
