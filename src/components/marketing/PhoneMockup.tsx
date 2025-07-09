@@ -118,28 +118,28 @@ export function PhoneMockup() {
                   </h3>
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center flex-shrink-0">
+                      <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center">
                         <Star className="w-2 h-2 text-terex-accent" />
                       </div>
-                      <div className="flex-1">
+                      <div>
                         <p className="text-white text-xs">Frais gratuits</p>
                         <p className="text-gray-400 text-xs">0% de frais</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-green-500/20 rounded flex items-center justify-center flex-shrink-0">
+                      <div className="w-4 h-4 bg-green-500/20 rounded flex items-center justify-center">
                         <Zap className="w-2 h-2 text-green-400" />
                       </div>
-                      <div className="flex-1">
+                      <div>
                         <p className="text-white text-xs">Rapide</p>
                         <p className="text-gray-400 text-xs">Instantané</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-blue-500/20 rounded flex items-center justify-center flex-shrink-0">
+                      <div className="w-4 h-4 bg-blue-500/20 rounded flex items-center justify-center">
                         <Clock className="w-2 h-2 text-blue-400" />
                       </div>
-                      <div className="flex-1">
+                      <div>
                         <p className="text-white text-xs">24/7</p>
                         <p className="text-gray-400 text-xs">Toujours disponible</p>
                       </div>
@@ -157,28 +157,28 @@ export function PhoneMockup() {
                   </h3>
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-blue-500/20 rounded flex items-center justify-center flex-shrink-0">
+                      <div className="w-4 h-4 bg-blue-500/20 rounded flex items-center justify-center">
                         <Shield className="w-2 h-2 text-blue-400" />
                       </div>
-                      <div className="flex-1">
+                      <div>
                         <p className="text-white text-xs">Sécurisé</p>
                         <p className="text-gray-400 text-xs">Cryptage SSL</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-yellow-500/20 rounded flex items-center justify-center flex-shrink-0">
+                      <div className="w-4 h-4 bg-yellow-500/20 rounded flex items-center justify-center">
                         <Award className="w-2 h-2 text-yellow-400" />
                       </div>
-                      <div className="flex-1">
+                      <div>
                         <p className="text-white text-xs">Certifié</p>
                         <p className="text-gray-400 text-xs">Plateforme agréée</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center flex-shrink-0">
+                      <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center">
                         <Users className="w-2 h-2 text-terex-accent" />
                       </div>
-                      <div className="flex-1">
+                      <div>
                         <p className="text-white text-xs">Support</p>
                         <p className="text-gray-400 text-xs">Équipe dédiée</p>
                       </div>

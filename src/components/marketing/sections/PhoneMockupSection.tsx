@@ -15,17 +15,9 @@ export function PhoneMockupSection() {
               <span className="text-terex-accent font-medium text-sm">Interface Mobile</span>
             </div>
             
-            <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 md:mb-8 leading-tight">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight">
               L'expérience <span className="text-terex-accent">Terex</span> dans votre poche
             </h2>
-
-            {/* Phone Mockup for Mobile - Between title and subtitle */}
-            <div className="flex justify-center lg:hidden mb-6 md:mb-8">
-              <div className="relative scale-75">
-                <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
-                <PhoneMockup />
-              </div>
-            </div>
             
             <p className="text-base md:text-lg lg:text-xl text-gray-300 mb-6 md:mb-8 leading-relaxed max-w-md lg:max-w-none mx-auto lg:mx-0">
               <span className="block md:hidden">
@@ -68,8 +60,8 @@ export function PhoneMockupSection() {
             </div>
           </div>
           
-          {/* Right side - Phone Mockup for Desktop */}
-          <div className="hidden lg:flex justify-center lg:justify-end order-1 lg:order-2">
+          {/* Right side - Phone Mockup */}
+          <div className="flex justify-center lg:justify-end order-1 lg:order-2">
             <div className="relative scale-75 sm:scale-90 lg:scale-100">
               {/* Glow effect */}
               <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
