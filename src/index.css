@@ -523,65 +523,6 @@
   }
 }
 
-/* Animations pour la maquette d'avion */
-.airplane-container {
-  animation: float-airplane 6s ease-in-out infinite;
-}
-
-.airplane-svg {
-  transition: all 0.3s ease;
-}
-
-.airplane-container:hover .airplane-svg {
-  filter: drop-shadow(0 0 20px rgba(59, 150, 143, 0.5));
-}
-
-.propeller {
-  animation: spin 0.1s linear infinite;
-}
-
-@keyframes float-airplane {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-10px) rotate(1deg);
-  }
-  50% {
-    transform: translateY(-5px) rotate(0deg);
-  }
-  75% {
-    transform: translateY(-12px) rotate(-1deg);
-  }
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Delays pour les animations */
-.animation-delay-1000 {
-  animation-delay: 1s;
-}
-
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-3000 {
-  animation-delay: 3s;
-}
-
-/* Gradient radial pour l'effet de lueur */
-.bg-gradient-radial {
-  background: radial-gradient(circle, var(--tw-gradient-stops));
-}
-
 @media (max-width: 768px) {
   .mobile-optimized {
     padding: 1rem;
