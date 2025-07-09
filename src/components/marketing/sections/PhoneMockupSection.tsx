@@ -1,4 +1,3 @@
-
 import { PhoneMockup } from '../PhoneMockup';
 import { Button } from '@/components/ui/button';
 import { Smartphone, Download, Globe } from 'lucide-react';
@@ -15,12 +14,12 @@ export function PhoneMockupSection() {
               <span className="text-terex-accent font-medium text-sm">Interface Mobile</span>
             </div>
             
-            <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight">
+            <h2 className="text-4xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight">
               L'expérience <span className="text-terex-accent">Terex</span> dans votre poche
             </h2>
 
             {/* Phone Mockup - Only visible on mobile between title and subtitle */}
-            <div className="flex justify-center mb-6 md:mb-8 lg:hidden">
+            <div className="flex justify-center mb-6 md:mb-8 lg:hidden scrollbar-hide">
               <div className="relative scale-75">
                 {/* Glow effect */}
                 <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
@@ -70,7 +69,7 @@ export function PhoneMockupSection() {
           </div>
           
           {/* Right side - Phone Mockup - Hidden on mobile, visible on larger screens */}
-          <div className="hidden lg:flex justify-center lg:justify-end order-1 lg:order-2">
+          <div className="hidden lg:flex justify-center lg:justify-end order-1 lg:order-2 scrollbar-hide">
             <div className="relative scale-75 sm:scale-90 lg:scale-100">
               {/* Glow effect */}
               <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
