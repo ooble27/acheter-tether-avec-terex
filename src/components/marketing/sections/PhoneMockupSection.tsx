@@ -1,11 +1,8 @@
-
 import { PhoneMockup } from '../PhoneMockup';
 import { Button } from '@/components/ui/button';
 import { Smartphone, Download, Globe } from 'lucide-react';
-
 export function PhoneMockupSection() {
-  return (
-    <div className="py-16 md:py-24 bg-terex-dark">
+  return <div className="py-16 md:py-24 bg-terex-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left side - Content */}
@@ -28,9 +25,7 @@ export function PhoneMockupSection() {
             </div>
             
             <p className="text-base md:text-lg lg:text-xl text-gray-300 mb-6 md:mb-8 leading-relaxed max-w-md lg:max-w-none mx-auto lg:mx-0">
-              <span className="block md:hidden">
-                Découvrez notre interface intuitive conçue pour simplifier vos transactions USDT.
-              </span>
+              <span className="block md:hidden">Découvrez notre interface intuitive conçue pour simplifier toutes vos transactions.</span>
               <span className="hidden md:block">
                 Découvrez notre interface intuitive conçue pour simplifier vos transactions USDT. 
                 Un design moderne et fonctionnel pour tous vos besoins de trading et de transferts.
@@ -59,10 +54,7 @@ export function PhoneMockupSection() {
             </div>
             
             <div className="flex justify-center lg:justify-start">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-6 py-3 lg:px-8 lg:py-4 text-sm lg:text-base rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-full sm:w-auto max-w-xs sm:max-w-none"
-              >
+              <Button size="lg" className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-6 py-3 lg:px-8 lg:py-4 text-sm lg:text-base rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-full sm:w-auto max-w-xs sm:max-w-none">
                 Commencer maintenant
               </Button>
             </div>
@@ -78,6 +70,5 @@ export function PhoneMockupSection() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
