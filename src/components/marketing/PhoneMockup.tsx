@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from '@/components/ui/card';
 import { TrendingUp, Globe, Handshake, Star, Zap, Clock, Activity, Shield, Users, Award } from 'lucide-react';
 const TetherLogo = ({
@@ -105,7 +106,7 @@ export function PhoneMockup() {
                         <Star className="w-2 h-2 text-terex-accent" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-white text-xs">Frais gratuits</p>
+                        <p className="text-white text-xs text-left">Frais gratuits</p>
                         <p className="text-gray-400 text-xs text-left">0% de frais</p>
                       </div>
                     </div>
@@ -115,7 +116,7 @@ export function PhoneMockup() {
                       </div>
                       <div className="flex-1">
                         <p className="text-white text-xs text-left">Rapide</p>
-                        <p className="text-gray-400 text-xs">Instantané</p>
+                        <p className="text-gray-400 text-xs text-left">Instantané</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -124,7 +125,7 @@ export function PhoneMockup() {
                       </div>
                       <div className="flex-1">
                         <p className="text-white text-xs text-left">24/7</p>
-                        <p className="text-gray-400 text-xs">Toujours disponible</p>
+                        <p className="text-gray-400 text-xs text-left">Toujours disponible</p>
                       </div>
                     </div>
                   </div>
@@ -145,7 +146,7 @@ export function PhoneMockup() {
                       </div>
                       <div className="flex-1">
                         <p className="text-white text-xs text-left">Sécurisé</p>
-                        <p className="text-gray-400 text-xs">Cryptage SSL</p>
+                        <p className="text-gray-400 text-xs text-left">Cryptage SSL</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -154,7 +155,7 @@ export function PhoneMockup() {
                       </div>
                       <div className="flex-1">
                         <p className="text-white text-xs text-left">Certifié</p>
-                        <p className="text-gray-400 text-xs">Plateforme agréée</p>
+                        <p className="text-gray-400 text-xs text-left">Plateforme agréée</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -163,7 +164,7 @@ export function PhoneMockup() {
                       </div>
                       <div className="flex-1">
                         <p className="text-white text-xs text-left">Support</p>
-                        <p className="text-gray-400 text-xs">Équipe dédiée</p>
+                        <p className="text-gray-400 text-xs text-left">Équipe dédiée</p>
                       </div>
                     </div>
                   </div>
