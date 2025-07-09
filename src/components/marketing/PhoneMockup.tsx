@@ -1,5 +1,4 @@
 
-
 import { Card, CardContent } from '@/components/ui/card';
 import { TrendingUp, Globe, Handshake, Star, Zap, Clock, Activity, Shield, Users, Award } from 'lucide-react';
 const TetherLogo = ({
@@ -10,7 +9,7 @@ const TetherLogo = ({
 export function PhoneMockup() {
   return <div className="relative mx-auto">
       {/* Phone Frame */}
-      <div className="relative w-[280px] h-[560px] bg-gradient-to-br from-terex-accent/20 to-terex-accent/10 rounded-[3rem] p-2 shadow-2xl border border-terex-accent/30">
+      <div className="relative w-[280px] h-[560px] bg-gradient-to-br from-white/20 to-white/10 rounded-[3rem] p-2 shadow-2xl border border-white/30">
         {/* Screen bezel */}
         <div className="w-full h-full bg-black rounded-[2.5rem] p-1">
           {/* Notch */}
@@ -180,4 +179,3 @@ export function PhoneMockup() {
       </div>
     </div>;
 }
-
