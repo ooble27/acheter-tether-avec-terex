@@ -65,6 +65,20 @@
   }
 }
 
+/* Classe pour masquer la barre de défilement */
+@layer utilities {
+  .scrollbar-hide {
+    /* Firefox */
+    scrollbar-width: none;
+    /* Safari et Chrome */
+    -ms-overflow-style: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* Classes utilitaires pour les safe areas iOS PWA */
 @supports (padding-top: env(safe-area-inset-top)) {
   .pt-safe {
@@ -206,3 +220,4 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
+
