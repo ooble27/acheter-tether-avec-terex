@@ -54,20 +54,20 @@ function AnimatedGlobe() {
   );
 }
 
-function DataParticles() {
-  const particlesRef = useRef<THREE.Points>(null);
+function DataParticules() {
+  const particulesRef = useRef<THREE.Points>(null);
   
   useFrame((state) => {
-    if (particlesRef.current) {
-      particlesRef.current.rotation.y = state.clock.elapsedTime * 0.05;
+    if (particulesRef.current) {
+      particulesRef.current.rotation.y = state.clock.elapsedTime * 0.05;
     }
   });
 
   // Create particle positions
-  const particleCount = 100;
-  const positions = new Float32Array(particleCount * 3);
+  const particuleCount = 100;
+  const positions = new Float32Array(particuleCount * 3);
   
-  for (let i = 0; i < particleCount; i++) {
+  for (let i = 0; i < particuleCount; i++) {
     const radius = 4 + Math.random() * 2;
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.random() * Math.PI;
@@ -78,11 +78,11 @@ function DataParticles() {
   }
 
   return (
-    <points ref={particlesRef}>
+    <points ref={particulesRef}>
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={particleCount}
+          count={particuleCount}
           array={positions}
           itemSize={3}
         />
@@ -110,7 +110,7 @@ export function Globe3D() {
         <pointLight position={[-10, -10, -10]} intensity={0.5} color="#5BC1B8" />
         
         <AnimatedGlobe />
-        <DataParticles />
+        <DataParticules />
         
         <OrbitControls
           enableZoom={false}
