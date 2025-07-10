@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { TrendingUp, Globe, Handshake, Star, Zap, Clock, Activity, Shield, Users, Award, ArrowUpDown, Send, User, CreditCard, CheckCircle, Smartphone } from 'lucide-react';
@@ -32,17 +31,17 @@ export function DeviceMockups() {
       {/* Glow effect background */}
       <div className="absolute inset-0 bg-gradient-to-r from-terex-accent/20 via-transparent to-terex-accent/20 blur-3xl"></div>
       
-      {/* Desktop and Mobile layout */}
-      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16">
+      {/* Desktop and Mobile layout - Better spacing and arrangement */}
+      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20 xl:gap-24">
         
-        {/* Desktop mockup - visible on larger screens */}
-        <div className="hidden lg:block relative scale-75 xl:scale-90">
+        {/* iMac mockup - visible on larger screens */}
+        <div className="hidden lg:block relative">
           <div className="absolute inset-0 bg-terex-accent/20 rounded-3xl blur-3xl scale-110 animate-pulse"></div>
-          <MacBookMockup currentSlide={currentSlide} />
+          <IMacMockup currentSlide={currentSlide} />
         </div>
         
-        {/* Mobile mockup - always visible, larger on mobile */}
-        <div className="relative scale-90 lg:scale-75 xl:scale-85">
+        {/* Mobile mockup - always visible, better proportions */}
+        <div className="relative">
           <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
           <IPhoneMockup currentSlide={currentSlide} />
         </div>
@@ -66,32 +65,37 @@ export function DeviceMockups() {
   );
 }
 
-function MacBookMockup({ currentSlide }: { currentSlide: number }) {
+function IMacMockup({ currentSlide }: { currentSlide: number }) {
   return (
-    <div className="relative mx-auto">
-      {/* MacBook Frame */}
-      <div className="relative w-[400px] h-[280px] bg-gradient-to-br from-gray-200 to-gray-400 rounded-t-2xl p-3 shadow-2xl border border-gray-300">
+    <div className="relative mx-auto scale-75 xl:scale-85">
+      {/* iMac Screen */}
+      <div className="relative w-[480px] h-[360px] bg-gradient-to-br from-gray-100 to-gray-300 rounded-3xl p-4 shadow-2xl border-2 border-gray-200">
         {/* Screen bezel */}
-        <div className="w-full h-full bg-black rounded-xl p-1">
+        <div className="w-full h-full bg-black rounded-2xl p-1">
           {/* Camera */}
-          <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rounded-full z-20"></div>
+          <div className="absolute top-3 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rounded-full z-20"></div>
           
           {/* Screen content */}
-          <div className="w-full h-full bg-terex-dark rounded-lg overflow-hidden relative">
+          <div className="w-full h-full bg-terex-dark rounded-xl overflow-hidden relative">
             <DesktopScreenContent currentSlide={currentSlide} />
           </div>
         </div>
       </div>
       
-      {/* MacBook base */}
-      <div className="w-[450px] h-6 bg-gradient-to-b from-gray-300 to-gray-500 rounded-b-2xl mx-auto shadow-lg"></div>
+      {/* iMac Stand */}
+      <div className="flex flex-col items-center">
+        {/* Neck */}
+        <div className="w-8 h-16 bg-gradient-to-b from-gray-200 to-gray-400 rounded-b-lg shadow-md"></div>
+        {/* Base */}
+        <div className="w-32 h-6 bg-gradient-to-b from-gray-300 to-gray-500 rounded-full shadow-lg"></div>
+      </div>
     </div>
   );
 }
 
 function IPhoneMockup({ currentSlide }: { currentSlide: number }) {
   return (
-    <div className="relative mx-auto">
+    <div className="relative mx-auto scale-90 lg:scale-100">
       {/* Phone Frame */}
       <div className="relative w-[280px] h-[560px] bg-gradient-to-br from-white/20 to-white/10 rounded-[3rem] p-2 shadow-2xl border border-white/30">
         {/* Screen bezel */}
@@ -336,7 +340,7 @@ function MobileDashboardScreen() {
     <div className="p-3 space-y-3 text-xs overflow-y-auto h-full pb-8 scrollbar-hide">
       <div className="flex items-center space-x-2 mb-3">
         <div className="w-6 h-6 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
-          <Activity className="w-3 h-3 text-white" />
+          <Activity className="w-3 h-3 text-black" />
         </div>
         <div>
           <h1 className="text-sm font-bold text-white">
