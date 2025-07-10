@@ -133,57 +133,6 @@ export type Database = {
           },
         ]
       }
-      favorite_recipients: {
-        Row: {
-          created_at: string
-          id: string
-          last_amount: number | null
-          provider: string | null
-          receive_method: string
-          recipient_account: string | null
-          recipient_bank: string | null
-          recipient_country: string
-          recipient_email: string | null
-          recipient_name: string
-          recipient_phone: string | null
-          updated_at: string
-          usage_count: number | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          last_amount?: number | null
-          provider?: string | null
-          receive_method: string
-          recipient_account?: string | null
-          recipient_bank?: string | null
-          recipient_country: string
-          recipient_email?: string | null
-          recipient_name: string
-          recipient_phone?: string | null
-          updated_at?: string
-          usage_count?: number | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          last_amount?: number | null
-          provider?: string | null
-          receive_method?: string
-          recipient_account?: string | null
-          recipient_bank?: string | null
-          recipient_country?: string
-          recipient_email?: string | null
-          recipient_name?: string
-          recipient_phone?: string | null
-          updated_at?: string
-          usage_count?: number | null
-          user_id?: string
-        }
-        Relationships: []
-      }
       international_transfers: {
         Row: {
           amount: number

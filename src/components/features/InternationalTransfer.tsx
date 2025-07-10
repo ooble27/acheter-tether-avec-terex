@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,14 +5,12 @@ import { useInternationalTransfers } from '@/hooks/useInternationalTransfers';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useCryptoRates } from '@/hooks/useCryptoRates';
-import { FavoriteRecipient } from '@/hooks/useFavoriteRecipients';
 
 // Importer les nouveaux composants
 import { TransferConfirmation } from './international-transfer/TransferConfirmation';
 import { PaymentInstructions } from './international-transfer/PaymentInstructions';
 import { TransferPending } from './international-transfer/TransferPending';
 import { MobileMoneySelector } from './international-transfer/MobileMoneySelector';
-import { RecipientSelector } from './international-transfer/RecipientSelector';
 import { KYCProtection } from './KYCProtection';
 import { KYCPage } from './KYCPage';
 import { TransferForm } from './international-transfer/TransferForm';
@@ -22,10 +19,10 @@ import { TransferSidebar } from './international-transfer/TransferSidebar';
 
 export function InternationalTransfer() {
   const [showKYCPage, setShowKYCPage] = useState(false);
-  const [currentStep, setCurrentStep] = useState('recipient-select');
+  const [currentStep, setCurrentStep] = useState('form');
   const [sendAmount, setSendAmount] = useState('');
   const [recipientCountry, setRecipientCountry] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('interac'); // Pré-sélectionner Interac par défaut
+  const [paymentMethod, setPaymentMethod] = useState('');
   const [receiveMethod, setReceiveMethod] = useState('');
   const [recipientFirstName, setRecipientFirstName] = useState('');
   const [recipientLastName, setRecipientLastName] = useState('');
@@ -35,8 +32,6 @@ export function InternationalTransfer() {
   const [recipientBank, setRecipientBank] = useState('');
   const [provider, setProvider] = useState('');
   const [createdTransfer, setCreatedTransfer] = useState<any>(null);
-  const [selectedRecipient, setSelectedRecipient] = useState<FavoriteRecipient | null>(null);
-  const [isNewRecipient, setIsNewRecipient] = useState(false);
   
   const { createTransfer, loading } = useInternationalTransfers();
   const { user } = useAuth();
@@ -70,51 +65,6 @@ export function InternationalTransfer() {
   const receiveAmount = calculateReceiveAmount();
   const fees = '0.00'; // Gratuit avec TRX
 
-  const handleRecipientSelect = (recipient: FavoriteRecipient | null) => {
-    setSelectedRecipient(recipient);
-    
-    if (recipient) {
-      // Pré-remplir les données du destinataire sélectionné
-      const names = recipient.recipient_name.split(' ');
-      setRecipientFirstName(names[0] || '');
-      setRecipientLastName(names.slice(1).join(' ') || '');
-      setRecipientEmail(recipient.recipient_email || '');
-      setRecipientPhone(recipient.recipient_phone || '');
-      setRecipientAccount(recipient.recipient_account || '');
-      setRecipientBank(recipient.recipient_bank || '');
-      setRecipientCountry(recipient.recipient_country);
-      setReceiveMethod(recipient.receive_method);
-      setProvider(recipient.provider || '');
-      
-      // Suggérer le dernier montant envoyé
-      if (recipient.last_amount) {
-        setSendAmount(recipient.last_amount.toString());
-      }
-    } else {
-      // Réinitialiser le formulaire pour un nouveau destinataire
-      setRecipientFirstName('');
-      setRecipientLastName('');
-      setRecipientEmail('');
-      setRecipientPhone('');
-      setRecipientAccount('');
-      setRecipientBank('');
-      setRecipientCountry('');
-      setReceiveMethod('');
-      setProvider('');
-      setSendAmount('');
-    }
-  };
-
-  const handleRecipientContinue = () => {
-    if (selectedRecipient) {
-      // Si un destinataire favori est sélectionné, aller à l'étape de modification
-      setCurrentStep('modify-transfer');
-    } else {
-      // Si c'est un nouveau destinataire, aller au formulaire
-      setCurrentStep('form');
-    }
-  };
-
   const handleMobileMoneyComplete = (selectedProvider: string, phoneNumber: string) => {
     setProvider(selectedProvider);
     setRecipientPhone(phoneNumber);
@@ -140,26 +90,6 @@ export function InternationalTransfer() {
       toast({
         title: "Informations manquantes",
         description: "Veuillez remplir tous les champs requis",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Si c'est Mobile Money, aller à la sélection du service
-    if (receiveMethod === 'mobile') {
-      setCurrentStep('mobile-money');
-      return;
-    }
-
-    // Sinon, aller directement à la confirmation
-    setCurrentStep('confirmation');
-  };
-
-  const handleModifyTransferSubmit = () => {
-    if (!sendAmount || !paymentMethod) {
-      toast({
-        title: "Informations manquantes",
-        description: "Veuillez remplir le montant et choisir la méthode de paiement",
         variant: "destructive",
       });
       return;
@@ -207,11 +137,11 @@ export function InternationalTransfer() {
   };
 
   const handleBackToDashboard = () => {
-    setCurrentStep('recipient-select');
+    setCurrentStep('form');
     // Reset form
     setSendAmount('');
     setRecipientCountry('');
-    setPaymentMethod('interac');
+    setPaymentMethod('');
     setReceiveMethod('');
     setRecipientFirstName('');
     setRecipientLastName('');
@@ -221,8 +151,6 @@ export function InternationalTransfer() {
     setRecipientBank('');
     setProvider('');
     setCreatedTransfer(null);
-    setSelectedRecipient(null);
-    setIsNewRecipient(false);
   };
 
   // Rendu conditionnel selon l'étape
@@ -230,93 +158,12 @@ export function InternationalTransfer() {
     return <KYCPage onBack={() => setShowKYCPage(false)} />;
   }
 
-  // Étape de sélection du destinataire
-  if (currentStep === 'recipient-select') {
-    return (
-      <KYCProtection onKYCRequired={handleKYCRequired}>
-        <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="mb-6 md:mb-8">
-              <h1 className="text-3xl font-bold text-white mb-2">Virement international</h1>
-              <p className="text-gray-400">Sélectionnez un destinataire ou ajoutez-en un nouveau</p>
-            </div>
-
-            <RecipientSelector
-              onSelectRecipient={handleRecipientSelect}
-              onContinue={handleRecipientContinue}
-              selectedRecipient={selectedRecipient}
-              isNewRecipient={isNewRecipient}
-              setIsNewRecipient={setIsNewRecipient}
-            />
-          </div>
-        </div>
-      </KYCProtection>
-    );
-  }
-
-  // Nouvelle étape de modification pour les destinataires favoris
-  if (currentStep === 'modify-transfer') {
-    return (
-      <KYCProtection onKYCRequired={handleKYCRequired}>
-        <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="mb-6 md:mb-8">
-              <Button
-                variant="ghost"
-                onClick={() => setCurrentStep('recipient-select')}
-                className="text-gray-400 hover:text-white mb-4"
-              >
-                ← Retour aux destinataires
-              </Button>
-              <h1 className="text-3xl font-bold text-white mb-2">Modifier le transfert</h1>
-              <p className="text-gray-400">Ajustez le montant et les détails de votre transfert</p>
-            </div>
-
-            <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader>
-                <CardTitle className="text-white">
-                  Transfert vers {recipientFirstName} {recipientLastName}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <TransferForm
-                  sendAmount={sendAmount}
-                  setSendAmount={setSendAmount}
-                  receiveAmount={receiveAmount}
-                  recipientCountry={recipientCountry}
-                  setRecipientCountry={setRecipientCountry}
-                  paymentMethod={paymentMethod}
-                  setPaymentMethod={setPaymentMethod}
-                  receiveMethod={receiveMethod}
-                  setReceiveMethod={setReceiveMethod}
-                  exchangeRate={exchangeRate}
-                  fees={fees}
-                  provider={provider}
-                  setProvider={setProvider}
-                />
-
-                <Button 
-                  size="lg"
-                  className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                  disabled={!sendAmount || !paymentMethod || loading}
-                  onClick={handleModifyTransferSubmit}
-                >
-                  {loading ? 'Traitement...' : 'Continuer le transfert'}
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </KYCProtection>
-    );
-  }
-
   if (currentStep === 'mobile-money') {
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
         <MobileMoneySelector
           onComplete={handleMobileMoneyComplete}
-          onBack={() => setCurrentStep(selectedRecipient ? 'modify-transfer' : 'form')}
+          onBack={() => setCurrentStep('form')}
           recipientCountry={recipientCountry}
         />
       </KYCProtection>
@@ -346,7 +193,7 @@ export function InternationalTransfer() {
         <TransferConfirmation
           transferData={transferData}
           onConfirm={handleTransferConfirm}
-          onBack={() => setCurrentStep(receiveMethod === 'mobile' ? 'mobile-money' : (selectedRecipient ? 'modify-transfer' : 'form'))}
+          onBack={() => setCurrentStep(receiveMethod === 'mobile' ? 'mobile-money' : 'form')}
           loading={loading}
         />
       </KYCProtection>
@@ -376,21 +223,14 @@ export function InternationalTransfer() {
     );
   }
 
-  // Formulaire principal (pour les nouveaux destinataires)
+  // Formulaire principal
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
       <div className="min-h-screen bg-terex-dark p-2 md:p-4">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6 md:mb-8">
-            <Button
-              variant="ghost"
-              onClick={() => setCurrentStep('recipient-select')}
-              className="text-gray-400 hover:text-white mb-4"
-            >
-              ← Retour aux destinataires
-            </Button>
-            <h1 className="text-3xl font-bold text-white mb-2">Nouveau destinataire</h1>
-            <p className="text-gray-400">Remplissez les informations du nouveau destinataire</p>
+            <h1 className="text-3xl font-bold text-white mb-2">Virement international</h1>
+            <p className="text-gray-400">Envoyer de l'argent rapidement à vos proches</p>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
