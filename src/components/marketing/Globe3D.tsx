@@ -94,7 +94,7 @@ function ConnectionArcs() {
     <group ref={arcsRef}>
       {arcs.map((geometry, index) => (
         <mesh key={index} geometry={geometry}>
-          <meshBasicMaterial 
+          <meshStandardMaterial 
             color="#00D4FF" 
             transparent 
             opacity={0.6}

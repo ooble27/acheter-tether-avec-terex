@@ -122,7 +122,7 @@ function FloatingUSDTLogo() {
         {/* USDT Ring */}
         <mesh>
           <torusGeometry args={[0.3, 0.05, 16, 100]} />
-          <meshBasicMaterial
+          <meshStandardMaterial
             color="#26A17B"
             emissive="#26A17B"
             emissiveIntensity={0.3}
@@ -132,7 +132,7 @@ function FloatingUSDTLogo() {
         {/* Center dot */}
         <mesh>
           <sphereGeometry args={[0.15]} />
-          <meshBasicMaterial
+          <meshStandardMaterial
             color="#26A17B"
             emissive="#26A17B"
             emissiveIntensity={0.5}
