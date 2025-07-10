@@ -1,40 +1,32 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { TrendingUp, Globe, Handshake, Star, Zap, Clock, Activity, Shield, Users, Award, ArrowUpDown, Send, User, CreditCard, CheckCircle, Smartphone, DollarSign, Coins, Building2 } from 'lucide-react';
-
-const TetherLogo = ({ className }: { className?: string }) => (
-  <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="Tether Logo" className={className} />
-);
+import { TrendingUp, Globe, Shield, Zap, Clock, CheckCircle, Smartphone, DollarSign, Coins, Building2 } from 'lucide-react';
 
 export function DeviceMockups() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Messages explicatifs pour chaque slide
+  // Messages rotatifs pour le titre principal
+  const titleMessages = [
+    "Achetez des USDT facilement avec Terex",
+    "Vendez vos stablecoins en toute sécurité",
+    "Envoyez de l'argent à vos proches en Afrique",
+    "Échangez vos cryptomonnaies rapidement",
+    "Transférez sans frais vers 6 pays africains"
+  ];
+
   const slides = [
     {
-      title: "Achetez des USDT facilement",
-      subtitle: "Convertissez vos CAD en USDT en quelques clics",
-      icon: <Coins className="w-8 h-8 text-terex-accent" />,
-      component: <BuyUSDTExplanation />
+      component: <ProfessionalUSDTBuy />
     },
     {
-      title: "Vendez vos USDT rapidement", 
-      subtitle: "Reconvertissez vos USDT en CAD instantanément",
-      icon: <DollarSign className="w-8 h-8 text-green-400" />,
-      component: <SellUSDTExplanation />
+      component: <ProfessionalUSDTSell />
     },
     {
-      title: "Virements internationaux",
-      subtitle: "Envoyez de l'argent vers l'Afrique sans frais",
-      icon: <Globe className="w-8 h-8 text-blue-400" />,
-      component: <TransferExplanation />
+      component: <ProfessionalTransfer />
     },
     {
-      title: "Plateforme sécurisée",
-      subtitle: "Vos transactions sont protégées et vérifiées",
-      icon: <Shield className="w-8 h-8 text-purple-400" />,
-      component: <SecurityExplanation />
+      component: <ProfessionalSecurity />
     }
   ];
 
@@ -49,24 +41,16 @@ export function DeviceMockups() {
   }, [totalSlides]);
 
   return (
-    <div className="relative flex flex-col lg:flex-row items-center justify-center min-h-[600px] lg:min-h-[700px] gap-8 lg:gap-16">
-      {/* Text Section */}
-      <div className="flex-1 text-center lg:text-left order-2 lg:order-1 px-4">
-        <div className="transition-all duration-700 ease-in-out">
-          <div className="flex items-center justify-center lg:justify-start mb-4">
-            {slides[currentSlide].icon}
-          </div>
-          <h3 className="text-2xl lg:text-3xl font-bold text-white mb-3">
-            {slides[currentSlide].title}
-          </h3>
-          <p className="text-lg text-gray-300 mb-6">
-            {slides[currentSlide].subtitle}
-          </p>
-        </div>
+    <div className="relative flex items-center justify-center min-h-[600px] lg:min-h-[700px]">
+      {/* Titre principal qui change */}
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 text-center z-10 mb-8">
+        <h2 className="text-2xl lg:text-4xl font-bold text-white transition-all duration-700 ease-in-out">
+          {titleMessages[currentSlide]}
+        </h2>
       </div>
       
-      {/* Mobile mockup - centered */}
-      <div className="relative order-1 lg:order-2">
+      {/* Mobile mockup - plus grand sur desktop */}
+      <div className="relative mt-16">
         <IPhoneMockup currentSlide={currentSlide} slides={slides} />
       </div>
     </div>
@@ -76,8 +60,8 @@ export function DeviceMockups() {
 function IPhoneMockup({ currentSlide, slides }: { currentSlide: number, slides: any[] }) {
   return (
     <div className="relative mx-auto">
-      {/* Phone Frame - More realistic iPhone styling */}
-      <div className="relative w-[260px] h-[520px] bg-gradient-to-br from-gray-800 to-black rounded-[2.8rem] p-2 shadow-2xl border border-gray-700">
+      {/* Phone Frame - Plus grand sur desktop */}
+      <div className="relative w-[280px] h-[560px] lg:w-[320px] lg:h-[640px] bg-gradient-to-br from-gray-800 to-black rounded-[2.8rem] p-2 shadow-2xl border border-gray-700">
         {/* Screen bezel */}
         <div className="w-full h-full bg-black rounded-[2.3rem] p-1 relative">
           {/* Dynamic Island */}
@@ -130,275 +114,243 @@ function MobileScreenContent({ currentSlide, slides }: { currentSlide: number, s
   );
 }
 
-// Composants d'explication pour chaque service
-function BuyUSDTExplanation() {
+// Composants professionnels redesignés
+function ProfessionalUSDTBuy() {
   return (
-    <div className="p-4 space-y-4 text-xs overflow-y-auto h-full pb-8 scrollbar-hide">
-      {/* Header */}
-      <div className="flex items-center space-x-2 mb-4">
-        <div className="w-8 h-8 bg-terex-accent/20 rounded-lg flex items-center justify-center">
-          <Coins className="w-4 h-4 text-terex-accent" />
+    <div className="p-6 h-full bg-gradient-to-br from-terex-dark to-terex-darker">
+      {/* Header professionnel */}
+      <div className="text-center mb-8">
+        <div className="w-16 h-16 bg-gradient-to-br from-terex-accent to-yellow-400 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <Coins className="w-8 h-8 text-black" />
         </div>
-        <div>
-          <h1 className="text-sm font-bold text-white">Achat USDT</h1>
-          <p className="text-gray-400 text-xs">Simple et rapide</p>
-        </div>
+        <h2 className="text-xl font-bold text-white mb-2">Achat USDT</h2>
+        <p className="text-gray-300 text-sm">Convertissez vos CAD en USDT</p>
       </div>
 
-      {/* Steps */}
-      <div className="space-y-3">
-        <Card className="bg-terex-darker border-terex-accent/30">
-          <CardContent className="p-3">
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center text-black font-bold text-xs">1</div>
-              <div>
-                <p className="text-white text-xs font-medium">Choisissez le montant</p>
-                <p className="text-gray-400 text-xs">En dollars canadiens</p>
-              </div>
+      {/* Process steps */}
+      <div className="space-y-4">
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-terex-accent rounded-full flex items-center justify-center text-black font-bold text-sm">1</div>
+            <div>
+              <p className="text-white font-medium">Saisissez le montant</p>
+              <p className="text-gray-400 text-xs">En dollars canadiens</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card className="bg-terex-darker border-terex-accent/30">
-          <CardContent className="p-3">
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center text-black font-bold text-xs">2</div>
-              <div>
-                <p className="text-white text-xs font-medium">Payez par carte</p>
-                <p className="text-gray-400 text-xs">Visa ou Mastercard</p>
-              </div>
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-terex-accent rounded-full flex items-center justify-center text-black font-bold text-sm">2</div>
+            <div>
+              <p className="text-white font-medium">Effectuez le paiement</p>
+              <p className="text-gray-400 text-xs">Carte Visa ou Mastercard</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card className="bg-terex-darker border-terex-accent/30">
-          <CardContent className="p-3">
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center text-black font-bold text-xs">3</div>
-              <div>
-                <p className="text-white text-xs font-medium">Recevez vos USDT</p>
-                <p className="text-gray-400 text-xs">Dans votre portefeuille</p>
-              </div>
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-terex-accent rounded-full flex items-center justify-center text-black font-bold text-sm">3</div>
+            <div>
+              <p className="text-white font-medium">Recevez vos USDT</p>
+              <p className="text-gray-400 text-xs">Dans votre portefeuille</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Benefits */}
-      <div className="mt-4">
-        <h3 className="text-white text-xs font-medium mb-2">Avantages</h3>
-        <div className="space-y-2">
-          <div className="flex items-center space-x-2">
-            <Zap className="w-3 h-3 text-terex-accent" />
-            <span className="text-white text-xs">Transaction instantanée</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Shield className="w-3 h-3 text-green-400" />
-            <span className="text-white text-xs">100% sécurisé</span>
-          </div>
+      <div className="mt-6 bg-gradient-to-r from-terex-accent/10 to-blue-500/10 rounded-xl p-4 border border-terex-accent/20">
+        <div className="flex items-center space-x-2 mb-2">
+          <Zap className="w-4 h-4 text-terex-accent" />
+          <span className="text-terex-accent font-medium text-sm">Transaction instantanée</span>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function SellUSDTExplanation() {
-  return (
-    <div className="p-4 space-y-4 text-xs overflow-y-auto h-full pb-8 scrollbar-hide">
-      {/* Header */}
-      <div className="flex items-center space-x-2 mb-4">
-        <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
-          <DollarSign className="w-4 h-4 text-green-400" />
-        </div>
-        <div>
-          <h1 className="text-sm font-bold text-white">Vente USDT</h1>
-          <p className="text-gray-400 text-xs">Convertissez en CAD</p>
-        </div>
-      </div>
-
-      {/* Steps */}
-      <div className="space-y-3">
-        <Card className="bg-terex-darker border-green-500/30">
-          <CardContent className="p-3">
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-xs">1</div>
-              <div>
-                <p className="text-white text-xs font-medium">Envoyez vos USDT</p>
-                <p className="text-gray-400 text-xs">Vers notre adresse</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-green-500/30">
-          <CardContent className="p-3">
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-xs">2</div>
-              <div>
-                <p className="text-white text-xs font-medium">Confirmation rapide</p>
-                <p className="text-gray-400 text-xs">Vérification automatique</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-green-500/30">
-          <CardContent className="p-3">
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-xs">3</div>
-              <div>
-                <p className="text-white text-xs font-medium">Recevez vos CAD</p>
-                <p className="text-gray-400 text-xs">Virement Interac</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Rate display */}
-      <Card className="bg-terex-darker border-green-500/30">
-        <CardContent className="p-3">
-          <div className="text-center">
-            <p className="text-gray-400 text-xs">Taux actuel</p>
-            <p className="text-green-400 font-bold">1 USDT = 1.00 CAD</p>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
-function TransferExplanation() {
-  return (
-    <div className="p-4 space-y-4 text-xs overflow-y-auto h-full pb-8 scrollbar-hide">
-      {/* Header */}
-      <div className="flex items-center space-x-2 mb-4">
-        <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
-          <Globe className="w-4 h-4 text-blue-400" />
-        </div>
-        <div>
-          <h1 className="text-sm font-bold text-white">Virements</h1>
-          <p className="text-gray-400 text-xs">Vers l'Afrique</p>
-        </div>
-      </div>
-
-      {/* Destinations */}
-      <div className="space-y-2">
-        <h3 className="text-white text-xs font-medium">Destinations disponibles</h3>
-        
-        <Card className="bg-terex-darker border-blue-500/30">
-          <CardContent className="p-2">
-            <div className="flex items-center space-x-2">
-              <span className="text-sm">🇨🇲</span>
-              <div>
-                <p className="text-white text-xs font-medium">Cameroun</p>
-                <p className="text-gray-400 text-xs">Mobile Money, Banque</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-blue-500/30">
-          <CardContent className="p-2">
-            <div className="flex items-center space-x-2">
-              <span className="text-sm">🇸🇳</span>
-              <div>
-                <p className="text-white text-xs font-medium">Sénégal</p>
-                <p className="text-gray-400 text-xs">Wave, Orange Money</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-blue-500/30">
-          <CardContent className="p-2">
-            <div className="flex items-center space-x-2">
-              <span className="text-sm">🇨🇮</span>
-              <div>
-                <p className="text-white text-xs font-medium">Côte d'Ivoire</p>
-                <p className="text-gray-400 text-xs">Mobile Money</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Benefits */}
-      <div className="space-y-2">
-        <div className="flex items-center space-x-2 p-2 bg-blue-500/10 border border-blue-500/30 rounded text-xs">
-          <Zap className="w-3 h-3 text-blue-400" />
-          <span className="text-blue-400">Transfert instantané</span>
-        </div>
-        <div className="flex items-center space-x-2 p-2 bg-terex-accent/10 border border-terex-accent/30 rounded text-xs">
-          <DollarSign className="w-3 h-3 text-terex-accent" />
-          <span className="text-terex-accent">Frais réduits</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SecurityExplanation() {
-  return (
-    <div className="p-4 space-y-4 text-xs overflow-y-auto h-full pb-8 scrollbar-hide">
-      {/* Header */}
-      <div className="flex items-center space-x-2 mb-4">
-        <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
-          <Shield className="w-4 h-4 text-purple-400" />
-        </div>
-        <div>
-          <h1 className="text-sm font-bold text-white">Sécurité</h1>
-          <p className="text-gray-400 text-xs">Protection maximale</p>
-        </div>
-      </div>
-
-      {/* Security features */}
-      <div className="space-y-3">
-        <Card className="bg-terex-darker border-purple-500/30">
-          <CardContent className="p-3">
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="w-4 h-4 text-green-400" />
-              <div>
-                <p className="text-white text-xs font-medium">KYC vérifié</p>
-                <p className="text-gray-400 text-xs">Identité confirmée</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-purple-500/30">
-          <CardContent className="p-3">
-            <div className="flex items-center space-x-2">
-              <Shield className="w-4 h-4 text-purple-400" />
-              <div>
-                <p className="text-white text-xs font-medium">Chiffrement SSL</p>
-                <p className="text-gray-400 text-xs">Données protégées</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-purple-500/30">
-          <CardContent className="p-3">
-            <div className="flex items-center space-x-2">
-              <Building2 className="w-4 h-4 text-blue-400" />
-              <div>
-                <p className="text-white text-xs font-medium">Réglementé</p>
-                <p className="text-gray-400 text-xs">Conforme aux lois</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Trust indicators */}
-      <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
         <div className="flex items-center space-x-2">
-          <Award className="w-4 h-4 text-green-400" />
-          <div>
-            <p className="font-medium text-green-400 text-xs">Plateforme de confiance</p>
-            <p className="text-gray-400 text-xs">Plus de 10,000 utilisateurs</p>
+          <Shield className="w-4 h-4 text-green-400" />
+          <span className="text-green-400 font-medium text-sm">100% sécurisé</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProfessionalUSDTSell() {
+  return (
+    <div className="p-6 h-full bg-gradient-to-br from-terex-dark to-terex-darker">
+      <div className="text-center mb-8">
+        <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-400 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <DollarSign className="w-8 h-8 text-white" />
+        </div>
+        <h2 className="text-xl font-bold text-white mb-2">Vente USDT</h2>
+        <p className="text-gray-300 text-sm">Convertissez en CAD rapidement</p>
+      </div>
+
+      <div className="space-y-4">
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">1</div>
+            <div>
+              <p className="text-white font-medium">Envoyez vos USDT</p>
+              <p className="text-gray-400 text-xs">Vers notre adresse sécurisée</p>
+            </div>
           </div>
+        </div>
+
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">2</div>
+            <div>
+              <p className="text-white font-medium">Vérification automatique</p>
+              <p className="text-gray-400 text-xs">Confirmation en temps réel</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">3</div>
+            <div>
+              <p className="text-white font-medium">Recevez vos CAD</p>
+              <p className="text-gray-400 text-xs">Virement Interac instantané</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl p-4 border border-green-500/20">
+        <div className="text-center">
+          <p className="text-gray-400 text-xs mb-1">Taux de change actuel</p>
+          <p className="text-green-400 font-bold text-lg">1 USDT = 1.35 CAD</p>
+          <p className="text-green-400 text-xs">Mis à jour en temps réel</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProfessionalTransfer() {
+  return (
+    <div className="p-6 h-full bg-gradient-to-br from-terex-dark to-terex-darker">
+      <div className="text-center mb-8">
+        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <Globe className="w-8 h-8 text-white" />
+        </div>
+        <h2 className="text-xl font-bold text-white mb-2">Virements Afrique</h2>
+        <p className="text-gray-300 text-sm">Envoyez de l'argent facilement</p>
+      </div>
+
+      <div className="space-y-3">
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+          <div className="flex items-center space-x-3">
+            <span className="text-lg">🇨🇲</span>
+            <div className="flex-1">
+              <p className="text-white font-medium text-sm">Cameroun</p>
+              <p className="text-gray-400 text-xs">MTN • Orange Money</p>
+            </div>
+            <div className="text-right">
+              <p className="text-blue-400 text-xs">≈ 5 min</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+          <div className="flex items-center space-x-3">
+            <span className="text-lg">🇸🇳</span>
+            <div className="flex-1">
+              <p className="text-white font-medium text-sm">Sénégal</p>
+              <p className="text-gray-400 text-xs">Wave • Orange Money</p>
+            </div>
+            <div className="text-right">
+              <p className="text-blue-400 text-xs">≈ 5 min</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+          <div className="flex items-center space-x-3">
+            <span className="text-lg">🇨🇮</span>
+            <div className="flex-1">
+              <p className="text-white font-medium text-sm">Côte d'Ivoire</p>
+              <p className="text-gray-400 text-xs">Mobile Money</p>
+            </div>
+            <div className="text-right">
+              <p className="text-blue-400 text-xs">≈ 5 min</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-xl p-4 border border-blue-500/20">
+        <div className="grid grid-cols-2 gap-4 text-center">
+          <div>
+            <div className="flex items-center justify-center space-x-1 mb-1">
+              <Zap className="w-3 h-3 text-blue-400" />
+              <span className="text-blue-400 text-xs font-medium">Instantané</span>
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center justify-center space-x-1 mb-1">
+              <DollarSign className="w-3 h-3 text-terex-accent" />
+              <span className="text-terex-accent text-xs font-medium">Sans frais</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProfessionalSecurity() {
+  return (
+    <div className="p-6 h-full bg-gradient-to-br from-terex-dark to-terex-darker">
+      <div className="text-center mb-8">
+        <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-400 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <Shield className="w-8 h-8 text-white" />
+        </div>
+        <h2 className="text-xl font-bold text-white mb-2">Sécurité Maximale</h2>
+        <p className="text-gray-300 text-sm">Vos fonds sont protégés</p>
+      </div>
+
+      <div className="space-y-4">
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+          <div className="flex items-center space-x-3">
+            <CheckCircle className="w-6 h-6 text-green-400" />
+            <div>
+              <p className="text-white font-medium text-sm">KYC Vérifié</p>
+              <p className="text-gray-400 text-xs">Identité confirmée et sécurisée</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+          <div className="flex items-center space-x-3">
+            <Shield className="w-6 h-6 text-purple-400" />
+            <div>
+              <p className="text-white font-medium text-sm">Chiffrement SSL</p>
+              <p className="text-gray-400 text-xs">Protection 256-bit de vos données</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+          <div className="flex items-center space-x-3">
+            <Building2 className="w-6 h-6 text-blue-400" />
+            <div>
+              <p className="text-white font-medium text-sm">Réglementé</p>
+              <p className="text-gray-400 text-xs">Conforme aux normes canadiennes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl p-4 border border-green-500/20">
+        <div className="text-center">
+          <div className="flex items-center justify-center space-x-2 mb-2">
+            <CheckCircle className="w-5 h-5 text-green-400" />
+            <span className="text-green-400 font-medium text-sm">Plateforme de confiance</span>
+          </div>
+          <p className="text-gray-400 text-xs">Plus de 10,000 utilisateurs actifs</p>
         </div>
       </div>
     </div>
