@@ -1,8 +1,9 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { CryptoVisualization } from './CryptoVisualization';
+import { SimpleVisual } from './SimpleVisual';
 
 interface HeroSectionProps {
   user?: { email: string; name: string } | null;
@@ -96,9 +97,9 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
           </div>
           
-          {/* Colonne de droite - Visualisation crypto moderne */}
+          {/* Colonne de droite - Nouveau visuel simple */}
           <div className="order-1 lg:order-2 flex justify-center">
-            <CryptoVisualization />
+            <SimpleVisual />
           </div>
         </div>
         
