@@ -898,19 +898,112 @@
   }
 }
 
+/* 3D Hero Section Specific Styles */
+.hero-3d-container {
+  background: radial-gradient(ellipse at center, rgba(59, 150, 143, 0.1) 0%, transparent 70%);
+}
+
+/* WebGL Canvas Optimizations */
+canvas {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Loading placeholder for 3D scene */
+.scene-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(45deg, #0A0A0B, #1e1e1e);
+  border-radius: 1.5rem;
+}
+
+.scene-loading::before {
+  content: '';
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(59, 150, 143, 0.3);
+  border-top: 3px solid #3B968F;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Enhanced glassmorphism effects */
+.glass-enhanced {
+  background: rgba(20, 14, 4, 0.1);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(59, 150, 143, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(59, 150, 143, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Holographic text effect */
+.holo-text {
+  background: linear-gradient(
+    45deg,
+    #3B968F 0%,
+    #4BA89F 25%,
+    #5BC1B8 50%,
+    #00D4FF 75%,
+    #3B968F 100%
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: holo-shift 3s ease-in-out infinite;
+}
+
+@keyframes holo-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Mobile optimizations for 3D */
 @media (max-width: 768px) {
-  .crypto-visualization-container {
-    width: 300px;
-    height: 300px;
+  .hero-3d-container {
+    height: 400px !important;
   }
   
-  .hexagon {
-    width: 45px;
-    height: 45px;
+  canvas {
+    max-height: 400px;
   }
   
-  .data-point {
-    font-size: 10px;
-    padding: 3px 8px;
+  /* Reduce particle count on mobile */
+  .floating-particle:nth-child(n+10) {
+    display: none;
+  }
+}
+
+/* High DPI displays optimization */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  canvas {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+  }
+}
+
+/* Prefers reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+  .hero-3d-container * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
