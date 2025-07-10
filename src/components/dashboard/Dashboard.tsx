@@ -25,6 +25,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
+import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
 
 interface DashboardProps {
   user: { email: string; name: string } | null;
@@ -69,8 +70,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'transfer':
         return <InternationalTransfer />;
       case 'otc':
-        // Pour l'instant, rediriger vers les virements internationaux pour OTC
-        return <InternationalTransfer />;
+        // Redirecter vers le formulaire de demande de gros volume
+        return <HighVolumeRequest onBack={() => setActiveSection('home')} />;
       case 'history':
         return <TransactionHistoryPage />;
       case 'profile':

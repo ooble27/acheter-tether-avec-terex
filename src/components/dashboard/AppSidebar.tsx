@@ -354,7 +354,7 @@ export function MobileMenu({ activeSection, setActiveSection, onLogout }: AppSid
         <Button 
           variant="ghost" 
           size="icon"
-          className="md:hidden fixed top-4 left-4 z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12 mt-safe"
+          className="md:hidden fixed top-4 right-4 z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12 mt-safe"
         >
           <Menu className="h-6 w-6" />
         </Button>

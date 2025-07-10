@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
@@ -20,6 +19,7 @@ import {
   TrendingDown
 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
 
 interface DashboardHomeProps {
   user: { email: string; name: string } | null;
@@ -44,7 +44,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   };
 
   if (isMobile) {
-    // Design mobile identique à la maquette de téléphone avec un design plus compact
+    // Design mobile avec la section historique ajoutée
     return (
       <div className="min-h-screen bg-terex-dark p-3 space-y-3 text-xs overflow-y-auto scrollbar-hide">
         {/* Header avec taille augmentée comme demandé */}
@@ -122,6 +122,9 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </CardContent>
           </Card>
         </div>
+
+        {/* Section Historique des transactions récentes */}
+        <RecentTransactions onNavigate={onNavigate} />
 
         {/* Avantages Terex - identique à la maquette */}
         <Card className="bg-terex-darker border-terex-gray mb-3">
