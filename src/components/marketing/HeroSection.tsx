@@ -97,56 +97,104 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
           </div>
           
-          {/* Colonne de droite - Visuel avec personne et crypto */}
+          {/* Colonne de droite - Maquette professionnelle */}
           <div className="order-1 lg:order-2 flex justify-center relative">
-            {/* Container principal avec la personne en arrière-plan */}
             <div className="relative w-full max-w-md lg:max-w-lg">
-              {/* Image de la personne professionnelle */}
-              <div className="relative z-10 mb-8 lg:mb-0">
-                <div className="w-80 h-96 lg:w-96 lg:h-[500px] mx-auto relative overflow-hidden rounded-3xl bg-gradient-to-br from-terex-accent/20 to-terex-darker/40 backdrop-blur-sm border border-terex-accent/30">
-                  {/* Placeholder pour la personne - vous pouvez remplacer par une vraie image */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-full h-full bg-gradient-to-b from-transparent via-terex-dark/20 to-terex-dark/60 flex flex-col items-center justify-end p-8">
-                      {/* Silhouette stylisée d'une personne avec smartphone */}
-                      <div className="relative">
-                        {/* Corps de la personne */}
-                        <div className="w-32 h-48 bg-gradient-to-b from-terex-accent/30 to-terex-accent/50 rounded-t-full mx-auto relative">
-                          {/* Tête */}
-                          <div className="w-20 h-20 bg-gradient-to-b from-terex-accent/40 to-terex-accent/60 rounded-full mx-auto -mb-4 relative z-10"></div>
-                          {/* Bras tenant le smartphone */}
-                          <div className="absolute top-16 right-2 w-4 h-12 bg-terex-accent/40 rounded-full transform rotate-12"></div>
-                          {/* Smartphone */}
-                          <div className="absolute top-20 right-0 w-6 h-12 bg-white/90 rounded-lg shadow-lg border border-terex-accent/20">
-                            <div className="w-full h-2 bg-terex-accent/80 rounded-t-lg"></div>
-                            <div className="p-1 space-y-1">
-                              <div className="w-full h-1 bg-terex-accent/60 rounded"></div>
-                              <div className="w-3/4 h-1 bg-terex-accent/40 rounded"></div>
-                              <div className="w-full h-1 bg-terex-accent/60 rounded"></div>
+              
+              {/* Image professionnelle avec smartphone */}
+              <div className="relative z-10">
+                <div className="w-80 h-96 lg:w-96 lg:h-[500px] mx-auto relative overflow-hidden rounded-3xl bg-gradient-to-br from-terex-accent/10 to-terex-dark/80 border border-terex-accent/20 shadow-2xl">
+                  
+                  {/* Arrière-plan avec pattern subtil */}
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,150,143,0.1)_0%,transparent_50%)]"></div>
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(59,150,143,0.05)_0%,transparent_50%)]"></div>
+                  
+                  {/* Personne professionnelle */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
+                    
+                    {/* Avatar professionnel stylisé */}
+                    <div className="relative mb-8">
+                      <div className="w-32 h-32 rounded-full bg-gradient-to-br from-terex-accent/20 to-terex-accent/40 border-4 border-terex-accent/30 flex items-center justify-center shadow-xl">
+                        {/* Représentation stylisée d'une personne */}
+                        <div className="w-24 h-24 rounded-full bg-gradient-to-br from-amber-600 to-amber-800 relative overflow-hidden">
+                          {/* Visage */}
+                          <div className="absolute inset-0 bg-gradient-to-b from-amber-500 to-amber-700"></div>
+                          {/* Yeux */}
+                          <div className="absolute top-8 left-7 w-2 h-2 bg-white rounded-full"></div>
+                          <div className="absolute top-8 right-7 w-2 h-2 bg-white rounded-full"></div>
+                          {/* Sourire */}
+                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-8 h-4 border-b-2 border-white rounded-full"></div>
+                        </div>
+                      </div>
+                      
+                      {/* Effet de brillance */}
+                      <div className="absolute -top-2 -right-2 w-8 h-8 bg-terex-accent/30 rounded-full animate-pulse"></div>
+                      <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-terex-accent/20 rounded-full animate-ping"></div>
+                    </div>
+                    
+                    {/* Smartphone moderne */}
+                    <div className="relative">
+                      <div className="w-20 h-36 bg-gradient-to-b from-gray-800 to-gray-900 rounded-xl shadow-2xl border border-gray-600 relative">
+                        {/* Écran du téléphone */}
+                        <div className="absolute inset-2 bg-gradient-to-b from-blue-400 to-terex-accent rounded-lg overflow-hidden">
+                          {/* Interface Terex simulée */}
+                          <div className="p-2 space-y-1">
+                            <div className="w-full h-1 bg-white/60 rounded"></div>
+                            <div className="w-3/4 h-1 bg-white/40 rounded"></div>
+                            <div className="w-full h-1 bg-white/60 rounded"></div>
+                            <div className="w-1/2 h-1 bg-white/40 rounded"></div>
+                            
+                            {/* Logo USDT mini */}
+                            <div className="flex justify-center mt-2">
+                              <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                                <div className="text-[6px] text-white font-bold">₮</div>
+                              </div>
+                            </div>
+                            
+                            {/* Montant simulé */}
+                            <div className="text-center mt-1">
+                              <div className="text-[8px] text-white font-bold">1,250 USDT</div>
                             </div>
                           </div>
                         </div>
                         
-                        {/* Effet de lumière autour du smartphone */}
-                        <div className="absolute top-16 right-0 w-12 h-12 bg-terex-accent/20 rounded-full blur-xl animate-pulse"></div>
+                        {/* Bouton home */}
+                        <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-gray-600 rounded-full"></div>
                       </div>
                       
-                      {/* Texte professionnel */}
-                      <div className="text-center text-white/80 mt-4">
-                        <div className="text-sm font-medium">Professionnel connecté</div>
-                        <div className="text-xs text-terex-accent">Transferts instantanés</div>
-                      </div>
+                      {/* Effets lumineux autour du smartphone */}
+                      <div className="absolute -inset-4 bg-terex-accent/10 rounded-2xl blur-xl animate-pulse"></div>
+                      <div className="absolute top-0 right-0 w-3 h-3 bg-green-400 rounded-full animate-ping"></div>
+                    </div>
+                    
+                    {/* Texte descriptif */}
+                    <div className="text-center mt-8">
+                      <h3 className="text-white font-semibold text-lg mb-2">
+                        Transferts instantanés
+                      </h3>
+                      <p className="text-terex-accent text-sm">
+                        Connecté • Sécurisé • Rapide
+                      </p>
+                    </div>
+                    
+                    {/* Indicateurs de connexion */}
+                    <div className="flex space-x-2 mt-4">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 bg-terex-accent rounded-full animate-pulse delay-100"></div>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse delay-200"></div>
                     </div>
                   </div>
                   
                   {/* Particules flottantes */}
-                  <div className="absolute top-4 left-4 w-2 h-2 bg-terex-accent rounded-full animate-ping"></div>
-                  <div className="absolute top-1/3 right-6 w-1 h-1 bg-white rounded-full animate-pulse"></div>
-                  <div className="absolute bottom-1/4 left-8 w-1.5 h-1.5 bg-terex-accent/60 rounded-full animate-bounce"></div>
+                  <div className="absolute top-4 left-4 w-2 h-2 bg-terex-accent/60 rounded-full animate-bounce"></div>
+                  <div className="absolute top-1/3 right-6 w-1 h-1 bg-white/60 rounded-full animate-pulse"></div>
+                  <div className="absolute bottom-1/4 left-8 w-1.5 h-1.5 bg-terex-accent/40 rounded-full animate-ping"></div>
+                  <div className="absolute top-2/3 right-4 w-1 h-1 bg-green-400/60 rounded-full animate-bounce delay-300"></div>
                 </div>
               </div>
               
-              {/* Visualisation crypto en overlay/côté */}
-              <div className="absolute -bottom-8 -right-4 lg:-right-8 scale-75 lg:scale-90 opacity-80">
+              {/* Visualisation crypto en arrière-plan */}
+              <div className="absolute -bottom-8 -right-4 lg:-right-8 scale-75 lg:scale-90 opacity-60">
                 <CryptoVisualization />
               </div>
             </div>
