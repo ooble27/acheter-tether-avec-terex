@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useEmailNotifications } from '@/hooks/useEmailNotifications';
+import { useFavoriteRecipients } from '@/hooks/useFavoriteRecipients';
 
 export const useInternationalTransfers = () => {
   const [transfers, setTransfers] = useState<any[]>([]);
@@ -10,6 +11,7 @@ export const useInternationalTransfers = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const { sendTransferNotification } = useEmailNotifications();
+  const { saveRecipient } = useFavoriteRecipients();
 
   const fetchTransfers = async () => {
     if (!user) return;
@@ -91,6 +93,25 @@ export const useInternationalTransfers = () => {
       }
 
       console.log('Transfert créé avec succès:', data);
+
+      // Sauvegarder le destinataire dans les favoris
+      try {
+        await saveRecipient({
+          recipient_name: transferData.recipient_name,
+          recipient_phone: transferData.recipient_phone,
+          recipient_email: transferData.recipient_email,
+          recipient_account: transferData.recipient_account,
+          recipient_bank: transferData.recipient_bank,
+          recipient_country: transferData.recipient_country,
+          receive_method: transferData.receive_method,
+          provider: transferData.provider,
+          amount: transferData.amount
+        });
+        console.log('Destinataire sauvegardé dans les favoris');
+      } catch (favoriteError) {
+        console.error('Erreur lors de la sauvegarde du destinataire favori:', favoriteError);
+        // Ne pas faire échouer le transfert si la sauvegarde des favoris échoue
+      }
 
       toast({
         title: "Transfert créé",
