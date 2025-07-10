@@ -17,10 +17,9 @@ interface PublicHomeProps {
   onGetStarted: () => void;
   user?: { email: string; name: string } | null;
   onShowDashboard?: () => void;
-  heroVariant?: 'default' | 'diaspora';
 }
 
-export function PublicHome({ onGetStarted, user, onShowDashboard, heroVariant = 'default' }: PublicHomeProps) {
+export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomeProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -60,19 +59,19 @@ export function PublicHome({ onGetStarted, user, onShowDashboard, heroVariant = 
         onLogout={handleLogout}
       />
       
-      <HeroSection user={user} onShowDashboard={onShowDashboard} variant={heroVariant} />
+      <HeroSection user={user} onShowDashboard={onShowDashboard} />
       
-      {/* Only show other sections for default variant */}
-      {heroVariant === 'default' && (
-        <>
-          <CurrencyConverterSection />
-          <PhoneMockupSection />
-          <HowItWorksSection onBlockchainInfoClick={handleBlockchainInfo} />
-          <StatsSection />
-          <PaymentMethodsSection />
-          <TestimonialsSection />
-        </>
-      )}
+      <CurrencyConverterSection />
+
+      <PhoneMockupSection />
+
+      <HowItWorksSection onBlockchainInfoClick={handleBlockchainInfo} />
+
+      <StatsSection />
+      
+      <PaymentMethodsSection />
+
+      <TestimonialsSection />
       
       <CTASection user={user} onGetStarted={handleGetStarted} />
 
