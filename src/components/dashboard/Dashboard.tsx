@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
@@ -70,8 +71,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'transfer':
         return <InternationalTransfer />;
       case 'otc':
-        // Redirecter vers le formulaire de demande de gros volume
-        return <HighVolumeRequest onBack={() => setActiveSection('home')} />;
+        // Redirecter vers le formulaire de demande de gros volume avec un montant par défaut
+        return <HighVolumeRequest onBack={() => setActiveSection('home')} requestedAmount="" />;
       case 'history':
         return <TransactionHistoryPage />;
       case 'profile':
