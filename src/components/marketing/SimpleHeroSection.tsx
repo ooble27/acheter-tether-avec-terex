@@ -99,7 +99,8 @@ export function SimpleHeroSection({ user, onShowDashboard }: SimpleHeroSectionPr
               <div className="text-4xl font-bold text-terex-accent mb-2">24/7</div>
               <div className="text-gray-400">Disponibilité</div>
             </div>
-            <div className="text-4xl font-bold text-terex-accent mb-2">0%</div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-terex-accent mb-2">0%</div>
               <div className="text-gray-400">Commission</div>
             </div>
           </div>
