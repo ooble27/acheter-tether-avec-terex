@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
@@ -18,6 +19,7 @@ import {
   Anchor,
   TrendingDown
 } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface DashboardHomeProps {
   user: { email: string; name: string } | null;
@@ -32,6 +34,188 @@ const TetherLogo = ({ className }: { className?: string }) => (
 );
 
 export function DashboardHome({ user }: DashboardHomeProps) {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    // Design mobile identique à la maquette de téléphone
+    return (
+      <div className="min-h-screen bg-terex-dark p-3 space-y-3 text-xs overflow-y-auto scrollbar-hide">
+        {/* Header identique à la maquette */}
+        <div className="flex items-center space-x-2 mb-3">
+          <div className="w-6 h-6 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
+            <Activity className="w-3 h-3 text-white" />
+          </div>
+          <div>
+            <h1 className="text-sm font-bold text-white">
+              Bienvenue, <span className="text-terex-accent">{user?.name}</span>
+            </h1>
+            <p className="text-gray-400 text-xs text-left">Plateforme USDT</p>
+          </div>
+        </div>
+
+        {/* Services Grid - identique à la maquette */}
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
+            <CardContent className="p-2">
+              <div className="flex items-center justify-between mb-1">
+                <div className="w-6 h-6 bg-green-500/20 rounded-lg flex items-center justify-center">
+                  <TetherLogo className="w-4 h-4" />
+                </div>
+              </div>
+              <h3 className="text-white text-xs font-medium text-left">Acheter USDT</h3>
+              <p className="text-gray-400 text-xs text-left">Achat rapide</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
+            <CardContent className="p-2">
+              <div className="flex items-center justify-between mb-1">
+                <div className="w-6 h-6 bg-red-500/20 rounded-lg flex items-center justify-center">
+                  <TetherLogo className="w-4 h-4" />
+                </div>
+              </div>
+              <h3 className="text-white text-xs font-medium text-left">Vendre USDT</h3>
+              <p className="text-gray-400 text-xs text-left">Vente rapide</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
+            <CardContent className="p-2">
+              <div className="flex items-center justify-between mb-1">
+                <div className="w-6 h-6 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                  <Handshake className="w-3 h-3 text-purple-400" />
+                </div>
+              </div>
+              <h3 className="text-white text-xs font-medium text-left">Trading OTC</h3>
+              <p className="text-gray-400 text-xs text-left">Gros volumes</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
+            <CardContent className="p-2">
+              <div className="flex items-center justify-between mb-1">
+                <div className="w-6 h-6 bg-terex-accent/20 rounded-lg flex items-center justify-center">
+                  <Globe className="w-3 h-3 text-terex-accent" />
+                </div>
+              </div>
+              <h3 className="text-white text-xs font-medium text-left">Virements</h3>
+              <p className="text-gray-400 text-xs text-left">International</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Avantages Terex - identique à la maquette */}
+        <Card className="bg-terex-darker border-terex-gray mb-3">
+          <CardContent className="p-2">
+            <h3 className="text-white text-xs font-medium mb-2 flex items-center">
+              <Star className="w-3 h-3 mr-1 text-terex-accent" />
+              Avantages Terex
+            </h3>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center flex-shrink-0">
+                  <Star className="w-2 h-2 text-terex-accent" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white text-xs text-left">Frais gratuits</p>
+                  <p className="text-gray-400 text-xs text-left">0% de frais</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-green-500/20 rounded flex items-center justify-center flex-shrink-0">
+                  <Zap className="w-2 h-2 text-green-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white text-xs text-left">Rapide</p>
+                  <p className="text-gray-400 text-xs text-left">Instantané</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-blue-500/20 rounded flex items-center justify-center flex-shrink-0">
+                  <Clock className="w-2 h-2 text-blue-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white text-xs text-left">24/7</p>
+                  <p className="text-gray-400 text-xs text-left">Toujours disponible</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Section USDT - Pourquoi nous ne supportons que Tether */}
+        <Card className="bg-terex-darker border-terex-gray mb-3">
+          <CardContent className="p-2">
+            <h3 className="text-white text-xs font-medium mb-2 flex items-center">
+              <TetherLogo className="w-3 h-3 mr-1" />
+              Pourquoi Tether ?
+            </h3>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-green-500/20 rounded flex items-center justify-center flex-shrink-0">
+                  <Anchor className="w-2 h-2 text-green-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white text-xs text-left">Stabilité</p>
+                  <p className="text-gray-400 text-xs text-left">Adossé au dollar</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-blue-500/20 rounded flex items-center justify-center flex-shrink-0">
+                  <Globe className="w-2 h-2 text-blue-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white text-xs text-left">Mondial</p>
+                  <p className="text-gray-400 text-xs text-left">Accepté partout</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Section Sécurité et Confiance - identique à la maquette */}
+        <Card className="bg-terex-darker border-terex-gray">
+          <CardContent className="p-2">
+            <h3 className="text-white text-xs font-medium mb-2 flex items-center">
+              <Shield className="w-3 h-3 mr-1 text-blue-400" />
+              Sécurité & Confiance
+            </h3>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-blue-500/20 rounded flex items-center justify-center flex-shrink-0">
+                  <Shield className="w-2 h-2 text-blue-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white text-xs text-left">Sécurisé</p>
+                  <p className="text-gray-400 text-xs text-left">Cryptage SSL</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-yellow-500/20 rounded flex items-center justify-center flex-shrink-0">
+                  <Trophy className="w-2 h-2 text-yellow-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white text-xs text-left">Certifié</p>
+                  <p className="text-gray-400 text-xs text-left">Plateforme agréée</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center flex-shrink-0">
+                  <Users className="w-2 h-2 text-terex-accent" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white text-xs text-left">Support</p>
+                  <p className="text-gray-400 text-xs text-left">Équipe dédiée</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Design desktop inchangé
   return (
     <div className="min-h-screen bg-terex-dark p-4 md:p-6">
       {/* Header Section */}
