@@ -1,1134 +1,123 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 20 14.3% 4.1%;
-    --foreground: 0 0% 95%;
-
-    --card: 20 14.3% 4.1%;
-    --card-foreground: 0 0% 95%;
-
-    --popover: 20 14.3% 4.1%;
-    --popover-foreground: 0 0% 95%;
-
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 355.7 100% 97.3%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 142.4 71.8% 29.2%;
-
-    --radius: 0.75rem;
-
-    --sidebar-background: 20 14.3% 4.1%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 142.1 76.2% 36.3%;
-    --sidebar-primary-foreground: 355.7 100% 97.3%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 142.4 71.8% 29.2%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  html, body {
-    @apply bg-terex-dark text-foreground font-sans;
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    height: 100%;
-  }
-
-  #root {
-    min-height: 100vh;
-    height: 100%;
-  }
-}
-
-/* Classe pour masquer la barre de défilement */
-@layer utilities {
-  .scrollbar-hide {
-    /* Firefox */
-    scrollbar-width: none;
-    /* Safari et Chrome */
-    -ms-overflow-style: none;
-  }
+/* Variables CSS pour les couleurs Terex */
+:root {
+  --background: 210 40% 2%;
+  --foreground: 180 100% 90%;
+  --muted: 210 40% 5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --popover: 210 40% 3%;
+  --popover-foreground: 180 100% 90%;
+  --card: 210 40% 3%;
+  --card-foreground: 180 100% 90%;
+  --border: 210 40% 12%;
+  --input: 210 40% 12%;
+  --primary: 180 65% 41%;
+  --primary-foreground: 210 40% 2%;
+  --secondary: 210 40% 8%;
+  --secondary-foreground: 180 100% 90%;
+  --accent: 180 65% 41%;
+  --accent-foreground: 210 40% 2%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --ring: 180 65% 41%;
+  --radius: 0.5rem;
   
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-/* Classes utilitaires pour les safe areas iOS PWA */
-@supports (padding-top: env(safe-area-inset-top)) {
-  .pt-safe {
-    padding-top: env(safe-area-inset-top);
-  }
-  
-  .pb-safe {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-  
-  .pl-safe {
-    padding-left: env(safe-area-inset-left);
-  }
-  
-  .pr-safe {
-    padding-right: env(safe-area-inset-right);
-  }
-  
-  .mt-safe {
-    margin-top: env(safe-area-inset-top);
-  }
-  
-  .mb-safe {
-    margin-bottom: env(safe-area-inset-bottom);
-  }
-}
-
-/* Style Binance pour le logo et branding */
-.terex-brand {
-  background: linear-gradient(135deg, #3B968F 0%, #4BA89F 50%, #5BC1B8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  text-shadow: 0 0 30px rgba(59, 150, 143, 0.3);
-}
-
-.logo-glow {
-  position: relative;
-}
-
-.logo-glow::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  background: linear-gradient(45deg, #3B968F, #4BA89F, #5BC1B8);
-  border-radius: inherit;
-  filter: blur(8px);
-  opacity: 0.3;
-  z-index: -1;
-}
-
-.gradient-button {
-  background: linear-gradient(135deg, #3B968F 0%, #4BA89F 100%);
-  transition: all 0.3s ease;
-}
-
-.gradient-button:hover {
-  background: linear-gradient(135deg, #4BA89F 0%, #5BC1B8 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(59, 150, 143, 0.3);
-}
-
-.gradient-button:disabled {
-  transform: none;
-  box-shadow: none;
-}
-
-/* Glass morphism effect pour les cartes */
-.glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Styles pour la carte de l'Afrique 3D */
-.africa-map-container {
-  perspective: 1000px;
-  transform-style: preserve-3d;
-}
-
-.africa-map {
-  position: relative;
-  transform: rotateX(15deg) rotateY(-5deg);
-  animation: float 6s ease-in-out infinite;
-  filter: drop-shadow(0 20px 40px rgba(59, 150, 143, 0.3));
-}
-
-.africa-continent {
-  animation: pulse-continent 4s ease-in-out infinite;
-}
-
-.sahara-region {
-  animation: sahara-glow 5s ease-in-out infinite;
-}
-
-.africa-shadow {
-  position: absolute;
-  bottom: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 300px;
-  height: 100px;
-  background: radial-gradient(ellipse, rgba(59, 150, 143, 0.2) 0%, transparent 70%);
-  border-radius: 50%;
-  filter: blur(20px);
-}
-
-/* Points des pays - positions plus réalistes */
-.country-point {
-  position: absolute;
-  transform: translate(-50%, -50%);
-}
-
-.senegal {
-  top: 30%;
-  left: 15%;
-}
-
-.ivory-coast {
-  top: 50%;
-  left: 18%;
-}
-
-.mali {
-  top: 35%;
-  left: 25%;
-}
-
-.burkina {
-  top: 42%;
-  left: 28%;
-}
-
-.niger {
-  top: 32%;
-  left: 35%;
-}
-
-.nigeria {
-  top: 48%;
-  left: 35%;
-}
-
-.pulse-dot {
-  width: 12px;
-  height: 12px;
-  background: linear-gradient(135deg, #3B968F, #5BC1B8);
-  border-radius: 50%;
-  animation: pulse-dot 2s ease-in-out infinite;
-  box-shadow: 0 0 20px rgba(59, 150, 143, 0.6);
-}
-
-.country-label {
-  position: absolute;
-  top: -35px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #3B968F;
-  font-size: 10px;
-  font-weight: 600;
-  white-space: nowrap;
-  opacity: 0;
-  animation: fade-label 3s ease-in-out infinite;
-  text-shadow: 0 0 10px rgba(59, 150, 143, 0.5);
-}
-
-/* Flux d'USDT */
-.usdt-flow {
-  position: absolute;
-  pointer-events: none;
-}
-
-.flow-1 {
-  top: 25%;
-  left: 20%;
-  animation: flow-path-1 8s linear infinite;
-}
-
-.flow-2 {
-  top: 40%;
-  right: 20%;
-  animation: flow-path-2 10s linear infinite;
-}
-
-.flow-3 {
-  bottom: 35%;
-  left: 25%;
-  animation: flow-path-3 12s linear infinite;
-}
-
-.flow-4 {
-  bottom: 25%;
-  right: 30%;
-  animation: flow-path-4 9s linear infinite;
-}
-
-.usdt-particle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(38, 161, 123, 0.1);
-  border-radius: 50%;
-  padding: 8px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(38, 161, 123, 0.3);
-  box-shadow: 0 0 20px rgba(38, 161, 123, 0.4);
-  animation: particle-glow 2s ease-in-out infinite;
-}
-
-/* Particules flottantes d'arrière-plan */
-.floating-particle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: #3B968F;
-  border-radius: 50%;
-  opacity: 0.6;
-}
-
-.particle-1 {
-  top: 15%;
-  left: 10%;
-  animation: float-particle 15s linear infinite;
-}
-
-.particle-2 {
-  top: 25%;
-  right: 15%;
-  animation: float-particle 18s linear infinite reverse;
-}
-
-.particle-3 {
-  bottom: 25%;
-  left: 20%;
-  animation: float-particle 20s linear infinite;
-}
-
-.particle-4 {
-  bottom: 35%;
-  right: 10%;
-  animation: float-particle 16s linear infinite reverse;
-}
-
-.particle-5 {
-  top: 60%;
-  left: 8%;
-  animation: float-particle 22s linear infinite;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .animate-fade-in {
-    animation: fade-in 0.4s ease-out;
-  }
-  
-  .animate-slide-up {
-    animation: slide-up 0.3s ease-out;
-  }
-  
-  .animate-scale-in {
-    animation: scale-in 0.2s ease-out;
-  }
-
-  .animate-glow {
-    animation: glow 2s ease-in-out infinite alternate;
-  }
-}
-
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes glow {
-  from {
-    box-shadow: 0 0 20px rgba(59, 150, 143, 0.2);
-  }
-  to {
-    box-shadow: 0 0 30px rgba(59, 150, 143, 0.4);
-  }
-}
-
-/* Animations pour la carte de l'Afrique */
-@keyframes float {
-  0%, 100% {
-    transform: rotateX(15deg) rotateY(-5deg) translateY(0px);
-  }
-  50% {
-    transform: rotateX(15deg) rotateY(-5deg) translateY(-10px);
-  }
-}
-
-@keyframes pulse-continent {
-  0%, 100% {
-    filter: drop-shadow(0 0 10px rgba(59, 150, 143, 0.4));
-  }
-  50% {
-    filter: drop-shadow(0 0 20px rgba(59, 150, 143, 0.8));
-  }
-}
-
-@keyframes sahara-glow {
-  0%, 100% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 0.4;
-  }
-}
-
-@keyframes pulse-dot {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 0.7;
-  }
-}
-
-@keyframes fade-label {
-  0%, 70% {
-    opacity: 0;
-  }
-  80%, 90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes particle-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(38, 161, 123, 0.4);
-    transform: scale(1);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(38, 161, 123, 0.8);
-    transform: scale(1.1);
-  }
-}
-
-@keyframes flow-path-1 {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(250px, 150px) rotate(360deg);
-    opacity: 0;
-  }
-}
-
-@keyframes flow-path-2 {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-200px, 120px) rotate(-360deg);
-    opacity: 0;
-  }
-}
-
-@keyframes flow-path-3 {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(180px, -140px) rotate(360deg);
-    opacity: 0;
-  }
-}
-
-@keyframes flow-path-4 {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-160px, -120px) rotate(-360deg);
-    opacity: 0;
-  }
-}
-
-@keyframes float-particle {
-  0% {
-    transform: translateY(0px) rotate(0deg);
-    opacity: 0.6;
-  }
-  50% {
-    transform: translateY(-20px) rotate(180deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(0px) rotate(360deg);
-    opacity: 0.6;
-  }
-}
-
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes spin-reverse {
-  from {
-    transform: rotate(360deg);
-  }
-  to {
-    transform: rotate(0deg);
-  }
-}
-
-@keyframes wave {
-  0%, 100% {
-    transform: translateY(0px) scale(1);
-  }
-  50% {
-    transform: translateY(-8px) scale(1.1);
-  }
-}
-
-@keyframes wave-delay-1 {
-  0%, 100% {
-    transform: translateY(0px) scale(1);
-  }
-  50% {
-    transform: translateY(-6px) scale(1.05);
-  }
-}
-
-@keyframes wave-delay-2 {
-  0%, 100% {
-    transform: translateY(0px) scale(1);
-  }
-  50% {
-    transform: translateY(-10px) scale(1.15);
-  }
-}
-
-@keyframes wave-delay-3 {
-  0%, 100% {
-    transform: translateY(0px) scale(1);
-  }
-  50% {
-    transform: translateY(-7px) scale(1.08);
-  }
-}
-
-@keyframes wave-delay-4 {
-  0%, 100% {
-    transform: translateY(0px) scale(1);
-  }
-  50% {
-    transform: translateY(-5px) scale(1.12);
-  }
-}
-
-@keyframes wave-delay-5 {
-  0%, 100% {
-    transform: translateY(0px) scale(1);
-  }
-  50% {
-    transform: translateY(-9px) scale(1.06);
-  }
-}
-
-@keyframes pulse-slow {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 1;
-  }
-}
-
-@keyframes pulse-wave {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.3;
-  }
-  50% {
-    transform: scale(1.02);
-    opacity: 0.6;
-  }
-}
-
-@keyframes pulse-wave-reverse {
-  0%, 100% {
-    transform: scale(1.02);
-    opacity: 0.6;
-  }
-  50% {
-    transform: scale(1);
-    opacity: 0.3;
-  }
-}
-
-@keyframes float-wave-1 {
-  0%, 100% {
-    transform: translateY(0px) translateX(0px);
-    opacity: 0.6;
-  }
-  33% {
-    transform: translateY(-15px) translateX(5px);
-    opacity: 1;
-  }
-  66% {
-    transform: translateY(-8px) translateX(-3px);
-    opacity: 0.8;
-  }
-}
-
-@keyframes float-wave-2 {
-  0%, 100% {
-    transform: translateY(0px) translateX(0px) rotate(0deg);
-    opacity: 0.7;
-  }
-  33% {
-    transform: translateY(-12px) translateX(-4px) rotate(120deg);
-    opacity: 1;
-  }
-  66% {
-    transform: translateY(-6px) translateX(2px) rotate(240deg);
-    opacity: 0.9;
-  }
-}
-
-@keyframes float-wave-3 {
-  0%, 100% {
-    transform: translateY(0px) translateX(0px) scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: translateY(-18px) translateX(8px) scale(1.2);
-    opacity: 1;
-  }
-}
-
-@keyframes glow-wave {
-  0%, 100% {
-    filter: blur(10px);
-    opacity: 0.3;
-  }
-  50% {
-    filter: blur(15px);
-    opacity: 0.6;
-  }
-}
-
-/* Classes d'animation */
-.animate-spin-slow {
-  animation: spin-slow 15s linear infinite;
-}
-
-.animate-spin-reverse {
-  animation: spin-reverse 20s linear infinite;
-}
-
-.animate-wave {
-  animation: wave 3s ease-in-out infinite;
-}
-
-.animate-wave-delay-1 {
-  animation: wave-delay-1 3s ease-in-out infinite 0.5s;
-}
-
-.animate-wave-delay-2 {
-  animation: wave-delay-2 3s ease-in-out infinite 1s;
-}
-
-.animate-wave-delay-3 {
-  animation: wave-delay-3 3s ease-in-out infinite 1.5s;
-}
-
-.animate-wave-delay-4 {
-  animation: wave-delay-4 3s ease-in-out infinite 2s;
-}
-
-.animate-wave-delay-5 {
-  animation: wave-delay-5 3s ease-in-out infinite 2.5s;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 4s ease-in-out infinite;
-}
-
-.animate-pulse-wave {
-  animation: pulse-wave 5s ease-in-out infinite;
-}
-
-.animate-pulse-wave-reverse {
-  animation: pulse-wave-reverse 5s ease-in-out infinite;
-}
-
-.animate-float-wave-1 {
-  animation: float-wave-1 8s ease-in-out infinite;
-}
-
-.animate-float-wave-2 {
-  animation: float-wave-2 10s ease-in-out infinite;
-}
-
-.animate-float-wave-3 {
-  animation: float-wave-3 12s ease-in-out infinite;
-}
-
-.animate-glow-wave {
-  animation: glow-wave 6s ease-in-out infinite;
-}
-
-@media (max-width: 768px) {
-  .mobile-optimized {
-    padding: 1rem;
-  }
-  
-  .card-mobile {
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .country-label {
-    font-size: 8px;
-    top: -30px;
-  }
-  
-  .usdt-particle {
-    padding: 6px;
-  }
+  /* Variables custom Terex */
+  --terex-dark: 210 40% 2%;
+  --terex-darker: 210 40% 1%;
+  --terex-light: 180 100% 90%;
+  --terex-accent: 180 65% 41%;
+  --terex-secondary: 210 40% 8%;
+}
+
+html {
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
 * {
-  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+  border-color: hsl(var(--border));
 }
 
-/* Nouvelle visualisation crypto moderne */
-.crypto-visualization-container {
-  position: relative;
-  width: 400px;
-  height: 400px;
-  perspective: 1000px;
-  transform-style: preserve-3d;
+body {
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  font-feature-settings: "rlig" 1, "calt" 1;
 }
 
-/* Cercles concentriques */
-.crypto-circles {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.crypto-circle {
-  position: absolute;
-  border: 2px solid rgba(59, 150, 143, 0.3);
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.circle-1 {
-  width: 100px;
-  height: 100px;
-  animation: pulse-circle 3s ease-in-out infinite;
-}
-
-.circle-2 {
-  width: 180px;
-  height: 180px;
-  animation: pulse-circle 3s ease-in-out infinite 0.5s;
-}
-
-.circle-3 {
-  width: 260px;
-  height: 260px;
-  animation: pulse-circle 3s ease-in-out infinite 1s;
-}
-
-.circle-4 {
-  width: 340px;
-  height: 340px;
-  animation: pulse-circle 3s ease-in-out infinite 1.5s;
-}
-
-/* Logo USDT central */
-.central-usdt-logo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-}
-
-.usdt-glow-effect {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(59, 150, 143, 0.1) 0%, transparent 70%);
-  animation: central-glow 4s ease-in-out infinite;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(59, 150, 143, 0.2);
-}
-
-/* Hexagones flottants */
-.floating-hexagons {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.hexagon {
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  background: rgba(20, 14, 4, 0.8);
-  border: 2px solid rgba(59, 150, 143, 0.4);
-  border-radius: 8px;
-  backdrop-filter: blur(10px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.hexagon:hover {
-  border-color: #3B968F;
-  transform: scale(1.1);
-  background: rgba(59, 150, 143, 0.1);
-}
-
-.hexagon-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hex-1 {
-  top: 10%;
-  left: 20%;
-  animation: float-hex 6s ease-in-out infinite;
-}
-
-.hex-2 {
-  top: 15%;
-  right: 15%;
-  animation: float-hex 6s ease-in-out infinite 1s;
-}
-
-.hex-3 {
-  top: 60%;
-  left: 10%;
-  animation: float-hex 6s ease-in-out infinite 2s;
-}
-
-.hex-4 {
-  bottom: 20%;
-  right: 20%;
-  animation: float-hex 6s ease-in-out infinite 3s;
-}
-
-.hex-5 {
-  top: 45%;
-  left: 5%;
-  animation: float-hex 6s ease-in-out infinite 4s;
-}
-
-.hex-6 {
-  top: 35%;
-  right: 8%;
-  animation: float-hex 6s ease-in-out infinite 5s;
-}
-
-/* Lignes de connexion */
-.connection-lines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.connections-svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.connection-line {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  animation: draw-line 4s ease-in-out infinite;
-}
-
-.line-1 { animation-delay: 0s; }
-.line-2 { animation-delay: 0.5s; }
-.line-3 { animation-delay: 1s; }
-.line-4 { animation-delay: 1.5s; }
-.line-5 { animation-delay: 2s; }
-.line-6 { animation-delay: 2.5s; }
-
-/* Particules flottantes */
-.floating-particles {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.particle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: #3B968F;
-  border-radius: 50%;
-  opacity: 0.7;
-}
-
-.particle-1 {
-  top: 20%;
-  left: 30%;
-  animation: float-particle 8s linear infinite;
-}
-
-.particle-2 {
-  top: 70%;
-  left: 60%;
-  animation: float-particle 10s linear infinite reverse;
-}
-
-.particle-3 {
-  top: 40%;
-  left: 80%;
-  animation: float-particle 12s linear infinite;
-}
-
-.particle-4 {
-  top: 80%;
-  left: 20%;
-  animation: float-particle 9s linear infinite reverse;
-}
-
-.particle-5 {
-  top: 10%;
-  left: 70%;
-  animation: float-particle 11s linear infinite;
-}
-
-.particle-6 {
-  top: 60%;
-  left: 10%;
-  animation: float-particle 7s linear infinite reverse;
-}
-
-.particle-7 {
-  top: 30%;
-  left: 50%;
-  animation: float-particle 13s linear infinite;
-}
-
-.particle-8 {
-  top: 90%;
-  left: 40%;
-  animation: float-particle 6s linear infinite reverse;
-}
-
-/* Données flottantes */
-.floating-data {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.data-point {
-  position: absolute;
-  background: rgba(59, 150, 143, 0.1);
-  border: 1px solid rgba(59, 150, 143, 0.3);
-  border-radius: 20px;
-  padding: 4px 12px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #3B968F;
-  backdrop-filter: blur(10px);
-  animation: data-float 5s ease-in-out infinite;
-}
-
-.data-1 {
-  top: 25%;
-  left: 75%;
-  animation-delay: 0s;
-}
-
-.data-2 {
-  top: 65%;
-  left: 75%;
-  animation-delay: 1s;
-}
-
-.data-3 {
-  top: 75%;
-  left: 25%;
-  animation-delay: 2s;
-}
-
-.data-4 {
-  top: 25%;
-  left: 15%;
-  animation-delay: 3s;
-}
-
-/* Animations */
-@keyframes pulse-circle {
+/* Animations 3D pour SimpleVisual */
+@keyframes float3D {
   0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.3;
+    transform: translate(-50%, -50%) rotateX(20deg) rotateY(-10deg) translateY(0px);
   }
   50% {
-    transform: translate(-50%, -50%) scale(1.05);
-    opacity: 0.6;
+    transform: translate(-50%, -50%) rotateX(25deg) rotateY(10deg) translateY(-8px);
   }
 }
 
-@keyframes central-glow {
+@keyframes geometric3DFloat {
   0%, 100% {
-    box-shadow: 0 0 30px rgba(59, 150, 143, 0.3);
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    box-shadow: 0 0 50px rgba(59, 150, 143, 0.6);
-    transform: translate(-50%, -50%) scale(1.05);
-  }
-}
-
-@keyframes float-hex {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
+    transform: rotateX(45deg) rotateY(30deg) translateY(0px) translateZ(0px);
   }
   33% {
-    transform: translateY(-10px) rotate(120deg);
+    transform: rotateX(60deg) rotateY(45deg) translateY(-12px) translateZ(15px);
   }
   66% {
-    transform: translateY(5px) rotate(240deg);
+    transform: rotateX(30deg) rotateY(15deg) translateY(-6px) translateZ(-8px);
   }
 }
 
-@keyframes draw-line {
+@keyframes particle3DMove {
   0% {
-    stroke-dashoffset: 100;
-    opacity: 0;
+    transform: translateZ(30px) translateY(0px) translateX(0px) rotateY(0deg);
+    opacity: 0.8;
   }
-  20% {
-    opacity: 1;
-  }
-  80% {
-    stroke-dashoffset: 0;
+  50% {
+    transform: translateZ(50px) translateY(-15px) translateX(8px) rotateY(180deg);
     opacity: 1;
   }
   100% {
-    stroke-dashoffset: -100;
-    opacity: 0;
+    transform: translateZ(30px) translateY(0px) translateX(0px) rotateY(360deg);
+    opacity: 0.8;
   }
 }
 
-@keyframes data-float {
+@keyframes dataLabel3D {
   0%, 100% {
-    transform: translateY(0px);
-    opacity: 0.7;
+    transform: translateZ(15px) translateY(0px);
+    opacity: 0.9;
   }
   50% {
-    transform: translateY(-8px);
+    transform: translateZ(25px) translateY(-8px);
     opacity: 1;
   }
 }
 
-@media (max-width: 768px) {
-  .crypto-visualization-container {
-    width: 300px;
-    height: 300px;
+/* Gradient radial pour l'effet de lueur */
+.bg-gradient-radial {
+  background: radial-gradient(circle at center, var(--tw-gradient-stops));
+}
+
+@layer base {
+  /* Scrollbar personnalisée */
+  ::-webkit-scrollbar {
+    width: 8px;
   }
   
-  .hexagon {
-    width: 45px;
-    height: 45px;
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
   }
   
-  .data-point {
-    font-size: 10px;
-    padding: 3px 8px;
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--accent));
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--accent) / 0.8);
   }
 }
