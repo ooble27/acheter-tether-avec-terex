@@ -15,13 +15,15 @@ import {
   Mail, 
   MapPin,
   Trash2,
-  Clock
+  Clock,
+  Edit3
 } from 'lucide-react';
 import { useFavoriteRecipients, FavoriteRecipient } from '@/hooks/useFavoriteRecipients';
 
 interface RecipientSelectorProps {
   onSelectRecipient: (recipient: FavoriteRecipient | null) => void;
   onContinue: () => void;
+  onEditRecipient: (recipient: FavoriteRecipient) => void;
   selectedRecipient: FavoriteRecipient | null;
   isNewRecipient: boolean;
   setIsNewRecipient: (value: boolean) => void;
@@ -38,7 +40,8 @@ const availableCountries = [
 
 export function RecipientSelector({ 
   onSelectRecipient, 
-  onContinue, 
+  onContinue,
+  onEditRecipient,
   selectedRecipient, 
   isNewRecipient, 
   setIsNewRecipient 
@@ -73,6 +76,11 @@ export function RecipientSelector({
   const handleNewRecipient = () => {
     onSelectRecipient(null);
     setIsNewRecipient(true);
+  };
+
+  const handleEditRecipient = (recipient: FavoriteRecipient, e: React.MouseEvent) => {
+    e.stopPropagation();
+    onEditRecipient(recipient);
   };
 
   if (loading) {
@@ -158,6 +166,15 @@ export function RecipientSelector({
                     </div>
                     
                     <div className="flex items-center space-x-2">
+                      <Button
+                        onClick={(e) => handleEditRecipient(recipient, e)}
+                        variant="outline"
+                        size="sm"
+                        className="border-terex-accent/50 text-terex-accent hover:bg-terex-accent/10 h-8 w-8 p-0"
+                      >
+                        <Edit3 className="w-3 h-3" />
+                      </Button>
+                      
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();

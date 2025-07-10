@@ -37,6 +37,7 @@ export function InternationalTransfer() {
   const [createdTransfer, setCreatedTransfer] = useState<any>(null);
   const [selectedRecipient, setSelectedRecipient] = useState<FavoriteRecipient | null>(null);
   const [isNewRecipient, setIsNewRecipient] = useState(false);
+  const [editingRecipient, setEditingRecipient] = useState<FavoriteRecipient | null>(null);
   
   const { createTransfer, loading } = useInternationalTransfers();
   const { user } = useAuth();
@@ -103,6 +104,31 @@ export function InternationalTransfer() {
       setProvider('');
       setSendAmount('');
     }
+  };
+
+  const handleEditRecipient = (recipient: FavoriteRecipient) => {
+    setEditingRecipient(recipient);
+    setSelectedRecipient(null);
+    setIsNewRecipient(false);
+    
+    // Pré-remplir les données du destinataire à éditer
+    const names = recipient.recipient_name.split(' ');
+    setRecipientFirstName(names[0] || '');
+    setRecipientLastName(names.slice(1).join(' ') || '');
+    setRecipientEmail(recipient.recipient_email || '');
+    setRecipientPhone(recipient.recipient_phone || '');
+    setRecipientAccount(recipient.recipient_account || '');
+    setRecipientBank(recipient.recipient_bank || '');
+    setRecipientCountry(recipient.recipient_country);
+    setReceiveMethod(recipient.receive_method);
+    setProvider(recipient.provider || '');
+    
+    // Suggérer le dernier montant envoyé
+    if (recipient.last_amount) {
+      setSendAmount(recipient.last_amount.toString());
+    }
+    
+    setCurrentStep('form');
   };
 
   const handleRecipientContinue = () => {
@@ -203,6 +229,7 @@ export function InternationalTransfer() {
     setCreatedTransfer(null);
     setSelectedRecipient(null);
     setIsNewRecipient(false);
+    setEditingRecipient(null);
   };
 
   // Rendu conditionnel selon l'étape
@@ -224,6 +251,7 @@ export function InternationalTransfer() {
             <RecipientSelector
               onSelectRecipient={handleRecipientSelect}
               onContinue={handleRecipientContinue}
+              onEditRecipient={handleEditRecipient}
               selectedRecipient={selectedRecipient}
               isNewRecipient={isNewRecipient}
               setIsNewRecipient={setIsNewRecipient}
@@ -299,14 +327,18 @@ export function InternationalTransfer() {
     );
   }
 
-  // Formulaire principal (pour les nouveaux destinataires)
+  // Formulaire principal (pour les nouveaux destinataires ou l'édition)
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
       <div className="min-h-screen bg-terex-dark p-2 md:p-4">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6 md:mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Nouveau destinataire</h1>
-            <p className="text-gray-400">Remplissez les informations du nouveau destinataire</p>
+            <h1 className="text-3xl font-bold text-white mb-2">
+              {editingRecipient ? 'Modifier le destinataire' : 'Nouveau destinataire'}
+            </h1>
+            <p className="text-gray-400">
+              {editingRecipient ? 'Modifiez les informations du destinataire' : 'Remplissez les informations du nouveau destinataire'}
+            </p>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
@@ -314,7 +346,9 @@ export function InternationalTransfer() {
               <Card className="bg-terex-darker border-terex-gray shadow-2xl">
                 <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-white text-lg md:text-xl">Nouveau transfert</CardTitle>
+                    <CardTitle className="text-white text-lg md:text-xl">
+                      {editingRecipient ? 'Modifier le transfert' : 'Nouveau transfert'}
+                    </CardTitle>
                     <Button
                       variant="outline"
                       onClick={() => setCurrentStep('recipient-select')}
@@ -354,7 +388,12 @@ export function InternationalTransfer() {
                     setRecipientAccount={setRecipientAccount}
                     recipientBank={recipientBank}
                     setRecipientBank={setRecipientBank}
+                    recipientCountry={recipientCountry}
+                    setRecipientCountry={setRecipientCountry}
                     receiveMethod={receiveMethod}
+                    setReceiveMethod={setReceiveMethod}
+                    provider={provider}
+                    setProvider={setProvider}
                   />
 
                   <Button 
