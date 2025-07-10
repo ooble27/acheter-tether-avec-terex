@@ -32,17 +32,17 @@ export function DeviceMockups() {
       <div className="absolute inset-0 bg-gradient-to-r from-terex-accent/20 via-transparent to-terex-accent/20 blur-3xl"></div>
       
       {/* Desktop and Mobile layout - Better spacing and arrangement */}
-      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20 xl:gap-24">
+      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 xl:gap-20">
         
         {/* iMac mockup - visible on larger screens */}
         <div className="hidden lg:block relative">
-          <div className="absolute inset-0 bg-terex-accent/20 rounded-3xl blur-3xl scale-110 animate-pulse"></div>
+          <div className="absolute inset-0 bg-terex-accent/10 rounded-3xl blur-2xl scale-105 animate-pulse"></div>
           <IMacMockup currentSlide={currentSlide} />
         </div>
         
-        {/* Mobile mockup - always visible, better proportions */}
-        <div className="relative">
-          <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
+        {/* Mobile mockup - smaller on desktop */}
+        <div className="relative scale-90 lg:scale-75">
+          <div className="absolute inset-0 bg-terex-accent/10 rounded-full blur-2xl scale-105 animate-pulse"></div>
           <IPhoneMockup currentSlide={currentSlide} />
         </div>
       </div>
@@ -67,13 +67,13 @@ export function DeviceMockups() {
 
 function IMacMockup({ currentSlide }: { currentSlide: number }) {
   return (
-    <div className="relative mx-auto scale-75 xl:scale-85">
-      {/* iMac Screen */}
-      <div className="relative w-[480px] h-[360px] bg-gradient-to-br from-gray-100 to-gray-300 rounded-3xl p-4 shadow-2xl border-2 border-gray-200">
-        {/* Screen bezel */}
-        <div className="w-full h-full bg-black rounded-2xl p-1">
-          {/* Camera */}
-          <div className="absolute top-3 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rounded-full z-20"></div>
+    <div className="relative mx-auto scale-90 xl:scale-100">
+      {/* iMac Screen - More realistic proportions */}
+      <div className="relative w-[520px] h-[390px] bg-gradient-to-b from-gray-50 to-gray-200 rounded-[2rem] p-3 shadow-2xl border border-gray-300">
+        {/* Screen bezel with Apple-like styling */}
+        <div className="w-full h-full bg-black rounded-[1.5rem] p-2 relative">
+          {/* Apple logo area */}
+          <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-gray-700 rounded-full"></div>
           
           {/* Screen content */}
           <div className="w-full h-full bg-terex-dark rounded-xl overflow-hidden relative">
@@ -82,12 +82,14 @@ function IMacMockup({ currentSlide }: { currentSlide: number }) {
         </div>
       </div>
       
-      {/* iMac Stand */}
+      {/* iMac Stand - More realistic */}
       <div className="flex flex-col items-center">
-        {/* Neck */}
-        <div className="w-8 h-16 bg-gradient-to-b from-gray-200 to-gray-400 rounded-b-lg shadow-md"></div>
-        {/* Base */}
-        <div className="w-32 h-6 bg-gradient-to-b from-gray-300 to-gray-500 rounded-full shadow-lg"></div>
+        {/* Neck - thinner and more elegant */}
+        <div className="w-6 h-12 bg-gradient-to-b from-gray-200 via-gray-300 to-gray-400 rounded-b-md shadow-lg"></div>
+        {/* Base - Apple-like curved base */}
+        <div className="w-40 h-4 bg-gradient-to-b from-gray-300 to-gray-500 rounded-full shadow-xl relative">
+          <div className="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent rounded-full"></div>
+        </div>
       </div>
     </div>
   );
@@ -95,22 +97,22 @@ function IMacMockup({ currentSlide }: { currentSlide: number }) {
 
 function IPhoneMockup({ currentSlide }: { currentSlide: number }) {
   return (
-    <div className="relative mx-auto scale-90 lg:scale-100">
-      {/* Phone Frame */}
-      <div className="relative w-[280px] h-[560px] bg-gradient-to-br from-white/20 to-white/10 rounded-[3rem] p-2 shadow-2xl border border-white/30">
+    <div className="relative mx-auto">
+      {/* Phone Frame - More realistic iPhone styling */}
+      <div className="relative w-[260px] h-[520px] bg-gradient-to-br from-gray-800 to-black rounded-[2.8rem] p-2 shadow-2xl border border-gray-700">
         {/* Screen bezel */}
-        <div className="w-full h-full bg-black rounded-[2.5rem] p-1">
-          {/* Notch */}
-          <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-20 h-5 bg-black rounded-full z-20"></div>
+        <div className="w-full h-full bg-black rounded-[2.3rem] p-1 relative">
+          {/* Dynamic Island */}
+          <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-24 h-6 bg-black rounded-full z-20 border border-gray-800"></div>
           
           {/* Screen content */}
-          <div className="w-full h-full bg-terex-dark rounded-[2.2rem] overflow-hidden relative">
+          <div className="w-full h-full bg-terex-dark rounded-[2rem] overflow-hidden relative">
             <MobileScreenContent currentSlide={currentSlide} />
           </div>
         </div>
         
         {/* Home indicator */}
-        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-white rounded-full opacity-60"></div>
+        <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-28 h-1 bg-white rounded-full opacity-60"></div>
       </div>
     </div>
   );
@@ -155,10 +157,13 @@ function MobileScreenContent({ currentSlide }: { currentSlide: number }) {
       {/* Status bar */}
       <div className="h-8 bg-terex-darker flex items-center justify-between px-4 text-xs text-white">
         <span>9:41</span>
-        <div className="flex space-x-1">
-          <div className="w-4 h-2 bg-white rounded-sm"></div>
-          <div className="w-4 h-2 bg-white rounded-sm"></div>
-          <div className="w-4 h-2 bg-white rounded-sm"></div>
+        <div className="flex space-x-1 items-center">
+          <div className="flex space-x-1">
+            <div className="w-1 h-1 bg-white rounded-full"></div>
+            <div className="w-1 h-1 bg-white rounded-full"></div>
+            <div className="w-1 h-1 bg-white rounded-full"></div>
+          </div>
+          <div className="w-6 h-3 bg-green-400 rounded-sm ml-2"></div>
         </div>
       </div>
 
@@ -180,64 +185,84 @@ function MobileScreenContent({ currentSlide }: { currentSlide: number }) {
   );
 }
 
-// Desktop Screen Components
+// Desktop Screen Components - Real Terex platform pages
 function DashboardScreen() {
   return (
-    <div className="p-6 bg-terex-dark text-white h-full overflow-y-auto scrollbar-hide">
-      <div className="flex items-center space-x-3 mb-6">
-        <div className="w-8 h-8 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
-          <Activity className="w-4 h-4 text-white" />
+    <div className="p-4 bg-terex-dark text-white h-full overflow-y-auto scrollbar-hide">
+      {/* Header with Terex branding */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
+            <Activity className="w-4 h-4 text-black" />
+          </div>
+          <div>
+            <h1 className="text-lg font-bold text-white">Dashboard Terex</h1>
+            <p className="text-gray-400 text-xs">Plateforme USDT & Virements</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-xl font-bold text-white">Dashboard Terex</h1>
-          <p className="text-gray-400 text-sm">Plateforme USDT</p>
+        <div className="w-8 h-8 bg-terex-accent/20 rounded-full flex items-center justify-center">
+          <User className="w-4 h-4 text-terex-accent" />
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-3 mb-2">
-              <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
-                <TetherLogo className="w-5 h-5" />
-              </div>
-              <h3 className="text-white font-medium">Acheter USDT</h3>
-            </div>
-            <p className="text-gray-400 text-sm">Achat rapide et sécurisé</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-3 mb-2">
-              <div className="w-8 h-8 bg-terex-accent/20 rounded-lg flex items-center justify-center">
-                <Globe className="w-4 h-4 text-terex-accent" />
-              </div>
-              <h3 className="text-white font-medium">Virements</h3>
-            </div>
-            <p className="text-gray-400 text-sm">Transferts internationaux</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="bg-terex-darker border-terex-gray">
+      {/* Balance card */}
+      <Card className="bg-gradient-to-r from-terex-accent/10 to-terex-accent/5 border-terex-accent/30 mb-4">
         <CardContent className="p-4">
-          <h3 className="text-white font-medium mb-3 flex items-center">
-            <Star className="w-4 h-4 mr-2 text-terex-accent" />
-            Avantages Terex
-          </h3>
-          <div className="space-y-2">
-            <div className="flex items-center space-x-3">
-              <div className="w-6 h-6 bg-terex-accent/20 rounded flex items-center justify-center">
-                <Zap className="w-3 h-3 text-terex-accent" />
-              </div>
-              <span className="text-white text-sm">Frais gratuits</span>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-400 text-sm">Balance USDT</p>
+              <p className="text-2xl font-bold text-terex-accent">1,247.50</p>
             </div>
-            <div className="flex items-center space-x-3">
+            <TetherLogo className="w-8 h-8" />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Quick actions */}
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
+          <CardContent className="p-3">
+            <div className="flex items-center space-x-2 mb-2">
               <div className="w-6 h-6 bg-green-500/20 rounded flex items-center justify-center">
-                <Clock className="w-3 h-3 text-green-400" />
+                <TetherLogo className="w-4 h-4" />
               </div>
-              <span className="text-white text-sm">Transferts instantanés</span>
+              <h3 className="text-white text-sm font-medium">Acheter USDT</h3>
+            </div>
+            <p className="text-gray-400 text-xs">Achat rapide et sécurisé</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
+          <CardContent className="p-3">
+            <div className="flex items-center space-x-2 mb-2">
+              <div className="w-6 h-6 bg-blue-500/20 rounded flex items-center justify-center">
+                <Globe className="w-4 h-4 text-blue-400" />
+              </div>
+              <h3 className="text-white text-sm font-medium">Virements</h3>
+            </div>
+            <p className="text-gray-400 text-xs">Transferts internationaux</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Recent transactions */}
+      <Card className="bg-terex-darker border-terex-gray">
+        <CardContent className="p-3">
+          <h3 className="text-white text-sm font-medium mb-3">Transactions récentes</h3>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between p-2 bg-terex-dark rounded">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                <span className="text-white text-xs">Achat USDT</span>
+              </div>
+              <span className="text-terex-accent text-xs font-medium">+500 USDT</span>
+            </div>
+            <div className="flex items-center justify-between p-2 bg-terex-dark rounded">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+                <span className="text-white text-xs">Virement Cameroun</span>
+              </div>
+              <span className="text-gray-400 text-xs">-200 CAD</span>
             </div>
           </div>
         </CardContent>
@@ -248,44 +273,56 @@ function DashboardScreen() {
 
 function BuyUSDTScreen() {
   return (
-    <div className="p-6 bg-terex-dark text-white h-full">
+    <div className="p-4 bg-terex-dark text-white h-full">
+      {/* Header */}
       <div className="flex items-center space-x-3 mb-6">
-        <ArrowUpDown className="w-6 h-6 text-terex-accent" />
-        <h1 className="text-xl font-bold">Acheter USDT</h1>
+        <ArrowUpDown className="w-5 h-5 text-terex-accent" />
+        <h1 className="text-lg font-bold">Acheter USDT</h1>
       </div>
 
-      <div className="space-y-4">
-        <Card className="bg-terex-darker border-terex-accent/30">
-          <CardContent className="p-4">
-            <label className="text-sm text-gray-400 mb-2 block">Montant (CAD)</label>
-            <input 
-              type="text" 
-              value="500.00"
-              className="w-full bg-terex-dark border border-gray-600 rounded-lg px-3 py-2 text-white"
-              readOnly
-            />
-            <div className="mt-3 p-3 bg-terex-dark rounded-lg">
-              <div className="flex justify-between">
-                <span className="text-gray-400">Vous recevez</span>
-                <span className="text-terex-accent font-bold">≈ 500.00 USDT</span>
+      {/* Amount input */}
+      <Card className="bg-terex-darker border-terex-accent/30 mb-4">
+        <CardContent className="p-4">
+          <label className="text-sm text-gray-400 mb-2 block">Montant (CAD)</label>
+          <input 
+            type="text" 
+            value="500.00"
+            className="w-full bg-terex-dark border border-gray-600 rounded-lg px-3 py-2 text-white text-lg"
+            readOnly
+          />
+          <div className="mt-3 p-3 bg-terex-dark rounded-lg">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-400">Vous recevez</span>
+              <div className="flex items-center space-x-2">
+                <TetherLogo className="w-4 h-4" />
+                <span className="text-terex-accent font-bold">500.00 USDT</span>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
-        <Card className="bg-terex-darker border-terex-accent/30">
-          <CardContent className="p-4">
-            <h3 className="font-medium mb-3">Méthode de paiement</h3>
-            <div className="flex items-center space-x-3 p-3 bg-terex-accent/10 border border-terex-accent/30 rounded-lg">
-              <CreditCard className="w-5 h-5 text-terex-accent" />
-              <div className="flex-1">
-                <p className="font-medium text-white">Carte bancaire</p>
-                <p className="text-sm text-gray-400">Visa, Mastercard</p>
-              </div>
-              <CheckCircle className="w-5 h-5 text-terex-accent" />
+      {/* Payment method */}
+      <Card className="bg-terex-darker border-terex-accent/30 mb-4">
+        <CardContent className="p-4">
+          <h3 className="font-medium mb-3">Méthode de paiement</h3>
+          <div className="flex items-center space-x-3 p-3 bg-terex-accent/10 border border-terex-accent/30 rounded-lg">
+            <CreditCard className="w-5 h-5 text-terex-accent" />
+            <div className="flex-1">
+              <p className="font-medium text-white">Carte bancaire</p>
+              <p className="text-sm text-gray-400">Visa, Mastercard</p>
             </div>
-          </CardContent>
-        </Card>
+            <CheckCircle className="w-5 h-5 text-terex-accent" />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Rate info */}
+      <div className="bg-terex-accent/10 border border-terex-accent/30 rounded-lg p-3">
+        <div className="flex items-center space-x-2">
+          <Star className="w-4 h-4 text-terex-accent" />
+          <span className="text-terex-accent text-sm font-medium">Taux avantageux • 1 CAD = 1 USDT</span>
+        </div>
       </div>
     </div>
   );
@@ -293,85 +330,114 @@ function BuyUSDTScreen() {
 
 function TransferScreen() {
   return (
-    <div className="p-6 bg-terex-dark text-white h-full">
+    <div className="p-4 bg-terex-dark text-white h-full">
+      {/* Header */}
       <div className="flex items-center space-x-3 mb-6">
-        <Globe className="w-6 h-6 text-blue-400" />
-        <h1 className="text-xl font-bold">Virement International</h1>
+        <Globe className="w-5 h-5 text-blue-400" />
+        <h1 className="text-lg font-bold">Virement International</h1>
       </div>
 
-      <div className="space-y-4">
-        <Card className="bg-terex-darker border-blue-500/30">
-          <CardContent className="p-4">
-            <h3 className="font-medium mb-3">Destination</h3>
-            <div className="flex items-center space-x-3 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-              <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-                <span className="text-xs text-white">🇨🇲</span>
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-white">Cameroun</p>
-                <p className="text-sm text-gray-400">Mobile Money • MTN, Orange</p>
-              </div>
+      {/* Destination */}
+      <Card className="bg-terex-darker border-blue-500/30 mb-4">
+        <CardContent className="p-4">
+          <h3 className="font-medium mb-3">Destination</h3>
+          <div className="flex items-center space-x-3 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+            <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center text-sm">
+              🇨🇲
             </div>
-          </CardContent>
-        </Card>
+            <div className="flex-1">
+              <p className="font-medium text-white">Cameroun</p>
+              <p className="text-sm text-gray-400">Mobile Money • MTN, Orange</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-        <Card className="bg-terex-darker border-blue-500/30">
-          <CardContent className="p-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-sm text-gray-400">Montant</p>
-                <p className="text-lg font-bold text-white">500.00 CAD</p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm text-gray-400">Destinataire reçoit</p>
-                <p className="text-lg font-bold text-blue-400">≈ 285,000 XAF</p>
-              </div>
+      {/* Amount */}
+      <Card className="bg-terex-darker border-blue-500/30 mb-4">
+        <CardContent className="p-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-sm text-gray-400">Montant</p>
+              <p className="text-xl font-bold text-white">500.00 CAD</p>
             </div>
-          </CardContent>
-        </Card>
+            <div className="text-right">
+              <p className="text-sm text-gray-400">Destinataire reçoit</p>
+              <p className="text-xl font-bold text-blue-400">285,000 XAF</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Benefits */}
+      <div className="space-y-2">
+        <div className="flex items-center space-x-3 p-2 bg-green-500/10 border border-green-500/30 rounded-lg">
+          <Zap className="w-4 h-4 text-green-400" />
+          <span className="text-green-400 text-sm">Transfert instantané</span>
+        </div>
+        <div className="flex items-center space-x-3 p-2 bg-terex-accent/10 border border-terex-accent/30 rounded-lg">
+          <Shield className="w-4 h-4 text-terex-accent" />
+          <span className="text-terex-accent text-sm">Frais gratuits avec Terex</span>
+        </div>
       </div>
     </div>
   );
 }
 
-// Mobile Screen Components (similar content but optimized for mobile)
+// Mobile Screen Components - Real Terex mobile pages
 function MobileDashboardScreen() {
   return (
     <div className="p-3 space-y-3 text-xs overflow-y-auto h-full pb-8 scrollbar-hide">
+      {/* Header */}
       <div className="flex items-center space-x-2 mb-3">
         <div className="w-6 h-6 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
           <Activity className="w-3 h-3 text-black" />
         </div>
         <div>
           <h1 className="text-sm font-bold text-white">
-            Bienvenue, <span className="text-terex-accent">Mohamed</span>
+            Salut, <span className="text-terex-accent">Mohamed</span>
           </h1>
-          <p className="text-gray-400 text-xs">Plateforme USDT</p>
+          <p className="text-gray-400 text-xs">Plateforme Terex</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 mb-3">
-        <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
+      {/* Balance */}
+      <Card className="bg-gradient-to-r from-terex-accent/15 to-terex-accent/5 border-terex-accent/30">
+        <CardContent className="p-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-400 text-xs">Balance USDT</p>
+              <p className="text-lg font-bold text-terex-accent">1,247.50</p>
+            </div>
+            <TetherLogo className="w-6 h-6" />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Quick actions */}
+      <div className="grid grid-cols-2 gap-2">
+        <Card className="bg-terex-darker border-terex-gray">
           <CardContent className="p-2">
             <div className="w-6 h-6 bg-green-500/20 rounded-lg flex items-center justify-center mb-1">
               <TetherLogo className="w-4 h-4" />
             </div>
-            <h3 className="text-white text-xs font-medium">Acheter USDT</h3>
-            <p className="text-gray-400 text-xs">Achat rapide</p>
+            <h3 className="text-white text-xs font-medium">Acheter</h3>
+            <p className="text-gray-400 text-xs">USDT</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
+        <Card className="bg-terex-darker border-terex-gray">
           <CardContent className="p-2">
-            <div className="w-6 h-6 bg-terex-accent/20 rounded-lg flex items-center justify-center mb-1">
-              <Globe className="w-3 h-3 text-terex-accent" />
+            <div className="w-6 h-6 bg-blue-500/20 rounded-lg flex items-center justify-center mb-1">
+              <Globe className="w-3 h-3 text-blue-400" />
             </div>
-            <h3 className="text-white text-xs font-medium">Virements</h3>
+            <h3 className="text-white text-xs font-medium">Virement</h3>
             <p className="text-gray-400 text-xs">International</p>
           </CardContent>
         </Card>
       </div>
 
+      {/* Features */}
       <Card className="bg-terex-darker border-terex-gray">
         <CardContent className="p-2">
           <h3 className="text-white text-xs font-medium mb-2 flex items-center">
@@ -380,16 +446,12 @@ function MobileDashboardScreen() {
           </h3>
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center">
-                <Zap className="w-2 h-2 text-terex-accent" />
-              </div>
+              <Zap className="w-3 h-3 text-terex-accent" />
               <span className="text-white text-xs">Frais gratuits</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-green-500/20 rounded flex items-center justify-center">
-                <Clock className="w-2 h-2 text-green-400" />
-              </div>
-              <span className="text-white text-xs">Instantané</span>
+              <Clock className="w-3 h-3 text-green-400" />
+              <span className="text-white text-xs">Transferts instantanés</span>
             </div>
           </div>
         </CardContent>
@@ -401,40 +463,45 @@ function MobileDashboardScreen() {
 function MobileBuyUSDTScreen() {
   return (
     <div className="p-3 bg-terex-dark text-white h-full overflow-y-auto scrollbar-hide">
+      {/* Header */}
       <div className="flex items-center space-x-2 mb-4">
         <ArrowUpDown className="w-4 h-4 text-terex-accent" />
         <h1 className="text-sm font-bold">Acheter USDT</h1>
       </div>
 
-      <div className="space-y-3">
-        <Card className="bg-terex-darker border-terex-accent/30">
-          <CardContent className="p-3">
-            <label className="text-xs text-gray-400 mb-1 block">Montant (CAD)</label>
-            <input 
-              type="text" 
-              value="500.00"
-              className="w-full bg-terex-dark border border-gray-600 rounded px-2 py-1 text-white text-sm"
-              readOnly
-            />
-            <div className="mt-2 p-2 bg-terex-dark rounded">
-              <div className="flex justify-between text-xs">
-                <span className="text-gray-400">Vous recevez</span>
-                <span className="text-terex-accent font-bold">≈ 500.00 USDT</span>
+      {/* Amount */}
+      <Card className="bg-terex-darker border-terex-accent/30 mb-3">
+        <CardContent className="p-3">
+          <label className="text-xs text-gray-400 mb-1 block">Montant (CAD)</label>
+          <input 
+            type="text" 
+            value="500.00"
+            className="w-full bg-terex-dark border border-gray-600 rounded px-2 py-2 text-white text-sm"
+            readOnly
+          />
+          <div className="mt-2 p-2 bg-terex-dark rounded">
+            <div className="flex justify-between items-center text-xs">
+              <span className="text-gray-400">Vous recevez</span>
+              <div className="flex items-center space-x-1">
+                <TetherLogo className="w-3 h-3" />
+                <span className="text-terex-accent font-bold">500.00 USDT</span>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
-        <Card className="bg-terex-darker border-terex-accent/30">
-          <CardContent className="p-3">
-            <h3 className="text-xs font-medium mb-2">Paiement</h3>
-            <div className="flex items-center space-x-2 p-2 bg-terex-accent/10 border border-terex-accent/30 rounded">
-              <CreditCard className="w-3 h-3 text-terex-accent" />
-              <span className="text-white text-xs">Carte bancaire</span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Payment method */}
+      <Card className="bg-terex-darker border-terex-accent/30">
+        <CardContent className="p-3">
+          <h3 className="text-xs font-medium mb-2">Paiement</h3>
+          <div className="flex items-center space-x-2 p-2 bg-terex-accent/10 border border-terex-accent/30 rounded">
+            <CreditCard className="w-3 h-3 text-terex-accent" />
+            <span className="text-white text-xs">Carte bancaire</span>
+            <CheckCircle className="w-3 h-3 text-terex-accent ml-auto" />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
@@ -442,39 +509,52 @@ function MobileBuyUSDTScreen() {
 function MobileTransferScreen() {
   return (
     <div className="p-3 bg-terex-dark text-white h-full overflow-y-auto scrollbar-hide">
+      {/* Header */}
       <div className="flex items-center space-x-2 mb-4">
         <Globe className="w-4 h-4 text-blue-400" />
         <h1 className="text-sm font-bold">Virement</h1>
       </div>
 
-      <div className="space-y-3">
-        <Card className="bg-terex-darker border-blue-500/30">
-          <CardContent className="p-3">
-            <h3 className="text-xs font-medium mb-2">Destination</h3>
-            <div className="flex items-center space-x-2 p-2 bg-blue-500/10 border border-blue-500/30 rounded">
-              <span className="text-xs">🇨🇲</span>
-              <div>
-                <p className="text-white text-xs font-medium">Cameroun</p>
-                <p className="text-gray-400 text-xs">Mobile Money</p>
-              </div>
+      {/* Destination */}
+      <Card className="bg-terex-darker border-blue-500/30 mb-3">
+        <CardContent className="p-3">
+          <h3 className="text-xs font-medium mb-2">Destination</h3>
+          <div className="flex items-center space-x-2 p-2 bg-blue-500/10 border border-blue-500/30 rounded">
+            <span className="text-sm">🇨🇲</span>
+            <div>
+              <p className="text-white text-xs font-medium">Cameroun</p>
+              <p className="text-gray-400 text-xs">Mobile Money</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
-        <Card className="bg-terex-darker border-blue-500/30">
-          <CardContent className="p-3">
-            <div className="flex justify-between text-xs">
-              <div>
-                <p className="text-gray-400">Montant</p>
-                <p className="font-bold text-white">500 CAD</p>
-              </div>
-              <div className="text-right">
-                <p className="text-gray-400">Reçoit</p>
-                <p className="font-bold text-blue-400">285,000 XAF</p>
-              </div>
+      {/* Amount */}
+      <Card className="bg-terex-darker border-blue-500/30 mb-3">
+        <CardContent className="p-3">
+          <div className="flex justify-between text-xs">
+            <div>
+              <p className="text-gray-400">Envoi</p>
+              <p className="font-bold text-white">500 CAD</p>
             </div>
-          </CardContent>
-        </Card>
+            <div className="text-right">
+              <p className="text-gray-400">Reçoit</p>
+              <p className="font-bold text-blue-400">285,000 XAF</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Benefits */}
+      <div className="space-y-2">
+        <div className="flex items-center space-x-2 p-2 bg-green-500/10 border border-green-500/30 rounded text-xs">
+          <Zap className="w-3 h-3 text-green-400" />
+          <span className="text-green-400">Instantané</span>
+        </div>
+        <div className="flex items-center space-x-2 p-2 bg-terex-accent/10 border border-terex-accent/30 rounded text-xs">
+          <Shield className="w-3 h-3 text-terex-accent" />
+          <span className="text-terex-accent">Sans frais</span>
+        </div>
       </div>
     </div>
   );
