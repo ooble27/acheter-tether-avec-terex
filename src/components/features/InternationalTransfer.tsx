@@ -25,7 +25,7 @@ export function InternationalTransfer() {
   const [currentStep, setCurrentStep] = useState('recipient-select');
   const [sendAmount, setSendAmount] = useState('');
   const [recipientCountry, setRecipientCountry] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('interac'); // Pré-sélectionner Interac par défaut
+  const [paymentMethod, setPaymentMethod] = useState('');
   const [receiveMethod, setReceiveMethod] = useState('');
   const [recipientFirstName, setRecipientFirstName] = useState('');
   const [recipientLastName, setRecipientLastName] = useState('');
@@ -107,8 +107,8 @@ export function InternationalTransfer() {
 
   const handleRecipientContinue = () => {
     if (selectedRecipient) {
-      // Si un destinataire favori est sélectionné, aller à l'étape de modification
-      setCurrentStep('modify-transfer');
+      // Si un destinataire favori est sélectionné, aller directement à la confirmation
+      setCurrentStep('confirmation');
     } else {
       // Si c'est un nouveau destinataire, aller au formulaire
       setCurrentStep('form');
@@ -140,26 +140,6 @@ export function InternationalTransfer() {
       toast({
         title: "Informations manquantes",
         description: "Veuillez remplir tous les champs requis",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Si c'est Mobile Money, aller à la sélection du service
-    if (receiveMethod === 'mobile') {
-      setCurrentStep('mobile-money');
-      return;
-    }
-
-    // Sinon, aller directement à la confirmation
-    setCurrentStep('confirmation');
-  };
-
-  const handleModifyTransferSubmit = () => {
-    if (!sendAmount || !paymentMethod) {
-      toast({
-        title: "Informations manquantes",
-        description: "Veuillez remplir le montant et choisir la méthode de paiement",
         variant: "destructive",
       });
       return;
@@ -211,7 +191,7 @@ export function InternationalTransfer() {
     // Reset form
     setSendAmount('');
     setRecipientCountry('');
-    setPaymentMethod('interac');
+    setPaymentMethod('');
     setReceiveMethod('');
     setRecipientFirstName('');
     setRecipientLastName('');
@@ -254,69 +234,12 @@ export function InternationalTransfer() {
     );
   }
 
-  // Nouvelle étape de modification pour les destinataires favoris
-  if (currentStep === 'modify-transfer') {
-    return (
-      <KYCProtection onKYCRequired={handleKYCRequired}>
-        <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="mb-6 md:mb-8">
-              <Button
-                variant="ghost"
-                onClick={() => setCurrentStep('recipient-select')}
-                className="text-gray-400 hover:text-white mb-4"
-              >
-                ← Retour aux destinataires
-              </Button>
-              <h1 className="text-3xl font-bold text-white mb-2">Modifier le transfert</h1>
-              <p className="text-gray-400">Ajustez le montant et les détails de votre transfert</p>
-            </div>
-
-            <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader>
-                <CardTitle className="text-white">
-                  Transfert vers {recipientFirstName} {recipientLastName}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <TransferForm
-                  sendAmount={sendAmount}
-                  setSendAmount={setSendAmount}
-                  receiveAmount={receiveAmount}
-                  recipientCountry={recipientCountry}
-                  setRecipientCountry={setRecipientCountry}
-                  paymentMethod={paymentMethod}
-                  setPaymentMethod={setPaymentMethod}
-                  receiveMethod={receiveMethod}
-                  setReceiveMethod={setReceiveMethod}
-                  exchangeRate={exchangeRate}
-                  fees={fees}
-                  provider={provider}
-                  setProvider={setProvider}
-                />
-
-                <Button 
-                  size="lg"
-                  className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                  disabled={!sendAmount || !paymentMethod || loading}
-                  onClick={handleModifyTransferSubmit}
-                >
-                  {loading ? 'Traitement...' : 'Continuer le transfert'}
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </KYCProtection>
-    );
-  }
-
   if (currentStep === 'mobile-money') {
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
         <MobileMoneySelector
           onComplete={handleMobileMoneyComplete}
-          onBack={() => setCurrentStep(selectedRecipient ? 'modify-transfer' : 'form')}
+          onBack={() => setCurrentStep(selectedRecipient ? 'recipient-select' : 'form')}
           recipientCountry={recipientCountry}
         />
       </KYCProtection>
@@ -346,7 +269,7 @@ export function InternationalTransfer() {
         <TransferConfirmation
           transferData={transferData}
           onConfirm={handleTransferConfirm}
-          onBack={() => setCurrentStep(receiveMethod === 'mobile' ? 'mobile-money' : (selectedRecipient ? 'modify-transfer' : 'form'))}
+          onBack={() => setCurrentStep(receiveMethod === 'mobile' ? 'mobile-money' : (selectedRecipient ? 'recipient-select' : 'form'))}
           loading={loading}
         />
       </KYCProtection>
@@ -382,13 +305,6 @@ export function InternationalTransfer() {
       <div className="min-h-screen bg-terex-dark p-2 md:p-4">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6 md:mb-8">
-            <Button
-              variant="ghost"
-              onClick={() => setCurrentStep('recipient-select')}
-              className="text-gray-400 hover:text-white mb-4"
-            >
-              ← Retour aux destinataires
-            </Button>
             <h1 className="text-3xl font-bold text-white mb-2">Nouveau destinataire</h1>
             <p className="text-gray-400">Remplissez les informations du nouveau destinataire</p>
           </div>
@@ -399,6 +315,13 @@ export function InternationalTransfer() {
                 <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-white text-lg md:text-xl">Nouveau transfert</CardTitle>
+                    <Button
+                      variant="outline"
+                      onClick={() => setCurrentStep('recipient-select')}
+                      className="text-terex-accent border-terex-accent hover:bg-terex-accent hover:text-white"
+                    >
+                      Retour aux destinataires
+                    </Button>
                   </div>
                 </CardHeader>
                 <CardContent className="p-4 md:p-6 space-y-6">
