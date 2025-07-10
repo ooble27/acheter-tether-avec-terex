@@ -34,7 +34,7 @@ export function DeviceMockups() {
       
       {/* Mobile mockup for smaller screens */}
       <div className="relative z-10 lg:hidden">
-        <iPhoneMockup currentSlide={currentSlide} />
+        <IPhoneMockup currentSlide={currentSlide} />
       </div>
       
       {/* Slide indicators */}
@@ -75,7 +75,7 @@ function MacBookMockup({ currentSlide }: { currentSlide: number }) {
   );
 }
 
-function iPhoneMockup({ currentSlide }: { currentSlide: number }) {
+function IPhoneMockup({ currentSlide }: { currentSlide: number }) {
   return (
     <div className="relative">
       {/* iPhone frame */}
