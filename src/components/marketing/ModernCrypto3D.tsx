@@ -1,7 +1,7 @@
 
 import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, Text3D, OrbitControls, Sphere, Ring } from '@react-three/drei';
+import { Float, OrbitControls, Ring } from '@react-three/drei';
 import * as THREE from 'three';
 
 function USDTCoin({ position }: { position: [number, number, number] }) {
@@ -26,9 +26,9 @@ function USDTCoin({ position }: { position: [number, number, number] }) {
           <meshStandardMaterial color="#ffffff" />
         </mesh>
         
-        {/* Texte USDT */}
+        {/* Indicateur USDT simplifié */}
         <mesh position={[0, 0.12, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <textGeometry args={['USDT', { font: undefined, size: 0.15, height: 0.01 }]} />
+          <ringGeometry args={[0.4, 0.6, 8]} />
           <meshStandardMaterial color="#26A17B" />
         </mesh>
       </mesh>
