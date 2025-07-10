@@ -39,13 +39,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           
           {/* Colonne de gauche - Contenu textuel */}
           <div className="order-2 lg:order-1">
-            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              L'échange USDT Tether et les transferts
-              <br />
-              <span className="text-terex-accent relative">
-                vers l'Afrique
-              </span>
-            </h1>
+            <DeviceMockups />
             
             <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-2xl leading-relaxed">
               Achetez et vendez des USDT facilement, 
@@ -97,9 +91,125 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
           </div>
           
-          {/* Colonne de droite - Maquettes d'appareils avec interfaces Terex */}
+          {/* Colonne de droite - Maquette de téléphone */}
           <div className="order-1 lg:order-2 flex justify-center">
-            <DeviceMockups />
+            <div className="relative mx-auto">
+              {/* Phone Frame - More realistic iPhone styling */}
+              <div className="relative w-[320px] h-[640px] lg:w-[360px] lg:h-[720px] bg-gradient-to-br from-gray-800 to-black rounded-[2.8rem] p-2 shadow-2xl border border-gray-700">
+                {/* Screen bezel */}
+                <div className="w-full h-full bg-black rounded-[2.3rem] p-1 relative">
+                  {/* Dynamic Island */}
+                  <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-24 h-6 bg-black rounded-full z-20 border border-gray-800"></div>
+                  
+                  {/* Screen content */}
+                  <div className="w-full h-full bg-terex-dark rounded-[2rem] overflow-hidden relative">
+                    {/* Status bar */}
+                    <div className="h-8 bg-terex-darker flex items-center justify-between px-4 text-xs text-white">
+                      <span>9:41</span>
+                      <div className="flex space-x-1 items-center">
+                        <div className="flex space-x-1">
+                          <div className="w-1 h-1 bg-white rounded-full"></div>
+                          <div className="w-1 h-1 bg-white rounded-full"></div>
+                          <div className="w-1 h-1 bg-white rounded-full"></div>
+                        </div>
+                        <div className="w-6 h-3 bg-green-400 rounded-sm ml-2"></div>
+                      </div>
+                    </div>
+
+                    {/* Screen content with real marketing images */}
+                    <div className="p-6 space-y-6 text-xs overflow-y-auto h-full pb-8">
+                      {/* Hero image */}
+                      <div className="w-full h-40 bg-gradient-to-br from-terex-accent/20 to-blue-500/20 rounded-lg overflow-hidden">
+                        <img 
+                          src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=400&h=200&q=80" 
+                          alt="Mobile banking"
+                          className="w-full h-full object-cover opacity-80"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-terex-dark/80 to-transparent"></div>
+                      </div>
+
+                      {/* Service cards */}
+                      <div className="space-y-4">
+                        <Card className="bg-terex-darker/80 border-terex-accent/30">
+                          <CardContent className="p-4">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-12 h-12 bg-terex-accent/20 rounded-lg overflow-hidden">
+                                <img 
+                                  src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=100&h=100&q=80"
+                                  alt="USDT"
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <div>
+                                <h3 className="text-white font-semibold text-sm">Achetez des USDT</h3>
+                                <p className="text-gray-400 text-xs">Conversion instantanée</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        <Card className="bg-terex-darker/80 border-green-500/30">
+                          <CardContent className="p-4">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-12 h-12 bg-green-500/20 rounded-lg overflow-hidden">
+                                <img 
+                                  src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=100&h=100&q=80"
+                                  alt="Transfer"
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <div>
+                                <h3 className="text-white font-semibold text-sm">Vendez vos USDT</h3>
+                                <p className="text-gray-400 text-xs">Conversion en CAD</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        <Card className="bg-terex-darker/80 border-blue-500/30">
+                          <CardContent className="p-4">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-12 h-12 bg-blue-500/20 rounded-lg overflow-hidden">
+                                <img 
+                                  src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&w=100&h=100&q=80"
+                                  alt="Africa"
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <div>
+                                <h3 className="text-white font-semibold text-sm">Virements Afrique</h3>
+                                <p className="text-gray-400 text-xs">Transfert instantané</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        <Card className="bg-terex-darker/80 border-purple-500/30">
+                          <CardContent className="p-4">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-12 h-12 bg-purple-500/20 rounded-lg overflow-hidden">
+                                <img 
+                                  src="https://images.unsplash.com/photo-1555421689-491a97ff2040?auto=format&fit=crop&w=100&h=100&q=80"
+                                  alt="Security"
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <div>
+                                <h3 className="text-white font-semibold text-sm">100% Sécurisé</h3>
+                                <p className="text-gray-400 text-xs">Protection maximale</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Home indicator */}
+                <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-28 h-1 bg-white rounded-full opacity-60"></div>
+              </div>
+            </div>
           </div>
         </div>
         
