@@ -16,7 +16,6 @@ import { UserGuide } from '@/components/features/UserGuide';
 import { SecurityPolicy } from '@/components/features/SecurityPolicy';
 import { TermsOfService } from '@/components/features/TermsOfService';
 import { AboutTerex } from '@/components/features/AboutTerex';
-import { AIAssistantWidget } from '@/components/features/AIAssistantWidget';
 import { TransactionHistoryPage } from '@/components/features/TransactionHistoryPage';
 import { NotificationPermissionPrompt } from '@/components/notifications/NotificationPermissionPrompt';
 import { TransactionProvider } from '@/contexts/TransactionContext';
@@ -129,9 +128,6 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             
             {renderContent()}
           </main>
-
-          {/* Widget Assistant IA flottant */}
-          <AIAssistantWidget />
           
           {/* Prompt de permission pour les notifications push */}
           <NotificationPermissionPrompt />
