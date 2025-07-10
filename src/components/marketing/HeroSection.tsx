@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Globe } from 'lucide-react';
@@ -96,9 +97,59 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
           </div>
           
-          {/* Colonne de droite - Visualisation crypto moderne */}
-          <div className="order-1 lg:order-2 flex justify-center">
-            <CryptoVisualization />
+          {/* Colonne de droite - Visuel avec personne et crypto */}
+          <div className="order-1 lg:order-2 flex justify-center relative">
+            {/* Container principal avec la personne en arrière-plan */}
+            <div className="relative w-full max-w-md lg:max-w-lg">
+              {/* Image de la personne professionnelle */}
+              <div className="relative z-10 mb-8 lg:mb-0">
+                <div className="w-80 h-96 lg:w-96 lg:h-[500px] mx-auto relative overflow-hidden rounded-3xl bg-gradient-to-br from-terex-accent/20 to-terex-darker/40 backdrop-blur-sm border border-terex-accent/30">
+                  {/* Placeholder pour la personne - vous pouvez remplacer par une vraie image */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-full h-full bg-gradient-to-b from-transparent via-terex-dark/20 to-terex-dark/60 flex flex-col items-center justify-end p-8">
+                      {/* Silhouette stylisée d'une personne avec smartphone */}
+                      <div className="relative">
+                        {/* Corps de la personne */}
+                        <div className="w-32 h-48 bg-gradient-to-b from-terex-accent/30 to-terex-accent/50 rounded-t-full mx-auto relative">
+                          {/* Tête */}
+                          <div className="w-20 h-20 bg-gradient-to-b from-terex-accent/40 to-terex-accent/60 rounded-full mx-auto -mb-4 relative z-10"></div>
+                          {/* Bras tenant le smartphone */}
+                          <div className="absolute top-16 right-2 w-4 h-12 bg-terex-accent/40 rounded-full transform rotate-12"></div>
+                          {/* Smartphone */}
+                          <div className="absolute top-20 right-0 w-6 h-12 bg-white/90 rounded-lg shadow-lg border border-terex-accent/20">
+                            <div className="w-full h-2 bg-terex-accent/80 rounded-t-lg"></div>
+                            <div className="p-1 space-y-1">
+                              <div className="w-full h-1 bg-terex-accent/60 rounded"></div>
+                              <div className="w-3/4 h-1 bg-terex-accent/40 rounded"></div>
+                              <div className="w-full h-1 bg-terex-accent/60 rounded"></div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Effet de lumière autour du smartphone */}
+                        <div className="absolute top-16 right-0 w-12 h-12 bg-terex-accent/20 rounded-full blur-xl animate-pulse"></div>
+                      </div>
+                      
+                      {/* Texte professionnel */}
+                      <div className="text-center text-white/80 mt-4">
+                        <div className="text-sm font-medium">Professionnel connecté</div>
+                        <div className="text-xs text-terex-accent">Transferts instantanés</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Particules flottantes */}
+                  <div className="absolute top-4 left-4 w-2 h-2 bg-terex-accent rounded-full animate-ping"></div>
+                  <div className="absolute top-1/3 right-6 w-1 h-1 bg-white rounded-full animate-pulse"></div>
+                  <div className="absolute bottom-1/4 left-8 w-1.5 h-1.5 bg-terex-accent/60 rounded-full animate-bounce"></div>
+                </div>
+              </div>
+              
+              {/* Visualisation crypto en overlay/côté */}
+              <div className="absolute -bottom-8 -right-4 lg:-right-8 scale-75 lg:scale-90 opacity-80">
+                <CryptoVisualization />
+              </div>
+            </div>
           </div>
         </div>
         
