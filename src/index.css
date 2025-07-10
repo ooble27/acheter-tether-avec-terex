@@ -76,6 +76,10 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  .bg-gradient-radial {
+    background: radial-gradient(var(--tw-gradient-stops));
+  }
 }
 
 /* Classes utilitaires pour les safe areas iOS PWA */
@@ -521,6 +525,34 @@
     transform: translateY(0px) rotate(360deg);
     opacity: 0.6;
   }
+}
+
+@keyframes float-3d {
+  0%, 100% {
+    transform: translateY(0px) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotateY(180deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.animate-float-3d {
+  animation: float-3d 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
 }
 
 @media (max-width: 768px) {
