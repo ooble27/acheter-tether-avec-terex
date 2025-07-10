@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
@@ -62,12 +61,15 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   const renderContent = () => {
     switch (activeSection) {
       case 'home':
-        return <DashboardHome user={user} />;
+        return <DashboardHome user={user} onNavigate={setActiveSection} />;
       case 'buy':
         return <BuyUSDT />;
       case 'sell':
         return <SellUSDT />;
       case 'transfer':
+        return <InternationalTransfer />;
+      case 'otc':
+        // Pour l'instant, rediriger vers les virements internationaux pour OTC
         return <InternationalTransfer />;
       case 'history':
         return <TransactionHistoryPage />;
@@ -92,7 +94,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'job-applications':
         return (isAdmin() || isKYCReviewer()) ? <JobApplicationsAdmin /> : <div className="text-white">Accès non autorisé</div>;
       default:
-        return <DashboardHome user={user} />;
+        return <DashboardHome user={user} onNavigate={setActiveSection} />;
     }
   };
 
