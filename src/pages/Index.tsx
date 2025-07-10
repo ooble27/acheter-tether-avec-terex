@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Dashboard } from '@/components/dashboard/Dashboard';
@@ -9,6 +8,7 @@ const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [showDashboard, setShowDashboard] = useState(false);
+  const [heroVariant, setHeroVariant] = useState<'default' | 'diaspora'>('diaspora');
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -56,8 +56,8 @@ const Index = () => {
     return <Dashboard user={userWithName} onLogout={handleBackToHome} />;
   }
 
-  // Sinon, afficher la landing page (même pour les utilisateurs connectés)
-  return <PublicHome onGetStarted={handleGetStarted} user={userWithName} onShowDashboard={handleShowDashboard} />;
+  // Sinon, afficher la landing page avec le variant diaspora
+  return <PublicHome onGetStarted={handleGetStarted} user={userWithName} onShowDashboard={handleShowDashboard} heroVariant={heroVariant} />;
 };
 
 export default Index;
