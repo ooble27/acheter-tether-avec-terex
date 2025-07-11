@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Globe, ArrowRightLeft, Send, Banknote, TrendingUp, Users, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DeviceMockups } from './DeviceMockups';
-import { PhoneMockup } from './PhoneMockup';
+import { ScreenSlides } from './ScreenSlides';
 import { useState, useEffect } from 'react';
 
 interface HeroSectionProps {
@@ -14,6 +14,24 @@ interface HeroSectionProps {
 
 export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
   const navigate = useNavigate();
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Messages qui changent pour le titre principal
+  const titleMessages = [
+    "L'échange USDT Tether et les transferts vers l'Afrique",
+    "Achetez des USDT facilement avec Terex",
+    "Vendez vos stablecoins en toute sécurité", 
+    "Envoyez de l'argent à vos proches en Afrique",
+    "Plateforme 100% sécurisée et réglementée"
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % titleMessages.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [titleMessages.length]);
 
   const handleGetStarted = () => {
     navigate('/auth');
@@ -41,7 +59,31 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           
           {/* Colonne de gauche - Contenu textuel */}
           <div className="order-2 lg:order-1">
-            <DeviceMockups />
+            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+              <span className="transition-all duration-700 ease-in-out">
+                {currentSlide === 0 ? (
+                  <>
+                    L'échange USDT Tether et les transferts vers l'<span className="text-terex-accent">Afrique</span>
+                  </>
+                ) : currentSlide === 1 ? (
+                  <>
+                    Achetez des USDT facilement avec <span className="text-terex-accent">Terex</span>
+                  </>
+                ) : currentSlide === 2 ? (
+                  <>
+                    Vendez vos stablecoins en toute <span className="text-terex-accent">sécurité</span>
+                  </>
+                ) : currentSlide === 3 ? (
+                  <>
+                    Envoyez de l'argent à vos proches en <span className="text-terex-accent">Afrique</span>
+                  </>
+                ) : (
+                  <>
+                    Plateforme 100% sécurisée et <span className="text-terex-accent">réglementée</span>
+                  </>
+                )}
+              </span>
+            </h1>
             
             <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-2xl leading-relaxed">
               Achetez et vendez des USDT facilement, 
@@ -93,12 +135,43 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
           </div>
           
-          {/* Colonne de droite - Utiliser le même PhoneMockup que la section Interface Mobile */}
+          {/* Colonne de droite - Téléphone avec ScreenSlides */}
           <div className="order-1 lg:order-2 flex justify-center">
             <div className="relative scale-75 sm:scale-90 lg:scale-100">
               {/* Glow effect */}
               <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
-              <PhoneMockup />
+              
+              {/* Phone Frame */}
+              <div className="relative mx-auto">
+                <div className="relative w-[280px] h-[560px] bg-gradient-to-br from-white/20 to-white/10 rounded-[3rem] p-2 shadow-2xl border border-white/30">
+                  {/* Screen bezel */}
+                  <div className="w-full h-full bg-black rounded-[2.5rem] p-1">
+                    {/* Notch */}
+                    <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-20 h-5 bg-black rounded-full z-20"></div>
+                    
+                    {/* Screen content with ScreenSlides */}
+                    <div className="w-full h-full bg-terex-dark rounded-[2.2rem] overflow-hidden relative">
+                      {/* Status bar */}
+                      <div className="h-8 bg-terex-darker flex items-center justify-between px-4 text-xs text-white relative z-10">
+                        <span>9:41</span>
+                        <div className="flex space-x-1">
+                          <div className="w-4 h-2 bg-white rounded-sm"></div>
+                          <div className="w-4 h-2 bg-white rounded-sm"></div>
+                          <div className="w-4 h-2 bg-white rounded-sm"></div>
+                        </div>
+                      </div>
+
+                      {/* ScreenSlides Component */}
+                      <div className="h-[calc(100%-2rem)]">
+                        <ScreenSlides currentSlide={currentSlide} deviceType="mobile" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Home indicator */}
+                  <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-white rounded-full opacity-60"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
