@@ -18,13 +18,9 @@ interface PaymentProvider {
   logo: string;
 }
 
-const africanCurrencies: CurrencyOption[] = [
+const currencies: CurrencyOption[] = [
   { code: 'XOF', name: 'Franc CFA', flag: '🇸🇳' },
-  { code: 'XAF', name: 'Franc CFA Central', flag: '🇨🇲' },
-  { code: 'NGN', name: 'Naira', flag: '🇳🇬' },
-  { code: 'KES', name: 'Shilling', flag: '🇰🇪' },
-  { code: 'GHS', name: 'Cedi', flag: '🇬🇭' },
-  { code: 'MAD', name: 'Dirham', flag: '🇲🇦' }
+  { code: 'CAD', name: 'Dollar Canadien', flag: '🇨🇦' }
 ];
 
 const paymentProviders: PaymentProvider[] = [
@@ -42,32 +38,22 @@ const paymentProviders: PaymentProvider[] = [
 
 export function InteractiveCurrencyCalculator() {
   const [amount, setAmount] = useState('100');
-  const [selectedCurrency, setSelectedCurrency] = useState(africanCurrencies[0]);
+  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
   const [selectedProvider, setSelectedProvider] = useState(paymentProviders[0]);
   const [isFlipped, setIsFlipped] = useState(false);
   const [previousRate, setPreviousRate] = useState<number | null>(null);
   
   const { 
     terexRateCfa, 
-    marketRateCfa, 
+    terexRateCad,
     loading, 
     error,
     lastUpdated,
     refresh
   } = useTerexRates(2);
 
-  // Simulation des taux pour les autres devises (en production, ces données viendraient d'une API)
   const getRateForCurrency = (currencyCode: string) => {
-    const baseRate = terexRateCfa;
-    const rates: { [key: string]: number } = {
-      'XOF': baseRate,
-      'XAF': baseRate * 1.1,
-      'NGN': baseRate * 0.7,
-      'KES': baseRate * 0.008,
-      'GHS': baseRate * 0.1,
-      'MAD': baseRate * 0.06
-    };
-    return rates[currencyCode] || baseRate;
+    return currencyCode === 'CAD' ? terexRateCad : terexRateCfa;
   };
 
   const currentRate = getRateForCurrency(selectedCurrency.code);
@@ -128,14 +114,14 @@ export function InteractiveCurrencyCalculator() {
           {/* Currency Selector */}
           <div className="mb-4">
             <label className="text-sm text-gray-400 mb-2 block">
-              Devise africaine
+              Devise de destination
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {africanCurrencies.slice(0, 6).map((currency) => (
+              {currencies.map((currency) => (
                 <button
                   key={currency.code}
                   onClick={() => setSelectedCurrency(currency)}
-                  className={`p-2 rounded-lg text-left transition-all ${
+                  className={`p-3 rounded-lg text-left transition-all ${
                     selectedCurrency.code === currency.code
                       ? 'bg-terex-accent text-black'
                       : 'bg-terex-gray hover:bg-terex-gray-light text-gray-300'
@@ -144,7 +130,7 @@ export function InteractiveCurrencyCalculator() {
                   <div className="flex items-center space-x-2">
                     <span className="text-lg">{currency.flag}</span>
                     <div>
-                      <div className="text-xs font-medium">{currency.code}</div>
+                      <div className="text-sm font-medium">{currency.code}</div>
                       <div className="text-xs opacity-70">{currency.name}</div>
                     </div>
                   </div>
@@ -163,7 +149,7 @@ export function InteractiveCurrencyCalculator() {
                 <button
                   key={provider.id}
                   onClick={() => setSelectedProvider(provider)}
-                  className={`p-2 rounded-lg text-left transition-all ${
+                  className={`p-3 rounded-lg text-left transition-all ${
                     selectedProvider.id === provider.id
                       ? 'bg-terex-accent text-black'
                       : 'bg-terex-gray hover:bg-terex-gray-light text-gray-300'
@@ -175,7 +161,7 @@ export function InteractiveCurrencyCalculator() {
                       alt={provider.name} 
                       className="w-6 h-6 rounded object-contain"
                     />
-                    <div className="text-xs font-medium">{provider.name}</div>
+                    <div className="text-sm font-medium">{provider.name}</div>
                   </div>
                 </button>
               ))}
