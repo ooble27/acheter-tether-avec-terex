@@ -8,7 +8,7 @@ export function DeviceMockups() {
   const titleMessages = [
     "L'échange USDT Tether et les transferts vers l'Afrique",
     "Achetez des USDT facilement avec Terex",
-    "Vendez vos stablecoins en toute sécurité",
+    "Vendez vos stablecoins en toute sécurité", 
     "Envoyez de l'argent à vos proches en Afrique",
     "Plateforme 100% sécurisée et réglementée"
   ];
@@ -22,18 +22,28 @@ export function DeviceMockups() {
   }, [titleMessages.length]);
 
   return (
-    <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+    <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-gray-800 mb-6 leading-tight">
       <span className="transition-all duration-700 ease-in-out">
-        {currentSlide < 1 ? (
+        {currentSlide === 0 ? (
           <>
-            {titleMessages[currentSlide]}
-            <br />
-            <span className="text-terex-accent relative">vers l'Afrique</span>
+            L'échange USDT Tether et les transferts vers l'<span className="text-terex-accent">Afrique</span>
+          </>
+        ) : currentSlide === 1 ? (
+          <>
+            Achetez des USDT facilement avec <span className="text-terex-accent">Terex</span>
+          </>
+        ) : currentSlide === 2 ? (
+          <>
+            Vendez vos stablecoins en toute <span className="text-terex-accent">sécurité</span>
+          </>
+        ) : currentSlide === 3 ? (
+          <>
+            Envoyez de l'argent à vos proches en <span className="text-terex-accent">Afrique</span>
           </>
         ) : (
-          <span className="text-terex-accent relative">
-            {titleMessages[currentSlide]}
-          </span>
+          <>
+            Plateforme 100% sécurisée et <span className="text-terex-accent">réglementée</span>
+          </>
         )}
       </span>
     </h1>
