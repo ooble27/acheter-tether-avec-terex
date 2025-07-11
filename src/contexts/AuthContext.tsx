@@ -36,7 +36,6 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   console.log('AuthProvider: Initializing...');
   
-  // Initialize state with proper default values
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
