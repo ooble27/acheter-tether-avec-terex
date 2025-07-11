@@ -429,7 +429,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                   </div>
                   <div className="flex-1">
                     <div className="text-white text-sm">Équipe dédiée 24/7</div>
-                    <div className="text-gray-400 text-xs">Temps de réponse: < 2 heures</div>
+                    <div className="text-gray-400 text-xs">Temps de réponse: &lt; 2 heures</div>
                   </div>
                 </div>
               </div>
