@@ -42,65 +42,78 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
     }
   };
 
-  // Contenu dynamique pour le téléphone selon le slide actuel
+  // Contenu réel des pages Terex selon le slide actuel
   const getPhoneContent = () => {
     switch (currentSlide) {
       case 0: // "L'échange USDT Tether et les transferts vers l'Afrique"
         return (
           <>
-            {/* Header de l'app */}
+            {/* Header Terex Dashboard */}
             <div className="bg-terex-darker p-3 rounded-t-lg">
               <div className="flex items-center justify-between">
-                <h2 className="text-white font-bold text-sm">Terex Exchange</h2>
-                <div className="w-8 h-8 bg-terex-accent rounded-full flex items-center justify-center">
-                  <ArrowRightLeft className="w-4 h-4 text-black" />
+                <h2 className="text-white font-bold text-sm">Dashboard Terex</h2>
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-terex-accent rounded-full flex items-center justify-center">
+                    <span className="text-black font-bold text-xs">T</span>
+                  </div>
                 </div>
               </div>
             </div>
             
-            {/* Interface d'échange USDT */}
+            {/* Services principaux */}
             <div className="p-4 space-y-3">
-              <div className="bg-terex-darker rounded-lg p-3">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-400 text-xs">Vous vendez</span>
-                  <span className="text-terex-accent text-xs">Balance: 1,250.00</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">₮</span>
-                    </div>
-                    <span className="text-white font-medium text-sm">USDT</span>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="bg-terex-darker rounded-lg p-3 border border-green-500/30">
+                  <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center mb-2">
+                    <Banknote className="w-4 h-4 text-green-400" />
                   </div>
-                  <span className="text-white font-bold">100.00</span>
+                  <h3 className="text-white font-medium text-xs">Acheter USDT</h3>
+                  <p className="text-gray-400 text-xs">Achat rapide</p>
                 </div>
-              </div>
 
-              <div className="flex justify-center">
-                <div className="w-8 h-8 bg-terex-accent/20 rounded-full flex items-center justify-center">
-                  <ArrowRightLeft className="w-4 h-4 text-terex-accent rotate-90" />
-                </div>
-              </div>
-
-              <div className="bg-terex-darker rounded-lg p-3">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-400 text-xs">Vous recevez</span>
-                  <span className="text-terex-accent text-xs">1 USDT = 650 CFA</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">F</span>
-                    </div>
-                    <span className="text-white font-medium text-sm">XOF</span>
+                <div className="bg-terex-darker rounded-lg p-3 border border-red-500/30">
+                  <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center mb-2">
+                    <TrendingUp className="w-4 h-4 text-red-400" />
                   </div>
-                  <span className="text-white font-bold">65,000</span>
+                  <h3 className="text-white font-medium text-xs">Vendre USDT</h3>
+                  <p className="text-gray-400 text-xs">Vente rapide</p>
+                </div>
+
+                <div className="bg-terex-darker rounded-lg p-3 border border-blue-500/30">
+                  <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center mb-2">
+                    <Send className="w-4 h-4 text-blue-400" />
+                  </div>
+                  <h3 className="text-white font-medium text-xs">Transferts</h3>
+                  <p className="text-gray-400 text-xs">International</p>
+                </div>
+
+                <div className="bg-terex-darker rounded-lg p-3 border border-purple-500/30">
+                  <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center mb-2">
+                    <Globe className="w-4 h-4 text-purple-400" />
+                  </div>
+                  <h3 className="text-white font-medium text-xs">Trading OTC</h3>
+                  <p className="text-gray-400 text-xs">Gros volumes</p>
                 </div>
               </div>
 
-              <Button className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-medium py-2 text-sm">
-                Échanger maintenant
-              </Button>
+              {/* Statistiques utilisateur */}
+              <div className="bg-terex-darker rounded-lg p-3">
+                <h3 className="text-white font-medium text-sm mb-2">Statistiques</h3>
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div>
+                    <div className="text-terex-accent font-bold text-lg">1,250</div>
+                    <div className="text-gray-400 text-xs">USDT</div>
+                  </div>
+                  <div>
+                    <div className="text-green-400 font-bold text-lg">12</div>
+                    <div className="text-gray-400 text-xs">Achats</div>
+                  </div>
+                  <div>
+                    <div className="text-blue-400 font-bold text-lg">8</div>
+                    <div className="text-gray-400 text-xs">Ventes</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </>
         );
@@ -108,53 +121,72 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
       case 1: // "Achetez des USDT facilement avec Terex"
         return (
           <>
-            {/* Header de l'app */}
+            {/* Page d'achat USDT réelle */}
             <div className="bg-terex-darker p-3 rounded-t-lg">
               <div className="flex items-center justify-between">
                 <h2 className="text-white font-bold text-sm">Acheter USDT</h2>
-                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                  <Banknote className="w-4 h-4 text-white" />
-                </div>
+                <Button className="bg-terex-accent text-black px-2 py-1 text-xs">
+                  Historique
+                </Button>
               </div>
             </div>
             
-            {/* Interface d'achat USDT */}
             <div className="p-4 space-y-3">
+              {/* Montant d'achat */}
               <div className="bg-terex-darker rounded-lg p-3">
-                <label className="text-gray-400 text-xs block mb-1">Montant à acheter</label>
+                <label className="text-gray-400 text-xs block mb-1">Montant en XOF</label>
                 <div className="flex items-center justify-between">
                   <input 
                     type="text" 
-                    value="500" 
+                    value="325,000" 
                     className="bg-transparent text-white font-bold text-lg flex-1" 
                     readOnly 
                   />
-                  <span className="text-terex-accent font-medium">USDT</span>
+                  <span className="text-gray-400 font-medium text-sm">XOF</span>
                 </div>
-                <div className="text-gray-400 text-xs mt-1">≈ 325,000 XOF</div>
+                <div className="text-terex-accent text-xs mt-1">≈ 500 USDT (1 USDT = 650 XOF)</div>
               </div>
 
+              {/* Méthodes de paiement */}
               <div className="bg-terex-darker rounded-lg p-3">
                 <label className="text-gray-400 text-xs block mb-2">Méthode de paiement</label>
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">💳</span>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2 p-2 bg-orange-500/10 border border-orange-500/30 rounded">
+                    <div className="w-6 h-6 bg-orange-500 rounded flex items-center justify-center">
+                      <span className="text-white text-xs">📱</span>
+                    </div>
+                    <div className="flex-1">
+                      <span className="text-white text-sm">Orange Money</span>
+                      <div className="text-gray-400 text-xs">Instantané</div>
+                    </div>
+                    <div className="w-4 h-4 bg-orange-500 rounded-full"></div>
                   </div>
-                  <div>
-                    <div className="text-white font-medium text-sm">Mobile Money</div>
-                    <div className="text-gray-400 text-xs">Orange Money, MTN</div>
+                  <div className="flex items-center space-x-2 p-2 bg-terex-dark rounded border border-gray-600">
+                    <div className="w-6 h-6 bg-yellow-500 rounded flex items-center justify-center">
+                      <span className="text-white text-xs">📱</span>
+                    </div>
+                    <div className="flex-1">
+                      <span className="text-white text-sm">MTN Mobile Money</span>
+                      <div className="text-gray-400 text-xs">Instantané</div>
+                    </div>
                   </div>
                 </div>
               </div>
 
+              {/* Adresse de portefeuille */}
               <div className="bg-terex-darker rounded-lg p-3">
-                <label className="text-gray-400 text-xs block mb-1">Adresse de réception</label>
-                <input 
-                  type="text" 
-                  value="TQn9Y2khEsLJW1ChVWFMSMeRDow..." 
-                  className="bg-transparent text-white text-sm w-full" 
-                  readOnly 
-                />
+                <label className="text-gray-400 text-xs block mb-1">Adresse de réception USDT</label>
+                <div className="flex items-center space-x-2">
+                  <input 
+                    type="text" 
+                    value="TQn9Y2khEsLJW1ChVWFMSMeRDow5VnbNrp" 
+                    className="bg-terex-dark text-white text-xs flex-1 p-2 rounded border border-gray-600" 
+                    readOnly 
+                  />
+                  <Button className="bg-terex-accent text-black px-2 py-1 text-xs">
+                    Copier
+                  </Button>
+                </div>
               </div>
 
               <Button className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 text-sm">
@@ -167,23 +199,31 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
       case 2: // "Vendez vos stablecoins en toute sécurité"
         return (
           <>
-            {/* Header de l'app */}
+            {/* Page de vente USDT réelle */}
             <div className="bg-terex-darker p-3 rounded-t-lg">
               <div className="flex items-center justify-between">
                 <h2 className="text-white font-bold text-sm">Vendre USDT</h2>
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                  <Shield className="w-4 h-4 text-white" />
+                <div className="flex items-center space-x-1">
+                  <Shield className="w-4 h-4 text-green-400" />
+                  <span className="text-green-400 text-xs">Sécurisé</span>
                 </div>
               </div>
             </div>
             
-            {/* Interface de vente USDT */}
             <div className="p-4 space-y-3">
+              {/* Balance USDT */}
               <div className="bg-terex-darker rounded-lg p-3">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-400 text-xs">Montant à vendre</span>
-                  <span className="text-terex-accent text-xs">Balance: 2,450 USDT</span>
+                  <span className="text-gray-400 text-xs">Balance USDT</span>
+                  <span className="text-terex-accent text-xs">Disponible</span>
                 </div>
+                <div className="text-white font-bold text-lg">2,450.00 USDT</div>
+                <div className="text-gray-400 text-xs">≈ 1,592,500 XOF</div>
+              </div>
+
+              {/* Montant à vendre */}
+              <div className="bg-terex-darker rounded-lg p-3">
+                <label className="text-gray-400 text-xs block mb-1">Montant à vendre</label>
                 <div className="flex items-center justify-between">
                   <input 
                     type="text" 
@@ -193,30 +233,33 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                   />
                   <span className="text-white font-medium">USDT</span>
                 </div>
-                <div className="text-green-400 text-xs mt-1">≈ 650,000 XOF</div>
+                <div className="text-green-400 text-xs mt-1">Vous recevrez: 650,000 XOF</div>
               </div>
 
+              {/* Méthode de réception */}
               <div className="bg-terex-darker rounded-lg p-3">
-                <label className="text-gray-400 text-xs block mb-2">Méthode de réception</label>
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2 p-2 bg-terex-dark rounded border border-terex-accent">
-                    <div className="w-6 h-6 bg-orange-500 rounded flex items-center justify-center">
-                      <span className="text-white text-xs">📱</span>
-                    </div>
-                    <span className="text-white text-sm">Mobile Money</span>
+                <label className="text-gray-400 text-xs block mb-2">Recevoir sur</label>
+                <div className="flex items-center space-x-2 p-2 bg-orange-500/10 border border-orange-500/30 rounded">
+                  <div className="w-6 h-6 bg-orange-500 rounded flex items-center justify-center">
+                    <span className="text-white text-xs">📱</span>
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-white text-sm">+223 76 43 21 98</span>
+                    <div className="text-gray-400 text-xs">Orange Money Mali</div>
                   </div>
                 </div>
               </div>
 
+              {/* Garantie de sécurité */}
               <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
                 <div className="flex items-center space-x-2 mb-1">
                   <Shield className="w-4 h-4 text-green-400" />
-                  <span className="text-green-400 font-medium text-xs">Transaction sécurisée</span>
+                  <span className="text-green-400 font-medium text-xs">Fonds protégés</span>
                 </div>
-                <p className="text-gray-300 text-xs">Fonds protégés par notre système de garantie</p>
+                <p className="text-gray-300 text-xs">Transaction sécurisée par escrow Terex</p>
               </div>
 
-              <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 text-sm">
+              <Button className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2 text-sm">
                 Vendre 1,000 USDT
               </Button>
             </div>
@@ -226,18 +269,19 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
       case 3: // "Envoyez de l'argent à vos proches en Afrique"
         return (
           <>
-            {/* Header de l'app */}
+            {/* Page de transfert international réelle */}
             <div className="bg-terex-darker p-3 rounded-t-lg">
               <div className="flex items-center justify-between">
                 <h2 className="text-white font-bold text-sm">Transfert International</h2>
-                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-                  <Send className="w-4 h-4 text-white" />
+                <div className="flex items-center space-x-1">
+                  <Globe className="w-4 h-4 text-blue-400" />
+                  <span className="text-blue-400 text-xs">Global</span>
                 </div>
               </div>
             </div>
             
-            {/* Interface de transfert */}
             <div className="p-4 space-y-3">
+              {/* Montant à envoyer */}
               <div className="bg-terex-darker rounded-lg p-3">
                 <label className="text-gray-400 text-xs block mb-1">Montant à envoyer</label>
                 <div className="flex items-center justify-between">
@@ -249,40 +293,54 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                   />
                   <span className="text-white font-medium">USD</span>
                 </div>
-                <div className="text-gray-400 text-xs mt-1">Frais: 5 USD • Le destinataire recevra: 162,500 XOF</div>
-              </div>
-
-              <div className="bg-terex-darker rounded-lg p-3">
-                <label className="text-gray-400 text-xs block mb-2">Destinataire</label>
-                <div className="space-y-2">
-                  <input 
-                    type="text" 
-                    value="Amadou Diallo" 
-                    placeholder="Nom complet" 
-                    className="w-full bg-terex-dark text-white text-sm p-2 rounded border border-gray-600" 
-                    readOnly 
-                  />
-                  <input 
-                    type="text" 
-                    value="+223 76 43 21 98" 
-                    placeholder="Numéro de téléphone" 
-                    className="w-full bg-terex-dark text-white text-sm p-2 rounded border border-gray-600" 
-                    readOnly 
-                  />
+                <div className="text-gray-400 text-xs mt-1">
+                  Frais: 5 USD • Taux: 1 USD = 650 XOF
                 </div>
               </div>
 
+              {/* Informations destinataire */}
               <div className="bg-terex-darker rounded-lg p-3">
-                <label className="text-gray-400 text-xs block mb-2">Méthode de réception</label>
+                <label className="text-gray-400 text-xs block mb-2">Destinataire</label>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs">AD</span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-white font-medium text-sm">Amadou Diallo</div>
+                      <div className="text-gray-400 text-xs">+223 76 43 21 98</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Pays et méthode */}
+              <div className="bg-terex-darker rounded-lg p-3">
+                <label className="text-gray-400 text-xs block mb-2">Livraison</label>
+                <div className="flex items-center space-x-2 mb-2">
+                  <div className="w-6 h-6 bg-orange-500 rounded flex items-center justify-center">
+                    <span className="text-white text-xs">🇲🇱</span>
+                  </div>
+                  <span className="text-white text-sm">Mali</span>
+                </div>
                 <div className="flex items-center space-x-2 p-2 bg-orange-500/10 border border-orange-500/30 rounded">
                   <div className="w-6 h-6 bg-orange-500 rounded flex items-center justify-center">
                     <span className="text-white text-xs">📱</span>
                   </div>
-                  <div>
-                    <span className="text-white text-sm">Orange Money Mali</span>
-                    <div className="text-gray-400 text-xs">Livraison instantanée</div>
+                  <div className="flex-1">
+                    <span className="text-white text-sm">Orange Money</span>
+                    <div className="text-gray-400 text-xs">Livraison: 5-10 minutes</div>
                   </div>
                 </div>
+              </div>
+
+              {/* Récapitulatif */}
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-gray-300 text-xs">Le destinataire recevra:</span>
+                  <span className="text-blue-400 font-bold text-sm">162,500 XOF</span>
+                </div>
+                <div className="text-gray-400 text-xs">Temps estimé: 5-10 minutes</div>
               </div>
 
               <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 text-sm">
@@ -295,36 +353,34 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
       case 4: // "Plateforme 100% sécurisée et réglementée"
         return (
           <>
-            {/* Header de l'app */}
+            {/* Page de sécurité et conformité réelle */}
             <div className="bg-terex-darker p-3 rounded-t-lg">
               <div className="flex items-center justify-between">
-                <h2 className="text-white font-bold text-sm">Sécurité Terex</h2>
-                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                <h2 className="text-white font-bold text-sm">Sécurité & Conformité</h2>
+                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                   <Shield className="w-4 h-4 text-white" />
                 </div>
               </div>
             </div>
             
-            {/* Interface de sécurité */}
             <div className="p-4 space-y-3">
+              {/* Statut de vérification */}
               <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
                 <div className="flex items-center space-x-2 mb-2">
                   <Shield className="w-5 h-5 text-green-400" />
-                  <span className="text-green-400 font-medium text-sm">Compte vérifié</span>
+                  <span className="text-green-400 font-medium text-sm">Compte vérifié KYC</span>
                 </div>
                 <p className="text-gray-300 text-xs">Votre identité a été vérifiée avec succès</p>
+                <div className="text-green-400 text-xs mt-1">Niveau 2 - Transactions illimitées</div>
               </div>
 
+              {/* Certifications */}
               <div className="bg-terex-darker rounded-lg p-3">
-                <h3 className="text-white font-medium text-sm mb-2">Mesures de sécurité</h3>
+                <h3 className="text-white font-medium text-sm mb-2">Certifications</h3>
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    <span className="text-gray-300 text-xs">Chiffrement AES-256</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    <span className="text-gray-300 text-xs">Authentification 2FA</span>
+                    <span className="text-gray-300 text-xs">Licence de change agréée</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-green-400 rounded-full"></div>
@@ -332,13 +388,18 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                   </div>
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    <span className="text-gray-300 text-xs">Licence réglementaire</span>
+                    <span className="text-gray-300 text-xs">Audit de sécurité annuel</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <span className="text-gray-300 text-xs">Chiffrement AES-256</span>
                   </div>
                 </div>
               </div>
 
+              {/* Statistiques de sécurité */}
               <div className="bg-terex-darker rounded-lg p-3">
-                <h3 className="text-white font-medium text-sm mb-2">Statistiques de sécurité</h3>
+                <h3 className="text-white font-medium text-sm mb-2">Performance</h3>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="text-center">
                     <div className="text-terex-accent font-bold text-lg">99.9%</div>
@@ -346,17 +407,36 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                   </div>
                   <div className="text-center">
                     <div className="text-green-400 font-bold text-lg">0</div>
-                    <div className="text-gray-400 text-xs">Incidents</div>
+                    <div className="text-gray-400 text-xs">Faille de sécurité</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-blue-400 font-bold text-lg">50K+</div>
+                    <div className="text-gray-400 text-xs">Utilisateurs</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-purple-400 font-bold text-lg">24/7</div>
+                    <div className="text-gray-400 text-xs">Support</div>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-2">
-                <div className="flex items-center justify-center space-x-1">
-                  <Shield className="w-4 h-4 text-purple-400" />
-                  <span className="text-purple-400 font-medium text-xs">Plateforme certifiée</span>
+              {/* Support */}
+              <div className="bg-terex-darker rounded-lg p-3">
+                <h3 className="text-white font-medium text-sm mb-2">Support client</h3>
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-terex-accent rounded-full flex items-center justify-center">
+                    <Users className="w-4 h-4 text-black" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-white text-sm">Équipe dédiée 24/7</div>
+                    <div className="text-gray-400 text-xs">Temps de réponse: < 2 heures</div>
+                  </div>
                 </div>
               </div>
+
+              <Button className="w-full bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 text-sm">
+                Contacter le support
+              </Button>
             </div>
           </>
         );
