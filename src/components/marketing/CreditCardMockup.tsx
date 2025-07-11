@@ -1,5 +1,5 @@
 
-import { Smartphone, Wifi, Contactless } from 'lucide-react';
+import { Smartphone, Wifi, CreditCard } from 'lucide-react';
 
 export function CreditCardMockup() {
   return (
@@ -19,7 +19,7 @@ export function CreditCardMockup() {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                  <Contactless className="w-5 h-5" />
+                  <CreditCard className="w-5 h-5" />
                 </div>
                 <span className="text-sm font-medium">Terex Card</span>
               </div>
