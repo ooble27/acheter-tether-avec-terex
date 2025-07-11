@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Globe, ArrowRightLeft, Send, Banknote, TrendingUp, Users, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { CryptoVisualization } from './CryptoVisualization';
+import { AfricaMap3D } from './AfricaMap3D';
 import { useState, useEffect } from 'react';
 
 interface HeroSectionProps {
@@ -134,9 +134,9 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
           </div>
           
-          {/* Colonne de droite - CryptoVisualization */}
+          {/* Colonne de droite - AfricaMap3D */}
           <div className="order-1 lg:order-2 flex justify-center">
-            <CryptoVisualization />
+            <AfricaMap3D />
           </div>
         </div>
         
