@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Shield, Globe, ArrowRightLeft, Send, Banknote } from 'lucide-react';
+import { Shield, Globe, ArrowRightLeft, Send, Banknote, TrendingUp, Users, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DeviceMockups } from './DeviceMockups';
 import { useState, useEffect } from 'react';
@@ -48,160 +48,316 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
       case 0: // "L'échange USDT Tether et les transferts vers l'Afrique"
         return (
           <>
-            <div className="w-full h-40 bg-gradient-to-br from-terex-accent/20 to-blue-500/20 rounded-lg overflow-hidden relative">
-              <img 
-                src="https://images.unsplash.com/photo-1621761191319-c6fb62004040?auto=format&fit=crop&w=400&h=200&q=80" 
-                alt="USDT Exchange"
-                className="w-full h-full object-cover opacity-80"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-terex-dark/80 to-transparent flex items-end">
-                <div className="p-4">
-                  <h3 className="text-white font-bold text-sm">Échange USDT</h3>
-                  <p className="text-terex-accent text-xs">Transferts Afrique</p>
+            {/* Header de l'app */}
+            <div className="bg-terex-darker p-3 rounded-t-lg">
+              <div className="flex items-center justify-between">
+                <h2 className="text-white font-bold text-sm">Terex Exchange</h2>
+                <div className="w-8 h-8 bg-terex-accent rounded-full flex items-center justify-center">
+                  <ArrowRightLeft className="w-4 h-4 text-black" />
                 </div>
               </div>
             </div>
-            <Card className="bg-terex-darker/80 border-terex-accent/30">
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-terex-accent/20 rounded-lg flex items-center justify-center">
-                    <ArrowRightLeft className="w-6 h-6 text-terex-accent" />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-semibold text-sm">Échange USDT</h3>
-                    <p className="text-gray-400 text-xs">Taux en temps réel</p>
-                  </div>
+            
+            {/* Interface d'échange USDT */}
+            <div className="p-4 space-y-3">
+              <div className="bg-terex-darker rounded-lg p-3">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-gray-400 text-xs">Vous vendez</span>
+                  <span className="text-terex-accent text-xs">Balance: 1,250.00</span>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">₮</span>
+                    </div>
+                    <span className="text-white font-medium text-sm">USDT</span>
+                  </div>
+                  <span className="text-white font-bold">100.00</span>
+                </div>
+              </div>
+
+              <div className="flex justify-center">
+                <div className="w-8 h-8 bg-terex-accent/20 rounded-full flex items-center justify-center">
+                  <ArrowRightLeft className="w-4 h-4 text-terex-accent rotate-90" />
+                </div>
+              </div>
+
+              <div className="bg-terex-darker rounded-lg p-3">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-gray-400 text-xs">Vous recevez</span>
+                  <span className="text-terex-accent text-xs">1 USDT = 650 CFA</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">F</span>
+                    </div>
+                    <span className="text-white font-medium text-sm">XOF</span>
+                  </div>
+                  <span className="text-white font-bold">65,000</span>
+                </div>
+              </div>
+
+              <Button className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-medium py-2 text-sm">
+                Échanger maintenant
+              </Button>
+            </div>
           </>
         );
 
       case 1: // "Achetez des USDT facilement avec Terex"
         return (
           <>
-            <div className="w-full h-40 bg-gradient-to-br from-green-500/20 to-terex-accent/20 rounded-lg overflow-hidden relative">
-              <img 
-                src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=400&h=200&q=80"
-                alt="Buy USDT"
-                className="w-full h-full object-cover opacity-80"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-terex-dark/80 to-transparent flex items-end">
-                <div className="p-4">
-                  <h3 className="text-white font-bold text-sm">Achat USDT</h3>
-                  <p className="text-terex-accent text-xs">Facile et rapide</p>
+            {/* Header de l'app */}
+            <div className="bg-terex-darker p-3 rounded-t-lg">
+              <div className="flex items-center justify-between">
+                <h2 className="text-white font-bold text-sm">Acheter USDT</h2>
+                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                  <Banknote className="w-4 h-4 text-white" />
                 </div>
               </div>
             </div>
-            <Card className="bg-terex-darker/80 border-green-500/30">
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                    <Banknote className="w-6 h-6 text-green-400" />
+            
+            {/* Interface d'achat USDT */}
+            <div className="p-4 space-y-3">
+              <div className="bg-terex-darker rounded-lg p-3">
+                <label className="text-gray-400 text-xs block mb-1">Montant à acheter</label>
+                <div className="flex items-center justify-between">
+                  <input 
+                    type="text" 
+                    value="500" 
+                    className="bg-transparent text-white font-bold text-lg flex-1" 
+                    readOnly 
+                  />
+                  <span className="text-terex-accent font-medium">USDT</span>
+                </div>
+                <div className="text-gray-400 text-xs mt-1">≈ 325,000 XOF</div>
+              </div>
+
+              <div className="bg-terex-darker rounded-lg p-3">
+                <label className="text-gray-400 text-xs block mb-2">Méthode de paiement</label>
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">💳</span>
                   </div>
                   <div>
-                    <h3 className="text-white font-semibold text-sm">Achetez USDT</h3>
-                    <p className="text-gray-400 text-xs">Transaction sécurisée</p>
+                    <div className="text-white font-medium text-sm">Mobile Money</div>
+                    <div className="text-gray-400 text-xs">Orange Money, MTN</div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+
+              <div className="bg-terex-darker rounded-lg p-3">
+                <label className="text-gray-400 text-xs block mb-1">Adresse de réception</label>
+                <input 
+                  type="text" 
+                  value="TQn9Y2khEsLJW1ChVWFMSMeRDow..." 
+                  className="bg-transparent text-white text-sm w-full" 
+                  readOnly 
+                />
+              </div>
+
+              <Button className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 text-sm">
+                Acheter 500 USDT
+              </Button>
+            </div>
           </>
         );
 
       case 2: // "Vendez vos stablecoins en toute sécurité"
         return (
           <>
-            <div className="w-full h-40 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg overflow-hidden relative">
-              <img 
-                src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=400&h=200&q=80"
-                alt="Sell USDT"
-                className="w-full h-full object-cover opacity-80"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-terex-dark/80 to-transparent flex items-end">
-                <div className="p-4">
-                  <h3 className="text-white font-bold text-sm">Vente USDT</h3>
-                  <p className="text-terex-accent text-xs">100% sécurisé</p>
+            {/* Header de l'app */}
+            <div className="bg-terex-darker p-3 rounded-t-lg">
+              <div className="flex items-center justify-between">
+                <h2 className="text-white font-bold text-sm">Vendre USDT</h2>
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                  <Shield className="w-4 h-4 text-white" />
                 </div>
               </div>
             </div>
-            <Card className="bg-terex-darker/80 border-blue-500/30">
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                    <Shield className="w-6 h-6 text-blue-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-semibold text-sm">Vente sécurisée</h3>
-                    <p className="text-gray-400 text-xs">Protection garantie</p>
+            
+            {/* Interface de vente USDT */}
+            <div className="p-4 space-y-3">
+              <div className="bg-terex-darker rounded-lg p-3">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-gray-400 text-xs">Montant à vendre</span>
+                  <span className="text-terex-accent text-xs">Balance: 2,450 USDT</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <input 
+                    type="text" 
+                    value="1,000" 
+                    className="bg-transparent text-white font-bold text-lg flex-1" 
+                    readOnly 
+                  />
+                  <span className="text-white font-medium">USDT</span>
+                </div>
+                <div className="text-green-400 text-xs mt-1">≈ 650,000 XOF</div>
+              </div>
+
+              <div className="bg-terex-darker rounded-lg p-3">
+                <label className="text-gray-400 text-xs block mb-2">Méthode de réception</label>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2 p-2 bg-terex-dark rounded border border-terex-accent">
+                    <div className="w-6 h-6 bg-orange-500 rounded flex items-center justify-center">
+                      <span className="text-white text-xs">📱</span>
+                    </div>
+                    <span className="text-white text-sm">Mobile Money</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+
+              <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+                <div className="flex items-center space-x-2 mb-1">
+                  <Shield className="w-4 h-4 text-green-400" />
+                  <span className="text-green-400 font-medium text-xs">Transaction sécurisée</span>
+                </div>
+                <p className="text-gray-300 text-xs">Fonds protégés par notre système de garantie</p>
+              </div>
+
+              <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 text-sm">
+                Vendre 1,000 USDT
+              </Button>
+            </div>
           </>
         );
 
       case 3: // "Envoyez de l'argent à vos proches en Afrique"
         return (
           <>
-            <div className="w-full h-40 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-lg overflow-hidden relative">
-              <img 
-                src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&w=400&h=200&q=80"
-                alt="Africa Transfer"
-                className="w-full h-full object-cover opacity-80"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-terex-dark/80 to-transparent flex items-end">
-                <div className="p-4">
-                  <h3 className="text-white font-bold text-sm">Transfert Afrique</h3>
-                  <p className="text-terex-accent text-xs">Envoi instantané</p>
+            {/* Header de l'app */}
+            <div className="bg-terex-darker p-3 rounded-t-lg">
+              <div className="flex items-center justify-between">
+                <h2 className="text-white font-bold text-sm">Transfert International</h2>
+                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                  <Send className="w-4 h-4 text-white" />
                 </div>
               </div>
             </div>
-            <Card className="bg-terex-darker/80 border-orange-500/30">
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center">
-                    <Send className="w-6 h-6 text-orange-400" />
+            
+            {/* Interface de transfert */}
+            <div className="p-4 space-y-3">
+              <div className="bg-terex-darker rounded-lg p-3">
+                <label className="text-gray-400 text-xs block mb-1">Montant à envoyer</label>
+                <div className="flex items-center justify-between">
+                  <input 
+                    type="text" 
+                    value="250" 
+                    className="bg-transparent text-white font-bold text-lg flex-1" 
+                    readOnly 
+                  />
+                  <span className="text-white font-medium">USD</span>
+                </div>
+                <div className="text-gray-400 text-xs mt-1">Frais: 5 USD • Le destinataire recevra: 162,500 XOF</div>
+              </div>
+
+              <div className="bg-terex-darker rounded-lg p-3">
+                <label className="text-gray-400 text-xs block mb-2">Destinataire</label>
+                <div className="space-y-2">
+                  <input 
+                    type="text" 
+                    value="Amadou Diallo" 
+                    placeholder="Nom complet" 
+                    className="w-full bg-terex-dark text-white text-sm p-2 rounded border border-gray-600" 
+                    readOnly 
+                  />
+                  <input 
+                    type="text" 
+                    value="+223 76 43 21 98" 
+                    placeholder="Numéro de téléphone" 
+                    className="w-full bg-terex-dark text-white text-sm p-2 rounded border border-gray-600" 
+                    readOnly 
+                  />
+                </div>
+              </div>
+
+              <div className="bg-terex-darker rounded-lg p-3">
+                <label className="text-gray-400 text-xs block mb-2">Méthode de réception</label>
+                <div className="flex items-center space-x-2 p-2 bg-orange-500/10 border border-orange-500/30 rounded">
+                  <div className="w-6 h-6 bg-orange-500 rounded flex items-center justify-center">
+                    <span className="text-white text-xs">📱</span>
                   </div>
                   <div>
-                    <h3 className="text-white font-semibold text-sm">Envoi Afrique</h3>
-                    <p className="text-gray-400 text-xs">Vers vos proches</p>
+                    <span className="text-white text-sm">Orange Money Mali</span>
+                    <div className="text-gray-400 text-xs">Livraison instantanée</div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+
+              <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 text-sm">
+                Envoyer 250 USD
+              </Button>
+            </div>
           </>
         );
 
       case 4: // "Plateforme 100% sécurisée et réglementée"
         return (
           <>
-            <div className="w-full h-40 bg-gradient-to-br from-purple-500/20 to-terex-accent/20 rounded-lg overflow-hidden relative">
-              <img 
-                src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&h=200&q=80"
-                alt="Security"
-                className="w-full h-full object-cover opacity-80"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-terex-dark/80 to-transparent flex items-end">
-                <div className="p-4">
-                  <h3 className="text-white font-bold text-sm">Sécurité</h3>
-                  <p className="text-terex-accent text-xs">Réglementée</p>
+            {/* Header de l'app */}
+            <div className="bg-terex-darker p-3 rounded-t-lg">
+              <div className="flex items-center justify-between">
+                <h2 className="text-white font-bold text-sm">Sécurité Terex</h2>
+                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                  <Shield className="w-4 h-4 text-white" />
                 </div>
               </div>
             </div>
-            <Card className="bg-terex-darker/80 border-purple-500/30">
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                    <Shield className="w-6 h-6 text-purple-400" />
+            
+            {/* Interface de sécurité */}
+            <div className="p-4 space-y-3">
+              <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Shield className="w-5 h-5 text-green-400" />
+                  <span className="text-green-400 font-medium text-sm">Compte vérifié</span>
+                </div>
+                <p className="text-gray-300 text-xs">Votre identité a été vérifiée avec succès</p>
+              </div>
+
+              <div className="bg-terex-darker rounded-lg p-3">
+                <h3 className="text-white font-medium text-sm mb-2">Mesures de sécurité</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <span className="text-gray-300 text-xs">Chiffrement AES-256</span>
                   </div>
-                  <div>
-                    <h3 className="text-white font-semibold text-sm">100% Sécurisé</h3>
-                    <p className="text-gray-400 text-xs">Conformité totale</p>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <span className="text-gray-300 text-xs">Authentification 2FA</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <span className="text-gray-300 text-xs">Conformité RGPD</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <span className="text-gray-300 text-xs">Licence réglementaire</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+
+              <div className="bg-terex-darker rounded-lg p-3">
+                <h3 className="text-white font-medium text-sm mb-2">Statistiques de sécurité</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="text-center">
+                    <div className="text-terex-accent font-bold text-lg">99.9%</div>
+                    <div className="text-gray-400 text-xs">Uptime</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-green-400 font-bold text-lg">0</div>
+                    <div className="text-gray-400 text-xs">Incidents</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-2">
+                <div className="flex items-center justify-center space-x-1">
+                  <Shield className="w-4 h-4 text-purple-400" />
+                  <span className="text-purple-400 font-medium text-xs">Plateforme certifiée</span>
+                </div>
+              </div>
+            </div>
           </>
         );
 
@@ -296,7 +452,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                     </div>
 
                     {/* Screen content with dynamic content based on current slide */}
-                    <div className="p-6 space-y-6 text-xs overflow-y-auto h-full pb-8">
+                    <div className="text-xs overflow-y-auto h-full pb-8">
                       {getPhoneContent()}
                     </div>
                   </div>
