@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react'
+import React, { createContext, useContext, useState, useEffect } from 'react'
 import type { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 
@@ -33,7 +33,7 @@ interface AuthProviderProps {
   children: React.ReactNode
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export function AuthProvider({ children }: AuthProviderProps) {
   console.log('AuthProvider: Initializing...');
   
   // Initialize state with proper default values
@@ -168,7 +168,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return { error }
   }
 
-  const value = useMemo(() => ({
+  const value = React.useMemo(() => ({
     user,
     session,
     loading,
