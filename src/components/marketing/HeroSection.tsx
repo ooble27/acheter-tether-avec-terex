@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Globe, ArrowRightLeft, Send, Banknote, TrendingUp, Users, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { SimpleCrypto3D } from './SimpleCrypto3D';
+import { InteractiveCurrencyCalculator } from './InteractiveCurrencyCalculator';
 import { useState, useEffect } from 'react';
 
 interface HeroSectionProps {
@@ -134,9 +134,9 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
           </div>
           
-          {/* Colonne de droite - SimpleCrypto3D */}
+          {/* Colonne de droite - Calculateur interactif */}
           <div className="order-1 lg:order-2 flex justify-center">
-            <SimpleCrypto3D />
+            <InteractiveCurrencyCalculator />
           </div>
         </div>
         
