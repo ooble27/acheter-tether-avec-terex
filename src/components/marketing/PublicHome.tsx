@@ -14,7 +14,6 @@ import { CTASection } from './sections/CTASection';
 import { FooterSection } from './sections/FooterSection';
 import { PhoneMockupSection } from './sections/PhoneMockupSection';
 import { FeaturesShowcaseSection } from './sections/FeaturesShowcaseSection';
-import { TransferProcessSection } from './sections/TransferProcessSection';
 
 interface PublicHomeProps {
   onGetStarted: () => void;
@@ -69,8 +68,6 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       <PhoneMockupSection />
 
       <FeaturesShowcaseSection />
-
-      <TransferProcessSection />
 
       <HowItWorksSection onBlockchainInfoClick={handleBlockchainInfo} />
 

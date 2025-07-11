@@ -6,11 +6,11 @@ import { ArrowRight, Shield, Zap, Clock } from 'lucide-react';
 
 export function FeaturesShowcaseSection() {
   return (
-    <section className="py-16 sm:py-20 bg-terex-dark">
+    <section className="py-20 sm:py-28 bg-terex-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Dashboard Feature */}
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center mb-32">
           <div className="order-2 lg:order-1">
             <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-4 py-2 mb-6 border border-terex-accent/20">
               <Shield className="w-4 h-4 text-terex-accent mr-2" />
@@ -58,7 +58,7 @@ export function FeaturesShowcaseSection() {
         </div>
 
         {/* Trading Graph Feature */}
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
           <div className="flex justify-center">
             <div className="relative scale-75 sm:scale-90 lg:scale-100">
               <div className="absolute inset-0 bg-terex-accent/10 rounded-3xl blur-3xl scale-110 animate-pulse"></div>
@@ -80,14 +80,24 @@ export function FeaturesShowcaseSection() {
               Suivez l'évolution des taux USDT/CAD en direct et effectuez vos transactions au moment optimal pour maximiser vos gains.
             </p>
             
-            <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-1 gap-4 mb-8">
               <div className="bg-terex-darker/50 rounded-xl p-4 border border-terex-accent/20">
-                <div className="text-2xl font-bold text-terex-accent mb-1">0%</div>
-                <div className="text-sm text-gray-400">Frais cachés</div>
+                <div className="flex justify-between items-center">
+                  <span className="text-white font-medium">Achat USDT</span>
+                  <span className="text-terex-accent font-semibold">0% commission</span>
+                </div>
               </div>
               <div className="bg-terex-darker/50 rounded-xl p-4 border border-terex-accent/20">
-                <div className="text-2xl font-bold text-terex-accent mb-1">24/7</div>
-                <div className="text-sm text-gray-400">Disponibilité</div>
+                <div className="flex justify-between items-center">
+                  <span className="text-white font-medium">Virement international</span>
+                  <span className="text-terex-accent font-semibold">Frais fixes 2$</span>
+                </div>
+              </div>
+              <div className="bg-terex-darker/50 rounded-xl p-4 border border-terex-accent/20">
+                <div className="flex justify-between items-center">
+                  <span className="text-white font-medium">Conversion devises</span>
+                  <span className="text-terex-accent font-semibold">0.5% seulement</span>
+                </div>
               </div>
             </div>
             
