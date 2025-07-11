@@ -94,8 +94,8 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           {/* Colonne de droite - Maquette de téléphone */}
           <div className="order-1 lg:order-2 flex justify-center">
             <div className="relative mx-auto">
-              {/* Phone Frame - More realistic iPhone styling */}
-              <div className="relative w-[320px] h-[640px] lg:w-[400px] lg:h-[800px] bg-gradient-to-br from-gray-800 to-black rounded-[2.8rem] p-2 shadow-2xl border border-gray-700">
+              {/* Phone Frame - Reduced size on desktop */}
+              <div className="relative w-[280px] h-[560px] lg:w-[300px] lg:h-[600px] bg-gradient-to-br from-gray-800 to-black rounded-[2.8rem] p-2 shadow-2xl border border-gray-700">
                 {/* Screen bezel */}
                 <div className="w-full h-full bg-black rounded-[2.3rem] p-1 relative">
                   {/* Dynamic Island */}
