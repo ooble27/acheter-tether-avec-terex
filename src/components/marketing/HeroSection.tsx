@@ -3,8 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Globe, ArrowRightLeft, Send, Banknote, TrendingUp, Users, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { DeviceMockups } from './DeviceMockups';
-import { ScreenSlides } from './ScreenSlides';
+import { CryptoVisualization } from './CryptoVisualization';
 import { useState, useEffect } from 'react';
 
 interface HeroSectionProps {
@@ -135,53 +134,9 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
           </div>
           
-          {/* Colonne de droite - Téléphone avec ScreenSlides */}
+          {/* Colonne de droite - CryptoVisualization */}
           <div className="order-1 lg:order-2 flex justify-center">
-            <div className="relative scale-75 sm:scale-90 lg:scale-100">
-              {/* Glow effect */}
-              <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
-              
-              {/* Phone Frame */}
-              <div className="relative mx-auto">
-                <div className="relative w-[280px] h-[560px] bg-gradient-to-br from-white/20 to-white/10 rounded-[3rem] p-2 shadow-2xl border border-white/30">
-                  {/* Screen bezel */}
-                  <div className="w-full h-full bg-black rounded-[2.5rem] p-1">
-                    {/* Notch */}
-                    <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-20 h-5 bg-black rounded-full z-20"></div>
-                    
-                    {/* Screen content with ScreenSlides */}
-                    <div className="w-full h-full bg-terex-dark rounded-[2.2rem] overflow-hidden relative">
-                      {/* Status bar */}
-                      <div className="h-8 bg-terex-darker flex items-center justify-between px-4 text-xs text-white relative z-10">
-                        <span>9:41</span>
-                        <div className="flex space-x-1">
-                          <div className="w-4 h-2 bg-white rounded-sm"></div>
-                          <div className="w-4 h-2 bg-white rounded-sm"></div>
-                          <div className="w-4 h-2 bg-white rounded-sm"></div>
-                        </div>
-                      </div>
-
-                      {/* ScreenSlides Component avec mapping des slides */}
-                      <div className="h-[calc(100%-2rem)]">
-                        <ScreenSlides 
-                          currentSlide={
-                            currentSlide === 0 ? 0 : // Dashboard
-                            currentSlide === 1 ? 1 : // Buy USDT
-                            currentSlide === 2 ? 2 : // Sell USDT
-                            currentSlide === 3 ? 3 : // Transfer
-                            4 // Profile
-                          } 
-                          deviceType="mobile" 
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Home indicator */}
-                  <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-white rounded-full opacity-60"></div>
-                </div>
-              </div>
-            </div>
+            <CryptoVisualization />
           </div>
         </div>
         
@@ -193,7 +148,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 {/* Logo USDT correct */}
                 <svg className="w-8 h-8" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="16" cy="16" r="16" fill="#26A17B"/>
-                  <path d="M17.922 17.383v-.002c-.11.008-.677.042-1.942.042-1.01 0-1.721-.03-1.971-.042v.003c-3.888-.171-6.79-.848-6.79-1.658 0-.809 2.902-1.486 6.79-1.66v2.644c.254.018.982.061 1.988.061 1.207 0 1.812-.05 1.925-.06v-2.643c3.88.173 6.775.85 6.775 1.658 0 .81-2.895 1.485-6.775 1.657m0-3.59v-2.366h5.414V7_819H8.595v3.608h5.414v2.365c-4.4.202-7.709 1.074-7.709 2.148 0 1.074 3.309 1.945 7.709 2.147v7.582h3.913v-7.584c4.393-.202 7.694-1.073 7.694-2.147 0-1.073-3.301-1.944-7.694-2.145" fill="white"/>
+                  <path d="M17.922 17.383v-.002c-.11.008-.677.042-1.942.042-1.01 0-1.721-.03-1.971-.042v.003c-3.888-.171-6.79-.848-6.79-1.658 0-.809 2.902-1.486 6.79-1.66v2.644c.254.018.982.061 1.988.061 1.207 0 1.812-.05 1.925-.06v-2.643c3.88.173 6.775.85 6.775 1.658 0 .81-2.895 1.485-6.775 1.657m0-3.59v-2.366h5.414V7.819H8.595v3.608h5.414v2.365c-4.4.202-7.709 1.074-7.709 2.148 0 1.074 3.309 1.945 7.709 2.147v7.582h3.913v-7.584c4.393-.202 7.694-1.073 7.694-2.147 0-1.073-3.301-1.944-7.694-2.145" fill="white"/>
                 </svg>
               </div>
               <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Échange USDT Tether</h3>
