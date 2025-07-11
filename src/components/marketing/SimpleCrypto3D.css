@@ -1,0 +1,310 @@
+
+/* Conteneur principal */
+.simple-crypto-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+}
+
+/* Logo USDT central */
+.central-usdt {
+  position: relative;
+  z-index: 10;
+  animation: float 6s ease-in-out infinite;
+}
+
+.usdt-glow {
+  position: relative;
+  border-radius: 50%;
+  box-shadow: 0 0 30px rgba(59, 150, 143, 0.6);
+  animation: glow 4s ease-in-out infinite alternate;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 30px rgba(59, 150, 143, 0.6); }
+  100% { box-shadow: 0 0 50px rgba(59, 150, 143, 0.9); }
+}
+
+/* Cercles concentriques */
+.crypto-rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ring {
+  position: absolute;
+  border: 2px solid rgba(59, 150, 143, 0.3);
+  border-radius: 50%;
+  animation: rotate 20s linear infinite;
+}
+
+.ring-1 {
+  width: 200px;
+  height: 200px;
+  top: -100px;
+  left: -100px;
+  animation-duration: 15s;
+}
+
+.ring-2 {
+  width: 300px;
+  height: 300px;
+  top: -150px;
+  left: -150px;
+  animation-duration: 25s;
+  animation-direction: reverse;
+}
+
+.ring-3 {
+  width: 400px;
+  height: 400px;
+  top: -200px;
+  left: -200px;
+  animation-duration: 35s;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Icônes crypto flottantes */
+.floating-cryptos {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.crypto-icon {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  animation: orbit 12s linear infinite;
+  transition: transform 0.3s ease;
+}
+
+.crypto-icon:hover {
+  transform: scale(1.2);
+}
+
+.crypto-1 {
+  top: -120px;
+  left: -24px;
+  animation-delay: 0s;
+}
+
+.crypto-2 {
+  top: 80px;
+  left: -24px;
+  animation-delay: -3s;
+}
+
+.crypto-3 {
+  top: -20px;
+  left: -140px;
+  animation-delay: -6s;
+}
+
+.crypto-4 {
+  top: -20px;
+  left: 100px;
+  animation-delay: -9s;
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+}
+
+/* Stats flottantes */
+.floating-stats {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.stat-bubble {
+  position: absolute;
+  background: rgba(59, 150, 143, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(59, 150, 143, 0.3);
+  border-radius: 12px;
+  padding: 8px 12px;
+  text-align: center;
+  animation: floatStat 8s ease-in-out infinite;
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #3B968F;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 2px;
+}
+
+.stat-1 {
+  top: -180px;
+  left: -40px;
+  animation-delay: 0s;
+}
+
+.stat-2 {
+  top: 140px;
+  left: -30px;
+  animation-delay: -2s;
+}
+
+.stat-3 {
+  top: -40px;
+  left: -200px;
+  animation-delay: -4s;
+}
+
+.stat-4 {
+  top: -40px;
+  left: 160px;
+  animation-delay: -6s;
+}
+
+@keyframes floatStat {
+  0%, 100% { transform: translateY(0px); opacity: 0.8; }
+  50% { transform: translateY(-15px); opacity: 1; }
+}
+
+/* Particules flottantes */
+.floating-particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #3B968F;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: floatParticle 10s linear infinite;
+}
+
+.p-1 {
+  top: 20%;
+  left: 15%;
+  animation-delay: 0s;
+}
+
+.p-2 {
+  top: 30%;
+  right: 20%;
+  animation-delay: -2s;
+}
+
+.p-3 {
+  bottom: 25%;
+  left: 25%;
+  animation-delay: -4s;
+}
+
+.p-4 {
+  top: 60%;
+  right: 15%;
+  animation-delay: -6s;
+}
+
+.p-5 {
+  bottom: 40%;
+  left: 60%;
+  animation-delay: -8s;
+}
+
+.p-6 {
+  top: 40%;
+  left: 80%;
+  animation-delay: -10s;
+}
+
+@keyframes floatParticle {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.6;
+  }
+  25% { 
+    transform: translateY(-20px) translateX(10px);
+    opacity: 1;
+  }
+  50% { 
+    transform: translateY(-10px) translateX(-15px);
+    opacity: 0.8;
+  }
+  75% { 
+    transform: translateY(-30px) translateX(5px);
+    opacity: 0.9;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ring-1 {
+    width: 150px;
+    height: 150px;
+    top: -75px;
+    left: -75px;
+  }
+  
+  .ring-2 {
+    width: 200px;
+    height: 200px;
+    top: -100px;
+    left: -100px;
+  }
+  
+  .ring-3 {
+    width: 250px;
+    height: 250px;
+    top: -125px;
+    left: -125px;
+  }
+  
+  .crypto-icon {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .stat-bubble {
+    padding: 6px 8px;
+  }
+  
+  .stat-value {
+    font-size: 14px;
+  }
+  
+  .stat-label {
+    font-size: 8px;
+  }
+  
+  .central-usdt svg {
+    width: 80px;
+    height: 80px;
+  }
+}
