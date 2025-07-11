@@ -36,6 +36,7 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   console.log('AuthProvider: Initializing...');
   
+  // Initialize state with proper default values
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
@@ -43,6 +44,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     console.log('AuthProvider: Setting up auth listener...')
     
+    let mounted = true;
+
     const getInitialSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -53,18 +56,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
         
         console.log('AuthProvider: Initial session:', session?.user?.email || 'no session');
         
-        setSession(session)
-        setUser(session?.user ?? null)
-        setLoading(false)
+        if (mounted) {
+          setSession(session)
+          setUser(session?.user ?? null)
+          setLoading(false)
 
-        if (session?.user) {
-          localStorage.setItem('terex-session-active', 'true');
-          localStorage.setItem('terex-last-session-update', Date.now().toString());
-          localStorage.setItem('terex-user-email', session.user.email || '');
+          if (session?.user) {
+            localStorage.setItem('terex-session-active', 'true');
+            localStorage.setItem('terex-last-session-update', Date.now().toString());
+            localStorage.setItem('terex-user-email', session.user.email || '');
+          }
         }
       } catch (error) {
         console.error('AuthProvider: Unexpected error:', error);
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
@@ -74,24 +81,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
       async (event, session) => {
         console.log('AuthProvider: Auth state change:', event, session?.user?.email || 'no user');
         
-        setSession(session)
-        setUser(session?.user ?? null)
-        setLoading(false)
+        if (mounted) {
+          setSession(session)
+          setUser(session?.user ?? null)
+          setLoading(false)
 
-        if (session?.user) {
-          localStorage.setItem('terex-session-active', 'true');
-          localStorage.setItem('terex-last-session-update', Date.now().toString());
-          localStorage.setItem('terex-user-email', session.user.email || '');
-        } else {
-          localStorage.removeItem('terex-session-active');
-          localStorage.removeItem('terex-last-session-update');
-          localStorage.removeItem('terex-user-email');
-          localStorage.removeItem('terex-pwa-session-synced');
+          if (session?.user) {
+            localStorage.setItem('terex-session-active', 'true');
+            localStorage.setItem('terex-last-session-update', Date.now().toString());
+            localStorage.setItem('terex-user-email', session.user.email || '');
+          } else {
+            localStorage.removeItem('terex-session-active');
+            localStorage.removeItem('terex-last-session-update');
+            localStorage.removeItem('terex-user-email');
+            localStorage.removeItem('terex-pwa-session-synced');
+          }
         }
       }
     )
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     }
   }, [])
