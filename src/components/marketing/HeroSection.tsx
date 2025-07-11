@@ -161,9 +161,18 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                         </div>
                       </div>
 
-                      {/* ScreenSlides Component */}
+                      {/* ScreenSlides Component avec mapping des slides */}
                       <div className="h-[calc(100%-2rem)]">
-                        <ScreenSlides currentSlide={currentSlide} deviceType="mobile" />
+                        <ScreenSlides 
+                          currentSlide={
+                            currentSlide === 0 ? 0 : // Dashboard
+                            currentSlide === 1 ? 1 : // Buy USDT
+                            currentSlide === 2 ? 2 : // Sell USDT
+                            currentSlide === 3 ? 3 : // Transfer
+                            4 // Profile
+                          } 
+                          deviceType="mobile" 
+                        />
                       </div>
                     </div>
                   </div>
