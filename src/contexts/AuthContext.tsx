@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react'
 import type { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/integrations/supabase/client'
 
@@ -36,6 +36,7 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   console.log('AuthProvider: Initializing...');
   
+  // Initialize state with proper default values
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
@@ -167,7 +168,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return { error }
   }
 
-  const value = React.useMemo(() => ({
+  const value = useMemo(() => ({
     user,
     session,
     loading,

@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Globe, ArrowRightLeft, Send, Banknote, TrendingUp, Users, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { InteractiveCurrencyCalculator } from './InteractiveCurrencyCalculator';
+import { DeviceMockups } from './DeviceMockups';
+import { PhoneMockup } from './PhoneMockup';
 import { useState, useEffect } from 'react';
 
 interface HeroSectionProps {
@@ -13,24 +14,6 @@ interface HeroSectionProps {
 
 export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
   const navigate = useNavigate();
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  // Messages qui changent pour le titre principal
-  const titleMessages = [
-    "L'échange USDT Tether et les transferts vers l'Afrique",
-    "Achetez des USDT facilement avec Terex",
-    "Vendez vos stablecoins en toute sécurité", 
-    "Envoyez de l'argent à vos proches en Afrique",
-    "Plateforme 100% sécurisée et réglementée"
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % titleMessages.length);
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [titleMessages.length]);
 
   const handleGetStarted = () => {
     navigate('/auth');
@@ -58,31 +41,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           
           {/* Colonne de gauche - Contenu textuel */}
           <div className="order-2 lg:order-1">
-            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              <span className="transition-all duration-700 ease-in-out">
-                {currentSlide === 0 ? (
-                  <>
-                    L'échange USDT Tether et les transferts vers l'<span className="text-terex-accent">Afrique</span>
-                  </>
-                ) : currentSlide === 1 ? (
-                  <>
-                    Achetez des USDT facilement avec <span className="text-terex-accent">Terex</span>
-                  </>
-                ) : currentSlide === 2 ? (
-                  <>
-                    Vendez vos stablecoins en toute <span className="text-terex-accent">sécurité</span>
-                  </>
-                ) : currentSlide === 3 ? (
-                  <>
-                    Envoyez de l'argent à vos proches en <span className="text-terex-accent">Afrique</span>
-                  </>
-                ) : (
-                  <>
-                    Plateforme 100% sécurisée et <span className="text-terex-accent">réglementée</span>
-                  </>
-                )}
-              </span>
-            </h1>
+            <DeviceMockups />
             
             <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-2xl leading-relaxed">
               Achetez et vendez des USDT facilement, 
@@ -134,9 +93,13 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
           </div>
           
-          {/* Colonne de droite - Calculateur interactif */}
+          {/* Colonne de droite - Utiliser le même PhoneMockup que la section Interface Mobile */}
           <div className="order-1 lg:order-2 flex justify-center">
-            <InteractiveCurrencyCalculator />
+            <div className="relative scale-75 sm:scale-90 lg:scale-100">
+              {/* Glow effect */}
+              <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
+              <PhoneMockup />
+            </div>
           </div>
         </div>
         
@@ -148,7 +111,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 {/* Logo USDT correct */}
                 <svg className="w-8 h-8" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="16" cy="16" r="16" fill="#26A17B"/>
-                  <path d="M17.922 17.383v-.002c-.11.008-.677.042-1.942.042-1.01 0-1.721-.03-1.971-.042v.003c-3.888-.171-6.79-.848-6.79-1.658 0-.809 2.902-1.486 6.79-1.66v2.644c.254.018.982.061 1.988.061 1.207 0 1.812-.05 1.925-.06v-2.643c3.88.173 6.775.85 6.775 1.658 0 .81-2.895 1.485-6.775 1.657m0-3.59v-2.366h5.414V7.819H8.595v3.608h5.414v2.365c-4.4.202-7.709 1.074-7.709 2.148 0 1.074 3.309 1.945 7.709 2.147v7.582h3.913v-7.584c4.393-.202 7.694-1.073 7.694-2.147 0-1.073-3.301-1.944-7.694-2.145" fill="white"/>
+                  <path d="M17.922 17.383v-.002c-.11.008-.677.042-1.942.042-1.01 0-1.721-.03-1.971-.042v.003c-3.888-.171-6.79-.848-6.79-1.658 0-.809 2.902-1.486 6.79-1.66v2.644c.254.018.982.061 1.988.061 1.207 0 1.812-.05 1.925-.06v-2.643c3.88.173 6.775.85 6.775 1.658 0 .81-2.895 1.485-6.775 1.657m0-3.59v-2.366h5.414V7_819H8.595v3.608h5.414v2.365c-4.4.202-7.709 1.074-7.709 2.148 0 1.074 3.309 1.945 7.709 2.147v7.582h3.913v-7.584c4.393-.202 7.694-1.073 7.694-2.147 0-1.073-3.301-1.944-7.694-2.145" fill="white"/>
                 </svg>
               </div>
               <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Échange USDT Tether</h3>

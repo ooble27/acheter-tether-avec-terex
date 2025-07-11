@@ -22,11 +22,13 @@ if ('serviceWorker' in navigator) {
 // Initialize the app
 const rootElement = document.getElementById("root");
 
-if (!rootElement) {
-  throw new Error('Root element not found');
+if (rootElement) {
+  const root = createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+} else {
+  console.error('Root element not found');
 }
-
-const root = createRoot(rootElement);
-root.render(
-  <App />
-);
