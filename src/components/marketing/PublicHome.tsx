@@ -1,4 +1,3 @@
-
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -13,7 +12,6 @@ import { PaymentMethodsSection } from './sections/PaymentMethodsSection';
 import { CTASection } from './sections/CTASection';
 import { FooterSection } from './sections/FooterSection';
 import { PhoneMockupSection } from './sections/PhoneMockupSection';
-import { FeaturesShowcaseSection } from './sections/FeaturesShowcaseSection';
 
 interface PublicHomeProps {
   onGetStarted: () => void;
@@ -63,43 +61,17 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       
       <HeroSection user={user} onShowDashboard={onShowDashboard} />
       
-      {/* Espacement après Hero */}
-      <div className="py-8 sm:py-12"></div>
-      
       <CurrencyConverterSection />
-
-      {/* Espacement après Currency Converter */}
-      <div className="py-8 sm:py-12"></div>
 
       <PhoneMockupSection />
 
-      {/* Espacement après Phone Mockup */}
-      <div className="py-12 sm:py-16"></div>
-
-      <FeaturesShowcaseSection />
-
-      {/* Espacement après Features Showcase */}
-      <div className="py-12 sm:py-16"></div>
-
       <HowItWorksSection onBlockchainInfoClick={handleBlockchainInfo} />
-
-      {/* Espacement après How It Works */}
-      <div className="py-8 sm:py-12"></div>
 
       <StatsSection />
       
-      {/* Espacement après Stats */}
-      <div className="py-8 sm:py-12"></div>
-      
       <PaymentMethodsSection />
 
-      {/* Espacement après Payment Methods */}
-      <div className="py-8 sm:py-12"></div>
-
       <TestimonialsSection />
-      
-      {/* Espacement avant CTA */}
-      <div className="py-8 sm:py-12"></div>
       
       <CTASection user={user} onGetStarted={handleGetStarted} />
 
