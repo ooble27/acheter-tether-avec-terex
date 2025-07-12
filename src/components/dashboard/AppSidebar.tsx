@@ -95,7 +95,7 @@ const AppSidebarContent = ({
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="flex-1 px-4 py-6 overflow-y-auto">
+      <SidebarContent className="flex-1 px-4 py-6 overflow-y-auto bg-terex-darker">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-2">
