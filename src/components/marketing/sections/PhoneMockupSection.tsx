@@ -21,8 +21,6 @@ export function PhoneMockupSection() {
             {/* Phone Mockup - Only visible on mobile between title and subtitle */}
             <div className="flex justify-center mb-6 md:mb-8 lg:hidden scrollbar-hide">
               <div className="relative scale-75">
-                {/* Glow effect */}
-                <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
                 <PhoneMockup />
               </div>
             </div>
@@ -71,8 +69,6 @@ export function PhoneMockupSection() {
           {/* Right side - Phone Mockup - Hidden on mobile, visible on larger screens */}
           <div className="hidden lg:flex justify-center lg:justify-end order-1 lg:order-2 scrollbar-hide">
             <div className="relative scale-75 sm:scale-90 lg:scale-100">
-              {/* Glow effect */}
-              <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
               <PhoneMockup />
             </div>
           </div>

@@ -49,8 +49,6 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             {/* Mockup téléphone visible uniquement sur mobile entre titre et sous-titre */}
             <div className="lg:hidden flex justify-center my-8">
               <div className="relative scale-75">
-                {/* Glow effect */}
-                <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
                 <PhoneMockup />
               </div>
             </div>
@@ -113,8 +111,6 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           {/* Colonne de droite - PhoneMockup visible uniquement sur desktop */}
           <div className="order-1 lg:order-2 hidden lg:flex justify-center">
             <div className="relative scale-75 sm:scale-90 lg:scale-100">
-              {/* Glow effect */}
-              <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
               <PhoneMockup />
             </div>
           </div>
