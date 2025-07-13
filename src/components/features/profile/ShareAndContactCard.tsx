@@ -13,13 +13,13 @@ export function ShareAndContactCard() {
         await navigator.share({
           title: 'Terex - Échange crypto et transferts',
           text: 'Découvrez Terex pour vos échanges USDT et virements internationaux',
-          url: 'https://app.terex.com'
+          url: 'https://app.terangaexchange.com'
         });
       } catch (error) {
         console.log('Erreur lors du partage:', error);
       }
     } else {
-      navigator.clipboard.writeText('https://app.terex.com');
+      navigator.clipboard.writeText('https://app.terangaexchange.com');
       toast({
         title: "Lien copié !",
         description: "Le lien de Terex a été copié dans le presse-papiers",
@@ -28,15 +28,15 @@ export function ShareAndContactCard() {
   };
 
   const handleEmailContact = () => {
-    window.open('mailto:support@terex.com?subject=Contact Terex', '_blank');
+    window.open('mailto:terangaexchange@gmail.com?subject=Contact Terex', '_blank');
   };
 
   const handlePhoneContact = () => {
-    window.open('tel:+221771234567', '_blank');
+    window.open('tel:+221773972749', '_blank');
   };
 
   const handleWhatsAppContact = () => {
-    window.open('https://wa.me/221771234567', '_blank');
+    window.open('https://wa.me/14182619091', '_blank');
   };
 
   return (
@@ -78,7 +78,7 @@ export function ShareAndContactCard() {
             className="w-full border-terex-gray/30 text-gray-300 hover:bg-terex-gray/30 justify-start min-w-0"
           >
             <Mail className="w-4 h-4 mr-3 flex-shrink-0" />
-            <span className="flex-1 text-left truncate text-xs">support@terex.com</span>
+            <span className="flex-1 text-left truncate text-xs">terangaexchange@gmail.com</span>
             <ExternalLink className="w-3 h-3 flex-shrink-0" />
           </Button>
           
@@ -89,7 +89,7 @@ export function ShareAndContactCard() {
             className="w-full border-terex-gray/30 text-gray-300 hover:bg-terex-gray/30 justify-start"
           >
             <Phone className="w-4 h-4 mr-3 flex-shrink-0" />
-            <span className="flex-1 text-left">+221 77 123 4567</span>
+            <span className="flex-1 text-left">+221 77 397 27 49</span>
             <ExternalLink className="w-3 h-3 flex-shrink-0" />
           </Button>
           

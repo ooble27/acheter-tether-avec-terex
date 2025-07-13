@@ -97,7 +97,7 @@ export function AdminLogin() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@terex.com"
+                  placeholder="admin@terangaexchange.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="bg-terex-gray border-terex-gray text-white placeholder:text-gray-400"

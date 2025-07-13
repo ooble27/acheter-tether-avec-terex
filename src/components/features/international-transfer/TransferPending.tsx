@@ -146,11 +146,11 @@ export function TransferPending({ transferData, onBackToDashboard }: TransferPen
               <CardContent className="space-y-3">
                 <div className="flex items-center space-x-3">
                   <Phone className="w-4 h-4 text-terex-accent" />
-                  <span className="text-white text-sm">+221 77 123 4567</span>
+                  <span className="text-white text-sm">+221 77 397 27 49</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Mail className="w-4 h-4 text-terex-accent" />
-                  <span className="text-white text-sm">support@terex.com</span>
+                  <span className="text-white text-sm">terangaexchange@gmail.com</span>
                 </div>
               </CardContent>
             </Card>
