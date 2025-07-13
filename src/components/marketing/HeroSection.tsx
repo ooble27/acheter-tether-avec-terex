@@ -40,15 +40,32 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[600px]">
           
           {/* Colonne de gauche - Contenu textuel */}
-          <div className="order-2 lg:order-1">
-            <DeviceMockups />
+          <div className="order-2 lg:order-1 text-center lg:text-left">
+            {/* Titre centré sur mobile */}
+            <div className="lg:hidden">
+              <DeviceMockups />
+            </div>
             
-            <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-2xl leading-relaxed">
+            {/* Mockup téléphone visible uniquement sur mobile entre titre et sous-titre */}
+            <div className="lg:hidden flex justify-center my-8">
+              <div className="relative scale-75">
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
+                <PhoneMockup />
+              </div>
+            </div>
+            
+            {/* DeviceMockups pour desktop seulement */}
+            <div className="hidden lg:block">
+              <DeviceMockups />
+            </div>
+            
+            <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-2xl leading-relaxed mx-auto lg:mx-0">
               Achetez et vendez des USDT facilement, 
               effectuez des transferts d'argent vers l'Afrique instantanément. Rapide, sécurisé et sans commission.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 justify-center lg:justify-start">
               {user ? (
                 <Button 
                   onClick={handleDashboard}
@@ -77,7 +94,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
             
             {/* Stats rapides */}
-            <div className="grid grid-cols-3 gap-4 text-center lg:text-left">
+            <div className="grid grid-cols-3 gap-4 text-center">
               <div>
                 <div className="text-2xl font-bold text-terex-accent">5min</div>
                 <div className="text-sm text-gray-400">Transfert rapide</div>
@@ -93,8 +110,8 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
           </div>
           
-          {/* Colonne de droite - Utiliser le même PhoneMockup que la section Interface Mobile */}
-          <div className="order-1 lg:order-2 flex justify-center">
+          {/* Colonne de droite - PhoneMockup visible uniquement sur desktop */}
+          <div className="order-1 lg:order-2 hidden lg:flex justify-center">
             <div className="relative scale-75 sm:scale-90 lg:scale-100">
               {/* Glow effect */}
               <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl scale-110 animate-pulse"></div>
