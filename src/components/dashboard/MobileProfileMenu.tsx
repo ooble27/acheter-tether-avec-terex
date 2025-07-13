@@ -2,25 +2,17 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   User, 
   HelpCircle, 
-  Settings, 
   LogOut, 
   Shield, 
   UserCheck, 
-  Bell,
-  CreditCard,
-  Wallet,
   History,
   Star,
   Gift,
   Phone,
-  Mail,
-  Lock,
-  Eye,
-  Globe,
-  Download,
   Share2,
   FileText
 } from 'lucide-react';
@@ -51,18 +43,6 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
     { id: 'history', label: 'Historique', icon: History, description: 'Mes transactions' },
   ];
 
-  const walletItems = [
-    { id: 'wallet', label: 'Mon Portefeuille', icon: Wallet, description: 'Adresses crypto sauvegardées' },
-    { id: 'payment-methods', label: 'Moyens de Paiement', icon: CreditCard, description: 'Cartes et Mobile Money' },
-  ];
-
-  const settingsItems = [
-    { id: 'notifications', label: 'Notifications', icon: Bell, description: 'Préférences notifications' },
-    { id: 'security', label: 'Sécurité', icon: Lock, description: 'Mot de passe et 2FA' },
-    { id: 'privacy', label: 'Confidentialité', icon: Eye, description: 'Paramètres de confidentialité' },
-    { id: 'language', label: 'Langue', icon: Globe, description: 'Français / English' },
-  ];
-
   const supportItems = [
     { id: 'faq', label: 'FAQ', icon: HelpCircle, description: 'Questions fréquentes' },
     { id: 'contact', label: 'Nous Contacter', icon: Phone, description: 'Support client 24/7' },
@@ -73,16 +53,15 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
     { id: 'referral', label: 'Parrainage', icon: Gift, description: 'Invitez vos amis' },
     { id: 'share-app', label: 'Partager l\'App', icon: Share2, description: 'Partager Terex' },
     { id: 'terms', label: 'Conditions d\'Utilisation', icon: FileText, description: 'CGU et politique' },
-    { id: 'download', label: 'Télécharger PDF', icon: Download, description: 'Relevés et documents' },
   ];
 
   const adminItems = [
     { id: 'kyc-admin', label: 'Administration KYC', icon: Shield, description: 'Vérifications d\'identité' },
-    { id: 'orders-admin', label: 'Gestion Commandes', icon: Settings, description: 'Ordres et transactions' },
+    { id: 'orders-admin', label: 'Gestion Commandes', icon: Shield, description: 'Ordres et transactions' },
     { id: 'job-applications', label: 'Candidatures', icon: UserCheck, description: 'Gestion des candidatures' },
   ];
 
-  const renderMenuSection = (title: string, items: any[], color: string = 'terex-accent') => (
+  const renderMenuSection = (title: string, items: any[]) => (
     <>
       <div className="pt-4 pb-2">
         <div className="flex items-center space-x-2 px-4">
@@ -103,7 +82,7 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
             onClick={() => handleItemClick(item.id)}
             className={`w-full justify-start p-4 h-auto rounded-xl transition-all duration-200 ${
               isActive 
-                ? `bg-gradient-to-r from-${color} to-${color}/80 text-white shadow-lg shadow-${color}/25` 
+                ? 'bg-gradient-to-r from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/25' 
                 : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white'
             }`}
           >
@@ -136,7 +115,7 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
       
       <SheetContent 
         side="right" 
-        className="w-80 bg-terex-darker border-l border-terex-gray/30 p-0 shadow-2xl"
+        className="w-80 bg-terex-darker border-l border-terex-gray/30 p-0 shadow-2xl no-scrollbar"
       >
         <div className="flex flex-col h-full pt-safe">
           {/* Header */}
@@ -153,27 +132,23 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto p-4">
-            <div className="space-y-2">
-              {/* Section Profil */}
-              {renderMenuSection('Profil', profileItems)}
+          <ScrollArea className="flex-1 no-scrollbar">
+            <div className="p-4">
+              <div className="space-y-2">
+                {/* Section Profil */}
+                {renderMenuSection('Profil', profileItems)}
 
-              {/* Section Portefeuille */}
-              {renderMenuSection('Portefeuille', walletItems, 'blue-500')}
+                {/* Section Support */}
+                {renderMenuSection('Support', supportItems)}
 
-              {/* Section Paramètres */}
-              {renderMenuSection('Paramètres', settingsItems, 'purple-500')}
+                {/* Section Plus */}
+                {renderMenuSection('Plus', moreItems)}
 
-              {/* Section Support */}
-              {renderMenuSection('Support', supportItems, 'green-500')}
-
-              {/* Section Plus */}
-              {renderMenuSection('Plus', moreItems, 'indigo-500')}
-
-              {/* Section Administration */}
-              {isKYCReviewer() && renderMenuSection('Administration', adminItems, 'orange-500')}
+                {/* Section Administration */}
+                {isKYCReviewer() && renderMenuSection('Administration', adminItems)}
+              </div>
             </div>
-          </div>
+          </ScrollArea>
 
           {/* Footer avec bouton de déconnexion */}
           <div className="p-4 border-t border-terex-gray/30 pb-safe">

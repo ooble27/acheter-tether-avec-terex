@@ -56,15 +56,34 @@
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
     height: 100%;
+    /* Masquer toutes les barres de scroll */
+    overflow: overlay;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer et Edge */
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none; /* Safari et Chrome */
   }
 
   #root {
     min-height: 100vh;
     height: 100%;
   }
+
+  /* Masquer les barres de scroll sur tous les éléments */
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer et Edge */
+  }
+
+  *::-webkit-scrollbar {
+    display: none; /* Safari et Chrome */
+  }
 }
 
-/* Classe pour masquer la barre de défilement */
+/* Classe pour masquer la barre de défilement (renforcée) */
 @layer utilities {
   .scrollbar-hide {
     /* Firefox */
@@ -75,6 +94,16 @@
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Application globale */
+  .no-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer et Edge */
+  }
+  
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Safari et Chrome */
   }
 }
 
