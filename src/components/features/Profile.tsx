@@ -24,7 +24,10 @@ export function Profile({ user }: ProfileProps) {
   const [activeSection, setActiveSection] = useState('profile');
   const { profile } = useUserProfile();
   const { signOut } = useAuth();
-  const { kycData, isKYCVerified } = useKYC();
+  const { kycData } = useKYC();
+
+  // Fonction utilitaire pour vérifier si le KYC est vérifié
+  const isKYCVerified = kycData?.status === 'approved';
 
   const handleLogout = async () => {
     try {
