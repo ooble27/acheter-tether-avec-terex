@@ -12,10 +12,29 @@ interface KYCProtectionProps {
 export function KYCProtection({ children, onKYCRequired }: KYCProtectionProps) {
   const { isAuthorized, loading, kycStatus } = useTransactionAuthorization();
 
-  if (loading) {
+  // Affichage immédiat sans message de chargement
+  // Si en cours de chargement et pas encore d'autorisation, on affiche le contenu de protection
+  if (loading && !isAuthorized) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-white">Vérification des autorisations...</div>
+      <div className="space-y-6">
+        <Alert variant="destructive" className="border-l-4 border-l-red-500">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle className="flex items-center">
+            <Shield className="w-4 h-4 mr-2" />
+            Vérification d'identité requise
+          </AlertTitle>
+          <AlertDescription className="mt-2">
+            Vous devez vérifier votre identité avant d'effectuer des transactions. Ce processus ne prend que quelques minutes.
+            <div className="mt-4">
+              <Button 
+                onClick={onKYCRequired}
+                className="bg-terex-accent hover:bg-terex-accent/90"
+              >
+                Commencer la vérification
+              </Button>
+            </div>
+          </AlertDescription>
+        </Alert>
       </div>
     );
   }
