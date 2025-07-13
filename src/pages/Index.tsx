@@ -25,6 +25,24 @@ const Index = () => {
     }
   }, [navigate]);
 
+  // Vérifier si on est en mode PWA (standalone)
+  const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
+               (window.navigator as any).standalone ||
+               document.referrer.includes('android-app://');
+
+  useEffect(() => {
+    // Si on est en mode PWA et pas de chargement
+    if (isPWA && !loading) {
+      if (!user) {
+        // Pas d'utilisateur connecté, rediriger vers l'authentification
+        navigate('/auth');
+      } else {
+        // Utilisateur connecté, afficher directement le dashboard
+        setShowDashboard(true);
+      }
+    }
+  }, [isPWA, user, loading, navigate]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-terex-dark flex items-center justify-center">
@@ -51,12 +69,27 @@ const Index = () => {
     setShowDashboard(false);
   };
 
-  // Si l'utilisateur est connecté et veut voir le dashboard
-  if (userWithName && showDashboard) {
+  // Si on est en mode PWA et utilisateur connecté, afficher le dashboard directement
+  if (isPWA && userWithName) {
     return <Dashboard user={userWithName} onLogout={handleBackToHome} />;
   }
 
-  // Sinon, afficher la landing page (même pour les utilisateurs connectés)
+  // Si l'utilisateur est connecté et veut voir le dashboard (mode web)
+  if (userWithName && showDashboard && !isPWA) {
+    return <Dashboard user={userWithName} onLogout={handleBackToHome} />;
+  }
+
+  // Si on est en mode PWA sans utilisateur, ne pas afficher la landing page
+  // (la redirection vers /auth se fera via l'useEffect ci-dessus)
+  if (isPWA && !userWithName) {
+    return (
+      <div className="min-h-screen bg-terex-dark flex items-center justify-center">
+        <div className="text-white text-lg">Redirection...</div>
+      </div>
+    );
+  }
+
+  // Sinon, afficher la landing page (mode navigateur web normal)
   return <PublicHome onGetStarted={handleGetStarted} user={userWithName} onShowDashboard={handleShowDashboard} />;
 };
 

@@ -6,11 +6,13 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useState } from 'react';
+
 interface AppSidebarProps {
   activeSection: string;
   setActiveSection: (section: string) => void;
   onLogout: () => void;
 }
+
 const TetherLogo = ({
   className,
   isActive,
@@ -22,6 +24,7 @@ const TetherLogo = ({
 }) => <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="Tether Logo" className={`${className} ${isActive ? 'brightness-0 invert' : ''}`} style={color === 'red' && !isActive ? {
   filter: 'hue-rotate(0deg) saturate(0) brightness(0) invert(27%) sepia(98%) saturate(7465%) hue-rotate(0deg) brightness(98%) contrast(118%)'
 } : {}} />;
+
 const menuItems = [{
   id: 'home',
   label: 'Accueil',
@@ -59,6 +62,7 @@ const menuItems = [{
   icon: HelpCircle,
   description: 'Centre d\'aide'
 }];
+
 const AppSidebarContent = ({
   activeSection,
   setActiveSection,
@@ -71,9 +75,16 @@ const AppSidebarContent = ({
     isKYCReviewer
   } = useUserRole();
   const isTablet = useIsTablet();
+
+  // Vérifier si on est en mode PWA (standalone)
+  const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
+               (window.navigator as any).standalone ||
+               document.referrer.includes('android-app://');
+
   const handleExternalNavigation = (url: string) => {
     window.location.href = url;
   };
+
   return <div className="flex flex-col h-full min-h-0">
       <SidebarHeader className="p-6 border-b border-terex-gray/30 pt-safe bg-[terex-gray-light] bg-terex-darker">
         {/* Logo Header Style Binance dans la Sidebar */}
@@ -120,33 +131,36 @@ const AppSidebarContent = ({
                   </SidebarMenuItem>;
             })}
 
-              {/* Section Navigation externe */}
-              <div className="pt-6 pb-2">
-                <div className="flex items-center space-x-2 px-4">
-                  <div className="h-px bg-terex-gray/40 flex-1"></div>
-                  <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Navigation</span>
-                  <div className="h-px bg-terex-gray/40 flex-1"></div>
-                </div>
-              </div>
-              
-
-              <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => {
-                handleExternalNavigation('/');
-                onItemClick?.();
-              }} className="group relative w-full p-4 h-auto rounded-xl transition-all duration-200 text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md">
-                  <div className="flex items-center space-x-4 w-full">
-                    <div className="flex-shrink-0 p-2 rounded-lg transition-colors bg-terex-gray/30 group-hover:bg-terex-accent/20">
-                      <Globe className="h-6 w-6" />
+              {/* Section Navigation externe - uniquement si pas en mode PWA */}
+              {!isPWA && (
+                <>
+                  <div className="pt-6 pb-2">
+                    <div className="flex items-center space-x-2 px-4">
+                      <div className="h-px bg-terex-gray/40 flex-1"></div>
+                      <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Navigation</span>
+                      <div className="h-px bg-terex-gray/40 flex-1"></div>
                     </div>
-                    <div className="flex-1 text-left min-w-0">
-                      <div className="font-semibold text-sm truncate">Landing Page</div>
-                      <div className="text-xs opacity-75 truncate">Accueil & Informations</div>
-                    </div>
-                    <ExternalLink className="w-4 h-4 opacity-50" />
                   </div>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+                  
+                  <SidebarMenuItem>
+                    <SidebarMenuButton onClick={() => {
+                    handleExternalNavigation('/');
+                    onItemClick?.();
+                  }} className="group relative w-full p-4 h-auto rounded-xl transition-all duration-200 text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md">
+                      <div className="flex items-center space-x-4 w-full">
+                        <div className="flex-shrink-0 p-2 rounded-lg transition-colors bg-terex-gray/30 group-hover:bg-terex-accent/20">
+                          <Globe className="h-6 w-6" />
+                        </div>
+                        <div className="flex-1 text-left min-w-0">
+                          <div className="font-semibold text-sm truncate">Landing Page</div>
+                          <div className="text-xs opacity-75 truncate">Accueil & Informations</div>
+                        </div>
+                        <ExternalLink className="w-4 h-4 opacity-50" />
+                      </div>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </>
+              )}
               
               {/* Section Administration */}
               {isKYCReviewer() && <>
@@ -226,6 +240,7 @@ const AppSidebarContent = ({
         </div>}
     </div>;
 };
+
 export function AppSidebar({
   activeSection,
   setActiveSection,
@@ -239,6 +254,7 @@ export function AppSidebar({
       <AppSidebarContent activeSection={activeSection} setActiveSection={setActiveSection} onLogout={onLogout} />
     </Sidebar>;
 }
+
 export function MobileMenu({
   activeSection,
   setActiveSection,
