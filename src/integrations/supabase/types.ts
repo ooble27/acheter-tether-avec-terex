@@ -184,56 +184,6 @@ export type Database = {
         }
         Relationships: []
       }
-      fraud_alerts: {
-        Row: {
-          alert_type: string
-          created_at: string
-          description: string
-          id: string
-          metadata: Json | null
-          order_id: string | null
-          reviewed_at: string | null
-          reviewed_by: string | null
-          severity: string
-          status: string
-          user_id: string
-        }
-        Insert: {
-          alert_type: string
-          created_at?: string
-          description: string
-          id?: string
-          metadata?: Json | null
-          order_id?: string | null
-          reviewed_at?: string | null
-          reviewed_by?: string | null
-          severity: string
-          status?: string
-          user_id: string
-        }
-        Update: {
-          alert_type?: string
-          created_at?: string
-          description?: string
-          id?: string
-          metadata?: Json | null
-          order_id?: string | null
-          reviewed_at?: string | null
-          reviewed_by?: string | null
-          severity?: string
-          status?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fraud_alerts_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: false
-            referencedRelation: "orders"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       international_transfers: {
         Row: {
           amount: number
@@ -545,12 +495,8 @@ export type Database = {
           amount: number
           created_at: string
           currency: string
-          deleted_at: string | null
           exchange_rate: number
-          fees: number | null
-          from_currency: string | null
           id: string
-          is_deleted: boolean | null
           network: string
           notes: string | null
           payment_method: Database["public"]["Enums"]["payment_method"]
@@ -558,12 +504,7 @@ export type Database = {
           payment_status: string | null
           processed_at: string | null
           processed_by: string | null
-          recipient_country: string | null
-          recipient_name: string | null
-          recipient_phone: string | null
           status: Database["public"]["Enums"]["order_status"]
-          to_currency: string | null
-          total_amount: number | null
           type: string
           updated_at: string
           usdt_amount: number
@@ -574,12 +515,8 @@ export type Database = {
           amount: number
           created_at?: string
           currency?: string
-          deleted_at?: string | null
           exchange_rate: number
-          fees?: number | null
-          from_currency?: string | null
           id?: string
-          is_deleted?: boolean | null
           network?: string
           notes?: string | null
           payment_method: Database["public"]["Enums"]["payment_method"]
@@ -587,12 +524,7 @@ export type Database = {
           payment_status?: string | null
           processed_at?: string | null
           processed_by?: string | null
-          recipient_country?: string | null
-          recipient_name?: string | null
-          recipient_phone?: string | null
           status?: Database["public"]["Enums"]["order_status"]
-          to_currency?: string | null
-          total_amount?: number | null
           type?: string
           updated_at?: string
           usdt_amount: number
@@ -603,12 +535,8 @@ export type Database = {
           amount?: number
           created_at?: string
           currency?: string
-          deleted_at?: string | null
           exchange_rate?: number
-          fees?: number | null
-          from_currency?: string | null
           id?: string
-          is_deleted?: boolean | null
           network?: string
           notes?: string | null
           payment_method?: Database["public"]["Enums"]["payment_method"]
@@ -616,12 +544,7 @@ export type Database = {
           payment_status?: string | null
           processed_at?: string | null
           processed_by?: string | null
-          recipient_country?: string | null
-          recipient_name?: string | null
-          recipient_phone?: string | null
           status?: Database["public"]["Enums"]["order_status"]
-          to_currency?: string | null
-          total_amount?: number | null
           type?: string
           updated_at?: string
           usdt_amount?: number
@@ -855,39 +778,6 @@ export type Database = {
           },
         ]
       }
-      user_2fa_settings: {
-        Row: {
-          backup_codes: string[] | null
-          created_at: string
-          enabled_at: string | null
-          id: string
-          is_enabled: boolean
-          secret: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          backup_codes?: string[] | null
-          created_at?: string
-          enabled_at?: string | null
-          id?: string
-          is_enabled?: boolean
-          secret: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          backup_codes?: string[] | null
-          created_at?: string
-          enabled_at?: string | null
-          id?: string
-          is_enabled?: boolean
-          secret?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -982,7 +872,7 @@ export type Database = {
         | "completed"
         | "cancelled"
         | "failed"
-      payment_method: "card" | "mobile" | "wave" | "orange_money" | "interac"
+      payment_method: "card" | "mobile"
       user_role: "user" | "admin" | "kyc_reviewer"
     }
     CompositeTypes: {
@@ -1118,7 +1008,7 @@ export const Constants = {
         "cancelled",
         "failed",
       ],
-      payment_method: ["card", "mobile", "wave", "orange_money", "interac"],
+      payment_method: ["card", "mobile"],
       user_role: ["user", "admin", "kyc_reviewer"],
     },
   },
