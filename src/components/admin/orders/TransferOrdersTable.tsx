@@ -1,4 +1,5 @@
 
+
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -133,10 +134,10 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                 <div className="text-right">
                   <div className="flex flex-col items-end space-y-1">
                     <div className="text-lg font-bold text-white">
-                      {order.amount} {order.from_currency || order.currency}
+                      {order.amount} {order.from_currency}
                     </div>
                     <div className="text-sm text-terex-accent flex items-center">
-                      <span>→ {order.total_amount || order.amount} {order.to_currency || order.currency}</span>
+                      <span>→ {order.total_amount} {order.to_currency}</span>
                     </div>
                   </div>
                 </div>
@@ -216,15 +217,15 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                     <div className="space-y-3 text-sm">
                       <div className="flex justify-between">
                         <span className="text-gray-400">Montant envoyé:</span>
-                        <span className="text-white font-medium">{order.amount} {order.from_currency || order.currency}</span>
+                        <span className="text-white font-medium">{order.amount} {order.from_currency}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Montant à recevoir:</span>
-                        <span className="text-white font-medium">{order.total_amount || order.amount} {order.to_currency || order.currency}</span>
+                        <span className="text-white font-medium">{order.total_amount} {order.to_currency}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Frais:</span>
-                        <span className="text-white">{order.fees || 0} {order.from_currency || order.currency}</span>
+                        <span className="text-white">{order.fees} {order.from_currency}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Taux:</span>
@@ -238,7 +239,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                     <div className="space-y-3 text-sm">
                       <div>
                         <span className="text-gray-400 block mb-1">Nom complet:</span>
-                        <span className="text-white font-medium">{order.recipient_name || 'Non spécifié'}</span>
+                        <span className="text-white font-medium">{order.recipient_name}</span>
                       </div>
                       
                       <div>
@@ -252,7 +253,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                           <div className="flex items-center justify-between bg-terex-gray/50 p-2 rounded">
                             <span className="text-white font-mono">{order.recipient_phone}</span>
                             <Button
-                              onClick={() => copyToClipboard(order.recipient_phone!)}
+                              onClick={() => copyToClipboard(order.recipient_phone)}
                               size="sm"
                               variant="outline"
                               className="h-6 w-6 p-0 border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-white"
@@ -295,7 +296,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                           <div className="flex items-center justify-between bg-terex-gray/50 p-2 rounded">
                             <span className="text-white font-mono text-xs">{order.payment_reference}</span>
                             <Button
-                              onClick={() => copyToClipboard(order.payment_reference!)}
+                              onClick={() => copyToClipboard(order.payment_reference)}
                               size="sm"
                               variant="outline"
                               className="h-6 w-6 p-0 border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-white"

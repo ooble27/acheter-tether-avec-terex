@@ -139,7 +139,7 @@ export function TrashOrdersTable({ orders, onRestoreFromTrash }: TrashOrdersTabl
                       {order.amount.toLocaleString()} {order.from_currency || order.currency}
                     </div>
                     <div className="text-sm text-gray-500">
-                      → {order.total_amount?.toLocaleString() || order.amount.toLocaleString()} {order.to_currency || order.currency}
+                      → {order.total_amount?.toLocaleString()} {order.to_currency}
                     </div>
                   </>
                 )}

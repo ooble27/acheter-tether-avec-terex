@@ -1,4 +1,5 @@
 
+
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -56,17 +57,17 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
 
   const getPaymentServiceInfo = (order: UnifiedOrder) => {
     // Extraire les informations du service de paiement depuis les notes ou payment_details
-    let serviceInfo = { service: 'Mobile Money', phone: order.recipient_phone || '' };
+    let serviceInfo = { service: 'Mobile Money', phone: order.recipient_phone };
     
     if (order.notes) {
       try {
         const parsedNotes = JSON.parse(order.notes);
         if (parsedNotes.provider === 'wave') {
           serviceInfo.service = 'Wave';
-          serviceInfo.phone = parsedNotes.phoneNumber || order.recipient_phone || '';
+          serviceInfo.phone = parsedNotes.phoneNumber || order.recipient_phone;
         } else if (parsedNotes.provider === 'orange') {
           serviceInfo.service = 'Orange Money';
-          serviceInfo.phone = parsedNotes.phoneNumber || order.recipient_phone || '';
+          serviceInfo.phone = parsedNotes.phoneNumber || order.recipient_phone;
         }
       } catch (e) {
         // Si les notes ne sont pas en JSON, chercher dans le texte
@@ -80,12 +81,15 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
     
     // Utiliser payment_method comme fallback
     if (serviceInfo.service === 'Mobile Money') {
-      if (order.payment_method === 'wave') {
-        serviceInfo.service = 'Wave';
-      } else if (order.payment_method === 'orange_money') {
-        serviceInfo.service = 'Orange Money';
-      } else {
-        serviceInfo.service = 'Mobile Money';
+      switch (order.payment_method) {
+        case 'wave':
+          serviceInfo.service = 'Wave';
+          break;
+        case 'orange_money':
+          serviceInfo.service = 'Orange Money';
+          break;
+        default:
+          serviceInfo.service = 'Mobile Money';
       }
     }
     
@@ -286,7 +290,7 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
                           <div className="flex items-center justify-between bg-terex-gray/50 p-2 rounded">
                             <span className="text-white font-mono text-xs">{order.payment_reference}</span>
                             <Button
-                              onClick={() => copyToClipboard(order.payment_reference!)}
+                              onClick={() => copyToClipboard(order.payment_reference)}
                               size="sm"
                               variant="outline"
                               className="h-6 w-6 p-0 border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-white"

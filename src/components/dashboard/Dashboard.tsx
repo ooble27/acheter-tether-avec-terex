@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/dashboard/AppSidebar';
+import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
 import { MobileProfileMenu } from '@/components/dashboard/MobileProfileMenu';
 import { BuyUSDT } from '@/components/features/BuyUSDT';
@@ -28,8 +28,6 @@ import { useUserRole } from '@/hooks/useUserRole';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
-import { ContactPage } from '@/components/features/ContactPage';
-import { PrivacyPolicyPage } from '@/components/features/PrivacyPolicyPage';
 
 interface DashboardProps {
   user: { email: string; name: string } | null;
@@ -50,8 +48,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
   // Effet pour remonter en haut à chaque changement de section
   useEffect(() => {
-    // Pour mobile, scroll immédiatement et de façon synchrone
-    if (isMobile) {
+    // Pour le PWA mobile, scroll immédiatement et de façon synchrone
+    if (isPWA && isMobile) {
       window.scrollTo(0, 0);
       // Force aussi le scroll du body au cas où
       document.body.scrollTop = 0;
@@ -59,11 +57,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [activeSection, isMobile]);
+  }, [activeSection, isPWA, isMobile]);
 
   // Effet spécial pour s'assurer que la page home scroll bien en haut
   useEffect(() => {
-    if (activeSection === 'home' && isMobile) {
+    if (activeSection === 'home' && isPWA && isMobile) {
       // Double vérification pour la page d'accueil
       setTimeout(() => {
         window.scrollTo(0, 0);
@@ -71,7 +69,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         document.documentElement.scrollTop = 0;
       }, 50);
     }
-  }, [activeSection, isMobile]);
+  }, [activeSection, isPWA, isMobile]);
 
   const handleLogout = async () => {
     try {
@@ -117,25 +115,12 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         return <TermsOfService onBack={() => setActiveSection('faq')} />;
       case 'about-terex':
         return <AboutTerex onBack={() => setActiveSection('faq')} />;
-      case 'contact':
-        return <ContactPage onBack={() => setActiveSection('home')} />;
-      case 'privacy-policy':
-        return <PrivacyPolicyPage onBack={() => setActiveSection('home')} />;
       case 'kyc-admin':
         return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
       case 'orders-admin':
         return isKYCReviewer() ? <OrdersDashboardNew /> : <div className="text-white">Accès non autorisé</div>;
       case 'job-applications':
         return (isAdmin() || isKYCReviewer()) ? <JobApplicationsAdmin /> : <div className="text-white">Accès non autorisé</div>;
-      case 'feedback':
-        // Rediriger vers le formulaire de contact avec le sujet pré-rempli pour les avis
-        return <ContactPage onBack={() => setActiveSection('home')} />;
-      case 'referral':
-        // Pour l'instant, rediriger vers le profil où il y a les informations de parrainage
-        return <Profile user={user} onLogout={handleLogout} />;
-      case 'share-app':
-        // Fonction de partage de l'app - pour l'instant rediriger vers profil
-        return <Profile user={user} onLogout={handleLogout} />;
       default:
         return <DashboardHome user={user} onNavigate={setActiveSection} />;
     }
@@ -145,7 +130,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     <TransactionProvider>
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-terex-dark">
-          {/* Sidebar uniquement pour desktop */}
+          {/* Sidebar desktop ou menu mobile classique si pas PWA */}
           {!isMobile && (
             <AppSidebar 
               activeSection={activeSection}
@@ -153,10 +138,19 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               onLogout={handleLogout}
             />
           )}
+          
+          {/* Menu mobile classique pour navigation web (pas PWA) */}
+          {isMobile && !isPWA && (
+            <MobileMenu 
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+              onLogout={handleLogout}
+            />
+          )}
 
-          <main className={`flex-1 ${isMobile ? 'p-4 pt-16 pb-20' : 'p-6'} relative`}>
-            {/* Menu profil mobile pour TOUS les mobiles */}
-            {isMobile && (
+          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'} relative ${isMobile && isPWA ? 'pb-20' : ''}`}>
+            {/* Menu profil mobile pour PWA */}
+            {isMobile && isPWA && (
               <MobileProfileMenu
                 activeSection={activeSection}
                 setActiveSection={setActiveSection}
@@ -178,8 +172,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             {renderContent()}
           </main>
           
-          {/* Navigation en bas pour TOUS les mobiles */}
-          {isMobile && (
+          {/* Navigation en bas pour mobile PWA */}
+          {isMobile && isPWA && (
             <MobileBottomNav
               activeSection={activeSection}
               setActiveSection={setActiveSection}
