@@ -5,6 +5,7 @@ import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { useState } from 'react';
 
 interface AppSidebarProps {
@@ -88,21 +89,24 @@ const AppSidebarContent = ({
   return <div className="flex flex-col h-full min-h-0">
       <SidebarHeader className="p-6 border-b border-terex-gray/30 pt-safe bg-[terex-gray-light] bg-terex-darker">
         {/* Logo Header Style Binance dans la Sidebar */}
-        <div className="flex items-center space-x-3">
-          <div className="relative flex items-center gap-3 p-3 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-xl border border-terex-accent/20">
-            <div className="relative">
-              <img src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" alt="Terex Logo" className="w-10 h-10 rounded-lg shadow-lg" />
-              <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 to-transparent rounded-lg blur opacity-40"></div>
-            </div>
-            <div className="flex flex-col">
-              <h1 className="text-xl font-black tracking-tight text-white">
-                <span className="bg-gradient-to-r from-terex-accent to-terex-accent/80 bg-clip-text text-transparent">
-                  TEREX
-                </span>
-              </h1>
-              <p className="text-[10px] font-medium text-terex-accent/70 uppercase tracking-wider">Teranga Exchange</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="relative flex items-center gap-3 p-3 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-xl border border-terex-accent/20">
+              <div className="relative">
+                <img src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" alt="Terex Logo" className="w-10 h-10 rounded-lg shadow-lg" />
+                <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 to-transparent rounded-lg blur opacity-40"></div>
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-xl font-black tracking-tight text-white">
+                  <span className="bg-gradient-to-r from-terex-accent to-terex-accent/80 bg-clip-text text-transparent">
+                    TEREX
+                  </span>
+                </h1>
+                <p className="text-[10px] font-medium text-terex-accent/70 uppercase tracking-wider">Teranga Exchange</p>
+              </div>
             </div>
           </div>
+          <ThemeToggle />
         </div>
       </SidebarHeader>
       
