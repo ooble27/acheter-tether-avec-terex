@@ -82,7 +82,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'history':
         return <TransactionHistoryPage />;
       case 'profile':
-        return <Profile user={user} onLogout={handleLogout} />;
+        return <Profile user={user} />;
       case 'kyc':
         return <KYCPage onBack={() => setActiveSection('profile')} />;
       case 'faq':

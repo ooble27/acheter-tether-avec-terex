@@ -14,6 +14,7 @@ import { AdminDashboard } from '@/components/dashboard/AdminDashboard';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { useAuth } from '@/contexts/AuthContext';
+import { useKYC } from '@/hooks/useKYC';
 
 interface ProfileProps {
   user: { email: string; name: string } | null;
@@ -22,14 +23,19 @@ interface ProfileProps {
 export function Profile({ user }: ProfileProps) {
   const [activeSection, setActiveSection] = useState('profile');
   const { profile } = useUserProfile();
-  const { logout } = useAuth();
+  const { signOut } = useAuth();
+  const { kycData, isKYCVerified } = useKYC();
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await signOut();
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);
     }
+  };
+
+  const handleStartKYC = () => {
+    setActiveSection('kyc');
   };
 
   const renderContent = () => {
@@ -38,7 +44,11 @@ export function Profile({ user }: ProfileProps) {
         return (
           <div className="space-y-6">
             <PersonalInfoCard user={user} />
-            <SecuritySettingsCard user={user} />
+            <SecuritySettingsCard 
+              onStartKYC={handleStartKYC}
+              kycData={kycData}
+              isKYCVerified={isKYCVerified}
+            />
             <ProfileStatsCard />
           </div>
         );
@@ -62,7 +72,11 @@ export function Profile({ user }: ProfileProps) {
         return (
           <div className="space-y-6">
             <PersonalInfoCard user={user} />
-            <SecuritySettingsCard user={user} />
+            <SecuritySettingsCard 
+              onStartKYC={handleStartKYC}
+              kycData={kycData}
+              isKYCVerified={isKYCVerified}
+            />
             <ProfileStatsCard />
           </div>
         );
