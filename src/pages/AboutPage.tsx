@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, CheckCircle, Users, Globe, TrendingUp, Shield, Zap, Award, Target, User } from 'lucide-react';
@@ -246,22 +247,24 @@ const AboutPage = () => {
           </div>
           
           <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-px h-full w-0.5 bg-gradient-to-b from-terex-accent via-terex-accent/50 to-transparent"></div>
+            {/* Timeline line - hidden on mobile */}
+            <div className="absolute left-1/2 transform -translate-x-px h-full w-0.5 bg-gradient-to-b from-terex-accent via-terex-accent/50 to-transparent hidden md:block"></div>
             
-            <div className="space-y-12">
+            <div className="space-y-8 md:space-y-12">
               {milestones.map((milestone, index) => (
-                <div key={index} className={`flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}>
-                  <div className={`w-1/2 ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'}`}>
-                    <div className="bg-gradient-to-br from-terex-accent/10 to-transparent rounded-xl p-6 border border-terex-accent/20">
+                <div key={index} className={`flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} flex-col md:space-y-0 space-y-0`}>
+                  <div className={`w-full md:w-1/2 ${index % 2 === 0 ? 'md:pr-8 md:text-right' : 'md:pl-8 md:text-left'} text-left px-4 md:px-0`}>
+                    <div className="bg-gradient-to-br from-terex-accent/10 to-transparent rounded-xl p-6 border border-terex-accent/20 max-w-md mx-auto md:mx-0">
                       <div className="text-terex-accent font-bold text-lg mb-2">{milestone.year}</div>
-                      <h3 className="text-white font-semibold text-xl mb-2">{milestone.title}</h3>
-                      <p className="text-gray-300">{milestone.desc}</p>
+                      <h3 className="text-white font-semibold text-xl mb-2 leading-tight">{milestone.title}</h3>
+                      <p className="text-gray-300 text-sm leading-relaxed">{milestone.desc}</p>
                     </div>
                   </div>
                   
-                  <div className="flex-shrink-0 w-4 h-4 bg-terex-accent rounded-full border-4 border-terex-dark"></div>
+                  {/* Timeline dot - hidden on mobile */}
+                  <div className="flex-shrink-0 w-4 h-4 bg-terex-accent rounded-full border-4 border-terex-dark hidden md:block"></div>
                   
-                  <div className="w-1/2"></div>
+                  <div className="hidden md:block md:w-1/2"></div>
                 </div>
               ))}
             </div>
