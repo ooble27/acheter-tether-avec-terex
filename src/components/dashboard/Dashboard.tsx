@@ -127,6 +127,15 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         return isKYCReviewer() ? <OrdersDashboardNew /> : <div className="text-white">Accès non autorisé</div>;
       case 'job-applications':
         return (isAdmin() || isKYCReviewer()) ? <JobApplicationsAdmin /> : <div className="text-white">Accès non autorisé</div>;
+      case 'feedback':
+        // Rediriger vers le formulaire de contact avec le sujet pré-rempli pour les avis
+        return <ContactPage onBack={() => setActiveSection('home')} />;
+      case 'referral':
+        // Pour l'instant, rediriger vers le profil où il y a les informations de parrainage
+        return <Profile user={user} onLogout={handleLogout} />;
+      case 'share-app':
+        // Fonction de partage de l'app - pour l'instant rediriger vers profil
+        return <Profile user={user} onLogout={handleLogout} />;
       default:
         return <DashboardHome user={user} onNavigate={setActiveSection} />;
     }
