@@ -545,8 +545,12 @@ export type Database = {
           amount: number
           created_at: string
           currency: string
+          deleted_at: string | null
           exchange_rate: number
+          fees: number | null
+          from_currency: string | null
           id: string
+          is_deleted: boolean | null
           network: string
           notes: string | null
           payment_method: Database["public"]["Enums"]["payment_method"]
@@ -554,7 +558,12 @@ export type Database = {
           payment_status: string | null
           processed_at: string | null
           processed_by: string | null
+          recipient_country: string | null
+          recipient_name: string | null
+          recipient_phone: string | null
           status: Database["public"]["Enums"]["order_status"]
+          to_currency: string | null
+          total_amount: number | null
           type: string
           updated_at: string
           usdt_amount: number
@@ -565,8 +574,12 @@ export type Database = {
           amount: number
           created_at?: string
           currency?: string
+          deleted_at?: string | null
           exchange_rate: number
+          fees?: number | null
+          from_currency?: string | null
           id?: string
+          is_deleted?: boolean | null
           network?: string
           notes?: string | null
           payment_method: Database["public"]["Enums"]["payment_method"]
@@ -574,7 +587,12 @@ export type Database = {
           payment_status?: string | null
           processed_at?: string | null
           processed_by?: string | null
+          recipient_country?: string | null
+          recipient_name?: string | null
+          recipient_phone?: string | null
           status?: Database["public"]["Enums"]["order_status"]
+          to_currency?: string | null
+          total_amount?: number | null
           type?: string
           updated_at?: string
           usdt_amount: number
@@ -585,8 +603,12 @@ export type Database = {
           amount?: number
           created_at?: string
           currency?: string
+          deleted_at?: string | null
           exchange_rate?: number
+          fees?: number | null
+          from_currency?: string | null
           id?: string
+          is_deleted?: boolean | null
           network?: string
           notes?: string | null
           payment_method?: Database["public"]["Enums"]["payment_method"]
@@ -594,7 +616,12 @@ export type Database = {
           payment_status?: string | null
           processed_at?: string | null
           processed_by?: string | null
+          recipient_country?: string | null
+          recipient_name?: string | null
+          recipient_phone?: string | null
           status?: Database["public"]["Enums"]["order_status"]
+          to_currency?: string | null
+          total_amount?: number | null
           type?: string
           updated_at?: string
           usdt_amount?: number
@@ -955,7 +982,7 @@ export type Database = {
         | "completed"
         | "cancelled"
         | "failed"
-      payment_method: "card" | "mobile"
+      payment_method: "card" | "mobile" | "wave" | "orange_money" | "interac"
       user_role: "user" | "admin" | "kyc_reviewer"
     }
     CompositeTypes: {
@@ -1091,7 +1118,7 @@ export const Constants = {
         "cancelled",
         "failed",
       ],
-      payment_method: ["card", "mobile"],
+      payment_method: ["card", "mobile", "wave", "orange_money", "interac"],
       user_role: ["user", "admin", "kyc_reviewer"],
     },
   },

@@ -69,9 +69,10 @@ export const useOrders = () => {
 
   const createOrder = async (orderData: Omit<Order, 'id' | 'created_at' | 'updated_at'>) => {
     try {
+      // Cast pour contourner les problèmes de type temporaires
       const { data, error } = await supabase
         .from('orders')
-        .insert([orderData])
+        .insert([orderData as any])
         .select()
         .single();
 
@@ -106,7 +107,7 @@ export const useOrders = () => {
           notes,
           updated_at: new Date().toISOString(),
           processed_at: newStatus === 'completed' ? new Date().toISOString() : null
-        })
+        } as any)
         .eq('id', orderId)
         .select()
         .single();
@@ -162,7 +163,10 @@ export const useOrders = () => {
     try {
       const { error } = await supabase
         .from('orders')
-        .update({ is_deleted: true })
+        .update({ 
+          is_deleted: true,
+          deleted_at: new Date().toISOString()
+        } as any)
         .eq('id', orderId);
 
       if (error) throw error;
@@ -190,7 +194,10 @@ export const useOrders = () => {
     try {
       const { error } = await supabase
         .from('orders')
-        .update({ is_deleted: false })
+        .update({ 
+          is_deleted: false,
+          deleted_at: null
+        } as any)
         .eq('id', orderId);
 
       if (error) throw error;
