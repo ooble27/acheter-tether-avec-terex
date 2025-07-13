@@ -31,7 +31,12 @@ import { PWASessionSync } from "./components/PWASessionSync";
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider 
+      attribute="class" 
+      defaultTheme="dark" 
+      enableSystem 
+      storageKey="vite-ui-theme"
+    >
       <Router>
         <AuthProvider>
           <TransactionProvider>
