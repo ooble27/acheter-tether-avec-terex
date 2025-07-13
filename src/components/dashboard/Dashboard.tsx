@@ -48,8 +48,28 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
   // Effet pour remonter en haut à chaque changement de section
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeSection]);
+    // Pour le PWA mobile, scroll immédiatement et de façon synchrone
+    if (isPWA && isMobile) {
+      window.scrollTo(0, 0);
+      // Force aussi le scroll du body au cas où
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [activeSection, isPWA, isMobile]);
+
+  // Effet spécial pour s'assurer que la page home scroll bien en haut
+  useEffect(() => {
+    if (activeSection === 'home' && isPWA && isMobile) {
+      // Double vérification pour la page d'accueil
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      }, 50);
+    }
+  }, [activeSection, isPWA, isMobile]);
 
   const handleLogout = async () => {
     try {
@@ -82,7 +102,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'history':
         return <TransactionHistoryPage />;
       case 'profile':
-        return <Profile user={user} onLogout={handleLogout} />;
+        return <Profile user={user} />;
       case 'kyc':
         return <KYCPage onBack={() => setActiveSection('profile')} />;
       case 'faq':

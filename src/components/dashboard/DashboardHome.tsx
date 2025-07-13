@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
@@ -20,6 +21,7 @@ import {
 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
+import { useEffect } from 'react';
 
 interface DashboardHomeProps {
   user: { email: string; name: string } | null;
@@ -36,6 +38,30 @@ const TetherLogo = ({ className }: { className?: string }) => (
 
 export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   const isMobile = useIsMobile();
+
+  // Vérifier si on est en mode PWA (standalone)
+  const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
+               (window.navigator as any).standalone ||
+               document.referrer.includes('android-app://');
+
+  // Force le scroll en haut quand le composant se monte (spécialement pour PWA mobile)
+  useEffect(() => {
+    if (isPWA && isMobile) {
+      // Scroll immédiat et forcé pour PWA mobile
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      
+      // Double vérification après un petit délai
+      const timer = setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isPWA, isMobile]);
 
   const handleServiceClick = (service: string) => {
     if (onNavigate) {
