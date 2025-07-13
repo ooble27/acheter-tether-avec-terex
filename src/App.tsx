@@ -28,6 +28,7 @@ import { Toaster } from "@/components/ui/toaster"
 import BlockchainPage from "./pages/BlockchainPage";
 import { TransactionProvider } from "./contexts/TransactionContext";
 import { PWASessionSync } from "./components/PWASessionSync";
+import { ScrollToTop } from "./components/ScrollToTop";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <AuthProvider>
           <TransactionProvider>
             <PWASessionSync />
+            <ScrollToTop />
             <Toaster />
             <Routes>
               <Route path="/" element={<Index />} />
