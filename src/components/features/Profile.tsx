@@ -1,99 +1,85 @@
-import { useState } from 'react';
-import { useUserProfile } from '@/hooks/useUserProfile';
-import { useKYC } from '@/hooks/useKYC';
-import { KYCAlert } from './KYCAlert';
-import { KYCPage } from './KYCPage';
+
+import React, { useState } from 'react';
+import { MobileProfileMenu } from '@/components/dashboard/MobileProfileMenu';
 import { PersonalInfoCard } from './profile/PersonalInfoCard';
+import { SecuritySettingsCard } from './profile/SecuritySettingsCard';
+import { ProfileStatsCard } from './profile/ProfileStatsCard';
 import { ContactCard } from './profile/ContactCard';
 import { ShareAndContactCard } from './profile/ShareAndContactCard';
-import { SecuritySettingsCard } from './profile/SecuritySettingsCard';
-import { User, Star, Award } from 'lucide-react';
+import { TermsCard } from './profile/TermsCard';
+import { TransactionHistoryPage } from './TransactionHistoryPage';
+import { FAQ } from './FAQ';
+import { KYCAdmin } from '@/components/admin/KYCAdmin';
+import { AdminDashboard } from '@/components/dashboard/AdminDashboard';
+import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
+import { useUserProfile } from '@/hooks/useUserProfile';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ProfileProps {
   user: { email: string; name: string } | null;
-  onLogout: () => void;
 }
 
-export function Profile({ user, onLogout }: ProfileProps) {
-  const [showKYC, setShowKYC] = useState(false);
-  const { loading } = useUserProfile();
-  const { kycData, loading: kycLoading } = useKYC();
+export function Profile({ user }: ProfileProps) {
+  const [activeSection, setActiveSection] = useState('profile');
+  const { profile } = useUserProfile();
+  const { logout } = useAuth();
 
-  const handleStartKYC = () => {
-    setShowKYC(true);
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
+    }
   };
 
-  if (loading || kycLoading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-white">Chargement...</div>
-      </div>
-    );
-  }
-
-  if (showKYC) {
-    return <KYCPage onBack={() => setShowKYC(false)} />;
-  }
-
-  const isKYCVerified = kycData?.status === 'approved';
-  const showKYCAlert = !isKYCVerified && kycData?.status !== 'submitted' && kycData?.status !== 'under_review';
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'profile':
+        return (
+          <div className="space-y-6">
+            <PersonalInfoCard user={user} />
+            <SecuritySettingsCard user={user} />
+            <ProfileStatsCard />
+          </div>
+        );
+      case 'history':
+        return <TransactionHistoryPage />;
+      case 'faq':
+        return <FAQ onNavigate={setActiveSection} />;
+      case 'contact':
+        return <ContactCard user={user} />;
+      case 'share-app':
+        return <ShareAndContactCard />;
+      case 'terms':
+        return <TermsCard />;
+      case 'kyc-admin':
+        return <KYCAdmin />;
+      case 'orders-admin':
+        return <AdminDashboard />;
+      case 'job-applications':
+        return <JobApplicationsAdmin />;
+      default:
+        return (
+          <div className="space-y-6">
+            <PersonalInfoCard user={user} />
+            <SecuritySettingsCard user={user} />
+            <ProfileStatsCard />
+          </div>
+        );
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-terex-dark p-2 md:p-6 lg:p-8 animate-fade-in">
-      {/* Header avec design uniforme */}
-      <div className="bg-gradient-to-br from-terex-darker/95 to-terex-dark/95 border border-white/10 rounded-2xl mb-6 md:mb-8 p-4 md:p-8 shadow-2xl backdrop-blur-sm">
-        <div className="relative">
-          <div className="flex items-center space-x-4 mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-2xl flex items-center justify-center shadow-lg">
-              <User className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold text-white mb-2">Mon Profil</h1>
-              <p className="text-gray-300 text-lg">Bienvenue {user?.name || 'Utilisateur'}</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2 bg-terex-darker/80 backdrop-blur-sm rounded-full px-4 py-2 border border-terex-gray/20">
-              <Star className="w-4 h-4 text-terex-accent" />
-              <span className="text-white text-sm">Membre Terex</span>
-            </div>
-            <div className="flex items-center space-x-2 bg-green-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-green-500/30">
-              <Award className="w-4 h-4 text-green-400" />
-              <span className="text-green-400 text-sm">Compte Actif</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* KYC Alert - Seulement si pas vérifié et pas en cours */}
-      {showKYCAlert && (
-        <div className="mb-6 md:mb-8">
-          <KYCAlert status={kycData?.status || 'pending'} onStartKYC={handleStartKYC} />
-        </div>
-      )}
-
-      {/* Grille des cartes avec hiérarchie des tailles - 12 colonnes pour plus de contrôle */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 md:gap-8">
-        {/* Colonne principale - Blocs plus larges (8 colonnes sur 12) */}
-        <div className="xl:col-span-8 space-y-6 md:space-y-8">
-          {/* Informations personnelles - Plus large */}
-          <PersonalInfoCard user={user} />
-          
-          {/* Contact - Plus large */}
-          <ContactCard user={user} />
-        </div>
-
-        {/* Colonne secondaire - Blocs plus petits (4 colonnes sur 12) */}
-        <div className="xl:col-span-4 space-y-6 md:space-y-8">
-          {/* Paramètres de sécurité */}
-          <SecuritySettingsCard 
-            onStartKYC={handleStartKYC} 
-            kycData={kycData}
-            isKYCVerified={isKYCVerified}
-          />
-          
-          {/* Partage et contact */}
-          <ShareAndContactCard />
+    <div className="relative min-h-screen bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark">
+      <MobileProfileMenu 
+        activeSection={activeSection}
+        setActiveSection={setActiveSection}
+        onLogout={handleLogout}
+      />
+      
+      <div className="pb-20 pt-20">
+        <div className="max-w-4xl mx-auto px-4">
+          {renderContent()}
         </div>
       </div>
     </div>
