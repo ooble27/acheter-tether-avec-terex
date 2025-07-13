@@ -36,7 +36,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   console.log('AuthProvider: Initializing...');
   
-  // Initialize state with proper default values
+  // Initialize state with proper default values - add error boundary
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
