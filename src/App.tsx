@@ -1,4 +1,5 @@
 
+import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -30,8 +31,8 @@ import { PWASessionSync } from "./components/PWASessionSync";
 
 function App() {
   return (
-    <Router>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <Router>
         <AuthProvider>
           <TransactionProvider>
             <PWASessionSync />
@@ -58,8 +59,8 @@ function App() {
             </Routes>
           </TransactionProvider>
         </AuthProvider>
-      </ThemeProvider>
-    </Router>
+      </Router>
+    </ThemeProvider>
   );
 }
 
