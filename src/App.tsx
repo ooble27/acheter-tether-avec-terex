@@ -34,10 +34,10 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
+        <ScrollToTop />
         <AuthProvider>
           <TransactionProvider>
             <PWASessionSync />
-            <ScrollToTop />
             <Toaster />
             <Routes>
               <Route path="/" element={<Index />} />
