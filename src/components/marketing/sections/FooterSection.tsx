@@ -113,11 +113,11 @@ export function FooterSection() {
               </div>
               <div className="flex items-center text-gray-300">
                 <Phone className="w-4 h-4 mr-3 text-terex-accent" />
-                <span className="text-sm">+221 77 123 4567</span>
+                <span className="text-sm">+221 77 397 27 49</span>
               </div>
               <div className="flex items-center text-gray-300">
                 <Mail className="w-4 h-4 mr-3 text-terex-accent" />
-                <span className="text-sm">contact@terex.com</span>
+                <span className="text-sm">terangaexchange@gmail.com</span>
               </div>
             </div>
 
