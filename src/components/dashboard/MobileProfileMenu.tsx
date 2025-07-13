@@ -50,9 +50,10 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
   ];
 
   const moreItems = [
+    { id: 'privacy-policy', label: 'Confidentialité', icon: Shield, description: 'Politique de confidentialité' },
     { id: 'referral', label: 'Parrainage', icon: Gift, description: 'Invitez vos amis' },
     { id: 'share-app', label: 'Partager l\'App', icon: Share2, description: 'Partager Terex' },
-    { id: 'terms', label: 'Conditions d\'Utilisation', icon: FileText, description: 'CGU et politique' },
+    { id: 'terms-of-service', label: 'Conditions d\'Utilisation', icon: FileText, description: 'CGU et politique' },
   ];
 
   const adminItems = [

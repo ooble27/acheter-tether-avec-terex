@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
@@ -28,6 +27,8 @@ import { useUserRole } from '@/hooks/useUserRole';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
+import { ContactPage } from '@/components/features/ContactPage';
+import { PrivacyPolicyPage } from '@/components/features/PrivacyPolicyPage';
 
 interface DashboardProps {
   user: { email: string; name: string } | null;
@@ -115,6 +116,10 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         return <TermsOfService onBack={() => setActiveSection('faq')} />;
       case 'about-terex':
         return <AboutTerex onBack={() => setActiveSection('faq')} />;
+      case 'contact':
+        return <ContactPage onBack={() => setActiveSection('home')} />;
+      case 'privacy-policy':
+        return <PrivacyPolicyPage onBack={() => setActiveSection('home')} />;
       case 'kyc-admin':
         return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
       case 'orders-admin':
