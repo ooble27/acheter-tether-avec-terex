@@ -49,7 +49,7 @@ export const useFraudDetection = () => {
 
       if (error) throw error;
 
-      setAlerts(data || []);
+      setAlerts((data || []) as FraudAlert[]);
       
       // Calculer les statistiques
       const totalAlerts = data?.length || 0;
@@ -83,7 +83,16 @@ export const useFraudDetection = () => {
   const analyzeTransaction = async (order: any) => {
     try {
       // Analyse automatique des transactions pour détecter les fraudes
-      const alerts: Partial<FraudAlert>[] = [];
+      const alerts: Array<{
+        user_id: string;
+        order_id?: string;
+        alert_type: 'suspicious_amount' | 'rapid_transactions' | 'unusual_pattern' | 'blacklisted_address' | 'kyc_mismatch';
+        severity: 'low' | 'medium' | 'high' | 'critical';
+        description: string;
+        metadata: any;
+        status: 'pending' | 'reviewed' | 'dismissed' | 'escalated';
+        created_at: string;
+      }> = [];
 
       // 1. Montant suspect (> 100 000 CFA ou > 500 USDT)
       if (order.amount > 100000 || order.usdt_amount > 500) {
@@ -93,7 +102,9 @@ export const useFraudDetection = () => {
           alert_type: 'suspicious_amount',
           severity: order.amount > 500000 ? 'critical' : 'high',
           description: `Transaction de montant élevé: ${order.amount} ${order.currency}`,
-          metadata: { amount: order.amount, currency: order.currency }
+          metadata: { amount: order.amount, currency: order.currency },
+          status: 'pending',
+          created_at: new Date().toISOString()
         });
       }
 
@@ -111,7 +122,9 @@ export const useFraudDetection = () => {
           alert_type: 'rapid_transactions',
           severity: recentOrders.length > 5 ? 'high' : 'medium',
           description: `${recentOrders.length} transactions en moins d'1 heure`,
-          metadata: { count: recentOrders.length, timeframe: '1h' }
+          metadata: { count: recentOrders.length, timeframe: '1h' },
+          status: 'pending',
+          created_at: new Date().toISOString()
         });
       }
 
@@ -129,7 +142,9 @@ export const useFraudDetection = () => {
           alert_type: 'kyc_mismatch',
           severity: 'medium',
           description: 'Transaction sans KYC approuvé',
-          metadata: { kyc_status: kycData?.status || 'not_found' }
+          metadata: { kyc_status: kycData?.status || 'not_found' },
+          status: 'pending',
+          created_at: new Date().toISOString()
         });
       }
 
@@ -137,11 +152,7 @@ export const useFraudDetection = () => {
       if (alerts.length > 0) {
         const { error } = await supabase
           .from('fraud_alerts')
-          .insert(alerts.map(alert => ({
-            ...alert,
-            status: 'pending',
-            created_at: new Date().toISOString()
-          })));
+          .insert(alerts);
 
         if (error) throw error;
       }

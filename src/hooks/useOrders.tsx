@@ -16,7 +16,7 @@ export interface Order {
   network: string;
   wallet_address?: string;
   status: 'pending' | 'processing' | 'completed' | 'cancelled' | 'failed';
-  payment_method: 'card' | 'mobile';
+  payment_method: 'card' | 'mobile' | 'wave' | 'orange_money' | 'interac';
   payment_reference?: string;
   payment_status?: string;
   notes?: string;
@@ -26,6 +26,13 @@ export interface Order {
   processed_by?: string;
   is_deleted?: boolean;
   recipient_name?: string;
+  recipient_phone?: string;
+  from_currency?: string;
+  to_currency?: string;
+  total_amount?: number;
+  fees?: number;
+  recipient_country?: string;
+  deleted_at?: string;
 }
 
 // Alias pour compatibilité avec les autres composants
@@ -47,7 +54,7 @@ export const useOrders = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setOrders(data || []);
+      setOrders((data || []) as Order[]);
     } catch (error) {
       console.error('Erreur lors de la récupération des commandes:', error);
       toast({
@@ -70,7 +77,7 @@ export const useOrders = () => {
 
       if (error) throw error;
 
-      setOrders(prev => [data, ...prev]);
+      setOrders(prev => [data as Order, ...prev]);
       
       toast({
         title: "Commande créée",
@@ -78,7 +85,7 @@ export const useOrders = () => {
         className: "bg-green-600 text-white border-green-600",
       });
 
-      return data;
+      return data as Order;
     } catch (error) {
       console.error('Erreur lors de la création de la commande:', error);
       toast({
