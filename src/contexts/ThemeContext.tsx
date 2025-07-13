@@ -13,12 +13,22 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   console.log('ThemeProvider: Initializing...');
   
+  // Add defensive check to ensure we're in a React context
+  if (!React || typeof React.useState !== 'function') {
+    console.error('ThemeProvider: React hooks not available');
+    return <>{children}</>;
+  }
+
   const [theme, setTheme] = useState<Theme>('dark');
 
   useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
+    try {
+      const root = window.document.documentElement;
+      root.classList.remove('light', 'dark');
+      root.classList.add(theme);
+    } catch (error) {
+      console.error('ThemeProvider: Error applying theme:', error);
+    }
   }, [theme]);
 
   const value = useMemo(() => ({
