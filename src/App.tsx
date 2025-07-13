@@ -20,7 +20,7 @@ import StatusPage from "./pages/StatusPage";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import SecurityPage from "./pages/SecurityPage";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MarketingPage } from "./pages/MarketingPage";
 import AdminPage from "./pages/AdminPage";
@@ -31,7 +31,7 @@ import { PWASessionSync } from "./components/PWASessionSync";
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider>
       <Router>
         <AuthProvider>
           <TransactionProvider>
