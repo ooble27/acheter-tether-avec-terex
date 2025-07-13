@@ -31,7 +31,7 @@ export function PhoneMockup() {
             <div className="p-3 space-y-3 text-xs overflow-y-auto h-full pb-8 scrollbar-hide">
               {/* Header */}
               <div className="flex items-center space-x-2 mb-3">
-                <div className="w-6 h-6 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
+                <div className="w-6 h-6 bg-gray-600 rounded-lg flex items-center justify-center">
                   <Activity className="w-3 h-3 text-white" />
                 </div>
                 <div>
@@ -47,7 +47,7 @@ export function PhoneMockup() {
                 <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
                   <CardContent className="p-2">
                     <div className="flex items-center justify-between mb-1">
-                      <div className="w-6 h-6 bg-green-500/20 rounded-lg flex items-center justify-center">
+                      <div className="w-6 h-6 bg-gray-700/20 rounded-lg flex items-center justify-center">
                         <TetherLogo className="w-4 h-4" />
                       </div>
                     </div>
@@ -83,7 +83,7 @@ export function PhoneMockup() {
                 <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
                   <CardContent className="p-2">
                     <div className="flex items-center justify-between mb-1">
-                      <div className="w-6 h-6 bg-terex-accent/20 rounded-lg flex items-center justify-center">
+                      <div className="w-6 h-6 bg-gray-700/20 rounded-lg flex items-center justify-center">
                         <Globe className="w-3 h-3 text-terex-accent" />
                       </div>
                     </div>
@@ -102,7 +102,7 @@ export function PhoneMockup() {
                   </h3>
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center flex-shrink-0">
+                      <div className="w-4 h-4 bg-gray-700/20 rounded flex items-center justify-center flex-shrink-0">
                         <Star className="w-2 h-2 text-terex-accent" />
                       </div>
                       <div className="flex-1">
@@ -111,7 +111,7 @@ export function PhoneMockup() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-green-500/20 rounded flex items-center justify-center flex-shrink-0">
+                      <div className="w-4 h-4 bg-gray-700/20 rounded flex items-center justify-center flex-shrink-0">
                         <Zap className="w-2 h-2 text-green-400" />
                       </div>
                       <div className="flex-1">
@@ -159,7 +159,7 @@ export function PhoneMockup() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center flex-shrink-0">
+                      <div className="w-4 h-4 bg-gray-700/20 rounded flex items-center justify-center flex-shrink-0">
                         <Users className="w-2 h-2 text-terex-accent" />
                       </div>
                       <div className="flex-1">
