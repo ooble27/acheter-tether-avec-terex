@@ -45,7 +45,7 @@ const AboutPage = () => {
     { label: "Volume Traité", value: "10M+", icon: TrendingUp },
     { label: "Utilisateurs", value: "500+", icon: Users },
     { label: "Pays Desservis", value: "5", icon: Globe },
-    { label: "Disponibilité", value: "99.99%", icon: Award }
+    { label: "Disponibilité", value: "99.9%", icon: Award }
   ];
 
   const team = [
@@ -216,17 +216,19 @@ const AboutPage = () => {
             <p className="text-gray-300 text-lg">Des résultats qui parlent d'eux-mêmes</p>
           </div>
           
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
                 <div key={index} className="group text-center">
-                  <div className="bg-gradient-to-br from-terex-accent/10 to-transparent backdrop-blur-sm rounded-2xl p-8 border border-terex-accent/20 group-hover:border-terex-accent/50 transition-all duration-500 group-hover:scale-105">
-                    <IconComponent className="w-12 h-12 text-terex-accent mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                    <div className="text-4xl font-bold text-white mb-2 group-hover:text-terex-accent transition-colors duration-300">
+                  <div className="bg-gradient-to-br from-terex-accent/10 to-transparent backdrop-blur-sm rounded-2xl p-4 lg:p-8 border border-terex-accent/20 group-hover:border-terex-accent/50 transition-all duration-500 group-hover:scale-105 h-full flex flex-col justify-center min-h-[160px] lg:min-h-[200px]">
+                    <IconComponent className="w-8 h-8 lg:w-12 lg:h-12 text-terex-accent mx-auto mb-3 lg:mb-4 group-hover:scale-110 transition-transform duration-300" />
+                    <div className="text-2xl lg:text-4xl font-bold text-white mb-1 lg:mb-2 group-hover:text-terex-accent transition-colors duration-300 leading-tight">
                       {stat.value}
                     </div>
-                    <div className="text-gray-300 font-medium">{stat.label}</div>
+                    <div className="text-gray-300 font-medium text-sm lg:text-base leading-tight px-1">
+                      {stat.label}
+                    </div>
                   </div>
                 </div>
               );
