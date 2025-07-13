@@ -28,6 +28,9 @@ export interface Order {
   recipient_name?: string;
 }
 
+// Alias pour compatibilité avec les autres composants
+export type UnifiedOrder = Order;
+
 export const useOrders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,6 +57,36 @@ export const useOrders = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const createOrder = async (orderData: Omit<Order, 'id' | 'created_at' | 'updated_at'>) => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .insert([orderData])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setOrders(prev => [data, ...prev]);
+      
+      toast({
+        title: "Commande créée",
+        description: "Votre commande a été créée avec succès",
+        className: "bg-green-600 text-white border-green-600",
+      });
+
+      return data;
+    } catch (error) {
+      console.error('Erreur lors de la création de la commande:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de créer la commande",
+        variant: "destructive",
+      });
+      throw error;
     }
   };
 
@@ -181,6 +214,7 @@ export const useOrders = () => {
   return {
     orders,
     loading,
+    createOrder,
     updateOrderStatus,
     moveToTrash,
     restoreFromTrash,

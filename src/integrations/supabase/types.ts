@@ -184,6 +184,56 @@ export type Database = {
         }
         Relationships: []
       }
+      fraud_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          description: string
+          id: string
+          metadata: Json | null
+          order_id: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          severity: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          description: string
+          id?: string
+          metadata?: Json | null
+          order_id?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          severity: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          description?: string
+          id?: string
+          metadata?: Json | null
+          order_id?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          severity?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fraud_alerts_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       international_transfers: {
         Row: {
           amount: number
@@ -777,6 +827,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_2fa_settings: {
+        Row: {
+          backup_codes: string[] | null
+          created_at: string
+          enabled_at: string | null
+          id: string
+          is_enabled: boolean
+          secret: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          backup_codes?: string[] | null
+          created_at?: string
+          enabled_at?: string | null
+          id?: string
+          is_enabled?: boolean
+          secret: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          backup_codes?: string[] | null
+          created_at?: string
+          enabled_at?: string | null
+          id?: string
+          is_enabled?: boolean
+          secret?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {

@@ -3,131 +3,220 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { 
   Shield, 
-  Smartphone, 
+  QrCode, 
   Key, 
-  CheckCircle, 
+  CheckCircle,
   AlertTriangle,
   Copy,
   RefreshCw
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
 
-interface TwoFactorSetup {
+interface TwoFactorSettings {
+  id: string;
+  user_id: string;
   secret: string;
-  qrCode: string;
-  backupCodes: string[];
-  isEnabled: boolean;
+  backup_codes: string[];
+  is_enabled: boolean;
+  enabled_at?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export function TwoFactorAuth() {
-  const [setup, setSetup] = useState<TwoFactorSetup | null>(null);
+  const [settings, setSettings] = useState<TwoFactorSettings | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [showBackupCodes, setShowBackupCodes] = useState(false);
-  const { user } = useAuth();
+  const [isEnabling, setIsEnabling] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
 
-  const generateSecret = () => {
-    // Générer un secret TOTP (Time-based One-Time Password)
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-    const secret = Array.from(
-      { length: 32 }, 
-      () => chars[Math.floor(Math.random() * chars.length)]
-    ).join('');
+  const fetchSettings = async () => {
+    if (!user) return;
 
-    // Générer des codes de sauvegarde
-    const backupCodes = Array.from(
-      { length: 10 }, 
-      () => Math.random().toString(36).substring(2, 8).toUpperCase()
-    );
-
-    // Créer l'URL du QR code (format Google Authenticator)
-    const issuer = 'Terex';
-    const accountName = user?.email || 'user@terex.com';
-    const qrCodeUrl = `otpauth://totp/${issuer}:${accountName}?secret=${secret}&issuer=${issuer}`;
-    
-    // Pour un vrai QR code, vous utiliseriez une librairie comme qrcode
-    // Ici, nous simulons juste l'URL
-    const qrCode = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrCodeUrl)}`;
-
-    setSetup({
-      secret,
-      qrCode,
-      backupCodes,
-      isEnabled: false
-    });
-  };
-
-  const verifyAndEnable2FA = async () => {
-    if (!verificationCode || !setup) return;
-
-    setIsVerifying(true);
     try {
-      // Ici, vous vérifieriez le code TOTP avec une librairie comme `speakeasy`
-      // Pour la démo, nous acceptons le code "123456"
-      if (verificationCode === '123456' || verificationCode.length === 6) {
-        // Sauvegarder la configuration 2FA en base
-        const { error } = await supabase
-          .from('user_2fa_settings')
-          .upsert({
-            user_id: user?.id,
-            secret: setup.secret,
-            backup_codes: setup.backupCodes,
-            is_enabled: true,
-            enabled_at: new Date().toISOString()
-          });
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('user_2fa_settings')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
 
-        if (error) throw error;
-
-        setSetup(prev => prev ? { ...prev, isEnabled: true } : null);
-        setShowBackupCodes(true);
-
-        toast({
-          title: "2FA activé avec succès",
-          description: "Votre authentification à deux facteurs est maintenant active",
-          className: "bg-green-600 text-white border-green-600",
-        });
-      } else {
-        throw new Error('Code de vérification invalide');
+      if (error && error.code !== 'PGRST116') {
+        throw error;
       }
+
+      setSettings(data);
     } catch (error) {
-      console.error('Erreur lors de la vérification 2FA:', error);
+      console.error('Erreur lors du chargement des paramètres 2FA:', error);
       toast({
-        title: "Erreur de vérification",
-        description: "Le code saisi est invalide. Veuillez réessayer.",
+        title: "Erreur",
+        description: "Impossible de charger les paramètres 2FA",
         variant: "destructive",
       });
     } finally {
-      setIsVerifying(false);
+      setLoading(false);
+    }
+  };
+
+  const generateSecret = () => {
+    // Générer un secret 2FA basique (dans un vrai app, utiliser une lib comme speakeasy)
+    const secret = Array.from({ length: 32 }, () => 
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'[Math.floor(Math.random() * 32)]
+    ).join('');
+    
+    return secret;
+  };
+
+  const generateBackupCodes = () => {
+    return Array.from({ length: 8 }, () => 
+      Math.random().toString(36).substring(2, 8).toUpperCase()
+    );
+  };
+
+  const setup2FA = async () => {
+    if (!user) return;
+
+    try {
+      const secret = generateSecret();
+      const backupCodes = generateBackupCodes();
+      
+      // Créer ou mettre à jour les paramètres 2FA
+      const { data, error } = user && settings ? 
+        await supabase
+          .from('user_2fa_settings')
+          .update({
+            secret,
+            backup_codes: backupCodes,
+            is_enabled: false,
+            updated_at: new Date().toISOString()
+          })
+          .eq('user_id', user.id)
+          .select()
+          .single()
+        :
+        await supabase
+          .from('user_2fa_settings')
+          .insert({
+            user_id: user.id,
+            secret,
+            backup_codes: backupCodes,
+            is_enabled: false
+          })
+          .select()
+          .single();
+
+      if (error) throw error;
+
+      setSettings(data);
+      
+      // Générer l'URL du QR code
+      const appName = 'Terex';
+      const accountName = user.email || 'user';
+      const qrUrl = `otpauth://totp/${encodeURIComponent(appName)}:${encodeURIComponent(accountName)}?secret=${secret}&issuer=${encodeURIComponent(appName)}`;
+      setQrCodeUrl(qrUrl);
+
+      toast({
+        title: "Configuration 2FA initiée",
+        description: "Scannez le QR code avec votre app d'authentification",
+        className: "bg-blue-600 text-white border-blue-600",
+      });
+
+    } catch (error) {
+      console.error('Erreur lors de la configuration 2FA:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de configurer l'authentification à deux facteurs",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const enable2FA = async () => {
+    if (!user || !settings || !verificationCode) return;
+
+    try {
+      setIsEnabling(true);
+      
+      // Dans un vrai app, vérifier le code TOTP ici
+      // Pour cette démo, on accepte n'importe quel code de 6 chiffres
+      if (!/^\d{6}$/.test(verificationCode)) {
+        throw new Error('Code de vérification invalide');
+      }
+
+      const { data, error } = await supabase
+        .from('user_2fa_settings')
+        .update({
+          is_enabled: true,
+          enabled_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .eq('user_id', user.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setSettings(data);
+      setVerificationCode('');
+      setQrCodeUrl('');
+
+      toast({
+        title: "2FA Activé",
+        description: "L'authentification à deux facteurs a été activée avec succès",
+        className: "bg-green-600 text-white border-green-600",
+      });
+
+    } catch (error) {
+      console.error('Erreur lors de l\'activation 2FA:', error);
+      toast({
+        title: "Erreur",
+        description: "Code de vérification invalide",
+        variant: "destructive",
+      });
+    } finally {
+      setIsEnabling(false);
     }
   };
 
   const disable2FA = async () => {
+    if (!user || !settings) return;
+
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('user_2fa_settings')
-        .update({ is_enabled: false })
-        .eq('user_id', user?.id);
+        .update({
+          is_enabled: false,
+          enabled_at: null,
+          updated_at: new Date().toISOString()
+        })
+        .eq('user_id', user.id)
+        .select()
+        .single();
 
       if (error) throw error;
 
-      setSetup(null);
+      setSettings(data);
+
       toast({
-        title: "2FA désactivé",
+        title: "2FA Désactivé",
         description: "L'authentification à deux facteurs a été désactivée",
-        variant: "destructive",
+        className: "bg-orange-600 text-white border-orange-600",
       });
+
     } catch (error) {
       console.error('Erreur lors de la désactivation 2FA:', error);
       toast({
         title: "Erreur",
-        description: "Impossible de désactiver le 2FA",
+        description: "Impossible de désactiver l'authentification à deux facteurs",
         variant: "destructive",
       });
     }
@@ -137,220 +226,160 @@ export function TwoFactorAuth() {
     navigator.clipboard.writeText(text);
     toast({
       title: "Copié",
-      description: "Le texte a été copié dans le presse-papier",
+      description: "Code copié dans le presse-papiers",
       className: "bg-blue-600 text-white border-blue-600",
     });
   };
 
-  const check2FAStatus = async () => {
-    if (!user) return;
-
-    try {
-      const { data, error } = await supabase
-        .from('user_2fa_settings')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('is_enabled', true)
-        .single();
-
-      if (data && !error) {
-        setSetup({
-          secret: data.secret,
-          qrCode: '',
-          backupCodes: data.backup_codes || [],
-          isEnabled: true
-        });
-      }
-    } catch (error) {
-      // Pas de 2FA configuré
-    }
-  };
-
   useEffect(() => {
-    check2FAStatus();
+    fetchSettings();
   }, [user]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-terex-dark flex items-center justify-center">
+        <div className="flex items-center space-x-3 text-white">
+          <RefreshCw className="w-6 h-6 animate-spin" />
+          <span className="text-lg">Chargement des paramètres de sécurité...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-terex-dark p-6 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-white flex items-center">
-          <Shield className="w-8 h-8 mr-3 text-terex-accent" />
-          Authentification à Deux Facteurs (2FA)
-        </h1>
-        <p className="text-gray-400">Renforcez la sécurité de votre compte</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white flex items-center">
+            <Shield className="w-8 h-8 mr-3 text-terex-accent" />
+            Authentification à Deux Facteurs (2FA)
+          </h1>
+          <p className="text-gray-400">Renforcez la sécurité de votre compte administrateur</p>
+        </div>
       </div>
 
-      {!setup?.isEnabled ? (
-        <div className="max-w-2xl space-y-6">
-          <Alert className="border-blue-600 bg-blue-600/10">
-            <AlertTriangle className="h-4 w-4 text-blue-400" />
-            <AlertDescription className="text-blue-300">
-              L'authentification à deux facteurs ajoute une couche de sécurité supplémentaire 
-              à votre compte en exigeant un code de votre téléphone en plus de votre mot de passe.
-            </AlertDescription>
-          </Alert>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Configuration 2FA */}
+        <Card className="bg-terex-darker border-terex-gray">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center">
+              <Key className="w-5 h-5 mr-2" />
+              Configuration 2FA
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-gray-300">Statut 2FA:</span>
+              <Badge 
+                className={settings?.is_enabled ? 
+                  "bg-green-600 text-white" : 
+                  "bg-red-600 text-white"
+                }
+              >
+                {settings?.is_enabled ? (
+                  <>
+                    <CheckCircle className="w-4 h-4 mr-1" />
+                    Activé
+                  </>
+                ) : (
+                  <>
+                    <AlertTriangle className="w-4 h-4 mr-1" />
+                    Désactivé
+                  </>
+                )}
+              </Badge>
+            </div>
 
-          {!setup && (
-            <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center">
-                  <Key className="w-5 h-5 mr-2" />
-                  Configurer l'authentification 2FA
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center">
-                  <Button
-                    onClick={generateSecret}
-                    className="bg-terex-accent hover:bg-terex-accent/80 text-white"
+            {!settings?.is_enabled && (
+              <div className="space-y-4">
+                {!qrCodeUrl ? (
+                  <Button 
+                    onClick={setup2FA}
+                    className="w-full bg-terex-accent hover:bg-terex-accent/80"
                   >
-                    <Smartphone className="w-4 h-4 mr-2" />
-                    Commencer la configuration
+                    <QrCode className="w-4 h-4 mr-2" />
+                    Configurer l'authentification 2FA
                   </Button>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+                ) : (
+                  <div className="space-y-4">
+                    <div className="p-4 bg-terex-gray rounded-lg">
+                      <h4 className="text-white font-medium mb-2">1. Scannez ce QR Code</h4>
+                      <div className="bg-white p-4 rounded-lg inline-block">
+                        <QrCode className="w-32 h-32 text-black" />
+                      </div>
+                      <p className="text-gray-400 text-sm mt-2">
+                        Utilisez Google Authenticator, Authy ou une autre app compatible TOTP
+                      </p>
+                    </div>
 
-          {setup && !setup.isEnabled && (
-            <div className="space-y-6">
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader>
-                  <CardTitle className="text-white">Étape 1: Scanner le QR Code</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-gray-400">
-                    Utilisez Google Authenticator, Authy ou une autre app d'authentification 
-                    pour scanner ce QR code :
-                  </p>
-                  
-                  <div className="flex justify-center">
-                    <div className="p-4 bg-white rounded-lg">
-                      <img 
-                        src={setup.qrCode} 
-                        alt="QR Code 2FA" 
-                        className="w-48 h-48"
+                    <div className="space-y-2">
+                      <Label htmlFor="verification-code" className="text-gray-300">
+                        2. Entrez le code de vérification
+                      </Label>
+                      <Input
+                        id="verification-code"
+                        type="text"
+                        placeholder="123456"
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value)}
+                        className="bg-terex-gray border-terex-gray text-white"
+                        maxLength={6}
                       />
                     </div>
-                  </div>
 
-                  <div className="text-center">
-                    <p className="text-sm text-gray-400 mb-2">
-                      Ou entrez manuellement cette clé secrète :
-                    </p>
-                    <div className="flex items-center justify-center space-x-2">
-                      <code className="bg-terex-gray px-3 py-2 rounded text-white font-mono">
-                        {setup.secret}
-                      </code>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => copyToClipboard(setup.secret)}
-                        className="border-terex-gray text-gray-300"
-                      >
-                        <Copy className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader>
-                  <CardTitle className="text-white">Étape 2: Vérifier le Code</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-gray-400">
-                    Entrez le code à 6 chiffres généré par votre app d'authentification :
-                  </p>
-                  
-                  <div className="flex space-x-4">
-                    <Input
-                      type="text"
-                      placeholder="123456"
-                      value={verificationCode}
-                      onChange={(e) => setVerificationCode(e.target.value)}
-                      maxLength={6}
-                      className="bg-terex-gray border-terex-gray text-white text-center text-lg"
-                    />
-                    <Button
-                      onClick={verifyAndEnable2FA}
-                      disabled={isVerifying || verificationCode.length !== 6}
-                      className="bg-green-600 hover:bg-green-700 text-white"
+                    <Button 
+                      onClick={enable2FA}
+                      disabled={isEnabling || verificationCode.length !== 6}
+                      className="w-full bg-green-600 hover:bg-green-700"
                     >
-                      {isVerifying ? (
-                        <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+                      {isEnabling ? (
+                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
                       ) : (
                         <CheckCircle className="w-4 h-4 mr-2" />
                       )}
-                      Vérifier et Activer
+                      Activer 2FA
                     </Button>
                   </div>
-
-                  <p className="text-xs text-gray-500">
-                    Conseil: Pour les tests, utilisez le code "123456"
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="max-w-2xl space-y-6">
-          <Card className="bg-terex-darker border-green-600">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                <CheckCircle className="w-5 h-5 mr-2 text-green-400" />
-                2FA Activé
-                <Badge className="ml-2 bg-green-600 text-white">Actif</Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-400 mb-4">
-                Votre authentification à deux facteurs est active et protège votre compte.
-              </p>
-              
-              <div className="flex space-x-4">
-                <Button
-                  onClick={() => setShowBackupCodes(!showBackupCodes)}
-                  variant="outline"
-                  className="border-terex-gray text-gray-300"
-                >
-                  <Key className="w-4 h-4 mr-2" />
-                  {showBackupCodes ? 'Masquer' : 'Voir'} les codes de sauvegarde
-                </Button>
-                
-                <Button
-                  onClick={disable2FA}
-                  variant="destructive"
-                  className="bg-red-600 hover:bg-red-700"
-                >
-                  <AlertTriangle className="w-4 h-4 mr-2" />
-                  Désactiver 2FA
-                </Button>
+                )}
               </div>
-            </CardContent>
-          </Card>
+            )}
 
-          {showBackupCodes && (
-            <Card className="bg-terex-darker border-terex-gray">
-              <CardHeader>
-                <CardTitle className="text-white">Codes de Sauvegarde</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Alert className="border-yellow-600 bg-yellow-600/10 mb-4">
-                  <AlertTriangle className="h-4 w-4 text-yellow-400" />
-                  <AlertDescription className="text-yellow-300">
-                    Conservez ces codes en lieu sûr. Ils vous permettront d'accéder à votre 
-                    compte si vous perdez votre téléphone.
-                  </AlertDescription>
-                </Alert>
+            {settings?.is_enabled && (
+              <Button 
+                onClick={disable2FA}
+                variant="destructive"
+                className="w-full"
+              >
+                <AlertTriangle className="w-4 h-4 mr-2" />
+                Désactiver 2FA
+              </Button>
+            )}
+          </CardContent>
+        </Card>
 
+        {/* Codes de sauvegarde */}
+        <Card className="bg-terex-darker border-terex-gray">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center">
+              <Key className="w-5 h-5 mr-2" />
+              Codes de Sauvegarde
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {settings?.backup_codes && settings.backup_codes.length > 0 ? (
+              <div className="space-y-4">
+                <p className="text-gray-400 text-sm">
+                  Conservez ces codes en lieu sûr. Ils vous permettront d'accéder à votre compte si vous perdez votre appareil d'authentification.
+                </p>
+                
                 <div className="grid grid-cols-2 gap-2">
-                  {setup.backupCodes.map((code, index) => (
-                    <div key={index} className="flex items-center justify-between p-2 bg-terex-gray rounded">
-                      <code className="text-white font-mono">{code}</code>
-                      <Button
+                  {settings.backup_codes.map((code, index) => (
+                    <div 
+                      key={index}
+                      className="flex items-center justify-between bg-terex-gray p-2 rounded"
+                    >
+                      <span className="font-mono text-white">{code}</span>
+                      <Button 
                         size="sm"
                         variant="ghost"
                         onClick={() => copyToClipboard(code)}
@@ -362,18 +391,55 @@ export function TwoFactorAuth() {
                   ))}
                 </div>
 
-                <Button
-                  className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white"
-                  onClick={() => copyToClipboard(setup.backupCodes.join('\n'))}
+                <Separator className="bg-terex-gray" />
+                
+                <Button 
+                  onClick={setup2FA}
+                  variant="outline"
+                  className="w-full border-terex-gray text-gray-300 hover:bg-terex-gray"
                 >
-                  <Copy className="w-4 h-4 mr-2" />
-                  Copier tous les codes
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Régénérer les codes de sauvegarde
                 </Button>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      )}
+              </div>
+            ) : (
+              <p className="text-gray-400 text-center py-8">
+                Aucun code de sauvegarde généré. Configurez d'abord l'authentification 2FA.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Informations de sécurité */}
+      <Card className="bg-terex-darker border-terex-gray">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center">
+            <Shield className="w-5 h-5 mr-2" />
+            Conseils de Sécurité
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3 text-gray-300">
+            <div className="flex items-start space-x-3">
+              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+              <p>Utilisez une application d'authentification reconnue comme Google Authenticator ou Authy</p>
+            </div>
+            <div className="flex items-start space-x-3">
+              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+              <p>Conservez vos codes de sauvegarde dans un lieu sûr, séparé de votre appareil principal</p>
+            </div>
+            <div className="flex items-start space-x-3">
+              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+              <p>Ne partagez jamais vos codes 2FA avec qui que ce soit</p>
+            </div>
+            <div className="flex items-start space-x-3">
+              <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+              <p>Activez 2FA sur tous vos comptes critiques, pas seulement sur Terex</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
