@@ -9,7 +9,7 @@ export function DeviceMockups() {
     "Échange USDT et transferts vers l'Afrique",
     "Achetez des USDT facilement avec Terex", 
     "Vendez vos stablecoins en sécurité totale",
-    "Envoyez de l'argent à vos proches rapidement",
+    "Envoyez de l'argent à vos proches vite",
     "Plateforme sécurisée et réglementée 100%"
   ];
 
@@ -38,7 +38,7 @@ export function DeviceMockups() {
           </>
         ) : currentSlide === 3 ? (
           <>
-            Envoyez de l'argent à vos proches <span className="text-terex-accent">rapidement</span>
+            Envoyez de l'argent à vos proches <span className="text-terex-accent">vite</span>
           </>
         ) : (
           <>
