@@ -12,12 +12,9 @@ interface KYCProtectionProps {
 export function KYCProtection({ children, onKYCRequired }: KYCProtectionProps) {
   const { isAuthorized, loading, kycStatus } = useTransactionAuthorization();
 
+  // Si en cours de chargement, ne pas afficher de message, juste ne rien rendre
   if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-white">Vérification des autorisations...</div>
-      </div>
-    );
+    return null;
   }
 
   if (!isAuthorized) {
