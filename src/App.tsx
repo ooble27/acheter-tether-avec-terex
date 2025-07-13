@@ -7,9 +7,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { TransactionProvider } from "@/contexts/TransactionContext";
-import ScrollToTop from "@/components/ScrollToTop";
-import PWAInstallPrompt from "@/components/PWAInstallPrompt";
-import PWASessionSync from "@/components/PWASessionSync";
+import { ScrollToTop } from "@/components/ScrollToTop";
+import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
+import { PWASessionSync } from "@/components/PWASessionSync";
 
 // Pages publiques
 import Index from "./pages/Index";
@@ -26,7 +26,7 @@ import SecurityPage from "./pages/SecurityPage";
 import StatusPage from "./pages/StatusPage";
 import CareersPage from "./pages/CareersPage";
 import GuidePage from "./pages/GuidePage";
-import MarketingPage from "./pages/MarketingPage";
+import { MarketingPage } from "./pages/MarketingPage";
 import BlockchainPage from "./pages/BlockchainPage";
 import NotFound from "./pages/NotFound";
 
