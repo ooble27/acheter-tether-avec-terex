@@ -10,6 +10,8 @@ import {
   Shield, 
   UserCheck, 
   History,
+  Star,
+  Gift,
   Phone,
   Share2,
   FileText
@@ -44,9 +46,11 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
   const supportItems = [
     { id: 'faq', label: 'FAQ', icon: HelpCircle, description: 'Questions fréquentes' },
     { id: 'contact', label: 'Nous Contacter', icon: Phone, description: 'Support client 24/7' },
+    { id: 'feedback', label: 'Avis & Suggestions', icon: Star, description: 'Donnez votre avis' },
   ];
 
   const moreItems = [
+    { id: 'referral', label: 'Parrainage', icon: Gift, description: 'Invitez vos amis' },
     { id: 'share-app', label: 'Partager l\'App', icon: Share2, description: 'Partager Terex' },
     { id: 'terms', label: 'Conditions d\'Utilisation', icon: FileText, description: 'CGU et politique' },
   ];
