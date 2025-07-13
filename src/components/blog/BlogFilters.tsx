@@ -77,11 +77,11 @@ export const BlogFilters = ({ onFiltersChange, currentFilters }: BlogFiltersProp
 
         {/* Filtre par catégorie */}
         <Select
-          value={currentFilters.category || ''}
+          value={currentFilters.category || 'all'}
           onValueChange={(value) => 
             onFiltersChange({ 
               ...currentFilters, 
-              category: value || undefined 
+              category: value === 'all' ? undefined : value
             })
           }
         >
@@ -89,7 +89,7 @@ export const BlogFilters = ({ onFiltersChange, currentFilters }: BlogFiltersProp
             <SelectValue placeholder="Toutes les catégories" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Toutes les catégories</SelectItem>
+            <SelectItem value="all">Toutes les catégories</SelectItem>
             {categories?.map((category) => (
               <SelectItem key={category.id} value={category.slug}>
                 <div className="flex items-center gap-2">
@@ -106,11 +106,11 @@ export const BlogFilters = ({ onFiltersChange, currentFilters }: BlogFiltersProp
 
         {/* Filtre par tag */}
         <Select
-          value={currentFilters.tag || ''}
+          value={currentFilters.tag || 'all'}
           onValueChange={(value) => 
             onFiltersChange({ 
               ...currentFilters, 
-              tag: value || undefined 
+              tag: value === 'all' ? undefined : value
             })
           }
         >
@@ -118,7 +118,7 @@ export const BlogFilters = ({ onFiltersChange, currentFilters }: BlogFiltersProp
             <SelectValue placeholder="Tous les tags" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Tous les tags</SelectItem>
+            <SelectItem value="all">Tous les tags</SelectItem>
             {tags?.map((tag) => (
               <SelectItem key={tag.id} value={tag.slug}>
                 {tag.name}
