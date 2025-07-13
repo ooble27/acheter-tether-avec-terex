@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, CheckCircle, Users, Globe, TrendingUp, Shield, Zap, Award, Target, User } from 'lucide-react';
@@ -122,21 +121,11 @@ const AboutPage = () => {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
-            <div className="flex justify-center items-center mb-8">
-              <div className="relative">
-                <img 
-                  src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-                  alt="Terex Logo" 
-                  className="w-20 h-20 rounded-2xl mr-6"
-                />
-                <div className="absolute -inset-4 bg-terex-accent/20 rounded-3xl blur-xl"></div>
-              </div>
-              <div className="text-left">
-                <h1 className="text-5xl font-bold text-white mb-2">
-                  À propos de <span className="text-terex-accent">Terex</span>
-                </h1>
-                <p className="text-terex-accent text-lg font-medium">Teranga Exchange</p>
-              </div>
+            <div className="text-center mb-8">
+              <h1 className="text-5xl font-bold text-white mb-2">
+                À propos de <span className="text-terex-accent">Terex</span>
+              </h1>
+              <p className="text-terex-accent text-lg font-medium">Teranga Exchange</p>
             </div>
             <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
               Terex révolutionne les échanges crypto-fiat et les transferts d'argent vers l'Afrique. 
