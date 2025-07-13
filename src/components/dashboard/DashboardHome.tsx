@@ -1,52 +1,33 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { 
-  TrendingUp, 
-  Zap, 
-  Globe, 
-  ArrowUpRight, 
-  Activity,
-  Handshake,
-  Clock,
-  Users,
-  Star,
-  Trophy,
-  Target,
-  Shield,
-  Blocks,
-  CheckCircle,
-  Anchor,
-  TrendingDown
-} from 'lucide-react';
+import { TrendingUp, Zap, Globe, ArrowUpRight, Activity, Handshake, Clock, Users, Star, Trophy, Target, Shield, Blocks, CheckCircle, Anchor, TrendingDown } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
-
 interface DashboardHomeProps {
-  user: { email: string; name: string } | null;
+  user: {
+    email: string;
+    name: string;
+  } | null;
   onNavigate?: (section: string) => void;
 }
-
-const TetherLogo = ({ className }: { className?: string }) => (
-  <img 
-    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
-    alt="Tether Logo"
-    className={className}
-  />
-);
-
-export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
+const TetherLogo = ({
+  className
+}: {
+  className?: string;
+}) => <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="Tether Logo" className={className} />;
+export function DashboardHome({
+  user,
+  onNavigate
+}: DashboardHomeProps) {
   const isMobile = useIsMobile();
-
   const handleServiceClick = (service: string) => {
     if (onNavigate) {
       onNavigate(service);
     }
   };
-
   if (isMobile) {
     // Design mobile avec la section historique ajoutée
-    return (
-      <div className="min-h-screen bg-terex-dark p-3 space-y-3 text-xs overflow-y-auto scrollbar-hide">
+    return <div className="min-h-screen bg-terex-dark p-3 space-y-3 text-xs overflow-y-auto scrollbar-hide">
         {/* Header avec taille augmentée comme demandé */}
         <div className="flex items-center space-x-3 mb-6">
           <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
@@ -62,10 +43,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
 
         {/* Services Grid - 2x2 comme dans la maquette avec navigation */}
         <div className="grid grid-cols-2 gap-3 mb-4">
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('buy')}
-          >
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('buy')}>
             <CardContent className="p-3">
               <div className="flex items-center justify-between mb-2">
                 <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
@@ -77,10 +55,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </CardContent>
           </Card>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('sell')}
-          >
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('sell')}>
             <CardContent className="p-3">
               <div className="flex items-center justify-between mb-2">
                 <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
@@ -92,10 +67,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </CardContent>
           </Card>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('otc')}
-          >
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('otc')}>
             <CardContent className="p-3">
               <div className="flex items-center justify-between mb-2">
                 <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
@@ -107,10 +79,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </CardContent>
           </Card>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('transfer')}
-          >
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('transfer')}>
             <CardContent className="p-3">
               <div className="flex items-center justify-between mb-2">
                 <div className="w-8 h-8 bg-terex-accent/20 rounded-lg flex items-center justify-center">
@@ -233,13 +202,11 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </div>
           </CardContent>
         </Card>
-      </div>
-    );
+      </div>;
   }
 
   // Design desktop inchangé avec navigation ajoutée
-  return (
-    <div className="min-h-screen bg-terex-dark p-4 md:p-6">
+  return <div className="min-h-screen p-4 md:p-6 bg-[terex-gray-light] bg-terex-darker">
       {/* Header Section */}
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-4">
@@ -257,10 +224,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
 
       {/* Services rapides avec navigation */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
-        <Card 
-          className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors group cursor-pointer"
-          onClick={() => handleServiceClick('buy')}
-        >
+        <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors group cursor-pointer" onClick={() => handleServiceClick('buy')}>
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center group-hover:bg-green-500/30 transition-colors">
@@ -275,10 +239,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </CardHeader>
         </Card>
 
-        <Card 
-          className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors group cursor-pointer"
-          onClick={() => handleServiceClick('sell')}
-        >
+        <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors group cursor-pointer" onClick={() => handleServiceClick('sell')}>
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <div className="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center group-hover:bg-red-500/30 transition-colors">
@@ -293,10 +254,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </CardHeader>
         </Card>
 
-        <Card 
-          className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors group cursor-pointer"
-          onClick={() => handleServiceClick('otc')}
-        >
+        <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors group cursor-pointer" onClick={() => handleServiceClick('otc')}>
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center group-hover:bg-purple-500/30 transition-colors">
@@ -311,10 +269,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </CardHeader>
         </Card>
 
-        <Card 
-          className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors group cursor-pointer"
-          onClick={() => handleServiceClick('transfer')}
-        >
+        <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors group cursor-pointer" onClick={() => handleServiceClick('transfer')}>
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <div className="w-12 h-12 bg-terex-accent/20 rounded-xl flex items-center justify-center group-hover:bg-terex-accent/30 transition-colors">
@@ -520,6 +475,5 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </div>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 }
