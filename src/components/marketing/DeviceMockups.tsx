@@ -4,13 +4,13 @@ import React, { useState, useEffect } from 'react';
 export function DeviceMockups() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Messages qui changent pour le titre principal
+  // Messages harmonisés pour avoir la même longueur et éviter les décalages
   const titleMessages = [
-    "L'échange USDT Tether et les transferts vers l'Afrique",
-    "Achetez des USDT facilement avec Terex",
-    "Vendez vos stablecoins en toute sécurité", 
-    "Envoyez de l'argent à vos proches en Afrique",
-    "Plateforme 100% sécurisée et réglementée"
+    "Échange USDT et transferts vers l'Afrique",
+    "Achetez des USDT facilement avec Terex", 
+    "Vendez vos stablecoins en sécurité totale",
+    "Envoyez de l'argent à vos proches rapidement",
+    "Plateforme sécurisée et réglementée 100%"
   ];
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export function DeviceMockups() {
       <span className="transition-all duration-700 ease-in-out">
         {currentSlide === 0 ? (
           <>
-            L'échange USDT Tether et les transferts vers l'<span className="text-terex-accent">Afrique</span>
+            Échange USDT et transferts vers l'<span className="text-terex-accent">Afrique</span>
           </>
         ) : currentSlide === 1 ? (
           <>
@@ -34,15 +34,15 @@ export function DeviceMockups() {
           </>
         ) : currentSlide === 2 ? (
           <>
-            Vendez vos stablecoins en toute <span className="text-terex-accent">sécurité</span>
+            Vendez vos stablecoins en <span className="text-terex-accent">sécurité</span> totale
           </>
         ) : currentSlide === 3 ? (
           <>
-            Envoyez de l'argent à vos proches en <span className="text-terex-accent">Afrique</span>
+            Envoyez de l'argent à vos proches <span className="text-terex-accent">rapidement</span>
           </>
         ) : (
           <>
-            Plateforme 100% sécurisée et <span className="text-terex-accent">réglementée</span>
+            Plateforme <span className="text-terex-accent">sécurisée</span> et réglementée 100%
           </>
         )}
       </span>
