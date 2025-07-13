@@ -5,16 +5,10 @@ export function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    console.log('ScrollToTop: Navigation vers', pathname);
-    // Force le scroll immédiatement
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    // Et aussi avec un délai pour être sûr
-    setTimeout(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-      console.log('ScrollToTop: Scroll forcé effectué');
-    }, 100);
+    // Force le scroll immédiatement et de manière fluide
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
   }, [pathname]);
 
   return null;
