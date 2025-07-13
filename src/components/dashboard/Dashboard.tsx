@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
+import { AppSidebar } from '@/components/dashboard/AppSidebar';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
 import { MobileProfileMenu } from '@/components/dashboard/MobileProfileMenu';
 import { BuyUSDT } from '@/components/features/BuyUSDT';
@@ -49,8 +50,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
   // Effet pour remonter en haut à chaque changement de section
   useEffect(() => {
-    // Pour le PWA mobile, scroll immédiatement et de façon synchrone
-    if (isPWA && isMobile) {
+    // Pour mobile, scroll immédiatement et de façon synchrone
+    if (isMobile) {
       window.scrollTo(0, 0);
       // Force aussi le scroll du body au cas où
       document.body.scrollTop = 0;
@@ -58,11 +59,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [activeSection, isPWA, isMobile]);
+  }, [activeSection, isMobile]);
 
   // Effet spécial pour s'assurer que la page home scroll bien en haut
   useEffect(() => {
-    if (activeSection === 'home' && isPWA && isMobile) {
+    if (activeSection === 'home' && isMobile) {
       // Double vérification pour la page d'accueil
       setTimeout(() => {
         window.scrollTo(0, 0);
@@ -70,7 +71,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         document.documentElement.scrollTop = 0;
       }, 50);
     }
-  }, [activeSection, isPWA, isMobile]);
+  }, [activeSection, isMobile]);
 
   const handleLogout = async () => {
     try {
@@ -135,7 +136,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     <TransactionProvider>
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-terex-dark">
-          {/* Sidebar desktop ou menu mobile classique si pas PWA */}
+          {/* Sidebar uniquement pour desktop */}
           {!isMobile && (
             <AppSidebar 
               activeSection={activeSection}
@@ -143,19 +144,10 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               onLogout={handleLogout}
             />
           )}
-          
-          {/* Menu mobile classique pour navigation web (pas PWA) */}
-          {isMobile && !isPWA && (
-            <MobileMenu 
-              activeSection={activeSection}
-              setActiveSection={setActiveSection}
-              onLogout={handleLogout}
-            />
-          )}
 
-          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'} relative ${isMobile && isPWA ? 'pb-20' : ''}`}>
-            {/* Menu profil mobile pour PWA */}
-            {isMobile && isPWA && (
+          <main className={`flex-1 ${isMobile ? 'p-4 pt-16 pb-20' : 'p-6'} relative`}>
+            {/* Menu profil mobile pour TOUS les mobiles */}
+            {isMobile && (
               <MobileProfileMenu
                 activeSection={activeSection}
                 setActiveSection={setActiveSection}
@@ -177,8 +169,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             {renderContent()}
           </main>
           
-          {/* Navigation en bas pour mobile PWA */}
-          {isMobile && isPWA && (
+          {/* Navigation en bas pour TOUS les mobiles */}
+          {isMobile && (
             <MobileBottomNav
               activeSection={activeSection}
               setActiveSection={setActiveSection}
