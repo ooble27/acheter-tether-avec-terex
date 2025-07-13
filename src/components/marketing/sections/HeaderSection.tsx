@@ -4,7 +4,6 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { User, LogOut, Menu } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useNavigate } from 'react-router-dom';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 interface HeaderSectionProps {
   user?: { email: string; name: string } | null;
@@ -67,7 +66,6 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
 
               {/* User Actions */}
               <div className="flex items-center space-x-4 ml-8 border-l border-terex-gray/30 pl-8">
-                <ThemeToggle />
                 {user ? (
                   <>
                     <Button
@@ -104,93 +102,90 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
 
           {/* Mobile Hamburger Menu */}
           {isMobile && (
-            <div className="flex items-center space-x-2">
-              <ThemeToggle />
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-white hover:bg-terex-accent/20"
-                  >
-                    <Menu className="h-6 w-6" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent 
-                  side="right" 
-                  className="w-80 bg-terex-darker border-l border-terex-accent/20 p-0"
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:bg-terex-accent/20"
                 >
-                  <div className="flex flex-col h-full pt-safe">
-                    {/* Header du menu mobile */}
-                    {user && (
-                      <div className="p-6 border-b border-terex-accent/20">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-terex-accent rounded-full flex items-center justify-center">
-                            <User className="w-6 h-6 text-white" />
-                          </div>
-                          <div>
-                            <p className="text-white font-medium">{user.name}</p>
-                            <p className="text-gray-400 text-sm">{user.email}</p>
-                          </div>
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent 
+                side="right" 
+                className="w-80 bg-terex-darker border-l border-terex-accent/20 p-0"
+              >
+                <div className="flex flex-col h-full pt-safe">
+                  {/* Header du menu mobile */}
+                  {user && (
+                    <div className="p-6 border-b border-terex-accent/20">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-terex-accent rounded-full flex items-center justify-center">
+                          <User className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <p className="text-white font-medium">{user.name}</p>
+                          <p className="text-gray-400 text-sm">{user.email}</p>
                         </div>
                       </div>
+                    </div>
+                  )}
+
+                  {/* Menu Items */}
+                  <div className="flex-1 p-6 space-y-4">
+                    {user && (
+                      <Button
+                        onClick={onShowDashboard}
+                        variant="ghost"
+                        className="w-full justify-start text-white hover:bg-terex-accent/20 h-14 text-lg"
+                      >
+                        <User className="w-6 h-6 mr-3" />
+                        Dashboard
+                      </Button>
                     )}
 
-                    {/* Menu Items */}
-                    <div className="flex-1 p-6 space-y-4">
-                      {user && (
+                    {/* Navigation Items */}
+                    <div className="space-y-2">
+                      <p className="text-gray-400 text-sm font-medium px-3">Navigation</p>
+                      {navigationItems.map((item) => (
                         <Button
-                          onClick={onShowDashboard}
+                          key={item.href}
+                          onClick={() => navigate(item.href)}
                           variant="ghost"
-                          className="w-full justify-start text-white hover:bg-terex-accent/20 h-14 text-lg"
+                          className="w-full justify-start text-white hover:bg-terex-accent/20 h-12"
                         >
-                          <User className="w-6 h-6 mr-3" />
-                          Dashboard
+                          {item.label}
                         </Button>
-                      )}
-
-                      {/* Navigation Items */}
-                      <div className="space-y-2">
-                        <p className="text-gray-400 text-sm font-medium px-3">Navigation</p>
-                        {navigationItems.map((item) => (
-                          <Button
-                            key={item.href}
-                            onClick={() => navigate(item.href)}
-                            variant="ghost"
-                            className="w-full justify-start text-white hover:bg-terex-accent/20 h-12"
-                          >
-                            {item.label}
-                          </Button>
-                        ))}
-                      </div>
-
-                      {!user && (
-                        <Button
-                          onClick={() => navigate('/auth')}
-                          className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold h-14 text-lg"
-                        >
-                          Se Connecter
-                        </Button>
-                      )}
+                      ))}
                     </div>
 
-                    {/* Footer avec déconnexion */}
-                    {user && (
-                      <div className="p-6 border-t border-terex-accent/20 pb-safe">
-                        <Button
-                          onClick={handleLogout}
-                          variant="ghost"
-                          className="w-full justify-start text-red-400 hover:bg-red-600/20 h-14 text-lg"
-                        >
-                          <LogOut className="w-6 h-6 mr-3" />
-                          Déconnexion
-                        </Button>
-                      </div>
+                    {!user && (
+                      <Button
+                        onClick={() => navigate('/auth')}
+                        className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold h-14 text-lg"
+                      >
+                        Se Connecter
+                      </Button>
                     )}
                   </div>
-                </SheetContent>
-              </Sheet>
-            </div>
+
+                  {/* Footer avec déconnexion */}
+                  {user && (
+                    <div className="p-6 border-t border-terex-accent/20 pb-safe">
+                      <Button
+                        onClick={handleLogout}
+                        variant="ghost"
+                        className="w-full justify-start text-red-400 hover:bg-red-600/20 h-14 text-lg"
+                      >
+                        <LogOut className="w-6 h-6 mr-3" />
+                        Déconnexion
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
           )}
         </div>
       </div>

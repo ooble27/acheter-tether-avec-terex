@@ -14,11 +14,9 @@ import {
   Gift,
   Phone,
   Share2,
-  FileText,
-  Palette
+  FileText
 } from 'lucide-react';
 import { useUserRole } from '@/hooks/useUserRole';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 interface MobileProfileMenuProps {
   activeSection: string;
@@ -122,17 +120,14 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
         <div className="flex flex-col h-full pt-safe">
           {/* Header */}
           <div className="p-6 border-b border-terex-gray/30">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-2xl flex items-center justify-center">
-                  <User className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-white">Menu Profil</h2>
-                  <p className="text-gray-400 text-sm">Paramètres & Options</p>
-                </div>
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-2xl flex items-center justify-center">
+                <User className="w-6 h-6 text-white" />
               </div>
-              <ThemeToggle />
+              <div>
+                <h2 className="text-xl font-bold text-white">Menu Profil</h2>
+                <p className="text-gray-400 text-sm">Paramètres & Options</p>
+              </div>
             </div>
           </div>
 

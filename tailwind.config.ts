@@ -67,12 +67,12 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				terex: {
-					green: 'hsl(165 45% 35%)', /* Vert Terex principal */
-					'green-light': 'hsl(165 55% 42%)', /* Vert Terex clair */
-					'green-dark': 'hsl(165 35% 28%)', /* Vert Terex foncé */
-					white: 'hsl(0 0% 100%)', /* Blanc pur */
-					gray: 'hsl(0 0% 96.1%)', /* Gris très clair */
-					'gray-dark': 'hsl(0 0% 45.1%)', /* Gris moyen */
+					dark: '#141414',
+					darker: '#1e1e1e',
+					accent: '#3B968F',
+					'accent-light': '#4BA89F',
+					gray: '#2A2A2A',
+					'gray-light': '#3A3A3A',
 				}
 			},
 			borderRadius: {
