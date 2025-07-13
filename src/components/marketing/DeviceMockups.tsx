@@ -4,13 +4,13 @@ import React, { useState, useEffect } from 'react';
 export function DeviceMockups() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Messages plus courts pour éviter les décalages
+  // Messages qui changent pour le titre principal
   const titleMessages = [
-    "Échange USDT et transferts Afrique",
-    "Achetez des USDT avec Terex",
-    "Vendez vos stablecoins facilement", 
-    "Envoyez de l'argent en Afrique",
-    "Plateforme sécurisée et réglementée"
+    "L'échange USDT Tether et les transferts vers l'Afrique",
+    "Achetez des USDT facilement avec Terex",
+    "Vendez vos stablecoins en toute sécurité", 
+    "Envoyez de l'argent à vos proches en Afrique",
+    "Plateforme 100% sécurisée et réglementée"
   ];
 
   useEffect(() => {
@@ -26,23 +26,23 @@ export function DeviceMockups() {
       <span className="transition-all duration-700 ease-in-out">
         {currentSlide === 0 ? (
           <>
-            Échange USDT et transferts <span className="text-terex-accent">Afrique</span>
+            L'échange USDT Tether et les transferts vers l'<span className="text-terex-accent">Afrique</span>
           </>
         ) : currentSlide === 1 ? (
           <>
-            Achetez des USDT avec <span className="text-terex-accent">Terex</span>
+            Achetez des USDT facilement avec <span className="text-terex-accent">Terex</span>
           </>
         ) : currentSlide === 2 ? (
           <>
-            Vendez vos stablecoins <span className="text-terex-accent">facilement</span>
+            Vendez vos stablecoins en toute <span className="text-terex-accent">sécurité</span>
           </>
         ) : currentSlide === 3 ? (
           <>
-            Envoyez de l'argent en <span className="text-terex-accent">Afrique</span>
+            Envoyez de l'argent à vos proches en <span className="text-terex-accent">Afrique</span>
           </>
         ) : (
           <>
-            Plateforme sécurisée et <span className="text-terex-accent">réglementée</span>
+            Plateforme 100% sécurisée et <span className="text-terex-accent">réglementée</span>
           </>
         )}
       </span>
