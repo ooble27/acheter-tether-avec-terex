@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
+import { BottomNavigation } from '@/components/dashboard/BottomNavigation';
+import { ProfileMenu } from '@/components/dashboard/ProfileMenu';
 import { BuyUSDT } from '@/components/features/BuyUSDT';
 import { SellUSDT } from '@/components/features/SellUSDT';
 import { InternationalTransfer } from '@/components/features/InternationalTransfer';
@@ -38,6 +40,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   const isTablet = useIsTablet();
   const { signOut } = useAuth();
   const { isKYCReviewer, isAdmin } = useUserRole();
+
+  // Vérifier si on est en mode PWA (standalone)
+  const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
+               (window.navigator as any).standalone ||
+               document.referrer.includes('android-app://');
 
   // Effet pour remonter en haut à chaque changement de section
   useEffect(() => {
@@ -103,17 +110,34 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     <TransactionProvider>
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-terex-dark">
-          <AppSidebar 
-            activeSection={activeSection}
-            setActiveSection={setActiveSection}
-            onLogout={handleLogout}
-          />
-          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'} relative`}>
+          {/* Sidebar pour desktop et tablette */}
+          {!isMobile && (
+            <AppSidebar 
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+              onLogout={handleLogout}
+            />
+          )}
+
+          {/* Menu mobile hamburger pour le web (non-PWA) */}
+          {isMobile && !isPWA && (
             <MobileMenu 
               activeSection={activeSection}
               setActiveSection={setActiveSection}
               onLogout={handleLogout}
             />
+          )}
+
+          <main className={`flex-1 ${isMobile ? (isPWA ? 'pb-20' : 'p-4 pt-16') : 'p-6'} relative`}>
+            {/* Menu profil pour PWA mobile */}
+            {isMobile && isPWA && (
+              <ProfileMenu
+                user={user}
+                activeSection={activeSection}
+                setActiveSection={setActiveSection}
+                onLogout={handleLogout}
+              />
+            )}
             
             {/* Bouton de déconnexion flottant uniquement sur tablette */}
             {isTablet && (
@@ -128,6 +152,14 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             
             {renderContent()}
           </main>
+
+          {/* Navigation en bas pour PWA mobile */}
+          {isMobile && isPWA && (
+            <BottomNavigation 
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+            />
+          )}
           
           {/* Prompt de permission pour les notifications push */}
           <NotificationPermissionPrompt />
