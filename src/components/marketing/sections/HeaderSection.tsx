@@ -28,6 +28,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   const navigationItems = [
     { label: 'Accueil', href: '/' },
     { label: 'À propos', href: '/about' },
+    { label: 'Blog', href: '/blog' },
     { label: 'Carrières', href: '/careers' },
     { label: 'Support', href: '/support' },
     { label: 'Contact', href: '/contact' },
