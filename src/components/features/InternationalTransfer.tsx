@@ -226,57 +226,53 @@ export function InternationalTransfer() {
   // Formulaire principal
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
-      <div className="min-h-screen bg-terex-dark p-4">
+      <div className="min-h-screen bg-terex-dark p-2 md:p-4">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
+          <div className="mb-6 md:mb-8">
             <h1 className="text-3xl font-bold text-white mb-2">Virement international</h1>
             <p className="text-gray-400">Envoyer de l'argent rapidement à vos proches</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-6">
+          <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
             <div className="lg:col-span-2">
               <Card className="bg-terex-darker border-terex-gray shadow-2xl">
-                <CardHeader className="border-b border-terex-gray p-6">
+                <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-white text-xl">Nouveau transfert</CardTitle>
+                    <CardTitle className="text-white text-lg md:text-xl">Nouveau transfert</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6 space-y-6">
-                  <div>
-                    <TransferForm
-                      sendAmount={sendAmount}
-                      setSendAmount={setSendAmount}
-                      receiveAmount={receiveAmount}
-                      recipientCountry={recipientCountry}
-                      setRecipientCountry={setRecipientCountry}
-                      paymentMethod={paymentMethod}
-                      setPaymentMethod={setPaymentMethod}
-                      receiveMethod={receiveMethod}
-                      setReceiveMethod={setReceiveMethod}
-                      exchangeRate={exchangeRate}
-                      fees={fees}
-                      provider={provider}
-                      setProvider={setProvider}
-                    />
-                  </div>
+                <CardContent className="p-4 md:p-6 space-y-6">
+                  <TransferForm
+                    sendAmount={sendAmount}
+                    setSendAmount={setSendAmount}
+                    receiveAmount={receiveAmount}
+                    recipientCountry={recipientCountry}
+                    setRecipientCountry={setRecipientCountry}
+                    paymentMethod={paymentMethod}
+                    setPaymentMethod={setPaymentMethod}
+                    receiveMethod={receiveMethod}
+                    setReceiveMethod={setReceiveMethod}
+                    exchangeRate={exchangeRate}
+                    fees={fees}
+                    provider={provider}
+                    setProvider={setProvider}
+                  />
 
-                  <div>
-                    <RecipientForm
-                      recipientFirstName={recipientFirstName}
-                      setRecipientFirstName={setRecipientFirstName}
-                      recipientLastName={recipientLastName}
-                      setRecipientLastName={setRecipientLastName}
-                      recipientEmail={recipientEmail}
-                      setRecipientEmail={setRecipientEmail}
-                      recipientPhone={recipientPhone}
-                      setRecipientPhone={setRecipientPhone}
-                      recipientAccount={recipientAccount}
-                      setRecipientAccount={setRecipientAccount}
-                      recipientBank={recipientBank}
-                      setRecipientBank={setRecipientBank}
-                      receiveMethod={receiveMethod}
-                    />
-                  </div>
+                  <RecipientForm
+                    recipientFirstName={recipientFirstName}
+                    setRecipientFirstName={setRecipientFirstName}
+                    recipientLastName={recipientLastName}
+                    setRecipientLastName={setRecipientLastName}
+                    recipientEmail={recipientEmail}
+                    setRecipientEmail={setRecipientEmail}
+                    recipientPhone={recipientPhone}
+                    setRecipientPhone={setRecipientPhone}
+                    recipientAccount={recipientAccount}
+                    setRecipientAccount={setRecipientAccount}
+                    recipientBank={recipientBank}
+                    setRecipientBank={setRecipientBank}
+                    receiveMethod={receiveMethod}
+                  />
 
                   <Button 
                     size="lg"

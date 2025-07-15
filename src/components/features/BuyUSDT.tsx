@@ -291,27 +291,27 @@ export function BuyUSDT() {
 
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
-      <div className="min-h-screen bg-terex-dark p-4">
+      <div className="min-h-screen bg-terex-dark p-2 md:p-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Acheter USDT</h1>
+          <div className="mb-6 md:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Acheter USDT</h1>
             <p className="text-gray-400">Achetez des USDT avec de l'argent fiat</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-6">
+          <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
             {/* Main Trading Interface */}
             <div className="lg:col-span-2">
               <Card className="bg-terex-darker border-terex-gray shadow-2xl">
-                <CardHeader className="border-b border-terex-gray p-6">
+                <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-white text-xl">Acheter USDT</CardTitle>
+                    <CardTitle className="text-white text-lg md:text-xl">Acheter USDT</CardTitle>
                     <Badge variant="outline" className="text-terex-accent border-terex-accent">
                       Taux en temps réel
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="p-4 md:p-6">
                   <LimitsValidator 
                     amount={fiatAmount} 
                     currency={currency} 
@@ -321,21 +321,23 @@ export function BuyUSDT() {
                       <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
                         <TabsTrigger 
                           value="card"
-                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white"
+                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
                         >
-                          <CreditCard className="mr-2 w-4 h-4" />
-                          Carte bancaire
+                          <CreditCard className="mr-1 md:mr-2 w-4 h-4" />
+                          <span className="hidden sm:inline">Carte bancaire</span>
+                          <span className="sm:hidden">Carte</span>
                         </TabsTrigger>
                         <TabsTrigger 
                           value="mobile"
-                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white"
+                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
                         >
                           <img 
                             src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
                             alt="Wave" 
-                            className="mr-2 w-4 h-4 rounded-full"
+                            className="mr-1 md:mr-2 w-4 h-4 rounded-full"
                           />
-                          Mobile Money
+                          <span className="hidden sm:inline">Mobile Money</span>
+                          <span className="sm:hidden">Mobile</span>
                         </TabsTrigger>
                       </TabsList>
 
@@ -377,73 +379,61 @@ export function BuyUSDT() {
                       {paymentMethods.map((method) => (
                         <TabsContent key={method.id} value={method.id} className="space-y-6">
                           {/* Amount Input Section */}
-                          <div>
-                            <BuyAmountInput
-                              fiatAmount={fiatAmount}
-                              setFiatAmount={setFiatAmount}
-                              currency={currency}
-                              setCurrency={setCurrency}
-                              usdtAmount={usdtAmount}
-                              exchangeRate={exchangeRates[currency as keyof typeof exchangeRates]}
-                              paymentMethod={paymentMethod}
-                              processingTime={method.time}
-                              fee={method.fee}
-                            />
-                          </div>
+                          <BuyAmountInput
+                            fiatAmount={fiatAmount}
+                            setFiatAmount={setFiatAmount}
+                            currency={currency}
+                            setCurrency={setCurrency}
+                            usdtAmount={usdtAmount}
+                            exchangeRate={exchangeRates[currency as keyof typeof exchangeRates]}
+                            paymentMethod={paymentMethod}
+                            processingTime={method.time}
+                            fee={method.fee}
+                          />
 
                           {/* Destination Selection */}
-                          <div>
-                            <DestinationSelector
-                              destination={destination}
-                              setDestination={setDestination}
-                            />
-                          </div>
+                          <DestinationSelector
+                            destination={destination}
+                            setDestination={setDestination}
+                          />
 
                           {/* Conditional rendering based on destination */}
                           {destination === 'wallet' && (
                             <>
                               {/* Network Selection */}
-                              <div>
-                                <NetworkSelector
-                                  network={network}
-                                  setNetwork={setNetwork}
-                                />
-                              </div>
+                              <NetworkSelector
+                                network={network}
+                                setNetwork={setNetwork}
+                              />
 
                               {/* Wallet Address Input */}
-                              <div>
-                                <WalletAddressInput
-                                  walletAddress={walletAddress}
-                                  setWalletAddress={setWalletAddress}
-                                  network={network}
-                                />
-                              </div>
+                              <WalletAddressInput
+                                walletAddress={walletAddress}
+                                setWalletAddress={setWalletAddress}
+                                network={network}
+                              />
                             </>
                           )}
 
                           {destination === 'binance' && (
-                            <div>
-                              <BinanceEmailInput
-                                email={binanceEmail}
-                                setEmail={setBinanceEmail}
-                                username={binanceUsername}
-                                setUsername={setBinanceUsername}
-                                binanceId={binanceId}
-                                setBinanceId={setBinanceId}
-                              />
-                            </div>
+                            <BinanceEmailInput
+                              email={binanceEmail}
+                              setEmail={setBinanceEmail}
+                              username={binanceUsername}
+                              setUsername={setBinanceUsername}
+                              binanceId={binanceId}
+                              setBinanceId={setBinanceId}
+                            />
                           )}
 
                           {/* Payment Method Details */}
-                          <div>
-                            <PaymentMethodForm
-                              paymentMethod={paymentMethod}
-                              cardData={cardData}
-                              setCardData={setCardData}
-                              mobileData={mobileData}
-                              setMobileData={setMobileData}
-                            />
-                          </div>
+                          <PaymentMethodForm
+                            paymentMethod={paymentMethod}
+                            cardData={cardData}
+                            setCardData={setCardData}
+                            mobileData={mobileData}
+                            setMobileData={setMobileData}
+                          />
 
                           {/* Buy Button */}
                           <Button 

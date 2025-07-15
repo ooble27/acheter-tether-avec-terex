@@ -266,46 +266,48 @@ export function SellUSDT() {
 
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
-      <div className="min-h-screen bg-terex-dark p-4">
+      <div className="min-h-screen bg-terex-dark p-2 md:p-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Vendre USDT</h1>
+          <div className="mb-6 md:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Vendre USDT</h1>
             <p className="text-gray-400">Vendez vos USDT et recevez de l'argent fiat</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-6">
+          <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
             {/* Main Trading Interface */}
             <div className="lg:col-span-2">
               <Card className="bg-terex-darker border-terex-gray shadow-2xl">
-                <CardHeader className="border-b border-terex-gray p-6">
+                <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-white text-xl">Vendre USDT</CardTitle>
+                    <CardTitle className="text-white text-lg md:text-xl">Vendre USDT</CardTitle>
                     <Badge variant="outline" className="text-terex-accent border-terex-accent">
                       Taux en temps réel
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="p-4 md:p-6">
                   <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'bank' | 'mobile')} className="space-y-6">
                     <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
                       <TabsTrigger 
                         value="bank"
-                        className="data-[state=active]:bg-terex-accent data-[state=active]:text-white"
+                        className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
                       >
-                        <CreditCard className="mr-2 w-4 h-4" />
-                        Virement bancaire
+                        <CreditCard className="mr-1 md:mr-2 w-4 h-4" />
+                        <span className="hidden sm:inline">Virement bancaire</span>
+                        <span className="sm:hidden">Banque</span>
                       </TabsTrigger>
                       <TabsTrigger 
                         value="mobile"
-                        className="data-[state=active]:bg-terex-accent data-[state=active]:text-white"
+                        className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
                       >
                         <img 
                           src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
                           alt="Wave" 
-                          className="mr-2 w-4 h-4 rounded-full"
+                          className="mr-1 md:mr-2 w-4 h-4 rounded-full"
                         />
-                        Mobile Money
+                        <span className="hidden sm:inline">Mobile Money</span>
+                        <span className="sm:hidden">Mobile</span>
                       </TabsTrigger>
                     </TabsList>
 
@@ -342,10 +344,10 @@ export function SellUSDT() {
                                   type="text"
                                   value={fiatAmount}
                                   readOnly
-                                  className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
+                                  className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24 md:pr-20"
                                 />
                                 <Select value={currency} onValueChange={setCurrency}>
-                                  <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
+                                  <SelectTrigger className="absolute right-1 top-1 w-20 h-10 bg-terex-gray-light border-0 text-terex-accent">
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -446,13 +448,13 @@ export function SellUSDT() {
                                 type="text"
                                 value={WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
                                 readOnly
-                                className="bg-terex-gray border-terex-gray-light text-white h-12 flex-1"
+                                className="bg-terex-gray border-terex-gray-light text-white h-12"
                               />
                               <Button
                                 type="button"
                                 size="sm"
                                 onClick={() => copyToClipboard(WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES])}
-                                className="bg-terex-accent hover:bg-terex-accent/80 flex-shrink-0"
+                                className="bg-terex-accent hover:bg-terex-accent/80"
                               >
                                 <Copy className="w-4 h-4" />
                               </Button>
@@ -556,7 +558,7 @@ export function SellUSDT() {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {/* Taux du jour */}
               <Card className="bg-terex-darker border-terex-gray">
                 <CardHeader className="p-4">

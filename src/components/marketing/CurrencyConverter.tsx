@@ -1,3 +1,5 @@
+
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -102,7 +104,7 @@ export function CurrencyConverter() {
   };
 
   return (
-    <Card className="bg-terex-darker/80 border-terex-accent/30 backdrop-blur-sm w-full max-w-md mx-auto">
+    <Card className="bg-terex-darker/80 border-terex-accent/30 backdrop-blur-sm">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-white text-lg flex items-center">
@@ -129,9 +131,9 @@ export function CurrencyConverter() {
           </p>
         )}
       </CardHeader>
-      <CardContent className="space-y-4 w-full">
+      <CardContent className="space-y-4">
         {/* Mode sélection */}
-        <div className="flex rounded-lg bg-terex-gray p-1 w-full">
+        <div className="flex rounded-lg bg-terex-gray p-1">
           <button
             onClick={() => setMode('buy')}
             className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
@@ -154,19 +156,19 @@ export function CurrencyConverter() {
           </button>
         </div>
 
-        <div className="space-y-3 w-full">
+        <div className="space-y-3">
           {mode === 'buy' ? (
             // Mode Achat : Je paie en CFA/CAD, je reçois USDT
             <>
-              <div className="space-y-2 w-full">
+              <div className="space-y-2">
                 <Label className="text-white text-sm">Je paie</Label>
-                <div className="relative w-full">
+                <div className="relative">
                   <Input
                     type="number"
                     placeholder="0.00"
                     value={displayedFiatAmount}
                     onChange={(e) => handleFiatAmountChange(e.target.value)}
-                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20 w-full"
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
                   />
                   <Select value={currency} onValueChange={setCurrency}>
                     <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
@@ -184,15 +186,15 @@ export function CurrencyConverter() {
                 <ArrowRightLeft className="w-5 h-5 text-terex-accent" />
               </div>
 
-              <div className="space-y-2 w-full">
+              <div className="space-y-2">
                 <Label className="text-white text-sm">Je reçois</Label>
-                <div className="relative w-full">
+                <div className="relative">
                   <Input
                     type="number"
                     placeholder="0.00"
                     value={displayedUSDTAmount}
                     onChange={(e) => handleUSDTAmountChange(e.target.value)}
-                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24 w-full"
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24"
                   />
                   <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
                     <img 
@@ -208,15 +210,15 @@ export function CurrencyConverter() {
           ) : (
             // Mode Vente : Je vends USDT, je reçois CFA/CAD
             <>
-              <div className="space-y-2 w-full">
+              <div className="space-y-2">
                 <Label className="text-white text-sm">Je vends</Label>
-                <div className="relative w-full">
+                <div className="relative">
                   <Input
                     type="number"
                     placeholder="0.00"
                     value={displayedUSDTAmount}
                     onChange={(e) => handleUSDTAmountChange(e.target.value)}
-                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24 w-full"
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24"
                   />
                   <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
                     <img 
@@ -233,15 +235,15 @@ export function CurrencyConverter() {
                 <ArrowRightLeft className="w-5 h-5 text-terex-accent" />
               </div>
 
-              <div className="space-y-2 w-full">
+              <div className="space-y-2">
                 <Label className="text-white text-sm">Je reçois</Label>
-                <div className="relative w-full">
+                <div className="relative">
                   <Input
                     type="number"
                     placeholder="0.00"
                     value={displayedFiatAmount}
                     onChange={(e) => handleFiatAmountChange(e.target.value)}
-                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20 w-full"
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
                   />
                   <Select value={currency} onValueChange={setCurrency}>
                     <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
@@ -258,7 +260,7 @@ export function CurrencyConverter() {
           )}
         </div>
 
-        <div className="bg-terex-gray rounded-lg p-3 w-full">
+        <div className="bg-terex-gray rounded-lg p-3">
           <div className="flex justify-between text-sm">
             <span className="text-gray-400">
               Taux TEREX ({mode === 'buy' ? 'achat' : 'vente'})
@@ -288,3 +290,4 @@ export function CurrencyConverter() {
     </Card>
   );
 }
+
