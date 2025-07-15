@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -227,16 +226,16 @@ export function InternationalTransfer() {
   // Formulaire principal
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
-      <div className="min-h-screen bg-terex-dark px-0 sm:px-2 py-4">
-        <div className="w-full max-w-7xl mx-auto">
-          <div className="mb-6 px-4 sm:px-2">
+      <div className="min-h-screen bg-terex-dark p-2 md:p-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-6 md:mb-8">
             <h1 className="text-3xl font-bold text-white mb-2">Virement international</h1>
             <p className="text-gray-400">Envoyer de l'argent rapidement à vos proches</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-4 px-0 sm:px-2">
+          <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
             <div className="lg:col-span-2">
-              <Card className="bg-terex-darker border-terex-gray shadow-2xl mx-2 sm:mx-0">
+              <Card className="bg-terex-darker border-terex-gray shadow-2xl">
                 <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-white text-lg md:text-xl">Nouveau transfert</CardTitle>
@@ -288,16 +287,14 @@ export function InternationalTransfer() {
             </div>
 
             {/* Sidebar */}
-            <div className="px-2 sm:px-0">
-              <TransferSidebar
-                exchangeRate={exchangeRate}
-                ratesLoading={ratesLoading}
-                ratesError={ratesError}
-                lastUpdated={lastUpdated}
-                refresh={refresh}
-                setSendAmount={setSendAmount}
-              />
-            </div>
+            <TransferSidebar
+              exchangeRate={exchangeRate}
+              ratesLoading={ratesLoading}
+              ratesError={ratesError}
+              lastUpdated={lastUpdated}
+              refresh={refresh}
+              setSendAmount={setSendAmount}
+            />
           </div>
         </div>
       </div>

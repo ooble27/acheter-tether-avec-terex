@@ -266,18 +266,18 @@ export function SellUSDT() {
 
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
-      <div className="min-h-screen bg-terex-dark px-0 sm:px-2 py-4">
-        <div className="w-full max-w-7xl mx-auto">
+      <div className="min-h-screen bg-terex-dark p-2 md:p-4">
+        <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-6 px-4 sm:px-2">
+          <div className="mb-6 md:mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Vendre USDT</h1>
             <p className="text-gray-400">Vendez vos USDT et recevez de l'argent fiat</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-4 px-0 sm:px-2">
+          <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
             {/* Main Trading Interface */}
             <div className="lg:col-span-2">
-              <Card className="bg-terex-darker border-terex-gray shadow-2xl mx-2 sm:mx-0">
+              <Card className="bg-terex-darker border-terex-gray shadow-2xl">
                 <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-white text-lg md:text-xl">Vendre USDT</CardTitle>
@@ -558,10 +558,10 @@ export function SellUSDT() {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-4 md:space-y-6 px-2 sm:px-0">
+            <div className="space-y-4 md:space-y-6">
               {/* Taux du jour */}
               <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader className="p-3 md:p-4">
+                <CardHeader className="p-4">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-white text-base md:text-lg flex items-center">
                       <img 
@@ -587,7 +587,7 @@ export function SellUSDT() {
                     </p>
                   )}
                 </CardHeader>
-                <CardContent className="space-y-3 p-3 md:p-4 pt-0">
+                <CardContent className="space-y-3 p-4 pt-0">
                   {ratesError && (
                     <Alert className="border-yellow-500/50 bg-yellow-500/10">
                       <AlertCircle className="h-4 w-4" />
@@ -611,7 +611,7 @@ export function SellUSDT() {
 
               {/* Market Info */}
               <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader className="p-3 md:p-4">
+                <CardHeader className="p-4">
                   <CardTitle className="text-white text-base md:text-lg flex items-center">
                     <img 
                       src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
@@ -621,7 +621,7 @@ export function SellUSDT() {
                     Nos taux TEREX (achat)
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3 p-3 md:p-4 pt-0">
+                <CardContent className="space-y-3 p-4 pt-0">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400 text-sm">USDT/CFA</span>
                     <span className="text-white font-bold text-sm">{terexBuyRateCfa.toLocaleString()} CFA</span>
@@ -634,13 +634,13 @@ export function SellUSDT() {
 
               {/* Security Features */}
               <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader className="p-3 md:p-4">
+                <CardHeader className="p-4">
                   <CardTitle className="text-white text-base md:text-lg flex items-center">
                     <Shield className="w-4 h-4 md:w-5 md:h-5 mr-2 text-terex-accent" />
                     Sécurité
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3 p-3 md:p-4 pt-0">
+                <CardContent className="space-y-3 p-4 pt-0">
                   <div className="flex items-start space-x-3">
                     <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
                     <div>
@@ -667,10 +667,10 @@ export function SellUSDT() {
 
               {/* Quick Actions */}
               <Card className="bg-terex-darker border-terex-gray">
-                <CardHeader className="p-3 md:p-4">
+                <CardHeader className="p-4">
                   <CardTitle className="text-white text-base md:text-lg">Montants rapides</CardTitle>
                 </CardHeader>
-                <CardContent className="p-3 md:p-4 pt-0">
+                <CardContent className="p-4 pt-0">
                   <div className="grid grid-cols-2 gap-2">
                     {getQuickAmounts().map((value) => (
                       <Button
