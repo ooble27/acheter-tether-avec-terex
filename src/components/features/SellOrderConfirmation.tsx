@@ -10,10 +10,16 @@ interface OrderData {
   amount: string;
   currency: string;
   usdtAmount: string;
-  network: string;
-  walletAddress: string;
-  paymentMethod: string;
   exchangeRate: number;
+  walletAddress: string;
+  paymentMethod: 'bank' | 'mobile' | 'binance';
+  bankName?: string;
+  accountNumber?: string;
+  accountName?: string;
+  mobileProvider?: 'wave' | 'orange';
+  mobileNumber?: string;
+  binancePayId?: string;
+  network?: string;
   phoneNumber?: string;
   provider?: string;
   useBinancePay?: boolean;
@@ -37,6 +43,7 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
     switch (orderData.paymentMethod) {
       case 'bank': return 'Virement bancaire';
       case 'mobile': return 'Mobile Money';
+      case 'binance': return 'Binance Pay';
       default: return orderData.paymentMethod;
     }
   };
@@ -102,10 +109,10 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
 
             <div className="space-y-4">
               <h3 className="text-white font-medium">
-                {orderData.useBinancePay ? 'Envoi via Binance Pay' : 'Détails d\'envoi USDT'}
+                {orderData.paymentMethod === 'binance' ? 'Envoi via Binance Pay' : 'Détails d\'envoi USDT'}
               </h3>
               <div className="bg-terex-gray rounded-lg p-4 space-y-3 w-full">
-                {orderData.useBinancePay ? (
+                {orderData.paymentMethod === 'binance' ? (
                   <>
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                       <span className="text-gray-400 text-sm">Méthode d'envoi</span>
@@ -154,16 +161,38 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
                   <span className="text-gray-400 text-sm">Réception via</span>
                   <span className="text-white font-medium">{getPaymentMethodName()}</span>
                 </div>
-                {orderData.phoneNumber && (
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                    <span className="text-gray-400 text-sm">{orderData.paymentMethod === 'mobile' ? 'Numéro' : 'Compte'}</span>
-                    <span className="text-white font-medium">{orderData.phoneNumber}</span>
-                  </div>
+                {orderData.paymentMethod === 'bank' && orderData.bankName && (
+                  <>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                      <span className="text-gray-400 text-sm">Banque</span>
+                      <span className="text-white font-medium">{orderData.bankName}</span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                      <span className="text-gray-400 text-sm">Compte</span>
+                      <span className="text-white font-medium">{orderData.accountNumber}</span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                      <span className="text-gray-400 text-sm">Titulaire</span>
+                      <span className="text-white font-medium">{orderData.accountName}</span>
+                    </div>
+                  </>
                 )}
-                {orderData.provider && (
+                {orderData.paymentMethod === 'mobile' && orderData.mobileNumber && (
+                  <>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                      <span className="text-gray-400 text-sm">Numéro</span>
+                      <span className="text-white font-medium">{orderData.mobileNumber}</span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                      <span className="text-gray-400 text-sm">Service</span>
+                      <span className="text-white font-medium">{orderData.mobileProvider === 'wave' ? 'Wave' : 'Orange Money'}</span>
+                    </div>
+                  </>
+                )}
+                {orderData.paymentMethod === 'binance' && orderData.binancePayId && (
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                    <span className="text-gray-400 text-sm">Service</span>
-                    <span className="text-white font-medium">{getProviderName()}</span>
+                    <span className="text-gray-400 text-sm">Binance Pay ID</span>
+                    <span className="text-white font-medium">{orderData.binancePayId}</span>
                   </div>
                 )}
               </div>
@@ -175,7 +204,7 @@ export function SellOrderConfirmation({ orderData, onConfirm, onBack, loading }:
                 <div className="space-y-1">
                   <p className="text-blue-200 font-medium">Processus de vente</p>
                   <p className="text-blue-100 text-sm">
-                    {orderData.useBinancePay ? (
+                    {orderData.paymentMethod === 'binance' ? (
                       <>
                         Après confirmation, vous serez redirigé vers Binance Pay pour envoyer 
                         vos {orderData.usdtAmount} USDT directement. Une fois la transaction confirmée, 
