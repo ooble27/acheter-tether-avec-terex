@@ -1,3 +1,4 @@
+
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -50,7 +51,7 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark">
+    <div className="min-h-screen bg-terex-dark px-0">
       <PWAInstallPrompt />
       
       <HeaderSection 
