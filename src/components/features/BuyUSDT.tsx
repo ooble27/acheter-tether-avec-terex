@@ -291,37 +291,37 @@ export function BuyUSDT() {
 
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
-      <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-terex-dark p-1 sm:p-2 md:p-4">
+        <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
           {/* Header */}
-          <div className="mb-6 md:mb-8">
+          <div className="mb-4 sm:mb-6 md:mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Acheter USDT</h1>
             <p className="text-gray-400">Achetez des USDT avec de l'argent fiat</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
             {/* Main Trading Interface */}
-            <div className="lg:col-span-2">
-              <Card className="bg-terex-darker border-terex-gray shadow-2xl w-full">
-                <CardHeader className="border-b border-terex-gray p-4 md:p-6">
+            <div className="lg:col-span-2 w-full">
+              <Card className="bg-terex-darker border-terex-gray shadow-2xl w-full mx-auto">
+                <CardHeader className="border-b border-terex-gray p-3 sm:p-4 md:p-6">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-white text-lg md:text-xl">Acheter USDT</CardTitle>
-                    <Badge variant="outline" className="text-terex-accent border-terex-accent">
+                    <CardTitle className="text-white text-base sm:text-lg md:text-xl">Acheter USDT</CardTitle>
+                    <Badge variant="outline" className="text-terex-accent border-terex-accent text-xs sm:text-sm">
                       Taux en temps réel
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="p-4 md:p-6 space-y-6 w-full">
+                <CardContent className="p-3 sm:p-4 md:p-6 w-full">
                   <LimitsValidator 
                     amount={fiatAmount} 
                     currency={currency} 
                     onHighVolumeRequest={handleHighVolumeRequest}
                   >
-                    <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'card' | 'mobile')} className="space-y-6 w-full">
+                    <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'card' | 'mobile')} className="space-y-4 sm:space-y-6 w-full">
                       <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
                         <TabsTrigger 
                           value="card"
-                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm w-full"
+                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs sm:text-sm w-full"
                         >
                           <CreditCard className="mr-1 md:mr-2 w-4 h-4" />
                           <span className="hidden sm:inline">Carte bancaire</span>
@@ -329,7 +329,7 @@ export function BuyUSDT() {
                         </TabsTrigger>
                         <TabsTrigger 
                           value="mobile"
-                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm w-full"
+                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs sm:text-sm w-full"
                         >
                           <img 
                             src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
@@ -377,7 +377,7 @@ export function BuyUSDT() {
                       )}
 
                       {paymentMethods.map((method) => (
-                        <TabsContent key={method.id} value={method.id} className="space-y-6 w-full">
+                        <TabsContent key={method.id} value={method.id} className="space-y-4 sm:space-y-6 w-full">
                           {/* Amount Input Section */}
                           <div className="w-full">
                             <BuyAmountInput
@@ -450,7 +450,7 @@ export function BuyUSDT() {
                           {/* Buy Button */}
                           <Button 
                             size="lg"
-                            className="w-full gradient-button text-white font-semibold h-12 text-lg"
+                            className="w-full gradient-button text-white font-semibold h-12 text-base sm:text-lg"
                             disabled={!fiatAmount || 
                               (destination === 'wallet' && !walletAddress) ||
                               (destination === 'binance' && (!binanceEmail || !binanceUsername || !binanceId)) ||

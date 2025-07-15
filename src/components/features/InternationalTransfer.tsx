@@ -226,22 +226,22 @@ export function InternationalTransfer() {
   // Formulaire principal
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
-      <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-6 md:mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Virement international</h1>
+      <div className="min-h-screen bg-terex-dark p-1 sm:p-2 md:p-4">
+        <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
+          <div className="mb-4 sm:mb-6 md:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Virement international</h1>
             <p className="text-gray-400">Envoyer de l'argent rapidement à vos proches</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
-            <div className="lg:col-span-2">
-              <Card className="bg-terex-darker border-terex-gray shadow-2xl w-full">
-                <CardHeader className="border-b border-terex-gray p-4 md:p-6">
+          <div className="grid lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+            <div className="lg:col-span-2 w-full">
+              <Card className="bg-terex-darker border-terex-gray shadow-2xl w-full mx-auto">
+                <CardHeader className="border-b border-terex-gray p-3 sm:p-4 md:p-6">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-white text-lg md:text-xl">Nouveau transfert</CardTitle>
+                    <CardTitle className="text-white text-base sm:text-lg md:text-xl">Nouveau transfert</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-4 md:p-6 space-y-6 w-full">
+                <CardContent className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 w-full">
                   <div className="w-full">
                     <TransferForm
                       sendAmount={sendAmount}
@@ -280,7 +280,7 @@ export function InternationalTransfer() {
 
                   <Button 
                     size="lg"
-                    className="w-full gradient-button text-white font-semibold h-12 text-lg"
+                    className="w-full gradient-button text-white font-semibold h-12 text-base sm:text-lg"
                     disabled={!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName || (receiveMethod !== 'mobile' && !recipientPhone) || loading || (receiveMethod === 'mobile' && !provider)}
                     onClick={handleFormSubmit}
                   >
