@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -44,9 +45,9 @@ export function PaymentSuccess({ orderData, orderId, txHash, onBackToHome, onBuy
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-6 text-center">
+    <div className="min-h-screen bg-terex-dark px-0 py-2 md:p-4">
+      <div className="max-w-4xl mx-auto px-0">
+        <div className="mb-6 text-center px-3 md:px-0">
           <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="w-8 h-8 text-green-500" />
           </div>
@@ -58,9 +59,9 @@ export function PaymentSuccess({ orderData, orderId, txHash, onBackToHome, onBuy
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid lg:grid-cols-2 gap-6 px-0">
           {/* Détails de la transaction */}
-          <Card className="bg-terex-darker border-terex-gray">
+          <Card className="bg-terex-darker border-terex-gray mx-0">
             <CardHeader>
               <CardTitle className="text-white">Détails de la transaction</CardTitle>
             </CardHeader>
@@ -107,7 +108,7 @@ export function PaymentSuccess({ orderData, orderId, txHash, onBackToHome, onBuy
           </Card>
 
           {/* Adresse de réception */}
-          <Card className="bg-terex-darker border-terex-gray">
+          <Card className="bg-terex-darker border-terex-gray mx-0">
             <CardHeader>
               <CardTitle className="text-white">Détails de réception</CardTitle>
             </CardHeader>
@@ -135,7 +136,7 @@ export function PaymentSuccess({ orderData, orderId, txHash, onBackToHome, onBuy
           </Card>
 
           {/* Actions */}
-          <div className="lg:col-span-2 flex flex-col md:flex-row gap-3 md:gap-6">
+          <div className="lg:col-span-2 flex flex-col md:flex-row gap-3 md:gap-6 px-0">
             <Button
               className="w-full gradient-button text-white font-medium py-3"
               onClick={onBuyMore}

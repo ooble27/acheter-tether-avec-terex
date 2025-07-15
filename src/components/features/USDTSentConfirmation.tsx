@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,9 +27,9 @@ export function USDTSentConfirmation({ orderData, onBackToHome }: USDTSentConfir
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark p-1 md:p-4 flex items-center justify-center">
-      <div className="w-full max-w-5xl mx-auto px-1 md:px-0">
-        <Card className="bg-terex-darker border-terex-gray text-center w-full mx-1 md:mx-0">
+    <div className="min-h-screen bg-terex-dark px-0 py-1 md:p-4 flex items-center justify-center">
+      <div className="w-full max-w-5xl mx-auto px-0 md:px-0">
+        <Card className="bg-terex-darker border-terex-gray text-center w-full mx-0 md:mx-0">
           <CardHeader className="pb-6 p-3 md:p-6">
             <div className="flex justify-center mb-4">
               <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center">

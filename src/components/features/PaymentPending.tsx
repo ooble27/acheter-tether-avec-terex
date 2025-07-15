@@ -69,9 +69,9 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
   ];
 
   return (
-    <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-6">
+    <div className="min-h-screen bg-terex-dark px-0 py-2 md:p-4">
+      <div className="max-w-4xl mx-auto px-0">
+        <div className="mb-6 px-3 md:px-0">
           <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
             Traitement en cours{dots}
           </h1>
@@ -80,10 +80,10 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-6 px-0">
           {/* Statut du traitement */}
           <div className="lg:col-span-2">
-            <Card className="bg-terex-darker border-terex-gray mb-6">
+            <Card className="bg-terex-darker border-terex-gray mb-6 mx-0">
               <CardHeader>
                 <CardTitle className="text-white">Statut de votre commande</CardTitle>
                 <p className="text-gray-400">Commande #{orderId.slice(-8).toUpperCase()}</p>
@@ -127,18 +127,20 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
               </CardContent>
             </Card>
 
-            <Button
-              variant="outline"
-              onClick={onBackToHome}
-              className="text-white border-terex-gray hover:bg-terex-gray"
-            >
-              Retourner à l'accueil
-            </Button>
+            <div className="px-3 md:px-0">
+              <Button
+                variant="outline"
+                onClick={onBackToHome}
+                className="text-white border-terex-gray hover:bg-terex-gray"
+              >
+                Retourner à l'accueil
+              </Button>
+            </div>
           </div>
 
           {/* Récapitulatif de commande */}
           <div>
-            <Card className="bg-terex-darker border-terex-gray">
+            <Card className="bg-terex-darker border-terex-gray mx-0">
               <CardHeader>
                 <CardTitle className="text-white">Récapitulatif</CardTitle>
               </CardHeader>
