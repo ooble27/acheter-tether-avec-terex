@@ -302,7 +302,7 @@ export function BuyUSDT() {
           <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
             {/* Main Trading Interface */}
             <div className="lg:col-span-2">
-              <Card className="bg-terex-darker border-terex-gray shadow-2xl">
+              <Card className="bg-terex-darker border-terex-gray shadow-2xl w-full">
                 <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-white text-lg md:text-xl">Acheter USDT</CardTitle>
@@ -311,17 +311,17 @@ export function BuyUSDT() {
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="p-4 md:p-6">
+                <CardContent className="p-4 md:p-6 space-y-6 w-full">
                   <LimitsValidator 
                     amount={fiatAmount} 
                     currency={currency} 
                     onHighVolumeRequest={handleHighVolumeRequest}
                   >
-                    <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'card' | 'mobile')} className="space-y-6">
+                    <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'card' | 'mobile')} className="space-y-6 w-full">
                       <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
                         <TabsTrigger 
                           value="card"
-                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
+                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm w-full"
                         >
                           <CreditCard className="mr-1 md:mr-2 w-4 h-4" />
                           <span className="hidden sm:inline">Carte bancaire</span>
@@ -329,7 +329,7 @@ export function BuyUSDT() {
                         </TabsTrigger>
                         <TabsTrigger 
                           value="mobile"
-                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
+                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm w-full"
                         >
                           <img 
                             src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
@@ -344,9 +344,9 @@ export function BuyUSDT() {
                       {/* Affichage des messages de limite */}
                       {limitMessage.type && (
                         <Alert className={
-                          limitMessage.type === 'error' ? 'border-red-500/50 bg-red-500/10' :
-                          limitMessage.type === 'max-reached' ? 'border-orange-500/50 bg-orange-500/10' :
-                          'border-yellow-500/50 bg-yellow-500/10'
+                          limitMessage.type === 'error' ? 'border-red-500/50 bg-red-500/10 w-full' :
+                          limitMessage.type === 'max-reached' ? 'border-orange-500/50 bg-orange-500/10 w-full' :
+                          'border-yellow-500/50 bg-yellow-500/10 w-full'
                         }>
                           {limitMessage.type === 'error' ? (
                             <AlertTriangle className="h-4 w-4 text-red-400" />
@@ -360,7 +360,7 @@ export function BuyUSDT() {
                             limitMessage.type === 'max-reached' ? 'text-orange-200' :
                             'text-yellow-200'
                           }>
-                            <div className="flex flex-col space-y-3">
+                            <div className="flex flex-col space-y-3 w-full">
                               <span>{limitMessage.message}</span>
                               {limitMessage.type === 'max-reached' && (
                                 <Button 
@@ -377,63 +377,75 @@ export function BuyUSDT() {
                       )}
 
                       {paymentMethods.map((method) => (
-                        <TabsContent key={method.id} value={method.id} className="space-y-6">
+                        <TabsContent key={method.id} value={method.id} className="space-y-6 w-full">
                           {/* Amount Input Section */}
-                          <BuyAmountInput
-                            fiatAmount={fiatAmount}
-                            setFiatAmount={setFiatAmount}
-                            currency={currency}
-                            setCurrency={setCurrency}
-                            usdtAmount={usdtAmount}
-                            exchangeRate={exchangeRates[currency as keyof typeof exchangeRates]}
-                            paymentMethod={paymentMethod}
-                            processingTime={method.time}
-                            fee={method.fee}
-                          />
+                          <div className="w-full">
+                            <BuyAmountInput
+                              fiatAmount={fiatAmount}
+                              setFiatAmount={setFiatAmount}
+                              currency={currency}
+                              setCurrency={setCurrency}
+                              usdtAmount={usdtAmount}
+                              exchangeRate={exchangeRates[currency as keyof typeof exchangeRates]}
+                              paymentMethod={paymentMethod}
+                              processingTime={method.time}
+                              fee={method.fee}
+                            />
+                          </div>
 
                           {/* Destination Selection */}
-                          <DestinationSelector
-                            destination={destination}
-                            setDestination={setDestination}
-                          />
+                          <div className="w-full">
+                            <DestinationSelector
+                              destination={destination}
+                              setDestination={setDestination}
+                            />
+                          </div>
 
                           {/* Conditional rendering based on destination */}
                           {destination === 'wallet' && (
                             <>
                               {/* Network Selection */}
-                              <NetworkSelector
-                                network={network}
-                                setNetwork={setNetwork}
-                              />
+                              <div className="w-full">
+                                <NetworkSelector
+                                  network={network}
+                                  setNetwork={setNetwork}
+                                />
+                              </div>
 
                               {/* Wallet Address Input */}
-                              <WalletAddressInput
-                                walletAddress={walletAddress}
-                                setWalletAddress={setWalletAddress}
-                                network={network}
-                              />
+                              <div className="w-full">
+                                <WalletAddressInput
+                                  walletAddress={walletAddress}
+                                  setWalletAddress={setWalletAddress}
+                                  network={network}
+                                />
+                              </div>
                             </>
                           )}
 
                           {destination === 'binance' && (
-                            <BinanceEmailInput
-                              email={binanceEmail}
-                              setEmail={setBinanceEmail}
-                              username={binanceUsername}
-                              setUsername={setBinanceUsername}
-                              binanceId={binanceId}
-                              setBinanceId={setBinanceId}
-                            />
+                            <div className="w-full">
+                              <BinanceEmailInput
+                                email={binanceEmail}
+                                setEmail={setBinanceEmail}
+                                username={binanceUsername}
+                                setUsername={setBinanceUsername}
+                                binanceId={binanceId}
+                                setBinanceId={setBinanceId}
+                              />
+                            </div>
                           )}
 
                           {/* Payment Method Details */}
-                          <PaymentMethodForm
-                            paymentMethod={paymentMethod}
-                            cardData={cardData}
-                            setCardData={setCardData}
-                            mobileData={mobileData}
-                            setMobileData={setMobileData}
-                          />
+                          <div className="w-full">
+                            <PaymentMethodForm
+                              paymentMethod={paymentMethod}
+                              cardData={cardData}
+                              setCardData={setCardData}
+                              mobileData={mobileData}
+                              setMobileData={setMobileData}
+                            />
+                          </div>
 
                           {/* Buy Button */}
                           <Button 

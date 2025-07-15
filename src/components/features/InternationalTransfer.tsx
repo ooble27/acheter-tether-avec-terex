@@ -235,44 +235,48 @@ export function InternationalTransfer() {
 
           <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
             <div className="lg:col-span-2">
-              <Card className="bg-terex-darker border-terex-gray shadow-2xl">
+              <Card className="bg-terex-darker border-terex-gray shadow-2xl w-full">
                 <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-white text-lg md:text-xl">Nouveau transfert</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-4 md:p-6 space-y-6">
-                  <TransferForm
-                    sendAmount={sendAmount}
-                    setSendAmount={setSendAmount}
-                    receiveAmount={receiveAmount}
-                    recipientCountry={recipientCountry}
-                    setRecipientCountry={setRecipientCountry}
-                    paymentMethod={paymentMethod}
-                    setPaymentMethod={setPaymentMethod}
-                    receiveMethod={receiveMethod}
-                    setReceiveMethod={setReceiveMethod}
-                    exchangeRate={exchangeRate}
-                    fees={fees}
-                    provider={provider}
-                    setProvider={setProvider}
-                  />
+                <CardContent className="p-4 md:p-6 space-y-6 w-full">
+                  <div className="w-full">
+                    <TransferForm
+                      sendAmount={sendAmount}
+                      setSendAmount={setSendAmount}
+                      receiveAmount={receiveAmount}
+                      recipientCountry={recipientCountry}
+                      setRecipientCountry={setRecipientCountry}
+                      paymentMethod={paymentMethod}
+                      setPaymentMethod={setPaymentMethod}
+                      receiveMethod={receiveMethod}
+                      setReceiveMethod={setReceiveMethod}
+                      exchangeRate={exchangeRate}
+                      fees={fees}
+                      provider={provider}
+                      setProvider={setProvider}
+                    />
+                  </div>
 
-                  <RecipientForm
-                    recipientFirstName={recipientFirstName}
-                    setRecipientFirstName={setRecipientFirstName}
-                    recipientLastName={recipientLastName}
-                    setRecipientLastName={setRecipientLastName}
-                    recipientEmail={recipientEmail}
-                    setRecipientEmail={setRecipientEmail}
-                    recipientPhone={recipientPhone}
-                    setRecipientPhone={setRecipientPhone}
-                    recipientAccount={recipientAccount}
-                    setRecipientAccount={setRecipientAccount}
-                    recipientBank={recipientBank}
-                    setRecipientBank={setRecipientBank}
-                    receiveMethod={receiveMethod}
-                  />
+                  <div className="w-full">
+                    <RecipientForm
+                      recipientFirstName={recipientFirstName}
+                      setRecipientFirstName={setRecipientFirstName}
+                      recipientLastName={recipientLastName}
+                      setRecipientLastName={setRecipientLastName}
+                      recipientEmail={recipientEmail}
+                      setRecipientEmail={setRecipientEmail}
+                      recipientPhone={recipientPhone}
+                      setRecipientPhone={setRecipientPhone}
+                      recipientAccount={recipientAccount}
+                      setRecipientAccount={setRecipientAccount}
+                      recipientBank={recipientBank}
+                      setRecipientBank={setRecipientBank}
+                      receiveMethod={receiveMethod}
+                    />
+                  </div>
 
                   <Button 
                     size="lg"
