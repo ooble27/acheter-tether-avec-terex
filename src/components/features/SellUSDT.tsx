@@ -163,9 +163,15 @@ export function SellUSDT() {
             amount: fiatAmount,
             currency,
             usdtAmount,
-            network,
+            exchangeRate: buyRates[currency as keyof typeof buyRates],
+            walletAddress: '',
             paymentMethod: paymentMethod,
-            exchangeRate: buyRates[currency as keyof typeof buyRates]
+            bankName: paymentMethod === 'bank' ? bankName : undefined,
+            accountNumber: paymentMethod === 'bank' ? accountNumber : undefined,
+            accountName: paymentMethod === 'bank' ? accountName : undefined,
+            mobileProvider: paymentMethod === 'mobile' ? mobileProvider : undefined,
+            mobileNumber: paymentMethod === 'mobile' ? mobileNumber : undefined,
+            binancePayId: paymentMethod === 'binance' ? binancePayId : undefined
           }}
           orderId={currentOrderId}
           onBackToHome={handleBackToHome}
@@ -183,9 +189,15 @@ export function SellUSDT() {
             amount: fiatAmount,
             currency,
             usdtAmount,
-            network,
+            exchangeRate: buyRates[currency as keyof typeof buyRates],
+            walletAddress: '',
             paymentMethod: paymentMethod,
-            exchangeRate: buyRates[currency as keyof typeof buyRates]
+            bankName: paymentMethod === 'bank' ? bankName : undefined,
+            accountNumber: paymentMethod === 'bank' ? accountNumber : undefined,
+            accountName: paymentMethod === 'bank' ? accountName : undefined,
+            mobileProvider: paymentMethod === 'mobile' ? mobileProvider : undefined,
+            mobileNumber: paymentMethod === 'mobile' ? mobileNumber : undefined,
+            binancePayId: paymentMethod === 'binance' ? binancePayId : undefined
           }}
           orderId={currentOrderId}
           onBack={() => setShowInstructions(false)}
@@ -204,9 +216,9 @@ export function SellUSDT() {
             amount: fiatAmount,
             currency,
             usdtAmount,
-            network,
-            paymentMethod: paymentMethod,
             exchangeRate: buyRates[currency as keyof typeof buyRates],
+            walletAddress: '',
+            paymentMethod: paymentMethod,
             bankName: paymentMethod === 'bank' ? bankName : undefined,
             accountNumber: paymentMethod === 'bank' ? accountNumber : undefined,
             accountName: paymentMethod === 'bank' ? accountName : undefined,
@@ -227,7 +239,7 @@ export function SellUSDT() {
       <div className="min-h-screen bg-terex-dark p-0">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-6 md:mb-8 px-0 md:px-0">
+          <div className="mb-6 md:mb-8 px-1 md:px-0">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Vendre USDT</h1>
             <p className="text-gray-400">Vendez vos USDT et recevez de l'argent fiat</p>
           </div>

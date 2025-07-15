@@ -1,22 +1,42 @@
 
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info } from 'lucide-react';
 
 interface BinancePayOptionProps {
-  enabled: boolean;
-  onToggle: (enabled: boolean) => void;
+  binancePayId: string;
+  setBinancePayId: (id: string) => void;
 }
 
-export function BinancePayOption({ enabled, onToggle }: BinancePayOptionProps) {
+export function BinancePayOption({ binancePayId, setBinancePayId }: BinancePayOptionProps) {
   const [imageError, setImageError] = useState(false);
 
   return (
-    <Card className="bg-terex-gray border-terex-gray-light">
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between">
+    <div className="space-y-4">
+      <h3 className="text-white font-medium">Binance Pay</h3>
+      
+      <div className="space-y-2">
+        <Label className="text-white">Binance Pay ID</Label>
+        <Input
+          placeholder="Votre Binance Pay ID"
+          value={binancePayId}
+          onChange={(e) => setBinancePayId(e.target.value)}
+          className="bg-terex-gray border-terex-gray-light text-white h-12"
+        />
+      </div>
+
+      <Alert className="border-yellow-500/50 bg-yellow-500/10">
+        <Info className="h-4 w-4 text-yellow-400" />
+        <AlertDescription className="text-yellow-200">
+          Assurez-vous que votre Binance Pay ID est correct pour recevoir le paiement.
+        </AlertDescription>
+      </Alert>
+
+      <Card className="bg-terex-gray border-terex-gray-light">
+        <CardContent className="p-4">
           <div className="flex items-center space-x-3">
             {!imageError ? (
               <img 
@@ -31,18 +51,11 @@ export function BinancePayOption({ enabled, onToggle }: BinancePayOptionProps) {
               </div>
             )}
             <div>
-              <Label className="text-white font-medium">Envoyer via Binance Pay</Label>
+              <p className="text-white font-medium">Paiement Binance Pay</p>
               <p className="text-gray-400 text-sm">Transfert direct sans frais réseau</p>
             </div>
           </div>
-          <Switch
-            checked={enabled}
-            onCheckedChange={onToggle}
-            className="data-[state=checked]:bg-terex-accent data-[state=unchecked]:bg-gray-600 border-2 border-gray-500 data-[state=checked]:border-terex-accent shadow-lg"
-          />
-        </div>
-        
-        {enabled && (
+          
           <div className="mt-4 bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
             <div className="flex items-start space-x-2">
               <Info className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
@@ -56,8 +69,8 @@ export function BinancePayOption({ enabled, onToggle }: BinancePayOptionProps) {
               </div>
             </div>
           </div>
-        )}
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
