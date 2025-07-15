@@ -291,19 +291,19 @@ export function BuyUSDT() {
 
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
-      <div className="min-h-screen bg-terex-dark p-4">
-        <div className="w-full max-w-7xl mx-auto">
+      <div className="min-h-screen bg-terex-dark px-2 py-4">
+        <div className="w-full mx-auto">
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-6 px-2">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Acheter USDT</h1>
             <p className="text-gray-400">Achetez des USDT avec de l'argent fiat</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-6">
+          <div className="grid lg:grid-cols-3 gap-4 px-2">
             {/* Main Trading Interface */}
             <div className="lg:col-span-2">
               <Card className="bg-terex-darker border-terex-gray shadow-2xl">
-                <CardHeader className="border-b border-terex-gray p-6">
+                <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-white text-lg md:text-xl">Acheter USDT</CardTitle>
                     <Badge variant="outline" className="text-terex-accent border-terex-accent">
@@ -311,7 +311,7 @@ export function BuyUSDT() {
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="p-4 md:p-6">
                   <LimitsValidator 
                     amount={fiatAmount} 
                     currency={currency} 
