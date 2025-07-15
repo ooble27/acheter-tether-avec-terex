@@ -70,11 +70,11 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   };
 
   if (isMobile) {
-    // Design mobile avec px-0 pour maximiser l'espace
+    // Design mobile avec px-0 pour tous les conteneurs
     return (
       <div className="min-h-screen bg-terex-dark px-0 py-3 space-y-3 text-xs overflow-y-auto scrollbar-hide">
-        {/* Header avec taille augmentée comme demandé */}
-        <div className="flex items-center space-x-3 mb-6 px-3">
+        {/* Header avec px-0 */}
+        <div className="flex items-center space-x-3 mb-6 px-0">
           <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
             <Activity className="w-6 h-6 text-white" />
           </div>
@@ -86,8 +86,8 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </div>
         </div>
 
-        {/* Services Grid - 2x2 comme dans la maquette avec navigation */}
-        <div className="grid grid-cols-2 gap-3 mb-4 px-3">
+        {/* Services Grid - 2x2 avec px-0 */}
+        <div className="grid grid-cols-2 gap-3 mb-4 px-0">
           <Card 
             className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
             onClick={() => handleServiceClick('buy')}
@@ -149,13 +149,13 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </Card>
         </div>
 
-        {/* Section Historique des transactions récentes */}
+        {/* Section Historique des transactions récentes - px-0 */}
         <div className="px-0">
           <RecentTransactions onNavigate={onNavigate} />
         </div>
 
-        {/* Avantages Terex - identique à la maquette */}
-        <Card className="bg-terex-darker border-terex-gray mb-3 mx-3">
+        {/* Avantages Terex - px-0 */}
+        <Card className="bg-terex-darker border-terex-gray mb-3 mx-0">
           <CardContent className="p-3">
             <h3 className="text-white text-sm font-medium mb-3 flex items-center">
               <Star className="w-4 h-4 mr-2 text-terex-accent" />
@@ -193,8 +193,8 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </CardContent>
         </Card>
 
-        {/* Section USDT - Pourquoi nous ne supportons que Tether */}
-        <Card className="bg-terex-darker border-terex-gray mb-3 mx-3">
+        {/* Section USDT - px-0 */}
+        <Card className="bg-terex-darker border-terex-gray mb-3 mx-0">
           <CardContent className="p-3">
             <h3 className="text-white text-sm font-medium mb-3 flex items-center">
               <TetherLogo className="w-4 h-4 mr-2" />
@@ -223,8 +223,8 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </CardContent>
         </Card>
 
-        {/* Section Sécurité et Confiance */}
-        <Card className="bg-terex-darker border-terex-gray mx-3">
+        {/* Section Sécurité et Confiance - px-0 */}
+        <Card className="bg-terex-darker border-terex-gray mx-0">
           <CardContent className="p-3">
             <h3 className="text-white text-sm font-medium mb-3 flex items-center">
               <Shield className="w-4 h-4 mr-2 text-blue-400" />
