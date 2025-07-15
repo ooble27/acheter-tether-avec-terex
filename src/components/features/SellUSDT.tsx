@@ -266,65 +266,63 @@ export function SellUSDT() {
 
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
-      <div className="min-h-screen bg-terex-dark p-1 sm:p-2 md:p-4">
-        <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
+      <div className="min-h-screen bg-terex-dark p-4">
+        <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-4 sm:mb-6 md:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Vendre USDT</h1>
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">Vendre USDT</h1>
             <p className="text-gray-400">Vendez vos USDT et recevez de l'argent fiat</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+          <div className="grid lg:grid-cols-3 gap-6">
             {/* Main Trading Interface */}
-            <div className="lg:col-span-2 w-full">
-              <Card className="bg-terex-darker border-terex-gray shadow-2xl w-full mx-auto">
-                <CardHeader className="border-b border-terex-gray p-3 sm:p-4 md:p-6">
+            <div className="lg:col-span-2">
+              <Card className="bg-terex-darker border-terex-gray shadow-2xl">
+                <CardHeader className="border-b border-terex-gray p-6">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-white text-base sm:text-lg md:text-xl">Vendre USDT</CardTitle>
-                    <Badge variant="outline" className="text-terex-accent border-terex-accent text-xs sm:text-sm">
+                    <CardTitle className="text-white text-xl">Vendre USDT</CardTitle>
+                    <Badge variant="outline" className="text-terex-accent border-terex-accent">
                       Taux en temps réel
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="p-3 sm:p-4 md:p-6 w-full">
-                  <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'bank' | 'mobile')} className="space-y-4 sm:space-y-6 w-full">
+                <CardContent className="p-6">
+                  <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'bank' | 'mobile')} className="space-y-6">
                     <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
                       <TabsTrigger 
                         value="bank"
-                        className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs sm:text-sm"
+                        className="data-[state=active]:bg-terex-accent data-[state=active]:text-white"
                       >
-                        <CreditCard className="mr-1 md:mr-2 w-4 h-4" />
-                        <span className="hidden sm:inline">Virement bancaire</span>
-                        <span className="sm:hidden">Banque</span>
+                        <CreditCard className="mr-2 w-4 h-4" />
+                        Virement bancaire
                       </TabsTrigger>
                       <TabsTrigger 
                         value="mobile"
-                        className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs sm:text-sm"
+                        className="data-[state=active]:bg-terex-accent data-[state=active]:text-white"
                       >
                         <img 
                           src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
                           alt="Wave" 
-                          className="mr-1 md:mr-2 w-4 h-4 rounded-full"
+                          className="mr-2 w-4 h-4 rounded-full"
                         />
-                        <span className="hidden sm:inline">Mobile Money</span>
-                        <span className="sm:hidden">Mobile</span>
+                        Mobile Money
                       </TabsTrigger>
                     </TabsList>
 
                     {paymentMethods.map((method) => (
-                      <TabsContent key={method.id} value={method.id} className="space-y-4 sm:space-y-6 w-full">
+                      <TabsContent key={method.id} value={method.id} className="space-y-6">
                         {/* Amount Input Section */}
-                        <div className="space-y-4 w-full">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                            <div className="space-y-2 w-full">
+                        <div className="space-y-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
                               <Label className="text-white text-sm font-medium">Je vends</Label>
-                              <div className="relative w-full">
+                              <div className="relative">
                                 <Input
                                   type="number"
                                   placeholder="0.00"
                                   value={usdtAmount}
                                   onChange={(e) => setUsdtAmount(e.target.value)}
-                                  className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24 w-full"
+                                  className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24"
                                 />
                                 <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
                                   <img 
@@ -337,17 +335,17 @@ export function SellUSDT() {
                               </div>
                             </div>
                             
-                            <div className="space-y-2 w-full">
+                            <div className="space-y-2">
                               <Label className="text-white text-sm font-medium">Je reçois</Label>
-                              <div className="relative w-full">
+                              <div className="relative">
                                 <Input
                                   type="text"
                                   value={fiatAmount}
                                   readOnly
-                                  className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24 md:pr-20 w-full"
+                                  className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
                                 />
                                 <Select value={currency} onValueChange={setCurrency}>
-                                  <SelectTrigger className="absolute right-1 top-1 w-20 h-10 bg-terex-gray-light border-0 text-terex-accent">
+                                  <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -362,7 +360,7 @@ export function SellUSDT() {
                             <ArrowRightLeft className="w-5 h-5 text-terex-accent" />
                           </div>
 
-                          <div className="bg-terex-gray rounded-lg p-3 w-full">
+                          <div className="bg-terex-gray rounded-lg p-3">
                             <div className="flex justify-between text-sm">
                               <span className="text-gray-400">Taux TEREX (achat)</span>
                               <span className="text-white">1 USDT = {exchangeRates[currency as keyof typeof exchangeRates]} {currency}</span>
@@ -386,10 +384,10 @@ export function SellUSDT() {
 
                         {/* Network Selection - only show if not using Binance Pay */}
                         {!useBinancePay && (
-                          <div className="space-y-2 w-full">
+                          <div className="space-y-2">
                             <Label className="text-white text-sm font-medium">Réseau d'envoi</Label>
                             <Select value={network} onValueChange={setNetwork}>
-                              <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12 w-full">
+                              <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent className="bg-terex-darker border-terex-gray">
@@ -441,9 +439,9 @@ export function SellUSDT() {
 
                         {/* Our Wallet Address - only show if not using Binance Pay */}
                         {!useBinancePay && (
-                          <div className="space-y-2 w-full">
+                          <div className="space-y-2">
                             <Label className="text-white text-sm font-medium">Adresse de réception (Notre portefeuille)</Label>
-                            <div className="flex items-center space-x-2 w-full">
+                            <div className="flex items-center space-x-2">
                               <Input
                                 type="text"
                                 value={WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
@@ -465,33 +463,33 @@ export function SellUSDT() {
 
                         {/* Payment Method Details */}
                         {method.id === 'bank' && (
-                          <div className="space-y-4 w-full">
+                          <div className="space-y-4">
                             <h3 className="text-white font-medium">Informations bancaires</h3>
-                            <div className="grid gap-4 w-full">
-                              <div className="space-y-2 w-full">
+                            <div className="grid gap-4">
+                              <div className="space-y-2">
                                 <Label className="text-white text-sm">Nom du titulaire du compte</Label>
                                 <Input
                                   value={bankData.accountHolder}
                                   onChange={(e) => setBankData({...bankData, accountHolder: e.target.value})}
-                                  className="bg-terex-gray border-terex-gray-light text-white w-full"
+                                  className="bg-terex-gray border-terex-gray-light text-white"
                                   placeholder="Votre nom complet"
                                 />
                               </div>
-                              <div className="space-y-2 w-full">
+                              <div className="space-y-2">
                                 <Label className="text-white text-sm">Numéro de compte</Label>
                                 <Input
                                   value={bankData.accountNumber}
                                   onChange={(e) => setBankData({...bankData, accountNumber: e.target.value})}
-                                  className="bg-terex-gray border-terex-gray-light text-white w-full"
+                                  className="bg-terex-gray border-terex-gray-light text-white"
                                   placeholder="Votre numéro de compte"
                                 />
                               </div>
-                              <div className="space-y-2 w-full">
+                              <div className="space-y-2">
                                 <Label className="text-white text-sm">Nom de la banque</Label>
                                 <Input
                                   value={bankData.bankName}
                                   onChange={(e) => setBankData({...bankData, bankName: e.target.value})}
-                                  className="bg-terex-gray border-terex-gray-light text-white w-full"
+                                  className="bg-terex-gray border-terex-gray-light text-white"
                                   placeholder="Nom de votre banque"
                                 />
                               </div>
@@ -500,13 +498,13 @@ export function SellUSDT() {
                         )}
 
                         {method.id === 'mobile' && (
-                          <div className="space-y-4 w-full">
+                          <div className="space-y-4">
                             <h3 className="text-white font-medium">Comment souhaitez-vous recevoir l'argent ?</h3>
-                            <div className="grid gap-4 w-full">
-                              <div className="space-y-2 w-full">
+                            <div className="grid gap-4">
+                              <div className="space-y-2">
                                 <Label className="text-white text-sm">Service de paiement</Label>
                                 <Select value={mobileData.provider} onValueChange={(value) => setMobileData({...mobileData, provider: value as 'wave' | 'orange'})}>
-                                  <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white w-full">
+                                  <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white">
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -525,12 +523,12 @@ export function SellUSDT() {
                                   </SelectContent>
                                 </Select>
                               </div>
-                              <div className="space-y-2 w-full">
+                              <div className="space-y-2">
                                 <Label className="text-white text-sm">Numéro de téléphone</Label>
                                 <Input
                                   value={mobileData.phoneNumber}
                                   onChange={(e) => setMobileData({...mobileData, phoneNumber: e.target.value})}
-                                  className="bg-terex-gray border-terex-gray-light text-white w-full"
+                                  className="bg-terex-gray border-terex-gray-light text-white"
                                   placeholder="+221 XX XXX XX XX"
                                 />
                               </div>
@@ -541,7 +539,7 @@ export function SellUSDT() {
                         {/* Sell Button */}
                         <Button 
                           size="lg"
-                          className="w-full gradient-button text-white font-semibold h-12 text-base sm:text-lg"
+                          className="w-full gradient-button text-white font-semibold h-12 text-lg"
                           disabled={!usdtAmount || 
                             (paymentMethod === 'bank' && (!bankData.accountNumber || !bankData.bankName || !bankData.accountHolder)) ||
                             (paymentMethod === 'mobile' && !mobileData.phoneNumber)
@@ -558,7 +556,7 @@ export function SellUSDT() {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-3 sm:space-y-4 md:space-y-6">
+            <div className="space-y-6">
               {/* Taux du jour */}
               <Card className="bg-terex-darker border-terex-gray">
                 <CardHeader className="p-4">
