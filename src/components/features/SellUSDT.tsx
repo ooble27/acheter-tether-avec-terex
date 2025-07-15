@@ -269,12 +269,12 @@ export function SellUSDT() {
       <div className="min-h-screen bg-terex-dark p-0">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-6 md:mb-8 px-2 md:px-0">
+          <div className="mb-6 md:mb-8 px-1 md:px-0">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Vendre USDT</h1>
             <p className="text-gray-400">Vendez vos USDT et recevez de l'argent fiat</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-0 md:gap-6 px-1 lg:px-0">
+          <div className="grid lg:grid-cols-3 gap-0 md:gap-6 px-0 lg:px-0">
             {/* Main Trading Interface */}
             <div className="lg:col-span-2">
               <Card className="bg-terex-darker border-terex-gray shadow-2xl">
@@ -558,7 +558,7 @@ export function SellUSDT() {
             </div>
 
             {/* Sidebar */}
-            <div className="px-1 lg:px-0 mt-4 lg:mt-0 space-y-4 md:space-y-6">
+            <div className="px-0 lg:px-0 mt-4 lg:mt-0 space-y-4 md:space-y-6">
               {/* Taux du jour */}
               <Card className="bg-terex-darker border-terex-gray">
                 <CardHeader className="p-4">

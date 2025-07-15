@@ -228,12 +228,12 @@ export function InternationalTransfer() {
     <KYCProtection onKYCRequired={handleKYCRequired}>
       <div className="min-h-screen bg-terex-dark p-0">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-6 md:mb-8 px-2 md:px-0">
+          <div className="mb-6 md:mb-8 px-1 md:px-0">
             <h1 className="text-3xl font-bold text-white mb-2">Virement international</h1>
             <p className="text-gray-400">Envoyer de l'argent rapidement à vos proches</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-0 md:gap-6 px-1 lg:px-0">
+          <div className="grid lg:grid-cols-3 gap-0 md:gap-6 px-0 lg:px-0">
             <div className="lg:col-span-2">
               <Card className="bg-terex-darker border-terex-gray shadow-2xl">
                 <CardHeader className="border-b border-terex-gray p-4 md:p-6">
@@ -287,7 +287,7 @@ export function InternationalTransfer() {
             </div>
 
             {/* Sidebar */}
-            <div className="px-1 lg:px-0 mt-4 lg:mt-0">
+            <div className="px-0 lg:px-0 mt-4 lg:mt-0">
               <TransferSidebar
                 exchangeRate={exchangeRate}
                 ratesLoading={ratesLoading}

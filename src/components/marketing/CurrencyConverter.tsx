@@ -1,5 +1,3 @@
-
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -104,7 +102,7 @@ export function CurrencyConverter() {
   };
 
   return (
-    <Card className="bg-terex-darker/80 border-terex-accent/30 backdrop-blur-sm">
+    <Card className="bg-terex-darker/80 border-terex-accent/30 backdrop-blur-sm mx-1 md:mx-0">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-white text-lg flex items-center">
@@ -290,4 +288,3 @@ export function CurrencyConverter() {
     </Card>
   );
 }
-
