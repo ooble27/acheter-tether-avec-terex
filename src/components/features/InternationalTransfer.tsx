@@ -287,7 +287,7 @@ export function InternationalTransfer() {
             </div>
 
             {/* Sidebar */}
-            <div className="px-2 lg:px-0 mt-4 lg:mt-0">
+            <div className="px-0 lg:px-0 mt-4 lg:mt-0">
               <TransferSidebar
                 exchangeRate={exchangeRate}
                 ratesLoading={ratesLoading}
