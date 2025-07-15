@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -96,8 +97,8 @@ export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPag
 
   if (paymentStep === 'processing') {
     return (
-      <div className="min-h-screen bg-terex-dark p-4 flex items-center justify-center">
-        <Card className="w-full max-w-md bg-terex-darker border-terex-gray">
+      <div className="min-h-screen bg-terex-dark px-0 py-4 flex items-center justify-center">
+        <Card className="w-full max-w-md bg-terex-darker border-terex-gray mx-3">
           <CardContent className="p-8 text-center">
             <div className="mb-6">
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-terex-accent mx-auto"></div>
@@ -115,10 +116,10 @@ export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPag
   }
 
   return (
-    <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-terex-dark px-0 py-2 md:p-4">
+      <div className="max-w-4xl mx-auto px-0">
         {/* Header */}
-        <div className="mb-6 flex items-center space-x-4">
+        <div className="mb-6 flex items-center space-x-4 px-3 md:px-0">
           <Button
             variant="ghost"
             onClick={onBack}
@@ -133,10 +134,10 @@ export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPag
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-6 px-0">
           {/* Récapitulatif de commande */}
-          <div className="lg:col-span-1">
-            <Card className="bg-terex-darker border-terex-gray">
+          <div className="lg:col-span-1 px-3 md:px-0">
+            <Card className="bg-terex-darker border-terex-gray mx-0">
               <CardHeader>
                 <CardTitle className="text-white">Récapitulatif</CardTitle>
               </CardHeader>
@@ -176,8 +177,8 @@ export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPag
           </div>
 
           {/* Méthodes de paiement */}
-          <div className="lg:col-span-2">
-            <Card className="bg-terex-darker border-terex-gray">
+          <div className="lg:col-span-2 px-3 md:px-0">
+            <Card className="bg-terex-darker border-terex-gray mx-0">
               <CardHeader>
                 <CardTitle className="text-white">Choisir la méthode de paiement</CardTitle>
               </CardHeader>

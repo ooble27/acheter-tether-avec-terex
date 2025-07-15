@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -227,7 +228,7 @@ export function InternationalTransfer() {
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
       <div className="min-h-screen bg-terex-dark p-0">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto px-0">
           <div className="mb-6 md:mb-8 px-1 md:px-0">
             <h1 className="text-3xl font-bold text-white mb-2">Virement international</h1>
             <p className="text-gray-400">Envoyer de l'argent rapidement à vos proches</p>
@@ -235,7 +236,7 @@ export function InternationalTransfer() {
 
           <div className="grid lg:grid-cols-3 gap-0 md:gap-6 px-0 lg:px-0">
             <div className="lg:col-span-2">
-              <Card className="bg-terex-darker border-terex-gray shadow-2xl">
+              <Card className="bg-terex-darker border-terex-gray shadow-2xl mx-0">
                 <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-white text-lg md:text-xl">Nouveau transfert</CardTitle>

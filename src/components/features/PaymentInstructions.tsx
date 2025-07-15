@@ -93,9 +93,9 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
 
   if (orderData.paymentMethod === 'card') {
     return (
-      <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-        <div className="max-w-2xl mx-auto">
-          <div className="mb-6 flex items-center space-x-4">
+      <div className="min-h-screen bg-terex-dark px-0 py-2 md:p-4">
+        <div className="max-w-2xl mx-auto px-0">
+          <div className="mb-6 flex items-center space-x-4 px-3 md:px-0">
             <Button
               variant="ghost"
               onClick={onBack}
@@ -110,7 +110,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
             </div>
           </div>
 
-          <Card className="bg-terex-darker border-terex-gray">
+          <Card className="bg-terex-darker border-terex-gray mx-0">
             <CardContent className="p-6 text-center space-y-6">
               <div className="w-16 h-16 bg-terex-accent/20 rounded-full flex items-center justify-center mx-auto">
                 <CheckCircle className="w-8 h-8 text-terex-accent" />
@@ -135,9 +135,9 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
   }
 
   return (
-    <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-6 flex items-center space-x-4">
+    <div className="min-h-screen bg-terex-dark px-0 py-2 md:p-4">
+      <div className="max-w-4xl mx-auto px-0">
+        <div className="mb-6 flex items-center space-x-4 px-3 md:px-0">
           <Button
             variant="ghost"
             onClick={onBack}
@@ -152,10 +152,10 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-6 px-0">
           {/* Instructions de paiement */}
-          <div className="lg:col-span-2 space-y-6">
-            <Card className="bg-terex-darker border-terex-gray">
+          <div className="lg:col-span-2 space-y-6 px-0">
+            <Card className="bg-terex-darker border-terex-gray mx-0">
               <CardHeader>
                 <CardTitle className="text-white">{instructions.title}</CardTitle>
                 <div className="flex items-center space-x-2">
@@ -178,7 +178,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
             </Card>
 
             {instructions.recipientNumber && (
-              <Card className="bg-terex-darker border-terex-gray">
+              <Card className="bg-terex-darker border-terex-gray mx-0">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center">
                     <Phone className="w-5 h-5 mr-2 text-terex-accent" />
@@ -201,7 +201,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
               </Card>
             )}
 
-            <Card className="bg-amber-500/10 border-amber-500/30">
+            <Card className="bg-amber-500/10 border-amber-500/30 mx-0">
               <CardContent className="p-4">
                 <div className="flex items-start space-x-3">
                   <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5" />
@@ -217,18 +217,20 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
               </CardContent>
             </Card>
 
-            <Button
-              onClick={onPaymentConfirmed}
-              size="lg"
-              className="w-full gradient-button text-white font-semibold h-12"
-            >
-              J'ai effectué le paiement
-            </Button>
+            <div className="px-3 md:px-0">
+              <Button
+                onClick={onPaymentConfirmed}
+                size="lg"
+                className="w-full gradient-button text-white font-semibold h-12"
+              >
+                J'ai effectué le paiement
+              </Button>
+            </div>
           </div>
 
           {/* Récapitulatif de la commande */}
-          <div className="space-y-6">
-            <Card className="bg-terex-darker border-terex-gray">
+          <div className="space-y-6 px-3 md:px-0">
+            <Card className="bg-terex-darker border-terex-gray mx-0">
               <CardHeader>
                 <CardTitle className="text-white">Récapitulatif</CardTitle>
               </CardHeader>
@@ -260,7 +262,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
               </CardContent>
             </Card>
 
-            <Card className="bg-green-500/10 border-green-500/30">
+            <Card className="bg-green-500/10 border-green-500/30 mx-0">
               <CardContent className="p-4">
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
