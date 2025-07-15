@@ -266,18 +266,18 @@ export function SellUSDT() {
 
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
-      <div className="min-h-screen bg-terex-dark px-2 py-4">
-        <div className="w-full mx-auto">
+      <div className="min-h-screen bg-terex-dark px-0 sm:px-2 py-4">
+        <div className="w-full max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-6 px-2">
+          <div className="mb-6 px-4 sm:px-2">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Vendre USDT</h1>
             <p className="text-gray-400">Vendez vos USDT et recevez de l'argent fiat</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-4 px-2">
+          <div className="grid lg:grid-cols-3 gap-4 px-0 sm:px-2">
             {/* Main Trading Interface */}
             <div className="lg:col-span-2">
-              <Card className="bg-terex-darker border-terex-gray shadow-2xl">
+              <Card className="bg-terex-darker border-terex-gray shadow-2xl mx-2 sm:mx-0">
                 <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-white text-lg md:text-xl">Vendre USDT</CardTitle>
@@ -558,7 +558,7 @@ export function SellUSDT() {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-4 md:space-y-6">
+            <div className="space-y-4 md:space-y-6 px-2 sm:px-0">
               {/* Taux du jour */}
               <Card className="bg-terex-darker border-terex-gray">
                 <CardHeader className="p-3 md:p-4">

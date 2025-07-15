@@ -291,18 +291,18 @@ export function BuyUSDT() {
 
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
-      <div className="min-h-screen bg-terex-dark px-2 py-4">
-        <div className="w-full mx-auto">
+      <div className="min-h-screen bg-terex-dark px-0 sm:px-2 py-4">
+        <div className="w-full max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-6 px-2">
+          <div className="mb-6 px-4 sm:px-2">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Acheter USDT</h1>
             <p className="text-gray-400">Achetez des USDT avec de l'argent fiat</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-4 px-2">
+          <div className="grid lg:grid-cols-3 gap-4 px-0 sm:px-2">
             {/* Main Trading Interface */}
             <div className="lg:col-span-2">
-              <Card className="bg-terex-darker border-terex-gray shadow-2xl">
+              <Card className="bg-terex-darker border-terex-gray shadow-2xl mx-2 sm:mx-0">
                 <CardHeader className="border-b border-terex-gray p-4 md:p-6">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-white text-lg md:text-xl">Acheter USDT</CardTitle>
@@ -459,16 +459,18 @@ export function BuyUSDT() {
             </div>
 
             {/* Sidebar */}
-            <TradingSidebar
-              exchangeRates={exchangeRates}
-              marketRates={marketRates}
-              ratesLoading={ratesLoading}
-              ratesError={ratesError}
-              lastUpdated={lastUpdated}
-              refreshRates={refreshRates}
-              currency={currency}
-              setFiatAmount={setFiatAmount}
-            />
+            <div className="px-2 sm:px-0">
+              <TradingSidebar
+                exchangeRates={exchangeRates}
+                marketRates={marketRates}
+                ratesLoading={ratesLoading}
+                ratesError={ratesError}
+                lastUpdated={lastUpdated}
+                refreshRates={refreshRates}
+                currency={currency}
+                setFiatAmount={setFiatAmount}
+              />
+            </div>
           </div>
         </div>
       </div>
