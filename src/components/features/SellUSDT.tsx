@@ -266,19 +266,19 @@ export function SellUSDT() {
 
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
-      <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-terex-dark p-4">
+        <div className="w-full max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-6 md:mb-8">
+          <div className="mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Vendre USDT</h1>
             <p className="text-gray-400">Vendez vos USDT et recevez de l'argent fiat</p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid lg:grid-cols-3 gap-6">
             {/* Main Trading Interface */}
             <div className="lg:col-span-2">
               <Card className="bg-terex-darker border-terex-gray shadow-2xl">
-                <CardHeader className="border-b border-terex-gray p-4 md:p-6">
+                <CardHeader className="border-b border-terex-gray p-6">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-white text-lg md:text-xl">Vendre USDT</CardTitle>
                     <Badge variant="outline" className="text-terex-accent border-terex-accent">
@@ -286,7 +286,7 @@ export function SellUSDT() {
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="p-4 md:p-6">
+                <CardContent className="p-6">
                   <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'bank' | 'mobile')} className="space-y-6">
                     <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
                       <TabsTrigger 
@@ -558,7 +558,7 @@ export function SellUSDT() {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-4 md:space-y-6">
+            <div className="space-y-6">
               {/* Taux du jour */}
               <Card className="bg-terex-darker border-terex-gray">
                 <CardHeader className="p-4">
