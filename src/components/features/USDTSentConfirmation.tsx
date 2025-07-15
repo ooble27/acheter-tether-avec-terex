@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,40 +7,22 @@ interface OrderData {
   amount: string;
   currency: string;
   usdtAmount: string;
-  exchangeRate: number;
-  walletAddress: string;
-  paymentMethod: 'bank' | 'mobile' | 'binance';
-  bankName?: string;
-  accountNumber?: string;
-  accountName?: string;
-  mobileProvider?: 'wave' | 'orange';
-  mobileNumber?: string;
-  binancePayId?: string;
   phoneNumber?: string;
   provider?: string;
 }
 
 interface USDTSentConfirmationProps {
   orderData: OrderData;
-  orderId: string;
   onBackToHome: () => void;
 }
 
-export function USDTSentConfirmation({ orderData, orderId, onBackToHome }: USDTSentConfirmationProps) {
+export function USDTSentConfirmation({ orderData, onBackToHome }: USDTSentConfirmationProps) {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   const getProviderName = () => {
-    if (orderData.paymentMethod === 'bank') return 'Virement bancaire';
-    if (orderData.paymentMethod === 'binance') return 'Binance Pay';
-    return orderData.mobileProvider === 'wave' ? 'Wave' : 'Orange Money';
-  };
-
-  const getPaymentDestination = () => {
-    if (orderData.paymentMethod === 'bank') return orderData.accountNumber;
-    if (orderData.paymentMethod === 'binance') return orderData.binancePayId;
-    return orderData.mobileNumber;
+    return orderData.provider === 'wave' ? 'Wave' : 'Orange Money';
   };
 
   return (
@@ -74,16 +55,12 @@ export function USDTSentConfirmation({ orderData, orderId, onBackToHome }: USDTS
                 <span className="text-white font-bold">{orderData.amount} {orderData.currency}</span>
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
-                <span className="text-gray-400 text-sm">Destination du paiement</span>
-                <span className="text-white break-all">{getPaymentDestination()}</span>
+                <span className="text-gray-400 text-sm">Numéro de téléphone</span>
+                <span className="text-white break-all">{orderData.phoneNumber}</span>
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
                 <span className="text-gray-400 text-sm">Service de paiement</span>
                 <span className="text-white">{getProviderName()}</span>
-              </div>
-              <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
-                <span className="text-gray-400 text-sm">Commande</span>
-                <span className="text-white">#{orderId.slice(-8)}</span>
               </div>
             </div>
 
