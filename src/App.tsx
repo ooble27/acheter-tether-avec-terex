@@ -32,37 +32,39 @@ import { ScrollToTop } from "./components/ScrollToTop";
 
 function App() {
   return (
-    <ThemeProvider>
-      <Router>
-        <ScrollToTop />
-        <AuthProvider>
-          <TransactionProvider>
-            <PWASessionSync />
-            <Toaster />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/auth/callback" element={<AuthCallback />} />
-              <Route path="/blockchain" element={<BlockchainPage />} />
-              <Route path="/marketing" element={<MarketingPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/careers" element={<CareersPage />} />
-              <Route path="/support" element={<SupportPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/faq" element={<FAQPage />} />
-              <Route path="/help" element={<HelpPage />} />
-              <Route path="/guide" element={<GuidePage />} />
-              <Route path="/status" element={<StatusPage />} />
-              <Route path="/terms" element={<TermsPage />} />
-              <Route path="/privacy" element={<PrivacyPage />} />
-              <Route path="/security" element={<SecurityPage />} />
-              <Route path="/admin/*" element={<AdminPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </TransactionProvider>
-        </AuthProvider>
-      </Router>
-    </ThemeProvider>
+    <React.StrictMode>
+      <ThemeProvider>
+        <Router>
+          <ScrollToTop />
+          <AuthProvider>
+            <TransactionProvider>
+              <PWASessionSync />
+              <Toaster />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<AuthPage />} />
+                <Route path="/auth/callback" element={<AuthCallback />} />
+                <Route path="/blockchain" element={<BlockchainPage />} />
+                <Route path="/marketing" element={<MarketingPage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/careers" element={<CareersPage />} />
+                <Route path="/support" element={<SupportPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/faq" element={<FAQPage />} />
+                <Route path="/help" element={<HelpPage />} />
+                <Route path="/guide" element={<GuidePage />} />
+                <Route path="/status" element={<StatusPage />} />
+                <Route path="/terms" element={<TermsPage />} />
+                <Route path="/privacy" element={<PrivacyPage />} />
+                <Route path="/security" element={<SecurityPage />} />
+                <Route path="/admin/*" element={<AdminPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </TransactionProvider>
+          </AuthProvider>
+        </Router>
+      </ThemeProvider>
+    </React.StrictMode>
   );
 }
 
