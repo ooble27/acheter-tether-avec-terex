@@ -5,7 +5,6 @@
 
 @layer base {
   :root {
-    /* Mode Sombre (défaut) */
     --background: 20 14.3% 4.1%;
     --foreground: 0 0% 95%;
 
@@ -45,46 +44,6 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 142.4 71.8% 29.2%;
   }
-
-  .light {
-    /* Mode Clair */
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 355.7 100% 97.3%;
-
-    --secondary: 210 40% 98%;
-    --secondary-foreground: 222.2 84% 4.9%;
-
-    --muted: 210 40% 98%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 98%;
-    --accent-foreground: 222.2 84% 4.9%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 142.4 71.8% 29.2%;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 222.2 84% 4.9%;
-    --sidebar-primary: 142.1 76.2% 36.3%;
-    --sidebar-primary-foreground: 355.7 100% 97.3%;
-    --sidebar-accent: 210 40% 96%;
-    --sidebar-accent-foreground: 222.2 84% 4.9%;
-    --sidebar-border: 214.3 31.8% 91.4%;
-    --sidebar-ring: 142.4 71.8% 29.2%;
-  }
 }
 
 @layer base {
@@ -93,19 +52,19 @@
   }
 
   html, body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-terex-dark text-foreground font-sans;
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
     height: 100%;
+    /* Masquer toutes les barres de scroll */
     overflow: overlay;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer et Edge */
   }
 
   html::-webkit-scrollbar,
   body::-webkit-scrollbar {
-    display: none;
+    display: none; /* Safari et Chrome */
   }
 
   #root {
@@ -113,38 +72,42 @@
     height: 100%;
   }
 
+  /* Masquer les barres de scroll sur tous les éléments */
   * {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer et Edge */
   }
 
   *::-webkit-scrollbar {
+    display: none; /* Safari et Chrome */
+  }
+}
+
+/* Classe pour masquer la barre de défilement (renforcée) */
+@layer utilities {
+  .scrollbar-hide {
+    /* Firefox */
+    scrollbar-width: none;
+    /* Safari et Chrome */
+    -ms-overflow-style: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-}
 
-/* Couleurs Terex adaptatives */
-@layer base {
-  :root {
-    --terex-dark: 20 14.3% 4.1%;
-    --terex-darker: 240 3.7% 15.9%;
-    --terex-accent: 142.1 76.2% 36.3%;
-    --terex-accent-light: 142.1 76.2% 46.3%;
-    --terex-gray: 240 3.7% 25.9%;
-    --terex-gray-light: 240 3.7% 35.9%;
+  /* Application globale */
+  .no-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer et Edge */
   }
-
-  .light {
-    --terex-dark: 0 0% 98%;
-    --terex-darker: 210 40% 96%;
-    --terex-accent: 142.1 76.2% 36.3%;
-    --terex-accent-light: 142.1 76.2% 46.3%;
-    --terex-gray: 214.3 31.8% 91.4%;
-    --terex-gray-light: 210 40% 94%;
+  
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Safari et Chrome */
   }
 }
 
-/* Classe utilitaires pour les safe areas iOS PWA */
+/* Classes utilitaires pour les safe areas iOS PWA */
 @supports (padding-top: env(safe-area-inset-top)) {
   .pt-safe {
     padding-top: env(safe-area-inset-top);
@@ -173,13 +136,13 @@
 
 /* Style Binance pour le logo et branding */
 .terex-brand {
-  background: linear-gradient(135deg, hsl(var(--terex-accent)) 0%, hsl(var(--terex-accent-light)) 50%, hsl(var(--terex-accent-light)) 100%);
+  background: linear-gradient(135deg, #3B968F 0%, #4BA89F 50%, #5BC1B8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 900;
   letter-spacing: -0.02em;
-  text-shadow: 0 0 30px hsla(var(--terex-accent), 0.3);
+  text-shadow: 0 0 30px rgba(59, 150, 143, 0.3);
 }
 
 .logo-glow {
@@ -190,7 +153,7 @@
   content: '';
   position: absolute;
   inset: -2px;
-  background: linear-gradient(45deg, hsl(var(--terex-accent)), hsl(var(--terex-accent-light)), hsl(var(--terex-accent-light)));
+  background: linear-gradient(45deg, #3B968F, #4BA89F, #5BC1B8);
   border-radius: inherit;
   filter: blur(8px);
   opacity: 0.3;
@@ -198,14 +161,14 @@
 }
 
 .gradient-button {
-  background: linear-gradient(135deg, hsl(var(--terex-accent)) 0%, hsl(var(--terex-accent-light)) 100%);
+  background: linear-gradient(135deg, #3B968F 0%, #4BA89F 100%);
   transition: all 0.3s ease;
 }
 
 .gradient-button:hover {
-  background: linear-gradient(135deg, hsl(var(--terex-accent-light)) 0%, hsl(var(--terex-accent-light)) 100%);
+  background: linear-gradient(135deg, #4BA89F 0%, #5BC1B8 100%);
   transform: translateY(-1px);
-  box-shadow: 0 8px 25px hsla(var(--terex-accent), 0.3);
+  box-shadow: 0 8px 25px rgba(59, 150, 143, 0.3);
 }
 
 .gradient-button:disabled {
@@ -215,9 +178,9 @@
 
 /* Glass morphism effect pour les cartes */
 .glass-card {
-  background: hsla(var(--background), 0.05);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
-  border: 1px solid hsla(var(--border), 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Styles pour la carte de l'Afrique 3D */
@@ -437,10 +400,10 @@
 
 @keyframes glow {
   from {
-    box-shadow: 0 0 20px hsla(var(--terex-accent), 0.2);
+    box-shadow: 0 0 20px rgba(59, 150, 143, 0.2);
   }
   to {
-    box-shadow: 0 0 30px hsla(var(--terex-accent), 0.4);
+    box-shadow: 0 0 30px rgba(59, 150, 143, 0.4);
   }
 }
 
@@ -596,7 +559,7 @@
   
   .card-mobile {
     border-radius: 0.5rem;
-    box-shadow: 0 2px 8px hsla(var(--foreground), 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
   
   .country-label {
@@ -914,11 +877,11 @@
 
 @keyframes central-glow {
   0%, 100% {
-    box-shadow: 0 0 30px hsla(var(--terex-accent), 0.3);
+    box-shadow: 0 0 30px rgba(59, 150, 143, 0.3);
     transform: translate(-50%, -50%) scale(1);
   }
   50% {
-    box-shadow: 0 0 50px hsla(var(--terex-accent), 0.6);
+    box-shadow: 0 0 50px rgba(59, 150, 143, 0.6);
     transform: translate(-50%, -50%) scale(1.05);
   }
 }
