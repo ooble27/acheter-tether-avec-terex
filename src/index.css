@@ -5,7 +5,6 @@
 
 @layer base {
   :root {
-    /* Mode sombre (existant) */
     --background: 20 14.3% 4.1%;
     --foreground: 0 0% 95%;
 
@@ -45,46 +44,6 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 142.4 71.8% 29.2%;
   }
-
-  .light {
-    /* Mode clair - couleurs élégantes */
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 355.7 100% 97.3%;
-
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 142.4 71.8% 29.2%;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 11%;
-    --sidebar-primary: 142.1 76.2% 36.3%;
-    --sidebar-primary-foreground: 355.7 100% 97.3%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 240 5.9% 90%;
-    --sidebar-ring: 142.4 71.8% 29.2%;
-  }
 }
 
 @layer base {
@@ -93,18 +52,19 @@
   }
 
   html, body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-terex-dark text-foreground font-sans;
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
     height: 100%;
+    /* Masquer toutes les barres de scroll */
     overflow: overlay;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer et Edge */
   }
 
   html::-webkit-scrollbar,
   body::-webkit-scrollbar {
-    display: none;
+    display: none; /* Safari et Chrome */
   }
 
   #root {
@@ -112,20 +72,23 @@
     height: 100%;
   }
 
+  /* Masquer les barres de scroll sur tous les éléments */
   * {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer et Edge */
   }
 
   *::-webkit-scrollbar {
-    display: none;
+    display: none; /* Safari et Chrome */
   }
 }
 
-/* Classes utilitaires pour masquer les barres de scroll */
+/* Classe pour masquer la barre de défilement (renforcée) */
 @layer utilities {
   .scrollbar-hide {
+    /* Firefox */
     scrollbar-width: none;
+    /* Safari et Chrome */
     -ms-overflow-style: none;
   }
   
@@ -133,16 +96,18 @@
     display: none;
   }
 
+  /* Application globale */
   .no-scrollbar {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer et Edge */
   }
   
   .no-scrollbar::-webkit-scrollbar {
-    display: none;
+    display: none; /* Safari et Chrome */
   }
 }
 
+/* Classes utilitaires pour les safe areas iOS PWA */
 @supports (padding-top: env(safe-area-inset-top)) {
   .pt-safe {
     padding-top: env(safe-area-inset-top);
@@ -167,22 +132,6 @@
   .mb-safe {
     margin-bottom: env(safe-area-inset-bottom);
   }
-}
-
-/* Mode sombre spécifique pour les classes Terex */
-.dark {
-  .terex-bg-dark { @apply bg-terex-dark; }
-  .terex-bg-darker { @apply bg-terex-darker; }
-  .terex-bg-gray { @apply bg-terex-gray; }
-  .terex-text-accent { @apply text-terex-accent; }
-}
-
-/* Mode clair spécifique pour les classes Terex */
-.light {
-  .terex-bg-dark { @apply bg-white; }
-  .terex-bg-darker { @apply bg-gray-50; }
-  .terex-bg-gray { @apply bg-gray-100; }
-  .terex-text-accent { @apply text-terex-accent; }
 }
 
 /* Style Binance pour le logo et branding */
@@ -232,12 +181,6 @@
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.light .glass-card {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Styles pour la carte de l'Afrique 3D */

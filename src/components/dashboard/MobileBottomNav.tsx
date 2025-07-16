@@ -26,7 +26,7 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border pb-safe">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-terex-darker border-t border-terex-gray/30 pb-safe">
       <div className="flex justify-around items-center py-2">
         {navItems.map((item) => {
           const IconComponent = item.icon;
@@ -41,7 +41,7 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
               className={`flex flex-col items-center justify-center h-12 w-12 rounded-xl transition-all duration-200 ${
                 isActive 
                   ? 'bg-gradient-to-r from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/25' 
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                  : 'text-gray-400 hover:text-white hover:bg-terex-gray/50'
               }`}
             >
               {item.isCustomIcon ? (

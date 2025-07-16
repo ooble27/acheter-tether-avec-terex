@@ -6,7 +6,6 @@ type Theme = 'dark' | 'light';
 interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
-  toggleTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -18,24 +17,7 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   console.log('ThemeProvider: Initializing...');
   
-  // Récupérer le thème sauvegardé ou utiliser le mode sombre par défaut
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('terex-theme') as Theme;
-      return savedTheme || 'dark';
-    }
-    return 'dark';
-  });
-
-  const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
-    localStorage.setItem('terex-theme', newTheme);
-  };
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-  };
+  const [theme, setTheme] = useState<Theme>('dark');
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -46,7 +28,6 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const value = useMemo(() => ({
     theme,
     setTheme,
-    toggleTheme,
   }), [theme]);
 
   return (

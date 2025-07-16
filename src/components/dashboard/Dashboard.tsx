@@ -1,9 +1,9 @@
+
 import { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
 import { MobileProfileMenu } from '@/components/dashboard/MobileProfileMenu';
-import { ThemeSwitch } from '@/components/ui/theme-switch';
 import { BuyUSDT } from '@/components/features/BuyUSDT';
 import { SellUSDT } from '@/components/features/SellUSDT';
 import { InternationalTransfer } from '@/components/features/InternationalTransfer';
@@ -76,6 +76,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       console.log('Dashboard: Starting logout...')
       await signOut();
       console.log('Dashboard: Logout completed')
+      // No need to manually redirect, the auth state change will handle it
     } catch (error) {
       console.error('Dashboard: Logout error:', error)
     }
@@ -128,12 +129,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   return (
     <TransactionProvider>
       <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-background">
-          {/* Switch de thème flottant */}
-          <div className="fixed top-4 right-4 z-50">
-            <ThemeSwitch />
-          </div>
-
+        <div className="min-h-screen flex w-full bg-terex-dark">
           {/* Sidebar desktop ou menu mobile classique si pas PWA */}
           {!isMobile && (
             <AppSidebar 
@@ -166,7 +162,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             {isTablet && (
               <Button 
                 onClick={handleLogout}
-                className="fixed top-6 right-20 z-50 h-14 px-6 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm shadow-lg"
+                className="fixed top-6 right-6 z-50 h-14 px-6 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm shadow-lg"
               >
                 <LogOut className="mr-2 h-5 w-5" />
                 Déconnexion
@@ -184,6 +180,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             />
           )}
           
+          {/* Prompt de permission pour les notifications push */}
           <NotificationPermissionPrompt />
         </div>
       </SidebarProvider>
