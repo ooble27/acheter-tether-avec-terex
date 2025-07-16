@@ -5,6 +5,47 @@
 
 @layer base {
   :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 142.1 76.2% 36.3%;
+    --primary-foreground: 355.7 100% 97.3%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 142.4 71.8% 29.2%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222.2 84% 4.9%;
+    --sidebar-primary: 142.1 76.2% 36.3%;
+    --sidebar-primary-foreground: 355.7 100% 97.3%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 222.2 84% 4.9%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-ring: 142.4 71.8% 29.2%;
+  }
+
+  .dark {
     --background: 20 14.3% 4.1%;
     --foreground: 0 0% 95%;
 
@@ -33,8 +74,6 @@
     --input: 240 3.7% 15.9%;
     --ring: 142.4 71.8% 29.2%;
 
-    --radius: 0.75rem;
-
     --sidebar-background: 20 14.3% 4.1%;
     --sidebar-foreground: 0 0% 95%;
     --sidebar-primary: 142.1 76.2% 36.3%;
@@ -52,19 +91,18 @@
   }
 
   html, body {
-    @apply bg-terex-dark text-foreground font-sans;
+    @apply bg-background text-foreground font-sans;
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
     height: 100%;
-    /* Masquer toutes les barres de scroll */
     overflow: overlay;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer et Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   html::-webkit-scrollbar,
   body::-webkit-scrollbar {
-    display: none; /* Safari et Chrome */
+    display: none;
   }
 
   #root {
@@ -72,23 +110,19 @@
     height: 100%;
   }
 
-  /* Masquer les barres de scroll sur tous les éléments */
   * {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer et Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   *::-webkit-scrollbar {
-    display: none; /* Safari et Chrome */
+    display: none;
   }
 }
 
-/* Classe pour masquer la barre de défilement (renforcée) */
 @layer utilities {
   .scrollbar-hide {
-    /* Firefox */
     scrollbar-width: none;
-    /* Safari et Chrome */
     -ms-overflow-style: none;
   }
   
@@ -96,18 +130,16 @@
     display: none;
   }
 
-  /* Application globale */
   .no-scrollbar {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer et Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
   
   .no-scrollbar::-webkit-scrollbar {
-    display: none; /* Safari et Chrome */
+    display: none;
   }
 }
 
-/* Classes utilitaires pour les safe areas iOS PWA */
 @supports (padding-top: env(safe-area-inset-top)) {
   .pt-safe {
     padding-top: env(safe-area-inset-top);
@@ -134,7 +166,6 @@
   }
 }
 
-/* Style Binance pour le logo et branding */
 .terex-brand {
   background: linear-gradient(135deg, #3B968F 0%, #4BA89F 50%, #5BC1B8 100%);
   -webkit-background-clip: text;
@@ -176,7 +207,6 @@
   box-shadow: none;
 }
 
-/* Glass morphism effect pour les cartes */
 .glass-card {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
