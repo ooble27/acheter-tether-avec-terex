@@ -34,8 +34,8 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
-        <ScrollToTop />
         <AuthProvider>
+          <ScrollToTop />
           <TransactionProvider>
             <PWASessionSync />
             <Toaster />
