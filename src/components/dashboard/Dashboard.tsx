@@ -8,7 +8,7 @@ import { BuyUSDT } from '@/components/features/BuyUSDT';
 import { SellUSDT } from '@/components/features/SellUSDT';
 import { InternationalTransfer } from '@/components/features/InternationalTransfer';
 import { FAQ } from '@/components/features/FAQ';
-import { ModernDashboardHome } from '@/components/modern/ModernDashboardHome';
+import { DashboardHome } from '@/components/dashboard/DashboardHome';
 import { Profile } from '@/components/features/Profile';
 import { KYCPage } from '@/components/features/KYCPage';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
@@ -89,7 +89,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   const renderContent = () => {
     switch (activeSection) {
       case 'home':
-        return <ModernDashboardHome user={user} onNavigate={setActiveSection} />;
+        return <DashboardHome user={user} onNavigate={setActiveSection} />;
       case 'buy':
         return <BuyUSDT />;
       case 'sell':
@@ -122,14 +122,14 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'job-applications':
         return (isAdmin() || isKYCReviewer()) ? <JobApplicationsAdmin /> : <div className="text-white">Accès non autorisé</div>;
       default:
-        return <ModernDashboardHome user={user} onNavigate={setActiveSection} />;
+        return <DashboardHome user={user} onNavigate={setActiveSection} />;
     }
   };
 
   return (
     <TransactionProvider>
       <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-gradient-to-br from-gray-50 to-white">
+        <div className="min-h-screen flex w-full bg-terex-dark">
           {/* Sidebar desktop ou menu mobile classique si pas PWA */}
           {!isMobile && (
             <AppSidebar 
@@ -148,7 +148,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             />
           )}
 
-          <main className={`flex-1 ${isMobile ? 'p-0 pt-16' : 'p-0'} relative ${isMobile && isPWA ? 'pb-20' : ''}`}>
+          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'} relative ${isMobile && isPWA ? 'pb-20' : ''}`}>
             {/* Menu profil mobile pour PWA */}
             {isMobile && isPWA && (
               <MobileProfileMenu

@@ -17,7 +17,6 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   console.log('ThemeProvider: Initializing...');
   
-  // Utiliser une valeur par défaut directement
   const [theme, setTheme] = useState<Theme>('dark');
 
   useEffect(() => {
