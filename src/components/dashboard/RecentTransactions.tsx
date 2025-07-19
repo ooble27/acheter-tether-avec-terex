@@ -21,12 +21,7 @@ const TetherLogo = ({ className }: { className?: string }) => (
 
 export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
   const isMobile = useIsMobile();
-  const { transactions, loading, loadTransactions } = useTransactions();
-
-  // Load transactions when component mounts
-  React.useEffect(() => {
-    loadTransactions();
-  }, []);
+  const { transactions, loading } = useTransactions();
 
   const getTransactionIcon = (type: string) => {
     switch (type) {
@@ -115,19 +110,8 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
   // Show only the 3 most recent transactions
   const recentTransactions = transactions.slice(0, 3);
 
-  if (loading) {
-    return (
-      <Card className="bg-terex-darker border-terex-gray">
-        <CardContent className="p-3">
-          <div className="text-center py-4">
-            <p className="text-gray-400 text-sm">Chargement...</p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (recentTransactions.length === 0) {
+  // Ne plus afficher le chargement, afficher directement le contenu
+  if (recentTransactions.length === 0 && !loading) {
     return (
       <Card className="bg-terex-darker border-terex-gray">
         <CardHeader className="p-3 pb-2">

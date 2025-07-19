@@ -1,21 +1,15 @@
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useEffect } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { TransactionHistory } from '@/components/features/TransactionHistory';
 import { useTransactions } from '@/hooks/useTransactions';
-import { RefreshCw, Download, Filter } from 'lucide-react';
+import { RefreshCw, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export function TransactionHistoryPage() {
-  const { transactions, loading, loadTransactions, refetch, hasLoaded } = useTransactions();
+  const { transactions, loading, refetch } = useTransactions();
   const { toast } = useToast();
-
-  useEffect(() => {
-    if (!hasLoaded) {
-      loadTransactions();
-    }
-  }, [hasLoaded, loadTransactions]);
 
   const handleRefresh = async () => {
     try {
@@ -117,19 +111,8 @@ export function TransactionHistoryPage() {
         </Card>
       </div>
 
-      {/* Historique des transactions */}
-      {loading && !hasLoaded ? (
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardContent className="p-8">
-            <div className="flex items-center justify-center">
-              <RefreshCw className="w-6 h-6 animate-spin text-terex-accent mr-2" />
-              <span className="text-white">Chargement de votre historique...</span>
-            </div>
-          </CardContent>
-        </Card>
-      ) : (
-        <TransactionHistory transactions={transactions} />
-      )}
+      {/* Historique des transactions - Plus de message de chargement */}
+      <TransactionHistory transactions={transactions} />
     </div>
   );
 }

@@ -20,14 +20,32 @@ interface Transaction {
   payment_method?: string;
 }
 
+// Cache global pour éviter les rechargements
+let transactionsCache: Transaction[] = [];
+let cacheTimestamp = 0;
+let isInitialLoad = true;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
 export const useTransactions = () => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>(transactionsCache);
   const [loading, setLoading] = useState(false);
-  const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(!isInitialLoad);
   const { user } = useAuth();
 
-  const fetchTransactions = async () => {
+  const fetchTransactions = async (forceRefresh = false) => {
     if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    // Vérifier si on a un cache valide
+    const now = Date.now();
+    const isCacheValid = (now - cacheTimestamp) < CACHE_DURATION;
+    
+    // Si on a un cache valide et pas de force refresh, utiliser le cache
+    if (isCacheValid && transactionsCache.length > 0 && !forceRefresh) {
+      setTransactions(transactionsCache);
+      setHasLoaded(true);
       setLoading(false);
       return;
     }
@@ -100,7 +118,14 @@ export const useTransactions = () => {
 
       // Trier par date et limiter à 50 pour la performance
       allTransactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-      setTransactions(allTransactions.slice(0, 50));
+      const sortedTransactions = allTransactions.slice(0, 50);
+      
+      // Mettre à jour le cache
+      transactionsCache = sortedTransactions;
+      cacheTimestamp = now;
+      isInitialLoad = false;
+      
+      setTransactions(sortedTransactions);
       setHasLoaded(true);
     } catch (error) {
       console.error('Erreur lors de la récupération des transactions:', error);
@@ -109,9 +134,21 @@ export const useTransactions = () => {
     }
   };
 
-  // Ne charger que quand c'est demandé explicitement
+  // Charger automatiquement au premier appel
+  useEffect(() => {
+    if (user && isInitialLoad) {
+      fetchTransactions();
+    } else if (user && transactionsCache.length > 0) {
+      // Si on a déjà des données en cache, les utiliser immédiatement
+      setTransactions(transactionsCache);
+      setHasLoaded(true);
+      setLoading(false);
+    }
+  }, [user]);
+
+  // Fonction pour charger les transactions (pour compatibilité)
   const loadTransactions = () => {
-    if (!hasLoaded) {
+    if (!hasLoaded || isInitialLoad) {
       fetchTransactions();
     }
   };
@@ -119,7 +156,7 @@ export const useTransactions = () => {
   return {
     transactions,
     loading,
-    refetch: fetchTransactions,
+    refetch: () => fetchTransactions(true), // Force refresh
     loadTransactions,
     hasLoaded
   };
