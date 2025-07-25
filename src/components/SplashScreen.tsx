@@ -29,13 +29,13 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
       {/* Particules d'arrière-plan */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute w-96 h-96 bg-terex-primary/10 rounded-full blur-3xl animate-pulse -top-48 -left-48"></div>
-        <div className="absolute w-96 h-96 bg-terex-primary/5 rounded-full blur-3xl animate-pulse -bottom-48 -right-48 animation-delay-1000"></div>
+        <div className="absolute w-96 h-96 bg-terex-primary/5 rounded-full blur-3xl animate-pulse -bottom-48 -right-48" style={{ animationDelay: '1s' }}></div>
       </div>
 
       {/* Contenu principal */}
       <div className="relative z-10 text-center">
         {/* Logo container avec animation */}
-        <div className="mb-8 animate-scale-in">
+        <div className="mb-8 animate-bounce">
           <div className="relative">
             {/* Cercle de fond animé */}
             <div className="absolute inset-0 w-24 h-24 mx-auto bg-gradient-to-r from-terex-primary to-terex-primary/80 rounded-full animate-pulse"></div>
@@ -52,7 +52,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         </div>
 
         {/* Nom de l'application */}
-        <div className="animate-fade-in animation-delay-300">
+        <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
           <h1 className="text-4xl font-bold text-white mb-2 tracking-wide">
             Terex
           </h1>
@@ -62,16 +62,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         </div>
 
         {/* Indicateur de chargement */}
-        <div className="mt-12 animate-fade-in animation-delay-500">
+        <div className="mt-12 animate-fade-in" style={{ animationDelay: '500ms' }}>
           <div className="w-32 h-1 bg-gray-700 rounded-full mx-auto overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-terex-primary to-terex-primary/80 rounded-full animate-[loading_2s_ease-in-out_infinite]"></div>
+            <div className="h-full bg-gradient-to-r from-terex-primary to-terex-primary/80 rounded-full animate-pulse" style={{
+              animation: 'loadingBar 2s ease-in-out infinite'
+            }}></div>
           </div>
         </div>
       </div>
 
       {/* Animation CSS personnalisée */}
-      <style jsx>{`
-        @keyframes loading {
+      <style>{`
+        @keyframes loadingBar {
           0% {
             width: 0%;
             margin-left: 0%;
@@ -84,18 +86,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             width: 100%;
             margin-left: 0%;
           }
-        }
-        
-        .animation-delay-300 {
-          animation-delay: 300ms;
-        }
-        
-        .animation-delay-500 {
-          animation-delay: 500ms;
-        }
-        
-        .animation-delay-1000 {
-          animation-delay: 1000ms;
         }
       `}</style>
     </div>
