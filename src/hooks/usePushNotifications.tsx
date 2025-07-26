@@ -35,7 +35,6 @@ export const usePushNotifications = () => {
         const registration = await navigator.serviceWorker.register('/sw.js');
         console.log('✅ Service Worker enregistré:', registration);
         
-        // Attendre que le service worker soit prêt
         await navigator.serviceWorker.ready;
         console.log('✅ Service Worker prêt');
         
@@ -79,20 +78,15 @@ export const usePushNotifications = () => {
 
       console.log('🚀 Début de la souscription aux notifications...');
 
-      // Demander la permission
       await requestPermission();
-
-      // Enregistrer le service worker
       const registration = await registerServiceWorker();
 
-      // Vérifier si le pushManager est disponible
       if (!registration.pushManager) {
         throw new Error('Push Manager non disponible');
       }
 
       console.log('🔄 Création de l\'abonnement push...');
 
-      // Créer l'abonnement push
       const pushSubscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(
@@ -102,7 +96,6 @@ export const usePushNotifications = () => {
 
       console.log('✅ Push subscription créé:', pushSubscription);
 
-      // Extraire les clés
       const p256dhKey = pushSubscription.getKey('p256dh');
       const authKey = pushSubscription.getKey('auth');
 
@@ -124,7 +117,6 @@ export const usePushNotifications = () => {
         auth: subscriptionData.auth.substring(0, 20) + '...'
       });
 
-      // Sauvegarder l'abonnement en base
       const { error } = await supabase
         .from('push_subscriptions')
         .upsert(subscriptionData, {
@@ -146,7 +138,6 @@ export const usePushNotifications = () => {
         }
       });
 
-      // Test immédiat de notification
       console.log('🧪 Test de notification immédiat...');
       await testNotification();
 
@@ -176,31 +167,51 @@ export const usePushNotifications = () => {
 
   const testNotification = async () => {
     try {
+      if (!user) {
+        throw new Error('Utilisateur non connecté');
+      }
+
       console.log('🧪 Envoi de notification de test...');
       
-      const { error } = await supabase.functions.invoke('send-push-notification', {
+      const { data, error } = await supabase.functions.invoke('send-push-notification', {
         body: {
           subscription: subscription || {
             endpoint: 'test',
             keys: { p256dh: 'test', auth: 'test' }
           },
           notification: {
-            title: 'Test Terex',
-            body: 'Vos notifications push fonctionnent correctement ! 🎉',
+            title: 'Test Terex 🎉',
+            body: 'Vos notifications push fonctionnent correctement !',
             icon: '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
             badge: '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
-            data: { type: 'test' }
+            url: '/?test=notification',
+            data: { type: 'test', timestamp: Date.now() }
           }
         }
       });
 
       if (error) {
         console.error('❌ Erreur test notification:', error);
+        toast({
+          title: "Erreur test",
+          description: `Erreur lors du test: ${error.message}`,
+          variant: "destructive"
+        });
       } else {
-        console.log('✅ Notification de test envoyée');
+        console.log('✅ Notification de test envoyée:', data);
+        toast({
+          title: "Test envoyé",
+          description: "Vérifiez votre notification push !",
+          className: "bg-blue-600 text-white border-blue-600",
+        });
       }
     } catch (error) {
       console.error('❌ Erreur lors du test:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible d'envoyer la notification de test",
+        variant: "destructive"
+      });
     }
   };
 
@@ -210,7 +221,6 @@ export const usePushNotifications = () => {
 
       console.log('🔄 Désabonnement des notifications...');
 
-      // Supprimer de la base de données
       const { error } = await supabase
         .from('push_subscriptions')
         .delete()
@@ -221,7 +231,6 @@ export const usePushNotifications = () => {
         throw error;
       }
 
-      // Désabonner du navigateur
       if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.ready;
         const pushSubscription = await registration.pushManager.getSubscription();
