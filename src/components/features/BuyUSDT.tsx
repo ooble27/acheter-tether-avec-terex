@@ -291,6 +291,19 @@ export function BuyUSDT() {
 
   return (
     <KYCProtection onKYCRequired={handleKYCRequired}>
+      <style>
+        {`
+          .usdt-icon-force-visible {
+            filter: none !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+            background: none !important;
+            -webkit-filter: none !important;
+            backdrop-filter: none !important;
+          }
+        `}
+      </style>
       <div className="min-h-screen bg-terex-dark p-0">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
@@ -299,13 +312,7 @@ export function BuyUSDT() {
               <img 
                 src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                 alt="USDT" 
-                className="w-8 h-8 mr-3"
-                style={{ 
-                  filter: 'none',
-                  opacity: '1',
-                  visibility: 'visible',
-                  display: 'inline-block'
-                }}
+                className="w-8 h-8 mr-3 usdt-icon-force-visible"
               />
               <h1 className="text-2xl sm:text-3xl font-bold text-white">Acheter USDT</h1>
             </div>
