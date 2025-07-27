@@ -31,8 +31,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
     { label: 'Carrières', href: '/careers' },
     { label: 'Support', href: '/support' },
     { label: 'Contact', href: '/contact' },
-    { label: 'FAQ', href: '/faq' },
-    { label: 'Bannière', href: '/banniere' }
+    { label: 'FAQ', href: '/faq' }
   ];
 
   return (

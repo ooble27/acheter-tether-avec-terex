@@ -23,7 +23,6 @@ import SecurityPage from "./pages/SecurityPage";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MarketingPage } from "./pages/MarketingPage";
-import { TwitterBannerPage } from "./pages/TwitterBannerPage";
 import AdminPage from "./pages/AdminPage";
 import { Toaster } from "@/components/ui/toaster"
 import BlockchainPage from "./pages/BlockchainPage";
@@ -48,7 +47,6 @@ function App() {
                 <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="/blockchain" element={<BlockchainPage />} />
                 <Route path="/marketing" element={<MarketingPage />} />
-                <Route path="/banniere" element={<TwitterBannerPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/careers" element={<CareersPage />} />
                 <Route path="/support" element={<SupportPage />} />
