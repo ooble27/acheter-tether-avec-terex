@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, CheckCircle, Users, Globe, TrendingUp, Shield, Zap, Award, Target, User } from 'lucide-react';
@@ -304,20 +305,20 @@ const AboutPage = () => {
           
           <div className="grid md:grid-cols-3 gap-8">
             {team.map((member, index) => (
-              <div key={index} className="group">
-                <div className="bg-gradient-to-br from-terex-accent/10 to-transparent rounded-2xl p-8 border border-terex-accent/20 hover:border-terex-accent/50 transition-all duration-500 hover:scale-105">
+              <div key={index} className="group h-full">
+                <div className="bg-gradient-to-br from-terex-accent/10 to-transparent rounded-2xl p-8 border border-terex-accent/20 hover:border-terex-accent/50 transition-all duration-500 hover:scale-105 h-full flex flex-col">
                   <div className="relative mb-6">
                     <div className="w-24 h-24 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full mx-auto flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                       <User className="w-12 h-12 text-terex-accent" />
                     </div>
                   </div>
                   
-                  <div className="text-center">
+                  <div className="text-center flex-1 flex flex-col">
                     <h3 className="text-white font-bold text-xl mb-2">{member.name}</h3>
                     <p className="text-terex-accent font-medium mb-4">{member.role}</p>
-                    <p className="text-gray-300 text-sm leading-relaxed mb-6">{member.bio}</p>
+                    <p className="text-gray-300 text-sm leading-relaxed mb-6 flex-1">{member.bio}</p>
                     
-                    <div className="flex flex-wrap justify-center gap-2">
+                    <div className="flex flex-wrap justify-center gap-2 mt-auto">
                       {member.specialties.map((specialty, idx) => (
                         <span key={idx} className="bg-terex-accent/20 text-terex-accent text-xs px-3 py-1 rounded-full">
                           {specialty}
