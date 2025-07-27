@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, CheckCircle, Users, Globe, TrendingUp, Shield, Zap, Award, Target, User } from 'lucide-react';
@@ -52,21 +51,21 @@ const AboutPage = () => {
   const team = [
     {
       name: "Mohamed Lo",
-      role: "CEO & Fondateur",
+      role: "CEO & Fondateur", 
       bio: "Expert fintech avec plus de 10 ans d'expérience dans les services financiers numériques en Afrique et au Canada",
       specialties: ["Leadership", "Fintech", "Vision Stratégique"]
     },
     {
-      name: "Fatou Sow",
+      name: "Sidy Ndiaye",
       role: "CTO",
-      bio: "Ingénieure blockchain spécialisée dans les solutions de paiement décentralisées",
-      specialties: ["Blockchain", "Architecture", "Crypto"]
+      bio: "Expert en fintech spécialisé dans le développement de solutions financières innovantes",
+      specialties: ["Fintech", "Architecture", "Innovation"]
     },
     {
-      name: "Omar Ba",
-      role: "Head of Compliance",
-      bio: "Expert en réglementation financière et conformité AML/KYC",
-      specialties: ["Compliance", "AML/KYC", "Réglementation"]
+      name: "Adéchina Olaitan",
+      role: "Head of Marketing",
+      bio: "Spécialiste du marketing digital et de la communication pour les entreprises fintech",
+      specialties: ["Marketing", "Communication", "Digital"]
     }
   ];
 
@@ -78,7 +77,7 @@ const AboutPage = () => {
     },
     {
       icon: Target,
-      title: "Transparence",
+      title: "Transparence", 
       description: "Tarifs clairs, processus transparent et communication honnête avec nos utilisateurs."
     },
     {
