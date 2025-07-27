@@ -301,10 +301,10 @@ export function BuyUSDT() {
                 alt="USDT" 
                 className="w-8 h-8 mr-3"
                 style={{ 
-                  filter: 'none !important',
-                  opacity: '1 !important',
-                  visibility: 'visible !important',
-                  display: 'inline-block !important'
+                  filter: 'none',
+                  opacity: '1',
+                  visibility: 'visible',
+                  display: 'inline-block'
                 }}
               />
               <h1 className="text-2xl sm:text-3xl font-bold text-white">Acheter USDT</h1>
