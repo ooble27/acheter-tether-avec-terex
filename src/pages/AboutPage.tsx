@@ -122,7 +122,7 @@ const AboutPage = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
             <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold text-white mb-2">
+              <h1 className="text-5xl font-bold text-white mb-2">
                 À propos de <span className="text-terex-accent">Terex</span>
               </h1>
               <p className="text-terex-accent text-lg font-medium">Teranga Exchange</p>
