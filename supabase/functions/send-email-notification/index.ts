@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.0.0";
 import { Resend } from "npm:resend@2.0.0";
@@ -365,139 +366,181 @@ const handler = async (req: Request): Promise<Response> => {
         const statusMessage = statusMessages[orderData.status as keyof typeof statusMessages] || 'Mise à jour de votre candidature';
         subject = `Candidature ${orderData.position} - ${statusMessage}`;
 
-        // Email de mise à jour de statut pour le candidat
+        // Email de mise à jour de statut pour le candidat avec fond noir et contenu long
         htmlContent = `
-          <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #f8fafc;">
-            <!-- Header avec gradient Terex -->
-            <div style="background: linear-gradient(135deg, #0FA958 0%, #08a045 100%); padding: 40px 30px; text-align: center; border-radius: 12px 12px 0 0;">
-              <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; backdrop-filter: blur(10px);">
-                <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                  Mise à jour de votre candidature
-                </h1>
-                <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px; font-weight: 500;">
-                  ${orderData.position} chez Terex
-                </p>
-              </div>
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #000000; color: #ffffff; padding: 0;">
+            
+            <!-- Header simple -->
+            <div style="padding: 40px 30px; text-align: center; border-bottom: 1px solid #333333;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600;">
+                TEREX
+              </h1>
+              <p style="color: #888888; margin: 10px 0 0 0; font-size: 14px;">
+                Plateforme d'échange crypto
+              </p>
             </div>
 
             <!-- Contenu principal -->
-            <div style="background: white; padding: 40px 30px;">
-              <div style="text-align: center; margin-bottom: 30px;">
-                <div style="width: 80px; height: 80px; margin: 0 auto 20px; background: linear-gradient(135deg, #0FA958, #08a045); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 32px rgba(15, 169, 88, 0.3);">
-                  ${orderData.status === 'accepted' 
-                    ? '<span style="color: white; font-size: 40px;">🎉</span>'
-                    : orderData.status === 'rejected'
-                    ? '<span style="color: white; font-size: 40px;">📋</span>'
-                    : orderData.status === 'interview'
-                    ? '<span style="color: white; font-size: 40px;">📞</span>'
-                    : '<span style="color: white; font-size: 40px;">⏳</span>'
-                  }
-                </div>
-                <h2 style="color: #1a202c; font-size: 24px; font-weight: 700; margin: 0;">
+            <div style="padding: 40px 30px;">
+              
+              <!-- Statut -->
+              <div style="text-align: center; margin-bottom: 40px;">
+                <h2 style="color: #ffffff; font-size: 22px; font-weight: 600; margin: 0 0 10px 0;">
                   ${statusMessage}
                 </h2>
+                <p style="color: #888888; font-size: 16px; margin: 0;">
+                  ${orderData.position}
+                </p>
               </div>
 
-              <div style="background: #f7fafc; border-left: 4px solid #0FA958; padding: 20px; border-radius: 8px; margin: 25px 0;">
-                <p style="color: #2d3748; font-size: 16px; line-height: 1.6; margin: 0;">
-                  Bonjour <strong>${orderData.first_name}</strong>,
+              <!-- Message principal -->
+              <div style="margin-bottom: 40px;">
+                <p style="color: #ffffff; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                  Bonjour ${orderData.first_name},
                 </p>
-                <p style="color: #4a5568; font-size: 16px; line-height: 1.6; margin: 15px 0 0 0;">
-                  ${orderData.status === 'accepted' 
-                    ? `Nous avons le plaisir de vous informer que votre candidature pour le poste de <strong>${orderData.position}</strong> a été retenue ! Notre équipe RH vous contactera dans les plus brefs délais pour organiser les prochaines étapes.`
-                    : orderData.status === 'rejected'
-                    ? `Après un examen attentif de votre candidature pour le poste de <strong>${orderData.position}</strong>, nous avons le regret de vous informer que nous ne pouvons pas donner suite à votre candidature pour le moment. Nous conserverons votre profil dans notre base de données pour de futures opportunités.`
-                    : orderData.status === 'interview'
-                    ? `Votre candidature pour le poste de <strong>${orderData.position}</strong> a retenu notre attention ! Nous souhaitons vous rencontrer lors d'un entretien. Notre équipe RH vous contactera prochainement pour fixer un rendez-vous.`
-                    : orderData.status === 'reviewing'
-                    ? `Votre candidature pour le poste de <strong>${orderData.position}</strong> est actuellement en cours d'examen par notre équipe. Nous vous tiendrons informé de l'évolution de votre dossier.`
-                    : `Votre candidature pour le poste de <strong>${orderData.position}</strong> a bien été reçue et est en cours de traitement.`
-                  }
-                </p>
+                
+                ${orderData.status === 'accepted' ? `
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Nous avons le plaisir de vous informer que votre candidature pour le poste de <strong style="color: #ffffff;">${orderData.position}</strong> a été retenue par notre équipe de recrutement.
+                  </p>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Après un examen approfondi de votre profil et de vos compétences, nous pensons que vous seriez un excellent ajout à notre équipe chez Terex. Votre expérience et votre motivation correspondent parfaitement à ce que nous recherchons pour ce poste.
+                  </p>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    En tant que membre de l'équipe Terex, vous rejoindrez une entreprise innovante qui révolutionne les transferts d'argent et les échanges cryptographiques en Afrique. Nous sommes fiers de notre mission qui consiste à faciliter les transactions financières pour des millions de personnes à travers le continent.
+                  </p>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Notre équipe RH vous contactera dans les prochaines 48 heures pour discuter des détails de votre intégration, notamment :
+                  </p>
+                  
+                  <ul style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 20px; padding: 0;">
+                    <li style="margin-bottom: 8px;">Les conditions d'emploi et la rémunération</li>
+                    <li style="margin-bottom: 8px;">La date de début souhaitée</li>
+                    <li style="margin-bottom: 8px;">Les formalités administratives</li>
+                    <li style="margin-bottom: 8px;">Le processus d'onboarding</li>
+                    <li style="margin-bottom: 8px;">Les outils et équipements nécessaires</li>
+                  </ul>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Nous avons hâte de vous accueillir dans notre équipe et de voir comment vous contribuerez à notre croissance et à notre succès. Terex est une entreprise où chaque membre de l'équipe joue un rôle crucial dans notre mission de transformation du paysage financier africain.
+                  </p>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Si vous avez des questions concernant votre poste ou le processus d'intégration, n'hésitez pas à nous contacter. Nous sommes là pour vous accompagner dans cette nouvelle étape de votre carrière.
+                  </p>
+                ` : orderData.status === 'rejected' ? `
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Nous vous remercions d'avoir pris le temps de postuler pour le poste de <strong style="color: #ffffff;">${orderData.position}</strong> chez Terex.
+                  </p>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Après un examen attentif de votre candidature et de tous les profils reçus, nous avons le regret de vous informer que nous ne pouvons pas donner suite à votre candidature pour ce poste spécifique.
+                  </p>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Cette décision ne reflète en aucun cas vos compétences ou votre potentiel. Le processus de sélection était très compétitif, et nous avons dû faire des choix difficiles parmi de nombreux candidats qualifiés.
+                  </p>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Nous tenons à vous faire savoir que votre profil a été ajouté à notre base de données de talents, et nous vous contacterons si d'autres opportunités correspondant à votre profil se présentent à l'avenir.
+                  </p>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Nous vous encourageons à continuer à suivre nos offres d'emploi et à postuler pour d'autres postes qui pourraient vous intéresser. Terex est une entreprise en croissance rapide, et de nouvelles opportunités apparaissent régulièrement.
+                  </p>
+                ` : orderData.status === 'interview' ? `
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Votre candidature pour le poste de <strong style="color: #ffffff;">${orderData.position}</strong> a retenu notre attention et nous souhaitons vous rencontrer lors d'un entretien.
+                  </p>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Après avoir examiné votre profil, nous pensons que vous pourriez être un excellent candidat pour rejoindre notre équipe chez Terex. Nous aimerions en savoir plus sur votre expérience et discuter de la façon dont vous pourriez contribuer à notre mission.
+                  </p>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Un membre de notre équipe RH vous contactera dans les prochaines 48 heures pour organiser un entretien. Nous vous proposerons plusieurs créneaux horaires pour nous adapter à votre emploi du temps.
+                  </p>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    L'entretien sera l'occasion de :
+                  </p>
+                  
+                  <ul style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 20px; padding: 0;">
+                    <li style="margin-bottom: 8px;">Discuter de votre expérience et de vos compétences</li>
+                    <li style="margin-bottom: 8px;">Présenter en détail le poste et les responsabilités</li>
+                    <li style="margin-bottom: 8px;">Vous faire découvrir notre entreprise et notre culture</li>
+                    <li style="margin-bottom: 8px;">Répondre à toutes vos questions</li>
+                  </ul>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Nous vous recommandons de préparer quelques questions sur le poste et sur Terex. Cela montrera votre intérêt et vous aidera à mieux comprendre si cette opportunité vous convient.
+                  </p>
+                ` : `
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Votre candidature pour le poste de <strong style="color: #ffffff;">${orderData.position}</strong> est actuellement ${orderData.status === 'reviewing' ? 'en cours d\'examen' : 'en attente d\'examen'} par notre équipe de recrutement.
+                  </p>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Nous prenons le temps d'examiner soigneusement chaque candidature pour nous assurer de trouver les meilleurs talents pour rejoindre notre équipe. Ce processus peut prendre quelques jours, mais nous nous efforçons de vous tenir informé régulièrement.
+                  </p>
+                  
+                  <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                    Nous vous tiendrons informé de l'évolution de votre candidature et vous contacterons dès que nous aurons des nouvelles à vous communiquer.
+                  </p>
+                `}
               </div>
 
               ${orderData.admin_notes ? `
-                <div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 20px; margin: 25px 0;">
-                  <h3 style="color: #c2410c; font-size: 16px; font-weight: 600; margin: 0 0 10px 0;">
-                    💬 Message de notre équipe RH
+                <div style="background: #111111; border: 1px solid #333333; border-radius: 8px; padding: 20px; margin: 30px 0;">
+                  <h3 style="color: #ffffff; font-size: 16px; font-weight: 600; margin: 0 0 10px 0;">
+                    Message de notre équipe RH
                   </h3>
-                  <p style="color: #9a3412; margin: 0; font-style: italic; line-height: 1.5;">
+                  <p style="color: #cccccc; margin: 0; font-style: italic; line-height: 1.5;">
                     "${orderData.admin_notes}"
                   </p>
                 </div>
               ` : ''}
 
-              <!-- Timeline de processus -->
-              <div style="margin: 30px 0; padding: 25px; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius: 12px;">
-                <h3 style="color: #1a202c; font-size: 18px; font-weight: 600; margin: 0 0 20px 0; text-align: center;">
-                  🔄 Processus de recrutement
+              <!-- Informations sur l'entreprise -->
+              <div style="margin: 40px 0; padding: 25px; background: #111111; border-radius: 8px;">
+                <h3 style="color: #ffffff; font-size: 18px; font-weight: 600; margin: 0 0 15px 0;">
+                  À propos de Terex
                 </h3>
-                <div style="display: flex; justify-content: space-between; align-items: center; position: relative;">
-                  <div style="flex: 1; text-align: center;">
-                    <div style="width: 40px; height: 40px; margin: 0 auto 10px; background: #0FA958; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                      <span style="color: white; font-weight: bold;">✓</span>
-                    </div>
-                    <p style="margin: 0; font-size: 12px; color: #4a5568; font-weight: 500;">Candidature reçue</p>
-                  </div>
-                  <div style="flex: 1; text-align: center;">
-                    <div style="width: 40px; height: 40px; margin: 0 auto 10px; background: ${orderData.status === 'reviewing' || orderData.status === 'interview' || orderData.status === 'accepted' ? '#0FA958' : '#e2e8f0'}; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                      <span style="color: ${orderData.status === 'reviewing' || orderData.status === 'interview' || orderData.status === 'accepted' ? 'white' : '#9ca3af'}; font-weight: bold;">${orderData.status === 'reviewing' || orderData.status === 'interview' || orderData.status === 'accepted' ? '✓' : '2'}</span>
-                    </div>
-                    <p style="margin: 0; font-size: 12px; color: #4a5568; font-weight: 500;">Examen du dossier</p>
-                  </div>
-                  <div style="flex: 1; text-align: center;">
-                    <div style="width: 40px; height: 40px; margin: 0 auto 10px; background: ${orderData.status === 'interview' || orderData.status === 'accepted' ? '#0FA958' : '#e2e8f0'}; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                      <span style="color: ${orderData.status === 'interview' || orderData.status === 'accepted' ? 'white' : '#9ca3af'}; font-weight: bold;">${orderData.status === 'interview' || orderData.status === 'accepted' ? '✓' : '3'}</span>
-                    </div>
-                    <p style="margin: 0; font-size: 12px; color: #4a5568; font-weight: 500;">Entretien</p>
-                  </div>
-                  <div style="flex: 1; text-align: center;">
-                    <div style="width: 40px; height: 40px; margin: 0 auto 10px; background: ${orderData.status === 'accepted' ? '#0FA958' : '#e2e8f0'}; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                      <span style="color: ${orderData.status === 'accepted' ? 'white' : '#9ca3af'}; font-weight: bold;">${orderData.status === 'accepted' ? '✓' : '4'}</span>
-                    </div>
-                    <p style="margin: 0; font-size: 12px; color: #4a5568; font-weight: 500;">Décision finale</p>
-                  </div>
-                </div>
+                <p style="color: #cccccc; font-size: 14px; line-height: 1.6; margin: 0 0 15px 0;">
+                  Terex est une plateforme innovante qui révolutionne les transferts d'argent et les échanges cryptographiques en Afrique. Nous facilitons les transactions financières pour des millions de personnes à travers le continent.
+                </p>
+                <p style="color: #cccccc; font-size: 14px; line-height: 1.6; margin: 0;">
+                  Notre mission est de rendre les services financiers plus accessibles, plus rapides et plus sûrs pour tous les Africains, en utilisant les dernières technologies blockchain et crypto.
+                </p>
               </div>
 
-              ${orderData.status === 'interview' ? `
-                <div style="background: #dbeafe; border: 1px solid #93c5fd; border-radius: 8px; padding: 20px; margin: 25px 0; text-align: center;">
-                  <h3 style="color: #1e40af; font-size: 16px; font-weight: 600; margin: 0 0 10px 0;">
-                    📞 Prochaines étapes
-                  </h3>
-                  <p style="color: #1e3a8a; margin: 0; line-height: 1.5;">
-                    Un membre de notre équipe RH vous contactera dans les 48 heures pour organiser votre entretien. 
-                    Assurez-vous que vos coordonnées sont à jour !
-                  </p>
-                </div>
-              ` : ''}
+              <!-- Contact -->
+              <div style="margin: 40px 0; text-align: center;">
+                <p style="color: #cccccc; font-size: 14px; line-height: 1.6; margin: 0 0 15px 0;">
+                  Si vous avez des questions concernant votre candidature, n'hésitez pas à nous contacter :
+                </p>
+                <p style="color: #cccccc; font-size: 14px; margin: 0;">
+                  <a href="mailto:terangaexchange@gmail.com" style="color: #ffffff; text-decoration: none;">
+                    terangaexchange@gmail.com
+                  </a>
+                </p>
+              </div>
             </div>
-
+            
             <!-- Footer -->
-            <div style="background: #1a202c; padding: 30px; text-align: center; border-radius: 0 0 12px 12px;">
-              <div style="margin-bottom: 20px;">
-                <h3 style="color: white; font-size: 18px; font-weight: 600; margin: 0 0 10px 0;">
-                  Questions ?
-                </h3>
-                <p style="color: #a0aec0; margin: 0; font-size: 14px;">
-                  Notre équipe RH est là pour vous accompagner
-                </p>
-              </div>
-              
-              <div style="border-top: 1px solid #4a5568; padding-top: 20px;">
-                <p style="color: #718096; margin: 0 0 15px 0; font-size: 14px;">
-                  Cordialement,<br>
-                  <strong style="color: #0FA958;">L'équipe Terex</strong>
-                </p>
-                <div style="margin-top: 20px;">
-                  <a href="mailto:terangaexchange@gmail.com" style="color: #0FA958; text-decoration: none; font-weight: 500; margin: 0 15px;">
-                    ✉️ Contact RH
-                  </a>
-                  <a href="https://app.terangaexchange.com" style="color: #0FA958; text-decoration: none; font-weight: 500; margin: 0 15px;">
-                    🌐 Notre plateforme
-                  </a>
-                </div>
-              </div>
+            <div style="border-top: 1px solid #333333; padding: 30px; text-align: center;">
+              <p style="color: #888888; margin: 0 0 10px 0; font-size: 14px;">
+                Cordialement,<br>
+                <strong style="color: #ffffff;">L'équipe Terex</strong>
+              </p>
+              <p style="color: #666666; margin: 0; font-size: 12px;">
+                <a href="https://app.terangaexchange.com" style="color: #888888; text-decoration: none;">
+                  app.terangaexchange.com
+                </a>
+              </p>
             </div>
           </div>
         `;
