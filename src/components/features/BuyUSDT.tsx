@@ -300,7 +300,12 @@ export function BuyUSDT() {
                 src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                 alt="USDT" 
                 className="w-8 h-8 mr-3"
-                style={{ filter: 'none' }}
+                style={{ 
+                  filter: 'none !important',
+                  opacity: '1 !important',
+                  visibility: 'visible !important',
+                  display: 'inline-block !important'
+                }}
               />
               <h1 className="text-2xl sm:text-3xl font-bold text-white">Acheter USDT</h1>
             </div>
