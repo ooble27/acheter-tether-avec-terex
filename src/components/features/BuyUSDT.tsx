@@ -295,7 +295,15 @@ export function BuyUSDT() {
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-6 md:mb-8 px-1 md:px-0">
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Acheter USDT</h1>
+            <div className="flex items-center mb-2">
+              <img 
+                src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
+                alt="USDT" 
+                className="w-8 h-8 mr-3"
+                style={{ filter: 'none' }}
+              />
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">Acheter USDT</h1>
+            </div>
             <p className="text-gray-400">Achetez des USDT avec de l'argent fiat</p>
           </div>
 

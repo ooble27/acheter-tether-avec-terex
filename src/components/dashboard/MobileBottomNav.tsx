@@ -7,7 +7,8 @@ const TetherLogo = ({ className, isActive }: { className?: string; isActive?: bo
   <img 
     src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" 
     alt="Tether Logo" 
-    className={`${className} ${isActive ? 'brightness-0 invert' : ''}`} 
+    className={`${className}`}
+    style={{ filter: 'none' }}
   />
 );
 
