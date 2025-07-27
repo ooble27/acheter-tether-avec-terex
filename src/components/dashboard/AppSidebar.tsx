@@ -1,3 +1,4 @@
+
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -21,7 +22,7 @@ const TetherLogo = ({
   className?: string;
   isActive?: boolean;
   color?: string;
-}) => <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="Tether Logo" className={`${className} ${isActive ? 'brightness-0 invert' : ''}`} style={color === 'red' && !isActive ? {
+}) => <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="Tether Logo" className={`${className} ${isActive ? 'brightness-0 invert' : ''} usdt-icon-force-visible`} style={color === 'red' && !isActive ? {
   filter: 'hue-rotate(0deg) saturate(0) brightness(0) invert(27%) sepia(98%) saturate(7465%) hue-rotate(0deg) brightness(98%) contrast(118%)'
 } : {}} />;
 
@@ -86,6 +87,20 @@ const AppSidebarContent = ({
   };
 
   return <div className="flex flex-col h-full min-h-0">
+      <style>
+        {`
+          .usdt-icon-force-visible {
+            filter: none !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+            background: none !important;
+            -webkit-filter: none !important;
+            backdrop-filter: none !important;
+          }
+        `}
+      </style>
+      
       <SidebarHeader className="p-6 border-b border-terex-gray/30 pt-safe bg-[terex-gray-light] bg-terex-darker">
         {/* Logo Header Style Binance dans la Sidebar */}
         <div className="flex items-center space-x-3">

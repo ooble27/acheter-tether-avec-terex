@@ -7,7 +7,7 @@ const TetherLogo = ({ className, isActive }: { className?: string; isActive?: bo
   <img 
     src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" 
     alt="Tether Logo" 
-    className={`${className}`}
+    className={`${className} usdt-icon-force-visible`}
     style={{ filter: 'none' }}
   />
 );
@@ -28,6 +28,20 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-terex-darker border-t border-terex-gray/30 pb-safe">
+      <style>
+        {`
+          .usdt-icon-force-visible {
+            filter: none !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+            background: none !important;
+            -webkit-filter: none !important;
+            backdrop-filter: none !important;
+          }
+        `}
+      </style>
+      
       <div className="flex justify-around items-center py-2">
         {navItems.map((item) => {
           const IconComponent = item.icon;

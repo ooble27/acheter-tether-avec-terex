@@ -35,6 +35,20 @@ export function TradingSidebar({
 }: TradingSidebarProps) {
   return (
     <div className="lg:col-span-1 space-y-4 md:space-y-6 w-full">
+      <style>
+        {`
+          .usdt-icon-force-visible {
+            filter: none !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+            background: none !important;
+            -webkit-filter: none !important;
+            backdrop-filter: none !important;
+          }
+        `}
+      </style>
+      
       {/* Taux du jour */}
       <Card className="bg-terex-darker border-terex-gray w-full overflow-hidden">
         <CardHeader className="p-3 sm:p-4">
@@ -43,7 +57,7 @@ export function TradingSidebar({
               <img 
                 src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                 alt="USDT" 
-                className="w-4 h-4 md:w-5 md:h-5 mr-2 flex-shrink-0"
+                className="w-4 h-4 md:w-5 md:h-5 mr-2 flex-shrink-0 usdt-icon-force-visible"
               />
               <span className="truncate">Taux du jour</span>
             </CardTitle>
@@ -92,7 +106,7 @@ export function TradingSidebar({
             <img 
               src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
               alt="USDT" 
-              className="w-4 h-4 md:w-5 md:h-5 mr-2 flex-shrink-0"
+              className="w-4 h-4 md:w-5 md:h-5 mr-2 flex-shrink-0 usdt-icon-force-visible"
             />
             <span className="truncate">Nos taux TEREX</span>
           </CardTitle>
