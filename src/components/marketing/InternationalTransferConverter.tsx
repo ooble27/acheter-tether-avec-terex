@@ -10,7 +10,8 @@ import { useCryptoRates } from '@/hooks/useCryptoRates';
 import { useNavigate } from 'react-router-dom';
 
 export function InternationalTransferConverter() {
-  const [amount, setAmount] = useState('100');
+  const [cadAmount, setCadAmount] = useState('100');
+  const [cfaAmount, setCfaAmount] = useState('');
   const [service, setService] = useState('wave');
   const navigate = useNavigate();
 
@@ -33,19 +34,43 @@ export function InternationalTransferConverter() {
     orange: { percentage: 0.8, name: 'Orange Money', logo: '/lovable-uploads/49a20f85-382b-4dd2-aefe-98214bea6069.png' }
   };
 
-  // Calcul du montant reçu avec déduction des frais
-  const calculateReceiveAmount = () => {
-    if (!amount) return '0';
+  const selectedService = serviceFees[service as keyof typeof serviceFees];
+
+  // Calcul du montant CFA reçu avec déduction des frais
+  const calculateCfaFromCad = (cadValue: string) => {
+    if (!cadValue) return '';
     
-    const baseAmount = parseFloat(amount) * exchangeRate;
-    const feePercentage = serviceFees[service as keyof typeof serviceFees].percentage;
+    const baseAmount = parseFloat(cadValue) * exchangeRate;
+    const feePercentage = selectedService.percentage;
     const amountAfterFees = baseAmount * (1 - feePercentage / 100);
     
     return Math.round(amountAfterFees).toString();
   };
 
-  const receiveAmount = calculateReceiveAmount();
-  const selectedService = serviceFees[service as keyof typeof serviceFees];
+  // Calcul du montant CAD nécessaire pour obtenir un montant CFA donné
+  const calculateCadFromCfa = (cfaValue: string) => {
+    if (!cfaValue) return '';
+    
+    const feePercentage = selectedService.percentage;
+    const amountBeforeFees = parseFloat(cfaValue) / (1 - feePercentage / 100);
+    const cadNeeded = amountBeforeFees / exchangeRate;
+    
+    return (Math.round(cadNeeded * 100) / 100).toString();
+  };
+
+  const handleCadAmountChange = (value: string) => {
+    setCadAmount(value);
+    setCfaAmount(calculateCfaFromCad(value));
+  };
+
+  const handleCfaAmountChange = (value: string) => {
+    setCfaAmount(value);
+    setCadAmount(calculateCadFromCfa(value));
+  };
+
+  // Affichage des montants
+  const displayedCadAmount = cadAmount;
+  const displayedCfaAmount = cfaAmount || (cadAmount ? calculateCfaFromCad(cadAmount) : '');
 
   const handleStartTransfer = () => {
     navigate('/auth');
@@ -87,8 +112,8 @@ export function InternationalTransferConverter() {
               <Input
                 type="number"
                 placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                value={displayedCadAmount}
+                onChange={(e) => handleCadAmountChange(e.target.value)}
                 className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
               />
               <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
@@ -105,9 +130,10 @@ export function InternationalTransferConverter() {
             <Label className="text-white text-sm">Le destinataire reçoit</Label>
             <div className="relative">
               <Input
-                type="text"
-                value={receiveAmount}
-                readOnly
+                type="number"
+                placeholder="0"
+                value={displayedCfaAmount}
+                onChange={(e) => handleCfaAmountChange(e.target.value)}
                 className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
               />
               <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
