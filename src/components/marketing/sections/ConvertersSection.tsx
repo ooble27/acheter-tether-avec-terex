@@ -15,10 +15,10 @@ export function ConvertersSection() {
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           <div>
-            <div className="text-center mb-6">
-              <div className="flex items-center justify-center mb-3">
+            <div className="text-center mb-4">
+              <div className="flex items-center justify-center mb-2">
                 <img 
                   src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                   alt="USDT" 
@@ -32,8 +32,8 @@ export function ConvertersSection() {
           </div>
           
           <div>
-            <div className="text-center mb-6">
-              <h3 className="text-xl font-semibold text-white mb-3">Virement International</h3>
+            <div className="text-center mb-4">
+              <h3 className="text-xl font-semibold text-white mb-2">Virement International</h3>
               <p className="text-sm text-gray-400">Envoyez de l'argent vers l'Afrique</p>
             </div>
             <InternationalTransferConverter />
