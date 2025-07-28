@@ -36,7 +36,7 @@ export function UnifiedConverter() {
       </div>
 
       {/* Convertisseur selon la sélection */}
-      <div className="[&>*]:rounded-t-none [&>*]:border-t-0">
+      <div className="[&>*]:rounded-t-none [&>*]:border-t-0 [&>*]:mx-0">
         {activeTab === 'usdt' ? (
           <CurrencyConverter />
         ) : (
