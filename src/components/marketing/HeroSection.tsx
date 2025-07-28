@@ -41,11 +41,11 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           
           {/* Colonne de gauche - Contenu textuel */}
           <div className="order-2 lg:order-1 text-center lg:text-left">
-            {/* DeviceMockups avec titre optimisé pour mobile */}
+            {/* Titre optimisé pour mobile avec 2 lignes fixes */}
             <div className="lg:hidden">
-              <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-4 leading-tight">
-                <div>La plateforme crypto</div>
-                <div className="text-terex-accent">de confiance</div>
+              <div className="text-4xl sm:text-5xl font-black text-white mb-4 leading-tight">
+                <div>Échangez vos cryptos</div>
+                <div className="text-terex-accent">facilement</div>
               </div>
             </div>
             
