@@ -41,9 +41,12 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           
           {/* Colonne de gauche - Contenu textuel */}
           <div className="order-2 lg:order-1 text-center lg:text-left">
-            {/* Titre centré sur mobile */}
+            {/* DeviceMockups avec titre optimisé pour mobile */}
             <div className="lg:hidden">
-              <DeviceMockups />
+              <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-4 leading-tight">
+                <div>La plateforme crypto</div>
+                <div className="text-terex-accent">de confiance</div>
+              </div>
             </div>
             
             {/* Mockup téléphone visible uniquement sur mobile entre titre et sous-titre */}
