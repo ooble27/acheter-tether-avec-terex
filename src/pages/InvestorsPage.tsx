@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, TrendingUp, Users, Globe, Shield, Target, Award, CheckCircle, Download, Calendar, Mail, Phone } from 'lucide-react';
+import { ArrowRight, TrendingUp, Users, Globe, Shield, Target, Award, CheckCircle, Download, Calendar, Mail, Phone, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
