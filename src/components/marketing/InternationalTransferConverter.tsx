@@ -29,9 +29,8 @@ export function InternationalTransferConverter() {
 
   // Frais selon le service
   const serviceFees = {
-    wave: { percentage: 1, name: 'Wave' },
-    orange: { percentage: 2, name: 'Orange Money' },
-    moov: { percentage: 1.5, name: 'Moov Money' }
+    wave: { percentage: 1, name: 'Wave', logo: '/lovable-uploads/72ce0703-a66b-4a87-869b-8e9b7a022eb4.png' },
+    orange: { percentage: 0.8, name: 'Orange Money', logo: '/lovable-uploads/49a20f85-382b-4dd2-aefe-98214bea6069.png' }
   };
 
   // Calcul du montant reçu avec déduction des frais
@@ -124,9 +123,26 @@ export function InternationalTransferConverter() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="wave">Wave ({serviceFees.wave.percentage}% frais)</SelectItem>
-                <SelectItem value="orange">Orange Money ({serviceFees.orange.percentage}% frais)</SelectItem>
-                <SelectItem value="moov">Moov Money ({serviceFees.moov.percentage}% frais)</SelectItem>
+                <SelectItem value="wave">
+                  <div className="flex items-center space-x-2">
+                    <img 
+                      src={serviceFees.wave.logo} 
+                      alt="Wave" 
+                      className="w-4 h-4"
+                    />
+                    <span>Wave ({serviceFees.wave.percentage}% frais)</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="orange">
+                  <div className="flex items-center space-x-2">
+                    <img 
+                      src={serviceFees.orange.logo} 
+                      alt="Orange Money" 
+                      className="w-4 h-4"
+                    />
+                    <span>Orange Money ({serviceFees.orange.percentage}% frais)</span>
+                  </div>
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
