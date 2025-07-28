@@ -234,7 +234,7 @@ const CareersPage = () => {
     {
       icon: <Users className="w-8 h-8 text-terex-accent" />,
       title: "Diversité",
-      description: "Notre équipe multiculturelle reflète la richesse de nos marchés africains et canadiens."
+      description: "Notre équipe multiculturelle reflète la richesse de nos marchés africains."
     },
     {
       icon: <Briefcase className="w-8 h-8 text-terex-accent" />,
