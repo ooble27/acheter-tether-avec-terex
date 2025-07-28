@@ -10,7 +10,7 @@ export function CurrencyConverterSection() {
             <img 
               src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
               alt="USDT" 
-              className="w-8 h-8 mr-3"
+              className="w-8 h-8 mr-3 hidden sm:block"
               style={{ filter: 'none' }}
             />
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
