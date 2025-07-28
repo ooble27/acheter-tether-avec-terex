@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -20,6 +19,7 @@ import StatusPage from "./pages/StatusPage";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import SecurityPage from "./pages/SecurityPage";
+import InvestorsPage from "./pages/InvestorsPage";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MarketingPage } from "./pages/MarketingPage";
@@ -58,6 +58,7 @@ function App() {
                 <Route path="/terms" element={<TermsPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
                 <Route path="/security" element={<SecurityPage />} />
+                <Route path="/investors" element={<InvestorsPage />} />
                 <Route path="/admin/*" element={<AdminPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
