@@ -1,3 +1,4 @@
+
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -6,7 +7,7 @@ import { HeroSection } from './HeroSection';
 import { TestimonialsSection } from './TestimonialsSection';
 import { StatsSection } from './StatsSection';
 import { HeaderSection } from './sections/HeaderSection';
-import { CurrencyConverterSection } from './sections/CurrencyConverterSection';
+import { ConvertersSection } from './sections/ConvertersSection';
 import { HowItWorksSection } from './sections/HowItWorksSection';
 import { PaymentMethodsSection } from './sections/PaymentMethodsSection';
 import { CTASection } from './sections/CTASection';
@@ -61,7 +62,7 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       
       <HeroSection user={user} onShowDashboard={onShowDashboard} />
       
-      <CurrencyConverterSection />
+      <ConvertersSection />
 
       <PhoneMockupSection />
 
