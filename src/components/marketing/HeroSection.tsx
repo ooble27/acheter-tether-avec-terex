@@ -44,8 +44,8 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             {/* Titre optimisé pour mobile avec 2 lignes fixes */}
             <div className="lg:hidden">
               <div className="text-4xl sm:text-5xl font-black text-white mb-4 leading-tight">
-                <div>Échangez vos cryptos</div>
-                <div className="text-terex-accent">facilement</div>
+                <div>Achetez des USDT facilement</div>
+                <div className="text-terex-accent">et envoyez de l'argent</div>
               </div>
             </div>
             
