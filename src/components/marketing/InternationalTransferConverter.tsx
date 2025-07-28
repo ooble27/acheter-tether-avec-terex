@@ -29,7 +29,7 @@ export function InternationalTransferConverter() {
 
   // Frais selon le service
   const serviceFees = {
-    wave: { percentage: 1, name: 'Wave', logo: '/lovable-uploads/86b4b50f-9595-46c2-8cce-30343f23454a.png' },
+    wave: { percentage: 1, name: 'Wave', logo: '/lovable-uploads/067fb4dd-d38f-4df7-8fe0-b983a7dd2c55.png' },
     orange: { percentage: 0.8, name: 'Orange Money', logo: '/lovable-uploads/49a20f85-382b-4dd2-aefe-98214bea6069.png' }
   };
 
