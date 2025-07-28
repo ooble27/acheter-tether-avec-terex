@@ -15,8 +15,8 @@ export function ConvertersSection() {
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          <div>
+        <div className="flex flex-col md:flex-row justify-between items-start gap-8 w-full">
+          <div className="w-full md:w-auto md:flex-shrink-0">
             <div className="text-center mb-4">
               <div className="flex items-center justify-center mb-2">
                 <img 
@@ -31,7 +31,7 @@ export function ConvertersSection() {
             <CurrencyConverter />
           </div>
           
-          <div>
+          <div className="w-full md:w-auto md:flex-shrink-0">
             <div className="text-center mb-4">
               <h3 className="text-xl font-semibold text-white mb-2">Virement International</h3>
               <p className="text-sm text-gray-400">Envoyez de l'argent vers l'Afrique</p>
