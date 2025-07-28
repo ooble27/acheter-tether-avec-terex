@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -67,6 +67,27 @@ export function InternationalTransferConverter() {
     setCfaAmount(value);
     setCadAmount(calculateCadFromCfa(value));
   };
+
+  const handleServiceChange = (newService: string) => {
+    setService(newService);
+    // Recalculer les montants avec le nouveau service
+    if (cadAmount) {
+      // Si on a un montant CAD, recalculer le CFA
+      setCfaAmount(''); // Réinitialiser temporairement pour forcer le recalcul
+    } else if (cfaAmount) {
+      // Si on a un montant CFA, recalculer le CAD
+      setCadAmount(''); // Réinitialiser temporairement pour forcer le recalcul
+    }
+  };
+
+  // Effet pour recalculer automatiquement quand le service change
+  useEffect(() => {
+    if (cadAmount && !cfaAmount) {
+      setCfaAmount(calculateCfaFromCad(cadAmount));
+    } else if (cfaAmount && !cadAmount) {
+      setCadAmount(calculateCadFromCfa(cfaAmount));
+    }
+  }, [service, selectedService.percentage, exchangeRate]);
 
   // Affichage des montants
   const displayedCadAmount = cadAmount;
@@ -144,7 +165,7 @@ export function InternationalTransferConverter() {
 
           <div className="space-y-2">
             <Label className="text-white text-sm">Service de paiement</Label>
-            <Select value={service} onValueChange={setService}>
+            <Select value={service} onValueChange={handleServiceChange}>
               <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
                 <SelectValue />
               </SelectTrigger>
