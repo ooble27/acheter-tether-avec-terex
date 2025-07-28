@@ -26,28 +26,23 @@ export function DeviceMockups() {
       <span className="transition-all duration-700 ease-in-out">
         {currentSlide === 0 ? (
           <>
-            <div className="sm:inline">Échange USDT et transferts</div>
-            <div className="sm:inline"> vers l'<span className="text-terex-accent">Afrique</span></div>
+            Échange USDT et transferts vers l'<span className="text-terex-accent">Afrique</span>
           </>
         ) : currentSlide === 1 ? (
           <>
-            <div className="sm:inline">Achetez des USDT</div>
-            <div className="sm:inline"> facilement avec <span className="text-terex-accent">Terex</span></div>
+            Achetez des USDT facilement avec <span className="text-terex-accent">Terex</span>
           </>
         ) : currentSlide === 2 ? (
           <>
-            <div className="sm:inline">Vendez vos stablecoins</div>
-            <div className="sm:inline"> en <span className="text-terex-accent">sécurité</span> totale</div>
+            Vendez vos stablecoins en <span className="text-terex-accent">sécurité</span> totale
           </>
         ) : currentSlide === 3 ? (
           <>
-            <div className="sm:inline">Envoyez de l'argent</div>
-            <div className="sm:inline"> à vos proches <span className="text-terex-accent">sans frais</span></div>
+            Envoyez de l'argent à vos proches <span className="text-terex-accent">sans frais</span>
           </>
         ) : (
           <>
-            <div className="sm:inline">Plateforme <span className="text-terex-accent">sécurisée</span></div>
-            <div className="sm:inline"> et réglementée 100%</div>
+            Plateforme <span className="text-terex-accent">sécurisée</span> et réglementée 100%
           </>
         )}
       </span>
