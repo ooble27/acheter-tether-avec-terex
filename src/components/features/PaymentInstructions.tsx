@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -67,13 +66,13 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
         steps: [
           "Ouvrez votre application Wave ou Orange Money",
           "Sélectionnez 'Envoyer de l'argent'",
-          `Entrez le numéro : +221 77 123 45 67`,
+          `Entrez le numéro : +221 777569268`,
           `Montant : ${orderData.amount} ${orderData.currency}`,
           `Référence : ${orderId.slice(-8).toUpperCase()}`,
           "Confirmez le transfert",
           "Cliquez sur 'J'ai payé' ci-dessous"
         ],
-        recipientNumber: "+221 77 123 45 67"
+        recipientNumber: "+221 777569268"
       };
     } else {
       return {
