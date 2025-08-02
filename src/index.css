@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
@@ -70,6 +71,7 @@
   #root {
     min-height: 100vh;
     height: 100%;
+    background-color: #141414 !important;
   }
 
   /* Masquer les barres de scroll sur tous les éléments */
@@ -80,6 +82,49 @@
 
   *::-webkit-scrollbar {
     display: none; /* Safari et Chrome */
+  }
+}
+
+/* Règles spécifiques pour Safari mobile pour éviter le flash de couleur verte */
+@supports (-webkit-appearance: none) {
+  @media screen and (max-width: 768px) {
+    html {
+      background-color: #141414 !important;
+    }
+    
+    body {
+      background-color: #141414 !important;
+    }
+    
+    #root {
+      background-color: #141414 !important;
+    }
+    
+    /* Forcer le fond noir sur tous les éléments racine */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #141414;
+      z-index: -1000;
+    }
+  }
+}
+
+/* Protection supplémentaire pour iOS Safari */
+@supports (-webkit-touch-callout: none) {
+  html, body, #root {
+    background-color: #141414 !important;
+    background: #141414 !important;
+  }
+  
+  /* Éviter tout flash de couleur au chargement */
+  body {
+    opacity: 1 !important;
+    background: #141414 !important;
   }
 }
 
