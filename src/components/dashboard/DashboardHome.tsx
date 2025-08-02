@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
@@ -72,8 +73,8 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
     // Design mobile avec px-0 pour tous les conteneurs
     return (
       <div className="min-h-screen bg-terex-dark px-0 py-3 space-y-3 text-xs overflow-y-auto scrollbar-hide">
-        {/* Header avec px-0 */}
-        <div className="flex items-center space-x-3 mb-6 px-0">
+        {/* Header avec px-0 et alignement avec le bouton hamburger */}
+        <div className="flex items-center space-x-3 mb-6 px-0 pt-4 mt-safe">
           <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
             <Activity className="w-6 h-6 text-white" />
           </div>
