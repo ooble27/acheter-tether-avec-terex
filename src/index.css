@@ -5,44 +5,44 @@
 
 @layer base {
   :root {
-    --background: 20 14.3% 4.1%;
+    --background: 20 14% 8%;
     --foreground: 0 0% 95%;
 
-    --card: 20 14.3% 4.1%;
+    --card: 20 14% 8%;
     --card-foreground: 0 0% 95%;
 
-    --popover: 20 14.3% 4.1%;
+    --popover: 20 14% 8%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 355.7 100% 97.3%;
+    --primary: 172 38% 45%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 3.7% 15.9%;
+    --secondary: 20 14% 16%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 20 14% 16%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 240 3.7% 15.9%;
+    --accent: 20 14% 16%;
     --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 142.4 71.8% 29.2%;
+    --border: 20 14% 16%;
+    --input: 20 14% 16%;
+    --ring: 172 38% 45%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 20 14.3% 4.1%;
+    --sidebar-background: 20 14% 8%;
     --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 142.1 76.2% 36.3%;
-    --sidebar-primary-foreground: 355.7 100% 97.3%;
-    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-primary: 172 38% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 20 14% 16%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 142.4 71.8% 29.2%;
+    --sidebar-border: 20 14% 16%;
+    --sidebar-ring: 172 38% 45%;
   }
 }
 
@@ -52,7 +52,8 @@
   }
 
   html, body {
-    @apply bg-terex-dark text-foreground font-sans;
+    background-color: hsl(20, 14%, 8%) !important;
+    color: hsl(0, 0%, 95%) !important;
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
     height: 100%;
@@ -60,6 +61,10 @@
     overflow: overlay;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* Internet Explorer et Edge */
+    
+    /* Spécifique à Safari pour éviter les flashs */
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
   html::-webkit-scrollbar,
@@ -70,6 +75,7 @@
   #root {
     min-height: 100vh;
     height: 100%;
+    background-color: hsl(20, 14%, 8%) !important;
   }
 
   /* Masquer les barres de scroll sur tous les éléments */
@@ -134,15 +140,15 @@
   }
 }
 
-/* Style Binance pour le logo et branding */
+/* Style Terex pour le logo et branding */
 .terex-brand {
-  background: linear-gradient(135deg, #3B968F 0%, #4BA89F 50%, #5BC1B8 100%);
+  background: linear-gradient(135deg, hsl(172, 38%, 45%) 0%, hsl(172, 40%, 55%) 50%, hsl(172, 42%, 65%) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 900;
   letter-spacing: -0.02em;
-  text-shadow: 0 0 30px rgba(59, 150, 143, 0.3);
+  text-shadow: 0 0 30px hsla(172, 38%, 45%, 0.3);
 }
 
 .logo-glow {
@@ -153,7 +159,7 @@
   content: '';
   position: absolute;
   inset: -2px;
-  background: linear-gradient(45deg, #3B968F, #4BA89F, #5BC1B8);
+  background: linear-gradient(45deg, hsl(172, 38%, 45%), hsl(172, 40%, 55%), hsl(172, 42%, 65%));
   border-radius: inherit;
   filter: blur(8px);
   opacity: 0.3;
@@ -161,14 +167,14 @@
 }
 
 .gradient-button {
-  background: linear-gradient(135deg, #3B968F 0%, #4BA89F 100%);
+  background: linear-gradient(135deg, hsl(172, 38%, 45%) 0%, hsla(172, 38%, 45%, 0.8) 100%);
   transition: all 0.3s ease;
 }
 
 .gradient-button:hover {
-  background: linear-gradient(135deg, #4BA89F 0%, #5BC1B8 100%);
+  background: linear-gradient(135deg, hsla(172, 40%, 55%, 0.9) 0%, hsl(172, 42%, 65%) 100%);
   transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(59, 150, 143, 0.3);
+  box-shadow: 0 8px 25px hsla(172, 38%, 45%, 0.3);
 }
 
 .gradient-button:disabled {
@@ -178,9 +184,9 @@
 
 /* Glass morphism effect pour les cartes */
 .glass-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: hsla(0, 0%, 100%, 0.05);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid hsla(0, 0%, 100%, 0.1);
 }
 
 /* Styles pour la carte de l'Afrique 3D */
@@ -569,6 +575,24 @@
   
   .usdt-particle {
     padding: 6px;
+  }
+}
+
+/* Nouvelle classe pour éviter le flash vert sur Safari mobile */
+@media screen and (-webkit-min-device-pixel-ratio: 1) {
+  html {
+    background-color: hsl(20, 14%, 8%) !important;
+  }
+  
+  body {
+    background-color: hsl(20, 14%, 8%) !important;
+  }
+}
+
+/* Spécifique pour les appareils iOS */
+@supports (-webkit-touch-callout: none) {
+  html, body {
+    background-color: hsl(20, 14%, 8%) !important;
   }
 }
 
