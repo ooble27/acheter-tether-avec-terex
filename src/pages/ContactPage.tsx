@@ -199,10 +199,10 @@ const ContactPage = () => {
                     variant="outline" 
                     size="sm" 
                     className="border-green-500/30 text-green-400 hover:bg-green-500 hover:text-white justify-start"
-                    onClick={() => window.open('https://wa.me/+22177397249', '_blank')}
+                    onClick={() => window.open('https://wa.me/+14182619091', '_blank')}
                   >
                     <MessageCircle className="w-4 h-4 mr-2" />
-                    WhatsApp: +221 77 397 27 49
+                    WhatsApp: +1 (418) 261-9091
                   </Button>
                   <Button 
                     variant="outline" 

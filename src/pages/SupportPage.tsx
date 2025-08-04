@@ -125,9 +125,9 @@ const SupportPage = () => {
                 
                 <Button 
                   className="mt-6 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 w-full"
-                  onClick={() => window.open('https://wa.me/+22177397249', '_blank')}
+                  onClick={() => window.open('https://wa.me/+14182619091', '_blank')}
                 >
-                  +221 77 397 27 49
+                  +1 (418) 261-9091
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </div>
@@ -177,7 +177,7 @@ const SupportPage = () => {
                 </div>
                 
                 <p className="text-gray-300 mb-6 leading-relaxed">
-                  Appelez-nous pour une assistance immédiate (Sénégal).
+                  Appelez-nous pour une assistance immédiate (Canada/International).
                 </p>
                 
                 <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
@@ -187,9 +187,9 @@ const SupportPage = () => {
                 
                 <Button 
                   className="mt-6 bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-6 py-3 w-full"
-                  onClick={() => window.location.href = 'tel:+22177397249'}
+                  onClick={() => window.location.href = 'tel:+14182619091'}
                 >
-                  +221 77 397 27 49
+                  +1 (418) 261-9091
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </div>
