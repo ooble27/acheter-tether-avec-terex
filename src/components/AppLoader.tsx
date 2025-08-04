@@ -9,7 +9,17 @@ interface AppLoaderProps {
 }
 
 export const AppLoader: React.FC<AppLoaderProps> = ({ children, loading = false }) => {
-  const { showSplash, handleSplashComplete, isAppReady } = useSplashScreen(1800);
+  // Add error boundary for hook usage
+  let hookData;
+  try {
+    hookData = useSplashScreen(1800);
+  } catch (error) {
+    console.error('Error in useSplashScreen:', error);
+    // Fallback without splash screen
+    return <>{children}</>;
+  }
+
+  const { showSplash, handleSplashComplete, isAppReady } = hookData;
 
   // Vérifier si on est en mode PWA
   const isPWA = window.matchMedia('(display-mode: standalone)').matches ||

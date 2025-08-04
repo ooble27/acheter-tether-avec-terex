@@ -19,16 +19,33 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Initialize the app
-const rootElement = document.getElementById("root");
+// Initialize the app with proper error handling
+const initializeApp = () => {
+  const rootElement = document.getElementById("root");
 
-if (!rootElement) {
-  throw new Error('Root element not found');
+  if (!rootElement) {
+    throw new Error('Root element not found');
+  }
+
+  try {
+    const root = createRoot(rootElement);
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    );
+    console.log('App rendered successfully');
+  } catch (error) {
+    console.error('Error rendering app:', error);
+    // Fallback rendering without strict mode
+    const root = createRoot(rootElement);
+    root.render(<App />);
+  }
+};
+
+// Ensure DOM is ready before initializing
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+  initializeApp();
 }
-
-const root = createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
