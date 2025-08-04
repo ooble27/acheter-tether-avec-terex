@@ -26,9 +26,19 @@ if (!rootElement) {
   throw new Error('Root element not found');
 }
 
-const root = createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+console.log('Main.tsx: Creating React root...');
+
+try {
+  const root = createRoot(rootElement);
+  console.log('Main.tsx: Rendering App component...');
+  
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+  
+  console.log('Main.tsx: App rendered successfully');
+} catch (error) {
+  console.error('Main.tsx: Error during app initialization:', error);
+}
