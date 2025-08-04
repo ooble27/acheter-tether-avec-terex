@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, ReactNode } from 'react';
 
 type Theme = 'dark' | 'light';
 
@@ -14,47 +14,33 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  console.log('ThemeProvider: Starting initialization...');
-  
-  // Add safety check to ensure React hooks are available
-  if (!React.useState) {
-    console.error('ThemeProvider: React hooks not available yet');
-    return <>{children}</>;
-  }
-  
-  console.log('ThemeProvider: React hooks available, proceeding with initialization...');
+export function ThemeProvider({ children }: ThemeProviderProps) {
+  console.log('ThemeProvider: Initializing...');
   
   const [theme, setTheme] = useState<Theme>('dark');
 
   useEffect(() => {
-    console.log('ThemeProvider: Applying theme:', theme);
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
   }, [theme]);
 
-  const contextValue = React.useMemo(() => {
-    console.log('ThemeProvider: Creating context value');
-    return {
-      theme,
-      setTheme,
-    };
-  }, [theme]);
-
-  console.log('ThemeProvider: Rendering provider with theme:', theme);
+  const value = useMemo(() => ({
+    theme,
+    setTheme,
+  }), [theme]);
 
   return (
-    <ThemeContext.Provider value={contextValue}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );
-};
+}
 
-export const useTheme = () => {
+export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
-};
+}
