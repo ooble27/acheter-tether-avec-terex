@@ -108,7 +108,7 @@ const ContactPage = () => {
     {
       icon: Phone,
       title: "Téléphone",
-      content: "+1 (418) 261-9091\nWhatsApp disponible",
+      content: "+221 77 397 27 49\nWhatsApp disponible",
       subtext: "Disponible 24/7"
     },
     {
@@ -199,10 +199,10 @@ const ContactPage = () => {
                     variant="outline" 
                     size="sm" 
                     className="border-green-500/30 text-green-400 hover:bg-green-500 hover:text-white justify-start"
-                    onClick={() => window.open('https://wa.me/14182619091', '_blank')}
+                    onClick={() => window.open('https://wa.me/+22177397249', '_blank')}
                   >
                     <MessageCircle className="w-4 h-4 mr-2" />
-                    WhatsApp: +1 (418) 261-9091
+                    WhatsApp: +221 77 397 27 49
                   </Button>
                   <Button 
                     variant="outline" 
@@ -265,7 +265,7 @@ const ContactPage = () => {
                       <label className="block text-white font-medium mb-2">Téléphone</label>
                       <Input 
                         className="bg-terex-dark border-terex-gray text-white" 
-                        placeholder="+221 XX XXX XXXX" 
+                        placeholder="+221 77 397 27 49" 
                         value={formData.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
                       />

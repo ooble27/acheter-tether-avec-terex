@@ -127,7 +127,7 @@ export function MobileMoneySelector({ onComplete, onBack, recipientCountry }: Mo
                   </div>
                   <Input
                     type="tel"
-                    placeholder="77 123 45 67"
+                    placeholder="77 397 27 49"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     className="bg-terex-gray border-terex-gray-light text-white flex-1 h-12"
