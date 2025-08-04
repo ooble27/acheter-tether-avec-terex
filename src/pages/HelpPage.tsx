@@ -197,9 +197,10 @@ const HelpPage = () => {
               <Button 
                 variant="outline"
                 className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10"
+                onClick={() => window.location.href = 'tel:+221773972749'}
               >
                 <Phone className="w-4 h-4 mr-2" />
-                +221 77 123 4567
+                +221 77 397 27 49
               </Button>
             </div>
           </div>
