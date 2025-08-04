@@ -15,20 +15,34 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  console.log('ThemeProvider: Initializing...');
+  console.log('ThemeProvider: Starting initialization...');
+  
+  // Add safety check to ensure React hooks are available
+  if (!React.useState) {
+    console.error('ThemeProvider: React hooks not available yet');
+    return <>{children}</>;
+  }
+  
+  console.log('ThemeProvider: React hooks available, proceeding with initialization...');
   
   const [theme, setTheme] = useState<Theme>('dark');
 
   useEffect(() => {
+    console.log('ThemeProvider: Applying theme:', theme);
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
   }, [theme]);
 
-  const contextValue = React.useMemo(() => ({
-    theme,
-    setTheme,
-  }), [theme]);
+  const contextValue = React.useMemo(() => {
+    console.log('ThemeProvider: Creating context value');
+    return {
+      theme,
+      setTheme,
+    };
+  }, [theme]);
+
+  console.log('ThemeProvider: Rendering provider with theme:', theme);
 
   return (
     <ThemeContext.Provider value={contextValue}>

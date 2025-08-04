@@ -5,6 +5,7 @@ import App from './App.tsx';
 import './index.css';
 
 console.log('Main.tsx: Starting application...');
+console.log('Main.tsx: React version:', React.version);
 
 // Enregistrement du service worker pour PWA
 if ('serviceWorker' in navigator) {
@@ -28,17 +29,33 @@ if (!rootElement) {
 
 console.log('Main.tsx: Creating React root...');
 
-try {
-  const root = createRoot(rootElement);
-  console.log('Main.tsx: Rendering App component...');
-  
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-  
-  console.log('Main.tsx: App rendered successfully');
-} catch (error) {
-  console.error('Main.tsx: Error during app initialization:', error);
-}
+// Ensure React is fully loaded before proceeding
+const initializeApp = () => {
+  try {
+    // Verify React hooks are available
+    if (!React.useState) {
+      console.error('Main.tsx: React hooks not available, retrying...');
+      setTimeout(initializeApp, 100);
+      return;
+    }
+    
+    console.log('Main.tsx: React hooks available, creating root...');
+    const root = createRoot(rootElement);
+    console.log('Main.tsx: Rendering App component...');
+    
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    );
+    
+    console.log('Main.tsx: App rendered successfully');
+  } catch (error) {
+    console.error('Main.tsx: Error during app initialization:', error);
+    // Retry after a short delay
+    setTimeout(initializeApp, 500);
+  }
+};
+
+// Start initialization
+initializeApp();
