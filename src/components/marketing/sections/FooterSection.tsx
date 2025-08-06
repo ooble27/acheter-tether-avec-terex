@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
@@ -163,21 +164,9 @@ export function FooterSection() {
         <Separator className="my-12 bg-terex-gray" />
 
         {/* Bottom Footer */}
-        <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
-          <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-8 text-gray-400 text-sm">
+        <div className="text-center">
+          <div className="text-gray-400 text-sm">
             <p>&copy; 2024 Terex. Tous droits réservés.</p>
-            <div className="flex items-center space-x-6">
-              <span>Licence BCEAO: TRX-2024-001</span>
-              <span>Régulé par la Banque Centrale</span>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-4 text-sm text-gray-400">
-            <span>Disponible 24/7</span>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-green-400">Systèmes opérationnels</span>
-            </div>
           </div>
         </div>
       </div>
