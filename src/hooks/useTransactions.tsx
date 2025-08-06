@@ -20,31 +20,57 @@ interface Transaction {
   payment_method?: string;
 }
 
-// Cache global pour éviter les rechargements
-let transactionsCache: Transaction[] = [];
-let cacheTimestamp = 0;
-let isInitialLoad = true;
+// Cache par utilisateur pour éviter les mélanges entre comptes
+let userCaches: { [userId: string]: { transactions: Transaction[], timestamp: number } } = {};
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 export const useTransactions = () => {
-  const [transactions, setTransactions] = useState<Transaction[]>(transactionsCache);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
-  const [hasLoaded, setHasLoaded] = useState(!isInitialLoad);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const { user } = useAuth();
+
+  // Réinitialiser l'état quand l'utilisateur change
+  useEffect(() => {
+    console.log('useTransactions: User changed, resetting state', user?.id);
+    setTransactions([]);
+    setLoading(false);
+    setHasLoaded(false);
+    
+    // Nettoyer les anciens caches (garder seulement les 3 derniers utilisateurs)
+    const userIds = Object.keys(userCaches);
+    if (userIds.length > 3) {
+      const sortedIds = userIds.sort((a, b) => userCaches[b].timestamp - userCaches[a].timestamp);
+      const toKeep = sortedIds.slice(0, 3);
+      const newCache: typeof userCaches = {};
+      toKeep.forEach(id => {
+        newCache[id] = userCaches[id];
+      });
+      userCaches = newCache;
+    }
+  }, [user?.id]);
 
   const fetchTransactions = async (forceRefresh = false) => {
     if (!user) {
+      console.log('useTransactions: No user, clearing transactions');
+      setTransactions([]);
       setLoading(false);
+      setHasLoaded(true);
       return;
     }
 
-    // Vérifier si on a un cache valide
+    const userId = user.id;
+    console.log('useTransactions: Fetching for user', userId);
+
+    // Vérifier le cache spécifique à l'utilisateur
     const now = Date.now();
-    const isCacheValid = (now - cacheTimestamp) < CACHE_DURATION;
+    const userCache = userCaches[userId];
+    const isCacheValid = userCache && (now - userCache.timestamp) < CACHE_DURATION;
     
-    // Si on a un cache valide et pas de force refresh, utiliser le cache
-    if (isCacheValid && transactionsCache.length > 0 && !forceRefresh) {
-      setTransactions(transactionsCache);
+    // Si on a un cache valide pour cet utilisateur et pas de force refresh
+    if (isCacheValid && userCache.transactions.length > 0 && !forceRefresh) {
+      console.log('useTransactions: Using cache for user', userId);
+      setTransactions(userCache.transactions);
       setHasLoaded(true);
       setLoading(false);
       return;
@@ -52,12 +78,13 @@ export const useTransactions = () => {
 
     try {
       setLoading(true);
+      console.log('useTransactions: Fetching from database for user', userId);
 
       // Limiter à 50 transactions récentes pour éviter les problèmes de performance
       const { data: orders, error: ordersError } = await supabase
         .from('orders')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(50);
 
@@ -68,7 +95,7 @@ export const useTransactions = () => {
       const { data: transfers, error: transfersError } = await supabase
         .from('international_transfers')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(50);
 
@@ -120,11 +147,13 @@ export const useTransactions = () => {
       allTransactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
       const sortedTransactions = allTransactions.slice(0, 50);
       
-      // Mettre à jour le cache
-      transactionsCache = sortedTransactions;
-      cacheTimestamp = now;
-      isInitialLoad = false;
+      // Mettre à jour le cache spécifique à l'utilisateur
+      userCaches[userId] = {
+        transactions: sortedTransactions,
+        timestamp: now
+      };
       
+      console.log('useTransactions: Loaded', sortedTransactions.length, 'transactions for user', userId);
       setTransactions(sortedTransactions);
       setHasLoaded(true);
     } catch (error) {
@@ -134,23 +163,18 @@ export const useTransactions = () => {
     }
   };
 
-  // Charger automatiquement au premier appel
+  // Charger automatiquement au premier appel ou changement d'utilisateur
   useEffect(() => {
-    if (user && isInitialLoad) {
+    if (user && !hasLoaded) {
+      console.log('useTransactions: Auto-loading transactions for new user');
       fetchTransactions();
-    } else if (user && transactionsCache.length > 0) {
-      // Si on a déjà des données en cache, les utiliser immédiatement
-      setTransactions(transactionsCache);
-      setHasLoaded(true);
-      setLoading(false);
     }
-  }, [user]);
+  }, [user, hasLoaded]);
 
   // Fonction pour charger les transactions (pour compatibilité)
   const loadTransactions = () => {
-    if (!hasLoaded || isInitialLoad) {
-      fetchTransactions();
-    }
+    console.log('useTransactions: Manual load requested');
+    fetchTransactions();
   };
 
   return {

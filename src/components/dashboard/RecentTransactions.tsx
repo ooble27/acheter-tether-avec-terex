@@ -1,9 +1,10 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTransactions } from '@/hooks/useTransactions';
+import { useAuth } from '@/contexts/AuthContext';
 import { ArrowUp, ArrowDown, Send, Clock, CheckCircle, RotateCcw } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -21,7 +22,17 @@ const TetherLogo = ({ className }: { className?: string }) => (
 
 export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
   const isMobile = useIsMobile();
-  const { transactions, loading } = useTransactions();
+  const { transactions, loading, refetch } = useTransactions();
+  const { user } = useAuth();
+
+  // Recharger les transactions quand l'utilisateur change
+  useEffect(() => {
+    console.log('RecentTransactions: User changed, current transactions count:', transactions.length);
+    if (user && transactions.length === 0 && !loading) {
+      console.log('RecentTransactions: Refreshing transactions for new user');
+      refetch();
+    }
+  }, [user?.id]);
 
   const getTransactionIcon = (type: string) => {
     switch (type) {
@@ -110,8 +121,23 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
   // Show only the 3 most recent transactions
   const recentTransactions = transactions.slice(0, 3);
 
-  // Ne plus afficher le chargement, afficher directement le contenu
-  if (recentTransactions.length === 0 && !loading) {
+  // Afficher un état de chargement uniquement si on n'a pas de transactions et qu'on charge
+  if (loading && transactions.length === 0) {
+    return (
+      <Card className="bg-terex-darker border-terex-gray">
+        <CardHeader className="p-3 pb-2">
+          <CardTitle className="text-white text-sm font-medium">Activité récente</CardTitle>
+        </CardHeader>
+        <CardContent className="p-3 pt-0">
+          <div className="text-center py-4">
+            <p className="text-gray-400 text-xs">Chargement...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (recentTransactions.length === 0) {
     return (
       <Card className="bg-terex-darker border-terex-gray">
         <CardHeader className="p-3 pb-2">

@@ -1,6 +1,7 @@
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, useEffect } from 'react';
 import { useTransactions as useTransactionsHook } from '@/hooks/useTransactions';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Transaction {
   id: string;
@@ -31,6 +32,12 @@ const TransactionContext = createContext<TransactionContextType | undefined>(und
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   const { transactions, loading, refetch, loadTransactions, hasLoaded } = useTransactionsHook();
+  const { user } = useAuth();
+
+  // Log les changements d'utilisateur pour debugging
+  useEffect(() => {
+    console.log('TransactionContext: User changed', user?.id, 'Transactions count:', transactions.length);
+  }, [user?.id, transactions.length]);
 
   return (
     <TransactionContext.Provider value={{ transactions, loading, refetch, loadTransactions, hasLoaded }}>
