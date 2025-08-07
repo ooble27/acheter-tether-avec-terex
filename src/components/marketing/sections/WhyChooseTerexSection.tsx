@@ -83,22 +83,41 @@ export function WhyChooseTerexSection() {
           })}
         </div>
         
-        {/* Call to action bottom */}
+        {/* Call to action bottom - version responsive */}
         <div className="text-center mt-16">
-          <div className="inline-flex items-center space-x-8 bg-terex-darker/50 border border-terex-gray/30 rounded-2xl px-8 py-6">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-terex-accent mb-2">+1000</div>
-              <div className="text-sm text-gray-400">Clients satisfaits</div>
+          <div className="bg-terex-darker/50 border border-terex-gray/30 rounded-2xl p-6 max-w-4xl mx-auto">
+            {/* Version desktop */}
+            <div className="hidden md:flex items-center justify-center space-x-8">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-terex-accent mb-2">+1000</div>
+                <div className="text-sm text-gray-400">Clients satisfaits</div>
+              </div>
+              <div className="w-px h-12 bg-terex-gray/30"></div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-terex-accent mb-2">10M+ CFA</div>
+                <div className="text-sm text-gray-400">Volume mensuel</div>
+              </div>
+              <div className="w-px h-12 bg-terex-gray/30"></div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-terex-accent mb-2">4.9/5</div>
+                <div className="text-sm text-gray-400">Note moyenne</div>
+              </div>
             </div>
-            <div className="w-px h-12 bg-terex-gray/30"></div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-terex-accent mb-2">10M+ CFA</div>
-              <div className="text-sm text-gray-400">Volume mensuel</div>
-            </div>
-            <div className="w-px h-12 bg-terex-gray/30"></div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-terex-accent mb-2">4.9/5</div>
-              <div className="text-sm text-gray-400">Note moyenne</div>
+            
+            {/* Version mobile */}
+            <div className="md:hidden grid grid-cols-3 gap-4">
+              <div className="text-center">
+                <div className="text-xl font-bold text-terex-accent mb-1">+1000</div>
+                <div className="text-xs text-gray-400">Clients satisfaits</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xl font-bold text-terex-accent mb-1">10M+ CFA</div>
+                <div className="text-xs text-gray-400">Volume mensuel</div>
+              </div>
+              <div className="text-center">
+                <div className="text-xl font-bold text-terex-accent mb-1">4.9/5</div>
+                <div className="text-xs text-gray-400">Note moyenne</div>
+              </div>
             </div>
           </div>
         </div>
