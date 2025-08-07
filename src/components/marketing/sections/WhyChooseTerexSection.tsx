@@ -18,7 +18,7 @@ const advantages = [
   {
     icon: Shield,
     title: "Sécurité maximale",
-    description: "Chiffrement 256-bit, conformité KYC/AML et régulation BCEAO",
+    description: "Plateforme sécurisée avec les plus hauts standards de protection des données",
     highlight: "99.9% de fiabilité"
   },
   {
@@ -36,7 +36,7 @@ const advantages = [
   {
     icon: Globe,
     title: "Couverture Afrique",
-    description: "Spécialisés sur les corridors Afrique-Canada avec une expertise locale unique",
+    description: "Spécialisés sur les corridors africains avec une expertise locale unique",
     highlight: "6 pays couverts"
   }
 ];
