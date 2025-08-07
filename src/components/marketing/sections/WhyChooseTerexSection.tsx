@@ -1,5 +1,4 @@
 
-import { Card, CardContent } from '@/components/ui/card';
 import { TrendingDown, Clock, Shield, Headphones, Smartphone, Globe } from 'lucide-react';
 
 const advantages = [
@@ -55,30 +54,28 @@ export function WhyChooseTerexSection() {
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
           {advantages.map((advantage, index) => {
             const IconComponent = advantage.icon;
             return (
-              <Card 
+              <div 
                 key={index} 
-                className="bg-terex-darker/50 border-terex-gray/30 hover:border-terex-accent/30 transition-all duration-300 hover:scale-105 group shadow-lg"
+                className="text-center group hover:scale-105 transition-all duration-300"
               >
-                <CardContent className="p-8 text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-terex-accent/20 to-terex-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                    <IconComponent className="w-8 h-8 text-terex-accent" />
-                  </div>
-                  
-                  <h3 className="text-xl font-bold text-white mb-3">{advantage.title}</h3>
-                  
-                  <p className="text-gray-300 mb-4 leading-relaxed">
-                    {advantage.description}
-                  </p>
-                  
-                  <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-4 py-2 border border-terex-accent/20">
-                    <span className="text-terex-accent font-semibold text-sm">{advantage.highlight}</span>
-                  </div>
-                </CardContent>
-              </Card>
+                <div className="w-16 h-16 bg-gradient-to-br from-terex-accent/20 to-terex-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                  <IconComponent className="w-8 h-8 text-terex-accent" />
+                </div>
+                
+                <h3 className="text-xl font-bold text-white mb-3">{advantage.title}</h3>
+                
+                <p className="text-gray-300 mb-4 leading-relaxed">
+                  {advantage.description}
+                </p>
+                
+                <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-4 py-2 border border-terex-accent/20">
+                  <span className="text-terex-accent font-semibold text-sm">{advantage.highlight}</span>
+                </div>
+              </div>
             );
           })}
         </div>
