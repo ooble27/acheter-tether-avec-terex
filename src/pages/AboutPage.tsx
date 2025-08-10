@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, CheckCircle, Users, Globe, TrendingUp, Shield, Zap, Award, Target, User } from 'lucide-react';
@@ -58,9 +57,9 @@ const AboutPage = () => {
     },
     {
       name: "Sidy Ndiaye",
-      role: "CTO",
-      bio: "Expert en fintech spécialisé dans le développement de solutions financières innovantes",
-      specialties: ["Fintech", "Architecture", "Innovation"]
+      role: "Directeur des Opérations",
+      bio: "Expert en gestion des opérations spécialisé dans l'optimisation des processus et la coordination des équipes",
+      specialties: ["Opérations", "Gestion", "Processus"]
     },
     {
       name: "Adéchina Olaitan",
