@@ -1,93 +1,83 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRight, Send, Shield } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 
 interface HowItWorksSectionProps {
   onBlockchainInfoClick: () => void;
 }
 
-const TetherLogo = ({ className }: { className?: string }) => (
-  <img 
-    src="https://cryptologos.cc/logos/tether-usdt-logo.svg" 
-    alt="USDT Tether Logo" 
-    className={className} 
-  />
-);
-
 export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionProps) {
-  const steps = [
-    {
-      icon: <TetherLogo className="w-6 h-6" />,
-      title: "Échanger USDT-Tether",
-      description: "Acheter et vendre du USDT au meilleur taux",
-      color: "from-green-500/20 to-green-500/5",
-      iconBg: "bg-green-500/20"
-    },
-    {
-      icon: <Send className="w-6 h-6 text-blue-400" />,
-      title: "Transférer l'argent",
-      description: "Virements internationaux rapides et sécurisés",
-      color: "from-blue-500/20 to-blue-500/5",
-      iconBg: "bg-blue-500/20"
-    },
-    {
-      icon: <Shield className="w-6 h-6 text-terex-accent" />,
-      title: "100% sécurisé",
-      description: "Plateforme protégée avec les plus hauts standards",
-      color: "from-terex-accent/20 to-terex-accent/5",
-      iconBg: "bg-terex-accent/20"
-    }
-  ];
-
   return (
-    <section className="py-20 bg-terex-darker">
+    <section id="how-it-works" className="py-16 sm:py-20 bg-terex-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-            Comment ça <span className="text-terex-accent">fonctionne</span> ?
+        <div className="text-center mb-12 sm:mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+            Comment ça <span className="text-terex-accent relative">
+              marche
+            </span> ?
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Découvrez notre processus simple et sécurisé en 3 étapes pour 
-            échanger vos USDT et effectuer vos transferts internationaux
+          <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
+            Trois étapes simples pour commencer vos échanges et transferts vers l'Afrique
           </p>
         </div>
-
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {steps.map((step, index) => (
-            <Card 
-              key={index}
-              className="bg-terex-dark/50 border-terex-gray/30 hover:border-terex-accent/30 transition-all duration-300 hover:scale-105 group"
-            >
-              <CardContent className="p-8 text-center">
-                <div className={`w-16 h-16 bg-gradient-to-br ${step.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform ${step.iconBg}`}>
-                  {step.icon}
-                </div>
-                
-                <div className="inline-flex items-center justify-center w-8 h-8 bg-terex-accent/20 rounded-full mb-4">
-                  <span className="text-terex-accent font-bold text-sm">{index + 1}</span>
-                </div>
-                
-                <h3 className="text-xl font-bold text-white mb-3">{step.title}</h3>
-                <p className="text-gray-300 leading-relaxed">{step.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button 
-            size="lg"
-            className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-8 py-4 rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105"
-          >
-            Commencer maintenant
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
+        
+        <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
+          <Card className="bg-terex-darker/80 border-terex-accent/30 hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
+            <CardContent className="p-4 sm:p-6 text-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold text-terex-accent">1</span>
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-white mb-3">Inscription gratuite</h3>
+              <p className="text-gray-300 mb-4 text-sm">
+                Créez votre compte en moins de 2 minutes. Processus de vérification KYC simple et rapide.
+              </p>
+              <div className="flex items-center justify-center space-x-2 text-terex-accent">
+                <CheckCircle className="w-4 h-4" />
+                <span className="text-xs">100% gratuit</span>
+              </div>
+            </CardContent>
+          </Card>
           
+          <Card className="bg-terex-darker/80 border-terex-accent/30 hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
+            <CardContent className="p-4 sm:p-6 text-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold text-terex-accent">2</span>
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-white mb-3">Choisissez votre service</h3>
+              <p className="text-gray-300 mb-4 text-sm">
+                Achat/vente USDT ou transfert vers l'Afrique. Interface intuitive pour tous vos besoins.
+              </p>
+              <div className="flex items-center justify-center space-x-2 text-terex-accent">
+                <CheckCircle className="w-4 h-4" />
+                <span className="text-xs">Taux en temps réel</span>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-terex-darker/80 border-terex-accent/30 hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
+            <CardContent className="p-4 sm:p-6 text-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold text-terex-accent">3</span>
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-white mb-3">Transaction sécurisée</h3>
+              <p className="text-gray-300 mb-4 text-sm">
+                Confirmez et finalisez votre transaction. Suivi en temps réel jusqu'à la réception.
+              </p>
+              <div className="flex items-center justify-center space-x-2 text-terex-accent">
+                <CheckCircle className="w-4 h-4" />
+                <span className="text-xs">3-5 minutes</span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        
+        <div className="text-center mt-12">
           <Button 
-            variant="outline"
-            size="lg"
             onClick={onBlockchainInfoClick}
-            className="border-terex-gray hover:border-terex-accent text-white hover:text-terex-accent px-8 py-4 rounded-xl transition-all duration-300 bg-transparent hover:bg-terex-accent/5"
+            variant="outline" 
+            size="lg"
+            className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-6 py-4 text-base sm:text-lg rounded-xl backdrop-blur-sm w-64 sm:w-auto mx-auto h-12 sm:h-auto"
           >
             En savoir plus sur la blockchain
           </Button>
