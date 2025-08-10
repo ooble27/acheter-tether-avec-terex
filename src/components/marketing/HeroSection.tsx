@@ -1,4 +1,5 @@
 
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Globe, ArrowRightLeft, Send, Banknote, TrendingUp, Users, Clock } from 'lucide-react';
@@ -121,9 +122,9 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           <Card className="bg-terex-darker border-terex-accent/20 backdrop-blur-sm hover:bg-terex-gray transition-all duration-300 hover:scale-105 group shadow-lg">
             <CardContent className="p-4 sm:p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                {/* Logo USDT réel */}
+                {/* Logo USDT de CoinMarketCap */}
                 <img 
-                  src="/partners/tether-logo.png" 
+                  src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                   alt="USDT Tether" 
                   className="w-8 h-8"
                 />
@@ -157,3 +158,4 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
     </div>
   );
 }
+
