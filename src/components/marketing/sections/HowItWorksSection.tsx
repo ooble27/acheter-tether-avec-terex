@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, Send, Shield } from 'lucide-react';
@@ -9,7 +8,7 @@ interface HowItWorksSectionProps {
 
 const TetherLogo = ({ className }: { className?: string }) => (
   <img 
-    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" 
+    src="https://cryptologos.cc/logos/tether-usdt-logo.svg" 
     alt="USDT Tether Logo" 
     className={className} 
   />
