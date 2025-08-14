@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
@@ -57,16 +56,24 @@
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
     height: 100%;
-    /* Éliminer complètement les barres de scroll et empêcher le débordement horizontal */
+    /* Correction complète pour éliminer les barres de scroll et le débordement horizontal */
     overflow-x: hidden !important;
     scroll-behavior: smooth;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* Internet Explorer et Edge */
+    /* Empêcher les espaces blancs */
+    margin: 0 !important;
+    padding: 0 !important;
+    /* Forcer la largeur exacte */
+    width: 100vw !important;
+    max-width: 100vw !important;
   }
 
   html::-webkit-scrollbar,
   body::-webkit-scrollbar {
     display: none; /* Safari et Chrome */
+    width: 0 !important;
+    height: 0 !important;
   }
 
   #root {
@@ -74,24 +81,40 @@
     height: 100%;
     background-color: #141414 !important;
     overflow-x: hidden !important;
-    width: 100%;
-    max-width: 100vw;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    /* Empêcher tout débordement */
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative;
   }
 
-  /* Masquer les barres de scroll sur tous les éléments et empêcher le débordement horizontal */
+  /* Masquer complètement les barres de scroll sur tous les éléments */
   * {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer et Edge */
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* Internet Explorer et Edge */
   }
 
   *::-webkit-scrollbar {
-    display: none; /* Safari et Chrome */
+    display: none !important; /* Safari et Chrome */
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
   }
 
-  /* Empêcher tout débordement horizontal sur tous les éléments */
+  /* Empêcher tout débordement horizontal et espaces blancs */
   *, *::before, *::after {
-    max-width: 100%;
-    box-sizing: border-box;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+    /* Empêcher les marges qui causent des débordements */
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Correction spécifique pour les conteneurs principaux */
+  .container, main, section, div {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
   }
 }
 
@@ -101,16 +124,22 @@
     html {
       background-color: #141414 !important;
       overflow-x: hidden !important;
+      width: 100vw !important;
+      max-width: 100vw !important;
     }
     
     body {
       background-color: #141414 !important;
       overflow-x: hidden !important;
+      width: 100vw !important;
+      max-width: 100vw !important;
     }
     
     #root {
       background-color: #141414 !important;
       overflow-x: hidden !important;
+      width: 100vw !important;
+      max-width: 100vw !important;
     }
     
     /* Forcer le fond noir sur tous les éléments racine */
@@ -123,6 +152,8 @@
       bottom: 0;
       background-color: #141414;
       z-index: -1000;
+      width: 100vw !important;
+      max-width: 100vw !important;
     }
   }
 }
@@ -133,6 +164,8 @@
     background-color: #141414 !important;
     background: #141414 !important;
     overflow-x: hidden !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
   }
   
   /* Éviter tout flash de couleur au chargement */
@@ -147,25 +180,29 @@
 @layer utilities {
   .scrollbar-hide {
     /* Firefox */
-    scrollbar-width: none;
+    scrollbar-width: none !important;
     /* Safari et Chrome */
-    -ms-overflow-style: none;
+    -ms-overflow-style: none !important;
     overflow-x: hidden !important;
   }
   
   .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
   }
 
   /* Application globale */
   .no-scrollbar {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer et Edge */
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* Internet Explorer et Edge */
     overflow-x: hidden !important;
   }
   
   .no-scrollbar::-webkit-scrollbar {
-    display: none; /* Safari et Chrome */
+    display: none !important; /* Safari et Chrome */
+    width: 0 !important;
+    height: 0 !important;
   }
 }
 
@@ -1004,4 +1041,43 @@
     font-size: 10px;
     padding: 3px 8px;
   }
+}
+
+/* Correction pour le scroll fluide et élimination des bugs */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out;
+  }
+  
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scale-in 0.2s ease-out;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+}
+
+/* Scroll fluide amélioré */
+html {
+  scroll-behavior: smooth !important;
+  scroll-padding-top: 0 !important;
+}
+
+/* Empêcher les transitions pendant le scroll pour éviter les bugs */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Correction spécifique pour les éléments qui peuvent causer des problèmes de scroll */
+.main-content, .page-container, .app-container {
+  overflow-x: hidden !important;
+  width: 100% !important;
+  max-width: 100vw !important;
 }
