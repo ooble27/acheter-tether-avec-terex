@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -31,12 +32,41 @@ import { PWASessionSync } from "./components/PWASessionSync";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { AppLoader } from "./components/AppLoader";
 
+// Error boundary component for ScrollToTop
+class ScrollToTopErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.warn('ScrollToTop error boundary caught:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return null; // Don't render ScrollToTop if it errors
+    }
+
+    return this.props.children;
+  }
+}
+
 function App() {
   return (
     <ThemeProvider>
       <AppLoader>
         <Router>
-          <ScrollToTop />
+          <ScrollToTopErrorBoundary>
+            <ScrollToTop />
+          </ScrollToTopErrorBoundary>
           <AuthProvider>
             <TransactionProvider>
               <PWASessionSync />

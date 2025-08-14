@@ -3,37 +3,41 @@ import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export function ScrollToTop() {
-  const { pathname } = useLocation();
+  let location;
+  
+  // Safely get location with error handling
+  try {
+    location = useLocation();
+  } catch (error) {
+    // If we're outside router context, just return null
+    console.warn('ScrollToTop: Router context not available', error);
+    return null;
+  }
+
+  const { pathname } = location;
 
   useEffect(() => {
-    // Méthode multiple pour assurer un scroll fiable vers le haut
+    // Multiple methods to ensure reliable scroll to top
     const scrollToTop = () => {
-      // Méthode 1: Scroll immédiat
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      // Method 1: Immediate scroll
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       
-      // Méthode 2: Force le scroll sur les éléments HTML
+      // Method 2: Force scroll on HTML elements
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
       
-      // Méthode 3: Assurer le scroll après un délai court
+      // Method 3: Ensure scroll after a short delay
       setTimeout(() => {
-        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         document.documentElement.scrollTop = 0;
         document.body.scrollTop = 0;
       }, 0);
-      
-      // Méthode 4: RequestAnimationFrame pour assurer l'exécution
-      requestAnimationFrame(() => {
-        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-      });
     };
 
     scrollToTop();
 
-    // Assurer le scroll même si le composant se remonte après le rendu
-    const timeoutId = setTimeout(scrollToTop, 100);
+    // Ensure scroll even if component remounts after render
+    const timeoutId = setTimeout(scrollToTop, 50);
     
     return () => clearTimeout(timeoutId);
   }, [pathname]);
