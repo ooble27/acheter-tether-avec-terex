@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
@@ -62,11 +61,13 @@
     scroll-behavior: smooth;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* Internet Explorer et Edge */
+    max-width: 100vw !important;
   }
 
   html::-webkit-scrollbar,
   body::-webkit-scrollbar {
     display: none; /* Safari et Chrome */
+    width: 0 !important;
   }
 
   #root {
@@ -75,23 +76,43 @@
     background-color: #141414 !important;
     overflow-x: hidden !important;
     width: 100%;
-    max-width: 100vw;
+    max-width: 100vw !important;
   }
 
   /* Masquer les barres de scroll sur tous les éléments et empêcher le débordement horizontal */
   * {
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* Internet Explorer et Edge */
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   *::-webkit-scrollbar {
     display: none; /* Safari et Chrome */
+    width: 0 !important;
   }
 
   /* Empêcher tout débordement horizontal sur tous les éléments */
   *, *::before, *::after {
     max-width: 100%;
     box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  /* Force la suppression des barres de scroll blanches */
+  body, html, #root, main, div {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  
+  body::-webkit-scrollbar, 
+  html::-webkit-scrollbar, 
+  #root::-webkit-scrollbar, 
+  main::-webkit-scrollbar, 
+  div::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    background: transparent !important;
   }
 }
 
@@ -155,6 +176,7 @@
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+    width: 0 !important;
   }
 
   /* Application globale */
@@ -166,6 +188,7 @@
   
   .no-scrollbar::-webkit-scrollbar {
     display: none; /* Safari et Chrome */
+    width: 0 !important;
   }
 }
 
