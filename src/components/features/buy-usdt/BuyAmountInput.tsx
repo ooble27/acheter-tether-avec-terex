@@ -1,3 +1,4 @@
+
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -7,7 +8,6 @@ interface BuyAmountInputProps {
   fiatAmount: string;
   setFiatAmount: (amount: string) => void;
   usdtAmount: string;
-  setUsdtAmount: (amount: string) => void;
   currency: string;
   setCurrency: (currency: string) => void;
   exchangeRate: number;
@@ -17,7 +17,6 @@ export function BuyAmountInput({
   fiatAmount,
   setFiatAmount,
   usdtAmount,
-  setUsdtAmount,
   currency,
   setCurrency,
   exchangeRate
@@ -59,21 +58,18 @@ export function BuyAmountInput({
   const handleFiatChange = (value: string) => {
     setInternalFiatAmount(value);
     setInternalUsdtAmount('');
-    setUsdtAmount('');
     setFiatAmount(value);
-    setUsdtAmount(calculateUsdtAmount(value));
   };
 
   const handleUsdtChange = (value: string) => {
     setInternalUsdtAmount(value);
     setInternalFiatAmount('');
-    setFiatAmount('');
-    setUsdtAmount(value);
-    setFiatAmount(calculateFiatAmount(value));
+    const calculatedFiat = calculateFiatAmount(value);
+    setFiatAmount(calculatedFiat);
   };
 
   const displayedFiatAmount = internalFiatAmount;
-  const displayedUsdtAmount = internalUsdtAmount;
+  const displayedUsdtAmount = internalUsdtAmount || (fiatAmount ? calculateUsdtAmount(fiatAmount) : '');
 
   return (
     <div className="space-y-4">
