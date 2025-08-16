@@ -1,9 +1,7 @@
 
-import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
 import { ArrowRightLeft } from 'lucide-react';
 import { enforceMaxLimit } from './LimitsValidator';
 
@@ -14,9 +12,6 @@ interface BuyAmountInputProps {
   setCurrency: (currency: string) => void;
   usdtAmount: string;
   exchangeRate: number;
-  paymentMethod: 'card' | 'mobile';
-  processingTime: string;
-  fee: string;
 }
 
 export function BuyAmountInput({
@@ -25,10 +20,7 @@ export function BuyAmountInput({
   currency,
   setCurrency,
   usdtAmount,
-  exchangeRate,
-  paymentMethod,
-  processingTime,
-  fee
+  exchangeRate
 }: BuyAmountInputProps) {
   
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +29,10 @@ export function BuyAmountInput({
     const limitedValue = enforceMaxLimit(value, currency);
     setFiatAmount(limitedValue);
   };
+
+  // Calcul des frais et du temps de traitement basé sur la devise
+  const fee = currency === 'CFA' ? '0%' : '2%';
+  const processingTime = currency === 'CFA' ? '5-15 minutes' : '24-48 heures';
 
   return (
     <div className="space-y-4">
@@ -49,15 +45,15 @@ export function BuyAmountInput({
               placeholder="0.00"
               value={fiatAmount}
               onChange={handleAmountChange}
-              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
+              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0"
             />
             <Select value={currency} onValueChange={setCurrency}>
-              <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
+              <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent focus:ring-0 focus:ring-offset-0">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="CFA">CFA</SelectItem>
-                <SelectItem value="CAD">CAD</SelectItem>
+              <SelectContent className="bg-terex-gray border-terex-gray-light">
+                <SelectItem value="CFA" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light">CFA</SelectItem>
+                <SelectItem value="CAD" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light">CAD</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -70,7 +66,7 @@ export function BuyAmountInput({
               type="text"
               value={usdtAmount}
               readOnly
-              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24"
+              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0"
             />
             <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
               <img 
