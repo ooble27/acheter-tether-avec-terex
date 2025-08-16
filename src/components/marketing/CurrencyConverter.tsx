@@ -101,15 +101,6 @@ export function CurrencyConverter() {
     navigate('/auth');
   };
 
-  const inputClasses = "bg-terex-gray border-terex-gray-light text-white h-12 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-transparent focus:shadow-none";
-  const inputStyle = { 
-    boxShadow: 'none',
-    outline: 'none',
-    border: '1px solid #3A3A3A'
-  };
-
-  const selectTriggerClasses = "bg-terex-gray-light border-0 text-terex-accent focus:ring-0 focus:ring-offset-0 focus:outline-none focus:ring-transparent focus-visible:ring-0 focus-visible:ring-offset-0 focus:shadow-none";
-
   return (
     <Card className="bg-terex-darker/80 border-terex-accent/30 backdrop-blur-sm mx-1 md:mx-0">
       <CardHeader className="pb-4">
@@ -127,7 +118,7 @@ export function CurrencyConverter() {
             variant="ghost"
             onClick={refreshRates}
             disabled={ratesLoading}
-            className="h-8 w-8 p-0 text-terex-accent hover:bg-white/10"
+            className="h-8 w-8 p-0 text-terex-accent hover:bg-terex-accent/10"
           >
             <RefreshCw className={`w-4 h-4 ${ratesLoading ? 'animate-spin' : ''}`} />
           </Button>
@@ -145,7 +136,7 @@ export function CurrencyConverter() {
             onClick={() => setMode('buy')}
             className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
               mode === 'buy' 
-                ? 'bg-terex-gray-light text-white' 
+                ? 'bg-terex-accent text-black' 
                 : 'text-gray-300 hover:text-white'
             }`}
           >
@@ -155,7 +146,7 @@ export function CurrencyConverter() {
             onClick={() => setMode('sell')}
             className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
               mode === 'sell' 
-                ? 'bg-terex-gray-light text-white' 
+                ? 'bg-terex-accent text-black' 
                 : 'text-gray-300 hover:text-white'
             }`}
           >
@@ -175,16 +166,15 @@ export function CurrencyConverter() {
                     placeholder="0.00"
                     value={displayedFiatAmount}
                     onChange={(e) => handleFiatAmountChange(e.target.value)}
-                    className={`${inputClasses} pr-20`}
-                    style={inputStyle}
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
                   />
                   <Select value={currency} onValueChange={setCurrency}>
-                    <SelectTrigger className={`absolute right-1 top-1 w-16 h-10 ${selectTriggerClasses}`} style={inputStyle}>
+                    <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-terex-gray border-terex-gray-light">
-                      <SelectItem value="CFA" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light focus:text-white focus:outline-none focus:ring-0">CFA</SelectItem>
-                      <SelectItem value="CAD" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light focus:text-white focus:outline-none focus:ring-0">CAD</SelectItem>
+                    <SelectContent>
+                      <SelectItem value="CFA">CFA</SelectItem>
+                      <SelectItem value="CAD">CAD</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -202,8 +192,7 @@ export function CurrencyConverter() {
                     placeholder="0.00"
                     value={displayedUSDTAmount}
                     onChange={(e) => handleUSDTAmountChange(e.target.value)}
-                    className={`${inputClasses} pr-24`}
-                    style={inputStyle}
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24"
                   />
                   <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
                     <img 
@@ -227,8 +216,7 @@ export function CurrencyConverter() {
                     placeholder="0.00"
                     value={displayedUSDTAmount}
                     onChange={(e) => handleUSDTAmountChange(e.target.value)}
-                    className={`${inputClasses} pr-24`}
-                    style={inputStyle}
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24"
                   />
                   <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
                     <img 
@@ -253,16 +241,15 @@ export function CurrencyConverter() {
                     placeholder="0.00"
                     value={displayedFiatAmount}
                     onChange={(e) => handleFiatAmountChange(e.target.value)}
-                    className={`${inputClasses} pr-20`}
-                    style={inputStyle}
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
                   />
                   <Select value={currency} onValueChange={setCurrency}>
-                    <SelectTrigger className={`absolute right-1 top-1 w-16 h-10 ${selectTriggerClasses}`} style={inputStyle}>
+                    <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-terex-gray border-terex-gray-light">
-                      <SelectItem value="CFA" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light focus:text-white focus:outline-none focus:ring-0">CFA</SelectItem>
-                      <SelectItem value="CAD" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light focus:text-white focus:outline-none focus:ring-0">CAD</SelectItem>
+                    <SelectContent>
+                      <SelectItem value="CFA">CFA</SelectItem>
+                      <SelectItem value="CAD">CAD</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -293,7 +280,7 @@ export function CurrencyConverter() {
 
         <Button 
           onClick={handleStartTrading}
-          className="w-full bg-white hover:bg-white/90 text-black font-bold h-12"
+          className="w-full bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold h-12"
         >
           Commencer à trader
         </Button>

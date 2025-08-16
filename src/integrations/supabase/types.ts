@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
+  // Allows to automatically instanciate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -114,13 +114,6 @@ export type Database = {
             columns: ["parent_id"]
             isOneToOne: false
             referencedRelation: "blog_comments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "blog_comments_parent_id_fkey"
-            columns: ["parent_id"]
-            isOneToOne: false
-            referencedRelation: "blog_comments_public"
             referencedColumns: ["id"]
           },
           {
@@ -1208,64 +1201,7 @@ export type Database = {
       }
     }
     Views: {
-      blog_comments_public: {
-        Row: {
-          author_name: string | null
-          content: string | null
-          created_at: string | null
-          id: string | null
-          is_approved: boolean | null
-          parent_id: string | null
-          post_id: string | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          author_name?: string | null
-          content?: string | null
-          created_at?: string | null
-          id?: string | null
-          is_approved?: boolean | null
-          parent_id?: string | null
-          post_id?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          author_name?: string | null
-          content?: string | null
-          created_at?: string | null
-          id?: string | null
-          is_approved?: boolean | null
-          parent_id?: string | null
-          post_id?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "blog_comments_parent_id_fkey"
-            columns: ["parent_id"]
-            isOneToOne: false
-            referencedRelation: "blog_comments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "blog_comments_parent_id_fkey"
-            columns: ["parent_id"]
-            isOneToOne: false
-            referencedRelation: "blog_comments_public"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "blog_comments_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "blog_posts"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+      [_ in never]: never
     }
     Functions: {
       generate_payment_reference: {
@@ -1274,8 +1210,8 @@ export type Database = {
       }
       has_role: {
         Args: {
-          _role: Database["public"]["Enums"]["user_role"]
           _user_id: string
+          _role: Database["public"]["Enums"]["user_role"]
         }
         Returns: boolean
       }

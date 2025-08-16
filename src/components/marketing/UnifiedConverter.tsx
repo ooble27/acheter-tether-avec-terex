@@ -15,7 +15,7 @@ export function UnifiedConverter() {
             onClick={() => setActiveTab('usdt')}
             className={`flex-1 py-2 px-2 sm:px-3 rounded-md text-xs sm:text-sm font-medium transition-colors ${
               activeTab === 'usdt' 
-                ? 'bg-terex-gray-light text-white' 
+                ? 'bg-terex-accent text-black' 
                 : 'text-gray-300 hover:text-white'
             }`}
           >
@@ -25,7 +25,7 @@ export function UnifiedConverter() {
             onClick={() => setActiveTab('transfer')}
             className={`flex-1 py-2 px-2 sm:px-3 rounded-md text-xs sm:text-sm font-medium transition-colors ${
               activeTab === 'transfer' 
-                ? 'bg-terex-gray-light text-white' 
+                ? 'bg-terex-accent text-black' 
                 : 'text-gray-300 hover:text-white'
             }`}
           >
@@ -46,4 +46,3 @@ export function UnifiedConverter() {
     </div>
   );
 }
-

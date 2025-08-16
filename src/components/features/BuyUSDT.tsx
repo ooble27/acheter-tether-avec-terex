@@ -406,6 +406,9 @@ export function BuyUSDT() {
                             setCurrency={setCurrency}
                             usdtAmount={usdtAmount}
                             exchangeRate={exchangeRates[currency as keyof typeof exchangeRates]}
+                            paymentMethod={paymentMethod}
+                            processingTime={method.time}
+                            fee={method.fee}
                           />
 
                           {/* Destination Selection */}

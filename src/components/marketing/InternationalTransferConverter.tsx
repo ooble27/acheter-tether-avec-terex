@@ -114,7 +114,7 @@ export function InternationalTransferConverter() {
             variant="ghost"
             onClick={refreshRates}
             disabled={ratesLoading}
-            className="h-8 w-8 p-0 text-terex-accent hover:bg-white/10"
+            className="h-8 w-8 p-0 text-terex-accent hover:bg-terex-accent/10"
           >
             <RefreshCw className={`w-4 h-4 ${ratesLoading ? 'animate-spin' : ''}`} />
           </Button>
@@ -135,7 +135,7 @@ export function InternationalTransferConverter() {
                 placeholder="0.00"
                 value={displayedCadAmount}
                 onChange={(e) => handleCadAmountChange(e.target.value)}
-                className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-transparent"
+                className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
               />
               <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
                 <span className="text-terex-accent font-medium text-sm">CAD</span>
@@ -155,7 +155,7 @@ export function InternationalTransferConverter() {
                 placeholder="0"
                 value={displayedCfaAmount}
                 onChange={(e) => handleCfaAmountChange(e.target.value)}
-                className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-transparent"
+                className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20"
               />
               <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
                 <span className="text-terex-accent font-medium text-sm">CFA</span>
@@ -166,11 +166,11 @@ export function InternationalTransferConverter() {
           <div className="space-y-2">
             <Label className="text-white text-sm">Service de paiement</Label>
             <Select value={service} onValueChange={handleServiceChange}>
-              <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12 focus:ring-0 focus:ring-offset-0 focus:outline-none focus:ring-transparent focus-visible:ring-0 focus-visible:ring-offset-0">
+              <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-terex-gray border-terex-gray-light">
-                <SelectItem value="wave" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light focus:text-white">
+              <SelectContent>
+                <SelectItem value="wave">
                   <div className="flex items-center space-x-2">
                     <img 
                       src={serviceFees.wave.logo} 
@@ -180,7 +180,7 @@ export function InternationalTransferConverter() {
                     <span>Wave ({serviceFees.wave.percentage}% frais)</span>
                   </div>
                 </SelectItem>
-                <SelectItem value="orange" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light focus:text-white">
+                <SelectItem value="orange">
                   <div className="flex items-center space-x-2">
                     <img 
                       src={serviceFees.orange.logo} 
@@ -212,7 +212,7 @@ export function InternationalTransferConverter() {
 
         <Button 
           onClick={handleStartTransfer}
-          className="w-full bg-white hover:bg-white/90 text-black font-bold h-12"
+          className="w-full bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold h-12"
         >
           Commencer le virement
         </Button>
@@ -220,4 +220,3 @@ export function InternationalTransferConverter() {
     </Card>
   );
 }
-

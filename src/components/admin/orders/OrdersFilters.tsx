@@ -19,13 +19,6 @@ export function OrdersFilters() {
     setPaymentMethod('all');
   };
 
-  const inputClasses = "bg-terex-gray border-terex-gray text-white focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-transparent focus:shadow-none";
-  const inputStyle = { 
-    boxShadow: 'none',
-    outline: 'none',
-    border: '1px solid #3A3A3A'
-  };
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <div className="space-y-2">
@@ -34,8 +27,7 @@ export function OrdersFilters() {
           type="date"
           value={dateFrom}
           onChange={(e) => setDateFrom(e.target.value)}
-          className={inputClasses}
-          style={inputStyle}
+          className="bg-terex-gray border-terex-gray text-white"
         />
       </div>
 
@@ -45,8 +37,7 @@ export function OrdersFilters() {
           type="date"
           value={dateTo}
           onChange={(e) => setDateTo(e.target.value)}
-          className={inputClasses}
-          style={inputStyle}
+          className="bg-terex-gray border-terex-gray text-white"
         />
       </div>
 
@@ -57,8 +48,7 @@ export function OrdersFilters() {
           placeholder="0"
           value={amountMin}
           onChange={(e) => setAmountMin(e.target.value)}
-          className={inputClasses}
-          style={inputStyle}
+          className="bg-terex-gray border-terex-gray text-white"
         />
       </div>
 
@@ -69,8 +59,7 @@ export function OrdersFilters() {
           placeholder="1000000"
           value={amountMax}
           onChange={(e) => setAmountMax(e.target.value)}
-          className={inputClasses}
-          style={inputStyle}
+          className="bg-terex-gray border-terex-gray text-white"
         />
       </div>
 
@@ -79,8 +68,7 @@ export function OrdersFilters() {
         <select
           value={paymentMethod}
           onChange={(e) => setPaymentMethod(e.target.value)}
-          className="w-full bg-terex-gray border border-terex-gray text-white rounded-md px-3 py-2 focus:bg-terex-gray focus:border-terex-gray-light focus:outline-none focus:ring-transparent focus:shadow-none"
-          style={inputStyle}
+          className="w-full bg-terex-gray border border-terex-gray text-white rounded-md px-3 py-2"
         >
           <option value="all">Toutes les méthodes</option>
           <option value="bank_transfer">Virement bancaire</option>
@@ -97,11 +85,10 @@ export function OrdersFilters() {
         >
           Réinitialiser
         </Button>
-        <Button className="bg-white hover:bg-white/90 text-black">
+        <Button className="bg-terex-accent hover:bg-terex-accent/90">
           Appliquer
         </Button>
       </div>
     </div>
   );
 }
-
