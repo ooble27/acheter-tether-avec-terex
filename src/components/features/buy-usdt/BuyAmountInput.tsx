@@ -45,15 +45,20 @@ export function BuyAmountInput({
               placeholder="0.00"
               value={fiatAmount}
               onChange={handleAmountChange}
-              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-transparent"
+              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-transparent focus:shadow-none"
+              style={{ 
+                boxShadow: 'none',
+                outline: 'none',
+                border: '1px solid #3A3A3A'
+              }}
             />
             <Select value={currency} onValueChange={setCurrency}>
-              <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent focus:ring-0 focus:ring-offset-0 focus:outline-none focus:ring-transparent focus-visible:ring-0 focus-visible:ring-offset-0">
+              <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent focus:ring-0 focus:ring-offset-0 focus:outline-none focus:ring-transparent focus-visible:ring-0 focus-visible:ring-offset-0 focus:shadow-none" style={{ boxShadow: 'none', outline: 'none' }}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-terex-gray border-terex-gray-light">
-                <SelectItem value="CFA" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light focus:text-white">CFA</SelectItem>
-                <SelectItem value="CAD" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light focus:text-white">CAD</SelectItem>
+                <SelectItem value="CFA" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light focus:text-white focus:outline-none focus:ring-0">CFA</SelectItem>
+                <SelectItem value="CAD" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light focus:text-white focus:outline-none focus:ring-0">CAD</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -66,7 +71,12 @@ export function BuyAmountInput({
               type="text"
               value={usdtAmount}
               readOnly
-              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-transparent"
+              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-transparent focus:shadow-none"
+              style={{ 
+                boxShadow: 'none',
+                outline: 'none',
+                border: '1px solid #3A3A3A'
+              }}
             />
             <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
               <img 
