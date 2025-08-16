@@ -97,10 +97,11 @@ export function OrdersFilters() {
         >
           Réinitialiser
         </Button>
-        <Button className="bg-terex-accent hover:bg-terex-accent/90">
+        <Button className="bg-white hover:bg-white/90 text-black">
           Appliquer
         </Button>
       </div>
     </div>
   );
 }
+

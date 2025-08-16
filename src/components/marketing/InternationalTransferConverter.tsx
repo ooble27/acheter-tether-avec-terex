@@ -114,7 +114,7 @@ export function InternationalTransferConverter() {
             variant="ghost"
             onClick={refreshRates}
             disabled={ratesLoading}
-            className="h-8 w-8 p-0 text-terex-accent hover:bg-terex-accent/10"
+            className="h-8 w-8 p-0 text-terex-accent hover:bg-white/10"
           >
             <RefreshCw className={`w-4 h-4 ${ratesLoading ? 'animate-spin' : ''}`} />
           </Button>
@@ -212,7 +212,7 @@ export function InternationalTransferConverter() {
 
         <Button 
           onClick={handleStartTransfer}
-          className="w-full bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold h-12"
+          className="w-full bg-white hover:bg-white/90 text-black font-bold h-12"
         >
           Commencer le virement
         </Button>
@@ -220,3 +220,4 @@ export function InternationalTransferConverter() {
     </Card>
   );
 }
+

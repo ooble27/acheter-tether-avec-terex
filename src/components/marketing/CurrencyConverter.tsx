@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -128,7 +127,7 @@ export function CurrencyConverter() {
             variant="ghost"
             onClick={refreshRates}
             disabled={ratesLoading}
-            className="h-8 w-8 p-0 text-terex-accent hover:bg-terex-accent/10"
+            className="h-8 w-8 p-0 text-terex-accent hover:bg-white/10"
           >
             <RefreshCw className={`w-4 h-4 ${ratesLoading ? 'animate-spin' : ''}`} />
           </Button>
@@ -146,7 +145,7 @@ export function CurrencyConverter() {
             onClick={() => setMode('buy')}
             className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
               mode === 'buy' 
-                ? 'bg-terex-accent text-black' 
+                ? 'bg-terex-gray-light text-white' 
                 : 'text-gray-300 hover:text-white'
             }`}
           >
@@ -156,7 +155,7 @@ export function CurrencyConverter() {
             onClick={() => setMode('sell')}
             className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
               mode === 'sell' 
-                ? 'bg-terex-accent text-black' 
+                ? 'bg-terex-gray-light text-white' 
                 : 'text-gray-300 hover:text-white'
             }`}
           >
@@ -294,7 +293,7 @@ export function CurrencyConverter() {
 
         <Button 
           onClick={handleStartTrading}
-          className="w-full bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold h-12"
+          className="w-full bg-white hover:bg-white/90 text-black font-bold h-12"
         >
           Commencer à trader
         </Button>
