@@ -42,20 +42,20 @@ export function RecipientForm({
           placeholder="Prénom"
           value={recipientFirstName}
           onChange={(e) => setRecipientFirstName(e.target.value)}
-          className="bg-terex-gray border-terex-gray-light text-white h-12 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="bg-terex-gray border-terex-gray-light text-white h-12"
         />
         <Input
           placeholder="Nom de famille"
           value={recipientLastName}
           onChange={(e) => setRecipientLastName(e.target.value)}
-          className="bg-terex-gray border-terex-gray-light text-white h-12 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="bg-terex-gray border-terex-gray-light text-white h-12"
         />
         <Input
           placeholder="Email (optionnel)"
           type="email"
           value={recipientEmail}
           onChange={(e) => setRecipientEmail(e.target.value)}
-          className="bg-terex-gray border-terex-gray-light text-white h-12 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="bg-terex-gray border-terex-gray-light text-white h-12"
         />
         {receiveMethod !== 'mobile' && (
           <Input
@@ -63,7 +63,7 @@ export function RecipientForm({
             type="tel"
             value={recipientPhone}
             onChange={(e) => setRecipientPhone(e.target.value)}
-            className="bg-terex-gray border-terex-gray-light text-white h-12 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="bg-terex-gray border-terex-gray-light text-white h-12"
           />
         )}
       </div>
@@ -74,13 +74,13 @@ export function RecipientForm({
             placeholder="IBAN / Numéro de compte"
             value={recipientAccount}
             onChange={(e) => setRecipientAccount(e.target.value)}
-            className="bg-terex-gray border-terex-gray-light text-white h-12 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="bg-terex-gray border-terex-gray-light text-white h-12"
           />
           <Input
             placeholder="Nom de la banque"
             value={recipientBank}
             onChange={(e) => setRecipientBank(e.target.value)}
-            className="bg-terex-gray border-terex-gray-light text-white h-12 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="bg-terex-gray border-terex-gray-light text-white h-12"
           />
         </div>
       )}

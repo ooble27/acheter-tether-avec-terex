@@ -17,7 +17,7 @@ export function WalletAddressInput({ walletAddress, setWalletAddress, network }:
         placeholder={`Votre adresse ${network} pour recevoir les USDT`}
         value={walletAddress}
         onChange={(e) => setWalletAddress(e.target.value)}
-        className="bg-terex-gray border-terex-gray-light text-white h-12 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0"
+        className="bg-terex-gray border-terex-gray-light text-white h-12"
       />
       <p className="text-gray-400 text-xs">
         Entrez l'adresse de votre portefeuille {network} où vous souhaitez recevoir vos USDT
