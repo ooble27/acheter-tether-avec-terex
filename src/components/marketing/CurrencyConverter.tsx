@@ -167,15 +167,15 @@ export function CurrencyConverter() {
                     placeholder="0.00"
                     value={displayedFiatAmount}
                     onChange={(e) => handleFiatAmountChange(e.target.value)}
-                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-transparent"
                   />
                   <Select value={currency} onValueChange={setCurrency}>
-                    <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent focus:ring-0 focus:ring-offset-0">
+                    <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent focus:ring-0 focus:ring-offset-0 focus:outline-none focus:ring-transparent focus-visible:ring-0 focus-visible:ring-offset-0">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-terex-gray border-terex-gray-light">
-                      <SelectItem value="CFA" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light">CFA</SelectItem>
-                      <SelectItem value="CAD" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light">CAD</SelectItem>
+                      <SelectItem value="CFA" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light focus:text-white">CFA</SelectItem>
+                      <SelectItem value="CAD" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light focus:text-white">CAD</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -193,7 +193,7 @@ export function CurrencyConverter() {
                     placeholder="0.00"
                     value={displayedUSDTAmount}
                     onChange={(e) => handleUSDTAmountChange(e.target.value)}
-                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-transparent"
                   />
                   <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
                     <img 
@@ -217,7 +217,7 @@ export function CurrencyConverter() {
                     placeholder="0.00"
                     value={displayedUSDTAmount}
                     onChange={(e) => handleUSDTAmountChange(e.target.value)}
-                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-24 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-transparent"
                   />
                   <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
                     <img 
@@ -242,15 +242,15 @@ export function CurrencyConverter() {
                     placeholder="0.00"
                     value={displayedFiatAmount}
                     onChange={(e) => handleFiatAmountChange(e.target.value)}
-                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="bg-terex-gray border-terex-gray-light text-white h-12 pr-20 focus:bg-terex-gray focus:border-terex-gray-light focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-transparent"
                   />
                   <Select value={currency} onValueChange={setCurrency}>
-                    <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent focus:ring-0 focus:ring-offset-0">
+                    <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent focus:ring-0 focus:ring-offset-0 focus:outline-none focus:ring-transparent focus-visible:ring-0 focus-visible:ring-offset-0">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-terex-gray border-terex-gray-light">
-                      <SelectItem value="CFA" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light">CFA</SelectItem>
-                      <SelectItem value="CAD" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light">CAD</SelectItem>
+                      <SelectItem value="CFA" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light focus:text-white">CFA</SelectItem>
+                      <SelectItem value="CAD" className="text-white hover:bg-terex-gray-light focus:bg-terex-gray-light focus:text-white">CAD</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
