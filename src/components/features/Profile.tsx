@@ -49,7 +49,7 @@ export function Profile({ user: propUser, onLogout: propOnLogout }: ProfileProps
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-6">
-          <PersonalInfoCard user={displayUser} />
+          <PersonalInfoCard user={authUser} />
           <ContactCard user={displayUser} />
         </div>
         

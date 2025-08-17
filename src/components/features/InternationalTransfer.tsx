@@ -72,7 +72,6 @@ export function InternationalTransfer() {
               fees: '0'
             }}
             onBack={prevStep}
-            onContinue={nextStep}
           />
         );
       case 3:

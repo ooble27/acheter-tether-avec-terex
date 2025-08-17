@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -203,8 +204,13 @@ export function BuyUSDT() {
         return (
           <OrderConfirmation
             orderData={{
-              ...orderData,
-              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+              amount: orderData.amount,
+              currency: orderData.currency,
+              usdtAmount: orderData.usdtAmount,
+              network: orderData.network,
+              walletAddress: orderData.walletAddress,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile',
+              exchangeRate: orderData.exchangeRate
             }}
             onBack={handleBack}
             onConfirm={handleConfirm}
@@ -214,8 +220,13 @@ export function BuyUSDT() {
         return (
           <PaymentPage
             orderData={{
-              ...orderData,
+              amount: orderData.amount,
+              currency: orderData.currency,
+              usdtAmount: orderData.usdtAmount,
+              network: orderData.network,
+              walletAddress: orderData.walletAddress,
               paymentMethod: orderData.paymentMethod as 'card' | 'mobile',
+              exchangeRate: orderData.exchangeRate,
               paymentLink: orderData.paymentLink || ''
             }}
             orderId={orderId}
@@ -228,8 +239,13 @@ export function BuyUSDT() {
         return (
           <PaymentPending
             orderData={{
-              ...orderData,
-              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+              amount: orderData.amount,
+              currency: orderData.currency,
+              usdtAmount: orderData.usdtAmount,
+              network: orderData.network,
+              walletAddress: orderData.walletAddress,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile',
+              exchangeRate: orderData.exchangeRate
             }}
             orderId={orderId}
             onBackToHome={handleBuyMore}
@@ -239,8 +255,13 @@ export function BuyUSDT() {
         return (
           <PaymentSuccess
             orderData={{
-              ...orderData,
-              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+              amount: orderData.amount,
+              currency: orderData.currency,
+              usdtAmount: orderData.usdtAmount,
+              network: orderData.network,
+              walletAddress: orderData.walletAddress,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile',
+              exchangeRate: orderData.exchangeRate
             }}
             orderId={orderId}
             txHash={transactionHash}
@@ -252,8 +273,13 @@ export function BuyUSDT() {
         return (
           <PaymentPending
             orderData={{
-              ...orderData,
-              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+              amount: orderData.amount,
+              currency: orderData.currency,
+              usdtAmount: orderData.usdtAmount,
+              network: orderData.network,
+              walletAddress: orderData.walletAddress,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile',
+              exchangeRate: orderData.exchangeRate
             }}
             orderId={orderId}
             onBackToHome={handleBuyMore}
@@ -263,8 +289,13 @@ export function BuyUSDT() {
         return (
           <PaymentSuccess
             orderData={{
-              ...orderData,
-              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+              amount: orderData.amount,
+              currency: orderData.currency,
+              usdtAmount: orderData.usdtAmount,
+              network: orderData.network,
+              walletAddress: orderData.walletAddress,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile',
+              exchangeRate: orderData.exchangeRate
             }}
             orderId={orderId}
             txHash={transactionHash}
