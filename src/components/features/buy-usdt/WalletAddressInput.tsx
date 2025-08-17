@@ -4,11 +4,11 @@ import { Label } from '@/components/ui/label';
 
 interface WalletAddressInputProps {
   walletAddress: string;
-  onWalletAddressChange: (address: string) => void;
+  setWalletAddress: (address: string) => void;
   network: string;
 }
 
-export function WalletAddressInput({ walletAddress, onWalletAddressChange, network }: WalletAddressInputProps) {
+export function WalletAddressInput({ walletAddress, setWalletAddress, network }: WalletAddressInputProps) {
   return (
     <div className="space-y-2">
       <Label className="text-white text-sm font-medium">Votre adresse de réception {network}</Label>
@@ -16,7 +16,7 @@ export function WalletAddressInput({ walletAddress, onWalletAddressChange, netwo
         type="text"
         placeholder={`Votre adresse ${network} pour recevoir les USDT`}
         value={walletAddress}
-        onChange={(e) => onWalletAddressChange(e.target.value)}
+        onChange={(e) => setWalletAddress(e.target.value)}
         className="bg-terex-gray border-terex-gray-light text-white h-12"
       />
       <p className="text-gray-400 text-xs">

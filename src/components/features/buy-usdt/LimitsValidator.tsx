@@ -2,11 +2,8 @@
 interface LimitsValidatorProps {
   amount: string;
   currency: string;
-  network: string;
-  paymentMethod: 'card' | 'mobile' | 'binance';
-  onLimitsError: (error: string | null) => void;
-  onExchangeRateChange: (exchangeRate: number) => void;
-  onUSDTAmountChange: (usdtAmount: string) => void;
+  onHighVolumeRequest: () => void;
+  children: React.ReactNode;
 }
 
 export const PURCHASE_LIMITS = {
@@ -20,18 +17,8 @@ export const PURCHASE_LIMITS = {
   }
 };
 
-export function LimitsValidator({ 
-  amount, 
-  currency, 
-  network, 
-  paymentMethod, 
-  onLimitsError, 
-  onExchangeRateChange, 
-  onUSDTAmountChange 
-}: LimitsValidatorProps) {
-  // Logic for limits validation and rate calculation would go here
-  // For now, just return null to satisfy the interface
-  return null;
+export function LimitsValidator({ amount, currency, onHighVolumeRequest, children }: LimitsValidatorProps) {
+  return <>{children}</>;
 }
 
 export function getLimitMessage(amount: string, currency: string): { type: 'error' | 'warning' | 'max-reached' | null; message: string } {

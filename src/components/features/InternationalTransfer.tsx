@@ -1,142 +1,306 @@
 
-import { useState, useEffect } from 'react';
-import { TransferForm } from '@/components/features/international-transfer/TransferForm';
-import { TransferConfirmation } from '@/components/features/international-transfer/TransferConfirmation';
-import { TransferPending } from '@/components/features/international-transfer/TransferPending';
-import { TransferSidebar } from '@/components/features/international-transfer/TransferSidebar';
-import { KYCProtection } from '@/components/features/KYCProtection';
-import { useScrollToTop } from '@/components/ScrollToTop';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { useInternationalTransfers } from '@/hooks/useInternationalTransfers';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { useCryptoRates } from '@/hooks/useCryptoRates';
+
+// Importer les nouveaux composants
+import { TransferConfirmation } from './international-transfer/TransferConfirmation';
+import { PaymentInstructions } from './international-transfer/PaymentInstructions';
+import { TransferPending } from './international-transfer/TransferPending';
+import { MobileMoneySelector } from './international-transfer/MobileMoneySelector';
+import { KYCProtection } from './KYCProtection';
+import { KYCPage } from './KYCPage';
+import { TransferForm } from './international-transfer/TransferForm';
+import { RecipientForm } from './international-transfer/RecipientForm';
+import { TransferSidebar } from './international-transfer/TransferSidebar';
 
 export function InternationalTransfer() {
-  const scrollToTop = useScrollToTop();
+  const [showKYCPage, setShowKYCPage] = useState(false);
+  const [currentStep, setCurrentStep] = useState('form');
+  const [sendAmount, setSendAmount] = useState('');
+  const [recipientCountry, setRecipientCountry] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const [receiveMethod, setReceiveMethod] = useState('');
+  const [recipientFirstName, setRecipientFirstName] = useState('');
+  const [recipientLastName, setRecipientLastName] = useState('');
+  const [recipientEmail, setRecipientEmail] = useState('');
+  const [recipientPhone, setRecipientPhone] = useState('');
+  const [recipientAccount, setRecipientAccount] = useState('');
+  const [recipientBank, setRecipientBank] = useState('');
+  const [provider, setProvider] = useState('');
+  const [createdTransfer, setCreatedTransfer] = useState<any>(null);
   
-  const [currentStep, setCurrentStep] = useState(1);
-  const [transferData, setTransferData] = useState({
-    sendAmount: '',
-    receiveAmount: '',
-    recipientCountry: '',
-    recipientFirstName: '',
-    recipientLastName: '',
-    paymentMethod: '',
-    receiveMethod: '',
-    provider: '',
-  });
+  const { createTransfer, loading } = useInternationalTransfers();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const { usdtToCfa, usdtToCad, loading: ratesLoading, error: ratesError, lastUpdated, refresh } = useCryptoRates();
 
-  const nextStep = () => {
-    setCurrentStep(currentStep + 1);
+  // Calcul du taux CAD vers CFA via USD
+  const cadToUsd = usdtToCad ? (1 / usdtToCad) : 0.74;
+  const usdToCfa = usdtToCfa || 600;
+  const exchangeRate = Math.round(cadToUsd * usdToCfa * 100) / 100;
+  
+  // Calcul du montant à recevoir avec déduction automatique des frais
+  const calculateReceiveAmount = () => {
+    if (!sendAmount) return '0.00';
+    
+    const baseAmount = parseFloat(sendAmount) * exchangeRate;
+    
+    if (receiveMethod === 'mobile') {
+      if (provider === 'wave') {
+        // Déduction de 1% pour Wave
+        return (baseAmount * 0.99).toFixed(2);
+      } else if (provider === 'orange') {
+        // Déduction de 0.8% pour Orange Money
+        return (baseAmount * 0.992).toFixed(2);
+      }
+    }
+    
+    return baseAmount.toFixed(2);
+  };
+  
+  const receiveAmount = calculateReceiveAmount();
+  const fees = '0.00'; // Gratuit avec TRX
+
+  const handleMobileMoneyComplete = (selectedProvider: string, phoneNumber: string) => {
+    setProvider(selectedProvider);
+    setRecipientPhone(phoneNumber);
+    setCurrentStep('confirmation');
   };
 
-  const prevStep = () => {
-    setCurrentStep(currentStep - 1);
+  const handleKYCRequired = () => {
+    setShowKYCPage(true);
   };
 
-  const handleSubmit = () => {
-    nextStep();
+  const handleFormSubmit = () => {
+    if (!user) {
+      toast({
+        title: "Connexion requise",
+        description: "Vous devez être connecté pour effectuer un transfert",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || 
+        !recipientFirstName || !recipientLastName) {
+      toast({
+        title: "Informations manquantes",
+        description: "Veuillez remplir tous les champs requis",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Si c'est Mobile Money, aller à la sélection du service
+    if (receiveMethod === 'mobile') {
+      setCurrentStep('mobile-money');
+      return;
+    }
+
+    // Sinon, aller directement à la confirmation
+    setCurrentStep('confirmation');
   };
 
-  const renderContent = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          <TransferForm 
-            sendAmount={transferData.sendAmount}
-            setSendAmount={(amount: string) => setTransferData(prev => ({ ...prev, sendAmount: amount }))}
-            receiveAmount={transferData.receiveAmount}
-            recipientCountry={transferData.recipientCountry}
-            setRecipientCountry={(country: string) => setTransferData(prev => ({ ...prev, recipientCountry: country }))}
-            paymentMethod={transferData.paymentMethod}
-            setPaymentMethod={(method: string) => setTransferData(prev => ({ ...prev, paymentMethod: method }))}
-            receiveMethod={transferData.receiveMethod}
-            setReceiveMethod={(method: string) => setTransferData(prev => ({ ...prev, receiveMethod: method }))}
-            exchangeRate={650}
-            fees="0"
-            provider={transferData.provider}
-            setProvider={(provider: string) => setTransferData(prev => ({ ...prev, provider }))}
-            onSubmit={handleSubmit}
-          />
-        );
-      case 2:
-        return (
-          <TransferConfirmation
-            transferData={{
-              sendAmount: transferData.sendAmount,
-              receiveAmount: transferData.receiveAmount,
-              receiveMethod: transferData.receiveMethod,
-              recipientFirstName: transferData.recipientFirstName,
-              recipientLastName: transferData.recipientLastName,
-              recipientCountry: transferData.recipientCountry,
-              recipientPhone: '',
-              recipientBank: '',
-              recipientAccount: '',
-              paymentMethod: transferData.paymentMethod,
-              exchangeRate: 650,
-              fees: '0'
-            }}
-            onBack={prevStep}
-            onConfirm={nextStep}
-          />
-        );
-      case 3:
-        return (
-          <TransferPending
-            transferData={{
-              amount: transferData.sendAmount,
-              total_amount: transferData.receiveAmount,
-              recipient_name: `${transferData.recipientFirstName} ${transferData.recipientLastName}`,
-              recipient_phone: '',
-              recipient_country: transferData.recipientCountry,
-              id: Math.random().toString(36)
-            }}
-            onBackToDashboard={() => setCurrentStep(1)}
-          />
-        );
-      default:
-        return (
-          <TransferForm 
-            sendAmount={transferData.sendAmount}
-            setSendAmount={(amount: string) => setTransferData(prev => ({ ...prev, sendAmount: amount }))}
-            receiveAmount={transferData.receiveAmount}
-            recipientCountry={transferData.recipientCountry}
-            setRecipientCountry={(country: string) => setTransferData(prev => ({ ...prev, recipientCountry: country }))}
-            paymentMethod={transferData.paymentMethod}
-            setPaymentMethod={(method: string) => setTransferData(prev => ({ ...prev, paymentMethod: method }))}
-            receiveMethod={transferData.receiveMethod}
-            setReceiveMethod={(method: string) => setTransferData(prev => ({ ...prev, receiveMethod: method }))}
-            exchangeRate={650}
-            fees="0"
-            provider={transferData.provider}
-            setProvider={(provider: string) => setTransferData(prev => ({ ...prev, provider }))}
-            onSubmit={handleSubmit}
-          />
-        );
+  const handleTransferConfirm = async () => {
+    const transferData = {
+      amount: parseFloat(sendAmount),
+      from_currency: 'CAD',
+      to_currency: 'CFA',
+      exchange_rate: exchangeRate,
+      fees: 0, // Gratuit
+      total_amount: parseFloat(receiveAmount),
+      recipient_name: `${recipientFirstName} ${recipientLastName}`,
+      recipient_account: recipientAccount || recipientPhone,
+      recipient_bank: recipientBank,
+      recipient_country: recipientCountry,
+      recipient_phone: recipientPhone,
+      recipient_email: recipientEmail,
+      payment_method: paymentMethod,
+      receive_method: receiveMethod,
+      provider: provider,
+      status: 'pending'
+    };
+
+    const result = await createTransfer(transferData);
+    if (result) {
+      setCreatedTransfer(result);
+      setCurrentStep('payment');
     }
   };
 
-  // Effet pour scroll to top à chaque changement d'étape
-  useEffect(() => {
-    scrollToTop();
-  }, [currentStep, scrollToTop]);
+  const handlePaymentSent = () => {
+    setCurrentStep('pending');
+  };
 
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-      {/* Contenu principal */}
-      <div className="lg:col-span-3">
-        <KYCProtection onKYCRequired={() => {}}>
-          {renderContent()}
-        </KYCProtection>
-      </div>
+  const handleBackToDashboard = () => {
+    setCurrentStep('form');
+    // Reset form
+    setSendAmount('');
+    setRecipientCountry('');
+    setPaymentMethod('');
+    setReceiveMethod('');
+    setRecipientFirstName('');
+    setRecipientLastName('');
+    setRecipientEmail('');
+    setRecipientPhone('');
+    setRecipientAccount('');
+    setRecipientBank('');
+    setProvider('');
+    setCreatedTransfer(null);
+  };
 
-      {/* Sidebar */}
-      <div className="lg:col-span-1">
-        <TransferSidebar 
-          exchangeRate={650}
-          ratesLoading={false}
-          ratesError={null}
-          lastUpdated={new Date()}
-          refresh={() => {}}
-          setSendAmount={(amount: string) => setTransferData(prev => ({ ...prev, sendAmount: amount }))}
+  // Rendu conditionnel selon l'étape
+  if (showKYCPage) {
+    return <KYCPage onBack={() => setShowKYCPage(false)} />;
+  }
+
+  if (currentStep === 'mobile-money') {
+    return (
+      <KYCProtection onKYCRequired={handleKYCRequired}>
+        <MobileMoneySelector
+          onComplete={handleMobileMoneyComplete}
+          onBack={() => setCurrentStep('form')}
+          recipientCountry={recipientCountry}
         />
+      </KYCProtection>
+    );
+  }
+
+  if (currentStep === 'confirmation') {
+    const transferData = {
+      sendAmount,
+      receiveAmount,
+      recipientCountry,
+      paymentMethod,
+      receiveMethod,
+      recipientFirstName,
+      recipientLastName,
+      recipientPhone,
+      recipientEmail,
+      recipientAccount,
+      recipientBank,
+      provider,
+      exchangeRate,
+      fees
+    };
+
+    return (
+      <KYCProtection onKYCRequired={handleKYCRequired}>
+        <TransferConfirmation
+          transferData={transferData}
+          onConfirm={handleTransferConfirm}
+          onBack={() => setCurrentStep(receiveMethod === 'mobile' ? 'mobile-money' : 'form')}
+          loading={loading}
+        />
+      </KYCProtection>
+    );
+  }
+
+  if (currentStep === 'payment') {
+    return (
+      <KYCProtection onKYCRequired={handleKYCRequired}>
+        <PaymentInstructions
+          transferData={createdTransfer}
+          onPaymentSent={handlePaymentSent}
+          onBack={() => setCurrentStep('confirmation')}
+        />
+      </KYCProtection>
+    );
+  }
+
+  if (currentStep === 'pending') {
+    return (
+      <KYCProtection onKYCRequired={handleKYCRequired}>
+        <TransferPending
+          transferData={createdTransfer}
+          onBackToDashboard={handleBackToDashboard}
+        />
+      </KYCProtection>
+    );
+  }
+
+  // Formulaire principal
+  return (
+    <KYCProtection onKYCRequired={handleKYCRequired}>
+      <div className="min-h-screen bg-terex-dark p-0">
+        <div className="max-w-7xl mx-auto px-0">
+          <div className="mb-6 md:mb-8 px-1 md:px-0">
+            <h1 className="text-3xl font-bold text-white mb-2">Virement international</h1>
+            <p className="text-gray-400">Envoyer de l'argent rapidement à vos proches</p>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-0 md:gap-6 px-0 lg:px-0">
+            <div className="lg:col-span-2">
+              <Card className="bg-terex-darker border-terex-gray shadow-2xl mx-0">
+                <CardHeader className="border-b border-terex-gray p-4 md:p-6">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-white text-lg md:text-xl">Nouveau transfert</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-4 md:p-6 space-y-6">
+                  <TransferForm
+                    sendAmount={sendAmount}
+                    setSendAmount={setSendAmount}
+                    receiveAmount={receiveAmount}
+                    recipientCountry={recipientCountry}
+                    setRecipientCountry={setRecipientCountry}
+                    paymentMethod={paymentMethod}
+                    setPaymentMethod={setPaymentMethod}
+                    receiveMethod={receiveMethod}
+                    setReceiveMethod={setReceiveMethod}
+                    exchangeRate={exchangeRate}
+                    fees={fees}
+                    provider={provider}
+                    setProvider={setProvider}
+                  />
+
+                  <RecipientForm
+                    recipientFirstName={recipientFirstName}
+                    setRecipientFirstName={setRecipientFirstName}
+                    recipientLastName={recipientLastName}
+                    setRecipientLastName={setRecipientLastName}
+                    recipientEmail={recipientEmail}
+                    setRecipientEmail={setRecipientEmail}
+                    recipientPhone={recipientPhone}
+                    setRecipientPhone={setRecipientPhone}
+                    recipientAccount={recipientAccount}
+                    setRecipientAccount={setRecipientAccount}
+                    recipientBank={recipientBank}
+                    setRecipientBank={setRecipientBank}
+                    receiveMethod={receiveMethod}
+                  />
+
+                  <Button 
+                    size="lg"
+                    className="w-full gradient-button text-white font-semibold h-12 text-lg"
+                    disabled={!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName || (receiveMethod !== 'mobile' && !recipientPhone) || loading || (receiveMethod === 'mobile' && !provider)}
+                    onClick={handleFormSubmit}
+                  >
+                    {loading ? 'Traitement...' : 'Continuer le transfert'}
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Sidebar */}
+            <div className="px-0 lg:px-0 mt-4 lg:mt-0">
+              <TransferSidebar
+                exchangeRate={exchangeRate}
+                ratesLoading={ratesLoading}
+                ratesError={ratesError}
+                lastUpdated={lastUpdated}
+                refresh={refresh}
+                setSendAmount={setSendAmount}
+              />
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </KYCProtection>
   );
 }

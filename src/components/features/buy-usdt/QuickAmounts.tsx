@@ -4,10 +4,10 @@ import { Label } from '@/components/ui/label';
 
 interface QuickAmountsProps {
   currency: string;
-  onAmountChange: (amount: string) => void;
+  setFiatAmount: (amount: string) => void;
 }
 
-export function QuickAmounts({ currency, onAmountChange }: QuickAmountsProps) {
+export function QuickAmounts({ currency, setFiatAmount }: QuickAmountsProps) {
   const getQuickAmounts = () => {
     if (currency === 'CFA') {
       return ['10000', '25000', '50000', '100000', '250000', '500000'];
@@ -24,7 +24,7 @@ export function QuickAmounts({ currency, onAmountChange }: QuickAmountsProps) {
             key={value}
             variant="outline"
             size="sm"
-            onClick={() => onAmountChange(value)}
+            onClick={() => setFiatAmount(value)}
             className="border-terex-gray text-gray-300 hover:bg-terex-gray text-xs w-full min-w-0 h-8 px-1"
           >
             <span className="truncate">

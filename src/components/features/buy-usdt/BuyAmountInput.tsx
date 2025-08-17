@@ -8,34 +8,34 @@ import { ArrowRightLeft } from 'lucide-react';
 import { enforceMaxLimit } from './LimitsValidator';
 
 interface BuyAmountInputProps {
-  amount: string;
-  onAmountChange: (amount: string) => void;
+  fiatAmount: string;
+  setFiatAmount: (amount: string) => void;
   currency: string;
-  onCurrencyChange: (currency: string) => void;
-  usdtAmount?: string;
-  exchangeRate?: number;
-  paymentMethod?: 'card' | 'mobile' | 'binance';
-  processingTime?: string;
-  fee?: string;
+  setCurrency: (currency: string) => void;
+  usdtAmount: string;
+  exchangeRate: number;
+  paymentMethod: 'card' | 'mobile';
+  processingTime: string;
+  fee: string;
 }
 
 export function BuyAmountInput({
-  amount,
-  onAmountChange,
+  fiatAmount,
+  setFiatAmount,
   currency,
-  onCurrencyChange,
-  usdtAmount = '0.00',
-  exchangeRate = 0,
-  paymentMethod = 'card',
-  processingTime = '2-5 minutes',
-  fee = 'Inclus'
+  setCurrency,
+  usdtAmount,
+  exchangeRate,
+  paymentMethod,
+  processingTime,
+  fee
 }: BuyAmountInputProps) {
   
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     // Appliquer la limite maximale
     const limitedValue = enforceMaxLimit(value, currency);
-    onAmountChange(limitedValue);
+    setFiatAmount(limitedValue);
   };
 
   return (
@@ -47,11 +47,11 @@ export function BuyAmountInput({
             <Input
               type="number"
               placeholder="0.00"
-              value={amount}
+              value={fiatAmount}
               onChange={handleAmountChange}
               className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
             />
-            <Select value={currency} onValueChange={onCurrencyChange}>
+            <Select value={currency} onValueChange={setCurrency}>
               <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
                 <SelectValue />
               </SelectTrigger>

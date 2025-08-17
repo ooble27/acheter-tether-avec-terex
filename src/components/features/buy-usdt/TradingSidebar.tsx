@@ -20,18 +20,18 @@ interface TradingSidebarProps {
   lastUpdated: Date | null;
   refreshRates: () => void;
   currency: string;
-  onAmountChange: (amount: string) => void;
+  setFiatAmount: (amount: string) => void;
 }
 
 export function TradingSidebar({
-  exchangeRates = { CFA: 650, CAD: 1.35 },
-  marketRates = { CFA: 637, CAD: 1.32 },
-  ratesLoading = false,
-  ratesError = null,
-  lastUpdated = new Date(),
-  refreshRates = () => {},
-  currency = 'CFA',
-  onAmountChange = () => {}
+  exchangeRates,
+  marketRates,
+  ratesLoading,
+  ratesError,
+  lastUpdated,
+  refreshRates,
+  currency,
+  setFiatAmount
 }: TradingSidebarProps) {
   return (
     <div className="lg:col-span-1 space-y-4 md:space-y-6 w-full">
@@ -123,7 +123,7 @@ export function TradingSidebar({
         <CardContent className="p-3 sm:p-4 pt-0 w-full overflow-hidden">
           <QuickAmounts
             currency={currency}
-            onAmountChange={onAmountChange}
+            setFiatAmount={setFiatAmount}
           />
         </CardContent>
       </Card>

@@ -3,22 +3,14 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { Info } from 'lucide-react';
 
 interface BinancePayOptionProps {
-  binancePay: boolean;
-  binanceEmail: string;
-  onBinancePayChange: (enabled: boolean) => void;
-  onBinanceEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  enabled: boolean;
+  onToggle: (enabled: boolean) => void;
 }
 
-export function BinancePayOption({ 
-  binancePay, 
-  binanceEmail, 
-  onBinancePayChange, 
-  onBinanceEmailChange 
-}: BinancePayOptionProps) {
+export function BinancePayOption({ enabled, onToggle }: BinancePayOptionProps) {
   const [imageError, setImageError] = useState(false);
 
   return (
@@ -44,39 +36,26 @@ export function BinancePayOption({
             </div>
           </div>
           <Switch
-            checked={binancePay}
-            onCheckedChange={onBinancePayChange}
+            checked={enabled}
+            onCheckedChange={onToggle}
             className="data-[state=checked]:bg-terex-accent data-[state=unchecked]:bg-gray-600 border-2 border-gray-500 data-[state=checked]:border-terex-accent shadow-lg"
           />
         </div>
         
-        {binancePay && (
-          <>
-            <div className="mt-4 bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
-              <div className="flex items-start space-x-2">
-                <Info className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-blue-200 text-sm font-medium">Avantages Binance Pay</p>
-                  <ul className="text-blue-100 text-xs mt-1 space-y-1">
-                    <li>• Transfert instantané sans frais</li>
-                    <li>• Sécurisé par Binance</li>
-                    <li>• Pas besoin de choisir un réseau</li>
-                  </ul>
-                </div>
+        {enabled && (
+          <div className="mt-4 bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
+            <div className="flex items-start space-x-2">
+              <Info className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-blue-200 text-sm font-medium">Avantages Binance Pay</p>
+                <ul className="text-blue-100 text-xs mt-1 space-y-1">
+                  <li>• Transfert instantané sans frais</li>
+                  <li>• Sécurisé par Binance</li>
+                  <li>• Pas besoin de choisir un réseau</li>
+                </ul>
               </div>
             </div>
-            
-            <div className="mt-4 space-y-2">
-              <Label className="text-white text-sm font-medium">Email Binance</Label>
-              <Input
-                type="email"
-                placeholder="votre.email@exemple.com"
-                value={binanceEmail}
-                onChange={onBinanceEmailChange}
-                className="bg-terex-gray border-terex-gray-light text-white h-10"
-              />
-            </div>
-          </>
+          </div>
         )}
       </CardContent>
     </Card>

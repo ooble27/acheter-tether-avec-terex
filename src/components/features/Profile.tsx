@@ -1,70 +1,101 @@
-
-import { useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useState } from 'react';
+import { useUserProfile } from '@/hooks/useUserProfile';
 import { useKYC } from '@/hooks/useKYC';
-import { PersonalInfoCard } from '@/components/features/profile/PersonalInfoCard';
-import { ContactCard } from '@/components/features/profile/ContactCard';
-import { SecuritySettingsCard } from '@/components/features/profile/SecuritySettingsCard';
-import { ProfileStatsCard } from '@/components/features/profile/ProfileStatsCard';
-import { ShareAndContactCard } from '@/components/features/profile/ShareAndContactCard';
-import { useScrollToTop } from '@/components/ScrollToTop';
+import { KYCAlert } from './KYCAlert';
+import { KYCPage } from './KYCPage';
+import { PersonalInfoCard } from './profile/PersonalInfoCard';
+import { ContactCard } from './profile/ContactCard';
+import { ShareAndContactCard } from './profile/ShareAndContactCard';
+import { SecuritySettingsCard } from './profile/SecuritySettingsCard';
+import { User, Star, Award } from 'lucide-react';
 
 interface ProfileProps {
-  user?: { email: string; name: string } | null;
-  onLogout?: () => Promise<void>;
+  user: { email: string; name: string } | null;
+  onLogout: () => void;
 }
 
-export function Profile({ user: propUser, onLogout: propOnLogout }: ProfileProps = {}) {
-  const scrollToTop = useScrollToTop();
-  const { user: authUser, logout } = useAuth();
-  const { kycData, loading } = useKYC();
-
-  // Scroll to top when component mounts
-  useEffect(() => {
-    scrollToTop();
-  }, [scrollToTop]);
-
-  const handleLogout = async () => {
-    if (propOnLogout) {
-      await propOnLogout();
-    } else {
-      await logout();
-    }
-  };
+export function Profile({ user, onLogout }: ProfileProps) {
+  const [showKYC, setShowKYC] = useState(false);
+  const { loading } = useUserProfile();
+  const { kycData, loading: kycLoading } = useKYC();
 
   const handleStartKYC = () => {
-    // Logic to start KYC process
-    console.log('Starting KYC process...');
+    setShowKYC(true);
   };
 
+  if (loading || kycLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-white">Chargement...</div>
+      </div>
+    );
+  }
+
+  if (showKYC) {
+    return <KYCPage onBack={() => setShowKYC(false)} />;
+  }
+
   const isKYCVerified = kycData?.status === 'approved';
-  const displayUser = propUser || (authUser ? { 
-    email: authUser.email || '', 
-    name: authUser.user_metadata?.name || authUser.user_metadata?.full_name || authUser.email?.split('@')[0] || '' 
-  } : null);
+  const showKYCAlert = !isKYCVerified && kycData?.status !== 'submitted' && kycData?.status !== 'under_review';
 
   return (
-    <div className="container mx-auto p-4 space-y-6 max-w-4xl">
-      <h1 className="text-2xl md:text-3xl font-bold text-white mb-8">Mon Profil</h1>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-6">
-          <PersonalInfoCard user={authUser} />
-          <ContactCard user={displayUser} />
+    <div className="min-h-screen bg-terex-dark p-2 md:p-6 lg:p-8 animate-fade-in">
+      {/* Header avec design uniforme */}
+      <div className="bg-gradient-to-br from-terex-darker/95 to-terex-dark/95 border border-white/10 rounded-2xl mb-6 md:mb-8 p-4 md:p-8 shadow-2xl backdrop-blur-sm">
+        <div className="relative">
+          <div className="flex items-center space-x-4 mb-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-2xl flex items-center justify-center shadow-lg">
+              <User className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold text-white mb-2">Mon Profil</h1>
+              <p className="text-gray-300 text-lg">Bienvenue {user?.name || 'Utilisateur'}</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 bg-terex-darker/80 backdrop-blur-sm rounded-full px-4 py-2 border border-terex-gray/20">
+              <Star className="w-4 h-4 text-terex-accent" />
+              <span className="text-white text-sm">Membre Terex</span>
+            </div>
+            <div className="flex items-center space-x-2 bg-green-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-green-500/30">
+              <Award className="w-4 h-4 text-green-400" />
+              <span className="text-green-400 text-sm">Compte Actif</span>
+            </div>
+          </div>
         </div>
-        
-        <div className="space-y-6">
-          <ProfileStatsCard />
+      </div>
+
+      {/* KYC Alert - Seulement si pas vérifié et pas en cours */}
+      {showKYCAlert && (
+        <div className="mb-6 md:mb-8">
+          <KYCAlert status={kycData?.status || 'pending'} onStartKYC={handleStartKYC} />
+        </div>
+      )}
+
+      {/* Grille des cartes avec hiérarchie des tailles - 12 colonnes pour plus de contrôle */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 md:gap-8">
+        {/* Colonne principale - Blocs plus larges (8 colonnes sur 12) */}
+        <div className="xl:col-span-8 space-y-6 md:space-y-8">
+          {/* Informations personnelles - Plus large */}
+          <PersonalInfoCard user={user} />
+          
+          {/* Contact - Plus large */}
+          <ContactCard user={user} />
+        </div>
+
+        {/* Colonne secondaire - Blocs plus petits (4 colonnes sur 12) */}
+        <div className="xl:col-span-4 space-y-6 md:space-y-8">
+          {/* Paramètres de sécurité */}
           <SecuritySettingsCard 
-            onLogout={handleLogout}
-            onStartKYC={handleStartKYC}
+            onStartKYC={handleStartKYC} 
             kycData={kycData}
             isKYCVerified={isKYCVerified}
           />
+          
+          {/* Partage et contact */}
+          <ShareAndContactCard />
         </div>
       </div>
-      
-      <ShareAndContactCard />
     </div>
   );
 }
