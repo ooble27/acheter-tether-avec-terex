@@ -56,7 +56,7 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
             {/* Accès plateforme */}
             <Container style={platformSection}>
               <Text style={footerTitle}>🚀 Accédez à votre compte</Text>
-              <Link href="https://app.terangaexchange.com" style={platformLink}>
+              <Link href="https://terangaexchange.com" style={platformLink}>
                 Ouvrir la plateforme Terex →
               </Link>
             </Container>

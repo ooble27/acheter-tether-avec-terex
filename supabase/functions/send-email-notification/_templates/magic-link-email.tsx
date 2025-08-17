@@ -1,4 +1,3 @@
-
 import {
   Body,
   Container,
@@ -95,7 +94,7 @@ export const MagicLinkEmail = ({ magicLink, userEmail }: MagicLinkEmailProps) =>
             Votre plateforme de confiance pour les échanges USDT
           </Text>
           <Text style={footerLinks}>
-            <Link href="https://app.terangaexchange.com" style={link}>
+            <Link href="https://terangaexchange.com" style={link}>
               🌐 Accéder à la plateforme
             </Link>
             {' • '}
