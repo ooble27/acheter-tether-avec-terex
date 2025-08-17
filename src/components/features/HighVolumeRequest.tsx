@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -238,8 +239,8 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-gray-400">Email VIP</p>
-                  <p className="text-white">vip@terangexchange.com</p>
+                  <p className="text-gray-400">Email</p>
+                  <p className="text-white">terangaexchange@gmail.com</p>
                 </div>
                 <div>
                   <p className="text-gray-400">WhatsApp</p>
