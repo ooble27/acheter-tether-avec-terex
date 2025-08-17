@@ -1,13 +1,16 @@
-import { useState } from 'react';
-import { useUserProfile } from '@/hooks/useUserProfile';
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { User, Shield, Settings, LogOut, CheckCircle, AlertCircle, Clock, Mail, Phone, MapPin, Calendar, Briefcase, Star } from 'lucide-react';
+import { PersonalInfoCard } from '@/components/features/profile/PersonalInfoCard';
+import { SecuritySettingsCard } from '@/components/features/profile/SecuritySettingsCard';
+import { ProfileStatsCard } from '@/components/features/profile/ProfileStatsCard';
+import { ContactCard } from '@/components/features/profile/ContactCard';
+import { ShareAndContactCard } from '@/components/features/profile/ShareAndContactCard';
 import { useKYC } from '@/hooks/useKYC';
-import { KYCAlert } from './KYCAlert';
-import { KYCPage } from './KYCPage';
-import { PersonalInfoCard } from './profile/PersonalInfoCard';
-import { ContactCard } from './profile/ContactCard';
-import { ShareAndContactCard } from './profile/ShareAndContactCard';
-import { SecuritySettingsCard } from './profile/SecuritySettingsCard';
-import { User, Star, Award } from 'lucide-react';
+import { useScrollToTop } from '@/components/ScrollToTop';
 
 interface ProfileProps {
   user: { email: string; name: string } | null;
@@ -15,87 +18,87 @@ interface ProfileProps {
 }
 
 export function Profile({ user, onLogout }: ProfileProps) {
-  const [showKYC, setShowKYC] = useState(false);
-  const { loading } = useUserProfile();
-  const { kycData, loading: kycLoading } = useKYC();
+  const scrollToTop = useScrollToTop();
+  const [activeTab, setActiveTab] = useState<'personal' | 'security'>('personal');
+  const { kycStatus, isLoading: isKYCLoading, isError: isKYCError, error: kycError } = useKYC();
 
-  const handleStartKYC = () => {
-    setShowKYC(true);
-  };
-
-  if (loading || kycLoading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-white">Chargement...</div>
-      </div>
-    );
-  }
-
-  if (showKYC) {
-    return <KYCPage onBack={() => setShowKYC(false)} />;
-  }
-
-  const isKYCVerified = kycData?.status === 'approved';
-  const showKYCAlert = !isKYCVerified && kycData?.status !== 'submitted' && kycData?.status !== 'under_review';
+  useEffect(() => {
+    scrollToTop();
+  }, [scrollToTop]);
 
   return (
-    <div className="min-h-screen bg-terex-dark p-2 md:p-6 lg:p-8 animate-fade-in">
-      {/* Header avec design uniforme */}
-      <div className="bg-gradient-to-br from-terex-darker/95 to-terex-dark/95 border border-white/10 rounded-2xl mb-6 md:mb-8 p-4 md:p-8 shadow-2xl backdrop-blur-sm">
-        <div className="relative">
-          <div className="flex items-center space-x-4 mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-2xl flex items-center justify-center shadow-lg">
-              <User className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold text-white mb-2">Mon Profil</h1>
-              <p className="text-gray-300 text-lg">Bienvenue {user?.name || 'Utilisateur'}</p>
-            </div>
-          </div>
+    <div className="space-y-6">
+      {/* En-tête du profil */}
+      <Card className="bg-terex-darker border-terex-gray">
+        <CardHeader>
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2 bg-terex-darker/80 backdrop-blur-sm rounded-full px-4 py-2 border border-terex-gray/20">
-              <Star className="w-4 h-4 text-terex-accent" />
-              <span className="text-white text-sm">Membre Terex</span>
-            </div>
-            <div className="flex items-center space-x-2 bg-green-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-green-500/30">
-              <Award className="w-4 h-4 text-green-400" />
-              <span className="text-green-400 text-sm">Compte Actif</span>
+            <User className="w-10 h-10 text-white" />
+            <div>
+              <CardTitle className="text-2xl font-bold text-white">{user?.name || 'Utilisateur'}</CardTitle>
+              <CardDescription className="text-gray-400">{user?.email}</CardDescription>
             </div>
           </div>
-        </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center space-x-4">
+            {kycStatus === 'approved' ? (
+              <Badge className="bg-green-500 text-white border-0">
+                <CheckCircle className="w-4 h-4 mr-2" />
+                KYC Validé
+              </Badge>
+            ) : kycStatus === 'pending' ? (
+              <Badge className="bg-yellow-500 text-white border-0">
+                <Clock className="w-4 h-4 mr-2" />
+                KYC En cours
+              </Badge>
+            ) : kycStatus === 'rejected' ? (
+              <Badge className="bg-red-500 text-white border-0">
+                <AlertCircle className="w-4 h-4 mr-2" />
+                KYC Refusé
+              </Badge>
+            ) : (
+              <Badge className="bg-gray-500 text-white border-0">
+                <Shield className="w-4 h-4 mr-2" />
+                KYC Non vérifié
+              </Badge>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Navigation entre les onglets */}
+      <div className="flex items-center space-x-4">
+        <Button
+          variant={activeTab === 'personal' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('personal')}
+          className={`flex items-center space-x-2 ${activeTab === 'personal' ? 'gradient-button text-white' : 'border-terex-gray text-gray-300 hover:bg-terex-gray'}`}
+        >
+          <User className="w-4 h-4" />
+          <span>Informations personnelles</span>
+        </Button>
+        <Button
+          variant={activeTab === 'security' ? 'default' : 'outline'}
+          onClick={() => setActiveTab('security')}
+          className={`flex items-center space-x-2 ${activeTab === 'security' ? 'gradient-button text-white' : 'border-terex-gray text-gray-300 hover:bg-terex-gray'}`}
+        >
+          <Shield className="w-4 h-4" />
+          <span>Sécurité</span>
+        </Button>
       </div>
 
-      {/* KYC Alert - Seulement si pas vérifié et pas en cours */}
-      {showKYCAlert && (
-        <div className="mb-6 md:mb-8">
-          <KYCAlert status={kycData?.status || 'pending'} onStartKYC={handleStartKYC} />
-        </div>
-      )}
-
-      {/* Grille des cartes avec hiérarchie des tailles - 12 colonnes pour plus de contrôle */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 md:gap-8">
-        {/* Colonne principale - Blocs plus larges (8 colonnes sur 12) */}
-        <div className="xl:col-span-8 space-y-6 md:space-y-8">
-          {/* Informations personnelles - Plus large */}
+      {/* Contenu des onglets */}
+      {activeTab === 'personal' ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <PersonalInfoCard user={user} />
-          
-          {/* Contact - Plus large */}
-          <ContactCard user={user} />
-        </div>
-
-        {/* Colonne secondaire - Blocs plus petits (4 colonnes sur 12) */}
-        <div className="xl:col-span-4 space-y-6 md:space-y-8">
-          {/* Paramètres de sécurité */}
-          <SecuritySettingsCard 
-            onStartKYC={handleStartKYC} 
-            kycData={kycData}
-            isKYCVerified={isKYCVerified}
-          />
-          
-          {/* Partage et contact */}
+          <ContactCard />
           <ShareAndContactCard />
         </div>
-      </div>
+      ) : (
+        <SecuritySettingsCard onLogout={onLogout} />
+      )}
+
+      {/* Statistiques du profil */}
+      <ProfileStatsCard />
     </div>
   );
 }

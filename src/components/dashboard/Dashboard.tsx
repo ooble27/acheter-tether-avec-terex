@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
@@ -28,6 +27,7 @@ import { useUserRole } from '@/hooks/useUserRole';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
+import { useScrollToTop } from '@/components/ScrollToTop';
 
 interface DashboardProps {
   user: { email: string; name: string } | null;
@@ -40,24 +40,17 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   const isTablet = useIsTablet();
   const { signOut } = useAuth();
   const { isKYCReviewer, isAdmin } = useUserRole();
+  const scrollToTop = useScrollToTop();
 
   // Vérifier si on est en mode PWA (standalone)
   const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
                (window.navigator as any).standalone ||
                document.referrer.includes('android-app://');
 
-  // Effet pour remonter en haut à chaque changement de section
+  // Effet pour remonter en haut à chaque changement de section - amélioré
   useEffect(() => {
-    // Pour le PWA mobile, scroll immédiatement et de façon synchrone
-    if (isPWA && isMobile) {
-      window.scrollTo(0, 0);
-      // Force aussi le scroll du body au cas où
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [activeSection, isPWA, isMobile]);
+    scrollToTop();
+  }, [activeSection, scrollToTop]);
 
   // Effet spécial pour s'assurer que la page home scroll bien en haut
   useEffect(() => {
