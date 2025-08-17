@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.0.0";
 import { Resend } from "npm:resend@2.0.0";
@@ -263,7 +262,7 @@ const handler = async (req: Request): Promise<Response> => {
         // Email de confirmation pour le candidat
         subject = `Candidature reçue - ${orderData.position} chez Terex`;
         htmlContent = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="font-family: Arial, sans-serif; max-width: 896px; margin: 0 auto; padding: 0;">
             <div style="background: linear-gradient(135deg, #0FA958 0%, #08a045 100%); color: white; padding: 30px; border-radius: 10px; text-align: center;">
               <h1 style="margin: 0; font-size: 28px;">Candidature reçue avec succès</h1>
             </div>
@@ -297,7 +296,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="text-align: center; padding: 20px; color: #666; font-size: 14px;">
               <p>Cordialement,<br><strong>L'équipe Terex</strong></p>
               <p style="margin-top: 20px;">
-                <a href="https://app.terangaexchange.com" style="color: #0FA958; text-decoration: none;">app.terangaexchange.com</a>
+                <a href="https://terangaexchange.com" style="color: #0FA958; text-decoration: none;">terangaexchange.com</a>
               </p>
             </div>
           </div>
@@ -368,7 +367,7 @@ const handler = async (req: Request): Promise<Response> => {
 
         // Email de mise à jour de statut pour le candidat avec fond noir et contenu long
         htmlContent = `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #000000; color: #ffffff; padding: 0;">
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 896px; margin: 0 auto; background: #000000; color: #ffffff; padding: 0;">
             
             <!-- Header simple -->
             <div style="padding: 40px 30px; text-align: center; border-bottom: 1px solid #333333;">
@@ -537,8 +536,8 @@ const handler = async (req: Request): Promise<Response> => {
                 <strong style="color: #ffffff;">L'équipe Terex</strong>
               </p>
               <p style="color: #666666; margin: 0; font-size: 12px;">
-                <a href="https://app.terangaexchange.com" style="color: #888888; text-decoration: none;">
-                  app.terangaexchange.com
+                <a href="https://terangaexchange.com" style="color: #888888; text-decoration: none;">
+                  terangaexchange.com
                 </a>
               </p>
             </div>
