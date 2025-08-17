@@ -1,427 +1,59 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 20 14.3% 4.1%;
-    --foreground: 0 0% 95%;
-
-    --card: 20 14.3% 4.1%;
-    --card-foreground: 0 0% 95%;
-
-    --popover: 20 14.3% 4.1%;
-    --popover-foreground: 0 0% 95%;
-
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 355.7 100% 97.3%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 142.4 71.8% 29.2%;
-
-    --radius: 0.75rem;
-
-    --sidebar-background: 20 14.3% 4.1%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 142.1 76.2% 36.3%;
-    --sidebar-primary-foreground: 355.7 100% 97.3%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 142.4 71.8% 29.2%;
-  }
-}
-
-@layer base {
   * {
     @apply border-border;
   }
-
-  html, body {
-    @apply bg-terex-dark text-foreground font-sans;
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    height: 100%;
-    /* Masquer toutes les barres de scroll */
-    overflow: overlay;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer et Edge */
-  }
-
-  html::-webkit-scrollbar,
-  body::-webkit-scrollbar {
-    display: none; /* Safari et Chrome */
-  }
-
-  #root {
-    min-height: 100vh;
-    height: 100%;
-    background-color: #141414 !important;
-  }
-
-  /* Masquer les barres de scroll sur tous les éléments */
-  * {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer et Edge */
-  }
-
-  *::-webkit-scrollbar {
-    display: none; /* Safari et Chrome */
-  }
-}
-
-/* Règles spécifiques pour Safari mobile pour éviter le flash de couleur verte */
-@supports (-webkit-appearance: none) {
-  @media screen and (max-width: 768px) {
-    html {
-      background-color: #141414 !important;
-    }
-    
-    body {
-      background-color: #141414 !important;
-    }
-    
-    #root {
-      background-color: #141414 !important;
-    }
-    
-    /* Forcer le fond noir sur tous les éléments racine */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #141414;
-      z-index: -1000;
-    }
-  }
-}
-
-/* Protection supplémentaire pour iOS Safari */
-@supports (-webkit-touch-callout: none) {
-  html, body, #root {
-    background-color: #141414 !important;
-    background: #141414 !important;
-  }
-  
-  /* Éviter tout flash de couleur au chargement */
   body {
-    opacity: 1 !important;
-    background: #141414 !important;
-  }
-}
-
-/* Classe pour masquer la barre de défilement (renforcée) */
-@layer utilities {
-  .scrollbar-hide {
-    /* Firefox */
-    scrollbar-width: none;
-    /* Safari et Chrome */
-    -ms-overflow-style: none;
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   }
   
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Application globale */
-  .no-scrollbar {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer et Edge */
-  }
-  
-  .no-scrollbar::-webkit-scrollbar {
-    display: none; /* Safari et Chrome */
+  html {
+    scroll-behavior: smooth;
   }
 }
 
-/* Classes utilitaires pour les safe areas iOS PWA */
-@supports (padding-top: env(safe-area-inset-top)) {
-  .pt-safe {
-    padding-top: env(safe-area-inset-top);
-  }
-  
-  .pb-safe {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-  
-  .pl-safe {
-    padding-left: env(safe-area-inset-left);
-  }
-  
-  .pr-safe {
-    padding-right: env(safe-area-inset-right);
-  }
-  
-  .mt-safe {
-    margin-top: env(safe-area-inset-top);
-  }
-  
-  .mb-safe {
-    margin-bottom: env(safe-area-inset-bottom);
-  }
+:root {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 84% 4.9%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+  --radius: 0.5rem;
+
+  /* Terex Colors */
+  --terex-darker: 225, 25%, 8%;
+  --terex-dark: 225, 20%, 12%;
+  --terex-gray: 225, 15%, 25%;
+  --terex-accent: 142, 76%, 36%;
 }
 
-/* Style Binance pour le logo et branding */
-.terex-brand {
-  background: linear-gradient(135deg, #3B968F 0%, #4BA89F 50%, #5BC1B8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  text-shadow: 0 0 30px rgba(59, 150, 143, 0.3);
-}
-
-.logo-glow {
-  position: relative;
-}
-
-.logo-glow::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  background: linear-gradient(45deg, #3B968F, #4BA89F, #5BC1B8);
-  border-radius: inherit;
-  filter: blur(8px);
-  opacity: 0.3;
-  z-index: -1;
-}
-
-.gradient-button {
-  background: linear-gradient(135deg, #3B968F 0%, #4BA89F 100%);
-  transition: all 0.3s ease;
-}
-
-.gradient-button:hover {
-  background: linear-gradient(135deg, #4BA89F 0%, #5BC1B8 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(59, 150, 143, 0.3);
-}
-
-.gradient-button:disabled {
-  transform: none;
-  box-shadow: none;
-}
-
-/* Glass morphism effect pour les cartes */
-.glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Styles pour la carte de l'Afrique 3D */
-.africa-map-container {
-  perspective: 1000px;
-  transform-style: preserve-3d;
-}
-
-.africa-map {
-  position: relative;
-  transform: rotateX(15deg) rotateY(-5deg);
-  animation: float 6s ease-in-out infinite;
-  filter: drop-shadow(0 20px 40px rgba(59, 150, 143, 0.3));
-}
-
-.africa-continent {
-  animation: pulse-continent 4s ease-in-out infinite;
-}
-
-.sahara-region {
-  animation: sahara-glow 5s ease-in-out infinite;
-}
-
-.africa-shadow {
-  position: absolute;
-  bottom: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 300px;
-  height: 100px;
-  background: radial-gradient(ellipse, rgba(59, 150, 143, 0.2) 0%, transparent 70%);
-  border-radius: 50%;
-  filter: blur(20px);
-}
-
-/* Points des pays - positions plus réalistes */
-.country-point {
-  position: absolute;
-  transform: translate(-50%, -50%);
-}
-
-.senegal {
-  top: 30%;
-  left: 15%;
-}
-
-.ivory-coast {
-  top: 50%;
-  left: 18%;
-}
-
-.mali {
-  top: 35%;
-  left: 25%;
-}
-
-.burkina {
-  top: 42%;
-  left: 28%;
-}
-
-.niger {
-  top: 32%;
-  left: 35%;
-}
-
-.nigeria {
-  top: 48%;
-  left: 35%;
-}
-
-.pulse-dot {
-  width: 12px;
-  height: 12px;
-  background: linear-gradient(135deg, #3B968F, #5BC1B8);
-  border-radius: 50%;
-  animation: pulse-dot 2s ease-in-out infinite;
-  box-shadow: 0 0 20px rgba(59, 150, 143, 0.6);
-}
-
-.country-label {
-  position: absolute;
-  top: -35px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #3B968F;
-  font-size: 10px;
-  font-weight: 600;
-  white-space: nowrap;
-  opacity: 0;
-  animation: fade-label 3s ease-in-out infinite;
-  text-shadow: 0 0 10px rgba(59, 150, 143, 0.5);
-}
-
-/* Flux d'USDT */
-.usdt-flow {
-  position: absolute;
-  pointer-events: none;
-}
-
-.flow-1 {
-  top: 25%;
-  left: 20%;
-  animation: flow-path-1 8s linear infinite;
-}
-
-.flow-2 {
-  top: 40%;
-  right: 20%;
-  animation: flow-path-2 10s linear infinite;
-}
-
-.flow-3 {
-  bottom: 35%;
-  left: 25%;
-  animation: flow-path-3 12s linear infinite;
-}
-
-.flow-4 {
-  bottom: 25%;
-  right: 30%;
-  animation: flow-path-4 9s linear infinite;
-}
-
-.usdt-particle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(38, 161, 123, 0.1);
-  border-radius: 50%;
-  padding: 8px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(38, 161, 123, 0.3);
-  box-shadow: 0 0 20px rgba(38, 161, 123, 0.4);
-  animation: particle-glow 2s ease-in-out infinite;
-}
-
-/* Particules flottantes d'arrière-plan */
-.floating-particle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: #3B968F;
-  border-radius: 50%;
-  opacity: 0.6;
-}
-
-.particle-1 {
-  top: 15%;
-  left: 10%;
-  animation: float-particle 15s linear infinite;
-}
-
-.particle-2 {
-  top: 25%;
-  right: 15%;
-  animation: float-particle 18s linear infinite reverse;
-}
-
-.particle-3 {
-  bottom: 25%;
-  left: 20%;
-  animation: float-particle 20s linear infinite;
-}
-
-.particle-4 {
-  bottom: 35%;
-  right: 10%;
-  animation: float-particle 16s linear infinite reverse;
-}
-
-.particle-5 {
-  top: 60%;
-  left: 8%;
-  animation: float-particle 22s linear infinite;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .animate-fade-in {
-    animation: fade-in 0.4s ease-out;
-  }
-  
-  .animate-slide-up {
-    animation: slide-up 0.3s ease-out;
-  }
-  
-  .animate-scale-in {
-    animation: scale-in 0.2s ease-out;
-  }
-
-  .animate-glow {
-    animation: glow 2s ease-in-out infinite alternate;
-  }
-}
-
-@keyframes slide-up {
+/* Animations personnalisées */
+@keyframes fade-in {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -432,559 +64,132 @@
   }
 }
 
-@keyframes scale-in {
+@keyframes slide-in-right {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: translateX(100%);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateX(0);
   }
 }
 
-@keyframes glow {
-  from {
-    box-shadow: 0 0 20px rgba(59, 150, 143, 0.2);
-  }
-  to {
-    box-shadow: 0 0 30px rgba(59, 150, 143, 0.4);
-  }
-}
-
-/* Animations pour la carte de l'Afrique */
-@keyframes float {
+@keyframes pulse-glow {
   0%, 100% {
-    transform: rotateX(15deg) rotateY(-5deg) translateY(0px);
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
   }
   50% {
-    transform: rotateX(15deg) rotateY(-5deg) translateY(-10px);
+    box-shadow: 0 0 40px rgba(34, 197, 94, 0.6);
   }
 }
 
-@keyframes pulse-continent {
-  0%, 100% {
-    filter: drop-shadow(0 0 10px rgba(59, 150, 143, 0.4));
-  }
-  50% {
-    filter: drop-shadow(0 0 20px rgba(59, 150, 143, 0.8));
-  }
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-@keyframes sahara-glow {
-  0%, 100% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 0.4;
-  }
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
 }
 
-@keyframes pulse-dot {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 0.7;
-  }
+.animate-slide-in-right {
+  animation: slide-in-right 0.5s ease-out forwards;
 }
 
-@keyframes fade-label {
-  0%, 70% {
-    opacity: 0;
-  }
-  80%, 90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
-@keyframes particle-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(38, 161, 123, 0.4);
-    transform: scale(1);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(38, 161, 123, 0.8);
-    transform: scale(1.1);
-  }
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
 }
 
-@keyframes flow-path-1 {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(250px, 150px) rotate(360deg);
-    opacity: 0;
-  }
+/* Animation delays */
+.animation-delay-200 {
+  animation-delay: 200ms;
 }
 
-@keyframes flow-path-2 {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-200px, 120px) rotate(-360deg);
-    opacity: 0;
-  }
+.animation-delay-400 {
+  animation-delay: 400ms;
 }
 
-@keyframes flow-path-3 {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(180px, -140px) rotate(360deg);
-    opacity: 0;
-  }
+.animation-delay-600 {
+  animation-delay: 600ms;
 }
 
-@keyframes flow-path-4 {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-160px, -120px) rotate(-360deg);
-    opacity: 0;
-  }
+.animation-delay-800 {
+  animation-delay: 800ms;
 }
 
-@keyframes float-particle {
-  0% {
-    transform: translateY(0px) rotate(0deg);
-    opacity: 0.6;
-  }
-  50% {
-    transform: translateY(-20px) rotate(180deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(0px) rotate(360deg);
-    opacity: 0.6;
-  }
-}
-
-@media (max-width: 768px) {
-  .mobile-optimized {
-    padding: 1rem;
-  }
-  
-  .card-mobile {
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .country-label {
-    font-size: 8px;
-    top: -30px;
-  }
-  
-  .usdt-particle {
-    padding: 6px;
-  }
-}
-
-* {
-  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-/* Nouvelle visualisation crypto moderne */
-.crypto-visualization-container {
-  position: relative;
-  width: 400px;
-  height: 400px;
-  perspective: 1000px;
-  transform-style: preserve-3d;
-}
-
-/* Cercles concentriques */
-.crypto-circles {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.crypto-circle {
-  position: absolute;
-  border: 2px solid rgba(59, 150, 143, 0.3);
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.circle-1 {
-  width: 100px;
-  height: 100px;
-  animation: pulse-circle 3s ease-in-out infinite;
-}
-
-.circle-2 {
-  width: 180px;
-  height: 180px;
-  animation: pulse-circle 3s ease-in-out infinite 0.5s;
-}
-
-.circle-3 {
-  width: 260px;
-  height: 260px;
-  animation: pulse-circle 3s ease-in-out infinite 1s;
-}
-
-.circle-4 {
-  width: 340px;
-  height: 340px;
-  animation: pulse-circle 3s ease-in-out infinite 1.5s;
-}
-
-/* Logo USDT central */
-.central-usdt-logo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-}
-
-.usdt-glow-effect {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(59, 150, 143, 0.1) 0%, transparent 70%);
-  animation: central-glow 4s ease-in-out infinite;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(59, 150, 143, 0.2);
-}
-
-/* Hexagones flottants */
-.floating-hexagons {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.hexagon {
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  background: rgba(20, 14, 4, 0.8);
-  border: 2px solid rgba(59, 150, 143, 0.4);
-  border-radius: 8px;
-  backdrop-filter: blur(10px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.hexagon:hover {
-  border-color: #3B968F;
-  transform: scale(1.1);
-  background: rgba(59, 150, 143, 0.1);
-}
-
-.hexagon-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hex-1 {
-  top: 10%;
-  left: 20%;
-  animation: float-hex 6s ease-in-out infinite;
-}
-
-.hex-2 {
-  top: 15%;
-  right: 15%;
-  animation: float-hex 6s ease-in-out infinite 1s;
-}
-
-.hex-3 {
-  top: 60%;
-  left: 10%;
-  animation: float-hex 6s ease-in-out infinite 2s;
-}
-
-.hex-4 {
-  bottom: 20%;
-  right: 20%;
-  animation: float-hex 6s ease-in-out infinite 3s;
-}
-
-.hex-5 {
-  top: 45%;
-  left: 5%;
-  animation: float-hex 6s ease-in-out infinite 4s;
-}
-
-.hex-6 {
-  top: 35%;
-  right: 8%;
-  animation: float-hex 6s ease-in-out infinite 5s;
-}
-
-/* Lignes de connexion */
-.connection-lines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.connections-svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.connection-line {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  animation: draw-line 4s ease-in-out infinite;
-}
-
-.line-1 { animation-delay: 0s; }
-.line-2 { animation-delay: 0.5s; }
-.line-3 { animation-delay: 1s; }
-.line-4 { animation-delay: 1.5s; }
-.line-5 { animation-delay: 2s; }
-.line-6 { animation-delay: 2.5s; }
-
-/* Particules flottantes */
-.floating-particles {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.particle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: #3B968F;
-  border-radius: 50%;
-  opacity: 0.7;
-}
-
-.particle-1 {
-  top: 20%;
-  left: 30%;
-  animation: float-particle 8s linear infinite;
-}
-
-.particle-2 {
-  top: 70%;
-  left: 60%;
-  animation: float-particle 10s linear infinite reverse;
-}
-
-.particle-3 {
-  top: 40%;
-  left: 80%;
-  animation: float-particle 12s linear infinite;
-}
-
-.particle-4 {
-  top: 80%;
-  left: 20%;
-  animation: float-particle 9s linear infinite reverse;
-}
-
-.particle-5 {
-  top: 10%;
-  left: 70%;
-  animation: float-particle 11s linear infinite;
-}
-
-.particle-6 {
-  top: 60%;
-  left: 10%;
-  animation: float-particle 7s linear infinite reverse;
-}
-
-.particle-7 {
-  top: 30%;
-  left: 50%;
-  animation: float-particle 13s linear infinite;
-}
-
-.particle-8 {
-  top: 90%;
-  left: 40%;
-  animation: float-particle 6s linear infinite reverse;
-}
-
-/* Données flottantes */
-.floating-data {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.data-point {
-  position: absolute;
-  background: rgba(59, 150, 143, 0.1);
-  border: 1px solid rgba(59, 150, 143, 0.3);
-  border-radius: 20px;
-  padding: 4px 12px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #3B968F;
-  backdrop-filter: blur(10px);
-  animation: data-float 5s ease-in-out infinite;
-}
-
-.data-1 {
-  top: 25%;
-  left: 75%;
-  animation-delay: 0s;
-}
-
-.data-2 {
-  top: 65%;
-  left: 75%;
-  animation-delay: 1s;
-}
-
-.data-3 {
-  top: 75%;
-  left: 25%;
+.animation-delay-2000 {
   animation-delay: 2s;
 }
 
-.data-4 {
-  top: 25%;
-  left: 15%;
-  animation-delay: 3s;
+.animation-delay-4000 {
+  animation-delay: 4s;
 }
 
-/* Animations */
-@keyframes pulse-circle {
-  0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.3;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.05);
-    opacity: 0.6;
-  }
+/* Scrollbar personnalisée */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
-@keyframes central-glow {
-  0%, 100% {
-    box-shadow: 0 0 30px rgba(59, 150, 143, 0.3);
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    box-shadow: 0 0 50px rgba(59, 150, 143, 0.6);
-    transform: translate(-50%, -50%) scale(1.05);
-  }
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-@keyframes float-hex {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-10px) rotate(120deg);
-  }
-  66% {
-    transform: translateY(5px) rotate(240deg);
-  }
+/* Glass effect */
+.glass-effect {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-@keyframes draw-line {
-  0% {
-    stroke-dashoffset: 100;
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  80% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-  }
-  100% {
-    stroke-dashoffset: -100;
-    opacity: 0;
-  }
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-@keyframes data-float {
-  0%, 100% {
-    transform: translateY(0px);
-    opacity: 0.7;
-  }
-  50% {
-    transform: translateY(-8px);
-    opacity: 1;
-  }
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
-@media (max-width: 768px) {
-  .crypto-visualization-container {
-    width: 300px;
-    height: 300px;
-  }
-  
-  .hexagon {
-    width: 45px;
-    height: 45px;
-  }
-  
-  .data-point {
-    font-size: 10px;
-    padding: 3px 8px;
-  }
+/* Mobile safe areas */
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.mt-safe {
+  margin-top: env(safe-area-inset-top);
+}
+
+.mb-safe {
+  margin-bottom: env(safe-area-inset-bottom);
+}
+
+/* Text gradients */
+.text-gradient {
+  background: linear-gradient(135deg, #22c55e, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
