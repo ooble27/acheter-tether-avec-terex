@@ -232,6 +232,7 @@ export function BuyUSDT() {
               paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
             }}
             orderId={orderId}
+            onBackToHome={handleBuyMore}
           />
         );
       case 5:
@@ -255,6 +256,7 @@ export function BuyUSDT() {
               paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
             }}
             orderId={orderId}
+            onBackToHome={handleBuyMore}
           />
         );
       case 7:

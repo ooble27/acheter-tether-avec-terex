@@ -18,7 +18,8 @@ export function InternationalTransfer() {
     recipientFirstName: '',
     recipientLastName: '',
     paymentMethod: '',
-    termsAccepted: false,
+    receiveMethod: '',
+    provider: '',
   });
 
   const nextStep = () => {
@@ -43,15 +44,14 @@ export function InternationalTransfer() {
             receiveAmount={transferData.receiveAmount}
             recipientCountry={transferData.recipientCountry}
             setRecipientCountry={(country: string) => setTransferData(prev => ({ ...prev, recipientCountry: country }))}
-            recipientFirstName={transferData.recipientFirstName}
-            setRecipientFirstName={(name: string) => setTransferData(prev => ({ ...prev, recipientFirstName: name }))}
-            recipientLastName={transferData.recipientLastName}
-            setRecipientLastName={(name: string) => setTransferData(prev => ({ ...prev, recipientLastName: name }))}
             paymentMethod={transferData.paymentMethod}
             setPaymentMethod={(method: string) => setTransferData(prev => ({ ...prev, paymentMethod: method }))}
-            termsAccepted={transferData.termsAccepted}
-            setTermsAccepted={(accepted: boolean) => setTransferData(prev => ({ ...prev, termsAccepted: accepted }))}
-            onSubmit={handleSubmit}
+            receiveMethod={transferData.receiveMethod}
+            setReceiveMethod={(method: string) => setTransferData(prev => ({ ...prev, receiveMethod: method }))}
+            exchangeRate={650}
+            fees="0"
+            provider={transferData.provider}
+            setProvider={(provider: string) => setTransferData(prev => ({ ...prev, provider }))}
           />
         );
       case 2:
@@ -60,13 +60,16 @@ export function InternationalTransfer() {
             transferData={{
               sendAmount: transferData.sendAmount,
               receiveAmount: transferData.receiveAmount,
-              receiveMethod: 'bank',
+              receiveMethod: transferData.receiveMethod,
               recipientFirstName: transferData.recipientFirstName,
               recipientLastName: transferData.recipientLastName,
               recipientCountry: transferData.recipientCountry,
+              recipientPhone: '',
               recipientBank: '',
               recipientAccount: '',
               paymentMethod: transferData.paymentMethod,
+              exchangeRate: 650,
+              fees: '0'
             }}
             onBack={prevStep}
             onContinue={nextStep}
@@ -77,7 +80,7 @@ export function InternationalTransfer() {
           <TransferPending
             transferData={{
               amount: transferData.sendAmount,
-              total_amount: transferData.sendAmount,
+              total_amount: transferData.receiveAmount,
               recipient_name: `${transferData.recipientFirstName} ${transferData.recipientLastName}`,
               recipient_phone: '',
               recipient_country: transferData.recipientCountry,
@@ -94,15 +97,14 @@ export function InternationalTransfer() {
             receiveAmount={transferData.receiveAmount}
             recipientCountry={transferData.recipientCountry}
             setRecipientCountry={(country: string) => setTransferData(prev => ({ ...prev, recipientCountry: country }))}
-            recipientFirstName={transferData.recipientFirstName}
-            setRecipientFirstName={(name: string) => setTransferData(prev => ({ ...prev, recipientFirstName: name }))}
-            recipientLastName={transferData.recipientLastName}
-            setRecipientLastName={(name: string) => setTransferData(prev => ({ ...prev, recipientLastName: name }))}
             paymentMethod={transferData.paymentMethod}
             setPaymentMethod={(method: string) => setTransferData(prev => ({ ...prev, paymentMethod: method }))}
-            termsAccepted={transferData.termsAccepted}
-            setTermsAccepted={(accepted: boolean) => setTransferData(prev => ({ ...prev, termsAccepted: accepted }))}
-            onSubmit={handleSubmit}
+            receiveMethod={transferData.receiveMethod}
+            setReceiveMethod={(method: string) => setTransferData(prev => ({ ...prev, receiveMethod: method }))}
+            exchangeRate={650}
+            fees="0"
+            provider={transferData.provider}
+            setProvider={(provider: string) => setTransferData(prev => ({ ...prev, provider }))}
           />
         );
     }
@@ -125,12 +127,12 @@ export function InternationalTransfer() {
       {/* Sidebar */}
       <div className="lg:col-span-1">
         <TransferSidebar 
-          exchangeRate={1.0}
+          exchangeRate={650}
           ratesLoading={false}
           ratesError={null}
           lastUpdated={new Date()}
-          sendAmount={transferData.sendAmount}
-          receiveAmount={transferData.receiveAmount}
+          refresh={() => {}}
+          setSendAmount={(amount: string) => setTransferData(prev => ({ ...prev, sendAmount: amount }))}
         />
       </div>
     </div>

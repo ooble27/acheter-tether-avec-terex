@@ -9,9 +9,14 @@ import { ProfileStatsCard } from '@/components/features/profile/ProfileStatsCard
 import { ShareAndContactCard } from '@/components/features/profile/ShareAndContactCard';
 import { useScrollToTop } from '@/components/ScrollToTop';
 
-export function Profile() {
+interface ProfileProps {
+  user?: { email: string; name: string } | null;
+  onLogout?: () => Promise<void>;
+}
+
+export function Profile({ user: propUser, onLogout: propOnLogout }: ProfileProps = {}) {
   const scrollToTop = useScrollToTop();
-  const { user, logout } = useAuth();
+  const { user: authUser, logout } = useAuth();
   const { kycData, loading } = useKYC();
 
   // Scroll to top when component mounts
@@ -20,7 +25,11 @@ export function Profile() {
   }, [scrollToTop]);
 
   const handleLogout = async () => {
-    await logout();
+    if (propOnLogout) {
+      await propOnLogout();
+    } else {
+      await logout();
+    }
   };
 
   const handleStartKYC = () => {
@@ -29,6 +38,10 @@ export function Profile() {
   };
 
   const isKYCVerified = kycData?.status === 'approved';
+  const displayUser = propUser || (authUser ? { 
+    email: authUser.email || '', 
+    name: authUser.user_metadata?.name || authUser.user_metadata?.full_name || authUser.email?.split('@')[0] || '' 
+  } : null);
 
   return (
     <div className="container mx-auto p-4 space-y-6 max-w-4xl">
@@ -36,11 +49,8 @@ export function Profile() {
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-6">
-          <PersonalInfoCard user={user} />
-          <ContactCard user={user ? { 
-            email: user.email || '', 
-            name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || '' 
-          } : null} />
+          <PersonalInfoCard user={displayUser} />
+          <ContactCard user={displayUser} />
         </div>
         
         <div className="space-y-6">
