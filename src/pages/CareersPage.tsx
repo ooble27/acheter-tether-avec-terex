@@ -77,7 +77,6 @@ const CareersPage = () => {
       title: "Community Manager",
       type: "Temps plein",
       location: "Dakar / Remote",
-      salary: "45 000 - 60 000 CFA",
       description: "Nous recherchons un(e) Community Manager passionné(e) pour développer et animer notre communauté crypto en Afrique francophone.",
       responsibilities: [
         "Gérer et animer nos réseaux sociaux (Twitter, LinkedIn, Telegram, Discord)",
@@ -107,7 +106,6 @@ const CareersPage = () => {
       title: "Spécialiste Opérations Crypto",
       type: "Temps plein",
       location: "Dakar / Remote",
-      salary: "50 000 - 70 000 CFA",
       description: "Rejoignez notre équipe opérationnelle pour traiter et superviser les transactions crypto-fiat en temps réel.",
       responsibilities: [
         "Traiter les ordres d'achat et de vente d'USDT",
@@ -137,7 +135,6 @@ const CareersPage = () => {
       title: "Développeur Frontend React",
       type: "Temps plein",
       location: "Remote / Dakar",
-      salary: "60 000 - 90 000 CFA",
       description: "Développez l'interface utilisateur de notre plateforme d'échange crypto avec les dernières technologies web.",
       responsibilities: [
         "Développer des interfaces utilisateur modernes avec React/TypeScript",
@@ -167,7 +164,6 @@ const CareersPage = () => {
       title: "Responsable Marketing Digital",
       type: "Temps plein",
       location: "Dakar / Remote",
-      salary: "55 000 - 75 000 CFA",
       description: "Pilotez la stratégie marketing digital de Terex pour conquérir le marché africain des cryptomonnaies.",
       responsibilities: [
         "Développer et exécuter la stratégie marketing digital",
@@ -197,7 +193,6 @@ const CareersPage = () => {
       title: "Analyste Financier Crypto",
       type: "Temps plein",
       location: "Dakar / Remote",
-      salary: "50 000 - 70 000 CFA",
       description: "Analysez les marchés crypto et optimisez les stratégies financières pour maximiser la rentabilité.",
       responsibilities: [
         "Analyser les tendances et mouvements des marchés crypto",
@@ -352,9 +347,6 @@ const CareersPage = () => {
                             <div className="flex items-center space-x-2">
                               <MapPin className="w-4 h-4 flex-shrink-0" />
                               <span className="text-sm md:text-base">{position.location}</span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <span className="text-sm md:text-base">{position.salary} / mois</span>
                             </div>
                           </div>
                           
