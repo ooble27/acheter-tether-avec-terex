@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,6 +28,7 @@ interface OrderData {
   paymentMethod: 'card' | 'mobile' | 'binance';
   binanceEmail?: string;
   exchangeRate: number;
+  paymentLink?: string;
 }
 
 export function BuyUSDT() {
@@ -40,6 +42,7 @@ export function BuyUSDT() {
     walletAddress: '',
     paymentMethod: 'card',
     exchangeRate: 0,
+    paymentLink: '',
   });
   const [orderId, setOrderId] = useState('');
   const [paymentUrl, setPaymentUrl] = useState('');
@@ -126,6 +129,7 @@ export function BuyUSDT() {
       walletAddress: '',
       paymentMethod: 'card',
       exchangeRate: 0,
+      paymentLink: '',
     });
     setCurrentStep(1);
   };
@@ -169,7 +173,7 @@ export function BuyUSDT() {
               />
             ) : (
               <BinanceEmailInput
-                binanceEmail={orderData.binanceEmail}
+                binanceEmail={orderData.binanceEmail || ''}
                 onBinanceEmailChange={handleBinanceEmailChange}
                 onValidation={handleBinanceEmailValidation}
               />
@@ -183,6 +187,8 @@ export function BuyUSDT() {
               currency={orderData.currency}
               onAmountChange={handleAmountChange}
               onCurrencyChange={handleCurrencyChange}
+              usdtAmount={orderData.usdtAmount}
+              exchangeRate={orderData.exchangeRate}
             />
             <QuickAmounts
               onAmountChange={handleAmountChange}
@@ -197,7 +203,10 @@ export function BuyUSDT() {
       case 2:
         return (
           <OrderConfirmation
-            orderData={orderData}
+            orderData={{
+              ...orderData,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+            }}
             onBack={handleBack}
             onConfirm={handleConfirm}
           />
@@ -205,7 +214,11 @@ export function BuyUSDT() {
       case 3:
         return (
           <PaymentPage
-            orderData={orderData}
+            orderData={{
+              ...orderData,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile',
+              paymentLink: orderData.paymentLink || ''
+            }}
             orderId={orderId}
             onBack={handleBack}
             onPaymentSuccess={handlePaymentSuccess}
@@ -215,7 +228,10 @@ export function BuyUSDT() {
       case 4:
         return (
           <PaymentPending
-            orderData={orderData}
+            orderData={{
+              ...orderData,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+            }}
             orderId={orderId}
             onBack={handleBack}
           />
@@ -223,7 +239,10 @@ export function BuyUSDT() {
       case 5:
         return (
           <PaymentSuccess
-            orderData={orderData}
+            orderData={{
+              ...orderData,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+            }}
             orderId={orderId}
             txHash={transactionHash}
             onBackToHome={handleBuyMore}
@@ -233,7 +252,10 @@ export function BuyUSDT() {
       case 6:
         return (
           <PaymentPending
-            orderData={orderData}
+            orderData={{
+              ...orderData,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+            }}
             orderId={orderId}
             onBack={handleBack}
           />
@@ -241,7 +263,10 @@ export function BuyUSDT() {
       case 7:
         return (
           <PaymentSuccess
-            orderData={orderData}
+            orderData={{
+              ...orderData,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+            }}
             orderId={orderId}
             txHash={transactionHash}
             onBackToHome={handleBuyMore}
@@ -269,10 +294,7 @@ export function BuyUSDT() {
 
   return (
     <div className="flex min-h-screen bg-terex-dark">
-      <TradingSidebar
-        currentStep={currentStep}
-        orderData={orderData}
-      />
+      <TradingSidebar />
 
       <main className="flex-1 p-4 md:p-6">
         {currentStep > 1 && (
@@ -298,7 +320,9 @@ export function BuyUSDT() {
           </Button>
         )}
 
-        <KYCProtection />
+        <KYCProtection>
+          <div />
+        </KYCProtection>
       </main>
     </div>
   );

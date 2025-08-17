@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -70,8 +71,6 @@ export function PaymentPage({ orderData, orderId, onBack, onPaymentSuccess, onPa
               <CardContent className="space-y-6">
                 <PaymentInstructions
                   orderData={orderData}
-                  onPaymentSuccess={handlePaymentSuccess}
-                  onPaymentError={handlePaymentError}
                 />
               </CardContent>
             </Card>

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { TransferForm } from '@/components/features/international-transfer/TransferForm';
 import { TransferConfirmation } from '@/components/features/international-transfer/TransferConfirmation';
@@ -53,38 +54,52 @@ export function InternationalTransfer() {
     switch (currentStep) {
       case 1:
         return (
-          <TransferForm
-            transferData={transferData}
-            handleInputChange={handleInputChange}
-            handleCheckboxChange={handleCheckboxChange}
-            nextStep={nextStep}
-            onSubmit={handleSubmit}
-          />
+          <TransferForm />
         );
       case 2:
         return (
           <TransferConfirmation
-            transferData={transferData}
-            prevStep={prevStep}
-            nextStep={nextStep}
+            transferData={{
+              sendAmount: transferData.transferAmount,
+              sendCurrency: transferData.transferCurrency,
+              receiveAmount: transferData.transferAmount,
+              receiveCurrency: transferData.transferCurrency,
+              receiveMethod: 'bank',
+              recipientFirstName: transferData.recipientName.split(' ')[0] || '',
+              recipientLastName: transferData.recipientName.split(' ').slice(1).join(' ') || '',
+              recipientCountry: transferData.recipientCountry,
+              recipientBank: transferData.recipientBank,
+              recipientAccount: transferData.recipientAccount,
+              paymentMethod: transferData.paymentMethod,
+              termsAccepted: transferData.termsAccepted,
+            }}
+            onBack={prevStep}
+            onContinue={nextStep}
           />
         );
       case 3:
         return (
           <TransferPending
-            transferData={transferData}
-            onBackToHome={() => setCurrentStep(1)}
+            transferData={{
+              sendAmount: transferData.transferAmount,
+              sendCurrency: transferData.transferCurrency,
+              receiveAmount: transferData.transferAmount,
+              receiveCurrency: transferData.transferCurrency,
+              receiveMethod: 'bank',
+              recipientFirstName: transferData.recipientName.split(' ')[0] || '',
+              recipientLastName: transferData.recipientName.split(' ').slice(1).join(' ') || '',
+              recipientCountry: transferData.recipientCountry,
+              recipientBank: transferData.recipientBank,
+              recipientAccount: transferData.recipientAccount,
+              paymentMethod: transferData.paymentMethod,
+              termsAccepted: transferData.termsAccepted,
+            }}
+            onBack={() => setCurrentStep(1)}
           />
         );
       default:
         return (
-          <TransferForm
-            transferData={transferData}
-            handleInputChange={handleInputChange}
-            handleCheckboxChange={handleCheckboxChange}
-            nextStep={nextStep}
-            onSubmit={handleSubmit}
-          />
+          <TransferForm />
         );
     }
   };
@@ -98,14 +113,21 @@ export function InternationalTransfer() {
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
       {/* Contenu principal */}
       <div className="lg:col-span-3">
-        <KYCProtection>
+        <KYCProtection onKYCRequired={() => {}}>
           {renderContent()}
         </KYCProtection>
       </div>
 
       {/* Sidebar */}
       <div className="lg:col-span-1">
-        <TransferSidebar />
+        <TransferSidebar 
+          exchangeRate={1.0}
+          ratesLoading={false}
+          ratesError={null}
+          lastUpdated={new Date().toISOString()}
+          sendAmount="0"
+          receiveAmount="0"
+        />
       </div>
     </div>
   );

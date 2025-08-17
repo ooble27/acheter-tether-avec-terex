@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,7 +21,10 @@ interface ProfileProps {
 export function Profile({ user, onLogout }: ProfileProps) {
   const scrollToTop = useScrollToTop();
   const [activeTab, setActiveTab] = useState<'personal' | 'security'>('personal');
-  const { kycStatus, isLoading: isKYCLoading, isError: isKYCError, error: kycError } = useKYC();
+  const { kycData, loading } = useKYC();
+
+  // Déterminer le statut KYC basé sur kycData
+  const kycStatus = kycData?.status || 'not_verified';
 
   useEffect(() => {
     scrollToTop();
@@ -46,7 +50,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
                 <CheckCircle className="w-4 h-4 mr-2" />
                 KYC Validé
               </Badge>
-            ) : kycStatus === 'pending' ? (
+            ) : kycStatus === 'pending' || kycStatus === 'submitted' || kycStatus === 'under_review' ? (
               <Badge className="bg-yellow-500 text-white border-0">
                 <Clock className="w-4 h-4 mr-2" />
                 KYC En cours
@@ -90,11 +94,11 @@ export function Profile({ user, onLogout }: ProfileProps) {
       {activeTab === 'personal' ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <PersonalInfoCard user={user} />
-          <ContactCard />
+          <ContactCard user={user} />
           <ShareAndContactCard />
         </div>
       ) : (
-        <SecuritySettingsCard onLogout={onLogout} />
+        <SecuritySettingsCard />
       )}
 
       {/* Statistiques du profil */}

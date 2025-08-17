@@ -4,14 +4,14 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 interface DestinationSelectorProps {
   destination: 'wallet' | 'binance';
-  setDestination: (destination: 'wallet' | 'binance') => void;
+  onDestinationChange: (destination: 'wallet' | 'binance') => void;
 }
 
-export function DestinationSelector({ destination, setDestination }: DestinationSelectorProps) {
+export function DestinationSelector({ destination, onDestinationChange }: DestinationSelectorProps) {
   return (
     <div className="space-y-3">
       <Label className="text-white text-sm font-medium">Où souhaitez-vous recevoir vos USDT ?</Label>
-      <RadioGroup value={destination} onValueChange={(value) => setDestination(value as 'wallet' | 'binance')} className="space-y-3">
+      <RadioGroup value={destination} onValueChange={(value) => onDestinationChange(value as 'wallet' | 'binance')} className="space-y-3">
         <div className="flex items-center space-x-3 p-3 border border-terex-gray-light rounded-lg hover:border-terex-accent/50 transition-colors">
           <RadioGroupItem value="wallet" id="wallet" className="text-terex-accent" />
           <div className="flex items-center space-x-2 flex-1">

@@ -14,14 +14,14 @@ const NETWORK_LOGOS = {
 
 interface NetworkSelectorProps {
   network: string;
-  setNetwork: (network: string) => void;
+  onNetworkChange: (network: string) => void;
 }
 
-export function NetworkSelector({ network, setNetwork }: NetworkSelectorProps) {
+export function NetworkSelector({ network, onNetworkChange }: NetworkSelectorProps) {
   return (
     <div className="space-y-2">
       <Label className="text-white text-sm font-medium">Réseau de réception</Label>
-      <Select value={network} onValueChange={setNetwork}>
+      <Select value={network} onValueChange={onNetworkChange}>
         <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
           <div className="flex items-center space-x-3">
             <img 
