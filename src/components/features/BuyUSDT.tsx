@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -260,7 +259,6 @@ export function BuyUSDT() {
               usdtAmount: orderData.usdtAmount,
               network: orderData.network,
               walletAddress: orderData.walletAddress,
-              paymentMethod: orderData.paymentMethod as 'card' | 'mobile',
               exchangeRate: orderData.exchangeRate
             }}
             orderId={orderId}
@@ -294,7 +292,6 @@ export function BuyUSDT() {
               usdtAmount: orderData.usdtAmount,
               network: orderData.network,
               walletAddress: orderData.walletAddress,
-              paymentMethod: orderData.paymentMethod as 'card' | 'mobile',
               exchangeRate: orderData.exchangeRate
             }}
             orderId={orderId}

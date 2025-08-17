@@ -52,6 +52,7 @@ export function InternationalTransfer() {
             fees="0"
             provider={transferData.provider}
             setProvider={(provider: string) => setTransferData(prev => ({ ...prev, provider }))}
+            onSubmit={handleSubmit}
           />
         );
       case 2:
@@ -72,6 +73,7 @@ export function InternationalTransfer() {
               fees: '0'
             }}
             onBack={prevStep}
+            onConfirm={nextStep}
           />
         );
       case 3:
@@ -104,6 +106,7 @@ export function InternationalTransfer() {
             fees="0"
             provider={transferData.provider}
             setProvider={(provider: string) => setTransferData(prev => ({ ...prev, provider }))}
+            onSubmit={handleSubmit}
           />
         );
     }
