@@ -170,10 +170,10 @@ export function FooterSection() {
         {/* Bottom Footer */}
         <div className="text-center">
           <div className="text-gray-400 text-sm">
-            <p>&copy; 2024 Terex. Tous droits réservés.</p>
+            <p>&copy; 2025 Terex. Tous droits réservés.</p>
           </div>
         </div>
       </div>
     </footer>
-  );
+  );  
 }
