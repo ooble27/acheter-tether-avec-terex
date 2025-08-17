@@ -54,16 +54,29 @@ export function InternationalTransfer() {
     switch (currentStep) {
       case 1:
         return (
-          <TransferForm />
+          <TransferForm 
+            sendAmount=""
+            setSendAmount={() => {}}
+            receiveAmount=""
+            recipientCountry=""
+            setRecipientCountry={() => {}}
+            recipientFirstName=""
+            setRecipientFirstName={() => {}}
+            recipientLastName=""
+            setRecipientLastName={() => {}}
+            paymentMethod=""
+            setPaymentMethod={() => {}}
+            termsAccepted={false}
+            setTermsAccepted={() => {}}
+            onSubmit={handleSubmit}
+          />
         );
       case 2:
         return (
           <TransferConfirmation
             transferData={{
               sendAmount: transferData.transferAmount,
-              sendCurrency: transferData.transferCurrency,
               receiveAmount: transferData.transferAmount,
-              receiveCurrency: transferData.transferCurrency,
               receiveMethod: 'bank',
               recipientFirstName: transferData.recipientName.split(' ')[0] || '',
               recipientLastName: transferData.recipientName.split(' ').slice(1).join(' ') || '',
@@ -81,25 +94,35 @@ export function InternationalTransfer() {
         return (
           <TransferPending
             transferData={{
-              sendAmount: transferData.transferAmount,
-              sendCurrency: transferData.transferCurrency,
-              receiveAmount: transferData.transferAmount,
-              receiveCurrency: transferData.transferCurrency,
-              receiveMethod: 'bank',
-              recipientFirstName: transferData.recipientName.split(' ')[0] || '',
-              recipientLastName: transferData.recipientName.split(' ').slice(1).join(' ') || '',
-              recipientCountry: transferData.recipientCountry,
-              recipientBank: transferData.recipientBank,
-              recipientAccount: transferData.recipientAccount,
-              paymentMethod: transferData.paymentMethod,
-              termsAccepted: transferData.termsAccepted,
+              ...transferData,
+              amount: transferData.transferAmount,
+              total_amount: transferData.transferAmount,
+              recipient_name: transferData.recipientName,
+              recipient_phone: '',
+              recipient_country: transferData.recipientCountry,
+              id: Math.random().toString(36)
             }}
-            onBack={() => setCurrentStep(1)}
+            onBackToDashboard={() => setCurrentStep(1)}
           />
         );
       default:
         return (
-          <TransferForm />
+          <TransferForm 
+            sendAmount=""
+            setSendAmount={() => {}}
+            receiveAmount=""
+            recipientCountry=""
+            setRecipientCountry={() => {}}
+            recipientFirstName=""
+            setRecipientFirstName={() => {}}
+            recipientLastName=""
+            setRecipientLastName={() => {}}
+            paymentMethod=""
+            setPaymentMethod={() => {}}
+            termsAccepted={false}
+            setTermsAccepted={() => {}}
+            onSubmit={handleSubmit}
+          />
         );
     }
   };

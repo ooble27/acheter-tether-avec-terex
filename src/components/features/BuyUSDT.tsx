@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -155,7 +154,6 @@ export function BuyUSDT() {
             <LimitsValidator
               amount={orderData.amount}
               currency={orderData.currency}
-              network={orderData.network}
               paymentMethod={orderData.paymentMethod}
               onLimitsError={handleLimitsError}
               onExchangeRateChange={handleExchangeRateChange}
@@ -203,10 +201,7 @@ export function BuyUSDT() {
       case 2:
         return (
           <OrderConfirmation
-            orderData={{
-              ...orderData,
-              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
-            }}
+            orderData={orderData}
             onBack={handleBack}
             onConfirm={handleConfirm}
           />
@@ -216,7 +211,6 @@ export function BuyUSDT() {
           <PaymentPage
             orderData={{
               ...orderData,
-              paymentMethod: orderData.paymentMethod as 'card' | 'mobile',
               paymentLink: orderData.paymentLink || ''
             }}
             orderId={orderId}
@@ -228,21 +222,14 @@ export function BuyUSDT() {
       case 4:
         return (
           <PaymentPending
-            orderData={{
-              ...orderData,
-              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
-            }}
+            orderData={orderData}
             orderId={orderId}
-            onBack={handleBack}
           />
         );
       case 5:
         return (
           <PaymentSuccess
-            orderData={{
-              ...orderData,
-              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
-            }}
+            orderData={orderData}
             orderId={orderId}
             txHash={transactionHash}
             onBackToHome={handleBuyMore}
@@ -252,21 +239,14 @@ export function BuyUSDT() {
       case 6:
         return (
           <PaymentPending
-            orderData={{
-              ...orderData,
-              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
-            }}
+            orderData={orderData}
             orderId={orderId}
-            onBack={handleBack}
           />
         );
       case 7:
         return (
           <PaymentSuccess
-            orderData={{
-              ...orderData,
-              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
-            }}
+            orderData={orderData}
             orderId={orderId}
             txHash={transactionHash}
             onBackToHome={handleBuyMore}
@@ -294,7 +274,16 @@ export function BuyUSDT() {
 
   return (
     <div className="flex min-h-screen bg-terex-dark">
-      <TradingSidebar />
+      <TradingSidebar
+        exchangeRates={{ CFA: 650, CAD: 1.35 }}
+        marketRates={{ CFA: 637, CAD: 1.32 }}
+        ratesLoading={false}
+        ratesError={null}
+        lastUpdated={new Date()}
+        refreshRates={() => {}}
+        currency={orderData.currency}
+        onAmountChange={handleAmountChange}
+      />
 
       <main className="flex-1 p-4 md:p-6">
         {currentStep > 1 && (
@@ -320,7 +309,7 @@ export function BuyUSDT() {
           </Button>
         )}
 
-        <KYCProtection>
+        <KYCProtection onKYCRequired={() => {}}>
           <div />
         </KYCProtection>
       </main>
