@@ -240,7 +240,7 @@ const handler = async (req: Request): Promise<Response> => {
           type: 'magiclink',
           email: finalEmailAddress,
           options: {
-            redirectTo: `${supabaseUrl.replace('.supabase.co', '.supabase.co')}/auth/callback?redirect_to=${encodeURIComponent('https://app.terangaexchange.com/')}`
+            redirectTo: `${supabaseUrl.replace('.supabase.co', '.supabase.co')}/auth/callback?redirect_to=${encodeURIComponent('https://terangaexchange.com/')}`
           }
         });
 
@@ -305,7 +305,7 @@ const handler = async (req: Request): Promise<Response> => {
         // Envoyer aussi une notification à l'équipe RH Terex
         try {
           const adminNotificationHtml = `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="font-family: Arial, sans-serif; max-width: 896px; margin: 0 auto; padding: 0;">
               <div style="background: linear-gradient(135deg, #0FA958 0%, #08a045 100%); color: white; padding: 30px; border-radius: 10px; text-align: center;">
                 <h1 style="margin: 0; font-size: 28px;">Nouvelle Candidature</h1>
               </div>
@@ -333,7 +333,7 @@ const handler = async (req: Request): Promise<Response> => {
               ` : ''}
               
               <div style="text-align: center; margin: 30px 0;">
-                <a href="https://app.terangaexchange.com/admin" style="background: #0FA958; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                <a href="https://terangaexchange.com/admin" style="background: #0FA958; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
                   Voir dans l'admin
                 </a>
               </div>
