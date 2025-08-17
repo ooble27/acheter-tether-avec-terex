@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -71,7 +70,7 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
 
   return (
     <div className="min-h-screen bg-terex-dark p-0">
-      <div className="max-w-7xl mx-auto px-0 lg:px-0">
+      <div className="max-w-5xl mx-auto px-0 lg:px-8">
         {/* Header */}
         <div className="mb-6 px-1 md:px-0">
           <Button 
