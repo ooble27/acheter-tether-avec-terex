@@ -120,6 +120,10 @@ export function FooterSection() {
                 <Mail className="w-4 h-4 mr-3 text-terex-accent" />
                 <span className="text-sm">terangaexchange@gmail.com</span>
               </div>
+              <div className="flex items-center text-gray-300">
+                <Phone className="w-4 h-4 mr-3 text-terex-accent" />
+                <span className="text-sm">WhatsApp: +1 418 261 9091</span>
+              </div>
             </div>
 
             {/* Social Links */}
