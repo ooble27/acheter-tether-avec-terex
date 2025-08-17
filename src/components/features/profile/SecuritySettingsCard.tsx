@@ -1,137 +1,122 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Shield, Lock, Eye, AlertTriangle, CheckCircle, Clock, XCircle } from 'lucide-react';
-import { KYCData } from '@/hooks/useKYC';
+import { Badge } from '@/components/ui/badge';
+import { Shield, CheckCircle, Clock, AlertTriangle, LogOut, FileCheck } from 'lucide-react';
+import type { KYCData } from '@/hooks/useKYC';
 
 interface SecuritySettingsCardProps {
+  onLogout: () => Promise<void>;
   onStartKYC: () => void;
   kycData: KYCData | null;
   isKYCVerified: boolean;
 }
 
-export function SecuritySettingsCard({ onStartKYC, kycData, isKYCVerified }: SecuritySettingsCardProps) {
-  const getKYCStatusDisplay = () => {
-    if (isKYCVerified) {
-      return {
-        icon: CheckCircle,
-        title: 'Vérification KYC approuvée',
-        description: 'Votre identité a été vérifiée avec succès. Vous pouvez effectuer toutes les transactions.',
-        bgColor: 'bg-green-500/10',
-        borderColor: 'border-green-500/20',
-        iconColor: 'text-green-400',
-        showButton: false
-      };
+export function SecuritySettingsCard({ 
+  onLogout, 
+  onStartKYC, 
+  kycData, 
+  isKYCVerified 
+}: SecuritySettingsCardProps) {
+  const getKYCStatusBadge = () => {
+    if (!kycData) {
+      return (
+        <Badge variant="secondary" className="bg-gray-600 text-gray-200">
+          <Clock className="w-3 h-3 mr-1" />
+          Non démarré
+        </Badge>
+      );
     }
 
-    switch (kycData?.status) {
+    switch (kycData.status) {
+      case 'pending':
       case 'submitted':
+        return (
+          <Badge variant="secondary" className="bg-yellow-600 text-yellow-100">
+            <Clock className="w-3 h-3 mr-1" />
+            En attente
+          </Badge>
+        );
       case 'under_review':
-        return {
-          icon: Clock,
-          title: 'Vérification en cours de traitement',
-          description: 'Votre demande de vérification a été soumise avec succès. Nous examinerons vos documents sous 1-3 jours ouvrables.',
-          bgColor: 'bg-yellow-500/10',
-          borderColor: 'border-yellow-500/20',
-          iconColor: 'text-yellow-400',
-          showButton: false
-        };
+        return (
+          <Badge variant="secondary" className="bg-blue-600 text-blue-100">
+            <Clock className="w-3 h-3 mr-1" />
+            En cours de vérification
+          </Badge>
+        );
+      case 'approved':
+        return (
+          <Badge variant="secondary" className="bg-green-600 text-green-100">
+            <CheckCircle className="w-3 h-3 mr-1" />
+            Vérifié
+          </Badge>
+        );
       case 'rejected':
-        return {
-          icon: XCircle,
-          title: 'Vérification rejetée',
-          description: 'Vos documents n\'ont pas pu être validés. Veuillez soumettre de nouveaux documents conformes.',
-          bgColor: 'bg-red-500/10',
-          borderColor: 'border-red-500/20',
-          iconColor: 'text-red-400',
-          showButton: true,
-          buttonText: 'Soumettre à nouveau'
-        };
+        return (
+          <Badge variant="destructive">
+            <AlertTriangle className="w-3 h-3 mr-1" />
+            Rejeté
+          </Badge>
+        );
       default:
-        return {
-          icon: AlertTriangle,
-          title: 'Vérification KYC requise',
-          description: 'Complétez votre vérification d\'identité pour débloquer toutes les fonctionnalités de Terex',
-          bgColor: 'bg-orange-500/10',
-          borderColor: 'border-orange-500/20',
-          iconColor: 'text-orange-400',
-          showButton: true,
-          buttonText: 'Commencer la vérification'
-        };
+        return (
+          <Badge variant="secondary" className="bg-gray-600 text-gray-200">
+            <Clock className="w-3 h-3 mr-1" />
+            Statut inconnu
+          </Badge>
+        );
     }
   };
-
-  const kycStatus = getKYCStatusDisplay();
-  const Icon = kycStatus.icon;
 
   return (
     <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-gray/30 shadow-2xl backdrop-blur-sm">
       <CardHeader className="bg-gradient-to-r from-terex-accent/10 to-transparent border-b border-terex-gray/30 rounded-t-xl">
-        <CardTitle className="text-white flex items-center">
+        <div className="flex items-center">
           <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-xl flex items-center justify-center mr-3">
             <Shield className="w-6 h-6 md:w-7 md:h-7 text-white" />
           </div>
           <div>
-            <div className="text-white">Sécurité & Vérification</div>
+            <CardTitle className="text-white">Sécurité</CardTitle>
             <CardDescription className="text-gray-400">
-              Protégez votre compte avec nos mesures de sécurité
+              Gérez la sécurité de votre compte
             </CardDescription>
           </div>
-        </CardTitle>
+        </div>
       </CardHeader>
-      <CardContent className="space-y-4 p-6">
-        {/* KYC Status */}
-        <div className={`p-4 ${kycStatus.bgColor} border ${kycStatus.borderColor} rounded-xl`}>
-          <div className="flex items-start space-x-3">
-            <Icon className={`w-5 h-5 ${kycStatus.iconColor} mt-1 flex-shrink-0`} />
-            <div className="flex-1">
-              <h4 className="text-white font-medium mb-1">{kycStatus.title}</h4>
-              <p className="text-gray-400 text-sm mb-3">
-                {kycStatus.description}
-              </p>
-              {kycStatus.showButton && (
-                <Button
-                  onClick={onStartKYC}
-                  size="sm"
-                  className="bg-terex-accent hover:bg-terex-accent/80 text-white"
-                >
-                  {kycStatus.buttonText}
-                </Button>
-              )}
+      <CardContent className="p-6 space-y-6">
+        {/* Statut de vérification KYC */}
+        <div className="flex items-center justify-between p-4 bg-terex-darker/50 rounded-xl border border-terex-gray/20">
+          <div className="flex items-center space-x-3">
+            <FileCheck className="w-5 h-5 text-terex-accent" />
+            <div>
+              <p className="text-white font-medium">Vérification d'identité (KYC)</p>
+              <p className="text-gray-400 text-sm">Statut de vérification de votre compte</p>
             </div>
+          </div>
+          <div className="flex items-center space-x-3">
+            {getKYCStatusBadge()}
+            {!isKYCVerified && (
+              <Button
+                onClick={onStartKYC}
+                size="sm"
+                className="bg-terex-accent hover:bg-terex-accent/90 text-white"
+              >
+                Démarrer KYC
+              </Button>
+            )}
           </div>
         </div>
 
-        {/* Security Features */}
+        {/* Actions de sécurité */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between p-3 bg-terex-darker/50 rounded-lg border border-terex-gray/20">
-            <div className="flex items-center space-x-3">
-              <Lock className="w-4 h-4 text-green-400" />
-              <span className="text-white text-sm">Authentification par email</span>
-            </div>
-            <CheckCircle className="w-4 h-4 text-green-400" />
-          </div>
-          
-          <div className="flex items-center justify-between p-3 bg-terex-darker/50 rounded-lg border border-terex-gray/20">
-            <div className="flex items-center space-x-3">
-              <Eye className="w-4 h-4 text-blue-400" />
-              <span className="text-white text-sm">Surveillance des transactions</span>
-            </div>
-            <CheckCircle className="w-4 h-4 text-green-400" />
-          </div>
-        </div>
-
-        {/* Tips de sécurité */}
-        <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-          <h4 className="text-white font-medium mb-2 flex items-center">
-            <Shield className="w-4 h-4 mr-2 text-blue-400" />
-            Conseils de sécurité
-          </h4>
-          <ul className="text-gray-400 text-sm space-y-1">
-            <li>• Ne partagez jamais vos informations de connexion</li>
-            <li>• Vérifiez toujours les adresses de portefeuille</li>
-            <li>• Utilisez des réseaux sécurisés</li>
-          </ul>
+          <Button
+            onClick={onLogout}
+            variant="outline"
+            className="w-full justify-start text-red-400 border-red-400/30 hover:bg-red-400/10 hover:border-red-400/50"
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Se déconnecter
+          </Button>
         </div>
       </CardContent>
     </Card>

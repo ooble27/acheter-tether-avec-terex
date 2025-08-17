@@ -12,13 +12,12 @@ export function InternationalTransfer() {
   
   const [currentStep, setCurrentStep] = useState(1);
   const [transferData, setTransferData] = useState({
-    recipientName: '',
+    sendAmount: '',
+    receiveAmount: '',
     recipientCountry: '',
-    recipientBank: '',
-    recipientAccount: '',
-    transferAmount: '',
-    transferCurrency: 'USD',
-    paymentMethod: 'bank',
+    recipientFirstName: '',
+    recipientLastName: '',
+    paymentMethod: '',
     termsAccepted: false,
   });
 
@@ -30,22 +29,6 @@ export function InternationalTransfer() {
     setCurrentStep(currentStep - 1);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setTransferData(prevData => ({
-      ...prevData,
-      [name]: value
-    }));
-  };
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setTransferData(prevData => ({
-      ...prevData,
-      [name]: checked
-    }));
-  };
-
   const handleSubmit = () => {
     nextStep();
   };
@@ -55,19 +38,19 @@ export function InternationalTransfer() {
       case 1:
         return (
           <TransferForm 
-            sendAmount=""
-            setSendAmount={() => {}}
-            receiveAmount=""
-            recipientCountry=""
-            setRecipientCountry={() => {}}
-            recipientFirstName=""
-            setRecipientFirstName={() => {}}
-            recipientLastName=""
-            setRecipientLastName={() => {}}
-            paymentMethod=""
-            setPaymentMethod={() => {}}
-            termsAccepted={false}
-            setTermsAccepted={() => {}}
+            sendAmount={transferData.sendAmount}
+            setSendAmount={(amount: string) => setTransferData(prev => ({ ...prev, sendAmount: amount }))}
+            receiveAmount={transferData.receiveAmount}
+            recipientCountry={transferData.recipientCountry}
+            setRecipientCountry={(country: string) => setTransferData(prev => ({ ...prev, recipientCountry: country }))}
+            recipientFirstName={transferData.recipientFirstName}
+            setRecipientFirstName={(name: string) => setTransferData(prev => ({ ...prev, recipientFirstName: name }))}
+            recipientLastName={transferData.recipientLastName}
+            setRecipientLastName={(name: string) => setTransferData(prev => ({ ...prev, recipientLastName: name }))}
+            paymentMethod={transferData.paymentMethod}
+            setPaymentMethod={(method: string) => setTransferData(prev => ({ ...prev, paymentMethod: method }))}
+            termsAccepted={transferData.termsAccepted}
+            setTermsAccepted={(accepted: boolean) => setTransferData(prev => ({ ...prev, termsAccepted: accepted }))}
             onSubmit={handleSubmit}
           />
         );
@@ -75,16 +58,15 @@ export function InternationalTransfer() {
         return (
           <TransferConfirmation
             transferData={{
-              sendAmount: transferData.transferAmount,
-              receiveAmount: transferData.transferAmount,
+              sendAmount: transferData.sendAmount,
+              receiveAmount: transferData.receiveAmount,
               receiveMethod: 'bank',
-              recipientFirstName: transferData.recipientName.split(' ')[0] || '',
-              recipientLastName: transferData.recipientName.split(' ').slice(1).join(' ') || '',
+              recipientFirstName: transferData.recipientFirstName,
+              recipientLastName: transferData.recipientLastName,
               recipientCountry: transferData.recipientCountry,
-              recipientBank: transferData.recipientBank,
-              recipientAccount: transferData.recipientAccount,
+              recipientBank: '',
+              recipientAccount: '',
               paymentMethod: transferData.paymentMethod,
-              termsAccepted: transferData.termsAccepted,
             }}
             onBack={prevStep}
             onContinue={nextStep}
@@ -94,10 +76,9 @@ export function InternationalTransfer() {
         return (
           <TransferPending
             transferData={{
-              ...transferData,
-              amount: transferData.transferAmount,
-              total_amount: transferData.transferAmount,
-              recipient_name: transferData.recipientName,
+              amount: transferData.sendAmount,
+              total_amount: transferData.sendAmount,
+              recipient_name: `${transferData.recipientFirstName} ${transferData.recipientLastName}`,
               recipient_phone: '',
               recipient_country: transferData.recipientCountry,
               id: Math.random().toString(36)
@@ -108,19 +89,19 @@ export function InternationalTransfer() {
       default:
         return (
           <TransferForm 
-            sendAmount=""
-            setSendAmount={() => {}}
-            receiveAmount=""
-            recipientCountry=""
-            setRecipientCountry={() => {}}
-            recipientFirstName=""
-            setRecipientFirstName={() => {}}
-            recipientLastName=""
-            setRecipientLastName={() => {}}
-            paymentMethod=""
-            setPaymentMethod={() => {}}
-            termsAccepted={false}
-            setTermsAccepted={() => {}}
+            sendAmount={transferData.sendAmount}
+            setSendAmount={(amount: string) => setTransferData(prev => ({ ...prev, sendAmount: amount }))}
+            receiveAmount={transferData.receiveAmount}
+            recipientCountry={transferData.recipientCountry}
+            setRecipientCountry={(country: string) => setTransferData(prev => ({ ...prev, recipientCountry: country }))}
+            recipientFirstName={transferData.recipientFirstName}
+            setRecipientFirstName={(name: string) => setTransferData(prev => ({ ...prev, recipientFirstName: name }))}
+            recipientLastName={transferData.recipientLastName}
+            setRecipientLastName={(name: string) => setTransferData(prev => ({ ...prev, recipientLastName: name }))}
+            paymentMethod={transferData.paymentMethod}
+            setPaymentMethod={(method: string) => setTransferData(prev => ({ ...prev, paymentMethod: method }))}
+            termsAccepted={transferData.termsAccepted}
+            setTermsAccepted={(accepted: boolean) => setTransferData(prev => ({ ...prev, termsAccepted: accepted }))}
             onSubmit={handleSubmit}
           />
         );
@@ -147,9 +128,9 @@ export function InternationalTransfer() {
           exchangeRate={1.0}
           ratesLoading={false}
           ratesError={null}
-          lastUpdated={new Date().toISOString()}
-          sendAmount="0"
-          receiveAmount="0"
+          lastUpdated={new Date()}
+          sendAmount={transferData.sendAmount}
+          receiveAmount={transferData.receiveAmount}
         />
       </div>
     </div>

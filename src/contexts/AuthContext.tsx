@@ -9,6 +9,7 @@ interface AuthContextType {
   loading: boolean
   signUp: (email: string, password: string, name: string) => Promise<{ error: any }>
   signOut: () => Promise<void>
+  logout: () => Promise<void>  // Add logout method
   resendVerification: (email: string) => Promise<{ error: any }>
 }
 
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   signUp: async () => ({ error: null }),
   signOut: async () => {},
+  logout: async () => {},  // Add logout method
   resendVerification: async () => ({ error: null }),
 })
 
@@ -157,6 +159,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }
 
+  // Add logout as alias to signOut
+  const logout = signOut;
+
   const resendVerification = async (email: string) => {
     const { error } = await supabase.auth.resend({
       type: 'signup',
@@ -174,6 +179,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     loading,
     signUp,
     signOut,
+    logout,  // Add logout to the context value
     resendVerification,
   }), [user, session, loading])
 

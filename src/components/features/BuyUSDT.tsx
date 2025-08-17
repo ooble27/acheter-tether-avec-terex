@@ -154,6 +154,7 @@ export function BuyUSDT() {
             <LimitsValidator
               amount={orderData.amount}
               currency={orderData.currency}
+              network={orderData.network}
               paymentMethod={orderData.paymentMethod}
               onLimitsError={handleLimitsError}
               onExchangeRateChange={handleExchangeRateChange}
@@ -201,7 +202,10 @@ export function BuyUSDT() {
       case 2:
         return (
           <OrderConfirmation
-            orderData={orderData}
+            orderData={{
+              ...orderData,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+            }}
             onBack={handleBack}
             onConfirm={handleConfirm}
           />
@@ -211,6 +215,7 @@ export function BuyUSDT() {
           <PaymentPage
             orderData={{
               ...orderData,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile',
               paymentLink: orderData.paymentLink || ''
             }}
             orderId={orderId}
@@ -222,14 +227,20 @@ export function BuyUSDT() {
       case 4:
         return (
           <PaymentPending
-            orderData={orderData}
+            orderData={{
+              ...orderData,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+            }}
             orderId={orderId}
           />
         );
       case 5:
         return (
           <PaymentSuccess
-            orderData={orderData}
+            orderData={{
+              ...orderData,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+            }}
             orderId={orderId}
             txHash={transactionHash}
             onBackToHome={handleBuyMore}
@@ -239,14 +250,20 @@ export function BuyUSDT() {
       case 6:
         return (
           <PaymentPending
-            orderData={orderData}
+            orderData={{
+              ...orderData,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+            }}
             orderId={orderId}
           />
         );
       case 7:
         return (
           <PaymentSuccess
-            orderData={orderData}
+            orderData={{
+              ...orderData,
+              paymentMethod: orderData.paymentMethod as 'card' | 'mobile'
+            }}
             orderId={orderId}
             txHash={transactionHash}
             onBackToHome={handleBuyMore}

@@ -36,8 +36,11 @@ export function Profile() {
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-6">
-          <PersonalInfoCard />
-          <ContactCard user={user} />
+          <PersonalInfoCard user={user} />
+          <ContactCard user={user ? { 
+            email: user.email || '', 
+            name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || '' 
+          } : null} />
         </div>
         
         <div className="space-y-6">
