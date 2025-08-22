@@ -531,7 +531,7 @@ export function BuyUSDT() {
                           {paymentMethod === 'interac' ? (
                             <InteracPaymentForm
                               interacData={interacData}
-                              setInteracData={setInteracData}
+                              setInteracData={(data) => setInteracData({ ...data, phone: data.phone || '' })}
                             />
                           ) : (
                             <PaymentMethodForm

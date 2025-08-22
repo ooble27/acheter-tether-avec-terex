@@ -17,7 +17,7 @@ interface MobileData {
 }
 
 interface PaymentMethodFormProps {
-  paymentMethod: 'card' | 'mobile';
+  paymentMethod: 'card' | 'mobile' | 'interac';
   cardData: CardData;
   setCardData: (data: CardData) => void;
   mobileData: MobileData;
