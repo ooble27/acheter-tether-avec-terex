@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,7 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CreditCard, AlertTriangle, Info } from 'lucide-react';
 import { OrderConfirmation } from '@/components/features/OrderConfirmation';
-import { PaymentInstructions } from '@/components/features/PaymentInstructions';
 import { PaymentPending } from '@/components/features/PaymentPending';
 import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
 import { useOrders } from '@/hooks/useOrders';
@@ -19,18 +19,21 @@ import { BuyAmountInput } from './buy-usdt/BuyAmountInput';
 import { NetworkSelector } from './buy-usdt/NetworkSelector';
 import { WalletAddressInput } from './buy-usdt/WalletAddressInput';
 import { DestinationSelector } from './buy-usdt/DestinationSelector';
+import { CanadianDestinationSelector } from './buy-usdt/CanadianDestinationSelector';
 import { BinanceEmailInput } from './buy-usdt/BinanceEmailInput';
 import { PaymentMethodForm } from './buy-usdt/PaymentMethodForm';
+import { InteracPaymentForm } from './buy-usdt/InteracPaymentForm';
+import { InteracPaymentInstructions } from './buy-usdt/InteracPaymentInstructions';
 import { TradingSidebar } from './buy-usdt/TradingSidebar';
 import { LimitsValidator, getLimitMessage } from './buy-usdt/LimitsValidator';
 
 export function BuyUSDT() {
   const [showKYCPage, setShowKYCPage] = useState(false);
   const [showHighVolumeRequest, setShowHighVolumeRequest] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'mobile'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'mobile' | 'interac'>('card');
   const [fiatAmount, setFiatAmount] = useState('');
   const [currency, setCurrency] = useState('CFA');
-  const [destination, setDestination] = useState<'wallet' | 'binance'>('wallet');
+  const [destination, setDestination] = useState<'wallet' | 'binance' | 'trust' | 'kraken'>('wallet');
   const [network, setNetwork] = useState('TRC20');
   const [walletAddress, setWalletAddress] = useState('');
   const [binanceEmail, setBinanceEmail] = useState('');
@@ -55,11 +58,17 @@ export function BuyUSDT() {
     provider: 'wave' as 'wave' | 'orange'
   });
 
+  const [interacData, setInteracData] = useState({
+    firstName: '',
+    lastName: '',
+    interacEmail: '',
+    phoneNumber: ''
+  });
+
   const { createOrder } = useOrders();
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Correction: utiliser les bonnes propriétés du hook
   const { 
     terexRateCfa, 
     terexRateCad, 
@@ -71,7 +80,10 @@ export function BuyUSDT() {
     refresh: refreshRates
   } = useTerexRates(2);
 
-  // Correction: ajouter CAD aux taux d'échange
+  // Pour Interac, forcer CAD comme devise
+  const isInterac = paymentMethod === 'interac';
+  const effectiveCurrency = isInterac ? 'CAD' : currency;
+  
   const exchangeRates = {
     CFA: terexRateCfa,
     CAD: terexRateCad
@@ -82,35 +94,28 @@ export function BuyUSDT() {
     CAD: marketRateCad
   };
 
-  // Fonction pour formater les nombres - améliorée
   const formatAmount = (amount: string | number) => {
     const num = parseFloat(amount.toString());
     if (isNaN(num)) return '0';
     
-    // Si c'est un nombre entier, ne pas afficher de décimales
     if (num === Math.floor(num)) {
       return num.toString();
     }
     
-    // Sinon, limiter à 2 décimales et enlever les zéros inutiles
     return parseFloat(num.toFixed(2)).toString();
   };
 
-  const usdtAmount = fiatAmount ? formatAmount(parseFloat(fiatAmount) / exchangeRates[currency as keyof typeof exchangeRates]) : '0';
+  const usdtAmount = fiatAmount ? formatAmount(parseFloat(fiatAmount) / exchangeRates[effectiveCurrency as keyof typeof exchangeRates]) : '0';
 
   const paymentMethods = [
     { id: 'card' as const, name: 'Carte bancaire', icon: '💳', fee: '3%', time: '2-5 min' },
-    { id: 'mobile' as const, name: 'Mobile Money', icon: '📱', fee: '2%', time: '2-5 min' }
+    { id: 'mobile' as const, name: 'Mobile Money', icon: '📱', fee: '2%', time: '2-5 min' },
+    { id: 'interac' as const, name: 'Interac e-Transfer', icon: '🇨🇦', fee: '2%', time: '5-10 min' }
   ];
 
-  // Gestion des limites
-  const limitMessage = getLimitMessage(fiatAmount, currency);
+  const limitMessage = getLimitMessage(fiatAmount, effectiveCurrency);
 
   const handleHighVolumeRequest = () => {
-    setShowHighVolumeRequest(true);
-  };
-
-  const handleLimitExceeded = (amount: string) => {
     setShowHighVolumeRequest(true);
   };
 
@@ -119,12 +124,16 @@ export function BuyUSDT() {
       return;
     }
     
-    // Validation selon la destination
-    if (destination === 'wallet' && !walletAddress) {
+    // Validation selon la destination et méthode de paiement
+    if ((destination === 'wallet' || destination === 'trust') && !walletAddress) {
       return;
     }
     
     if (destination === 'binance' && (!binanceEmail || !binanceUsername || !binanceId)) {
+      return;
+    }
+    
+    if (destination === 'kraken' && !walletAddress) {
       return;
     }
     
@@ -133,6 +142,10 @@ export function BuyUSDT() {
     }
     
     if (paymentMethod === 'mobile' && !mobileData.phoneNumber) {
+      return;
+    }
+
+    if (paymentMethod === 'interac' && (!interacData.firstName || !interacData.lastName || !interacData.interacEmail)) {
       return;
     }
     
@@ -148,26 +161,26 @@ export function BuyUSDT() {
       user_id: user.id,
       type: 'buy' as const,
       amount: parseFloat(fiatAmount),
-      currency,
+      currency: effectiveCurrency,
       usdt_amount: parseFloat(usdtAmount),
-      exchange_rate: exchangeRates[currency as keyof typeof exchangeRates],
+      exchange_rate: exchangeRates[effectiveCurrency as keyof typeof exchangeRates],
       payment_method: paymentMethod,
-      network: destination === 'wallet' ? network : 'BINANCE',
-      wallet_address: destination === 'wallet' ? walletAddress : binanceEmail,
+      network: (destination === 'binance') ? 'BINANCE' : (destination === 'kraken') ? 'KRAKEN' : (destination === 'trust') ? 'TRUST' : network,
+      wallet_address: (destination === 'binance') ? binanceEmail : walletAddress,
       status: 'pending' as const,
       payment_status: 'pending',
-      // Stocker les informations dans les notes
       notes: JSON.stringify({
         destination,
-        phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : null,
+        phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : (paymentMethod === 'interac' ? interacData.phoneNumber : null),
         provider: paymentMethod === 'mobile' ? mobileData.provider : null,
         paymentMethod: paymentMethod,
         cardData: paymentMethod === 'card' ? {
           ...cardData,
-          number: cardData.number.slice(-4), // Stocker seulement les 4 derniers chiffres
-          cvv: '***' // Ne pas stocker le CVV
+          number: cardData.number.slice(-4),
+          cvv: '***'
         } : null,
         mobileData: paymentMethod === 'mobile' ? mobileData : null,
+        interacData: paymentMethod === 'interac' ? interacData : null,
         binanceData: destination === 'binance' ? {
           email: binanceEmail,
           username: binanceUsername,
@@ -193,7 +206,6 @@ export function BuyUSDT() {
   };
 
   const handleBackToHome = () => {
-    // Réinitialiser tous les états
     setFiatAmount('');
     setWalletAddress('');
     setBinanceEmail('');
@@ -201,6 +213,7 @@ export function BuyUSDT() {
     setBinanceId('');
     setCardData({ number: '', expiryMonth: '', expiryYear: '', cvv: '', name: '' });
     setMobileData({ phoneNumber: '', provider: 'wave' });
+    setInteracData({ firstName: '', lastName: '', interacEmail: '', phoneNumber: '' });
     setShowPending(false);
     setCurrentOrderId('');
   };
@@ -209,12 +222,10 @@ export function BuyUSDT() {
     setShowKYCPage(true);
   };
 
-  // Si on est sur la page KYC
   if (showKYCPage) {
     return <KYCPage onBack={() => setShowKYCPage(false)} />;
   }
 
-  // État de confirmation finale
   if (showHighVolumeRequest) {
     return (
       <HighVolumeRequest 
@@ -224,19 +235,18 @@ export function BuyUSDT() {
     );
   }
 
-  // État de confirmation finale
   if (showPending) {
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
         <PaymentPending
           orderData={{
             amount: fiatAmount,
-            currency,
+            currency: effectiveCurrency,
             usdtAmount,
-            network: destination === 'wallet' ? network : 'BINANCE',
-            walletAddress: destination === 'wallet' ? walletAddress : binanceEmail,
+            network: (destination === 'binance') ? 'BINANCE' : (destination === 'kraken') ? 'KRAKEN' : (destination === 'trust') ? 'TRUST' : network,
+            walletAddress: (destination === 'binance') ? binanceEmail : walletAddress,
             paymentMethod: paymentMethod,
-            exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
+            exchangeRate: exchangeRates[effectiveCurrency as keyof typeof exchangeRates]
           }}
           orderId={currentOrderId}
           onBackToHome={handleBackToHome}
@@ -245,41 +255,51 @@ export function BuyUSDT() {
     );
   }
 
-  // État des instructions de paiement
   if (showInstructions) {
+    // Si c'est Interac, utiliser les instructions spéciales
+    if (paymentMethod === 'interac') {
+      return (
+        <KYCProtection onKYCRequired={handleKYCRequired}>
+          <InteracPaymentInstructions
+            orderData={{
+              amount: fiatAmount,
+              currency: effectiveCurrency,
+              usdtAmount,
+              network: (destination === 'binance') ? 'BINANCE' : (destination === 'kraken') ? 'KRAKEN' : (destination === 'trust') ? 'TRUST' : network,
+              walletAddress: (destination === 'binance') ? binanceEmail : walletAddress,
+              exchangeRate: exchangeRates[effectiveCurrency as keyof typeof exchangeRates],
+              firstName: interacData.firstName,
+              lastName: interacData.lastName,
+              interacEmail: interacData.interacEmail
+            }}
+            orderId={currentOrderId}
+            onBack={() => setShowInstructions(false)}
+            onPaymentConfirmed={handlePaymentConfirmed}
+          />
+        </KYCProtection>
+      );
+    }
+    
+    // Sinon, utiliser les instructions normales
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
-        <PaymentInstructions
-          orderData={{
-            amount: fiatAmount,
-            currency,
-            usdtAmount,
-            network: destination === 'wallet' ? network : 'BINANCE',
-            walletAddress: destination === 'wallet' ? walletAddress : binanceEmail,
-            paymentMethod: paymentMethod,
-            exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
-          }}
-          orderId={currentOrderId}
-          onBack={() => setShowInstructions(false)}
-          onPaymentConfirmed={handlePaymentConfirmed}
-        />
+        {/* Instructions normales pour les autres méthodes */}
       </KYCProtection>
     );
   }
 
-  // État de confirmation de commande
   if (showConfirmation) {
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
         <OrderConfirmation
           orderData={{
             amount: fiatAmount,
-            currency,
+            currency: effectiveCurrency,
             usdtAmount,
-            network: destination === 'wallet' ? network : 'BINANCE',
-            walletAddress: destination === 'wallet' ? walletAddress : binanceEmail,
+            network: (destination === 'binance') ? 'BINANCE' : (destination === 'kraken') ? 'KRAKEN' : (destination === 'trust') ? 'TRUST' : network,
+            walletAddress: (destination === 'binance') ? binanceEmail : walletAddress,
             paymentMethod: paymentMethod,
-            exchangeRate: exchangeRates[currency as keyof typeof exchangeRates]
+            exchangeRate: exchangeRates[effectiveCurrency as keyof typeof exchangeRates]
           }}
           onConfirm={handleConfirmOrder}
           onBack={() => setShowConfirmation(false)}
@@ -334,11 +354,17 @@ export function BuyUSDT() {
                 <CardContent className="p-4 md:p-6">
                   <LimitsValidator 
                     amount={fiatAmount} 
-                    currency={currency} 
+                    currency={effectiveCurrency} 
                     onHighVolumeRequest={handleHighVolumeRequest}
                   >
-                    <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'card' | 'mobile')} className="space-y-6">
-                      <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
+                    <Tabs value={paymentMethod} onValueChange={(value) => {
+                      setPaymentMethod(value as 'card' | 'mobile' | 'interac');
+                      // Réinitialiser la devise selon la méthode
+                      if (value === 'interac') {
+                        setCurrency('CAD');
+                      }
+                    }} className="space-y-6">
+                      <TabsList className="grid w-full grid-cols-3 bg-terex-gray">
                         <TabsTrigger 
                           value="card"
                           className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
@@ -359,9 +385,16 @@ export function BuyUSDT() {
                           <span className="hidden sm:inline">Mobile Money</span>
                           <span className="sm:hidden">Mobile</span>
                         </TabsTrigger>
+                        <TabsTrigger 
+                          value="interac"
+                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
+                        >
+                          🇨🇦
+                          <span className="hidden sm:inline ml-1">Interac</span>
+                          <span className="sm:hidden ml-1">Interac</span>
+                        </TabsTrigger>
                       </TabsList>
 
-                      {/* Affichage des messages de limite */}
                       {limitMessage.type && (
                         <Alert className={
                           limitMessage.type === 'error' ? 'border-red-500/50 bg-red-500/10' :
@@ -402,40 +435,50 @@ export function BuyUSDT() {
                           <BuyAmountInput
                             fiatAmount={fiatAmount}
                             setFiatAmount={setFiatAmount}
-                            currency={currency}
-                            setCurrency={setCurrency}
+                            currency={effectiveCurrency}
+                            setCurrency={isInterac ? () => {} : setCurrency} // Désactiver le changement de devise pour Interac
                             usdtAmount={usdtAmount}
-                            exchangeRate={exchangeRates[currency as keyof typeof exchangeRates]}
+                            exchangeRate={exchangeRates[effectiveCurrency as keyof typeof exchangeRates]}
                             paymentMethod={paymentMethod}
                             processingTime={method.time}
                             fee={method.fee}
+                            disableCurrencyChange={isInterac}
                           />
 
-                          {/* Destination Selection */}
-                          <DestinationSelector
-                            destination={destination}
-                            setDestination={setDestination}
-                          />
+                          {/* Destination Selection - Spéciale pour Interac */}
+                          {isInterac ? (
+                            <CanadianDestinationSelector
+                              destination={destination as 'wallet' | 'trust' | 'kraken'}
+                              setDestination={setDestination as (dest: 'wallet' | 'trust' | 'kraken') => void}
+                            />
+                          ) : (
+                            <DestinationSelector
+                              destination={destination as 'wallet' | 'binance'}
+                              setDestination={setDestination as (dest: 'wallet' | 'binance') => void}
+                            />
+                          )}
 
                           {/* Conditional rendering based on destination */}
-                          {destination === 'wallet' && (
+                          {(destination === 'wallet' || destination === 'trust' || destination === 'kraken') && (
                             <>
-                              {/* Network Selection */}
-                              <NetworkSelector
-                                network={network}
-                                setNetwork={setNetwork}
-                              />
+                              {/* Network Selection - Skip pour Kraken et Trust */}
+                              {(destination === 'wallet') && (
+                                <NetworkSelector
+                                  network={network}
+                                  setNetwork={setNetwork}
+                                />
+                              )}
 
                               {/* Wallet Address Input */}
                               <WalletAddressInput
                                 walletAddress={walletAddress}
                                 setWalletAddress={setWalletAddress}
-                                network={network}
+                                network={destination === 'kraken' ? 'KRAKEN' : destination === 'trust' ? 'TRUST' : network}
                               />
                             </>
                           )}
 
-                          {destination === 'binance' && (
+                          {destination === 'binance' && !isInterac && (
                             <BinanceEmailInput
                               email={binanceEmail}
                               setEmail={setBinanceEmail}
@@ -447,24 +490,32 @@ export function BuyUSDT() {
                           )}
 
                           {/* Payment Method Details */}
-                          <PaymentMethodForm
-                            paymentMethod={paymentMethod}
-                            cardData={cardData}
-                            setCardData={setCardData}
-                            mobileData={mobileData}
-                            setMobileData={setMobileData}
-                          />
+                          {method.id === 'interac' ? (
+                            <InteracPaymentForm
+                              interacData={interacData}
+                              setInteracData={setInteracData}
+                            />
+                          ) : (
+                            <PaymentMethodForm
+                              paymentMethod={paymentMethod as 'card' | 'mobile'}
+                              cardData={cardData}
+                              setCardData={setCardData}
+                              mobileData={mobileData}
+                              setMobileData={setMobileData}
+                            />
+                          )}
 
                           {/* Buy Button */}
                           <Button 
                             size="lg"
                             className="w-full gradient-button text-white font-semibold h-12 text-lg"
                             disabled={!fiatAmount || 
-                              (destination === 'wallet' && !walletAddress) ||
+                              ((destination === 'wallet' || destination === 'trust' || destination === 'kraken') && !walletAddress) ||
                               (destination === 'binance' && (!binanceEmail || !binanceUsername || !binanceId)) ||
                               limitMessage.type === 'error' || limitMessage.type === 'max-reached' ||
                               (paymentMethod === 'card' && (!cardData.number || !cardData.expiryMonth || !cardData.expiryYear || !cardData.cvv || !cardData.name)) ||
-                              (paymentMethod === 'mobile' && !mobileData.phoneNumber)
+                              (paymentMethod === 'mobile' && !mobileData.phoneNumber) ||
+                              (paymentMethod === 'interac' && (!interacData.firstName || !interacData.lastName || !interacData.interacEmail))
                             }
                             onClick={handleBuyClick}
                           >
@@ -487,7 +538,7 @@ export function BuyUSDT() {
                 ratesError={ratesError}
                 lastUpdated={lastUpdated}
                 refreshRates={refreshRates}
-                currency={currency}
+                currency={effectiveCurrency}
                 setFiatAmount={setFiatAmount}
               />
             </div>
