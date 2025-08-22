@@ -17,20 +17,7 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   console.log('ThemeProvider: Initializing...');
   
-  // Add error boundary for useState
-  let theme: Theme;
-  let setTheme: (theme: Theme) => void;
-  
-  try {
-    const [themeState, setThemeState] = useState<Theme>('dark');
-    theme = themeState;
-    setTheme = setThemeState;
-  } catch (error) {
-    console.error('Error in ThemeProvider useState:', error);
-    // Fallback values
-    theme = 'dark';
-    setTheme = () => {};
-  }
+  const [theme, setTheme] = useState<Theme>('dark');
 
   useEffect(() => {
     try {
