@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,9 +13,10 @@ interface BuyAmountInputProps {
   setCurrency: (currency: string) => void;
   usdtAmount: string;
   exchangeRate: number;
-  paymentMethod: 'card' | 'mobile';
+  paymentMethod: 'card' | 'mobile' | 'interac';
   processingTime: string;
   fee: string;
+  disableCurrencyChange?: boolean;
 }
 
 export function BuyAmountInput({
@@ -28,12 +28,12 @@ export function BuyAmountInput({
   exchangeRate,
   paymentMethod,
   processingTime,
-  fee
+  fee,
+  disableCurrencyChange = false
 }: BuyAmountInputProps) {
   
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // Appliquer la limite maximale
     const limitedValue = enforceMaxLimit(value, currency);
     setFiatAmount(limitedValue);
   };
@@ -51,16 +51,25 @@ export function BuyAmountInput({
               onChange={handleAmountChange}
               className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
             />
-            <Select value={currency} onValueChange={setCurrency}>
-              <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
+            <Select 
+              value={currency} 
+              onValueChange={setCurrency}
+              disabled={disableCurrencyChange}
+            >
+              <SelectTrigger className={`absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent ${disableCurrencyChange ? 'opacity-60 cursor-not-allowed' : ''}`}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="CFA">CFA</SelectItem>
+                {!disableCurrencyChange && <SelectItem value="CFA">CFA</SelectItem>}
                 <SelectItem value="CAD">CAD</SelectItem>
               </SelectContent>
             </Select>
           </div>
+          {disableCurrencyChange && (
+            <p className="text-gray-400 text-xs">
+              Interac e-Transfer disponible uniquement en CAD
+            </p>
+          )}
         </div>
         
         <div className="space-y-2">
