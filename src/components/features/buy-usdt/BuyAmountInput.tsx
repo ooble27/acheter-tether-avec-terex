@@ -105,8 +105,7 @@ export function BuyAmountInput({
         {/* Quick Amounts */}
         <QuickAmounts
           currency={currency}
-          onAmountSelect={setFiatAmount}
-          paymentMethod={paymentMethod}
+          setFiatAmount={setFiatAmount}
         />
 
         {/* Exchange Rate */}
