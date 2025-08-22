@@ -1,9 +1,11 @@
 
+import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { QuickAmounts } from './QuickAmounts';
+import { Button } from '@/components/ui/button';
+import { ArrowRightLeft } from 'lucide-react';
+import { enforceMaxLimit } from './LimitsValidator';
 
 interface BuyAmountInputProps {
   fiatAmount: string;
@@ -12,10 +14,9 @@ interface BuyAmountInputProps {
   setCurrency: (currency: string) => void;
   usdtAmount: string;
   exchangeRate: number;
-  paymentMethod: 'card' | 'mobile' | 'interac';
+  paymentMethod: 'card' | 'mobile';
   processingTime: string;
   fee: string;
-  disableCurrencyChange?: boolean;
 }
 
 export function BuyAmountInput({
@@ -27,117 +28,78 @@ export function BuyAmountInput({
   exchangeRate,
   paymentMethod,
   processingTime,
-  fee,
-  disableCurrencyChange = false
+  fee
 }: BuyAmountInputProps) {
-  const formatAmount = (amount: string | number) => {
-    const num = parseFloat(amount.toString());
-    if (isNaN(num)) return '0';
-    
-    if (num === Math.floor(num)) {
-      return num.toString();
-    }
-    
-    return parseFloat(num.toFixed(2)).toString();
+  
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Appliquer la limite maximale
+    const limitedValue = enforceMaxLimit(value, currency);
+    setFiatAmount(limitedValue);
   };
 
-  const availableCurrencies = disableCurrencyChange ? 
-    [{ value: 'CAD', label: 'Dollar Canadien (CAD)', flag: '🇨🇦' }] :
-    [
-      { value: 'CFA', label: 'Franc CFA (XOF)', flag: '🇸🇳' },
-      { value: 'CAD', label: 'Dollar Canadien (CAD)', flag: '🇨🇦' }
-    ];
-
   return (
-    <div className="space-y-6">
-      <div className="grid gap-4">
-        {/* Payment Method Info */}
-        <div className="flex items-center justify-between bg-terex-gray/30 rounded-lg p-3">
-          <div className="flex items-center space-x-2">
-            <span className="text-gray-300 text-sm">Temps de traitement:</span>
-            <Badge variant="outline" className="text-terex-accent border-terex-accent">
-              {processingTime}
-            </Badge>
-          </div>
-          <div className="flex items-center space-x-2">
-            <span className="text-gray-300 text-sm">Frais:</span>
-            <Badge variant="outline" className="text-green-400 border-green-400">
-              {fee}
-            </Badge>
-          </div>
-        </div>
-
-        {/* Fiat Amount Input */}
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label className="text-white text-sm">Montant à payer</Label>
+          <Label className="text-white text-sm font-medium">Je paie</Label>
           <div className="relative">
             <Input
               type="number"
+              placeholder="0.00"
               value={fiatAmount}
-              onChange={(e) => setFiatAmount(e.target.value)}
-              className="bg-terex-gray border-terex-gray-light text-white text-lg font-semibold pr-20"
-              placeholder="0"
+              onChange={handleAmountChange}
+              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
             />
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <Select 
-                value={currency} 
-                onValueChange={setCurrency}
-                disabled={disableCurrencyChange}
-              >
-                <SelectTrigger className="w-20 h-8 bg-transparent border-none text-white font-semibold">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableCurrencies.map((curr) => (
-                    <SelectItem key={curr.value} value={curr.value}>
-                      <div className="flex items-center space-x-2">
-                        <span>{curr.flag}</span>
-                        <span>{curr.value}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <Select value={currency} onValueChange={setCurrency}>
+              <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="CFA">CFA</SelectItem>
+                <SelectItem value="CAD">CAD</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
-
-        {/* Quick Amounts */}
-        <QuickAmounts
-          currency={currency}
-          setFiatAmount={setFiatAmount}
-        />
-
-        {/* Exchange Rate */}
-        <div className="bg-terex-gray/50 rounded-lg p-4">
-          <div className="flex items-center justify-between">
-            <span className="text-gray-300">Taux de change</span>
-            <span className="text-white font-semibold">
-              1 USDT = {formatAmount(exchangeRate)} {currency}
-            </span>
-          </div>
-        </div>
-
-        {/* USDT Amount Output */}
+        
         <div className="space-y-2">
-          <Label className="text-white text-sm">USDT à recevoir</Label>
-          <div className="bg-terex-darker border border-terex-gray rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <img 
-                  src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                  alt="USDT" 
-                  className="w-8 h-8"
-                />
-                <div>
-                  <p className="text-terex-accent font-bold text-xl">
-                    {formatAmount(usdtAmount)} USDT
-                  </p>
-                  <p className="text-gray-400 text-sm">Tether USD</p>
-                </div>
-              </div>
+          <Label className="text-white text-sm font-medium">Je reçois</Label>
+          <div className="relative">
+            <Input
+              type="text"
+              value={usdtAmount}
+              readOnly
+              className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-24"
+            />
+            <div className="absolute right-2 top-2 flex items-center space-x-1 bg-terex-gray-light rounded px-2 py-1">
+              <img 
+                src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
+                alt="USDT" 
+                className="w-5 h-5"
+              />
+              <span className="text-terex-accent font-medium text-sm">USDT</span>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center">
+        <ArrowRightLeft className="w-5 h-5 text-terex-accent" />
+      </div>
+
+      <div className="bg-terex-gray rounded-lg p-3">
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-400">Taux TEREX (vente)</span>
+          <span className="text-white">1 USDT = {exchangeRate} {currency}</span>
+        </div>
+        <div className="flex justify-between text-sm mt-1">
+          <span className="text-gray-400">Frais</span>
+          <span className="text-terex-accent">{fee}</span>
+        </div>
+        <div className="flex justify-between text-sm mt-1">
+          <span className="text-gray-400">Temps de traitement</span>
+          <span className="text-terex-accent">{processingTime}</span>
         </div>
       </div>
     </div>
