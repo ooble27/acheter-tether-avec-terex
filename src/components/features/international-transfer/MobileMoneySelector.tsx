@@ -62,9 +62,9 @@ export function MobileMoneySelector({ onComplete, onBack, recipientCountry }: Mo
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-      <div className="w-full max-w-2xl mx-auto px-2 md:px-0">
-        <div className="mb-6">
+    <div className="min-h-screen bg-terex-dark p-0 md:p-4">
+      <div className="w-full max-w-2xl mx-auto px-0 md:px-0">
+        <div className="mb-6 px-4 md:px-0">
           <Button
             variant="ghost"
             onClick={onBack}
@@ -77,14 +77,14 @@ export function MobileMoneySelector({ onComplete, onBack, recipientCountry }: Mo
           <p className="text-gray-400 text-sm md:text-base">Sélectionnez le service que le destinataire utilise</p>
         </div>
 
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader>
+        <Card className="bg-terex-darker border-terex-gray mx-0 md:mx-0">
+          <CardHeader className="px-4 md:px-6">
             <CardTitle className="text-white flex items-center">
               <Smartphone className="w-5 h-5 mr-2 text-terex-accent" />
               Services disponibles
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 px-4 md:px-6">
             <div className="space-y-4">
               <Label className="text-white text-sm font-medium">Service Mobile Money</Label>
               <RadioGroup value={selectedProvider} onValueChange={setSelectedProvider}>
@@ -151,7 +151,7 @@ export function MobileMoneySelector({ onComplete, onBack, recipientCountry }: Mo
         </Card>
 
         {availableProviders.length === 0 && (
-          <Card className="bg-red-500/10 border-red-500/20 mt-6">
+          <Card className="bg-red-500/10 border-red-500/20 mt-6 mx-4 md:mx-0">
             <CardContent className="p-4">
               <p className="text-red-200">
                 Aucun service Mobile Money n'est disponible pour ce pays. 
