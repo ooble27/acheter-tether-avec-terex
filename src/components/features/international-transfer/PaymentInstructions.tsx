@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -29,7 +28,7 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
 
   const renderInteracInstructions = () => (
     <div className="space-y-4 md:space-y-6">
-      <div className="bg-terex-accent/10 border border-terex-accent/20 rounded-lg p-3 md:p-4">
+      <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 md:p-4">
         <div className="flex items-start space-x-2 md:space-x-3">
           <img 
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Interac_logo.svg/256px-Interac_logo.svg.png" 
@@ -40,8 +39,8 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
             }}
           />
           <div>
-            <h3 className="text-terex-accent font-medium mb-1 md:mb-2 text-sm md:text-base">Instructions Interac E-Transfer</h3>
-            <div className="space-y-1 md:space-y-2 text-gray-300 text-xs md:text-sm">
+            <h3 className="text-blue-200 font-medium mb-1 md:mb-2 text-sm md:text-base">Instructions Interac E-Transfer</h3>
+            <div className="space-y-1 md:space-y-2 text-blue-100 text-xs md:text-sm">
               <p>1. Connectez-vous à votre banque en ligne</p>
               <p>2. Sélectionnez "Interac E-Transfer"</p>
               <p>3. Envoyez {transferData.amount} CAD</p>
@@ -138,12 +137,12 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
 
   const renderCardInstructions = () => (
     <div className="space-y-4 md:space-y-6">
-      <div className="bg-terex-accent/10 border border-terex-accent/20 rounded-lg p-3 md:p-4">
+      <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3 md:p-4">
         <div className="flex items-start space-x-2 md:space-x-3">
-          <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-terex-accent mt-0.5 flex-shrink-0" />
+          <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-green-500 mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="text-terex-accent font-medium mb-1 md:mb-2 text-sm md:text-base">Paiement par carte bancaire</h3>
-            <p className="text-gray-300 text-xs md:text-sm">
+            <h3 className="text-green-200 font-medium mb-1 md:mb-2 text-sm md:text-base">Paiement par carte bancaire</h3>
+            <p className="text-green-100 text-xs md:text-sm">
               Cliquez ci-dessous pour payer {transferData.amount} CAD de manière sécurisée
             </p>
           </div>
@@ -295,7 +294,7 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
                   <Button
                     onClick={onPaymentSent}
                     size="lg"
-                    className="w-full bg-terex-accent hover:bg-terex-accent/80 text-white font-semibold h-12 md:h-14 text-base md:text-lg"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold h-12 md:h-14 text-base md:text-lg"
                   >
                     <CheckCircle className="w-5 h-5 mr-2" />
                     J'ai effectué le paiement
@@ -310,7 +309,7 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
               <CardHeader className="pb-3 md:pb-4 px-0 md:px-6 pt-4 md:pt-6">
                 <CardTitle className="text-white text-base md:text-lg px-4 md:px-0">Récapitulatif</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2 md:space-y-3 px-0 md:px-6 pb-4 md:pb-6">
+              <CardContent className="space-y-2 md:space-y-3 px-4 md:px-6 pb-4 md:pb-6">
                 <div className="flex justify-between text-sm md:text-base">
                   <span className="text-gray-400">Montant</span>
                   <span className="text-white">{transferData.amount} CAD</span>
@@ -329,24 +328,22 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
               </CardContent>
             </Card>
 
-            <div className="mt-8">
-              <Card className="bg-terex-darker border-terex-gray mx-0">
-                <CardHeader className="pb-3 md:pb-4 px-0 md:px-6 pt-4 md:pt-6">
-                  <CardTitle className="text-white text-base md:text-lg px-4 md:px-0">Destinataire</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2 px-0 md:px-6 pb-4 md:pb-6">
-                  <p className="text-white font-medium text-sm md:text-base">
-                    {transferData.recipient_name}
-                  </p>
-                  <p className="text-gray-400 text-xs md:text-sm break-all">
-                    {transferData.recipient_phone}
-                  </p>
-                  <Badge variant="outline" className="text-terex-accent border-terex-accent text-xs">
-                    {transferData.recipient_country}
-                  </Badge>
-                </CardContent>
-              </Card>
-            </div>
+            <Card className="bg-terex-darker border-terex-gray mx-0">
+              <CardHeader className="pb-3 md:pb-4 px-0 md:px-6 pt-4 md:pt-6">
+                <CardTitle className="text-white text-base md:text-lg px-4 md:px-0">Destinataire</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 px-4 md:px-6 pb-4 md:pb-6">
+                <p className="text-white font-medium text-sm md:text-base">
+                  {transferData.recipient_name}
+                </p>
+                <p className="text-gray-400 text-xs md:text-sm break-all">
+                  {transferData.recipient_phone}
+                </p>
+                <Badge variant="outline" className="text-terex-accent border-terex-accent text-xs">
+                  {transferData.recipient_country}
+                </Badge>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
