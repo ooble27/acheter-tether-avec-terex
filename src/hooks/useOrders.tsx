@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useEmailNotifications } from '@/hooks/useEmailNotifications';
@@ -66,9 +66,10 @@ export function useOrders() {
   const { toast } = useToast();
   const { sendEmailNotification } = useEmailNotifications();
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       setLoading(true);
+      console.log('useOrders: Fetching orders...');
       
       // Fetch regular orders
       const { data: ordersData, error: ordersError } = await supabase
@@ -145,6 +146,7 @@ export function useOrders() {
 
       // Combine all orders
       const allOrders = [...transformedOrders, ...transformedTransfers];
+      console.log('useOrders: Loaded', allOrders.length, 'orders');
       setOrders(allOrders);
 
     } catch (error) {
@@ -157,11 +159,11 @@ export function useOrders() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [fetchOrders]);
 
   const createOrder = async (orderData: Omit<UnifiedOrder, 'id' | 'created_at' | 'updated_at'>) => {
     try {
@@ -317,7 +319,8 @@ export function useOrders() {
         console.error('Erreur lors de l\'envoi de l\'email de notification:', emailError);
       }
 
-      await fetchOrders(); // Refresh the orders list
+      // Forcer le rafraîchissement immédiat des données
+      await fetchOrders();
       
       toast({
         title: "Succès",
@@ -366,14 +369,14 @@ export function useOrders() {
     });
   };
 
-  const refreshOrders = () => {
+  const refreshOrders = useCallback(() => {
+    console.log('useOrders: Manual refresh requested');
     fetchOrders();
-  };
+  }, [fetchOrders]);
 
   return {
     orders,
     loading,
-    createOrder,
     updateOrderStatus,
     refreshOrders,
     moveToTrash,
