@@ -88,13 +88,13 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
                   <div className="min-w-0 flex-1 overflow-hidden">
                     <span className="text-gray-400 text-xs md:text-base block font-medium">❓ Question de sécurité</span>
                     <p className="text-white font-bold text-sm md:text-xl mt-2 whitespace-nowrap overflow-x-auto">
-                      Référence transfert
+                      Virement
                     </p>
                   </div>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => copyToClipboard('Référence transfert', 'Question')}
+                    onClick={() => copyToClipboard('Virement', 'Question')}
                     className="text-green-500 border-green-500 hover:bg-green-500/10 flex-shrink-0 h-8 w-8 md:h-12 md:w-12"
                   >
                     {copied === 'Question' ? <CheckCircle className="w-3 h-3 md:w-5 md:h-5" /> : <Copy className="w-3 h-3 md:w-5 md:h-5" />}
