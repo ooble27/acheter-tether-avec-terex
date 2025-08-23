@@ -31,9 +31,12 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
       <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 md:p-4">
         <div className="flex items-start space-x-2 md:space-x-3">
           <img 
-            src="/lovable-uploads/ae10f8c7-fb15-4996-8f3e-d8a28fe8f89e.png" 
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Interac_logo.svg/256px-Interac_logo.svg.png" 
             alt="Interac" 
             className="w-4 h-4 md:w-5 md:h-5 mt-0.5 flex-shrink-0"
+            onError={(e) => {
+              e.currentTarget.src = "/lovable-uploads/ae10f8c7-fb15-4996-8f3e-d8a28fe8f89e.png";
+            }}
           />
           <div>
             <h3 className="text-blue-200 font-medium mb-1 md:mb-2 text-sm md:text-base">Instructions Interac E-Transfer</h3>

@@ -335,9 +335,12 @@ export function BuyUSDT() {
                           className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
                         >
                           <img 
-                            src="/lovable-uploads/3c0dd5e1-7e00-4dd0-add4-bc08aef7010c.png" 
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Interac_logo.svg/256px-Interac_logo.svg.png" 
                             alt="Interac" 
                             className="mr-1 md:mr-2 w-4 h-4"
+                            onError={(e) => {
+                              e.currentTarget.src = "/lovable-uploads/3c0dd5e1-7e00-4dd0-add4-bc08aef7010c.png";
+                            }}
                           />
                           <span className="hidden sm:inline">Interac</span>
                           <span className="sm:hidden">Interac</span>
