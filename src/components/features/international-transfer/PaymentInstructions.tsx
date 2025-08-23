@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -49,8 +50,8 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
         </div>
       </div>
 
-      <Card className="bg-terex-gray border-terex-gray-light">
-        <CardHeader className="pb-3 md:pb-4">
+      <Card className="bg-terex-gray border-terex-gray-light mx-0">
+        <CardHeader className="pb-3 md:pb-4 px-4 md:px-6 pt-4 md:pt-6">
           <CardTitle className="text-white text-base md:text-xl font-bold">
             Détails du destinataire Terex Exchange
           </CardTitle>
@@ -58,77 +59,75 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
             Informations officielles pour votre virement Interac
           </p>
         </CardHeader>
-        <CardContent className="space-y-3 md:space-y-4">
-          <div className="space-y-3 md:space-y-4">
-            <div className="p-3 md:p-6 bg-terex-darker rounded-lg border border-terex-accent/20">
-              <div className="flex flex-col space-y-3">
-                <div className="flex justify-between items-start gap-2">
-                  <div className="min-w-0 flex-1 overflow-hidden">
-                    <span className="text-gray-400 text-xs md:text-base block font-medium">📧 Email destinataire</span>
-                    <p className="text-white font-bold text-sm md:text-xl mt-2 break-all whitespace-nowrap overflow-x-auto">
-                      mohalaval4@gmail.com
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => copyToClipboard('mohalaval4@gmail.com', 'Email')}
-                    className="text-terex-accent border-terex-accent hover:bg-terex-accent/10 flex-shrink-0 h-8 w-8 md:h-12 md:w-12"
-                  >
-                    {copied === 'Email' ? <CheckCircle className="w-3 h-3 md:w-5 md:h-5" /> : <Copy className="w-3 h-3 md:w-5 md:h-5" />}
-                  </Button>
+        <CardContent className="space-y-3 md:space-y-4 px-4 md:px-6 pb-4 md:pb-6">
+          <div className="p-3 md:p-6 bg-terex-darker rounded-lg border border-terex-accent/20">
+            <div className="flex flex-col space-y-3">
+              <div className="flex justify-between items-start gap-2">
+                <div className="min-w-0 flex-1 overflow-hidden">
+                  <span className="text-gray-400 text-xs md:text-base block font-medium">📧 Email destinataire</span>
+                  <p className="text-white font-bold text-sm md:text-xl mt-2 break-all whitespace-nowrap overflow-x-auto">
+                    mohalaval4@gmail.com
+                  </p>
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copyToClipboard('mohalaval4@gmail.com', 'Email')}
+                  className="text-terex-accent border-terex-accent hover:bg-terex-accent/10 flex-shrink-0 h-8 w-8 md:h-12 md:w-12"
+                >
+                  {copied === 'Email' ? <CheckCircle className="w-3 h-3 md:w-5 md:h-5" /> : <Copy className="w-3 h-3 md:w-5 md:h-5" />}
+                </Button>
               </div>
             </div>
+          </div>
 
-            <div className="p-3 md:p-6 bg-terex-darker rounded-lg border border-green-500/20">
-              <div className="flex flex-col space-y-3">
-                <div className="flex justify-between items-start gap-2">
-                  <div className="min-w-0 flex-1 overflow-hidden">
-                    <span className="text-gray-400 text-xs md:text-base block font-medium">❓ Question de sécurité</span>
-                    <p className="text-white font-bold text-sm md:text-xl mt-2 whitespace-nowrap overflow-x-auto">
-                      Référence transfert
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => copyToClipboard('Référence transfert', 'Question')}
-                    className="text-green-500 border-green-500 hover:bg-green-500/10 flex-shrink-0 h-8 w-8 md:h-12 md:w-12"
-                  >
-                    {copied === 'Question' ? <CheckCircle className="w-3 h-3 md:w-5 md:h-5" /> : <Copy className="w-3 h-3 md:w-5 md:h-5" />}
-                  </Button>
+          <div className="p-3 md:p-6 bg-terex-darker rounded-lg border border-green-500/20">
+            <div className="flex flex-col space-y-3">
+              <div className="flex justify-between items-start gap-2">
+                <div className="min-w-0 flex-1 overflow-hidden">
+                  <span className="text-gray-400 text-xs md:text-base block font-medium">❓ Question de sécurité</span>
+                  <p className="text-white font-bold text-sm md:text-xl mt-2 whitespace-nowrap overflow-x-auto">
+                    Référence transfert
+                  </p>
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copyToClipboard('Référence transfert', 'Question')}
+                  className="text-green-500 border-green-500 hover:bg-green-500/10 flex-shrink-0 h-8 w-8 md:h-12 md:w-12"
+                >
+                  {copied === 'Question' ? <CheckCircle className="w-3 h-3 md:w-5 md:h-5" /> : <Copy className="w-3 h-3 md:w-5 md:h-5" />}
+                </Button>
               </div>
             </div>
+          </div>
 
-            <div className="p-3 md:p-6 bg-terex-darker rounded-lg border border-yellow-500/20">
-              <div className="flex flex-col space-y-3">
-                <div className="flex justify-between items-start gap-2">
-                  <div className="min-w-0 flex-1 overflow-hidden">
-                    <span className="text-gray-400 text-xs md:text-base block font-medium">✅ Réponse</span>
-                    <p className="text-white font-bold text-sm md:text-xl mt-2 whitespace-nowrap overflow-x-auto">
-                      TEREX-{transferData.id?.slice(-8)}
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => copyToClipboard(`TEREX-${transferData.id?.slice(-8)}`, 'Réponse')}
-                    className="text-yellow-500 border-yellow-500 hover:bg-yellow-500/10 flex-shrink-0 h-8 w-8 md:h-12 md:w-12"
-                  >
-                    {copied === 'Réponse' ? <CheckCircle className="w-3 h-3 md:w-5 md:h-5" /> : <Copy className="w-3 h-3 md:w-5 md:h-5" />}
-                  </Button>
+          <div className="p-3 md:p-6 bg-terex-darker rounded-lg border border-yellow-500/20">
+            <div className="flex flex-col space-y-3">
+              <div className="flex justify-between items-start gap-2">
+                <div className="min-w-0 flex-1 overflow-hidden">
+                  <span className="text-gray-400 text-xs md:text-base block font-medium">✅ Réponse</span>
+                  <p className="text-white font-bold text-sm md:text-xl mt-2 whitespace-nowrap overflow-x-auto">
+                    TEREX-{transferData.id?.slice(-8)}
+                  </p>
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copyToClipboard(`TEREX-${transferData.id?.slice(-8)}`, 'Réponse')}
+                  className="text-yellow-500 border-yellow-500 hover:bg-yellow-500/10 flex-shrink-0 h-8 w-8 md:h-12 md:w-12"
+                >
+                  {copied === 'Réponse' ? <CheckCircle className="w-3 h-3 md:w-5 md:h-5" /> : <Copy className="w-3 h-3 md:w-5 md:h-5" />}
+                </Button>
               </div>
             </div>
+          </div>
 
-            <div className="p-4 md:p-6 bg-gradient-to-r from-terex-accent/10 to-terex-accent/5 rounded-lg border border-terex-accent">
-              <span className="text-gray-400 text-sm md:text-base block font-medium">💰 Montant à envoyer</span>
-              <p className="text-terex-accent font-bold text-2xl md:text-3xl mt-2">
-                {transferData.amount} CAD
-              </p>
-            </div>
+          <div className="p-4 md:p-6 bg-gradient-to-r from-terex-accent/10 to-terex-accent/5 rounded-lg border border-terex-accent">
+            <span className="text-gray-400 text-sm md:text-base block font-medium">💰 Montant à envoyer</span>
+            <p className="text-terex-accent font-bold text-2xl md:text-3xl mt-2">
+              {transferData.amount} CAD
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -179,27 +178,76 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
         </div>
       </div>
 
-      <Card className="bg-terex-gray border-terex-gray-light">
-        <CardHeader className="pb-3 md:pb-4">
+      <Card className="bg-terex-gray border-terex-gray-light mx-0">
+        <CardHeader className="pb-3 md:pb-4 px-4 md:px-6 pt-4 md:pt-6">
           <CardTitle className="text-white text-base md:text-lg">Coordonnées bancaires</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 md:space-y-4">
-          <div className="space-y-2 md:space-y-3">
-            <div className="p-3 bg-terex-darker rounded-lg">
-              <span className="text-gray-400 text-xs md:text-sm block">Nom du bénéficiaire</span>
-              <p className="text-white font-medium text-sm md:text-base">Teranga Exchange Inc.</p>
+        <CardContent className="space-y-3 md:space-y-4 px-4 md:px-6 pb-4 md:pb-6">
+          <div className="p-3 md:p-4 bg-terex-darker rounded-lg border border-terex-accent/20">
+            <div className="flex justify-between items-start gap-2">
+              <div className="min-w-0 flex-1">
+                <span className="text-gray-400 text-xs md:text-sm block font-medium">Nom du bénéficiaire</span>
+                <p className="text-white font-bold text-sm md:text-base mt-1">Teranga Exchange Inc.</p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => copyToClipboard('Teranga Exchange Inc.', 'Nom')}
+                className="text-terex-accent border-terex-accent hover:bg-terex-accent/10 flex-shrink-0 h-8 w-8 md:h-10 md:w-10"
+              >
+                {copied === 'Nom' ? <CheckCircle className="w-3 h-3 md:w-4 md:h-4" /> : <Copy className="w-3 h-3 md:w-4 md:h-4" />}
+              </Button>
             </div>
-            <div className="p-3 bg-terex-darker rounded-lg">
-              <span className="text-gray-400 text-xs md:text-sm block">Numéro de compte</span>
-              <p className="text-white font-medium text-sm md:text-base">1234567890</p>
+          </div>
+
+          <div className="p-3 md:p-4 bg-terex-darker rounded-lg border border-blue-500/20">
+            <div className="flex justify-between items-start gap-2">
+              <div className="min-w-0 flex-1">
+                <span className="text-gray-400 text-xs md:text-sm block font-medium">Numéro de compte</span>
+                <p className="text-white font-bold text-sm md:text-base mt-1">1234567890</p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => copyToClipboard('1234567890', 'Compte')}
+                className="text-blue-500 border-blue-500 hover:bg-blue-500/10 flex-shrink-0 h-8 w-8 md:h-10 md:w-10"
+              >
+                {copied === 'Compte' ? <CheckCircle className="w-3 h-3 md:w-4 md:h-4" /> : <Copy className="w-3 h-3 md:w-4 md:h-4" />}
+              </Button>
             </div>
-            <div className="p-3 bg-terex-darker rounded-lg">
-              <span className="text-gray-400 text-xs md:text-sm block">Code d'institution</span>
-              <p className="text-white font-medium text-sm md:text-base">001</p>
+          </div>
+
+          <div className="p-3 md:p-4 bg-terex-darker rounded-lg border border-green-500/20">
+            <div className="flex justify-between items-start gap-2">
+              <div className="min-w-0 flex-1">
+                <span className="text-gray-400 text-xs md:text-sm block font-medium">Code d'institution</span>
+                <p className="text-white font-bold text-sm md:text-base mt-1">001</p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => copyToClipboard('001', 'Code')}
+                className="text-green-500 border-green-500 hover:bg-green-500/10 flex-shrink-0 h-8 w-8 md:h-10 md:w-10"
+              >
+                {copied === 'Code' ? <CheckCircle className="w-3 h-3 md:w-4 md:h-4" /> : <Copy className="w-3 h-3 md:w-4 md:h-4" />}
+              </Button>
             </div>
-            <div className="p-3 bg-terex-darker rounded-lg">
-              <span className="text-gray-400 text-xs md:text-sm block">Référence</span>
-              <p className="text-white font-medium text-sm md:text-base">TEREX-{transferData.id?.slice(-8)}</p>
+          </div>
+
+          <div className="p-3 md:p-4 bg-terex-darker rounded-lg border border-yellow-500/20">
+            <div className="flex justify-between items-start gap-2">
+              <div className="min-w-0 flex-1">
+                <span className="text-gray-400 text-xs md:text-sm block font-medium">Référence</span>
+                <p className="text-white font-bold text-sm md:text-base mt-1">TEREX-{transferData.id?.slice(-8)}</p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => copyToClipboard(`TEREX-${transferData.id?.slice(-8)}`, 'Référence')}
+                className="text-yellow-500 border-yellow-500 hover:bg-yellow-500/10 flex-shrink-0 h-8 w-8 md:h-10 md:w-10"
+              >
+                {copied === 'Référence' ? <CheckCircle className="w-3 h-3 md:w-4 md:h-4" /> : <Copy className="w-3 h-3 md:w-4 md:h-4" />}
+              </Button>
             </div>
           </div>
         </CardContent>
@@ -208,7 +256,7 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
   );
 
   return (
-    <div className="min-h-screen bg-terex-dark overflow-x-hidden">
+    <div className="min-h-screen bg-terex-dark overflow-x-hidden px-0">
       <div className="w-full max-w-7xl mx-auto px-0 md:px-6 py-0 md:py-6">
         <div className="mb-4 md:mb-6 px-4 md:px-0">
           <Button
@@ -224,8 +272,8 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
           <p className="text-gray-400 text-sm md:text-base">Suivez les instructions pour effectuer votre paiement</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 px-4 md:px-0">
-          <div className="lg:col-span-2 order-2 lg:order-1">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 px-0 md:px-0">
+          <div className="lg:col-span-2 order-2 lg:order-1 px-4 md:px-0">
             <Card className="bg-terex-darker border-terex-gray mx-0 md:mx-0">
               <CardHeader className="pb-3 md:pb-4 px-4 md:px-6 pt-4 md:pt-6">
                 <CardTitle className="text-white flex items-center text-base md:text-lg">
@@ -260,7 +308,7 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
             </Card>
           </div>
 
-          <div className="space-y-4 md:space-y-6 order-1 lg:order-2">
+          <div className="space-y-4 md:space-y-6 order-1 lg:order-2 px-4 md:px-0">
             <Card className="bg-terex-darker border-terex-gray mx-0 md:mx-0">
               <CardHeader className="pb-3 md:pb-4 px-4 md:px-6 pt-4 md:pt-6">
                 <CardTitle className="text-white text-base md:text-lg">Récapitulatif</CardTitle>
