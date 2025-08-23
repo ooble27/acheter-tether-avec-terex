@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { RefreshCw, AlertCircle } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 
 interface USDTData {
   usd_price: number;
@@ -13,7 +13,6 @@ interface USDTData {
 export function USDTLivePrice() {
   const [usdtData, setUsdtData] = useState<USDTData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
   // Taux de change approximatifs (dans une vraie app, ces taux viendraient aussi d'une API)
@@ -22,19 +21,11 @@ export function USDTLivePrice() {
 
   const fetchUSDTPrice = async () => {
     try {
-      console.log('Tentative de récupération du prix USDT...');
-      
       // Récupération du prix USDT depuis CoinGecko
       const response = await fetch(
-        'https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=usd&include_last_updated_at=true'
+        'https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=usd'
       );
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
       const data = await response.json();
-      console.log('Prix USDT récupéré avec succès:', data);
       
       const usdPrice = data.tether.usd;
       const fcfaPrice = usdPrice * USD_TO_FCFA;
@@ -48,24 +39,8 @@ export function USDTLivePrice() {
       });
       
       setLastUpdate(new Date());
-      setError(null);
     } catch (error) {
       console.error('Erreur lors de la récupération du prix USDT:', error);
-      setError('Connexion limitée à l\'API');
-      
-      // Utiliser des données de fallback si pas de données existantes
-      if (!usdtData) {
-        console.log('Utilisation des données de fallback pour USDT');
-        const fallbackUsdPrice = 1.0000;
-        setUsdtData({
-          usd_price: fallbackUsdPrice,
-          fcfa_price: fallbackUsdPrice * USD_TO_FCFA,
-          cad_price: fallbackUsdPrice * USD_TO_CAD,
-          last_updated: new Date().toISOString()
-        });
-      }
-      
-      setLastUpdate(new Date());
     } finally {
       setLoading(false);
     }
@@ -88,13 +63,7 @@ export function USDTLivePrice() {
     });
   };
 
-  const handleRefresh = () => {
-    console.log('Actualisation manuelle demandée');
-    setLoading(true);
-    fetchUSDTPrice();
-  };
-
-  if (loading && !usdtData) {
+  if (loading) {
     return (
       <Card className="bg-terex-darker border-terex-gray">
         <CardHeader>
@@ -118,15 +87,9 @@ export function USDTLivePrice() {
             <span className="mr-2">💰</span>
             Prix USDT en Temps Réel
           </span>
-          <div className="flex items-center space-x-2">
-            {error && (
-              <AlertCircle className="w-4 h-4 text-yellow-400" title={error} />
-            )}
-            <RefreshCw 
-              className={`w-4 h-4 text-terex-accent cursor-pointer hover:text-terex-accent/80 ${loading ? 'animate-spin' : ''}`} 
-              onClick={handleRefresh}
-            />
-          </div>
+          <RefreshCw className="w-4 h-4 text-terex-accent animate-spin" style={{
+            animationDuration: '2s'
+          }} />
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -162,14 +125,6 @@ export function USDTLivePrice() {
               <div className="w-2 h-2 bg-terex-accent rounded-full animate-pulse"></div>
               <span>Dernière mise à jour : {formatTime(lastUpdate)}</span>
             </div>
-            
-            {error && (
-              <div className="text-center p-2 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-                <p className="text-yellow-400 text-xs">
-                  Connexion limitée - Prix approximatif
-                </p>
-              </div>
-            )}
           </>
         )}
       </CardContent>
