@@ -71,9 +71,9 @@ export function TransferConfirmation({ transferData, onConfirm, onBack, loading 
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-      <div className="w-full max-w-4xl mx-auto px-2 md:px-0">
-        <div className="mb-6">
+    <div className="min-h-screen bg-terex-dark p-0 md:p-4">
+      <div className="w-full max-w-4xl mx-auto px-0 md:px-0">
+        <div className="mb-6 px-4 md:px-0">
           <Button
             variant="ghost"
             onClick={onBack}
@@ -86,14 +86,14 @@ export function TransferConfirmation({ transferData, onConfirm, onBack, loading 
           <p className="text-gray-400 text-sm md:text-base">Vérifiez les détails de votre transfert avant de confirmer</p>
         </div>
 
-        <Card className="bg-terex-darker border-terex-gray w-full">
-          <CardHeader className="pb-4 p-4 md:p-6">
+        <Card className="bg-terex-darker border-terex-gray w-full mx-0 md:mx-0">
+          <CardHeader className="pb-4 px-4 md:px-6 pt-4 md:pt-6">
             <CardTitle className="text-white flex items-center text-lg md:text-xl">
               <Globe className="w-5 h-5 mr-2 text-terex-accent" />
               Récapitulatif du transfert
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6 p-4 md:p-6">
+          <CardContent className="space-y-6 px-4 md:px-6 pb-4 md:pb-6">
             {/* Montants */}
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -11,9 +11,9 @@ interface TransferPendingProps {
 
 export function TransferPending({ transferData, onBackToDashboard }: TransferPendingProps) {
   return (
-    <div className="min-h-screen bg-terex-dark p-2 md:p-4">
-      <div className="w-full max-w-4xl mx-auto px-2 md:px-0">
-        <div className="mb-6 text-center">
+    <div className="min-h-screen bg-terex-dark p-0 md:p-4">
+      <div className="w-full max-w-4xl mx-auto px-0 md:px-0">
+        <div className="mb-6 text-center px-4 md:px-0">
           <div className="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <Clock className="w-8 h-8 text-yellow-500" />
           </div>
@@ -21,7 +21,7 @@ export function TransferPending({ transferData, onBackToDashboard }: TransferPen
           <p className="text-gray-400 text-sm md:text-base">Votre paiement est en cours de vérification</p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-6 px-4 md:px-0">
           <div className="lg:col-span-2 space-y-6">
             <Card className="bg-terex-darker border-terex-gray">
               <CardHeader>
