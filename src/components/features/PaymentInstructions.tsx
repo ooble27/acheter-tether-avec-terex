@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,7 +21,7 @@ interface PaymentInstructionsProps {
 }
 
 export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfirmed }: PaymentInstructionsProps) {
-  const [copied, setCopied] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const [timeLeft, setTimeLeft] = useState(30 * 60);
   const { toast } = useToast();
 
@@ -50,14 +49,14 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const copyToClipboard = (text: string, label: string) => {
+  const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    setCopied(label);
+    setCopied(true);
     toast({
       title: "Copié !",
-      description: `${label} copié dans le presse-papier`,
+      description: "L'information a été copiée dans le presse-papiers",
     });
-    setTimeout(() => setCopied(null), 2000);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   // Generate unique security question and answer based on orderId
@@ -78,6 +77,11 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
         steps: [
           "Connectez-vous à votre banque en ligne ou application mobile",
           "Sélectionnez 'Virement Interac' ou 'Envoyer de l'argent'",
+          `Email destinataire : mohalaval4@gmail.com`,
+          `Montant : ${orderData.amount} ${orderData.currency}`,
+          `Message/Référence : ${orderId.slice(-8).toUpperCase()}`,
+          `Question de sécurité : ${securityDetails.question}`,
+          `Réponse : ${securityDetails.answer}`,
           "Confirmez le virement",
           "Cliquez sur 'J'ai payé' ci-dessous"
         ],
@@ -91,6 +95,9 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
         steps: [
           "Ouvrez votre application Wave ou Orange Money",
           "Sélectionnez 'Envoyer de l'argent'",
+          `Entrez le numéro : +221 777569268`,
+          `Montant : ${orderData.amount} ${orderData.currency}`,
+          `Référence : ${orderId.slice(-8).toUpperCase()}`,
           "Confirmez le transfert",
           "Cliquez sur 'J'ai payé' ci-dessous"
         ],
@@ -102,9 +109,9 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
   const instructions = getPaymentInstructions();
 
   return (
-    <div className="min-h-screen bg-terex-dark px-0 py-0 md:p-4">
+    <div className="min-h-screen bg-terex-dark px-0 py-2 md:p-4">
       <div className="max-w-4xl mx-auto px-0">
-        <div className="mb-4 md:mb-6 flex items-center space-x-4 px-3 md:px-0">
+        <div className="mb-6 flex items-center space-x-4 px-3 md:px-0">
           <Button
             variant="ghost"
             onClick={onBack}
@@ -114,177 +121,120 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
             Retour
           </Button>
           <div>
-            <h1 className="text-xl md:text-3xl font-bold text-white">Effectuer le paiement</h1>
-            <p className="text-gray-400 text-sm md:text-base">Suivez les instructions pour compléter votre achat</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-white">Effectuer le paiement</h1>
+            <p className="text-gray-400">Suivez les instructions pour compléter votre achat</p>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-4 md:gap-6 px-0">
-          <div className="lg:col-span-2 space-y-4 md:space-y-6 px-0">
+        <div className="grid lg:grid-cols-3 gap-6 px-0">
+          <div className="lg:col-span-2 space-y-6 px-0">
             <Card className="bg-terex-darker border-terex-gray mx-0">
-              <CardHeader className="px-4 md:px-6 pt-4 md:pt-6">
-                <CardTitle className="text-white text-base md:text-lg">{instructions.title}</CardTitle>
+              <CardHeader>
+                <CardTitle className="text-white">{instructions.title}</CardTitle>
                 <div className="flex items-center space-x-2">
                   <Clock className="w-4 h-4 text-orange-500" />
-                  <span className="text-orange-500 font-medium text-sm">
+                  <span className="text-orange-500 font-medium">
                     Temps restant : {formatTime(timeLeft)}
                   </span>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4 px-4 md:px-6 pb-4 md:pb-6">
+              <CardContent className="space-y-4">
                 {instructions.steps.map((step, index) => (
                   <div key={index} className="flex items-start space-x-3">
                     <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <span className="text-white text-xs font-bold">{index + 1}</span>
                     </div>
-                    <p className="text-gray-300 text-sm md:text-base">{step}</p>
+                    <p className="text-gray-300">{step}</p>
                   </div>
                 ))}
               </CardContent>
             </Card>
 
-            {orderData.paymentMethod === 'card' && (
-              <Card className="bg-terex-gray border-terex-gray-light mx-0">
-                <CardHeader className="pb-3 md:pb-4 px-4 md:px-6 pt-4 md:pt-6">
-                  <CardTitle className="text-white text-base md:text-xl font-bold">
-                    Détails du destinataire Terex Exchange
+            {orderData.paymentMethod === 'card' && 'recipientEmail' in instructions && (
+              <Card className="bg-terex-darker border-terex-gray mx-0">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <Mail className="w-5 h-5 mr-2 text-terex-accent" />
+                    Email destinataire
                   </CardTitle>
-                  <p className="text-terex-accent text-xs md:text-base font-medium">
-                    Informations officielles pour votre virement Interac
-                  </p>
                 </CardHeader>
-                <CardContent className="space-y-3 md:space-y-4 px-4 md:px-6 pb-4 md:pb-6">
-                  <div className="p-3 md:p-6 bg-terex-darker rounded-lg border border-terex-accent/20">
-                    <div className="flex flex-col space-y-3">
-                      <div className="flex justify-between items-start gap-2">
-                        <div className="min-w-0 flex-1 overflow-hidden">
-                          <span className="text-gray-400 text-xs md:text-base block font-medium">📧 Email destinataire</span>
-                          <p className="text-white font-bold text-sm md:text-xl mt-2 break-all whitespace-nowrap overflow-x-auto">
-                            {instructions.recipientEmail}
-                          </p>
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => copyToClipboard(instructions.recipientEmail!, 'Email')}
-                          className="text-terex-accent border-terex-accent hover:bg-terex-accent/10 flex-shrink-0 h-8 w-8 md:h-12 md:w-12"
-                        >
-                          {copied === 'Email' ? <CheckCircle className="w-3 h-3 md:w-5 md:h-5" /> : <Copy className="w-3 h-3 md:w-5 md:h-5" />}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-3 md:p-6 bg-terex-darker rounded-lg border border-green-500/20">
-                    <div className="flex flex-col space-y-3">
-                      <div className="flex justify-between items-start gap-2">
-                        <div className="min-w-0 flex-1 overflow-hidden">
-                          <span className="text-gray-400 text-xs md:text-base block font-medium">❓ Question de sécurité</span>
-                          <p className="text-white font-bold text-sm md:text-xl mt-2 whitespace-nowrap overflow-x-auto">
-                            {instructions.securityQuestion}
-                          </p>
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => copyToClipboard(instructions.securityQuestion!, 'Question')}
-                          className="text-green-500 border-green-500 hover:bg-green-500/10 flex-shrink-0 h-8 w-8 md:h-12 md:w-12"
-                        >
-                          {copied === 'Question' ? <CheckCircle className="w-3 h-3 md:w-5 md:h-5" /> : <Copy className="w-3 h-3 md:w-5 md:h-5" />}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-3 md:p-6 bg-terex-darker rounded-lg border border-yellow-500/20">
-                    <div className="flex flex-col space-y-3">
-                      <div className="flex justify-between items-start gap-2">
-                        <div className="min-w-0 flex-1 overflow-hidden">
-                          <span className="text-gray-400 text-xs md:text-base block font-medium">✅ Réponse</span>
-                          <p className="text-white font-bold text-sm md:text-xl mt-2 whitespace-nowrap overflow-x-auto">
-                            {instructions.securityAnswer}
-                          </p>
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => copyToClipboard(instructions.securityAnswer!, 'Réponse')}
-                          className="text-yellow-500 border-yellow-500 hover:bg-yellow-500/10 flex-shrink-0 h-8 w-8 md:h-12 md:w-12"
-                        >
-                          {copied === 'Réponse' ? <CheckCircle className="w-3 h-3 md:w-5 md:h-5" /> : <Copy className="w-3 h-3 md:w-5 md:h-5" />}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-4 md:p-6 bg-gradient-to-r from-terex-accent/10 to-terex-accent/5 rounded-lg border border-terex-accent">
-                    <span className="text-gray-400 text-sm md:text-base block font-medium">💰 Montant à envoyer</span>
-                    <p className="text-terex-accent font-bold text-2xl md:text-3xl mt-2">
-                      {orderData.amount} {orderData.currency}
-                    </p>
+                <CardContent>
+                  <div className="flex items-center justify-between bg-terex-gray rounded-lg p-4">
+                    <span className="text-white font-mono text-lg">{instructions.recipientEmail}</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => copyToClipboard(instructions.recipientEmail!)}
+                      className="border-terex-gray text-white hover:bg-terex-gray"
+                    >
+                      {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
             )}
 
-            {orderData.paymentMethod === 'mobile' && (
-              <Card className="bg-terex-gray border-terex-gray-light mx-0">
-                <CardHeader className="pb-3 md:pb-4 px-4 md:px-6 pt-4 md:pt-6">
-                  <CardTitle className="text-white text-base md:text-xl font-bold">
-                    Détails du destinataire Mobile Money
+            {orderData.paymentMethod === 'card' && 'securityQuestion' in instructions && (
+              <>
+                <Card className="bg-terex-darker border-terex-gray mx-0">
+                  <CardHeader>
+                    <CardTitle className="text-white">Question de sécurité</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between bg-terex-gray rounded-lg p-4">
+                      <span className="text-white font-mono text-lg">{instructions.securityQuestion}</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyToClipboard(instructions.securityQuestion!)}
+                        className="border-terex-gray text-white hover:bg-terex-gray"
+                      >
+                        {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-terex-darker border-terex-gray mx-0">
+                  <CardHeader>
+                    <CardTitle className="text-white">Réponse de sécurité</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between bg-terex-gray rounded-lg p-4">
+                      <span className="text-white font-mono text-lg">{instructions.securityAnswer}</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyToClipboard(instructions.securityAnswer!)}
+                        className="border-terex-gray text-white hover:bg-terex-gray"
+                      >
+                        {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+
+            {orderData.paymentMethod === 'mobile' && 'recipientNumber' in instructions && (
+              <Card className="bg-terex-darker border-terex-gray mx-0">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <Phone className="w-5 h-5 mr-2 text-terex-accent" />
+                    Numéro de réception
                   </CardTitle>
-                  <p className="text-terex-accent text-xs md:text-base font-medium">
-                    Informations pour votre transfert Mobile Money
-                  </p>
                 </CardHeader>
-                <CardContent className="space-y-3 md:space-y-4 px-4 md:px-6 pb-4 md:pb-6">
-                  <div className="p-3 md:p-6 bg-terex-darker rounded-lg border border-terex-accent/20">
-                    <div className="flex flex-col space-y-3">
-                      <div className="flex justify-between items-start gap-2">
-                        <div className="min-w-0 flex-1 overflow-hidden">
-                          <span className="text-gray-400 text-xs md:text-base block font-medium">📱 Numéro destinataire</span>
-                          <p className="text-white font-bold text-sm md:text-xl mt-2 break-all whitespace-nowrap overflow-x-auto">
-                            +221 777569268
-                          </p>
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => copyToClipboard('+221 777569268', 'Numéro')}
-                          className="text-terex-accent border-terex-accent hover:bg-terex-accent/10 flex-shrink-0 h-8 w-8 md:h-12 md:w-12"
-                        >
-                          {copied === 'Numéro' ? <CheckCircle className="w-3 h-3 md:w-5 md:h-5" /> : <Copy className="w-3 h-3 md:w-5 md:h-5" />}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-3 md:p-6 bg-terex-darker rounded-lg border border-yellow-500/20">
-                    <div className="flex flex-col space-y-3">
-                      <div className="flex justify-between items-start gap-2">
-                        <div className="min-w-0 flex-1 overflow-hidden">
-                          <span className="text-gray-400 text-xs md:text-base block font-medium">📝 Référence</span>
-                          <p className="text-white font-bold text-sm md:text-xl mt-2 whitespace-nowrap overflow-x-auto">
-                            {orderId.slice(-8).toUpperCase()}
-                          </p>
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => copyToClipboard(orderId.slice(-8).toUpperCase(), 'Référence')}
-                          className="text-yellow-500 border-yellow-500 hover:bg-yellow-500/10 flex-shrink-0 h-8 w-8 md:h-12 md:w-12"
-                        >
-                          {copied === 'Référence' ? <CheckCircle className="w-3 h-3 md:w-5 md:h-5" /> : <Copy className="w-3 h-3 md:w-5 md:h-5" />}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-4 md:p-6 bg-gradient-to-r from-terex-accent/10 to-terex-accent/5 rounded-lg border border-terex-accent">
-                    <span className="text-gray-400 text-sm md:text-base block font-medium">💰 Montant à envoyer</span>
-                    <p className="text-terex-accent font-bold text-2xl md:text-3xl mt-2">
-                      {orderData.amount} {orderData.currency}
-                    </p>
+                <CardContent>
+                  <div className="flex items-center justify-between bg-terex-gray rounded-lg p-4">
+                    <span className="text-white font-mono text-lg">{instructions.recipientNumber}</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => copyToClipboard(instructions.recipientNumber!)}
+                      className="border-terex-gray text-white hover:bg-terex-gray"
+                    >
+                      {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -299,7 +249,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
                     <ul className="text-amber-100 text-sm space-y-1">
                       <li>• Utilisez exactement le montant indiqué</li>
                       <li>• N'oubliez pas d'inclure la référence de commande</li>
-                      {orderData.paymentMethod === 'card' && (
+                      {orderData.paymentMethod === 'card' && 'securityQuestion' in instructions && (
                         <>
                           <li>• Question de sécurité : {instructions.securityQuestion}</li>
                           <li>• Réponse : {instructions.securityAnswer}</li>
@@ -323,38 +273,38 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
             </div>
           </div>
 
-          <div className="space-y-4 md:space-y-6 px-3 md:px-0">
+          <div className="space-y-6 px-3 md:px-0">
             <Card className="bg-terex-darker border-terex-gray mx-0">
-              <CardHeader className="px-4 md:px-6 pt-4 md:pt-6">
-                <CardTitle className="text-white text-base md:text-lg">Récapitulatif</CardTitle>
+              <CardHeader>
+                <CardTitle className="text-white">Récapitulatif</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4 px-4 md:px-6 pb-4 md:pb-6">
+              <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-400 text-sm">Commande</span>
-                    <span className="text-white font-mono text-sm">#{orderId.slice(-8).toUpperCase()}</span>
+                    <span className="text-gray-400">Commande</span>
+                    <span className="text-white font-mono">#{orderId.slice(-8).toUpperCase()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400 text-sm">Montant à payer</span>
-                    <span className="text-white font-bold text-sm">
+                    <span className="text-gray-400">Montant à payer</span>
+                    <span className="text-white font-bold">
                       {orderData.amount} {orderData.currency}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400 text-sm">USDT à recevoir</span>
-                    <span className="text-terex-accent font-bold text-sm">
+                    <span className="text-gray-400">USDT à recevoir</span>
+                    <span className="text-terex-accent font-bold">
                       {orderData.usdtAmount} USDT
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400 text-sm">Méthode</span>
-                    <Badge variant="outline" className="text-terex-accent border-terex-accent text-xs">
+                    <span className="text-gray-400">Méthode</span>
+                    <Badge variant="outline" className="text-terex-accent border-terex-accent">
                       {orderData.paymentMethod === 'card' ? 'Interac' : 'Mobile Money'}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400 text-sm">Réseau</span>
-                    <Badge variant="outline" className="text-terex-accent border-terex-accent text-xs">
+                    <span className="text-gray-400">Réseau</span>
+                    <Badge variant="outline" className="text-terex-accent border-terex-accent">
                       {orderData.network}
                     </Badge>
                   </div>
