@@ -10,9 +10,9 @@ interface QuickAmountsProps {
 export function QuickAmounts({ currency, setFiatAmount }: QuickAmountsProps) {
   const getQuickAmounts = () => {
     if (currency === 'CFA') {
-      return ['50000', '100000', '250000', '500000', '1000000'];
+      return ['50000', '100000', '250000', '500000', '1000000', '1800000'];
     }
-    return ['100', '250', '500', '1000', '2500'];
+    return ['100', '250', '500', '1000', '2500', '4000'];
   };
 
   return (
