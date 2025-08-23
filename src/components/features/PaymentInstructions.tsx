@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -64,16 +63,16 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
   const generateSecurityDetails = (orderId: string) => {
     const orderNumber = orderId.slice(-8).toUpperCase();
     const questions = [
-      "Quelle est votre commande?",
-      "Quel est votre numéro de référence?",
-      "Quelle est votre transaction?",
-      "Quel est votre code de commande?"
+      "Code?",
+      "Référence?",
+      "Commande?",
+      "ID?"
     ];
     
     // Use order ID to determine which question to use
     const questionIndex = parseInt(orderId.slice(-1), 16) % questions.length;
     const question = questions[questionIndex];
-    const answer = `TEREX-${orderNumber}`;
+    const answer = orderNumber;
     
     return { question, answer };
   };
