@@ -1,5 +1,4 @@
 
-
 interface LimitsValidatorProps {
   amount: string;
   currency: string;
@@ -19,6 +18,15 @@ export const PURCHASE_LIMITS = {
 };
 
 export function LimitsValidator({ amount, currency, onHighVolumeRequest, children }: LimitsValidatorProps) {
+  const numericAmount = parseFloat(amount) || 0;
+  const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
+  
+  // Si l'utilisateur dépasse la limite, déclencher automatiquement OTC
+  if (limits && numericAmount > limits.max) {
+    onHighVolumeRequest();
+    return null; // Ne pas afficher les enfants, rediriger vers OTC
+  }
+  
   return <>{children}</>;
 }
 
@@ -32,7 +40,7 @@ export function getLimitMessage(amount: string, currency: string): { type: 'erro
   if (numericAmount > limits.max) {
     return {
       type: 'max-reached',
-      message: `Vous avez dépassé la limite maximale de ${limits.max.toLocaleString()} ${currency}. Pour des montants supérieurs, contactez notre équipe VIP.`
+      message: `Pour des montants supérieurs à ${limits.max.toLocaleString()} ${currency}, veuillez passer par notre service OTC.`
     };
   }
   
@@ -55,16 +63,7 @@ export function getLimitMessage(amount: string, currency: string): { type: 'erro
 }
 
 export function enforceMaxLimit(value: string, currency: string): string {
-  const numericValue = parseFloat(value) || 0;
-  const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
-  
-  if (!limits) return value;
-  
-  // Permettre jusqu'à la limite maximale incluse
-  if (numericValue > limits.max) {
-    return limits.max.toString();
-  }
-  
+  // Ne plus bloquer la saisie, laisser l'utilisateur taper le montant qu'il veut
+  // La validation se fera dans LimitsValidator
   return value;
 }
-
