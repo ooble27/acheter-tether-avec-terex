@@ -144,7 +144,7 @@ export function TradingSidebar({
             </Badge>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-gray-400 text-xs sm:text-sm">Carte bancaire</span>
+            <span className="text-gray-400 text-xs sm:text-sm">Interac</span>
             <Badge variant="outline" className="text-green-500 border-green-500 text-xs whitespace-nowrap">
               Instantané
             </Badge>
