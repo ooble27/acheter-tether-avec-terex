@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'terex-v1';
+const CACHE_NAME = 'terex-v2'; // Incrémenté pour forcer la mise à jour
 const urlsToCache = [
   '/',
   '/static/js/bundle.js',
@@ -11,10 +11,14 @@ const urlsToCache = [
 
 // Installation du service worker
 self.addEventListener('install', (event) => {
+  console.log('SW: Installation en cours...');
+  // Force l'activation immédiate du nouveau service worker
+  self.skipWaiting();
+  
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('Cache ouvert');
+        console.log('SW: Cache ouvert');
         return cache.addAll(urlsToCache);
       })
   );
@@ -22,50 +26,91 @@ self.addEventListener('install', (event) => {
 
 // Activation du service worker
 self.addEventListener('activate', (event) => {
+  console.log('SW: Activation en cours...');
+  
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('Suppression ancien cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    Promise.all([
+      // Nettoyer les anciens caches
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheName !== CACHE_NAME) {
+              console.log('SW: Suppression ancien cache:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      }),
+      // Prendre le contrôle immédiatement de tous les clients
+      self.clients.claim()
+    ])
   );
+  
+  // Notifier tous les clients qu'une nouvelle version est disponible
+  self.clients.matchAll().then(clients => {
+    clients.forEach(client => {
+      client.postMessage({
+        type: 'SW_UPDATED',
+        message: 'Nouvelle version installée'
+      });
+    });
+  });
 });
 
-// Interception des requêtes
+// Stratégie Network First avec cache fallback pour les ressources dynamiques
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+  
+  // Pour les requêtes vers l'API ou les ressources dynamiques, toujours essayer le réseau d'abord
+  if (url.pathname.includes('/api/') || 
+      url.pathname.includes('/auth/') || 
+      url.pathname.includes('supabase') ||
+      event.request.method !== 'GET') {
+    
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          // Si la réponse est OK, la retourner directement
+          if (response.ok) {
+            return response;
+          }
+          throw new Error('Network response was not ok');
+        })
+        .catch(() => {
+          // En cas d'erreur réseau, essayer le cache
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+  
+  // Pour les autres ressources (HTML, CSS, JS, images), utiliser Network First avec cache
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then((response) => {
-        // Cache hit - retourner la réponse
-        if (response) {
+        // Vérifier si nous avons reçu une réponse valide
+        if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
         }
         
-        // Cloner la requête
-        const fetchRequest = event.request.clone();
+        // Cloner la réponse pour la mettre en cache
+        const responseToCache = response.clone();
         
-        return fetch(fetchRequest).then((response) => {
-          // Vérifier si nous avons reçu une réponse valide
-          if (!response || response.status !== 200 || response.type !== 'basic') {
+        caches.open(CACHE_NAME)
+          .then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        
+        return response;
+      })
+      .catch(() => {
+        // En cas d'erreur réseau, utiliser le cache
+        return caches.match(event.request).then(response => {
+          if (response) {
             return response;
           }
           
-          // Cloner la réponse
-          const responseToCache = response.clone();
-          
-          caches.open(CACHE_NAME)
-            .then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-          
-          return response;
-        }).catch(() => {
-          // En cas d'erreur réseau, retourner une page hors ligne basique
+          // Si pas de cache et c'est une requête de document, retourner la page d'accueil
           if (event.request.destination === 'document') {
             return caches.match('/');
           }
@@ -74,7 +119,21 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Gestion des notifications push
+// Vérification périodique des mises à jour
+self.addEventListener('message', (event) => {
+  console.log('SW: Message reçu:', event.data);
+  
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  
+  if (event.data && event.data.type === 'CHECK_UPDATE') {
+    // Forcer une vérification de mise à jour
+    self.registration.update();
+  }
+});
+
+// Gestion des notifications push (conservé tel quel)
 self.addEventListener('push', (event) => {
   console.log('Push notification reçue:', event);
   
@@ -107,7 +166,6 @@ self.addEventListener('push', (event) => {
     } catch (error) {
       console.error('Erreur traitement push notification:', error);
       
-      // Notification de fallback
       event.waitUntil(
         self.registration.showNotification('Terex', {
           body: 'Vous avez une nouvelle notification',
@@ -119,7 +177,7 @@ self.addEventListener('push', (event) => {
   }
 });
 
-// Gestion des clics sur notifications
+// Gestion des clics sur notifications (conservé tel quel)
 self.addEventListener('notificationclick', (event) => {
   console.log('Clic sur notification:', event);
   
@@ -130,10 +188,8 @@ self.addEventListener('notificationclick', (event) => {
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
-        // Vérifier si l'application est déjà ouverte
         for (const client of clientList) {
           if (client.url.includes(self.location.origin) && 'focus' in client) {
-            // Naviguer vers l'URL de la notification
             client.postMessage({
               type: 'NOTIFICATION_CLICK',
               url: urlToOpen,
@@ -143,7 +199,6 @@ self.addEventListener('notificationclick', (event) => {
           }
         }
         
-        // Ouvrir une nouvelle fenêtre si l'application n'est pas ouverte
         if (clients.openWindow) {
           return clients.openWindow(urlToOpen);
         }
@@ -151,11 +206,7 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// Gestion des messages du client
-self.addEventListener('message', (event) => {
-  console.log('Message reçu dans SW:', event.data);
-  
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-});
+// Vérification automatique des mises à jour toutes les 30 secondes
+setInterval(() => {
+  self.registration.update();
+}, 30000);
