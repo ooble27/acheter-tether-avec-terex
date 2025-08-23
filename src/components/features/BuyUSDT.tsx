@@ -99,7 +99,7 @@ export function BuyUSDT() {
   const usdtAmount = fiatAmount ? formatAmount(parseFloat(fiatAmount) / exchangeRates[currency as keyof typeof exchangeRates]) : '0';
 
   const paymentMethods = [
-    { id: 'card' as const, name: 'Carte bancaire', icon: '💳', fee: '3%', time: '2-5 min' },
+    { id: 'card' as const, name: 'Interac', icon: '💳', fee: '3%', time: '2-5 min' },
     { id: 'mobile' as const, name: 'Mobile Money', icon: '📱', fee: '2%', time: '2-5 min' }
   ];
 
@@ -343,9 +343,13 @@ export function BuyUSDT() {
                           value="card"
                           className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
                         >
-                          <CreditCard className="mr-1 md:mr-2 w-4 h-4" />
-                          <span className="hidden sm:inline">Carte bancaire</span>
-                          <span className="sm:hidden">Carte</span>
+                          <img 
+                            src="/lovable-uploads/3c0dd5e1-7e00-4dd0-add4-bc08aef7010c.png" 
+                            alt="Interac" 
+                            className="mr-1 md:mr-2 w-4 h-4"
+                          />
+                          <span className="hidden sm:inline">Interac</span>
+                          <span className="sm:hidden">Interac</span>
                         </TabsTrigger>
                         <TabsTrigger 
                           value="mobile"
