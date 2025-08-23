@@ -32,7 +32,7 @@ export function OrderConfirmation({ orderData, onConfirm, onBack, loading }: Ord
 
   const getPaymentMethodName = () => {
     switch (orderData.paymentMethod) {
-      case 'card': return 'Carte bancaire';
+      case 'card': return 'Interac';
       case 'mobile': return 'Mobile Money';
       default: return orderData.paymentMethod;
     }
