@@ -1,8 +1,9 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Copy, CheckCircle, Clock, AlertCircle, Phone } from 'lucide-react';
+import { ArrowLeft, Copy, CheckCircle, Clock, AlertCircle, Phone, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface PaymentInstructionsProps {
@@ -22,7 +23,7 @@ interface PaymentInstructionsProps {
 
 export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfirmed }: PaymentInstructionsProps) {
   const [copied, setCopied] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(30 * 60); // 30 minutes en secondes
+  const [timeLeft, setTimeLeft] = useState(30 * 60);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -54,13 +55,29 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
     setCopied(true);
     toast({
       title: "Copié !",
-      description: "Le numéro a été copié dans le presse-papiers",
+      description: "L'information a été copiée dans le presse-papiers",
     });
     setTimeout(() => setCopied(false), 2000);
   };
 
   const getPaymentInstructions = () => {
-    if (orderData.paymentMethod === 'mobile') {
+    if (orderData.paymentMethod === 'card') {
+      return {
+        title: "Instructions de virement Interac",
+        steps: [
+          "Connectez-vous à votre banque en ligne ou application mobile",
+          "Sélectionnez 'Virement Interac' ou 'Envoyer de l'argent'",
+          `Email destinataire : payments@terex.ca`,
+          `Montant : ${orderData.amount} ${orderData.currency}`,
+          `Message/Référence : ${orderId.slice(-8).toUpperCase()}`,
+          "Question de sécurité : Terex",
+          "Réponse : USDT",
+          "Confirmez le virement",
+          "Cliquez sur 'J'ai payé' ci-dessous"
+        ],
+        recipientEmail: "payments@terex.ca"
+      };
+    } else {
       return {
         title: "Instructions de paiement Mobile Money",
         steps: [
@@ -74,64 +91,10 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
         ],
         recipientNumber: "+221 777569268"
       };
-    } else {
-      return {
-        title: "Instructions de paiement par carte",
-        steps: [
-          "Vous allez être redirigé vers notre partenaire de paiement sécurisé",
-          "Entrez vos informations de carte bancaire",
-          "Confirmez le paiement sécurisé",
-          "Vous serez redirigé automatiquement après paiement"
-        ],
-        recipientNumber: null
-      };
     }
   };
 
   const instructions = getPaymentInstructions();
-
-  if (orderData.paymentMethod === 'card') {
-    return (
-      <div className="min-h-screen bg-terex-dark px-0 py-2 md:p-4">
-        <div className="max-w-2xl mx-auto px-0">
-          <div className="mb-6 flex items-center space-x-4 px-3 md:px-0">
-            <Button
-              variant="ghost"
-              onClick={onBack}
-              className="text-gray-400 hover:text-white"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Retour
-            </Button>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-white">Paiement sécurisé</h1>
-              <p className="text-gray-400">Finalisez votre achat</p>
-            </div>
-          </div>
-
-          <Card className="bg-terex-darker border-terex-gray mx-0">
-            <CardContent className="p-6 text-center space-y-6">
-              <div className="w-16 h-16 bg-terex-accent/20 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle className="w-8 h-8 text-terex-accent" />
-              </div>
-              <h3 className="text-xl font-semibold text-white">
-                Redirection vers le paiement sécurisé
-              </h3>
-              <p className="text-gray-400">
-                Vous allez être redirigé vers notre partenaire de paiement pour finaliser votre achat de manière sécurisée.
-              </p>
-              <Button
-                onClick={onPaymentConfirmed}
-                className="gradient-button text-white font-semibold px-8 py-3"
-              >
-                Procéder au paiement
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-terex-dark px-0 py-2 md:p-4">
@@ -152,7 +115,6 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6 px-0">
-          {/* Instructions de paiement */}
           <div className="lg:col-span-2 space-y-6 px-0">
             <Card className="bg-terex-darker border-terex-gray mx-0">
               <CardHeader>
@@ -176,7 +138,31 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
               </CardContent>
             </Card>
 
-            {instructions.recipientNumber && (
+            {orderData.paymentMethod === 'card' && 'recipientEmail' in instructions && (
+              <Card className="bg-terex-darker border-terex-gray mx-0">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <Mail className="w-5 h-5 mr-2 text-terex-accent" />
+                    Email destinataire
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between bg-terex-gray rounded-lg p-4">
+                    <span className="text-white font-mono text-lg">{instructions.recipientEmail}</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => copyToClipboard(instructions.recipientEmail!)}
+                      className="border-terex-gray text-white hover:bg-terex-gray"
+                    >
+                      {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {orderData.paymentMethod === 'mobile' && 'recipientNumber' in instructions && (
               <Card className="bg-terex-darker border-terex-gray mx-0">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center">
@@ -209,6 +195,12 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
                     <ul className="text-amber-100 text-sm space-y-1">
                       <li>• Utilisez exactement le montant indiqué</li>
                       <li>• N'oubliez pas d'inclure la référence de commande</li>
+                      {orderData.paymentMethod === 'card' && (
+                        <>
+                          <li>• Question de sécurité : Terex</li>
+                          <li>• Réponse : USDT</li>
+                        </>
+                      )}
                       <li>• Le paiement doit être effectué dans les 30 minutes</li>
                     </ul>
                   </div>
@@ -227,7 +219,6 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
             </div>
           </div>
 
-          {/* Récapitulatif de la commande */}
           <div className="space-y-6 px-3 md:px-0">
             <Card className="bg-terex-darker border-terex-gray mx-0">
               <CardHeader>
@@ -250,6 +241,12 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
                     <span className="text-terex-accent font-bold">
                       {orderData.usdtAmount} USDT
                     </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Méthode</span>
+                    <Badge variant="outline" className="text-terex-accent border-terex-accent">
+                      {orderData.paymentMethod === 'card' ? 'Interac' : 'Mobile Money'}
+                    </Badge>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Réseau</span>

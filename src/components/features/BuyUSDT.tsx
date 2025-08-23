@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -21,6 +21,7 @@ import { WalletAddressInput } from './buy-usdt/WalletAddressInput';
 import { DestinationSelector } from './buy-usdt/DestinationSelector';
 import { BinanceEmailInput } from './buy-usdt/BinanceEmailInput';
 import { PaymentMethodForm } from './buy-usdt/PaymentMethodForm';
+import { InteracForm } from './buy-usdt/InteracForm';
 import { TradingSidebar } from './buy-usdt/TradingSidebar';
 import { LimitsValidator, getLimitMessage } from './buy-usdt/LimitsValidator';
 
@@ -29,7 +30,7 @@ export function BuyUSDT() {
   const [showHighVolumeRequest, setShowHighVolumeRequest] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'mobile'>('card');
   const [fiatAmount, setFiatAmount] = useState('');
-  const [currency, setCurrency] = useState('CFA');
+  const [currency, setCurrency] = useState('CAD'); // Défaut CAD pour Interac
   const [destination, setDestination] = useState<'wallet' | 'binance'>('wallet');
   const [network, setNetwork] = useState('TRC20');
   const [walletAddress, setWalletAddress] = useState('');
@@ -42,12 +43,12 @@ export function BuyUSDT() {
   const [loading, setLoading] = useState(false);
   const [currentOrderId, setCurrentOrderId] = useState('');
 
-  const [cardData, setCardData] = useState({
-    number: '',
-    expiryMonth: '',
-    expiryYear: '',
-    cvv: '',
-    name: ''
+  // Remplacer cardData par interacData
+  const [interacData, setInteracData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: ''
   });
 
   const [mobileData, setMobileData] = useState({
@@ -55,11 +56,17 @@ export function BuyUSDT() {
     provider: 'wave' as 'wave' | 'orange'
   });
 
+  // Forcer CAD quand Interac est sélectionné
+  useEffect(() => {
+    if (paymentMethod === 'card') {
+      setCurrency('CAD');
+    }
+  }, [paymentMethod]);
+
   const { createOrder } = useOrders();
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Correction: utiliser les bonnes propriétés du hook
   const { 
     terexRateCfa, 
     terexRateCad, 
@@ -71,7 +78,6 @@ export function BuyUSDT() {
     refresh: refreshRates
   } = useTerexRates(2);
 
-  // Correction: ajouter CAD aux taux d'échange
   const exchangeRates = {
     CFA: terexRateCfa,
     CAD: terexRateCad
@@ -82,17 +88,14 @@ export function BuyUSDT() {
     CAD: marketRateCad
   };
 
-  // Fonction pour formater les nombres - améliorée
   const formatAmount = (amount: string | number) => {
     const num = parseFloat(amount.toString());
     if (isNaN(num)) return '0';
     
-    // Si c'est un nombre entier, ne pas afficher de décimales
     if (num === Math.floor(num)) {
       return num.toString();
     }
     
-    // Sinon, limiter à 2 décimales et enlever les zéros inutiles
     return parseFloat(num.toFixed(2)).toString();
   };
 
@@ -103,7 +106,6 @@ export function BuyUSDT() {
     { id: 'mobile' as const, name: 'Mobile Money', icon: '📱', fee: '2%', time: '2-5 min' }
   ];
 
-  // Gestion des limites
   const limitMessage = getLimitMessage(fiatAmount, currency);
 
   const handleHighVolumeRequest = () => {
@@ -119,7 +121,6 @@ export function BuyUSDT() {
       return;
     }
     
-    // Validation selon la destination
     if (destination === 'wallet' && !walletAddress) {
       return;
     }
@@ -128,7 +129,8 @@ export function BuyUSDT() {
       return;
     }
     
-    if (paymentMethod === 'card' && (!cardData.number || !cardData.expiryMonth || !cardData.expiryYear || !cardData.cvv || !cardData.name)) {
+    // Validation Interac
+    if (paymentMethod === 'card' && (!interacData.firstName || !interacData.lastName || !interacData.email)) {
       return;
     }
     
@@ -156,17 +158,12 @@ export function BuyUSDT() {
       wallet_address: destination === 'wallet' ? walletAddress : binanceEmail,
       status: 'pending' as const,
       payment_status: 'pending',
-      // Stocker les informations dans les notes
       notes: JSON.stringify({
         destination,
         phoneNumber: paymentMethod === 'mobile' ? mobileData.phoneNumber : null,
         provider: paymentMethod === 'mobile' ? mobileData.provider : null,
         paymentMethod: paymentMethod,
-        cardData: paymentMethod === 'card' ? {
-          ...cardData,
-          number: cardData.number.slice(-4), // Stocker seulement les 4 derniers chiffres
-          cvv: '***' // Ne pas stocker le CVV
-        } : null,
+        interacData: paymentMethod === 'card' ? interacData : null,
         mobileData: paymentMethod === 'mobile' ? mobileData : null,
         binanceData: destination === 'binance' ? {
           email: binanceEmail,
@@ -193,13 +190,12 @@ export function BuyUSDT() {
   };
 
   const handleBackToHome = () => {
-    // Réinitialiser tous les états
     setFiatAmount('');
     setWalletAddress('');
     setBinanceEmail('');
     setBinanceUsername('');
     setBinanceId('');
-    setCardData({ number: '', expiryMonth: '', expiryYear: '', cvv: '', name: '' });
+    setInteracData({ firstName: '', lastName: '', email: '', phone: '' });
     setMobileData({ phoneNumber: '', provider: 'wave' });
     setShowPending(false);
     setCurrentOrderId('');
@@ -209,12 +205,10 @@ export function BuyUSDT() {
     setShowKYCPage(true);
   };
 
-  // Si on est sur la page KYC
   if (showKYCPage) {
     return <KYCPage onBack={() => setShowKYCPage(false)} />;
   }
 
-  // État de confirmation finale
   if (showHighVolumeRequest) {
     return (
       <HighVolumeRequest 
@@ -224,7 +218,6 @@ export function BuyUSDT() {
     );
   }
 
-  // État de confirmation finale
   if (showPending) {
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
@@ -245,7 +238,6 @@ export function BuyUSDT() {
     );
   }
 
-  // État des instructions de paiement
   if (showInstructions) {
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
@@ -267,7 +259,6 @@ export function BuyUSDT() {
     );
   }
 
-  // État de confirmation de commande
   if (showConfirmation) {
     return (
       <KYCProtection onKYCRequired={handleKYCRequired}>
@@ -306,7 +297,6 @@ export function BuyUSDT() {
       </style>
       <div className="min-h-screen bg-terex-dark p-0">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
           <div className="mb-6 md:mb-8 px-1 md:px-0">
             <div className="flex items-center mb-2">
               <img 
@@ -320,7 +310,6 @@ export function BuyUSDT() {
           </div>
 
           <div className="grid lg:grid-cols-3 gap-0 md:gap-6 px-0 lg:px-0">
-            {/* Main Trading Interface */}
             <div className="lg:col-span-2">
               <Card className="bg-terex-darker border-terex-gray shadow-2xl">
                 <CardHeader className="border-b border-terex-gray p-4 md:p-6">
@@ -365,7 +354,6 @@ export function BuyUSDT() {
                         </TabsTrigger>
                       </TabsList>
 
-                      {/* Affichage des messages de limite */}
                       {limitMessage.type && (
                         <Alert className={
                           limitMessage.type === 'error' ? 'border-red-500/50 bg-red-500/10' :
@@ -402,7 +390,6 @@ export function BuyUSDT() {
 
                       {paymentMethods.map((method) => (
                         <TabsContent key={method.id} value={method.id} className="space-y-6">
-                          {/* Amount Input Section */}
                           <BuyAmountInput
                             fiatAmount={fiatAmount}
                             setFiatAmount={setFiatAmount}
@@ -415,22 +402,18 @@ export function BuyUSDT() {
                             fee={method.fee}
                           />
 
-                          {/* Destination Selection */}
                           <DestinationSelector
                             destination={destination}
                             setDestination={setDestination}
                           />
 
-                          {/* Conditional rendering based on destination */}
                           {destination === 'wallet' && (
                             <>
-                              {/* Network Selection */}
                               <NetworkSelector
                                 network={network}
                                 setNetwork={setNetwork}
                               />
 
-                              {/* Wallet Address Input */}
                               <WalletAddressInput
                                 walletAddress={walletAddress}
                                 setWalletAddress={setWalletAddress}
@@ -450,16 +433,21 @@ export function BuyUSDT() {
                             />
                           )}
 
-                          {/* Payment Method Details */}
-                          <PaymentMethodForm
-                            paymentMethod={paymentMethod}
-                            cardData={cardData}
-                            setCardData={setCardData}
-                            mobileData={mobileData}
-                            setMobileData={setMobileData}
-                          />
+                          {method.id === 'card' ? (
+                            <InteracForm
+                              interacData={interacData}
+                              setInteracData={setInteracData}
+                            />
+                          ) : (
+                            <PaymentMethodForm
+                              paymentMethod={paymentMethod}
+                              cardData={{number: '', expiryMonth: '', expiryYear: '', cvv: '', name: ''}}
+                              setCardData={() => {}}
+                              mobileData={mobileData}
+                              setMobileData={setMobileData}
+                            />
+                          )}
 
-                          {/* Buy Button */}
                           <Button 
                             size="lg"
                             className="w-full gradient-button text-white font-semibold h-12 text-lg"
@@ -467,7 +455,7 @@ export function BuyUSDT() {
                               (destination === 'wallet' && !walletAddress) ||
                               (destination === 'binance' && (!binanceEmail || !binanceUsername || !binanceId)) ||
                               limitMessage.type === 'error' || limitMessage.type === 'max-reached' ||
-                              (paymentMethod === 'card' && (!cardData.number || !cardData.expiryMonth || !cardData.expiryYear || !cardData.cvv || !cardData.name)) ||
+                              (paymentMethod === 'card' && (!interacData.firstName || !interacData.lastName || !interacData.email)) ||
                               (paymentMethod === 'mobile' && !mobileData.phoneNumber)
                             }
                             onClick={handleBuyClick}
@@ -482,7 +470,6 @@ export function BuyUSDT() {
               </Card>
             </div>
 
-            {/* Sidebar */}
             <div className="px-0 lg:px-0 mt-4 lg:mt-0">
               <TradingSidebar
                 exchangeRates={exchangeRates}

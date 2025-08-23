@@ -33,7 +33,6 @@ export function BuyAmountInput({
   
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // Appliquer la limite maximale
     const limitedValue = enforceMaxLimit(value, currency);
     setFiatAmount(limitedValue);
   };
@@ -51,15 +50,23 @@ export function BuyAmountInput({
               onChange={handleAmountChange}
               className="bg-terex-gray border-terex-gray-light text-white text-lg h-12 pr-20"
             />
-            <Select value={currency} onValueChange={setCurrency}>
-              <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="CFA">CFA</SelectItem>
-                <SelectItem value="CAD">CAD</SelectItem>
-              </SelectContent>
-            </Select>
+            {paymentMethod === 'card' ? (
+              // Pour Interac, afficher CAD fixe
+              <div className="absolute right-2 top-2 h-8 bg-terex-gray-light rounded px-3 flex items-center">
+                <span className="text-terex-accent font-medium">CAD</span>
+              </div>
+            ) : (
+              // Pour Mobile Money, garder le sélecteur
+              <Select value={currency} onValueChange={setCurrency}>
+                <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="CFA">CFA</SelectItem>
+                  <SelectItem value="CAD">CAD</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
           </div>
         </div>
         
