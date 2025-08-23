@@ -60,22 +60,44 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Generate unique security question and answer based on orderId
+  const generateSecurityDetails = (orderId: string) => {
+    const orderNumber = orderId.slice(-8).toUpperCase();
+    const questions = [
+      "Quelle est votre commande?",
+      "Quel est votre numéro de référence?",
+      "Quelle est votre transaction?",
+      "Quel est votre code de commande?"
+    ];
+    
+    // Use order ID to determine which question to use
+    const questionIndex = parseInt(orderId.slice(-1), 16) % questions.length;
+    const question = questions[questionIndex];
+    const answer = `TEREX-${orderNumber}`;
+    
+    return { question, answer };
+  };
+
   const getPaymentInstructions = () => {
+    const securityDetails = generateSecurityDetails(orderId);
+    
     if (orderData.paymentMethod === 'card') {
       return {
         title: "Instructions de virement Interac",
         steps: [
           "Connectez-vous à votre banque en ligne ou application mobile",
           "Sélectionnez 'Virement Interac' ou 'Envoyer de l'argent'",
-          `Email destinataire : payments@terex.ca`,
+          `Email destinataire : mohalaval4@gmail.com`,
           `Montant : ${orderData.amount} ${orderData.currency}`,
           `Message/Référence : ${orderId.slice(-8).toUpperCase()}`,
-          "Question de sécurité : Terex",
-          "Réponse : USDT",
+          `Question de sécurité : ${securityDetails.question}`,
+          `Réponse : ${securityDetails.answer}`,
           "Confirmez le virement",
           "Cliquez sur 'J'ai payé' ci-dessous"
         ],
-        recipientEmail: "payments@terex.ca"
+        recipientEmail: "mohalaval4@gmail.com",
+        securityQuestion: securityDetails.question,
+        securityAnswer: securityDetails.answer
       };
     } else {
       return {
@@ -162,6 +184,48 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
               </Card>
             )}
 
+            {orderData.paymentMethod === 'card' && 'securityQuestion' in instructions && (
+              <>
+                <Card className="bg-terex-darker border-terex-gray mx-0">
+                  <CardHeader>
+                    <CardTitle className="text-white">Question de sécurité</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between bg-terex-gray rounded-lg p-4">
+                      <span className="text-white font-mono text-lg">{instructions.securityQuestion}</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyToClipboard(instructions.securityQuestion!)}
+                        className="border-terex-gray text-white hover:bg-terex-gray"
+                      >
+                        {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-terex-darker border-terex-gray mx-0">
+                  <CardHeader>
+                    <CardTitle className="text-white">Réponse de sécurité</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between bg-terex-gray rounded-lg p-4">
+                      <span className="text-white font-mono text-lg">{instructions.securityAnswer}</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyToClipboard(instructions.securityAnswer!)}
+                        className="border-terex-gray text-white hover:bg-terex-gray"
+                      >
+                        {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+
             {orderData.paymentMethod === 'mobile' && 'recipientNumber' in instructions && (
               <Card className="bg-terex-darker border-terex-gray mx-0">
                 <CardHeader>
@@ -195,10 +259,10 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
                     <ul className="text-amber-100 text-sm space-y-1">
                       <li>• Utilisez exactement le montant indiqué</li>
                       <li>• N'oubliez pas d'inclure la référence de commande</li>
-                      {orderData.paymentMethod === 'card' && (
+                      {orderData.paymentMethod === 'card' && 'securityQuestion' in instructions && (
                         <>
-                          <li>• Question de sécurité : Terex</li>
-                          <li>• Réponse : USDT</li>
+                          <li>• Question de sécurité : {instructions.securityQuestion}</li>
+                          <li>• Réponse : {instructions.securityAnswer}</li>
                         </>
                       )}
                       <li>• Le paiement doit être effectué dans les 30 minutes</li>
