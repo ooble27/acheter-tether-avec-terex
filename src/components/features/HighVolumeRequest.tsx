@@ -1,9 +1,11 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Phone, Mail, DollarSign } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAdminNotifications } from '@/hooks/useAdminNotifications';
@@ -12,15 +14,17 @@ import { useAuth } from '@/contexts/AuthContext';
 interface HighVolumeRequestProps {
   onBack: () => void;
   requestedAmount: string;
+  currency?: string;
 }
 
-export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequestProps) {
+export function HighVolumeRequest({ onBack, requestedAmount, currency = 'CFA' }: HighVolumeRequestProps) {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
     amount: requestedAmount,
+    currency: currency,
     purpose: '',
     additionalInfo: ''
   });
@@ -28,6 +32,14 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
   const { toast } = useToast();
   const { sendAdminNotification } = useAdminNotifications();
   const { user } = useAuth();
+
+  const getMinAmount = (curr: string) => {
+    return curr === 'CAD' ? 5001 : 2000001;
+  };
+
+  const getMaxDisplayAmount = (curr: string) => {
+    return curr === 'CAD' ? '5 000' : '2 000 000';
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +66,7 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
         email: '',
         phone: '',
         amount: '',
+        currency: 'CFA',
         purpose: '',
         additionalInfo: ''
       });
@@ -85,7 +98,7 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
             Demande de <span className="text-terex-accent">gros volume</span>
           </h1>
           <p className="text-gray-400">
-            Pour les montants supérieurs à 2 000 000 CFA, notre équipe vous accompagne personnellement
+            Pour les montants supérieurs à {getMaxDisplayAmount(formData.currency)} {formData.currency}, notre équipe vous accompagne personnellement
           </p>
         </div>
 
@@ -157,19 +170,41 @@ export function HighVolumeRequest({ onBack, requestedAmount }: HighVolumeRequest
                 {/* Détails de la transaction */}
                 <div className="space-y-4">
                   <h3 className="text-white font-medium text-lg">Détails de votre demande</h3>
-                  <div className="space-y-2">
-                    <Label className="text-white text-sm">Montant souhaité (CFA) *</Label>
-                    <Input
-                      type="number"
-                      value={formData.amount}
-                      onChange={(e) => setFormData({...formData, amount: e.target.value})}
-                      className="bg-terex-gray border-terex-gray-light text-white"
-                      placeholder="3 000 000"
-                      min="2000001"
-                      required
-                    />
-                    <p className="text-gray-400 text-xs">Minimum : 2 000 001 CFA</p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-white text-sm">Devise *</Label>
+                      <Select 
+                        value={formData.currency} 
+                        onValueChange={(value) => setFormData({...formData, currency: value})}
+                      >
+                        <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="CFA">CFA (Franc CFA)</SelectItem>
+                          <SelectItem value="CAD">CAD (Dollar Canadien)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label className="text-white text-sm">Montant souhaité *</Label>
+                      <Input
+                        type="number"
+                        value={formData.amount}
+                        onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                        className="bg-terex-gray border-terex-gray-light text-white"
+                        placeholder={formData.currency === 'CAD' ? '6 000' : '3 000 000'}
+                        min={getMinAmount(formData.currency)}
+                        required
+                      />
+                      <p className="text-gray-400 text-xs">
+                        Minimum : {getMinAmount(formData.currency).toLocaleString()} {formData.currency}
+                      </p>
+                    </div>
                   </div>
+                  
                   <div className="space-y-2">
                     <Label className="text-white text-sm">Objectif de la transaction *</Label>
                     <Input
