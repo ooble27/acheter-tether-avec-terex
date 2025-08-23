@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -22,7 +22,7 @@ interface Transaction {
 
 // Cache par utilisateur pour éviter les mélanges entre comptes
 let userCaches: { [userId: string]: { transactions: Transaction[], timestamp: number } } = {};
-const CACHE_DURATION = 2 * 60 * 1000; // Réduire à 2 minutes pour voir les mises à jour plus rapidement
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 export const useTransactions = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -50,7 +50,7 @@ export const useTransactions = () => {
     }
   }, [user?.id]);
 
-  const fetchTransactions = useCallback(async (forceRefresh = false) => {
+  const fetchTransactions = async (forceRefresh = false) => {
     if (!user) {
       console.log('useTransactions: No user, clearing transactions');
       setTransactions([]);
@@ -60,7 +60,7 @@ export const useTransactions = () => {
     }
 
     const userId = user.id;
-    console.log('useTransactions: Fetching for user', userId, 'Force refresh:', forceRefresh);
+    console.log('useTransactions: Fetching for user', userId);
 
     // Vérifier le cache spécifique à l'utilisateur
     const now = Date.now();
@@ -161,7 +161,7 @@ export const useTransactions = () => {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  };
 
   // Charger automatiquement au premier appel ou changement d'utilisateur
   useEffect(() => {
@@ -169,28 +169,18 @@ export const useTransactions = () => {
       console.log('useTransactions: Auto-loading transactions for new user');
       fetchTransactions();
     }
-  }, [user, hasLoaded, fetchTransactions]);
-
-  // Fonction pour forcer le rafraîchissement (pour compatibilité)
-  const refetch = useCallback(() => {
-    console.log('useTransactions: Force refresh requested');
-    // Vider le cache pour cet utilisateur
-    if (user?.id) {
-      delete userCaches[user.id];
-    }
-    return fetchTransactions(true);
-  }, [fetchTransactions, user?.id]);
+  }, [user, hasLoaded]);
 
   // Fonction pour charger les transactions (pour compatibilité)
-  const loadTransactions = useCallback(() => {
+  const loadTransactions = () => {
     console.log('useTransactions: Manual load requested');
-    return fetchTransactions();
-  }, [fetchTransactions]);
+    fetchTransactions();
+  };
 
   return {
     transactions,
     loading,
-    refetch,
+    refetch: () => fetchTransactions(true), // Force refresh
     loadTransactions,
     hasLoaded
   };

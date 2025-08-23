@@ -39,18 +39,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
     console.log('TransactionContext: User changed', user?.id, 'Transactions count:', transactions.length);
   }, [user?.id, transactions.length]);
 
-  // Forcer le rafraîchissement des données toutes les 30 secondes en arrière-plan
-  useEffect(() => {
-    if (!user || !hasLoaded) return;
-    
-    const interval = setInterval(() => {
-      console.log('TransactionContext: Auto-refresh transactions');
-      refetch();
-    }, 30000); // 30 secondes
-
-    return () => clearInterval(interval);
-  }, [user, hasLoaded, refetch]);
-
   return (
     <TransactionContext.Provider value={{ transactions, loading, refetch, loadTransactions, hasLoaded }}>
       {children}

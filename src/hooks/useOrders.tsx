@@ -1,5 +1,4 @@
-
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useEmailNotifications } from '@/hooks/useEmailNotifications';
@@ -67,10 +66,9 @@ export function useOrders() {
   const { toast } = useToast();
   const { sendEmailNotification } = useEmailNotifications();
 
-  const fetchOrders = useCallback(async () => {
+  const fetchOrders = async () => {
     try {
       setLoading(true);
-      console.log('useOrders: Fetching orders with optimized caching...');
       
       // Fetch regular orders
       const { data: ordersData, error: ordersError } = await supabase
@@ -147,7 +145,6 @@ export function useOrders() {
 
       // Combine all orders
       const allOrders = [...transformedOrders, ...transformedTransfers];
-      console.log('useOrders: Loaded', allOrders.length, 'orders with fresh data');
       setOrders(allOrders);
 
     } catch (error) {
@@ -160,19 +157,11 @@ export function useOrders() {
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  };
 
   useEffect(() => {
     fetchOrders();
-    
-    // Auto-refresh every 30 seconds for better update visibility
-    const interval = setInterval(() => {
-      console.log('useOrders: Auto-refreshing orders...');
-      fetchOrders();
-    }, 30000);
-    
-    return () => clearInterval(interval);
-  }, [fetchOrders]);
+  }, []);
 
   const createOrder = async (orderData: Omit<UnifiedOrder, 'id' | 'created_at' | 'updated_at'>) => {
     try {
@@ -328,8 +317,7 @@ export function useOrders() {
         console.error('Erreur lors de l\'envoi de l\'email de notification:', emailError);
       }
 
-      // Forcer le rafraîchissement immédiat des données
-      await fetchOrders();
+      await fetchOrders(); // Refresh the orders list
       
       toast({
         title: "Succès",
@@ -378,10 +366,9 @@ export function useOrders() {
     });
   };
 
-  const refreshOrders = useCallback(() => {
-    console.log('useOrders: Manual refresh requested');
+  const refreshOrders = () => {
     fetchOrders();
-  }, [fetchOrders]);
+  };
 
   return {
     orders,
