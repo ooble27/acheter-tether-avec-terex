@@ -13,7 +13,7 @@ export const PURCHASE_LIMITS = {
   },
   CAD: {
     min: 100,
-    max: 4000
+    max: 5000
   }
 };
 
