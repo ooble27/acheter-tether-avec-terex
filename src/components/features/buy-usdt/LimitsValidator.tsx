@@ -27,7 +27,7 @@ export function getLimitMessage(amount: string, currency: string): { type: 'erro
   
   if (!limits || numericAmount === 0) return { type: null, message: '' };
   
-  // Si l'utilisateur essaie de dépasser la limite
+  // Si l'utilisateur essaie de dépasser la limite (strictement supérieur)
   if (numericAmount > limits.max) {
     return {
       type: 'max-reached',
@@ -42,8 +42,8 @@ export function getLimitMessage(amount: string, currency: string): { type: 'erro
     };
   }
   
-  // Warning quand on approche de la limite (90% de la limite)
-  if (numericAmount > limits.max * 0.9) {
+  // Warning quand on approche de la limite (90% de la limite) mais pas à la limite exacte
+  if (numericAmount > limits.max * 0.9 && numericAmount < limits.max) {
     return {
       type: 'warning',
       message: `Vous approchez de la limite maximale (${limits.max.toLocaleString()} ${currency})`
