@@ -62,16 +62,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
   // Generate unique security question and answer based on orderId
   const generateSecurityDetails = (orderId: string) => {
     const orderNumber = orderId.slice(-8).toUpperCase();
-    const questions = [
-      "Code?",
-      "Référence?",
-      "Commande?",
-      "ID?"
-    ];
-    
-    // Use order ID to determine which question to use
-    const questionIndex = parseInt(orderId.slice(-1), 16) % questions.length;
-    const question = questions[questionIndex];
+    const question = "TEREX";
     const answer = orderNumber;
     
     return { question, answer };
