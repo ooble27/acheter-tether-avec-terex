@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -69,7 +70,7 @@ export function useOrders() {
   const fetchOrders = useCallback(async () => {
     try {
       setLoading(true);
-      console.log('useOrders: Fetching orders...');
+      console.log('useOrders: Fetching orders with optimized caching...');
       
       // Fetch regular orders
       const { data: ordersData, error: ordersError } = await supabase
@@ -146,7 +147,7 @@ export function useOrders() {
 
       // Combine all orders
       const allOrders = [...transformedOrders, ...transformedTransfers];
-      console.log('useOrders: Loaded', allOrders.length, 'orders');
+      console.log('useOrders: Loaded', allOrders.length, 'orders with fresh data');
       setOrders(allOrders);
 
     } catch (error) {
@@ -163,6 +164,14 @@ export function useOrders() {
 
   useEffect(() => {
     fetchOrders();
+    
+    // Auto-refresh every 30 seconds for better update visibility
+    const interval = setInterval(() => {
+      console.log('useOrders: Auto-refreshing orders...');
+      fetchOrders();
+    }, 30000);
+    
+    return () => clearInterval(interval);
   }, [fetchOrders]);
 
   const createOrder = async (orderData: Omit<UnifiedOrder, 'id' | 'created_at' | 'updated_at'>) => {
@@ -377,6 +386,7 @@ export function useOrders() {
   return {
     orders,
     loading,
+    createOrder,
     updateOrderStatus,
     refreshOrders,
     moveToTrash,
