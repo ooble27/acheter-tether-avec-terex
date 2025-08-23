@@ -56,10 +56,12 @@ export function BuyUSDT() {
     provider: 'wave' as 'wave' | 'orange'
   });
 
-  // Forcer CAD quand Interac est sélectionné
+  // Gérer les devises selon le mode de paiement
   useEffect(() => {
     if (paymentMethod === 'card') {
       setCurrency('CAD');
+    } else if (paymentMethod === 'mobile') {
+      setCurrency('CFA');
     }
   }, [paymentMethod]);
 

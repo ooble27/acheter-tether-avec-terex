@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -31,6 +31,13 @@ export function BuyAmountInput({
   fee
 }: BuyAmountInputProps) {
   
+  // Forcer CFA pour mobile money
+  useEffect(() => {
+    if (paymentMethod === 'mobile') {
+      setCurrency('CFA');
+    }
+  }, [paymentMethod, setCurrency]);
+  
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const limitedValue = enforceMaxLimit(value, currency);
@@ -56,16 +63,10 @@ export function BuyAmountInput({
                 <span className="text-terex-accent font-medium">CAD</span>
               </div>
             ) : (
-              // Pour Mobile Money, garder le sélecteur
-              <Select value={currency} onValueChange={setCurrency}>
-                <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="CFA">CFA</SelectItem>
-                  <SelectItem value="CAD">CAD</SelectItem>
-                </SelectContent>
-              </Select>
+              // Pour Mobile Money, afficher CFA fixe uniquement
+              <div className="absolute right-2 top-2 h-8 bg-terex-gray-light rounded px-3 flex items-center">
+                <span className="text-terex-accent font-medium">CFA</span>
+              </div>
             )}
           </div>
         </div>
