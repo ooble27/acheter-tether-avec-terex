@@ -117,13 +117,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "blog_comments_parent_id_fkey"
-            columns: ["parent_id"]
-            isOneToOne: false
-            referencedRelation: "blog_comments_public"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "blog_comments_post_id_fkey"
             columns: ["post_id"]
             isOneToOne: false
@@ -1208,66 +1201,25 @@ export type Database = {
       }
     }
     Views: {
-      blog_comments_public: {
-        Row: {
-          author_name: string | null
-          content: string | null
-          created_at: string | null
-          id: string | null
-          is_approved: boolean | null
-          parent_id: string | null
-          post_id: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          author_name?: string | null
-          content?: string | null
-          created_at?: string | null
-          id?: string | null
-          is_approved?: boolean | null
-          parent_id?: string | null
-          post_id?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          author_name?: string | null
-          content?: string | null
-          created_at?: string | null
-          id?: string | null
-          is_approved?: boolean | null
-          parent_id?: string | null
-          post_id?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "blog_comments_parent_id_fkey"
-            columns: ["parent_id"]
-            isOneToOne: false
-            referencedRelation: "blog_comments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "blog_comments_parent_id_fkey"
-            columns: ["parent_id"]
-            isOneToOne: false
-            referencedRelation: "blog_comments_public"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "blog_comments_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "blog_posts"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+      [_ in never]: never
     }
     Functions: {
       generate_payment_reference: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_public_comments: {
+        Args: { post_id_filter?: string }
+        Returns: {
+          author_name: string
+          content: string
+          created_at: string
+          id: string
+          is_approved: boolean
+          parent_id: string
+          post_id: string
+          updated_at: string
+        }[]
       }
       has_role: {
         Args: {
