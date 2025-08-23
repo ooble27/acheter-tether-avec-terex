@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -216,7 +215,7 @@ export function TransferForm({
             <div className="mt-3 pt-3 border-t border-terex-gray-light">
               <div className="flex justify-between text-sm">
                 <span className="text-yellow-400">
-                  Frais {provider === 'wave' ? 'Wave (1%)' : 'Orange Money (0.8%)'}
+                  Frais {provider === 'wave' ? 'Wave (1%)' : 'OM (0.8%)'}
                 </span>
                 <span className="text-yellow-400">
                   -{(parseFloat(sendAmount || '0') * exchangeRate * (provider === 'wave' ? 0.01 : 0.008)).toFixed(2)} CFA
