@@ -56,16 +56,10 @@ export function BuyAmountInput({
                 <span className="text-terex-accent font-medium">CAD</span>
               </div>
             ) : (
-              // Pour Mobile Money, garder le sélecteur
-              <Select value={currency} onValueChange={setCurrency}>
-                <SelectTrigger className="absolute right-1 top-1 w-16 h-10 bg-terex-gray-light border-0 text-terex-accent">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="CFA">CFA</SelectItem>
-                  <SelectItem value="CAD">CAD</SelectItem>
-                </SelectContent>
-              </Select>
+              // Pour Mobile Money, afficher CFA fixe seulement
+              <div className="absolute right-2 top-2 h-8 bg-terex-gray-light rounded px-3 flex items-center">
+                <span className="text-terex-accent font-medium">CFA</span>
+              </div>
             )}
           </div>
         </div>
@@ -98,7 +92,7 @@ export function BuyAmountInput({
       <div className="bg-terex-gray rounded-lg p-3">
         <div className="flex justify-between text-sm">
           <span className="text-gray-400">Taux TEREX (vente)</span>
-          <span className="text-white">1 USDT = {exchangeRate} {currency}</span>
+          <span className="text-white">1 USDT = {exchangeRate} {paymentMethod === 'mobile' ? 'CFA' : currency}</span>
         </div>
         <div className="flex justify-between text-sm mt-1">
           <span className="text-gray-400">Frais</span>
