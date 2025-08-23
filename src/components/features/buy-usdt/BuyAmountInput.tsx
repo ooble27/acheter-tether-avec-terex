@@ -1,9 +1,7 @@
 
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
 import { ArrowRightLeft } from 'lucide-react';
 import { enforceMaxLimit } from './LimitsValidator';
 
@@ -30,10 +28,17 @@ export function BuyAmountInput({
   processingTime,
   fee
 }: BuyAmountInputProps) {
-  
+  // Forcer la devise à CFA pour Mobile Money
+  useEffect(() => {
+    if (paymentMethod === 'mobile' && currency !== 'CFA') {
+      setCurrency('CFA');
+    }
+  }, [paymentMethod, currency, setCurrency]);
+
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    const limitedValue = enforceMaxLimit(value, currency);
+    const effectiveCurrency = paymentMethod === 'mobile' ? 'CFA' : currency;
+    const limitedValue = enforceMaxLimit(value, effectiveCurrency);
     setFiatAmount(limitedValue);
   };
 
