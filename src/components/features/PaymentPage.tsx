@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, CreditCard, Shield, Clock, CheckCircle } from 'lucide-react';
+import { ArrowLeft, CreditCard, Shield, Clock, CheckCircle, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useNabooPay } from '@/hooks/useNabooPay';
 
 interface PaymentPageProps {
   orderData: {
@@ -17,14 +18,16 @@ interface PaymentPageProps {
     walletAddress: string;
     paymentMethod: 'card' | 'mobile';
     exchangeRate: number;
+    orderId?: string;
   };
   onBack: () => void;
   onPaymentComplete: () => void;
 }
 
 export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPageProps) {
-  const [paymentStep, setPaymentStep] = useState<'method' | 'details' | 'processing'>('method');
+  const [paymentStep, setPaymentStep] = useState<'method' | 'details' | 'processing' | 'redirect'>('method');
   const [loading, setLoading] = useState(false);
+  const { createTransaction, checkoutUrl } = useNabooPay();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -71,23 +74,55 @@ export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPag
   };
 
   const handleMobilePayment = async () => {
-    setLoading(true);
-    try {
-      toast({
-        title: "Paiement en cours",
-        description: `Redirection vers ${mobileData.provider === 'wave' ? 'Wave' : 'Orange Money'}...`,
-      });
-      
-      setTimeout(() => {
-        setPaymentStep('processing');
-        setTimeout(() => {
-          onPaymentComplete();
-        }, 3000);
-      }, 1000);
-    } catch (error) {
+    if (!mobileData.phoneNumber) {
       toast({
         title: "Erreur",
-        description: "Impossible de traiter le paiement",
+        description: "Veuillez entrer votre numéro de téléphone",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const paymentMethods = mobileData.provider === 'wave' ? ['WAVE'] : ['ORANGE_MONEY'];
+      
+      toast({
+        title: "Création du paiement",
+        description: "Préparation de votre transaction sécurisée...",
+      });
+
+      const result = await createTransaction({
+        orderId: orderData.orderId || crypto.randomUUID(),
+        amount: parseFloat(orderData.amount),
+        products: [{
+          name: `${orderData.usdtAmount} USDT`,
+          category: 'Cryptocurrency',
+          amount: parseFloat(orderData.amount),
+          quantity: 1,
+          description: `Achat de ${orderData.usdtAmount} USDT via ${mobileData.provider === 'wave' ? 'Wave' : 'Orange Money'}`
+        }],
+        paymentMethods,
+        successUrl: `${window.location.origin}/payment/success`,
+        errorUrl: `${window.location.origin}/payment/error`
+      });
+
+      if (result.success && result.checkoutUrl) {
+        setPaymentStep('redirect');
+        toast({
+          title: "Redirection",
+          description: "Vous allez être redirigé vers la page de paiement sécurisée...",
+        });
+        
+        setTimeout(() => {
+          window.location.href = result.checkoutUrl!;
+        }, 1500);
+      }
+    } catch (error) {
+      console.error('Error processing mobile payment:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de traiter le paiement. Veuillez réessayer.",
         variant: "destructive",
       });
     } finally {
@@ -95,7 +130,13 @@ export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPag
     }
   };
 
-  if (paymentStep === 'processing') {
+  useEffect(() => {
+    if (checkoutUrl && paymentStep === 'redirect') {
+      window.location.href = checkoutUrl;
+    }
+  }, [checkoutUrl, paymentStep]);
+
+  if (paymentStep === 'processing' || paymentStep === 'redirect') {
     return (
       <div className="min-h-screen bg-terex-dark px-0 py-4 flex items-center justify-center">
         <Card className="w-full max-w-md bg-terex-darker border-terex-gray mx-3">
@@ -104,11 +145,26 @@ export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPag
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-terex-accent mx-auto"></div>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Traitement du paiement...
+              {paymentStep === 'redirect' ? 'Redirection...' : 'Traitement du paiement...'}
             </h3>
             <p className="text-gray-400">
-              Veuillez patienter pendant que nous traitons votre paiement
+              {paymentStep === 'redirect' 
+                ? 'Vous allez être redirigé vers la page de paiement sécurisée NabooPay...'
+                : 'Veuillez patienter pendant que nous traitons votre paiement'
+              }
             </p>
+            {checkoutUrl && (
+              <div className="mt-6">
+                <a 
+                  href={checkoutUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-terex-accent hover:underline gap-2"
+                >
+                  Ouvrir la page de paiement <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
