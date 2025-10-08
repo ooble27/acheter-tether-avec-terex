@@ -24,6 +24,7 @@ import { PaymentMethodForm } from './buy-usdt/PaymentMethodForm';
 import { InteracForm } from './buy-usdt/InteracForm';
 import { TradingSidebar } from './buy-usdt/TradingSidebar';
 import { LimitsValidator, getLimitMessage } from './buy-usdt/LimitsValidator';
+import { useNabooPay } from '@/hooks/useNabooPay';
 
 export function BuyUSDT() {
   const [showKYCPage, setShowKYCPage] = useState(false);
@@ -68,6 +69,7 @@ export function BuyUSDT() {
   const { createOrder } = useOrders();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { createTransaction, checkoutUrl } = useNabooPay();
 
   const { 
     terexRateCfa, 
@@ -180,7 +182,39 @@ export function BuyUSDT() {
     if (result) {
       setCurrentOrderId(result.id);
       setShowConfirmation(false);
-      setShowInstructions(true);
+      
+      // Si c'est Mobile Money, créer une transaction NabooPay et rediriger
+      if (paymentMethod === 'mobile') {
+        const nabooResult = await createTransaction({
+          orderId: result.id,
+          amount: parseFloat(fiatAmount),
+          products: [{
+            name: `Achat USDT - ${parseFloat(usdtAmount).toFixed(2)} USDT`,
+            category: 'Crypto',
+            amount: parseFloat(fiatAmount),
+            quantity: 1,
+            description: `Achat de ${parseFloat(usdtAmount).toFixed(2)} USDT via ${mobileData.provider.toUpperCase()}`
+          }],
+          paymentMethods: [mobileData.provider === 'wave' ? 'WAVE' : 'ORANGE_MONEY'],
+          successUrl: `${window.location.origin}/dashboard`,
+          errorUrl: `${window.location.origin}/dashboard`
+        });
+
+        if (nabooResult?.success && nabooResult.checkoutUrl) {
+          // Rediriger vers NabooPay
+          window.location.href = nabooResult.checkoutUrl;
+        } else {
+          toast({
+            title: "Erreur",
+            description: "Impossible de créer le paiement. Veuillez réessayer.",
+            variant: "destructive"
+          });
+          setLoading(false);
+        }
+      } else {
+        // Pour Interac, afficher les instructions manuelles
+        setShowInstructions(true);
+      }
     }
     
     setLoading(false);
