@@ -156,15 +156,31 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
                 {isKYCReviewer() && renderMenuSection('Administration', adminItems)}
 
                 {/* Bouton de déconnexion */}
-                <div className="pt-6 pb-4">
-                  <Button 
-                    onClick={handleLogout}
-                    className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
-                  >
-                    <LogOut className="mr-2 h-5 w-5" />
-                    Déconnexion
-                  </Button>
+                <div className="pt-4 pb-2">
+                  <div className="flex items-center space-x-2 px-4">
+                    <div className="h-px bg-terex-gray/40 flex-1"></div>
+                    <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Compte</span>
+                    <div className="h-px bg-terex-gray/40 flex-1"></div>
+                  </div>
                 </div>
+
+                <Button
+                  variant="ghost"
+                  onClick={handleLogout}
+                  className="w-full justify-start p-4 h-auto rounded-xl transition-all duration-200 text-red-400 hover:bg-red-600/20 hover:text-red-300"
+                >
+                  <div className="flex items-center space-x-4 w-full">
+                    <div className="p-2 rounded-lg bg-red-600/20">
+                      <LogOut className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <div className="font-medium text-sm">Déconnexion</div>
+                      <div className="text-xs opacity-75">Quitter votre session</div>
+                    </div>
+                  </div>
+                </Button>
+                
+                <div className="pb-4"></div>
               </div>
             </ScrollArea>
           </div>
