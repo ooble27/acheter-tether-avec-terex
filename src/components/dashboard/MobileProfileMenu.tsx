@@ -79,19 +79,18 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
             key={item.id}
             variant="ghost"
             onClick={() => handleItemClick(item.id)}
-            className={`w-full justify-start p-4 h-auto rounded-xl transition-all duration-200 ${
+            className={`w-full justify-start p-5 h-auto rounded-2xl transition-all duration-200 ${
               isActive 
                 ? 'bg-gradient-to-r from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/25' 
                 : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white'
             }`}
           >
             <div className="flex items-center space-x-4 w-full">
-              <div className={`p-2 rounded-lg ${isActive ? 'bg-white/20' : 'bg-terex-gray/30'}`}>
-                <IconComponent className="h-5 w-5" />
+              <div className={`p-3 rounded-xl ${isActive ? 'bg-white/20' : 'bg-terex-gray/30'}`}>
+                <IconComponent className="h-7 w-7" />
               </div>
               <div className="flex-1 text-left">
-                <div className="font-medium text-sm">{item.label}</div>
-                <div className="text-xs opacity-75">{item.description}</div>
+                <div className="font-medium text-base">{item.label}</div>
               </div>
             </div>
           </Button>
