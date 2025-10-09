@@ -26,13 +26,15 @@ import { TradingSidebar } from './buy-usdt/TradingSidebar';
 import { LimitsValidator, getLimitMessage } from './buy-usdt/LimitsValidator';
 import { useNabooPay } from '@/hooks/useNabooPay';
 import { MobileBuyUSDT } from './buy-usdt/MobileBuyUSDT';
+import { DesktopBuyUSDT as DesktopBuyUSDTComponent } from './buy-usdt/DesktopBuyUSDT';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export function BuyUSDT() {
-  return <MobileBuyUSDT />;
+  const isMobile = useIsMobile();
+  return isMobile ? <MobileBuyUSDT /> : <DesktopBuyUSDTComponent />;
 }
 
-function DesktopBuyUSDT() {
+function DesktopBuyUSDTOld() {
   const [showKYCPage, setShowKYCPage] = useState(false);
   const [showHighVolumeRequest, setShowHighVolumeRequest] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'mobile'>('card');
