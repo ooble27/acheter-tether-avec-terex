@@ -305,12 +305,19 @@ export function MobileBuyUSDT() {
           </DrawerHeader>
           
           <div className="px-4 pb-4">
-            <Input
-              placeholder={`Votre adresse ${network}`}
-              value={walletAddress}
-              onChange={(e) => setWalletAddress(e.target.value)}
-              className="bg-terex-gray border-terex-gray-light text-white h-12 font-light"
-            />
+            <div className="relative">
+              <Input
+                placeholder={`Votre adresse ${network}`}
+                value={walletAddress}
+                onChange={(e) => setWalletAddress(e.target.value)}
+                className="bg-terex-gray border-terex-gray-light text-white h-12 font-light pr-12"
+              />
+              <img 
+                src={NETWORK_LOGOS[network as keyof typeof NETWORK_LOGOS]} 
+                alt={network} 
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full"
+              />
+            </div>
           </div>
 
           <DrawerFooter>
