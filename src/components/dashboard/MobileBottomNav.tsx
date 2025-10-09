@@ -26,7 +26,7 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-terex-darker border-t border-terex-gray/30 pb-safe">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-terex-darker/95 backdrop-blur-lg border-t border-terex-gray/20 pb-safe shadow-2xl">
       <style>
         {`
           .usdt-icon-force-visible {
@@ -41,7 +41,7 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
         `}
       </style>
       
-      <div className="flex justify-around items-center py-2">
+      <div className="flex justify-around items-center px-2 py-3 max-w-lg mx-auto">
         {navItems.map((item) => {
           const IconComponent = item.icon;
           const isActive = activeSection === item.id;
@@ -50,19 +50,33 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
             <Button
               key={item.id}
               variant="ghost"
-              size="sm"
               onClick={() => setActiveSection(item.id)}
-              className={`flex flex-col items-center justify-center h-12 w-12 rounded-xl transition-all duration-200 ${
+              className={`relative flex flex-col items-center justify-center gap-1 h-auto py-2 px-4 rounded-2xl transition-all duration-300 group ${
                 isActive 
-                  ? 'bg-gradient-to-r from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/25' 
-                  : 'text-gray-400 hover:text-white hover:bg-terex-gray/50'
+                  ? 'bg-gradient-to-br from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/30 scale-105' 
+                  : 'text-gray-400 hover:text-white hover:bg-terex-gray/30 active:scale-95'
               }`}
             >
-              {item.isCustomIcon ? (
-                <IconComponent className="h-5 w-5" isActive={isActive} />
-              ) : (
-                <IconComponent className="h-5 w-5" />
+              {/* Indicateur actif en haut */}
+              {isActive && (
+                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-8 h-1 bg-white rounded-full shadow-lg" />
               )}
+              
+              <div className={`relative p-1.5 rounded-xl transition-all duration-300 ${
+                isActive ? 'bg-white/20' : 'bg-transparent group-hover:bg-terex-gray/20'
+              }`}>
+                {item.isCustomIcon ? (
+                  <IconComponent className="h-5 w-5" isActive={isActive} />
+                ) : (
+                  <IconComponent className="h-5 w-5" />
+                )}
+              </div>
+              
+              <span className={`text-[10px] font-medium transition-all duration-300 ${
+                isActive ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'
+              }`}>
+                {item.label}
+              </span>
             </Button>
           );
         })}
