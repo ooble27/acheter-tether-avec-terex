@@ -35,7 +35,7 @@ export function TransactionHistoryPage() {
           <h1 className="text-2xl md:text-3xl font-light text-white mb-1">
             Historique des transactions
           </h1>
-          <p className="text-gray-400">
+          <p className="text-gray-400 font-light">
             Consultez et gérez toutes vos transactions passées
           </p>
         </div>
@@ -68,8 +68,8 @@ export function TransactionHistoryPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm">Total transactions</p>
-                <p className="text-2xl font-bold text-white">{transactions?.length || 0}</p>
+                <p className="text-gray-400 text-sm font-light">Total transactions</p>
+                <p className="text-2xl font-light text-white">{transactions?.length || 0}</p>
               </div>
               <div className="w-12 h-12 bg-terex-accent/20 rounded-lg flex items-center justify-center">
                 <RefreshCw className="w-6 h-6 text-terex-accent" />
@@ -82,8 +82,8 @@ export function TransactionHistoryPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm">Transactions réussies</p>
-                <p className="text-2xl font-bold text-green-400">
+                <p className="text-gray-400 text-sm font-light">Transactions réussies</p>
+                <p className="text-2xl font-light text-green-400">
                   {transactions?.filter(t => t.status === 'completed' || t.status === 'confirmed').length || 0}
                 </p>
               </div>
@@ -98,8 +98,8 @@ export function TransactionHistoryPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm">En attente</p>
-                <p className="text-2xl font-bold text-yellow-400">
+                <p className="text-gray-400 text-sm font-light">En attente</p>
+                <p className="text-2xl font-light text-yellow-400">
                   {transactions?.filter(t => t.status === 'pending').length || 0}
                 </p>
               </div>

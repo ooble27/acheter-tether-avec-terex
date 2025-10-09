@@ -69,7 +69,7 @@ export function FAQ({ onNavigate }: FAQProps) {
     <div className="space-y-6 animate-fade-in">
       <div>
         <h1 className="text-2xl md:text-3xl font-light text-white mb-1">Questions Fréquentes</h1>
-        <p className="text-gray-400">
+        <p className="text-gray-400 font-light">
           Trouvez rapidement les réponses à vos questions sur Terex
         </p>
       </div>
@@ -78,7 +78,7 @@ export function FAQ({ onNavigate }: FAQProps) {
         <div className="lg:col-span-2">
           <Card className="bg-terex-darker border-terex-gray">
             <CardHeader>
-              <CardTitle className="text-white">FAQ Terex</CardTitle>
+              <CardTitle className="text-white font-light">FAQ Terex</CardTitle>
             </CardHeader>
             <CardContent>
               <Accordion type="single" collapsible className="space-y-2">
@@ -88,10 +88,10 @@ export function FAQ({ onNavigate }: FAQProps) {
                     value={item.id}
                     className="border-terex-gray"
                   >
-                    <AccordionTrigger className="text-white hover:text-terex-accent text-left">
+                    <AccordionTrigger className="text-white hover:text-terex-accent text-left font-light">
                       {item.question}
                     </AccordionTrigger>
-                    <AccordionContent className="text-gray-400">
+                    <AccordionContent className="text-gray-400 font-light">
                       {item.answer}
                     </AccordionContent>
                   </AccordionItem>
@@ -104,70 +104,70 @@ export function FAQ({ onNavigate }: FAQProps) {
         <div className="space-y-6">
           <Card className="bg-terex-darker border-terex-gray">
             <CardHeader>
-              <CardTitle className="text-white">Support Client</CardTitle>
+              <CardTitle className="text-white font-light">Support Client</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="p-3 bg-terex-gray rounded-lg">
-                <h3 className="text-terex-accent font-medium mb-1">📧 Email</h3>
-                <p className="text-gray-300 text-sm">Terangaexchange@gmail.com</p>
+                <h3 className="text-terex-accent font-light mb-1">📧 Email</h3>
+                <p className="text-gray-300 text-sm font-light">Terangaexchange@gmail.com</p>
               </div>
               <div className="p-3 bg-terex-gray rounded-lg">
-                <h3 className="text-terex-accent font-medium mb-1">💬 Chat en direct</h3>
-                <p className="text-gray-300 text-sm">Disponible 24/7</p>
+                <h3 className="text-terex-accent font-light mb-1">💬 Chat en direct</h3>
+                <p className="text-gray-300 text-sm font-light">Disponible 24/7</p>
               </div>
               <div className="p-3 bg-terex-gray rounded-lg">
-                <h3 className="text-terex-accent font-medium mb-1">📞 Téléphone</h3>
-                <p className="text-gray-300 text-sm">+1 (418) 261-9091</p>
+                <h3 className="text-terex-accent font-light mb-1">📞 Téléphone</h3>
+                <p className="text-gray-300 text-sm font-light">+1 (418) 261-9091</p>
               </div>
             </CardContent>
           </Card>
 
           <Card className="bg-terex-darker border-terex-gray">
             <CardHeader>
-              <CardTitle className="text-white">Heures d'ouverture</CardTitle>
+              <CardTitle className="text-white font-light">Heures d'ouverture</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-300">Lundi - Vendredi</span>
-                <span className="text-terex-accent">24/7</span>
+                <span className="text-gray-300 font-light">Lundi - Vendredi</span>
+                <span className="text-terex-accent font-light">24/7</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-300">Weekend</span>
-                <span className="text-terex-accent">24/7</span>
+                <span className="text-gray-300 font-light">Weekend</span>
+                <span className="text-terex-accent font-light">24/7</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-300">Support urgent</span>
-                <span className="text-terex-accent">Toujours</span>
+                <span className="text-gray-300 font-light">Support urgent</span>
+                <span className="text-terex-accent font-light">Toujours</span>
               </div>
             </CardContent>
           </Card>
 
           <Card className="bg-terex-darker border-terex-gray">
             <CardHeader>
-              <CardTitle className="text-white">Ressources</CardTitle>
+              <CardTitle className="text-white font-light">Ressources</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               <button 
                 onClick={() => handleResourceClick('user-guide')}
-                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left"
+                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left font-light"
               >
                 📖 Guide d'utilisation
               </button>
               <button 
                 onClick={() => handleResourceClick('security-policy')}
-                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left"
+                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left font-light"
               >
                 🔒 Politique de sécurité
               </button>
               <button 
                 onClick={() => handleResourceClick('terms-of-service')}
-                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left"
+                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left font-light"
               >
                 📋 Conditions d'utilisation
               </button>
               <button 
                 onClick={() => handleResourceClick('about-terex')}
-                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left"
+                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left font-light"
               >
                 💡 À propos de Terex
               </button>
