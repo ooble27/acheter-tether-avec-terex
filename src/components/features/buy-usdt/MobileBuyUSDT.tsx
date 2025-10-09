@@ -151,7 +151,7 @@ export function MobileBuyUSDT() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-terex-dark p-4 py-8">
+    <div className="min-h-screen flex items-center justify-center bg-terex-dark p-4 py-6">
       <div className="w-full max-w-md">
         {/* Étape 1: Montant */}
         {step === 'amount' && (
