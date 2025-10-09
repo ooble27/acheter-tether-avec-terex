@@ -2,14 +2,20 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from '@/components/ui/drawer';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useInternationalTransfers } from '@/hooks/useInternationalTransfers';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useCryptoRates } from '@/hooks/useCryptoRates';
-import { ArrowRight, ArrowLeft, Check, Send, User, MapPin, CreditCard, Smartphone, Wallet } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Check, Send, User, CreditCard, Smartphone, Wallet, Building2, Globe } from 'lucide-react';
 import { TransferPending } from './TransferPending';
+
+const PAYMENT_LOGOS = {
+  interac: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Interac_logo.svg/2560px-Interac_logo.svg.png',
+  wave: 'https://play-lh.googleusercontent.com/SJJC8sL9FXgC-4P1sL8CvRzL8GVHJ7kzQQD8HEihRQUqfDAKZrYMMWR7DQdQD6D1ow',
+  orange: '/payment-methods/orange-money-logo.png'
+};
 
 export function MobileInternationalTransfer() {
   const [step, setStep] = useState<'amount' | 'recipient' | 'method' | 'confirm'>('amount');
@@ -161,7 +167,7 @@ export function MobileInternationalTransfer() {
     step === 'method' ? 75 : 100;
 
   return (
-    <div className="min-h-screen bg-terex-dark pb-24">
+    <div className="min-h-screen bg-terex-dark">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-terex-darker border-b border-terex-gray px-4 py-4">
         <div className="flex items-center justify-between mb-3">
@@ -170,10 +176,7 @@ export function MobileInternationalTransfer() {
             <div>
               <h1 className="text-lg font-light text-white">Virement international</h1>
               <p className="text-xs text-gray-400">
-                {step === 'amount' && 'Montant à envoyer'}
-                {step === 'recipient' && 'Informations du bénéficiaire'}
-                {step === 'method' && 'Méthodes de paiement'}
-                {step === 'confirm' && 'Confirmation'}
+                Étape {step === 'amount' ? '1' : step === 'recipient' ? '2' : step === 'method' ? '3' : '4'} sur 4
               </p>
             </div>
           </div>
@@ -201,22 +204,21 @@ export function MobileInternationalTransfer() {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-4 space-y-4">
+      {/* Content - Scrollable avec padding pour éviter le débordement */}
+      <div className="px-4 py-6 overflow-y-auto pb-24" style={{ maxHeight: 'calc(100vh - 100px)' }}>
         {/* Étape 1: Montant */}
         {step === 'amount' && (
-          <Drawer open={true}>
-            <DrawerContent className="bg-terex-darker border-terex-gray">
-              <DrawerHeader>
-                <DrawerTitle className="text-white">Montant à envoyer</DrawerTitle>
-                <DrawerDescription className="text-gray-400">
-                  Combien souhaitez-vous envoyer ?
-                </DrawerDescription>
-              </DrawerHeader>
-              
-              <div className="p-4 space-y-4">
+          <Card className="bg-terex-darker border-terex-gray">
+            <CardContent className="p-6 space-y-6">
+              <div className="text-center mb-4">
+                <Globe className="w-12 h-12 text-terex-accent mx-auto mb-3" />
+                <h2 className="text-xl font-light text-white mb-2">Montant à envoyer</h2>
+                <p className="text-sm text-gray-400">Combien souhaitez-vous envoyer ?</p>
+              </div>
+
+              <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-gray-300">Montant (CAD)</Label>
+                  <Label className="text-gray-300 text-sm">Montant (CAD)</Label>
                   <Input
                     type="number"
                     placeholder="Ex: 100"
@@ -227,10 +229,10 @@ export function MobileInternationalTransfer() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-gray-300">Pays de destination</Label>
+                  <Label className="text-gray-300 text-sm">Pays de destination</Label>
                   <Select value={recipientCountry} onValueChange={setRecipientCountry}>
                     <SelectTrigger className="bg-terex-dark border-terex-gray text-white h-14">
-                      <SelectValue placeholder="Sélectionner" />
+                      <SelectValue placeholder="Sélectionner un pays" />
                     </SelectTrigger>
                     <SelectContent className="bg-terex-darker border-terex-gray">
                       {countries.map(country => (
@@ -243,271 +245,270 @@ export function MobileInternationalTransfer() {
                 </div>
 
                 {sendAmount && (
-                  <div className="bg-terex-accent/10 border border-terex-accent/30 rounded-lg p-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-400">Le bénéficiaire recevra</span>
+                  <div className="bg-terex-accent/10 border border-terex-accent/30 rounded-lg p-4 mt-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-gray-400 text-sm">Le bénéficiaire recevra</span>
                       <span className="text-2xl font-light text-terex-accent">{receiveAmount} CFA</span>
                     </div>
-                    <div className="text-xs text-gray-400 mt-2">
+                    <div className="text-xs text-gray-400">
                       Taux: 1 CAD = {exchangeRate} CFA
                     </div>
                   </div>
                 )}
-              </div>
 
-              <DrawerFooter>
                 <Button
                   onClick={handleContinueToRecipient}
-                  className="w-full gradient-button text-white h-14 text-lg"
+                  className="w-full gradient-button text-white h-14 text-lg mt-6"
                   disabled={!sendAmount || !recipientCountry}
                 >
                   Continuer <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* Étape 2: Bénéficiaire */}
         {step === 'recipient' && (
-          <Drawer open={true}>
-            <DrawerContent className="bg-terex-darker border-terex-gray">
-              <DrawerHeader>
-                <DrawerTitle className="text-white flex items-center gap-2">
-                  <User className="w-5 h-5" /> Informations du bénéficiaire
-                </DrawerTitle>
-              </DrawerHeader>
-              
-              <div className="p-4 space-y-4 max-h-[60vh] overflow-y-auto">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <Label className="text-gray-300">Prénom *</Label>
-                    <Input
-                      value={recipientFirstName}
-                      onChange={(e) => setRecipientFirstName(e.target.value)}
-                      className="bg-terex-dark border-terex-gray text-white"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-gray-300">Nom *</Label>
-                    <Input
-                      value={recipientLastName}
-                      onChange={(e) => setRecipientLastName(e.target.value)}
-                      className="bg-terex-dark border-terex-gray text-white"
-                    />
-                  </div>
-                </div>
-
+          <Card className="bg-terex-darker border-terex-gray">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-white flex items-center gap-2 text-lg">
+                <User className="w-5 h-5" /> Informations du bénéficiaire
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label className="text-gray-300">Téléphone *</Label>
+                  <Label className="text-gray-300 text-sm">Prénom *</Label>
                   <Input
-                    type="tel"
-                    placeholder="+221 XX XXX XX XX"
-                    value={recipientPhone}
-                    onChange={(e) => setRecipientPhone(e.target.value)}
-                    className="bg-terex-dark border-terex-gray text-white"
+                    value={recipientFirstName}
+                    onChange={(e) => setRecipientFirstName(e.target.value)}
+                    className="bg-terex-dark border-terex-gray text-white h-12"
                   />
                 </div>
-
                 <div className="space-y-2">
-                  <Label className="text-gray-300">Email (optionnel)</Label>
+                  <Label className="text-gray-300 text-sm">Nom *</Label>
                   <Input
-                    type="email"
-                    value={recipientEmail}
-                    onChange={(e) => setRecipientEmail(e.target.value)}
-                    className="bg-terex-dark border-terex-gray text-white"
+                    value={recipientLastName}
+                    onChange={(e) => setRecipientLastName(e.target.value)}
+                    className="bg-terex-dark border-terex-gray text-white h-12"
                   />
                 </div>
               </div>
 
-              <DrawerFooter>
-                <Button
-                  onClick={handleContinueToMethod}
-                  className="w-full gradient-button text-white h-14 text-lg"
-                  disabled={!recipientFirstName || !recipientLastName || !recipientPhone}
-                >
-                  Continuer <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
+              <div className="space-y-2">
+                <Label className="text-gray-300 text-sm">Téléphone *</Label>
+                <Input
+                  type="tel"
+                  placeholder="+221 XX XXX XX XX"
+                  value={recipientPhone}
+                  onChange={(e) => setRecipientPhone(e.target.value)}
+                  className="bg-terex-dark border-terex-gray text-white h-12"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-gray-300 text-sm">Email (optionnel)</Label>
+                <Input
+                  type="email"
+                  placeholder="email@exemple.com"
+                  value={recipientEmail}
+                  onChange={(e) => setRecipientEmail(e.target.value)}
+                  className="bg-terex-dark border-terex-gray text-white h-12"
+                />
+              </div>
+
+              <Button
+                onClick={handleContinueToMethod}
+                className="w-full gradient-button text-white h-14 text-lg mt-4"
+                disabled={!recipientFirstName || !recipientLastName || !recipientPhone}
+              >
+                Continuer <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </CardContent>
+          </Card>
         )}
 
         {/* Étape 3: Méthode */}
         {step === 'method' && (
-          <Drawer open={true}>
-            <DrawerContent className="bg-terex-darker border-terex-gray">
-              <DrawerHeader>
-                <DrawerTitle className="text-white flex items-center gap-2">
-                  <CreditCard className="w-5 h-5" /> Méthodes de paiement
-                </DrawerTitle>
-              </DrawerHeader>
-              
-              <div className="p-4 space-y-4 max-h-[60vh] overflow-y-auto">
-                <div className="space-y-2">
-                  <Label className="text-gray-300">Vous payez avec</Label>
-                  <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                    <SelectTrigger className="bg-terex-dark border-terex-gray text-white h-12">
-                      <SelectValue placeholder="Choisir" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-terex-darker border-terex-gray">
-                      <SelectItem value="interac" className="text-white">
-                        <div className="flex items-center gap-2">
-                          <CreditCard className="w-4 h-4" /> Interac e-Transfer
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="bank" className="text-white">
-                        <div className="flex items-center gap-2">
-                          <Wallet className="w-4 h-4" /> Virement bancaire
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-gray-300">Le bénéficiaire reçoit via</Label>
-                  <Select value={receiveMethod} onValueChange={setReceiveMethod}>
-                    <SelectTrigger className="bg-terex-dark border-terex-gray text-white h-12">
-                      <SelectValue placeholder="Choisir" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-terex-darker border-terex-gray">
-                      <SelectItem value="mobile" className="text-white">
-                        <div className="flex items-center gap-2">
-                          <Smartphone className="w-4 h-4" /> Mobile Money
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="bank" className="text-white">
-                        <div className="flex items-center gap-2">
-                          <Wallet className="w-4 h-4" /> Compte bancaire
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {receiveMethod === 'mobile' && (
-                  <div className="space-y-2">
-                    <Label className="text-gray-300">Service Mobile Money</Label>
-                    <Select value={provider} onValueChange={setProvider}>
-                      <SelectTrigger className="bg-terex-dark border-terex-gray text-white h-12">
-                        <SelectValue placeholder="Sélectionner" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-terex-darker border-terex-gray">
-                        <SelectItem value="orange" className="text-white">
-                          🟠 Orange Money (0.8% frais)
-                        </SelectItem>
-                        <SelectItem value="wave" className="text-white">
-                          🌊 Wave (1% frais)
-                        </SelectItem>
-                        <SelectItem value="free" className="text-white">
-                          📱 Free Money
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-
-                {receiveMethod === 'bank' && (
-                  <>
-                    <div className="space-y-2">
-                      <Label className="text-gray-300">Nom de la banque</Label>
-                      <Input
-                        value={recipientBank}
-                        onChange={(e) => setRecipientBank(e.target.value)}
-                        placeholder="Ex: Ecobank"
-                        className="bg-terex-dark border-terex-gray text-white"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-gray-300">Numéro de compte</Label>
-                      <Input
-                        value={recipientAccount}
-                        onChange={(e) => setRecipientAccount(e.target.value)}
-                        className="bg-terex-dark border-terex-gray text-white"
-                      />
-                    </div>
-                  </>
-                )}
+          <Card className="bg-terex-darker border-terex-gray">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-white flex items-center gap-2 text-lg">
+                <CreditCard className="w-5 h-5" /> Méthodes de paiement
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-gray-300 text-sm">Vous payez avec</Label>
+                <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                  <SelectTrigger className="bg-terex-dark border-terex-gray text-white h-14">
+                    <SelectValue placeholder="Choisir une méthode" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-terex-darker border-terex-gray">
+                    <SelectItem value="interac" className="text-white">
+                      <div className="flex items-center gap-3">
+                        <img src={PAYMENT_LOGOS.interac} alt="Interac" className="w-8 h-8 object-contain" />
+                        <span>Interac e-Transfer</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="bank" className="text-white">
+                      <div className="flex items-center gap-3">
+                        <Building2 className="w-5 h-5" />
+                        <span>Virement bancaire</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
-              <DrawerFooter>
-                <Button
-                  onClick={handleContinueToConfirm}
-                  className="w-full gradient-button text-white h-14 text-lg"
-                  disabled={!paymentMethod || !receiveMethod || (receiveMethod === 'mobile' && !provider) || (receiveMethod === 'bank' && (!recipientAccount || !recipientBank))}
-                >
-                  Continuer <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
+              <div className="space-y-2">
+                <Label className="text-gray-300 text-sm">Le bénéficiaire reçoit via</Label>
+                <Select value={receiveMethod} onValueChange={setReceiveMethod}>
+                  <SelectTrigger className="bg-terex-dark border-terex-gray text-white h-14">
+                    <SelectValue placeholder="Choisir une méthode" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-terex-darker border-terex-gray">
+                    <SelectItem value="mobile" className="text-white">
+                      <div className="flex items-center gap-3">
+                        <Smartphone className="w-5 h-5" />
+                        <span>Mobile Money</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="bank" className="text-white">
+                      <div className="flex items-center gap-3">
+                        <Building2 className="w-5 h-5" />
+                        <span>Compte bancaire</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {receiveMethod === 'mobile' && (
+                <div className="space-y-2">
+                  <Label className="text-gray-300 text-sm">Service Mobile Money</Label>
+                  <Select value={provider} onValueChange={setProvider}>
+                    <SelectTrigger className="bg-terex-dark border-terex-gray text-white h-14">
+                      <SelectValue placeholder="Sélectionner un service" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-terex-darker border-terex-gray">
+                      <SelectItem value="orange" className="text-white">
+                        <div className="flex items-center gap-3">
+                          <img src={PAYMENT_LOGOS.orange} alt="Orange Money" className="w-8 h-8 object-contain" />
+                          <span>Orange Money (0.8% frais)</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="wave" className="text-white">
+                        <div className="flex items-center gap-3">
+                          <img src={PAYMENT_LOGOS.wave} alt="Wave" className="w-8 h-8 object-contain rounded" />
+                          <span>Wave (1% frais)</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="free" className="text-white">
+                        <div className="flex items-center gap-3">
+                          <Smartphone className="w-5 h-5 text-blue-400" />
+                          <span>Free Money</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {receiveMethod === 'bank' && (
+                <>
+                  <div className="space-y-2">
+                    <Label className="text-gray-300 text-sm">Nom de la banque</Label>
+                    <Input
+                      value={recipientBank}
+                      onChange={(e) => setRecipientBank(e.target.value)}
+                      placeholder="Ex: Ecobank"
+                      className="bg-terex-dark border-terex-gray text-white h-12"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-gray-300 text-sm">Numéro de compte</Label>
+                    <Input
+                      value={recipientAccount}
+                      onChange={(e) => setRecipientAccount(e.target.value)}
+                      placeholder="Numéro de compte bancaire"
+                      className="bg-terex-dark border-terex-gray text-white h-12"
+                    />
+                  </div>
+                </>
+              )}
+
+              <Button
+                onClick={handleContinueToConfirm}
+                className="w-full gradient-button text-white h-14 text-lg mt-4"
+                disabled={!paymentMethod || !receiveMethod || (receiveMethod === 'mobile' && !provider) || (receiveMethod === 'bank' && (!recipientAccount || !recipientBank))}
+              >
+                Continuer <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </CardContent>
+          </Card>
         )}
 
         {/* Étape 4: Confirmation */}
         {step === 'confirm' && (
-          <Drawer open={true}>
-            <DrawerContent className="bg-terex-darker border-terex-gray">
-              <DrawerHeader>
-                <DrawerTitle className="text-white flex items-center gap-2">
-                  <Check className="w-5 h-5" /> Confirmation du transfert
-                </DrawerTitle>
-              </DrawerHeader>
-              
-              <div className="p-4 space-y-4 max-h-[60vh] overflow-y-auto">
-                <div className="bg-terex-dark rounded-lg p-4 space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Montant envoyé</span>
-                    <span className="text-white font-light">{sendAmount} CAD</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Montant reçu</span>
-                    <span className="text-terex-accent text-lg font-light">{receiveAmount} CFA</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Taux de change</span>
-                    <span className="text-white font-light">1 CAD = {exchangeRate} CFA</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Frais Terex</span>
-                    <span className="text-green-400 font-light">Gratuit 🎉</span>
-                  </div>
+          <Card className="bg-terex-darker border-terex-gray">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-white flex items-center gap-2 text-lg">
+                <Check className="w-5 h-5 text-green-400" /> Confirmation du transfert
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-terex-dark rounded-lg p-4 space-y-3">
+                <h3 className="text-white font-light text-sm mb-3">Détails du transfert</h3>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">Montant envoyé</span>
+                  <span className="text-white font-light">{sendAmount} CAD</span>
                 </div>
-
-                <div className="bg-terex-dark rounded-lg p-4 space-y-3">
-                  <h3 className="text-white font-light mb-2">Bénéficiaire</h3>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Nom</span>
-                    <span className="text-white font-light">{recipientFirstName} {recipientLastName}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Téléphone</span>
-                    <span className="text-white font-light">{recipientPhone}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Pays</span>
-                    <span className="text-white font-light">{countries.find(c => c.code === recipientCountry)?.name}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Méthode de réception</span>
-                    <span className="text-white font-light">
-                      {receiveMethod === 'mobile' ? `${provider.toUpperCase()} Money` : 'Virement bancaire'}
-                    </span>
-                  </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">Montant reçu</span>
+                  <span className="text-terex-accent text-lg font-light">{receiveAmount} CFA</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">Taux de change</span>
+                  <span className="text-white font-light">1 CAD = {exchangeRate} CFA</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">Frais Terex</span>
+                  <span className="text-green-400 font-light">Gratuit 🎉</span>
                 </div>
               </div>
 
-              <DrawerFooter>
-                <Button
-                  onClick={handleConfirm}
-                  className="w-full gradient-button text-white h-14 text-lg"
-                  disabled={loading}
-                >
-                  {loading ? 'Traitement...' : 'Confirmer le transfert'} <Check className="ml-2 w-5 h-5" />
-                </Button>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
+              <div className="bg-terex-dark rounded-lg p-4 space-y-3">
+                <h3 className="text-white font-light text-sm mb-3">Bénéficiaire</h3>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">Nom</span>
+                  <span className="text-white font-light">{recipientFirstName} {recipientLastName}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">Téléphone</span>
+                  <span className="text-white font-light">{recipientPhone}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">Pays</span>
+                  <span className="text-white font-light">{countries.find(c => c.code === recipientCountry)?.name}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">Méthode de réception</span>
+                  <span className="text-white font-light">
+                    {receiveMethod === 'mobile' ? `${provider.charAt(0).toUpperCase() + provider.slice(1)} Money` : 'Virement bancaire'}
+                  </span>
+                </div>
+              </div>
+
+              <Button
+                onClick={handleConfirm}
+                className="w-full gradient-button text-white h-14 text-lg mt-4"
+                disabled={loading}
+              >
+                {loading ? 'Traitement...' : 'Confirmer le transfert'} <Check className="ml-2 w-5 h-5" />
+              </Button>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>
