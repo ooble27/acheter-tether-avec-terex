@@ -9,8 +9,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { useNabooPay } from '@/hooks/useNabooPay';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, AlertCircle } from 'lucide-react';
 import { BinanceEmailInput } from './BinanceEmailInput';
+import { PURCHASE_LIMITS, getLimitMessage, enforceMaxLimit } from './LimitsValidator';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
@@ -44,12 +46,25 @@ export function MobileBuyUSDT() {
   const usdtAmount = fiatAmount ? (parseFloat(fiatAmount) / exchangeRate).toFixed(2) : '0';
 
   const isBinanceNetwork = network === 'BINANCE';
+  const limitMessage = getLimitMessage(fiatAmount, currency);
+  const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
 
   const handleContinueToNetwork = () => {
-    if (!fiatAmount || parseFloat(fiatAmount) <= 0) {
+    const numericAmount = parseFloat(fiatAmount);
+    if (!fiatAmount || numericAmount <= 0) {
       toast({ title: "Erreur", description: "Veuillez entrer un montant valide", variant: "destructive" });
       return;
     }
+    
+    if (limits && numericAmount < limits.min) {
+      toast({ 
+        title: "Montant trop faible", 
+        description: `Le montant minimum est ${limits.min.toLocaleString()} ${currency}`, 
+        variant: "destructive" 
+      });
+      return;
+    }
+    
     setStep('network');
   };
 
@@ -146,19 +161,44 @@ export function MobileBuyUSDT() {
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-white text-sm font-light">Montant</Label>
+              <div className="flex items-center justify-between">
+                <Label className="text-white text-sm font-light">Montant</Label>
+                {limits && (
+                  <span className="text-xs text-gray-400 font-light">
+                    {limits.min.toLocaleString()} - {limits.max.toLocaleString()} {currency}
+                  </span>
+                )}
+              </div>
               <div className="relative">
                 <Input
                   type="number"
                   placeholder="0"
                   value={fiatAmount}
-                  onChange={(e) => setFiatAmount(e.target.value)}
+                  onChange={(e) => setFiatAmount(enforceMaxLimit(e.target.value, currency))}
                   className="bg-terex-darker border-terex-gray text-white text-3xl font-light h-16 text-center px-20"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-light">
                   {currency}
                 </span>
               </div>
+              
+              {limitMessage.type && (
+                <Alert 
+                  variant={limitMessage.type === 'error' ? 'destructive' : 'default'}
+                  className={
+                    limitMessage.type === 'error' 
+                      ? 'bg-red-500/10 border-red-500/20 text-red-400' 
+                      : limitMessage.type === 'max-reached'
+                      ? 'bg-terex-accent/10 border-terex-accent/20 text-terex-accent'
+                      : 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400'
+                  }
+                >
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription className="text-sm font-light">
+                    {limitMessage.message}
+                  </AlertDescription>
+                </Alert>
+              )}
             </div>
 
             <div className="bg-terex-darker rounded-lg p-4 space-y-2">
