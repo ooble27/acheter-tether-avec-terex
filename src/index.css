@@ -5,43 +5,43 @@
 
 @layer base {
   :root {
-    --background: 0 0% 12%;
+    --background: 220 13% 18%;
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 16%;
+    --card: 220 13% 23%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 16%;
+    --popover: 220 13% 23%;
     --popover-foreground: 0 0% 98%;
 
     --primary: 142.1 76.2% 36.3%;
     --primary-foreground: 355.7 100% 97.3%;
 
-    --secondary: 0 0% 20%;
+    --secondary: 220 13% 28%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 0 0% 22%;
+    --muted: 220 13% 26%;
     --muted-foreground: 0 0% 70%;
 
-    --accent: 0 0% 20%;
+    --accent: 220 13% 28%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 24%;
-    --input: 0 0% 22%;
+    --border: 220 13% 30%;
+    --input: 220 13% 26%;
     --ring: 142.4 71.8% 29.2%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 14%;
+    --sidebar-background: 220 13% 18%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 142.1 76.2% 36.3%;
     --sidebar-primary-foreground: 355.7 100% 97.3%;
-    --sidebar-accent: 0 0% 20%;
+    --sidebar-accent: 220 13% 26%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 24%;
+    --sidebar-border: 220 13% 30%;
     --sidebar-ring: 142.4 71.8% 29.2%;
   }
 }
@@ -73,7 +73,7 @@
   #root {
     min-height: 100vh;
     height: 100%;
-    background-color: #1f1f1f !important;
+    background-color: #2a2d35 !important;
   }
 
   /* Forcer font-light sur tous les titres */
@@ -96,15 +96,15 @@
 @supports (-webkit-appearance: none) {
   @media screen and (max-width: 768px) {
     html {
-      background-color: #1f1f1f !important;
+      background-color: #2a2d35 !important;
     }
     
     body {
-      background-color: #1f1f1f !important;
+      background-color: #2a2d35 !important;
     }
     
     #root {
-      background-color: #1f1f1f !important;
+      background-color: #2a2d35 !important;
     }
     
     /* Forcer le fond sur tous les éléments racine */
@@ -115,7 +115,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: #1f1f1f;
+      background-color: #2a2d35;
       z-index: -1000;
     }
   }
@@ -124,14 +124,14 @@
 /* Protection supplémentaire pour iOS Safari */
 @supports (-webkit-touch-callout: none) {
   html, body, #root {
-    background-color: #1f1f1f !important;
-    background: #1f1f1f !important;
+    background-color: #2a2d35 !important;
+    background: #2a2d35 !important;
   }
   
   /* Éviter tout flash de couleur au chargement */
   body {
     opacity: 1 !important;
-    background: #1f1f1f !important;
+    background: #2a2d35 !important;
   }
 }
 

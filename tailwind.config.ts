@@ -78,12 +78,12 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 			terex: {
-				dark: '#1f1f1f',
-				darker: '#2a2a2a',
+				dark: '#2a2d35',
+				darker: '#3a3d45',
 				accent: '#3B968F',
 				'accent-light': '#4BA89F',
-				gray: '#333333',
-				'gray-light': '#404040',
+				gray: '#3a3d45',
+				'gray-light': '#484c56',
 			}
 			},
 			borderRadius: {
