@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Home, TrendingDown, Globe, History } from 'lucide-react';
+import { Home, TrendingDown, Globe, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const TetherLogo = ({ className, isActive }: { className?: string; isActive?: boolean }) => (
@@ -23,7 +23,6 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
     { id: 'buy', icon: TetherLogo, label: 'Acheter', isCustomIcon: true },
     { id: 'sell', icon: TrendingDown, label: 'Vendre' },
     { id: 'transfer', icon: Globe, label: 'Virement' },
-    { id: 'history', icon: History, label: 'Historique' },
   ];
 
   return (
