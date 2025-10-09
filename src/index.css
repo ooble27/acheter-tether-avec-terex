@@ -49,12 +49,13 @@
 @layer base {
   * {
     @apply border-border;
+    font-weight: 300 !important; /* Force font-light partout */
   }
 
   html, body {
     @apply bg-terex-dark text-foreground font-sans;
     font-family: 'Poppins', 'Inter', sans-serif;
-    font-weight: 300; /* font-light global */
+    font-weight: 300 !important; /* font-light global */
     letter-spacing: -0.01em;
     min-height: 100vh;
     height: 100%;
@@ -73,6 +74,11 @@
     min-height: 100vh;
     height: 100%;
     background-color: #141414 !important;
+  }
+
+  /* Forcer font-light sur tous les titres */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 300 !important;
   }
 
   /* Masquer les barres de scroll sur tous les éléments */
