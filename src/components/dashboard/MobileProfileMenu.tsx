@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   User, 
@@ -115,15 +114,15 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
 
       {/* Full Screen Menu */}
       {isOpen && (
-        <div className="fixed inset-0 z-[100] bg-background">
-          <div className="flex flex-col h-full">
+        <div className="fixed inset-0 z-[100] bg-background animate-in fade-in duration-200">
+          <div className="flex flex-col h-full animate-in slide-in-from-bottom duration-300">
             {/* Header with Back Button */}
-            <div className="flex items-center justify-between p-4 border-b border-border">
+            <div className="flex items-center justify-between p-4 border-b border-border bg-background">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsOpen(false)}
-                className="rounded-full"
+                className="rounded-full hover:bg-muted"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -144,7 +143,7 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
             </div>
 
             {/* Content */}
-            <ScrollArea className="flex-1">
+            <ScrollArea className="flex-1 bg-background">
               <div className="p-4 space-y-2">
                 {/* Section Profil */}
                 {renderMenuSection('Profil', profileItems)}
@@ -161,7 +160,7 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
             </ScrollArea>
 
             {/* Footer avec bouton de déconnexion */}
-            <div className="p-4 border-t border-border pb-safe">
+            <div className="p-4 border-t border-border bg-background pb-safe">
               <Button 
                 onClick={handleLogout}
                 className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
