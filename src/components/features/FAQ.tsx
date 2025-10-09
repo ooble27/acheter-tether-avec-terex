@@ -68,7 +68,7 @@ export function FAQ({ onNavigate }: FAQProps) {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Questions Fréquentes</h1>
+        <h1 className="text-2xl md:text-3xl font-light text-white mb-1">Questions Fréquentes</h1>
         <p className="text-gray-400">
           Trouvez rapidement les réponses à vos questions sur Terex
         </p>
