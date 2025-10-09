@@ -9,10 +9,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { useNabooPay } from '@/hooks/useNabooPay';
-import { ArrowRight, Check, AlertCircle } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { BinanceEmailInput } from './BinanceEmailInput';
 import { PURCHASE_LIMITS, getLimitMessage, enforceMaxLimit } from './LimitsValidator';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
@@ -43,11 +42,14 @@ export function MobileBuyUSDT() {
   const { terexRateCfa, terexRateCad } = useTerexRates(2);
 
   const exchangeRate = currency === 'CFA' ? terexRateCfa : terexRateCad;
-  const usdtAmount = fiatAmount ? (parseFloat(fiatAmount) / exchangeRate).toFixed(2) : '0';
+  const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
+  const numericAmount = parseFloat(fiatAmount) || 0;
+  const usdtAmount = fiatAmount && numericAmount >= (limits?.min || 0) 
+    ? (numericAmount / exchangeRate).toFixed(2) 
+    : '0';
 
   const isBinanceNetwork = network === 'BINANCE';
   const limitMessage = getLimitMessage(fiatAmount, currency);
-  const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
 
   const handleContinueToNetwork = () => {
     const numericAmount = parseFloat(fiatAmount);
@@ -196,21 +198,15 @@ export function MobileBuyUSDT() {
               </div>
               
               {limitMessage.type && (
-                <Alert 
-                  variant={limitMessage.type === 'error' ? 'destructive' : 'default'}
-                  className={
-                    limitMessage.type === 'error' 
-                      ? 'bg-red-500/10 border-red-500/20 text-red-400' 
-                      : limitMessage.type === 'max-reached'
-                      ? 'bg-terex-accent/10 border-terex-accent/20 text-terex-accent'
-                      : 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400'
-                  }
-                >
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription className="text-sm font-light">
-                    {limitMessage.message}
-                  </AlertDescription>
-                </Alert>
+                <p className={`text-xs font-light ${
+                  limitMessage.type === 'error' 
+                    ? 'text-red-400' 
+                    : limitMessage.type === 'max-reached'
+                    ? 'text-terex-accent'
+                    : 'text-yellow-400'
+                }`}>
+                  {limitMessage.message}
+                </p>
               )}
             </div>
 
