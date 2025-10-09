@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
@@ -37,6 +38,7 @@ interface DashboardProps {
 
 export function Dashboard({ user, onLogout }: DashboardProps) {
   const [activeSection, setActiveSection] = useState('home');
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const { signOut } = useAuth();
@@ -87,6 +89,34 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     setActiveSection('home');
   };
 
+  const handleNavigate = (section: string) => {
+    // Pages qui doivent ouvrir une nouvelle route
+    const externalPages = ['contact', 'feedback', 'referral', 'share-app', 'terms'];
+    
+    if (externalPages.includes(section)) {
+      switch (section) {
+        case 'contact':
+          navigate('/contact');
+          break;
+        case 'feedback':
+          navigate('/feedback');
+          break;
+        case 'referral':
+          navigate('/referral');
+          break;
+        case 'share-app':
+          navigate('/share');
+          break;
+        case 'terms':
+          navigate('/terms');
+          break;
+      }
+    } else {
+      // Pages internes au dashboard
+      setActiveSection(section);
+    }
+  };
+
   const renderContent = () => {
     switch (activeSection) {
       case 'home':
@@ -135,7 +165,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
           {!isMobile && (
             <AppSidebar 
               activeSection={activeSection}
-              setActiveSection={setActiveSection}
+              setActiveSection={handleNavigate}
               onLogout={handleLogout}
             />
           )}
@@ -144,7 +174,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
           {isMobile && !isPWA && (
             <MobileMenu 
               activeSection={activeSection}
-              setActiveSection={setActiveSection}
+              setActiveSection={handleNavigate}
               onLogout={handleLogout}
             />
           )}
@@ -154,7 +184,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             {isMobile && isPWA && (
               <MobileProfileMenu
                 activeSection={activeSection}
-                setActiveSection={setActiveSection}
+                setActiveSection={handleNavigate}
                 onLogout={handleLogout}
               />
             )}
