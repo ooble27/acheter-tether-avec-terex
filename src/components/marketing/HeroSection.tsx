@@ -69,7 +69,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 <Button 
                   onClick={handleDashboard}
                   size="lg" 
-                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-6 py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto"
+                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-light px-6 py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto"
                 >
                   Aller au Dashboard
                 </Button>
@@ -77,7 +77,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 <Button 
                   onClick={handleGetStarted}
                   size="lg" 
-                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-6 py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto"
+                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-light px-6 py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto"
                 >
                   Commencer maintenant
                 </Button>
@@ -95,15 +95,15 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             {/* Stats rapides */}
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-terex-accent">5min</div>
+                <div className="text-2xl font-light text-terex-accent">5min</div>
                 <div className="text-sm text-gray-400">Transfert rapide</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-terex-accent">6</div>
+                <div className="text-2xl font-light text-terex-accent">6</div>
                 <div className="text-sm text-gray-400">Pays supportés</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-terex-accent">24/7</div>
+                <div className="text-2xl font-light text-terex-accent">24/7</div>
                 <div className="text-sm text-gray-400">Disponibilité</div>
               </div>
             </div>

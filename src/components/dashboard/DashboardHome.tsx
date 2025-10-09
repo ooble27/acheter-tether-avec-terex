@@ -97,7 +97,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   <TetherLogo className="w-5 h-5" />
                 </div>
               </div>
-              <h3 className="text-white text-sm font-medium mb-1">Acheter USDT</h3>
+              <h3 className="text-white text-sm font-light mb-1">Acheter USDT</h3>
               <p className="text-gray-400 text-xs">Achat rapide</p>
             </CardContent>
           </Card>
@@ -112,7 +112,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   <TetherLogo className="w-5 h-5" />
                 </div>
               </div>
-              <h3 className="text-white text-sm font-medium mb-1">Vendre USDT</h3>
+              <h3 className="text-white text-sm font-light mb-1">Vendre USDT</h3>
               <p className="text-gray-400 text-xs">Vente rapide</p>
             </CardContent>
           </Card>
@@ -127,7 +127,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   <Handshake className="w-4 h-4 text-purple-400" />
                 </div>
               </div>
-              <h3 className="text-white text-sm font-medium mb-1">Trading OTC</h3>
+              <h3 className="text-white text-sm font-light mb-1">Trading OTC</h3>
               <p className="text-gray-400 text-xs">Gros volumes</p>
             </CardContent>
           </Card>
@@ -142,7 +142,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   <Globe className="w-4 h-4 text-terex-accent" />
                 </div>
               </div>
-              <h3 className="text-white text-sm font-medium mb-1">Virements</h3>
+              <h3 className="text-white text-sm font-light mb-1">Virements</h3>
               <p className="text-gray-400 text-xs">International</p>
             </CardContent>
           </Card>
@@ -167,7 +167,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             <Activity className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl md:text-3xl font-bold text-white">
+            <h1 className="text-xl md:text-3xl font-light text-white">
               Bienvenue, <span className="text-terex-accent">{user?.name?.split(' ')[0]}</span>
             </h1>
             <p className="text-gray-400">Plateforme décentralisée pour vos transactions USDT</p>
@@ -265,7 +265,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                 <Star className="w-4 h-4 md:w-5 md:h-5 text-terex-accent" />
               </div>
               <div>
-                <h3 className="text-white font-medium">Frais gratuits</h3>
+                <h3 className="text-white font-light">Frais gratuits</h3>
                 <p className="text-gray-400 text-sm">0% de frais sur les virements</p>
               </div>
             </div>
@@ -274,7 +274,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                 <Zap className="w-4 h-4 md:w-5 md:h-5 text-green-400" />
               </div>
               <div>
-                <h3 className="text-white font-medium">Transactions rapides</h3>
+                <h3 className="text-white font-light">Transactions rapides</h3>
                 <p className="text-gray-400 text-sm">Traitement instantané</p>
               </div>
             </div>
@@ -283,7 +283,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                 <Clock className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
               </div>
               <div>
-                <h3 className="text-white font-medium">Service 24/7</h3>
+                <h3 className="text-white font-light">Service 24/7</h3>
                 <p className="text-gray-400 text-sm">Support disponible 24h/24</p>
               </div>
             </div>
@@ -310,7 +310,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   <Anchor className="w-4 h-4 md:w-5 md:h-5 text-green-400" />
                 </div>
                 <div>
-                  <h3 className="text-white font-medium mb-1">Stabilité garantie</h3>
+                  <h3 className="text-white font-light mb-1">Stabilité garantie</h3>
                   <p className="text-gray-400 text-sm">Tether est adossé au dollar américain (1:1), offrant une stabilité incomparable face à la volatilité du marché crypto</p>
                 </div>
               </div>
@@ -319,7 +319,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   <Globe className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="text-white font-medium mb-1">Acceptation mondiale</h3>
+                  <h3 className="text-white font-light mb-1">Acceptation mondiale</h3>
                   <p className="text-gray-400 text-sm">L'USDT est la cryptomonnaie stable la plus utilisée au monde, acceptée sur toutes les plateformes d'échange</p>
                 </div>
               </div>
@@ -330,7 +330,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-terex-accent" />
                 </div>
                 <div>
-                  <h3 className="text-white font-medium mb-1">Simplicité d'usage</h3>
+                  <h3 className="text-white font-light mb-1">Simplicité d'usage</h3>
                   <p className="text-gray-400 text-sm">Pas besoin de suivre plusieurs cryptomonnaies, Tether seul pour tous vos besoins</p>
                 </div>
               </div>
@@ -339,7 +339,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   <Zap className="w-4 h-4 md:w-5 md:h-5 text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="text-white font-medium mb-1">Transferts rapides</h3>
+                  <h3 className="text-white font-light mb-1">Transferts rapides</h3>
                   <p className="text-gray-400 text-sm">Les transactions Tether sont rapides et peu coûteuses, parfaites pour les virements internationaux</p>
                 </div>
               </div>
@@ -363,7 +363,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                 <Shield className="w-4 h-4 md:w-5 md:h-5 text-terex-accent" />
               </div>
               <div>
-                <h3 className="text-white font-medium mb-1">Sécurité renforcée</h3>
+                <h3 className="text-white font-light mb-1">Sécurité renforcée</h3>
                 <p className="text-gray-400 text-sm">Protection blockchain avancée pour toutes vos transactions</p>
               </div>
             </div>
@@ -372,7 +372,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                 <Activity className="w-4 h-4 md:w-5 md:h-5 text-green-400" />
               </div>
               <div>
-                <h3 className="text-white font-medium mb-1">Réseau décentralisé</h3>
+                <h3 className="text-white font-light mb-1">Réseau décentralisé</h3>
                 <p className="text-gray-400 text-sm">Infrastructure distribuée pour plus de fiabilité</p>
               </div>
             </div>
@@ -381,7 +381,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                 <Target className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
               </div>
               <div>
-                <h3 className="text-white font-medium mb-1">Transparence totale</h3>
+                <h3 className="text-white font-light mb-1">Transparence totale</h3>
                 <p className="text-gray-400 text-sm">Toutes les transactions sont vérifiables sur la blockchain</p>
               </div>
             </div>
@@ -403,7 +403,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   <Star className="w-3 h-3 md:w-4 md:h-4 text-terex-accent" />
                 </div>
                 <div>
-                  <h3 className="text-white font-medium mb-1">Économies garanties</h3>
+                  <h3 className="text-white font-light mb-1">Économies garanties</h3>
                   <p className="text-gray-400 text-sm">Frais de transaction réduits et transferts internationaux gratuits</p>
                 </div>
               </div>
@@ -412,7 +412,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   <Zap className="w-3 h-3 md:w-4 md:h-4 text-green-400" />
                 </div>
                 <div>
-                  <h3 className="text-white font-medium mb-1">Rapidité optimale</h3>
+                  <h3 className="text-white font-light mb-1">Rapidité optimale</h3>
                   <p className="text-gray-400 text-sm">Transactions instantanées et confirmations rapides</p>
                 </div>
               </div>
@@ -423,7 +423,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   <Clock className="w-3 h-3 md:w-4 md:h-4 text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="text-white font-medium mb-1">Disponibilité continue</h3>
+                  <h3 className="text-white font-light mb-1">Disponibilité continue</h3>
                   <p className="text-gray-400 text-sm">Service client et plateforme accessibles 24h/24, 7j/7</p>
                 </div>
               </div>
@@ -432,7 +432,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   <Users className="w-3 h-3 md:w-4 md:h-4 text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="text-white font-medium mb-1">Communauté active</h3>
+                  <h3 className="text-white font-light mb-1">Communauté active</h3>
                   <p className="text-gray-400 text-sm">Rejoignez des milliers d'utilisateurs satisfaits</p>
                 </div>
               </div>
