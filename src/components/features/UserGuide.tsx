@@ -20,7 +20,7 @@ export function UserGuide({ onBack }: UserGuideProps) {
           Retour
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Guide d'utilisation complet Terex</h1>
+          <h1 className="text-3xl font-light text-white mb-2">Guide d'utilisation complet Terex</h1>
           <p className="text-gray-400">
             Maîtrisez toutes les fonctionnalités de Terex étape par étape
           </p>

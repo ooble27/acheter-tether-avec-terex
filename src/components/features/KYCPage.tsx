@@ -77,7 +77,7 @@ export function KYCPage({ onBack }: KYCPageProps) {
             Retour
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-white">Vérification d'identité</h1>
+            <h1 className="text-3xl font-light text-white">Vérification d'identité</h1>
             <p className="text-gray-400">Soumettez vos documents pour la vérification</p>
           </div>
         </div>
@@ -99,7 +99,7 @@ export function KYCPage({ onBack }: KYCPageProps) {
           Retour au profil
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-white">Vérification d'identité</h1>
+          <h1 className="text-3xl font-light text-white">Vérification d'identité</h1>
           <p className="text-gray-400">Gérez votre statut de vérification KYC</p>
         </div>
       </div>

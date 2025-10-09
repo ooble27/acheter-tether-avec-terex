@@ -54,7 +54,7 @@ export function OrderConfirmation({ orderData, onConfirm, onBack, loading }: Ord
             <ArrowLeft className="w-4 h-4 mr-2" />
             Retour
           </Button>
-          <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Confirmation d'achat</h1>
+          <h1 className="text-2xl md:text-3xl font-light text-white mb-2">Confirmation d'achat</h1>
           <p className="text-gray-400 text-sm md:text-base">Vérifiez les détails de votre achat avant de confirmer</p>
         </div>
 

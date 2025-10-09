@@ -19,7 +19,7 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
           Retour
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">À propos de Terex</h1>
+          <h1 className="text-3xl font-light text-white mb-2">À propos de Terex</h1>
           <p className="text-gray-400">
             Notre histoire, notre mission et nos valeurs fondatrices
           </p>
@@ -40,7 +40,7 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                 </div>
               </div>
               <div className="md:col-span-2 space-y-4">
-                <h2 className="text-2xl font-bold text-white">Mohamed Lo</h2>
+                <h2 className="text-2xl font-light text-white">Mohamed Lo</h2>
                 <h3 className="text-xl font-medium text-terex-accent">Fondateur & CEO</h3>
                 <p className="text-gray-300 text-lg leading-relaxed">
                   "Notre mission est de connecter l'Afrique au monde digital grâce à des solutions 

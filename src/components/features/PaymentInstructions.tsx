@@ -121,7 +121,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
             Retour
           </Button>
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-white">Effectuer le paiement</h1>
+            <h1 className="text-2xl md:text-3xl font-light text-white">Effectuer le paiement</h1>
             <p className="text-gray-400">Suivez les instructions pour compléter votre achat</p>
           </div>
         </div>

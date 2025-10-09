@@ -20,7 +20,7 @@ export function TermsOfService({ onBack }: TermsOfServiceProps) {
           Retour
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Conditions d'utilisation complètes - Terex</h1>
+          <h1 className="text-3xl font-light text-white mb-2">Conditions d'utilisation complètes - Terex</h1>
           <p className="text-gray-400">
             Termes et conditions juridiques détaillés régissant l'utilisation de nos services
           </p>

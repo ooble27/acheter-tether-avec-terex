@@ -94,7 +94,7 @@ export function HighVolumeRequest({ onBack, requestedAmount, currency = 'CFA' }:
             <ArrowLeft className="w-4 h-4 mr-2" />
             Retour
           </Button>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+          <h1 className="text-2xl sm:text-3xl font-light text-white mb-2">
             Demande de <span className="text-terex-accent">gros volume</span>
           </h1>
           <p className="text-gray-400">
