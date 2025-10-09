@@ -136,14 +136,14 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
     return (
       <Card className="bg-terex-darker border-terex-gray">
         <CardHeader className={isMobile ? "p-4" : ""}>
-          <CardTitle className={`text-white ${isMobile ? "text-lg" : ""}`}>Historique des transactions</CardTitle>
-          <CardDescription className={`text-gray-400 ${isMobile ? "text-sm" : ""}`}>
+          <CardTitle className={`text-white font-light ${isMobile ? "text-lg" : ""}`}>Historique des transactions</CardTitle>
+          <CardDescription className={`text-gray-400 font-light ${isMobile ? "text-sm" : ""}`}>
             Consultez toutes vos transactions passées
           </CardDescription>
         </CardHeader>
         <CardContent className={isMobile ? "p-4 pt-0" : ""}>
           <div className="text-center py-6">
-            <p className={`text-gray-400 ${isMobile ? "text-sm" : ""}`}>Aucune transaction pour le moment</p>
+            <p className={`text-gray-400 font-light ${isMobile ? "text-sm" : ""}`}>Aucune transaction pour le moment</p>
           </div>
         </CardContent>
       </Card>
@@ -155,8 +155,8 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
       <div className="space-y-3">
         <Card className="bg-terex-darker border-terex-gray">
           <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-white text-lg">Historique des transactions</CardTitle>
-            <CardDescription className="text-gray-400 text-sm">
+            <CardTitle className="text-white text-lg font-light">Historique des transactions</CardTitle>
+            <CardDescription className="text-gray-400 text-sm font-light">
               Consultez toutes vos transactions passées
             </CardDescription>
           </CardHeader>
@@ -169,7 +169,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     {getTransactionIcon(transaction.type)}
-                    <span className={`font-medium text-sm ${getTransactionLabelColor(transaction.type)}`}>
+                    <span className={`font-light text-sm ${getTransactionLabelColor(transaction.type)}`}>
                       {getTransactionLabel(transaction.type)}
                     </span>
                   </div>
@@ -182,7 +182,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-400 text-xs">Montant envoyé:</span>
-                    <span className="text-white text-sm font-medium">
+                    <span className="text-white text-sm font-light">
                       {transaction.amount} {transaction.currency}
                     </span>
                   </div>
@@ -192,7 +192,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                       <span className="text-gray-400 text-xs">USDT reçu:</span>
                       <div className="flex items-center space-x-1">
                         <USDTLogo className="w-3 h-3" />
-                        <span className="text-terex-accent text-sm font-medium">{transaction.usdtAmount} USDT</span>
+                        <span className="text-terex-accent text-sm font-light">{transaction.usdtAmount} USDT</span>
                       </div>
                     </div>
                   )}
@@ -200,7 +200,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                   {(transaction.type === 'sell' || transaction.type === 'transfer') && transaction.fiatAmount && (
                     <div className="flex justify-between items-center">
                       <span className="text-gray-400 text-xs">Montant reçu:</span>
-                      <span className="text-white text-sm font-medium">
+                      <span className="text-white text-sm font-light">
                         {transaction.fiatAmount} {transaction.receiveCurrency}
                       </span>
                     </div>
@@ -236,8 +236,8 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
   return (
     <Card className="bg-terex-darker border-terex-gray">
       <CardHeader>
-        <CardTitle className="text-white">Historique des transactions</CardTitle>
-        <CardDescription className="text-gray-400">
+        <CardTitle className="text-white font-light">Historique des transactions</CardTitle>
+        <CardDescription className="text-gray-400 font-light">
           Consultez toutes vos transactions passées
         </CardDescription>
       </CardHeader>
@@ -245,13 +245,13 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
         <Table>
           <TableHeader>
             <TableRow className="border-terex-gray">
-              <TableHead className="text-gray-300">Type</TableHead>
-              <TableHead className="text-gray-300">Montant envoyé</TableHead>
-              <TableHead className="text-gray-300">Reçu</TableHead>
-              <TableHead className="text-gray-300">Détails</TableHead>
-              <TableHead className="text-gray-300">Statut</TableHead>
-              <TableHead className="text-gray-300">Date</TableHead>
-              <TableHead className="text-gray-300">Actions</TableHead>
+              <TableHead className="text-gray-300 font-light">Type</TableHead>
+              <TableHead className="text-gray-300 font-light">Montant envoyé</TableHead>
+              <TableHead className="text-gray-300 font-light">Reçu</TableHead>
+              <TableHead className="text-gray-300 font-light">Détails</TableHead>
+              <TableHead className="text-gray-300 font-light">Statut</TableHead>
+              <TableHead className="text-gray-300 font-light">Date</TableHead>
+              <TableHead className="text-gray-300 font-light">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -260,7 +260,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                 <TableCell>
                   <div className="flex items-center space-x-2">
                     {getTransactionIcon(transaction.type)}
-                    <span className={getTransactionLabelColor(transaction.type)}>
+                    <span className={`font-light ${getTransactionLabelColor(transaction.type)}`}>
                       {getTransactionLabel(transaction.type)}
                     </span>
                   </div>
