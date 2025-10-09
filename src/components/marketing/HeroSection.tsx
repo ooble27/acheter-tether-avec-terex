@@ -129,8 +129,8 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                   className="w-8 h-8"
                 />
               </div>
-              <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Échange USDT Tether</h3>
-              <p className="text-gray-400 text-xs sm:text-sm">Achetez et vendez vos USDT au meilleur taux</p>
+              <h3 className="text-white font-light mb-2 text-sm sm:text-base">Échange USDT Tether</h3>
+              <p className="text-gray-400 text-xs sm:text-sm font-light">Achetez et vendez vos USDT au meilleur taux</p>
             </CardContent>
           </Card>
           
@@ -139,8 +139,8 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <Globe className="w-6 h-6 text-terex-accent" />
               </div>
-              <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Transferts vers l'Afrique</h3>
-              <p className="text-gray-400 text-xs sm:text-sm">Transférez de l'argent partout en Afrique</p>
+              <h3 className="text-white font-light mb-2 text-sm sm:text-base">Transferts vers l'Afrique</h3>
+              <p className="text-gray-400 text-xs sm:text-sm font-light">Transférez de l'argent partout en Afrique</p>
             </CardContent>
           </Card>
           
@@ -149,8 +149,8 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <Shield className="w-6 h-6 text-terex-accent" />
               </div>
-              <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">100% Sécurisé</h3>
-              <p className="text-gray-400 text-xs sm:text-sm">Chiffrement 256-bit et conformité réglementaire</p>
+              <h3 className="text-white font-light mb-2 text-sm sm:text-base">100% Sécurisé</h3>
+              <p className="text-gray-400 text-xs sm:text-sm font-light">Chiffrement 256-bit et conformité réglementaire</p>
             </CardContent>
           </Card>
         </div>

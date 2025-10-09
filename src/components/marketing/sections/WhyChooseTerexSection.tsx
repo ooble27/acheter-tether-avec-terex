@@ -68,14 +68,14 @@ export function WhyChooseTerexSection() {
                     <IconComponent className="w-8 h-8 text-terex-accent" />
                   </div>
                   
-                  <h3 className="text-xl font-bold text-white mb-3">{advantage.title}</h3>
+                  <h3 className="text-xl font-light text-white mb-3">{advantage.title}</h3>
                   
-                  <p className="text-gray-300 mb-4 leading-relaxed">
+                  <p className="text-gray-400 mb-4 leading-relaxed font-light">
                     {advantage.description}
                   </p>
                   
                   <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-4 py-2 border border-terex-accent/20">
-                    <span className="text-terex-accent font-semibold text-sm">{advantage.highlight}</span>
+                    <span className="text-terex-accent font-light text-sm">{advantage.highlight}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -89,34 +89,34 @@ export function WhyChooseTerexSection() {
             {/* Version desktop */}
             <div className="hidden md:flex items-center justify-center space-x-8">
               <div className="text-center">
-                <div className="text-3xl font-bold text-terex-accent mb-2">+1000</div>
-                <div className="text-sm text-gray-400">Clients satisfaits</div>
+                <div className="text-3xl font-light text-terex-accent mb-2">+1000</div>
+                <div className="text-sm text-gray-400 font-light">Clients satisfaits</div>
               </div>
               <div className="w-px h-12 bg-terex-gray/30"></div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-terex-accent mb-2">10M+ CFA</div>
-                <div className="text-sm text-gray-400">Volume mensuel</div>
+                <div className="text-3xl font-light text-terex-accent mb-2">10M+ CFA</div>
+                <div className="text-sm text-gray-400 font-light">Volume mensuel</div>
               </div>
               <div className="w-px h-12 bg-terex-gray/30"></div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-terex-accent mb-2">4.9/5</div>
-                <div className="text-sm text-gray-400">Note moyenne</div>
+                <div className="text-3xl font-light text-terex-accent mb-2">4.9/5</div>
+                <div className="text-sm text-gray-400 font-light">Note moyenne</div>
               </div>
             </div>
             
             {/* Version mobile */}
             <div className="md:hidden grid grid-cols-3 gap-4">
               <div className="text-center">
-                <div className="text-xl font-bold text-terex-accent mb-1">+1000</div>
-                <div className="text-xs text-gray-400">Clients satisfaits</div>
+                <div className="text-xl font-light text-terex-accent mb-1">+1000</div>
+                <div className="text-xs text-gray-400 font-light">Clients satisfaits</div>
               </div>
               <div className="text-center">
-                <div className="text-xl font-bold text-terex-accent mb-1">10M+ CFA</div>
-                <div className="text-xs text-gray-400">Volume mensuel</div>
+                <div className="text-xl font-light text-terex-accent mb-1">10M+ CFA</div>
+                <div className="text-xs text-gray-400 font-light">Volume mensuel</div>
               </div>
               <div className="text-center">
-                <div className="text-xl font-bold text-terex-accent mb-1">4.9/5</div>
-                <div className="text-xs text-gray-400">Note moyenne</div>
+                <div className="text-xl font-light text-terex-accent mb-1">4.9/5</div>
+                <div className="text-xs text-gray-400 font-light">Note moyenne</div>
               </div>
             </div>
           </div>

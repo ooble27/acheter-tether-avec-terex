@@ -26,8 +26,8 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <span className="text-xl font-bold text-terex-accent">1</span>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-white mb-3">Inscription gratuite</h3>
-              <p className="text-gray-300 mb-4 text-sm">
+              <h3 className="text-base sm:text-lg font-light text-white mb-3">Inscription gratuite</h3>
+              <p className="text-gray-400 mb-4 text-sm font-light">
                 Créez votre compte en moins de 2 minutes. Processus de vérification KYC simple et rapide.
               </p>
               <div className="flex items-center justify-center space-x-2 text-terex-accent">
@@ -42,8 +42,8 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <span className="text-xl font-bold text-terex-accent">2</span>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-white mb-3">Choisissez votre service</h3>
-              <p className="text-gray-300 mb-4 text-sm">
+              <h3 className="text-base sm:text-lg font-light text-white mb-3">Choisissez votre service</h3>
+              <p className="text-gray-400 mb-4 text-sm font-light">
                 Achat/vente USDT ou transfert vers l'Afrique. Interface intuitive pour tous vos besoins.
               </p>
               <div className="flex items-center justify-center space-x-2 text-terex-accent">
@@ -58,8 +58,8 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <span className="text-xl font-bold text-terex-accent">3</span>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-white mb-3">Transaction sécurisée</h3>
-              <p className="text-gray-300 mb-4 text-sm">
+              <h3 className="text-base sm:text-lg font-light text-white mb-3">Transaction sécurisée</h3>
+              <p className="text-gray-400 mb-4 text-sm font-light">
                 Confirmez et finalisez votre transaction. Suivi en temps réel jusqu'à la réception.
               </p>
               <div className="flex items-center justify-center space-x-2 text-terex-accent">
