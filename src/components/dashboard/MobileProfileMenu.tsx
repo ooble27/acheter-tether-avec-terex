@@ -102,39 +102,50 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
   );
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="fixed top-4 right-4 z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12 mt-safe"
-        >
-          <User className="h-6 w-6" />
-        </Button>
-      </SheetTrigger>
-      
-      <SheetContent 
-        side="right" 
-        className="w-80 bg-terex-darker border-l border-terex-gray/30 p-0 shadow-2xl no-scrollbar"
+    <>
+      {/* Trigger Button */}
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        onClick={() => setIsOpen(true)}
+        className="fixed top-4 right-4 z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12 mt-safe"
       >
-        <div className="flex flex-col h-full pt-safe">
-          {/* Header */}
-          <div className="p-6 border-b border-terex-gray/30">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-2xl flex items-center justify-center">
-                <User className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-white">Menu Profil</h2>
-                <p className="text-gray-400 text-sm">Paramètres & Options</p>
-              </div>
-            </div>
-          </div>
+        <User className="h-6 w-6" />
+      </Button>
 
-          {/* Content */}
-          <ScrollArea className="flex-1 no-scrollbar">
-            <div className="p-4">
-              <div className="space-y-2">
+      {/* Full Screen Menu */}
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] bg-background">
+          <div className="flex flex-col h-full">
+            {/* Header with Back Button */}
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsOpen(false)}
+                className="rounded-full"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="m15 18-6-6 6-6"/>
+                </svg>
+              </Button>
+              <h1 className="text-xl font-bold">Paramètres</h1>
+              <div className="w-10"></div>
+            </div>
+
+            {/* Content */}
+            <ScrollArea className="flex-1">
+              <div className="p-4 space-y-2">
                 {/* Section Profil */}
                 {renderMenuSection('Profil', profileItems)}
 
@@ -147,21 +158,21 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
                 {/* Section Administration */}
                 {isKYCReviewer() && renderMenuSection('Administration', adminItems)}
               </div>
-            </div>
-          </ScrollArea>
+            </ScrollArea>
 
-          {/* Footer avec bouton de déconnexion */}
-          <div className="p-4 border-t border-terex-gray/30 pb-safe">
-            <Button 
-              onClick={handleLogout}
-              className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
-            >
-              <LogOut className="mr-2 h-5 w-5" />
-              Déconnexion
-            </Button>
+            {/* Footer avec bouton de déconnexion */}
+            <div className="p-4 border-t border-border pb-safe">
+              <Button 
+                onClick={handleLogout}
+                className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
+              >
+                <LogOut className="mr-2 h-5 w-5" />
+                Déconnexion
+              </Button>
+            </div>
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+      )}
+    </>
   );
 }
