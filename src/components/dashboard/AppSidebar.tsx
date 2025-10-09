@@ -1,11 +1,10 @@
 
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck, Phone, Star, Gift, Share2, FileText, Sun, Moon } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck, Phone, Star, Gift, Share2, FileText } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
-import { useTheme } from '@/contexts/ThemeContext';
 import { useState } from 'react';
 
 interface AppSidebarProps {
@@ -76,7 +75,6 @@ const AppSidebarContent = ({
     isKYCReviewer
   } = useUserRole();
   const isTablet = useIsTablet();
-  const { theme, setTheme } = useTheme();
 
   // Vérifier si on est en mode PWA (standalone)
   const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
@@ -246,26 +244,10 @@ const AppSidebarContent = ({
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      {/* Bouton theme toggle + déconnexion - masqué sur tablette */}
-      {!isTablet && <div className="p-4 border-t border-border mt-auto flex-shrink-0 pb-safe bg-card space-y-2">
-          <Button 
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            variant="outline"
-            className="w-full h-12 border-border hover:bg-accent transition-all duration-200 rounded-xl font-light text-sm"
-          >
-            {theme === 'dark' ? (
-              <>
-                <Sun className="mr-2 h-5 w-5" />
-                Mode Clair
-              </>
-            ) : (
-              <>
-                <Moon className="mr-2 h-5 w-5" />
-                Mode Sombre
-              </>
-            )}
-          </Button>
-          <Button onClick={onLogout} className="w-full h-12 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-light text-sm">
+      
+      {/* Bouton de déconnexion - masqué sur tablette */}
+      {!isTablet && <div className="p-4 border-t border-terex-gray/30 mt-auto flex-shrink-0 pb-safe bg-terex-darker">
+          <Button onClick={onLogout} className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm">
             <LogOut className="mr-2 h-5 w-5" />
             Déconnexion
           </Button>
@@ -280,9 +262,9 @@ export function AppSidebar({
 }: AppSidebarProps) {
   const isMobile = useIsMobile();
   if (isMobile) {
-    return null;
+    return null; // Le menu mobile sera géré par MobileMenu
   }
-  return <Sidebar className="bg-card border-r border-border shadow-2xl fixed left-0 top-0 h-screen z-50">
+  return <Sidebar className="bg-terex-darker border-r border-terex-gray/30 shadow-2xl fixed left-0 top-0 h-screen z-50">
       <AppSidebarContent activeSection={activeSection} setActiveSection={setActiveSection} onLogout={onLogout} />
     </Sidebar>;
 }
@@ -294,7 +276,6 @@ export function MobileMenu({
 }: AppSidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { isKYCReviewer, isAdmin } = useUserRole();
-  const { theme, setTheme } = useTheme();
   
   const handleItemClick = (section: string) => {
     setActiveSection(section);
@@ -376,22 +357,22 @@ export function MobileMenu({
         variant="ghost" 
         size="icon" 
         onClick={() => setIsOpen(true)}
-        className="md:hidden fixed top-4 right-4 z-50 bg-card backdrop-blur-sm border border-border text-foreground hover:bg-accent shadow-lg rounded-xl w-12 h-12 mt-safe"
+        className="md:hidden fixed top-4 right-4 z-50 bg-terex-darker backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12 mt-safe"
       >
         <Menu className="h-6 w-6" />
       </Button>
 
       {/* Full Screen Menu */}
       {isOpen && (
-        <div className="fixed inset-0 z-[100] bg-background animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[100] bg-terex-dark animate-in fade-in duration-200">
           <div className="flex flex-col h-full animate-in slide-in-from-right duration-300">
             {/* Header with Back Button */}
-            <div className="flex items-center justify-start p-4 bg-background border-b border-border">
+            <div className="flex items-center justify-start p-4 bg-terex-dark border-b border-terex-gray/30">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsOpen(false)}
-                className="rounded-full hover:bg-accent text-foreground"
+                className="rounded-full hover:bg-terex-gray/30 text-white"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -410,7 +391,7 @@ export function MobileMenu({
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto bg-background">
+            <div className="flex-1 overflow-y-auto bg-terex-dark">
               <div className="p-4 space-y-2">
                 {/* Section Profil */}
                 {renderMenuSection('Profil', profileItems)}
@@ -423,31 +404,6 @@ export function MobileMenu({
 
                 {/* Section Administration */}
                 {isKYCReviewer() && renderMenuSection('Administration', adminItems)}
-
-                {/* Section Apparence */}
-                <div className="pt-4 pb-2">
-                  <div className="flex items-center space-x-2 px-4">
-                    <div className="h-px bg-terex-gray/40 flex-1"></div>
-                    <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Apparence</span>
-                    <div className="h-px bg-terex-gray/40 flex-1"></div>
-                  </div>
-                </div>
-
-                <Button
-                  variant="ghost"
-                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="w-full justify-start p-4 h-auto rounded-xl transition-all duration-200 hover:bg-terex-gray/30"
-                >
-                  <div className="flex items-center space-x-4 w-full">
-                    <div className="p-2 rounded-lg bg-terex-accent/20">
-                      {theme === 'dark' ? <Sun className="h-5 w-5 text-terex-accent" /> : <Moon className="h-5 w-5 text-terex-accent" />}
-                    </div>
-                    <div className="flex-1 text-left">
-                      <div className="font-medium text-sm text-white">{theme === 'dark' ? 'Mode Clair' : 'Mode Sombre'}</div>
-                      <div className="text-xs text-gray-400">Changer l'apparence</div>
-                    </div>
-                  </div>
-                </Button>
 
                 {/* Bouton de déconnexion */}
                 <div className="pt-4 pb-2">

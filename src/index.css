@@ -44,45 +44,6 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 142.4 71.8% 29.2%;
   }
-
-  .light {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 0 0% 98%;
-
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 142.4 71.8% 29.2%;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 142.1 76.2% 36.3%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 142.4 71.8% 29.2%;
-  }
 }
 
 @layer base {
@@ -91,30 +52,27 @@
   }
 
   html, body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-terex-dark text-foreground font-sans;
     font-family: 'Poppins', 'Inter', sans-serif;
     font-weight: 300;
     letter-spacing: -0.01em;
     min-height: 100vh;
     height: 100%;
+    /* Masquer toutes les barres de scroll */
     overflow: overlay;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer et Edge */
   }
 
   html::-webkit-scrollbar,
   body::-webkit-scrollbar {
-    display: none;
+    display: none; /* Safari et Chrome */
   }
 
   #root {
     min-height: 100vh;
     height: 100%;
-    @apply bg-background;
-  }
-
-  .light #root {
-    background-color: #ffffff !important;
+    background-color: #141414 !important;
   }
 
   /* Masquer les barres de scroll sur tous les éléments */
@@ -128,22 +86,23 @@
   }
 }
 
-/* Règles spécifiques pour Safari mobile - mode sombre uniquement */
+/* Règles spécifiques pour Safari mobile pour éviter le flash de couleur verte */
 @supports (-webkit-appearance: none) {
   @media screen and (max-width: 768px) {
-    html:not(.light) {
+    html {
       background-color: #141414 !important;
     }
     
-    body:not(.light *) {
+    body {
       background-color: #141414 !important;
     }
     
-    html:not(.light) #root {
+    #root {
       background-color: #141414 !important;
     }
     
-    body:not(.light *)::before {
+    /* Forcer le fond noir sur tous les éléments racine */
+    body::before {
       content: '';
       position: fixed;
       top: 0;
@@ -156,16 +115,15 @@
   }
 }
 
-/* Protection supplémentaire pour iOS Safari - mode sombre uniquement */
+/* Protection supplémentaire pour iOS Safari */
 @supports (-webkit-touch-callout: none) {
-  html:not(.light), 
-  html:not(.light) body, 
-  html:not(.light) #root {
+  html, body, #root {
     background-color: #141414 !important;
     background: #141414 !important;
   }
   
-  html:not(.light) body {
+  /* Éviter tout flash de couleur au chargement */
+  body {
     opacity: 1 !important;
     background: #141414 !important;
   }
