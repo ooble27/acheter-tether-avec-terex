@@ -1,12 +1,11 @@
 
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck, Phone, Star, Gift, Share2, FileText, Sun, Moon } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck, Phone, Star, Gift, Share2, FileText } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useState } from 'react';
-import { useTheme } from '@/contexts/ThemeContext';
 
 interface AppSidebarProps {
   activeSection: string;
@@ -75,7 +74,6 @@ const AppSidebarContent = ({
   const {
     isKYCReviewer
   } = useUserRole();
-  const { theme, setTheme } = useTheme();
   const isTablet = useIsTablet();
 
   // Vérifier si on est en mode PWA (standalone)
@@ -247,25 +245,9 @@ const AppSidebarContent = ({
         </SidebarGroup>
       </SidebarContent>
       
-      {/* Boutons de thème et déconnexion - masqué sur tablette */}
-      {!isTablet && <div className="p-4 border-t border-terex-gray/30 mt-auto flex-shrink-0 pb-safe bg-terex-darker space-y-3">
-          <Button 
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="w-full h-12 bg-terex-gray/50 hover:bg-terex-gray border border-terex-gray-light text-gray-300 hover:text-white transition-all duration-200 rounded-xl font-light text-sm"
-          >
-            {theme === 'dark' ? (
-              <>
-                <Sun className="mr-2 h-5 w-5" />
-                Mode Clair
-              </>
-            ) : (
-              <>
-                <Moon className="mr-2 h-5 w-5" />
-                Mode Sombre
-              </>
-            )}
-          </Button>
-          <Button onClick={onLogout} className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-light text-sm">
+      {/* Bouton de déconnexion - masqué sur tablette */}
+      {!isTablet && <div className="p-4 border-t border-terex-gray/30 mt-auto flex-shrink-0 pb-safe bg-terex-darker">
+          <Button onClick={onLogout} className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm">
             <LogOut className="mr-2 h-5 w-5" />
             Déconnexion
           </Button>
@@ -294,7 +276,6 @@ export function MobileMenu({
 }: AppSidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { isKYCReviewer, isAdmin } = useUserRole();
-  const { theme, setTheme } = useTheme();
   
   const handleItemClick = (section: string) => {
     setActiveSection(section);
@@ -423,31 +404,6 @@ export function MobileMenu({
 
                 {/* Section Administration */}
                 {isKYCReviewer() && renderMenuSection('Administration', adminItems)}
-
-                {/* Bouton de changement de thème */}
-                <div className="pt-4 pb-2">
-                  <div className="flex items-center space-x-2 px-4">
-                    <div className="h-px bg-terex-gray/40 flex-1"></div>
-                    <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Apparence</span>
-                    <div className="h-px bg-terex-gray/40 flex-1"></div>
-                  </div>
-                </div>
-
-                <Button
-                  variant="ghost"
-                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="w-full justify-start p-4 h-auto rounded-xl transition-all duration-200 text-gray-300 hover:bg-terex-gray/50 hover:text-white"
-                >
-                  <div className="flex items-center space-x-4 w-full">
-                    <div className="p-2 rounded-lg bg-terex-gray/30">
-                      {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                    </div>
-                    <div className="flex-1 text-left">
-                      <div className="font-medium text-sm">{theme === 'dark' ? 'Mode Clair' : 'Mode Sombre'}</div>
-                      <div className="text-xs opacity-75">Changer le thème</div>
-                    </div>
-                  </div>
-                </Button>
 
                 {/* Bouton de déconnexion */}
                 <div className="pt-4 pb-2">
