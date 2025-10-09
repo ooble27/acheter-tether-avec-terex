@@ -298,7 +298,7 @@ export function MobileMenu({
         <div className="fixed inset-0 z-[100] bg-background animate-in fade-in duration-200">
           <div className="flex flex-col h-full animate-in slide-in-from-left duration-300">
             {/* Header with Back Button */}
-            <div className="flex items-center justify-between p-4 border-b border-border bg-background">
+            <div className="flex items-center justify-start p-4 border-b border-border bg-background">
               <Button
                 variant="ghost"
                 size="icon"
@@ -319,24 +319,64 @@ export function MobileMenu({
                   <path d="m15 18-6-6 6-6"/>
                 </svg>
               </Button>
-              <h1 className="text-xl font-bold">Menu</h1>
-              <div className="w-10"></div>
             </div>
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto bg-background">
-              <AppSidebarContent 
-                activeSection={activeSection} 
-                setActiveSection={(section) => {
-                  setActiveSection(section);
-                  setIsOpen(false);
-                }} 
-                onLogout={() => {
+              <div className="px-4 py-6">
+                <SidebarMenu className="space-y-2">
+                  {menuItems.map(item => {
+                    const IconComponent = item.icon;
+                    return (
+                      <SidebarMenuItem key={item.id}>
+                        <SidebarMenuButton 
+                          onClick={() => {
+                            setActiveSection(item.id);
+                            setIsOpen(false);
+                          }} 
+                          className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${
+                            activeSection === item.id 
+                              ? 'bg-gradient-to-r from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/25' 
+                              : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'
+                          }`}
+                        >
+                          <div className="flex items-center space-x-4 w-full">
+                            <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
+                              activeSection === item.id 
+                                ? 'bg-white/20' 
+                                : 'bg-terex-gray/30 group-hover:bg-terex-accent/20'
+                            }`}>
+                              {item.isCustomIcon ? (
+                                <IconComponent className="h-6 w-6" isActive={activeSection === item.id} />
+                              ) : (
+                                <IconComponent className="h-6 w-6" />
+                              )}
+                            </div>
+                            <div className="flex-1 text-left min-w-0">
+                              <div className="font-semibold text-sm truncate">{item.label}</div>
+                              <div className="text-xs opacity-75 truncate">{item.description}</div>
+                            </div>
+                          </div>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  })}
+                </SidebarMenu>
+              </div>
+            </div>
+
+            {/* Footer avec bouton de déconnexion */}
+            <div className="p-4 border-t border-border bg-background pb-safe">
+              <Button 
+                onClick={() => {
                   onLogout();
                   setIsOpen(false);
-                }} 
-                onItemClick={handleItemClick} 
-              />
+                }}
+                className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
+              >
+                <LogOut className="mr-2 h-5 w-5" />
+                Déconnexion
+              </Button>
             </div>
           </div>
         </div>
