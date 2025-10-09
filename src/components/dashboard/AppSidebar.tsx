@@ -11,6 +11,8 @@ interface AppSidebarProps {
   activeSection: string;
   setActiveSection: (section: string) => void;
   onLogout: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 const TetherLogo = ({
@@ -272,10 +274,18 @@ export function AppSidebar({
 export function MobileMenu({
   activeSection,
   setActiveSection,
-  onLogout
+  onLogout,
+  isOpen: externalIsOpen,
+  onClose: externalOnClose
 }: AppSidebarProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const { isKYCReviewer, isAdmin } = useUserRole();
+  
+  // Utiliser l'état externe si fourni, sinon utiliser l'état interne
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+  const setIsOpen = externalOnClose ? (open: boolean) => {
+    if (!open) externalOnClose();
+  } : setInternalIsOpen;
   
   const handleItemClick = (section: string) => {
     setActiveSection(section);
@@ -352,16 +362,6 @@ export function MobileMenu({
 
   return (
     <>
-      {/* Hamburger Button - visible partout (desktop et mobile) */}
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        onClick={() => setIsOpen(true)}
-        className="fixed top-4 right-4 z-50 bg-terex-darker backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12 mt-safe"
-      >
-        <Menu className="h-6 w-6" />
-      </Button>
-
       {/* Full Screen Menu */}
       {isOpen && (
         <div className="fixed inset-0 z-[100] bg-terex-dark animate-in fade-in duration-200">

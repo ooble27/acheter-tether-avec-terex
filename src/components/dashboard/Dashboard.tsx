@@ -1,8 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar, MobileMenu } from '@/components/dashboard/AppSidebar';
+import { MobileMenu } from '@/components/dashboard/AppSidebar';
+import { DashboardNavbar } from '@/components/dashboard/DashboardNavbar';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
 import { MobileProfileMenu } from '@/components/dashboard/MobileProfileMenu';
 import { BuyUSDT } from '@/components/features/BuyUSDT';
@@ -38,6 +38,7 @@ interface DashboardProps {
 
 export function Dashboard({ user, onLogout }: DashboardProps) {
   const [activeSection, setActiveSection] = useState('home');
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
@@ -160,15 +161,23 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   return (
     <TransactionProvider>
       <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-terex-dark">
-          {/* Menu hamburger pour desktop et mobile */}
+        <div className="min-h-screen flex flex-col w-full bg-terex-dark">
+          {/* Barre de navigation */}
+          <DashboardNavbar 
+            onMenuClick={() => setMenuOpen(true)}
+            activeSection={activeSection}
+          />
+          
+          {/* Menu hamburger */}
           <MobileMenu 
             activeSection={activeSection}
             setActiveSection={handleNavigate}
             onLogout={handleLogout}
+            isOpen={menuOpen}
+            onClose={() => setMenuOpen(false)}
           />
 
-          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'} relative ${isMobile ? 'pb-20' : ''}`}>
+          <main className={`flex-1 ${isMobile ? 'p-4 pt-20' : 'p-6 pt-20'} relative ${isMobile ? 'pb-20' : ''}`}>
             {/* Menu profil mobile pour PWA */}
             {isMobile && isPWA && (
               <MobileProfileMenu
