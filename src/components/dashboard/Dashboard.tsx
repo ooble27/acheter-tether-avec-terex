@@ -180,7 +180,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             onClose={() => setMenuOpen(false)}
           />
 
-          <main className={`flex-1 ${isMobile ? 'p-4 pt-20 pb-20' : 'p-6 pt-20 pb-24'} relative`}>
+          <main className={`flex-1 ${isMobile ? 'p-4 pt-4 pb-20' : 'p-6 pt-20 pb-24'} relative`}>
             {/* Menu profil mobile pour PWA */}
             {isMobile && isPWA && (
               <MobileProfileMenu
