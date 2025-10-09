@@ -288,7 +288,7 @@ export function MobileMenu({
         variant="ghost" 
         size="icon" 
         onClick={() => setIsOpen(true)}
-        className="md:hidden fixed top-4 left-4 z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12 mt-safe"
+        className="md:hidden fixed top-4 right-4 z-50 bg-white/90 backdrop-blur-sm border border-gray-200 text-gray-800 hover:bg-white hover:text-terex-accent shadow-lg rounded-xl w-12 h-12 mt-safe"
       >
         <Menu className="h-6 w-6" />
       </Button>
@@ -296,9 +296,9 @@ export function MobileMenu({
       {/* Full Screen Menu */}
       {isOpen && (
         <div className="fixed inset-0 z-[100] bg-background animate-in fade-in duration-200">
-          <div className="flex flex-col h-full animate-in slide-in-from-left duration-300">
+          <div className="flex flex-col h-full animate-in slide-in-from-right duration-300">
             {/* Header with Back Button */}
-            <div className="flex items-center justify-start p-4 border-b border-border bg-background">
+            <div className="flex items-center justify-end p-4 border-b border-border bg-background">
               <Button
                 variant="ghost"
                 size="icon"
