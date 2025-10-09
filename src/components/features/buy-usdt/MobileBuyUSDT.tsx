@@ -128,7 +128,7 @@ export function MobileBuyUSDT() {
                   placeholder="0"
                   value={fiatAmount}
                   onChange={(e) => setFiatAmount(e.target.value)}
-                  className="bg-terex-darker border-terex-gray text-white text-3xl font-light h-16 text-center pr-20"
+                  className="bg-terex-darker border-terex-gray text-white text-3xl font-light h-16 text-center px-20"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-light">
                   {currency}
