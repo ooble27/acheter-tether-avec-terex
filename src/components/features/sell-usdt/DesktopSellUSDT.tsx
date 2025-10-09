@@ -125,7 +125,7 @@ export function DesktopSellUSDT() {
       <div className="w-full max-w-lg">
         {/* Étape 1: Montant */}
         {step === 'amount' && (
-          <div className="space-y-6 bg-terex-darker/50 rounded-2xl p-8 border border-terex-gray/30">
+          <div className="space-y-6 rounded-2xl p-8">
             <div className="space-y-2">
               <h2 className="text-2xl font-light text-white">Vendre USDT</h2>
               <p className="text-sm text-gray-400 font-light">Entrez le montant d'USDT que vous souhaitez vendre</p>
@@ -172,7 +172,7 @@ export function DesktopSellUSDT() {
 
         {/* Étape 2: Méthode de paiement */}
         {step === 'method' && (
-          <div className="space-y-6 bg-terex-darker/50 rounded-2xl p-8 border border-terex-gray/30">
+          <div className="space-y-6 rounded-2xl p-8">
             <div className="space-y-2">
               <button 
                 onClick={() => setStep('amount')}
@@ -292,7 +292,7 @@ export function DesktopSellUSDT() {
 
         {/* Étape 3: Réseau */}
         {step === 'network' && (
-          <div className="space-y-6 bg-terex-darker/50 rounded-2xl p-8 border border-terex-gray/30">
+          <div className="space-y-6 rounded-2xl p-8">
             <div className="space-y-2">
               <button 
                 onClick={() => setStep('method')}
@@ -347,7 +347,7 @@ export function DesktopSellUSDT() {
 
         {/* Étape 4: Confirmation */}
         {step === 'confirm' && (
-          <div className="space-y-6 bg-terex-darker/50 rounded-2xl p-8 border border-terex-gray/30">
+          <div className="space-y-6 rounded-2xl p-8">
             <div className="space-y-2">
               <button 
                 onClick={() => setStep('network')}
@@ -405,7 +405,7 @@ export function DesktopSellUSDT() {
 
         {/* Étape 5: Succès */}
         {step === 'success' && (
-          <div className="space-y-6 bg-terex-darker/50 rounded-2xl p-8 border border-terex-gray/30">
+          <div className="space-y-6 rounded-2xl p-8">
             <div className="text-center space-y-4">
               <div className="w-16 h-16 mx-auto bg-green-500/20 rounded-full flex items-center justify-center">
                 <Check className="w-8 h-8 text-green-400" />

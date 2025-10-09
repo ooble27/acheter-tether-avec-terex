@@ -153,7 +153,7 @@ export function DesktopBuyUSDT() {
       <div className="w-full max-w-lg">
         {/* Étape 1: Montant */}
         {step === 'amount' && (
-          <div className="space-y-6 bg-terex-darker/50 rounded-2xl p-8 border border-terex-gray/30">
+          <div className="space-y-6 rounded-2xl p-8">
             <div className="space-y-2">
               <h2 className="text-2xl font-light text-white">Acheter USDT</h2>
               <p className="text-sm text-gray-400 font-light">Entrez le montant que vous souhaitez dépenser</p>
@@ -239,7 +239,7 @@ export function DesktopBuyUSDT() {
 
         {/* Étape 2: Réseau */}
         {step === 'network' && (
-          <div className="space-y-6 bg-terex-darker/50 rounded-2xl p-8 border border-terex-gray/30">
+          <div className="space-y-6 rounded-2xl p-8">
             <div className="space-y-2">
               <button 
                 onClick={() => setStep('amount')}
@@ -287,7 +287,7 @@ export function DesktopBuyUSDT() {
 
         {/* Étape 3: Adresse Wallet */}
         {step === 'address' && (
-          <div className="space-y-6 bg-terex-darker/50 rounded-2xl p-8 border border-terex-gray/30">
+          <div className="space-y-6 rounded-2xl p-8">
             <div className="space-y-2">
               <button 
                 onClick={() => setStep('network')}
@@ -327,7 +327,7 @@ export function DesktopBuyUSDT() {
 
         {/* Étape 3bis: Compte Binance */}
         {step === 'binance' && (
-          <div className="space-y-6 bg-terex-darker/50 rounded-2xl p-8 border border-terex-gray/30 max-h-[calc(100vh-12rem)] overflow-y-auto">
+          <div className="space-y-6 rounded-2xl p-8 max-h-[calc(100vh-12rem)] overflow-y-auto">
             <div className="space-y-2">
               <button 
                 onClick={() => setStep('network')}
@@ -370,7 +370,7 @@ export function DesktopBuyUSDT() {
 
         {/* Étape 4: Confirmation */}
         {step === 'confirm' && (
-          <div className="space-y-6 bg-terex-darker/50 rounded-2xl p-8 border border-terex-gray/30">
+          <div className="space-y-6 rounded-2xl p-8">
             <div className="space-y-2">
               <button 
                 onClick={() => isBinanceNetwork ? setStep('binance') : setStep('address')}
