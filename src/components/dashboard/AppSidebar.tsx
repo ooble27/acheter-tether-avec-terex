@@ -1,7 +1,7 @@
 
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck, Phone, Star, Gift, Share2, FileText } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -294,14 +294,14 @@ export function MobileMenu({
 
   const supportItems = [
     { id: 'faq', label: 'FAQ', icon: HelpCircle, description: 'Questions fréquentes' },
-    { id: 'contact', label: 'Nous Contacter', icon: User, description: 'Support client 24/7' },
-    { id: 'feedback', label: 'Avis & Suggestions', icon: User, description: 'Donnez votre avis' },
+    { id: 'contact', label: 'Nous Contacter', icon: Phone, description: 'Support client 24/7' },
+    { id: 'feedback', label: 'Avis & Suggestions', icon: Star, description: 'Donnez votre avis' },
   ];
 
   const moreItems = [
-    { id: 'referral', label: 'Parrainage', icon: User, description: 'Invitez vos amis' },
-    { id: 'share-app', label: 'Partager l\'App', icon: User, description: 'Partager Terex' },
-    { id: 'terms', label: 'Conditions d\'Utilisation', icon: User, description: 'CGU et politique' },
+    { id: 'referral', label: 'Parrainage', icon: Gift, description: 'Invitez vos amis' },
+    { id: 'share-app', label: 'Partager l\'App', icon: Share2, description: 'Partager Terex' },
+    { id: 'terms', label: 'Conditions d\'Utilisation', icon: FileText, description: 'CGU et politique' },
   ];
 
   const adminItems = [
