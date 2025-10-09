@@ -275,11 +275,80 @@ export function MobileMenu({
   onLogout
 }: AppSidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { isKYCReviewer, isAdmin } = useUserRole();
   
-  const handleItemClick = () => {
-    setActiveSection(activeSection);
+  const handleItemClick = (section: string) => {
+    setActiveSection(section);
     setIsOpen(false);
   };
+
+  const handleLogout = () => {
+    setIsOpen(false);
+    onLogout();
+  };
+
+  const profileItems = [
+    { id: 'profile', label: 'Mon Profil', icon: User, description: 'Informations personnelles' },
+    { id: 'history', label: 'Historique', icon: History, description: 'Mes transactions' },
+  ];
+
+  const supportItems = [
+    { id: 'faq', label: 'FAQ', icon: HelpCircle, description: 'Questions fréquentes' },
+    { id: 'contact', label: 'Nous Contacter', icon: User, description: 'Support client 24/7' },
+    { id: 'feedback', label: 'Avis & Suggestions', icon: User, description: 'Donnez votre avis' },
+  ];
+
+  const moreItems = [
+    { id: 'referral', label: 'Parrainage', icon: User, description: 'Invitez vos amis' },
+    { id: 'share-app', label: 'Partager l\'App', icon: User, description: 'Partager Terex' },
+    { id: 'terms', label: 'Conditions d\'Utilisation', icon: User, description: 'CGU et politique' },
+  ];
+
+  const adminItems = [
+    { id: 'kyc-admin', label: 'Administration KYC', icon: Shield, description: 'Vérifications d\'identité' },
+    { id: 'orders-admin', label: 'Gestion Commandes', icon: Shield, description: 'Ordres et transactions' },
+    { id: 'job-applications', label: 'Candidatures', icon: UserCheck, description: 'Gestion des candidatures' },
+  ];
+
+  const renderMenuSection = (title: string, items: any[]) => (
+    <>
+      <div className="pt-4 pb-2">
+        <div className="flex items-center space-x-2 px-4">
+          <div className="h-px bg-terex-gray/40 flex-1"></div>
+          <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">{title}</span>
+          <div className="h-px bg-terex-gray/40 flex-1"></div>
+        </div>
+      </div>
+      
+      {items.map((item) => {
+        const IconComponent = item.icon;
+        const isActive = activeSection === item.id;
+        
+        return (
+          <Button
+            key={item.id}
+            variant="ghost"
+            onClick={() => handleItemClick(item.id)}
+            className={`w-full justify-start p-4 h-auto rounded-xl transition-all duration-200 ${
+              isActive 
+                ? 'bg-gradient-to-r from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/25' 
+                : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white'
+            }`}
+          >
+            <div className="flex items-center space-x-4 w-full">
+              <div className={`p-2 rounded-lg ${isActive ? 'bg-white/20' : 'bg-terex-gray/30'}`}>
+                <IconComponent className="h-5 w-5" />
+              </div>
+              <div className="flex-1 text-left">
+                <div className="font-medium text-sm">{item.label}</div>
+                <div className="text-xs opacity-75">{item.description}</div>
+              </div>
+            </div>
+          </Button>
+        );
+      })}
+    </>
+  );
 
   return (
     <>
@@ -322,94 +391,31 @@ export function MobileMenu({
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto bg-terex-dark px-4 py-6">
-              {/* Section Navigation */}
-              <div className="mb-6">
-                <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3 px-2">Navigation</h3>
-                <div className="bg-terex-darker rounded-2xl overflow-hidden">
-                  {menuItems.slice(0, 4).map((item, index) => {
-                    const IconComponent = item.icon;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          setActiveSection(item.id);
-                          setIsOpen(false);
-                        }} 
-                        className={`w-full flex items-center space-x-4 p-4 transition-all duration-200 ${
-                          index !== 3 ? 'border-b border-terex-gray/20' : ''
-                        } ${
-                          activeSection === item.id 
-                            ? 'bg-terex-accent/10 text-terex-accent' 
-                            : 'text-gray-300 hover:bg-terex-gray/30'
-                        }`}
-                      >
-                        <div className="flex-shrink-0">
-                          {item.isCustomIcon ? (
-                            <IconComponent className="h-7 w-7" isActive={activeSection === item.id} color={activeSection === item.id ? 'accent' : 'default'} />
-                          ) : (
-                            <IconComponent className="h-7 w-7" />
-                          )}
-                        </div>
-                        <div className="flex-1 text-left">
-                          <div className="font-medium text-base">{item.label}</div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+            <div className="flex-1 overflow-y-auto bg-terex-dark">
+              <div className="p-4 space-y-2">
+                {/* Section Profil */}
+                {renderMenuSection('Profil', profileItems)}
 
-              {/* Section Compte */}
-              <div className="mb-6">
-                <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3 px-2">Compte</h3>
-                <div className="bg-terex-darker rounded-2xl overflow-hidden">
-                  {menuItems.slice(4).map((item, index) => {
-                    const IconComponent = item.icon;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          setActiveSection(item.id);
-                          setIsOpen(false);
-                        }} 
-                        className={`w-full flex items-center space-x-4 p-4 transition-all duration-200 ${
-                          index !== menuItems.slice(4).length - 1 ? 'border-b border-terex-gray/20' : ''
-                        } ${
-                          activeSection === item.id 
-                            ? 'bg-terex-accent/10 text-terex-accent' 
-                            : 'text-gray-300 hover:bg-terex-gray/30'
-                        }`}
-                      >
-                        <div className="flex-shrink-0">
-                          {item.isCustomIcon ? (
-                            <IconComponent className="h-7 w-7" isActive={activeSection === item.id} color={activeSection === item.id ? 'accent' : 'default'} />
-                          ) : (
-                            <IconComponent className="h-7 w-7" />
-                          )}
-                        </div>
-                        <div className="flex-1 text-left">
-                          <div className="font-medium text-base">{item.label}</div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
+                {/* Section Support */}
+                {renderMenuSection('Support', supportItems)}
+
+                {/* Section Plus */}
+                {renderMenuSection('Plus', moreItems)}
+
+                {/* Section Administration */}
+                {isKYCReviewer() && renderMenuSection('Administration', adminItems)}
               </div>
             </div>
 
             {/* Footer avec bouton de déconnexion */}
             <div className="p-4 bg-terex-dark border-t border-terex-gray/30 pb-safe">
-              <button
-                onClick={() => {
-                  onLogout();
-                  setIsOpen(false);
-                }}
-                className="w-full flex items-center justify-center space-x-2 p-4 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white rounded-xl font-medium transition-all duration-200"
+              <Button 
+                onClick={handleLogout}
+                className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
               >
-                <LogOut className="h-5 w-5" />
-                <span>Déconnexion</span>
-              </button>
+                <LogOut className="mr-2 h-5 w-5" />
+                Déconnexion
+              </Button>
             </div>
           </div>
         </div>
