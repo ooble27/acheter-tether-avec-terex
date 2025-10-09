@@ -161,23 +161,12 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     <TransactionProvider>
       <SidebarProvider>
         <div className="min-h-screen flex w-full bg-terex-dark">
-          {/* Sidebar desktop ou menu mobile classique si pas PWA */}
-          {!isMobile && (
-            <AppSidebar 
-              activeSection={activeSection}
-              setActiveSection={handleNavigate}
-              onLogout={handleLogout}
-            />
-          )}
-          
-          {/* Menu mobile classique pour navigation web (pas PWA) */}
-          {isMobile && !isPWA && (
-            <MobileMenu 
-              activeSection={activeSection}
-              setActiveSection={handleNavigate}
-              onLogout={handleLogout}
-            />
-          )}
+          {/* Menu hamburger pour desktop et mobile */}
+          <MobileMenu 
+            activeSection={activeSection}
+            setActiveSection={handleNavigate}
+            onLogout={handleLogout}
+          />
 
           <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'} relative ${isMobile ? 'pb-20' : ''}`}>
             {/* Menu profil mobile pour PWA */}

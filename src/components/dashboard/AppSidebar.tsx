@@ -352,12 +352,12 @@ export function MobileMenu({
 
   return (
     <>
-      {/* Hamburger Button */}
+      {/* Hamburger Button - visible partout (desktop et mobile) */}
       <Button 
         variant="ghost" 
         size="icon" 
         onClick={() => setIsOpen(true)}
-        className="md:hidden fixed top-4 right-4 z-50 bg-terex-darker backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12 mt-safe"
+        className="fixed top-4 right-4 z-50 bg-terex-darker backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12 mt-safe"
       >
         <Menu className="h-6 w-6" />
       </Button>
