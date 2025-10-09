@@ -167,6 +167,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
           <DashboardNavbar 
             onMenuClick={() => setMenuOpen(true)}
             activeSection={activeSection}
+            setActiveSection={handleNavigate}
+            onLogout={handleLogout}
           />
           
           {/* Menu hamburger */}

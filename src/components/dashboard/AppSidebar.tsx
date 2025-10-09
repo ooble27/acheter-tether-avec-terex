@@ -280,6 +280,7 @@ export function MobileMenu({
 }: AppSidebarProps) {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const { isKYCReviewer, isAdmin } = useUserRole();
+  const isMobile = useIsMobile();
   
   // Utiliser l'état externe si fourni, sinon utiliser l'état interne
   const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
@@ -360,82 +361,88 @@ export function MobileMenu({
     </>
   );
 
-  return (
-    <>
-      {/* Full Screen Menu */}
-      {isOpen && (
-        <div className="fixed inset-0 z-[100] bg-terex-dark animate-in fade-in duration-200">
-          <div className="flex flex-col h-full animate-in slide-in-from-right duration-300">
-            {/* Header with Back Button */}
-            <div className="flex items-center justify-start p-4 bg-terex-dark border-b border-terex-gray/30">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsOpen(false)}
-                className="rounded-full hover:bg-terex-gray/30 text-white"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="m15 18-6-6 6-6"/>
-                </svg>
-              </Button>
-            </div>
-
-            {/* Content */}
-            <div className="flex-1 overflow-y-auto bg-terex-dark">
-              <div className="p-4 space-y-2">
-                {/* Section Profil */}
-                {renderMenuSection('Profil', profileItems)}
-
-                {/* Section Support */}
-                {renderMenuSection('Support', supportItems)}
-
-                {/* Section Plus */}
-                {renderMenuSection('Plus', moreItems)}
-
-                {/* Section Administration */}
-                {isKYCReviewer() && renderMenuSection('Administration', adminItems)}
-
-                {/* Bouton de déconnexion */}
-                <div className="pt-4 pb-2">
-                  <div className="flex items-center space-x-2 px-4">
-                    <div className="h-px bg-terex-gray/40 flex-1"></div>
-                    <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Compte</span>
-                    <div className="h-px bg-terex-gray/40 flex-1"></div>
-                  </div>
-                </div>
-
+  // Sur mobile, afficher en plein écran. Sur desktop, afficher en popover
+  if (isMobile) {
+    return (
+      <>
+        {/* Full Screen Menu pour Mobile */}
+        {isOpen && (
+          <div className="fixed inset-0 z-[100] bg-terex-dark animate-in fade-in duration-200">
+            <div className="flex flex-col h-full animate-in slide-in-from-right duration-300">
+              {/* Header with Back Button */}
+              <div className="flex items-center justify-start p-4 bg-terex-dark border-b border-terex-gray/30">
                 <Button
                   variant="ghost"
-                  onClick={handleLogout}
-                  className="w-full justify-start p-4 h-auto rounded-xl transition-all duration-200 text-red-400 hover:bg-red-600/20 hover:text-red-300"
+                  size="icon"
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-full hover:bg-terex-gray/30 text-white"
                 >
-                  <div className="flex items-center space-x-4 w-full">
-                    <div className="p-2 rounded-lg bg-red-600/20">
-                      <LogOut className="h-5 w-5" />
-                    </div>
-                    <div className="flex-1 text-left">
-                      <div className="font-medium text-sm">Déconnexion</div>
-                      <div className="text-xs opacity-75">Quitter votre session</div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="m15 18-6-6 6-6"/>
+                  </svg>
+                </Button>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto bg-terex-dark">
+                <div className="p-4 space-y-2">
+                  {/* Section Profil */}
+                  {renderMenuSection('Profil', profileItems)}
+
+                  {/* Section Support */}
+                  {renderMenuSection('Support', supportItems)}
+
+                  {/* Section Plus */}
+                  {renderMenuSection('Plus', moreItems)}
+
+                  {/* Section Administration */}
+                  {isKYCReviewer() && renderMenuSection('Administration', adminItems)}
+
+                  {/* Bouton de déconnexion */}
+                  <div className="pt-4 pb-2">
+                    <div className="flex items-center space-x-2 px-4">
+                      <div className="h-px bg-terex-gray/40 flex-1"></div>
+                      <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Compte</span>
+                      <div className="h-px bg-terex-gray/40 flex-1"></div>
                     </div>
                   </div>
-                </Button>
-                
-                <div className="pb-4"></div>
+
+                  <Button
+                    variant="ghost"
+                    onClick={handleLogout}
+                    className="w-full justify-start p-4 h-auto rounded-xl transition-all duration-200 text-red-400 hover:bg-red-600/20 hover:text-red-300"
+                  >
+                    <div className="flex items-center space-x-4 w-full">
+                      <div className="p-2 rounded-lg bg-red-600/20">
+                        <LogOut className="h-5 w-5" />
+                      </div>
+                      <div className="flex-1 text-left">
+                        <div className="font-medium text-sm">Déconnexion</div>
+                        <div className="text-xs opacity-75">Quitter votre session</div>
+                      </div>
+                    </div>
+                  </Button>
+                  
+                  <div className="pb-4"></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-    </>
-  );
+        )}
+      </>
+    );
+  }
+
+  // Desktop: Popover dropdown
+  return null;
 }

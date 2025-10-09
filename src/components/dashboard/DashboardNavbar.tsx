@@ -1,12 +1,20 @@
 import { Menu, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { DesktopMenuPopover } from './DesktopMenuPopover';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useState } from 'react';
 
 interface DashboardNavbarProps {
   onMenuClick: () => void;
   activeSection: string;
+  setActiveSection?: (section: string) => void;
+  onLogout?: () => void;
 }
 
-export function DashboardNavbar({ onMenuClick, activeSection }: DashboardNavbarProps) {
+export function DashboardNavbar({ onMenuClick, activeSection, setActiveSection, onLogout }: DashboardNavbarProps) {
+  const isMobile = useIsMobile();
+  const [menuPopoverOpen, setMenuPopoverOpen] = useState(false);
+
   const getSectionTitle = (section: string) => {
     const titles: Record<string, string> = {
       'home': 'Tableau de bord',
@@ -78,14 +86,33 @@ export function DashboardNavbar({ onMenuClick, activeSection }: DashboardNavbarP
             </Button>
 
             {/* Bouton Menu Hamburger */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onMenuClick}
-              className="text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
+            {isMobile ? (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onMenuClick}
+                className="text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            ) : (
+              <DesktopMenuPopover
+                activeSection={activeSection}
+                setActiveSection={setActiveSection || (() => {})}
+                onLogout={onLogout || (() => {})}
+                isOpen={menuPopoverOpen}
+                onOpenChange={setMenuPopoverOpen}
+                trigger={
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
+                  >
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                }
+              />
+            )}
           </div>
         </div>
       </div>
