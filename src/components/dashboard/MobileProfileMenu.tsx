@@ -159,9 +159,9 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
                 <div className="pt-6 pb-4">
                   <Button 
                     onClick={handleLogout}
-                    className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
+                    className="w-full h-14 bg-white hover:bg-gray-100 text-black transition-all duration-200 rounded-xl font-medium text-base"
                   >
-                    <LogOut className="mr-2 h-5 w-5" />
+                    <LogOut className="mr-3 h-6 w-6" />
                     Déconnexion
                   </Button>
                 </div>
