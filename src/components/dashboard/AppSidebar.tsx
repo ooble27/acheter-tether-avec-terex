@@ -323,40 +323,78 @@ export function MobileMenu({
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto bg-terex-dark px-4 py-6">
-              <div className="space-y-2">
-                {menuItems.map(item => {
-                  const IconComponent = item.icon;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        setActiveSection(item.id);
-                        setIsOpen(false);
-                      }} 
-                      className={`w-full flex items-center space-x-4 p-4 rounded-xl transition-all duration-200 ${
-                        activeSection === item.id 
-                          ? 'bg-gradient-to-r from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/25' 
-                          : 'bg-terex-darker text-gray-300 hover:bg-terex-gray/50 hover:text-white'
-                      }`}
-                    >
-                      <div className={`flex-shrink-0 p-2 rounded-lg ${
-                        activeSection === item.id 
-                          ? 'bg-white/20' 
-                          : 'bg-terex-gray/30'
-                      }`}>
-                        {item.isCustomIcon ? (
-                          <IconComponent className="h-6 w-6" isActive={activeSection === item.id} />
-                        ) : (
-                          <IconComponent className="h-6 w-6" />
-                        )}
-                      </div>
-                      <div className="flex-1 text-left">
-                        <div className="font-semibold text-sm">{item.label}</div>
-                        <div className="text-xs opacity-75">{item.description}</div>
-                      </div>
-                    </button>
-                  );
-                })}
+              {/* Section Navigation */}
+              <div className="mb-6">
+                <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3 px-2">Navigation</h3>
+                <div className="bg-terex-darker rounded-2xl overflow-hidden">
+                  {menuItems.slice(0, 4).map((item, index) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          setActiveSection(item.id);
+                          setIsOpen(false);
+                        }} 
+                        className={`w-full flex items-center space-x-4 p-4 transition-all duration-200 ${
+                          index !== 3 ? 'border-b border-terex-gray/20' : ''
+                        } ${
+                          activeSection === item.id 
+                            ? 'bg-terex-accent/10 text-terex-accent' 
+                            : 'text-gray-300 hover:bg-terex-gray/30'
+                        }`}
+                      >
+                        <div className="flex-shrink-0">
+                          {item.isCustomIcon ? (
+                            <IconComponent className="h-7 w-7" isActive={activeSection === item.id} color={activeSection === item.id ? 'accent' : 'default'} />
+                          ) : (
+                            <IconComponent className="h-7 w-7" />
+                          )}
+                        </div>
+                        <div className="flex-1 text-left">
+                          <div className="font-medium text-base">{item.label}</div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Section Compte */}
+              <div className="mb-6">
+                <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3 px-2">Compte</h3>
+                <div className="bg-terex-darker rounded-2xl overflow-hidden">
+                  {menuItems.slice(4).map((item, index) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          setActiveSection(item.id);
+                          setIsOpen(false);
+                        }} 
+                        className={`w-full flex items-center space-x-4 p-4 transition-all duration-200 ${
+                          index !== menuItems.slice(4).length - 1 ? 'border-b border-terex-gray/20' : ''
+                        } ${
+                          activeSection === item.id 
+                            ? 'bg-terex-accent/10 text-terex-accent' 
+                            : 'text-gray-300 hover:bg-terex-gray/30'
+                        }`}
+                      >
+                        <div className="flex-shrink-0">
+                          {item.isCustomIcon ? (
+                            <IconComponent className="h-7 w-7" isActive={activeSection === item.id} color={activeSection === item.id ? 'accent' : 'default'} />
+                          ) : (
+                            <IconComponent className="h-7 w-7" />
+                          )}
+                        </div>
+                        <div className="flex-1 text-left">
+                          <div className="font-medium text-base">{item.label}</div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
