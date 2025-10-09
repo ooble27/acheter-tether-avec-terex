@@ -7,6 +7,7 @@ import {
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
 import AuthCallback from "./pages/AuthCallback";
+import DashboardPage from "./pages/DashboardPage";
 import NotFound from "./pages/NotFound";
 import AboutPage from "./pages/AboutPage";
 import CareersPage from "./pages/CareersPage";
@@ -43,6 +44,7 @@ function App() {
               <Toaster />
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="/blockchain" element={<BlockchainPage />} />

@@ -8,7 +8,6 @@ import { PublicHome } from '@/components/marketing/PublicHome';
 const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const [showDashboard, setShowDashboard] = useState(false);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -30,18 +29,21 @@ const Index = () => {
                (window.navigator as any).standalone ||
                document.referrer.includes('android-app://');
 
+  // Redirection automatique vers dashboard si utilisateur connecté
   useEffect(() => {
-    // Si on est en mode PWA et pas de chargement
-    if (isPWA && !loading) {
-      if (!user) {
-        // Pas d'utilisateur connecté, rediriger vers l'authentification
-        navigate('/auth');
-      } else {
-        // Utilisateur connecté, afficher directement le dashboard
-        setShowDashboard(true);
-      }
+    if (!loading && user) {
+      // Utilisateur connecté -> toujours rediriger vers dashboard
+      // Que ce soit en PWA ou navigateur web
+      const timer = setTimeout(() => {
+        navigate('/dashboard');
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    } else if (!loading && !user && isPWA) {
+      // Pas d'utilisateur en PWA -> rediriger vers auth
+      navigate('/auth');
     }
-  }, [isPWA, user, loading, navigate]);
+  }, [user, loading, navigate, isPWA]);
 
   if (loading) {
     return (
@@ -51,37 +53,17 @@ const Index = () => {
     );
   }
 
-  // Créer l'objet utilisateur avec le nom extrait des métadonnées
-  const userWithName = user ? {
-    email: user.email || '',
-    name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
-  } : null;
-
-  const handleGetStarted = () => {
-    navigate('/auth');
-  };
-
-  const handleShowDashboard = () => {
-    setShowDashboard(true);
-  };
-
-  const handleBackToHome = () => {
-    setShowDashboard(false);
-  };
-
-  // Si on est en mode PWA et utilisateur connecté, afficher le dashboard directement
-  if (isPWA && userWithName) {
-    return <Dashboard user={userWithName} onLogout={handleBackToHome} />;
+  // Si utilisateur connecté, afficher un état de redirection
+  if (user) {
+    return (
+      <div className="min-h-screen bg-terex-dark flex items-center justify-center">
+        <div className="text-white text-lg">Redirection vers le dashboard...</div>
+      </div>
+    );
   }
 
-  // Si l'utilisateur est connecté et veut voir le dashboard (mode web)
-  if (userWithName && showDashboard && !isPWA) {
-    return <Dashboard user={userWithName} onLogout={handleBackToHome} />;
-  }
-
-  // Si on est en mode PWA sans utilisateur, ne pas afficher la landing page
-  // (la redirection vers /auth se fera via l'useEffect ci-dessus)
-  if (isPWA && !userWithName) {
+  // Si on est en PWA sans utilisateur
+  if (isPWA && !user) {
     return (
       <div className="min-h-screen bg-terex-dark flex items-center justify-center">
         <div className="text-white text-lg">Redirection...</div>
@@ -89,8 +71,12 @@ const Index = () => {
     );
   }
 
-  // Sinon, afficher la landing page (mode navigateur web normal)
-  return <PublicHome onGetStarted={handleGetStarted} user={userWithName} onShowDashboard={handleShowDashboard} />;
+  // Sinon, afficher la landing page (utilisateur non connecté en mode web)
+  const handleGetStarted = () => {
+    navigate('/auth');
+  };
+
+  return <PublicHome onGetStarted={handleGetStarted} user={null} onShowDashboard={() => {}} />;
 };
 
 export default Index;
