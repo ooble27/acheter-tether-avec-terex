@@ -222,10 +222,10 @@ export function Profile({ user, onLogout }: ProfileProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-terex-dark p-2 md:p-4 lg:p-6">
-      <div className="max-w-6xl mx-auto space-y-4">
+    <div className="min-h-screen bg-terex-dark px-0 md:p-4 lg:p-6 py-3">
+      <div className="max-w-7xl mx-auto space-y-4">
         {/* Header avec bouton de déconnexion */}
-        <div className="flex items-center justify-between mb-6 px-2">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl md:text-3xl font-light text-white mb-1">Mon Profil</h1>
             <p className="text-sm text-gray-400 font-light">{user?.email}</p>
