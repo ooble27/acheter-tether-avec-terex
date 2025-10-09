@@ -288,7 +288,7 @@ export function MobileMenu({
         variant="ghost" 
         size="icon" 
         onClick={() => setIsOpen(true)}
-        className="md:hidden fixed top-4 right-4 z-50 bg-white/90 backdrop-blur-sm border border-gray-200 text-gray-800 hover:bg-white hover:text-terex-accent shadow-lg rounded-xl w-12 h-12 mt-safe"
+        className="md:hidden fixed top-4 right-4 z-50 bg-terex-darker backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12 mt-safe"
       >
         <Menu className="h-6 w-6" />
       </Button>
