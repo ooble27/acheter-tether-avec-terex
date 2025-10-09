@@ -69,112 +69,148 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   };
 
   if (isMobile) {
-    // Design mobile avec px-0 pour tous les conteneurs
     return (
-      <div className="min-h-screen bg-terex-dark px-0 py-3 space-y-3 text-xs overflow-y-auto scrollbar-hide">
-        {/* Header avec px-0 */}
-        <div className="flex items-center space-x-3 mb-6 px-0">
-          <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
-            <Activity className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-white">
-              Bienvenue, <span className="text-terex-accent">{user?.name}</span>
-            </h1>
-            <p className="text-gray-400 text-base">Plateforme USDT</p>
+      <div className="min-h-screen bg-gradient-to-b from-terex-dark via-terex-dark to-terex-darker pb-20">
+        {/* Header moderne avec gradient */}
+        <div className="relative px-4 pt-6 pb-8 mb-6">
+          <div className="absolute inset-0 bg-gradient-to-br from-terex-accent/10 via-transparent to-transparent" />
+          <div className="relative">
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <p className="text-gray-400 text-sm mb-1">Bienvenue</p>
+                <h1 className="text-2xl font-bold text-white">
+                  {user?.name}
+                </h1>
+              </div>
+              <div className="w-14 h-14 bg-gradient-to-br from-terex-accent to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-terex-accent/20">
+                <Activity className="w-7 h-7 text-white" />
+              </div>
+            </div>
+            <p className="text-gray-400 text-sm mt-3">Gérez vos transactions USDT en toute simplicité</p>
           </div>
         </div>
 
-        {/* Services Grid - 2x2 avec px-0 */}
-        <div className="grid grid-cols-2 gap-3 mb-4 px-0">
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('buy')}
-          >
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
-                  <TetherLogo className="w-5 h-5" />
+        {/* Services Grid modernisé */}
+        <div className="px-4 mb-6">
+          <div className="grid grid-cols-2 gap-3">
+            {/* Acheter USDT */}
+            <Card 
+              className="bg-gradient-to-br from-terex-darker to-terex-dark border-terex-gray/50 hover:border-green-500/30 transition-all duration-300 cursor-pointer group overflow-hidden relative"
+              onClick={() => handleServiceClick('buy')}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <CardContent className="p-4 relative">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500/20 to-green-600/10 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <TetherLogo className="w-7 h-7" />
                 </div>
-              </div>
-              <h3 className="text-white text-sm font-medium mb-1">Acheter USDT</h3>
-              <p className="text-gray-400 text-xs">Achat rapide</p>
-            </CardContent>
-          </Card>
+                <h3 className="text-white font-semibold mb-1">Acheter</h3>
+                <p className="text-gray-400 text-xs">USDT rapide</p>
+              </CardContent>
+            </Card>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('sell')}
-          >
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
-                  <TetherLogo className="w-5 h-5" />
+            {/* Vendre USDT */}
+            <Card 
+              className="bg-gradient-to-br from-terex-darker to-terex-dark border-terex-gray/50 hover:border-red-500/30 transition-all duration-300 cursor-pointer group overflow-hidden relative"
+              onClick={() => handleServiceClick('sell')}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <CardContent className="p-4 relative">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500/20 to-red-600/10 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <TetherLogo className="w-7 h-7" />
                 </div>
-              </div>
-              <h3 className="text-white text-sm font-medium mb-1">Vendre USDT</h3>
-              <p className="text-gray-400 text-xs">Vente rapide</p>
-            </CardContent>
-          </Card>
+                <h3 className="text-white font-semibold mb-1">Vendre</h3>
+                <p className="text-gray-400 text-xs">Conversion CFA</p>
+              </CardContent>
+            </Card>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('otc')}
-          >
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                  <Handshake className="w-4 h-4 text-purple-400" />
+            {/* Trading OTC */}
+            <Card 
+              className="bg-gradient-to-br from-terex-darker to-terex-dark border-terex-gray/50 hover:border-purple-500/30 transition-all duration-300 cursor-pointer group overflow-hidden relative"
+              onClick={() => handleServiceClick('otc')}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <CardContent className="p-4 relative">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500/20 to-purple-600/10 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <Handshake className="w-6 h-6 text-purple-400" />
                 </div>
-              </div>
-              <h3 className="text-white text-sm font-medium mb-1">Trading OTC</h3>
-              <p className="text-gray-400 text-xs">Gros volumes</p>
-            </CardContent>
-          </Card>
+                <h3 className="text-white font-semibold mb-1">OTC</h3>
+                <p className="text-gray-400 text-xs">Gros volumes</p>
+              </CardContent>
+            </Card>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('transfer')}
-          >
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-terex-accent/20 rounded-lg flex items-center justify-center">
-                  <Globe className="w-4 h-4 text-terex-accent" />
+            {/* Virements */}
+            <Card 
+              className="bg-gradient-to-br from-terex-darker to-terex-dark border-terex-gray/50 hover:border-terex-accent/30 transition-all duration-300 cursor-pointer group overflow-hidden relative"
+              onClick={() => handleServiceClick('transfer')}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-terex-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <CardContent className="p-4 relative">
+                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/20 to-blue-600/10 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <Globe className="w-6 h-6 text-terex-accent" />
                 </div>
-              </div>
-              <h3 className="text-white text-sm font-medium mb-1">Virements</h3>
-              <p className="text-gray-400 text-xs">International</p>
-            </CardContent>
-          </Card>
+                <h3 className="text-white font-semibold mb-1">Virements</h3>
+                <p className="text-gray-400 text-xs">International</p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
-        {/* Section Historique des transactions récentes - px-0 */}
-        <div className="px-0">
+        {/* Stats rapides */}
+        <div className="px-4 mb-6">
+          <div className="grid grid-cols-3 gap-2">
+            <Card className="bg-terex-darker/50 border-terex-gray/30 backdrop-blur-sm">
+              <CardContent className="p-3 text-center">
+                <Zap className="w-5 h-5 text-terex-accent mx-auto mb-1" />
+                <p className="text-white font-semibold text-xs">Instant</p>
+                <p className="text-gray-400 text-xs">Rapide</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-terex-darker/50 border-terex-gray/30 backdrop-blur-sm">
+              <CardContent className="p-3 text-center">
+                <Shield className="w-5 h-5 text-green-400 mx-auto mb-1" />
+                <p className="text-white font-semibold text-xs">Sécurisé</p>
+                <p className="text-gray-400 text-xs">SSL</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-terex-darker/50 border-terex-gray/30 backdrop-blur-sm">
+              <CardContent className="p-3 text-center">
+                <Clock className="w-5 h-5 text-blue-400 mx-auto mb-1" />
+                <p className="text-white font-semibold text-xs">24/7</p>
+                <p className="text-gray-400 text-xs">Support</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Transactions récentes */}
+        <div className="px-4 mb-6">
           <RecentTransactions onNavigate={onNavigate} />
         </div>
 
-        {/* Section Moyens de paiement */}
-        <Card className="bg-terex-darker border-terex-gray mb-3 mx-0">
-          <CardContent className="p-3">
-            <h3 className="text-white text-sm font-medium mb-3">Paiements effectués avec</h3>
-            <div className="flex items-center justify-center gap-4">
-              <div className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center p-2">
-                <img 
-                  src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
-                  alt="Wave" 
-                  className="w-full h-full object-contain"
-                />
+        {/* Moyens de paiement */}
+        <div className="px-4">
+          <Card className="bg-terex-darker/50 border-terex-gray/30 backdrop-blur-sm">
+            <CardContent className="p-4">
+              <p className="text-gray-400 text-xs text-center mb-3">Paiements effectués avec</p>
+              <div className="flex items-center justify-center gap-4">
+                <div className="w-14 h-14 bg-white/5 rounded-xl flex items-center justify-center p-2 hover:bg-white/10 transition-colors">
+                  <img 
+                    src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
+                    alt="Wave" 
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="w-14 h-14 bg-white/5 rounded-xl flex items-center justify-center p-2 hover:bg-white/10 transition-colors">
+                  <img 
+                    src="/lovable-uploads/86b4b50f-9595-46c2-8cce-30343f23454a.png" 
+                    alt="Orange Money" 
+                    className="w-full h-full object-contain"
+                  />
+                </div>
               </div>
-              <div className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center p-2">
-                <img 
-                  src="/lovable-uploads/86b4b50f-9595-46c2-8cce-30343f23454a.png" 
-                  alt="Orange Money" 
-                  className="w-full h-full object-contain"
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
