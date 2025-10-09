@@ -110,23 +110,14 @@ export function MobileSellUSDT() {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label className="text-white text-sm font-light">Montant USDT</Label>
-              <div className="relative">
-                <Input
-                  type="number"
-                  placeholder="0"
-                  value={usdtAmount}
-                  onChange={(e) => setUsdtAmount(e.target.value)}
-                  className="bg-terex-darker border-terex-gray text-white text-3xl font-light h-16 text-center pr-24"
-                />
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center space-x-2">
-                  <img 
-                    src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                    alt="USDT" 
-                    className="w-8 h-8"
-                  />
-                  <span className="text-gray-400 text-sm font-light">USDT</span>
-                </div>
-              </div>
+              <Input
+                type="number"
+                placeholder="0"
+                value={usdtAmount}
+                onChange={(e) => setUsdtAmount(e.target.value)}
+                className="bg-terex-darker border-terex-gray text-white text-3xl font-light h-16 text-center"
+              />
+              <p className="text-center text-sm text-gray-400 font-light">USDT</p>
             </div>
 
             <div className="bg-terex-darker rounded-lg p-4 space-y-2">
