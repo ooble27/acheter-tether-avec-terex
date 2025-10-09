@@ -222,7 +222,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
   ];
 
   return (
-    <div className="min-h-[calc(100vh-10rem)] flex items-start justify-center py-8 px-4">
+    <div className="min-h-[calc(100vh-10rem)] flex items-start justify-center py-8 px-0 md:px-4">
       <div className="w-full max-w-2xl space-y-4">
         {/* Header avec bouton de déconnexion */}
         <div className="flex items-center justify-between mb-6">
