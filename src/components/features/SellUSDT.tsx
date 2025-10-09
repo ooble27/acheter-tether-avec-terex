@@ -44,13 +44,7 @@ const NETWORK_LOGOS = {
 };
 
 export function SellUSDT() {
-  const isMobile = useIsMobile();
-  
-  if (isMobile) {
-    return <MobileSellUSDT />;
-  }
-  
-  return <DesktopSellUSDT />;
+  return <MobileSellUSDT />;
 }
 
 function DesktopSellUSDT() {

@@ -29,13 +29,7 @@ import { MobileBuyUSDT } from './buy-usdt/MobileBuyUSDT';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export function BuyUSDT() {
-  const isMobile = useIsMobile();
-  
-  if (isMobile) {
-    return <MobileBuyUSDT />;
-  }
-  
-  return <DesktopBuyUSDT />;
+  return <MobileBuyUSDT />;
 }
 
 function DesktopBuyUSDT() {

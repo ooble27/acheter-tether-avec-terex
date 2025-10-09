@@ -151,10 +151,11 @@ export function MobileBuyUSDT() {
   };
 
   return (
-    <div className="h-full bg-terex-dark">
-      {/* Étape 1: Montant */}
-      {step === 'amount' && (
-        <div className="p-4 space-y-6">
+    <div className="min-h-screen flex items-center justify-center bg-terex-dark p-4">
+      <div className="w-full max-w-md">
+        {/* Étape 1: Montant */}
+        {step === 'amount' && (
+          <div className="space-y-6">
           <div className="space-y-2">
             <h2 className="text-2xl font-light text-white">Acheter USDT</h2>
             <p className="text-sm text-gray-400 font-light">Entrez le montant que vous souhaitez dépenser</p>
@@ -429,6 +430,7 @@ export function MobileBuyUSDT() {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+      </div>
     </div>
   );
 }

@@ -114,9 +114,12 @@ export function MobileSellUSDT() {
     setUsdtAmount('');
     setPhoneNumber('');
   };
-  return <div className="h-full bg-terex-dark">
-      {/* Étape 1: Montant */}
-      {step === 'amount' && <div className="p-4 space-y-6">
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-terex-dark p-4">
+      <div className="w-full max-w-md">
+        {/* Étape 1: Montant */}
+        {step === 'amount' && (
+          <div className="space-y-6">
           <div className="space-y-2">
             <h2 className="text-2xl font-light text-white">Vendre USDT</h2>
             <p className="text-sm text-gray-400 font-light">Entrez le montant que vous souhaitez vendre</p>
@@ -150,7 +153,8 @@ export function MobileSellUSDT() {
             Continuer
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
-        </div>}
+        </div>
+      )}
 
       {/* Drawer pour l'étape 2: Réseau + Binance Pay */}
       <Drawer open={step === 'network'} onOpenChange={open => !open && setStep('amount')}>
@@ -425,5 +429,7 @@ export function MobileSellUSDT() {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-    </div>;
+      </div>
+    </div>
+  );
 }
