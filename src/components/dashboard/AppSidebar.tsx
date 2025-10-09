@@ -404,18 +404,18 @@ export function MobileMenu({
 
                 {/* Section Administration */}
                 {isKYCReviewer() && renderMenuSection('Administration', adminItems)}
-              </div>
-            </div>
 
-            {/* Footer avec bouton de déconnexion */}
-            <div className="p-4 bg-terex-dark border-t border-terex-gray/30 pb-safe">
-              <Button 
-                onClick={handleLogout}
-                className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
-              >
-                <LogOut className="mr-2 h-5 w-5" />
-                Déconnexion
-              </Button>
+                {/* Bouton de déconnexion */}
+                <div className="pt-6 pb-4">
+                  <Button 
+                    onClick={handleLogout}
+                    className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
+                  >
+                    <LogOut className="mr-2 h-5 w-5" />
+                    Déconnexion
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
