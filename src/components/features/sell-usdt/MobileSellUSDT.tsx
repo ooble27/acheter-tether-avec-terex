@@ -10,19 +10,16 @@ import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { ArrowRight, Check, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-
 const WALLET_ADDRESSES = {
   TRC20: 'TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb',
   BEP20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
-  ERC20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
+  ERC20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84'
 };
-
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
   BEP20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',
-  ERC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
+  ERC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png'
 };
-
 export function MobileSellUSDT() {
   const [step, setStep] = useState<'amount' | 'network' | 'binance' | 'phone' | 'confirm' | 'instructions'>('amount');
   const [usdtAmount, setUsdtAmount] = useState('');
@@ -33,22 +30,30 @@ export function MobileSellUSDT() {
   const [provider, setProvider] = useState<'wave' | 'orange'>('wave');
   const [useBinancePay, setUseBinancePay] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const { createOrder } = useOrders();
-  const { user } = useAuth();
-  const { toast } = useToast();
-  const { terexBuyRateCfa } = useTerexRates(2);
-
+  const {
+    createOrder
+  } = useOrders();
+  const {
+    user
+  } = useAuth();
+  const {
+    toast
+  } = useToast();
+  const {
+    terexBuyRateCfa
+  } = useTerexRates(2);
   const fiatAmount = usdtAmount ? (parseFloat(usdtAmount) * terexBuyRateCfa).toFixed(2) : '0';
-
   const handleContinueToNetwork = () => {
     if (!usdtAmount || parseFloat(usdtAmount) <= 0) {
-      toast({ title: "Erreur", description: "Veuillez entrer un montant valide", variant: "destructive" });
+      toast({
+        title: "Erreur",
+        description: "Veuillez entrer un montant valide",
+        variant: "destructive"
+      });
       return;
     }
     setStep('network');
   };
-
   const handleContinueToPhone = () => {
     if (useBinancePay) {
       setStep('binance');
@@ -56,24 +61,23 @@ export function MobileSellUSDT() {
       setStep('phone');
     }
   };
-
   const handleContinueFromBinance = () => {
     setStep('phone');
   };
-
   const handleContinueToConfirm = () => {
     if (!phoneNumber) {
-      toast({ title: "Erreur", description: "Veuillez entrer un numéro de téléphone", variant: "destructive" });
+      toast({
+        title: "Erreur",
+        description: "Veuillez entrer un numéro de téléphone",
+        variant: "destructive"
+      });
       return;
     }
     setStep('confirm');
   };
-
   const handleConfirm = async () => {
     if (!user) return;
-    
     setLoading(true);
-    
     const orderData = {
       user_id: user.id,
       type: 'sell' as const,
@@ -93,50 +97,33 @@ export function MobileSellUSDT() {
         useBinancePay
       })
     };
-
     const result = await createOrder(orderData);
-    
     if (result) {
       setStep('instructions');
     }
-    
     setLoading(false);
   };
-
   const handleBackToDashboard = () => {
     setStep('amount');
     setUsdtAmount('');
     setPhoneNumber('');
   };
-
-  return (
-    <div className="h-full bg-terex-dark">
+  return <div className="h-full bg-terex-dark">
       {/* Étape 1: Montant */}
-      {step === 'amount' && (
-        <div className="p-4 space-y-6">
+      {step === 'amount' && <div className="p-4 space-y-6">
           <div className="space-y-2">
             <h2 className="text-2xl font-light text-white">Vendre USDT</h2>
-            <p className="text-sm text-gray-400 font-light">Entrez le montant d'USDT que vous souhaitez vendre</p>
+            <p className="text-sm text-gray-400 font-light">Entrez le montant que vous souhaitez vendre</p>
           </div>
 
           <div className="space-y-4">
             <div className="space-y-2">
               <Label className="text-white text-sm font-light">Montant USDT</Label>
               <div className="relative">
-                <Input
-                  type="number"
-                  placeholder="0"
-                  value={usdtAmount}
-                  onChange={(e) => setUsdtAmount(e.target.value)}
-                  className="bg-terex-darker border-terex-gray text-white text-3xl font-light h-16 text-center px-20"
-                />
+                <Input type="number" placeholder="0" value={usdtAmount} onChange={e => setUsdtAmount(e.target.value)} className="bg-terex-darker border-terex-gray text-white text-3xl font-light h-16 text-center px-20" />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
                   <span className="text-gray-400 text-lg font-light">USDT</span>
-                  <img 
-                    src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                    alt="USDT" 
-                    className="w-5 h-5"
-                  />
+                  <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-5 h-5" />
                 </span>
               </div>
             </div>
@@ -153,18 +140,14 @@ export function MobileSellUSDT() {
             </div>
           </div>
 
-          <Button 
-            onClick={handleContinueToNetwork}
-            className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
-          >
+          <Button onClick={handleContinueToNetwork} className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light">
             Continuer
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
-        </div>
-      )}
+        </div>}
 
       {/* Drawer pour l'étape 2: Réseau + Binance Pay */}
-      <Drawer open={step === 'network'} onOpenChange={(open) => !open && setStep('amount')}>
+      <Drawer open={step === 'network'} onOpenChange={open => !open && setStep('amount')}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
           <DrawerHeader>
             <DrawerTitle className="text-white font-light">Mode d'envoi</DrawerTitle>
@@ -178,47 +161,27 @@ export function MobileSellUSDT() {
             <div className="bg-terex-gray/30 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <img 
-                    src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" 
-                    alt="Binance" 
-                    className="w-10 h-10 rounded-full"
-                  />
+                  <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" className="w-10 h-10 rounded-full" />
                   <div>
                     <h3 className="text-white font-medium">Binance Pay</h3>
                     <p className="text-xs text-gray-400">Envoi instantané depuis Binance</p>
                   </div>
                 </div>
-                <Switch
-                  checked={useBinancePay}
-                  onCheckedChange={setUseBinancePay}
-                  className="data-[state=checked]:bg-terex-accent"
-                />
+                <Switch checked={useBinancePay} onCheckedChange={setUseBinancePay} className="data-[state=checked]:bg-terex-accent" />
               </div>
               
-              {useBinancePay && (
-                <Alert className="border-terex-accent/30 bg-terex-accent/10">
+              {useBinancePay && <Alert className="border-terex-accent/30 bg-terex-accent/10">
                   <AlertCircle className="h-4 w-4 text-terex-accent" />
                   <AlertDescription className="text-terex-accent text-xs">
                     Vous devrez envoyer vos USDT via Binance Pay à notre ID Binance Pay
                   </AlertDescription>
-                </Alert>
-              )}
+                </Alert>}
             </div>
 
             {/* Sélection du réseau si Binance Pay désactivé */}
-            {!useBinancePay && (
-              <div className="space-y-2">
+            {!useBinancePay && <div className="space-y-2">
                 <Label className="text-white text-sm">Réseau blockchain</Label>
-                {Object.entries(NETWORK_LOGOS).map(([net, logo]) => (
-                  <button
-                    key={net}
-                    onClick={() => setNetwork(net)}
-                    className={`w-full p-4 rounded-lg border transition-all ${
-                      network === net 
-                        ? 'border-terex-accent bg-terex-accent/10' 
-                        : 'border-terex-gray bg-terex-gray/50'
-                    }`}
-                  >
+                {Object.entries(NETWORK_LOGOS).map(([net, logo]) => <button key={net} onClick={() => setNetwork(net)} className={`w-full p-4 rounded-lg border transition-all ${network === net ? 'border-terex-accent bg-terex-accent/10' : 'border-terex-gray bg-terex-gray/50'}`}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <img src={logo} alt={net} className="w-8 h-8 rounded-full" />
@@ -226,17 +189,12 @@ export function MobileSellUSDT() {
                       </div>
                       {network === net && <Check className="w-5 h-5 text-terex-accent" />}
                     </div>
-                  </button>
-                ))}
-              </div>
-            )}
+                  </button>)}
+              </div>}
           </div>
 
           <DrawerFooter>
-            <Button 
-              onClick={handleContinueToPhone}
-              className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
-            >
+            <Button onClick={handleContinueToPhone} className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light">
               Continuer
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
@@ -245,15 +203,11 @@ export function MobileSellUSDT() {
       </Drawer>
 
       {/* Drawer Binance Pay Info */}
-      <Drawer open={step === 'binance'} onOpenChange={(open) => !open && setStep('network')}>
+      <Drawer open={step === 'binance'} onOpenChange={open => !open && setStep('network')}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
           <DrawerHeader>
             <DrawerTitle className="text-white font-light flex items-center gap-2">
-              <img 
-                src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" 
-                alt="Binance" 
-                className="w-6 h-6 rounded"
-              />
+              <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" className="w-6 h-6 rounded" />
               Binance Pay
             </DrawerTitle>
             <DrawerDescription className="text-gray-400 font-light">
@@ -286,10 +240,7 @@ export function MobileSellUSDT() {
           </div>
 
           <DrawerFooter>
-            <Button 
-              onClick={handleContinueFromBinance}
-              className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
-            >
+            <Button onClick={handleContinueFromBinance} className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light">
               J'ai compris
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
@@ -298,7 +249,7 @@ export function MobileSellUSDT() {
       </Drawer>
 
       {/* Drawer pour l'étape 3: Téléphone & Provider */}
-      <Drawer open={step === 'phone'} onOpenChange={(open) => !open && (useBinancePay ? setStep('binance') : setStep('network'))}>
+      <Drawer open={step === 'phone'} onOpenChange={open => !open && (useBinancePay ? setStep('binance') : setStep('network'))}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
           <DrawerHeader>
             <DrawerTitle className="text-white font-light">Informations de paiement</DrawerTitle>
@@ -311,27 +262,13 @@ export function MobileSellUSDT() {
             <div className="space-y-2">
               <Label className="text-white text-sm font-light">Service Mobile Money</Label>
               <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={() => setProvider('wave')}
-                  className={`p-4 rounded-lg border transition-all ${
-                    provider === 'wave' 
-                      ? 'border-terex-accent bg-terex-accent/10' 
-                      : 'border-terex-gray bg-terex-gray/50'
-                  }`}
-                >
+                <button onClick={() => setProvider('wave')} className={`p-4 rounded-lg border transition-all ${provider === 'wave' ? 'border-terex-accent bg-terex-accent/10' : 'border-terex-gray bg-terex-gray/50'}`}>
                   <div className="flex items-center justify-between">
                     <span className="text-white font-light">Wave</span>
                     {provider === 'wave' && <Check className="w-5 h-5 text-terex-accent" />}
                   </div>
                 </button>
-                <button
-                  onClick={() => setProvider('orange')}
-                  className={`p-4 rounded-lg border transition-all ${
-                    provider === 'orange' 
-                      ? 'border-terex-accent bg-terex-accent/10' 
-                      : 'border-terex-gray bg-terex-gray/50'
-                  }`}
-                >
+                <button onClick={() => setProvider('orange')} className={`p-4 rounded-lg border transition-all ${provider === 'orange' ? 'border-terex-accent bg-terex-accent/10' : 'border-terex-gray bg-terex-gray/50'}`}>
                   <div className="flex items-center justify-between">
                     <span className="text-white font-light">Orange Money</span>
                     {provider === 'orange' && <Check className="w-5 h-5 text-terex-accent" />}
@@ -342,20 +279,12 @@ export function MobileSellUSDT() {
 
             <div className="space-y-2">
               <Label className="text-white text-sm font-light">Numéro de téléphone</Label>
-              <Input
-                placeholder="+221 XX XXX XX XX"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                className="bg-terex-gray border-terex-gray-light text-white h-12 font-light"
-              />
+              <Input placeholder="+221 XX XXX XX XX" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} className="bg-terex-gray border-terex-gray-light text-white h-12 font-light" />
             </div>
           </div>
 
           <DrawerFooter>
-            <Button 
-              onClick={handleContinueToConfirm}
-              className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
-            >
+            <Button onClick={handleContinueToConfirm} className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light">
               Continuer
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
@@ -364,7 +293,7 @@ export function MobileSellUSDT() {
       </Drawer>
 
       {/* Drawer pour l'étape 4: Confirmation */}
-      <Drawer open={step === 'confirm'} onOpenChange={(open) => !open && setStep('phone')}>
+      <Drawer open={step === 'confirm'} onOpenChange={open => !open && setStep('phone')}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
           <DrawerHeader>
             <DrawerTitle className="text-white font-light">Confirmer la vente</DrawerTitle>
@@ -399,11 +328,7 @@ export function MobileSellUSDT() {
           </div>
 
           <DrawerFooter>
-            <Button 
-              onClick={handleConfirm}
-              disabled={loading}
-              className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
-            >
+            <Button onClick={handleConfirm} disabled={loading} className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light">
               {loading ? 'Traitement...' : 'Confirmer'}
             </Button>
           </DrawerFooter>
@@ -411,7 +336,7 @@ export function MobileSellUSDT() {
       </Drawer>
 
       {/* Drawer pour l'étape 5: Instructions d'envoi */}
-      <Drawer open={step === 'instructions'} onOpenChange={(open) => !open && handleBackToDashboard()}>
+      <Drawer open={step === 'instructions'} onOpenChange={open => !open && handleBackToDashboard()}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
           <DrawerHeader>
             <DrawerTitle className="text-white font-light">Envoyer vos USDT</DrawerTitle>
@@ -440,15 +365,11 @@ export function MobileSellUSDT() {
           </div>
 
           <DrawerFooter>
-            <Button 
-              onClick={handleBackToDashboard}
-              className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
-            >
+            <Button onClick={handleBackToDashboard} className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light">
               Compris
             </Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-    </div>
-  );
+    </div>;
 }
