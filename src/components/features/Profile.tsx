@@ -39,7 +39,9 @@ import {
   Globe,
   Lock,
   Trash2,
-  Key
+  Key,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 
 interface ProfileProps {
@@ -57,6 +59,8 @@ export function Profile({ user, onLogout }: ProfileProps) {
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { toast } = useToast();
   const { profile, updateProfile, loading } = useUserProfile();
   const { kycData, loading: kycLoading } = useKYC();
@@ -530,29 +534,56 @@ export function Profile({ user, onLogout }: ProfileProps) {
         <AlertDialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
           <AlertDialogContent className="bg-terex-darker border-terex-gray">
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-white">Changer le mot de passe</AlertDialogTitle>
+              <AlertDialogTitle className="text-white flex items-center gap-2">
+                <Key className="w-5 h-5 text-terex-accent" />
+                Changer le mot de passe
+              </AlertDialogTitle>
               <AlertDialogDescription className="text-gray-400">
                 Entrez votre nouveau mot de passe (minimum 6 caractères)
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label className="text-gray-400">Nouveau mot de passe</Label>
-                <Input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="bg-terex-dark border-terex-gray text-white"
-                />
+                <Label className="text-gray-400 flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  Nouveau mot de passe
+                </Label>
+                <div className="relative">
+                  <Input
+                    type={showNewPassword ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="bg-terex-dark border-terex-gray text-white pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                  >
+                    {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
               <div className="space-y-2">
-                <Label className="text-gray-400">Confirmer le mot de passe</Label>
-                <Input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="bg-terex-dark border-terex-gray text-white"
-                />
+                <Label className="text-gray-400 flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  Confirmer le mot de passe
+                </Label>
+                <div className="relative">
+                  <Input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="bg-terex-dark border-terex-gray text-white pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
             </div>
             <AlertDialogFooter>
