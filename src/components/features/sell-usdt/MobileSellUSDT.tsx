@@ -115,7 +115,7 @@ export function MobileSellUSDT() {
     setPhoneNumber('');
   };
   return (
-    <div className="min-h-screen flex items-start justify-center bg-terex-dark p-4 pt-8 pb-24">
+    <div className="min-h-screen flex items-start justify-center bg-terex-dark p-4 pt-20 pb-24">
       <div className="w-full max-w-md">
         {/* Étape 1: Montant */}
         {step === 'amount' && (
