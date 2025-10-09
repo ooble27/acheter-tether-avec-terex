@@ -295,15 +295,15 @@ export function MobileMenu({
 
       {/* Full Screen Menu */}
       {isOpen && (
-        <div className="fixed inset-0 z-[100] bg-gray-100 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[100] bg-terex-dark animate-in fade-in duration-200">
           <div className="flex flex-col h-full animate-in slide-in-from-right duration-300">
             {/* Header with Back Button */}
-            <div className="flex items-center justify-start p-4 bg-gray-100">
+            <div className="flex items-center justify-start p-4 bg-terex-dark border-b border-terex-gray/30">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsOpen(false)}
-                className="rounded-full hover:bg-gray-200 text-black"
+                className="rounded-full hover:bg-terex-gray/30 text-white"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -322,51 +322,52 @@ export function MobileMenu({
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto bg-gray-100 px-4 py-2">
-              {/* Navigation Section */}
-              <div className="mb-6">
-                <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3 px-4">Navigation</h3>
-                <div className="space-y-2">
-                  {menuItems.map(item => {
-                    const IconComponent = item.icon;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          setActiveSection(item.id);
-                          setIsOpen(false);
-                        }} 
-                        className={`w-full flex items-center space-x-4 p-4 rounded-2xl transition-all duration-200 ${
-                          activeSection === item.id 
-                            ? 'bg-terex-accent text-white shadow-md' 
-                            : 'bg-white text-black hover:bg-gray-50 shadow-sm'
-                        }`}
-                      >
-                        <div className="flex-shrink-0">
-                          {item.isCustomIcon ? (
-                            <IconComponent className="h-6 w-6" isActive={activeSection === item.id} color={activeSection === item.id ? 'white' : 'black'} />
-                          ) : (
-                            <IconComponent className="h-6 w-6" />
-                          )}
-                        </div>
-                        <div className="flex-1 text-left">
-                          <div className="font-medium text-base">{item.label}</div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
+            <div className="flex-1 overflow-y-auto bg-terex-dark px-4 py-6">
+              <div className="space-y-2">
+                {menuItems.map(item => {
+                  const IconComponent = item.icon;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setActiveSection(item.id);
+                        setIsOpen(false);
+                      }} 
+                      className={`w-full flex items-center space-x-4 p-4 rounded-xl transition-all duration-200 ${
+                        activeSection === item.id 
+                          ? 'bg-gradient-to-r from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/25' 
+                          : 'bg-terex-darker text-gray-300 hover:bg-terex-gray/50 hover:text-white'
+                      }`}
+                    >
+                      <div className={`flex-shrink-0 p-2 rounded-lg ${
+                        activeSection === item.id 
+                          ? 'bg-white/20' 
+                          : 'bg-terex-gray/30'
+                      }`}>
+                        {item.isCustomIcon ? (
+                          <IconComponent className="h-6 w-6" isActive={activeSection === item.id} />
+                        ) : (
+                          <IconComponent className="h-6 w-6" />
+                        )}
+                      </div>
+                      <div className="flex-1 text-left">
+                        <div className="font-semibold text-sm">{item.label}</div>
+                        <div className="text-xs opacity-75">{item.description}</div>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
             {/* Footer avec bouton de déconnexion */}
-            <div className="p-4 bg-gray-100 pb-safe">
+            <div className="p-4 bg-terex-dark border-t border-terex-gray/30 pb-safe">
               <button
                 onClick={() => {
                   onLogout();
                   setIsOpen(false);
                 }}
-                className="w-full flex items-center justify-center space-x-2 p-4 bg-white text-red-600 rounded-2xl font-medium shadow-sm hover:bg-gray-50 transition-all duration-200"
+                className="w-full flex items-center justify-center space-x-2 p-4 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white rounded-xl font-medium transition-all duration-200"
               >
                 <LogOut className="h-5 w-5" />
                 <span>Déconnexion</span>
