@@ -1,7 +1,6 @@
 
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
@@ -276,31 +275,72 @@ export function MobileMenu({
   onLogout
 }: AppSidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  
   const handleItemClick = () => {
+    setActiveSection(activeSection);
     setIsOpen(false);
   };
-  return <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden fixed top-4 right-4 z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12 mt-safe">
-          <Menu className="h-6 w-6" />
-        </Button>
-      </SheetTrigger>
-      <SheetContent side="left" className="w-80 bg-terex-darker border-r border-terex-gray/30 p-0 shadow-2xl fixed" style={{
-      height: '100dvh',
-      maxHeight: '100dvh',
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      zIndex: 9999
-    }}>
-        <div style={{
-        height: '100dvh',
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'relative'
-      }} className="pt-safe">
-          <AppSidebarContent activeSection={activeSection} setActiveSection={setActiveSection} onLogout={onLogout} onItemClick={handleItemClick} />
+
+  return (
+    <>
+      {/* Hamburger Button */}
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        onClick={() => setIsOpen(true)}
+        className="md:hidden fixed top-4 left-4 z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12 mt-safe"
+      >
+        <Menu className="h-6 w-6" />
+      </Button>
+
+      {/* Full Screen Menu */}
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] bg-background animate-in fade-in duration-200">
+          <div className="flex flex-col h-full animate-in slide-in-from-left duration-300">
+            {/* Header with Back Button */}
+            <div className="flex items-center justify-between p-4 border-b border-border bg-background">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsOpen(false)}
+                className="rounded-full hover:bg-muted"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="m15 18-6-6 6-6"/>
+                </svg>
+              </Button>
+              <h1 className="text-xl font-bold">Menu</h1>
+              <div className="w-10"></div>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto bg-background">
+              <AppSidebarContent 
+                activeSection={activeSection} 
+                setActiveSection={(section) => {
+                  setActiveSection(section);
+                  setIsOpen(false);
+                }} 
+                onLogout={() => {
+                  onLogout();
+                  setIsOpen(false);
+                }} 
+                onItemClick={handleItemClick} 
+              />
+            </div>
+          </div>
         </div>
-      </SheetContent>
-    </Sheet>;
+      )}
+    </>
+  );
 }
