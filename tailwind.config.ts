@@ -77,14 +77,14 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				terex: {
-					dark: '#141414',
-					darker: '#1e1e1e',
-					accent: '#3B968F',
-					'accent-light': '#4BA89F',
-					gray: '#2A2A2A',
-					'gray-light': '#3A3A3A',
-				}
+			terex: {
+				dark: '#1f1f1f',
+				darker: '#2a2a2a',
+				accent: '#3B968F',
+				'accent-light': '#4BA89F',
+				gray: '#333333',
+				'gray-light': '#404040',
+			}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
