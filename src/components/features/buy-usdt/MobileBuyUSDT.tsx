@@ -164,9 +164,22 @@ export function MobileBuyUSDT() {
               <div className="flex items-center justify-between">
                 <Label className="text-white text-sm font-light">Montant</Label>
                 {limits && (
-                  <span className="text-xs text-gray-400 font-light">
-                    {limits.min.toLocaleString()} - {limits.max.toLocaleString()} {currency}
-                  </span>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setFiatAmount(limits.min.toString())}
+                      className="text-xs text-terex-accent underline font-light hover:text-terex-accent/80 transition-colors"
+                    >
+                      Min
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFiatAmount(limits.max.toString())}
+                      className="text-xs text-terex-accent underline font-light hover:text-terex-accent/80 transition-colors"
+                    >
+                      Max
+                    </button>
+                  </div>
                 )}
               </div>
               <div className="relative">
