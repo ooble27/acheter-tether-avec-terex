@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { useNabooPay } from '@/hooks/useNabooPay';
 import { ArrowRight, Check } from 'lucide-react';
+import { BinanceEmailInput } from './BinanceEmailInput';
 
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
@@ -17,16 +18,20 @@ const NETWORK_LOGOS = {
   ERC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
   Arbitrum: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11841.png',
   Polygon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
-  Solana: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png'
+  Solana: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',
+  BINANCE: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png'
 };
 
 export function MobileBuyUSDT() {
-  const [step, setStep] = useState<'amount' | 'network' | 'address' | 'confirm'>('amount');
+  const [step, setStep] = useState<'amount' | 'network' | 'address' | 'binance' | 'confirm'>('amount');
   const [fiatAmount, setFiatAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'mobile'>('mobile');
   const [currency, setCurrency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
   const [walletAddress, setWalletAddress] = useState('');
+  const [binanceEmail, setBinanceEmail] = useState('');
+  const [binanceUsername, setBinanceUsername] = useState('');
+  const [binanceId, setBinanceId] = useState('');
   const [loading, setLoading] = useState(false);
 
   const { createOrder } = useOrders();
@@ -38,6 +43,8 @@ export function MobileBuyUSDT() {
   const exchangeRate = currency === 'CFA' ? terexRateCfa : terexRateCad;
   const usdtAmount = fiatAmount ? (parseFloat(fiatAmount) / exchangeRate).toFixed(2) : '0';
 
+  const isBinanceNetwork = network === 'BINANCE';
+
   const handleContinueToNetwork = () => {
     if (!fiatAmount || parseFloat(fiatAmount) <= 0) {
       toast({ title: "Erreur", description: "Veuillez entrer un montant valide", variant: "destructive" });
@@ -47,7 +54,19 @@ export function MobileBuyUSDT() {
   };
 
   const handleContinueToAddress = () => {
-    setStep('address');
+    if (isBinanceNetwork) {
+      setStep('binance');
+    } else {
+      setStep('address');
+    }
+  };
+
+  const handleContinueToBinanceConfirm = () => {
+    if (!binanceEmail || !binanceUsername || !binanceId) {
+      toast({ title: "Erreur", description: "Veuillez remplir toutes les informations Binance", variant: "destructive" });
+      return;
+    }
+    setStep('confirm');
   };
 
   const handleContinueToConfirm = () => {
@@ -71,13 +90,19 @@ export function MobileBuyUSDT() {
       usdt_amount: parseFloat(usdtAmount),
       exchange_rate: exchangeRate,
       payment_method: paymentMethod,
-      network,
-      wallet_address: walletAddress,
+      network: isBinanceNetwork ? 'BINANCE' : network,
+      wallet_address: isBinanceNetwork ? binanceEmail : walletAddress,
       status: 'pending' as const,
       payment_status: 'pending',
       notes: JSON.stringify({
         paymentMethod,
-        mobilePayment: true
+        mobilePayment: true,
+        destination: isBinanceNetwork ? 'binance' : 'wallet',
+        binanceData: isBinanceNetwork ? {
+          email: binanceEmail,
+          username: binanceUsername,
+          binanceId: binanceId
+        } : null
       })
     };
 
@@ -169,9 +194,9 @@ export function MobileBuyUSDT() {
       <Drawer open={step === 'network'} onOpenChange={(open) => !open && setStep('amount')}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
           <DrawerHeader>
-            <DrawerTitle className="text-white font-light">Sélectionner le réseau</DrawerTitle>
+            <DrawerTitle className="text-white font-light">Destination</DrawerTitle>
             <DrawerDescription className="text-gray-400 font-light">
-              Choisissez le réseau blockchain pour recevoir vos USDT
+              Choisissez où vous voulez recevoir vos USDT
             </DrawerDescription>
           </DrawerHeader>
           
@@ -209,7 +234,7 @@ export function MobileBuyUSDT() {
         </DrawerContent>
       </Drawer>
 
-      {/* Drawer pour l'étape 3: Adresse */}
+      {/* Drawer pour l'étape 3: Adresse Wallet */}
       <Drawer open={step === 'address'} onOpenChange={(open) => !open && setStep('network')}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
           <DrawerHeader>
@@ -240,8 +265,49 @@ export function MobileBuyUSDT() {
         </DrawerContent>
       </Drawer>
 
+      {/* Drawer pour l'étape 3bis: Compte Binance */}
+      <Drawer open={step === 'binance'} onOpenChange={(open) => !open && setStep('network')}>
+        <DrawerContent className="bg-terex-darker border-terex-gray max-h-[90vh]">
+          <DrawerHeader>
+            <DrawerTitle className="text-white font-light flex items-center gap-2">
+              <img 
+                src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" 
+                alt="Binance" 
+                className="w-6 h-6 rounded"
+              />
+              Compte Binance
+            </DrawerTitle>
+            <DrawerDescription className="text-gray-400 font-light">
+              Vos USDT seront envoyés directement sur votre compte Binance
+            </DrawerDescription>
+          </DrawerHeader>
+          
+          <div className="px-4 pb-4 overflow-y-auto max-h-[60vh]">
+            <BinanceEmailInput
+              email={binanceEmail}
+              setEmail={setBinanceEmail}
+              username={binanceUsername}
+              setUsername={setBinanceUsername}
+              binanceId={binanceId}
+              setBinanceId={setBinanceId}
+            />
+          </div>
+
+          <DrawerFooter>
+            <Button 
+              onClick={handleContinueToBinanceConfirm}
+              disabled={!binanceEmail || !binanceUsername || !binanceId}
+              className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light disabled:opacity-50"
+            >
+              Continuer
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+
       {/* Drawer pour l'étape 4: Confirmation */}
-      <Drawer open={step === 'confirm'} onOpenChange={(open) => !open && setStep('address')}>
+      <Drawer open={step === 'confirm'} onOpenChange={(open) => !open && (isBinanceNetwork ? setStep('binance') : setStep('address'))}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
           <DrawerHeader>
             <DrawerTitle className="text-white font-light">Confirmer l'achat</DrawerTitle>
@@ -261,12 +327,14 @@ export function MobileBuyUSDT() {
                 <span className="text-white font-light">{usdtAmount} USDT</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400 font-light">Réseau</span>
-                <span className="text-white font-light">{network}</span>
+                <span className="text-gray-400 font-light">Destination</span>
+                <span className="text-white font-light">{isBinanceNetwork ? 'Binance' : network}</span>
               </div>
               <div className="flex justify-between items-start">
-                <span className="text-gray-400 font-light">Adresse</span>
-                <span className="text-white font-light text-right text-xs break-all max-w-[60%]">{walletAddress}</span>
+                <span className="text-gray-400 font-light">{isBinanceNetwork ? 'Email' : 'Adresse'}</span>
+                <span className="text-white font-light text-right text-xs break-all max-w-[60%]">
+                  {isBinanceNetwork ? binanceEmail : walletAddress}
+                </span>
               </div>
             </div>
           </div>

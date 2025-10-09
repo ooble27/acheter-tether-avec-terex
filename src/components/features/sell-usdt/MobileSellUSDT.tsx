@@ -3,11 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from '@/components/ui/drawer';
+import { Switch } from '@/components/ui/switch';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const WALLET_ADDRESSES = {
   TRC20: 'TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb',
@@ -22,13 +24,14 @@ const NETWORK_LOGOS = {
 };
 
 export function MobileSellUSDT() {
-  const [step, setStep] = useState<'amount' | 'network' | 'phone' | 'confirm' | 'instructions'>('amount');
+  const [step, setStep] = useState<'amount' | 'network' | 'binance' | 'phone' | 'confirm' | 'instructions'>('amount');
   const [usdtAmount, setUsdtAmount] = useState('');
   const [paymentMethod] = useState<'mobile'>('mobile');
   const [currency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [provider, setProvider] = useState<'wave' | 'orange'>('wave');
+  const [useBinancePay, setUseBinancePay] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { createOrder } = useOrders();
@@ -47,6 +50,14 @@ export function MobileSellUSDT() {
   };
 
   const handleContinueToPhone = () => {
+    if (useBinancePay) {
+      setStep('binance');
+    } else {
+      setStep('phone');
+    }
+  };
+
+  const handleContinueFromBinance = () => {
     setStep('phone');
   };
 
@@ -71,14 +82,15 @@ export function MobileSellUSDT() {
       usdt_amount: parseFloat(usdtAmount),
       exchange_rate: terexBuyRateCfa,
       payment_method: paymentMethod,
-      network,
-      wallet_address: WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
+      network: useBinancePay ? 'Binance Pay' : network,
+      wallet_address: useBinancePay ? 'Binance Pay Transfer' : WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
       status: 'pending' as const,
       payment_status: 'pending',
       notes: JSON.stringify({
         phoneNumber,
         provider,
-        paymentMethod
+        paymentMethod,
+        useBinancePay
       })
     };
 
@@ -151,36 +163,73 @@ export function MobileSellUSDT() {
         </div>
       )}
 
-      {/* Drawer pour l'étape 2: Réseau */}
+      {/* Drawer pour l'étape 2: Réseau + Binance Pay */}
       <Drawer open={step === 'network'} onOpenChange={(open) => !open && setStep('amount')}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
           <DrawerHeader>
-            <DrawerTitle className="text-white font-light">Réseau d'envoi</DrawerTitle>
+            <DrawerTitle className="text-white font-light">Mode d'envoi</DrawerTitle>
             <DrawerDescription className="text-gray-400 font-light">
-              Sélectionnez le réseau sur lequel vous enverrez vos USDT
+              Choisissez comment vous voulez envoyer vos USDT
             </DrawerDescription>
           </DrawerHeader>
           
-          <div className="px-4 pb-4 space-y-2">
-            {Object.entries(NETWORK_LOGOS).map(([net, logo]) => (
-              <button
-                key={net}
-                onClick={() => setNetwork(net)}
-                className={`w-full p-4 rounded-lg border transition-all ${
-                  network === net 
-                    ? 'border-terex-accent bg-terex-accent/10' 
-                    : 'border-terex-gray bg-terex-gray/50'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <img src={logo} alt={net} className="w-8 h-8 rounded-full" />
-                    <span className="text-white font-light">{net}</span>
+          <div className="px-4 pb-4 space-y-4">
+            {/* Option Binance Pay */}
+            <div className="bg-terex-gray/30 rounded-lg p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <img 
+                    src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" 
+                    alt="Binance" 
+                    className="w-10 h-10 rounded-full"
+                  />
+                  <div>
+                    <h3 className="text-white font-medium">Binance Pay</h3>
+                    <p className="text-xs text-gray-400">Envoi instantané depuis Binance</p>
                   </div>
-                  {network === net && <Check className="w-5 h-5 text-terex-accent" />}
                 </div>
-              </button>
-            ))}
+                <Switch
+                  checked={useBinancePay}
+                  onCheckedChange={setUseBinancePay}
+                  className="data-[state=checked]:bg-terex-accent"
+                />
+              </div>
+              
+              {useBinancePay && (
+                <Alert className="border-terex-accent/30 bg-terex-accent/10">
+                  <AlertCircle className="h-4 w-4 text-terex-accent" />
+                  <AlertDescription className="text-terex-accent text-xs">
+                    Vous devrez envoyer vos USDT via Binance Pay à notre ID Binance Pay
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+
+            {/* Sélection du réseau si Binance Pay désactivé */}
+            {!useBinancePay && (
+              <div className="space-y-2">
+                <Label className="text-white text-sm">Réseau blockchain</Label>
+                {Object.entries(NETWORK_LOGOS).map(([net, logo]) => (
+                  <button
+                    key={net}
+                    onClick={() => setNetwork(net)}
+                    className={`w-full p-4 rounded-lg border transition-all ${
+                      network === net 
+                        ? 'border-terex-accent bg-terex-accent/10' 
+                        : 'border-terex-gray bg-terex-gray/50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <img src={logo} alt={net} className="w-8 h-8 rounded-full" />
+                        <span className="text-white font-light">{net}</span>
+                      </div>
+                      {network === net && <Check className="w-5 h-5 text-terex-accent" />}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <DrawerFooter>
@@ -195,8 +244,61 @@ export function MobileSellUSDT() {
         </DrawerContent>
       </Drawer>
 
+      {/* Drawer Binance Pay Info */}
+      <Drawer open={step === 'binance'} onOpenChange={(open) => !open && setStep('network')}>
+        <DrawerContent className="bg-terex-darker border-terex-gray">
+          <DrawerHeader>
+            <DrawerTitle className="text-white font-light flex items-center gap-2">
+              <img 
+                src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" 
+                alt="Binance" 
+                className="w-6 h-6 rounded"
+              />
+              Binance Pay
+            </DrawerTitle>
+            <DrawerDescription className="text-gray-400 font-light">
+              Instructions pour l'envoi via Binance Pay
+            </DrawerDescription>
+          </DrawerHeader>
+          
+          <div className="px-4 pb-4 space-y-4">
+            <Alert className="border-terex-accent/30 bg-terex-accent/10">
+              <AlertCircle className="h-4 w-4 text-terex-accent" />
+              <AlertDescription className="text-white text-sm space-y-2">
+                <p className="font-medium">Pour envoyer vos USDT via Binance Pay :</p>
+                <ol className="list-decimal list-inside space-y-1 text-xs text-gray-300">
+                  <li>Ouvrez l'application Binance</li>
+                  <li>Allez dans "Pay" puis "Envoyer"</li>
+                  <li>Scannez le QR code ou utilisez l'ID Binance Pay de Terex</li>
+                  <li>Entrez le montant exact: {usdtAmount} USDT</li>
+                  <li>Confirmez l'envoi</li>
+                </ol>
+              </AlertDescription>
+            </Alert>
+
+            <div className="bg-terex-gray rounded-lg p-4">
+              <div className="text-center space-y-2">
+                <p className="text-gray-400 text-xs">ID Binance Pay Terex</p>
+                <p className="text-white font-medium text-lg">12345678</p>
+                <p className="text-terex-accent text-xs">Copiez cet ID dans Binance</p>
+              </div>
+            </div>
+          </div>
+
+          <DrawerFooter>
+            <Button 
+              onClick={handleContinueFromBinance}
+              className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
+            >
+              J'ai compris
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+
       {/* Drawer pour l'étape 3: Téléphone & Provider */}
-      <Drawer open={step === 'phone'} onOpenChange={(open) => !open && setStep('network')}>
+      <Drawer open={step === 'phone'} onOpenChange={(open) => !open && (useBinancePay ? setStep('binance') : setStep('network'))}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
           <DrawerHeader>
             <DrawerTitle className="text-white font-light">Informations de paiement</DrawerTitle>
