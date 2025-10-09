@@ -1,8 +1,8 @@
 
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -262,32 +262,12 @@ export function AppSidebar({
   onLogout
 }: AppSidebarProps) {
   const isMobile = useIsMobile();
-  const { open, setOpen } = useSidebar();
-  
   if (isMobile) {
     return null; // Le menu mobile sera géré par MobileMenu
   }
-  
-  return (
-    <>
-      <Sidebar 
-        className="bg-terex-darker border-r border-terex-gray/30 shadow-2xl fixed left-0 top-0 h-screen z-50 transition-all duration-300"
-        collapsible="icon"
-      >
-        <AppSidebarContent activeSection={activeSection} setActiveSection={setActiveSection} onLogout={onLogout} />
-      </Sidebar>
-      
-      {/* Bouton hamburger toggle pour desktop */}
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => setOpen(!open)}
-        className="fixed top-4 left-4 z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12"
-      >
-        {open ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
-      </Button>
-    </>
-  );
+  return <Sidebar className="bg-terex-darker border-r border-terex-gray/30 shadow-2xl fixed left-0 top-0 h-screen z-50">
+      <AppSidebarContent activeSection={activeSection} setActiveSection={setActiveSection} onLogout={onLogout} />
+    </Sidebar>;
 }
 
 export function MobileMenu({
