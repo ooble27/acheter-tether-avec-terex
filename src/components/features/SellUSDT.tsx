@@ -28,7 +28,8 @@ const WALLET_ADDRESSES = {
   ERC20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
   Arbitrum: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
   Polygon: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
-  Solana: '8ES2hxsfqZVX3cjxWLBJ8jCdzSu9hTBYELSkX82UdnhN'
+  Solana: '8ES2hxsfqZVX3cjxWLBJ8jCdzSu9hTBYELSkX82UdnhN',
+  Aptos: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84'
 };
 
 // Logos des réseaux blockchain
@@ -38,7 +39,8 @@ const NETWORK_LOGOS = {
   ERC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', // Ethereum
   Arbitrum: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11841.png', // Arbitrum
   Polygon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png', // Polygon
-  Solana: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png' // Solana
+  Solana: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png', // Solana
+  Aptos: 'https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png' // Aptos
 };
 
 export function SellUSDT() {

@@ -56,6 +56,8 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
       case 'ERC20': return 'ERC20 (Ethereum)';
       case 'Arbitrum': return 'Arbitrum';
       case 'Polygon': return 'Polygon';
+      case 'Solana': return 'Solana';
+      case 'Aptos': return 'Aptos';
       default: return orderData.network;
     }
   };

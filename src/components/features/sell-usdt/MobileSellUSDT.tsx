@@ -13,12 +13,20 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 const WALLET_ADDRESSES = {
   TRC20: 'TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb',
   BEP20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
-  ERC20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84'
+  ERC20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
+  Arbitrum: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
+  Polygon: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
+  Solana: '8ES2hxsfqZVX3cjxWLBJ8jCdzSu9hTBYELSkX82UdnhN',
+  Aptos: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84'
 };
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
   BEP20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',
-  ERC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png'
+  ERC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
+  Arbitrum: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11841.png',
+  Polygon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
+  Solana: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',
+  Aptos: 'https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png'
 };
 export function MobileSellUSDT() {
   const [step, setStep] = useState<'amount' | 'network' | 'binance' | 'phone' | 'confirm' | 'instructions'>('amount');
@@ -354,12 +362,31 @@ export function MobileSellUSDT() {
             <div className="bg-terex-gray rounded-lg p-4 space-y-3">
               <p className="text-white font-light">Envoyez exactement:</p>
               <p className="text-2xl text-terex-accent font-light">{usdtAmount} USDT</p>
-              <p className="text-sm text-gray-400 font-light">sur le réseau {network}</p>
               
-              <div className="pt-3 border-t border-terex-gray-light">
-                <p className="text-gray-400 text-sm font-light mb-2">À l'adresse:</p>
-                <p className="text-white text-xs break-all font-light">{WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}</p>
-              </div>
+              {useBinancePay ? (
+                <div className="pt-3 border-t border-terex-gray-light space-y-3">
+                  <p className="text-gray-400 text-sm font-light mb-2">Via Binance Pay à:</p>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400 text-xs">Email:</span>
+                      <span className="text-white text-sm">lomohamed834@gmail.com</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400 text-xs">ID Binance:</span>
+                      <span className="text-white font-light">450715599</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <p className="text-sm text-gray-400 font-light">sur le réseau {network}</p>
+                  
+                  <div className="pt-3 border-t border-terex-gray-light">
+                    <p className="text-gray-400 text-sm font-light mb-2">À l'adresse:</p>
+                    <p className="text-white text-xs break-all font-light">{WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}</p>
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
