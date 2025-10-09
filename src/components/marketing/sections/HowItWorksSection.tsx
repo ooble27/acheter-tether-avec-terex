@@ -13,11 +13,9 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
-            Comment ça <span className="text-terex-accent relative">
-              marche
-            </span> ?
+            Comment ça <span className="text-terex-accent">marche</span> ?
           </h2>
-          <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto font-light">
             Trois étapes simples pour commencer vos échanges et transferts vers l'Afrique
           </p>
         </div>

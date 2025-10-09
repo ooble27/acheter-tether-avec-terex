@@ -7,11 +7,11 @@ export function CurrencyConverterSection() {
             <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-8 h-8 mr-3 hidden sm:block" style={{
             filter: 'none'
           }} />
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white">
               Découvrez nos <span className="text-terex-accent">Taux en temps réel</span>
             </h2>
           </div>
-          <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto mb-8">
+          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-8 font-light">
             Utilisez nos convertisseurs pour connaître instantanément nos taux USDT et virements internationaux
           </p>
         </div>

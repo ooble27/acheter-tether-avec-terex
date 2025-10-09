@@ -14,7 +14,7 @@ export function PhoneMockupSection() {
               <span className="text-terex-accent font-medium text-sm">Interface Mobile</span>
             </div>
             
-            <h2 className="text-4xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-4 md:mb-6 leading-tight">
               L'expérience <span className="text-terex-accent">Terex</span> dans votre poche
             </h2>
 
@@ -25,7 +25,7 @@ export function PhoneMockupSection() {
               </div>
             </div>
             
-            <p className="text-base md:text-lg lg:text-xl text-gray-300 mb-6 md:mb-8 leading-relaxed max-w-md lg:max-w-none mx-auto lg:mx-0">
+            <p className="text-base md:text-lg lg:text-xl text-gray-400 mb-6 md:mb-8 leading-relaxed max-w-md lg:max-w-none mx-auto lg:mx-0 font-light">
               <span className="block md:hidden">
                 Découvrez notre interface intuitive conçue pour simplifier vos transactions USDT.
               </span>
