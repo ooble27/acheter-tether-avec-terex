@@ -163,13 +163,15 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     <TransactionProvider>
       <SidebarProvider>
         <div className="min-h-screen flex flex-col w-full bg-terex-dark">
-          {/* Barre de navigation */}
-          <DashboardNavbar 
-            onMenuClick={() => setMenuOpen(true)}
-            activeSection={activeSection}
-            setActiveSection={handleNavigate}
-            onLogout={handleLogout}
-          />
+          {/* Barre de navigation - masquée sur mobile */}
+          {!isMobile && (
+            <DashboardNavbar 
+              onMenuClick={() => setMenuOpen(true)}
+              activeSection={activeSection}
+              setActiveSection={handleNavigate}
+              onLogout={handleLogout}
+            />
+          )}
           
           {/* Menu hamburger */}
           <MobileMenu 
@@ -180,7 +182,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             onClose={() => setMenuOpen(false)}
           />
 
-          <main className={`flex-1 ${isMobile ? 'p-4 pt-20 pb-20' : 'p-6 pt-20 pb-24'} relative`}>
+          <main className={`flex-1 ${isMobile ? 'p-4 pb-20' : 'p-6 pt-20 pb-24'} relative`}>
             {/* Menu profil mobile pour PWA */}
             {isMobile && isPWA && (
               <MobileProfileMenu
