@@ -289,7 +289,7 @@ function DesktopSellUSDT() {
                 className="w-8 h-8 mr-3"
                 style={{ filter: 'none' }}
               />
-              <h1 className="text-2xl sm:text-3xl font-bold text-white">Vendre USDT</h1>
+              <h1 className="text-2xl sm:text-3xl font-light text-white">Vendre USDT</h1>
             </div>
             <p className="text-gray-400">Vendez vos USDT et recevez de l'argent fiat</p>
           </div>
@@ -337,7 +337,7 @@ function DesktopSellUSDT() {
                         <div className="space-y-4">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                              <Label className="text-white text-sm font-medium">Je vends</Label>
+                              <Label className="text-white text-sm font-light">Je vends</Label>
                               <div className="relative">
                                 <Input
                                   type="number"
@@ -352,13 +352,13 @@ function DesktopSellUSDT() {
                                     alt="USDT" 
                                     className="w-5 h-5"
                                   />
-                                  <span className="text-terex-accent font-medium text-sm">USDT</span>
+                                  <span className="text-terex-accent font-light text-sm">USDT</span>
                                 </div>
                               </div>
                             </div>
                             
                             <div className="space-y-2">
-                              <Label className="text-white text-sm font-medium">Je reçois</Label>
+                              <Label className="text-white text-sm font-light">Je reçois</Label>
                               <div className="relative">
                                 <Input
                                   type="text"
@@ -407,7 +407,7 @@ function DesktopSellUSDT() {
                         {/* Network Selection - only show if not using Binance Pay */}
                         {!useBinancePay && (
                           <div className="space-y-2">
-                            <Label className="text-white text-sm font-medium">Réseau d'envoi</Label>
+                            <Label className="text-white text-sm font-light">Réseau d'envoi</Label>
                             <Select value={network} onValueChange={setNetwork}>
                               <SelectTrigger className="bg-terex-gray border-terex-gray-light text-white h-12">
                                 <SelectValue />
@@ -462,7 +462,7 @@ function DesktopSellUSDT() {
                         {/* Our Wallet Address - only show if not using Binance Pay */}
                         {!useBinancePay && (
                           <div className="space-y-2">
-                            <Label className="text-white text-sm font-medium">Adresse de réception (Notre portefeuille)</Label>
+                            <Label className="text-white text-sm font-light">Adresse de réception (Notre portefeuille)</Label>
                             <div className="flex items-center space-x-2">
                               <Input
                                 type="text"
@@ -486,7 +486,7 @@ function DesktopSellUSDT() {
                         {/* Payment Method Details */}
                         {method.id === 'bank' && (
                           <div className="space-y-4">
-                            <h3 className="text-white font-medium">Informations bancaires</h3>
+                            <h3 className="text-white font-light">Informations bancaires</h3>
                             <div className="grid gap-4">
                               <div className="space-y-2">
                                 <Label className="text-white text-sm">Nom du titulaire du compte</Label>
@@ -521,7 +521,7 @@ function DesktopSellUSDT() {
 
                         {method.id === 'mobile' && (
                           <div className="space-y-4">
-                            <h3 className="text-white font-medium">Comment souhaitez-vous recevoir l'argent ?</h3>
+                            <h3 className="text-white font-light">Comment souhaitez-vous recevoir l'argent ?</h3>
                             <div className="grid gap-4">
                               <div className="space-y-2">
                                 <Label className="text-white text-sm">Service de paiement</Label>
@@ -619,11 +619,11 @@ function DesktopSellUSDT() {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-gray-400 text-sm">Marché USDT/CFA</span>
-                      <span className="text-gray-300 font-medium text-sm">{marketRates.CFA.toLocaleString()} CFA</span>
+                      <span className="text-gray-300 font-light text-sm">{marketRates.CFA.toLocaleString()} CFA</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-400 text-sm">Marché USDT/CAD</span>
-                      <span className="text-gray-300 font-medium text-sm">${marketRates.CAD} CAD</span>
+                      <span className="text-gray-300 font-light text-sm">${marketRates.CAD} CAD</span>
                     </div>
                   </div>
                 </CardContent>
@@ -644,7 +644,7 @@ function DesktopSellUSDT() {
                 <CardContent className="space-y-3 p-4 pt-0">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400 text-sm">USDT/CFA</span>
-                    <span className="text-white font-bold text-sm">{terexBuyRateCfa.toLocaleString()} CFA</span>
+                    <span className="text-white font-light text-sm">{terexBuyRateCfa.toLocaleString()} CFA</span>
                   </div>
                   <div className="text-xs text-gray-500 mt-2">
                     * Nous achetons vos USDT à ce taux
@@ -664,21 +664,21 @@ function DesktopSellUSDT() {
                   <div className="flex items-start space-x-3">
                     <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
                     <div>
-                      <p className="text-white text-sm font-medium">Cryptage SSL 256-bit</p>
+                      <p className="text-white text-sm font-light">Cryptage SSL 256-bit</p>
                       <p className="text-gray-400 text-xs">Vos données sont protégées</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
                     <div>
-                      <p className="text-white text-sm font-medium">Fonds sécurisés</p>
+                      <p className="text-white text-sm font-light">Fonds sécurisés</p>
                       <p className="text-gray-400 text-xs">Portefeuilles multi-signatures</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
                     <div>
-                      <p className="text-white text-sm font-medium">Support 24/7</p>
+                      <p className="text-white text-sm font-light">Support 24/7</p>
                       <p className="text-gray-400 text-xs">Aide disponible en permanence</p>
                     </div>
                   </div>

@@ -352,7 +352,7 @@ function DesktopBuyUSDT() {
                 alt="USDT" 
                 className="w-8 h-8 mr-3 usdt-icon-force-visible"
               />
-              <h1 className="text-2xl sm:text-3xl font-bold text-white">Acheter USDT</h1>
+              <h1 className="text-2xl sm:text-3xl font-light text-white">Acheter USDT</h1>
             </div>
             <p className="text-gray-400">Achetez des USDT avec de l'argent fiat</p>
           </div>
