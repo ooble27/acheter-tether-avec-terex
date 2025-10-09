@@ -10,7 +10,7 @@ export function PaymentMethodsSection() {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
             Méthodes de <span className="text-terex-accent">paiement</span>
           </h2>
-          <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto font-light">
             Plusieurs options sécurisées pour vos transactions
           </p>
         </div>
@@ -19,24 +19,24 @@ export function PaymentMethodsSection() {
           <Card className="bg-terex-darker/80 border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
             <CardContent className="p-4 sm:p-6">
               <CreditCard className="w-8 h-8 sm:w-10 sm:h-10 text-terex-accent mx-auto mb-3" />
-              <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Virement bancaire</h3>
-              <p className="text-gray-400 text-xs">Virements SEPA et vers l'Afrique</p>
+              <h3 className="text-white font-light mb-2 text-sm sm:text-base">Virement bancaire</h3>
+              <p className="text-gray-400 text-xs font-light">Virements SEPA et vers l'Afrique</p>
             </CardContent>
           </Card>
           
           <Card className="bg-terex-darker/80 border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
             <CardContent className="p-4 sm:p-6">
               <Smartphone className="w-8 h-8 sm:w-10 sm:h-10 text-terex-accent mx-auto mb-3" />
-              <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Mobile Money</h3>
-              <p className="text-gray-400 text-xs">Orange Money, Wave, Free Money</p>
+              <h3 className="text-white font-light mb-2 text-sm sm:text-base">Mobile Money</h3>
+              <p className="text-gray-400 text-xs font-light">Orange Money, Wave, Free Money</p>
             </CardContent>
           </Card>
           
           <Card className="bg-terex-darker/80 border-terex-accent/30 text-center hover:border-terex-accent/50 transition-all duration-300 hover:scale-105 sm:col-span-2 lg:col-span-1">
             <CardContent className="p-4 sm:p-6">
               <Banknote className="w-8 h-8 sm:w-10 sm:h-10 text-terex-accent mx-auto mb-3" />
-              <h3 className="text-white font-semibold mb-2 text-sm sm:text-base">Espèces</h3>
-              <p className="text-gray-400 text-xs">Points de retrait partenaires</p>
+              <h3 className="text-white font-light mb-2 text-sm sm:text-base">Espèces</h3>
+              <p className="text-gray-400 text-xs font-light">Points de retrait partenaires</p>
             </CardContent>
           </Card>
         </div>

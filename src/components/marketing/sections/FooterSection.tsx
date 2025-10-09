@@ -64,10 +64,10 @@ export function FooterSection() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid lg:grid-cols-2 gap-8 items-center">
             <div>
-              <h3 className="text-2xl font-bold text-white mb-4">
+              <h3 className="text-2xl font-light text-white mb-4">
                 Restez informé des dernières actualités crypto
               </h3>
-              <p className="text-gray-300 text-lg">
+              <p className="text-gray-400 text-lg font-light">
                 Recevez nos analyses de marché, nouvelles fonctionnalités et conseils de trading directement dans votre boîte mail.
               </p>
             </div>
@@ -76,7 +76,7 @@ export function FooterSection() {
                 placeholder="Votre adresse email"
                 className="bg-terex-dark border-terex-gray text-white placeholder:text-gray-400 flex-1"
               />
-              <Button className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-8">
+              <Button className="bg-terex-accent hover:bg-terex-accent/90 text-black font-light px-8">
                 S'abonner
               </Button>
             </div>
@@ -96,12 +96,12 @@ export function FooterSection() {
                 className="w-12 h-12 rounded-xl"
               />
               <div>
-                <h3 className="text-2xl font-bold text-white">Terex</h3>
-                <p className="text-terex-accent text-sm">Teranga Exchange</p>
+                <h3 className="text-2xl font-light text-white">Terex</h3>
+                <p className="text-terex-accent text-sm font-light">Teranga Exchange</p>
               </div>
             </div>
             
-            <p className="text-gray-300 mb-6 leading-relaxed">
+            <p className="text-gray-400 mb-6 leading-relaxed font-light">
               La plateforme leader d'échange crypto-fiat en Afrique. Échangez vos USDT contre 
               des devises locales en toute sécurité avec les meilleurs taux du marché.
             </p>
@@ -148,7 +148,7 @@ export function FooterSection() {
           {/* Footer Links */}
           {footerSections.map((section, index) => (
             <div key={index} className="lg:col-span-1">
-              <h4 className="text-white font-semibold mb-6">{section.title}</h4>
+              <h4 className="text-white font-light mb-6">{section.title}</h4>
               <ul className="space-y-3">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>

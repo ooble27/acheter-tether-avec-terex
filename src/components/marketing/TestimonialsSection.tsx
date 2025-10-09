@@ -42,10 +42,10 @@ export function TestimonialsSection() {
     <section className="py-20 bg-terex-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
             Ils nous font <span className="text-terex-accent">confiance</span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto font-light">
             Découvrez ce que nos utilisateurs disent de leur expérience avec Terex
           </p>
         </div>
@@ -56,7 +56,7 @@ export function TestimonialsSection() {
               <CardContent className="p-8">
                 <div className="flex items-start space-x-4 mb-6">
                   <Quote className="w-8 h-8 text-terex-accent flex-shrink-0 mt-1" />
-                  <p className="text-gray-300 text-lg leading-relaxed italic">
+                  <p className="text-gray-400 text-lg leading-relaxed italic font-light">
                     "{testimonial.text}"
                   </p>
                 </div>
@@ -66,8 +66,8 @@ export function TestimonialsSection() {
                     <User className="w-6 h-6 text-terex-accent" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-white font-semibold">{testimonial.name}</h4>
-                    <p className="text-terex-accent text-sm">{testimonial.location}</p>
+                    <h4 className="text-white font-light">{testimonial.name}</h4>
+                    <p className="text-terex-accent text-sm font-light">{testimonial.location}</p>
                     <p className="text-gray-400 text-xs mt-1">{testimonial.transaction}</p>
                   </div>
                   <div className="flex space-x-1">
@@ -85,18 +85,18 @@ export function TestimonialsSection() {
         <div className="text-center mt-16">
           <div className="inline-flex items-center space-x-6 bg-terex-darker/50 border border-terex-gray/30 rounded-2xl px-8 py-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-terex-accent">4.9/5</div>
-              <div className="text-sm text-gray-400">Note moyenne</div>
+              <div className="text-2xl font-light text-terex-accent">4.9/5</div>
+              <div className="text-sm text-gray-400 font-light">Note moyenne</div>
             </div>
             <div className="w-px h-8 bg-terex-gray/30"></div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-terex-accent">1000+</div>
-              <div className="text-sm text-gray-400">Clients satisfaits</div>
+              <div className="text-2xl font-light text-terex-accent">1000+</div>
+              <div className="text-sm text-gray-400 font-light">Clients satisfaits</div>
             </div>
             <div className="w-px h-8 bg-terex-gray/30"></div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-terex-accent">24/7</div>
-              <div className="text-sm text-gray-400">Support client</div>
+              <div className="text-2xl font-light text-terex-accent">24/7</div>
+              <div className="text-sm text-gray-400 font-light">Support client</div>
             </div>
           </div>
         </div>
