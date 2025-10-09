@@ -223,9 +223,9 @@ export function Profile({ user, onLogout }: ProfileProps) {
 
   return (
     <div className="min-h-screen bg-terex-dark p-2 md:p-4 lg:p-6">
-      <div className="max-w-5xl mx-auto space-y-4">
+      <div className="max-w-6xl mx-auto space-y-4">
         {/* Header avec bouton de déconnexion */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 px-2">
           <div>
             <h1 className="text-2xl md:text-3xl font-light text-white mb-1">Mon Profil</h1>
             <p className="text-sm text-gray-400 font-light">{user?.email}</p>
@@ -241,10 +241,10 @@ export function Profile({ user, onLogout }: ProfileProps) {
           </Button>
         </div>
 
-        {/* Avatar et sélecteur de section */}
+        {/* Avatar et nom - Conteneur séparé */}
         <Card className="bg-terex-darker border-terex-gray">
           <CardContent className="p-4 md:p-6">
-            <div className="flex flex-col sm:flex-row items-center gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row items-center gap-4">
               <div className="w-20 h-20 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-full flex items-center justify-center flex-shrink-0">
                 <User className="w-10 h-10 text-white" />
               </div>
@@ -258,30 +258,36 @@ export function Profile({ user, onLogout }: ProfileProps) {
                 </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
 
-            {/* Dropdown de navigation */}
-            <div className="mb-6">
-              <Select value={currentSection} onValueChange={(value: Section) => setCurrentSection(value)}>
-                <SelectTrigger className="bg-terex-dark border-terex-gray text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-terex-darker border-terex-gray z-50">
-                  {sections.map((section) => {
-                    const Icon = section.icon;
-                    return (
-                      <SelectItem key={section.value} value={section.value} className="text-white">
-                        <div className="flex items-center gap-2">
-                          <Icon className="w-4 h-4" />
-                          {section.label}
-                        </div>
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </div>
+        {/* Dropdown de navigation - Conteneur séparé */}
+        <Card className="bg-terex-darker border-terex-gray">
+          <CardContent className="p-4">
+            <Select value={currentSection} onValueChange={(value: Section) => setCurrentSection(value)}>
+              <SelectTrigger className="bg-terex-dark border-terex-gray text-white">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-terex-darker border-terex-gray z-50">
+                {sections.map((section) => {
+                  const Icon = section.icon;
+                  return (
+                    <SelectItem key={section.value} value={section.value} className="text-white">
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-4 h-4" />
+                        {section.label}
+                      </div>
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
 
-            {/* Contenu des sections */}
+        {/* Contenu des sections - Conteneur séparé */}
+        <Card className="bg-terex-darker border-terex-gray">
+          <CardContent className="p-4 md:p-6">
             {currentSection === 'informations' && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between mb-4">
