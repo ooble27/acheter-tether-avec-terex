@@ -32,7 +32,7 @@ export function TransactionHistoryPage() {
       {/* En-tête */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white mb-2">
+          <h1 className="text-2xl md:text-3xl font-light text-white mb-1">
             Historique des transactions
           </h1>
           <p className="text-gray-400">

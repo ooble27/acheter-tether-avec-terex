@@ -266,7 +266,7 @@ const FAQPage = () => {
               <span className="text-terex-accent font-medium text-sm md:text-base">Foire aux Questions</span>
             </div>
             
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-light text-white mb-4 md:mb-6 leading-tight">
               Tout ce que vous devez <span className="text-terex-accent">savoir</span> sur Terex
             </h1>
             <p className="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8 md:mb-12 px-2">
