@@ -30,7 +30,7 @@ export function CTASection({ user, onGetStarted }: CTASectionProps) {
             <Button 
               onClick={onGetStarted}
               size="lg" 
-              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-4 sm:px-8 py-3 sm:py-4 text-sm sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-full max-w-80 sm:max-w-none sm:w-auto mx-auto"
+              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-light px-4 sm:px-8 py-3 sm:py-4 text-sm sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-full max-w-80 sm:max-w-none sm:w-auto mx-auto"
             >
               <span className="truncate">Créer mon compte gratuitement</span>
               <ArrowRight className="ml-2 w-4 h-4 flex-shrink-0" />

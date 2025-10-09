@@ -59,7 +59,7 @@ export function PhoneMockupSection() {
             <div className="flex justify-center lg:justify-start">
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-6 py-3 lg:px-8 lg:py-4 text-sm lg:text-base rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-full sm:w-auto max-w-xs sm:max-w-none"
+                className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-light px-6 py-3 lg:px-8 lg:py-4 text-sm lg:text-base rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-full sm:w-auto max-w-xs sm:max-w-none"
               >
                 Commencer maintenant
               </Button>

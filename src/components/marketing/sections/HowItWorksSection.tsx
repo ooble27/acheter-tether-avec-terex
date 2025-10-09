@@ -24,7 +24,7 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
           <Card className="bg-terex-darker/80 border-terex-accent/30 hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
             <CardContent className="p-4 sm:p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold text-terex-accent">1</span>
+                <span className="text-xl font-light text-terex-accent">1</span>
               </div>
               <h3 className="text-base sm:text-lg font-light text-white mb-3">Inscription gratuite</h3>
               <p className="text-gray-400 mb-4 text-sm font-light">
@@ -40,7 +40,7 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
           <Card className="bg-terex-darker/80 border-terex-accent/30 hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
             <CardContent className="p-4 sm:p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold text-terex-accent">2</span>
+                <span className="text-xl font-light text-terex-accent">2</span>
               </div>
               <h3 className="text-base sm:text-lg font-light text-white mb-3">Choisissez votre service</h3>
               <p className="text-gray-400 mb-4 text-sm font-light">
@@ -56,7 +56,7 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
           <Card className="bg-terex-darker/80 border-terex-accent/30 hover:border-terex-accent/50 transition-all duration-300 hover:scale-105">
             <CardContent className="p-4 sm:p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <span className="text-xl font-bold text-terex-accent">3</span>
+                <span className="text-xl font-light text-terex-accent">3</span>
               </div>
               <h3 className="text-base sm:text-lg font-light text-white mb-3">Transaction sécurisée</h3>
               <p className="text-gray-400 mb-4 text-sm font-light">

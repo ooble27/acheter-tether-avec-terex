@@ -57,7 +57,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                   <button
                     key={item.href}
                     onClick={() => navigate(item.href)}
-                    className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm font-medium"
+                    className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm font-light"
                   >
                     {item.label}
                   </button>
@@ -91,7 +91,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                 ) : (
                   <Button
                     onClick={() => navigate('/auth')}
-                    className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold"
+                    className="bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
                   >
                     Se Connecter
                   </Button>
@@ -125,7 +125,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                           <User className="w-6 h-6 text-white" />
                         </div>
                         <div>
-                          <p className="text-white font-medium">{user.name}</p>
+                          <p className="text-white font-light">{user.name}</p>
                           <p className="text-gray-400 text-sm">{user.email}</p>
                         </div>
                       </div>
@@ -147,7 +147,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
 
                     {/* Navigation Items */}
                     <div className="space-y-2">
-                      <p className="text-gray-400 text-sm font-medium px-3">Navigation</p>
+                      <p className="text-gray-400 text-sm font-light px-3">Navigation</p>
                       {navigationItems.map((item) => (
                         <Button
                           key={item.href}
@@ -163,7 +163,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                     {!user && (
                       <Button
                         onClick={() => navigate('/auth')}
-                        className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold h-14 text-lg"
+                        className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-light h-14 text-lg"
                       >
                         Se Connecter
                       </Button>
