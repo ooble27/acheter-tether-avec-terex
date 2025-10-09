@@ -20,7 +20,18 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ['Inter', 'sans-serif'],
+				sans: ['Poppins', 'Inter', 'sans-serif'],
+			},
+			fontSize: {
+				'xs': ['0.75rem', { lineHeight: '1.5', fontWeight: '300' }],
+				'sm': ['0.875rem', { lineHeight: '1.5', fontWeight: '300' }],
+				'base': ['1rem', { lineHeight: '1.5', fontWeight: '300' }],
+				'lg': ['1.125rem', { lineHeight: '1.5', fontWeight: '400' }],
+				'xl': ['1.25rem', { lineHeight: '1.5', fontWeight: '400' }],
+				'2xl': ['1.5rem', { lineHeight: '1.4', fontWeight: '500' }],
+				'3xl': ['1.875rem', { lineHeight: '1.3', fontWeight: '600' }],
+				'4xl': ['2.25rem', { lineHeight: '1.2', fontWeight: '600' }],
+				'5xl': ['3rem', { lineHeight: '1.1', fontWeight: '700' }],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
