@@ -118,23 +118,21 @@ export function MobileSellUSDT() {
                   onChange={(e) => setUsdtAmount(e.target.value)}
                   className="bg-terex-darker border-terex-gray text-white text-3xl font-light h-16 text-center px-20"
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-light">
-                  USDT
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                  <span className="text-gray-400 text-lg font-light">USDT</span>
+                  <img 
+                    src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
+                    alt="USDT" 
+                    className="w-5 h-5"
+                  />
                 </span>
               </div>
             </div>
 
             <div className="bg-terex-darker rounded-lg p-4 space-y-2">
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between">
                 <span className="text-gray-400 text-sm font-light">Vous recevez</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-white font-light">{fiatAmount} {currency}</span>
-                  <img 
-                    src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                    alt="CFA" 
-                    className="w-5 h-5"
-                  />
-                </div>
+                <span className="text-white font-light">{fiatAmount} {currency}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400 text-sm font-light">Taux</span>
