@@ -164,8 +164,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     <TransactionProvider>
       <SidebarProvider>
         <div className="min-h-screen flex flex-col w-full bg-terex-dark">
-          {/* Bouton hamburger flottant */}
-          {isMobile ? (
+          {/* Bouton hamburger flottant (masqué en PWA mobile) */}
+          {isMobile && !isPWA ? (
             <Button
               variant="ghost"
               size="icon"
@@ -174,7 +174,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             >
               <Menu className="h-5 w-5" />
             </Button>
-          ) : (
+          ) : !isMobile ? (
             <DesktopMenuPopover
               activeSection={activeSection}
               setActiveSection={handleNavigate}
@@ -191,7 +191,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                 </Button>
               }
             />
-          )}
+          ) : null}
           
           {/* Menu hamburger mobile plein écran */}
           <MobileMenu 
