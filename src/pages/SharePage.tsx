@@ -77,8 +77,8 @@ export default function SharePage() {
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark px-4 md:p-6 lg:p-8 py-3">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="min-h-[calc(100vh-10rem)] flex items-start justify-center py-8 px-4">
+      <div className="w-full max-w-2xl space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
           <Button
