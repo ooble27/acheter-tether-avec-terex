@@ -151,7 +151,7 @@ export function MobileBuyUSDT() {
   };
 
   return (
-    <div className="min-h-screen flex items-start justify-center bg-terex-dark p-4 pt-20 pb-24">
+    <div className="fixed inset-0 flex items-start justify-center bg-terex-dark p-4 pt-20 pb-24 overflow-hidden">
       <div className="w-full max-w-md">
         {/* Étape 1: Montant */}
         {step === 'amount' && (
@@ -291,8 +291,8 @@ export function MobileBuyUSDT() {
 
       {/* Drawer pour l'étape 3: Adresse Wallet */}
       <Drawer open={step === 'address'} onOpenChange={(open) => !open && setStep('network')}>
-        <DrawerContent className="bg-terex-darker border-terex-gray max-h-[85vh] flex flex-col">
-          <DrawerHeader className="relative flex-shrink-0">
+        <DrawerContent className="bg-terex-darker border-terex-gray">
+          <DrawerHeader className="relative">
             <button 
               onClick={() => setStep('network')}
               className="absolute left-4 top-4 p-2 hover:bg-terex-gray/50 rounded-full transition-colors"
@@ -305,8 +305,8 @@ export function MobileBuyUSDT() {
             </DrawerDescription>
           </DrawerHeader>
           
-          <div className="px-4 pb-4 overflow-y-auto flex-1">
-            <div className="relative min-h-[120px] flex items-center">
+          <div className="px-4 pb-4">
+            <div className="relative">
               <Input
                 placeholder={`Votre adresse ${network}`}
                 value={walletAddress}
@@ -321,7 +321,7 @@ export function MobileBuyUSDT() {
             </div>
           </div>
 
-          <DrawerFooter className="flex-shrink-0">
+          <DrawerFooter>
             <Button 
               onClick={handleContinueToConfirm}
               className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
