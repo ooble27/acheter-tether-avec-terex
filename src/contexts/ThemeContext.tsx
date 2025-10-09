@@ -17,13 +17,17 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   console.log('ThemeProvider: Initializing...');
   
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>(() => {
+    const stored = localStorage.getItem('theme');
+    return (stored === 'light' || stored === 'dark') ? stored : 'light';
+  });
 
   useEffect(() => {
     try {
       const root = window.document.documentElement;
       root.classList.remove('light', 'dark');
       root.classList.add(theme);
+      localStorage.setItem('theme', theme);
     } catch (error) {
       console.error('Error applying theme:', error);
     }
@@ -32,7 +36,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const value = useMemo(() => ({
     theme,
     setTheme,
-  }), [theme, setTheme]);
+  }), [theme]);
 
   return (
     <ThemeContext.Provider value={value}>

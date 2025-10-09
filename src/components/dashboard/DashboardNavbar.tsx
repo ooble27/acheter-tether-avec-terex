@@ -1,8 +1,9 @@
-import { Menu, Bell } from 'lucide-react';
+import { Menu, Bell, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DesktopMenuPopover } from './DesktopMenuPopover';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useState } from 'react';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface DashboardNavbarProps {
   onMenuClick: () => void;
@@ -14,6 +15,7 @@ interface DashboardNavbarProps {
 export function DashboardNavbar({ onMenuClick, activeSection, setActiveSection, onLogout }: DashboardNavbarProps) {
   const isMobile = useIsMobile();
   const [menuPopoverOpen, setMenuPopoverOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   const getSectionTitle = (section: string) => {
     const titles: Record<string, string> = {
@@ -38,7 +40,7 @@ export function DashboardNavbar({ onMenuClick, activeSection, setActiveSection, 
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-40 bg-terex-darker/95 backdrop-blur-md border-b border-terex-gray/30 shadow-lg">
+    <nav className="fixed top-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-b border-border shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {isMobile ? (
@@ -48,7 +50,7 @@ export function DashboardNavbar({ onMenuClick, activeSection, setActiveSection, 
                 variant="ghost"
                 size="icon"
                 onClick={onMenuClick}
-                className="text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
+                className="text-foreground hover:bg-accent rounded-xl border border-border"
               >
                 <Menu className="h-5 w-5" />
               </Button>
@@ -69,12 +71,12 @@ export function DashboardNavbar({ onMenuClick, activeSection, setActiveSection, 
                       <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 to-transparent rounded-lg blur opacity-40"></div>
                     </div>
                     <div className="hidden sm:flex flex-col">
-                      <h1 className="text-lg font-black tracking-tight text-white">
-                        <span className="bg-gradient-to-r from-terex-accent to-terex-accent/80 bg-clip-text text-transparent">
+                      <h1 className="text-lg font-black tracking-tight">
+                        <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
                           TEREX
                         </span>
                       </h1>
-                      <p className="text-[8px] font-medium text-terex-accent/70 uppercase tracking-wider">
+                      <p className="text-[8px] font-medium text-primary/70 uppercase tracking-wider">
                         Teranga Exchange
                       </p>
                     </div>
@@ -82,22 +84,32 @@ export function DashboardNavbar({ onMenuClick, activeSection, setActiveSection, 
                 </div>
 
                 {/* Titre de la section active - visible sur desktop */}
-                <div className="hidden md:block h-8 w-px bg-terex-gray/30"></div>
-                <h2 className="hidden md:block text-sm font-medium text-gray-300">
+                <div className="hidden md:block h-8 w-px bg-border"></div>
+                <h2 className="hidden md:block text-sm font-medium text-muted-foreground">
                   {getSectionTitle(activeSection)}
                 </h2>
               </div>
 
               {/* Actions à droite */}
               <div className="flex items-center space-x-2">
+                {/* Toggle Theme */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="text-foreground/70 hover:text-foreground hover:bg-accent rounded-xl"
+                >
+                  {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                </Button>
+
                 {/* Bouton notifications (optionnel) */}
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="relative text-gray-300 hover:text-white hover:bg-terex-gray/50 rounded-xl"
+                  className="relative text-foreground/70 hover:text-foreground hover:bg-accent rounded-xl"
                 >
                   <Bell className="h-5 w-5" />
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-terex-accent rounded-full"></span>
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
                 </Button>
 
                 {/* Bouton Menu Hamburger Desktop */}
@@ -111,7 +123,7 @@ export function DashboardNavbar({ onMenuClick, activeSection, setActiveSection, 
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
+                      className="text-foreground hover:bg-accent rounded-xl border border-border"
                     >
                       <Menu className="h-5 w-5" />
                     </Button>
