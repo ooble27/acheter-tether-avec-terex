@@ -78,10 +78,10 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             <Activity className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">
+            <h1 className="text-2xl md:text-3xl font-light text-white mb-1">
               Bienvenue, <span className="text-terex-accent">{user?.name}</span>
             </h1>
-            <p className="text-gray-400 text-base">Plateforme USDT</p>
+            <p className="text-sm text-gray-400 font-light">Plateforme USDT</p>
           </div>
         </div>
 
