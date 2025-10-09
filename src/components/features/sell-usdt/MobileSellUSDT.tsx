@@ -114,9 +114,9 @@ export function MobileSellUSDT() {
     setUsdtAmount('');
     setPhoneNumber('');
   };
-  return <div className="h-full bg-terex-dark">
+  return <div className="h-screen overflow-hidden bg-terex-dark flex flex-col">
       {/* Étape 1: Montant */}
-      {step === 'amount' && <div className="p-4 space-y-6">
+      {step === 'amount' && <div className="p-4 space-y-6 flex-1 flex flex-col justify-between overflow-hidden">
           <div className="space-y-2">
             <h2 className="text-2xl font-light text-white">Vendre USDT</h2>
             <p className="text-sm text-gray-400 font-light">Entrez le montant que vous souhaitez vendre</p>
