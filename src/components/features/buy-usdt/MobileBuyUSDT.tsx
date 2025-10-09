@@ -151,10 +151,10 @@ export function MobileBuyUSDT() {
   };
 
   return (
-    <div className="h-screen overflow-hidden bg-terex-dark flex flex-col">
+    <div className="h-full bg-terex-dark">
       {/* Étape 1: Montant */}
       {step === 'amount' && (
-        <div className="p-4 space-y-6 flex-1 flex flex-col justify-between overflow-hidden">
+        <div className="p-4 space-y-6">
           <div className="space-y-2">
             <h2 className="text-2xl font-light text-white">Acheter USDT</h2>
             <p className="text-sm text-gray-400 font-light">Entrez le montant que vous souhaitez dépenser</p>
