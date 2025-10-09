@@ -114,15 +114,15 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
 
       {/* Full Screen Menu */}
       {isOpen && (
-        <div className="fixed inset-0 z-[100] bg-background animate-in fade-in duration-200">
-          <div className="flex flex-col h-full animate-in slide-in-from-bottom duration-300">
+        <div className="fixed inset-0 z-[100] bg-terex-dark animate-in fade-in duration-200">
+          <div className="flex flex-col h-full animate-in slide-in-from-right duration-300">
             {/* Header with Back Button */}
-            <div className="flex items-center justify-between p-4 border-b border-border bg-background">
+            <div className="flex items-center justify-start p-4 border-b border-terex-gray/30 bg-terex-dark">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsOpen(false)}
-                className="rounded-full hover:bg-muted"
+                className="rounded-full hover:bg-terex-gray/30 text-white"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -138,12 +138,10 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
                   <path d="m15 18-6-6 6-6"/>
                 </svg>
               </Button>
-              <h1 className="text-xl font-bold">Paramètres</h1>
-              <div className="w-10"></div>
             </div>
 
             {/* Content */}
-            <ScrollArea className="flex-1 bg-background">
+            <ScrollArea className="flex-1 bg-terex-dark">
               <div className="p-4 space-y-2">
                 {/* Section Profil */}
                 {renderMenuSection('Profil', profileItems)}
@@ -160,7 +158,7 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
             </ScrollArea>
 
             {/* Footer avec bouton de déconnexion */}
-            <div className="p-4 border-t border-border bg-background pb-safe">
+            <div className="p-4 border-t border-terex-gray/30 bg-terex-dark pb-safe">
               <Button 
                 onClick={handleLogout}
                 className="w-full h-14 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm"
