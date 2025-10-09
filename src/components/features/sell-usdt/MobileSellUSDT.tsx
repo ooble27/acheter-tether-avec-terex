@@ -223,19 +223,24 @@ export function MobileSellUSDT() {
                 <ol className="list-decimal list-inside space-y-1 text-xs text-gray-300">
                   <li>Ouvrez l'application Binance</li>
                   <li>Allez dans "Pay" puis "Envoyer"</li>
-                  <li>Scannez le QR code ou utilisez l'ID Binance Pay de Terex</li>
-                  <li>Entrez le montant exact: {usdtAmount} USDT</li>
+                  <li>Envoyez à l'email: lomohamed834@gmail.com</li>
+                  <li>Ou utilisez l'ID: 450715599</li>
+                  <li>Montant exact: {usdtAmount} USDT</li>
                   <li>Confirmez l'envoi</li>
                 </ol>
               </AlertDescription>
             </Alert>
 
-            <div className="bg-terex-gray rounded-lg p-4">
-              <div className="text-center space-y-2">
-                <p className="text-gray-400 text-xs">ID Binance Pay Terex</p>
-                <p className="text-white font-medium text-lg">12345678</p>
-                <p className="text-terex-accent text-xs">Copiez cet ID dans Binance</p>
+            <div className="bg-terex-gray rounded-lg p-4 space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-400 text-xs">Email Binance</span>
+                <span className="text-white text-sm">lomohamed834@gmail.com</span>
               </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-400 text-xs">ID Binance Pay</span>
+                <span className="text-white font-medium text-lg">450715599</span>
+              </div>
+              <p className="text-terex-accent text-xs text-center">Utilisez cet ID dans Binance Pay</p>
             </div>
           </div>
 
