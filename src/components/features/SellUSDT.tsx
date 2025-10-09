@@ -19,6 +19,7 @@ import { KYCProtection } from './KYCProtection';
 import { KYCPage } from './KYCPage';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { MobileSellUSDT } from './sell-usdt/MobileSellUSDT';
+import { DesktopSellUSDT as DesktopSellUSDTComponent } from './sell-usdt/DesktopSellUSDT';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 // Adresses de portefeuille par réseau - Vos vraies adresses
@@ -44,7 +45,8 @@ const NETWORK_LOGOS = {
 };
 
 export function SellUSDT() {
-  return <MobileSellUSDT />;
+  const isMobile = useIsMobile();
+  return isMobile ? <MobileSellUSDT /> : <DesktopSellUSDTComponent />;
 }
 
 function DesktopSellUSDT() {
