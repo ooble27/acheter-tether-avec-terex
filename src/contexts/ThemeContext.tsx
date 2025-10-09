@@ -17,17 +17,13 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   console.log('ThemeProvider: Initializing...');
   
-  const [theme, setTheme] = useState<Theme>(() => {
-    const stored = localStorage.getItem('theme');
-    return (stored as Theme) || 'dark';
-  });
+  const [theme, setTheme] = useState<Theme>('dark');
 
   useEffect(() => {
     try {
       const root = window.document.documentElement;
       root.classList.remove('light', 'dark');
       root.classList.add(theme);
-      localStorage.setItem('theme', theme);
     } catch (error) {
       console.error('Error applying theme:', error);
     }
