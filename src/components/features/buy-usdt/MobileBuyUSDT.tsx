@@ -9,7 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { useNabooPay } from '@/hooks/useNabooPay';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, ArrowLeft } from 'lucide-react';
 import { BinanceEmailInput } from './BinanceEmailInput';
 import { PURCHASE_LIMITS, getLimitMessage, enforceMaxLimit } from './LimitsValidator';
 
@@ -241,7 +241,13 @@ export function MobileBuyUSDT() {
       {/* Drawer pour l'étape 2: Réseau */}
       <Drawer open={step === 'network'} onOpenChange={(open) => !open && setStep('amount')}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
-          <DrawerHeader>
+          <DrawerHeader className="relative">
+            <button 
+              onClick={() => setStep('amount')}
+              className="absolute left-4 top-4 p-2 hover:bg-terex-gray/50 rounded-full transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 text-white" />
+            </button>
             <DrawerTitle className="text-white font-light">Destination</DrawerTitle>
             <DrawerDescription className="text-gray-400 font-light">
               Choisissez où vous voulez recevoir vos USDT
@@ -285,7 +291,13 @@ export function MobileBuyUSDT() {
       {/* Drawer pour l'étape 3: Adresse Wallet */}
       <Drawer open={step === 'address'} onOpenChange={(open) => !open && setStep('network')}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
-          <DrawerHeader>
+          <DrawerHeader className="relative">
+            <button 
+              onClick={() => setStep('network')}
+              className="absolute left-4 top-4 p-2 hover:bg-terex-gray/50 rounded-full transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 text-white" />
+            </button>
             <DrawerTitle className="text-white font-light">Adresse de réception</DrawerTitle>
             <DrawerDescription className="text-gray-400 font-light">
               Entrez votre adresse {network} pour recevoir les USDT
@@ -316,7 +328,13 @@ export function MobileBuyUSDT() {
       {/* Drawer pour l'étape 3bis: Compte Binance */}
       <Drawer open={step === 'binance'} onOpenChange={(open) => !open && setStep('network')}>
         <DrawerContent className="bg-terex-darker border-terex-gray max-h-[90vh]">
-          <DrawerHeader>
+          <DrawerHeader className="relative">
+            <button 
+              onClick={() => setStep('network')}
+              className="absolute left-4 top-4 p-2 hover:bg-terex-gray/50 rounded-full transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 text-white" />
+            </button>
             <DrawerTitle className="text-white font-light flex items-center gap-2">
               <img 
                 src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" 
@@ -357,7 +375,13 @@ export function MobileBuyUSDT() {
       {/* Drawer pour l'étape 4: Confirmation */}
       <Drawer open={step === 'confirm'} onOpenChange={(open) => !open && (isBinanceNetwork ? setStep('binance') : setStep('address'))}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
-          <DrawerHeader>
+          <DrawerHeader className="relative">
+            <button 
+              onClick={() => isBinanceNetwork ? setStep('binance') : setStep('address')}
+              className="absolute left-4 top-4 p-2 hover:bg-terex-gray/50 rounded-full transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 text-white" />
+            </button>
             <DrawerTitle className="text-white font-light">Confirmer l'achat</DrawerTitle>
             <DrawerDescription className="text-gray-400 font-light">
               Vérifiez les détails de votre transaction

@@ -8,7 +8,7 @@ import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
-import { ArrowRight, Check, AlertCircle } from 'lucide-react';
+import { ArrowRight, Check, AlertCircle, ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 const WALLET_ADDRESSES = {
   TRC20: 'TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb',
@@ -23,8 +23,6 @@ const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
   BEP20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',
   ERC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
-  Arbitrum: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11841.png',
-  Polygon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
   Solana: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',
   Aptos: 'https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png'
 };
@@ -157,7 +155,13 @@ export function MobileSellUSDT() {
       {/* Drawer pour l'étape 2: Réseau + Binance Pay */}
       <Drawer open={step === 'network'} onOpenChange={open => !open && setStep('amount')}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
-          <DrawerHeader>
+          <DrawerHeader className="relative">
+            <button 
+              onClick={() => setStep('amount')}
+              className="absolute left-4 top-4 p-2 hover:bg-terex-gray/50 rounded-full transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 text-white" />
+            </button>
             <DrawerTitle className="text-white font-light">Mode d'envoi</DrawerTitle>
             <DrawerDescription className="text-gray-400 font-light">
               Choisissez comment vous voulez envoyer vos USDT
@@ -213,7 +217,13 @@ export function MobileSellUSDT() {
       {/* Drawer Binance Pay Info */}
       <Drawer open={step === 'binance'} onOpenChange={open => !open && setStep('network')}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
-          <DrawerHeader>
+          <DrawerHeader className="relative">
+            <button 
+              onClick={() => setStep('network')}
+              className="absolute left-4 top-4 p-2 hover:bg-terex-gray/50 rounded-full transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 text-white" />
+            </button>
             <DrawerTitle className="text-white font-light flex items-center gap-2">
               <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" className="w-6 h-6 rounded" />
               Binance Pay
@@ -264,7 +274,13 @@ export function MobileSellUSDT() {
       {/* Drawer pour l'étape 3: Téléphone & Provider */}
       <Drawer open={step === 'phone'} onOpenChange={open => !open && (useBinancePay ? setStep('binance') : setStep('network'))}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
-          <DrawerHeader>
+          <DrawerHeader className="relative">
+            <button 
+              onClick={() => useBinancePay ? setStep('binance') : setStep('network')}
+              className="absolute left-4 top-4 p-2 hover:bg-terex-gray/50 rounded-full transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 text-white" />
+            </button>
             <DrawerTitle className="text-white font-light">Informations de paiement</DrawerTitle>
             <DrawerDescription className="text-gray-400 font-light">
               Entrez votre numéro Mobile Money
@@ -308,7 +324,13 @@ export function MobileSellUSDT() {
       {/* Drawer pour l'étape 4: Confirmation */}
       <Drawer open={step === 'confirm'} onOpenChange={open => !open && setStep('phone')}>
         <DrawerContent className="bg-terex-darker border-terex-gray">
-          <DrawerHeader>
+          <DrawerHeader className="relative">
+            <button 
+              onClick={() => setStep('phone')}
+              className="absolute left-4 top-4 p-2 hover:bg-terex-gray/50 rounded-full transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 text-white" />
+            </button>
             <DrawerTitle className="text-white font-light">Confirmer la vente</DrawerTitle>
             <DrawerDescription className="text-gray-400 font-light">
               Vérifiez les détails de votre transaction
