@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { MobileMenu } from '@/components/dashboard/AppSidebar';
+import { DesktopMenuPopover } from '@/components/dashboard/DesktopMenuPopover';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
 import { DesktopBottomNav } from '@/components/dashboard/DesktopBottomNav';
 import { MobileProfileMenu } from '@/components/dashboard/MobileProfileMenu';
@@ -39,6 +40,7 @@ interface DashboardProps {
 export function Dashboard({ user, onLogout }: DashboardProps) {
   const [activeSection, setActiveSection] = useState('home');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
@@ -163,16 +165,35 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       <SidebarProvider>
         <div className="min-h-screen flex flex-col w-full bg-terex-dark">
           {/* Bouton hamburger flottant */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setMenuOpen(true)}
-            className="fixed top-4 right-4 z-50 text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
+          {isMobile ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setMenuOpen(true)}
+              className="fixed top-4 right-4 z-50 text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          ) : (
+            <DesktopMenuPopover
+              activeSection={activeSection}
+              setActiveSection={handleNavigate}
+              onLogout={handleLogout}
+              isOpen={desktopMenuOpen}
+              onOpenChange={setDesktopMenuOpen}
+              trigger={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="fixed top-4 right-4 z-50 text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
+                >
+                  <Menu className="h-5 w-5" />
+                </Button>
+              }
+            />
+          )}
           
-          {/* Menu hamburger */}
+          {/* Menu hamburger mobile plein écran */}
           <MobileMenu 
             activeSection={activeSection}
             setActiveSection={handleNavigate}
