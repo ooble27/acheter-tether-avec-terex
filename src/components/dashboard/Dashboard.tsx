@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { MobileMenu } from '@/components/dashboard/AppSidebar';
-import { DashboardNavbar } from '@/components/dashboard/DashboardNavbar';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
 import { DesktopBottomNav } from '@/components/dashboard/DesktopBottomNav';
 import { MobileProfileMenu } from '@/components/dashboard/MobileProfileMenu';
@@ -29,7 +28,7 @@ import { useIsTablet } from '@/hooks/use-tablet';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Button } from '@/components/ui/button';
-import { LogOut } from 'lucide-react';
+import { LogOut, Menu } from 'lucide-react';
 import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
 
 interface DashboardProps {
@@ -163,13 +162,15 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     <TransactionProvider>
       <SidebarProvider>
         <div className="min-h-screen flex flex-col w-full bg-terex-dark">
-          {/* Barre de navigation */}
-          <DashboardNavbar 
-            onMenuClick={() => setMenuOpen(true)}
-            activeSection={activeSection}
-            setActiveSection={handleNavigate}
-            onLogout={handleLogout}
-          />
+          {/* Bouton hamburger flottant */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setMenuOpen(true)}
+            className="fixed top-4 right-4 z-50 text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
           
           {/* Menu hamburger */}
           <MobileMenu 
@@ -180,7 +181,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             onClose={() => setMenuOpen(false)}
           />
 
-          <main className={`flex-1 ${isMobile ? 'p-4 pt-4 pb-20' : 'p-6 pt-20 pb-24'} relative`}>
+          <main className={`flex-1 ${isMobile ? 'p-4 pt-4 pb-20' : 'p-6 pt-6 pb-24'} relative`}>
             {/* Menu profil mobile pour PWA */}
             {isMobile && isPWA && (
               <MobileProfileMenu
