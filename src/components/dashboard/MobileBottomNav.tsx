@@ -41,8 +41,8 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
         `}
       </style>
       
-      <div className="mx-4 mb-4 bg-terex-darker/95 backdrop-blur-lg rounded-[2rem] shadow-2xl border border-terex-gray/20 p-3">
-        <div className="flex justify-around items-center gap-2">
+      <div className="mx-3 mb-3 bg-terex-darker/95 backdrop-blur-lg rounded-[1.5rem] shadow-2xl border border-terex-gray/20 p-2">
+        <div className="flex justify-around items-center gap-1">
           {navItems.map((item) => {
             const IconComponent = item.icon;
             const isActive = activeSection === item.id;
@@ -52,7 +52,7 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
                 key={item.id}
                 variant="ghost"
                 onClick={() => setActiveSection(item.id)}
-                className={`flex flex-col items-center justify-center gap-1.5 h-auto py-3 px-5 rounded-[1.5rem] transition-all duration-300 ${
+                className={`flex flex-col items-center justify-center gap-1 h-auto py-2 px-3 rounded-[1rem] transition-all duration-300 ${
                   isActive 
                     ? 'bg-gradient-to-br from-terex-accent to-terex-accent/90 text-white shadow-lg shadow-terex-accent/40' 
                     : 'text-gray-400 hover:text-gray-300 hover:bg-transparent'
@@ -60,13 +60,13 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
               >
                 <div className="relative">
                   {item.isCustomIcon ? (
-                    <IconComponent className="h-6 w-6" isActive={isActive} />
+                    <IconComponent className="h-5 w-5" isActive={isActive} />
                   ) : (
-                    <IconComponent className="h-6 w-6" />
+                    <IconComponent className="h-5 w-5" />
                   )}
                 </div>
                 
-                <span className={`text-[11px] font-medium whitespace-nowrap transition-all duration-300 ${
+                <span className={`text-[10px] font-medium whitespace-nowrap transition-all duration-300 ${
                   isActive ? 'text-white' : 'text-gray-400'
                 }`}>
                   {item.label}
