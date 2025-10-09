@@ -81,7 +81,7 @@ export default function FeedbackPage() {
     <div className="min-h-screen bg-terex-dark px-0 md:p-6 lg:p-8 py-3">
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-6 px-4 md:px-0">
+        <div className="flex items-center gap-4 mb-6 px-4 md:px-6">
           <Button
             onClick={() => navigate('/dashboard')}
             variant="outline"
