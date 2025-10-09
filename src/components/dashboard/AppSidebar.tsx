@@ -326,7 +326,6 @@ export function MobileMenu({
               <div className="space-y-2">
                 {menuItems.map(item => {
                   const IconComponent = item.icon;
-                  const isActive = activeSection === item.id;
                   return (
                     <button
                       key={item.id}
@@ -334,25 +333,26 @@ export function MobileMenu({
                         setActiveSection(item.id);
                         setIsOpen(false);
                       }} 
-                      className={`w-full flex items-center space-x-4 p-5 rounded-2xl transition-all duration-200 ${
-                        isActive 
+                      className={`w-full flex items-center space-x-4 p-4 rounded-xl transition-all duration-200 ${
+                        activeSection === item.id 
                           ? 'bg-gradient-to-r from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/25' 
                           : 'bg-terex-darker text-gray-300 hover:bg-terex-gray/50 hover:text-white'
                       }`}
                     >
-                      <div className={`flex-shrink-0 p-3 rounded-xl ${
-                        isActive 
+                      <div className={`flex-shrink-0 p-2 rounded-lg ${
+                        activeSection === item.id 
                           ? 'bg-white/20' 
                           : 'bg-terex-gray/30'
                       }`}>
                         {item.isCustomIcon ? (
-                          <IconComponent className="h-7 w-7" isActive={isActive} />
+                          <IconComponent className="h-6 w-6" isActive={activeSection === item.id} />
                         ) : (
-                          <IconComponent className="h-7 w-7" />
+                          <IconComponent className="h-6 w-6" />
                         )}
                       </div>
                       <div className="flex-1 text-left">
-                        <div className="font-medium text-base">{item.label}</div>
+                        <div className="font-semibold text-sm">{item.label}</div>
+                        <div className="text-xs opacity-75">{item.description}</div>
                       </div>
                     </button>
                   );
