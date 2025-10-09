@@ -140,12 +140,12 @@ export function MobileBuyUSDT() {
               <div className="flex justify-between items-center">
                 <span className="text-gray-400 text-sm font-light">Vous recevez</span>
                 <div className="flex items-center gap-2">
+                  <span className="text-white font-light">{usdtAmount} USDT</span>
                   <img 
                     src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                     alt="USDT" 
                     className="w-5 h-5"
                   />
-                  <span className="text-white font-light">{usdtAmount} USDT</span>
                 </div>
               </div>
               <div className="flex justify-between">
