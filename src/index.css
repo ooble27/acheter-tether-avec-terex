@@ -5,43 +5,43 @@
 
 @layer base {
   :root {
-    --background: 220 13% 18%;
-    --foreground: 0 0% 98%;
+    --background: 0 0% 98%;
+    --foreground: 0 0% 10%;
 
-    --card: 220 13% 23%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
 
-    --popover: 220 13% 23%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
 
     --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 355.7 100% 97.3%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 13% 28%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 10%;
 
-    --muted: 220 13% 26%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 220 13% 28%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 10%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 30%;
-    --input: 220 13% 26%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
     --ring: 142.4 71.8% 29.2%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 220 13% 18%;
-    --sidebar-foreground: 0 0% 98%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 0 0% 10%;
     --sidebar-primary: 142.1 76.2% 36.3%;
-    --sidebar-primary-foreground: 355.7 100% 97.3%;
-    --sidebar-accent: 220 13% 26%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 220 13% 30%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 0 0% 90%;
     --sidebar-ring: 142.4 71.8% 29.2%;
   }
 }
@@ -73,7 +73,7 @@
   #root {
     min-height: 100vh;
     height: 100%;
-    background-color: #2a2d35 !important;
+    background-color: #fafafa !important;
   }
 
   /* Forcer font-light sur tous les titres */
@@ -96,15 +96,15 @@
 @supports (-webkit-appearance: none) {
   @media screen and (max-width: 768px) {
     html {
-      background-color: #2a2d35 !important;
+      background-color: #fafafa !important;
     }
     
     body {
-      background-color: #2a2d35 !important;
+      background-color: #fafafa !important;
     }
     
     #root {
-      background-color: #2a2d35 !important;
+      background-color: #fafafa !important;
     }
     
     /* Forcer le fond sur tous les éléments racine */
@@ -115,7 +115,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: #2a2d35;
+      background-color: #fafafa;
       z-index: -1000;
     }
   }
@@ -124,14 +124,14 @@
 /* Protection supplémentaire pour iOS Safari */
 @supports (-webkit-touch-callout: none) {
   html, body, #root {
-    background-color: #2a2d35 !important;
-    background: #2a2d35 !important;
+    background-color: #fafafa !important;
+    background: #fafafa !important;
   }
   
   /* Éviter tout flash de couleur au chargement */
   body {
     opacity: 1 !important;
-    background: #2a2d35 !important;
+    background: #fafafa !important;
   }
 }
 
