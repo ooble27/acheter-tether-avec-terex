@@ -18,6 +18,8 @@ import { useToast } from '@/hooks/use-toast';
 import { KYCProtection } from './KYCProtection';
 import { KYCPage } from './KYCPage';
 import { useTerexRates } from '@/hooks/useTerexRates';
+import { MobileSellUSDT } from './sell-usdt/MobileSellUSDT';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Adresses de portefeuille par réseau - Vos vraies adresses
 const WALLET_ADDRESSES = {
@@ -40,6 +42,16 @@ const NETWORK_LOGOS = {
 };
 
 export function SellUSDT() {
+  const isMobile = useIsMobile();
+  
+  if (isMobile) {
+    return <MobileSellUSDT />;
+  }
+  
+  return <DesktopSellUSDT />;
+}
+
+function DesktopSellUSDT() {
   const [showKYCPage, setShowKYCPage] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'bank' | 'mobile'>('bank');
   const [usdtAmount, setUsdtAmount] = useState('');

@@ -25,8 +25,20 @@ import { InteracForm } from './buy-usdt/InteracForm';
 import { TradingSidebar } from './buy-usdt/TradingSidebar';
 import { LimitsValidator, getLimitMessage } from './buy-usdt/LimitsValidator';
 import { useNabooPay } from '@/hooks/useNabooPay';
+import { MobileBuyUSDT } from './buy-usdt/MobileBuyUSDT';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export function BuyUSDT() {
+  const isMobile = useIsMobile();
+  
+  if (isMobile) {
+    return <MobileBuyUSDT />;
+  }
+  
+  return <DesktopBuyUSDT />;
+}
+
+function DesktopBuyUSDT() {
   const [showKYCPage, setShowKYCPage] = useState(false);
   const [showHighVolumeRequest, setShowHighVolumeRequest] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'mobile'>('card');
