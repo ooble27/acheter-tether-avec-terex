@@ -6,6 +6,7 @@ import { useInternationalTransfers } from '@/hooks/useInternationalTransfers';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useCryptoRates } from '@/hooks/useCryptoRates';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Importer les nouveaux composants
 import { TransferConfirmation } from './international-transfer/TransferConfirmation';
@@ -17,8 +18,10 @@ import { KYCPage } from './KYCPage';
 import { TransferForm } from './international-transfer/TransferForm';
 import { RecipientForm } from './international-transfer/RecipientForm';
 import { TransferSidebar } from './international-transfer/TransferSidebar';
+import { MobileInternationalTransfer } from './international-transfer/MobileInternationalTransfer';
 
 export function InternationalTransfer() {
+  const isMobile = useIsMobile();
   const [showKYCPage, setShowKYCPage] = useState(false);
   const [currentStep, setCurrentStep] = useState('form');
   const [sendAmount, setSendAmount] = useState('');
@@ -38,6 +41,19 @@ export function InternationalTransfer() {
   const { user } = useAuth();
   const { toast } = useToast();
   const { usdtToCfa, usdtToCad, loading: ratesLoading, error: ratesError, lastUpdated, refresh } = useCryptoRates();
+
+  // Si mobile, utiliser la version mobile
+  if (isMobile) {
+    return (
+      <KYCProtection onKYCRequired={() => setShowKYCPage(true)}>
+        {showKYCPage ? (
+          <KYCPage onBack={() => setShowKYCPage(false)} />
+        ) : (
+          <MobileInternationalTransfer />
+        )}
+      </KYCProtection>
+    );
+  }
 
   // Calcul du taux CAD vers CFA via USD
   const cadToUsd = usdtToCad ? (1 / usdtToCad) : 0.74;
