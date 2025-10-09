@@ -149,7 +149,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             />
           )}
 
-          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'} relative ${isMobile && isPWA ? 'pb-20' : ''}`}>
+          <main className={`flex-1 ${isMobile ? 'p-4 pt-16' : 'p-6'} relative ${isMobile ? 'pb-20' : ''}`}>
             {/* Menu profil mobile pour PWA */}
             {isMobile && isPWA && (
               <MobileProfileMenu
@@ -173,8 +173,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             {renderContent()}
           </main>
           
-          {/* Navigation en bas pour mobile PWA */}
-          {isMobile && isPWA && (
+          {/* Navigation en bas pour mobile */}
+          {isMobile && (
             <MobileBottomNav
               activeSection={activeSection}
               setActiveSection={setActiveSection}
