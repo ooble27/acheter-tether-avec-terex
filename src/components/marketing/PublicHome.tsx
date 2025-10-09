@@ -65,13 +65,19 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       
       <CurrencyConverterSection />
 
-      <WhyChooseTerexSection />
+      <div className="hidden md:block">
+        <WhyChooseTerexSection />
+      </div>
 
       <PhoneMockupSection />
 
-      <HowItWorksSection onBlockchainInfoClick={handleBlockchainInfo} />
+      <div className="hidden md:block">
+        <HowItWorksSection onBlockchainInfoClick={handleBlockchainInfo} />
+      </div>
 
-      <StatsSection />
+      <div className="hidden md:block">
+        <StatsSection />
+      </div>
       
       <PaymentMethodsSection />
 
