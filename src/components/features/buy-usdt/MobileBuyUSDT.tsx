@@ -20,6 +20,7 @@ const NETWORK_LOGOS = {
   Arbitrum: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11841.png',
   Polygon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
   Solana: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',
+  Aptos: 'https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png',
   BINANCE: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png'
 };
 

@@ -9,7 +9,8 @@ const NETWORK_LOGOS = {
   ERC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', // Ethereum
   Arbitrum: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11841.png', // Arbitrum
   Polygon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png', // Polygon
-  Solana: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png' // Solana
+  Solana: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png', // Solana
+  Aptos: 'https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png' // Aptos
 };
 
 interface NetworkSelectorProps {
@@ -67,6 +68,12 @@ export function NetworkSelector({ network, setNetwork }: NetworkSelectorProps) {
             <div className="flex items-center space-x-3">
               <img src={NETWORK_LOGOS.Solana} alt="Solana" className="w-5 h-5 rounded-full" />
               <span>Solana</span>
+            </div>
+          </SelectItem>
+          <SelectItem value="Aptos">
+            <div className="flex items-center space-x-3">
+              <img src={NETWORK_LOGOS.Aptos} alt="Aptos" className="w-5 h-5 rounded-full" />
+              <span>Aptos</span>
             </div>
           </SelectItem>
         </SelectContent>
