@@ -17,21 +17,13 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   console.log('ThemeProvider: Initializing...');
   
-  const [theme, setTheme] = useState<Theme>(() => {
-    const saved = localStorage.getItem('theme');
-    return (saved === 'light' || saved === 'dark') ? saved : 'dark';
-  });
+  const [theme, setTheme] = useState<Theme>('dark');
 
   useEffect(() => {
     try {
-      const root = window.document.body;
-      root.classList.remove('light-mode');
-      
-      if (theme === 'light') {
-        root.classList.add('light-mode');
-      }
-      
-      localStorage.setItem('theme', theme);
+      const root = window.document.documentElement;
+      root.classList.remove('light', 'dark');
+      root.classList.add(theme);
     } catch (error) {
       console.error('Error applying theme:', error);
     }
