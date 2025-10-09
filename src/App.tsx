@@ -21,6 +21,9 @@ import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import SecurityPage from "./pages/SecurityPage";
 import InvestorsPage from "./pages/InvestorsPage";
+import FeedbackPage from "./pages/FeedbackPage";
+import ReferralPage from "./pages/ReferralPage";
+import SharePage from "./pages/SharePage";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MarketingPage } from "./pages/MarketingPage";
@@ -61,6 +64,9 @@ function App() {
                 <Route path="/privacy" element={<PrivacyPage />} />
                 <Route path="/security" element={<SecurityPage />} />
                 <Route path="/investors" element={<InvestorsPage />} />
+                <Route path="/feedback" element={<FeedbackPage />} />
+                <Route path="/referral" element={<ReferralPage />} />
+                <Route path="/share" element={<SharePage />} />
                 <Route path="/admin/*" element={<AdminPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
