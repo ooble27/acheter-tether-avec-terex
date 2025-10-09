@@ -148,19 +148,24 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </Card>
         </div>
 
+        {/* Section Historique des transactions récentes - px-0 */}
+        <div className="px-0">
+          <RecentTransactions onNavigate={onNavigate} />
+        </div>
+
         {/* Section Moyens de paiement */}
         <Card className="bg-terex-darker border-terex-gray mb-3 mx-0">
           <CardContent className="p-3">
             <h3 className="text-white text-sm font-medium mb-3">Paiements effectués avec</h3>
-            <div className="flex items-center justify-center gap-6">
-              <div className="w-16 h-16 bg-white/5 rounded-lg flex items-center justify-center p-2">
+            <div className="flex items-center justify-center gap-4">
+              <div className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center p-2">
                 <img 
                   src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
                   alt="Wave" 
                   className="w-full h-full object-contain"
                 />
               </div>
-              <div className="w-16 h-16 bg-white/5 rounded-lg flex items-center justify-center p-2">
+              <div className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center p-2">
                 <img 
                   src="/lovable-uploads/86b4b50f-9595-46c2-8cce-30343f23454a.png" 
                   alt="Orange Money" 
@@ -170,11 +175,6 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </div>
           </CardContent>
         </Card>
-
-        {/* Section Historique des transactions récentes - px-0 */}
-        <div className="px-0">
-          <RecentTransactions onNavigate={onNavigate} />
-        </div>
       </div>
     );
   }
