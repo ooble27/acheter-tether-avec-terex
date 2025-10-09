@@ -224,7 +224,7 @@ export function MobileSellUSDT() {
             >
               <ArrowLeft className="w-5 h-5 text-white" />
             </button>
-            <DrawerTitle className="text-white font-light flex items-center gap-2">
+            <DrawerTitle className="text-white font-light flex items-center gap-2 ml-12">
               <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" className="w-6 h-6 rounded" />
               Binance Pay
             </DrawerTitle>
