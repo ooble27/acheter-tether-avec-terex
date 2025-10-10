@@ -1,8 +1,12 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Shield, Lock, Eye, AlertTriangle, CheckCircle, Clock, XCircle } from 'lucide-react';
+import { Shield, Lock, Eye, AlertTriangle, CheckCircle, Clock, XCircle, Trash2 } from 'lucide-react';
 import { KYCData } from '@/hooks/useKYC';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface SecuritySettingsCardProps {
   onStartKYC: () => void;
@@ -11,6 +15,45 @@ interface SecuritySettingsCardProps {
 }
 
 export function SecuritySettingsCard({ onStartKYC, kycData, isKYCVerified }: SecuritySettingsCardProps) {
+  const { user } = useAuth();
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteAllOrders = async () => {
+    if (!user) return;
+
+    const confirmed = window.confirm(
+      "⚠️ ATTENTION : Cette action supprimera TOUTES vos commandes (achats, ventes et transferts). Cette action est irréversible. Voulez-vous vraiment continuer ?"
+    );
+
+    if (!confirmed) return;
+
+    setIsDeleting(true);
+    try {
+      // Supprimer toutes les commandes (orders)
+      const { error: ordersError } = await supabase
+        .from('orders')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (ordersError) throw ordersError;
+
+      // Supprimer tous les transferts internationaux
+      const { error: transfersError } = await supabase
+        .from('international_transfers')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (transfersError) throw transfersError;
+
+      toast.success('Toutes vos commandes ont été supprimées avec succès');
+    } catch (error) {
+      console.error('Erreur lors de la suppression des commandes:', error);
+      toast.error('Impossible de supprimer les commandes');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const getKYCStatusDisplay = () => {
     if (isKYCVerified) {
       return {
@@ -132,6 +175,27 @@ export function SecuritySettingsCard({ onStartKYC, kycData, isKYCVerified }: Sec
             <li>• Vérifiez toujours les adresses de portefeuille</li>
             <li>• Utilisez des réseaux sécurisés</li>
           </ul>
+        </div>
+
+        {/* Zone de danger */}
+        <div className="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
+          <h4 className="text-white font-medium mb-2 flex items-center">
+            <AlertTriangle className="w-4 h-4 mr-2 text-red-400" />
+            Zone de danger
+          </h4>
+          <p className="text-gray-400 text-sm mb-3">
+            Actions irréversibles affectant votre compte
+          </p>
+          <Button
+            onClick={handleDeleteAllOrders}
+            disabled={isDeleting}
+            variant="destructive"
+            size="sm"
+            className="w-full bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30"
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            {isDeleting ? 'Suppression...' : 'Supprimer toutes mes commandes'}
+          </Button>
         </div>
       </CardContent>
     </Card>
