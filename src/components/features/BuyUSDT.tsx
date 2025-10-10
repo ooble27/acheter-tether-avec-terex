@@ -326,215 +326,35 @@ function DesktopBuyUSDTOld() {
   }
 
   return (
-    <KYCProtection onKYCRequired={handleKYCRequired}>
-      <>
-        <style>
-          {`
-            .usdt-icon-force-visible {
-              filter: none !important;
-              opacity: 1 !important;
-              visibility: visible !important;
-              display: inline-block !important;
-              background: none !important;
-              -webkit-filter: none !important;
-              backdrop-filter: none !important;
-            }
-          `}
-        </style>
-        <div className="min-h-screen bg-terex-dark p-0">
+    <>
+      <style>
+        {`
+          .usdt-icon-force-visible {
+            filter: none !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: inline-block !important;
+            background: none !important;
+            -webkit-filter: none !important;
+            backdrop-filter: none !important;
+          }
+        `}
+      </style>
+      <div className="min-h-screen bg-terex-dark p-0">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6 md:mb-8 px-1 md:px-0">
             <div className="flex items-center mb-2">
-              <img 
-                src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                alt="USDT" 
-                className="w-8 h-8 mr-3 usdt-icon-force-visible"
-              />
-              <h1 className="text-2xl sm:text-3xl font-light text-white">Acheter USDT</h1>
-            </div>
-            <p className="text-gray-400">Achetez des USDT avec de l'argent fiat</p>
-          </div>
-
-          <div className="grid lg:grid-cols-3 gap-0 md:gap-6 px-0 lg:px-0">
-            <div className="lg:col-span-2">
-              <Card className="bg-terex-darker border-terex-gray shadow-2xl">
-                <CardHeader className="border-b border-terex-gray p-4 md:p-6">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-white text-lg md:text-xl">Acheter USDT</CardTitle>
-                    <Badge variant="outline" className="text-terex-accent border-terex-accent">
-                      Taux en temps réel
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-4 md:p-6">
-                  <LimitsValidator 
-                    amount={fiatAmount} 
-                    currency={currency} 
-                    onHighVolumeRequest={handleHighVolumeRequest}
-                  >
-                    <Tabs value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'card' | 'mobile')} className="space-y-6">
-                      <TabsList className="grid w-full grid-cols-2 bg-terex-gray">
-                        <TabsTrigger 
-                          value="card"
-                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
-                        >
-                          <img 
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Interac_logo.svg/256px-Interac_logo.svg.png" 
-                            alt="Interac" 
-                            className="mr-1 md:mr-2 w-4 h-4"
-                            onError={(e) => {
-                              e.currentTarget.src = "/lovable-uploads/3c0dd5e1-7e00-4dd0-add4-bc08aef7010c.png";
-                            }}
-                          />
-                          <span className="hidden sm:inline">Interac</span>
-                          <span className="sm:hidden">Interac</span>
-                        </TabsTrigger>
-                        <TabsTrigger 
-                          value="mobile"
-                          className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-xs md:text-sm"
-                        >
-                          <img 
-                            src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
-                            alt="Wave" 
-                            className="mr-1 md:mr-2 w-4 h-4 rounded-full"
-                          />
-                          <span className="hidden sm:inline">Mobile Money</span>
-                          <span className="sm:hidden">Mobile</span>
-                        </TabsTrigger>
-                      </TabsList>
-
-                      {limitMessage.type && (
-                        <Alert className={
-                          limitMessage.type === 'error' ? 'border-red-500/50 bg-red-500/10' :
-                          limitMessage.type === 'max-reached' ? 'border-orange-500/50 bg-orange-500/10' :
-                          'border-yellow-500/50 bg-yellow-500/10'
-                        }>
-                          {limitMessage.type === 'error' ? (
-                            <AlertTriangle className="h-4 w-4 text-red-400" />
-                          ) : limitMessage.type === 'max-reached' ? (
-                            <AlertTriangle className="h-4 w-4 text-orange-400" />
-                          ) : (
-                            <Info className="h-4 w-4 text-yellow-400" />
-                          )}
-                          <AlertDescription className={
-                            limitMessage.type === 'error' ? 'text-red-200' :
-                            limitMessage.type === 'max-reached' ? 'text-orange-200' :
-                            'text-yellow-200'
-                          }>
-                            <div className="flex flex-col space-y-3">
-                              <span>{limitMessage.message}</span>
-                              {limitMessage.type === 'max-reached' && (
-                                <Button 
-                                  onClick={handleHighVolumeRequest}
-                                  className="bg-terex-accent hover:bg-terex-accent/90 text-white w-fit"
-                                  size="sm"
-                                >
-                                  Demande de gros volume
-                                </Button>
-                              )}
-                            </div>
-                          </AlertDescription>
-                        </Alert>
-                      )}
-
-                      {paymentMethods.map((method) => (
-                        <TabsContent key={method.id} value={method.id} className="space-y-6">
-                          <BuyAmountInput
-                            fiatAmount={fiatAmount}
-                            setFiatAmount={setFiatAmount}
-                            currency={currency}
-                            setCurrency={setCurrency}
-                            usdtAmount={usdtAmount}
-                            exchangeRate={exchangeRates[currency as keyof typeof exchangeRates]}
-                            paymentMethod={paymentMethod}
-                            processingTime={method.time}
-                            fee={method.fee}
-                          />
-
-                          <DestinationSelector
-                            destination={destination}
-                            setDestination={setDestination}
-                          />
-
-                          {destination === 'wallet' && (
-                            <>
-                              <NetworkSelector
-                                network={network}
-                                setNetwork={setNetwork}
-                              />
-
-                              <WalletAddressInput
-                                walletAddress={walletAddress}
-                                setWalletAddress={setWalletAddress}
-                                network={network}
-                              />
-                            </>
-                          )}
-
-                          {destination === 'binance' && (
-                            <BinanceEmailInput
-                              email={binanceEmail}
-                              setEmail={setBinanceEmail}
-                              username={binanceUsername}
-                              setUsername={setBinanceUsername}
-                              binanceId={binanceId}
-                              setBinanceId={setBinanceId}
-                            />
-                          )}
-
-                          {method.id === 'card' ? (
-                            <InteracForm
-                              interacData={interacData}
-                              setInteracData={setInteracData}
-                            />
-                          ) : (
-                            <PaymentMethodForm
-                              paymentMethod={paymentMethod}
-                              cardData={{number: '', expiryMonth: '', expiryYear: '', cvv: '', name: ''}}
-                              setCardData={() => {}}
-                              mobileData={mobileData}
-                              setMobileData={setMobileData}
-                            />
-                          )}
-
-                          <Button 
-                            size="lg"
-                            className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                            disabled={!fiatAmount || 
-                              (destination === 'wallet' && !walletAddress) ||
-                              (destination === 'binance' && (!binanceEmail || !binanceUsername || !binanceId)) ||
-                              limitMessage.type === 'error' || limitMessage.type === 'max-reached' ||
-                              (paymentMethod === 'card' && (!interacData.firstName || !interacData.lastName || !interacData.email)) ||
-                              (paymentMethod === 'mobile' && !mobileData.phoneNumber)
-                            }
-                            onClick={handleBuyClick}
-                          >
-                            Continuer l'achat
-                          </Button>
-                        </TabsContent>
-                      ))}
-                    </Tabs>
-                  </LimitsValidator>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="px-0 lg:px-0 mt-4 lg:mt-0">
-              <TradingSidebar
-                exchangeRates={exchangeRates}
-                marketRates={marketRates}
-                ratesLoading={ratesLoading}
-                ratesError={ratesError}
-                lastUpdated={lastUpdated}
-                refreshRates={refreshRates}
-                currency={currency}
-                setFiatAmount={setFiatAmount}
+              <h1 className="text-2xl md:text-3xl font-light text-white">Buy USDT</h1>
+              <img
+                src="https://cryptologos.cc/logos/tether-usdt-logo.png"
+                alt="USDT"
+                className="w-7 h-7 ml-2 usdt-icon-force-visible"
               />
             </div>
+            <p className="text-gray-400">Fast and secure cryptocurrency purchase</p>
           </div>
-          </div>
+        </div>
       </div>
-      </>
-    </KYCProtection>
+    </>
   );
 }

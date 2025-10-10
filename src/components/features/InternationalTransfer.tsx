@@ -242,81 +242,79 @@ export function InternationalTransfer() {
 
   // Formulaire principal
   return (
-    <KYCProtection onKYCRequired={handleKYCRequired}>
-      <div className="min-h-screen bg-terex-dark p-0">
-        <div className="max-w-7xl mx-auto px-0">
-          <div className="mb-6 md:mb-8 px-1 md:px-0">
-            <h1 className="text-2xl md:text-3xl font-light text-white mb-1">Virement international</h1>
-            <p className="text-gray-400">Envoyer de l'argent rapidement à vos proches</p>
+    <div className="min-h-screen bg-terex-dark p-0">
+      <div className="max-w-7xl mx-auto px-0">
+        <div className="mb-6 md:mb-8 px-1 md:px-0">
+          <h1 className="text-2xl md:text-3xl font-light text-white mb-1">Virement international</h1>
+          <p className="text-gray-400">Envoyer de l'argent rapidement à vos proches</p>
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-0 md:gap-6 px-0 lg:px-0">
+          <div className="lg:col-span-2">
+            <Card className="bg-terex-darker border-terex-gray shadow-2xl mx-0">
+              <CardHeader className="border-b border-terex-gray p-4 md:p-6">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-white text-lg md:text-xl">Nouveau transfert</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 md:p-6 space-y-6">
+                <TransferForm
+                  sendAmount={sendAmount}
+                  setSendAmount={setSendAmount}
+                  receiveAmount={receiveAmount}
+                  recipientCountry={recipientCountry}
+                  setRecipientCountry={setRecipientCountry}
+                  paymentMethod={paymentMethod}
+                  setPaymentMethod={setPaymentMethod}
+                  receiveMethod={receiveMethod}
+                  setReceiveMethod={setReceiveMethod}
+                  exchangeRate={exchangeRate}
+                  fees={fees}
+                  provider={provider}
+                  setProvider={setProvider}
+                />
+
+                <RecipientForm
+                  recipientFirstName={recipientFirstName}
+                  setRecipientFirstName={setRecipientFirstName}
+                  recipientLastName={recipientLastName}
+                  setRecipientLastName={setRecipientLastName}
+                  recipientEmail={recipientEmail}
+                  setRecipientEmail={setRecipientEmail}
+                  recipientPhone={recipientPhone}
+                  setRecipientPhone={setRecipientPhone}
+                  recipientAccount={recipientAccount}
+                  setRecipientAccount={setRecipientAccount}
+                  recipientBank={recipientBank}
+                  setRecipientBank={setRecipientBank}
+                  receiveMethod={receiveMethod}
+                />
+
+                <Button 
+                  size="lg"
+                  className="w-full gradient-button text-white font-semibold h-12 text-lg"
+                  disabled={!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName || (receiveMethod !== 'mobile' && !recipientPhone) || loading || (receiveMethod === 'mobile' && !provider)}
+                  onClick={handleFormSubmit}
+                >
+                  {loading ? 'Traitement...' : 'Continuer le transfert'}
+                </Button>
+              </CardContent>
+            </Card>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-0 md:gap-6 px-0 lg:px-0">
-            <div className="lg:col-span-2">
-              <Card className="bg-terex-darker border-terex-gray shadow-2xl mx-0">
-                <CardHeader className="border-b border-terex-gray p-4 md:p-6">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-white text-lg md:text-xl">Nouveau transfert</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-4 md:p-6 space-y-6">
-                  <TransferForm
-                    sendAmount={sendAmount}
-                    setSendAmount={setSendAmount}
-                    receiveAmount={receiveAmount}
-                    recipientCountry={recipientCountry}
-                    setRecipientCountry={setRecipientCountry}
-                    paymentMethod={paymentMethod}
-                    setPaymentMethod={setPaymentMethod}
-                    receiveMethod={receiveMethod}
-                    setReceiveMethod={setReceiveMethod}
-                    exchangeRate={exchangeRate}
-                    fees={fees}
-                    provider={provider}
-                    setProvider={setProvider}
-                  />
-
-                  <RecipientForm
-                    recipientFirstName={recipientFirstName}
-                    setRecipientFirstName={setRecipientFirstName}
-                    recipientLastName={recipientLastName}
-                    setRecipientLastName={setRecipientLastName}
-                    recipientEmail={recipientEmail}
-                    setRecipientEmail={setRecipientEmail}
-                    recipientPhone={recipientPhone}
-                    setRecipientPhone={setRecipientPhone}
-                    recipientAccount={recipientAccount}
-                    setRecipientAccount={setRecipientAccount}
-                    recipientBank={recipientBank}
-                    setRecipientBank={setRecipientBank}
-                    receiveMethod={receiveMethod}
-                  />
-
-                  <Button 
-                    size="lg"
-                    className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                    disabled={!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName || (receiveMethod !== 'mobile' && !recipientPhone) || loading || (receiveMethod === 'mobile' && !provider)}
-                    onClick={handleFormSubmit}
-                  >
-                    {loading ? 'Traitement...' : 'Continuer le transfert'}
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Sidebar */}
-            <div className="px-0 lg:px-0 mt-4 lg:mt-0">
-              <TransferSidebar
-                exchangeRate={exchangeRate}
-                ratesLoading={ratesLoading}
-                ratesError={ratesError}
-                lastUpdated={lastUpdated}
-                refresh={refresh}
-                setSendAmount={setSendAmount}
-              />
-            </div>
+          {/* Sidebar */}
+          <div className="px-0 lg:px-0 mt-4 lg:mt-0">
+            <TransferSidebar
+              exchangeRate={exchangeRate}
+              ratesLoading={ratesLoading}
+              ratesError={ratesError}
+              lastUpdated={lastUpdated}
+              refresh={refresh}
+              setSendAmount={setSendAmount}
+            />
           </div>
         </div>
       </div>
-    </KYCProtection>
+    </div>
   );
 }

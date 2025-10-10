@@ -24,27 +24,27 @@ export function KYCProtection({ children, onKYCRequired }: KYCProtectionProps) {
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle className="flex items-center">
             <Shield className="w-4 h-4 mr-2" />
-            Vérification d'identité requise
+            Identity Verification Required
           </AlertTitle>
           <AlertDescription className="mt-2">
             {kycStatus === 'pending' && 
-              'Vous devez vérifier votre identité avant d\'effectuer des transactions. Ce processus ne prend que quelques minutes.'
+              'You must verify your identity before making transactions. This process only takes a few minutes.'
             }
             {kycStatus === 'submitted' && 
-              'Vos documents sont en cours d\'examen. Vous pourrez effectuer des transactions une fois la vérification approuvée.'
+              'Your documents are under review. You will be able to make transactions once verification is approved.'
             }
             {kycStatus === 'rejected' && 
-              'Votre vérification d\'identité a été rejetée. Veuillez soumettre de nouveaux documents conformes.'
+              'Your identity verification has been rejected. Please submit new compliant documents.'
             }
             {!kycStatus && 
-              'Une vérification d\'identité est requise pour accéder à ce service.'
+              'Identity verification is required to access this service.'
             }
             <div className="mt-4">
               <Button 
                 onClick={onKYCRequired}
                 className="bg-terex-accent hover:bg-terex-accent/90"
               >
-                {kycStatus === 'rejected' ? 'Soumettre à nouveau' : 'Commencer la vérification'}
+                {kycStatus === 'rejected' ? 'Submit Again' : 'Start Verification'}
               </Button>
             </div>
           </AlertDescription>
