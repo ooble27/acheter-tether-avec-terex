@@ -4,7 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, CheckCircle, Clock, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Clock, ShoppingCart, AlertTriangle } from 'lucide-react';
+import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 interface OrderData {
   amount: string;
@@ -26,9 +28,20 @@ interface OrderConfirmationProps {
 }
 
 export function OrderConfirmation({ orderData, onConfirm, onBack, loading }: OrderConfirmationProps) {
+  const { isAuthorized, loading: kycLoading, kycStatus } = useTransactionAuthorization();
+  const [showKYCAlert, setShowKYCAlert] = useState(false);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
+
+  const handleConfirmClick = () => {
+    if (!isAuthorized) {
+      setShowKYCAlert(true);
+      return;
+    }
+    onConfirm();
+  };
 
   const getPaymentMethodName = () => {
     switch (orderData.paymentMethod) {
@@ -57,6 +70,27 @@ export function OrderConfirmation({ orderData, onConfirm, onBack, loading }: Ord
           <h1 className="text-2xl md:text-3xl font-light text-white mb-2">Confirmation d'achat</h1>
           <p className="text-gray-400 text-sm md:text-base">Vérifiez les détails de votre achat avant de confirmer</p>
         </div>
+
+        {showKYCAlert && !isAuthorized && (
+          <Alert variant="destructive" className="border-l-4 border-l-red-500 mb-6 mx-3 md:mx-0">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle className="font-bold">Vérification d'identité requise</AlertTitle>
+            <AlertDescription className="mt-2">
+              {kycStatus === 'pending' && 
+                'Vous devez vérifier votre identité avant d\'effectuer des transactions. Veuillez compléter le processus KYC dans votre profil.'
+              }
+              {kycStatus === 'submitted' && 
+                'Vos documents sont en cours d\'examen. Vous pourrez effectuer des transactions une fois la vérification approuvée.'
+              }
+              {kycStatus === 'rejected' && 
+                'Votre vérification d\'identité a été rejetée. Veuillez soumettre de nouveaux documents conformes dans votre profil.'
+              }
+              {!kycStatus && 
+                'Une vérification d\'identité est requise pour effectuer cette transaction.'
+              }
+            </AlertDescription>
+          </Alert>
+        )}
 
         <Card className="bg-terex-darker border-terex-gray w-full mx-0">
           <CardHeader className="pb-4 p-3 md:p-6">
@@ -146,12 +180,12 @@ export function OrderConfirmation({ orderData, onConfirm, onBack, loading }: Ord
 
             {/* Bouton de confirmation */}
             <Button
-              onClick={onConfirm}
-              disabled={loading}
+              onClick={handleConfirmClick}
+              disabled={loading || kycLoading}
               size="lg"
               className="w-full gradient-button text-white font-semibold h-12 text-lg"
             >
-              {loading ? 'Création en cours...' : 'Confirmer l\'achat'}
+              {loading ? 'Création en cours...' : kycLoading ? 'Vérification...' : 'Confirmer l\'achat'}
             </Button>
           </CardContent>
         </Card>
