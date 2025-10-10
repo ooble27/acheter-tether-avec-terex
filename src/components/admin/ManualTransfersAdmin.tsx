@@ -115,13 +115,31 @@ export function ManualTransfersAdmin() {
 
       if (error) throw error;
 
-      if (data.success) {
-        if (data.status === 'completed' || data.status === 'success') {
-          toast.success('Paiement confirmé! La commande a été mise à jour.');
-          fetchPendingTransfers();
+      console.log('NabooPay status response:', data);
+
+      const status = data?.transactionData?.transaction_status;
+      
+      if (status === 'paid' || status === 'completed' || status === 'success') {
+        // Mettre à jour directement dans la base de données
+        const { error: updateError } = await supabase
+          .from('orders')
+          .update({
+            payment_status: 'confirmed',
+            status: 'processing',
+            processed_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', orderId);
+
+        if (updateError) {
+          console.error('Error updating order:', updateError);
+          toast.error('Erreur lors de la mise à jour');
         } else {
-          toast.info(`Statut du paiement: ${data.status}`);
+          toast.success('✅ Paiement confirmé! La commande est maintenant validée.');
+          await fetchPendingTransfers();
         }
+      } else {
+        toast.warning(`⏳ Paiement en attente - Statut: ${status || 'inconnu'}`);
       }
     } catch (error) {
       console.error('Error checking payment status:', error);
