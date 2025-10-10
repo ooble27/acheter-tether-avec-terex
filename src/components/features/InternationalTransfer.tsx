@@ -242,7 +242,8 @@ export function InternationalTransfer() {
 
   // Formulaire principal
   return (
-    <div className="min-h-screen bg-terex-dark p-0">
+    <KYCProtection onKYCRequired={handleKYCRequired}>
+      <div className="min-h-screen bg-terex-dark p-0">
         <div className="max-w-7xl mx-auto px-0">
           <div className="mb-6 md:mb-8 px-1 md:px-0">
             <h1 className="text-2xl md:text-3xl font-light text-white mb-1">Virement international</h1>
@@ -314,7 +315,8 @@ export function InternationalTransfer() {
               />
             </div>
           </div>
+        </div>
       </div>
-    </div>
+    </KYCProtection>
   );
 }

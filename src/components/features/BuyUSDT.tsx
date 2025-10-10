@@ -326,21 +326,22 @@ function DesktopBuyUSDTOld() {
   }
 
   return (
-    <>
-      <style>
-        {`
-          .usdt-icon-force-visible {
-            filter: none !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            display: inline-block !important;
-            background: none !important;
-            -webkit-filter: none !important;
-            backdrop-filter: none !important;
-          }
-        `}
-      </style>
-      <div className="min-h-screen bg-terex-dark p-0">
+    <KYCProtection onKYCRequired={handleKYCRequired}>
+      <>
+        <style>
+          {`
+            .usdt-icon-force-visible {
+              filter: none !important;
+              opacity: 1 !important;
+              visibility: visible !important;
+              display: inline-block !important;
+              background: none !important;
+              -webkit-filter: none !important;
+              backdrop-filter: none !important;
+            }
+          `}
+        </style>
+        <div className="min-h-screen bg-terex-dark p-0">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6 md:mb-8 px-1 md:px-0">
             <div className="flex items-center mb-2">
@@ -531,8 +532,9 @@ function DesktopBuyUSDTOld() {
               />
             </div>
           </div>
-        </div>
+          </div>
       </div>
-    </>
+      </>
+    </KYCProtection>
   );
 }
