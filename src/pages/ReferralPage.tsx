@@ -15,7 +15,7 @@ export default function ReferralPage() {
 
   // Génération d'un code de parrainage basé sur l'ID utilisateur
   const referralCode = user?.id ? `TEREX-${user.id.slice(0, 8).toUpperCase()}` : 'TEREX-XXXXX';
-  const referralLink = `https://app.terangaexchange.com/auth?ref=${referralCode}`;
+  const referralLink = `${window.location.origin}/auth?ref=${referralCode}`;
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(referralCode);

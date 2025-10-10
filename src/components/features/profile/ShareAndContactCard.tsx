@@ -13,13 +13,13 @@ export function ShareAndContactCard() {
         await navigator.share({
           title: 'Terex - Échange crypto et transferts',
           text: 'Découvrez Terex pour vos échanges USDT et virements internationaux',
-          url: 'https://terangaexchange.com'
+          url: window.location.origin
         });
       } catch (error) {
         console.log('Erreur lors du partage:', error);
       }
     } else {
-      navigator.clipboard.writeText('https://terangaexchange.com');
+      navigator.clipboard.writeText(window.location.origin);
       toast({
         title: "Lien copié !",
         description: "Le lien de Terex a été copié dans le presse-papiers",
