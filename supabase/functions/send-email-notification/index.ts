@@ -205,7 +205,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="text-align: center; padding: 20px; color: #666; font-size: 14px;">
               <p>Cordialement,<br><strong>L'équipe Terex</strong></p>
               <p style="margin-top: 20px;">
-                <a href="${supabaseUrl.replace('.supabase.co/functions/v1', '.lovableproject.com')}" style="color: #667eea; text-decoration: none;">Accéder à Terex</a>
+                <a href="https://app.terangaexchange.com" style="color: #667eea; text-decoration: none;">app.terangaexchange.com</a>
               </p>
             </div>
           </div>
@@ -240,7 +240,7 @@ const handler = async (req: Request): Promise<Response> => {
           type: 'magiclink',
           email: finalEmailAddress,
           options: {
-            redirectTo: `${supabaseUrl.replace('.supabase.co', '.supabase.co')}/auth/callback`
+            redirectTo: `${supabaseUrl.replace('.supabase.co', '.supabase.co')}/auth/callback?redirect_to=${encodeURIComponent('https://terangaexchange.com/')}`
           }
         });
 
@@ -296,7 +296,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="text-align: center; padding: 20px; color: #666; font-size: 14px;">
               <p>Cordialement,<br><strong>L'équipe Terex</strong></p>
               <p style="margin-top: 20px;">
-                <a href="${supabaseUrl.replace('.supabase.co/functions/v1', '.lovableproject.com')}" style="color: #0FA958; text-decoration: none;">Terex Platform</a>
+                <a href="https://terangaexchange.com" style="color: #0FA958; text-decoration: none;">terangaexchange.com</a>
               </p>
             </div>
           </div>
@@ -333,7 +333,7 @@ const handler = async (req: Request): Promise<Response> => {
               ` : ''}
               
               <div style="text-align: center; margin: 30px 0;">
-                <a href="${supabaseUrl.replace('.supabase.co/functions/v1', '.lovableproject.com')}/admin" style="background: #0FA958; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                <a href="https://terangaexchange.com/admin" style="background: #0FA958; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
                   Voir dans l'admin
                 </a>
               </div>
@@ -536,8 +536,8 @@ const handler = async (req: Request): Promise<Response> => {
                 <strong style="color: #ffffff;">L'équipe Terex</strong>
               </p>
               <p style="color: #666666; margin: 0; font-size: 12px;">
-                <a href="${supabaseUrl.replace('.supabase.co/functions/v1', '.lovableproject.com')}" style="color: #888888; text-decoration: none;">
-                  Terex Platform
+                <a href="https://terangaexchange.com" style="color: #888888; text-decoration: none;">
+                  terangaexchange.com
                 </a>
               </p>
             </div>

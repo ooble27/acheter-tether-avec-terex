@@ -19,7 +19,7 @@ export default function SharePage() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const appUrl = window.location.origin;
+  const appUrl = 'https://app.terangaexchange.com';
   const shareMessage = "Découvrez Terex - La plateforme pour acheter et vendre des USDT en Afrique de l'Ouest facilement et en toute sécurité !";
 
   const handleShare = async (platform?: string) => {
