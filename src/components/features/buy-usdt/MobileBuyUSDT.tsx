@@ -9,9 +9,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { useNabooPay } from '@/hooks/useNabooPay';
+import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
 import { ArrowRight, Check, ArrowLeft } from 'lucide-react';
 import { BinanceEmailInput } from './BinanceEmailInput';
 import { PURCHASE_LIMITS, getLimitMessage, enforceMaxLimit } from './LimitsValidator';
+import { KYCPage } from '../KYCPage';
 
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
@@ -24,6 +26,7 @@ const NETWORK_LOGOS = {
 
 export function MobileBuyUSDT() {
   const [step, setStep] = useState<'amount' | 'network' | 'address' | 'binance' | 'confirm'>('amount');
+  const [showKYCPage, setShowKYCPage] = useState(false);
   const [fiatAmount, setFiatAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'mobile'>('mobile');
   const [currency, setCurrency] = useState('CFA');
@@ -39,6 +42,7 @@ export function MobileBuyUSDT() {
   const { toast } = useToast();
   const { createTransaction } = useNabooPay();
   const { terexRateCfa, terexRateCad } = useTerexRates(2);
+  const { isAuthorized, kycStatus } = useTransactionAuthorization();
 
   const exchangeRate = currency === 'CFA' ? terexRateCfa : terexRateCad;
   const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
@@ -96,6 +100,12 @@ export function MobileBuyUSDT() {
   const handleConfirm = async () => {
     if (!user) return;
     
+    // Vérifier KYC avant de créer la transaction
+    if (!isAuthorized) {
+      setShowKYCPage(true);
+      return;
+    }
+    
     setLoading(true);
     
     const orderData = {
@@ -149,6 +159,10 @@ export function MobileBuyUSDT() {
     
     setLoading(false);
   };
+
+  if (showKYCPage) {
+    return <KYCPage onBack={() => setShowKYCPage(false)} />;
+  }
 
   return (
     <div className="min-h-screen flex items-start justify-center bg-terex-dark p-4 pt-20 pb-24">

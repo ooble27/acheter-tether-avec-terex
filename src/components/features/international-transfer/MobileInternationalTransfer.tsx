@@ -8,8 +8,10 @@ import { useInternationalTransfers } from '@/hooks/useInternationalTransfers';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useCryptoRates } from '@/hooks/useCryptoRates';
+import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
 import { ArrowRight, ArrowLeft, Check, Send, User, CreditCard, Smartphone, Wallet, Building2, Globe } from 'lucide-react';
 import { TransferPending } from './TransferPending';
+import { KYCPage } from '../KYCPage';
 
 const PAYMENT_LOGOS = {
   interac: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Interac_logo.svg/2560px-Interac_logo.svg.png',
@@ -19,6 +21,7 @@ const PAYMENT_LOGOS = {
 
 export function MobileInternationalTransfer() {
   const [step, setStep] = useState<'amount' | 'recipient' | 'method' | 'confirm'>('amount');
+  const [showKYCPage, setShowKYCPage] = useState(false);
   const [sendAmount, setSendAmount] = useState('');
   const [recipientCountry, setRecipientCountry] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
@@ -38,6 +41,7 @@ export function MobileInternationalTransfer() {
   const { user } = useAuth();
   const { toast } = useToast();
   const { usdtToCfa, usdtToCad } = useCryptoRates();
+  const { isAuthorized, kycStatus } = useTransactionAuthorization();
 
   // Calcul du taux CAD vers CFA via USD
   const cadToUsd = usdtToCad ? (1 / usdtToCad) : 0.74;
@@ -96,6 +100,12 @@ export function MobileInternationalTransfer() {
   };
 
   const handleConfirm = async () => {
+    // Vérifier KYC avant de créer la transaction
+    if (!isAuthorized) {
+      setShowKYCPage(true);
+      return;
+    }
+    
     setLoading(true);
     
     const transferData = {
@@ -143,13 +153,8 @@ export function MobileInternationalTransfer() {
     setCreatedTransfer(null);
   };
 
-  if (showPending && createdTransfer) {
-    return (
-      <TransferPending
-        transferData={createdTransfer}
-        onBackToDashboard={handleBackToDashboard}
-      />
-    );
+  if (showKYCPage) {
+    return <KYCPage onBack={() => setShowKYCPage(false)} />;
   }
 
   const countries = [
