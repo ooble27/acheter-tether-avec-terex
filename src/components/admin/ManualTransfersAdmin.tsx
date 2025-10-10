@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, RefreshCw } from 'lucide-react';
 
 interface PendingTransfer {
   id: string;
@@ -14,6 +14,7 @@ interface PendingTransfer {
   wallet_address: string;
   network: string;
   payment_status: string;
+  payment_reference?: string;
   created_at: string;
   user_id: string;
   user_name?: string;
@@ -24,6 +25,7 @@ export function ManualTransfersAdmin() {
   const [pendingSellOrders, setPendingSellOrders] = useState<PendingTransfer[]>([]);
   const [loading, setLoading] = useState(true);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [checkingPayment, setCheckingPayment] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPendingTransfers();
@@ -31,19 +33,21 @@ export function ManualTransfersAdmin() {
 
   const fetchPendingTransfers = async () => {
     try {
+      // Récupérer les commandes avec paiement confirmé OU en attente de vérification
       const { data: buyOrders, error: buyError } = await supabase
         .from('orders')
-        .select('id, type, amount, usdt_amount, wallet_address, network, payment_status, created_at, user_id')
+        .select('id, type, amount, usdt_amount, wallet_address, network, payment_status, payment_reference, created_at, user_id')
         .eq('type', 'buy')
-        .eq('payment_status', 'confirmed')
+        .in('payment_status', ['confirmed', 'pending'])
         .neq('status', 'completed')
         .order('created_at', { ascending: false });
 
       const { data: sellOrders, error: sellError } = await supabase
         .from('orders')
-        .select('id, type, amount, usdt_amount, wallet_address, network, payment_status, created_at, user_id')
+        .select('id, type, amount, usdt_amount, wallet_address, network, payment_status, payment_reference, created_at, user_id')
         .eq('type', 'sell')
-        .eq('payment_status', 'confirmed')
+        .in('payment_status', ['confirmed', 'pending'])
+        .neq('status', 'completed')
         .order('created_at', { ascending: false });
 
       if (buyError) throw buyError;
@@ -97,6 +101,36 @@ export function ManualTransfersAdmin() {
     toast.success('Copié!');
   };
 
+  const checkPaymentStatus = async (orderId: string, paymentReference?: string) => {
+    if (!paymentReference) {
+      toast.error('Aucune référence de paiement NabooPay');
+      return;
+    }
+
+    setCheckingPayment(orderId);
+    try {
+      const { data, error } = await supabase.functions.invoke('naboopay-check-status', {
+        body: { naboopayOrderId: paymentReference }
+      });
+
+      if (error) throw error;
+
+      if (data.success) {
+        if (data.status === 'completed' || data.status === 'success') {
+          toast.success('Paiement confirmé! La commande a été mise à jour.');
+          fetchPendingTransfers();
+        } else {
+          toast.info(`Statut du paiement: ${data.status}`);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking payment status:', error);
+      toast.error('Erreur lors de la vérification du paiement');
+    } finally {
+      setCheckingPayment(null);
+    }
+  };
+
   const markAsCompleted = async (orderId: string) => {
     try {
       const { error } = await supabase
@@ -122,7 +156,18 @@ export function ManualTransfersAdmin() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Achats USDT - Transferts manuels à effectuer</CardTitle>
+          <div className="flex justify-between items-center">
+            <CardTitle>Achats USDT - Transferts manuels à effectuer</CardTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={fetchPendingTransfers}
+              disabled={loading}
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              Actualiser
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           {pendingBuyOrders.length === 0 ? (
@@ -138,7 +183,12 @@ export function ManualTransfersAdmin() {
                         {new Date(order.created_at).toLocaleString('fr-FR')}
                       </p>
                     </div>
-                    <Badge>{order.network}</Badge>
+                    <div className="flex gap-2">
+                      <Badge variant={order.payment_status === 'confirmed' ? 'default' : 'secondary'}>
+                        {order.payment_status === 'confirmed' ? 'Payé' : 'En attente'}
+                      </Badge>
+                      <Badge>{order.network}</Badge>
+                    </div>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4 text-sm">
@@ -168,12 +218,35 @@ export function ManualTransfersAdmin() {
                     </div>
                   </div>
 
-                  <Button
-                    onClick={() => markAsCompleted(order.id)}
-                    className="w-full"
-                  >
-                    Marquer comme envoyé
-                  </Button>
+                  <div className="flex gap-2">
+                    {order.payment_status === 'pending' && order.payment_reference && (
+                      <Button
+                        variant="outline"
+                        onClick={() => checkPaymentStatus(order.id, order.payment_reference)}
+                        disabled={checkingPayment === order.id}
+                        className="flex-1"
+                      >
+                        {checkingPayment === order.id ? (
+                          <>
+                            <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                            Vérification...
+                          </>
+                        ) : (
+                          <>
+                            <RefreshCw className="h-4 w-4 mr-2" />
+                            Vérifier le paiement
+                          </>
+                        )}
+                      </Button>
+                    )}
+                    <Button
+                      onClick={() => markAsCompleted(order.id)}
+                      className={order.payment_status === 'pending' ? 'flex-1' : 'w-full'}
+                      disabled={order.payment_status === 'pending'}
+                    >
+                      Marquer comme envoyé
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
