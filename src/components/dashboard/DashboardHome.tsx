@@ -121,10 +121,13 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </Card>
 
           <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
+            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer relative"
             onClick={() => handleServiceClick('transfer')}
           >
             <CardContent className="p-3">
+              <div className="absolute top-2 right-2">
+                <span className="text-[9px] bg-terex-accent/20 text-terex-accent px-1.5 py-0.5 rounded-full">Bientôt</span>
+              </div>
               <div className="flex items-center justify-between mb-2">
                 <div className="w-8 h-8 bg-terex-accent/20 rounded-lg flex items-center justify-center">
                   <Globe className="w-4 h-4 text-terex-accent" />
@@ -213,10 +216,13 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </Card>
 
           <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
+            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer relative"
             onClick={() => handleServiceClick('transfer')}
           >
             <CardContent className="p-4">
+              <div className="absolute top-3 right-3">
+                <span className="text-[10px] bg-terex-accent/20 text-terex-accent px-2 py-0.5 rounded-full">Bientôt</span>
+              </div>
               <div className="flex items-center justify-between mb-3">
                 <div className="w-10 h-10 bg-terex-accent/20 rounded-lg flex items-center justify-center">
                   <Globe className="w-5 h-5 text-terex-accent" />
