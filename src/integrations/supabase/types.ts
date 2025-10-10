@@ -921,7 +921,6 @@ export type Database = {
           id: string
           language: string | null
           phone: string | null
-          referred_by_code: string | null
           updated_at: string | null
         }
         Insert: {
@@ -931,7 +930,6 @@ export type Database = {
           id: string
           language?: string | null
           phone?: string | null
-          referred_by_code?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -941,7 +939,6 @@ export type Database = {
           id?: string
           language?: string | null
           phone?: string | null
-          referred_by_code?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -973,107 +970,6 @@ export type Database = {
           p256dh?: string
           updated_at?: string
           user_id?: string
-        }
-        Relationships: []
-      }
-      referral_codes: {
-        Row: {
-          code: string
-          created_at: string
-          id: string
-          is_active: boolean
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          code: string
-          created_at?: string
-          id?: string
-          is_active?: boolean
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          code?: string
-          created_at?: string
-          id?: string
-          is_active?: boolean
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      referral_rewards: {
-        Row: {
-          amount: number
-          created_at: string
-          description: string | null
-          id: string
-          referral_id: string
-          reward_type: string
-          user_id: string
-        }
-        Insert: {
-          amount: number
-          created_at?: string
-          description?: string | null
-          id?: string
-          referral_id: string
-          reward_type: string
-          user_id: string
-        }
-        Update: {
-          amount?: number
-          created_at?: string
-          description?: string | null
-          id?: string
-          referral_id?: string
-          reward_type?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "referral_rewards_referral_id_fkey"
-            columns: ["referral_id"]
-            isOneToOne: false
-            referencedRelation: "referrals"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      referrals: {
-        Row: {
-          completed_at: string | null
-          created_at: string
-          id: string
-          referral_code: string
-          referred_id: string
-          referrer_id: string
-          reward_amount: number | null
-          rewarded_at: string | null
-          status: string
-        }
-        Insert: {
-          completed_at?: string | null
-          created_at?: string
-          id?: string
-          referral_code: string
-          referred_id: string
-          referrer_id: string
-          reward_amount?: number | null
-          rewarded_at?: string | null
-          status?: string
-        }
-        Update: {
-          completed_at?: string | null
-          created_at?: string
-          id?: string
-          referral_code?: string
-          referred_id?: string
-          referrer_id?: string
-          reward_amount?: number | null
-          rewarded_at?: string | null
-          status?: string
         }
         Relationships: []
       }
@@ -1309,10 +1205,6 @@ export type Database = {
     }
     Functions: {
       generate_payment_reference: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      generate_referral_code: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
