@@ -2,14 +2,13 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
-import { ArrowRight, ArrowLeft, Check, Info } from 'lucide-react';
+import { ArrowRight, Check, AlertCircle, ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { BinancePayOption } from './BinancePayOption';
 
 const WALLET_ADDRESSES = {
   TRC20: 'TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb',
@@ -25,60 +24,53 @@ const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
   BEP20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',
   ERC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
-  Arbitrum: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11841.png',
-  Polygon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
   Solana: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',
   Aptos: 'https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png'
 };
 
 export function DesktopSellUSDT() {
-  const [step, setStep] = useState<'amount' | 'method' | 'network' | 'confirm' | 'success'>('amount');
+  const [step, setStep] = useState<'amount' | 'network' | 'binance' | 'phone' | 'confirm' | 'instructions'>('amount');
   const [usdtAmount, setUsdtAmount] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<'bank' | 'mobile'>('mobile');
+  const [paymentMethod] = useState<'mobile'>('mobile');
   const [currency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [provider, setProvider] = useState<'wave' | 'orange' | 'binance'>('wave');
-  const [bankName, setBankName] = useState('');
-  const [accountNumber, setAccountNumber] = useState('');
-  const [accountHolder, setAccountHolder] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [provider, setProvider] = useState<'wave' | 'orange'>('wave');
   const [useBinancePay, setUseBinancePay] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { createOrder } = useOrders();
   const { user } = useAuth();
   const { toast } = useToast();
   const { terexBuyRateCfa } = useTerexRates(2);
 
-  const exchangeRate = terexBuyRateCfa;
-  const fiatAmount = usdtAmount ? (parseFloat(usdtAmount) * exchangeRate).toFixed(2) : '0';
+  const fiatAmount = usdtAmount ? (parseFloat(usdtAmount) * terexBuyRateCfa).toFixed(2) : '0';
 
-  const handleContinueToMethod = () => {
-    const numericAmount = parseFloat(usdtAmount);
-    if (!usdtAmount || numericAmount <= 0) {
+  const handleContinueToNetwork = () => {
+    if (!usdtAmount || parseFloat(usdtAmount) <= 0) {
       toast({ title: "Erreur", description: "Veuillez entrer un montant valide", variant: "destructive" });
       return;
     }
-    setStep('method');
+    setStep('network');
   };
 
-  const handleContinueToNetwork = () => {
-    if (paymentMethod === 'mobile' && !useBinancePay && !phoneNumber) {
-      toast({ title: "Erreur", description: "Veuillez entrer votre numéro de téléphone", variant: "destructive" });
-      return;
-    }
-    if (paymentMethod === 'bank' && (!bankName || !accountNumber || !accountHolder)) {
-      toast({ title: "Erreur", description: "Veuillez remplir toutes les informations bancaires", variant: "destructive" });
-      return;
-    }
+  const handleContinueToPhone = () => {
     if (useBinancePay) {
-      setStep('confirm');
+      setStep('binance');
     } else {
-      setStep('network');
+      setStep('phone');
     }
+  };
+
+  const handleContinueFromBinance = () => {
+    setStep('phone');
   };
 
   const handleContinueToConfirm = () => {
+    if (!phoneNumber) {
+      toast({ title: "Erreur", description: "Veuillez entrer un numéro de téléphone", variant: "destructive" });
+      return;
+    }
     setStep('confirm');
   };
 
@@ -87,45 +79,39 @@ export function DesktopSellUSDT() {
     
     setLoading(true);
     
-    const dbPaymentMethod = paymentMethod === 'bank' ? 'card' : 'mobile';
-    
     const orderData = {
       user_id: user.id,
       type: 'sell' as const,
       amount: parseFloat(fiatAmount),
       currency,
       usdt_amount: parseFloat(usdtAmount),
-      exchange_rate: exchangeRate,
-      payment_method: dbPaymentMethod as 'card' | 'mobile',
-      network: network,
-      wallet_address: WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
+      exchange_rate: terexBuyRateCfa,
+      payment_method: paymentMethod,
+      network: useBinancePay ? 'Binance Pay' : network,
+      wallet_address: useBinancePay ? 'Binance Pay Transfer' : WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES],
       status: 'pending' as const,
       payment_status: 'pending',
       notes: JSON.stringify({
-        phoneNumber: paymentMethod === 'mobile' ? phoneNumber : accountNumber,
-        provider: paymentMethod === 'mobile' ? provider : 'bank',
-        paymentMethod: paymentMethod,
-        useBinancePay: useBinancePay,
-        bankData: paymentMethod === 'bank' ? {
-          bankName,
-          accountNumber,
-          accountHolder
-        } : null,
-        mobileData: paymentMethod === 'mobile' ? {
-          phoneNumber,
-          provider,
-          binancePay: useBinancePay
-        } : null
+        phoneNumber,
+        provider,
+        paymentMethod,
+        useBinancePay
       })
     };
 
     const result = await createOrder(orderData);
     
     if (result) {
-      setStep('success');
+      setStep('instructions');
     }
     
     setLoading(false);
+  };
+
+  const handleBackToDashboard = () => {
+    setStep('amount');
+    setUsdtAmount('');
+    setPhoneNumber('');
   };
 
   return (
@@ -136,7 +122,7 @@ export function DesktopSellUSDT() {
           <div className="space-y-6 rounded-2xl p-8">
             <div className="space-y-2">
               <h2 className="text-2xl font-light text-white">Vendre USDT</h2>
-              <p className="text-sm text-gray-400 font-light">Entrez le montant d'USDT que vous souhaitez vendre</p>
+              <p className="text-sm text-gray-400 font-light">Entrez le montant que vous souhaitez vendre</p>
             </div>
 
             <div className="space-y-4">
@@ -150,193 +136,24 @@ export function DesktopSellUSDT() {
                     onChange={(e) => setUsdtAmount(e.target.value)}
                     className="bg-terex-gray/50 border-terex-gray text-white text-3xl font-light h-16 text-center px-20"
                   />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-light">
-                    USDT
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                    <span className="text-gray-400 text-lg font-light">USDT</span>
+                    <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-5 h-5" />
                   </span>
                 </div>
               </div>
 
               <div className="bg-terex-gray/30 rounded-lg p-4 space-y-2">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between">
                   <span className="text-gray-400 text-sm font-light">Vous recevez</span>
                   <span className="text-white font-light">{fiatAmount} {currency}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400 text-sm font-light">Taux (achat)</span>
-                  <span className="text-white font-light">1 USDT = {exchangeRate} {currency}</span>
+                  <span className="text-gray-400 text-sm font-light">Taux</span>
+                  <span className="text-white font-light">1 USDT = {terexBuyRateCfa} {currency}</span>
                 </div>
               </div>
             </div>
-
-            <Button 
-              onClick={handleContinueToMethod}
-              className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
-            >
-              Continuer
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
-        )}
-
-        {/* Étape 2: Méthode de paiement */}
-        {step === 'method' && (
-          <div className="space-y-6 rounded-2xl p-8">
-            <div className="space-y-2">
-              <button 
-                onClick={() => setStep('amount')}
-                className="p-2 hover:bg-terex-gray/50 rounded-full transition-colors -ml-2"
-              >
-                <ArrowLeft className="w-5 h-5 text-white" />
-              </button>
-              <h2 className="text-2xl font-light text-white">Méthode de réception</h2>
-              <p className="text-sm text-gray-400 font-light">
-                Comment souhaitez-vous recevoir votre argent ?
-              </p>
-            </div>
-            
-            <div className="space-y-2">
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => setPaymentMethod('mobile')}
-                  className={`p-4 rounded-lg border transition-all ${
-                    paymentMethod === 'mobile' 
-                      ? 'border-terex-accent bg-terex-accent/10' 
-                      : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <img 
-                        src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
-                        alt="Wave" 
-                        className="w-8 h-8"
-                      />
-                      <span className="text-white font-light">Wave</span>
-                    </div>
-                    {paymentMethod === 'mobile' && <Check className="w-5 h-5 text-terex-accent" />}
-                  </div>
-                </button>
-                <button
-                  onClick={() => setPaymentMethod('mobile')}
-                  className={`p-4 rounded-lg border transition-all ${
-                    paymentMethod === 'mobile' 
-                      ? 'border-terex-accent bg-terex-accent/10' 
-                      : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <img 
-                        src="/payment-methods/orange-money-logo.png" 
-                        alt="Orange Money" 
-                        className="w-8 h-8"
-                      />
-                      <span className="text-white font-light">Orange Money</span>
-                    </div>
-                    {paymentMethod === 'mobile' && <Check className="w-5 h-5 text-terex-accent" />}
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            {paymentMethod === 'mobile' && (
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label className="text-white text-sm font-light">Opérateur</Label>
-                  <div className="grid grid-cols-3 gap-3">
-                    <button
-                      onClick={() => {
-                        setProvider('wave');
-                        setUseBinancePay(false);
-                      }}
-                      className={`p-4 rounded-lg border transition-all ${
-                        provider === 'wave' && !useBinancePay
-                          ? 'border-terex-accent bg-terex-accent/10' 
-                          : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
-                      }`}
-                    >
-                      <div className="flex flex-col items-center space-y-2">
-                        <img 
-                          src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
-                          alt="Wave" 
-                          className="w-12 h-12"
-                        />
-                        <span className="text-white font-light">Wave</span>
-                        {provider === 'wave' && !useBinancePay && <Check className="w-4 h-4 text-terex-accent" />}
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setProvider('orange');
-                        setUseBinancePay(false);
-                      }}
-                      className={`p-4 rounded-lg border transition-all ${
-                        provider === 'orange' && !useBinancePay
-                          ? 'border-terex-accent bg-terex-accent/10' 
-                          : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
-                      }`}
-                    >
-                      <div className="flex flex-col items-center space-y-2">
-                        <img 
-                          src="/payment-methods/orange-money-logo.png" 
-                          alt="Orange Money" 
-                          className="w-12 h-12"
-                        />
-                        <span className="text-white font-light">Orange Money</span>
-                        {provider === 'orange' && !useBinancePay && <Check className="w-4 h-4 text-terex-accent" />}
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setProvider('binance');
-                        setUseBinancePay(true);
-                      }}
-                      className={`p-4 rounded-lg border transition-all ${
-                        useBinancePay
-                          ? 'border-terex-accent bg-terex-accent/10' 
-                          : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
-                      }`}
-                    >
-                      <div className="flex flex-col items-center space-y-2">
-                        <img 
-                          src="/lovable-uploads/72ce0703-a66b-4a87-869b-8e9b7a022eb4.png" 
-                          alt="Binance Pay" 
-                          className="w-12 h-12"
-                        />
-                        <span className="text-white font-light">Binance Pay</span>
-                        {useBinancePay && <Check className="w-4 h-4 text-terex-accent" />}
-                      </div>
-                    </button>
-                  </div>
-                </div>
-                
-                {useBinancePay && (
-                  <Alert className="border-blue-500/50 bg-blue-500/10">
-                    <Info className="h-4 w-4 text-blue-400" />
-                    <AlertDescription className="text-blue-200 text-sm">
-                      <p className="font-medium mb-2">Avantages Binance Pay</p>
-                      <ul className="space-y-1 text-xs">
-                        <li>• Transfert instantané sans frais</li>
-                        <li>• Sécurisé par Binance</li>
-                        <li>• Pas besoin de choisir un réseau</li>
-                      </ul>
-                    </AlertDescription>
-                  </Alert>
-                )}
-                
-                {!useBinancePay && (
-                  <div className="space-y-2">
-                    <Label className="text-white text-sm font-light">Numéro de téléphone</Label>
-                    <Input
-                      placeholder="+221 XX XXX XX XX"
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      className="bg-terex-gray/50 border-terex-gray text-white h-12 font-light"
-                    />
-                  </div>
-                )}
-              </div>
-            )}
 
             <Button 
               onClick={handleContinueToNetwork}
@@ -348,49 +165,209 @@ export function DesktopSellUSDT() {
           </div>
         )}
 
-        {/* Étape 3: Réseau */}
+        {/* Étape 2: Réseau + Binance Pay */}
         {step === 'network' && (
           <div className="space-y-6 rounded-2xl p-8">
             <div className="space-y-2">
               <button 
-                onClick={() => setStep('method')}
+                onClick={() => setStep('amount')}
                 className="p-2 hover:bg-terex-gray/50 rounded-full transition-colors -ml-2"
               >
                 <ArrowLeft className="w-5 h-5 text-white" />
               </button>
-              <h2 className="text-2xl font-light text-white">Réseau d'envoi</h2>
+              <h2 className="text-2xl font-light text-white">Mode d'envoi</h2>
               <p className="text-sm text-gray-400 font-light">
-                Choisissez le réseau sur lequel vous enverrez vos USDT
+                Choisissez comment vous voulez envoyer vos USDT
               </p>
             </div>
             
-            <Alert className="border-blue-500/50 bg-blue-500/10">
-              <Info className="h-4 w-4 text-blue-400" />
-              <AlertDescription className="text-blue-200 text-sm">
-                Vous devrez envoyer vos USDT à l'adresse que nous vous fournirons à l'étape suivante
+            {/* Option Binance Pay */}
+            <div className="bg-terex-gray/30 rounded-lg p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" className="w-10 h-10 rounded-full" />
+                  <div>
+                    <h3 className="text-white font-medium">Binance Pay</h3>
+                    <p className="text-xs text-gray-400">Envoi instantané depuis Binance</p>
+                  </div>
+                </div>
+                <Switch 
+                  checked={useBinancePay} 
+                  onCheckedChange={setUseBinancePay}
+                  className="data-[state=checked]:bg-terex-accent"
+                />
+              </div>
+              
+              {useBinancePay && (
+                <Alert className="border-terex-accent/30 bg-terex-accent/10">
+                  <AlertCircle className="h-4 w-4 text-terex-accent" />
+                  <AlertDescription className="text-terex-accent text-xs">
+                    Vous devrez envoyer vos USDT via Binance Pay à notre ID Binance Pay
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+
+            {/* Sélection du réseau si Binance Pay désactivé */}
+            {!useBinancePay && (
+              <div className="space-y-2">
+                <Label className="text-white text-sm">Réseau blockchain</Label>
+                {Object.entries(NETWORK_LOGOS).map(([net, logo]) => (
+                  <button
+                    key={net}
+                    onClick={() => setNetwork(net)}
+                    className={`w-full p-4 rounded-lg border transition-all ${
+                      network === net 
+                        ? 'border-terex-accent bg-terex-accent/10' 
+                        : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <img src={logo} alt={net} className="w-8 h-8 rounded-full" />
+                        <span className="text-white font-light">{net}</span>
+                      </div>
+                      {network === net && <Check className="w-5 h-5 text-terex-accent" />}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <Button 
+              onClick={handleContinueToPhone}
+              className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
+            >
+              Continuer
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        )}
+
+        {/* Étape 3: Binance Pay Info */}
+        {step === 'binance' && (
+          <div className="space-y-6 rounded-2xl p-8">
+            <div className="space-y-2">
+              <button 
+                onClick={() => setStep('network')}
+                className="p-2 hover:bg-terex-gray/50 rounded-full transition-colors -ml-2"
+              >
+                <ArrowLeft className="w-5 h-5 text-white" />
+              </button>
+              <h2 className="text-2xl font-light text-white flex items-center gap-2">
+                <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" className="w-6 h-6 rounded" />
+                Binance Pay
+              </h2>
+              <p className="text-sm text-gray-400 font-light">
+                Instructions pour l'envoi via Binance Pay
+              </p>
+            </div>
+            
+            <Alert className="border-terex-accent/30 bg-terex-accent/10">
+              <AlertCircle className="h-4 w-4 text-terex-accent" />
+              <AlertDescription className="text-white text-sm space-y-2">
+                <p className="font-medium">Pour envoyer vos USDT via Binance Pay :</p>
+                <ol className="list-decimal list-inside space-y-1 text-xs text-gray-300">
+                  <li>Ouvrez l'application Binance</li>
+                  <li>Allez dans "Pay" puis "Envoyer"</li>
+                  <li>Envoyez à l'email: lomohamed834@gmail.com</li>
+                  <li>Ou utilisez l'ID: 450715599</li>
+                  <li>Montant exact: {usdtAmount} USDT</li>
+                  <li>Confirmez l'envoi</li>
+                </ol>
               </AlertDescription>
             </Alert>
 
+            <div className="bg-terex-gray/30 rounded-lg p-4 space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-400 text-xs">Email Binance</span>
+                <span className="text-white text-sm">lomohamed834@gmail.com</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-400 text-xs">ID Binance Pay</span>
+                <span className="text-white font-medium text-lg">450715599</span>
+              </div>
+              <p className="text-terex-accent text-xs text-center">Utilisez cet ID dans Binance Pay</p>
+            </div>
+
+            <Button 
+              onClick={handleContinueFromBinance}
+              className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
+            >
+              J'ai compris
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        )}
+
+        {/* Étape 4: Téléphone & Provider */}
+        {step === 'phone' && (
+          <div className="space-y-6 rounded-2xl p-8">
             <div className="space-y-2">
-              {Object.entries(NETWORK_LOGOS).map(([net, logo]) => (
-                <button
-                  key={net}
-                  onClick={() => setNetwork(net)}
-                  className={`w-full p-4 rounded-lg border transition-all ${
-                    network === net 
-                      ? 'border-terex-accent bg-terex-accent/10' 
-                      : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <img src={logo} alt={net} className="w-8 h-8 rounded-full" />
-                      <span className="text-white font-light">{net}</span>
+              <button 
+                onClick={() => useBinancePay ? setStep('binance') : setStep('network')}
+                className="p-2 hover:bg-terex-gray/50 rounded-full transition-colors -ml-2"
+              >
+                <ArrowLeft className="w-5 h-5 text-white" />
+              </button>
+              <h2 className="text-2xl font-light text-white">Informations de paiement</h2>
+              <p className="text-sm text-gray-400 font-light">
+                Entrez votre numéro Mobile Money
+              </p>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-white text-sm font-light">Service Mobile Money</Label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setProvider('wave')}
+                    className={`p-4 rounded-lg border transition-all ${
+                      provider === 'wave' 
+                        ? 'border-terex-accent bg-terex-accent/10' 
+                        : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
+                    }`}
+                  >
+                    <div className="flex flex-col items-center space-y-2">
+                      <img 
+                        src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
+                        alt="Wave" 
+                        className="w-12 h-12"
+                      />
+                      <span className="text-white font-light text-sm">Wave</span>
+                      {provider === 'wave' && <Check className="w-4 h-4 text-terex-accent" />}
                     </div>
-                    {network === net && <Check className="w-5 h-5 text-terex-accent" />}
-                  </div>
-                </button>
-              ))}
+                  </button>
+                  <button
+                    onClick={() => setProvider('orange')}
+                    className={`p-4 rounded-lg border transition-all ${
+                      provider === 'orange' 
+                        ? 'border-terex-accent bg-terex-accent/10' 
+                        : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
+                    }`}
+                  >
+                    <div className="flex flex-col items-center space-y-2">
+                      <img 
+                        src="/payment-methods/orange-money-logo.png" 
+                        alt="Orange Money" 
+                        className="w-12 h-12"
+                      />
+                      <span className="text-white font-light text-sm">Orange Money</span>
+                      {provider === 'orange' && <Check className="w-4 h-4 text-terex-accent" />}
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-white text-sm font-light">Numéro de téléphone</Label>
+                <Input
+                  placeholder="+221 XX XXX XX XX"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="bg-terex-gray/50 border-terex-gray text-white h-12 font-light"
+                />
+              </div>
             </div>
 
             <Button 
@@ -403,12 +380,12 @@ export function DesktopSellUSDT() {
           </div>
         )}
 
-        {/* Étape 4: Confirmation */}
+        {/* Étape 5: Confirmation */}
         {step === 'confirm' && (
           <div className="space-y-6 rounded-2xl p-8">
             <div className="space-y-2">
               <button 
-                onClick={() => setStep('network')}
+                onClick={() => setStep('phone')}
                 className="p-2 hover:bg-terex-gray/50 rounded-full transition-colors -ml-2"
               >
                 <ArrowLeft className="w-5 h-5 text-white" />
@@ -421,7 +398,7 @@ export function DesktopSellUSDT() {
             
             <div className="bg-terex-gray/30 rounded-lg p-4 space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-400 font-light">Vous vendez</span>
+                <span className="text-gray-400 font-light">Vous envoyez</span>
                 <span className="text-white font-light">{usdtAmount} USDT</span>
               </div>
               <div className="flex justify-between">
@@ -429,110 +406,82 @@ export function DesktopSellUSDT() {
                 <span className="text-white font-light">{fiatAmount} {currency}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400 font-light">Méthode de paiement</span>
-                <span className="text-white font-light">
-                  {useBinancePay ? 'Binance Pay' : paymentMethod === 'mobile' ? 'Mobile Money' : 'Virement bancaire'}
-                </span>
+                <span className="text-gray-400 font-light">Réseau</span>
+                <span className="text-white font-light">{useBinancePay ? 'Binance Pay' : network}</span>
               </div>
-              {!useBinancePay && (
-                <div className="flex justify-between">
-                  <span className="text-gray-400 font-light">Réseau</span>
-                  <span className="text-white font-light">{network}</span>
-                </div>
-              )}
-              {paymentMethod === 'mobile' && !useBinancePay && (
-                <div className="flex justify-between">
-                  <span className="text-gray-400 font-light">Téléphone</span>
-                  <span className="text-white font-light">{phoneNumber}</span>
-                </div>
-              )}
-              {useBinancePay && (
-                <div className="flex justify-between">
-                  <span className="text-gray-400 font-light">Opérateur</span>
-                  <span className="text-white font-light">Binance Pay</span>
-                </div>
-              )}
+              <div className="flex justify-between">
+                <span className="text-gray-400 font-light">Service</span>
+                <span className="text-white font-light">{provider === 'wave' ? 'Wave' : 'Orange Money'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400 font-light">Numéro</span>
+                <span className="text-white font-light">{phoneNumber}</span>
+              </div>
             </div>
-
-            <Alert className="border-yellow-500/50 bg-yellow-500/10">
-              <Info className="h-4 w-4 text-yellow-400" />
-              <AlertDescription className="text-yellow-200 text-sm">
-                {useBinancePay 
-                  ? "Après confirmation, vous recevrez l'email Binance pour l'envoi via Binance Pay"
-                  : "Après confirmation, vous recevrez l'adresse pour envoyer vos USDT"
-                }
-              </AlertDescription>
-            </Alert>
 
             <Button 
               onClick={handleConfirm}
               disabled={loading}
               className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
             >
-              {loading ? 'Traitement...' : 'Confirmer la vente'}
+              {loading ? 'Traitement...' : 'Confirmer'}
             </Button>
           </div>
         )}
 
-        {/* Étape 5: Succès */}
-        {step === 'success' && (
+        {/* Étape 6: Instructions d'envoi */}
+        {step === 'instructions' && (
           <div className="space-y-6 rounded-2xl p-8">
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 mx-auto bg-green-500/20 rounded-full flex items-center justify-center">
-                <Check className="w-8 h-8 text-green-400" />
-              </div>
-              <h2 className="text-2xl font-light text-white">Commande créée !</h2>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-light text-white">Envoyer vos USDT</h2>
               <p className="text-sm text-gray-400 font-light">
-                Envoyez maintenant vos USDT à l'adresse suivante
+                Suivez ces instructions pour compléter votre vente
               </p>
             </div>
-
+            
             <div className="bg-terex-gray/30 rounded-lg p-4 space-y-3">
+              <p className="text-white font-light">Envoyez exactement:</p>
+              <p className="text-2xl text-terex-accent font-light">{usdtAmount} USDT</p>
+              
               {useBinancePay ? (
-                <div>
-                  <Label className="text-gray-400 font-light text-sm">Email Binance Pay</Label>
-                  <div className="mt-2 p-3 bg-terex-gray/50 rounded-lg text-white font-mono text-sm">
-                    terexofficiel@gmail.com
+                <div className="pt-3 border-t border-terex-gray space-y-3">
+                  <p className="text-gray-400 text-sm font-light mb-2">Via Binance Pay à:</p>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400 text-xs">Email:</span>
+                      <span className="text-white text-sm">lomohamed834@gmail.com</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400 text-xs">ID Binance:</span>
+                      <span className="text-white font-light">450715599</span>
+                    </div>
                   </div>
-                  <p className="text-gray-400 text-xs mt-2">
-                    Envoyez vos USDT via Binance Pay à cette adresse email
-                  </p>
                 </div>
               ) : (
                 <>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400 font-light">Réseau</span>
-                    <span className="text-white font-light">{network}</span>
-                  </div>
-                  <div>
-                    <Label className="text-gray-400 font-light text-sm">Adresse de dépôt</Label>
-                    <div className="mt-2 p-3 bg-terex-gray/50 rounded-lg break-all text-white font-mono text-sm">
+                  <p className="text-sm text-gray-400 font-light">sur le réseau {network}</p>
+                  
+                  <div className="pt-3 border-t border-terex-gray">
+                    <p className="text-gray-400 text-sm font-light mb-2">À l'adresse:</p>
+                    <p className="text-white text-xs break-all font-light">
                       {WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
-                    </div>
+                    </p>
                   </div>
                 </>
               )}
             </div>
 
-            <Alert className="border-blue-500/50 bg-blue-500/10">
-              <Info className="h-4 w-4 text-blue-400" />
-              <AlertDescription className="text-blue-200 text-sm">
-                Une fois l'envoi effectué, votre paiement sera traité dans les 2-5 minutes
-              </AlertDescription>
-            </Alert>
+            <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
+              <p className="text-yellow-200 text-xs font-light">
+                Une fois l'envoi effectué, nous traiterons votre paiement en 2-5 minutes.
+              </p>
+            </div>
 
             <Button 
-              onClick={() => {
-                setStep('amount');
-                setUsdtAmount('');
-                setPhoneNumber('');
-                setBankName('');
-                setAccountNumber('');
-                setAccountHolder('');
-              }}
+              onClick={handleBackToDashboard}
               className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
             >
-              Retour à l'accueil
+              Compris
             </Button>
           </div>
         )}
