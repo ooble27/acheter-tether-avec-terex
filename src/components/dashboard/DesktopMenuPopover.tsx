@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { User, History, HelpCircle, Phone, Star, Gift, Share2, FileText, Shield, UserCheck, LogOut } from 'lucide-react';
+import { User, History, HelpCircle, Phone, Star, Gift, Share2, FileText, Shield, UserCheck, LogOut, Settings } from 'lucide-react';
 import { useUserRole } from '@/hooks/useUserRole';
+import { useNavigate } from 'react-router-dom';
 
 interface DesktopMenuPopoverProps {
   activeSection: string;
@@ -21,6 +22,7 @@ export function DesktopMenuPopover({
   trigger
 }: DesktopMenuPopoverProps) {
   const { isKYCReviewer, isAdmin } = useUserRole();
+  const navigate = useNavigate();
 
   const handleItemClick = (section: string) => {
     setActiveSection(section);
@@ -48,6 +50,11 @@ export function DesktopMenuPopover({
     { id: 'share-app', label: 'Partager l\'App', icon: Share2 },
     { id: 'terms', label: 'Conditions d\'Utilisation', icon: FileText },
   ];
+
+  const handleAdminPortal = () => {
+    onOpenChange(false);
+    navigate('/admin');
+  };
 
   const adminItems = [
     { id: 'kyc-admin', label: 'Administration KYC', icon: Shield },
@@ -114,7 +121,20 @@ export function DesktopMenuPopover({
           {isKYCReviewer() && (
             <>
               <div className="h-px bg-terex-gray/20 my-2"></div>
-              {renderMenuSection('Administration', adminItems)}
+              
+              {/* Bouton Portail Admin */}
+              <Button
+                variant="ghost"
+                onClick={handleAdminPortal}
+                className="w-full justify-start p-3 h-auto rounded-lg transition-all duration-200 bg-terex-accent/10 text-terex-accent hover:bg-terex-accent/20 border border-terex-accent/30 mb-2"
+              >
+                <div className="flex items-center space-x-3 w-full">
+                  <Settings className="h-4 w-4 flex-shrink-0" />
+                  <span className="font-medium text-sm">Portail Admin Complet</span>
+                </div>
+              </Button>
+              
+              {renderMenuSection('Accès Rapide Admin', adminItems)}
             </>
           )}
 
