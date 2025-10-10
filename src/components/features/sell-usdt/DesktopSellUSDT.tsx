@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { ArrowRight, ArrowLeft, Check, Info } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { BinancePayOption } from './BinancePayOption';
 
 const WALLET_ADDRESSES = {
   TRC20: 'TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb',
@@ -37,11 +38,12 @@ export function DesktopSellUSDT() {
   const [currency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [provider, setProvider] = useState<'wave' | 'orange'>('wave');
+  const [provider, setProvider] = useState<'wave' | 'orange' | 'binance'>('wave');
   const [bankName, setBankName] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
   const [accountHolder, setAccountHolder] = useState('');
   const [loading, setLoading] = useState(false);
+  const [useBinancePay, setUseBinancePay] = useState(false);
 
   const { createOrder } = useOrders();
   const { user } = useAuth();
@@ -61,7 +63,7 @@ export function DesktopSellUSDT() {
   };
 
   const handleContinueToNetwork = () => {
-    if (paymentMethod === 'mobile' && !phoneNumber) {
+    if (paymentMethod === 'mobile' && !useBinancePay && !phoneNumber) {
       toast({ title: "Erreur", description: "Veuillez entrer votre numéro de téléphone", variant: "destructive" });
       return;
     }
@@ -69,7 +71,11 @@ export function DesktopSellUSDT() {
       toast({ title: "Erreur", description: "Veuillez remplir toutes les informations bancaires", variant: "destructive" });
       return;
     }
-    setStep('network');
+    if (useBinancePay) {
+      setStep('confirm');
+    } else {
+      setStep('network');
+    }
   };
 
   const handleContinueToConfirm = () => {
@@ -99,6 +105,7 @@ export function DesktopSellUSDT() {
         phoneNumber: paymentMethod === 'mobile' ? phoneNumber : accountNumber,
         provider: paymentMethod === 'mobile' ? provider : 'bank',
         paymentMethod: paymentMethod,
+        useBinancePay: useBinancePay,
         bankData: paymentMethod === 'bank' ? {
           bankName,
           accountNumber,
@@ -106,7 +113,8 @@ export function DesktopSellUSDT() {
         } : null,
         mobileData: paymentMethod === 'mobile' ? {
           phoneNumber,
-          provider
+          provider,
+          binancePay: useBinancePay
         } : null
       })
     };
@@ -209,11 +217,14 @@ export function DesktopSellUSDT() {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label className="text-white text-sm font-light">Opérateur</Label>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-3 gap-3">
                     <button
-                      onClick={() => setProvider('wave')}
+                      onClick={() => {
+                        setProvider('wave');
+                        setUseBinancePay(false);
+                      }}
                       className={`p-4 rounded-lg border transition-all ${
-                        provider === 'wave' 
+                        provider === 'wave' && !useBinancePay
                           ? 'border-terex-accent bg-terex-accent/10' 
                           : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
                       }`}
@@ -225,13 +236,16 @@ export function DesktopSellUSDT() {
                           className="w-12 h-12"
                         />
                         <span className="text-white font-light">Wave</span>
-                        {provider === 'wave' && <Check className="w-4 h-4 text-terex-accent" />}
+                        {provider === 'wave' && !useBinancePay && <Check className="w-4 h-4 text-terex-accent" />}
                       </div>
                     </button>
                     <button
-                      onClick={() => setProvider('orange')}
+                      onClick={() => {
+                        setProvider('orange');
+                        setUseBinancePay(false);
+                      }}
                       className={`p-4 rounded-lg border transition-all ${
-                        provider === 'orange' 
+                        provider === 'orange' && !useBinancePay
                           ? 'border-terex-accent bg-terex-accent/10' 
                           : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
                       }`}
@@ -243,20 +257,58 @@ export function DesktopSellUSDT() {
                           className="w-12 h-12"
                         />
                         <span className="text-white font-light">Orange Money</span>
-                        {provider === 'orange' && <Check className="w-4 h-4 text-terex-accent" />}
+                        {provider === 'orange' && !useBinancePay && <Check className="w-4 h-4 text-terex-accent" />}
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setProvider('binance');
+                        setUseBinancePay(true);
+                      }}
+                      className={`p-4 rounded-lg border transition-all ${
+                        useBinancePay
+                          ? 'border-terex-accent bg-terex-accent/10' 
+                          : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center space-y-2">
+                        <img 
+                          src="/lovable-uploads/72ce0703-a66b-4a87-869b-8e9b7a022eb4.png" 
+                          alt="Binance Pay" 
+                          className="w-12 h-12"
+                        />
+                        <span className="text-white font-light">Binance Pay</span>
+                        {useBinancePay && <Check className="w-4 h-4 text-terex-accent" />}
                       </div>
                     </button>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-white text-sm font-light">Numéro de téléphone</Label>
-                  <Input
-                    placeholder="+221 XX XXX XX XX"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    className="bg-terex-gray/50 border-terex-gray text-white h-12 font-light"
-                  />
-                </div>
+                
+                {useBinancePay && (
+                  <Alert className="border-blue-500/50 bg-blue-500/10">
+                    <Info className="h-4 w-4 text-blue-400" />
+                    <AlertDescription className="text-blue-200 text-sm">
+                      <p className="font-medium mb-2">Avantages Binance Pay</p>
+                      <ul className="space-y-1 text-xs">
+                        <li>• Transfert instantané sans frais</li>
+                        <li>• Sécurisé par Binance</li>
+                        <li>• Pas besoin de choisir un réseau</li>
+                      </ul>
+                    </AlertDescription>
+                  </Alert>
+                )}
+                
+                {!useBinancePay && (
+                  <div className="space-y-2">
+                    <Label className="text-white text-sm font-light">Numéro de téléphone</Label>
+                    <Input
+                      placeholder="+221 XX XXX XX XX"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      className="bg-terex-gray/50 border-terex-gray text-white h-12 font-light"
+                    />
+                  </div>
+                )}
               </div>
             )}
 
@@ -352,16 +404,26 @@ export function DesktopSellUSDT() {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400 font-light">Méthode de paiement</span>
-                <span className="text-white font-light">{paymentMethod === 'mobile' ? 'Mobile Money' : 'Virement bancaire'}</span>
+                <span className="text-white font-light">
+                  {useBinancePay ? 'Binance Pay' : paymentMethod === 'mobile' ? 'Mobile Money' : 'Virement bancaire'}
+                </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400 font-light">Réseau</span>
-                <span className="text-white font-light">{network}</span>
-              </div>
-              {paymentMethod === 'mobile' && (
+              {!useBinancePay && (
+                <div className="flex justify-between">
+                  <span className="text-gray-400 font-light">Réseau</span>
+                  <span className="text-white font-light">{network}</span>
+                </div>
+              )}
+              {paymentMethod === 'mobile' && !useBinancePay && (
                 <div className="flex justify-between">
                   <span className="text-gray-400 font-light">Téléphone</span>
                   <span className="text-white font-light">{phoneNumber}</span>
+                </div>
+              )}
+              {useBinancePay && (
+                <div className="flex justify-between">
+                  <span className="text-gray-400 font-light">Opérateur</span>
+                  <span className="text-white font-light">Binance Pay</span>
                 </div>
               )}
             </div>
@@ -369,7 +431,10 @@ export function DesktopSellUSDT() {
             <Alert className="border-yellow-500/50 bg-yellow-500/10">
               <Info className="h-4 w-4 text-yellow-400" />
               <AlertDescription className="text-yellow-200 text-sm">
-                Après confirmation, vous recevrez l'adresse pour envoyer vos USDT
+                {useBinancePay 
+                  ? "Après confirmation, vous recevrez l'email Binance pour l'envoi via Binance Pay"
+                  : "Après confirmation, vous recevrez l'adresse pour envoyer vos USDT"
+                }
               </AlertDescription>
             </Alert>
 
@@ -397,16 +462,30 @@ export function DesktopSellUSDT() {
             </div>
 
             <div className="bg-terex-gray/30 rounded-lg p-4 space-y-3">
-              <div className="flex justify-between">
-                <span className="text-gray-400 font-light">Réseau</span>
-                <span className="text-white font-light">{network}</span>
-              </div>
-              <div>
-                <Label className="text-gray-400 font-light text-sm">Adresse de dépôt</Label>
-                <div className="mt-2 p-3 bg-terex-gray/50 rounded-lg break-all text-white font-mono text-sm">
-                  {WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
+              {useBinancePay ? (
+                <div>
+                  <Label className="text-gray-400 font-light text-sm">Email Binance Pay</Label>
+                  <div className="mt-2 p-3 bg-terex-gray/50 rounded-lg text-white font-mono text-sm">
+                    terexofficiel@gmail.com
+                  </div>
+                  <p className="text-gray-400 text-xs mt-2">
+                    Envoyez vos USDT via Binance Pay à cette adresse email
+                  </p>
                 </div>
-              </div>
+              ) : (
+                <>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400 font-light">Réseau</span>
+                    <span className="text-white font-light">{network}</span>
+                  </div>
+                  <div>
+                    <Label className="text-gray-400 font-light text-sm">Adresse de dépôt</Label>
+                    <div className="mt-2 p-3 bg-terex-gray/50 rounded-lg break-all text-white font-mono text-sm">
+                      {WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             <Alert className="border-blue-500/50 bg-blue-500/10">
