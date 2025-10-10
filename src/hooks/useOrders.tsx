@@ -366,6 +366,54 @@ export function useOrders() {
     });
   };
 
+  const deletePermanently = async (orderId: string) => {
+    try {
+      // Trouver la commande pour savoir si c'est un transfer ou un order
+      const order = orders.find(o => o.id === orderId);
+      
+      if (!order) {
+        toast({
+          title: "Erreur",
+          description: "Commande introuvable",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Supprimer de la bonne table selon le type
+      if (order.type === 'transfer') {
+        const { error } = await supabase
+          .from('international_transfers')
+          .delete()
+          .eq('id', orderId);
+
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('orders')
+          .delete()
+          .eq('id', orderId);
+
+        if (error) throw error;
+      }
+
+      // Mettre à jour l'état local
+      setOrders(prevOrders => prevOrders.filter(o => o.id !== orderId));
+      
+      toast({
+        title: "Succès",
+        description: "Commande supprimée définitivement",
+      });
+    } catch (error) {
+      console.error('Error deleting order permanently:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer la commande",
+        variant: "destructive",
+      });
+    }
+  };
+
   const refreshOrders = () => {
     fetchOrders();
   };
@@ -377,6 +425,7 @@ export function useOrders() {
     updateOrderStatus,
     refreshOrders,
     moveToTrash,
-    restoreFromTrash
+    restoreFromTrash,
+    deletePermanently
   };
 }

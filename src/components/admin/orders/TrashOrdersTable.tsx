@@ -16,9 +16,10 @@ import { UnifiedOrder } from '@/hooks/useOrders';
 interface TrashOrdersTableProps {
   orders: UnifiedOrder[];
   onRestoreFromTrash: (orderId: string) => void;
+  onDeletePermanently: (orderId: string) => void;
 }
 
-export function TrashOrdersTable({ orders, onRestoreFromTrash }: TrashOrdersTableProps) {
+export function TrashOrdersTable({ orders, onRestoreFromTrash, onDeletePermanently }: TrashOrdersTableProps) {
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
   const getStatusBadge = (status: string) => {
@@ -165,6 +166,20 @@ export function TrashOrdersTable({ orders, onRestoreFromTrash }: TrashOrdersTabl
                 >
                   <RotateCcw className="w-4 h-4 mr-2" />
                   Restaurer
+                </Button>
+
+                <Button
+                  onClick={() => {
+                    if (window.confirm('Êtes-vous sûr de vouloir supprimer définitivement cette commande ? Cette action est irréversible.')) {
+                      onDeletePermanently(order.id);
+                    }
+                  }}
+                  variant="destructive"
+                  size="sm"
+                  className="bg-red-600/90 hover:bg-red-600"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Supprimer
                 </Button>
               </div>
             </div>

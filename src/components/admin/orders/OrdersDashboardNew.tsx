@@ -22,7 +22,7 @@ import { TransferOrdersTable } from './TransferOrdersTable';
 import { TrashOrdersTable } from './TrashOrdersTable';
 
 export function OrdersDashboardNew() {
-  const { orders, loading, updateOrderStatus, refreshOrders, moveToTrash, restoreFromTrash } = useOrders();
+  const { orders, loading, updateOrderStatus, refreshOrders, moveToTrash, restoreFromTrash, deletePermanently } = useOrders();
   const { isAdmin, isKYCReviewer } = useUserRole();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('buy');
@@ -239,6 +239,7 @@ export function OrdersDashboardNew() {
           <TrashOrdersTable 
             orders={filteredTrashedOrders}
             onRestoreFromTrash={restoreFromTrash}
+            onDeletePermanently={deletePermanently}
           />
         </TabsContent>
       </Tabs>
