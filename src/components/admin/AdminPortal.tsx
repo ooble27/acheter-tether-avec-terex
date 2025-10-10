@@ -10,11 +10,13 @@ import {
   Settings,
   BarChart3,
   Shield,
-  UserCheck
+  UserCheck,
+  Send
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
+import { ManualTransfersAdmin } from '@/components/admin/ManualTransfersAdmin';
 import { useUserRole } from '@/hooks/useUserRole';
 
 export function AdminPortal() {
@@ -44,7 +46,7 @@ export function AdminPortal() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-terex-gray grid grid-cols-3 w-full max-w-2xl">
+          <TabsList className="bg-terex-gray grid grid-cols-4 w-full">
             <TabsTrigger 
               value="orders" 
               className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
@@ -53,11 +55,18 @@ export function AdminPortal() {
               <span>Commandes</span>
             </TabsTrigger>
             <TabsTrigger 
+              value="transfers" 
+              className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
+            >
+              <Send className="w-4 h-4" />
+              <span>Transferts</span>
+            </TabsTrigger>
+            <TabsTrigger 
               value="kyc" 
               className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
             >
               <FileCheck className="w-4 h-4" />
-              <span>Vérifications KYC</span>
+              <span>KYC</span>
             </TabsTrigger>
             <TabsTrigger 
               value="applications" 
@@ -70,6 +79,10 @@ export function AdminPortal() {
 
           <TabsContent value="orders">
             <OrdersDashboardNew />
+          </TabsContent>
+
+          <TabsContent value="transfers">
+            <ManualTransfersAdmin />
           </TabsContent>
 
           <TabsContent value="kyc">
