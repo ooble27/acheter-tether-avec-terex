@@ -12,7 +12,8 @@ import {
   Send,
   Trash2,
   Archive,
-  Users
+  Users,
+  AlertTriangle
 } from 'lucide-react';
 import { useOrders } from '@/hooks/useOrders';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -20,12 +21,61 @@ import { BuyOrdersTable } from './BuyOrdersTable';
 import { SellOrdersTable } from './SellOrdersTable';
 import { TransferOrdersTable } from './TransferOrdersTable';
 import { TrashOrdersTable } from './TrashOrdersTable';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 export function OrdersDashboardNew() {
   const { orders, loading, updateOrderStatus, refreshOrders, moveToTrash, restoreFromTrash, deletePermanently } = useOrders();
   const { isAdmin, isKYCReviewer } = useUserRole();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('buy');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteAllOrders = async () => {
+    const confirmed = window.confirm(
+      "⚠️ ATTENTION CRITIQUE : Cette action supprimera DÉFINITIVEMENT toutes les commandes de tous les clients (achats, ventes et transferts). Cette action est IRRÉVERSIBLE. Êtes-vous absolument certain de vouloir continuer ?"
+    );
+
+    if (!confirmed) return;
+
+    const doubleConfirm = window.confirm(
+      "🚨 DERNIÈRE CONFIRMATION : Toutes les données seront perdues. Tapez OK pour confirmer."
+    );
+
+    if (!doubleConfirm) return;
+
+    setIsDeleting(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('Not authenticated');
+      }
+
+      const response = await fetch(
+        `https://mwwjrrduavfcwjiyniuy.supabase.co/functions/v1/admin-delete-all-orders`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to delete orders');
+      }
+
+      toast.success('Toutes les commandes ont été supprimées avec succès');
+      await refreshOrders();
+    } catch (error) {
+      console.error('Error deleting all orders:', error);
+      toast.error('Impossible de supprimer les commandes');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   if (!isAdmin() && !isKYCReviewer()) {
     return (
@@ -168,6 +218,18 @@ export function OrdersDashboardNew() {
               <span className="hidden sm:inline">Actualiser</span>
               <span className="sm:hidden">Actualiser</span>
             </Button>
+            {isAdmin() && (
+              <Button
+                onClick={handleDeleteAllOrders}
+                disabled={isDeleting}
+                variant="destructive"
+                size="sm"
+                className="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 text-xs sm:text-sm px-3 py-2 h-10 sm:h-auto"
+              >
+                <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                {isDeleting ? 'Suppression...' : 'Supprimer tout'}
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>

@@ -8,8 +8,10 @@ import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
+import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
 import { ArrowRight, Check, AlertCircle, ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { KYCPage } from '../KYCPage';
 const WALLET_ADDRESSES = {
   TRC20: 'TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb',
   BEP20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
@@ -28,6 +30,7 @@ const NETWORK_LOGOS = {
 };
 export function MobileSellUSDT() {
   const [step, setStep] = useState<'amount' | 'network' | 'binance' | 'phone' | 'confirm' | 'instructions'>('amount');
+  const [showKYCPage, setShowKYCPage] = useState(false);
   const [usdtAmount, setUsdtAmount] = useState('');
   const [paymentMethod] = useState<'mobile'>('mobile');
   const [currency] = useState('CFA');
@@ -36,18 +39,13 @@ export function MobileSellUSDT() {
   const [provider, setProvider] = useState<'wave' | 'orange'>('wave');
   const [useBinancePay, setUseBinancePay] = useState(false);
   const [loading, setLoading] = useState(false);
-  const {
-    createOrder
-  } = useOrders();
-  const {
-    user
-  } = useAuth();
-  const {
-    toast
-  } = useToast();
-  const {
-    terexBuyRateCfa
-  } = useTerexRates(2);
+  
+  const { createOrder } = useOrders();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const { terexBuyRateCfa } = useTerexRates(2);
+  const { isAuthorized, kycStatus } = useTransactionAuthorization();
+  
   const fiatAmount = usdtAmount ? (parseFloat(usdtAmount) * terexBuyRateCfa).toFixed(2) : '0';
   const handleContinueToNetwork = () => {
     if (!usdtAmount || parseFloat(usdtAmount) <= 0) {
@@ -83,6 +81,13 @@ export function MobileSellUSDT() {
   };
   const handleConfirm = async () => {
     if (!user) return;
+    
+    // Vérifier KYC avant de créer la transaction
+    if (!isAuthorized) {
+      setShowKYCPage(true);
+      return;
+    }
+    
     setLoading(true);
     const orderData = {
       user_id: user.id,
@@ -109,11 +114,16 @@ export function MobileSellUSDT() {
     }
     setLoading(false);
   };
+  
   const handleBackToDashboard = () => {
     setStep('amount');
     setUsdtAmount('');
     setPhoneNumber('');
   };
+  
+  if (showKYCPage) {
+    return <KYCPage onBack={() => setShowKYCPage(false)} />;
+  }
   return (
     <div className="min-h-screen flex items-start justify-center bg-terex-dark p-4 pt-20 pb-24">
       <div className="w-full max-w-md">

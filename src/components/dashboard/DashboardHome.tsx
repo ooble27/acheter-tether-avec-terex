@@ -130,7 +130,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   <Globe className="w-4 h-4 text-terex-accent" />
                 </div>
               </div>
-              <h3 className="text-white text-sm font-light mb-1">Virements</h3>
+              <h3 className="text-white text-sm font-light mb-1">Virement</h3>
               <p className="text-gray-400 text-xs">International</p>
             </CardContent>
           </Card>
@@ -223,7 +223,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                 </div>
                 <ArrowUpRight className="w-4 h-4 text-terex-accent" />
               </div>
-              <h3 className="text-white font-light mb-1">Virements</h3>
+              <h3 className="text-white font-light mb-1">Virement</h3>
               <p className="text-gray-400 text-sm">International</p>
             </CardContent>
           </Card>

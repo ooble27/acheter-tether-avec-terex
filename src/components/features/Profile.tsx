@@ -195,23 +195,39 @@ export function Profile({ user, onLogout }: ProfileProps) {
   };
 
   const handleDeleteAccount = async () => {
-    const { error } = await supabase.auth.admin.deleteUser(user?.email || '');
+    try {
+      // Appeler l'edge function pour supprimer le compte
+      const { data, error } = await supabase.functions.invoke('delete-user-account');
 
-    if (error) {
+      if (error) {
+        console.error('Error deleting account:', error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de supprimer le compte. Veuillez réessayer.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Déconnecter l'utilisateur
+      await supabase.auth.signOut();
+      
+      toast({
+        title: "Compte supprimé",
+        description: "Votre compte a été supprimé avec succès",
+        className: "bg-green-600 text-white",
+      });
+      
+      // Rediriger vers la page de connexion
+      window.location.href = '/auth';
+    } catch (error) {
+      console.error('Unexpected error deleting account:', error);
       toast({
         title: "Erreur",
-        description: "Impossible de supprimer le compte",
+        description: "Une erreur inattendue s'est produite",
         variant: "destructive",
       });
-      return;
     }
-
-    toast({
-      title: "Compte supprimé",
-      description: "Votre compte a été supprimé avec succès",
-      className: "bg-green-600 text-white",
-    });
-    onLogout();
   };
 
   const sections = [
