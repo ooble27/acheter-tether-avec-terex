@@ -14,6 +14,7 @@ export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [referralCode, setReferralCode] = useState('');
   const [activeTab, setActiveTab] = useState('login');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -89,7 +90,7 @@ export function LoginForm() {
     e.preventDefault();
 
     try {
-      const { error: signUpError } = await signUp(email, password, name);
+      const { error: signUpError } = await signUp(email, password, name, referralCode);
       
       if (signUpError) {
         if (signUpError.message.includes("User already registered") || 
@@ -313,6 +314,24 @@ export function LoginForm() {
                         </div>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="referral-code" className="text-white">
+                      Code de parrainage <span className="text-gray-500 text-sm">(optionnel)</span>
+                    </Label>
+                    <Input
+                      id="referral-code"
+                      type="text"
+                      placeholder="TEREX-XXXXXXXX"
+                      value={referralCode}
+                      onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                      className="bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-500"
+                      disabled={isLoading}
+                    />
+                    <p className="text-xs text-gray-500">
+                      Si vous avez été parrainé, entrez le code ici pour bénéficier d'avantages
+                    </p>
                   </div>
 
                   <Button 
