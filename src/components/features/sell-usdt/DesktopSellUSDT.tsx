@@ -203,38 +203,50 @@ export function DesktopSellUSDT() {
                   {paymentMethod === 'mobile' && <Check className="w-5 h-5 text-terex-accent" />}
                 </div>
               </button>
-              
-              <button
-                onClick={() => setPaymentMethod('bank')}
-                className={`w-full p-4 rounded-lg border transition-all ${
-                  paymentMethod === 'bank' 
-                    ? 'border-terex-accent bg-terex-accent/10' 
-                    : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <span className="text-2xl">🏦</span>
-                    <span className="text-white font-light">Virement bancaire</span>
-                  </div>
-                  {paymentMethod === 'bank' && <Check className="w-5 h-5 text-terex-accent" />}
-                </div>
-              </button>
             </div>
 
             {paymentMethod === 'mobile' && (
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label className="text-white text-sm font-light">Opérateur</Label>
-                  <Select value={provider} onValueChange={(value: 'wave' | 'orange') => setProvider(value)}>
-                    <SelectTrigger className="bg-terex-gray/50 border-terex-gray text-white h-12">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="wave">Wave</SelectItem>
-                      <SelectItem value="orange">Orange Money</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => setProvider('wave')}
+                      className={`p-4 rounded-lg border transition-all ${
+                        provider === 'wave' 
+                          ? 'border-terex-accent bg-terex-accent/10' 
+                          : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center space-y-2">
+                        <img 
+                          src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
+                          alt="Wave" 
+                          className="w-12 h-12"
+                        />
+                        <span className="text-white font-light">Wave</span>
+                        {provider === 'wave' && <Check className="w-4 h-4 text-terex-accent" />}
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setProvider('orange')}
+                      className={`p-4 rounded-lg border transition-all ${
+                        provider === 'orange' 
+                          ? 'border-terex-accent bg-terex-accent/10' 
+                          : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center space-y-2">
+                        <img 
+                          src="/payment-methods/orange-money-logo.png" 
+                          alt="Orange Money" 
+                          className="w-12 h-12"
+                        />
+                        <span className="text-white font-light">Orange Money</span>
+                        {provider === 'orange' && <Check className="w-4 h-4 text-terex-accent" />}
+                      </div>
+                    </button>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-white text-sm font-light">Numéro de téléphone</Label>
@@ -242,38 +254,6 @@ export function DesktopSellUSDT() {
                     placeholder="+221 XX XXX XX XX"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
-                    className="bg-terex-gray/50 border-terex-gray text-white h-12 font-light"
-                  />
-                </div>
-              </div>
-            )}
-
-            {paymentMethod === 'bank' && (
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label className="text-white text-sm font-light">Nom de la banque</Label>
-                  <Input
-                    placeholder="Ex: Ecobank"
-                    value={bankName}
-                    onChange={(e) => setBankName(e.target.value)}
-                    className="bg-terex-gray/50 border-terex-gray text-white h-12 font-light"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-white text-sm font-light">Numéro de compte</Label>
-                  <Input
-                    placeholder="Votre numéro de compte"
-                    value={accountNumber}
-                    onChange={(e) => setAccountNumber(e.target.value)}
-                    className="bg-terex-gray/50 border-terex-gray text-white h-12 font-light"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-white text-sm font-light">Titulaire du compte</Label>
-                  <Input
-                    placeholder="Nom complet"
-                    value={accountHolder}
-                    onChange={(e) => setAccountHolder(e.target.value)}
                     className="bg-terex-gray/50 border-terex-gray text-white h-12 font-light"
                   />
                 </div>

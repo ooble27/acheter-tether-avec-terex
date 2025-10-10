@@ -296,15 +296,25 @@ export function MobileSellUSDT() {
               <Label className="text-white text-sm font-light">Service Mobile Money</Label>
               <div className="grid grid-cols-2 gap-2">
                 <button onClick={() => setProvider('wave')} className={`p-4 rounded-lg border transition-all ${provider === 'wave' ? 'border-terex-accent bg-terex-accent/10' : 'border-terex-gray bg-terex-gray/50'}`}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-white font-light">Wave</span>
-                    {provider === 'wave' && <Check className="w-5 h-5 text-terex-accent" />}
+                  <div className="flex flex-col items-center space-y-2">
+                    <img 
+                      src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
+                      alt="Wave" 
+                      className="w-10 h-10"
+                    />
+                    <span className="text-white font-light text-sm">Wave</span>
+                    {provider === 'wave' && <Check className="w-4 h-4 text-terex-accent" />}
                   </div>
                 </button>
                 <button onClick={() => setProvider('orange')} className={`p-4 rounded-lg border transition-all ${provider === 'orange' ? 'border-terex-accent bg-terex-accent/10' : 'border-terex-gray bg-terex-gray/50'}`}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-white font-light">Orange Money</span>
-                    {provider === 'orange' && <Check className="w-5 h-5 text-terex-accent" />}
+                  <div className="flex flex-col items-center space-y-2">
+                    <img 
+                      src="/payment-methods/orange-money-logo.png" 
+                      alt="Orange Money" 
+                      className="w-10 h-10"
+                    />
+                    <span className="text-white font-light text-sm">Orange Money</span>
+                    {provider === 'orange' && <Check className="w-4 h-4 text-terex-accent" />}
                   </div>
                 </button>
               </div>
