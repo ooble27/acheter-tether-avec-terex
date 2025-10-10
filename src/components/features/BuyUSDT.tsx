@@ -150,6 +150,7 @@ function DesktopBuyUSDTOld() {
       return;
     }
     
+    // Vérifier KYC avant de confirmer
     setShowConfirmation(true);
   };
 
@@ -325,7 +326,7 @@ function DesktopBuyUSDTOld() {
   }
 
   return (
-    <KYCProtection onKYCRequired={handleKYCRequired}>
+    <>
       <style>
         {`
           .usdt-icon-force-visible {
@@ -532,6 +533,6 @@ function DesktopBuyUSDTOld() {
           </div>
         </div>
       </div>
-    </KYCProtection>
+    </>
   );
 }
