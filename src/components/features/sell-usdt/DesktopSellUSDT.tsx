@@ -195,22 +195,48 @@ export function DesktopSellUSDT() {
             </div>
             
             <div className="space-y-2">
-              <button
-                onClick={() => setPaymentMethod('mobile')}
-                className={`w-full p-4 rounded-lg border transition-all ${
-                  paymentMethod === 'mobile' 
-                    ? 'border-terex-accent bg-terex-accent/10' 
-                    : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <span className="text-2xl">📱</span>
-                    <span className="text-white font-light">Mobile Money</span>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => setPaymentMethod('mobile')}
+                  className={`p-4 rounded-lg border transition-all ${
+                    paymentMethod === 'mobile' 
+                      ? 'border-terex-accent bg-terex-accent/10' 
+                      : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <img 
+                        src="/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png" 
+                        alt="Wave" 
+                        className="w-8 h-8"
+                      />
+                      <span className="text-white font-light">Wave</span>
+                    </div>
+                    {paymentMethod === 'mobile' && <Check className="w-5 h-5 text-terex-accent" />}
                   </div>
-                  {paymentMethod === 'mobile' && <Check className="w-5 h-5 text-terex-accent" />}
-                </div>
-              </button>
+                </button>
+                <button
+                  onClick={() => setPaymentMethod('mobile')}
+                  className={`p-4 rounded-lg border transition-all ${
+                    paymentMethod === 'mobile' 
+                      ? 'border-terex-accent bg-terex-accent/10' 
+                      : 'border-terex-gray bg-terex-gray/30 hover:bg-terex-gray/50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <img 
+                        src="/payment-methods/orange-money-logo.png" 
+                        alt="Orange Money" 
+                        className="w-8 h-8"
+                      />
+                      <span className="text-white font-light">Orange Money</span>
+                    </div>
+                    {paymentMethod === 'mobile' && <Check className="w-5 h-5 text-terex-accent" />}
+                  </div>
+                </button>
+              </div>
             </div>
 
             {paymentMethod === 'mobile' && (
