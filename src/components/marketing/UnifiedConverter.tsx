@@ -40,17 +40,7 @@ export function UnifiedConverter() {
         {activeTab === 'usdt' ? (
           <CurrencyConverter />
         ) : (
-          <div className="bg-terex-darker/80 border border-terex-accent/30 backdrop-blur-sm rounded-b-lg p-8 text-center">
-            <div className="max-w-sm mx-auto">
-              <div className="w-16 h-16 bg-terex-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">🚀</span>
-              </div>
-              <h3 className="text-white text-xl font-medium mb-2">Bientôt disponible</h3>
-              <p className="text-gray-400 text-sm">
-                Les virements internationaux seront bientôt disponibles sur Terex. Restez connecté !
-              </p>
-            </div>
-          </div>
+          <InternationalTransferConverter />
         )}
       </div>
     </div>

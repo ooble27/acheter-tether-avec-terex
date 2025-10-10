@@ -129,20 +129,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case 'sell':
         return <SellUSDT />;
       case 'transfer':
-        return (
-          <div className="max-w-2xl mx-auto mt-8 text-center">
-            <div className="w-20 h-20 bg-terex-accent/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="text-4xl">🚀</span>
-            </div>
-            <h2 className="text-white text-2xl font-light mb-3">Virements Internationaux</h2>
-            <p className="text-gray-400 text-base mb-6">
-              Cette fonctionnalité sera bientôt disponible sur Terex.
-            </p>
-            <p className="text-gray-500 text-sm">
-              Nous travaillons activement pour vous offrir le meilleur service de virements internationaux.
-            </p>
-          </div>
-        );
+        return <InternationalTransfer />;
       case 'otc':
         // Redirecter vers le formulaire de demande de gros volume avec un montant par défaut
         return <HighVolumeRequest onBack={() => setActiveSection('home')} requestedAmount="" />;

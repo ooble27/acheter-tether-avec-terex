@@ -143,7 +143,6 @@ function DesktopSellUSDT() {
       return;
     }
     
-    // Vérifier KYC avant de confirmer
     setShowConfirmation(true);
   };
 
@@ -276,7 +275,8 @@ function DesktopSellUSDT() {
   }
 
   return (
-    <div className="min-h-screen bg-terex-dark px-0">
+    <KYCProtection onKYCRequired={handleKYCRequired}>
+      <div className="min-h-screen bg-terex-dark px-0">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-6 md:mb-8 px-1 md:px-0">
@@ -707,6 +707,7 @@ function DesktopSellUSDT() {
             </div>
           </div>
         </div>
-    </div>
+      </div>
+    </KYCProtection>
   );
 }
