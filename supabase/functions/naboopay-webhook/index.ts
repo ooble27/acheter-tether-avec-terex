@@ -1,10 +1,33 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { crypto } from "https://deno.land/std@0.168.0/crypto/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-signature',
 };
+
+// Fonction pour générer et vérifier la signature HMAC-SHA256
+async function verifySignature(payload: string, signature: string, secretKey: string): Promise<boolean> {
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(secretKey);
+  const data = encoder.encode(payload);
+  
+  const cryptoKey = await crypto.subtle.importKey(
+    "raw",
+    keyData,
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  
+  const signatureBuffer = await crypto.subtle.sign("HMAC", cryptoKey, data);
+  const expectedSignature = Array.from(new Uint8Array(signatureBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+  
+  return expectedSignature === signature;
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -12,8 +35,34 @@ serve(async (req) => {
   }
 
   try {
-    const webhookData = await req.json();
+    const rawBody = await req.text();
+    const webhookData = JSON.parse(rawBody);
     console.log('NabooPay webhook received:', webhookData);
+    
+    // Récupérer la signature depuis les headers
+    const signature = req.headers.get('X-Signature') || req.headers.get('x-signature');
+    const secretKey = Deno.env.get('NABOOPAY_WEBHOOK_SECRET') || Deno.env.get('NABOOPAY_API_KEY');
+    
+    if (!signature) {
+      console.error('No signature provided in webhook');
+      return new Response(
+        JSON.stringify({ success: false, error: 'No signature provided' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 }
+      );
+    }
+    
+    // Vérifier la signature
+    const isValid = await verifySignature(rawBody, signature, secretKey ?? '');
+    
+    if (!isValid) {
+      console.error('Invalid webhook signature');
+      return new Response(
+        JSON.stringify({ success: false, error: 'Invalid signature' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 }
+      );
+    }
+    
+    console.log('Webhook signature verified successfully');
 
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
