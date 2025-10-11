@@ -8,11 +8,10 @@ import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { useNabooPay } from '@/hooks/useNabooPay';
 import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
-import { ArrowRight, Check, ArrowLeft, Shield, AlertTriangle } from 'lucide-react';
+import { ArrowRight, Check, ArrowLeft } from 'lucide-react';
 import { BinanceEmailInput } from './BinanceEmailInput';
 import { PURCHASE_LIMITS, getLimitMessage, enforceMaxLimit } from './LimitsValidator';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { useNavigate } from 'react-router-dom';
+import { KYCPage } from '../KYCPage';
 
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
@@ -25,6 +24,7 @@ const NETWORK_LOGOS = {
 
 export function DesktopBuyUSDT() {
   const [step, setStep] = useState<'amount' | 'network' | 'address' | 'binance' | 'confirm'>('amount');
+  const [showKYCPage, setShowKYCPage] = useState(false);
   const [fiatAmount, setFiatAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'mobile'>('mobile');
   const [currency, setCurrency] = useState('CFA');
@@ -40,8 +40,7 @@ export function DesktopBuyUSDT() {
   const { toast } = useToast();
   const { createTransaction } = useNabooPay();
   const { terexRateCfa, terexRateCad } = useTerexRates(2);
-  const { isAuthorized, loading: kycLoading, kycStatus } = useTransactionAuthorization();
-  const navigate = useNavigate();
+  const { isAuthorized, kycStatus } = useTransactionAuthorization();
 
   const exchangeRate = currency === 'CFA' ? terexRateCfa : terexRateCad;
   const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
@@ -99,13 +98,9 @@ export function DesktopBuyUSDT() {
   const handleConfirm = async () => {
     if (!user) return;
     
-    // Vérifier l'autorisation KYC
+    // Vérifier KYC avant de créer la transaction
     if (!isAuthorized) {
-      toast({
-        title: "Vérification requise",
-        description: "Veuillez compléter la vérification KYC avant de continuer.",
-        variant: "destructive"
-      });
+      setShowKYCPage(true);
       return;
     }
     
@@ -162,6 +157,10 @@ export function DesktopBuyUSDT() {
     
     setLoading(false);
   };
+
+  if (showKYCPage) {
+    return <KYCPage onBack={() => setShowKYCPage(false)} />;
+  }
 
   return (
     <div className="min-h-[calc(100vh-10rem)] flex items-start justify-center py-8 px-4">
@@ -398,38 +397,6 @@ export function DesktopBuyUSDT() {
                 Vérifiez les détails de votre transaction
               </p>
             </div>
-
-            {!isAuthorized && !kycLoading && (
-              <Alert variant="destructive" className="border-l-4 border-l-red-500">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle className="flex items-center">
-                  <Shield className="w-4 h-4 mr-2" />
-                  Vérification d'identité requise
-                </AlertTitle>
-                <AlertDescription className="mt-2">
-                  {kycStatus === 'pending' && 
-                    'Vous devez vérifier votre identité avant d\'effectuer des transactions. Ce processus ne prend que quelques minutes.'
-                  }
-                  {kycStatus === 'submitted' && 
-                    'Vos documents sont en cours d\'examen. Vous pourrez effectuer des transactions une fois la vérification approuvée.'
-                  }
-                  {kycStatus === 'rejected' && 
-                    'Votre vérification d\'identité a été rejetée. Veuillez soumettre de nouveaux documents conformes.'
-                  }
-                  {!kycStatus && 
-                    'Une vérification d\'identité est requise pour accéder à ce service.'
-                  }
-                  <div className="mt-4">
-                    <Button 
-                      onClick={() => navigate('/dashboard/kyc')}
-                      className="bg-terex-accent hover:bg-terex-accent/90"
-                    >
-                      {kycStatus === 'rejected' ? 'Soumettre à nouveau' : 'Commencer la vérification'}
-                    </Button>
-                  </div>
-                </AlertDescription>
-              </Alert>
-            )}
             
             <div className="bg-terex-gray/30 rounded-lg p-4 space-y-3">
               <div className="flex justify-between">
@@ -454,10 +421,10 @@ export function DesktopBuyUSDT() {
 
             <Button 
               onClick={handleConfirm}
-              disabled={loading || kycLoading || !isAuthorized}
+              disabled={loading}
               className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light disabled:opacity-50"
             >
-              {loading ? 'Traitement...' : kycLoading ? 'Vérification...' : 'Confirmer et payer'}
+              {loading ? 'Traitement...' : 'Confirmer et payer'}
             </Button>
           </div>
         )}
