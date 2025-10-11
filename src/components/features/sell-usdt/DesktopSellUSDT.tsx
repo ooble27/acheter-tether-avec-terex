@@ -7,8 +7,10 @@ import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
-import { ArrowRight, Check, AlertCircle, ArrowLeft } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
+import { ArrowRight, Check, AlertCircle, ArrowLeft, Shield, AlertTriangle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useNavigate } from 'react-router-dom';
 
 const WALLET_ADDRESSES = {
   TRC20: 'TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb',
@@ -43,6 +45,8 @@ export function DesktopSellUSDT() {
   const { user } = useAuth();
   const { toast } = useToast();
   const { terexBuyRateCfa } = useTerexRates(2);
+  const { isAuthorized, loading: kycLoading, kycStatus } = useTransactionAuthorization();
+  const navigate = useNavigate();
 
   const fiatAmount = usdtAmount ? (parseFloat(usdtAmount) * terexBuyRateCfa).toFixed(2) : '0';
 
@@ -76,6 +80,16 @@ export function DesktopSellUSDT() {
 
   const handleConfirm = async () => {
     if (!user) return;
+    
+    // Vérifier l'autorisation KYC
+    if (!isAuthorized) {
+      toast({
+        title: "Vérification requise",
+        description: "Veuillez compléter la vérification KYC avant de continuer.",
+        variant: "destructive"
+      });
+      return;
+    }
     
     setLoading(true);
     
@@ -395,6 +409,38 @@ export function DesktopSellUSDT() {
                 Vérifiez les détails de votre transaction
               </p>
             </div>
+
+            {!isAuthorized && !kycLoading && (
+              <Alert variant="destructive" className="border-l-4 border-l-red-500">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle className="flex items-center">
+                  <Shield className="w-4 h-4 mr-2" />
+                  Vérification d'identité requise
+                </AlertTitle>
+                <AlertDescription className="mt-2">
+                  {kycStatus === 'pending' && 
+                    'Vous devez vérifier votre identité avant d\'effectuer des transactions. Ce processus ne prend que quelques minutes.'
+                  }
+                  {kycStatus === 'submitted' && 
+                    'Vos documents sont en cours d\'examen. Vous pourrez effectuer des transactions une fois la vérification approuvée.'
+                  }
+                  {kycStatus === 'rejected' && 
+                    'Votre vérification d\'identité a été rejetée. Veuillez soumettre de nouveaux documents conformes.'
+                  }
+                  {!kycStatus && 
+                    'Une vérification d\'identité est requise pour accéder à ce service.'
+                  }
+                  <div className="mt-4">
+                    <Button 
+                      onClick={() => navigate('/dashboard/kyc')}
+                      className="bg-terex-accent hover:bg-terex-accent/90"
+                    >
+                      {kycStatus === 'rejected' ? 'Soumettre à nouveau' : 'Commencer la vérification'}
+                    </Button>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            )}
             
             <div className="bg-terex-gray/30 rounded-lg p-4 space-y-3">
               <div className="flex justify-between">
@@ -421,10 +467,10 @@ export function DesktopSellUSDT() {
 
             <Button 
               onClick={handleConfirm}
-              disabled={loading}
-              className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
+              disabled={loading || kycLoading || !isAuthorized}
+              className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light disabled:opacity-50"
             >
-              {loading ? 'Traitement...' : 'Confirmer'}
+              {loading ? 'Traitement...' : kycLoading ? 'Vérification...' : 'Confirmer'}
             </Button>
           </div>
         )}
