@@ -17,6 +17,7 @@ const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
   BEP20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',
   ERC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
+  Polygon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
   Solana: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',
   Aptos: 'https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png',
   BINANCE: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png'

@@ -7,6 +7,7 @@ const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png', // Tron
   BEP20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png', // BSC/BNB
   ERC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', // Ethereum
+  Polygon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png', // Polygon
   Solana: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png', // Solana
   Aptos: 'https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png' // Aptos
 };
@@ -48,6 +49,12 @@ export function NetworkSelector({ network, setNetwork }: NetworkSelectorProps) {
             <div className="flex items-center space-x-3">
               <img src={NETWORK_LOGOS.ERC20} alt="Ethereum" className="w-5 h-5 rounded-full" />
               <span>ERC20 (Ethereum)</span>
+            </div>
+          </SelectItem>
+          <SelectItem value="Polygon">
+            <div className="flex items-center space-x-3">
+              <img src={NETWORK_LOGOS.Polygon} alt="Polygon" className="w-5 h-5 rounded-full" />
+              <span>Polygon</span>
             </div>
           </SelectItem>
           <SelectItem value="Solana">
