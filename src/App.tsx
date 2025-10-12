@@ -16,11 +16,9 @@ import ContactPage from "./pages/ContactPage";
 import FAQPage from "./pages/FAQPage";
 import HelpPage from "./pages/HelpPage";
 import GuidePage from "./pages/GuidePage";
-import StatusPage from "./pages/StatusPage";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import SecurityPage from "./pages/SecurityPage";
-import InvestorsPage from "./pages/InvestorsPage";
 import FeedbackPage from "./pages/FeedbackPage";
 import ReferralPageMain from "./pages/ReferralPage";
 import SharePage from "./pages/SharePage";
@@ -59,11 +57,9 @@ function App() {
                 <Route path="/faq" element={<FAQPage />} />
                 <Route path="/help" element={<HelpPage />} />
                 <Route path="/guide" element={<GuidePage />} />
-                <Route path="/status" element={<StatusPage />} />
                 <Route path="/terms" element={<TermsPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
                 <Route path="/security" element={<SecurityPage />} />
-                <Route path="/investors" element={<InvestorsPage />} />
                 <Route path="/feedback" element={<FeedbackPage />} />
                 <Route path="/referral" element={<ReferralPageMain />} />
                 <Route path="/share" element={<SharePage />} />

@@ -23,8 +23,7 @@ export function FooterSection() {
       title: "Entreprise",
       links: [
         { label: "À Propos", href: "/about" },
-        { label: "Carrières", href: "/careers" },
-        { label: "Investisseurs", href: "/investors" }
+        { label: "Carrières", href: "/careers" }
       ]
     },
     {
@@ -33,8 +32,7 @@ export function FooterSection() {
         { label: "Centre d'Aide", href: "/help" },
         { label: "Nous Contacter", href: "/contact" },
         { label: "Guide Utilisateur", href: "/guide" },
-        { label: "FAQ", href: "/faq" },
-        { label: "Statut Système", href: "/status" }
+        { label: "FAQ", href: "/faq" }
       ]
     },
     {
