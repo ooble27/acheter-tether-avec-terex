@@ -10,12 +10,15 @@ import { HeaderSection } from '@/components/marketing/sections/HeaderSection';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { HelpArticle } from '@/components/features/help/HelpArticle';
+import { helpArticles, getArticleById } from '@/data/helpArticles';
 
 const HelpPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -43,53 +46,55 @@ const HelpPage = () => {
     navigate('/');
   };
 
+  const selectedArticle = selectedArticleId ? getArticleById(selectedArticleId) : null;
+
+  if (selectedArticle) {
+    return (
+      <div className="min-h-screen bg-terex-dark">
+        <HeaderSection 
+          user={user ? {
+            email: user.email || '',
+            name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
+          } : null}
+          onShowDashboard={handleShowDashboard}
+          onLogout={handleLogout}
+        />
+        <HelpArticle 
+          article={selectedArticle} 
+          onBack={() => setSelectedArticleId(null)}
+        />
+        <FooterSection />
+      </div>
+    );
+  }
+
   const helpCategories = [
     {
       title: "Commencer",
       icon: Book,
-      articles: [
-        "Comment créer un compte",
-        "Vérification d'identité (KYC)",
-        "Première transaction",
-        "Configurer votre profil"
-      ]
+      articles: helpArticles.filter(a => a.category === "Commencer")
     },
     {
       title: "Acheter USDT",
       icon: HelpCircle,
-      articles: [
-        "Comment acheter des USDT",
-        "Méthodes de paiement acceptées",
-        "Délais de traitement",
-        "Limites de transaction"
-      ]
+      articles: helpArticles.filter(a => a.category === "Acheter USDT")
     },
     {
       title: "Vendre USDT",
       icon: MessageCircle,
-      articles: [
-        "Comment vendre des USDT",
-        "Recevoir votre paiement",
-        "Frais de transaction",
-        "Confirmer la vente"
-      ]
+      articles: helpArticles.filter(a => a.category === "Vendre USDT")
     },
     {
       title: "Transferts Internationaux",
       icon: Phone,
-      articles: [
-        "Envoyer de l'argent en Afrique",
-        "Frais de transfert",
-        "Délais de livraison",
-        "Suivi de transfert"
-      ]
+      articles: helpArticles.filter(a => a.category === "Transferts Internationaux")
     }
   ];
 
   const filteredCategories = helpCategories.map(category => ({
     ...category,
     articles: category.articles.filter(article =>
-      article.toLowerCase().includes(searchQuery.toLowerCase())
+      article.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
   })).filter(category => category.articles.length > 0);
 
@@ -164,12 +169,13 @@ const HelpPage = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      {category.articles.map((article, articleIndex) => (
+                      {category.articles.map((article) => (
                         <button
-                          key={articleIndex}
+                          key={article.id}
+                          onClick={() => setSelectedArticleId(article.id)}
                           className="w-full flex items-center justify-between p-3 rounded-lg bg-terex-dark/50 hover:bg-terex-accent/10 text-gray-300 hover:text-white transition-all duration-200 group"
                         >
-                          <span>{article}</span>
+                          <span>{article.title}</span>
                           <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </button>
                       ))}
