@@ -459,7 +459,7 @@ ${contactForm.message}
                 <div className="flex items-center">
                   <Phone className="w-6 h-6 text-terex-accent mr-4" />
                   <div>
-                    <p className="text-white font-medium">Téléphone</p>
+                    <p className="text-white font-medium">WhatsApp</p>
                     <p className="text-gray-300">+1 4182619091</p>
                   </div>
                 </div>

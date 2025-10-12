@@ -216,7 +216,7 @@ const TermsPage = () => {
                     </p>
                     <div className="mt-4 space-y-2">
                       <p>Email: terangaexchange@gmail.com</p>
-                      <p>Téléphone: +1 4182619091</p>
+                      <p>WhatsApp: +1 4182619091</p>
                       <p>Adresse: Plateau, Avenue Léopold Sédar Senghor, Dakar, Sénégal</p>
                     </div>
                   </section>

@@ -89,7 +89,7 @@ export function ShareAndContactCard() {
             className="w-full border-terex-gray/30 text-gray-300 hover:bg-terex-gray/30 justify-start"
           >
             <Phone className="w-4 h-4 mr-3 flex-shrink-0" />
-            <span className="flex-1 text-left">+1 4182619091</span>
+            <span className="flex-1 text-left">WhatsApp: +1 4182619091</span>
             <ExternalLink className="w-3 h-3 flex-shrink-0" />
           </Button>
           

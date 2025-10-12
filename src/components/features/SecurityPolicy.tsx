@@ -572,7 +572,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
                   <div className="space-y-2">
                     <p className="text-red-100 text-sm"><span className="font-medium">Email prioritaire:</span> terangaexchange@gmail.com</p>
                     <p className="text-red-100 text-sm"><span className="font-medium">Support 24/7:</span> terangaexchange@gmail.com</p>
-                    <p className="text-red-100 text-sm"><span className="font-medium">Ligne urgence:</span> +1 4182619091</p>
+                    <p className="text-red-100 text-sm"><span className="font-medium">WhatsApp urgence:</span> +1 4182619091</p>
                     <p className="text-red-100 text-sm"><span className="font-medium">Temps de réponse:</span> {'< 15 minutes garanti'}</p>
                   </div>
                 </div>

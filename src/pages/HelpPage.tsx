@@ -200,7 +200,7 @@ const HelpPage = () => {
                 onClick={() => window.location.href = 'tel:+221773972749'}
               >
                 <Phone className="w-4 h-4 mr-2" />
-                +1 4182619091
+                WhatsApp: +1 4182619091
               </Button>
             </div>
           </div>
