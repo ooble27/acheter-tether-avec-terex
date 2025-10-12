@@ -570,9 +570,9 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
                 <div>
                   <h6 className="text-red-200 font-medium mb-2">📞 Contact d'urgence (dans les 5 minutes)</h6>
                   <div className="space-y-2">
-                    <p className="text-red-100 text-sm"><span className="font-medium">Email prioritaire:</span> security@terex.com</p>
-                    <p className="text-red-100 text-sm"><span className="font-medium">Support 24/7:</span> Terangaexchange@gmail.com</p>
-                    <p className="text-red-100 text-sm"><span className="font-medium">Ligne urgence:</span> +1 (418) 261-9091</p>
+                    <p className="text-red-100 text-sm"><span className="font-medium">Email prioritaire:</span> contact@terex.app</p>
+                    <p className="text-red-100 text-sm"><span className="font-medium">Support 24/7:</span> contact@terex.app</p>
+                    <p className="text-red-100 text-sm"><span className="font-medium">Ligne urgence:</span> +221 77 397 27 49</p>
                     <p className="text-red-100 text-sm"><span className="font-medium">Temps de réponse:</span> {'< 15 minutes garanti'}</p>
                   </div>
                 </div>
@@ -687,7 +687,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                   <div className="text-sm">
                     <p className="text-terex-accent font-medium">📧 Contact sécurité:</p>
-                    <p className="text-gray-300">security@terex.com</p>
+                    <p className="text-gray-300">contact@terex.app</p>
                   </div>
                   <div className="text-sm">
                     <p className="text-terex-accent font-medium">📋 Dernière mise à jour:</p>

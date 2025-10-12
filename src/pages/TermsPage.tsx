@@ -215,8 +215,8 @@ const TermsPage = () => {
                       Pour toute question concernant ces conditions d'utilisation, veuillez nous contacter à:
                     </p>
                     <div className="mt-4 space-y-2">
-                      <p>Email: legal@terex.com</p>
-                      <p>Téléphone: +221 77 123 4567</p>
+                      <p>Email: contact@terex.app</p>
+                      <p>Téléphone: +221 77 397 27 49</p>
                       <p>Adresse: Plateau, Avenue Léopold Sédar Senghor, Dakar, Sénégal</p>
                     </div>
                   </section>

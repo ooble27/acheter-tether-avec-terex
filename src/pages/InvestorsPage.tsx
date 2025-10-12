@@ -453,14 +453,14 @@ ${contactForm.message}
                   <Mail className="w-6 h-6 text-terex-accent mr-4" />
                   <div>
                     <p className="text-white font-medium">Email investisseurs</p>
-                    <p className="text-gray-300">investors@terex.com</p>
+                    <p className="text-gray-300">contact@terex.app</p>
                   </div>
                 </div>
                 <div className="flex items-center">
                   <Phone className="w-6 h-6 text-terex-accent mr-4" />
                   <div>
                     <p className="text-white font-medium">Téléphone</p>
-                    <p className="text-gray-300">+221 77 123 4567</p>
+                    <p className="text-gray-300">+221 77 397 27 49</p>
                   </div>
                 </div>
                 <div className="flex items-center">
@@ -535,7 +535,7 @@ ${contactForm.message}
                       value={contactForm.phone}
                       onChange={(e) => setContactForm({...contactForm, phone: e.target.value})}
                       className="w-full px-4 py-3 bg-terex-dark border border-terex-gray rounded-lg text-white focus:border-terex-accent focus:outline-none"
-                      placeholder="+221 77 123 4567"
+                      placeholder="+221 77 397 27 49"
                     />
                   </div>
                   

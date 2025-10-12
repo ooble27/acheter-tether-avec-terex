@@ -326,7 +326,7 @@ function TransferSlide({ deviceType }: { deviceType: 'desktop' | 'mobile' }) {
                 <User className="w-5 h-5 text-gray-400" />
                 <div className="flex-1">
                   <p className="font-medium text-white">Jean Mballa</p>
-                  <p className="text-sm text-gray-400">+237 678 901 234</p>
+                  <p className="text-sm text-gray-400">+221 77 397 27 49</p>
                 </div>
               </div>
             </div>
