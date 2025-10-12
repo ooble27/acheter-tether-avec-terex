@@ -114,7 +114,7 @@ export function FooterSection() {
               </div>
               <div className="flex items-center text-gray-300">
                 <Phone className="w-4 h-4 mr-3 text-terex-accent" />
-                <span className="text-sm">+221 77 397 27 49</span>
+                <span className="text-sm">+1 4182619091</span>
               </div>
               <div className="flex items-center text-gray-300">
                 <Mail className="w-4 h-4 mr-3 text-terex-accent" />

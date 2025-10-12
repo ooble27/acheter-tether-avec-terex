@@ -204,8 +204,8 @@ const PrivacyPage = () => {
                     </p>
                     <div className="space-y-2">
                       <p><strong>Délégué à la Protection des Données:</strong></p>
-                      <p>Email: contact@terex.app</p>
-                      <p>Téléphone: +221 77 397 27 49</p>
+                      <p>Email: terangaexchange@gmail.com</p>
+                      <p>Téléphone: +1 4182619091</p>
                       <p>Adresse: Plateau, Avenue Léopold Sédar Senghor, Dakar, Sénégal</p>
                     </div>
                   </section>

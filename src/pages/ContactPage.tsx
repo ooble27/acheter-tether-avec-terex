@@ -108,7 +108,7 @@ const ContactPage = () => {
     {
       icon: Phone,
       title: "Téléphone",
-      content: "+221 77 397 27 49\nWhatsApp disponible",
+      content: "+1 4182619091\nWhatsApp disponible",
       subtext: "Disponible 24/7"
     },
     {
@@ -265,7 +265,7 @@ const ContactPage = () => {
                       <label className="block text-white font-medium mb-2">Téléphone</label>
                       <Input 
                         className="bg-terex-dark border-terex-gray text-white" 
-                        placeholder="+221 77 397 27 49" 
+                        placeholder="+1 4182619091" 
                         value={formData.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
                       />
