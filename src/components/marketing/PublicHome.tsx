@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { PWAInstallPrompt } from '../PWAInstallPrompt';
 import { HeroSection } from './HeroSection';
 import { TestimonialsSection } from './TestimonialsSection';
@@ -24,6 +25,7 @@ interface PublicHomeProps {
 export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomeProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const handleGetStarted = () => {
     navigate('/auth');
@@ -55,11 +57,13 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
     <div className="min-h-screen bg-terex-dark">
       <PWAInstallPrompt />
       
-      <HeaderSection 
-        user={user}
-        onShowDashboard={onShowDashboard}
-        onLogout={handleLogout}
-      />
+      {!isMobile && (
+        <HeaderSection 
+          user={user}
+          onShowDashboard={onShowDashboard}
+          onLogout={handleLogout}
+        />
+      )}
       
       <HeroSection user={user} onShowDashboard={onShowDashboard} />
       
