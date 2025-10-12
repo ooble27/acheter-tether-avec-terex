@@ -225,17 +225,6 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               />
             )}
             
-            {/* Bouton de déconnexion flottant uniquement sur tablette */}
-            {isTablet && (
-              <Button 
-                onClick={handleLogout}
-                className="fixed top-6 right-6 z-50 h-14 px-6 bg-red-600/20 hover:bg-red-600 border border-red-600/30 text-red-400 hover:text-white transition-all duration-200 rounded-xl font-medium text-sm shadow-lg"
-              >
-                <LogOut className="mr-2 h-5 w-5" />
-                Déconnexion
-              </Button>
-            )}
-            
             {renderContent()}
           </main>
           
