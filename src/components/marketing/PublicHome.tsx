@@ -57,13 +57,11 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
     <div className="min-h-screen bg-terex-dark">
       <PWAInstallPrompt />
       
-      {!isMobile && (
-        <HeaderSection 
-          user={user}
-          onShowDashboard={onShowDashboard}
-          onLogout={handleLogout}
-        />
-      )}
+      <HeaderSection 
+        user={user}
+        onShowDashboard={onShowDashboard}
+        onLogout={handleLogout}
+      />
       
       <HeroSection user={user} onShowDashboard={onShowDashboard} />
       
