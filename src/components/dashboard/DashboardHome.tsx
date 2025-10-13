@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { 
   Globe, 
   ArrowUpRight, 
-  Activity,
+  Sparkles,
   Handshake,
   TrendingUp
 } from 'lucide-react';
@@ -63,7 +63,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
         {/* Header avec px-0 */}
         <div className="flex items-center space-x-3 mb-6 px-0">
           <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
-            <Activity className="w-6 h-6 text-white" />
+            <Sparkles className="w-6 h-6 text-white" />
           </div>
           <div>
             <h1 className="text-2xl md:text-3xl font-light text-white mb-1">
@@ -152,7 +152,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
         {/* Header Section */}
         <div className="flex items-center space-x-3">
           <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-xl flex items-center justify-center">
-            <Activity className="w-6 h-6 text-white" />
+            <Sparkles className="w-6 h-6 text-white" />
           </div>
           <div>
             <h1 className="text-2xl font-light text-white">
