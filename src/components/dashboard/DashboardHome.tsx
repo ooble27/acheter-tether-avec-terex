@@ -81,8 +81,8 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           >
             <CardContent className="p-3">
               <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
-                  <img src="/usdt-logo.png" alt="USDT" className="w-8 h-8 object-contain" />
+                <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
+                  <TetherLogo className="w-5 h-5" />
                 </div>
               </div>
               <h3 className="text-white text-sm font-light mb-1">Acheter USDT</h3>
@@ -96,8 +96,8 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           >
             <CardContent className="p-3">
               <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
-                  <img src="/usdt-logo.png" alt="USDT" className="w-8 h-8 object-contain" />
+                <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
+                  <TetherLogo className="w-5 h-5" />
                 </div>
               </div>
               <h3 className="text-white text-sm font-light mb-1">Vendre USDT</h3>
@@ -170,8 +170,8 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           >
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden">
-                  <img src="/usdt-logo.png" alt="USDT" className="w-10 h-10 object-contain" />
+                <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
+                  <TetherLogo className="w-6 h-6" />
                 </div>
                 <ArrowUpRight className="w-4 h-4 text-terex-accent" />
               </div>
@@ -186,8 +186,8 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           >
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden">
-                  <img src="/usdt-logo.png" alt="USDT" className="w-10 h-10 object-contain" />
+                <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center">
+                  <TetherLogo className="w-6 h-6" />
                 </div>
                 <ArrowUpRight className="w-4 h-4 text-terex-accent" />
               </div>
