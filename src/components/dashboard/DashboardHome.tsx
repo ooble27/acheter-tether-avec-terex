@@ -62,8 +62,9 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
       <div className="min-h-screen bg-terex-dark px-0 py-3 space-y-3 text-xs overflow-y-auto scrollbar-hide">
         {/* Header avec px-0 */}
         <div className="flex items-center space-x-3 mb-6 px-0">
-          <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-lg flex items-center justify-center">
-            <Bitcoin className="w-6 h-6 text-white" />
+          <div className="relative w-12 h-12 bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/50 animate-pulse">
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-transparent rounded-xl blur-sm"></div>
+            <Bitcoin className="w-6 h-6 text-white relative z-10 drop-shadow-lg" />
           </div>
           <div>
             <h1 className="text-2xl md:text-3xl font-light text-white mb-1">
@@ -151,8 +152,9 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
       <div className="w-full max-w-2xl space-y-6">
         {/* Header Section */}
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-xl flex items-center justify-center">
-            <Bitcoin className="w-6 h-6 text-white" />
+          <div className="relative w-12 h-12 bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/50 animate-pulse">
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-transparent rounded-xl blur-sm"></div>
+            <Bitcoin className="w-6 h-6 text-white relative z-10 drop-shadow-lg" />
           </div>
           <div>
             <h1 className="text-2xl font-light text-white">
