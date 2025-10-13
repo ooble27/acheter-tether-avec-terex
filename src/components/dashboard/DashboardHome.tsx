@@ -62,8 +62,8 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
       <div className="min-h-screen bg-terex-dark px-0 py-3 space-y-3 text-xs overflow-y-auto scrollbar-hide">
         {/* Header avec px-0 */}
         <div className="flex items-center space-x-3 mb-6 px-0">
-          <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
-            <Bitcoin className="w-7 h-7 text-white" />
+          <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
+            <img src="/bitcoin-logo.png" alt="Bitcoin" className="w-12 h-12 object-contain" />
           </div>
           <div>
             <h1 className="text-2xl md:text-3xl font-light text-white mb-1">
@@ -151,8 +151,8 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
       <div className="w-full max-w-2xl space-y-6">
         {/* Header Section */}
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
-            <Bitcoin className="w-7 h-7 text-white" />
+          <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
+            <img src="/bitcoin-logo.png" alt="Bitcoin" className="w-12 h-12 object-contain" />
           </div>
           <div>
             <h1 className="text-2xl font-light text-white">
