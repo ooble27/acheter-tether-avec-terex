@@ -642,6 +642,166 @@ serve(async (req) => {
       );
     }
 
+    // POST /:payment_id/qr - Generate QR code for payment
+    if (req.method === 'POST' && pathParts.length === 2 && pathParts[1] === 'qr') {
+      const paymentId = pathParts[0];
+
+      // Get payment
+      const { data: payment, error: getError } = await supabase
+        .from('terex_payments')
+        .select('*')
+        .eq('id', paymentId)
+        .eq('merchant_id', merchant.id)
+        .single();
+
+      if (getError || !payment) {
+        return new Response(
+          JSON.stringify({ error: 'Payment not found' }),
+          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Check if payment already has a QR code
+      const { data: existingQR } = await supabase
+        .from('payment_qr_codes')
+        .select('*')
+        .eq('payment_id', paymentId)
+        .single();
+
+      if (existingQR) {
+        return new Response(
+          JSON.stringify({
+            success: true,
+            qr_code: {
+              id: existingQR.id,
+              qr_code: existingQR.qr_code,
+              payment_id: paymentId,
+              expires_at: existingQR.expires_at,
+              created_at: existingQR.created_at,
+            }
+          }),
+          { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Generate unique QR code
+      const qrCode = 'TRXQR-' + Array.from(crypto.getRandomValues(new Uint8Array(16)))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('').toUpperCase();
+
+      // Create QR code record
+      const { data: qrRecord, error: qrError } = await supabase
+        .from('payment_qr_codes')
+        .insert({
+          payment_id: paymentId,
+          qr_code: qrCode,
+          expires_at: payment.expires_at,
+          data: {
+            payment_id: paymentId,
+            amount: payment.amount,
+            currency: payment.currency,
+            usdt_amount: payment.usdt_amount,
+            reference_number: payment.reference_number,
+            merchant_id: merchant.id,
+          }
+        })
+        .select()
+        .single();
+
+      if (qrError) {
+        console.error('QR code creation error:', qrError);
+        return new Response(
+          JSON.stringify({ error: 'Failed to create QR code', details: qrError.message }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      console.log('QR code created:', qrRecord.id);
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          qr_code: {
+            id: qrRecord.id,
+            qr_code: qrRecord.qr_code,
+            payment_id: paymentId,
+            payment_url: `https://terex.app/pay/qr/${qrCode}`,
+            expires_at: qrRecord.expires_at,
+            created_at: qrRecord.created_at,
+          }
+        }),
+        { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // GET /qr/:code - Get payment info by QR code
+    if (req.method === 'GET' && pathParts.length === 2 && pathParts[0] === 'qr') {
+      const qrCode = pathParts[1];
+
+      // Get QR code record
+      const { data: qrRecord, error: qrError } = await supabase
+        .from('payment_qr_codes')
+        .select(`
+          *,
+          payment:terex_payments!inner(*)
+        `)
+        .eq('qr_code', qrCode)
+        .single();
+
+      if (qrError || !qrRecord) {
+        return new Response(
+          JSON.stringify({ error: 'QR code not found' }),
+          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const payment = qrRecord.payment;
+
+      // Check if merchant owns this payment
+      if (payment.merchant_id !== merchant.id) {
+        return new Response(
+          JSON.stringify({ error: 'Unauthorized' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Check if QR code has expired
+      const isExpired = new Date(qrRecord.expires_at) < new Date();
+
+      // Mark as scanned if first scan
+      if (!qrRecord.scanned_at) {
+        await supabase
+          .from('payment_qr_codes')
+          .update({ scanned_at: new Date().toISOString() })
+          .eq('id', qrRecord.id);
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          qr_code: {
+            id: qrRecord.id,
+            qr_code: qrRecord.qr_code,
+            is_expired: isExpired,
+            scanned_at: qrRecord.scanned_at,
+            created_at: qrRecord.created_at,
+          },
+          payment: {
+            id: payment.id,
+            reference_number: payment.reference_number,
+            amount: payment.amount,
+            currency: payment.currency,
+            usdt_amount: payment.usdt_amount,
+            status: payment.status,
+            expires_at: payment.expires_at,
+            paid_at: payment.paid_at,
+            created_at: payment.created_at,
+          }
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Method not allowed
     return new Response(
       JSON.stringify({ error: 'Method not allowed' }),
