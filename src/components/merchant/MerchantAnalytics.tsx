@@ -43,9 +43,9 @@ export function MerchantAnalytics({ merchantId }: MerchantAnalyticsProps) {
 
   if (loading) {
     return (
-      <Card className="bg-white border-gray-200">
+      <Card>
         <CardContent className="p-6">
-          <p className="text-gray-600">Chargement...</p>
+          <p className="text-muted-foreground">Chargement...</p>
         </CardContent>
       </Card>
     );
@@ -84,16 +84,16 @@ export function MerchantAnalytics({ merchantId }: MerchantAnalyticsProps) {
         {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.title} className="bg-white border-gray-200">
+            <Card key={stat.title}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-black">
+                <CardTitle className="text-sm font-medium">
                   {stat.title}
                 </CardTitle>
-                <Icon className="h-4 w-4 text-gray-600" />
+                <Icon className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-black">{stat.value}</div>
-                <p className="text-xs text-gray-600">
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <p className="text-xs text-muted-foreground">
                   {stat.description}
                 </p>
               </CardContent>
@@ -102,35 +102,35 @@ export function MerchantAnalytics({ merchantId }: MerchantAnalyticsProps) {
         })}
       </div>
 
-      <Card className="bg-white border-gray-200">
+      <Card>
         <CardHeader>
-          <CardTitle className="text-black">Aperçu</CardTitle>
-          <CardDescription className="text-gray-600">
+          <CardTitle>Aperçu</CardTitle>
+          <CardDescription>
             Statistiques de votre compte marchand
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-gray-50">
+            <div className="flex items-center justify-between p-4 border rounded-lg">
               <div>
-                <p className="font-medium text-black">Revenus estimés</p>
-                <p className="text-sm text-gray-600">
+                <p className="font-medium">Revenus estimés</p>
+                <p className="text-sm text-muted-foreground">
                   Commission sur les transactions complétées
                 </p>
               </div>
-              <p className="text-2xl font-bold text-black">
+              <p className="text-2xl font-bold">
                 {(stats.totalVolume * 0.005).toLocaleString()} CFA
               </p>
             </div>
             
-            <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-gray-50">
+            <div className="flex items-center justify-between p-4 border rounded-lg">
               <div>
-                <p className="font-medium text-black">Montant moyen par transaction</p>
-                <p className="text-sm text-gray-600">
+                <p className="font-medium">Montant moyen par transaction</p>
+                <p className="text-sm text-muted-foreground">
                   Sur les transactions réussies
                 </p>
               </div>
-              <p className="text-2xl font-bold text-black">
+              <p className="text-2xl font-bold">
                 {stats.completedTransactions > 0
                   ? (stats.totalVolume / stats.completedTransactions).toLocaleString()
                   : 0} CFA

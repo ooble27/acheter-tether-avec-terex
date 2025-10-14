@@ -95,30 +95,30 @@ export default function MerchantPortalPage() {
 
   if (!merchantAccount) {
     return (
-      <div className="min-h-screen bg-white p-4">
+      <div className="min-h-screen bg-background p-4">
         <div className="max-w-4xl mx-auto pt-20">
           <Button
             variant="ghost"
             onClick={() => navigate('/dashboard')}
-            className="mb-6 text-black hover:bg-gray-100 hover:text-black"
+            className="mb-6"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Retour au dashboard
           </Button>
 
-          <Card className="bg-white border-gray-200">
+          <Card>
             <CardHeader>
-              <CardTitle className="text-black">Portail Marchand Terex</CardTitle>
-              <CardDescription className="text-gray-600">
+              <CardTitle>Portail Marchand Terex</CardTitle>
+              <CardDescription>
                 Créez votre compte marchand pour accéder aux APIs de paiement
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-gray-700">
+              <p className="text-muted-foreground">
                 Le portail marchand vous permet d'intégrer Terex dans vos applications via API.
                 Vous pourrez accepter des paiements en USDT, gérer des transactions et suivre vos revenus.
               </p>
-              <Button onClick={createMerchantAccount} className="bg-primary text-white hover:bg-primary/90">
+              <Button onClick={createMerchantAccount}>
                 Créer mon compte marchand
               </Button>
             </CardContent>
@@ -129,20 +129,20 @@ export default function MerchantPortalPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white p-4">
+    <div className="min-h-screen bg-background p-4">
       <div className="max-w-7xl mx-auto pt-20">
         <div className="flex items-center justify-between mb-6">
           <div>
             <Button
               variant="ghost"
               onClick={() => navigate('/dashboard')}
-              className="mb-2 text-black hover:bg-gray-100 hover:text-black"
+              className="mb-2"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Retour au dashboard
             </Button>
-            <h1 className="text-3xl font-bold text-black">Portail Marchand</h1>
-            <p className="text-gray-600">{merchantAccount.business_name}</p>
+            <h1 className="text-3xl font-bold">Portail Marchand</h1>
+            <p className="text-muted-foreground">{merchantAccount.business_name}</p>
           </div>
         </div>
 
@@ -150,35 +150,35 @@ export default function MerchantPortalPage() {
         {isMobile && (
           <div className="mb-6">
             <Select value={activeTab} onValueChange={setActiveTab}>
-              <SelectTrigger className="w-full bg-white border-gray-200 text-black">
+              <SelectTrigger className="w-full bg-card border-border">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-white border-gray-200 z-50">
-                <SelectItem value="api-keys" className="text-black">
+              <SelectContent className="bg-card border-border z-50">
+                <SelectItem value="api-keys">
                   <div className="flex items-center gap-2">
                     <Key className="h-4 w-4" />
                     <span>API Keys</span>
                   </div>
                 </SelectItem>
-                <SelectItem value="webhooks" className="text-black">
+                <SelectItem value="webhooks">
                   <div className="flex items-center gap-2">
                     <Webhook className="h-4 w-4" />
                     <span>Webhooks</span>
                   </div>
                 </SelectItem>
-                <SelectItem value="transactions" className="text-black">
+                <SelectItem value="transactions">
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4" />
                     <span>Transactions</span>
                   </div>
                 </SelectItem>
-                <SelectItem value="analytics" className="text-black">
+                <SelectItem value="analytics">
                   <div className="flex items-center gap-2">
                     <BarChart3 className="h-4 w-4" />
                     <span>Analytics</span>
                   </div>
                 </SelectItem>
-                <SelectItem value="docs" className="text-black">
+                <SelectItem value="docs">
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4" />
                     <span>Documentation</span>
@@ -192,24 +192,24 @@ export default function MerchantPortalPage() {
         {/* Desktop: Tabs */}
         {!isMobile && (
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 bg-gray-100 border border-gray-200">
-              <TabsTrigger value="api-keys" className="text-black data-[state=active]:bg-white data-[state=active]:text-black">
+            <TabsList className="grid w-full grid-cols-5">
+              <TabsTrigger value="api-keys">
                 <Key className="mr-2 h-4 w-4" />
                 API Keys
               </TabsTrigger>
-              <TabsTrigger value="webhooks" className="text-black data-[state=active]:bg-white data-[state=active]:text-black">
+              <TabsTrigger value="webhooks">
                 <Webhook className="mr-2 h-4 w-4" />
                 Webhooks
               </TabsTrigger>
-              <TabsTrigger value="transactions" className="text-black data-[state=active]:bg-white data-[state=active]:text-black">
+              <TabsTrigger value="transactions">
                 <FileText className="mr-2 h-4 w-4" />
                 Transactions
               </TabsTrigger>
-              <TabsTrigger value="analytics" className="text-black data-[state=active]:bg-white data-[state=active]:text-black">
+              <TabsTrigger value="analytics">
                 <BarChart3 className="mr-2 h-4 w-4" />
                 Analytics
               </TabsTrigger>
-              <TabsTrigger value="docs" className="text-black data-[state=active]:bg-white data-[state=active]:text-black">
+              <TabsTrigger value="docs">
                 <FileText className="mr-2 h-4 w-4" />
                 Documentation
               </TabsTrigger>

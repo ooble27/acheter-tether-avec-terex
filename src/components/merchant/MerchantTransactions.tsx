@@ -44,55 +44,55 @@ export function MerchantTransactions({ merchantId }: MerchantTransactionsProps) 
 
   if (loading) {
     return (
-      <Card className="bg-white border-gray-200">
+      <Card>
         <CardContent className="p-6">
-          <p className="text-gray-600">Chargement...</p>
+          <p className="text-muted-foreground">Chargement...</p>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="bg-white border-gray-200">
+    <Card>
       <CardHeader>
-        <CardTitle className="text-black">Historique des transactions</CardTitle>
-        <CardDescription className="text-gray-600">
+        <CardTitle>Historique des transactions</CardTitle>
+        <CardDescription>
           Les 50 dernières transactions via l'API
         </CardDescription>
       </CardHeader>
       <CardContent>
         {transactions.length === 0 ? (
-          <p className="text-gray-600 text-center py-8">
+          <p className="text-muted-foreground text-center py-8">
             Aucune transaction pour le moment
           </p>
         ) : (
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="border-gray-200">
-                  <TableHead className="text-black">Référence</TableHead>
-                  <TableHead className="text-black">Montant</TableHead>
-                  <TableHead className="text-black">USDT</TableHead>
-                  <TableHead className="text-black">Statut</TableHead>
-                  <TableHead className="text-black">Date</TableHead>
+                <TableRow>
+                  <TableHead>Référence</TableHead>
+                  <TableHead>Montant</TableHead>
+                  <TableHead>USDT</TableHead>
+                  <TableHead>Statut</TableHead>
+                  <TableHead>Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {transactions.map((tx) => (
-                  <TableRow key={tx.id} className="border-gray-200 hover:bg-gray-50">
-                    <TableCell className="font-mono text-sm text-black">
+                  <TableRow key={tx.id}>
+                    <TableCell className="font-mono text-sm">
                       {tx.reference_number}
                     </TableCell>
-                    <TableCell className="text-black">
+                    <TableCell>
                       {tx.amount.toLocaleString()} {tx.currency}
                     </TableCell>
-                    <TableCell className="text-black">
+                    <TableCell>
                       {tx.usdt_amount} USDT
                     </TableCell>
                     <TableCell>
                       {getStatusBadge(tx.status)}
                     </TableCell>
-                    <TableCell className="text-gray-600">
+                    <TableCell className="text-muted-foreground">
                       {formatDistanceToNow(new Date(tx.created_at), {
                         addSuffix: true,
                         locale: fr

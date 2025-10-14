@@ -94,31 +94,31 @@ export function MerchantWebhooks({ merchantAccount, onUpdate }: MerchantWebhooks
 
   return (
     <div className="space-y-6">
-      <Card className="bg-white border-gray-200">
+      <Card>
         <CardHeader>
-          <CardTitle className="text-black">Configuration des Webhooks</CardTitle>
-          <CardDescription className="text-gray-600">
+          <CardTitle>Configuration des Webhooks</CardTitle>
+          <CardDescription>
             Recevez des notifications en temps réel pour les événements importants
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="webhook-url" className="text-black">URL du Webhook</Label>
+            <Label htmlFor="webhook-url">URL du Webhook</Label>
             <Input
               id="webhook-url"
               type="url"
               placeholder="https://votre-site.com/webhook"
               value={webhookUrl}
               onChange={(e) => setWebhookUrl(e.target.value)}
-              className="text-sm break-all bg-white border-gray-200 text-black"
+              className="text-sm break-all"
             />
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-muted-foreground">
               Cette URL recevra les notifications POST pour tous les événements
             </p>
           </div>
 
           <div className="flex flex-col md:flex-row gap-2">
-            <Button onClick={saveWebhookUrl} disabled={saving} className="w-full md:w-auto bg-primary text-white hover:bg-primary/90">
+            <Button onClick={saveWebhookUrl} disabled={saving} className="w-full md:w-auto">
               <Save className="mr-2 h-4 w-4" />
               {saving ? 'Enregistrement...' : 'Enregistrer'}
             </Button>
@@ -126,7 +126,7 @@ export function MerchantWebhooks({ merchantAccount, onUpdate }: MerchantWebhooks
               variant="outline"
               onClick={testWebhook}
               disabled={testing || !webhookUrl}
-              className="w-full md:w-auto border-gray-300 text-black hover:bg-gray-100 hover:text-black"
+              className="w-full md:w-auto"
             >
               <TestTube className="mr-2 h-4 w-4" />
               {testing ? 'Test...' : 'Tester'}
@@ -135,10 +135,10 @@ export function MerchantWebhooks({ merchantAccount, onUpdate }: MerchantWebhooks
         </CardContent>
       </Card>
 
-      <Card className="bg-white border-gray-200">
+      <Card>
         <CardHeader>
-          <CardTitle className="text-black">Événements disponibles</CardTitle>
-          <CardDescription className="text-gray-600">
+          <CardTitle>Événements disponibles</CardTitle>
+          <CardDescription>
             Votre webhook recevra ces types d'événements
           </CardDescription>
         </CardHeader>
@@ -151,12 +151,12 @@ export function MerchantWebhooks({ merchantAccount, onUpdate }: MerchantWebhooks
               { event: 'payment.failed', description: 'Un paiement a échoué' },
               { event: 'payment.expired', description: 'Un paiement a expiré' },
             ].map((item) => (
-              <div key={item.event} className="flex items-start gap-3 p-3 border border-gray-200 rounded-lg bg-gray-50">
+              <div key={item.event} className="flex items-start gap-3 p-3 border rounded-lg">
                 <div className="flex-1 min-w-0">
-                  <code className="text-xs font-mono bg-gray-200 text-black px-2 py-1 rounded break-all">
+                  <code className="text-xs font-mono bg-muted px-2 py-1 rounded break-all">
                     {item.event}
                   </code>
-                  <p className="text-sm text-gray-700 mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     {item.description}
                   </p>
                 </div>
@@ -166,13 +166,13 @@ export function MerchantWebhooks({ merchantAccount, onUpdate }: MerchantWebhooks
         </CardContent>
       </Card>
 
-      <Card className="bg-white border-gray-200">
+      <Card>
         <CardHeader>
-          <CardTitle className="text-black">Format des webhooks</CardTitle>
+          <CardTitle>Format des webhooks</CardTitle>
         </CardHeader>
         <CardContent>
-          <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto border border-gray-200">
-            <code className="text-xs md:text-sm whitespace-pre-wrap break-all text-black">{`{
+          <pre className="bg-muted p-4 rounded-lg overflow-x-auto">
+            <code className="text-xs md:text-sm whitespace-pre-wrap break-all">{`{
   "event": "payment.completed",
   "payment_id": "uuid",
   "merchant_id": "uuid",
