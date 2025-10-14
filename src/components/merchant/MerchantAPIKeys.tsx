@@ -68,35 +68,35 @@ export function MerchantAPIKeys({ merchantAccount, onUpdate }: MerchantAPIKeysPr
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="bg-white border-gray-200">
         <CardHeader>
-          <CardTitle>Clé API de Production</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-black">Clé API de Production</CardTitle>
+          <CardDescription className="text-gray-600">
             Utilisez cette clé pour intégrer Terex dans vos applications en production
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center gap-2 p-4 border rounded-lg bg-muted/50">
-            <AlertTriangle className="h-5 w-5 text-yellow-500" />
-            <p className="text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 p-4 border border-gray-200 rounded-lg bg-yellow-50">
+            <AlertTriangle className="h-5 w-5 text-yellow-600" />
+            <p className="text-sm text-gray-700">
               Ne partagez jamais votre clé API. Elle donne accès à votre compte marchand.
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label>Clé API</Label>
+            <Label className="text-black">Clé API</Label>
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <Input
                   type={showApiKey ? 'text' : 'password'}
                   value={merchantAccount.api_key}
                   readOnly
-                  className="pr-10"
+                  className="pr-10 bg-white border-gray-200 text-black"
                 />
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="absolute right-1 top-1/2 -translate-y-1/2"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 text-black hover:bg-gray-100"
                   onClick={() => setShowApiKey(!showApiKey)}
                 >
                   {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -105,16 +105,17 @@ export function MerchantAPIKeys({ merchantAccount, onUpdate }: MerchantAPIKeysPr
               <Button
                 variant="outline"
                 onClick={() => copyToClipboard(merchantAccount.api_key)}
+                className="border-gray-200 text-black hover:bg-gray-100"
               >
                 <Copy className="h-4 w-4" />
               </Button>
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t">
+          <div className="flex items-center justify-between pt-4 border-t border-gray-200">
             <div>
-              <p className="text-sm font-medium">Régénérer la clé API</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-sm font-medium text-black">Régénérer la clé API</p>
+              <p className="text-xs text-gray-600">
                 Attention : cela invalidera l'ancienne clé
               </p>
             </div>
@@ -145,33 +146,33 @@ export function MerchantAPIKeys({ merchantAccount, onUpdate }: MerchantAPIKeysPr
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="bg-white border-gray-200">
         <CardHeader>
-          <CardTitle>Informations du compte</CardTitle>
+          <CardTitle className="text-black">Informations du compte</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label className="text-muted-foreground">Nom de l'entreprise</Label>
-              <p className="font-medium">{merchantAccount.business_name}</p>
+              <Label className="text-gray-600">Nom de l'entreprise</Label>
+              <p className="font-medium text-black">{merchantAccount.business_name}</p>
             </div>
             <div>
-              <Label className="text-muted-foreground">Type</Label>
-              <p className="font-medium capitalize">{merchantAccount.business_type}</p>
+              <Label className="text-gray-600">Type</Label>
+              <p className="font-medium capitalize text-black">{merchantAccount.business_type}</p>
             </div>
             <div>
-              <Label className="text-muted-foreground">Email</Label>
-              <p className="font-medium">{merchantAccount.business_email}</p>
+              <Label className="text-gray-600">Email</Label>
+              <p className="font-medium text-black">{merchantAccount.business_email}</p>
             </div>
             <div>
-              <Label className="text-muted-foreground">Statut</Label>
+              <Label className="text-gray-600">Statut</Label>
               <Badge variant={merchantAccount.is_active ? 'default' : 'secondary'}>
                 {merchantAccount.is_active ? 'Actif' : 'Inactif'}
               </Badge>
             </div>
             <div>
-              <Label className="text-muted-foreground">Commission</Label>
-              <p className="font-medium">{(merchantAccount.commission_rate * 100).toFixed(2)}%</p>
+              <Label className="text-gray-600">Commission</Label>
+              <p className="font-medium text-black">{(merchantAccount.commission_rate * 100).toFixed(2)}%</p>
             </div>
           </div>
         </CardContent>

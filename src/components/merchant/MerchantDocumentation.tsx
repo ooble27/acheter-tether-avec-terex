@@ -5,10 +5,10 @@ import { Code } from 'lucide-react';
 export function MerchantDocumentation() {
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="bg-white border-gray-200">
         <CardHeader>
-          <CardTitle>Documentation API Terex</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-black">Documentation API Terex</CardTitle>
+          <CardDescription className="text-gray-600">
             Guide d'intégration et exemples de code
           </CardDescription>
         </CardHeader>
@@ -22,33 +22,33 @@ export function MerchantDocumentation() {
 
             <TabsContent value="overview" className="space-y-4">
               <div>
-                <h3 className="text-lg font-semibold mb-2">Introduction</h3>
-                <p className="text-muted-foreground mb-4">
+                <h3 className="text-lg font-semibold mb-2 text-black">Introduction</h3>
+                <p className="text-gray-600 mb-4">
                   L'API Terex vous permet d'accepter des paiements en USDT directement dans vos applications.
                   Toutes les requêtes doivent inclure votre clé API dans le header Authorization.
                 </p>
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-2">Base URL</h3>
-                <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
-                  <code className="text-xs md:text-sm break-all">https://mwwjrrduavfcwjiyniuy.supabase.co/functions/v1</code>
+                <h3 className="text-lg font-semibold mb-2 text-black">Base URL</h3>
+                <pre className="bg-gray-100 p-3 rounded-lg overflow-x-auto border border-gray-200">
+                  <code className="text-xs md:text-sm break-all text-black">https://mwwjrrduavfcwjiyniuy.supabase.co/functions/v1</code>
                 </pre>
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-2">Authentification</h3>
-                <p className="text-muted-foreground mb-2">
+                <h3 className="text-lg font-semibold mb-2 text-black">Authentification</h3>
+                <p className="text-gray-600 mb-2">
                   Incluez votre clé API dans chaque requête :
                 </p>
-                <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
-                  <code className="text-xs md:text-sm break-all">Authorization: Bearer VOTRE_CLE_API</code>
+                <pre className="bg-gray-100 p-3 rounded-lg overflow-x-auto border border-gray-200">
+                  <code className="text-xs md:text-sm break-all text-black">Authorization: Bearer VOTRE_CLE_API</code>
                 </pre>
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-2">Rate Limits</h3>
-                <p className="text-muted-foreground">
+                <h3 className="text-lg font-semibold mb-2 text-black">Rate Limits</h3>
+                <p className="text-gray-600">
                   100 requêtes par minute par clé API
                 </p>
               </div>
@@ -56,22 +56,22 @@ export function MerchantDocumentation() {
 
             <TabsContent value="payment" className="space-y-4">
               <div>
-                <h3 className="text-lg font-semibold mb-2">Créer un paiement</h3>
-                <p className="text-muted-foreground mb-4">
+                <h3 className="text-lg font-semibold mb-2 text-black">Créer un paiement</h3>
+                <p className="text-gray-600 mb-4">
                   Créez un nouveau paiement et recevez une URL de paiement pour votre client.
                 </p>
                 
                 <div className="mb-4">
-                  <p className="text-sm font-medium mb-2">Endpoint</p>
-                  <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
-                    <code className="text-xs md:text-sm break-all">POST /merchant-api-payments</code>
+                  <p className="text-sm font-medium mb-2 text-black">Endpoint</p>
+                  <pre className="bg-gray-100 p-3 rounded-lg overflow-x-auto border border-gray-200">
+                    <code className="text-xs md:text-sm break-all text-black">POST /merchant-api-payments</code>
                   </pre>
                 </div>
 
                 <div className="mb-4">
-                  <p className="text-sm font-medium mb-2">Request Body</p>
-                  <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
-                    <code className="text-xs md:text-sm whitespace-pre-wrap break-all">{`{
+                  <p className="text-sm font-medium mb-2 text-black">Request Body</p>
+                  <pre className="bg-gray-100 p-3 rounded-lg overflow-x-auto border border-gray-200">
+                    <code className="text-xs md:text-sm whitespace-pre-wrap break-all text-black">{`{
   "amount": 50000,
   "currency": "CFA",
   "description": "Commande #123",
@@ -86,9 +86,9 @@ export function MerchantDocumentation() {
                 </div>
 
                 <div>
-                  <p className="text-sm font-medium mb-2">Response</p>
-                  <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
-                    <code className="text-xs md:text-sm whitespace-pre-wrap break-all">{`{
+                  <p className="text-sm font-medium mb-2 text-black">Response</p>
+                  <pre className="bg-gray-100 p-3 rounded-lg overflow-x-auto border border-gray-200">
+                    <code className="text-xs md:text-sm whitespace-pre-wrap break-all text-black">{`{
   "success": true,
   "payment": {
     "id": "uuid",
@@ -106,19 +106,19 @@ export function MerchantDocumentation() {
                 </div>
               </div>
 
-              <div className="pt-4 border-t">
-                <h3 className="text-lg font-semibold mb-2">Vérifier un paiement</h3>
+              <div className="pt-4 border-t border-gray-200">
+                <h3 className="text-lg font-semibold mb-2 text-black">Vérifier un paiement</h3>
                 <div className="mb-4">
-                  <p className="text-sm font-medium mb-2">Endpoint</p>
-                  <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
-                    <code className="text-xs md:text-sm break-all">{`GET /merchant-api-payments/{payment_id}`}</code>
+                  <p className="text-sm font-medium mb-2 text-black">Endpoint</p>
+                  <pre className="bg-gray-100 p-3 rounded-lg overflow-x-auto border border-gray-200">
+                    <code className="text-xs md:text-sm break-all text-black">{`GET /merchant-api-payments/{payment_id}`}</code>
                   </pre>
                 </div>
 
                 <div>
-                  <p className="text-sm font-medium mb-2">Response</p>
-                  <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
-                    <code className="text-xs md:text-sm whitespace-pre-wrap break-all">{`{
+                  <p className="text-sm font-medium mb-2 text-black">Response</p>
+                  <pre className="bg-gray-100 p-3 rounded-lg overflow-x-auto border border-gray-200">
+                    <code className="text-xs md:text-sm whitespace-pre-wrap break-all text-black">{`{
   "success": true,
   "payment": {
     "id": "uuid",
@@ -134,12 +134,12 @@ export function MerchantDocumentation() {
 
             <TabsContent value="examples" className="space-y-4">
               <div>
-                <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+                <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 text-black">
                   <Code className="h-5 w-5" />
                   JavaScript / Node.js
                 </h3>
-                <pre className="bg-muted p-4 rounded-lg overflow-x-auto">
-                  <code className="text-xs md:text-sm whitespace-pre-wrap break-all">{`const createPayment = async () => {
+                <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto border border-gray-200">
+                  <code className="text-xs md:text-sm whitespace-pre-wrap break-all text-black">{`const createPayment = async () => {
   const response = await fetch(
     'https://mwwjrrduavfcwjiyniuy.supabase.co/functions/v1/merchant-api-payments',
     {
@@ -164,12 +164,12 @@ export function MerchantDocumentation() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+                <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 text-black">
                   <Code className="h-5 w-5" />
                   Python
                 </h3>
-                <pre className="bg-muted p-4 rounded-lg overflow-x-auto">
-                  <code className="text-xs md:text-sm whitespace-pre-wrap break-all">{`import requests
+                <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto border border-gray-200">
+                  <code className="text-xs md:text-sm whitespace-pre-wrap break-all text-black">{`import requests
 
 def create_payment():
     url = "https://mwwjrrduavfcwjiyniuy.supabase.co/functions/v1/merchant-api-payments"
@@ -191,12 +191,12 @@ def create_payment():
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+                <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 text-black">
                   <Code className="h-5 w-5" />
                   PHP
                 </h3>
-                <pre className="bg-muted p-4 rounded-lg overflow-x-auto">
-                  <code className="text-xs md:text-sm whitespace-pre-wrap break-all">{`<?php
+                <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto border border-gray-200">
+                  <code className="text-xs md:text-sm whitespace-pre-wrap break-all text-black">{`<?php
 $curl = curl_init();
 
 curl_setopt_array($curl, [

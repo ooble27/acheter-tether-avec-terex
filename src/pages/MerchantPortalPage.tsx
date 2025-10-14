@@ -141,8 +141,8 @@ export default function MerchantPortalPage() {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Retour au dashboard
             </Button>
-            <h1 className="text-3xl font-bold">Portail Marchand</h1>
-            <p className="text-muted-foreground">{merchantAccount.business_name}</p>
+            <h1 className="text-3xl font-bold text-black">Portail Marchand</h1>
+            <p className="text-gray-600">{merchantAccount.business_name}</p>
           </div>
         </div>
 
