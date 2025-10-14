@@ -100,21 +100,21 @@ export default function MerchantPortalPage() {
           <Button
             variant="ghost"
             onClick={() => navigate('/dashboard')}
-            className="mb-6"
+            className="mb-6 text-black hover:bg-gray-100"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Retour au dashboard
           </Button>
 
-          <Card>
+          <Card className="bg-white border-gray-200">
             <CardHeader>
-              <CardTitle>Portail Marchand Terex</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-black">Portail Marchand Terex</CardTitle>
+              <CardDescription className="text-gray-600">
                 Créez votre compte marchand pour accéder aux APIs de paiement
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-muted-foreground">
+              <p className="text-gray-700">
                 Le portail marchand vous permet d'intégrer Terex dans vos applications via API.
                 Vous pourrez accepter des paiements en USDT, gérer des transactions et suivre vos revenus.
               </p>
@@ -136,7 +136,7 @@ export default function MerchantPortalPage() {
             <Button
               variant="ghost"
               onClick={() => navigate('/dashboard')}
-              className="mb-2"
+              className="mb-2 text-black hover:bg-gray-100"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Retour au dashboard
@@ -150,35 +150,35 @@ export default function MerchantPortalPage() {
         {isMobile && (
           <div className="mb-6">
             <Select value={activeTab} onValueChange={setActiveTab}>
-              <SelectTrigger className="w-full bg-card border-border">
+              <SelectTrigger className="w-full bg-white border-gray-200 text-black">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-card border-border z-50">
-                <SelectItem value="api-keys">
+              <SelectContent className="bg-white border-gray-200 z-50">
+                <SelectItem value="api-keys" className="text-black">
                   <div className="flex items-center gap-2">
                     <Key className="h-4 w-4" />
                     <span>API Keys</span>
                   </div>
                 </SelectItem>
-                <SelectItem value="webhooks">
+                <SelectItem value="webhooks" className="text-black">
                   <div className="flex items-center gap-2">
                     <Webhook className="h-4 w-4" />
                     <span>Webhooks</span>
                   </div>
                 </SelectItem>
-                <SelectItem value="transactions">
+                <SelectItem value="transactions" className="text-black">
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4" />
                     <span>Transactions</span>
                   </div>
                 </SelectItem>
-                <SelectItem value="analytics">
+                <SelectItem value="analytics" className="text-black">
                   <div className="flex items-center gap-2">
                     <BarChart3 className="h-4 w-4" />
                     <span>Analytics</span>
                   </div>
                 </SelectItem>
-                <SelectItem value="docs">
+                <SelectItem value="docs" className="text-black">
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4" />
                     <span>Documentation</span>
@@ -192,24 +192,24 @@ export default function MerchantPortalPage() {
         {/* Desktop: Tabs */}
         {!isMobile && (
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="api-keys">
+            <TabsList className="grid w-full grid-cols-5 bg-gray-100 border border-gray-200">
+              <TabsTrigger value="api-keys" className="text-black data-[state=active]:bg-white data-[state=active]:text-black">
                 <Key className="mr-2 h-4 w-4" />
                 API Keys
               </TabsTrigger>
-              <TabsTrigger value="webhooks">
+              <TabsTrigger value="webhooks" className="text-black data-[state=active]:bg-white data-[state=active]:text-black">
                 <Webhook className="mr-2 h-4 w-4" />
                 Webhooks
               </TabsTrigger>
-              <TabsTrigger value="transactions">
+              <TabsTrigger value="transactions" className="text-black data-[state=active]:bg-white data-[state=active]:text-black">
                 <FileText className="mr-2 h-4 w-4" />
                 Transactions
               </TabsTrigger>
-              <TabsTrigger value="analytics">
+              <TabsTrigger value="analytics" className="text-black data-[state=active]:bg-white data-[state=active]:text-black">
                 <BarChart3 className="mr-2 h-4 w-4" />
                 Analytics
               </TabsTrigger>
-              <TabsTrigger value="docs">
+              <TabsTrigger value="docs" className="text-black data-[state=active]:bg-white data-[state=active]:text-black">
                 <FileText className="mr-2 h-4 w-4" />
                 Documentation
               </TabsTrigger>
