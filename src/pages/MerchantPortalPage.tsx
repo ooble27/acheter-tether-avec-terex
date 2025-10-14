@@ -192,49 +192,71 @@ export default function MerchantPortalPage() {
         {/* Desktop: Tabs */}
         {!isMobile && (
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="api-keys">
+            <TabsList className="grid w-full grid-cols-5 bg-muted">
+              <TabsTrigger value="api-keys" className="data-[state=active]:bg-background data-[state=active]:text-foreground">
                 <Key className="mr-2 h-4 w-4" />
                 API Keys
               </TabsTrigger>
-              <TabsTrigger value="webhooks">
+              <TabsTrigger value="webhooks" className="data-[state=active]:bg-background data-[state=active]:text-foreground">
                 <Webhook className="mr-2 h-4 w-4" />
                 Webhooks
               </TabsTrigger>
-              <TabsTrigger value="transactions">
+              <TabsTrigger value="transactions" className="data-[state=active]:bg-background data-[state=active]:text-foreground">
                 <FileText className="mr-2 h-4 w-4" />
                 Transactions
               </TabsTrigger>
-              <TabsTrigger value="analytics">
+              <TabsTrigger value="analytics" className="data-[state=active]:bg-background data-[state=active]:text-foreground">
                 <BarChart3 className="mr-2 h-4 w-4" />
                 Analytics
               </TabsTrigger>
-              <TabsTrigger value="docs">
+              <TabsTrigger value="docs" className="data-[state=active]:bg-background data-[state=active]:text-foreground">
                 <FileText className="mr-2 h-4 w-4" />
                 Documentation
               </TabsTrigger>
             </TabsList>
+
+            <TabsContent value="api-keys" className="mt-6">
+              <MerchantAPIKeys merchantAccount={merchantAccount} onUpdate={loadMerchantAccount} />
+            </TabsContent>
+            
+            <TabsContent value="webhooks" className="mt-6">
+              <MerchantWebhooks merchantAccount={merchantAccount} onUpdate={loadMerchantAccount} />
+            </TabsContent>
+            
+            <TabsContent value="transactions" className="mt-6">
+              <MerchantTransactions merchantId={merchantAccount.id} />
+            </TabsContent>
+            
+            <TabsContent value="analytics" className="mt-6">
+              <MerchantAnalytics merchantId={merchantAccount.id} />
+            </TabsContent>
+            
+            <TabsContent value="docs" className="mt-6">
+              <MerchantDocumentation />
+            </TabsContent>
           </Tabs>
         )}
 
-        {/* Content */}
-        <div className="mt-6">
-          {activeTab === 'api-keys' && (
-            <MerchantAPIKeys merchantAccount={merchantAccount} onUpdate={loadMerchantAccount} />
-          )}
-          {activeTab === 'webhooks' && (
-            <MerchantWebhooks merchantAccount={merchantAccount} onUpdate={loadMerchantAccount} />
-          )}
-          {activeTab === 'transactions' && (
-            <MerchantTransactions merchantId={merchantAccount.id} />
-          )}
-          {activeTab === 'analytics' && (
-            <MerchantAnalytics merchantId={merchantAccount.id} />
-          )}
-          {activeTab === 'docs' && (
-            <MerchantDocumentation />
-          )}
-        </div>
+        {/* Mobile: Content */}
+        {isMobile && (
+          <div className="mt-6">
+            {activeTab === 'api-keys' && (
+              <MerchantAPIKeys merchantAccount={merchantAccount} onUpdate={loadMerchantAccount} />
+            )}
+            {activeTab === 'webhooks' && (
+              <MerchantWebhooks merchantAccount={merchantAccount} onUpdate={loadMerchantAccount} />
+            )}
+            {activeTab === 'transactions' && (
+              <MerchantTransactions merchantId={merchantAccount.id} />
+            )}
+            {activeTab === 'analytics' && (
+              <MerchantAnalytics merchantId={merchantAccount.id} />
+            )}
+            {activeTab === 'docs' && (
+              <MerchantDocumentation />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
