@@ -96,7 +96,7 @@ export function MerchantAPIKeys({ merchantAccount, onUpdate }: MerchantAPIKeysPr
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="absolute right-1 top-1/2 -translate-y-1/2 text-black hover:bg-gray-100"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 text-black hover:bg-gray-100 hover:text-black"
                   onClick={() => setShowApiKey(!showApiKey)}
                 >
                   {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -105,7 +105,7 @@ export function MerchantAPIKeys({ merchantAccount, onUpdate }: MerchantAPIKeysPr
               <Button
                 variant="outline"
                 onClick={() => copyToClipboard(merchantAccount.api_key)}
-                className="border-gray-200 text-black hover:bg-gray-100"
+                className="border-gray-300 text-black hover:bg-gray-100 hover:text-black"
               >
                 <Copy className="h-4 w-4" />
               </Button>
@@ -121,7 +121,7 @@ export function MerchantAPIKeys({ merchantAccount, onUpdate }: MerchantAPIKeysPr
             </div>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive" disabled={regenerating}>
+                <Button variant="destructive" disabled={regenerating} className="bg-red-600 text-white hover:bg-red-700">
                   <RefreshCw className="mr-2 h-4 w-4" />
                   Régénérer
                 </Button>

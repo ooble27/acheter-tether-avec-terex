@@ -118,7 +118,7 @@ export function MerchantWebhooks({ merchantAccount, onUpdate }: MerchantWebhooks
           </div>
 
           <div className="flex flex-col md:flex-row gap-2">
-            <Button onClick={saveWebhookUrl} disabled={saving} className="w-full md:w-auto">
+            <Button onClick={saveWebhookUrl} disabled={saving} className="w-full md:w-auto bg-primary text-white hover:bg-primary/90">
               <Save className="mr-2 h-4 w-4" />
               {saving ? 'Enregistrement...' : 'Enregistrer'}
             </Button>
@@ -126,7 +126,7 @@ export function MerchantWebhooks({ merchantAccount, onUpdate }: MerchantWebhooks
               variant="outline"
               onClick={testWebhook}
               disabled={testing || !webhookUrl}
-              className="w-full md:w-auto border-gray-200 text-black hover:bg-gray-100"
+              className="w-full md:w-auto border-gray-300 text-black hover:bg-gray-100 hover:text-black"
             >
               <TestTube className="mr-2 h-4 w-4" />
               {testing ? 'Test...' : 'Tester'}

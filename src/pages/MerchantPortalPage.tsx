@@ -100,7 +100,7 @@ export default function MerchantPortalPage() {
           <Button
             variant="ghost"
             onClick={() => navigate('/dashboard')}
-            className="mb-6 text-black hover:bg-gray-100"
+            className="mb-6 text-black hover:bg-gray-100 hover:text-black"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Retour au dashboard
@@ -118,7 +118,7 @@ export default function MerchantPortalPage() {
                 Le portail marchand vous permet d'intégrer Terex dans vos applications via API.
                 Vous pourrez accepter des paiements en USDT, gérer des transactions et suivre vos revenus.
               </p>
-              <Button onClick={createMerchantAccount}>
+              <Button onClick={createMerchantAccount} className="bg-primary text-white hover:bg-primary/90">
                 Créer mon compte marchand
               </Button>
             </CardContent>
@@ -136,7 +136,7 @@ export default function MerchantPortalPage() {
             <Button
               variant="ghost"
               onClick={() => navigate('/dashboard')}
-              className="mb-2 text-black hover:bg-gray-100"
+              className="mb-2 text-black hover:bg-gray-100 hover:text-black"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Retour au dashboard
