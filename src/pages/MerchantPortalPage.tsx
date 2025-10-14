@@ -95,7 +95,7 @@ export default function MerchantPortalPage() {
 
   if (!merchantAccount) {
     return (
-      <div className="min-h-screen bg-background p-4">
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-background p-4">
         <div className="max-w-4xl mx-auto pt-20">
           <Button
             variant="ghost"
@@ -129,7 +129,7 @@ export default function MerchantPortalPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-background p-4">
       <div className="max-w-7xl mx-auto pt-20">
         <div className="flex items-center justify-between mb-6">
           <div>
