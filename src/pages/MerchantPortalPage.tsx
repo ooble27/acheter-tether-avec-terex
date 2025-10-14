@@ -5,12 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Key, Webhook, BarChart3, FileText, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Key, Webhook, BarChart3, FileText, Code2 } from 'lucide-react';
 import { MerchantAPIKeys } from '@/components/merchant/MerchantAPIKeys';
 import { MerchantWebhooks } from '@/components/merchant/MerchantWebhooks';
 import { MerchantTransactions } from '@/components/merchant/MerchantTransactions';
 import { MerchantAnalytics } from '@/components/merchant/MerchantAnalytics';
 import { MerchantDocumentation } from '@/components/merchant/MerchantDocumentation';
+import { MerchantAPI } from '@/components/merchant/MerchantAPI';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 export default function MerchantPortalPage() {
@@ -160,6 +161,12 @@ export default function MerchantPortalPage() {
                     <span>API Keys</span>
                   </div>
                 </SelectItem>
+                <SelectItem value="api">
+                  <div className="flex items-center gap-2">
+                    <Code2 className="h-4 w-4" />
+                    <span>API</span>
+                  </div>
+                </SelectItem>
                 <SelectItem value="webhooks">
                   <div className="flex items-center gap-2">
                     <Webhook className="h-4 w-4" />
@@ -192,10 +199,14 @@ export default function MerchantPortalPage() {
         {/* Desktop: Tabs */}
         {!isMobile && (
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 bg-muted">
+            <TabsList className="grid w-full grid-cols-6 bg-muted">
               <TabsTrigger value="api-keys" className="data-[state=active]:bg-background data-[state=active]:text-foreground">
                 <Key className="mr-2 h-4 w-4" />
                 API Keys
+              </TabsTrigger>
+              <TabsTrigger value="api" className="data-[state=active]:bg-background data-[state=active]:text-foreground">
+                <Code2 className="mr-2 h-4 w-4" />
+                API
               </TabsTrigger>
               <TabsTrigger value="webhooks" className="data-[state=active]:bg-background data-[state=active]:text-foreground">
                 <Webhook className="mr-2 h-4 w-4" />
@@ -217,6 +228,10 @@ export default function MerchantPortalPage() {
 
             <TabsContent value="api-keys" className="mt-6">
               <MerchantAPIKeys merchantAccount={merchantAccount} onUpdate={loadMerchantAccount} />
+            </TabsContent>
+            
+            <TabsContent value="api" className="mt-6">
+              <MerchantAPI merchantAccount={merchantAccount} />
             </TabsContent>
             
             <TabsContent value="webhooks" className="mt-6">
@@ -242,6 +257,9 @@ export default function MerchantPortalPage() {
           <div className="mt-6">
             {activeTab === 'api-keys' && (
               <MerchantAPIKeys merchantAccount={merchantAccount} onUpdate={loadMerchantAccount} />
+            )}
+            {activeTab === 'api' && (
+              <MerchantAPI merchantAccount={merchantAccount} />
             )}
             {activeTab === 'webhooks' && (
               <MerchantWebhooks merchantAccount={merchantAccount} onUpdate={loadMerchantAccount} />
