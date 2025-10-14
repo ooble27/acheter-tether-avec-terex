@@ -14,10 +14,10 @@ export function MerchantDocumentation() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="overview">
-            <TabsList>
-              <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
-              <TabsTrigger value="payment">Paiements</TabsTrigger>
-              <TabsTrigger value="examples">Exemples</TabsTrigger>
+            <TabsList className="w-full justify-start overflow-x-auto">
+              <TabsTrigger value="overview" className="text-xs md:text-sm whitespace-nowrap">Vue d'ensemble</TabsTrigger>
+              <TabsTrigger value="payment" className="text-xs md:text-sm whitespace-nowrap">Paiements</TabsTrigger>
+              <TabsTrigger value="examples" className="text-xs md:text-sm whitespace-nowrap">Exemples</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="space-y-4">
