@@ -154,6 +154,61 @@ serve(async (req) => {
       );
     }
 
+    // GET / - List all payments for merchant
+    if (req.method === 'GET' && pathParts.length === 0) {
+      const url = new URL(req.url);
+      const page = parseInt(url.searchParams.get('page') || '1');
+      const limit = Math.min(parseInt(url.searchParams.get('limit') || '50'), 100);
+      const status = url.searchParams.get('status');
+      const offset = (page - 1) * limit;
+
+      let query = supabase
+        .from('terex_payments')
+        .select('*', { count: 'exact' })
+        .eq('merchant_id', merchant.id)
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      if (status) {
+        query = query.eq('status', status);
+      }
+
+      const { data: payments, error: paymentsError, count } = await query;
+
+      if (paymentsError) {
+        console.error('Error fetching payments:', paymentsError);
+        return new Response(
+          JSON.stringify({ error: 'Failed to fetch payments' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          payments: payments?.map(p => ({
+            id: p.id,
+            reference_number: p.reference_number,
+            amount: p.amount,
+            currency: p.currency,
+            usdt_amount: p.usdt_amount,
+            status: p.status,
+            paid_at: p.paid_at,
+            created_at: p.created_at,
+            expires_at: p.expires_at,
+            customer_email: p.customer_email,
+          })) || [],
+          pagination: {
+            page,
+            limit,
+            total: count || 0,
+            pages: Math.ceil((count || 0) / limit)
+          }
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // GET /:payment_id - Get payment status
     if (req.method === 'GET' && pathParts.length === 1) {
       const paymentId = pathParts[0];
@@ -190,6 +245,198 @@ serve(async (req) => {
           }
         }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // PUT /:payment_id/confirm - Confirm payment (mark as paid)
+    if (req.method === 'PUT' && pathParts.length === 2 && pathParts[1] === 'confirm') {
+      const paymentId = pathParts[0];
+
+      // Verify payment belongs to merchant
+      const { data: payment, error: fetchError } = await supabase
+        .from('terex_payments')
+        .select('*')
+        .eq('id', paymentId)
+        .eq('merchant_id', merchant.id)
+        .single();
+
+      if (fetchError || !payment) {
+        return new Response(
+          JSON.stringify({ error: 'Payment not found' }),
+          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      if (payment.status === 'completed') {
+        return new Response(
+          JSON.stringify({ error: 'Payment already confirmed' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      if (payment.status === 'expired') {
+        return new Response(
+          JSON.stringify({ error: 'Payment has expired' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Update payment status
+      const { data: updatedPayment, error: updateError } = await supabase
+        .from('terex_payments')
+        .update({
+          status: 'completed',
+          paid_at: new Date().toISOString(),
+        })
+        .eq('id', paymentId)
+        .select()
+        .single();
+
+      if (updateError) {
+        console.error('Payment confirmation error:', updateError);
+        return new Response(
+          JSON.stringify({ error: 'Failed to confirm payment' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      console.log('Payment confirmed:', paymentId);
+
+      // Send webhook
+      if (merchant.webhook_url) {
+        try {
+          await fetch(merchant.webhook_url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              event: 'payment.completed',
+              payment_id: updatedPayment.id,
+              merchant_id: merchant.id,
+              amount: updatedPayment.amount,
+              currency: updatedPayment.currency,
+              usdt_amount: updatedPayment.usdt_amount,
+              status: updatedPayment.status,
+              reference_number: updatedPayment.reference_number,
+              timestamp: new Date().toISOString(),
+            }),
+          });
+        } catch (webhookError) {
+          console.error('Webhook error:', webhookError);
+        }
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          payment: {
+            id: updatedPayment.id,
+            reference_number: updatedPayment.reference_number,
+            status: updatedPayment.status,
+            paid_at: updatedPayment.paid_at,
+          }
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // POST /:payment_id/refund - Create refund
+    if (req.method === 'POST' && pathParts.length === 2 && pathParts[1] === 'refund') {
+      const paymentId = pathParts[0];
+      const body = await req.json();
+
+      // Verify payment belongs to merchant
+      const { data: payment, error: fetchError } = await supabase
+        .from('terex_payments')
+        .select('*')
+        .eq('id', paymentId)
+        .eq('merchant_id', merchant.id)
+        .single();
+
+      if (fetchError || !payment) {
+        return new Response(
+          JSON.stringify({ error: 'Payment not found' }),
+          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      if (payment.status !== 'completed') {
+        return new Response(
+          JSON.stringify({ error: 'Can only refund completed payments' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const refundAmount = body.amount || payment.amount;
+
+      if (refundAmount > payment.amount) {
+        return new Response(
+          JSON.stringify({ error: 'Refund amount exceeds payment amount' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Create refund record
+      const { data: refund, error: refundError } = await supabase
+        .from('refunds')
+        .insert({
+          payment_id: paymentId,
+          amount: refundAmount,
+          reason: body.reason || null,
+          status: 'pending',
+        })
+        .select()
+        .single();
+
+      if (refundError) {
+        console.error('Refund creation error:', refundError);
+        return new Response(
+          JSON.stringify({ error: 'Failed to create refund' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Update payment status
+      await supabase
+        .from('terex_payments')
+        .update({ status: 'refunded' })
+        .eq('id', paymentId);
+
+      console.log('Refund created:', refund.id);
+
+      // Send webhook
+      if (merchant.webhook_url) {
+        try {
+          await fetch(merchant.webhook_url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              event: 'payment.refunded',
+              payment_id: paymentId,
+              refund_id: refund.id,
+              merchant_id: merchant.id,
+              amount: refundAmount,
+              currency: payment.currency,
+              reason: body.reason,
+              timestamp: new Date().toISOString(),
+            }),
+          });
+        } catch (webhookError) {
+          console.error('Webhook error:', webhookError);
+        }
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          refund: {
+            id: refund.id,
+            payment_id: paymentId,
+            amount: refund.amount,
+            status: refund.status,
+            created_at: refund.created_at,
+          }
+        }),
+        { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
