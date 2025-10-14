@@ -139,27 +139,6 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </Card>
         </div>
 
-        {/* Portail Marchand - Pleine largeur */}
-        <Card 
-          className="bg-gradient-to-r from-terex-accent/20 to-purple-500/20 border-terex-accent/50 hover:border-terex-accent transition-colors cursor-pointer px-0"
-          onClick={() => navigate('/merchant')}
-        >
-          <CardContent className="p-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-terex-accent/30 rounded-lg flex items-center justify-center">
-                  <Store className="w-5 h-5 text-terex-accent" />
-                </div>
-                <div>
-                  <h3 className="text-white text-sm font-medium mb-0.5">Portail Marchand</h3>
-                  <p className="text-gray-400 text-xs">Intégrez Terex via API</p>
-                </div>
-              </div>
-              <ArrowUpRight className="w-4 h-4 text-terex-accent" />
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Section Historique des transactions récentes - px-0 */}
         <div className="px-0">
           <RecentTransactions onNavigate={onNavigate} />
@@ -252,27 +231,6 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </CardContent>
           </Card>
         </div>
-
-        {/* Portail Marchand - Pleine largeur */}
-        <Card 
-          className="bg-gradient-to-r from-terex-accent/20 to-purple-500/20 border-terex-accent/50 hover:border-terex-accent transition-colors cursor-pointer"
-          onClick={() => navigate('/merchant')}
-        >
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-terex-accent/30 rounded-lg flex items-center justify-center">
-                  <Store className="w-6 h-6 text-terex-accent" />
-                </div>
-                <div>
-                  <h3 className="text-white font-medium mb-1">Portail Marchand</h3>
-                  <p className="text-gray-400 text-sm">Intégrez Terex dans vos applications via API</p>
-                </div>
-              </div>
-              <ArrowUpRight className="w-5 h-5 text-terex-accent" />
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Recent Transactions */}
         <RecentTransactions onNavigate={onNavigate} />

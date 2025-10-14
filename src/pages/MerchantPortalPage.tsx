@@ -58,16 +58,36 @@ export default function MerchantPortalPage() {
     setLoading(false);
   };
 
+
+  const [formData, setFormData] = useState({
+    business_name: '',
+    business_type: 'ecommerce',
+    business_email: user?.email || '',
+    business_phone: '',
+    business_address: ''
+  });
+
   const createMerchantAccount = async () => {
     if (!user) return;
+
+    if (!formData.business_name || !formData.business_type) {
+      toast({
+        title: 'Erreur',
+        description: 'Veuillez remplir tous les champs obligatoires',
+        variant: 'destructive'
+      });
+      return;
+    }
 
     const { data, error } = await supabase
       .from('merchant_accounts')
       .insert([{
         user_id: user.id,
-        business_name: user.email?.split('@')[0] || 'Mon entreprise',
-        business_email: user.email,
-        business_type: 'ecommerce'
+        business_name: formData.business_name,
+        business_email: formData.business_email,
+        business_type: formData.business_type,
+        business_phone: formData.business_phone || null,
+        business_address: formData.business_address || null
       }])
       .select()
       .single();
@@ -83,8 +103,9 @@ export default function MerchantPortalPage() {
 
     setMerchantAccount(data);
     toast({
-      title: 'Compte marchand créé',
-      description: 'Votre compte marchand a été créé avec succès'
+      title: 'Compte marchand créé !',
+      description: 'Votre compte marchand a été créé avec succès. Vous pouvez maintenant accéder à votre QR code et aux APIs.',
+      className: "bg-green-600 text-white border-green-600"
     });
   };
 
@@ -99,7 +120,7 @@ export default function MerchantPortalPage() {
   if (!merchantAccount) {
     return (
       <div className="min-h-screen bg-background p-4">
-        <div className="max-w-4xl mx-auto pt-20">
+        <div className="max-w-2xl mx-auto pt-20 pb-10">
           <Button
             variant="ghost"
             onClick={() => navigate('/dashboard')}
@@ -110,20 +131,116 @@ export default function MerchantPortalPage() {
           </Button>
 
           <Card>
-            <CardHeader>
-              <CardTitle>Portail Marchand Terex</CardTitle>
-              <CardDescription>
-                Créez votre compte marchand pour accéder aux APIs de paiement
-              </CardDescription>
+            <CardHeader className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-purple-500 rounded-xl flex items-center justify-center">
+                  <Code2 className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl">Devenir Marchand Terex</CardTitle>
+                  <CardDescription>
+                    Intégrez les paiements USDT dans votre business
+                  </CardDescription>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-muted-foreground">
-                Le portail marchand vous permet d'intégrer Terex dans vos applications via API.
-                Vous pourrez accepter des paiements en USDT, gérer des transactions et suivre vos revenus.
-              </p>
-              <Button onClick={createMerchantAccount}>
+            <CardContent className="space-y-6">
+              <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <h3 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">
+                  Pourquoi devenir marchand ?
+                </h3>
+                <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+                  <li>• Acceptez des paiements USDT instantanés</li>
+                  <li>• API complète pour intégration facile</li>
+                  <li>• QR code permanent pour votre boutique</li>
+                  <li>• Webhooks pour automatiser vos processus</li>
+                  <li>• Commissions compétitives (0.5%)</li>
+                </ul>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Nom de votre entreprise <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.business_name}
+                    onChange={(e) => setFormData({ ...formData, business_name: e.target.value })}
+                    placeholder="Ex: Ma Boutique SARL"
+                    className="w-full p-3 rounded-lg border border-input bg-background"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Type d'entreprise <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={formData.business_type}
+                    onChange={(e) => setFormData({ ...formData, business_type: e.target.value })}
+                    className="w-full p-3 rounded-lg border border-input bg-background"
+                  >
+                    <option value="ecommerce">E-commerce</option>
+                    <option value="retail">Commerce de détail</option>
+                    <option value="restaurant">Restaurant</option>
+                    <option value="services">Services</option>
+                    <option value="marketplace">Marketplace</option>
+                    <option value="other">Autre</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Email professionnel <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.business_email}
+                    onChange={(e) => setFormData({ ...formData, business_email: e.target.value })}
+                    placeholder="contact@monentreprise.com"
+                    className="w-full p-3 rounded-lg border border-input bg-background"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Téléphone professionnel (optionnel)
+                  </label>
+                  <input
+                    type="tel"
+                    value={formData.business_phone}
+                    onChange={(e) => setFormData({ ...formData, business_phone: e.target.value })}
+                    placeholder="+237 6XX XX XX XX"
+                    className="w-full p-3 rounded-lg border border-input bg-background"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium mb-2 block">
+                    Adresse (optionnel)
+                  </label>
+                  <textarea
+                    value={formData.business_address}
+                    onChange={(e) => setFormData({ ...formData, business_address: e.target.value })}
+                    placeholder="Adresse complète de votre entreprise"
+                    rows={3}
+                    className="w-full p-3 rounded-lg border border-input bg-background resize-none"
+                  />
+                </div>
+              </div>
+
+              <Button 
+                onClick={createMerchantAccount}
+                className="w-full bg-gradient-to-r from-terex-accent to-purple-500 hover:from-terex-accent/90 hover:to-purple-500/90"
+                size="lg"
+              >
                 Créer mon compte marchand
               </Button>
+
+              <p className="text-xs text-muted-foreground text-center">
+                En créant votre compte marchand, vous acceptez nos conditions d'utilisation et notre politique de confidentialité.
+              </p>
             </CardContent>
           </Card>
         </div>

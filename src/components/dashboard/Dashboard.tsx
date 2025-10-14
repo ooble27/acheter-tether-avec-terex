@@ -94,7 +94,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
   const handleNavigate = (section: string) => {
     // Pages qui doivent ouvrir une nouvelle route
-    const externalPages = ['contact', 'feedback', 'referral', 'share-app', 'terms'];
+    const externalPages = ['contact', 'feedback', 'referral', 'share-app', 'terms', 'merchant'];
     
     if (externalPages.includes(section)) {
       switch (section) {
@@ -112,6 +112,9 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
           break;
         case 'terms':
           navigate('/terms');
+          break;
+        case 'merchant':
+          navigate('/merchant');
           break;
       }
     } else {

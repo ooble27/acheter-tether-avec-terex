@@ -48,6 +48,14 @@ export function MerchantPaymentQR({ merchantAccount }: MerchantPaymentQRProps) {
           <head>
             <title>QR Code - ${merchantAccount.business_name}</title>
             <style>
+              @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+              
+              * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+              }
+              
               body {
                 display: flex;
                 flex-direction: column;
@@ -55,39 +63,172 @@ export function MerchantPaymentQR({ merchantAccount }: MerchantPaymentQRProps) {
                 justify-content: center;
                 min-height: 100vh;
                 margin: 0;
-                font-family: Arial, sans-serif;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
               }
+              
               .container {
-                text-align: center;
-                padding: 40px;
-              }
-              h1 {
-                margin-bottom: 20px;
-                color: #333;
-              }
-              img {
-                border: 2px solid #ddd;
-                padding: 20px;
                 background: white;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                border-radius: 24px;
+                padding: 60px;
+                text-align: center;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                max-width: 600px;
               }
+              
+              .logo {
+                margin-bottom: 30px;
+              }
+              
+              .terex-logo {
+                font-size: 36px;
+                font-weight: 700;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+              }
+              
+              h1 {
+                margin-bottom: 10px;
+                color: #1a202c;
+                font-size: 28px;
+                font-weight: 700;
+              }
+              
+              .subtitle {
+                color: #718096;
+                font-size: 16px;
+                margin-bottom: 40px;
+              }
+              
+              .qr-container {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                padding: 30px;
+                border-radius: 20px;
+                display: inline-block;
+                margin-bottom: 30px;
+              }
+              
+              img {
+                border-radius: 12px;
+                background: white;
+                padding: 20px;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+              }
+              
               .info {
-                margin-top: 30px;
-                color: #666;
+                margin-top: 40px;
+                padding: 30px;
+                background: #f7fafc;
+                border-radius: 16px;
               }
+              
+              .info-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 0;
+                border-bottom: 1px solid #e2e8f0;
+              }
+              
+              .info-row:last-child {
+                border-bottom: none;
+              }
+              
+              .info-label {
+                color: #718096;
+                font-weight: 600;
+                font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+              }
+              
+              .info-value {
+                color: #1a202c;
+                font-weight: 600;
+                font-size: 16px;
+                font-family: 'Monaco', 'Courier New', monospace;
+              }
+              
+              .instructions {
+                margin-top: 30px;
+                padding: 20px;
+                background: #edf2f7;
+                border-radius: 12px;
+                text-align: left;
+              }
+              
+              .instructions h3 {
+                color: #2d3748;
+                font-size: 18px;
+                margin-bottom: 15px;
+              }
+              
+              .instructions ol {
+                margin-left: 20px;
+                color: #4a5568;
+                line-height: 1.8;
+              }
+              
+              .footer {
+                margin-top: 40px;
+                color: #a0aec0;
+                font-size: 14px;
+              }
+              
               @media print {
-                .no-print { display: none; }
+                body {
+                  background: white;
+                }
+                .no-print { 
+                  display: none; 
+                }
               }
             </style>
           </head>
           <body>
             <div class="container">
+              <div class="logo">
+                <div class="terex-logo">TEREX</div>
+              </div>
+              
               <h1>${merchantAccount.business_name}</h1>
-              <p>Scannez pour payer en USDT</p>
-              <img src="${getQRCodeUrl(500)}" alt="QR Code de paiement" />
+              <p class="subtitle">Scannez pour payer en USDT via Terex</p>
+              
+              <div class="qr-container">
+                <img src="${getQRCodeUrl(500)}" alt="QR Code de paiement" width="300" height="300" />
+              </div>
+              
               <div class="info">
-                <p><strong>Code:</strong> ${qrCode}</p>
+                <div class="info-row">
+                  <span class="info-label">Code Marchand</span>
+                  <span class="info-value">${qrCode}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Type d'entreprise</span>
+                  <span class="info-value">${merchantAccount.business_type || 'Commerce'}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Contact</span>
+                  <span class="info-value">${merchantAccount.business_email}</span>
+                </div>
+              </div>
+              
+              <div class="instructions">
+                <h3>💡 Comment utiliser ce QR Code ?</h3>
+                <ol>
+                  <li>Ouvrez l'application Terex sur votre smartphone</li>
+                  <li>Scannez ce QR code avec la caméra</li>
+                  <li>Entrez le montant à payer en CFA ou USDT</li>
+                  <li>Confirmez le paiement</li>
+                  <li>Recevez votre confirmation instantanée</li>
+                </ol>
+              </div>
+              
+              <div class="footer">
                 <p><strong>URL:</strong> ${paymentUrl}</p>
+                <p style="margin-top: 10px;">Propulsé par Terex - La plateforme de paiement crypto en Afrique</p>
               </div>
             </div>
           </body>
