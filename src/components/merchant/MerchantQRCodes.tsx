@@ -201,7 +201,7 @@ export function MerchantQRCodes({ merchantId }: MerchantQRCodesProps) {
                               variant="outline"
                               size="sm"
                               onClick={() => copyToClipboard(
-                                `https://terex.app/pay/qr/${qr.qr_code}`,
+                                `https://terangaexchange.com/pay/qr/${qr.qr_code}`,
                                 'URL de paiement'
                               )}
                             >
@@ -214,7 +214,7 @@ export function MerchantQRCodes({ merchantId }: MerchantQRCodesProps) {
                               asChild
                             >
                               <a 
-                                href={`https://terex.app/pay/qr/${qr.qr_code}`}
+                                href={`https://terangaexchange.com/pay/qr/${qr.qr_code}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
@@ -274,7 +274,7 @@ export function MerchantQRCodes({ merchantId }: MerchantQRCodesProps) {
     "id": "uuid",
     "qr_code": "TRXQR-XXXXX",
     "payment_id": "uuid",
-    "payment_url": "https://terex.app/pay/qr/TRXQR-XXXXX",
+    "payment_url": "https://terangaexchange.com/pay/qr/TRXQR-XXXXX",
     "expires_at": "2024-01-01T12:30:00Z",
     "created_at": "2024-01-01T12:00:00Z"
   }

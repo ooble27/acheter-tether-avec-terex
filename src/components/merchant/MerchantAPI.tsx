@@ -88,7 +88,7 @@ export function MerchantAPI({ merchantAccount }: MerchantAPIProps) {
     "usdt_amount": 85.47,
     "exchange_rate": 585,
     "status": "pending",
-    "payment_url": "https://terex.app/pay/uuid",
+    "payment_url": "https://terangaexchange.com/pay/uuid",
     "expires_at": "2024-01-01T12:30:00Z",
     "created_at": "2024-01-01T12:00:00Z"
   }

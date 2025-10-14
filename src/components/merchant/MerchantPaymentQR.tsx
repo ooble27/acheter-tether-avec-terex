@@ -14,7 +14,7 @@ export function MerchantPaymentQR({ merchantAccount }: MerchantPaymentQRProps) {
   const [qrSize, setQrSize] = useState<'small' | 'medium' | 'large'>('medium');
 
   const qrCode = merchantAccount.merchant_qr_code;
-  const paymentUrl = `https://terex.app/pay/merchant/${qrCode}`;
+  const paymentUrl = `https://terangaexchange.com/pay/merchant/${qrCode}`;
 
   // Générer une URL de QR code via une API externe (QR Code Generator API)
   const getQRCodeUrl = (size: number) => {

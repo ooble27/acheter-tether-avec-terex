@@ -78,7 +78,7 @@ const handler = async (req: Request): Promise<Response> => {
           ` : ''}
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://terex.app/admin" style="background: #0FA958; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+            <a href="https://terangaexchange.com/admin" style="background: #0FA958; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
               Voir dans l'admin
             </a>
           </div>
@@ -124,7 +124,7 @@ const handler = async (req: Request): Promise<Response> => {
           <p style="color: #666; font-size: 14px; margin-top: 30px;">
             Cordialement,<br>
             L'équipe Terex<br>
-            <a href="https://terex.app">terex.app</a>
+            <a href="https://terangaexchange.com">terangaexchange.com</a>
           </p>
         </div>
       `,

@@ -98,7 +98,7 @@ export function MerchantDocumentation() {
     "usdt_amount": 85.47,
     "exchange_rate": 585,
     "status": "pending",
-    "payment_url": "https://terex.app/pay/uuid",
+    "payment_url": "https://terangaexchange.com/pay/uuid",
     "expires_at": "2025-01-14T12:00:00Z"
   }
 }`}</code>

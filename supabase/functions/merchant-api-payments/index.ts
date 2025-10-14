@@ -725,7 +725,7 @@ serve(async (req) => {
             id: qrRecord.id,
             qr_code: qrRecord.qr_code,
             payment_id: paymentId,
-            payment_url: `https://terex.app/pay/qr/${qrCode}`,
+            payment_url: `https://terangaexchange.com/pay/qr/${qrCode}`,
             expires_at: qrRecord.expires_at,
             created_at: qrRecord.created_at,
           }
