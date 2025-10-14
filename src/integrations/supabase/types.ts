@@ -1303,6 +1303,53 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_logs: {
+        Row: {
+          created_at: string
+          delivered_at: string | null
+          error_message: string | null
+          event_type: string
+          id: string
+          merchant_id: string
+          payload: Json
+          response_body: string | null
+          response_status: number | null
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          event_type: string
+          id?: string
+          merchant_id: string
+          payload: Json
+          response_body?: string | null
+          response_status?: number | null
+          url: string
+        }
+        Update: {
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          merchant_id?: string
+          payload?: Json
+          response_body?: string | null
+          response_status?: number | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_logs_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

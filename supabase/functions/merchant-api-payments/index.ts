@@ -111,26 +111,52 @@ serve(async (req) => {
 
       console.log('Payment created:', payment.id);
 
-      // Send webhook if configured
+      // Send webhook if configured with logging
       if (merchant.webhook_url) {
+        const webhookPayload = {
+          event: 'payment.created',
+          payment_id: payment.id,
+          merchant_id: merchant.id,
+          amount: payment.amount,
+          currency: payment.currency,
+          usdt_amount: payment.usdt_amount,
+          status: payment.status,
+          reference_number: payment.reference_number,
+          timestamp: new Date().toISOString(),
+        };
+
         try {
-          await fetch(merchant.webhook_url, {
+          const webhookResponse = await fetch(merchant.webhook_url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              event: 'payment.created',
-              payment_id: payment.id,
-              merchant_id: merchant.id,
-              amount: payment.amount,
-              currency: payment.currency,
-              usdt_amount: payment.usdt_amount,
-              status: payment.status,
-              reference_number: payment.reference_number,
-              timestamp: new Date().toISOString(),
-            }),
+            body: JSON.stringify(webhookPayload),
           });
+
+          const responseBody = await webhookResponse.text();
+
+          // Log webhook
+          await supabase.from('webhook_logs').insert({
+            merchant_id: merchant.id,
+            event_type: 'payment.created',
+            payload: webhookPayload,
+            url: merchant.webhook_url,
+            response_status: webhookResponse.status,
+            response_body: responseBody.substring(0, 1000), // Limit to 1000 chars
+            delivered_at: new Date().toISOString(),
+          });
+
+          console.log('Webhook sent successfully:', webhookResponse.status);
         } catch (webhookError) {
           console.error('Webhook error:', webhookError);
+          
+          // Log failed webhook
+          await supabase.from('webhook_logs').insert({
+            merchant_id: merchant.id,
+            event_type: 'payment.created',
+            payload: webhookPayload,
+            url: merchant.webhook_url,
+            error_message: webhookError.message,
+          });
         }
       }
 
@@ -301,27 +327,49 @@ serve(async (req) => {
 
       console.log('Payment confirmed:', updatedPayment.id);
 
-      // Send webhook
+      // Send webhook with logging
       if (merchant.webhook_url) {
+        const webhookPayload = {
+          event: 'payment.completed',
+          payment_id: updatedPayment.id,
+          merchant_id: merchant.id,
+          amount: updatedPayment.amount,
+          currency: updatedPayment.currency,
+          usdt_amount: updatedPayment.usdt_amount,
+          status: updatedPayment.status,
+          reference_number: updatedPayment.reference_number,
+          paid_at: updatedPayment.paid_at,
+          timestamp: new Date().toISOString(),
+        };
+
         try {
-          await fetch(merchant.webhook_url, {
+          const webhookResponse = await fetch(merchant.webhook_url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              event: 'payment.completed',
-              payment_id: updatedPayment.id,
-              merchant_id: merchant.id,
-              amount: updatedPayment.amount,
-              currency: updatedPayment.currency,
-              usdt_amount: updatedPayment.usdt_amount,
-              status: updatedPayment.status,
-              reference_number: updatedPayment.reference_number,
-              paid_at: updatedPayment.paid_at,
-              timestamp: new Date().toISOString(),
-            }),
+            body: JSON.stringify(webhookPayload),
+          });
+
+          const responseBody = await webhookResponse.text();
+
+          await supabase.from('webhook_logs').insert({
+            merchant_id: merchant.id,
+            event_type: 'payment.completed',
+            payload: webhookPayload,
+            url: merchant.webhook_url,
+            response_status: webhookResponse.status,
+            response_body: responseBody.substring(0, 1000),
+            delivered_at: new Date().toISOString(),
           });
         } catch (webhookError) {
           console.error('Webhook error:', webhookError);
+          
+          await supabase.from('webhook_logs').insert({
+            merchant_id: merchant.id,
+            event_type: 'payment.completed',
+            payload: webhookPayload,
+            url: merchant.webhook_url,
+            error_message: webhookError.message,
+          });
         }
       }
 
@@ -421,25 +469,47 @@ serve(async (req) => {
 
       console.log('Refund created:', refund.id);
 
-      // Send webhook
+      // Send webhook with logging
       if (merchant.webhook_url) {
+        const webhookPayload = {
+          event: 'payment.refunded',
+          payment_id: paymentId,
+          refund_id: refund.id,
+          merchant_id: merchant.id,
+          refund_amount: refundAmount,
+          payment_amount: payment.amount,
+          reason: body.reason || null,
+          timestamp: new Date().toISOString(),
+        };
+
         try {
-          await fetch(merchant.webhook_url, {
+          const webhookResponse = await fetch(merchant.webhook_url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              event: 'payment.refunded',
-              payment_id: paymentId,
-              refund_id: refund.id,
-              merchant_id: merchant.id,
-              refund_amount: refundAmount,
-              payment_amount: payment.amount,
-              reason: body.reason || null,
-              timestamp: new Date().toISOString(),
-            }),
+            body: JSON.stringify(webhookPayload),
+          });
+
+          const responseBody = await webhookResponse.text();
+
+          await supabase.from('webhook_logs').insert({
+            merchant_id: merchant.id,
+            event_type: 'payment.refunded',
+            payload: webhookPayload,
+            url: merchant.webhook_url,
+            response_status: webhookResponse.status,
+            response_body: responseBody.substring(0, 1000),
+            delivered_at: new Date().toISOString(),
           });
         } catch (webhookError) {
           console.error('Webhook error:', webhookError);
+          
+          await supabase.from('webhook_logs').insert({
+            merchant_id: merchant.id,
+            event_type: 'payment.refunded',
+            payload: webhookPayload,
+            url: merchant.webhook_url,
+            error_message: webhookError.message,
+          });
         }
       }
 
@@ -456,6 +526,119 @@ serve(async (req) => {
           }
         }),
         { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // POST /webhooks/test - Test webhook endpoint
+    if (req.method === 'POST' && pathParts.length === 2 && pathParts[0] === 'webhooks' && pathParts[1] === 'test') {
+      if (!merchant.webhook_url) {
+        return new Response(
+          JSON.stringify({ error: 'No webhook URL configured' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const testPayload = {
+        event: 'webhook.test',
+        merchant_id: merchant.id,
+        message: 'This is a test webhook from Terex API',
+        timestamp: new Date().toISOString(),
+      };
+
+      try {
+        const webhookResponse = await fetch(merchant.webhook_url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(testPayload),
+        });
+
+        const responseBody = await webhookResponse.text();
+
+        // Log test webhook
+        await supabase.from('webhook_logs').insert({
+          merchant_id: merchant.id,
+          event_type: 'webhook.test',
+          payload: testPayload,
+          url: merchant.webhook_url,
+          response_status: webhookResponse.status,
+          response_body: responseBody.substring(0, 1000),
+          delivered_at: new Date().toISOString(),
+        });
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: 'Test webhook sent successfully',
+            status: webhookResponse.status,
+            response: responseBody.substring(0, 500),
+          }),
+          { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      } catch (error) {
+        console.error('Test webhook error:', error);
+
+        // Log failed test webhook
+        await supabase.from('webhook_logs').insert({
+          merchant_id: merchant.id,
+          event_type: 'webhook.test',
+          payload: testPayload,
+          url: merchant.webhook_url,
+          error_message: error.message,
+        });
+
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'Failed to send test webhook',
+            details: error.message,
+          }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    // GET /webhooks/logs - Get webhook logs
+    if (req.method === 'GET' && pathParts.length === 2 && pathParts[0] === 'webhooks' && pathParts[1] === 'logs') {
+      const page = parseInt(url.searchParams.get('page') || '1');
+      const limit = parseInt(url.searchParams.get('limit') || '20');
+      const offset = (page - 1) * limit;
+
+      const { data: logs, error: logsError, count } = await supabase
+        .from('webhook_logs')
+        .select('*', { count: 'exact' })
+        .eq('merchant_id', merchant.id)
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      if (logsError) {
+        console.error('Webhook logs error:', logsError);
+        return new Response(
+          JSON.stringify({ error: 'Failed to fetch webhook logs', details: logsError.message }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          logs: logs.map(log => ({
+            id: log.id,
+            event_type: log.event_type,
+            url: log.url,
+            response_status: log.response_status,
+            error_message: log.error_message,
+            created_at: log.created_at,
+            delivered_at: log.delivered_at,
+            payload: log.payload,
+          })),
+          pagination: {
+            page,
+            limit,
+            total: count || 0,
+            total_pages: Math.ceil((count || 0) / limit),
+          }
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
