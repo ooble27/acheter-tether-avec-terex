@@ -31,8 +31,8 @@ export function MerchantDocumentation() {
 
               <div>
                 <h3 className="text-lg font-semibold mb-2">Base URL</h3>
-                <pre className="bg-muted p-3 rounded-lg">
-                  <code>https://mwwjrrduavfcwjiyniuy.supabase.co/functions/v1</code>
+                <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
+                  <code className="text-xs md:text-sm break-all">https://mwwjrrduavfcwjiyniuy.supabase.co/functions/v1</code>
                 </pre>
               </div>
 
@@ -41,8 +41,8 @@ export function MerchantDocumentation() {
                 <p className="text-muted-foreground mb-2">
                   Incluez votre clé API dans chaque requête :
                 </p>
-                <pre className="bg-muted p-3 rounded-lg">
-                  <code>Authorization: Bearer VOTRE_CLE_API</code>
+                <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
+                  <code className="text-xs md:text-sm break-all">Authorization: Bearer VOTRE_CLE_API</code>
                 </pre>
               </div>
 
@@ -63,15 +63,15 @@ export function MerchantDocumentation() {
                 
                 <div className="mb-4">
                   <p className="text-sm font-medium mb-2">Endpoint</p>
-                  <pre className="bg-muted p-3 rounded-lg">
-                    <code>POST /merchant-api-payments</code>
+                  <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
+                    <code className="text-xs md:text-sm break-all">POST /merchant-api-payments</code>
                   </pre>
                 </div>
 
                 <div className="mb-4">
                   <p className="text-sm font-medium mb-2">Request Body</p>
                   <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
-{`{
+                    <code className="text-xs md:text-sm whitespace-pre-wrap break-all">{`{
   "amount": 50000,
   "currency": "CFA",
   "description": "Commande #123",
@@ -81,14 +81,14 @@ export function MerchantDocumentation() {
     "order_id": "123",
     "customer_name": "John Doe"
   }
-}`}
+}`}</code>
                   </pre>
                 </div>
 
                 <div>
                   <p className="text-sm font-medium mb-2">Response</p>
                   <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
-{`{
+                    <code className="text-xs md:text-sm whitespace-pre-wrap break-all">{`{
   "success": true,
   "payment": {
     "id": "uuid",
@@ -101,7 +101,7 @@ export function MerchantDocumentation() {
     "payment_url": "https://terex.app/pay/uuid",
     "expires_at": "2025-01-14T12:00:00Z"
   }
-}`}
+}`}</code>
                   </pre>
                 </div>
               </div>
@@ -110,15 +110,15 @@ export function MerchantDocumentation() {
                 <h3 className="text-lg font-semibold mb-2">Vérifier un paiement</h3>
                 <div className="mb-4">
                   <p className="text-sm font-medium mb-2">Endpoint</p>
-                  <pre className="bg-muted p-3 rounded-lg">
-                    <code>GET /merchant-api-payments/{'{'}{'}'}payment_id{'}'}</code>
+                  <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
+                    <code className="text-xs md:text-sm break-all">{`GET /merchant-api-payments/{payment_id}`}</code>
                   </pre>
                 </div>
 
                 <div>
                   <p className="text-sm font-medium mb-2">Response</p>
                   <pre className="bg-muted p-3 rounded-lg overflow-x-auto">
-{`{
+                    <code className="text-xs md:text-sm whitespace-pre-wrap break-all">{`{
   "success": true,
   "payment": {
     "id": "uuid",
@@ -126,7 +126,7 @@ export function MerchantDocumentation() {
     "paid_at": "2025-01-14T10:30:00Z",
     ...
   }
-}`}
+}`}</code>
                   </pre>
                 </div>
               </div>
@@ -139,7 +139,7 @@ export function MerchantDocumentation() {
                   JavaScript / Node.js
                 </h3>
                 <pre className="bg-muted p-4 rounded-lg overflow-x-auto">
-{`const createPayment = async () => {
+                  <code className="text-xs md:text-sm whitespace-pre-wrap break-all">{`const createPayment = async () => {
   const response = await fetch(
     'https://mwwjrrduavfcwjiyniuy.supabase.co/functions/v1/merchant-api-payments',
     {
@@ -159,7 +159,7 @@ export function MerchantDocumentation() {
 
   const data = await response.json();
   console.log(data.payment.payment_url);
-};`}
+};`}</code>
                 </pre>
               </div>
 
@@ -169,7 +169,7 @@ export function MerchantDocumentation() {
                   Python
                 </h3>
                 <pre className="bg-muted p-4 rounded-lg overflow-x-auto">
-{`import requests
+                  <code className="text-xs md:text-sm whitespace-pre-wrap break-all">{`import requests
 
 def create_payment():
     url = "https://mwwjrrduavfcwjiyniuy.supabase.co/functions/v1/merchant-api-payments"
@@ -186,7 +186,7 @@ def create_payment():
     
     response = requests.post(url, headers=headers, json=data)
     payment = response.json()
-    print(payment["payment"]["payment_url"])`}
+    print(payment["payment"]["payment_url"])`}</code>
                 </pre>
               </div>
 
@@ -196,7 +196,7 @@ def create_payment():
                   PHP
                 </h3>
                 <pre className="bg-muted p-4 rounded-lg overflow-x-auto">
-{`<?php
+                  <code className="text-xs md:text-sm whitespace-pre-wrap break-all">{`<?php
 $curl = curl_init();
 
 curl_setopt_array($curl, [
@@ -218,7 +218,7 @@ curl_setopt_array($curl, [
 $response = curl_exec($curl);
 $data = json_decode($response, true);
 echo $data["payment"]["payment_url"];
-?>`}
+?>`}</code>
                 </pre>
               </div>
             </TabsContent>

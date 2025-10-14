@@ -110,6 +110,7 @@ export function MerchantWebhooks({ merchantAccount, onUpdate }: MerchantWebhooks
               placeholder="https://votre-site.com/webhook"
               value={webhookUrl}
               onChange={(e) => setWebhookUrl(e.target.value)}
+              className="text-sm break-all"
             />
             <p className="text-xs text-muted-foreground">
               Cette URL recevra les notifications POST pour tous les événements
@@ -150,8 +151,8 @@ export function MerchantWebhooks({ merchantAccount, onUpdate }: MerchantWebhooks
               { event: 'payment.expired', description: 'Un paiement a expiré' },
             ].map((item) => (
               <div key={item.event} className="flex items-start gap-3 p-3 border rounded-lg">
-                <div className="flex-1">
-                  <code className="text-sm font-mono bg-muted px-2 py-1 rounded">
+                <div className="flex-1 min-w-0">
+                  <code className="text-xs font-mono bg-muted px-2 py-1 rounded break-all">
                     {item.event}
                   </code>
                   <p className="text-sm text-muted-foreground mt-1">
@@ -169,8 +170,8 @@ export function MerchantWebhooks({ merchantAccount, onUpdate }: MerchantWebhooks
           <CardTitle>Format des webhooks</CardTitle>
         </CardHeader>
         <CardContent>
-          <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">
-{`{
+          <pre className="bg-muted p-4 rounded-lg overflow-x-auto">
+            <code className="text-xs md:text-sm whitespace-pre-wrap break-all">{`{
   "event": "payment.completed",
   "payment_id": "uuid",
   "merchant_id": "uuid",
@@ -181,7 +182,7 @@ export function MerchantWebhooks({ merchantAccount, onUpdate }: MerchantWebhooks
   "reference_number": "TPY-XXX",
   "timestamp": "2025-01-14T10:00:00Z",
   "signature": "sha256_hmac_signature"
-}`}
+}`}</code>
           </pre>
         </CardContent>
       </Card>
