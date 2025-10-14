@@ -126,17 +126,17 @@ export function MerchantAPIKeys({ merchantAccount, onUpdate }: MerchantAPIKeysPr
                   Régénérer
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent>
+              <AlertDialogContent className="bg-white border-gray-200">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Régénérer la clé API ?</AlertDialogTitle>
-                  <AlertDialogDescription>
+                  <AlertDialogTitle className="text-black">Régénérer la clé API ?</AlertDialogTitle>
+                  <AlertDialogDescription className="text-gray-700">
                     Cette action invalidera immédiatement votre clé API actuelle. 
                     Toutes vos intégrations devront être mises à jour avec la nouvelle clé.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Annuler</AlertDialogCancel>
-                  <AlertDialogAction onClick={regenerateApiKey}>
+                  <AlertDialogCancel className="bg-white text-black border-gray-200 hover:bg-gray-100">Annuler</AlertDialogCancel>
+                  <AlertDialogAction onClick={regenerateApiKey} className="bg-red-600 text-white hover:bg-red-700">
                     Confirmer
                   </AlertDialogAction>
                 </AlertDialogFooter>

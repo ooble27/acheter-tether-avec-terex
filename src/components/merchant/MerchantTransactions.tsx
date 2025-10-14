@@ -79,7 +79,7 @@ export function MerchantTransactions({ merchantId }: MerchantTransactionsProps) 
               </TableHeader>
               <TableBody>
                 {transactions.map((tx) => (
-                  <TableRow key={tx.id} className="border-gray-200">
+                  <TableRow key={tx.id} className="border-gray-200 hover:bg-gray-50">
                     <TableCell className="font-mono text-sm text-black">
                       {tx.reference_number}
                     </TableCell>
