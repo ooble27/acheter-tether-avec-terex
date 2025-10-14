@@ -1,7 +1,7 @@
 
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck, Phone, Star, Gift, Share2, FileText } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck, Phone, Star, Gift, Share2, FileText, Store } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -303,6 +303,10 @@ export function MobileMenu({
     { id: 'history', label: 'Historique', icon: History, description: 'Mes transactions' },
   ];
 
+  const businessItems = [
+    { id: 'merchant', label: 'Devenir Marchand', icon: Store, description: 'Intégrez Terex via API' },
+  ];
+
   const supportItems = [
     { id: 'faq', label: 'FAQ', icon: HelpCircle, description: 'Questions fréquentes' },
     { id: 'contact', label: 'Nous Contacter', icon: Phone, description: 'Support client 24/7' },
@@ -398,6 +402,9 @@ export function MobileMenu({
                 <div className="p-4 space-y-2">
                   {/* Section Profil */}
                   {renderMenuSection('Profil', profileItems)}
+
+                  {/* Section Business */}
+                  {renderMenuSection('Business', businessItems)}
 
                   {/* Section Support */}
                   {renderMenuSection('Support', supportItems)}
