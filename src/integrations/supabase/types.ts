@@ -716,6 +716,7 @@ export type Database = {
           created_at: string
           id: string
           is_active: boolean
+          merchant_qr_code: string | null
           updated_at: string
           user_id: string
           webhook_url: string | null
@@ -731,6 +732,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
+          merchant_qr_code?: string | null
           updated_at?: string
           user_id: string
           webhook_url?: string | null
@@ -746,6 +748,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
+          merchant_qr_code?: string | null
           updated_at?: string
           user_id?: string
           webhook_url?: string | null
@@ -1355,6 +1358,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_merchant_qr_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       generate_payment_reference: {
         Args: Record<PropertyKey, never>
         Returns: string

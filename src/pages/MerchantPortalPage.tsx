@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Key, Webhook, BarChart3, FileText, Code2, QrCode } from 'lucide-react';
+import { ArrowLeft, Key, Webhook, BarChart3, FileText, Code2, QrCode, Scan } from 'lucide-react';
 import { MerchantAPIKeys } from '@/components/merchant/MerchantAPIKeys';
 import { MerchantWebhooks } from '@/components/merchant/MerchantWebhooks';
 import { MerchantTransactions } from '@/components/merchant/MerchantTransactions';
@@ -13,13 +13,14 @@ import { MerchantAnalytics } from '@/components/merchant/MerchantAnalytics';
 import { MerchantDocumentation } from '@/components/merchant/MerchantDocumentation';
 import { MerchantAPI } from '@/components/merchant/MerchantAPI';
 import { MerchantQRCodes } from '@/components/merchant/MerchantQRCodes';
+import { MerchantPaymentQR } from '@/components/merchant/MerchantPaymentQR';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 export default function MerchantPortalPage() {
   const [user, setUser] = useState<any>(null);
   const [merchantAccount, setMerchantAccount] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('api-keys');
+  const [activeTab, setActiveTab] = useState('payment-qr');
   const navigate = useNavigate();
   const { toast } = useToast();
   const isMobile = useIsMobile();
@@ -156,6 +157,12 @@ export default function MerchantPortalPage() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-card border-border z-50">
+                <SelectItem value="payment-qr">
+                  <div className="flex items-center gap-2">
+                    <Scan className="h-4 w-4" />
+                    <span>Mon QR de Paiement</span>
+                  </div>
+                </SelectItem>
                 <SelectItem value="api-keys">
                   <div className="flex items-center gap-2">
                     <Key className="h-4 w-4" />
@@ -206,7 +213,11 @@ export default function MerchantPortalPage() {
         {/* Desktop: Tabs */}
         {!isMobile && (
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-7 bg-muted">
+            <TabsList className="grid w-full grid-cols-8 bg-muted">
+              <TabsTrigger value="payment-qr" className="data-[state=active]:bg-background data-[state=active]:text-foreground">
+                <Scan className="mr-2 h-4 w-4" />
+                Mon QR
+              </TabsTrigger>
               <TabsTrigger value="api-keys" className="data-[state=active]:bg-background data-[state=active]:text-foreground">
                 <Key className="mr-2 h-4 w-4" />
                 API Keys
@@ -233,9 +244,13 @@ export default function MerchantPortalPage() {
               </TabsTrigger>
               <TabsTrigger value="docs" className="data-[state=active]:bg-background data-[state=active]:text-foreground">
                 <FileText className="mr-2 h-4 w-4" />
-                Documentation
+                Docs
               </TabsTrigger>
             </TabsList>
+
+            <TabsContent value="payment-qr" className="mt-6">
+              <MerchantPaymentQR merchantAccount={merchantAccount} />
+            </TabsContent>
 
             <TabsContent value="api-keys" className="mt-6">
               <MerchantAPIKeys merchantAccount={merchantAccount} onUpdate={loadMerchantAccount} />
@@ -270,6 +285,9 @@ export default function MerchantPortalPage() {
         {/* Mobile: Content */}
         {isMobile && (
           <div className="mt-6">
+            {activeTab === 'payment-qr' && (
+              <MerchantPaymentQR merchantAccount={merchantAccount} />
+            )}
             {activeTab === 'api-keys' && (
               <MerchantAPIKeys merchantAccount={merchantAccount} onUpdate={loadMerchantAccount} />
             )}
