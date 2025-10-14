@@ -126,25 +126,25 @@ export default function MerchantPortalPage() {
 
   if (!merchantAccount) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-terex-accent/5 p-4">
+      <div className="min-h-screen bg-background p-4">
         <div className="max-w-2xl mx-auto pt-20 pb-10">
           <Button
             variant="ghost"
             onClick={() => navigate('/dashboard')}
-            className="mb-6 hover:bg-terex-accent/10"
+            className="mb-6"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Retour au dashboard
           </Button>
 
-          <Card className="border-terex-accent/20 shadow-lg shadow-terex-accent/5">
-            <CardHeader className="space-y-4 bg-gradient-to-r from-terex-accent/10 to-purple-500/10">
+          <Card className="border-border">
+            <CardHeader className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <Code2 className="h-6 w-6 text-white" />
+                <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
+                  <Code2 className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl bg-gradient-to-r from-terex-accent to-purple-500 bg-clip-text text-transparent">
+                  <CardTitle className="text-2xl">
                     Devenir Marchand Terex
                   </CardTitle>
                   <CardDescription className="text-base">
@@ -154,30 +154,30 @@ export default function MerchantPortalPage() {
               </div>
             </CardHeader>
             <CardContent className="space-y-6 pt-6">
-              <div className="bg-gradient-to-br from-terex-accent/10 to-purple-500/10 border border-terex-accent/20 rounded-lg p-4">
+              <div className="bg-muted/50 border border-border rounded-lg p-4">
                 <h3 className="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 bg-terex-accent rounded-full"></span>
+                  <span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
                   Pourquoi devenir marchand ?
                 </h3>
                 <ul className="text-sm text-muted-foreground space-y-2">
                   <li className="flex items-start gap-2">
-                    <span className="text-terex-accent mt-0.5">✓</span>
+                    <span className="text-primary mt-0.5">✓</span>
                     <span>Acceptez des paiements USDT instantanés</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-terex-accent mt-0.5">✓</span>
+                    <span className="text-primary mt-0.5">✓</span>
                     <span>API complète pour intégration facile</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-terex-accent mt-0.5">✓</span>
+                    <span className="text-primary mt-0.5">✓</span>
                     <span>QR code permanent pour votre boutique</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-terex-accent mt-0.5">✓</span>
+                    <span className="text-primary mt-0.5">✓</span>
                     <span>Webhooks pour automatiser vos processus</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-terex-accent mt-0.5">✓</span>
+                    <span className="text-primary mt-0.5">✓</span>
                     <span>Commissions compétitives (0.5%)</span>
                   </li>
                 </ul>
@@ -186,25 +186,25 @@ export default function MerchantPortalPage() {
               <div className="space-y-4">
                 <div>
                   <label className="text-sm font-medium mb-2 block text-foreground">
-                    Nom de votre entreprise <span className="text-terex-accent">*</span>
+                    Nom de votre entreprise <span className="text-primary">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.business_name}
                     onChange={(e) => setFormData({ ...formData, business_name: e.target.value })}
                     placeholder="Ex: Ma Boutique SARL"
-                    className="w-full p-3 rounded-lg border border-input bg-background focus:border-terex-accent focus:ring-2 focus:ring-terex-accent/20 transition-all"
+                    className="w-full p-3 rounded-lg border border-input bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                   />
                 </div>
 
                 <div>
                   <label className="text-sm font-medium mb-2 block text-foreground">
-                    Type d'entreprise <span className="text-terex-accent">*</span>
+                    Type d'entreprise <span className="text-primary">*</span>
                   </label>
                   <select
                     value={formData.business_type}
                     onChange={(e) => setFormData({ ...formData, business_type: e.target.value })}
-                    className="w-full p-3 rounded-lg border border-input bg-background focus:border-terex-accent focus:ring-2 focus:ring-terex-accent/20 transition-all"
+                    className="w-full p-3 rounded-lg border border-input bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                   >
                     <option value="ecommerce">E-commerce</option>
                     <option value="retail">Commerce de détail</option>
@@ -217,14 +217,14 @@ export default function MerchantPortalPage() {
 
                 <div>
                   <label className="text-sm font-medium mb-2 block text-foreground">
-                    Email professionnel <span className="text-terex-accent">*</span>
+                    Email professionnel <span className="text-primary">*</span>
                   </label>
                   <input
                     type="email"
                     value={formData.business_email}
                     onChange={(e) => setFormData({ ...formData, business_email: e.target.value })}
                     placeholder="contact@monentreprise.com"
-                    className="w-full p-3 rounded-lg border border-input bg-background focus:border-terex-accent focus:ring-2 focus:ring-terex-accent/20 transition-all"
+                    className="w-full p-3 rounded-lg border border-input bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                   />
                 </div>
 
@@ -237,7 +237,7 @@ export default function MerchantPortalPage() {
                     value={formData.business_phone}
                     onChange={(e) => setFormData({ ...formData, business_phone: e.target.value })}
                     placeholder="+237 6XX XX XX XX"
-                    className="w-full p-3 rounded-lg border border-input bg-background focus:border-terex-accent focus:ring-2 focus:ring-terex-accent/20 transition-all"
+                    className="w-full p-3 rounded-lg border border-input bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                   />
                 </div>
 
@@ -250,14 +250,14 @@ export default function MerchantPortalPage() {
                     onChange={(e) => setFormData({ ...formData, business_address: e.target.value })}
                     placeholder="Adresse complète de votre entreprise"
                     rows={3}
-                    className="w-full p-3 rounded-lg border border-input bg-background focus:border-terex-accent focus:ring-2 focus:ring-terex-accent/20 transition-all resize-none"
+                    className="w-full p-3 rounded-lg border border-input bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all resize-none"
                   />
                 </div>
               </div>
 
               <Button 
                 onClick={createMerchantAccount}
-                className="w-full bg-gradient-to-r from-terex-accent to-purple-500 hover:from-terex-accent/90 hover:to-purple-500/90 text-white shadow-lg shadow-terex-accent/20 hover:shadow-xl hover:shadow-terex-accent/30 transition-all"
+                className="w-full"
                 size="lg"
               >
                 <Code2 className="mr-2 h-5 w-5" />
@@ -266,9 +266,9 @@ export default function MerchantPortalPage() {
 
               <p className="text-xs text-muted-foreground text-center">
                 En créant votre compte marchand, vous acceptez nos{' '}
-                <span className="text-terex-accent cursor-pointer hover:underline">conditions d'utilisation</span>
+                <span className="text-primary cursor-pointer hover:underline">conditions d'utilisation</span>
                 {' '}et notre{' '}
-                <span className="text-terex-accent cursor-pointer hover:underline">politique de confidentialité</span>.
+                <span className="text-primary cursor-pointer hover:underline">politique de confidentialité</span>.
               </p>
             </CardContent>
           </Card>
