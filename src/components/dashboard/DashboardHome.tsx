@@ -4,10 +4,8 @@ import {
   ArrowUpRight, 
   Bitcoin,
   Handshake,
-  TrendingUp,
-  Store
+  TrendingUp
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
 import { useEffect } from 'react';
@@ -27,7 +25,6 @@ const TetherLogo = ({ className }: { className?: string }) => (
 
 export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   const isMobile = useIsMobile();
-  const navigate = useNavigate();
 
   // Vérifier si on est en mode PWA (standalone)
   const isPWA = window.matchMedia('(display-mode: standalone)').matches ||

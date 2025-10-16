@@ -48,10 +48,6 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
     { id: 'feedback', label: 'Avis & Suggestions', icon: Star, description: 'Donnez votre avis' },
   ];
 
-  const businessItems = [
-    { id: 'merchant', label: 'Devenir Marchand', icon: FileText, description: 'Intégrez Terex via API' },
-  ];
-
   const moreItems = [
     { id: 'referral', label: 'Parrainage', icon: Gift, description: 'Invitez vos amis' },
     { id: 'share-app', label: 'Partager l\'App', icon: Share2, description: 'Partager Terex' },
@@ -149,9 +145,6 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
               <div className="p-4 space-y-2">
                 {/* Section Profil */}
                 {renderMenuSection('Profil', profileItems)}
-
-                {/* Section Business */}
-                {renderMenuSection('Business', businessItems)}
 
                 {/* Section Support */}
                 {renderMenuSection('Support', supportItems)}

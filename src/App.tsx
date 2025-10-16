@@ -28,7 +28,6 @@ import { MarketingPage } from "./pages/MarketingPage";
 import AdminPage from "./pages/AdminPage";
 import { Toaster } from "@/components/ui/toaster"
 import BlockchainPage from "./pages/BlockchainPage";
-import MerchantPortalPage from "./pages/MerchantPortalPage";
 import { TransactionProvider } from "./contexts/TransactionContext";
 import { PWASessionSync } from "./components/PWASessionSync";
 import { ScrollToTop } from "./components/ScrollToTop";
@@ -65,7 +64,6 @@ function App() {
                 <Route path="/referral" element={<ReferralPageMain />} />
                 <Route path="/share" element={<SharePage />} />
                 <Route path="/admin/*" element={<AdminPage />} />
-                <Route path="/merchant" element={<MerchantPortalPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </TransactionProvider>
