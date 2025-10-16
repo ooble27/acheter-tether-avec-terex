@@ -7,7 +7,7 @@ interface AuthContextType {
   user: User | null
   session: Session | null
   loading: boolean
-  signUp: (email: string, password: string, name: string, referralCode?: string) => Promise<{ error: any }>
+  signUp: (email: string, password: string, name: string, referralCode?: string) => Promise<{ error: any; data?: any }>
   signOut: () => Promise<void>
   resendVerification: (email: string) => Promise<{ error: any }>
 }
@@ -16,7 +16,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   session: null,
   loading: true,
-  signUp: async () => ({ error: null }),
+  signUp: async () => ({ error: null, data: null }),
   signOut: async () => {},
   resendVerification: async () => ({ error: null }),
 })
@@ -109,7 +109,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signUp = async (email: string, password: string, name: string, referralCode?: string) => {
     console.log('AuthProvider: Starting sign up for:', email, 'with referral code:', referralCode)
     setLoading(true)
-    const { error } = await supabase.auth.signUp({
+    
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -120,9 +121,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         emailRedirectTo: `${window.location.origin}/auth/callback`
       }
     })
-    console.log('AuthProvider: Sign up result:', { error })
+    
+    console.log('AuthProvider: Sign up result:', { error, data })
     setLoading(false)
-    return { error }
+    return { error, data }
   }
 
   const signOut = async () => {

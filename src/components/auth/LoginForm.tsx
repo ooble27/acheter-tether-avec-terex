@@ -94,10 +94,11 @@ export function LoginForm() {
       
       if (signUpError) {
         if (signUpError.message.includes("User already registered") || 
-            signUpError.message.includes("already registered")) {
+            signUpError.message.includes("already registered") ||
+            signUpError.message.includes("already been registered")) {
           toast({
             title: "Email déjà utilisé",
-            description: "Ce mail est déjà utilisé. Utilisez la connexion par mot de passe.",
+            description: "Cet email est déjà enregistré. Veuillez vous connecter.",
             variant: "destructive",
           });
           setActiveTab('login');
@@ -109,19 +110,34 @@ export function LoginForm() {
           });
         }
       } else {
+        // Supabase peut retourner un succès même si l'utilisateur existe déjà
+        // Vérifier si un email de confirmation a été envoyé
         toast({
           title: "Inscription réussie !",
           description: "Vérifiez votre email pour activer votre compte",
           className: "bg-green-600 text-white border-green-600",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erreur inattendue:', error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur inattendue s'est produite",
-        variant: "destructive",
-      });
+      
+      // Détecter si c'est une erreur liée à un utilisateur existant
+      if (error?.message?.includes("duplicate") || 
+          error?.message?.includes("unique") ||
+          error?.message?.includes("already")) {
+        toast({
+          title: "Email déjà utilisé",
+          description: "Cet email est déjà enregistré. Veuillez vous connecter.",
+          variant: "destructive",
+        });
+        setActiveTab('login');
+      } else {
+        toast({
+          title: "Erreur",
+          description: "Une erreur inattendue s'est produite",
+          variant: "destructive",
+        });
+      }
     }
   };
 
