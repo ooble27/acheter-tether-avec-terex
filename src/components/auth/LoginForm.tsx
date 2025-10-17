@@ -90,7 +90,7 @@ export function LoginForm() {
     e.preventDefault();
 
     try {
-      const { error: signUpError } = await signUp(email, password, name, referralCode);
+      const { error: signUpError, data } = await signUp(email, password, name, referralCode);
       
       if (signUpError) {
         if (signUpError.message.includes("User already registered") || 
@@ -110,13 +110,21 @@ export function LoginForm() {
           });
         }
       } else {
-        // Supabase peut retourner un succès même si l'utilisateur existe déjà
-        // Vérifier si un email de confirmation a été envoyé
-        toast({
-          title: "Inscription réussie !",
-          description: "Vérifiez votre email pour activer votre compte",
-          className: "bg-green-600 text-white border-green-600",
-        });
+        // Vérifier si l'utilisateur existe déjà (identities vide = email déjà utilisé)
+        if (data?.user && data.user.identities && data.user.identities.length === 0) {
+          toast({
+            title: "Email déjà utilisé",
+            description: "Cet email est déjà enregistré. Veuillez vous connecter.",
+            variant: "destructive",
+          });
+          setActiveTab('login');
+        } else {
+          toast({
+            title: "Inscription réussie !",
+            description: "Vérifiez votre email pour activer votre compte",
+            className: "bg-green-600 text-white border-green-600",
+          });
+        }
       }
     } catch (error: any) {
       console.error('Erreur inattendue:', error);
