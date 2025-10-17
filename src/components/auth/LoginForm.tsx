@@ -65,7 +65,7 @@ export function LoginForm() {
           error.message.includes("Email not confirmed")) {
         toast({
           title: "Identifiants incorrects",
-          description: "Email ou mot de passe incorrect.",
+          description: "L'email ou le mot de passe que vous avez saisi est incorrect.",
           variant: "destructive",
         });
       } else if (error.message.includes("For security purposes")) {
@@ -76,8 +76,8 @@ export function LoginForm() {
         });
       } else {
         toast({
-          title: "Erreur",
-          description: error.message,
+          title: "Erreur de connexion",
+          description: "Impossible de se connecter. Vérifiez vos identifiants.",
           variant: "destructive",
         });
       }
