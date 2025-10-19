@@ -157,8 +157,8 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
           </CardHeader>
           <CardContent className="text-gray-300 space-y-4">
             <p className="text-lg">
-              Terex est née d'une vision simple mais ambitieuse : transformer la façon dont l'argent circule entre le Canada, 
-              l'Afrique et au-delà, en utilisant les technologies blockchain comme catalyseur de changement.
+              Terex est née d'une vision simple mais ambitieuse : transformer la façon dont l'argent circule en Afrique 
+              et au-delà, en utilisant les technologies blockchain comme catalyseur de changement.
             </p>
             
             <div className="space-y-6">
@@ -194,9 +194,9 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                   </h5>
                   <h6 className="text-white font-medium mb-1">Lancement et croissance</h6>
                   <ul className="text-sm space-y-1">
-                    <li>• Lancement officiel au Canada/Sénégal</li>
-                    <li>• 1000+ utilisateurs actifs</li>
-                    <li>• Expansion à la Côte d'Ivoire</li>
+                    <li>• Lancement officiel au Sénégal</li>
+                    <li>• 500+ utilisateurs actifs</li>
+                    <li>• Expansion vers l'Afrique de l'Ouest</li>
                   </ul>
                 </div>
                 <div className="bg-terex-gray rounded-lg p-4">
@@ -206,9 +206,9 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                   </h5>
                   <h6 className="text-white font-medium mb-1">Expansion majeure</h6>
                   <ul className="text-sm space-y-1">
-                    <li>• Couverture de 6 pays</li>
-                    <li>• 5000+ utilisateurs actifs</li>
-                    <li>• Levée de fonds réussie</li>
+                    <li>• Couverture de 5 pays</li>
+                    <li>• 1000+ utilisateurs actifs</li>
+                    <li>• Partenariats stratégiques</li>
                   </ul>
                 </div>
               </div>
@@ -484,7 +484,7 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                 <div>
                   <h5 className="text-blue-200 font-medium">Une équipe diverse et passionnée</h5>
                   <p className="text-blue-100 text-sm mt-1">
-                    Notre équipe de 15 personnes est répartie entre le Canada et l'Afrique de l'Ouest, représentant 
+                    Notre équipe de 10 personnes est basée en Afrique de l'Ouest, représentant 
                     7 nationalités différentes. Cette diversité est notre force, nous permettant de comprendre intimement 
                     les besoins de nos utilisateurs et les défis propres à chaque marché. Nous sommes unis par une passion commune: 
                     utiliser la technologie pour créer un impact social positif et durable.

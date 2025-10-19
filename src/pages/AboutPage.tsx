@@ -52,20 +52,20 @@ const AboutPage = () => {
     {
       name: "Mohamed Lo",
       role: "CEO & Fondateur", 
-      bio: "Expert fintech avec plus de 10 ans d'expérience dans les services financiers numériques en Afrique et au Canada",
-      specialties: ["Leadership", "Fintech", "Vision Stratégique"]
+      bio: "Visionnaire et entrepreneur passionné par l'innovation fintech en Afrique, avec une expertise en blockchain et services financiers numériques",
+      specialties: ["Leadership", "Fintech", "Blockchain"]
     },
     {
-      name: "Sidy Ndiaye",
+      name: "Sidi Ndiaye",
       role: "Directeur des Opérations",
-      bio: "Expert en gestion des opérations spécialisé dans l'optimisation des processus et la coordination des équipes",
+      bio: "Expert en gestion des opérations et coordination d'équipes, spécialisé dans l'optimisation des processus et la croissance",
       specialties: ["Opérations", "Gestion", "Processus"]
     },
     {
-      name: "Adéchina Olaitan",
+      name: "Adesina",
       role: "Head of Marketing",
-      bio: "Spécialiste du marketing digital et de la communication pour les entreprises fintech",
-      specialties: ["Marketing", "Communication", "Digital"]
+      bio: "Spécialiste du marketing digital et de la communication stratégique pour l'écosystème fintech africain",
+      specialties: ["Marketing", "Communication", "Growth"]
     }
   ];
 

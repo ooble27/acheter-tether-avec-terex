@@ -32,7 +32,7 @@ const FAQPage = () => {
       faqs: [
         {
           question: "Qu'est-ce que Terex et comment ça marche ?",
-          answer: "Terex est la première plateforme d'échange crypto-fiat dédiée à l'Afrique francophone et au Canada. Nous permettons d'acheter, vendre et transférer des cryptomonnaies (principalement USDT) en utilisant les monnaies locales (CFA, CAD). Notre plateforme connecte les écosystèmes financiers traditionnels aux marchés des cryptomonnaies avec des délais ultra-rapides de 5 minutes maximum."
+          answer: "Terex est la première plateforme d'échange crypto-fiat dédiée à l'Afrique francophone. Nous permettons d'acheter, vendre et transférer des cryptomonnaies (principalement USDT) en utilisant les monnaies locales (CFA). Notre plateforme connecte les écosystèmes financiers traditionnels aux marchés des cryptomonnaies avec des délais ultra-rapides de 5 minutes maximum."
         },
         {
           question: "Comment créer un compte sur Terex ?",
@@ -120,7 +120,7 @@ const FAQPage = () => {
       faqs: [
         {
           question: "Vers quels pays puis-je envoyer de l'argent ?",
-          answer: "Nous couvrons 6 pays : Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger (via Mobile Money Orange, Wave, Free Money), et Canada (via virements bancaires et Interac). Nous ajoutons régulièrement de nouveaux pays et méthodes de réception selon la demande de nos utilisateurs."
+          answer: "Nous couvrons 5 pays d'Afrique de l'Ouest : Sénégal, Côte d'Ivoire, Mali, Burkina Faso et Niger via Mobile Money (Orange Money, Wave, Free Money). Nous ajoutons régulièrement de nouveaux pays et méthodes de réception selon la demande de nos utilisateurs."
         },
         {
           question: "Comment effectuer un transfert international ?",
@@ -132,11 +132,11 @@ const FAQPage = () => {
         },
         {
           question: "Combien de temps prend un transfert international ?",
-          answer: "Nos transferts sont ultra-rapides : 5-10 minutes vers Mobile Money en Afrique, 15-30 minutes vers les comptes bancaires au Canada. 95% de nos transferts sont complétés en moins de 15 minutes. Vous recevez des notifications en temps réel à chaque étape."
+          answer: "Nos transferts sont ultra-rapides : 5-10 minutes vers Mobile Money en Afrique de l'Ouest. 95% de nos transferts sont complétés en moins de 15 minutes. Vous recevez des notifications en temps réel à chaque étape."
         },
         {
           question: "Le bénéficiaire doit-il avoir un compte Terex ?",
-          answer: "Non, le bénéficiaire n'a pas besoin de compte Terex. Il suffit qu'il ait un compte Mobile Money (Orange Money, Wave, Free Money) en Afrique ou un compte bancaire au Canada. Il recevra l'argent directement sur son compte existant avec une notification SMS."
+          answer: "Non, le bénéficiaire n'a pas besoin de compte Terex. Il suffit qu'il ait un compte Mobile Money (Orange Money, Wave, Free Money) dans l'un de nos pays couverts. Il recevra l'argent directement sur son compte existant avec une notification SMS."
         },
         {
           question: "Puis-je suivre mon transfert en temps réel ?",

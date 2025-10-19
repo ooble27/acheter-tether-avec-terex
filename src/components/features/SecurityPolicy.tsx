@@ -623,7 +623,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
               <div className="bg-terex-gray p-4 rounded-lg">
                 <h5 className="text-blue-400 font-medium mb-3">🏛️ Réglementations respectées</h5>
                 <ul className="text-sm space-y-2">
-                  <li>• <span className="text-terex-accent">FINTRAC (Canada):</span> Enregistrement MSB</li>
+                  <li>• <span className="text-terex-accent">BCEAO:</span> Conformité réglementaire</li>
                   <li>• <span className="text-terex-accent">RGPD (Europe):</span> Protection des données</li>
                   <li>• <span className="text-terex-accent">FATF/GAFI:</span> Standards anti-blanchiment</li>
                   <li>• <span className="text-terex-accent">CCPA (Californie):</span> Confidentialité des consommateurs</li>

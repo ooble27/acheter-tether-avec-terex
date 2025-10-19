@@ -151,17 +151,10 @@ export function UserGuide({ onBack }: UserGuideProps) {
                 <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">2</div>
                 <div className="flex-1">
                   <h5 className="text-white font-medium">Sélectionnez votre devise locale</h5>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
-                    <div className="bg-terex-gray p-3 rounded">
-                      <h6 className="text-terex-accent font-medium">🌍 CFA (Afrique de l'Ouest)</h6>
-                      <p className="text-xs">Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger</p>
-                      <p className="text-xs text-terex-accent">Minimum: 10,000 CFA</p>
-                    </div>
-                    <div className="bg-terex-gray p-3 rounded">
-                      <h6 className="text-terex-accent font-medium">🍁 CAD (Canada)</h6>
-                      <p className="text-xs">Dollar canadien</p>
-                      <p className="text-xs text-terex-accent">Minimum: 15 CAD</p>
-                    </div>
+                  <div className="bg-terex-gray p-3 rounded mt-2">
+                    <h6 className="text-terex-accent font-medium">🌍 CFA (Afrique de l'Ouest)</h6>
+                    <p className="text-xs">Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger</p>
+                    <p className="text-xs text-terex-accent">Minimum: 10,000 CFA</p>
                   </div>
                 </div>
               </div>
@@ -245,14 +238,14 @@ export function UserGuide({ onBack }: UserGuideProps) {
                         <p className="text-xs">Scan QR code ou envoi direct</p>
                       </div>
                       <div className="bg-terex-gray p-3 rounded">
-                        <h6 className="text-green-400 font-medium">Virement Interac (Canada)</h6>
-                        <p className="text-xs">Email de transfert fourni</p>
-                        <p className="text-xs">Question/Réponse sécurisée</p>
+                        <h6 className="text-purple-400 font-medium">Free Money</h6>
+                        <p className="text-xs">Burkina Faso, Mali</p>
+                        <p className="text-xs">Paiement instantané</p>
                       </div>
                       <div className="bg-terex-gray p-3 rounded">
-                        <h6 className="text-purple-400 font-medium">Crypto (BTC/ETH)</h6>
-                        <p className="text-xs">Pour les utilisateurs avancés</p>
-                        <p className="text-xs">Conversion automatique</p>
+                        <h6 className="text-yellow-400 font-medium">Moov Money</h6>
+                        <p className="text-xs">Côte d'Ivoire, Niger</p>
+                        <p className="text-xs">Paiement rapide</p>
                       </div>
                     </div>
                   </div>

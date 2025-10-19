@@ -207,7 +207,7 @@ export function TermsOfService({ onBack }: TermsOfServiceProps) {
                   <div>
                     <h6 className="text-white font-medium text-sm">Pays source</h6>
                     <ul className="text-sm mt-1 space-y-1">
-                      <li>• 🇨🇦 Canada (CAD)</li>
+                      
                       <li>• Paiement par Interac e-Transfer</li>
                       <li>• Minimum: 25 CAD</li>
                     </ul>
@@ -726,7 +726,7 @@ export function TermsOfService({ onBack }: TermsOfServiceProps) {
                 <h5 className="text-terex-accent font-medium mb-3">🏛️ Juridiction et droit applicable</h5>
                 <p className="text-sm mb-3">
                   Les présentes conditions sont régies par les lois de la province du Québec et les lois fédérales 
-                  du Canada applicables, sans égard aux principes de conflits de lois.
+                  du Sénégal applicables, sans égard aux principes de conflits de lois.
                 </p>
                 <div className="space-y-3">
                   <div className="bg-terex-darker p-3 rounded">

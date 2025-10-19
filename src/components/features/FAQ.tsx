@@ -35,7 +35,7 @@ export function FAQ({ onNavigate }: FAQProps) {
     {
       id: "item-6",
       question: "Vers quels pays puis-je envoyer de l'argent ?",
-      answer: "Nous supportons les transferts vers le Sénégal, la Côte d'Ivoire, le Mali, le Burkina Faso, le Niger et le Canada. D'autres pays seront ajoutés prochainement."
+      answer: "Nous supportons les transferts vers le Sénégal, la Côte d'Ivoire, le Mali, le Burkina Faso et le Niger. D'autres pays africains seront ajoutés prochainement."
     },
     {
       id: "item-7",
