@@ -149,25 +149,25 @@ export function FAQ({ onNavigate }: FAQProps) {
             <CardContent className="space-y-2">
               <button 
                 onClick={() => handleResourceClick('user-guide')}
-                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left font-light"
+                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-base w-full text-left font-light"
               >
                 📖 Guide d'utilisation
               </button>
               <button 
                 onClick={() => handleResourceClick('security-policy')}
-                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left font-light"
+                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-base w-full text-left font-light"
               >
                 🔒 Politique de sécurité
               </button>
               <button 
                 onClick={() => handleResourceClick('terms-of-service')}
-                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left font-light"
+                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-base w-full text-left font-light"
               >
                 📋 Conditions d'utilisation
               </button>
               <button 
                 onClick={() => handleResourceClick('about-terex')}
-                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-sm w-full text-left font-light"
+                className="block text-terex-accent hover:text-terex-accent-light transition-colors text-base w-full text-left font-light"
               >
                 💡 À propos de Terex
               </button>
