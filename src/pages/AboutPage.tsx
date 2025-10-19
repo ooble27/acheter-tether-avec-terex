@@ -121,25 +121,25 @@ const AboutPage = () => {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
-            <div className="text-center mb-8">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2">
+            <div className="text-center mb-8 px-4">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2 break-words">
                 À propos de <span className="text-terex-accent">Terex</span>
               </h1>
-              <p className="text-terex-accent text-base md:text-lg font-medium">Teranga Exchange</p>
+              <p className="text-terex-accent text-sm sm:text-base md:text-lg font-medium">Teranga Exchange</p>
             </div>
-            <p className="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12 px-4">
+            <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12 px-4 break-words">
               Terex révolutionne les échanges crypto-fiat et les transferts d'argent en Afrique de l'Ouest. 
               Notre mission : rendre les services financiers numériques accessibles, sécurisés et abordables pour tous au Burkina Faso, en Côte d'Ivoire, au Sénégal et au Mali.
             </p>
             
             {/* Live metrics */}
-            <div className="flex justify-center items-center space-x-8 text-sm text-gray-400">
+            <div className="flex flex-col sm:flex-row justify-center items-center sm:space-x-8 space-y-2 sm:space-y-0 text-xs sm:text-sm text-gray-400 px-4">
               <div className="flex items-center">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-                Systèmes opérationnels
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse flex-shrink-0"></div>
+                <span className="break-words">Systèmes opérationnels</span>
               </div>
-              <div>99.9% de disponibilité</div>
-              <div>Support 24/7</div>
+              <div className="break-words">99.9% de disponibilité</div>
+              <div className="break-words">Support 24/7</div>
             </div>
           </div>
         </div>
@@ -149,45 +149,45 @@ const AboutPage = () => {
       <div className="py-24 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-5 gap-16 items-center">
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-3 px-4 lg:px-0">
               <div className="flex items-center mb-8">
-                <div className="w-1 h-16 bg-gradient-to-b from-terex-accent to-transparent mr-6"></div>
-                <h2 className="text-4xl font-bold text-white">Notre Mission</h2>
+                <div className="w-1 h-12 sm:h-16 bg-gradient-to-b from-terex-accent to-transparent mr-4 sm:mr-6 flex-shrink-0"></div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white break-words">Notre Mission</h2>
               </div>
               
-              <p className="text-gray-300 text-base md:text-lg mb-8 leading-relaxed">
+              <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-8 leading-relaxed break-words">
                 Chez Terex, nous croyons que chaque africain mérite un accès simple et sécurisé aux 
                 services financiers numériques. Notre plateforme connecte les crypto-monnaies aux 
                 monnaies locales (FCFA), facilitant les échanges et les transferts via Orange Money, Free Money et Moov Money.
               </p>
               
-              <p className="text-gray-300 text-base md:text-lg mb-12 leading-relaxed">
+              <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-12 leading-relaxed break-words">
                 Fondée en 2024 et basée à Dakar, Sénégal, Terex s'appuie sur la technologie blockchain pour offrir des solutions 
                 innovantes qui répondent aux besoins spécifiques du marché ouest-africain.
               </p>
 
               {/* Compact metrics */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 {[
                   { metric: "99.9%", label: "Disponibilité" },
                   { metric: "24/7", label: "Support Client" },
                   { metric: "< 5min", label: "Temps moyen" },
                   { metric: "ISO 27001", label: "Certification" }
                 ].map((item, index) => (
-                  <div key={index} className="text-center p-6 bg-gradient-to-br from-terex-accent/10 to-transparent rounded-xl border border-terex-accent/20">
-                    <div className="text-2xl font-bold text-terex-accent mb-1">{item.metric}</div>
-                    <div className="text-gray-300 text-sm">{item.label}</div>
+                  <div key={index} className="text-center p-4 sm:p-6 bg-gradient-to-br from-terex-accent/10 to-transparent rounded-xl border border-terex-accent/20">
+                    <div className="text-xl sm:text-2xl font-bold text-terex-accent mb-1 break-words">{item.metric}</div>
+                    <div className="text-gray-300 text-xs sm:text-sm break-words">{item.label}</div>
                   </div>
                 ))}
               </div>
             </div>
             
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 px-4 lg:px-0">
               <div className="relative">
-                <div className="bg-gradient-to-br from-terex-accent/20 via-terex-accent/10 to-transparent rounded-3xl p-8 backdrop-blur-sm border border-terex-accent/30">
-                  <Target className="w-16 h-16 text-terex-accent mb-6" />
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-4">Vision 2030</h3>
-                  <p className="text-gray-300 text-sm md:text-base mb-8 leading-relaxed">
+                <div className="bg-gradient-to-br from-terex-accent/20 via-terex-accent/10 to-transparent rounded-3xl p-6 sm:p-8 backdrop-blur-sm border border-terex-accent/30">
+                  <Target className="w-12 h-12 sm:w-16 sm:h-16 text-terex-accent mb-6" />
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 break-words">Vision 2030</h3>
+                  <p className="text-gray-300 text-xs sm:text-sm md:text-base mb-8 leading-relaxed break-words">
                     Devenir la référence ouest-africaine pour les échanges crypto-fiat et 
                     les transferts d'argent, en servant plus de 1 million d'utilisateurs 
                     à travers toute la zone UEMOA et au-delà.
@@ -195,9 +195,9 @@ const AboutPage = () => {
                   
                   <div className="space-y-4">
                     {["Zone UEMOA complète", "1M+ utilisateurs actifs", "100M+ FCFA de volume traité"].map((goal, index) => (
-                      <div key={index} className="flex items-center text-gray-300 text-sm md:text-base">
-                        <div className="w-2 h-2 bg-terex-accent rounded-full mr-4 flex-shrink-0"></div>
-                        <span className="break-words">{goal}</span>
+                      <div key={index} className="flex items-start text-gray-300 text-xs sm:text-sm md:text-base">
+                        <div className="w-2 h-2 bg-terex-accent rounded-full mr-3 sm:mr-4 flex-shrink-0 mt-1.5"></div>
+                        <span className="break-words flex-1">{goal}</span>
                       </div>
                     ))}
                   </div>
@@ -212,21 +212,21 @@ const AboutPage = () => {
       <div className="py-20 bg-gradient-to-r from-terex-darker via-terex-dark to-terex-darker">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 px-4">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Terex en chiffres</h2>
-            <p className="text-gray-300 text-base md:text-lg">Des résultats qui parlent d'eux-mêmes</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 break-words">Terex en chiffres</h2>
+            <p className="text-gray-300 text-sm sm:text-base md:text-lg break-words">Des résultats qui parlent d'eux-mêmes</p>
           </div>
           
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-8 px-4">
             {stats.map((stat, index) => {
               const IconComponent = stat.icon;
               return (
                 <div key={index} className="group text-center">
-                  <div className="bg-gradient-to-br from-terex-accent/10 to-transparent backdrop-blur-sm rounded-2xl p-4 lg:p-8 border border-terex-accent/20 group-hover:border-terex-accent/50 transition-all duration-500 group-hover:scale-105 h-full flex flex-col justify-center min-h-[160px] lg:min-h-[200px]">
-                    <IconComponent className="w-8 h-8 lg:w-12 lg:h-12 text-terex-accent mx-auto mb-3 lg:mb-4 group-hover:scale-110 transition-transform duration-300" />
-                    <div className="text-2xl lg:text-4xl font-bold text-white mb-1 lg:mb-2 group-hover:text-terex-accent transition-colors duration-300 leading-tight">
+                  <div className="bg-gradient-to-br from-terex-accent/10 to-transparent backdrop-blur-sm rounded-2xl p-3 sm:p-4 lg:p-8 border border-terex-accent/20 group-hover:border-terex-accent/50 transition-all duration-500 group-hover:scale-105 h-full flex flex-col justify-center min-h-[140px] sm:min-h-[160px] lg:min-h-[200px]">
+                    <IconComponent className="w-6 h-6 sm:w-8 sm:h-8 lg:w-12 lg:h-12 text-terex-accent mx-auto mb-2 sm:mb-3 lg:mb-4 group-hover:scale-110 transition-transform duration-300" />
+                    <div className="text-xl sm:text-2xl lg:text-4xl font-bold text-white mb-1 lg:mb-2 group-hover:text-terex-accent transition-colors duration-300 leading-tight break-words">
                       {stat.value}
                     </div>
-                    <div className="text-gray-300 font-medium text-sm lg:text-base leading-tight px-1">
+                    <div className="text-gray-300 font-medium text-xs sm:text-sm lg:text-base leading-tight px-1 break-words">
                       {stat.label}
                     </div>
                   </div>
@@ -241,8 +241,8 @@ const AboutPage = () => {
       <div className="py-24 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 px-4">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Notre Parcours</h2>
-            <p className="text-gray-300 text-base md:text-lg">L'évolution de Terex depuis sa création</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 break-words">Notre Parcours</h2>
+            <p className="text-gray-300 text-sm sm:text-base md:text-lg break-words">L'évolution de Terex depuis sa création</p>
           </div>
           
           <div className="relative">
@@ -253,10 +253,10 @@ const AboutPage = () => {
               {milestones.map((milestone, index) => (
                 <div key={index} className={`flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} flex-col md:space-y-0 space-y-0`}>
                   <div className={`w-full md:w-1/2 ${index % 2 === 0 ? 'md:pr-8 md:text-right' : 'md:pl-8 md:text-left'} text-left px-4 md:px-0`}>
-                    <div className="bg-gradient-to-br from-terex-accent/10 to-transparent rounded-xl p-6 border border-terex-accent/20 max-w-md mx-auto md:mx-0">
-                      <div className="text-terex-accent font-bold text-lg mb-2">{milestone.year}</div>
-                      <h3 className="text-white font-semibold text-xl mb-2 leading-tight">{milestone.title}</h3>
-                      <p className="text-gray-300 text-sm leading-relaxed">{milestone.desc}</p>
+                    <div className="bg-gradient-to-br from-terex-accent/10 to-transparent rounded-xl p-4 sm:p-6 border border-terex-accent/20 max-w-md mx-auto md:mx-0">
+                      <div className="text-terex-accent font-bold text-base sm:text-lg mb-2 break-words">{milestone.year}</div>
+                      <h3 className="text-white font-semibold text-lg sm:text-xl mb-2 leading-tight break-words">{milestone.title}</h3>
+                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed break-words">{milestone.desc}</p>
                     </div>
                   </div>
                   
@@ -275,18 +275,18 @@ const AboutPage = () => {
       <div className="py-24 bg-gradient-to-b from-terex-darker to-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 px-4">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Nos Valeurs</h2>
-            <p className="text-gray-300 text-base md:text-lg">Les principes qui guident chaque décision chez Terex</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 break-words">Nos Valeurs</h2>
+            <p className="text-gray-300 text-sm sm:text-base md:text-lg break-words">Les principes qui guident chaque décision chez Terex</p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 px-4">
             {values.map((value, index) => {
               const IconComponent = value.icon;
               return (
-                <div key={index} className="bg-gradient-to-br from-terex-accent/10 to-transparent backdrop-blur-sm rounded-2xl p-8 border border-terex-accent/20 hover:border-terex-accent/50 transition-all duration-500 hover:scale-[1.02]">
-                  <IconComponent className="w-12 h-12 text-terex-accent mb-6" />
-                  <h3 className="text-white font-bold text-xl mb-4">{value.title}</h3>
-                  <p className="text-gray-300 leading-relaxed">{value.description}</p>
+                <div key={index} className="bg-gradient-to-br from-terex-accent/10 to-transparent backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-terex-accent/20 hover:border-terex-accent/50 transition-all duration-500 hover:scale-[1.02]">
+                  <IconComponent className="w-10 h-10 sm:w-12 sm:h-12 text-terex-accent mb-6" />
+                  <h3 className="text-white font-bold text-lg sm:text-xl mb-4 break-words">{value.title}</h3>
+                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed break-words">{value.description}</p>
                 </div>
               );
             })}
@@ -298,8 +298,8 @@ const AboutPage = () => {
       <div className="py-24 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 px-4">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Notre Équipe</h2>
-            <p className="text-gray-300 text-base md:text-lg">Des experts passionnés qui construisent l'avenir de la fintech ouest-africaine</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 break-words">Notre Équipe</h2>
+            <p className="text-gray-300 text-sm sm:text-base md:text-lg break-words">Des experts passionnés qui construisent l'avenir de la fintech ouest-africaine</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
