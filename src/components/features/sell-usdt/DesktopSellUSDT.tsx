@@ -463,13 +463,59 @@ export function DesktopSellUSDT() {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-400 text-xs">Email:</span>
-                      <span className="text-white text-sm">lomohamed834@gmail.com</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-white text-sm">lomohamed834@gmail.com</span>
+                        <Button
+                          onClick={() => {
+                            navigator.clipboard.writeText('lomohamed834@gmail.com');
+                            toast({ title: "Copié !", description: "Email copié dans le presse-papiers" });
+                          }}
+                          size="sm"
+                          className="bg-terex-accent hover:bg-terex-accent/80 h-6 w-6 p-0"
+                        >
+                          <Check className="w-3 h-3" />
+                        </Button>
+                      </div>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-400 text-xs">ID Binance:</span>
-                      <span className="text-white font-light">450715599</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-white font-light">450715599</span>
+                        <Button
+                          onClick={() => {
+                            navigator.clipboard.writeText('450715599');
+                            toast({ title: "Copié !", description: "ID Binance copié dans le presse-papiers" });
+                          }}
+                          size="sm"
+                          className="bg-terex-accent hover:bg-terex-accent/80 h-6 w-6 p-0"
+                        >
+                          <Check className="w-3 h-3" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
+                  
+                  <Button
+                    onClick={() => {
+                      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                      if (isMobile) {
+                        window.location.href = 'binance://';
+                        setTimeout(() => {
+                          const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                          if (isIOS) {
+                            window.open('https://apps.apple.com/app/binance-buy-bitcoin-crypto/id1436799971', '_blank');
+                          } else {
+                            window.open('https://play.google.com/store/apps/details?id=com.binance.dev', '_blank');
+                          }
+                        }, 1000);
+                      } else {
+                        window.open('https://www.binance.com', '_blank');
+                      }
+                    }}
+                    className="w-full h-10 bg-terex-accent hover:bg-terex-accent/90 text-black font-light mt-2"
+                  >
+                    Ouvrir Binance Pay
+                  </Button>
                 </div>
               ) : (
                 <>
@@ -477,9 +523,21 @@ export function DesktopSellUSDT() {
                   
                   <div className="pt-3 border-t border-terex-gray">
                     <p className="text-gray-400 text-sm font-light mb-2">À l'adresse:</p>
-                    <p className="text-white text-xs break-all font-light">
-                      {WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-white text-xs break-all font-light flex-1">
+                        {WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
+                      </p>
+                      <Button
+                        onClick={() => {
+                          navigator.clipboard.writeText(WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]);
+                          toast({ title: "Copié !", description: "Adresse copiée dans le presse-papiers" });
+                        }}
+                        size="sm"
+                        className="bg-terex-accent hover:bg-terex-accent/80 h-8 w-8 p-0 flex-shrink-0"
+                      >
+                        <Check className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 </>
               )}
