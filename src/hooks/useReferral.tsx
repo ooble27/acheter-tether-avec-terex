@@ -110,7 +110,7 @@ export function useReferral() {
   };
 
   const shareReferralCode = (code: string) => {
-    const url = `${window.location.origin}?ref=${code}`;
+    const url = `https://terangaexchange.com/auth?ref=${code}`;
     const text = `Rejoignez Terex avec mon code de parrainage ${code} et bénéficiez d'avantages exclusifs! ${url}`;
     
     if (navigator.share) {
