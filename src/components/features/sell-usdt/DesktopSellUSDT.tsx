@@ -514,6 +514,7 @@ export function DesktopSellUSDT() {
                     }}
                     className="w-full h-10 bg-terex-accent hover:bg-terex-accent/90 text-black font-light mt-2"
                   >
+                    <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" className="w-5 h-5 mr-2" />
                     Ouvrir Binance Pay
                   </Button>
                 </div>
