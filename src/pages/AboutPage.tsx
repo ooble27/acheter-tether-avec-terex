@@ -42,9 +42,9 @@ const AboutPage = () => {
   };
 
   const stats = [
-    { label: "Volume Traité", value: "10M+", icon: TrendingUp },
+    { label: "Volume Traité", value: "10M FCFA", icon: TrendingUp },
     { label: "Utilisateurs", value: "500+", icon: Users },
-    { label: "Pays Desservis", value: "5", icon: Globe },
+    { label: "Pays", value: "4", icon: Globe },
     { label: "Disponibilité", value: "99.9%", icon: Award }
   ];
 
@@ -93,11 +93,11 @@ const AboutPage = () => {
   ];
 
   const milestones = [
-    { year: "2024", title: "Fondation de Terex", desc: "Lancement officiel avec l'équipe fondatrice" },
-    { year: "Q2 2024", title: "Première levée de fonds", desc: "Seed round de $2M pour le développement" },
-    { year: "Q3 2024", title: "Lancement MVP", desc: "Version bêta pour les premiers utilisateurs" },
-    { year: "Q4 2024", title: "Expansion régionale", desc: "Ouverture vers 5 pays africains" },
-    { year: "2025", title: "Série A", desc: "Objectif de $10M pour l'expansion" }
+    { year: "2024", title: "Fondation de Terex", desc: "Lancement officiel à Dakar avec l'équipe fondatrice" },
+    { year: "Q2 2024", title: "Partenariats clés", desc: "Intégration Orange Money et Free Money" },
+    { year: "Q3 2024", title: "Lancement MVP", desc: "Version bêta pour les premiers utilisateurs au Sénégal" },
+    { year: "Q4 2024", title: "Expansion UEMOA", desc: "Ouverture vers Burkina Faso, Côte d'Ivoire et Mali" },
+    { year: "2025", title: "Croissance régionale", desc: "Expansion vers toute la zone UEMOA" }
   ];
 
   return (
@@ -122,14 +122,14 @@ const AboutPage = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
             <div className="text-center mb-8">
-              <h1 className="text-5xl lg:text-6xl font-bold text-white mb-2">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2">
                 À propos de <span className="text-terex-accent">Terex</span>
               </h1>
-              <p className="text-terex-accent text-lg font-medium">Teranga Exchange</p>
+              <p className="text-terex-accent text-base md:text-lg font-medium">Teranga Exchange</p>
             </div>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
-              Terex révolutionne les échanges crypto-fiat et les transferts d'argent vers l'Afrique. 
-              Notre mission : rendre les services financiers numériques accessibles, sécurisés et abordables pour tous.
+            <p className="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12 px-4">
+              Terex révolutionne les échanges crypto-fiat et les transferts d'argent en Afrique de l'Ouest. 
+              Notre mission : rendre les services financiers numériques accessibles, sécurisés et abordables pour tous au Burkina Faso, en Côte d'Ivoire, au Sénégal et au Mali.
             </p>
             
             {/* Live metrics */}
@@ -155,15 +155,15 @@ const AboutPage = () => {
                 <h2 className="text-4xl font-bold text-white">Notre Mission</h2>
               </div>
               
-              <p className="text-gray-300 text-lg mb-8 leading-relaxed">
+              <p className="text-gray-300 text-base md:text-lg mb-8 leading-relaxed">
                 Chez Terex, nous croyons que chaque africain mérite un accès simple et sécurisé aux 
                 services financiers numériques. Notre plateforme connecte les crypto-monnaies aux 
-                monnaies traditionnelles, facilitant les échanges et les transferts internationaux.
+                monnaies locales (FCFA), facilitant les échanges et les transferts via Orange Money, Free Money et Moov Money.
               </p>
               
-              <p className="text-gray-300 text-lg mb-12 leading-relaxed">
-                Fondée en 2024, Terex s'appuie sur la technologie blockchain pour offrir des solutions 
-                innovantes qui répondent aux besoins spécifiques du marché africain.
+              <p className="text-gray-300 text-base md:text-lg mb-12 leading-relaxed">
+                Fondée en 2024 et basée à Dakar, Sénégal, Terex s'appuie sur la technologie blockchain pour offrir des solutions 
+                innovantes qui répondent aux besoins spécifiques du marché ouest-africain.
               </p>
 
               {/* Compact metrics */}
@@ -186,18 +186,18 @@ const AboutPage = () => {
               <div className="relative">
                 <div className="bg-gradient-to-br from-terex-accent/20 via-terex-accent/10 to-transparent rounded-3xl p-8 backdrop-blur-sm border border-terex-accent/30">
                   <Target className="w-16 h-16 text-terex-accent mb-6" />
-                  <h3 className="text-2xl font-bold text-white mb-4">Vision 2030</h3>
-                  <p className="text-gray-300 mb-8 leading-relaxed">
-                    Devenir la référence africaine pour les échanges crypto-fiat et 
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-4">Vision 2030</h3>
+                  <p className="text-gray-300 text-sm md:text-base mb-8 leading-relaxed">
+                    Devenir la référence ouest-africaine pour les échanges crypto-fiat et 
                     les transferts d'argent, en servant plus de 1 million d'utilisateurs 
-                    à travers 50 pays africains.
+                    à travers toute la zone UEMOA et au-delà.
                   </p>
                   
                   <div className="space-y-4">
-                    {["50+ pays couverts", "1M+ utilisateurs actifs", "$1B+ de volume traité"].map((goal, index) => (
-                      <div key={index} className="flex items-center text-gray-300">
-                        <div className="w-2 h-2 bg-terex-accent rounded-full mr-4"></div>
-                        {goal}
+                    {["Zone UEMOA complète", "1M+ utilisateurs actifs", "100M+ FCFA de volume traité"].map((goal, index) => (
+                      <div key={index} className="flex items-center text-gray-300 text-sm md:text-base">
+                        <div className="w-2 h-2 bg-terex-accent rounded-full mr-4 flex-shrink-0"></div>
+                        <span className="break-words">{goal}</span>
                       </div>
                     ))}
                   </div>
@@ -211,9 +211,9 @@ const AboutPage = () => {
       {/* Stats Section - Same green color scheme */}
       <div className="py-20 bg-gradient-to-r from-terex-darker via-terex-dark to-terex-darker">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Terex en chiffres</h2>
-            <p className="text-gray-300 text-lg">Des résultats qui parlent d'eux-mêmes</p>
+          <div className="text-center mb-16 px-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Terex en chiffres</h2>
+            <p className="text-gray-300 text-base md:text-lg">Des résultats qui parlent d'eux-mêmes</p>
           </div>
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
@@ -240,9 +240,9 @@ const AboutPage = () => {
       {/* Timeline Section */}
       <div className="py-24 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Notre Parcours</h2>
-            <p className="text-gray-300 text-lg">L'évolution de Terex depuis sa création</p>
+          <div className="text-center mb-16 px-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Notre Parcours</h2>
+            <p className="text-gray-300 text-base md:text-lg">L'évolution de Terex depuis sa création</p>
           </div>
           
           <div className="relative">
@@ -274,9 +274,9 @@ const AboutPage = () => {
       {/* Values Section - Same green color scheme */}
       <div className="py-24 bg-gradient-to-b from-terex-darker to-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Nos Valeurs</h2>
-            <p className="text-gray-300 text-lg">Les principes qui guident chaque décision chez Terex</p>
+          <div className="text-center mb-16 px-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Nos Valeurs</h2>
+            <p className="text-gray-300 text-base md:text-lg">Les principes qui guident chaque décision chez Terex</p>
           </div>
           
           <div className="grid md:grid-cols-2 gap-8">
@@ -297,9 +297,9 @@ const AboutPage = () => {
       {/* Team Section - Using person icons */}
       <div className="py-24 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Notre Équipe</h2>
-            <p className="text-gray-300 text-lg">Des experts passionnés qui construisent l'avenir de la fintech africaine</p>
+          <div className="text-center mb-16 px-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Notre Équipe</h2>
+            <p className="text-gray-300 text-base md:text-lg">Des experts passionnés qui construisent l'avenir de la fintech ouest-africaine</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -312,10 +312,10 @@ const AboutPage = () => {
                     </div>
                   </div>
                   
-                  <div className="text-center flex-1 flex flex-col">
-                    <h3 className="text-white font-bold text-xl mb-2">{member.name}</h3>
-                    <p className="text-terex-accent font-medium mb-4">{member.role}</p>
-                    <p className="text-gray-300 text-sm leading-relaxed mb-6 flex-1">{member.bio}</p>
+                   <div className="text-center flex-1 flex flex-col">
+                    <h3 className="text-white font-bold text-lg md:text-xl mb-2 break-words px-2">{member.name}</h3>
+                    <p className="text-terex-accent font-medium text-sm md:text-base mb-4 px-2">{member.role}</p>
+                    <p className="text-gray-300 text-xs md:text-sm leading-relaxed mb-6 flex-1 px-2">{member.bio}</p>
                     
                     <div className="flex flex-wrap justify-center gap-2 mt-auto">
                       {member.specialties.map((specialty, idx) => (
@@ -335,11 +335,11 @@ const AboutPage = () => {
       {/* CTA Section - Full Width Gradient */}
       <div className="py-24 bg-gradient-to-r from-terex-accent/10 via-terex-accent/5 to-terex-accent/10 border-t border-terex-accent/20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="text-3xl font-bold text-white mb-6">
+          <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">
             Rejoignez la révolution Terex
           </h3>
-          <p className="text-gray-300 mb-8 text-xl leading-relaxed">
-            Découvrez nos services et commencez à échanger vos USDT dès aujourd'hui.
+          <p className="text-gray-300 mb-8 text-base md:text-xl leading-relaxed">
+            Découvrez nos services et commencez à échanger vos USDT en FCFA dès aujourd'hui.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Button 
