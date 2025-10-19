@@ -62,7 +62,7 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                   </div>
                   <div className="space-y-1">
                     <p className="text-terex-accent font-medium">Contact</p>
-                    <p className="text-gray-300">lomohamed834@gmail.com</p>
+                    <p className="text-gray-300 break-all text-sm">lomohamed834@gmail.com</p>
                   </div>
                 </div>
               </div>
