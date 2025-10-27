@@ -11,7 +11,19 @@
     "title": "Achetez et vendez vos USDT en toute sécurité",
     "subtitle": "La plateforme la plus simple et sécurisée pour échanger vos USDT en Afrique",
     "buyButton": "Acheter USDT",
-    "sellButton": "Vendre USDT"
+    "sellButton": "Vendre USDT",
+    "description": "Échangez vos USDT contre XAF ou CAD rapidement et en toute sécurité"
+  },
+  "converter": {
+    "title": "Calculateur de conversion USDT",
+    "buy": "Acheter",
+    "sell": "Vendre",
+    "transfer": "Transfert",
+    "amount": "Montant",
+    "youPay": "Vous payez",
+    "youReceive": "Vous recevez",
+    "rate": "Taux",
+    "getStarted": "Commencer"
   },
   "networks": {
     "title": "Nous supportons les",
@@ -53,6 +65,23 @@
       "description": "Pas de frais cachés, tout est clair dès le départ"
     }
   },
+  "stats": {
+    "users": "Utilisateurs actifs",
+    "transactions": "Transactions",
+    "countries": "Pays",
+    "support": "Support 24/7"
+  },
+  "paymentMethods": {
+    "title": "Moyens de paiement acceptés",
+    "subtitle": "Payez avec vos méthodes préférées",
+    "mobileMoney": "Mobile Money",
+    "bankTransfer": "Virement bancaire",
+    "cash": "Espèces"
+  },
+  "testimonials": {
+    "title": "Ce que disent nos clients",
+    "subtitle": "Des milliers d'utilisateurs satisfaits"
+  },
   "cta": {
     "title": "Prêt à commencer ?",
     "subtitle": "Rejoignez des milliers d'utilisateurs qui nous font confiance",
@@ -71,7 +100,8 @@
     "faq": "FAQ",
     "guide": "Guide d'utilisation",
     "help": "Centre d'aide",
-    "rights": "Tous droits réservés"
+    "rights": "Tous droits réservés",
+    "description": "La plateforme de confiance pour acheter et vendre vos USDT en Afrique"
   },
   "dashboard": {
     "welcome": "Bienvenue",

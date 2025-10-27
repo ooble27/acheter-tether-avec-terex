@@ -2,18 +2,21 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface HowItWorksSectionProps {
   onBlockchainInfoClick: () => void;
 }
 
 export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionProps) {
+  const { t } = useTranslation();
+  
   return (
     <section id="how-it-works" className="py-16 sm:py-20 bg-terex-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
-            Comment ça <span className="text-terex-accent">marche</span> ?
+            {t('howItWorks.title')}
           </h2>
           <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto font-light">
             Trois étapes simples pour commencer vos échanges et transferts vers l'Afrique
@@ -26,9 +29,9 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <span className="text-xl font-light text-terex-accent">1</span>
               </div>
-              <h3 className="text-base sm:text-lg font-light text-white mb-3">Inscription gratuite</h3>
+              <h3 className="text-base sm:text-lg font-light text-white mb-3">{t('howItWorks.step1.title')}</h3>
               <p className="text-gray-400 mb-4 text-sm font-light">
-                Créez votre compte en moins de 2 minutes. Processus de vérification KYC simple et rapide.
+                {t('howItWorks.step1.description')}
               </p>
               <div className="flex items-center justify-center space-x-2 text-terex-accent">
                 <CheckCircle className="w-4 h-4" />
@@ -42,9 +45,9 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <span className="text-xl font-light text-terex-accent">2</span>
               </div>
-              <h3 className="text-base sm:text-lg font-light text-white mb-3">Choisissez votre service</h3>
+              <h3 className="text-base sm:text-lg font-light text-white mb-3">{t('howItWorks.step2.title')}</h3>
               <p className="text-gray-400 mb-4 text-sm font-light">
-                Achat/vente USDT ou transfert vers l'Afrique. Interface intuitive pour tous vos besoins.
+                {t('howItWorks.step2.description')}
               </p>
               <div className="flex items-center justify-center space-x-2 text-terex-accent">
                 <CheckCircle className="w-4 h-4" />
@@ -58,9 +61,9 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <span className="text-xl font-light text-terex-accent">3</span>
               </div>
-              <h3 className="text-base sm:text-lg font-light text-white mb-3">Transaction sécurisée</h3>
+              <h3 className="text-base sm:text-lg font-light text-white mb-3">{t('howItWorks.step3.title')}</h3>
               <p className="text-gray-400 mb-4 text-sm font-light">
-                Confirmez et finalisez votre transaction. Suivi en temps réel jusqu'à la réception.
+                {t('howItWorks.step3.description')}
               </p>
               <div className="flex items-center justify-center space-x-2 text-terex-accent">
                 <CheckCircle className="w-4 h-4" />

@@ -4,13 +4,15 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Mail, Phone, MapPin, Twitter, Facebook, Linkedin, Instagram, Youtube } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export function FooterSection() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const footerSections = [
     {
-      title: "Produits",
+      title: t('footer.company'),
       links: [
         { label: "Acheter USDT", href: "/auth" },
         { label: "Vendre USDT", href: "/auth" },
@@ -20,27 +22,27 @@ export function FooterSection() {
       ]
     },
     {
-      title: "Entreprise",
+      title: t('footer.company'),
       links: [
-        { label: "À Propos", href: "/about" },
-        { label: "Carrières", href: "/careers" }
+        { label: t('footer.about'), href: "/about" },
+        { label: t('footer.careers'), href: "/careers" }
       ]
     },
     {
-      title: "Support",
+      title: t('footer.support'),
       links: [
-        { label: "Centre d'Aide", href: "/help" },
-        { label: "Nous Contacter", href: "/contact" },
-        { label: "Guide Utilisateur", href: "/guide" },
-        { label: "FAQ", href: "/faq" }
+        { label: t('footer.help'), href: "/help" },
+        { label: t('nav.contact'), href: "/contact" },
+        { label: t('footer.guide'), href: "/guide" },
+        { label: t('nav.faq'), href: "/faq" }
       ]
     },
     {
-      title: "Légal",
+      title: t('footer.legal'),
       links: [
-        { label: "Conditions d'Utilisation", href: "/terms" },
-        { label: "Politique de Confidentialité", href: "/privacy" },
-        { label: "Politique de Sécurité", href: "/security" },
+        { label: t('footer.terms'), href: "/terms" },
+        { label: t('footer.privacy'), href: "/privacy" },
+        { label: t('footer.security'), href: "/security" },
         { label: "Conformité AML/KYC", href: "/compliance" },
         { label: "Mentions Légales", href: "/legal" }
       ]
@@ -100,8 +102,7 @@ export function FooterSection() {
             </div>
             
             <p className="text-gray-400 mb-6 leading-relaxed font-light">
-              La plateforme leader d'échange crypto-fiat en Afrique. Échangez vos USDT contre 
-              des devises locales en toute sécurité avec les meilleurs taux du marché.
+              {t('footer.description')}
             </p>
 
             {/* Contact Info */}
@@ -168,7 +169,7 @@ export function FooterSection() {
         {/* Bottom Footer */}
         <div className="text-center">
           <div className="text-gray-400 text-sm">
-            <p>&copy; 2025 Terex. Tous droits réservés.</p>
+            <p>&copy; 2025 Terex. {t('footer.rights')}.</p>
           </div>
         </div>
       </div>
