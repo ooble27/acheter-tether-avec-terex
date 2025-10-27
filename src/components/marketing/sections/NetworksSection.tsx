@@ -28,9 +28,6 @@ export function NetworksSection() {
 
   return (
     <section className="py-16 sm:py-24 bg-terex-dark relative overflow-hidden">
-      {/* Decorative shapes */}
-      <div className="absolute top-0 left-0 w-1/2 h-96 bg-terex-accent/20 rounded-full blur-3xl -translate-x-1/3 -translate-y-1/3" />
-      <div className="absolute bottom-0 right-0 w-1/2 h-96 bg-terex-accent/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white text-center mb-16">
@@ -42,7 +39,7 @@ export function NetworksSection() {
           <div className="flex justify-center lg:justify-end">
             <div className="relative">
               {/* Orange circle */}
-              <div className="w-80 h-80 sm:w-96 sm:h-96 rounded-full bg-gradient-to-br from-terex-accent to-orange-600 flex flex-col items-center justify-center p-8 shadow-2xl">
+              <div className="w-80 h-80 sm:w-96 sm:h-96 rounded-full bg-terex-accent flex flex-col items-center justify-center p-8 shadow-2xl">
                 <img 
                   src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                   alt="USDT" 
