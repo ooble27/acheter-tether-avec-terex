@@ -1,6 +1,8 @@
 import usdtLogo from '@/assets/usdt-logo.png';
+import { useTranslation } from 'react-i18next';
 
 export function NetworksSection() {
+  const { t } = useTranslation();
   const networks = [
     { 
       name: 'Tron (TRC20)', 
@@ -33,7 +35,7 @@ export function NetworksSection() {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white text-center mb-16">
-          Nous supportons les <span className="text-terex-accent">réseaux blockchain</span> que vous connaissez
+          {t('networks.title')} <span className="text-terex-accent">{t('networks.titleHighlight')}</span> {t('networks.subtitle')}
         </h2>
         
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
@@ -46,7 +48,7 @@ export function NetworksSection() {
                 className="w-32 h-32 sm:w-40 sm:h-40 mb-8"
               />
               <p className="text-white text-lg sm:text-xl font-light text-center leading-relaxed max-w-md">
-                <span className="font-semibold text-terex-accent">USDT</span> est une cryptomonnaie stable adossée au dollar américain. <span className="whitespace-nowrap">1 USDT = 1 USD</span>
+                <span className="font-semibold text-terex-accent">USDT</span> {t('networks.usdtDescription')} <span className="whitespace-nowrap">1 USDT = 1 USD</span>
               </p>
             </div>
           </div>

@@ -1,0 +1,86 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "login": "Login",
+    "getStarted": "Get Started"
+  },
+  "hero": {
+    "title": "Buy and sell your USDT safely",
+    "subtitle": "The simplest and most secure platform to exchange your USDT in Africa",
+    "buyButton": "Buy USDT",
+    "sellButton": "Sell USDT"
+  },
+  "networks": {
+    "title": "We support the",
+    "titleHighlight": "blockchain networks",
+    "subtitle": "you know",
+    "usdtDescription": "is a stablecoin pegged to the US dollar."
+  },
+  "howItWorks": {
+    "title": "How does it work?",
+    "step1": {
+      "title": "Create your account",
+      "description": "Quick and secure registration in just a few clicks"
+    },
+    "step2": {
+      "title": "Choose your transaction",
+      "description": "Buy or sell your USDT according to your needs"
+    },
+    "step3": {
+      "title": "Confirm and receive",
+      "description": "Instant and secure transaction"
+    }
+  },
+  "whyChoose": {
+    "title": "Why choose TEREX?",
+    "security": {
+      "title": "Maximum security",
+      "description": "Your transactions are protected by the best security protocols"
+    },
+    "speed": {
+      "title": "Speed",
+      "description": "Instant transactions 24/7"
+    },
+    "support": {
+      "title": "Dedicated support",
+      "description": "Our team is available to assist you"
+    },
+    "fees": {
+      "title": "Transparent fees",
+      "description": "No hidden fees, everything is clear from the start"
+    }
+  },
+  "cta": {
+    "title": "Ready to get started?",
+    "subtitle": "Join thousands of users who trust us",
+    "button": "Open a free account"
+  },
+  "footer": {
+    "company": "Company",
+    "about": "About",
+    "careers": "Careers",
+    "contact": "Contact",
+    "legal": "Legal",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "security": "Security",
+    "support": "Support",
+    "faq": "FAQ",
+    "guide": "User Guide",
+    "help": "Help Center",
+    "rights": "All rights reserved"
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "balance": "Balance",
+    "recentTransactions": "Recent transactions",
+    "buyUsdt": "Buy USDT",
+    "sellUsdt": "Sell USDT",
+    "transfer": "International transfer",
+    "profile": "Profile",
+    "logout": "Logout"
+  }
+}
