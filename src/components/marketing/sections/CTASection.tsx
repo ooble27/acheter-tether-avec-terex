@@ -12,10 +12,18 @@ export function CTASection({ user, onGetStarted }: CTASectionProps) {
     <section className="py-16 sm:py-20 bg-terex-dark">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
-          Prêt à commencer avec <span className="text-terex-accent">Terex</span> ?
+          {user ? (
+            <>Continuez votre expérience avec <span className="text-terex-accent">Terex</span></>
+          ) : (
+            <>Prêt à commencer avec <span className="text-terex-accent">Terex</span> ?</>
+          )}
         </h2>
         <p className="text-lg sm:text-xl text-gray-400 mb-8 font-light">
-          Rejoignez des milliers d'utilisateurs qui nous font confiance
+          {user ? (
+            "Explorez nos services d'échange USDT et de transferts vers l'Afrique, ou découvrez notre boutique crypto."
+          ) : (
+            "Rejoignez des milliers d'utilisateurs qui nous font confiance pour leurs échanges USDT et transferts vers l'Afrique."
+          )}
         </p>
         {!user && (
           <>

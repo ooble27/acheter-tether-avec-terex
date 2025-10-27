@@ -3,25 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Cache le widget Google Translate par défaut */
-#google_translate_element {
-  display: none !important;
-}
-
-/* Cache la barre Google Translate en haut */
-.goog-te-banner-frame {
-  display: none !important;
-}
-
-body {
-  top: 0 !important;
-}
-
-/* Style le sélecteur si visible */
-.goog-te-combo {
-  display: none !important;
-}
-
 @layer base {
   :root {
     --background: 20 14.3% 4.1%;

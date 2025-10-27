@@ -4,7 +4,6 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { User, LogOut, Menu } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useNavigate } from 'react-router-dom';
-import { LanguageSwitcherGoogle } from '@/components/LanguageSwitcherGoogle';
 
 interface HeaderSectionProps {
   user?: { email: string; name: string } | null;
@@ -67,7 +66,6 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
 
               {/* User Actions */}
               <div className="flex items-center space-x-4 ml-8 border-l border-terex-gray/30 pl-8">
-                <LanguageSwitcherGoogle />
                 {user ? (
                   <>
                     <Button
@@ -146,11 +144,6 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                         Dashboard
                       </Button>
                     )}
-
-                    {/* Language Switcher Mobile */}
-                    <div className="mb-4">
-                      <LanguageSwitcherGoogle />
-                    </div>
 
                     {/* Navigation Items */}
                     <div className="space-y-2">

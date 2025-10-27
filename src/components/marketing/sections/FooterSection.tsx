@@ -100,7 +100,8 @@ export function FooterSection() {
             </div>
             
             <p className="text-gray-400 mb-6 leading-relaxed font-light">
-              La plateforme de confiance pour acheter et vendre vos USDT en Afrique
+              La plateforme leader d'échange crypto-fiat en Afrique. Échangez vos USDT contre 
+              des devises locales en toute sécurité avec les meilleurs taux du marché.
             </p>
 
             {/* Contact Info */}

@@ -2,46 +2,46 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { TrendingDown, Clock, Shield, Headphones, Smartphone, Globe } from 'lucide-react';
 
-export function WhyChooseTerexSection() {
-  const advantages = [
-    {
-      icon: TrendingDown,
-      title: "Frais transparents",
-      description: "Les meilleurs taux de change du marché avec des frais transparents et réduits",
-      highlight: "Frais jusqu'à 70% moins cher"
-    },
-    {
-      icon: Clock,
-      title: "Rapidité",
-      description: "Transactions instantanées 24h/24 et 7j/7",
-      highlight: "Disponible 24h/24"
-    },
-    {
-      icon: Shield,
-      title: "Sécurité maximale",
-      description: "Vos transactions sont protégées par les meilleurs protocoles de sécurité",
-      highlight: "99.9% de fiabilité"
-    },
-    {
-      icon: Headphones,
-      title: "Support dédié",
-      description: "Assistance en français par des experts disponibles 24/7 via chat, email ou téléphone",
-      highlight: "Réponse < 30 secondes"
-    },
-    {
-      icon: Smartphone,
-      title: "Interface simplifiée",
-      description: "Plateforme intuitive conçue pour les utilisateurs débutants comme experts",
-      highlight: "3 clics pour transférer"
-    },
-    {
-      icon: Globe,
-      title: "Couverture Afrique",
-      description: "Spécialisés sur les corridors africains avec une expertise locale unique",
-      highlight: "6 pays couverts"
-    }
-  ];
+const advantages = [
+  {
+    icon: TrendingDown,
+    title: "Taux compétitifs",
+    description: "Les meilleurs taux de change du marché avec des frais transparents et réduits",
+    highlight: "Frais jusqu'à 70% moins cher"
+  },
+  {
+    icon: Clock,
+    title: "Transferts instantanés",
+    description: "Vos transactions USDT et virements internationaux traités en moins de 5 minutes",
+    highlight: "Disponible 24h/24"
+  },
+  {
+    icon: Shield,
+    title: "Sécurité maximale",
+    description: "Plateforme sécurisée avec les plus hauts standards de protection des données",
+    highlight: "99.9% de fiabilité"
+  },
+  {
+    icon: Headphones,
+    title: "Support client dédié",
+    description: "Assistance en français par des experts disponibles 24/7 via chat, email ou téléphone",
+    highlight: "Réponse < 30 secondes"
+  },
+  {
+    icon: Smartphone,
+    title: "Interface simplifiée",
+    description: "Plateforme intuitive conçue pour les utilisateurs débutants comme experts",
+    highlight: "3 clics pour transférer"
+  },
+  {
+    icon: Globe,
+    title: "Couverture Afrique",
+    description: "Spécialisés sur les corridors africains avec une expertise locale unique",
+    highlight: "6 pays couverts"
+  }
+];
 
+export function WhyChooseTerexSection() {
   return (
     <section className="py-20 bg-terex-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
