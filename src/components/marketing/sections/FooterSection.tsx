@@ -4,15 +4,13 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Mail, Phone, MapPin, Twitter, Facebook, Linkedin, Instagram, Youtube } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 
 export function FooterSection() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
 
   const footerSections = [
     {
-      title: t('footer.company'),
+      title: "Produits",
       links: [
         { label: "Acheter USDT", href: "/auth" },
         { label: "Vendre USDT", href: "/auth" },
@@ -22,27 +20,27 @@ export function FooterSection() {
       ]
     },
     {
-      title: t('footer.company'),
+      title: "Entreprise",
       links: [
-        { label: t('footer.about'), href: "/about" },
-        { label: t('footer.careers'), href: "/careers" }
+        { label: "À Propos", href: "/about" },
+        { label: "Carrières", href: "/careers" }
       ]
     },
     {
-      title: t('footer.support'),
+      title: "Support",
       links: [
-        { label: t('footer.help'), href: "/help" },
-        { label: t('nav.contact'), href: "/contact" },
-        { label: t('footer.guide'), href: "/guide" },
-        { label: t('nav.faq'), href: "/faq" }
+        { label: "Centre d'Aide", href: "/help" },
+        { label: "Nous Contacter", href: "/contact" },
+        { label: "Guide Utilisateur", href: "/guide" },
+        { label: "FAQ", href: "/faq" }
       ]
     },
     {
-      title: t('footer.legal'),
+      title: "Légal",
       links: [
-        { label: t('footer.terms'), href: "/terms" },
-        { label: t('footer.privacy'), href: "/privacy" },
-        { label: t('footer.security'), href: "/security" },
+        { label: "Conditions d'Utilisation", href: "/terms" },
+        { label: "Politique de Confidentialité", href: "/privacy" },
+        { label: "Politique de Sécurité", href: "/security" },
         { label: "Conformité AML/KYC", href: "/compliance" },
         { label: "Mentions Légales", href: "/legal" }
       ]
@@ -102,7 +100,7 @@ export function FooterSection() {
             </div>
             
             <p className="text-gray-400 mb-6 leading-relaxed font-light">
-              {t('footer.description')}
+              La plateforme de confiance pour acheter et vendre vos USDT en Afrique
             </p>
 
             {/* Contact Info */}
@@ -169,7 +167,7 @@ export function FooterSection() {
         {/* Bottom Footer */}
         <div className="text-center">
           <div className="text-gray-400 text-sm">
-            <p>&copy; 2025 Terex. {t('footer.rights')}.</p>
+            <p>&copy; 2025 Terex. Tous droits réservés.</p>
           </div>
         </div>
       </div>

@@ -4,8 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { User, LogOut, Menu } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useNavigate } from 'react-router-dom';
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
-import { useTranslation } from 'react-i18next';
+import { LanguageSwitcherGoogle } from '@/components/LanguageSwitcherGoogle';
 
 interface HeaderSectionProps {
   user?: { email: string; name: string } | null;
@@ -16,7 +15,6 @@ interface HeaderSectionProps {
 export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSectionProps) {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const { t } = useTranslation();
 
   const handleLogout = async () => {
     try {
@@ -29,12 +27,12 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   };
 
   const navigationItems = [
-    { label: t('nav.home'), href: '/' },
-    { label: t('nav.about'), href: '/about' },
-    { label: t('footer.careers'), href: '/careers' },
-    { label: t('footer.support'), href: '/support' },
-    { label: t('nav.contact'), href: '/contact' },
-    { label: t('nav.faq'), href: '/faq' }
+    { label: 'Accueil', href: '/' },
+    { label: 'À propos', href: '/about' },
+    { label: 'Carrières', href: '/careers' },
+    { label: 'Support', href: '/support' },
+    { label: 'Contact', href: '/contact' },
+    { label: 'FAQ', href: '/faq' }
   ];
 
   return (
@@ -69,7 +67,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
 
               {/* User Actions */}
               <div className="flex items-center space-x-4 ml-8 border-l border-terex-gray/30 pl-8">
-                <LanguageSwitcher />
+                <LanguageSwitcherGoogle />
                 {user ? (
                   <>
                     <Button
@@ -97,7 +95,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                     onClick={() => navigate('/auth')}
                     className="bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
                   >
-                    {t('nav.login')}
+                    Se Connecter
                   </Button>
                 )}
               </div>
@@ -151,12 +149,12 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
 
                     {/* Language Switcher Mobile */}
                     <div className="mb-4">
-                      <LanguageSwitcher />
+                      <LanguageSwitcherGoogle />
                     </div>
 
                     {/* Navigation Items */}
                     <div className="space-y-2">
-                      <p className="text-gray-400 text-sm font-light px-3">{t('footer.company')}</p>
+                      <p className="text-gray-400 text-sm font-light px-3">Navigation</p>
                       {navigationItems.map((item) => (
                         <Button
                           key={item.href}
@@ -174,7 +172,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                         onClick={() => navigate('/auth')}
                         className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-light h-14 text-lg"
                       >
-                        {t('nav.login')}
+                        Se Connecter
                       </Button>
                     )}
                   </div>
@@ -188,7 +186,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                         className="w-full justify-start text-red-400 hover:bg-red-600/20 h-14 text-lg"
                       >
                         <LogOut className="w-6 h-6 mr-3" />
-                        {t('dashboard.logout')}
+                        Déconnexion
                       </Button>
                     </div>
                   )}

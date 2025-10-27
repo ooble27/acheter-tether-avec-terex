@@ -32,6 +32,7 @@ import { TransactionProvider } from "./contexts/TransactionContext";
 import { PWASessionSync } from "./components/PWASessionSync";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { AppLoader } from "./components/AppLoader";
+import { GoogleTranslate } from "./components/GoogleTranslate";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
       <AppLoader>
         <Router>
           <ScrollToTop />
+          <GoogleTranslate />
           <AuthProvider>
             <TransactionProvider>
               <PWASessionSync />
