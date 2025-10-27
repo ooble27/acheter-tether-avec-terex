@@ -15,6 +15,7 @@ import { PaymentMethodsSection } from './sections/PaymentMethodsSection';
 import { CTASection } from './sections/CTASection';
 import { FooterSection } from './sections/FooterSection';
 import { PhoneMockupSection } from './sections/PhoneMockupSection';
+import { NetworksSection } from './sections/NetworksSection';
 
 interface PublicHomeProps {
   onGetStarted: () => void;
@@ -70,6 +71,8 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       <WhyChooseTerexSection />
 
       <PhoneMockupSection />
+
+      <NetworksSection />
 
       <HowItWorksSection onBlockchainInfoClick={handleBlockchainInfo} />
 
