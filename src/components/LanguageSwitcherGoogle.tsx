@@ -9,39 +9,42 @@ import { useEffect, useState } from 'react';
 
 export function LanguageSwitcherGoogle() {
   const [currentLang, setCurrentLang] = useState('fr');
+  const [isReady, setIsReady] = useState(false);
 
   const languages = [
     { code: 'fr', name: 'Français', flag: '🇫🇷' },
     { code: 'en', name: 'English', flag: '🇬🇧' }
   ];
 
-  const changeLanguage = (langCode: string) => {
-    const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-    if (selectElement) {
-      selectElement.value = langCode;
-      selectElement.dispatchEvent(new Event('change'));
-      setCurrentLang(langCode);
-    }
-  };
-
-  // Détecter le changement de langue
+  // Vérifier que Google Translate est chargé
   useEffect(() => {
-    const checkLanguage = () => {
-      const frame = document.querySelector('iframe.goog-te-banner-frame') as HTMLIFrameElement;
-      if (frame) {
-        try {
-          const lang = frame.contentWindow?.document.body.querySelector('.goog-te-menu-value span')?.textContent;
-          if (lang?.includes('English')) setCurrentLang('en');
-          else if (lang?.includes('Français')) setCurrentLang('fr');
-        } catch (e) {
-          // Cross-origin iframe, can't access
-        }
+    const checkGoogleTranslate = setInterval(() => {
+      const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+      if (selectElement) {
+        setIsReady(true);
+        clearInterval(checkGoogleTranslate);
       }
-    };
+    }, 500);
 
-    const interval = setInterval(checkLanguage, 1000);
-    return () => clearInterval(interval);
+    return () => clearInterval(checkGoogleTranslate);
   }, []);
+
+  const changeLanguage = (langCode: string) => {
+    if (!isReady) {
+      console.log('Google Translate not ready yet');
+      return;
+    }
+
+    // Attendre un peu pour s'assurer que tout est chargé
+    setTimeout(() => {
+      const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+      if (selectElement) {
+        selectElement.value = langCode;
+        selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+        setCurrentLang(langCode);
+      }
+    }, 100);
+  };
 
   const currentLanguage = languages.find(lang => lang.code === currentLang) || languages[0];
 
