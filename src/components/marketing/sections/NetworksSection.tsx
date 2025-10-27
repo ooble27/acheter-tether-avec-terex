@@ -27,7 +27,7 @@ export function NetworksSection() {
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-terex-darker relative overflow-hidden">
+    <section className="py-16 sm:py-24 bg-terex-dark relative overflow-hidden">
       {/* Decorative shapes */}
       <div className="absolute top-0 left-0 w-1/2 h-96 bg-terex-accent/20 rounded-full blur-3xl -translate-x-1/3 -translate-y-1/3" />
       <div className="absolute bottom-0 right-0 w-1/2 h-96 bg-terex-accent/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
