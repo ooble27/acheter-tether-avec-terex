@@ -46,7 +46,7 @@ export function NetworksSection() {
                 className="w-32 h-32 sm:w-40 sm:h-40 mb-8"
               />
               <p className="text-white text-xl sm:text-2xl font-light text-center leading-relaxed max-w-md">
-                <span className="font-semibold text-terex-accent">USDT</span> est une cryptomonnaie stable indexée 1:1 sur le dollar américain
+                <span className="font-semibold text-terex-accent">USDT</span> est une cryptomonnaie stable adossée au dollar américain. 1 USDT = 1 USD
               </p>
             </div>
           </div>
