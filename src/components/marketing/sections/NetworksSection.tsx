@@ -41,8 +41,7 @@ export function NetworksSection() {
               <img 
                 src="https://s2.coinmarketcap.com/static/img/coins/200x200/825.png" 
                 alt="USDT" 
-                className="w-48 h-48 sm:w-64 sm:h-64 mb-8"
-                style={{ filter: 'drop-shadow(0 10px 40px rgba(38, 194, 129, 0.3))' }}
+                className="w-48 h-48 sm:w-64 sm:h-64 mb-8 rounded-full"
               />
               <p className="text-white text-xl sm:text-2xl font-light text-center leading-relaxed max-w-md">
                 <span className="font-semibold text-terex-accent">USDT</span> est une cryptomonnaie stable indexée 1:1 sur le dollar américain
