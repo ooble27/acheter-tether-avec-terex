@@ -39,9 +39,9 @@ export function NetworksSection() {
           <div className="flex justify-center lg:justify-start lg:pl-12">
             <div className="relative flex flex-col items-center">
               <img 
-                src="https://s2.coinmarketcap.com/static/img/coins/200x200/825.png" 
+                src="https://s2.coinmarketcap.com/static/img/coins/128x128/825.png" 
                 alt="USDT" 
-                className="w-48 h-48 sm:w-64 sm:h-64 mb-8 rounded-full"
+                className="w-32 h-32 sm:w-40 sm:h-40 mb-8 rounded-full"
               />
               <p className="text-white text-xl sm:text-2xl font-light text-center leading-relaxed max-w-md">
                 <span className="font-semibold text-terex-accent">USDT</span> est une cryptomonnaie stable indexée 1:1 sur le dollar américain
