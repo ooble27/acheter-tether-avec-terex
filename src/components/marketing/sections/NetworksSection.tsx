@@ -34,21 +34,19 @@ export function NetworksSection() {
           Nous supportons les <span className="text-terex-accent">réseaux blockchain</span> que vous connaissez
         </h2>
         
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left side - USDT Circle */}
-          <div className="flex justify-center lg:justify-end">
-            <div className="relative">
-              {/* Orange circle */}
-              <div className="w-80 h-80 sm:w-96 sm:h-96 rounded-full bg-terex-accent flex flex-col items-center justify-center p-8 shadow-2xl">
-                <img 
-                  src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                  alt="USDT" 
-                  className="w-16 h-16 sm:w-20 sm:h-20 mb-6"
-                />
-                <p className="text-white text-lg sm:text-xl font-light text-center leading-relaxed">
-                  <span className="font-semibold">USDT</span> est une cryptomonnaie stable indexée 1:1 sur le dollar américain
-                </p>
-              </div>
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+          {/* Left side - USDT Logo */}
+          <div className="flex justify-center lg:justify-start lg:pl-12">
+            <div className="relative flex flex-col items-center">
+              <img 
+                src="https://s2.coinmarketcap.com/static/img/coins/200x200/825.png" 
+                alt="USDT" 
+                className="w-48 h-48 sm:w-64 sm:h-64 mb-8"
+                style={{ filter: 'drop-shadow(0 10px 40px rgba(38, 194, 129, 0.3))' }}
+              />
+              <p className="text-white text-xl sm:text-2xl font-light text-center leading-relaxed max-w-md">
+                <span className="font-semibold text-terex-accent">USDT</span> est une cryptomonnaie stable indexée 1:1 sur le dollar américain
+              </p>
             </div>
           </div>
           
