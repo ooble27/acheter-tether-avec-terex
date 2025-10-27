@@ -39,7 +39,7 @@ export function NetworksSection() {
           <div className="flex justify-center lg:justify-start lg:pl-12">
             <div className="relative flex flex-col items-center">
               <img 
-                src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
+                src="https://s2.coinmarketcap.com/static/img/coins/128x128/825.png" 
                 alt="USDT" 
                 className="w-32 h-32 sm:w-40 sm:h-40 mb-8 rounded-full"
               />
