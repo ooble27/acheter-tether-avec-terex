@@ -83,29 +83,29 @@ export function PWAInstallPrompt() {
   // Prompt d'installation automatique (Android/Chrome)
   if (showPrompt && deferredPrompt) {
     return (
-      <div className="fixed bottom-4 right-4 z-50 max-w-xs">
+      <div className="fixed bottom-2 right-2 md:bottom-4 md:right-4 z-50 max-w-[280px] md:max-w-xs">
         <Card className="bg-terex-darker border-terex-accent/30 shadow-lg">
-          <CardContent className="p-4">
-            <div className="flex items-start space-x-3">
+          <CardContent className="p-2 md:p-3">
+            <div className="flex items-start space-x-2">
               <div className="flex-shrink-0">
                 <img 
                   src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
                   alt="Terex" 
-                  className="w-8 h-8 rounded"
+                  className="w-6 h-6 md:w-8 md:h-8 rounded"
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-white font-semibold text-sm">
+                <h3 className="text-white font-semibold text-xs md:text-sm">
                   Installer Terex
                 </h3>
-                <p className="text-gray-300 text-xs mt-1">
-                  Ajoutez Terex à votre écran d'accueil pour un accès rapide
+                <p className="text-gray-300 text-[10px] md:text-xs mt-0.5">
+                  Accès rapide depuis votre écran
                 </p>
-                <div className="flex space-x-2 mt-3">
+                <div className="flex space-x-1.5 mt-2">
                   <Button
                     size="sm"
                     onClick={handleInstall}
-                    className="bg-terex-accent text-black hover:bg-terex-accent/90 h-8 px-3 text-xs"
+                    className="bg-terex-accent text-black hover:bg-terex-accent/90 h-7 md:h-8 px-2 md:px-3 text-[10px] md:text-xs"
                   >
                     <Download className="w-3 h-3 mr-1" />
                     Installer
@@ -114,7 +114,7 @@ export function PWAInstallPrompt() {
                     size="sm"
                     variant="ghost"
                     onClick={handleDismiss}
-                    className="text-gray-400 hover:text-white h-8 px-2"
+                    className="text-gray-400 hover:text-white h-7 md:h-8 px-1.5 md:px-2"
                   >
                     <X className="w-3 h-3" />
                   </Button>
@@ -130,29 +130,29 @@ export function PWAInstallPrompt() {
   // Instructions manuelles pour iOS et autres navigateurs
   if (showInstructions) {
     return (
-      <div className="fixed bottom-4 right-4 z-50 max-w-xs">
+      <div className="fixed bottom-2 right-2 md:bottom-4 md:right-4 z-50 max-w-[280px] md:max-w-xs">
         <Card className="bg-terex-darker border-blue-500/30 shadow-lg">
-          <CardContent className="p-4">
-            <div className="flex items-start space-x-3">
+          <CardContent className="p-2 md:p-3">
+            <div className="flex items-start space-x-2">
               <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center">
-                  <Info className="w-4 h-4 text-blue-400" />
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-blue-500/20 rounded-full flex items-center justify-center">
+                  <Info className="w-3 h-3 md:w-4 md:h-4 text-blue-400" />
                 </div>
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-white font-semibold text-sm">
+                <h3 className="text-white font-semibold text-xs md:text-sm">
                   Installer l'app Terex
                 </h3>
-                <p className="text-gray-300 text-xs mt-1">
-                  Accédez plus rapidement à Terex depuis votre écran d'accueil
+                <p className="text-gray-300 text-[10px] md:text-xs mt-0.5">
+                  Accès rapide depuis votre écran
                 </p>
-                <div className="flex space-x-2 mt-3">
+                <div className="flex space-x-1.5 mt-2">
                   <PWAInstallInstructions />
                   <Button
                     size="sm"
                     variant="ghost"
                     onClick={handleDismissInstructions}
-                    className="text-gray-400 hover:text-white h-8 px-2"
+                    className="text-gray-400 hover:text-white h-7 md:h-8 px-1.5 md:px-2"
                   >
                     <X className="w-3 h-3" />
                   </Button>
