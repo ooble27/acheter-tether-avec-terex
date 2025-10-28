@@ -50,7 +50,7 @@ export function FooterSection() {
   const socialLinks = [
     { icon: Twitter, href: "https://twitter.com/terex_official" },
     { icon: Facebook, href: "https://facebook.com/terex.official" },
-    { icon: Linkedin, href: "https://linkedin.com/company/terex-exchange" },
+    { icon: Linkedin, href: "https://www.linkedin.com/company/teranga-exchange/" },
     { icon: Instagram, href: "https://instagram.com/terex_official" },
     { icon: Youtube, href: "https://youtube.com/@terex-official" }
   ];
