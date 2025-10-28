@@ -83,7 +83,7 @@ export function PWAInstallPrompt() {
   // Prompt d'installation automatique (Android/Chrome)
   if (showPrompt && deferredPrompt) {
     return (
-      <div className="fixed bottom-4 left-4 right-4 z-50 max-w-sm mx-auto">
+      <div className="fixed bottom-4 right-4 z-50 max-w-xs">
         <Card className="bg-terex-darker border-terex-accent/30 shadow-lg">
           <CardContent className="p-4">
             <div className="flex items-start space-x-3">
@@ -130,7 +130,7 @@ export function PWAInstallPrompt() {
   // Instructions manuelles pour iOS et autres navigateurs
   if (showInstructions) {
     return (
-      <div className="fixed bottom-4 left-4 right-4 z-50 max-w-sm mx-auto">
+      <div className="fixed bottom-4 right-4 z-50 max-w-xs">
         <Card className="bg-terex-darker border-blue-500/30 shadow-lg">
           <CardContent className="p-4">
             <div className="flex items-start space-x-3">
