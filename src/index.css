@@ -469,6 +469,19 @@
   }
 }
 
+.animate-float {
+  animation: simple-float 3s ease-in-out infinite;
+}
+
+@keyframes simple-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
 @keyframes pulse-continent {
   0%, 100% {
     filter: drop-shadow(0 0 10px rgba(59, 150, 143, 0.4));

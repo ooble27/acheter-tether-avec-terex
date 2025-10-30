@@ -23,6 +23,7 @@ export function FooterSection() {
       title: "Entreprise",
       links: [
         { label: "À Propos", href: "/about" },
+        { label: "Blog", href: "/blog" },
         { label: "Carrières", href: "/careers" }
       ]
     },
