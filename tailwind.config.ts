@@ -123,8 +123,46 @@ export default {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.3s ease-out'
-			}
+			},
+			typography: {
+				DEFAULT: {
+					css: {
+						'--tw-prose-body': 'hsl(0 0% 80%)',
+						'--tw-prose-headings': 'hsl(0 0% 95%)',
+						'--tw-prose-links': 'hsl(142.1 76.2% 36.3%)',
+						'--tw-prose-bold': 'hsl(0 0% 95%)',
+						'--tw-prose-code': 'hsl(142.1 76.2% 36.3%)',
+						'--tw-prose-quotes': 'hsl(0 0% 80%)',
+						h2: {
+							fontWeight: '400',
+							marginTop: '2em',
+							marginBottom: '1em',
+						},
+						h3: {
+							fontWeight: '400',
+							marginTop: '1.6em',
+							marginBottom: '0.6em',
+						},
+						a: {
+							fontWeight: '400',
+							textDecoration: 'underline',
+							'&:hover': {
+								color: 'hsl(142.1 76.2% 46.3%)',
+							},
+						},
+						code: {
+							backgroundColor: 'hsl(240 3.7% 15.9%)',
+							padding: '0.25rem 0.375rem',
+							borderRadius: '0.25rem',
+							fontWeight: '400',
+						},
+						strong: {
+							fontWeight: '500',
+						},
+					},
+				},
+			},
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;

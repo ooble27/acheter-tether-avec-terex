@@ -29,6 +29,8 @@ import AdminPage from "./pages/AdminPage";
 import { Toaster } from "@/components/ui/toaster"
 import BlockchainPage from "./pages/BlockchainPage";
 import BlogPage from "./pages/BlogPage";
+import ComprendreUSDTArticle from "./pages/blog/ComprendreUSDTArticle";
+import AcheterUSDTArticle from "./pages/blog/AcheterUSDTArticle";
 import { TransactionProvider } from "./contexts/TransactionContext";
 import { PWASessionSync } from "./components/PWASessionSync";
 import { ScrollToTop } from "./components/ScrollToTop";
@@ -65,6 +67,8 @@ function App() {
                 <Route path="/referral" element={<ReferralPageMain />} />
                 <Route path="/share" element={<SharePage />} />
                 <Route path="/blog" element={<BlogPage />} />
+                <Route path="/blog/comprendre-usdt-stablecoin" element={<ComprendreUSDTArticle />} />
+                <Route path="/blog/acheter-usdt-terex-guide" element={<AcheterUSDTArticle />} />
                 <Route path="/admin/*" element={<AdminPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

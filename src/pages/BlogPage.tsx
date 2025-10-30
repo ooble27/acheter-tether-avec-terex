@@ -4,17 +4,21 @@ import { FooterSection } from "@/components/marketing/sections/FooterSection";
 import { HeaderSection } from "@/components/marketing/sections/HeaderSection";
 import { useNavigate } from "react-router-dom";
 
-import blogCryptoIllustration from "@/assets/blog-crypto-illustration.png";
-import blogCollaborationIllustration from "@/assets/blog-collaboration-illustration.png";
-import blogSecurityIllustration from "@/assets/blog-security-illustration.png";
-import blogSpeedIllustration from "@/assets/blog-speed-illustration.png";
+import blogUsdtImage from "@/assets/blog-usdt-stablecoin.png";
+import blogAcheterImage from "@/assets/blog-acheter-usdt.png";
+import blogSecuriteImage from "@/assets/blog-securite.png";
+import blogTransfertsImage from "@/assets/blog-transferts.png";
+import blogBlockchainImage from "@/assets/blog-blockchain.png";
+import blogMobileMoneyImage from "@/assets/blog-mobile-money.png";
+import blogKycImage from "@/assets/blog-kyc.png";
+import blogAfriqueImage from "@/assets/blog-afrique-crypto.png";
 
 const blogArticles = [
   {
     id: 1,
     title: "Comprendre l'USDT : Le stablecoin pour vos transferts",
     excerpt: "L'USDT (Tether) est la cryptomonnaie stable la plus utilisée au monde. Découvrez pourquoi elle est idéale pour les transferts internationaux en Afrique et comment elle maintient sa valeur.",
-    image: blogCryptoIllustration,
+    image: blogUsdtImage,
     date: "15 Oct 2025",
     readTime: "5 min",
     category: "Crypto",
@@ -24,7 +28,7 @@ const blogArticles = [
     id: 2,
     title: "Comment acheter de l'USDT sur Terex en 3 étapes",
     excerpt: "Guide complet pour acheter vos premiers USDT sur Terex. Paiement par mobile money, carte bancaire ou virement. Simple, rapide et sécurisé.",
-    image: blogSpeedIllustration,
+    image: blogAcheterImage,
     date: "12 Oct 2025",
     readTime: "7 min",
     category: "Guide",
@@ -34,7 +38,7 @@ const blogArticles = [
     id: 3,
     title: "Sécurité des transactions : Nos garanties",
     excerpt: "La sécurité est notre priorité. Découvrez comment Terex protège vos fonds avec le KYC, la vérification en deux étapes et nos partenariats bancaires certifiés.",
-    image: blogSecurityIllustration,
+    image: blogSecuriteImage,
     date: "8 Oct 2025",
     readTime: "6 min",
     category: "Sécurité",
@@ -44,7 +48,7 @@ const blogArticles = [
     id: 4,
     title: "Transferts internationaux : Économisez jusqu'à 80%",
     excerpt: "Comparez les frais des services traditionnels vs Terex. Envoyez de l'argent vers l'Afrique sans frais cachés et avec un taux de change transparent.",
-    image: blogCollaborationIllustration,
+    image: blogTransfertsImage,
     date: "5 Oct 2025",
     readTime: "8 min",
     category: "Transferts",
@@ -54,7 +58,7 @@ const blogArticles = [
     id: 5,
     title: "La blockchain expliquée simplement",
     excerpt: "Qu'est-ce que la blockchain ? Comment fonctionne-t-elle ? Découvrez la technologie derrière Bitcoin, Ethereum et l'USDT dans un langage accessible.",
-    image: blogCryptoIllustration,
+    image: blogBlockchainImage,
     date: "1 Oct 2025",
     readTime: "10 min",
     category: "Technologie",
@@ -64,11 +68,31 @@ const blogArticles = [
     id: 6,
     title: "Mobile Money et Crypto : L'alliance gagnante en Afrique",
     excerpt: "Orange Money, MTN Mobile Money, Moov Money... Découvrez comment Terex connecte les services de paiement mobile africains à l'économie crypto mondiale.",
-    image: blogSpeedIllustration,
+    image: blogMobileMoneyImage,
     date: "28 Sep 2025",
     readTime: "6 min",
     category: "Innovation",
     slug: "mobile-money-crypto-afrique"
+  },
+  {
+    id: 7,
+    title: "KYC : Pourquoi vérifier votre identité est important",
+    excerpt: "Le KYC (Know Your Customer) protège votre compte et combat la fraude. Découvrez comment compléter votre vérification en 5 minutes.",
+    image: blogKycImage,
+    date: "25 Sep 2025",
+    readTime: "5 min",
+    category: "Sécurité",
+    slug: "kyc-verification-identite"
+  },
+  {
+    id: 8,
+    title: "L'avenir de la crypto en Afrique",
+    excerpt: "L'Afrique adopte massivement les cryptomonnaies. Découvrez les opportunités, défis et perspectives pour le continent.",
+    image: blogAfriqueImage,
+    date: "20 Sep 2025",
+    readTime: "9 min",
+    category: "Analyse",
+    slug: "avenir-crypto-afrique"
   }
 ];
 
