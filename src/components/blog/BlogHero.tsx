@@ -1,4 +1,4 @@
-import blogHeroIllustration from "@/assets/blog-crypto-illustration.png";
+import blogHeroIllustration from "@/assets/blog-usdt-stablecoin.png";
 
 export function BlogHero() {
   return (
