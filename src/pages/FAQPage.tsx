@@ -2,7 +2,8 @@
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Input } from '@/components/ui/input';
-import { Search, MessageCircle, ArrowRight } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Search, MessageCircle, ArrowRight, User, ShoppingCart, Send, Shield, DollarSign, HelpCircle, Globe, Phone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -22,13 +23,52 @@ const FAQPage = () => {
   }, []);
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const faqCategories = [
+    {
+      id: 'demarrage',
+      title: 'Démarrage et Compte',
+      icon: User,
+      description: 'Création de compte, vérification KYC',
+    },
+    {
+      id: 'achat',
+      title: 'Achat d\'USDT',
+      icon: ShoppingCart,
+      description: 'Comment acheter des cryptomonnaies',
+    },
+    {
+      id: 'vente',
+      title: 'Vente d\'USDT',
+      icon: DollarSign,
+      description: 'Vendre vos cryptomonnaies',
+    },
+    {
+      id: 'transferts',
+      title: 'Transferts Internationaux',
+      icon: Globe,
+      description: 'Envoyer de l\'argent à l\'étranger',
+    },
+    {
+      id: 'securite',
+      title: 'Sécurité et Conformité',
+      icon: Shield,
+      description: 'Protection de vos données et fonds',
+    },
+    {
+      id: 'support',
+      title: 'Support et Assistance',
+      icon: HelpCircle,
+      description: 'Contactez notre équipe',
+    },
+  ];
 
   const faqSections = [
     {
+      id: 'demarrage',
       title: "Démarrage et Compte",
       icon: "👤",
-      color: "from-terex-accent/20 to-terex-accent-light/20",
-      borderColor: "border-terex-accent/30",
       faqs: [
         {
           question: "Qu'est-ce que Terex et comment ça marche ?",
@@ -53,10 +93,9 @@ const FAQPage = () => {
       ]
     },
     {
+      id: 'achat',
       title: "Achat d'USDT",
       icon: "💰",
-      color: "from-terex-accent/20 to-terex-accent-light/20",
-      borderColor: "border-terex-accent/30",
       faqs: [
         {
           question: "Comment acheter des USDT sur Terex ?",
@@ -85,10 +124,9 @@ const FAQPage = () => {
       ]
     },
     {
+      id: 'vente',
       title: "Vente d'USDT",
       icon: "💸",
-      color: "from-terex-accent/20 to-terex-accent-light/20",
-      borderColor: "border-terex-accent/30",
       faqs: [
         {
           question: "Comment vendre mes USDT sur Terex ?",
@@ -113,10 +151,9 @@ const FAQPage = () => {
       ]
     },
     {
+      id: 'transferts',
       title: "Transferts Internationaux",
       icon: "🌍",
-      color: "from-terex-accent/20 to-terex-accent-light/20",
-      borderColor: "border-terex-accent/30",
       faqs: [
         {
           question: "Vers quels pays puis-je envoyer de l'argent ?",
@@ -145,10 +182,9 @@ const FAQPage = () => {
       ]
     },
     {
+      id: 'securite',
       title: "Sécurité et Conformité",
       icon: "🔒",
-      color: "from-terex-accent/20 to-terex-accent-light/20",
-      borderColor: "border-terex-accent/30",
       faqs: [
         {
           question: "Comment Terex protège-t-il mes fonds et données ?",
@@ -173,10 +209,9 @@ const FAQPage = () => {
       ]
     },
     {
+      id: 'support',
       title: "Support et Assistance",
       icon: "🎧",
-      color: "from-terex-accent/20 to-terex-accent-light/20",
-      borderColor: "border-terex-accent/30",
       faqs: [
         {
           question: "Comment contacter le support client ?",
@@ -242,7 +277,7 @@ const FAQPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark">
+    <div className="min-h-screen bg-gray-50">
       <HeaderSection 
         user={user ? {
           email: user.email || '',
@@ -253,40 +288,29 @@ const FAQPage = () => {
       />
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-terex-darker via-terex-dark to-terex-darker">
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-96 h-96 bg-terex-accent/10 rounded-full blur-[120px] animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-terex-accent-light/10 rounded-full blur-[120px] animate-pulse" style={{animationDelay: '1s'}}></div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-terex-accent/5 rounded-full blur-[150px]"></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-32">
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           <div className="text-center space-y-8">
-            <div className="inline-flex items-center bg-gradient-to-r from-terex-accent/20 to-terex-accent-light/20 backdrop-blur-sm rounded-full px-6 py-3 border border-terex-accent/30 shadow-lg shadow-terex-accent/10">
-              <MessageCircle className="w-5 h-5 text-terex-accent mr-2 animate-pulse" />
-              <span className="text-terex-accent font-medium">Foire aux Questions</span>
-            </div>
-            
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-light text-white leading-tight">
-              Tout ce que vous devez<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-terex-accent to-terex-accent-light">savoir sur Terex</span>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+              Comment pouvons-nous vous aider ?
             </h1>
-            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed font-light">
-              Des réponses complètes et détaillées à toutes vos questions
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Voici quelques questions fréquemment posées...
             </p>
 
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto pt-4">
-              <div className="relative group">
-                <div className="absolute left-5 top-1/2 transform -translate-y-1/2 text-terex-accent/70 group-hover:text-terex-accent transition-colors">
-                  <Search className="w-6 h-6" />
-                </div>
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <Input
                   type="text"
-                  placeholder="Rechercher une question..."
+                  placeholder="Rechercher ici..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-14 pr-6 py-6 md:py-7 bg-terex-darker/70 backdrop-blur-xl border-2 border-terex-accent/20 focus:border-terex-accent/50 text-white placeholder:text-gray-400 rounded-2xl text-lg shadow-2xl shadow-terex-accent/5 hover:shadow-terex-accent/10 transition-all duration-300"
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setSelectedCategory(null);
+                  }}
+                  className="pl-12 pr-4 py-6 bg-gray-50 border-gray-300 text-gray-900 placeholder:text-gray-500 rounded-xl text-base focus:border-terex-accent focus:ring-terex-accent"
                 />
               </div>
             </div>
@@ -294,117 +318,131 @@ const FAQPage = () => {
         </div>
       </div>
 
-      {/* FAQ Sections */}
-      <div className="py-16 md:py-24 bg-terex-dark">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-            {filteredSections.map((section, sectionIndex) => (
-              <div 
-                key={sectionIndex} 
-                className="group animate-fade-in hover-scale" 
-                style={{ animationDelay: `${sectionIndex * 0.1}s` }}
-              >
-                <div className={`h-full rounded-3xl p-8 bg-gradient-to-br ${section.color} backdrop-blur-sm border ${section.borderColor} shadow-xl hover:shadow-2xl hover:shadow-terex-accent/10 transition-all duration-500 relative overflow-hidden`}>
-                  {/* Decorative gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-terex-accent/5 via-transparent to-terex-accent-light/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  
-                  <div className="relative">
-                    <div className="flex items-center gap-4 mb-8">
-                      <div className="text-5xl transform group-hover:scale-110 transition-transform duration-300">{section.icon}</div>
-                      <h2 className="text-3xl font-light text-white group-hover:text-terex-accent transition-colors duration-300">
-                        {section.title}
-                      </h2>
+      {/* Main Content */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        {!selectedCategory && !searchTerm ? (
+          /* Categories Grid */
+          <>
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">Collections</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {faqCategories.map((category) => {
+                const Icon = category.icon;
+                const section = faqSections.find(s => s.id === category.id);
+                const articleCount = section?.faqs.length || 0;
+                
+                return (
+                  <Card
+                    key={category.id}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className="p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-200 hover:border-terex-accent bg-white group"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="p-3 rounded-lg bg-gray-100 group-hover:bg-terex-accent/10 transition-colors">
+                        <Icon className="w-6 h-6 text-gray-700 group-hover:text-terex-accent transition-colors" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-terex-accent transition-colors">
+                          {category.title}
+                        </h3>
+                        <p className="text-sm text-gray-600">{category.description}</p>
+                        <p className="text-xs text-gray-500 mt-2">{articleCount} articles</p>
+                      </div>
                     </div>
-                    
-                    <Accordion type="single" collapsible className="space-y-4">
-                      {section.faqs.map((faq, faqIndex) => (
-                        <AccordionItem 
-                          key={faqIndex}
-                          value={`section-${sectionIndex}-item-${faqIndex}`}
-                          className="border-b border-terex-accent/20 last:border-0 hover:border-terex-accent/40 transition-colors"
-                        >
-                          <AccordionTrigger className="text-white hover:text-terex-accent text-left py-5 text-lg font-light transition-all group/item">
-                            <span className="pr-4">{faq.question}</span>
-                          </AccordionTrigger>
-                          <AccordionContent className="text-gray-300 leading-relaxed pb-6 pt-2 text-base font-light">
-                            {faq.answer}
-                          </AccordionContent>
-                        </AccordionItem>
-                      ))}
-                    </Accordion>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {filteredSections.length === 0 && (
-            <div className="text-center py-20 col-span-2">
-              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-terex-accent/20 to-terex-accent-light/20 backdrop-blur-sm mb-8 border border-terex-accent/30">
-                <Search className="w-12 h-12 text-terex-accent" />
-              </div>
-              <h3 className="text-3xl font-light text-white mb-4">Aucun résultat trouvé</h3>
-              <p className="text-gray-400 text-lg max-w-md mx-auto mb-8">
-                Essayez d'autres mots-clés ou contactez notre support pour plus d'aide.
-              </p>
-              <Button 
-                onClick={() => setSearchTerm('')}
-                className="bg-gradient-to-r from-terex-accent to-terex-accent-light hover:from-terex-accent-light hover:to-terex-accent text-white px-8 py-6 text-lg rounded-2xl shadow-2xl shadow-terex-accent/30 hover:shadow-terex-accent/50 transition-all duration-300 border-0"
+                  </Card>
+                );
+              })}
+            </div>
+          </>
+        ) : (
+          /* Articles List or Search Results */
+          <div>
+            {selectedCategory && !searchTerm && (
+              <Button
+                variant="ghost"
+                onClick={() => setSelectedCategory(null)}
+                className="mb-6 text-gray-600 hover:text-terex-accent"
               >
-                Voir toutes les questions
+                <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
+                Retour aux collections
               </Button>
-            </div>
-          )}
+            )}
 
-          {/* Contact Support */}
-          <div className="mt-16 md:mt-32 col-span-1 lg:col-span-2">
-            <div className="relative rounded-3xl md:rounded-[2.5rem] overflow-hidden">
-              {/* Animated background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-terex-accent/30 via-terex-accent-light/20 to-terex-accent/30 animate-pulse"></div>
-              <div className="absolute inset-0 backdrop-blur-2xl"></div>
-              
-              {/* Content */}
-              <div className="relative p-8 md:p-16 lg:p-20 text-center">
-                <div className="max-w-4xl mx-auto space-y-8">
-                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-terex-accent/20 backdrop-blur-sm border border-terex-accent/30 mb-4">
-                    <MessageCircle className="w-10 h-10 text-terex-accent animate-pulse" />
-                  </div>
+            {filteredSections.length === 0 ? (
+              <div className="text-center py-16">
+                <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Aucun résultat trouvé</h3>
+                <p className="text-gray-600 mb-6">
+                  Aucune question ne correspond à votre recherche "{searchTerm}".
+                </p>
+                <Button 
+                  onClick={() => {
+                    setSearchTerm('');
+                    setSelectedCategory(null);
+                  }}
+                  className="bg-terex-accent hover:bg-terex-accent-light text-white"
+                >
+                  Voir toutes les collections
+                </Button>
+              </div>
+            ) : (
+              filteredSections.map((section) => (
+                <div key={section.id} className="mb-12">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">{section.title}</h2>
                   
-                  <h3 className="text-3xl md:text-5xl font-light text-white leading-tight">
-                    Vous ne trouvez pas<br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-terex-accent to-terex-accent-light">votre réponse ?</span>
-                  </h3>
-                  
-                  <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light">
-                    Notre équipe support est disponible 24/7 pour répondre à toutes vos questions
-                  </p>
-                  
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                    <Button 
-                      size="lg"
-                      onClick={() => navigate('/contact')}
-                      className="bg-gradient-to-r from-terex-accent to-terex-accent-light hover:from-terex-accent-light hover:to-terex-accent text-white px-10 py-7 text-lg rounded-2xl shadow-2xl shadow-terex-accent/30 hover:shadow-terex-accent/50 transition-all duration-300 group border-0"
-                    >
-                      <MessageCircle className="mr-3 h-6 w-6 group-hover:animate-pulse" />
-                      Contacter le Support
-                      <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                    
-                    <Button 
-                      size="lg"
-                      variant="outline"
-                      onClick={() => window.location.href = 'tel:+14182619091'}
-                      className="bg-terex-darker/50 backdrop-blur-sm border-2 border-terex-accent/50 text-white hover:bg-terex-accent hover:border-terex-accent px-10 py-7 text-lg rounded-2xl transition-all duration-300 group"
-                    >
-                      <span className="mr-3 text-2xl group-hover:animate-pulse">📞</span>
-                      +1 (418) 261-9091
-                    </Button>
+                  <div className="space-y-3">
+                    {section.faqs.map((faq, faqIndex) => (
+                      <Card
+                        key={faqIndex}
+                        className="p-6 hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-terex-accent bg-white"
+                      >
+                        <Accordion type="single" collapsible>
+                          <AccordionItem value={`faq-${faqIndex}`} className="border-0">
+                            <AccordionTrigger className="text-left py-0 hover:no-underline font-semibold text-gray-900 hover:text-terex-accent text-base">
+                              {faq.question}
+                            </AccordionTrigger>
+                            <AccordionContent className="text-gray-700 leading-relaxed pt-4 text-base">
+                              {faq.answer}
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+                      </Card>
+                    ))}
                   </div>
                 </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {/* Contact Support Section */}
+        {!selectedCategory && !searchTerm && (
+          <div className="mt-16 bg-gradient-to-br from-gray-100 to-gray-50 rounded-2xl p-8 md:p-12 border border-gray-200">
+            <div className="text-center max-w-2xl mx-auto">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Une question spécifique ?</h3>
+              <p className="text-gray-600 mb-6">
+                Notre équipe de support est disponible 24/7 pour répondre à toutes vos questions personnalisées.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button 
+                  onClick={() => navigate('/contact')}
+                  className="bg-terex-accent hover:bg-terex-accent-light text-white px-6 py-6 text-base"
+                >
+                  <MessageCircle className="w-5 h-5 mr-2" />
+                  Contacter le Support
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+                <Button 
+                  variant="outline"
+                  className="border-gray-300 text-gray-700 hover:bg-gray-100 px-6 py-6 text-base"
+                  onClick={() => window.open('tel:+14182619091')}
+                >
+                  <Phone className="w-5 h-5 mr-2" />
+                  +1 (418) 261-9091
+                </Button>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       <FooterSection />
