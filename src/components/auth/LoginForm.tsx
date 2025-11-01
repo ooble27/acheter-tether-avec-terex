@@ -153,12 +153,39 @@ export function LoginForm() {
     <div className="min-h-screen w-full bg-terex-dark">
       <div className="min-h-screen grid lg:grid-cols-2">
         {/* Left Column - Branding */}
-        <div className="hidden lg:flex relative overflow-hidden bg-gradient-to-br from-terex-darker via-terex-dark to-black">
-          {/* Animated background elements */}
+        <div className="hidden lg:flex relative overflow-hidden bg-gradient-to-br from-terex-accent via-terex-accent-light to-terex-accent">
+          {/* Crypto illustrations */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute -top-40 -left-40 w-96 h-96 bg-terex-accent/10 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-terex-accent-light/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-terex-accent/5 rounded-full blur-3xl"></div>
+            {/* Bitcoin floating elements */}
+            <img 
+              src="/bitcoin-logo.png" 
+              alt="Bitcoin"
+              className="absolute top-20 right-20 w-24 h-24 opacity-20 animate-pulse"
+            />
+            <img 
+              src="/bitcoin-logo.png" 
+              alt="Bitcoin"
+              className="absolute bottom-32 left-16 w-16 h-16 opacity-15 animate-pulse"
+              style={{ animationDelay: '1s' }}
+            />
+            
+            {/* USDT floating elements */}
+            <img 
+              src="/lovable-uploads/1f66c012-9a51-41ac-9f7c-7095d2d632a6.png" 
+              alt="USDT"
+              className="absolute top-40 left-24 w-20 h-20 opacity-25 animate-pulse"
+              style={{ animationDelay: '0.5s' }}
+            />
+            <img 
+              src="/lovable-uploads/1f66c012-9a51-41ac-9f7c-7095d2d632a6.png" 
+              alt="USDT"
+              className="absolute bottom-20 right-32 w-28 h-28 opacity-20 animate-pulse"
+              style={{ animationDelay: '1.5s' }}
+            />
+            
+            {/* Gradient overlays */}
+            <div className="absolute -top-40 -left-40 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-black/10 rounded-full blur-3xl"></div>
           </div>
 
           {/* Content */}
@@ -171,36 +198,36 @@ export function LoginForm() {
                   className="w-16 h-16 drop-shadow-2xl"
                 />
                 <div>
-                  <h1 className="text-3xl font-black bg-gradient-to-r from-terex-accent to-terex-accent-light bg-clip-text text-transparent">
+                <h1 className="text-3xl font-black text-black">
                     TEREX
                   </h1>
-                  <p className="text-xs font-semibold text-terex-accent/70 uppercase tracking-widest">Teranga Exchange</p>
+                  <p className="text-xs font-semibold text-black/70 uppercase tracking-widest">Teranga Exchange</p>
                 </div>
               </div>
 
               <h2 className="text-5xl font-light leading-tight">
-                <span className="text-terex-accent font-normal">Rejoignez</span>
+                <span className="text-black font-normal">Rejoignez</span>
                 <br />
-                <span className="text-terex-accent font-normal">Terex,</span>
+                <span className="text-black font-normal">Terex,</span>
                 <br />
-                <span className="text-white">la plateforme</span>
+                <span className="text-black/90">la plateforme</span>
                 <br />
-                <span className="text-white">d'échange USDT</span>
+                <span className="text-black/90">d'échange USDT</span>
                 <br />
-                <span className="text-white">en Afrique</span>
+                <span className="text-black/90">en Afrique</span>
               </h2>
 
-              <div className="space-y-4 text-gray-400 text-sm pt-8">
+              <div className="space-y-4 text-black/70 text-sm pt-8">
                 <p className="flex items-center gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-terex-accent"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-black"></span>
                   Transactions rapides et sécurisées
                 </p>
                 <p className="flex items-center gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-terex-accent"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-black"></span>
                   Transferts internationaux simplifiés
                 </p>
                 <p className="flex items-center gap-3">
-                  <span className="w-1.5 h-1.5 rounded-full bg-terex-accent"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-black"></span>
                   Support client dédié 24/7
                 </p>
               </div>
