@@ -231,19 +231,6 @@ export function LoginForm() {
               <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
                 <div className="flex gap-8 border-b border-terex-gray pb-1">
                   <button
-                    onClick={() => setActiveTab('register')}
-                    className={`text-sm font-medium pb-3 transition-colors relative ${
-                      activeTab === 'register'
-                        ? 'text-white'
-                        : 'text-gray-500 hover:text-gray-300'
-                    }`}
-                  >
-                    S'inscrire
-                    {activeTab === 'register' && (
-                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-terex-accent"></div>
-                    )}
-                  </button>
-                  <button
                     onClick={() => setActiveTab('login')}
                     className={`text-sm font-medium pb-3 transition-colors relative ${
                       activeTab === 'login'
@@ -256,8 +243,101 @@ export function LoginForm() {
                       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-terex-accent"></div>
                     )}
                   </button>
+                  <button
+                    onClick={() => setActiveTab('register')}
+                    className={`text-sm font-medium pb-3 transition-colors relative ${
+                      activeTab === 'register'
+                        ? 'text-white'
+                        : 'text-gray-500 hover:text-gray-300'
+                    }`}
+                  >
+                    S'inscrire
+                    {activeTab === 'register' && (
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-terex-accent"></div>
+                    )}
+                  </button>
                 </div>
               
+                <TabsContent value="login" className="space-y-8 animate-fade-in">
+                  <div>
+                    <h2 className="text-2xl font-light text-white mb-2">CONNEXION</h2>
+                    <p className="text-gray-400 text-sm">Entrez vos identifiants pour vous connecter.</p>
+                  </div>
+
+                  <form onSubmit={handlePasswordLogin} className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-gray-300 text-sm font-normal">
+                        Email
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="votre@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
+                        required
+                        disabled={isLoading}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="password" className="text-gray-300 text-sm font-normal">
+                        Mot de passe
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0 pr-10"
+                          required
+                          disabled={isLoading}
+                        />
+                        <button
+                          type="button"
+                          className="absolute inset-y-0 right-0 flex items-center text-gray-400 hover:text-terex-accent transition-colors"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      className="w-full h-14 bg-gray-300 hover:bg-white text-black font-semibold rounded-lg transition-all duration-300"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Connexion en cours...
+                        </>
+                      ) : (
+                        'CONTINUER'
+                      )}
+                    </Button>
+
+                    <p className="text-center text-sm text-gray-400">
+                      Vous n'avez pas de compte?{' '}
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab('register')}
+                        className="text-terex-accent hover:underline font-medium"
+                      >
+                        S'inscrire
+                      </button>
+                    </p>
+                  </form>
+                </TabsContent>
+
                 <TabsContent value="register" className="space-y-8 animate-fade-in">
                   <div>
                     <h2 className="text-2xl font-light text-white mb-2">CRÉER VOTRE COMPTE</h2>
@@ -403,86 +483,6 @@ export function LoginForm() {
                         className="text-terex-accent hover:underline font-medium"
                       >
                         Se connecter
-                      </button>
-                    </p>
-                  </form>
-                </TabsContent>
-
-                <TabsContent value="login" className="space-y-8 animate-fade-in">
-                  <div>
-                    <h2 className="text-2xl font-light text-white mb-2">CONNEXION</h2>
-                    <p className="text-gray-400 text-sm">Entrez vos identifiants pour vous connecter.</p>
-                  </div>
-
-                  <form onSubmit={handlePasswordLogin} className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-gray-300 text-sm font-normal">
-                        Email
-                      </Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="votre@email.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
-                        required
-                        disabled={isLoading}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="password" className="text-gray-300 text-sm font-normal">
-                        Mot de passe
-                      </Label>
-                      <div className="relative">
-                        <Input
-                          id="password"
-                          type={showPassword ? "text" : "password"}
-                          placeholder="••••••••"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0 pr-10"
-                          required
-                          disabled={isLoading}
-                        />
-                        <button
-                          type="button"
-                          className="absolute inset-y-0 right-0 flex items-center text-gray-400 hover:text-terex-accent transition-colors"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? (
-                            <EyeOff className="h-4 w-4" />
-                          ) : (
-                            <Eye className="h-4 w-4" />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-
-                    <Button 
-                      type="submit" 
-                      className="w-full h-14 bg-gray-300 hover:bg-white text-black font-semibold rounded-lg transition-all duration-300"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? (
-                        <>
-                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                          Connexion en cours...
-                        </>
-                      ) : (
-                        'CONTINUER'
-                      )}
-                    </Button>
-
-                    <p className="text-center text-sm text-gray-400">
-                      Vous n'avez pas de compte?{' '}
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab('register')}
-                        className="text-terex-accent hover:underline font-medium"
-                      >
-                        S'inscrire
                       </button>
                     </p>
                   </form>
