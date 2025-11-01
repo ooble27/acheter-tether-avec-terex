@@ -2,54 +2,61 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+import usdtImage from "@/assets/blog-topic-usdt.png";
+import buyImage from "@/assets/blog-topic-buy.png";
+import securityImage from "@/assets/blog-topic-security.png";
+import transferImage from "@/assets/blog-topic-transfer.png";
+import blockchainImage from "@/assets/blog-topic-blockchain.png";
+import mobileMoneyImage from "@/assets/blog-topic-mobile-money.png";
+
 const topics = [
   {
     id: 1,
     category: "Stablecoins",
     title: "USDT & Stablecoins : Le guide complet",
     description: "Découvrez comment les stablecoins révolutionnent les transferts d'argent en Afrique et pourquoi l'USDT est la solution idéale.",
-    image: "/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png",
-    color: "from-terex-primary/20 to-terex-primary/5"
+    image: usdtImage,
+    color: "from-yellow-400/20 to-yellow-600/5"
   },
   {
     id: 2,
     category: "Guides Pratiques",
     title: "Comment acheter de l'USDT facilement",
     description: "Guide étape par étape pour acheter vos premiers USDT avec mobile money, carte bancaire ou virement bancaire.",
-    image: "/lovable-uploads/49a20f85-382b-4dd2-aefe-98214bea6069.png",
-    color: "from-blue-500/20 to-blue-500/5"
+    image: buyImage,
+    color: "from-blue-400/20 to-purple-500/5"
   },
   {
     id: 3,
     category: "Sécurité",
     title: "Protégez vos cryptomonnaies",
     description: "Les meilleures pratiques pour sécuriser vos actifs numériques et éviter les arnaques dans l'univers crypto.",
-    image: "/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png",
-    color: "from-orange-500/20 to-orange-500/5"
+    image: securityImage,
+    color: "from-orange-400/20 to-orange-600/5"
   },
   {
     id: 4,
     category: "Transferts",
     title: "Transferts internationaux simplifiés",
     description: "Envoyez de l'argent partout dans le monde rapidement et à moindre coût grâce à la blockchain.",
-    image: "/lovable-uploads/62ebb1fa-b6ad-4de9-b63e-14b9a3baaf99.png",
-    color: "from-purple-500/20 to-purple-500/5"
+    image: transferImage,
+    color: "from-purple-400/20 to-pink-500/5"
   },
   {
     id: 5,
     category: "Technologie",
     title: "La blockchain expliquée simplement",
     description: "Comprenez comment fonctionne la blockchain et pourquoi elle transforme l'économie mondiale.",
-    image: "/lovable-uploads/86b4b50f-9595-46c2-8cce-30343f23454a.png",
-    color: "from-green-500/20 to-green-500/5"
+    image: blockchainImage,
+    color: "from-teal-400/20 to-green-500/5"
   },
   {
     id: 6,
     category: "Finance Mobile",
     title: "Mobile Money & Crypto en Afrique",
     description: "L'union du Mobile Money et des cryptomonnaies crée de nouvelles opportunités pour l'inclusion financière.",
-    image: "/lovable-uploads/abd0d53b-cb36-4edb-91e5-e55da1466079.png",
-    color: "from-pink-500/20 to-pink-500/5"
+    image: mobileMoneyImage,
+    color: "from-pink-400/20 to-pink-600/5"
   }
 ];
 
