@@ -66,42 +66,40 @@ export function BlogTopics() {
 
   return (
     <div className="py-8 md:py-12 container mx-auto px-4">
-      <div className="relative max-w-5xl mx-auto">
-        {/* Main Card */}
+      <div className="relative max-w-6xl mx-auto">
+        {/* Main Carousel */}
         <div className="relative overflow-hidden">
           <div 
             className="flex transition-transform duration-500 ease-out"
             style={{ transform: `translateX(-${currentIndex * 100}%)` }}
           >
             {topics.map((topic) => (
-              <div key={topic.id} className="w-full flex-shrink-0">
-                <div className="bg-card/50 backdrop-blur-sm rounded-2xl border border-border overflow-hidden">
-                  <div className="grid md:grid-cols-[350px,1fr] gap-0">
-                    {/* Image Side - Separate Block */}
-                    <div className={`relative bg-gradient-to-br ${topic.color} p-0 flex items-center justify-center min-h-[280px] md:min-h-[320px]`}>
-                      <div className="w-full h-full flex items-center justify-center p-8">
-                        <img 
-                          src={topic.image} 
-                          alt={topic.title}
-                          className="w-full h-full max-w-[240px] max-h-[240px] object-contain drop-shadow-2xl"
-                        />
-                      </div>
+              <div key={topic.id} className="w-full flex-shrink-0 px-2">
+                <div className="grid md:grid-cols-2 gap-0 rounded-3xl overflow-hidden shadow-2xl">
+                  {/* Left Block - Image with Gradient Background */}
+                  <div className={`relative bg-gradient-to-br ${topic.color} flex items-center justify-center p-12 md:p-16 min-h-[320px] md:min-h-[400px]`}>
+                    <div className="relative z-10 w-full h-full flex items-center justify-center">
+                      <img 
+                        src={topic.image} 
+                        alt={topic.title}
+                        className="w-full h-auto max-w-[280px] object-contain drop-shadow-[0_20px_60px_rgba(0,0,0,0.4)]"
+                      />
                     </div>
+                  </div>
 
-                    {/* Content Side - Separate Block */}
-                    <div className="p-8 md:p-10 flex flex-col justify-center bg-card/30">
-                      <div className="inline-block mb-4">
-                        <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20">
-                          {topic.category}
-                        </span>
-                      </div>
-                      <h3 className="text-2xl md:text-3xl font-semibold text-foreground mb-4 leading-tight">
-                        {topic.title}
-                      </h3>
-                      <p className="text-muted-foreground leading-relaxed text-base">
-                        {topic.description}
-                      </p>
+                  {/* Right Block - Content */}
+                  <div className="bg-card p-8 md:p-12 flex flex-col justify-center">
+                    <div className="mb-6">
+                      <span className="inline-block text-xs font-semibold px-4 py-2 rounded-full bg-muted text-muted-foreground uppercase tracking-wide">
+                        {topic.category}
+                      </span>
                     </div>
+                    <h3 className="text-2xl md:text-4xl font-bold text-foreground mb-6 leading-tight">
+                      {topic.title}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
+                      {topic.description}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -110,37 +108,37 @@ export function BlogTopics() {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="absolute top-1/2 -translate-y-1/2 left-0 -ml-4 md:-ml-12">
+        <div className="absolute top-1/2 -translate-y-1/2 left-0 -ml-4 md:-ml-16 z-20">
           <Button
             variant="outline"
             size="icon"
             onClick={handlePrevious}
-            className="rounded-full bg-background/80 backdrop-blur-sm hover:bg-background"
+            className="h-12 w-12 rounded-full bg-background shadow-lg hover:bg-background/90 border-2"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-6 w-6" />
           </Button>
         </div>
-        <div className="absolute top-1/2 -translate-y-1/2 right-0 -mr-4 md:-mr-12">
+        <div className="absolute top-1/2 -translate-y-1/2 right-0 -mr-4 md:-mr-16 z-20">
           <Button
             variant="outline"
             size="icon"
             onClick={handleNext}
-            className="rounded-full bg-background/80 backdrop-blur-sm hover:bg-background"
+            className="h-12 w-12 rounded-full bg-background shadow-lg hover:bg-background/90 border-2"
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-6 w-6" />
           </Button>
         </div>
 
         {/* Pagination Dots */}
-        <div className="flex justify-center gap-2 mt-6">
+        <div className="flex justify-center gap-2 mt-8">
           {topics.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={`h-2 rounded-full transition-all ${
                 index === currentIndex 
-                  ? "w-8 bg-primary" 
-                  : "w-2 bg-muted-foreground/30"
+                  ? "w-10 bg-primary" 
+                  : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
               }`}
               aria-label={`Aller au sujet ${index + 1}`}
             />
