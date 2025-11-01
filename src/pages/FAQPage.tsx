@@ -88,7 +88,7 @@ const FAQPage = () => {
         },
         {
           question: "Puis-je utiliser Terex sans vérification KYC ?",
-          answer: "Non, la vérification KYC est obligatoire pour utiliser Terex. Cela nous permet de respecter les réglementations financières et de protéger tous nos utilisateurs contre la fraude et le blanchiment d'argent. Sans KYC, vous ne pourrez pas effectuer de transactions."
+          answer: "Oui, vous pouvez désormais utiliser Terex sans vérification KYC ! Nous avons simplifié notre processus pour vous permettre de commencer à effectuer des transactions immédiatement. Cependant, la vérification KYC reste recommandée pour débloquer des limites de transaction plus élevées et accéder à des fonctionnalités premium."
         }
       ]
     },
