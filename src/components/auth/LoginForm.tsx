@@ -153,7 +153,7 @@ export function LoginForm() {
     <div className="min-h-screen w-full bg-terex-dark">
       <div className="min-h-screen grid lg:grid-cols-2">
         {/* Left Column - Branding */}
-        <div className="hidden lg:flex relative overflow-hidden bg-black">
+        <div className="hidden lg:flex relative overflow-hidden bg-terex-dark">
           {/* Content */}
           <div className="relative z-10 flex flex-col justify-center items-start p-16 max-w-xl">
             <div className="space-y-8">
