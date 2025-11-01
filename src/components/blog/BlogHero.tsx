@@ -1,4 +1,4 @@
-import blogHeroIllustration from "@/assets/blog-usdt-stablecoin.png";
+import blogHeroIllustration from "@/assets/blog-hero.png";
 
 export function BlogHero() {
   return (
@@ -28,12 +28,12 @@ export function BlogHero() {
           </div>
 
           <div className="flex justify-center">
-            <div className="relative">
-              <div className="absolute inset-0 bg-terex-accent/20 rounded-full blur-3xl"></div>
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+              <div className="absolute inset-0 bg-gradient-to-tr from-terex-accent/10 to-transparent"></div>
               <img
                 src={blogHeroIllustration}
                 alt="Crypto illustration"
-                className="relative w-80 h-80 object-contain animate-float"
+                className="relative w-full h-[400px] object-cover"
               />
             </div>
           </div>
