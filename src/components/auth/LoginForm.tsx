@@ -153,12 +153,12 @@ export function LoginForm() {
     <div className="min-h-screen w-full bg-terex-dark">
       <div className="min-h-screen grid lg:grid-cols-2">
         {/* Left Column - Branding */}
-        <div className="hidden lg:flex relative overflow-hidden bg-white">
+        <div className="hidden lg:flex relative overflow-hidden bg-gradient-to-br from-terex-darker via-terex-dark to-black">
           {/* Animated background elements */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute -top-40 -left-40 w-96 h-96 bg-terex-accent/5 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-terex-accent-light/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-terex-accent/3 rounded-full blur-3xl"></div>
+            <div className="absolute -top-40 -left-40 w-96 h-96 bg-terex-accent/10 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-terex-accent-light/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-terex-accent/5 rounded-full blur-3xl"></div>
           </div>
 
           {/* Content */}
@@ -183,14 +183,14 @@ export function LoginForm() {
                 <br />
                 <span className="text-terex-accent font-normal">Terex,</span>
                 <br />
-                <span className="text-gray-900">la plateforme</span>
+                <span className="text-white">la plateforme</span>
                 <br />
-                <span className="text-gray-900">d'échange USDT</span>
+                <span className="text-white">d'échange USDT</span>
                 <br />
-                <span className="text-gray-900">en Afrique</span>
+                <span className="text-white">en Afrique</span>
               </h2>
 
-              <div className="space-y-4 text-gray-700 text-sm pt-8">
+              <div className="space-y-4 text-gray-400 text-sm pt-8">
                 <p className="flex items-center gap-3">
                   <span className="w-1.5 h-1.5 rounded-full bg-terex-accent"></span>
                   Transactions rapides et sécurisées
