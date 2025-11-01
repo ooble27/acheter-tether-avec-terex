@@ -11,12 +11,24 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { UserGuide } from '@/components/features/UserGuide';
+import { VideoGuide } from '@/components/features/VideoGuide';
+
+interface Guide {
+  title: string;
+  description: string;
+  duration: string;
+  difficulty: string;
+  steps: string[];
+  category: string;
+  videoUrl: string;
+}
 
 const GuidePage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
   const [showDetailedGuide, setShowDetailedGuide] = useState(false);
+  const [selectedGuide, setSelectedGuide] = useState<Guide | null>(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -44,6 +56,32 @@ const GuidePage = () => {
     navigate('/');
   };
 
+  // Afficher la vidéo du guide sélectionné
+  if (selectedGuide) {
+    return (
+      <div className="min-h-screen bg-terex-dark">
+        <HeaderSection 
+          user={user ? {
+            email: user.email || '',
+            name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
+          } : null}
+          onShowDashboard={handleShowDashboard}
+          onLogout={handleLogout}
+        />
+        
+        <VideoGuide
+          title={selectedGuide.title}
+          videoUrl={selectedGuide.videoUrl}
+          description={selectedGuide.description}
+          onBack={() => setSelectedGuide(null)}
+        />
+        
+        <FooterSection />
+      </div>
+    );
+  }
+
+  // Afficher le guide complet avec captures d'écran
   if (showDetailedGuide) {
     return (
       <div className="min-h-screen bg-terex-dark">
@@ -65,7 +103,7 @@ const GuidePage = () => {
     );
   }
 
-  const guides = [
+  const guides: Guide[] = [
     {
       title: "Guide de Démarrage Rapide",
       description: "Apprenez les bases de Terex en 10 minutes",
@@ -77,7 +115,8 @@ const GuidePage = () => {
         "Effectuer votre première transaction",
         "Configurer vos préférences"
       ],
-      category: "Démarrage"
+      category: "Démarrage",
+      videoUrl: "https://www.youtube.com/watch?v=VOTRE_VIDEO_ID_1"
     },
     {
       title: "Maîtriser l'Achat d'USDT",
@@ -90,7 +129,8 @@ const GuidePage = () => {
         "Confirmer la transaction",
         "Recevoir vos USDT"
       ],
-      category: "Trading"
+      category: "Trading",
+      videoUrl: "https://www.youtube.com/watch?v=VOTRE_VIDEO_ID_2"
     },
     {
       title: "Transferts Internationaux",
@@ -103,7 +143,8 @@ const GuidePage = () => {
         "Confirmer le transfert",
         "Suivre l'envoi"
       ],
-      category: "Transferts"
+      category: "Transferts",
+      videoUrl: "https://www.youtube.com/watch?v=VOTRE_VIDEO_ID_3"
     },
     {
       title: "Sécurité et Bonnes Pratiques",
@@ -116,7 +157,8 @@ const GuidePage = () => {
         "Sécuriser vos wallets",
         "Bonnes pratiques de trading"
       ],
-      category: "Sécurité"
+      category: "Sécurité",
+      videoUrl: "https://www.youtube.com/watch?v=VOTRE_VIDEO_ID_4"
     }
   ];
 
@@ -214,11 +256,11 @@ const GuidePage = () => {
                     ))}
                   </div>
                   <Button 
-                    onClick={() => setShowDetailedGuide(true)}
+                    onClick={() => setSelectedGuide(guide)}
                     className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold"
                   >
                     <Play className="w-4 h-4 mr-2" />
-                    Commencer le Guide
+                    Regarder la Vidéo
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </CardContent>
