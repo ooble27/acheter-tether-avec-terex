@@ -13,6 +13,7 @@ const paymentMethods = [
     title: "Wave",
     description: "Envoyez et recevez de l'argent instantanément avec Wave. La solution de mobile money la plus rapide et sécurisée d'Afrique pour vos transactions quotidiennes.",
     image: waveImage,
+    maxWidth: "100px",
   },
   {
     id: 2,
@@ -20,6 +21,7 @@ const paymentMethods = [
     title: "Orange Money",
     description: "Profitez de la puissance d'Orange Money pour toutes vos transactions. Une solution mobile fiable et accessible dans toute l'Afrique francophone.",
     image: orangeMoneyImage,
+    maxWidth: "100px",
   },
   {
     id: 3,
@@ -27,6 +29,7 @@ const paymentMethods = [
     title: "Cartes bancaires",
     description: "Utilisez vos cartes Visa et Mastercard en toute sécurité. Des paiements instantanés et protégés pour tous vos achats de cryptomonnaie.",
     image: bankCardImage,
+    maxWidth: "160px",
   }
 ];
 
@@ -69,7 +72,8 @@ export function PaymentMethodsSection() {
                         <img 
                           src={method.image} 
                           alt={method.title}
-                          className="w-full h-auto max-w-[160px] object-contain"
+                          className="w-full h-auto object-contain"
+                          style={{ maxWidth: method.maxWidth }}
                         />
                       </div>
                     </div>
