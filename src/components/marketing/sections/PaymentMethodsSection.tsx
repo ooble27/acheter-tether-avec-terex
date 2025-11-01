@@ -53,7 +53,7 @@ export function PaymentMethodsSection() {
           </p>
         </div>
 
-        <div className="relative max-w-4xl mx-auto">
+        <div className="relative max-w-4xl mx-auto px-4 lg:px-0">
           {/* Main Carousel */}
           <div className="relative overflow-hidden">
             <div 
@@ -61,7 +61,7 @@ export function PaymentMethodsSection() {
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
               {paymentMethods.map((method) => (
-                <div key={method.id} className="w-full flex-shrink-0 px-2">
+                <div key={method.id} className="w-full flex-shrink-0 px-1 sm:px-2">
                   <div className="grid md:grid-cols-2 gap-0 rounded-2xl overflow-hidden shadow-xl bg-terex-dark/50 border border-terex-accent/20">
                     {/* Left Block - Image */}
                     <div className="relative bg-transparent flex items-center justify-center p-8 md:p-10 min-h-[200px] md:min-h-[250px]">
@@ -95,7 +95,7 @@ export function PaymentMethodsSection() {
           </div>
 
           {/* Navigation Buttons */}
-          <div className="absolute top-1/2 -translate-y-1/2 left-0 -ml-4 md:-ml-12 z-20">
+          <div className="absolute top-1/2 -translate-y-1/2 left-2 lg:-ml-12 z-20">
             <Button
               variant="outline"
               size="icon"
@@ -105,7 +105,7 @@ export function PaymentMethodsSection() {
               <ChevronLeft className="h-5 w-5" />
             </Button>
           </div>
-          <div className="absolute top-1/2 -translate-y-1/2 right-0 -mr-4 md:-mr-12 z-20">
+          <div className="absolute top-1/2 -translate-y-1/2 right-2 lg:-mr-12 z-20">
             <Button
               variant="outline"
               size="icon"
