@@ -1,6 +1,6 @@
 export function BlogHero() {
   return (
-    <div className="relative bg-terex-darker py-16 md:py-24 overflow-hidden border-b border-terex-gray/20">
+    <div className="relative bg-terex-dark py-16 md:py-24 overflow-hidden border-b border-terex-gray/20">
       {/* Background decorative elements */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 left-10 w-72 h-72 bg-terex-accent rounded-full blur-3xl"></div>
