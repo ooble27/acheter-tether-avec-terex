@@ -108,22 +108,22 @@ const HelpPage = () => {
 
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-gradient-to-br from-terex-darker via-terex-dark to-terex-darker">
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 overflow-hidden">
             <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-terex-accent/10 rounded-full blur-3xl animate-pulse"></div>
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-terex-accent/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
           </div>
           
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24">
             <div className="text-center">
-              <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-6 py-3 mb-8 border border-terex-accent/20">
-                <HelpCircle className="w-5 h-5 text-terex-accent mr-2" />
-                <span className="text-terex-accent font-medium">Centre d'Aide</span>
+              <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-4 sm:px-6 py-2 sm:py-3 mb-6 sm:mb-8 border border-terex-accent/20">
+                <HelpCircle className="w-4 sm:w-5 h-4 sm:h-5 text-terex-accent mr-2" />
+                <span className="text-terex-accent font-medium text-sm sm:text-base">Centre d'Aide</span>
               </div>
               
-              <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 px-2">
                 Comment pouvons-nous vous <span className="text-terex-accent">aider</span> ?
               </h1>
-              <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
+              <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8 sm:mb-12 px-4">
                 Choisissez la catégorie correspondant à votre problème et nous vous guiderons étape par étape vers la solution
               </p>
             </div>
@@ -131,33 +131,33 @@ const HelpPage = () => {
         </div>
 
         {/* Catégories de support */}
-        <div className="py-16 bg-terex-dark">
+        <div className="py-8 sm:py-12 md:py-16 bg-terex-dark">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {supportFlows.map((flow) => {
                 const IconComponent = iconMap[flow.icon as keyof typeof iconMap];
                 return (
                   <Card
                     key={flow.id}
-                    className="bg-gradient-to-br from-terex-darker to-terex-gray/30 border-terex-accent/20 hover:border-terex-accent/40 transition-all duration-300 cursor-pointer group"
+                    className="bg-gradient-to-br from-terex-darker to-terex-gray/30 border-terex-accent/20 hover:border-terex-accent/40 transition-all duration-300 cursor-pointer group overflow-hidden"
                     onClick={() => handleSelectFlow(flow.id)}
                   >
-                    <CardHeader>
-                      <div className="flex items-center space-x-4">
-                        <div className="w-14 h-14 bg-terex-accent/20 rounded-xl flex items-center justify-center group-hover:bg-terex-accent/30 transition-colors">
-                          <IconComponent className="w-7 h-7 text-terex-accent" />
+                    <CardHeader className="p-4 sm:p-6">
+                      <div className="flex items-start sm:items-center space-x-3 sm:space-x-4">
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 bg-terex-accent/20 rounded-xl flex items-center justify-center group-hover:bg-terex-accent/30 transition-colors">
+                          <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 text-terex-accent" />
                         </div>
-                        <div>
-                          <CardTitle className="text-white text-xl">{flow.title}</CardTitle>
-                          <CardDescription className="text-gray-300">
+                        <div className="flex-1 min-w-0">
+                          <CardTitle className="text-white text-lg sm:text-xl mb-1 break-words">{flow.title}</CardTitle>
+                          <CardDescription className="text-gray-300 text-sm break-words">
                             {flow.description}
                           </CardDescription>
                         </div>
                       </div>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4 sm:p-6 pt-0">
                       <Button
-                        className="w-full bg-terex-accent/10 text-terex-accent hover:bg-terex-accent/20 border border-terex-accent/30"
+                        className="w-full bg-terex-accent/10 text-terex-accent hover:bg-terex-accent/20 border border-terex-accent/30 text-sm sm:text-base"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleSelectFlow(flow.id);
@@ -172,26 +172,26 @@ const HelpPage = () => {
             </div>
 
             {/* Contact Support */}
-            <div className="mt-16 text-center">
-              <h2 className="text-3xl font-bold text-white mb-6">Besoin d'aide supplémentaire ?</h2>
-              <p className="text-gray-300 text-lg mb-8">
+            <div className="mt-12 sm:mt-16 text-center px-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6">Besoin d'aide supplémentaire ?</h2>
+              <p className="text-gray-300 text-base sm:text-lg mb-6 sm:mb-8">
                 Notre équipe de support est là pour vous aider 24/7
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-xl mx-auto">
                 <Button 
                   onClick={() => navigate('/contact')}
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold"
+                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold w-full sm:w-auto"
                 >
                   <Mail className="w-4 h-4 mr-2" />
-                  Nous Contacter
+                  <span className="truncate">Nous Contacter</span>
                 </Button>
                 <Button 
                   variant="outline"
-                  className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10"
+                  className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 w-full sm:w-auto"
                   onClick={() => window.open('https://wa.me/14182619091', '_blank')}
                 >
-                  <Phone className="w-4 h-4 mr-2" />
-                  WhatsApp: +1 418-261-9091
+                  <Phone className="w-4 h-4 mr-2 flex-shrink-0" />
+                  <span className="truncate">WhatsApp</span>
                 </Button>
               </div>
             </div>
@@ -215,40 +215,40 @@ const HelpPage = () => {
         onLogout={handleLogout}
       />
 
-      <div className="py-12 bg-terex-dark">
+      <div className="py-6 sm:py-8 md:py-12 bg-terex-dark">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Button
             onClick={handleReset}
             variant="ghost"
-            className="mb-8 text-terex-accent hover:text-terex-accent/80 hover:bg-terex-accent/10"
+            className="mb-6 sm:mb-8 text-terex-accent hover:text-terex-accent/80 hover:bg-terex-accent/10 text-sm sm:text-base"
           >
             ← Retour aux catégories
           </Button>
 
           {selectedFlow && (
-            <div className="mb-8">
-              <div className="flex items-center space-x-3 mb-2">
+            <div className="mb-6 sm:mb-8">
+              <div className="flex items-center space-x-2 sm:space-x-3 mb-2">
                 {(() => {
                   const IconComponent = iconMap[selectedFlow.icon as keyof typeof iconMap];
-                  return <IconComponent className="w-6 h-6 text-terex-accent" />;
+                  return <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-terex-accent flex-shrink-0" />;
                 })()}
-                <h2 className="text-2xl font-bold text-white">{selectedFlow.title}</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-white break-words">{selectedFlow.title}</h2>
               </div>
-              <p className="text-gray-300">{selectedFlow.description}</p>
+              <p className="text-gray-300 text-sm sm:text-base break-words">{selectedFlow.description}</p>
             </div>
           )}
 
           {/* Historique de conversation */}
           {conversationPath.length > 0 && (
-            <div className="space-y-4 mb-8">
+            <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
               {conversationPath.map((item, index) => (
                 <div key={index} className="space-y-2">
-                  <Card className="bg-terex-darker/50 border-terex-accent/20">
-                    <CardContent className="pt-4">
-                      <p className="text-white font-medium mb-2">{item.question}</p>
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle className="w-4 h-4 text-terex-accent" />
-                        <p className="text-terex-accent">{item.answer}</p>
+                  <Card className="bg-terex-darker/50 border-terex-accent/20 overflow-hidden">
+                    <CardContent className="pt-4 p-4 sm:p-6">
+                      <p className="text-white font-medium mb-2 text-sm sm:text-base break-words">{item.question}</p>
+                      <div className="flex items-start space-x-2">
+                        <CheckCircle className="w-4 h-4 text-terex-accent flex-shrink-0 mt-0.5" />
+                        <p className="text-terex-accent text-sm sm:text-base break-words flex-1">{item.answer}</p>
                       </div>
                     </CardContent>
                   </Card>
@@ -259,17 +259,17 @@ const HelpPage = () => {
 
           {/* Question actuelle */}
           {currentQuestion && !solution && (
-            <Card className="bg-gradient-to-br from-terex-darker to-terex-gray/30 border-terex-accent/30">
-              <CardHeader>
-                <CardTitle className="text-white text-xl">{currentQuestion.question}</CardTitle>
+            <Card className="bg-gradient-to-br from-terex-darker to-terex-gray/30 border-terex-accent/30 overflow-hidden">
+              <CardHeader className="p-4 sm:p-6">
+                <CardTitle className="text-white text-lg sm:text-xl break-words">{currentQuestion.question}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
+              <CardContent className="p-4 sm:p-6 pt-0">
+                <div className="space-y-2 sm:space-y-3">
                   {currentQuestion.answers.map((answer, index) => (
                     <Button
                       key={index}
                       variant="outline"
-                      className="w-full justify-start text-left h-auto py-4 px-6 border-terex-accent/30 text-gray-300 hover:bg-terex-accent/10 hover:text-white hover:border-terex-accent/50"
+                      className="w-full justify-start text-left h-auto py-3 sm:py-4 px-4 sm:px-6 border-terex-accent/30 text-gray-300 hover:bg-terex-accent/10 hover:text-white hover:border-terex-accent/50 text-sm sm:text-base whitespace-normal break-words"
                       onClick={() => handleSelectAnswer(answer.text, answer.nextQuestionId, answer.solution)}
                     >
                       {answer.text}
@@ -282,32 +282,32 @@ const HelpPage = () => {
 
           {/* Solution finale */}
           {solution && (
-            <Card className="bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 border-terex-accent/30">
-              <CardHeader>
+            <Card className="bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 border-terex-accent/30 overflow-hidden">
+              <CardHeader className="p-4 sm:p-6">
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-terex-accent/20 rounded-full flex items-center justify-center">
-                    <CheckCircle className="w-6 h-6 text-terex-accent" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 bg-terex-accent/20 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-terex-accent" />
                   </div>
-                  <CardTitle className="text-white text-xl">Solution</CardTitle>
+                  <CardTitle className="text-white text-lg sm:text-xl">Solution</CardTitle>
                 </div>
               </CardHeader>
-              <CardContent>
-                <div className="prose prose-invert max-w-none">
-                  <p className="text-gray-200 whitespace-pre-line leading-relaxed">{solution}</p>
+              <CardContent className="p-4 sm:p-6 pt-0">
+                <div className="prose prose-invert max-w-none prose-sm sm:prose-base">
+                  <p className="text-gray-200 whitespace-pre-line leading-relaxed text-sm sm:text-base break-words">{solution}</p>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-terex-accent/20">
-                  <p className="text-gray-300 mb-4">Cette solution a-t-elle résolu votre problème ?</p>
-                  <div className="flex flex-col sm:flex-row gap-3">
+                <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-terex-accent/20">
+                  <p className="text-gray-300 mb-3 sm:mb-4 text-sm sm:text-base">Cette solution a-t-elle résolu votre problème ?</p>
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                     <Button
                       onClick={handleReset}
-                      className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold"
+                      className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold w-full sm:w-auto text-sm sm:text-base"
                     >
                       Oui, merci !
                     </Button>
                     <Button
                       variant="outline"
-                      className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10"
+                      className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 w-full sm:w-auto text-sm sm:text-base"
                       onClick={() => window.open('https://wa.me/14182619091', '_blank')}
                     >
                       Non, contacter le support
