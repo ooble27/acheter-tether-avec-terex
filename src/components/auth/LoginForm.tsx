@@ -150,280 +150,356 @@ export function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen w-full relative overflow-hidden bg-gradient-to-br from-terex-dark via-terex-darker to-terex-dark">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 -left-40 w-96 h-96 bg-terex-accent/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 -right-40 w-96 h-96 bg-terex-accent-light/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-terex-accent/3 rounded-full blur-3xl"></div>
-      </div>
+    <div className="min-h-screen w-full bg-terex-dark">
+      <div className="min-h-screen grid lg:grid-cols-2">
+        {/* Left Column - Branding */}
+        <div className="hidden lg:flex relative overflow-hidden bg-gradient-to-br from-terex-darker via-terex-dark to-black">
+          {/* Animated background elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute -top-40 -left-40 w-96 h-96 bg-terex-accent/10 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-terex-accent-light/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-terex-accent/5 rounded-full blur-3xl"></div>
+          </div>
 
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-md space-y-8 animate-fade-in">
-          {/* Logo Header */}
-          <div className="text-center space-y-6">
-            <div className="flex items-center justify-center">
-              <div className="relative group">
-                <div className="absolute -inset-2 bg-gradient-to-r from-terex-accent via-terex-accent-light to-terex-accent rounded-3xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
-                <div className="relative flex items-center gap-4 p-5 bg-gradient-to-br from-terex-darker/90 to-terex-gray/50 rounded-2xl border border-terex-accent/30 backdrop-blur-xl shadow-2xl">
-                  <div className="relative">
-                    <img 
-                      src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" 
-                      alt="Terex Logo" 
-                      className="w-14 h-14 drop-shadow-2xl animate-float"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <h1 className="text-4xl font-black tracking-tight">
-                      <span className="bg-gradient-to-r from-terex-accent via-terex-accent-light to-terex-accent bg-clip-text text-transparent drop-shadow-lg">
-                        TEREX
-                      </span>
-                    </h1>
-                    <p className="text-xs font-semibold text-terex-accent/80 uppercase tracking-widest">Teranga Exchange</p>
-                  </div>
+          {/* Content */}
+          <div className="relative z-10 flex flex-col justify-center items-start p-16 max-w-xl">
+            <div className="space-y-8">
+              <div className="flex items-center gap-4 mb-12">
+                <img 
+                  src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" 
+                  alt="Terex Logo" 
+                  className="w-16 h-16 drop-shadow-2xl"
+                />
+                <div>
+                  <h1 className="text-3xl font-black bg-gradient-to-r from-terex-accent to-terex-accent-light bg-clip-text text-transparent">
+                    TEREX
+                  </h1>
+                  <p className="text-xs font-semibold text-terex-accent/70 uppercase tracking-widest">Teranga Exchange</p>
                 </div>
               </div>
+
+              <h2 className="text-5xl font-light leading-tight">
+                <span className="text-terex-accent font-normal">Rejoignez</span>
+                <br />
+                <span className="text-terex-accent font-normal">Terex,</span>
+                <br />
+                <span className="text-white">la plateforme</span>
+                <br />
+                <span className="text-white">d'échange USDT</span>
+                <br />
+                <span className="text-white">en Afrique</span>
+              </h2>
+
+              <div className="space-y-4 text-gray-400 text-sm pt-8">
+                <p className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-terex-accent"></span>
+                  Transactions rapides et sécurisées
+                </p>
+                <p className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-terex-accent"></span>
+                  Transferts internationaux simplifiés
+                </p>
+                <p className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-terex-accent"></span>
+                  Support client dédié 24/7
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-gray-300 text-lg font-light">Votre passerelle crypto en Afrique</p>
-              <p className="text-gray-500 text-sm mt-2">Échange USDT • Transferts internationaux • Sécurisé</p>
+          </div>
+        </div>
+
+        {/* Right Column - Form */}
+        <div className="flex flex-col bg-terex-dark">
+          {/* Mobile Logo */}
+          <div className="lg:hidden flex items-center justify-between p-6 border-b border-terex-gray">
+            <div className="flex items-center gap-3">
+              <img 
+                src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" 
+                alt="Terex Logo" 
+                className="w-10 h-10"
+              />
+              <div>
+                <h1 className="text-xl font-black text-terex-accent">TEREX</h1>
+                <p className="text-[10px] text-terex-accent/70 uppercase tracking-wider">Teranga Exchange</p>
+              </div>
             </div>
           </div>
 
-          <Card className="bg-terex-darker/80 border-terex-accent/20 backdrop-blur-xl shadow-2xl">
-            <CardHeader className="space-y-3 pb-6">
-              <CardTitle className="text-3xl text-center bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent font-bold">
-                Bienvenue
-              </CardTitle>
-              <CardDescription className="text-center text-gray-400 text-base">
-                Connectez-vous ou créez votre compte pour commencer
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-                <TabsList className="grid w-full grid-cols-2 bg-terex-gray/50 p-1 rounded-xl backdrop-blur-sm border border-terex-accent/10">
-                  <TabsTrigger 
-                    value="login" 
-                    className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-terex-accent data-[state=active]:to-terex-accent-light data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+          {/* Form Content */}
+          <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
+            <div className="w-full max-w-md space-y-8">
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+                <div className="flex gap-8 border-b border-terex-gray pb-1">
+                  <button
+                    onClick={() => setActiveTab('register')}
+                    className={`text-sm font-medium pb-3 transition-colors relative ${
+                      activeTab === 'register'
+                        ? 'text-white'
+                        : 'text-gray-500 hover:text-gray-300'
+                    }`}
                   >
-                    Connexion
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="register" 
-                    className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-terex-accent data-[state=active]:to-terex-accent-light data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
-                  >
-                    Inscription
-                  </TabsTrigger>
-                </TabsList>
-              
-              <TabsContent value="login" className="space-y-6 animate-fade-in">
-                <form onSubmit={handlePasswordLogin} className="space-y-5">
-                  <div className="space-y-3">
-                    <Label htmlFor="email" className="text-white font-medium text-base flex items-center gap-2">
-                      <span className="w-1 h-5 bg-gradient-to-b from-terex-accent to-terex-accent-light rounded-full"></span>
-                      Email
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="votre@email.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="bg-terex-gray/50 border-terex-accent/20 text-white placeholder:text-gray-500 h-12 rounded-xl backdrop-blur-sm focus:border-terex-accent focus:ring-2 focus:ring-terex-accent/20 transition-all"
-                      required
-                      disabled={isLoading}
-                    />
-                  </div>
-
-                  <div className="space-y-3">
-                    <Label htmlFor="password" className="text-white font-medium text-base flex items-center gap-2">
-                      <span className="w-1 h-5 bg-gradient-to-b from-terex-accent to-terex-accent-light rounded-full"></span>
-                      Mot de passe
-                    </Label>
-                    <div className="relative">
-                      <Input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="••••••••"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="bg-terex-gray/50 border-terex-accent/20 text-white placeholder:text-gray-500 h-12 rounded-xl pr-12 backdrop-blur-sm focus:border-terex-accent focus:ring-2 focus:ring-terex-accent/20 transition-all"
-                        required
-                        disabled={isLoading}
-                      />
-                      <button
-                        type="button"
-                        className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-terex-accent transition-colors"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-5 w-5" />
-                        ) : (
-                          <Eye className="h-5 w-5" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  <Button 
-                    type="submit" 
-                    className="w-full h-12 bg-gradient-to-r from-terex-accent to-terex-accent-light hover:from-terex-accent-light hover:to-terex-accent text-white font-semibold rounded-xl shadow-lg hover:shadow-terex-accent/50 transition-all duration-300 hover:scale-[1.02]"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Connexion en cours...
-                      </>
-                    ) : (
-                      'Se connecter'
+                    S'inscrire
+                    {activeTab === 'register' && (
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-terex-accent"></div>
                     )}
-                  </Button>
-                </form>
-              </TabsContent>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('login')}
+                    className={`text-sm font-medium pb-3 transition-colors relative ${
+                      activeTab === 'login'
+                        ? 'text-white'
+                        : 'text-gray-500 hover:text-gray-300'
+                    }`}
+                  >
+                    Se connecter
+                    {activeTab === 'login' && (
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-terex-accent"></div>
+                    )}
+                  </button>
+                </div>
               
-              <TabsContent value="register" className="space-y-6 animate-fade-in">
-                <form onSubmit={handleSignUp} className="space-y-5">
-                  <div className="space-y-3">
-                    <Label htmlFor="name" className="text-white font-medium text-base flex items-center gap-2">
-                      <span className="w-1 h-5 bg-gradient-to-b from-terex-accent to-terex-accent-light rounded-full"></span>
-                      Nom complet
-                    </Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder="Votre nom complet"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="bg-terex-gray/50 border-terex-accent/20 text-white placeholder:text-gray-500 h-12 rounded-xl backdrop-blur-sm focus:border-terex-accent focus:ring-2 focus:ring-terex-accent/20 transition-all"
-                      required
-                      disabled={isLoading}
-                    />
+                <TabsContent value="register" className="space-y-8 animate-fade-in">
+                  <div>
+                    <h2 className="text-2xl font-light text-white mb-2">CRÉER VOTRE COMPTE</h2>
+                    <p className="text-gray-400 text-sm">Entrez votre email pour commencer.</p>
                   </div>
-                  
-                  <div className="space-y-3">
-                    <Label htmlFor="email-register" className="text-white font-medium text-base flex items-center gap-2">
-                      <span className="w-1 h-5 bg-gradient-to-b from-terex-accent to-terex-accent-light rounded-full"></span>
-                      Email
-                    </Label>
-                    <Input
-                      id="email-register"
-                      type="email"
-                      placeholder="votre@email.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="bg-terex-gray/50 border-terex-accent/20 text-white placeholder:text-gray-500 h-12 rounded-xl backdrop-blur-sm focus:border-terex-accent focus:ring-2 focus:ring-terex-accent/20 transition-all"
-                      required
-                      disabled={isLoading}
-                    />
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <Label htmlFor="password-register" className="text-white font-medium text-base flex items-center gap-2">
-                      <span className="w-1 h-5 bg-gradient-to-b from-terex-accent to-terex-accent-light rounded-full"></span>
-                      Mot de passe
-                    </Label>
-                    <div className="relative">
+
+                  <form onSubmit={handleSignUp} className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="text-gray-300 text-sm font-normal">
+                        Nom complet
+                      </Label>
                       <Input
-                        id="password-register"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="••••••••"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="bg-terex-gray/50 border-terex-accent/20 text-white placeholder:text-gray-500 h-12 rounded-xl pr-12 backdrop-blur-sm focus:border-terex-accent focus:ring-2 focus:ring-terex-accent/20 transition-all"
+                        id="name"
+                        type="text"
+                        placeholder="Votre nom complet"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
                         required
                         disabled={isLoading}
-                        minLength={6}
                       />
-                      <button
-                        type="button"
-                        className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-terex-accent transition-colors"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-5 w-5" />
-                        ) : (
-                          <Eye className="h-5 w-5" />
-                        )}
-                      </button>
                     </div>
-                    
+
+                    <div className="space-y-2">
+                      <Label htmlFor="email-register" className="text-gray-300 text-sm font-normal">
+                        Email
+                      </Label>
+                      <Input
+                        id="email-register"
+                        type="email"
+                        placeholder="votre@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
+                        required
+                        disabled={isLoading}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="password-register" className="text-gray-300 text-sm font-normal">
+                        Mot de passe
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          id="password-register"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0 pr-10"
+                          required
+                          disabled={isLoading}
+                          minLength={6}
+                        />
+                        <button
+                          type="button"
+                          className="absolute inset-y-0 right-0 flex items-center text-gray-400 hover:text-terex-accent transition-colors"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const input = document.getElementById('referral-code-input');
+                        if (input) input.classList.toggle('hidden');
+                      }}
+                      className="text-sm text-gray-400 hover:text-terex-accent transition-colors underline"
+                    >
+                      Avez-vous un code de parrainage?
+                    </button>
+
+                    <div id="referral-code-input" className="hidden space-y-2">
+                      <Label htmlFor="referral-code" className="text-gray-300 text-sm font-normal">
+                        Code de parrainage
+                      </Label>
+                      <Input
+                        id="referral-code"
+                        type="text"
+                        placeholder="TEREX-XXXXXXXX"
+                        value={referralCode}
+                        onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                        className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
+                        disabled={isLoading}
+                      />
+                    </div>
+
                     {password && (
-                      <div className="bg-gradient-to-br from-terex-gray/40 to-terex-darker/40 p-4 rounded-xl border border-terex-accent/20 backdrop-blur-sm">
-                        <div className="flex items-center gap-2 mb-3">
-                          <div className="p-1.5 bg-terex-accent/20 rounded-lg">
-                            <Info className="h-4 w-4 text-terex-accent" />
-                          </div>
-                          <span className="text-sm font-semibold text-white">Sécurité du mot de passe</span>
+                      <div className="space-y-2 text-xs text-gray-500">
+                        <div className={passwordRequirements.minLength ? 'text-green-400' : ''}>
+                          • Au moins 6 caractères
                         </div>
-                        <div className="space-y-2 text-sm">
-                          <div className={`flex items-center gap-2.5 transition-colors ${passwordRequirements.minLength ? 'text-green-400' : 'text-gray-500'}`}>
-                            <div className={`w-1.5 h-1.5 rounded-full ${passwordRequirements.minLength ? 'bg-green-400' : 'bg-gray-500'}`}></div>
-                            <span>Au moins 6 caractères</span>
-                          </div>
-                          <div className={`flex items-center gap-2.5 transition-colors ${passwordRequirements.hasUppercase ? 'text-green-400' : 'text-gray-500'}`}>
-                            <div className={`w-1.5 h-1.5 rounded-full ${passwordRequirements.hasUppercase ? 'bg-green-400' : 'bg-gray-500'}`}></div>
-                            <span>Une lettre majuscule</span>
-                          </div>
-                          <div className={`flex items-center gap-2.5 transition-colors ${passwordRequirements.hasLowercase ? 'text-green-400' : 'text-gray-500'}`}>
-                            <div className={`w-1.5 h-1.5 rounded-full ${passwordRequirements.hasLowercase ? 'bg-green-400' : 'bg-gray-500'}`}></div>
-                            <span>Une lettre minuscule</span>
-                          </div>
-                          <div className={`flex items-center gap-2.5 transition-colors ${passwordRequirements.hasNumber ? 'text-green-400' : 'text-gray-500'}`}>
-                            <div className={`w-1.5 h-1.5 rounded-full ${passwordRequirements.hasNumber ? 'bg-green-400' : 'bg-gray-500'}`}></div>
-                            <span>Un chiffre</span>
-                          </div>
-                          <div className={`flex items-center gap-2.5 transition-colors ${passwordRequirements.hasSpecialChar ? 'text-green-400' : 'text-gray-500'}`}>
-                            <div className={`w-1.5 h-1.5 rounded-full ${passwordRequirements.hasSpecialChar ? 'bg-green-400' : 'bg-gray-500'}`}></div>
-                            <span>Un caractère spécial</span>
-                          </div>
+                        <div className={passwordRequirements.hasUppercase ? 'text-green-400' : ''}>
+                          • Une lettre majuscule
+                        </div>
+                        <div className={passwordRequirements.hasLowercase ? 'text-green-400' : ''}>
+                          • Une lettre minuscule
+                        </div>
+                        <div className={passwordRequirements.hasNumber ? 'text-green-400' : ''}>
+                          • Un chiffre
+                        </div>
+                        <div className={passwordRequirements.hasSpecialChar ? 'text-green-400' : ''}>
+                          • Un caractère spécial
                         </div>
                       </div>
                     )}
-                  </div>
 
-                  <div className="space-y-3">
-                    <Label htmlFor="referral-code" className="text-white font-medium text-base flex items-center gap-2">
-                      <span className="w-1 h-5 bg-gradient-to-b from-terex-accent/50 to-terex-accent-light/50 rounded-full"></span>
-                      Code de parrainage 
-                      <span className="text-gray-500 text-sm font-normal">(optionnel)</span>
-                    </Label>
-                    <Input
-                      id="referral-code"
-                      type="text"
-                      placeholder="TEREX-XXXXXXXX"
-                      value={referralCode}
-                      onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
-                      className="bg-terex-gray/50 border-terex-accent/20 text-white placeholder:text-gray-500 h-12 rounded-xl backdrop-blur-sm focus:border-terex-accent focus:ring-2 focus:ring-terex-accent/20 transition-all"
-                      disabled={isLoading}
-                    />
-                    <p className="text-sm text-gray-400 flex items-start gap-2">
-                      <span className="text-terex-accent mt-0.5">💡</span>
-                      <span>Bénéficiez d'avantages en entrant un code de parrainage</span>
+                    <p className="text-xs text-gray-500">
+                      En continuant, vous acceptez nos{' '}
+                      <a href="/terms" className="text-terex-accent hover:underline">Conditions d'utilisation</a>
+                      {' '}et{' '}
+                      <a href="/privacy" className="text-terex-accent hover:underline">Politique de confidentialité</a>.
                     </p>
+
+                    <Button 
+                      type="submit" 
+                      className="w-full h-14 bg-gray-300 hover:bg-white text-black font-semibold rounded-lg transition-all duration-300"
+                      disabled={isLoading || !isPasswordValid}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Création du compte...
+                        </>
+                      ) : (
+                        'CONTINUER'
+                      )}
+                    </Button>
+
+                    <p className="text-center text-sm text-gray-400">
+                      Vous avez déjà un compte?{' '}
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab('login')}
+                        className="text-terex-accent hover:underline font-medium"
+                      >
+                        Se connecter
+                      </button>
+                    </p>
+                  </form>
+                </TabsContent>
+
+                <TabsContent value="login" className="space-y-8 animate-fade-in">
+                  <div>
+                    <h2 className="text-2xl font-light text-white mb-2">CONNEXION</h2>
+                    <p className="text-gray-400 text-sm">Entrez vos identifiants pour vous connecter.</p>
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    className="w-full h-12 bg-gradient-to-r from-terex-accent to-terex-accent-light hover:from-terex-accent-light hover:to-terex-accent text-white font-semibold rounded-xl shadow-lg hover:shadow-terex-accent/50 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                    disabled={isLoading || !isPasswordValid}
-                  >
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Création du compte...
-                      </>
-                    ) : (
-                      'Créer mon compte'
-                    )}
-                  </Button>
-                </form>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+                  <form onSubmit={handlePasswordLogin} className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-gray-300 text-sm font-normal">
+                        Email
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="votre@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
+                        required
+                        disabled={isLoading}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="password" className="text-gray-300 text-sm font-normal">
+                        Mot de passe
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0 pr-10"
+                          required
+                          disabled={isLoading}
+                        />
+                        <button
+                          type="button"
+                          className="absolute inset-y-0 right-0 flex items-center text-gray-400 hover:text-terex-accent transition-colors"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      className="w-full h-14 bg-gray-300 hover:bg-white text-black font-semibold rounded-lg transition-all duration-300"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Connexion en cours...
+                        </>
+                      ) : (
+                        'CONTINUER'
+                      )}
+                    </Button>
+
+                    <p className="text-center text-sm text-gray-400">
+                      Vous n'avez pas de compte?{' '}
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab('register')}
+                        className="text-terex-accent hover:underline font-medium"
+                      >
+                        S'inscrire
+                      </button>
+                    </p>
+                  </form>
+                </TabsContent>
+              </Tabs>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="p-6 border-t border-terex-gray">
+            <p className="text-center text-sm text-gray-500">
+              Powered by{' '}
+              <span className="text-terex-accent font-semibold">Terex</span>
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
     </div>
   );
 }
