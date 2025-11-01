@@ -102,12 +102,28 @@ const FAQPage = () => {
           answer: "Pour acheter des USDT : 1) Allez dans 'Acheter USDT', 2) Choisissez votre devise (CFA ou CAD), 3) Entrez le montant désiré, 4) Sélectionnez votre réseau blockchain (TRC20, BEP20, ERC20, Arbitrum, Polygon), 5) Fournissez votre adresse USDT de réception, 6) Choisissez votre méthode de paiement (Mobile Money, carte bancaire), 7) Suivez les instructions de paiement. Vos USDT sont livrés sous 5 minutes."
         },
         {
+          question: "Quelles sont vos adresses de réception USDT ?",
+          answer: "Nos adresses de réception varient selon le réseau blockchain : \n\n• TRC20 (Tron) : TVDGpn4hCSzJ5nkHPLetFQxX9XsMRMLghy\n• BEP20 (BSC) : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n• ERC20 (Ethereum) : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n• Arbitrum : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n• Polygon : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n\nVérifiez toujours que vous envoyez sur le bon réseau correspondant à votre transaction. Une erreur de réseau peut entraîner une perte de fonds."
+        },
+        {
+          question: "Puis-je envoyer mes USDT depuis Binance ?",
+          answer: "Oui, Binance est un excellent moyen d'envoyer vos USDT vers Terex ! Pour cela : 1) Connectez-vous à Binance, 2) Allez dans Wallet > Spot, 3) Sélectionnez USDT et cliquez sur 'Retirer', 4) Copiez l'adresse Terex correspondant à votre réseau choisi (TRC20, BEP20, etc.), 5) Collez l'adresse dans Binance, 6) Sélectionnez le même réseau, 7) Entrez le montant et confirmez. Vos USDT arriveront en quelques minutes."
+        },
+        {
+          question: "Comment recevoir mes USDT achetés sur mon compte Binance ?",
+          answer: "Pour recevoir vos USDT directement sur Binance : 1) Connectez-vous à votre compte Binance, 2) Allez dans Wallet > Spot > USDT > Dépôt, 3) Sélectionnez le réseau de votre choix (nous recommandons TRC20 pour les frais les plus bas), 4) Copiez l'adresse de dépôt Binance, 5) Utilisez cette adresse lors de votre achat sur Terex. Vos USDT apparaîtront sur Binance après confirmation blockchain (1-5 minutes)."
+        },
+        {
           question: "Quels sont les montants minimum et maximum pour acheter des USDT ?",
           answer: "Montant minimum : 50,000 CFA (environ 76€) ou 100 CAD pour Mobile Money et carte bancaire. Montants maximum : 2,000,000 CFA (3,050€) par transaction pour les comptes non vérifiés, jusqu'à 10,000,000 CFA (15,250€) pour les comptes KYC vérifiés. Pas de limite mensuelle pour les utilisateurs vérifiés."
         },
         {
           question: "Quels réseaux blockchain sont supportés ?",
-          answer: "Nous supportons 5 réseaux principaux : TRC20 (Tron) - le plus économique, BEP20 (Binance Smart Chain) - rapide et peu cher, ERC20 (Ethereum) - le plus sécurisé mais plus cher, Arbitrum - Ethereum Layer 2 économique, Polygon - rapide et économique. Choisissez selon votre wallet et vos préférences de frais."
+          answer: "Nous supportons 5 réseaux principaux : TRC20 (Tron) - le plus économique avec des frais quasi nuls, BEP20 (Binance Smart Chain) - rapide et peu cher, ERC20 (Ethereum) - le plus sécurisé mais avec des frais plus élevés, Arbitrum - Ethereum Layer 2 économique avec haute sécurité, Polygon - rapide, économique et écologique. Choisissez selon les préférences de votre wallet et les frais que vous souhaitez payer."
+        },
+        {
+          question: "Quel réseau choisir pour envoyer vers Binance ?",
+          answer: "Pour envoyer vers Binance, nous recommandons TRC20 (Tron) car : les frais sont les plus bas (~1 USDT), la confirmation est rapide (1-2 minutes), Binance supporte très bien ce réseau. Assurez-vous de sélectionner le même réseau sur Terex ET sur Binance pour éviter toute perte de fonds. BEP20 est également une excellente option avec des frais similaires."
         },
         {
           question: "Quelles méthodes de paiement acceptez-vous ?",
@@ -120,6 +136,10 @@ const FAQPage = () => {
         {
           question: "Que faire si je n'ai pas reçu mes USDT ?",
           answer: "Si vous n'avez pas reçu vos USDT après 10 minutes : 1) Vérifiez que vous avez payé le montant exact, 2) Confirmez que votre adresse USDT est correcte, 3) Vérifiez le bon réseau dans votre wallet, 4) Contactez notre support avec votre référence de transaction. Notre équipe résout 99% des problèmes en moins de 30 minutes."
+        },
+        {
+          question: "Puis-je acheter avec une carte bancaire internationale ?",
+          answer: "Oui, nous acceptons les cartes Visa et Mastercard du monde entier. Les cartes émises en Europe, Amérique du Nord, et la plupart des régions sont acceptées. Le paiement par carte est traité de manière sécurisée via des processeurs de paiement certifiés PCI-DSS."
         }
       ]
     },
@@ -130,23 +150,39 @@ const FAQPage = () => {
       faqs: [
         {
           question: "Comment vendre mes USDT sur Terex ?",
-          answer: "Pour vendre vos USDT : 1) Allez dans 'Vendre USDT', 2) Entrez le montant d'USDT à vendre, 3) Choisissez votre réseau d'envoi, 4) Sélectionnez votre méthode de réception (Orange Money, Wave, compte bancaire), 5) Fournissez vos informations de réception, 6) Envoyez vos USDT à l'adresse fournie, 7) Recevez votre paiement sous 5 minutes après confirmation blockchain."
+          answer: "Pour vendre vos USDT : 1) Allez dans 'Vendre USDT', 2) Entrez le montant d'USDT à vendre, 3) Choisissez votre réseau d'envoi, 4) Sélectionnez votre méthode de réception (Orange Money, Wave, compte bancaire), 5) Fournissez vos informations de réception, 6) Envoyez vos USDT à l'adresse fournie selon votre réseau, 7) Recevez votre paiement sous 5 minutes après confirmation blockchain."
+        },
+        {
+          question: "Puis-je vendre des USDT directement depuis Binance ?",
+          answer: "Oui, vous pouvez vendre vos USDT stockés sur Binance via Terex ! C'est très simple : 1) Créez une commande de vente sur Terex, 2) Notez l'adresse de réception et le réseau, 3) Sur Binance, allez dans Wallet > Spot > USDT > Retirer, 4) Entrez l'adresse Terex fournie, 5) Sélectionnez le même réseau (TRC20, BEP20, etc.), 6) Confirmez le retrait sur Binance, 7) Dès réception confirmée, nous vous payons immédiatement en CFA sur votre Mobile Money ou compte bancaire."
+        },
+        {
+          question: "Où envoyer mes USDT pour vendre ?",
+          answer: "Les adresses de réception pour vendre vos USDT sont affichées lors de la création de votre commande de vente. Elles varient selon le réseau : \n\n• TRC20 (Tron) : TVDGpn4hCSzJ5nkHPLetFQxX9XsMRMLghy\n• BEP20 (BSC) : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n• ERC20 (Ethereum) : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n• Arbitrum : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n• Polygon : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n\nIMPORTANT : Vérifiez toujours le réseau avant d'envoyer !"
         },
         {
           question: "Y a-t-il un montant minimum pour vendre des USDT ?",
-          answer: "Il n'y a pas de montant minimum pour vendre des USDT, mais nous recommandons au moins 20 USDT pour rentabiliser les frais de réseau blockchain. Le montant maximum dépend de votre niveau de vérification : 1,000 USDT/jour pour les comptes standards, 5,000 USDT/jour pour les comptes premium vérifiés."
+          answer: "Le montant minimum recommandé est de 20 USDT pour rentabiliser les frais de réseau blockchain (qui sont payés par vous lors de l'envoi). Il n'y a pas de minimum strict, mais les très petits montants peuvent être peu rentables à cause des frais réseau. Le montant maximum dépend de votre niveau de vérification : 1,000 USDT/jour pour les comptes standards, 5,000 USDT/jour pour les comptes premium vérifiés."
         },
         {
           question: "Combien de temps prend une vente d'USDT ?",
-          answer: "Une vente d'USDT prend 5-15 minutes au total : 1-3 minutes pour la confirmation blockchain (dépend du réseau), 2-5 minutes pour notre traitement interne, envoi immédiat vers votre compte Mobile Money ou bancaire. Les ventes via TRC20 sont généralement les plus rapides."
+          answer: "Une vente d'USDT prend 5-15 minutes au total : 1-3 minutes pour la confirmation blockchain (dépend du réseau), 2-5 minutes pour notre traitement interne, envoi immédiat vers votre compte Mobile Money ou bancaire. Les ventes via TRC20 sont généralement les plus rapides (1-2 minutes de confirmation)."
+        },
+        {
+          question: "Quels sont les frais de réseau pour envoyer mes USDT ?",
+          answer: "Les frais réseau varient selon la blockchain : TRC20 (Tron) : ~1 USDT, BEP20 (BSC) : ~0.50 USDT, ERC20 (Ethereum) : 5-20 USDT (variable selon congestion), Arbitrum : ~2 USDT, Polygon : ~0.50 USDT. Ces frais sont payés à la blockchain, pas à Terex. Nous recommandons TRC20 ou BEP20 pour minimiser les coûts."
         },
         {
           question: "Comment sont calculés les taux de vente ?",
-          answer: "Nos taux de vente sont basés sur les prix du marché international avec une marge compétitive. Le taux affiché inclut tous les frais et correspond exactement à ce que vous recevrez en CFA ou CAD. Nous garantissons des taux parmi les meilleurs du marché africain."
+          answer: "Nos taux de vente sont basés sur les prix du marché international avec une marge compétitive. Le taux affiché inclut tous les frais et correspond exactement à ce que vous recevrez en CFA ou CAD. Nous garantissons des taux parmi les meilleurs du marché africain. Le taux est fixé dès la création de votre commande."
         },
         {
           question: "Puis-je annuler une vente d'USDT ?",
-          answer: "Une fois que vous avez envoyé vos USDT à notre adresse, la transaction ne peut plus être annulée car elle est enregistrée sur la blockchain. Vérifiez toujours soigneusement toutes les informations avant d'envoyer. En cas d'erreur dans vos coordonnées de réception, contactez immédiatement notre support."
+          answer: "Une fois que vous avez envoyé vos USDT à notre adresse, la transaction ne peut plus être annulée car elle est enregistrée sur la blockchain de manière permanente. Vérifiez toujours soigneusement toutes les informations avant d'envoyer. En cas d'erreur dans vos coordonnées de réception, contactez immédiatement notre support pour tenter une solution."
+        },
+        {
+          question: "Que se passe-t-il si j'envoie sur le mauvais réseau ?",
+          answer: "Si vous envoyez vos USDT sur un réseau différent de celui sélectionné dans votre commande, vos fonds peuvent être perdus ou nécessiter une récupération complexe et coûteuse. Contactez immédiatement notre support si cela arrive. Nous ferons de notre mieux pour récupérer vos fonds, mais cela peut prendre plusieurs jours et entraîner des frais. TOUJOURS vérifier le réseau avant d'envoyer !"
         }
       ]
     },
@@ -187,8 +223,20 @@ const FAQPage = () => {
       icon: "🔒",
       faqs: [
         {
-          question: "Comment Terex protège-t-il mes fonds et données ?",
-          answer: "Nous utilisons un système de sécurité multi-niveaux : chiffrement SSL/TLS 256-bit, stockage des cryptos dans des wallets multi-signatures, authentification à 2 facteurs (2FA), surveillance 24/7 des transactions suspectes, conformité aux normes bancaires internationales, et audits de sécurité réguliers par des tiers."
+          question: "Terex détient-il mes fonds ? (Non-custodial)",
+          answer: "Non, Terex est une plateforme NON-CUSTODIAL. Cela signifie que nous ne détenons JAMAIS vos fonds ou vos cryptomonnaies. Lors d'un achat, vos USDT sont envoyés directement à votre adresse wallet. Lors d'une vente, vous envoyez vos USDT directement depuis votre wallet vers le nôtre, puis nous vous payons immédiatement. Vous gardez toujours le contrôle total de vos actifs. Nous agissons uniquement comme intermédiaire de transaction, jamais comme dépositaire."
+        },
+        {
+          question: "Qu'est-ce qu'un service non-custodial et pourquoi c'est important ?",
+          answer: "Un service non-custodial signifie que vous êtes le seul propriétaire et gestionnaire de vos cryptomonnaies. Terex ne stocke pas vos fonds dans des comptes centralisés. Avantages : sécurité maximale (pas de risque de piratage de plateforme), souveraineté totale sur vos actifs, pas de blocage de fonds par la plateforme, pas de risque de faillite affectant vos avoirs. C'est la philosophie crypto dans sa forme la plus pure : 'Not your keys, not your crypto' ne s'applique pas chez nous car vous contrôlez toujours vos clés."
+        },
+        {
+          question: "Comment Terex protège-t-il mes données personnelles ?",
+          answer: "Nous utilisons un système de sécurité multi-niveaux : chiffrement SSL/TLS 256-bit pour toutes les communications, stockage sécurisé des données personnelles avec accès limité, authentification à 2 facteurs (2FA) disponible, surveillance 24/7 des tentatives d'accès suspectes, conformité RGPD et aux normes de protection des données, audits de sécurité réguliers par des tiers indépendants. Vos documents KYC sont stockés de manière chiffrée et jamais partagés avec des tiers sans votre consentement."
+        },
+        {
+          question: "Mes cryptomonnaies sont-elles en sécurité pendant la transaction ?",
+          answer: "Oui, nos transactions suivent un protocole de sécurité strict : pour l'achat, nous n'envoyons vos USDT qu'après confirmation de paiement ; pour la vente, nous vérifions la réception blockchain avant de vous payer. Toutes les transactions sont enregistrées sur la blockchain publique, garantissant transparence et traçabilité. Notre système de monitoring détecte et bloque les tentatives de fraude en temps réel."
         },
         {
           question: "Terex est-il régulé et licencié ?",
@@ -205,6 +253,10 @@ const FAQPage = () => {
         {
           question: "Comment signaler une transaction suspecte ?",
           answer: "Pour signaler une activité suspecte : contactez immédiatement notre support via chat, email ou téléphone, fournissez tous les détails (références, montants, dates), nous enquêterons dans les 24h. Nous prenons très au sérieux la sécurité de notre écosystème et récompensons les signalements légitimes."
+        },
+        {
+          question: "Puis-je utiliser Terex de manière anonyme ?",
+          answer: "Non, conformément aux réglementations financières internationales, nous devons vérifier l'identité de nos utilisateurs. Cependant, vos données personnelles sont strictement confidentielles et ne sont jamais vendues ou partagées avec des tiers. La vérification KYC nous permet de protéger tous nos utilisateurs contre la fraude et le blanchiment d'argent."
         }
       ]
     },
