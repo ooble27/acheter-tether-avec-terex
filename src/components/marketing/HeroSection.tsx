@@ -35,7 +35,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
   };
 
   return (
-    <div className="bg-terex-dark min-h-screen">
+    <div className="bg-white min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
         {/* Layout principal en grid pour desktop, stack pour mobile */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[600px]">
@@ -86,7 +86,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 onClick={handleHowItWorks}
                 variant="outline" 
                 size="lg"
-                className="border-gray-600 text-gray-300 hover:bg-terex-gray px-6 py-4 text-base sm:text-lg rounded-xl backdrop-blur-sm w-64 sm:w-auto mx-auto h-12 sm:h-auto"
+                className="border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-4 text-base sm:text-lg rounded-xl backdrop-blur-sm w-64 sm:w-auto mx-auto h-12 sm:h-auto"
               >
                 Voir comment ça marche
               </Button>
@@ -119,7 +119,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
         
         {/* Cartes des fonctionnalités - en bas */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-16 lg:mt-24">
-          <Card className="bg-terex-darker border-terex-accent/20 backdrop-blur-sm hover:bg-terex-gray transition-all duration-300 hover:scale-105 group shadow-lg">
+          <Card className="bg-gray-50 border-terex-accent/20 backdrop-blur-sm hover:bg-gray-100 transition-all duration-300 hover:scale-105 group shadow-lg">
             <CardContent className="p-4 sm:p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 {/* Logo USDT de CoinMarketCap */}
@@ -129,28 +129,28 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                   className="w-8 h-8"
                 />
               </div>
-              <h3 className="text-white font-light mb-2 text-sm sm:text-base">Échange USDT Tether</h3>
-              <p className="text-gray-400 text-xs sm:text-sm font-light">Achetez et vendez vos USDT au meilleur taux</p>
+              <h3 className="text-gray-900 font-light mb-2 text-sm sm:text-base">Échange USDT Tether</h3>
+              <p className="text-gray-600 text-xs sm:text-sm font-light">Achetez et vendez vos USDT au meilleur taux</p>
             </CardContent>
           </Card>
           
-          <Card className="bg-terex-darker border-terex-accent/20 backdrop-blur-sm hover:bg-terex-gray transition-all duration-300 hover:scale-105 group shadow-lg">
+          <Card className="bg-gray-50 border-terex-accent/20 backdrop-blur-sm hover:bg-gray-100 transition-all duration-300 hover:scale-105 group shadow-lg">
             <CardContent className="p-4 sm:p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <Globe className="w-6 h-6 text-terex-accent" />
               </div>
-              <h3 className="text-white font-light mb-2 text-sm sm:text-base">Transferts vers l'Afrique</h3>
-              <p className="text-gray-400 text-xs sm:text-sm font-light">Transférez de l'argent partout en Afrique</p>
+              <h3 className="text-gray-900 font-light mb-2 text-sm sm:text-base">Transferts vers l'Afrique</h3>
+              <p className="text-gray-600 text-xs sm:text-sm font-light">Transférez de l'argent partout en Afrique</p>
             </CardContent>
           </Card>
           
-          <Card className="bg-terex-darker border-terex-accent/20 backdrop-blur-sm hover:bg-terex-gray transition-all duration-300 hover:scale-105 group sm:col-span-2 lg:col-span-1 shadow-lg">
+          <Card className="bg-gray-50 border-terex-accent/20 backdrop-blur-sm hover:bg-gray-100 transition-all duration-300 hover:scale-105 group sm:col-span-2 lg:col-span-1 shadow-lg">
             <CardContent className="p-4 sm:p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <Shield className="w-6 h-6 text-terex-accent" />
               </div>
-              <h3 className="text-white font-light mb-2 text-sm sm:text-base">100% Sécurisé</h3>
-              <p className="text-gray-400 text-xs sm:text-sm font-light">Chiffrement 256-bit et conformité réglementaire</p>
+              <h3 className="text-gray-900 font-light mb-2 text-sm sm:text-base">100% Sécurisé</h3>
+              <p className="text-gray-600 text-xs sm:text-sm font-light">Chiffrement 256-bit et conformité réglementaire</p>
             </CardContent>
           </Card>
         </div>
