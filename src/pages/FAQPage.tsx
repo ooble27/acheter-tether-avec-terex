@@ -270,7 +270,7 @@ const FAQPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-terex-dark">
       <HeaderSection 
         user={user ? {
           email: user.email || '',
@@ -281,20 +281,20 @@ const FAQPage = () => {
       />
 
       {/* Hero Section */}
-      <div className="bg-card border-b border-border">
+      <div className="bg-terex-darker border-b border-terex-accent/20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           <div className="text-center space-y-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground">
+            <h1 className="text-4xl md:text-5xl font-bold text-white">
               Comment pouvons-nous vous aider ?
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
               Voici quelques questions fréquemment posées...
             </p>
 
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto pt-4">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <Input
                   type="text"
                   placeholder="Rechercher ici..."
@@ -304,7 +304,7 @@ const FAQPage = () => {
                     setSelectedCategory(null);
                     setSelectedFaq(null);
                   }}
-                  className="pl-12 py-6 text-base bg-background border-border focus:border-primary focus:ring-primary"
+                  className="pl-12 py-6 text-base bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-400 focus:border-terex-accent focus:ring-terex-accent"
                 />
               </div>
             </div>
@@ -318,8 +318,8 @@ const FAQPage = () => {
           <>
             {/* Collections Title */}
             <div className="mb-10">
-              <h2 className="text-3xl font-bold text-foreground mb-2">Collections</h2>
-              <p className="text-muted-foreground">Parcourir les articles par catégorie</p>
+              <h2 className="text-3xl font-bold text-white mb-2">Collections</h2>
+              <p className="text-gray-300">Parcourir les articles par catégorie</p>
             </div>
 
             {/* Collections Grid */}
@@ -332,20 +332,20 @@ const FAQPage = () => {
                   <Card
                     key={category.id}
                     onClick={() => setSelectedCategory(category.id)}
-                    className="group p-6 cursor-pointer bg-card hover:bg-accent/50 border-border transition-all duration-200 hover:shadow-lg hover:shadow-primary/5"
+                    className="group p-6 cursor-pointer bg-terex-darker hover:bg-terex-gray border-terex-accent/20 transition-all duration-200 hover:shadow-lg hover:shadow-terex-accent/10"
                   >
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
-                        <Icon className="w-6 h-6 text-primary" />
+                      <div className="w-12 h-12 rounded-lg bg-terex-accent/10 flex items-center justify-center flex-shrink-0 group-hover:bg-terex-accent/20 transition-colors">
+                        <Icon className="w-6 h-6 text-terex-accent" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
+                        <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-terex-accent transition-colors">
                           {category.title}
                         </h3>
-                        <p className="text-sm text-muted-foreground mb-3">
+                        <p className="text-sm text-gray-300 mb-3">
                           {category.description}
                         </p>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-xs text-gray-400">
                           {articleCount} {articleCount === 1 ? 'article' : 'articles'}
                         </div>
                       </div>
@@ -362,7 +362,7 @@ const FAQPage = () => {
               <Button
                 variant="ghost"
                 onClick={() => setSelectedCategory(null)}
-                className="mb-6 text-muted-foreground hover:text-foreground"
+                className="mb-6 text-gray-300 hover:text-white hover:bg-terex-gray"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Retour aux collections
@@ -376,13 +376,13 @@ const FAQPage = () => {
                 return (
                   <div className="flex items-center gap-4 mb-6">
                     {Icon && (
-                      <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <Icon className="w-8 h-8 text-primary" />
+                      <div className="w-16 h-16 rounded-xl bg-terex-accent/10 flex items-center justify-center">
+                        <Icon className="w-8 h-8 text-terex-accent" />
                       </div>
                     )}
                     <div>
-                      <h2 className="text-3xl font-bold text-foreground">{category?.title}</h2>
-                      <p className="text-muted-foreground">{section?.faqs.length} {section?.faqs.length === 1 ? 'article' : 'articles'}</p>
+                      <h2 className="text-3xl font-bold text-white">{category?.title}</h2>
+                      <p className="text-gray-300">{section?.faqs.length} {section?.faqs.length === 1 ? 'article' : 'articles'}</p>
                     </div>
                   </div>
                 );
@@ -397,13 +397,13 @@ const FAQPage = () => {
                   <Card 
                     key={index}
                     onClick={() => setSelectedFaq({...faq, category: section.title})}
-                    className="group p-5 cursor-pointer bg-card hover:bg-accent/50 border-border transition-all duration-200 hover:shadow-md hover:shadow-primary/5"
+                    className="group p-5 cursor-pointer bg-terex-darker hover:bg-terex-gray border-terex-accent/20 transition-all duration-200 hover:shadow-md hover:shadow-terex-accent/10"
                   >
                     <div className="flex items-center justify-between">
-                      <h3 className="text-base font-medium text-foreground group-hover:text-primary transition-colors flex-1">
+                      <h3 className="text-base font-medium text-white group-hover:text-terex-accent transition-colors flex-1">
                         {faq.question}
                       </h3>
-                      <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
+                      <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-terex-accent group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
                     </div>
                   </Card>
                 ));
@@ -420,7 +420,7 @@ const FAQPage = () => {
                   setSearchTerm('');
                   setSelectedCategory(null);
                 }}
-                className="text-muted-foreground hover:text-foreground"
+                className="text-gray-300 hover:text-white hover:bg-terex-gray"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Effacer la recherche
@@ -429,11 +429,11 @@ const FAQPage = () => {
             
             {filteredSections.length === 0 ? (
               <div className="text-center py-16">
-                <div className="w-24 h-24 rounded-full bg-accent flex items-center justify-center mx-auto mb-6">
-                  <Search className="w-12 h-12 text-muted-foreground" />
+                <div className="w-24 h-24 rounded-full bg-terex-gray flex items-center justify-center mx-auto mb-6">
+                  <Search className="w-12 h-12 text-gray-400" />
                 </div>
-                <h3 className="text-2xl font-semibold text-foreground mb-3">Aucun résultat trouvé</h3>
-                <p className="text-muted-foreground max-w-md mx-auto">
+                <h3 className="text-2xl font-semibold text-white mb-3">Aucun résultat trouvé</h3>
+                <p className="text-gray-300 max-w-md mx-auto">
                   Essayez d'autres mots-clés ou parcourez nos collections
                 </p>
               </div>
@@ -441,19 +441,19 @@ const FAQPage = () => {
               <div className="space-y-8">
                 {filteredSections.map((section) => (
                   <div key={section.id}>
-                    <h3 className="text-xl font-semibold text-foreground mb-4">{section.title}</h3>
+                    <h3 className="text-xl font-semibold text-white mb-4">{section.title}</h3>
                     <div className="space-y-3">
                       {section.faqs.map((faq, index) => (
                         <Card 
                           key={index}
                           onClick={() => setSelectedFaq({...faq, category: section.title})}
-                          className="group p-5 cursor-pointer bg-card hover:bg-accent/50 border-border transition-all duration-200"
+                          className="group p-5 cursor-pointer bg-terex-darker hover:bg-terex-gray border-terex-accent/20 transition-all duration-200"
                         >
                           <div className="flex items-center justify-between">
-                            <h4 className="text-base font-medium text-foreground group-hover:text-primary transition-colors flex-1">
+                            <h4 className="text-base font-medium text-white group-hover:text-terex-accent transition-colors flex-1">
                               {faq.question}
                             </h4>
-                            <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
+                            <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-terex-accent group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
                           </div>
                         </Card>
                       ))}
@@ -467,20 +467,20 @@ const FAQPage = () => {
 
         {/* Contact Support Section */}
         {!selectedCategory && !searchTerm && (
-          <div className="mt-20 bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-10 text-center border border-primary/10">
-            <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-6">
-              <MessageCircle className="w-10 h-10 text-primary" />
+          <div className="mt-20 bg-gradient-to-br from-terex-accent/5 to-terex-accent/10 rounded-2xl p-10 text-center border border-terex-accent/20">
+            <div className="w-20 h-20 rounded-full bg-terex-accent/20 flex items-center justify-center mx-auto mb-6">
+              <MessageCircle className="w-10 h-10 text-terex-accent" />
             </div>
-            <h3 className="text-2xl font-bold text-foreground mb-3">
+            <h3 className="text-2xl font-bold text-white mb-3">
               Vous ne trouvez pas ce que vous cherchez ?
             </h3>
-            <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
+            <p className="text-gray-300 mb-8 max-w-xl mx-auto">
               Notre équipe support est disponible 24/7 pour vous aider
             </p>
             <Button 
               onClick={() => navigate('/support')}
               size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="bg-terex-accent hover:bg-terex-accent-light text-white"
             >
               Contacter le support
             </Button>
@@ -491,43 +491,43 @@ const FAQPage = () => {
       {/* Article Detail Modal/View */}
       {selectedFaq && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-card rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto border border-border">
-            <div className="sticky top-0 bg-card border-b border-border px-8 py-6 flex items-center justify-between z-10">
+          <div className="bg-terex-darker rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto border border-terex-accent/20">
+            <div className="sticky top-0 bg-terex-darker border-b border-terex-accent/20 px-8 py-6 flex items-center justify-between z-10">
               <Button
                 variant="ghost"
                 onClick={() => setSelectedFaq(null)}
-                className="text-muted-foreground hover:text-foreground"
+                className="text-gray-300 hover:text-white hover:bg-terex-gray"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Retour
               </Button>
-              <span className="text-sm text-muted-foreground">{selectedFaq.category}</span>
+              <span className="text-sm text-gray-400">{selectedFaq.category}</span>
             </div>
             
             <div className="px-8 py-10">
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8">
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-8">
                 {selectedFaq.question}
               </h1>
               
               <div className="prose prose-lg max-w-none">
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                <p className="text-gray-300 leading-relaxed whitespace-pre-line">
                   {selectedFaq.answer}
                 </p>
               </div>
 
               {/* Placeholder for future video */}
-              <div className="mt-10 p-6 bg-accent/30 rounded-xl border border-border">
-                <p className="text-sm text-muted-foreground text-center">
+              <div className="mt-10 p-6 bg-terex-gray/30 rounded-xl border border-terex-accent/20">
+                <p className="text-sm text-gray-400 text-center">
                   📹 Tutoriel vidéo disponible prochainement
                 </p>
               </div>
             </div>
 
-            <div className="border-t border-border px-8 py-6 bg-accent/20">
-              <p className="text-sm text-muted-foreground text-center mb-4">Cet article vous a-t-il été utile ?</p>
+            <div className="border-t border-terex-accent/20 px-8 py-6 bg-terex-gray/20">
+              <p className="text-sm text-gray-300 text-center mb-4">Cet article vous a-t-il été utile ?</p>
               <div className="flex items-center justify-center gap-4">
-                <Button variant="outline" size="sm" className="border-border hover:bg-accent">👍 Oui</Button>
-                <Button variant="outline" size="sm" className="border-border hover:bg-accent">👎 Non</Button>
+                <Button variant="outline" size="sm" className="border-terex-accent/20 text-gray-300 hover:bg-terex-gray hover:text-white">👍 Oui</Button>
+                <Button variant="outline" size="sm" className="border-terex-accent/20 text-gray-300 hover:bg-terex-gray hover:text-white">👎 Non</Button>
               </div>
             </div>
           </div>
