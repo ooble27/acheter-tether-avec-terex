@@ -22,7 +22,7 @@ export function DeviceMockups() {
   }, [titleMessages.length]);
 
   return (
-    <h1 className="text-3xl sm:text-4xl lg:text-6xl font-light text-gray-900 mb-6 leading-tight">
+    <h1 className="text-3xl sm:text-4xl lg:text-6xl font-light text-white mb-6 leading-tight">
       <span className="transition-all duration-700 ease-in-out">
         {currentSlide === 0 ? (
           <>
