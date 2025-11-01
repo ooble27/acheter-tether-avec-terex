@@ -1,11 +1,11 @@
-import { useEffect } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
+import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-import waveImage from "@/assets/payment-wave.png";
-import orangeMoneyImage from "@/assets/payment-orange-money.png";
-import bankCardImage from "@/assets/payment-bank-card.png";
-import cashImage from "@/assets/payment-cash.png";
+import waveImage from "@/assets/wave-logo.png";
+import orangeMoneyImage from "@/assets/orange-money-logo.png";
+import bankCardImage from "@/assets/bank-card-logo.png";
+import cashImage from "@/assets/cash-logo.png";
 
 const paymentMethods = [
   {
@@ -43,61 +43,60 @@ const paymentMethods = [
 ];
 
 export function PaymentMethodsSection() {
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    { 
-      loop: true,
-      align: "start",
-      skipSnaps: false
-    },
-    [Autoplay({ delay: 3000, stopOnInteraction: false })]
-  );
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    if (emblaApi) {
-      // Autoplay will start automatically
-    }
-  }, [emblaApi]);
+  const handlePrevious = () => {
+    setCurrentIndex((prev) => (prev === 0 ? paymentMethods.length - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev === paymentMethods.length - 1 ? 0 : prev + 1));
+  };
 
   return (
-    <section className="py-16 sm:py-20 bg-terex-dark">
+    <section className="py-12 sm:py-16 bg-terex-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-white mb-4">
             Méthodes de <span className="text-terex-accent">paiement</span>
           </h2>
-          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto font-light">
+          <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto font-light">
             Plusieurs options sécurisées pour vos transactions
           </p>
         </div>
 
-        <div className="relative max-w-6xl mx-auto">
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex">
+        <div className="relative max-w-4xl mx-auto">
+          {/* Main Carousel */}
+          <div className="relative overflow-hidden">
+            <div 
+              className="flex transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            >
               {paymentMethods.map((method) => (
-                <div key={method.id} className="flex-[0_0_100%] min-w-0 px-2 md:flex-[0_0_50%]">
-                  <div className="grid md:grid-cols-2 gap-0 rounded-3xl overflow-hidden shadow-2xl">
+                <div key={method.id} className="w-full flex-shrink-0 px-2">
+                  <div className="grid md:grid-cols-2 gap-0 rounded-2xl overflow-hidden shadow-xl">
                     {/* Left Block - Image with Gradient Background */}
-                    <div className={`relative bg-gradient-to-br ${method.color} flex items-center justify-center p-12 md:p-16 min-h-[320px] md:min-h-[400px]`}>
+                    <div className={`relative bg-gradient-to-br ${method.color} flex items-center justify-center p-8 md:p-10 min-h-[200px] md:min-h-[250px]`}>
                       <div className="relative z-10 w-full h-full flex items-center justify-center">
                         <img 
                           src={method.image} 
                           alt={method.title}
-                          className="w-full h-auto max-w-[280px] object-contain drop-shadow-[0_20px_60px_rgba(0,0,0,0.4)]"
+                          className="w-full h-auto max-w-[160px] object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.3)]"
                         />
                       </div>
                     </div>
 
                     {/* Right Block - Content */}
-                    <div className="bg-card p-8 md:p-12 flex flex-col justify-center">
-                      <div className="mb-6">
-                        <span className="inline-block text-xs font-semibold px-4 py-2 rounded-full bg-muted text-muted-foreground uppercase tracking-wide">
+                    <div className="bg-card p-6 md:p-8 flex flex-col justify-center">
+                      <div className="mb-4">
+                        <span className="inline-block text-xs font-semibold px-3 py-1.5 rounded-full bg-muted text-muted-foreground uppercase tracking-wide">
                           {method.category}
                         </span>
                       </div>
-                      <h3 className="text-2xl md:text-4xl font-bold text-foreground mb-6 leading-tight">
+                      <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 leading-tight">
                         {method.title}
                       </h3>
-                      <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
+                      <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
                         {method.description}
                       </p>
                     </div>
@@ -107,12 +106,40 @@ export function PaymentMethodsSection() {
             </div>
           </div>
 
+          {/* Navigation Buttons */}
+          <div className="absolute top-1/2 -translate-y-1/2 left-0 -ml-4 md:-ml-12 z-20">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handlePrevious}
+              className="h-10 w-10 rounded-full bg-background shadow-lg hover:bg-background/90 border-2"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
+          </div>
+          <div className="absolute top-1/2 -translate-y-1/2 right-0 -mr-4 md:-mr-12 z-20">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleNext}
+              className="h-10 w-10 rounded-full bg-background shadow-lg hover:bg-background/90 border-2"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </Button>
+          </div>
+
           {/* Pagination Dots */}
-          <div className="flex justify-center gap-2 mt-8">
+          <div className="flex justify-center gap-2 mt-6">
             {paymentMethods.map((_, index) => (
-              <div
+              <button
                 key={index}
-                className="h-2 w-2 rounded-full bg-muted-foreground/30"
+                onClick={() => setCurrentIndex(index)}
+                className={`h-2 rounded-full transition-all ${
+                  index === currentIndex 
+                    ? "w-8 bg-terex-accent" 
+                    : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                }`}
+                aria-label={`Aller à la méthode ${index + 1}`}
               />
             ))}
           </div>
