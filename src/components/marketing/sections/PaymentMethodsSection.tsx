@@ -11,21 +11,21 @@ const paymentMethods = [
     id: 1,
     category: "Mobile Money",
     title: "Wave",
-    description: "Envoyez et recevez de l'argent instantanément avec Wave, la solution de mobile money la plus rapide d'Afrique.",
+    description: "Envoyez et recevez de l'argent instantanément avec Wave. La solution de mobile money la plus rapide et sécurisée d'Afrique pour vos transactions quotidiennes.",
     image: waveImage,
   },
   {
     id: 2,
     category: "Mobile Money",
     title: "Orange Money",
-    description: "Profitez de la puissance d'Orange Money pour vos transactions sécurisées partout en Afrique.",
+    description: "Profitez de la puissance d'Orange Money pour toutes vos transactions. Une solution mobile fiable et accessible dans toute l'Afrique francophone.",
     image: orangeMoneyImage,
   },
   {
     id: 3,
     category: "Banking",
     title: "Cartes bancaires",
-    description: "Utilisez vos cartes Visa et Mastercard pour des paiements sécurisés et instantanés.",
+    description: "Utilisez vos cartes Visa et Mastercard en toute sécurité. Des paiements instantanés et protégés pour tous vos achats de cryptomonnaie.",
     image: bankCardImage,
   }
 ];
