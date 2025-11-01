@@ -62,9 +62,9 @@ export function PaymentMethodsSection() {
             >
               {paymentMethods.map((method) => (
                 <div key={method.id} className="w-full flex-shrink-0 px-2">
-                  <div className="grid md:grid-cols-2 gap-0 rounded-2xl overflow-hidden shadow-xl">
+                  <div className="grid md:grid-cols-2 gap-0 rounded-2xl overflow-hidden shadow-xl bg-terex-dark/50 border border-terex-accent/20">
                     {/* Left Block - Image */}
-                    <div className="relative bg-card flex items-center justify-center p-8 md:p-10 min-h-[200px] md:min-h-[250px]">
+                    <div className="relative bg-transparent flex items-center justify-center p-8 md:p-10 min-h-[200px] md:min-h-[250px]">
                       <div className="relative z-10 w-full h-full flex items-center justify-center">
                         <img 
                           src={method.image} 
@@ -75,16 +75,16 @@ export function PaymentMethodsSection() {
                     </div>
 
                     {/* Right Block - Content */}
-                    <div className="bg-card p-6 md:p-8 flex flex-col justify-center">
+                    <div className="bg-transparent p-6 md:p-8 flex flex-col justify-center">
                       <div className="mb-4">
-                        <span className="inline-block text-xs font-semibold px-3 py-1.5 rounded-full bg-muted text-muted-foreground uppercase tracking-wide">
+                        <span className="inline-block text-xs font-semibold px-3 py-1.5 rounded-full bg-terex-accent/20 text-terex-accent uppercase tracking-wide">
                           {method.category}
                         </span>
                       </div>
-                      <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 leading-tight">
+                      <h3 className="text-xl md:text-2xl font-bold text-white mb-3 leading-tight">
                         {method.title}
                       </h3>
-                      <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
+                      <p className="text-gray-300 leading-relaxed text-sm md:text-base">
                         {method.description}
                       </p>
                     </div>
