@@ -10,7 +10,7 @@ export default function AcheterUSDTArticle() {
 
       <h2 className="text-white">Étape 1 : Créez votre compte Terex</h2>
       <p className="text-gray-300">
-        Rendez-vous sur <a href="/" className="text-terex-accent hover:underline">terex.app</a> et cliquez sur "Se Connecter". 
+        Rendez-vous sur <a href="/" className="text-terex-accent hover:underline">terangaexchange.com</a> et cliquez sur "Se Connecter". 
         Vous recevrez un lien de connexion magique par email - pas besoin de mot de passe !
       </p>
       <p className="text-gray-300">
