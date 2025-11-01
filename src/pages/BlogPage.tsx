@@ -1,5 +1,4 @@
 import { BlogHero } from "@/components/blog/BlogHero";
-import { BlogTopics } from "@/components/blog/BlogTopics";
 import { BlogCard } from "@/components/blog/BlogCard";
 import { FooterSection } from "@/components/marketing/sections/FooterSection";
 import { HeaderSection } from "@/components/marketing/sections/HeaderSection";
@@ -92,8 +91,6 @@ export default function BlogPage() {
       />
       
       <BlogHero />
-      
-      <BlogTopics />
 
       <section className="py-16 md:py-24 container mx-auto px-4">
         <div className="text-center mb-12">
