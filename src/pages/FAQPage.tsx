@@ -103,7 +103,7 @@ const FAQPage = () => {
         },
         {
           question: "Quelles sont vos adresses de réception USDT ?",
-          answer: "Nos adresses de réception varient selon le réseau blockchain : \n\n• TRC20 (Tron) : TVDGpn4hCSzJ5nkHPLetFQxX9XsMRMLghy\n• BEP20 (BSC) : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n• ERC20 (Ethereum) : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n• Arbitrum : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n• Polygon : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n\nVérifiez toujours que vous envoyez sur le bon réseau correspondant à votre transaction. Une erreur de réseau peut entraîner une perte de fonds."
+          answer: "Nos adresses de réception varient selon le réseau blockchain : \n\n• TRC20 (Tron) : TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb\n• BEP20 (BSC) : 0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84\n• ERC20 (Ethereum) : 0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84\n• Arbitrum : 0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84\n• Polygon : 0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84\n• Solana : 8ES2hxsfqZVX3cjxWLBJ8jCdzSu9hTBYELSkX82UdnhN\n• Aptos : 0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84\n\nVérifiez toujours que vous envoyez sur le bon réseau correspondant à votre transaction. Une erreur de réseau peut entraîner une perte de fonds."
         },
         {
           question: "Puis-je envoyer mes USDT depuis Binance ?",
@@ -158,7 +158,7 @@ const FAQPage = () => {
         },
         {
           question: "Où envoyer mes USDT pour vendre ?",
-          answer: "Les adresses de réception pour vendre vos USDT sont affichées lors de la création de votre commande de vente. Elles varient selon le réseau : \n\n• TRC20 (Tron) : TVDGpn4hCSzJ5nkHPLetFQxX9XsMRMLghy\n• BEP20 (BSC) : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n• ERC20 (Ethereum) : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n• Arbitrum : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n• Polygon : 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb\n\nIMPORTANT : Vérifiez toujours le réseau avant d'envoyer !"
+          answer: "Les adresses de réception pour vendre vos USDT sont affichées lors de la création de votre commande de vente. Elles varient selon le réseau : \n\n• TRC20 (Tron) : TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb\n• BEP20 (BSC) : 0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84\n• ERC20 (Ethereum) : 0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84\n• Arbitrum : 0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84\n• Polygon : 0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84\n• Solana : 8ES2hxsfqZVX3cjxWLBJ8jCdzSu9hTBYELSkX82UdnhN\n• Aptos : 0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84\n\nIMPORTANT : Vérifiez toujours le réseau avant d'envoyer !"
         },
         {
           question: "Y a-t-il un montant minimum pour vendre des USDT ?",
