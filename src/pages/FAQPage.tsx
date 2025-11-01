@@ -255,33 +255,38 @@ const FAQPage = () => {
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-terex-darker via-terex-dark to-terex-darker">
         <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-32 h-32 md:w-64 md:h-64 bg-terex-accent/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 md:w-96 md:h-96 bg-terex-accent/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-20 left-10 w-96 h-96 bg-terex-accent/10 rounded-full blur-[120px] animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-terex-accent-light/10 rounded-full blur-[120px] animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-terex-accent/5 rounded-full blur-[150px]"></div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24">
-          <div className="text-center">
-            <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-4 py-2 md:px-6 md:py-3 mb-6 md:mb-8 border border-terex-accent/20">
-              <MessageCircle className="w-4 h-4 md:w-5 md:h-5 text-terex-accent mr-2" />
-              <span className="text-terex-accent font-medium text-sm md:text-base">Foire aux Questions</span>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-32">
+          <div className="text-center space-y-8">
+            <div className="inline-flex items-center bg-gradient-to-r from-terex-accent/20 to-terex-accent-light/20 backdrop-blur-sm rounded-full px-6 py-3 border border-terex-accent/30 shadow-lg shadow-terex-accent/10">
+              <MessageCircle className="w-5 h-5 text-terex-accent mr-2 animate-pulse" />
+              <span className="text-terex-accent font-medium">Foire aux Questions</span>
             </div>
             
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-light text-white mb-4 md:mb-6 leading-tight">
-              Tout ce que vous devez <span className="text-terex-accent">savoir</span> sur Terex
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-light text-white leading-tight">
+              Tout ce que vous devez<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-terex-accent to-terex-accent-light">savoir sur Terex</span>
             </h1>
-            <p className="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8 md:mb-12 px-2">
-              Des réponses complètes et détaillées à toutes vos questions sur notre plateforme d'échange crypto-fiat.
+            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed font-light">
+              Des réponses complètes et détaillées à toutes vos questions
             </p>
 
             {/* Search Bar */}
-            <div className="max-w-2xl mx-auto mb-8 md:mb-16 px-4">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 md:w-5 md:h-5" />
+            <div className="max-w-2xl mx-auto pt-4">
+              <div className="relative group">
+                <div className="absolute left-5 top-1/2 transform -translate-y-1/2 text-terex-accent/70 group-hover:text-terex-accent transition-colors">
+                  <Search className="w-6 h-6" />
+                </div>
                 <Input
-                  placeholder="Rechercher dans la FAQ..."
+                  type="text"
+                  placeholder="Rechercher une question..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 md:pl-12 h-12 md:h-14 bg-terex-darker border-terex-accent/30 text-white placeholder:text-gray-400 text-base md:text-lg rounded-full"
+                  className="pl-14 pr-6 py-6 md:py-7 bg-terex-darker/70 backdrop-blur-xl border-2 border-terex-accent/20 focus:border-terex-accent/50 text-white placeholder:text-gray-400 rounded-2xl text-lg shadow-2xl shadow-terex-accent/5 hover:shadow-terex-accent/10 transition-all duration-300"
                 />
               </div>
             </div>
@@ -290,51 +295,61 @@ const FAQPage = () => {
       </div>
 
       {/* FAQ Sections */}
-      <div className="py-12 md:py-24 bg-terex-dark">
+      <div className="py-16 md:py-24 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-6 md:space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
             {filteredSections.map((section, sectionIndex) => (
-              <div key={sectionIndex} className={`bg-gradient-to-br ${section.color} rounded-xl md:rounded-2xl border ${section.borderColor} p-4 md:p-8 hover:border-terex-accent/40 transition-all duration-300`}>
-                <div className="flex items-center space-x-3 md:space-x-4 mb-6 md:mb-8">
-                  <div className="text-2xl md:text-4xl">{section.icon}</div>
-                  <div>
-                    <h2 className="text-xl md:text-3xl font-bold text-white mb-1 md:mb-2">{section.title}</h2>
-                    <p className="text-gray-300 text-sm md:text-base">{section.faqs.length} questions dans cette section</p>
+              <div 
+                key={sectionIndex} 
+                className="group animate-fade-in hover-scale" 
+                style={{ animationDelay: `${sectionIndex * 0.1}s` }}
+              >
+                <div className={`h-full rounded-3xl p-8 bg-gradient-to-br ${section.color} backdrop-blur-sm border ${section.borderColor} shadow-xl hover:shadow-2xl hover:shadow-terex-accent/10 transition-all duration-500 relative overflow-hidden`}>
+                  {/* Decorative gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-terex-accent/5 via-transparent to-terex-accent-light/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative">
+                    <div className="flex items-center gap-4 mb-8">
+                      <div className="text-5xl transform group-hover:scale-110 transition-transform duration-300">{section.icon}</div>
+                      <h2 className="text-3xl font-light text-white group-hover:text-terex-accent transition-colors duration-300">
+                        {section.title}
+                      </h2>
+                    </div>
+                    
+                    <Accordion type="single" collapsible className="space-y-4">
+                      {section.faqs.map((faq, faqIndex) => (
+                        <AccordionItem 
+                          key={faqIndex}
+                          value={`section-${sectionIndex}-item-${faqIndex}`}
+                          className="border-b border-terex-accent/20 last:border-0 hover:border-terex-accent/40 transition-colors"
+                        >
+                          <AccordionTrigger className="text-white hover:text-terex-accent text-left py-5 text-lg font-light transition-all group/item">
+                            <span className="pr-4">{faq.question}</span>
+                          </AccordionTrigger>
+                          <AccordionContent className="text-gray-300 leading-relaxed pb-6 pt-2 text-base font-light">
+                            {faq.answer}
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
                   </div>
                 </div>
-                
-                <Accordion type="single" collapsible className="space-y-3 md:space-y-4">
-                  {section.faqs.map((faq, faqIndex) => (
-                    <AccordionItem 
-                      key={faqIndex} 
-                      value={`section-${sectionIndex}-faq-${faqIndex}`}
-                      className="bg-terex-darker/50 rounded-lg md:rounded-xl border border-terex-gray/30 overflow-hidden"
-                    >
-                      <AccordionTrigger className="text-white font-semibold text-base md:text-lg hover:no-underline px-4 md:px-6 py-3 md:py-4 hover:bg-terex-darker/70 transition-colors text-left">
-                        {faq.question}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-gray-300 px-4 md:px-6 py-3 md:py-4 border-t border-terex-gray/20 bg-terex-darker/30">
-                        <div className="text-sm md:text-base leading-relaxed">
-                          {faq.answer}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
               </div>
             ))}
           </div>
 
           {filteredSections.length === 0 && (
-            <div className="text-center mt-12 md:mt-16 px-4">
-              <MessageCircle className="w-12 h-12 md:w-16 md:h-16 text-gray-400 mx-auto mb-4 md:mb-6" />
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">Aucun résultat trouvé</h3>
-              <p className="text-gray-400 text-base md:text-lg mb-6 md:mb-8">
-                Aucune question ne correspond à votre recherche "{searchTerm}".
+            <div className="text-center py-20 col-span-2">
+              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-terex-accent/20 to-terex-accent-light/20 backdrop-blur-sm mb-8 border border-terex-accent/30">
+                <Search className="w-12 h-12 text-terex-accent" />
+              </div>
+              <h3 className="text-3xl font-light text-white mb-4">Aucun résultat trouvé</h3>
+              <p className="text-gray-400 text-lg max-w-md mx-auto mb-8">
+                Essayez d'autres mots-clés ou contactez notre support pour plus d'aide.
               </p>
               <Button 
                 onClick={() => setSearchTerm('')}
-                className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-6 py-2 md:px-8 md:py-3"
+                className="bg-gradient-to-r from-terex-accent to-terex-accent-light hover:from-terex-accent-light hover:to-terex-accent text-white px-8 py-6 text-lg rounded-2xl shadow-2xl shadow-terex-accent/30 hover:shadow-terex-accent/50 transition-all duration-300 border-0"
               >
                 Voir toutes les questions
               </Button>
@@ -342,28 +357,50 @@ const FAQPage = () => {
           )}
 
           {/* Contact Support */}
-          <div className="mt-12 md:mt-20 text-center px-4">
-            <div className="bg-gradient-to-br from-terex-darker to-terex-gray/30 rounded-xl md:rounded-2xl border border-terex-accent/20 p-6 md:p-12">
-              <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 md:mb-4">Une question spécifique ?</h3>
-              <p className="text-gray-300 text-base md:text-lg mb-6 md:mb-8 max-w-2xl mx-auto">
-                Notre équipe de support est disponible 24/7 pour répondre à toutes vos questions personnalisées.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
-                <Button 
-                  onClick={() => navigate('/contact')}
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-6 py-3 md:px-8 md:py-3 text-base md:text-lg"
-                >
-                  <MessageCircle className="w-4 h-4 md:w-5 md:h-5 mr-2" />
-                  Contacter le Support
-                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5 ml-2" />
-                </Button>
-                <Button 
-                  variant="outline"
-                  className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 px-6 py-3 md:px-8 md:py-3 text-base md:text-lg"
-                  onClick={() => window.open('tel:+14182619091')}
-                >
-                  📞 +1 (418) 261-9091
-                </Button>
+          <div className="mt-16 md:mt-32 col-span-1 lg:col-span-2">
+            <div className="relative rounded-3xl md:rounded-[2.5rem] overflow-hidden">
+              {/* Animated background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-terex-accent/30 via-terex-accent-light/20 to-terex-accent/30 animate-pulse"></div>
+              <div className="absolute inset-0 backdrop-blur-2xl"></div>
+              
+              {/* Content */}
+              <div className="relative p-8 md:p-16 lg:p-20 text-center">
+                <div className="max-w-4xl mx-auto space-y-8">
+                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-terex-accent/20 backdrop-blur-sm border border-terex-accent/30 mb-4">
+                    <MessageCircle className="w-10 h-10 text-terex-accent animate-pulse" />
+                  </div>
+                  
+                  <h3 className="text-3xl md:text-5xl font-light text-white leading-tight">
+                    Vous ne trouvez pas<br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-terex-accent to-terex-accent-light">votre réponse ?</span>
+                  </h3>
+                  
+                  <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light">
+                    Notre équipe support est disponible 24/7 pour répondre à toutes vos questions
+                  </p>
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                    <Button 
+                      size="lg"
+                      onClick={() => navigate('/contact')}
+                      className="bg-gradient-to-r from-terex-accent to-terex-accent-light hover:from-terex-accent-light hover:to-terex-accent text-white px-10 py-7 text-lg rounded-2xl shadow-2xl shadow-terex-accent/30 hover:shadow-terex-accent/50 transition-all duration-300 group border-0"
+                    >
+                      <MessageCircle className="mr-3 h-6 w-6 group-hover:animate-pulse" />
+                      Contacter le Support
+                      <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                    
+                    <Button 
+                      size="lg"
+                      variant="outline"
+                      onClick={() => window.location.href = 'tel:+14182619091'}
+                      className="bg-terex-darker/50 backdrop-blur-sm border-2 border-terex-accent/50 text-white hover:bg-terex-accent hover:border-terex-accent px-10 py-7 text-lg rounded-2xl transition-all duration-300 group"
+                    >
+                      <span className="mr-3 text-2xl group-hover:animate-pulse">📞</span>
+                      +1 (418) 261-9091
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

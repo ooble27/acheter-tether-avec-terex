@@ -164,5 +164,15 @@ export default {
 			},
 		}
 	},
-	plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+	plugins: [
+		require("tailwindcss-animate"), 
+		require("@tailwindcss/typography"),
+		function({ addUtilities }: any) {
+			addUtilities({
+				'.hover-scale': {
+					'@apply transition-transform duration-200 hover:scale-105': {},
+				},
+			})
+		}
+	],
 } satisfies Config;
