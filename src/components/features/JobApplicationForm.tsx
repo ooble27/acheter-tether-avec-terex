@@ -101,9 +101,8 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 className="bg-terex-gray border-terex-accent/30 text-white"
                 placeholder="votre@email.com"
-                disabled
               />
-              <p className="text-gray-400 text-sm">Email de votre compte Terex</p>
+              {user && <p className="text-gray-400 text-sm">Email de votre compte Terex</p>}
             </div>
             
             <div className="space-y-2">

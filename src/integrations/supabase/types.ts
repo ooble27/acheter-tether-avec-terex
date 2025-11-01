@@ -716,6 +716,7 @@ export type Database = {
           created_at: string
           id: string
           is_active: boolean
+          merchant_qr_code: string | null
           updated_at: string
           user_id: string
           webhook_url: string | null
@@ -731,6 +732,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
+          merchant_qr_code?: string | null
           updated_at?: string
           user_id: string
           webhook_url?: string | null
@@ -746,6 +748,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
+          merchant_qr_code?: string | null
           updated_at?: string
           user_id?: string
           webhook_url?: string | null
@@ -1303,19 +1306,61 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_logs: {
+        Row: {
+          created_at: string
+          delivered_at: string | null
+          error_message: string | null
+          event_type: string
+          id: string
+          merchant_id: string
+          payload: Json
+          response_body: string | null
+          response_status: number | null
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          event_type: string
+          id?: string
+          merchant_id: string
+          payload: Json
+          response_body?: string | null
+          response_status?: number | null
+          url: string
+        }
+        Update: {
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          merchant_id?: string
+          payload?: Json
+          response_body?: string | null
+          response_status?: number | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_logs_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchant_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      generate_payment_reference: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      generate_referral_code: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      generate_merchant_qr_code: { Args: never; Returns: string }
+      generate_payment_reference: { Args: never; Returns: string }
+      generate_referral_code: { Args: never; Returns: string }
       get_public_comments: {
         Args: { post_id_filter?: string }
         Returns: {
@@ -1342,10 +1387,7 @@ export type Database = {
         }
         Returns: boolean
       }
-      is_kyc_verified: {
-        Args: { _user_id: string }
-        Returns: boolean
-      }
+      is_kyc_verified: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       order_status:

@@ -27,12 +27,8 @@ export const useJobApplications = () => {
     setIsSubmitting(true);
     
     try {
-      // Récupérer l'utilisateur actuel - connexion obligatoire
+      // Récupérer l'utilisateur actuel (optionnel maintenant)
       const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error("Vous devez être connecté pour postuler");
-      }
       
       let cvUrl = null;
       
@@ -40,7 +36,8 @@ export const useJobApplications = () => {
       if (applicationData.cv_file) {
         const fileExt = applicationData.cv_file.name.split('.').pop();
         const fileName = `${Date.now()}-${applicationData.first_name}-${applicationData.last_name}.${fileExt}`;
-        const filePath = `${user.id}/${fileName}`;
+        // Utiliser 'public' comme dossier pour les CVs des utilisateurs non connectés
+        const filePath = user?.id ? `${user.id}/${fileName}` : `public/${fileName}`;
         
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from('cvs')
@@ -62,7 +59,7 @@ export const useJobApplications = () => {
         .insert({
           ...dataToInsert,
           cv_url: cvUrl,
-          user_id: user.id,
+          user_id: user?.id || null,
         });
 
       if (dbError) {
@@ -74,9 +71,9 @@ export const useJobApplications = () => {
         'send-email-notification',
         {
           body: {
-            userId: user.id,
+            userId: user?.id || null,
             orderId: null,
-            emailAddress: user.email,
+            emailAddress: applicationData.email,
             emailType: 'job_application',
             transactionType: 'application',
             orderData: {

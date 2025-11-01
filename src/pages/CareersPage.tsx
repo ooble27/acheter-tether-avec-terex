@@ -49,15 +49,6 @@ const CareersPage = () => {
   };
 
   const handleApply = (position: string) => {
-    if (!user) {
-      toast({
-        title: "Connexion requise",
-        description: "Vous devez être connecté pour postuler à un emploi.",
-        variant: "destructive",
-      });
-      navigate('/auth');
-      return;
-    }
     setSelectedPosition(position);
     setShowApplicationForm(true);
   };
