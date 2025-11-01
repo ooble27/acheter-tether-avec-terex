@@ -31,6 +31,10 @@ import BlockchainPage from "./pages/BlockchainPage";
 import BlogPage from "./pages/BlogPage";
 import ComprendreUSDTArticle from "./pages/blog/ComprendreUSDTArticle";
 import AcheterUSDTArticle from "./pages/blog/AcheterUSDTArticle";
+import SecuriteCryptoArticle from "./pages/blog/SecuriteCryptoArticle";
+import TransfertsInternationauxArticle from "./pages/blog/TransfertsInternationauxArticle";
+import BlockchainSimpleArticle from "./pages/blog/BlockchainSimpleArticle";
+import MobileMoneyCryptoArticle from "./pages/blog/MobileMoneyCryptoArticle";
 import { TransactionProvider } from "./contexts/TransactionContext";
 import { PWASessionSync } from "./components/PWASessionSync";
 import { ScrollToTop } from "./components/ScrollToTop";
@@ -69,6 +73,10 @@ function App() {
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/blog/comprendre-usdt-stablecoin" element={<ComprendreUSDTArticle />} />
                 <Route path="/blog/acheter-usdt-terex-guide" element={<AcheterUSDTArticle />} />
+                <Route path="/blog/securite-crypto" element={<SecuriteCryptoArticle />} />
+                <Route path="/blog/transferts-internationaux" element={<TransfertsInternationauxArticle />} />
+                <Route path="/blog/blockchain-simple" element={<BlockchainSimpleArticle />} />
+                <Route path="/blog/mobile-money-crypto" element={<MobileMoneyCryptoArticle />} />
                 <Route path="/admin/*" element={<AdminPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

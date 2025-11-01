@@ -36,63 +36,43 @@ const blogArticles = [
   },
   {
     id: 3,
-    title: "Sécurité des transactions : Nos garanties",
-    excerpt: "La sécurité est notre priorité. Découvrez comment Terex protège vos fonds avec le KYC, la vérification en deux étapes et nos partenariats bancaires certifiés.",
+    title: "Sécurité des transactions crypto : Guide complet",
+    excerpt: "La sécurité est primordiale dans l'univers des cryptomonnaies. Découvrez les meilleures pratiques pour protéger vos actifs numériques et effectuer des transactions en toute sérénité.",
     image: blogSecuriteImage,
-    date: "8 Oct 2025",
-    readTime: "6 min",
+    date: "15 Jan 2025",
+    readTime: "8 min",
     category: "Sécurité",
-    slug: "securite-transactions-terex"
+    slug: "securite-crypto"
   },
   {
     id: 4,
-    title: "Transferts internationaux : Économisez jusqu'à 80%",
-    excerpt: "Comparez les frais des services traditionnels vs Terex. Envoyez de l'argent vers l'Afrique sans frais cachés et avec un taux de change transparent.",
+    title: "Transferts internationaux en Afrique : La révolution Terex",
+    excerpt: "Les transferts d'argent internationaux en Afrique ont longtemps été coûteux et lents. Découvrez comment Terex révolutionne ces transactions grâce à la blockchain.",
     image: blogTransfertsImage,
-    date: "5 Oct 2025",
-    readTime: "8 min",
+    date: "12 Jan 2025",
+    readTime: "10 min",
     category: "Transferts",
-    slug: "economiser-transferts-internationaux"
+    slug: "transferts-internationaux"
   },
   {
     id: 5,
     title: "La blockchain expliquée simplement",
-    excerpt: "Qu'est-ce que la blockchain ? Comment fonctionne-t-elle ? Découvrez la technologie derrière Bitcoin, Ethereum et l'USDT dans un langage accessible.",
+    excerpt: "La blockchain est souvent perçue comme une technologie complexe. Nous vous expliquons simplement comment elle fonctionne et pourquoi elle révolutionne la finance mondiale.",
     image: blogBlockchainImage,
-    date: "1 Oct 2025",
-    readTime: "10 min",
+    date: "10 Jan 2025",
+    readTime: "12 min",
     category: "Technologie",
-    slug: "blockchain-expliquee-simplement"
+    slug: "blockchain-simple"
   },
   {
     id: 6,
-    title: "Mobile Money et Crypto : L'alliance gagnante en Afrique",
-    excerpt: "Orange Money, MTN Mobile Money, Moov Money... Découvrez comment Terex connecte les services de paiement mobile africains à l'économie crypto mondiale.",
+    title: "Mobile Money et crypto en Afrique : La révolution financière",
+    excerpt: "Le Mobile Money a révolutionné les paiements en Afrique. Aujourd'hui, sa combinaison avec les cryptomonnaies ouvre de nouvelles possibilités pour l'inclusion financière.",
     image: blogMobileMoneyImage,
-    date: "28 Sep 2025",
-    readTime: "6 min",
-    category: "Innovation",
-    slug: "mobile-money-crypto-afrique"
-  },
-  {
-    id: 7,
-    title: "KYC : Pourquoi vérifier votre identité est important",
-    excerpt: "Le KYC (Know Your Customer) protège votre compte et combat la fraude. Découvrez comment compléter votre vérification en 5 minutes.",
-    image: blogKycImage,
-    date: "25 Sep 2025",
-    readTime: "5 min",
-    category: "Sécurité",
-    slug: "kyc-verification-identite"
-  },
-  {
-    id: 8,
-    title: "L'avenir de la crypto en Afrique",
-    excerpt: "L'Afrique adopte massivement les cryptomonnaies. Découvrez les opportunités, défis et perspectives pour le continent.",
-    image: blogAfriqueImage,
-    date: "20 Sep 2025",
-    readTime: "9 min",
-    category: "Analyse",
-    slug: "avenir-crypto-afrique"
+    date: "8 Jan 2025",
+    readTime: "11 min",
+    category: "Finance mobile",
+    slug: "mobile-money-crypto"
   }
 ];
 
