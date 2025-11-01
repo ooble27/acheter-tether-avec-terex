@@ -102,7 +102,9 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
                 className="bg-terex-gray border-terex-accent/30 text-white"
                 placeholder="votre@email.com"
               />
-              {user && <p className="text-gray-400 text-sm">Email de votre compte Terex</p>}
+              {user && (
+                <p className="text-gray-400 text-sm">Email de votre compte Terex</p>
+              )}
             </div>
             
             <div className="space-y-2">

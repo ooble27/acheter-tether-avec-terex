@@ -36,8 +36,7 @@ export const useJobApplications = () => {
       if (applicationData.cv_file) {
         const fileExt = applicationData.cv_file.name.split('.').pop();
         const fileName = `${Date.now()}-${applicationData.first_name}-${applicationData.last_name}.${fileExt}`;
-        // Utiliser 'public' comme dossier pour les CVs des utilisateurs non connectés
-        const filePath = user?.id ? `${user.id}/${fileName}` : `public/${fileName}`;
+        const filePath = user ? `${user.id}/${fileName}` : `public/${fileName}`;
         
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from('cvs')
