@@ -153,9 +153,12 @@ export function LoginForm() {
     <div className="min-h-screen w-full bg-terex-dark">
       <div className="min-h-screen grid lg:grid-cols-2">
         {/* Left Column - Branding */}
-        <div className="hidden lg:flex relative overflow-hidden bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700">
-          {/* Soft overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+        <div className="hidden lg:flex relative overflow-hidden bg-gradient-to-br from-[#0a2f2f] via-[#0d1f1f] to-[#000000]">
+          {/* Subtle background glow */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-terex-accent/5 rounded-full blur-[120px]"></div>
+            <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-terex-accent-light/5 rounded-full blur-[100px]"></div>
+          </div>
 
           {/* Content */}
           <div className="relative z-10 flex flex-col justify-center items-start p-16 max-w-xl">
