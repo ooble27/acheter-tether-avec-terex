@@ -21,14 +21,14 @@ const AuthPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-terex-dark flex items-center justify-center">
-        <div className="text-white text-lg">Chargement...</div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-gray-900 text-lg">Chargement...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-terex-dark">
+    <div className="min-h-screen bg-white">
       <LoginForm />
     </div>
   );

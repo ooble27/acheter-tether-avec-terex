@@ -150,7 +150,7 @@ export function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-terex-dark">
+    <div className="min-h-screen w-full bg-white">
       <div className="min-h-screen grid lg:grid-cols-2">
         {/* Left Column - Branding */}
         <div className="hidden lg:flex relative overflow-hidden bg-gradient-to-br from-terex-darker via-terex-dark to-black">
@@ -209,9 +209,9 @@ export function LoginForm() {
         </div>
 
         {/* Right Column - Form */}
-        <div className="flex flex-col bg-terex-dark">
+        <div className="flex flex-col bg-white">
           {/* Mobile Logo */}
-          <div className="lg:hidden flex items-center justify-between p-6 border-b border-terex-gray">
+          <div className="lg:hidden flex items-center justify-between p-6 border-b border-gray-200">
             <div className="flex items-center gap-3">
               <img 
                 src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" 
@@ -229,13 +229,13 @@ export function LoginForm() {
           <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
             <div className="w-full max-w-md space-y-8">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-                <div className="flex gap-8 border-b border-terex-gray pb-1">
+                <div className="flex gap-8 border-b border-gray-200 pb-1">
                   <button
                     onClick={() => setActiveTab('login')}
                     className={`text-sm font-medium pb-3 transition-colors relative ${
                       activeTab === 'login'
-                        ? 'text-white'
-                        : 'text-gray-500 hover:text-gray-300'
+                        ? 'text-gray-900'
+                        : 'text-gray-500 hover:text-gray-700'
                     }`}
                   >
                     Se connecter
@@ -247,8 +247,8 @@ export function LoginForm() {
                     onClick={() => setActiveTab('register')}
                     className={`text-sm font-medium pb-3 transition-colors relative ${
                       activeTab === 'register'
-                        ? 'text-white'
-                        : 'text-gray-500 hover:text-gray-300'
+                        ? 'text-gray-900'
+                        : 'text-gray-500 hover:text-gray-700'
                     }`}
                   >
                     S'inscrire
@@ -260,13 +260,13 @@ export function LoginForm() {
               
                 <TabsContent value="login" className="space-y-8 animate-fade-in">
                   <div>
-                    <h2 className="text-2xl font-light text-white mb-2">CONNEXION</h2>
-                    <p className="text-gray-400 text-sm">Entrez vos identifiants pour vous connecter.</p>
+                    <h2 className="text-2xl font-light text-gray-900 mb-2">CONNEXION</h2>
+                    <p className="text-gray-600 text-sm">Entrez vos identifiants pour vous connecter.</p>
                   </div>
 
                   <form onSubmit={handlePasswordLogin} className="space-y-6">
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-gray-300 text-sm font-normal">
+                      <Label htmlFor="email" className="text-gray-700 text-sm font-normal">
                         Email
                       </Label>
                       <Input
@@ -275,14 +275,14 @@ export function LoginForm() {
                         placeholder="votre@email.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
+                        className="bg-transparent border-0 border-b border-gray-300 text-gray-900 placeholder:text-gray-400 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
                         required
                         disabled={isLoading}
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="password" className="text-gray-300 text-sm font-normal">
+                      <Label htmlFor="password" className="text-gray-700 text-sm font-normal">
                         Mot de passe
                       </Label>
                       <div className="relative">
@@ -292,7 +292,7 @@ export function LoginForm() {
                           placeholder="••••••••"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0 pr-10"
+                          className="bg-transparent border-0 border-b border-gray-300 text-gray-900 placeholder:text-gray-400 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0 pr-10"
                           required
                           disabled={isLoading}
                         />
@@ -325,7 +325,7 @@ export function LoginForm() {
                       )}
                     </Button>
 
-                    <p className="text-center text-sm text-gray-400">
+                    <p className="text-center text-sm text-gray-600">
                       Vous n'avez pas de compte?{' '}
                       <button
                         type="button"
@@ -340,13 +340,13 @@ export function LoginForm() {
 
                 <TabsContent value="register" className="space-y-8 animate-fade-in">
                   <div>
-                    <h2 className="text-2xl font-light text-white mb-2">CRÉER VOTRE COMPTE</h2>
-                    <p className="text-gray-400 text-sm">Entrez votre email pour commencer.</p>
+                    <h2 className="text-2xl font-light text-gray-900 mb-2">CRÉER VOTRE COMPTE</h2>
+                    <p className="text-gray-600 text-sm">Entrez votre email pour commencer.</p>
                   </div>
 
                   <form onSubmit={handleSignUp} className="space-y-6">
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-gray-300 text-sm font-normal">
+                      <Label htmlFor="name" className="text-gray-700 text-sm font-normal">
                         Nom complet
                       </Label>
                       <Input
@@ -355,14 +355,14 @@ export function LoginForm() {
                         placeholder="Votre nom complet"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
+                        className="bg-transparent border-0 border-b border-gray-300 text-gray-900 placeholder:text-gray-400 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
                         required
                         disabled={isLoading}
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="email-register" className="text-gray-300 text-sm font-normal">
+                      <Label htmlFor="email-register" className="text-gray-700 text-sm font-normal">
                         Email
                       </Label>
                       <Input
@@ -371,14 +371,14 @@ export function LoginForm() {
                         placeholder="votre@email.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
+                        className="bg-transparent border-0 border-b border-gray-300 text-gray-900 placeholder:text-gray-400 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
                         required
                         disabled={isLoading}
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="password-register" className="text-gray-300 text-sm font-normal">
+                      <Label htmlFor="password-register" className="text-gray-700 text-sm font-normal">
                         Mot de passe
                       </Label>
                       <div className="relative">
@@ -388,7 +388,7 @@ export function LoginForm() {
                           placeholder="••••••••"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0 pr-10"
+                          className="bg-transparent border-0 border-b border-gray-300 text-gray-900 placeholder:text-gray-400 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0 pr-10"
                           required
                           disabled={isLoading}
                           minLength={6}
@@ -413,13 +413,13 @@ export function LoginForm() {
                         const input = document.getElementById('referral-code-input');
                         if (input) input.classList.toggle('hidden');
                       }}
-                      className="text-sm text-gray-400 hover:text-terex-accent transition-colors underline"
+                      className="text-sm text-gray-600 hover:text-terex-accent transition-colors underline"
                     >
                       Avez-vous un code de parrainage?
                     </button>
 
                     <div id="referral-code-input" className="hidden space-y-2">
-                      <Label htmlFor="referral-code" className="text-gray-300 text-sm font-normal">
+                      <Label htmlFor="referral-code" className="text-gray-700 text-sm font-normal">
                         Code de parrainage
                       </Label>
                       <Input
@@ -428,7 +428,7 @@ export function LoginForm() {
                         placeholder="TEREX-XXXXXXXX"
                         value={referralCode}
                         onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
-                        className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
+                        className="bg-transparent border-0 border-b border-gray-300 text-gray-900 placeholder:text-gray-400 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
                         disabled={isLoading}
                       />
                     </div>
@@ -475,7 +475,7 @@ export function LoginForm() {
                       )}
                     </Button>
 
-                    <p className="text-center text-sm text-gray-400">
+                    <p className="text-center text-sm text-gray-600">
                       Vous avez déjà un compte?{' '}
                       <button
                         type="button"
@@ -492,7 +492,7 @@ export function LoginForm() {
           </div>
 
           {/* Footer */}
-          <div className="p-6 border-t border-terex-gray">
+          <div className="p-6 border-t border-gray-200">
             <p className="text-center text-sm text-gray-500">
               Propulsé par{' '}
               <span className="text-terex-accent font-semibold">Terex</span>
