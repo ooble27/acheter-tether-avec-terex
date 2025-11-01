@@ -153,7 +153,14 @@ export function LoginForm() {
     <div className="min-h-screen w-full bg-terex-dark">
       <div className="min-h-screen grid lg:grid-cols-2">
         {/* Left Column - Branding */}
-        <div className="hidden lg:flex relative overflow-hidden bg-terex-dark">
+        <div className="hidden lg:flex relative overflow-hidden bg-gradient-to-br from-terex-darker via-terex-dark to-black">
+          {/* Animated background elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute -top-40 -left-40 w-96 h-96 bg-terex-accent/10 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-terex-accent-light/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-terex-accent/5 rounded-full blur-3xl"></div>
+          </div>
+
           {/* Content */}
           <div className="relative z-10 flex flex-col justify-center items-start p-16 max-w-xl">
             <div className="space-y-8">
