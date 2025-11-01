@@ -494,7 +494,7 @@ export function LoginForm() {
           {/* Footer */}
           <div className="p-6 border-t border-terex-gray">
             <p className="text-center text-sm text-gray-500">
-              Powered by{' '}
+              Propulsé par{' '}
               <span className="text-terex-accent font-semibold">Terex</span>
             </p>
           </div>
