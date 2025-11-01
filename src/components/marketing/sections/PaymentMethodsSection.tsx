@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import waveImage from "@/assets/wave-logo.png";
 import orangeMoneyImage from "@/assets/orange-money-logo.png";
 import bankCardImage from "@/assets/bank-card-logo.png";
-import cashImage from "@/assets/cash-logo.png";
 
 const paymentMethods = [
   {
@@ -14,7 +13,6 @@ const paymentMethods = [
     title: "Wave",
     description: "Envoyez et recevez de l'argent instantanément avec Wave, la solution de mobile money la plus rapide d'Afrique.",
     image: waveImage,
-    color: "from-blue-400/20 to-cyan-500/5"
   },
   {
     id: 2,
@@ -22,7 +20,6 @@ const paymentMethods = [
     title: "Orange Money",
     description: "Profitez de la puissance d'Orange Money pour vos transactions sécurisées partout en Afrique.",
     image: orangeMoneyImage,
-    color: "from-orange-400/20 to-orange-600/5"
   },
   {
     id: 3,
@@ -30,15 +27,6 @@ const paymentMethods = [
     title: "Cartes bancaires",
     description: "Utilisez vos cartes Visa et Mastercard pour des paiements sécurisés et instantanés.",
     image: bankCardImage,
-    color: "from-blue-500/20 to-purple-500/5"
-  },
-  {
-    id: 4,
-    category: "Cash",
-    title: "Argent liquide",
-    description: "Retirez ou déposez de l'argent liquide dans nos points de retrait partenaires.",
-    image: cashImage,
-    color: "from-green-400/20 to-emerald-500/5"
   }
 ];
 
@@ -75,13 +63,13 @@ export function PaymentMethodsSection() {
               {paymentMethods.map((method) => (
                 <div key={method.id} className="w-full flex-shrink-0 px-2">
                   <div className="grid md:grid-cols-2 gap-0 rounded-2xl overflow-hidden shadow-xl">
-                    {/* Left Block - Image with Gradient Background */}
-                    <div className={`relative bg-gradient-to-br ${method.color} flex items-center justify-center p-8 md:p-10 min-h-[200px] md:min-h-[250px]`}>
+                    {/* Left Block - Image */}
+                    <div className="relative bg-card flex items-center justify-center p-8 md:p-10 min-h-[200px] md:min-h-[250px]">
                       <div className="relative z-10 w-full h-full flex items-center justify-center">
                         <img 
                           src={method.image} 
                           alt={method.title}
-                          className="w-full h-auto max-w-[160px] object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.3)]"
+                          className="w-full h-auto max-w-[160px] object-contain"
                         />
                       </div>
                     </div>
