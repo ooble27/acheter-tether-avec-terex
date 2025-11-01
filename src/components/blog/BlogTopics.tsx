@@ -76,27 +76,29 @@ export function BlogTopics() {
             {topics.map((topic) => (
               <div key={topic.id} className="w-full flex-shrink-0">
                 <div className="bg-card/50 backdrop-blur-sm rounded-2xl border border-border overflow-hidden">
-                  <div className="grid md:grid-cols-[300px,1fr] gap-0">
-                    {/* Image Side */}
-                    <div className={`relative bg-gradient-to-br ${topic.color} p-8 md:p-12 flex items-center justify-center`}>
-                      <img 
-                        src={topic.image} 
-                        alt={topic.title}
-                        className="w-full h-auto max-w-[200px] object-contain"
-                      />
+                  <div className="grid md:grid-cols-[350px,1fr] gap-0">
+                    {/* Image Side - Separate Block */}
+                    <div className={`relative bg-gradient-to-br ${topic.color} p-0 flex items-center justify-center min-h-[280px] md:min-h-[320px]`}>
+                      <div className="w-full h-full flex items-center justify-center p-8">
+                        <img 
+                          src={topic.image} 
+                          alt={topic.title}
+                          className="w-full h-full max-w-[240px] max-h-[240px] object-contain drop-shadow-2xl"
+                        />
+                      </div>
                     </div>
 
-                    {/* Content Side */}
-                    <div className="p-6 md:p-8 flex flex-col justify-center">
+                    {/* Content Side - Separate Block */}
+                    <div className="p-8 md:p-10 flex flex-col justify-center bg-card/30">
                       <div className="inline-block mb-4">
-                        <span className="text-xs font-medium px-3 py-1 rounded-full bg-muted text-muted-foreground">
+                        <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20">
                           {topic.category}
                         </span>
                       </div>
-                      <h3 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
+                      <h3 className="text-2xl md:text-3xl font-semibold text-foreground mb-4 leading-tight">
                         {topic.title}
                       </h3>
-                      <p className="text-muted-foreground leading-relaxed">
+                      <p className="text-muted-foreground leading-relaxed text-base">
                         {topic.description}
                       </p>
                     </div>
