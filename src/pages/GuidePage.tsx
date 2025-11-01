@@ -130,7 +130,7 @@ const GuidePage = () => {
         "Recevoir vos USDT"
       ],
       category: "Trading",
-      videoUrl: "https://www.youtube.com/watch?v=VOTRE_VIDEO_ID_2"
+      videoUrl: "https://youtu.be/yqMAOvQTzGY?si=O0_LI8sC0877bvL6"
     },
     {
       title: "Transferts Internationaux",
