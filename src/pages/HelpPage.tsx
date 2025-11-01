@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { HelpArticle } from '@/components/features/help/HelpArticle';
 import { helpArticles, getArticleById } from '@/data/helpArticles';
+import { GuidedSupport } from '@/components/features/help/GuidedSupport';
 
 const HelpPage = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const HelpPage = () => {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
+  const [showGuidedSupport, setShowGuidedSupport] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -47,6 +49,23 @@ const HelpPage = () => {
   };
 
   const selectedArticle = selectedArticleId ? getArticleById(selectedArticleId) : null;
+
+  if (showGuidedSupport) {
+    return (
+      <div className="min-h-screen bg-terex-dark">
+        <HeaderSection 
+          user={user ? {
+            email: user.email || '',
+            name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
+          } : null}
+          onShowDashboard={handleShowDashboard}
+          onLogout={handleLogout}
+        />
+        <GuidedSupport onBack={() => setShowGuidedSupport(false)} />
+        <FooterSection />
+      </div>
+    );
+  }
 
   if (selectedArticle) {
     return (
@@ -126,9 +145,29 @@ const HelpPage = () => {
             <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
               Comment pouvons-nous vous <span className="text-terex-accent">aider</span> ?
             </h1>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
-              Trouvez rapidement les réponses à vos questions sur l'utilisation de Terex.
+            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
+              Choisissez comment vous souhaitez obtenir de l'aide
             </p>
+
+            {/* Boutons de choix */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+              <Button
+                onClick={() => setShowGuidedSupport(true)}
+                className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold text-lg h-14 px-8"
+              >
+                🤝 Support Guidé (Recommandé)
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  const helpSection = document.getElementById('help-articles');
+                  helpSection?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10 text-lg h-14 px-8"
+              >
+                📚 Articles d'aide
+              </Button>
+            </div>
 
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto mb-16">
@@ -147,8 +186,12 @@ const HelpPage = () => {
       </div>
 
       {/* Help Categories */}
-      <div className="py-24 bg-terex-dark">
+      <div id="help-articles" className="py-24 bg-terex-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-white mb-4">Articles d'aide</h2>
+            <p className="text-gray-300">Parcourez nos guides détaillés</p>
+          </div>
           <div className="grid lg:grid-cols-2 gap-8">
             {filteredCategories.map((category, index) => {
               const IconComponent = category.icon;
