@@ -15,16 +15,7 @@ interface BlogCardProps {
 export function BlogCard({ title, excerpt, image, date, readTime, category, slug }: BlogCardProps) {
   return (
     <Link to={`/blog/${slug}`}>
-      <Card className="group relative bg-terex-darker/80 border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-500 overflow-hidden h-full hover:shadow-[0_8px_30px_rgb(0,245,160,0.12)]">
-        {/* Background image on hover */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500">
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover"
-          />
-        </div>
-        
+      <Card className="group bg-terex-darker/80 border-terex-gray/50 hover:border-terex-accent/50 hover:bg-terex-darker transition-all duration-500 overflow-hidden h-full hover:shadow-[0_8px_30px_rgb(0,245,160,0.12)]">
         <div className="aspect-[16/10] overflow-hidden">
           <img
             src={image}
@@ -32,7 +23,7 @@ export function BlogCard({ title, excerpt, image, date, readTime, category, slug
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           />
         </div>
-        <CardContent className="p-6 relative z-10">
+        <CardContent className="p-6">
           <div className="flex items-center gap-3 mb-3 flex-wrap">
             <span className="text-xs font-semibold text-terex-accent bg-terex-accent/10 px-3 py-1.5 rounded-full border border-terex-accent/20">
               {category}
