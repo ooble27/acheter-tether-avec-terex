@@ -36,6 +36,7 @@ import TransfertsInternationauxArticle from "./pages/blog/TransfertsInternationa
 import BlockchainSimpleArticle from "./pages/blog/BlockchainSimpleArticle";
 import MobileMoneyCryptoArticle from "./pages/blog/MobileMoneyCryptoArticle";
 import { TransactionProvider } from "./contexts/TransactionContext";
+import { TransactionRepeatProvider } from "./contexts/TransactionRepeatContext";
 import { PWASessionSync } from "./components/PWASessionSync";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { AppLoader } from "./components/AppLoader";
@@ -48,9 +49,10 @@ function App() {
           <ScrollToTop />
           <AuthProvider>
             <TransactionProvider>
-              <PWASessionSync />
-              <Toaster />
-              <Routes>
+              <TransactionRepeatProvider>
+                <PWASessionSync />
+                <Toaster />
+                <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/auth" element={<AuthPage />} />
@@ -80,6 +82,7 @@ function App() {
                 <Route path="/admin/*" element={<AdminPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              </TransactionRepeatProvider>
             </TransactionProvider>
           </AuthProvider>
         </Router>

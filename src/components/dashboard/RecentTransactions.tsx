@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,6 +7,10 @@ import { useTransactions } from '@/hooks/useTransactions';
 import { useAuth } from '@/contexts/AuthContext';
 import { ArrowUp, ArrowDown, Send, Clock, CheckCircle, RotateCcw } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useTransactionRepeat } from '@/contexts/TransactionRepeatContext';
+import { RepeatTransactionDialog } from '@/components/features/RepeatTransactionDialog';
+import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface RecentTransactionsProps {
   onNavigate?: (section: string) => void;
@@ -24,6 +28,11 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
   const isMobile = useIsMobile();
   const { transactions, loading, refetch } = useTransactions();
   const { user } = useAuth();
+  const { setTransactionToRepeat } = useTransactionRepeat();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
 
   // Recharger les transactions quand l'utilisateur change
   useEffect(() => {
@@ -101,19 +110,34 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
   };
 
   const handleRepeatTransaction = (transaction: any) => {
-    if (onNavigate) {
-      switch (transaction.type) {
-        case 'buy':
-          onNavigate('buy');
-          break;
-        case 'sell':
-          onNavigate('sell');
-          break;
-        case 'transfer':
-          onNavigate('transfer');
-          break;
-        default:
-          onNavigate('buy');
+    setSelectedTransaction(transaction);
+    setDialogOpen(true);
+  };
+
+  const handleConfirmRepeat = () => {
+    if (selectedTransaction) {
+      setTransactionToRepeat(selectedTransaction);
+      setDialogOpen(false);
+      
+      toast({
+        title: "🔄 Transaction prête à être répétée",
+        description: "Les données ont été pré-remplies dans le formulaire",
+      });
+
+      if (onNavigate) {
+        switch (selectedTransaction.type) {
+          case 'buy':
+            onNavigate('buy');
+            break;
+          case 'sell':
+            onNavigate('sell');
+            break;
+          case 'transfer':
+            onNavigate('transfer');
+            break;
+          default:
+            onNavigate('buy');
+        }
       }
     }
   };
@@ -153,8 +177,16 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
   }
 
   return (
-    <Card className="bg-terex-darker border-terex-gray">
-      <CardHeader className="p-3 pb-2">
+    <>
+      <RepeatTransactionDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        transaction={selectedTransaction}
+        onConfirm={handleConfirmRepeat}
+      />
+      
+      <Card className="bg-terex-darker border-terex-gray">
+        <CardHeader className="p-3 pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-white text-sm font-medium">Activité récente</CardTitle>
           <Button
@@ -209,5 +241,6 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
         </div>
       </CardContent>
     </Card>
+    </>
   );
 }

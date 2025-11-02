@@ -1,16 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
-import { ArrowRight, Check, AlertCircle, ArrowLeft } from 'lucide-react';
+import { ArrowRight, Check, AlertCircle, ArrowLeft, X } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { KYCPage } from '../KYCPage';
+import { useRepeatTransaction } from '@/hooks/useRepeatTransaction';
 
 const WALLET_ADDRESSES = {
   TRC20: 'TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb',
@@ -47,6 +49,23 @@ export function DesktopSellUSDT() {
   const { toast } = useToast();
   const { terexBuyRateCfa } = useTerexRates(2);
   const { isAuthorized, kycStatus } = useTransactionAuthorization();
+
+  const { isRepeating, clearRepeat } = useRepeatTransaction({
+    transactionType: 'sell',
+    onRepeat: (transaction) => {
+      if (transaction.usdtAmount) {
+        setUsdtAmount(transaction.usdtAmount);
+      }
+      setNetwork(transaction.network || 'TRC20');
+      if (transaction.recipient_phone) {
+        setPhoneNumber(transaction.recipient_phone);
+      }
+      toast({
+        title: "🔄 Transaction répétée",
+        description: "Les données ont été pré-remplies. Vous pouvez les modifier avant de continuer.",
+      });
+    }
+  });
 
   const fiatAmount = usdtAmount ? (parseFloat(usdtAmount) * terexBuyRateCfa).toFixed(2) : '0';
 
@@ -131,6 +150,25 @@ export function DesktopSellUSDT() {
   return (
     <div className="min-h-[calc(100vh-10rem)] flex items-start justify-center py-8 px-4">
       <div className="w-full max-w-lg">
+        {isRepeating && (
+          <div className="mb-4 bg-terex-accent/10 border border-terex-accent/30 rounded-lg p-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="bg-terex-accent text-white">
+                🔄 Répétition de transaction
+              </Badge>
+              <span className="text-sm text-gray-300">Données pré-remplies</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearRepeat}
+              className="text-gray-400 hover:text-white p-1 h-auto"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+        )}
+        
         {/* Étape 1: Montant */}
         {step === 'amount' && (
           <div className="space-y-6 rounded-2xl p-8">

@@ -1,17 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { useNabooPay } from '@/hooks/useNabooPay';
 import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
-import { ArrowRight, Check, ArrowLeft } from 'lucide-react';
+import { ArrowRight, Check, ArrowLeft, X } from 'lucide-react';
 import { BinanceEmailInput } from './BinanceEmailInput';
 import { PURCHASE_LIMITS, getLimitMessage, enforceMaxLimit } from './LimitsValidator';
 import { KYCPage } from '../KYCPage';
+import { useRepeatTransaction } from '@/hooks/useRepeatTransaction';
 
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
@@ -42,6 +44,22 @@ export function DesktopBuyUSDT() {
   const { createTransaction } = useNabooPay();
   const { terexRateCfa, terexRateCad } = useTerexRates(2);
   const { isAuthorized, kycStatus } = useTransactionAuthorization();
+
+  const { isRepeating, clearRepeat } = useRepeatTransaction({
+    transactionType: 'buy',
+    onRepeat: (transaction) => {
+      setFiatAmount(transaction.amount || '');
+      setCurrency(transaction.currency || 'CFA');
+      setNetwork(transaction.network || 'TRC20');
+      if (transaction.address) {
+        setWalletAddress(transaction.address);
+      }
+      toast({
+        title: "🔄 Transaction répétée",
+        description: "Les données ont été pré-remplies. Vous pouvez les modifier avant de continuer.",
+      });
+    }
+  });
 
   const exchangeRate = currency === 'CFA' ? terexRateCfa : terexRateCad;
   const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
@@ -166,6 +184,25 @@ export function DesktopBuyUSDT() {
   return (
     <div className="min-h-[calc(100vh-10rem)] flex items-start justify-center py-8 px-4">
       <div className="w-full max-w-lg">
+        {isRepeating && (
+          <div className="mb-4 bg-terex-accent/10 border border-terex-accent/30 rounded-lg p-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="bg-terex-accent text-white">
+                🔄 Répétition de transaction
+              </Badge>
+              <span className="text-sm text-gray-300">Données pré-remplies</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearRepeat}
+              className="text-gray-400 hover:text-white p-1 h-auto"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+        )}
+        
         {/* Étape 1: Montant */}
         {step === 'amount' && (
           <div className="space-y-6 rounded-2xl p-8">
