@@ -43,6 +43,9 @@
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 142.4 71.8% 29.2%;
+
+    /* Terex Highlight Color - Yellow/Gold for important values */
+    --terex-highlight: 45 100% 60%;
   }
 }
 

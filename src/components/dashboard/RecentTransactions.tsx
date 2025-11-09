@@ -220,7 +220,7 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
                       <>
                         <span className="text-gray-500 text-xs">→</span>
                         <TetherLogo className="w-3 h-3" />
-                        <span className="text-terex-accent text-xs">{transaction.usdtAmount}</span>
+                        <span className="text-terex-highlight text-xs font-medium">{transaction.usdtAmount}</span>
                       </>
                     )}
                   </div>

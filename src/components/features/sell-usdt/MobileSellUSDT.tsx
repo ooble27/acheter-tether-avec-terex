@@ -150,11 +150,11 @@ export function MobileSellUSDT() {
             <div className="bg-terex-darker rounded-lg p-4 space-y-2">
               <div className="flex justify-between">
                 <span className="text-gray-400 text-sm font-light">Vous recevez</span>
-                <span className="text-white font-light">{fiatAmount} {currency}</span>
+                <span className="text-terex-highlight font-medium text-lg">{fiatAmount} {currency}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400 text-sm font-light">Taux</span>
-                <span className="text-white font-light">1 USDT = {terexBuyRateCfa} {currency}</span>
+                <span className="text-terex-highlight font-light">1 USDT = {terexBuyRateCfa} {currency}</span>
               </div>
             </div>
           </div>

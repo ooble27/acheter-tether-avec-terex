@@ -253,10 +253,10 @@ export function MobileInternationalTransfer() {
                   <div className="bg-terex-accent/10 border border-terex-accent/30 rounded-lg p-4 mt-4">
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-gray-400 text-sm">Le bénéficiaire recevra</span>
-                      <span className="text-2xl font-light text-terex-accent">{receiveAmount} CFA</span>
+                      <span className="text-2xl font-medium text-terex-highlight">{receiveAmount} CFA</span>
                     </div>
                     <div className="text-xs text-gray-400">
-                      Taux: 1 CAD = {exchangeRate} CFA
+                      Taux: <span className="text-terex-highlight">1 CAD = {exchangeRate} CFA</span>
                     </div>
                   </div>
                 )}
