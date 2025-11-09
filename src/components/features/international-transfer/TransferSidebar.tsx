@@ -61,7 +61,7 @@ export function TransferSidebar({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-gray-400 text-sm">1 CAD vers CFA</span>
-              <span className="text-terex-highlight font-bold text-lg">{exchangeRate} CFA</span>
+              <span className="text-terex-accent font-bold">{exchangeRate} CFA</span>
             </div>
             <div className="text-xs text-gray-500">
               * Taux en temps réel - Aucune commission

@@ -229,7 +229,7 @@ export function MobileBuyUSDT() {
               <div className="flex justify-between items-center">
                 <span className="text-gray-400 text-sm font-light">Vous recevez</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-terex-highlight font-medium text-lg">{usdtAmount} USDT</span>
+                  <span className="text-white font-light">{usdtAmount} USDT</span>
                   <img 
                     src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                     alt="USDT" 
@@ -239,7 +239,7 @@ export function MobileBuyUSDT() {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400 text-sm font-light">Taux</span>
-                <span className="text-terex-highlight font-light">1 USDT = {exchangeRate} {currency}</span>
+                <span className="text-white font-light">1 USDT = {exchangeRate} {currency}</span>
               </div>
             </div>
           </div>

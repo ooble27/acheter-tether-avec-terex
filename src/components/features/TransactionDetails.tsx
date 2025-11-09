@@ -1,15 +1,10 @@
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from '@/components/ui/sheet';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Eye, Clock, CheckCircle, XCircle, RotateCcw } from 'lucide-react';
+import { Eye, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useState } from 'react';
-import { useTransactionRepeat } from '@/contexts/TransactionRepeatContext';
-import { RepeatTransactionDialog } from './RepeatTransactionDialog';
-import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
 
 interface Transaction {
   id: string;
@@ -42,11 +37,6 @@ const USDTLogo = ({ className }: { className?: string }) => (
 
 export function TransactionDetails({ transaction }: TransactionDetailsProps) {
   const isMobile = useIsMobile();
-  const { setTransactionToRepeat } = useTransactionRepeat();
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const [repeatDialogOpen, setRepeatDialogOpen] = useState(false);
-  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -99,25 +89,6 @@ export function TransactionDetails({ transaction }: TransactionDetailsProps) {
       console.error('Erreur formatage date:', error);
       return 'Date invalide';
     }
-  };
-
-  const handleRepeatClick = () => {
-    setDetailsOpen(false);
-    setRepeatDialogOpen(true);
-  };
-
-  const handleConfirmRepeat = () => {
-    setTransactionToRepeat(transaction);
-    setRepeatDialogOpen(false);
-    
-    toast({
-      title: "🔄 Transaction prête à être répétée",
-      description: "Les données ont été pré-remplies. Redirection...",
-    });
-
-    setTimeout(() => {
-      navigate('/dashboard');
-    }, 500);
   };
 
   const detailsContent = (
@@ -217,16 +188,8 @@ export function TransactionDetails({ transaction }: TransactionDetailsProps) {
 
   if (isMobile) {
     return (
-      <>
-        <RepeatTransactionDialog
-          open={repeatDialogOpen}
-          onOpenChange={setRepeatDialogOpen}
-          transaction={transaction}
-          onConfirm={handleConfirmRepeat}
-        />
-        
-        <Sheet open={detailsOpen} onOpenChange={setDetailsOpen}>
-          <SheetTrigger asChild>
+      <Sheet>
+        <SheetTrigger asChild>
           <Button variant="ghost" size="sm" className="text-terex-accent hover:bg-terex-gray/20">
             <Eye className="w-4 h-4" />
           </Button>
@@ -241,32 +204,14 @@ export function TransactionDetails({ transaction }: TransactionDetailsProps) {
           <div className="px-2">
             {detailsContent}
           </div>
-          <SheetFooter className="pt-4">
-            <Button
-              onClick={handleRepeatClick}
-              className="w-full bg-terex-accent hover:bg-terex-accent/90 text-white"
-            >
-              <RotateCcw className="w-4 h-4 mr-2" />
-              Répéter cette transaction
-            </Button>
-          </SheetFooter>
         </SheetContent>
       </Sheet>
-      </>
     );
   }
 
   return (
-    <>
-      <RepeatTransactionDialog
-        open={repeatDialogOpen}
-        onOpenChange={setRepeatDialogOpen}
-        transaction={transaction}
-        onConfirm={handleConfirmRepeat}
-      />
-      
-      <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
-        <DialogTrigger asChild>
+    <Dialog>
+      <DialogTrigger asChild>
         <Button variant="ghost" size="sm" className="text-terex-accent hover:bg-terex-gray/20">
           <Eye className="w-4 h-4" />
         </Button>
@@ -276,17 +221,7 @@ export function TransactionDetails({ transaction }: TransactionDetailsProps) {
           <DialogTitle className="text-white">Détails de la transaction</DialogTitle>
         </DialogHeader>
         {detailsContent}
-        <DialogFooter>
-          <Button
-            onClick={handleRepeatClick}
-            className="w-full bg-terex-accent hover:bg-terex-accent/90 text-white"
-          >
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Répéter cette transaction
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
-    </>
   );
 }

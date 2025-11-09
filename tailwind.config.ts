@@ -84,7 +84,6 @@ export default {
 					'accent-light': '#4BA89F',
 					gray: '#2A2A2A',
 					'gray-light': '#3A3A3A',
-					highlight: 'hsl(var(--terex-highlight))',
 				}
 			},
 			borderRadius: {

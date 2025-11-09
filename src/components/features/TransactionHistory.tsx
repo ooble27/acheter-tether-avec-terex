@@ -1,16 +1,10 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { TransactionDetails } from './TransactionDetails';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ArrowUp, ArrowDown, Send, Clock, CheckCircle, XCircle, RotateCcw } from 'lucide-react';
-import { useState } from 'react';
-import { useTransactionRepeat } from '@/contexts/TransactionRepeatContext';
-import { RepeatTransactionDialog } from './RepeatTransactionDialog';
-import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
+import { ArrowUp, ArrowDown, Send, Clock, CheckCircle, XCircle } from 'lucide-react';
 
 interface Transaction {
   id: string;
@@ -44,11 +38,6 @@ const USDTLogo = ({ className }: { className?: string }) => (
 
 export function TransactionHistory({ transactions = [] }: TransactionHistoryProps) {
   const isMobile = useIsMobile();
-  const { setTransactionToRepeat } = useTransactionRepeat();
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -142,27 +131,6 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
     }
   };
 
-  const handleRepeatClick = (transaction: Transaction) => {
-    setSelectedTransaction(transaction);
-    setDialogOpen(true);
-  };
-
-  const handleConfirmRepeat = () => {
-    if (selectedTransaction) {
-      setTransactionToRepeat(selectedTransaction);
-      setDialogOpen(false);
-      
-      toast({
-        title: "🔄 Transaction prête à être répétée",
-        description: "Les données ont été pré-remplies. Redirection...",
-      });
-
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 500);
-    }
-  };
-
   // Handle empty transactions
   if (!transactions || transactions.length === 0) {
     return (
@@ -184,15 +152,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
 
   if (isMobile) {
     return (
-      <>
-        <RepeatTransactionDialog
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          transaction={selectedTransaction}
-          onConfirm={handleConfirmRepeat}
-        />
-        
-        <div className="space-y-3">
+      <div className="space-y-3">
         <Card className="bg-terex-darker border-terex-gray">
           <CardHeader className="p-4 pb-2">
             <CardTitle className="text-white text-lg font-light">Historique des transactions</CardTitle>
@@ -215,15 +175,6 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                   </div>
                   <div className="flex items-center space-x-2">
                     {getStatusBadge(transaction.status)}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleRepeatClick(transaction)}
-                      className="p-1 h-auto text-terex-accent hover:text-terex-accent/80 hover:bg-terex-accent/10"
-                      title="Répéter cette transaction"
-                    >
-                      <RotateCcw className="w-4 h-4" />
-                    </Button>
                     <TransactionDetails transaction={transaction} />
                   </div>
                 </div>
@@ -279,20 +230,11 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
           </Card>
         ))}
       </div>
-      </>
     );
   }
 
   return (
-    <>
-      <RepeatTransactionDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        transaction={selectedTransaction}
-        onConfirm={handleConfirmRepeat}
-      />
-      
-      <Card className="bg-terex-darker border-terex-gray">
+    <Card className="bg-terex-darker border-terex-gray">
       <CardHeader>
         <CardTitle className="text-white font-light">Historique des transactions</CardTitle>
         <CardDescription className="text-gray-400 font-light">
@@ -350,18 +292,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                 <TableCell>{getStatusBadge(transaction.status)}</TableCell>
                 <TableCell className="text-white text-sm">{formatDate(transaction.date)}</TableCell>
                 <TableCell>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleRepeatClick(transaction)}
-                      className="text-terex-accent hover:bg-terex-accent/10"
-                      title="Répéter cette transaction"
-                    >
-                      <RotateCcw className="w-4 h-4" />
-                    </Button>
-                    <TransactionDetails transaction={transaction} />
-                  </div>
+                  <TransactionDetails transaction={transaction} />
                 </TableCell>
               </TableRow>
             ))}
@@ -369,6 +300,5 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
         </Table>
       </CardContent>
     </Card>
-    </>
   );
 }

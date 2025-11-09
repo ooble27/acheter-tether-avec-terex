@@ -67,7 +67,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </div>
           <div>
             <h1 className="text-2xl md:text-3xl font-light text-white mb-1">
-              Bienvenue, <span className="text-terex-highlight">{user?.name?.split(' ')[0]}</span>
+              Bienvenue, <span className="text-terex-accent">{user?.name?.split(' ')[0]}</span>
             </h1>
             <p className="text-sm text-gray-400 font-light">Plateforme USDT</p>
           </div>
@@ -156,7 +156,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </div>
           <div>
             <h1 className="text-2xl font-light text-white">
-              Bienvenue, <span className="text-terex-highlight">{user?.name?.split(' ')[0]}</span>
+              Bienvenue, <span className="text-terex-accent">{user?.name?.split(' ')[0]}</span>
             </h1>
             <p className="text-gray-400 text-sm">Plateforme USDT</p>
           </div>

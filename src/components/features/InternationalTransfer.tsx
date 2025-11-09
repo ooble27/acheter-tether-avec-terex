@@ -1,15 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { useInternationalTransfers } from '@/hooks/useInternationalTransfers';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useCryptoRates } from '@/hooks/useCryptoRates';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { X } from 'lucide-react';
-import { useRepeatTransaction } from '@/hooks/useRepeatTransaction';
 
 // Importer les nouveaux composants
 import { TransferConfirmation } from './international-transfer/TransferConfirmation';
@@ -44,35 +41,6 @@ export function InternationalTransfer() {
   const { user } = useAuth();
   const { toast } = useToast();
   const { usdtToCfa, usdtToCad, loading: ratesLoading, error: ratesError, lastUpdated, refresh } = useCryptoRates();
-
-  const { isRepeating, clearRepeat } = useRepeatTransaction({
-    transactionType: 'transfer',
-    onRepeat: (transaction) => {
-      setSendAmount(transaction.amount || '');
-      setRecipientCountry(transaction.recipient_country || '');
-      if (transaction.recipient_name) {
-        const names = transaction.recipient_name.split(' ');
-        setRecipientFirstName(names[0] || '');
-        setRecipientLastName(names.slice(1).join(' ') || '');
-      }
-      if (transaction.recipient_phone) {
-        setRecipientPhone(transaction.recipient_phone);
-      }
-      if (transaction.recipient_account) {
-        setRecipientAccount(transaction.recipient_account);
-      }
-      if (transaction.payment_method) {
-        setPaymentMethod(transaction.payment_method);
-      }
-      if (transaction.provider) {
-        setProvider(transaction.provider);
-      }
-      toast({
-        title: "🔄 Transaction répétée",
-        description: "Les données ont été pré-remplies. Vous pouvez les modifier avant de continuer.",
-      });
-    }
-  });
 
   // Si mobile, utiliser la version mobile
   if (isMobile) {
@@ -280,25 +248,6 @@ export function InternationalTransfer() {
           <h1 className="text-2xl md:text-3xl font-light text-white mb-1">Virement international</h1>
           <p className="text-gray-400">Envoyer de l'argent rapidement à vos proches</p>
         </div>
-
-        {isRepeating && (
-          <div className="mb-4 bg-terex-accent/10 border border-terex-accent/30 rounded-lg p-3 flex items-center justify-between mx-1 md:mx-0">
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="bg-terex-accent text-white">
-                🔄 Répétition de transaction
-              </Badge>
-              <span className="text-sm text-gray-300">Données pré-remplies</span>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={clearRepeat}
-              className="text-gray-400 hover:text-white p-1 h-auto"
-            >
-              <X className="w-4 h-4" />
-            </Button>
-          </div>
-        )}
 
         <div className="grid lg:grid-cols-3 gap-0 md:gap-6 px-0 lg:px-0">
           <div className="lg:col-span-2">

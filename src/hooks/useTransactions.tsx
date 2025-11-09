@@ -177,17 +177,11 @@ export const useTransactions = () => {
     fetchTransactions();
   };
 
-  // Méthode pour récupérer une transaction par ID
-  const getTransactionById = (id: string): Transaction | undefined => {
-    return transactions.find(t => t.id === id);
-  };
-
   return {
     transactions,
     loading,
     refetch: () => fetchTransactions(true), // Force refresh
     loadTransactions,
-    hasLoaded,
-    getTransactionById
+    hasLoaded
   };
 };
