@@ -116,7 +116,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-80 bg-terex-darker border-l border-terex-accent/20 p-0">
+              <SheetContent side="right" className="w-full bg-terex-darker border-none p-0">
                 <ScrollArea className="h-full">
                   <div className="flex flex-col min-h-full pt-safe">
                     {/* Header avec logo */}
