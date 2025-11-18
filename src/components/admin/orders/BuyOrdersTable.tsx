@@ -126,13 +126,16 @@ export function BuyOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: BuyOrd
               {/* Actions */}
               <div className="flex items-center space-x-2">
                 <Button
-                  onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
                   variant="outline"
                   size="sm"
+                  onClick={() => {
+                    setSelectedOrder(order);
+                    setDialogOpen(true);
+                  }}
                   className="border-terex-gray text-white hover:bg-terex-gray"
                 >
                   <Eye className="w-4 h-4 mr-2" />
-                  {expandedOrder === order.id ? 'Masquer' : 'Détails'}
+                  Détails
                 </Button>
 
                 <Button
@@ -188,61 +191,6 @@ export function BuyOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: BuyOrd
               </div>
             </div>
           </div>
-
-          {/* Expanded Details */}
-          {expandedOrder === order.id && (
-            <div className="border-t border-terex-gray/50 bg-terex-gray/20 p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div>
-                  <h4 className="text-sm font-medium text-terex-accent mb-2">Informations de paiement</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Méthode:</span>
-                      <span className="text-white">{order.payment_method}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Réseau:</span>
-                      <span className="text-white">{order.network}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Taux:</span>
-                      <span className="text-white">{order.exchange_rate}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-sm font-medium text-terex-accent mb-2">Portefeuille de réception</h4>
-                  <div className="bg-terex-gray/50 p-3 rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <p className="font-mono text-xs text-white break-all flex-1 mr-2">
-                        {order.wallet_address || 'Non spécifié'}
-                      </p>
-                      {order.wallet_address && (
-                        <Button
-                          onClick={() => copyToClipboard(order.wallet_address)}
-                          size="sm"
-                          variant="outline"
-                          className="h-8 w-8 p-0 border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-white"
-                        >
-                          <Copy className="w-3 h-3" />
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {order.notes && (
-                  <div>
-                    <h4 className="text-sm font-medium text-terex-accent mb-2">Notes</h4>
-                    <div className="bg-terex-gray/50 p-3 rounded text-sm text-white">
-                      {order.notes}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
         </div>
         ))}
       </div>

@@ -372,5 +372,6 @@ export function JobApplicationsAdmin() {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 }
