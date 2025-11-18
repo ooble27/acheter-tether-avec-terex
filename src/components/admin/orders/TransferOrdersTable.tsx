@@ -155,13 +155,16 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                 {/* Actions */}
                 <div className="flex items-center space-x-2 flex-wrap">
                   <Button
-                    onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
                     variant="outline"
                     size="sm"
+                    onClick={() => {
+                      setSelectedOrder(order);
+                      setDialogOpen(true);
+                    }}
                     className="border-terex-gray text-white hover:bg-terex-gray"
                   >
                     <Eye className="w-4 h-4 mr-2" />
-                    {expandedOrder === order.id ? 'Masquer' : 'Détails'}
+                    Détails
                   </Button>
 
                   <Button
@@ -217,113 +220,10 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                 </div>
               </div>
             </div>
-
-            {/* Expanded Details */}
-            {expandedOrder === order.id && (
-              <div className="border-t border-terex-gray/50 bg-terex-gray/20 p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <div>
-                    <h4 className="text-sm font-medium text-terex-accent mb-3">Détails du transfert</h4>
-                    <div className="space-y-3 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Montant envoyé:</span>
-                        <span className="text-white font-medium">{order.amount} {order.from_currency}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Montant à recevoir:</span>
-                        <span className="text-white font-medium">{order.total_amount} {order.to_currency}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Frais:</span>
-                        <span className="text-white">{order.fees} {order.from_currency}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Taux:</span>
-                        <span className="text-white">{order.exchange_rate}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="text-sm font-medium text-terex-accent mb-3">Informations du destinataire</h4>
-                    <div className="space-y-3 text-sm">
-                      <div>
-                        <span className="text-gray-400 block mb-1">Nom complet:</span>
-                        <span className="text-white font-medium">{order.recipient_name}</span>
-                      </div>
-                      
-                      <div>
-                        <span className="text-gray-400 block mb-1">Service de réception:</span>
-                        <span className="text-white font-medium">{receiveMethod}</span>
-                      </div>
-                      
-                      {order.recipient_phone && (
-                        <div>
-                          <span className="text-gray-400 block mb-1">Numéro de téléphone:</span>
-                          <div className="flex items-center justify-between bg-terex-gray/50 p-2 rounded">
-                            <span className="text-white font-mono">{order.recipient_phone}</span>
-                            <Button
-                              onClick={() => copyToClipboard(order.recipient_phone)}
-                              size="sm"
-                              variant="outline"
-                              className="h-6 w-6 p-0 border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-white"
-                            >
-                              <Copy className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      )}
-
-                      {order.recipient_country && (
-                        <div>
-                          <span className="text-gray-400 block mb-1">Pays:</span>
-                          <span className="text-white">{order.recipient_country}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="text-sm font-medium text-terex-accent mb-3">Détails de paiement</h4>
-                    <div className="space-y-3 text-sm">
-                      <div>
-                        <span className="text-gray-400 block mb-1">Méthode de paiement:</span>
-                        <span className="text-white">
-                          {order.payment_method === 'card' ? 'Carte bancaire' : 
-                           order.payment_method === 'interac' ? 'Interac E-Transfer' : 
-                           order.payment_method || 'N/A'}
-                        </span>
-                      </div>
-                      
-                      <div>
-                        <span className="text-gray-400 block mb-1">Date:</span>
-                        <span className="text-white">{new Date(order.created_at).toLocaleDateString('fr-FR')}</span>
-                      </div>
-
-                      {order.payment_reference && (
-                        <div>
-                          <span className="text-gray-400 block mb-1">Référence:</span>
-                          <div className="flex items-center justify-between bg-terex-gray/50 p-2 rounded">
-                            <span className="text-white font-mono text-xs">{order.payment_reference}</span>
-                            <Button
-                              onClick={() => copyToClipboard(order.payment_reference)}
-                              size="sm"
-                              variant="outline"
-                              className="h-6 w-6 p-0 border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-white"
-                            >
-                              <Copy className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         );
       })}
     </div>
+    </>
   );
 }
