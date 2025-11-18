@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { UnifiedOrder } from '@/hooks/useOrders';
 import type { Database } from '@/integrations/supabase/types';
+import { OrderDetailsDialog } from './OrderDetailsDialog';
 
 type OrderStatus = Database['public']['Enums']['order_status'];
 
@@ -22,7 +23,8 @@ interface BuyOrdersTableProps {
 }
 
 export function BuyOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: BuyOrdersTableProps) {
-  const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<UnifiedOrder | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const getStatusBadge = (status: string) => {
     const statusStyles = {
@@ -66,8 +68,16 @@ export function BuyOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: BuyOrd
   }
 
   return (
-    <div className="space-y-4">
-      {orders.map((order) => (
+    <>
+      <OrderDetailsDialog
+        order={selectedOrder}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onStatusUpdate={onStatusUpdate}
+      />
+      
+      <div className="space-y-4">
+        {orders.map((order) => (
         <div 
           key={order.id} 
           className="bg-terex-darker rounded-xl border border-terex-gray/50 overflow-hidden hover:border-terex-accent/30 transition-all duration-300"
@@ -234,7 +244,8 @@ export function BuyOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: BuyOrd
             </div>
           )}
         </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   );
 }

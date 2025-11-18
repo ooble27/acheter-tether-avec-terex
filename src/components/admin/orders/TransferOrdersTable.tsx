@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { UnifiedOrder } from '@/hooks/useOrders';
 import type { Database } from '@/integrations/supabase/types';
+import { OrderDetailsDialog } from './OrderDetailsDialog';
 
 type OrderStatus = Database['public']['Enums']['order_status'];
 
@@ -24,7 +25,8 @@ interface TransferOrdersTableProps {
 }
 
 export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: TransferOrdersTableProps) {
-  const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<UnifiedOrder | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const getStatusBadge = (status: string) => {
     const statusStyles = {
@@ -88,8 +90,16 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
   }
 
   return (
-    <div className="space-y-4">
-      {orders.map((order) => {
+    <>
+      <OrderDetailsDialog
+        order={selectedOrder}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onStatusUpdate={onStatusUpdate}
+      />
+      
+      <div className="space-y-4">
+        {orders.map((order) => {
         const receiveMethod = getReceiveMethodName(order);
         
         return (
