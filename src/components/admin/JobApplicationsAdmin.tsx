@@ -24,6 +24,7 @@ import {
 import { useJobApplicationsAdmin } from '@/hooks/useJobApplicationsAdmin';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { InterviewScheduleDialog } from './InterviewScheduleDialog';
 
 const statusConfig = {
   pending: { label: 'En attente', color: 'bg-yellow-500', variant: 'secondary' as const },
@@ -39,6 +40,8 @@ export function JobApplicationsAdmin() {
   const [newStatus, setNewStatus] = useState('');
   const [adminNotes, setAdminNotes] = useState('');
   const [filter, setFilter] = useState('all');
+  const [interviewDialogOpen, setInterviewDialogOpen] = useState(false);
+  const [applicationForInterview, setApplicationForInterview] = useState<any>(null);
 
   const filteredApplications = applications.filter(app => {
     if (filter === 'all') return true;
@@ -76,7 +79,18 @@ export function JobApplicationsAdmin() {
   }
 
   return (
-    <div className="space-y-6">
+    <>
+      <InterviewScheduleDialog
+        open={interviewDialogOpen}
+        onOpenChange={setInterviewDialogOpen}
+        application={applicationForInterview}
+        onScheduled={() => {
+          setInterviewDialogOpen(false);
+          window.location.reload();
+        }}
+      />
+      
+      <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-white">Gestion des Candidatures</h2>
