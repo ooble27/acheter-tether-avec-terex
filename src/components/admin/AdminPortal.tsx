@@ -12,7 +12,6 @@ import {
   BarChart3,
   Shield,
   UserCheck,
-  Send,
   Menu,
   ArrowLeft,
   Calculator
@@ -20,7 +19,6 @@ import {
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
-import { ManualTransfersAdmin } from '@/components/admin/ManualTransfersAdmin';
 import { AccountingAdmin } from '@/components/admin/AccountingAdmin';
 import { useUserRole } from '@/hooks/useUserRole';
 
@@ -63,20 +61,13 @@ export function AdminPortal() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-terex-gray grid grid-cols-5 w-full">
+          <TabsList className="bg-terex-gray grid grid-cols-4 w-full">
             <TabsTrigger 
               value="orders" 
               className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
             >
               <ShoppingCart className="w-4 h-4" />
               <span>Commandes</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="transfers" 
-              className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
-            >
-              <Send className="w-4 h-4" />
-              <span>Transferts</span>
             </TabsTrigger>
             <TabsTrigger 
               value="accounting" 
@@ -103,10 +94,6 @@ export function AdminPortal() {
 
           <TabsContent value="orders">
             <OrdersDashboardNew />
-          </TabsContent>
-
-          <TabsContent value="transfers">
-            <ManualTransfersAdmin />
           </TabsContent>
 
           <TabsContent value="accounting">
