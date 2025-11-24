@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useManualTransactions } from '@/hooks/useManualTransactions';
-import { Plus, DollarSign, TrendingUp, Activity, Wallet, Trash2, Edit } from 'lucide-react';
+import { Plus, DollarSign, TrendingUp, Activity, Wallet, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
@@ -68,7 +68,7 @@ export function AccountingAdmin() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Comptabilité Manuelle</h1>
