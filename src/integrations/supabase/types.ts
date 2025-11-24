@@ -704,6 +704,66 @@ export type Database = {
         }
         Relationships: []
       }
+      manual_transactions: {
+        Row: {
+          amount: number
+          buy_price: number
+          client_name: string | null
+          client_phone: string | null
+          created_at: string
+          crypto_amount: number
+          crypto_currency: string
+          currency: string
+          id: string
+          notes: string | null
+          payment_method: string | null
+          profit: number | null
+          profit_percentage: number | null
+          sell_price: number
+          transaction_date: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          buy_price: number
+          client_name?: string | null
+          client_phone?: string | null
+          created_at?: string
+          crypto_amount: number
+          crypto_currency?: string
+          currency?: string
+          id?: string
+          notes?: string | null
+          payment_method?: string | null
+          profit?: number | null
+          profit_percentage?: number | null
+          sell_price: number
+          transaction_date?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          buy_price?: number
+          client_name?: string | null
+          client_phone?: string | null
+          created_at?: string
+          crypto_amount?: number
+          crypto_currency?: string
+          currency?: string
+          id?: string
+          notes?: string | null
+          payment_method?: string | null
+          profit?: number | null
+          profit_percentage?: number | null
+          sell_price?: number
+          transaction_date?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       merchant_accounts: {
         Row: {
           api_key: string

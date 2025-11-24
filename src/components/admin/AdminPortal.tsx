@@ -14,12 +14,14 @@ import {
   UserCheck,
   Send,
   Menu,
-  ArrowLeft
+  ArrowLeft,
+  Calculator
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
 import { ManualTransfersAdmin } from '@/components/admin/ManualTransfersAdmin';
+import { AccountingAdmin } from '@/components/admin/AccountingAdmin';
 import { useUserRole } from '@/hooks/useUserRole';
 
 export function AdminPortal() {
@@ -61,7 +63,7 @@ export function AdminPortal() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-terex-gray grid grid-cols-4 w-full">
+          <TabsList className="bg-terex-gray grid grid-cols-5 w-full">
             <TabsTrigger 
               value="orders" 
               className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
@@ -75,6 +77,13 @@ export function AdminPortal() {
             >
               <Send className="w-4 h-4" />
               <span>Transferts</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="accounting" 
+              className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
+            >
+              <Calculator className="w-4 h-4" />
+              <span>Comptabilité</span>
             </TabsTrigger>
             <TabsTrigger 
               value="kyc" 
@@ -98,6 +107,10 @@ export function AdminPortal() {
 
           <TabsContent value="transfers">
             <ManualTransfersAdmin />
+          </TabsContent>
+
+          <TabsContent value="accounting">
+            <AccountingAdmin />
           </TabsContent>
 
           <TabsContent value="kyc">
