@@ -83,12 +83,12 @@ export function AccountingAdmin() {
               Nouvelle Transaction
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-background">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Ajouter une Transaction Manuelle</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="transaction_date">Date de Transaction</Label>
                   <Input
@@ -97,7 +97,6 @@ export function AccountingAdmin() {
                     value={formData.transaction_date}
                     onChange={(e) => setFormData({ ...formData, transaction_date: e.target.value })}
                     required
-                    className="bg-background"
                   />
                 </div>
                 <div>
@@ -107,12 +106,11 @@ export function AccountingAdmin() {
                     value={formData.client_name}
                     onChange={(e) => setFormData({ ...formData, client_name: e.target.value })}
                     placeholder="Nom du client"
-                    className="bg-background"
                   />
                 </div>
               </div>
 
-              <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="client_phone">Téléphone du Client</Label>
                   <Input
@@ -120,7 +118,6 @@ export function AccountingAdmin() {
                     value={formData.client_phone}
                     onChange={(e) => setFormData({ ...formData, client_phone: e.target.value })}
                     placeholder="+1 234 567 8900"
-                    className="bg-background"
                   />
                 </div>
                 <div>
@@ -130,14 +127,13 @@ export function AccountingAdmin() {
                     value={formData.payment_method}
                     onChange={(e) => setFormData({ ...formData, payment_method: e.target.value })}
                     placeholder="Interac, Virement, etc."
-                    className="bg-background"
                   />
                 </div>
               </div>
 
               <div className="border-t pt-4">
                 <h3 className="font-semibold mb-3">Détails Financiers</h3>
-                <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="crypto_amount">Montant Crypto</Label>
                     <Input
@@ -148,7 +144,6 @@ export function AccountingAdmin() {
                       onChange={(e) => setFormData({ ...formData, crypto_amount: e.target.value })}
                       placeholder="1000"
                       required
-                      className="bg-background"
                     />
                   </div>
                   <div>
@@ -159,9 +154,11 @@ export function AccountingAdmin() {
                       onChange={(e) => setFormData({ ...formData, crypto_currency: e.target.value })}
                       placeholder="USDT"
                       required
-                      className="bg-background"
                     />
                   </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mt-4">
                   <div>
                     <Label htmlFor="buy_price">Prix d'Achat (unitaire)</Label>
                     <Input
@@ -172,7 +169,6 @@ export function AccountingAdmin() {
                       onChange={(e) => setFormData({ ...formData, buy_price: e.target.value })}
                       placeholder="1.35"
                       required
-                      className="bg-background"
                     />
                   </div>
                   <div>
@@ -185,9 +181,11 @@ export function AccountingAdmin() {
                       onChange={(e) => setFormData({ ...formData, sell_price: e.target.value })}
                       placeholder="1.37"
                       required
-                      className="bg-background"
                     />
                   </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mt-4">
                   <div>
                     <Label htmlFor="amount">Montant Total</Label>
                     <Input
@@ -198,7 +196,6 @@ export function AccountingAdmin() {
                       onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                       placeholder="4000"
                       required
-                      className="bg-background"
                     />
                   </div>
                   <div>
@@ -209,7 +206,6 @@ export function AccountingAdmin() {
                       onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
                       placeholder="CAD"
                       required
-                      className="bg-background"
                     />
                   </div>
                 </div>
@@ -235,7 +231,6 @@ export function AccountingAdmin() {
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   placeholder="Notes additionnelles..."
                   rows={3}
-                  className="bg-background"
                 />
               </div>
 
