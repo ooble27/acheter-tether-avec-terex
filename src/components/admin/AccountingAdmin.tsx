@@ -83,7 +83,7 @@ export function AccountingAdmin() {
               Nouvelle Transaction
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-background">
             <DialogHeader>
               <DialogTitle>Ajouter une Transaction Manuelle</DialogTitle>
             </DialogHeader>
@@ -211,9 +211,9 @@ export function AccountingAdmin() {
                 </div>
 
                 {formData.crypto_amount && formData.buy_price && formData.sell_price && (
-                  <div className="mt-4 p-4 bg-muted rounded-lg">
+                  <div className="mt-4 p-4 bg-muted/50 rounded-lg border border-border">
                     <div className="text-sm text-muted-foreground">Bénéfice Estimé</div>
-                    <div className="text-2xl font-bold text-primary">
+                    <div className="text-2xl font-bold text-terex-highlight">
                       {((parseFloat(formData.sell_price) - parseFloat(formData.buy_price)) * parseFloat(formData.crypto_amount)).toFixed(2)} {formData.currency}
                     </div>
                     <div className="text-sm text-muted-foreground">
@@ -249,49 +249,49 @@ export function AccountingAdmin() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
+        <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Bénéfice Total</CardTitle>
+            <CardTitle className="text-sm font-medium text-foreground">Bénéfice Total</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">
+            <div className="text-2xl font-bold text-terex-highlight">
               {stats.totalProfit.toFixed(2)} CAD
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Volume Total</CardTitle>
+            <CardTitle className="text-sm font-medium text-foreground">Volume Total</CardTitle>
             <Wallet className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-foreground">
               {stats.totalVolume.toFixed(2)} CAD
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Marge Moyenne</CardTitle>
+            <CardTitle className="text-sm font-medium text-foreground">Marge Moyenne</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-foreground">
               {stats.averageProfitPercentage.toFixed(2)}%
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Transactions</CardTitle>
+            <CardTitle className="text-sm font-medium text-foreground">Transactions</CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-foreground">
               {stats.transactionCount}
             </div>
           </CardContent>
@@ -299,9 +299,9 @@ export function AccountingAdmin() {
       </div>
 
       {/* Transactions Table */}
-      <Card>
+      <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle>Historique des Transactions</CardTitle>
+          <CardTitle className="text-foreground">Historique des Transactions</CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -344,11 +344,11 @@ export function AccountingAdmin() {
                       <TableCell>{transaction.buy_price.toFixed(4)}</TableCell>
                       <TableCell>{transaction.sell_price.toFixed(4)}</TableCell>
                       <TableCell>{transaction.amount.toFixed(2)} {transaction.currency}</TableCell>
-                      <TableCell className="font-bold text-primary">
+                      <TableCell className="font-bold text-terex-highlight">
                         +{transaction.profit.toFixed(2)} {transaction.currency}
                       </TableCell>
                       <TableCell>
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-terex-highlight/10 text-terex-highlight">
                           {transaction.profit_percentage.toFixed(2)}%
                         </span>
                       </TableCell>
