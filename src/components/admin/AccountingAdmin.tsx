@@ -7,7 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useManualTransactions } from '@/hooks/useManualTransactions';
-import { Plus, DollarSign, TrendingUp, Activity, Wallet, Trash2 } from 'lucide-react';
+import { Plus, DollarSign, TrendingUp, Activity, Wallet, Trash2, FileText } from 'lucide-react';
+import { generateInvoicePDF } from '@/utils/generateInvoicePDF';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
@@ -377,14 +378,26 @@ export function AccountingAdmin() {
                         </span>
                       </TableCell>
                       <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDelete(transaction.id)}
-                          className="text-red-400 hover:bg-red-500/10 hover:text-red-300"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => generateInvoicePDF(transaction)}
+                            className="text-terex-accent hover:bg-terex-accent/10"
+                            title="Générer facture PDF"
+                          >
+                            <FileText className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDelete(transaction.id)}
+                            className="text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                            title="Supprimer"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
