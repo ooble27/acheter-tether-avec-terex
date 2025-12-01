@@ -84,13 +84,13 @@ export function AccountingAdmin() {
                 <span className="sm:hidden">Nouveau</span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-terex-darker border border-terex-gray">
+            <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto bg-terex-darker border border-terex-gray">
               <DialogHeader>
-                <DialogTitle className="text-white">Ajouter une Transaction Manuelle</DialogTitle>
+                <DialogTitle className="text-white text-xl">Ajouter une Transaction Manuelle</DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
+              <form onSubmit={handleSubmit} className="space-y-6 pt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
                     <Label htmlFor="transaction_date" className="text-gray-300">Date de Transaction</Label>
                     <Input
                       id="transaction_date"
@@ -101,7 +101,7 @@ export function AccountingAdmin() {
                       className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
                     />
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <Label htmlFor="client_name" className="text-gray-300">Nom du Client</Label>
                     <Input
                       id="client_name"
@@ -113,8 +113,8 @@ export function AccountingAdmin() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
                     <Label htmlFor="client_phone" className="text-gray-300">Téléphone du Client</Label>
                     <Input
                       id="client_phone"
@@ -124,7 +124,7 @@ export function AccountingAdmin() {
                       className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
                     />
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <Label htmlFor="payment_method" className="text-gray-300">Méthode de Paiement</Label>
                     <Input
                       id="payment_method"
@@ -136,88 +136,88 @@ export function AccountingAdmin() {
                   </div>
                 </div>
 
-                <div className="border-t pt-4">
-                  <h3 className="font-semibold mb-3 text-white">Détails Financiers</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                    <Label htmlFor="crypto_amount" className="text-gray-300">Montant Crypto</Label>
-                    <Input
-                      id="crypto_amount"
-                      type="number"
-                      step="0.01"
-                      value={formData.crypto_amount}
-                      onChange={(e) => setFormData({ ...formData, crypto_amount: e.target.value })}
-                      placeholder="1000"
-                      required
-                      className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
-                    />
+                <div className="border-t border-terex-gray/50 pt-6">
+                  <h3 className="font-semibold mb-4 text-white text-lg">Détails Financiers</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="crypto_amount" className="text-gray-300">Montant Crypto</Label>
+                      <Input
+                        id="crypto_amount"
+                        type="number"
+                        step="0.01"
+                        value={formData.crypto_amount}
+                        onChange={(e) => setFormData({ ...formData, crypto_amount: e.target.value })}
+                        placeholder="1000"
+                        required
+                        className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
+                      />
                     </div>
-                    <div>
-                    <Label htmlFor="crypto_currency" className="text-gray-300">Crypto</Label>
-                    <Input
-                      id="crypto_currency"
-                      value={formData.crypto_currency}
-                      onChange={(e) => setFormData({ ...formData, crypto_currency: e.target.value })}
-                      placeholder="USDT"
-                      required
-                      className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
-                    />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 mt-4">
-                    <div>
-                    <Label htmlFor="buy_price" className="text-gray-300">Prix d'Achat (unitaire)</Label>
-                    <Input
-                      id="buy_price"
-                      type="number"
-                      step="0.000001"
-                      value={formData.buy_price}
-                      onChange={(e) => setFormData({ ...formData, buy_price: e.target.value })}
-                      placeholder="1.35"
-                      required
-                      className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
-                    />
-                    </div>
-                    <div>
-                    <Label htmlFor="sell_price" className="text-gray-300">Prix de Vente (unitaire)</Label>
-                    <Input
-                      id="sell_price"
-                      type="number"
-                      step="0.000001"
-                      value={formData.sell_price}
-                      onChange={(e) => setFormData({ ...formData, sell_price: e.target.value })}
-                      placeholder="1.37"
-                      required
-                      className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
-                    />
+                    <div className="space-y-2">
+                      <Label htmlFor="crypto_currency" className="text-gray-300">Crypto</Label>
+                      <Input
+                        id="crypto_currency"
+                        value={formData.crypto_currency}
+                        onChange={(e) => setFormData({ ...formData, crypto_currency: e.target.value })}
+                        placeholder="USDT"
+                        required
+                        className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
+                      />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 mt-4">
-                    <div>
-                    <Label htmlFor="amount" className="text-gray-300">Montant Total</Label>
-                    <Input
-                      id="amount"
-                      type="number"
-                      step="0.01"
-                      value={formData.amount}
-                      onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                      placeholder="4000"
-                      required
-                      className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
-                    />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="buy_price" className="text-gray-300">Prix d'Achat (unitaire)</Label>
+                      <Input
+                        id="buy_price"
+                        type="number"
+                        step="0.000001"
+                        value={formData.buy_price}
+                        onChange={(e) => setFormData({ ...formData, buy_price: e.target.value })}
+                        placeholder="1.35"
+                        required
+                        className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
+                      />
                     </div>
-                    <div>
-                    <Label htmlFor="currency" className="text-gray-300">Devise</Label>
-                    <Input
-                      id="currency"
-                      value={formData.currency}
-                      onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-                      placeholder="CAD"
-                      required
-                      className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
-                    />
+                    <div className="space-y-2">
+                      <Label htmlFor="sell_price" className="text-gray-300">Prix de Vente (unitaire)</Label>
+                      <Input
+                        id="sell_price"
+                        type="number"
+                        step="0.000001"
+                        value={formData.sell_price}
+                        onChange={(e) => setFormData({ ...formData, sell_price: e.target.value })}
+                        placeholder="1.37"
+                        required
+                        className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="amount" className="text-gray-300">Montant Total</Label>
+                      <Input
+                        id="amount"
+                        type="number"
+                        step="0.01"
+                        value={formData.amount}
+                        onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                        placeholder="4000"
+                        required
+                        className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="currency" className="text-gray-300">Devise</Label>
+                      <Input
+                        id="currency"
+                        value={formData.currency}
+                        onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                        placeholder="CAD"
+                        required
+                        className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
+                      />
                     </div>
                   </div>
 
@@ -234,16 +234,16 @@ export function AccountingAdmin() {
                   )}
                 </div>
 
-                <div>
-                <Label htmlFor="notes" className="text-gray-300">Notes</Label>
-                <Textarea
-                  id="notes"
-                  value={formData.notes}
-                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  placeholder="Notes additionnelles..."
-                  rows={3}
-                  className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="notes" className="text-gray-300">Notes</Label>
+                  <Textarea
+                    id="notes"
+                    value={formData.notes}
+                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    placeholder="Notes additionnelles..."
+                    rows={3}
+                    className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
+                  />
                 </div>
 
                 <div className="flex justify-end gap-2">
