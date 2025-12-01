@@ -84,14 +84,14 @@ export function AccountingAdmin() {
                 <span className="sm:hidden">Nouveau</span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto bg-terex-darker border border-terex-gray">
+            <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto bg-terex-darker border border-terex-gray">
               <DialogHeader>
-                <DialogTitle className="text-white text-xl">Ajouter une Transaction Manuelle</DialogTitle>
+                <DialogTitle className="text-white">Ajouter une Transaction Manuelle</DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-6 pt-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="transaction_date" className="text-gray-300">Date de Transaction</Label>
+              <form onSubmit={handleSubmit} className="space-y-5 pt-2">
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="transaction_date" className="text-gray-300 text-sm">Date de Transaction</Label>
                     <Input
                       id="transaction_date"
                       type="datetime-local"
@@ -101,8 +101,8 @@ export function AccountingAdmin() {
                       className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="client_name" className="text-gray-300">Nom du Client</Label>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="client_name" className="text-gray-300 text-sm">Nom du Client</Label>
                     <Input
                       id="client_name"
                       value={formData.client_name}
@@ -113,9 +113,9 @@ export function AccountingAdmin() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="client_phone" className="text-gray-300">Téléphone du Client</Label>
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="client_phone" className="text-gray-300 text-sm">Téléphone du Client</Label>
                     <Input
                       id="client_phone"
                       value={formData.client_phone}
@@ -124,8 +124,8 @@ export function AccountingAdmin() {
                       className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="payment_method" className="text-gray-300">Méthode de Paiement</Label>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="payment_method" className="text-gray-300 text-sm">Méthode de Paiement</Label>
                     <Input
                       id="payment_method"
                       value={formData.payment_method}
@@ -136,11 +136,11 @@ export function AccountingAdmin() {
                   </div>
                 </div>
 
-                <div className="border-t border-terex-gray/50 pt-6">
-                  <h3 className="font-semibold mb-4 text-white text-lg">Détails Financiers</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="crypto_amount" className="text-gray-300">Montant Crypto</Label>
+                <div className="border-t border-terex-gray/50 pt-4">
+                  <h3 className="font-semibold mb-3 text-white">Détails Financiers</h3>
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="crypto_amount" className="text-gray-300 text-sm">Montant Crypto</Label>
                       <Input
                         id="crypto_amount"
                         type="number"
@@ -152,8 +152,8 @@ export function AccountingAdmin() {
                         className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="crypto_currency" className="text-gray-300">Crypto</Label>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="crypto_currency" className="text-gray-300 text-sm">Crypto</Label>
                       <Input
                         id="crypto_currency"
                         value={formData.crypto_currency}
@@ -165,9 +165,9 @@ export function AccountingAdmin() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="buy_price" className="text-gray-300">Prix d'Achat (unitaire)</Label>
+                  <div className="grid grid-cols-2 gap-6 mt-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="buy_price" className="text-gray-300 text-sm">Prix d'Achat (unitaire)</Label>
                       <Input
                         id="buy_price"
                         type="number"
@@ -179,8 +179,8 @@ export function AccountingAdmin() {
                         className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="sell_price" className="text-gray-300">Prix de Vente (unitaire)</Label>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="sell_price" className="text-gray-300 text-sm">Prix de Vente (unitaire)</Label>
                       <Input
                         id="sell_price"
                         type="number"
@@ -194,9 +194,9 @@ export function AccountingAdmin() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="amount" className="text-gray-300">Montant Total</Label>
+                  <div className="grid grid-cols-2 gap-6 mt-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="amount" className="text-gray-300 text-sm">Montant Total</Label>
                       <Input
                         id="amount"
                         type="number"
@@ -208,8 +208,8 @@ export function AccountingAdmin() {
                         className="bg-terex-dark border-terex-gray text-white placeholder-gray-400"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="currency" className="text-gray-300">Devise</Label>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="currency" className="text-gray-300 text-sm">Devise</Label>
                       <Input
                         id="currency"
                         value={formData.currency}
@@ -234,8 +234,8 @@ export function AccountingAdmin() {
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="notes" className="text-gray-300">Notes</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="notes" className="text-gray-300 text-sm">Notes</Label>
                   <Textarea
                     id="notes"
                     value={formData.notes}
