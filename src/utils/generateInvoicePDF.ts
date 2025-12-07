@@ -20,138 +20,255 @@ interface TransactionData {
   notes?: string | null;
 }
 
+interface CompanyInfo {
+  name: string;
+  address: string;
+  city: string;
+  phone: string;
+  email: string;
+  website: string;
+  taxNumber?: string;
+}
+
+const companyInfo: CompanyInfo = {
+  name: 'Ooble Technologies Inc.',
+  address: '1234 Boulevard Technologique',
+  city: 'Montréal, QC H3A 1A1, Canada',
+  phone: '+1 (514) 555-0123',
+  email: 'facturation@oobletechnologies.com',
+  website: 'www.oobletechnologies.com',
+  taxNumber: 'TPS: 123456789 RT0001 | TVQ: 1234567890 TQ0001'
+};
+
 export const generateInvoicePDF = (transaction: TransactionData) => {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
   
-  // Company Header
-  doc.setFontSize(24);
+  // Colors
+  const primaryColor = [59, 150, 143] as [number, number, number];
+  const darkColor = [33, 37, 41] as [number, number, number];
+  const grayColor = [108, 117, 125] as [number, number, number];
+  const lightGray = [248, 249, 250] as [number, number, number];
+  
+  // ============ HEADER SECTION ============
+  // Company Logo Area (left side)
+  doc.setFillColor(...primaryColor);
+  doc.rect(0, 0, 8, 50, 'F');
+  
+  doc.setFontSize(22);
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(59, 150, 143); // Terex accent color
-  doc.text('Ooble Technologies Inc.', 20, 25);
+  doc.setTextColor(...darkColor);
+  doc.text(companyInfo.name, 20, 22);
   
-  doc.setFontSize(10);
+  doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(100, 100, 100);
-  doc.text('Services de change crypto', 20, 32);
+  doc.setTextColor(...grayColor);
+  doc.text(companyInfo.address, 20, 30);
+  doc.text(companyInfo.city, 20, 35);
+  doc.text(`Tél: ${companyInfo.phone}`, 20, 40);
+  doc.text(`Email: ${companyInfo.email}`, 20, 45);
   
-  // Invoice Title
-  doc.setFontSize(20);
+  // Invoice Title (right side)
+  doc.setFontSize(28);
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(0, 0, 0);
+  doc.setTextColor(...primaryColor);
   doc.text('FACTURE', pageWidth - 20, 25, { align: 'right' });
   
   // Invoice Number and Date
-  const invoiceNumber = `FAC-${transaction.id.slice(0, 8).toUpperCase()}`;
+  const invoiceNumber = `FAC-${format(new Date(transaction.transaction_date), 'yyyyMMdd')}-${transaction.id.slice(0, 6).toUpperCase()}`;
   const invoiceDate = format(new Date(transaction.transaction_date), 'dd MMMM yyyy', { locale: fr });
+  const dueDate = format(new Date(new Date(transaction.transaction_date).getTime() + 30 * 24 * 60 * 60 * 1000), 'dd MMMM yyyy', { locale: fr });
   
   doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`N° ${invoiceNumber}`, pageWidth - 20, 32, { align: 'right' });
-  doc.text(`Date: ${invoiceDate}`, pageWidth - 20, 38, { align: 'right' });
-  
-  // Separator line
-  doc.setDrawColor(59, 150, 143);
-  doc.setLineWidth(0.5);
-  doc.line(20, 45, pageWidth - 20, 45);
-  
-  // Client Information
-  doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(0, 0, 0);
-  doc.text('Facturé à:', 20, 58);
+  doc.setTextColor(...darkColor);
+  doc.text('N° Facture:', pageWidth - 70, 35);
+  doc.text('Date:', pageWidth - 70, 42);
+  doc.text('Échéance:', pageWidth - 70, 49);
+  
+  doc.setFont('helvetica', 'normal');
+  doc.text(invoiceNumber, pageWidth - 20, 35, { align: 'right' });
+  doc.text(invoiceDate, pageWidth - 20, 42, { align: 'right' });
+  doc.text(dueDate, pageWidth - 20, 49, { align: 'right' });
+  
+  // ============ SEPARATOR ============
+  doc.setDrawColor(...primaryColor);
+  doc.setLineWidth(1);
+  doc.line(20, 55, pageWidth - 20, 55);
+  
+  // ============ CLIENT SECTION ============
+  doc.setFillColor(...lightGray);
+  doc.roundedRect(20, 62, 85, 40, 3, 3, 'F');
+  
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...primaryColor);
+  doc.text('FACTURÉ À', 25, 72);
   
   doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...darkColor);
+  doc.text(transaction.client_name || 'Client', 25, 80);
+  
   doc.setFont('helvetica', 'normal');
-  doc.text(transaction.client_name || 'Client', 20, 65);
+  doc.setTextColor(...grayColor);
   if (transaction.client_phone) {
-    doc.text(transaction.client_phone, 20, 71);
+    doc.text(`Tél: ${transaction.client_phone}`, 25, 87);
+  }
+  if (transaction.payment_method) {
+    doc.text(`Paiement: ${transaction.payment_method}`, 25, 94);
   }
   
-  // Transaction Details Table
+  // Payment Status Box
+  doc.setFillColor(...primaryColor);
+  doc.roundedRect(pageWidth - 85, 62, 65, 25, 3, 3, 'F');
+  
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(255, 255, 255);
+  doc.text('STATUT', pageWidth - 80, 72);
+  
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('PAYÉE', pageWidth - 80, 82);
+  
+  // ============ SERVICE DETAILS TABLE ============
+  const serviceDescription = 'Services informatiques et consultation technologique';
+  const serviceDetails = `Prestation de services informatiques incluant:\n- Consultation et support technique\n- Services de traitement de données\n- Assistance à la gestion financière`;
+  
   autoTable(doc, {
-    startY: 85,
-    head: [['Description', 'Quantité', 'Prix unitaire', 'Total']],
+    startY: 110,
+    head: [['Description', 'Quantité', 'Prix unitaire', 'Total HT']],
     body: [
       [
-        `${transaction.crypto_currency} - Achat/Vente`,
-        `${transaction.crypto_amount.toFixed(2)} ${transaction.crypto_currency}`,
-        `${transaction.sell_price.toFixed(4)} ${transaction.currency}`,
+        {
+          content: serviceDescription,
+          styles: { fontStyle: 'bold' }
+        },
+        '1',
+        `${transaction.amount.toFixed(2)} ${transaction.currency}`,
         `${transaction.amount.toFixed(2)} ${transaction.currency}`
       ]
     ],
     headStyles: {
-      fillColor: [59, 150, 143],
+      fillColor: primaryColor,
       textColor: [255, 255, 255],
-      fontStyle: 'bold'
+      fontStyle: 'bold',
+      fontSize: 10,
+      cellPadding: 6
     },
     bodyStyles: {
-      textColor: [0, 0, 0]
+      textColor: darkColor,
+      fontSize: 10,
+      cellPadding: 8
+    },
+    columnStyles: {
+      0: { cellWidth: 90 },
+      1: { halign: 'center', cellWidth: 25 },
+      2: { halign: 'right', cellWidth: 35 },
+      3: { halign: 'right', cellWidth: 35 }
     },
     alternateRowStyles: {
-      fillColor: [245, 245, 245]
+      fillColor: lightGray
     },
-    margin: { left: 20, right: 20 }
+    margin: { left: 20, right: 20 },
+    theme: 'grid',
+    styles: {
+      lineColor: [220, 220, 220],
+      lineWidth: 0.5
+    }
   });
   
   // Get the Y position after the table
-  const finalY = (doc as any).lastAutoTable.finalY + 10;
+  const tableEndY = (doc as any).lastAutoTable.finalY + 10;
   
-  // Summary Box
-  doc.setFillColor(245, 245, 245);
-  doc.roundedRect(pageWidth - 90, finalY, 70, 45, 3, 3, 'F');
+  // ============ TOTALS SECTION ============
+  const totalsX = pageWidth - 90;
+  const totalsWidth = 70;
+  
+  // Subtotal
+  doc.setFillColor(...lightGray);
+  doc.roundedRect(totalsX, tableEndY, totalsWidth, 50, 3, 3, 'F');
   
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(100, 100, 100);
-  doc.text('Prix d\'achat:', pageWidth - 85, finalY + 12);
-  doc.text('Prix de vente:', pageWidth - 85, finalY + 22);
-  doc.text('Marge:', pageWidth - 85, finalY + 32);
+  doc.setTextColor(...grayColor);
+  
+  const subtotal = transaction.amount;
+  const tps = subtotal * 0.05; // 5% TPS
+  const tvq = subtotal * 0.09975; // 9.975% TVQ
+  const total = subtotal + tps + tvq;
+  
+  doc.text('Sous-total HT:', totalsX + 5, tableEndY + 12);
+  doc.text('TPS (5%):', totalsX + 5, tableEndY + 22);
+  doc.text('TVQ (9.975%):', totalsX + 5, tableEndY + 32);
   
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(0, 0, 0);
-  doc.text(`${transaction.buy_price.toFixed(4)}`, pageWidth - 25, finalY + 12, { align: 'right' });
-  doc.text(`${transaction.sell_price.toFixed(4)}`, pageWidth - 25, finalY + 22, { align: 'right' });
-  doc.setTextColor(59, 150, 143);
-  doc.text(`${transaction.profit_percentage.toFixed(2)}%`, pageWidth - 25, finalY + 32, { align: 'right' });
+  doc.setTextColor(...darkColor);
+  doc.text(`${subtotal.toFixed(2)} ${transaction.currency}`, totalsX + totalsWidth - 5, tableEndY + 12, { align: 'right' });
+  doc.text(`${tps.toFixed(2)} ${transaction.currency}`, totalsX + totalsWidth - 5, tableEndY + 22, { align: 'right' });
+  doc.text(`${tvq.toFixed(2)} ${transaction.currency}`, totalsX + totalsWidth - 5, tableEndY + 32, { align: 'right' });
   
   // Total Box
-  doc.setFillColor(59, 150, 143);
-  doc.roundedRect(pageWidth - 90, finalY + 50, 70, 25, 3, 3, 'F');
+  doc.setFillColor(...primaryColor);
+  doc.roundedRect(totalsX, tableEndY + 55, totalsWidth, 25, 3, 3, 'F');
   
-  doc.setFontSize(12);
+  doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(255, 255, 255);
-  doc.text('TOTAL', pageWidth - 85, finalY + 62);
-  doc.text(`${transaction.amount.toFixed(2)} ${transaction.currency}`, pageWidth - 25, finalY + 68, { align: 'right' });
+  doc.text('TOTAL TTC', totalsX + 5, tableEndY + 66);
+  doc.setFontSize(14);
+  doc.text(`${total.toFixed(2)} ${transaction.currency}`, totalsX + totalsWidth - 5, tableEndY + 73, { align: 'right' });
   
-  // Payment Method
-  if (transaction.payment_method) {
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(100, 100, 100);
-    doc.text(`Méthode de paiement: ${transaction.payment_method}`, 20, finalY + 20);
-  }
-  
-  // Notes
+  // ============ NOTES SECTION ============
   if (transaction.notes) {
     doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...darkColor);
+    doc.text('Notes:', 20, tableEndY + 15);
+    
     doc.setFont('helvetica', 'italic');
-    doc.setTextColor(100, 100, 100);
-    doc.text(`Notes: ${transaction.notes}`, 20, finalY + 30);
+    doc.setTextColor(...grayColor);
+    const splitNotes = doc.splitTextToSize(transaction.notes, 80);
+    doc.text(splitNotes, 20, tableEndY + 23);
   }
   
-  // Footer
-  const footerY = doc.internal.pageSize.getHeight() - 30;
-  doc.setDrawColor(200, 200, 200);
-  doc.setLineWidth(0.3);
-  doc.line(20, footerY, pageWidth - 20, footerY);
+  // ============ PAYMENT TERMS ============
+  const termsY = tableEndY + 90;
+  doc.setFillColor(...lightGray);
+  doc.roundedRect(20, termsY, pageWidth - 40, 35, 3, 3, 'F');
+  
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...primaryColor);
+  doc.text('CONDITIONS DE PAIEMENT', 25, termsY + 10);
+  
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...grayColor);
+  doc.setFontSize(9);
+  doc.text('• Paiement à réception de facture', 25, termsY + 18);
+  doc.text('• Virement Interac, chèque ou virement bancaire acceptés', 25, termsY + 25);
+  doc.text('• Toute facture impayée après 30 jours entraînera des frais de retard de 2% par mois', 25, termsY + 32);
+  
+  // ============ FOOTER ============
+  const footerY = pageHeight - 30;
+  
+  doc.setDrawColor(...primaryColor);
+  doc.setLineWidth(0.5);
+  doc.line(20, footerY - 5, pageWidth - 20, footerY - 5);
   
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
-  doc.setTextColor(150, 150, 150);
-  doc.text('Ooble Technologies Inc. - Services de change crypto', pageWidth / 2, footerY + 8, { align: 'center' });
-  doc.text('Merci pour votre confiance!', pageWidth / 2, footerY + 14, { align: 'center' });
+  doc.setTextColor(...grayColor);
+  doc.text(companyInfo.name, pageWidth / 2, footerY + 2, { align: 'center' });
+  doc.text(`${companyInfo.website} | ${companyInfo.email}`, pageWidth / 2, footerY + 8, { align: 'center' });
+  if (companyInfo.taxNumber) {
+    doc.text(companyInfo.taxNumber, pageWidth / 2, footerY + 14, { align: 'center' });
+  }
+  
+  doc.setFontSize(7);
+  doc.text('Merci pour votre confiance!', pageWidth / 2, footerY + 22, { align: 'center' });
   
   // Download the PDF
   doc.save(`Facture_${invoiceNumber}_${format(new Date(), 'yyyy-MM-dd')}.pdf`);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,15 +6,21 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useManualTransactions } from '@/hooks/useManualTransactions';
-import { Plus, DollarSign, TrendingUp, Activity, Wallet, Trash2, FileText } from 'lucide-react';
+import { Plus, DollarSign, TrendingUp, Activity, Wallet, Trash2, FileText, Calendar, Download, Search, Filter } from 'lucide-react';
 import { generateInvoicePDF } from '@/utils/generateInvoicePDF';
-import { format } from 'date-fns';
+import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, subMonths, isWithinInterval } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
 
 export function AccountingAdmin() {
   const { transactions, loading, addTransaction, deleteTransaction, stats } = useManualTransactions();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dateFilter, setDateFilter] = useState<'all' | 'today' | 'week' | 'month' | 'custom'>('all');
+  const [customStartDate, setCustomStartDate] = useState('');
+  const [customEndDate, setCustomEndDate] = useState('');
   const [formData, setFormData] = useState({
     transaction_date: new Date().toISOString().slice(0, 16),
     amount: '',
@@ -28,6 +34,93 @@ export function AccountingAdmin() {
     payment_method: 'Interac',
     notes: ''
   });
+
+  // Filter transactions
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter(t => {
+      // Search filter
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch = !searchQuery || 
+        t.client_name?.toLowerCase().includes(searchLower) ||
+        t.client_phone?.toLowerCase().includes(searchLower) ||
+        t.payment_method?.toLowerCase().includes(searchLower);
+
+      // Date filter
+      const transactionDate = new Date(t.transaction_date);
+      const today = new Date();
+      let matchesDate = true;
+
+      if (dateFilter === 'today') {
+        matchesDate = format(transactionDate, 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd');
+      } else if (dateFilter === 'week') {
+        matchesDate = isWithinInterval(transactionDate, {
+          start: startOfWeek(today, { weekStartsOn: 1 }),
+          end: endOfWeek(today, { weekStartsOn: 1 })
+        });
+      } else if (dateFilter === 'month') {
+        matchesDate = isWithinInterval(transactionDate, {
+          start: startOfMonth(today),
+          end: endOfMonth(today)
+        });
+      } else if (dateFilter === 'custom' && customStartDate && customEndDate) {
+        matchesDate = isWithinInterval(transactionDate, {
+          start: new Date(customStartDate),
+          end: new Date(customEndDate + 'T23:59:59')
+        });
+      }
+
+      return matchesSearch && matchesDate;
+    });
+  }, [transactions, searchQuery, dateFilter, customStartDate, customEndDate]);
+
+  // Chart data for profit over time
+  const chartData = useMemo(() => {
+    const last6Months = Array.from({ length: 6 }, (_, i) => {
+      const date = subMonths(new Date(), 5 - i);
+      return {
+        month: format(date, 'MMM yyyy', { locale: fr }),
+        start: startOfMonth(date),
+        end: endOfMonth(date),
+        profit: 0,
+        volume: 0,
+        count: 0
+      };
+    });
+
+    transactions.forEach(t => {
+      const transactionDate = new Date(t.transaction_date);
+      const monthData = last6Months.find(m => 
+        isWithinInterval(transactionDate, { start: m.start, end: m.end })
+      );
+      if (monthData) {
+        monthData.profit += t.profit;
+        monthData.volume += t.amount;
+        monthData.count += 1;
+      }
+    });
+
+    return last6Months.map(m => ({
+      month: m.month,
+      profit: parseFloat(m.profit.toFixed(2)),
+      volume: parseFloat(m.volume.toFixed(2)),
+      count: m.count
+    }));
+  }, [transactions]);
+
+  // Filtered stats
+  const filteredStats = useMemo(() => {
+    const totalProfit = filteredTransactions.reduce((sum, t) => sum + t.profit, 0);
+    const totalVolume = filteredTransactions.reduce((sum, t) => sum + t.amount, 0);
+    const avgMargin = filteredTransactions.length > 0 
+      ? filteredTransactions.reduce((sum, t) => sum + t.profit_percentage, 0) / filteredTransactions.length 
+      : 0;
+    return {
+      totalProfit,
+      totalVolume,
+      avgMargin,
+      count: filteredTransactions.length
+    };
+  }, [filteredTransactions]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -264,6 +357,59 @@ export function AccountingAdmin() {
         <div className="absolute bottom-0 left-0 w-16 sm:w-32 h-16 sm:h-32 bg-terex-accent/5 rounded-full translate-y-8 sm:translate-y-16 -translate-x-8 sm:-translate-x-16"></div>
       </div>
 
+      {/* Filters Section */}
+      <Card className="bg-terex-darker border-terex-gray/50 shadow-sm">
+        <CardContent className="pt-6">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex-1 min-w-[200px]">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Rechercher par client, téléphone..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 bg-terex-dark border-terex-gray text-white placeholder-gray-400"
+                />
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4 text-gray-400" />
+              <Select value={dateFilter} onValueChange={(v) => setDateFilter(v as any)}>
+                <SelectTrigger className="w-[140px] bg-terex-dark border-terex-gray text-white">
+                  <SelectValue placeholder="Période" />
+                </SelectTrigger>
+                <SelectContent className="bg-terex-dark border-terex-gray">
+                  <SelectItem value="all" className="text-white">Tout</SelectItem>
+                  <SelectItem value="today" className="text-white">Aujourd'hui</SelectItem>
+                  <SelectItem value="week" className="text-white">Cette semaine</SelectItem>
+                  <SelectItem value="month" className="text-white">Ce mois</SelectItem>
+                  <SelectItem value="custom" className="text-white">Personnalisé</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {dateFilter === 'custom' && (
+              <div className="flex items-center gap-2">
+                <Input
+                  type="date"
+                  value={customStartDate}
+                  onChange={(e) => setCustomStartDate(e.target.value)}
+                  className="bg-terex-dark border-terex-gray text-white w-[140px]"
+                />
+                <span className="text-gray-400">à</span>
+                <Input
+                  type="date"
+                  value={customEndDate}
+                  onChange={(e) => setCustomEndDate(e.target.value)}
+                  className="bg-terex-dark border-terex-gray text-white w-[140px]"
+                />
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
         <Card className="bg-terex-darker border-terex-gray/50 shadow-sm hover:border-terex-accent/50 transition-all">
@@ -275,8 +421,9 @@ export function AccountingAdmin() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl sm:text-3xl font-bold text-terex-accent">
-              {stats.totalProfit.toFixed(2)} CAD
+              {filteredStats.totalProfit.toFixed(2)} CAD
             </div>
+            <p className="text-xs text-gray-400 mt-1">sur {filteredStats.count} transactions</p>
           </CardContent>
         </Card>
 
@@ -289,8 +436,9 @@ export function AccountingAdmin() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl sm:text-3xl font-bold text-white">
-              {stats.totalVolume.toFixed(2)} CAD
+              {filteredStats.totalVolume.toFixed(2)} CAD
             </div>
+            <p className="text-xs text-gray-400 mt-1">volume filtré</p>
           </CardContent>
         </Card>
 
@@ -303,8 +451,9 @@ export function AccountingAdmin() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl sm:text-3xl font-bold text-white">
-              {stats.averageProfitPercentage.toFixed(2)}%
+              {filteredStats.avgMargin.toFixed(2)}%
             </div>
+            <p className="text-xs text-gray-400 mt-1">marge filtrée</p>
           </CardContent>
         </Card>
 
@@ -317,7 +466,77 @@ export function AccountingAdmin() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl sm:text-3xl font-bold text-white">
-              {stats.transactionCount}
+              {filteredStats.count}
+            </div>
+            <p className="text-xs text-gray-400 mt-1">sur {stats.transactionCount} au total</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <Card className="bg-terex-darker border-terex-gray/50 shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-terex-accent" />
+              Évolution des Bénéfices
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[250px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="month" stroke="#9CA3AF" fontSize={12} />
+                  <YAxis stroke="#9CA3AF" fontSize={12} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1f2937', 
+                      border: '1px solid #374151',
+                      borderRadius: '8px'
+                    }}
+                    labelStyle={{ color: '#fff' }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="profit" 
+                    stroke="#3b968f" 
+                    strokeWidth={3}
+                    dot={{ fill: '#3b968f', strokeWidth: 2 }}
+                    name="Bénéfice (CAD)"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-terex-darker border-terex-gray/50 shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Activity className="h-5 w-5 text-blue-400" />
+              Volume et Transactions par Mois
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[250px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="month" stroke="#9CA3AF" fontSize={12} />
+                  <YAxis stroke="#9CA3AF" fontSize={12} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1f2937', 
+                      border: '1px solid #374151',
+                      borderRadius: '8px'
+                    }}
+                    labelStyle={{ color: '#fff' }}
+                  />
+                  <Legend />
+                  <Bar dataKey="count" fill="#8b5cf6" name="Nombre de transactions" />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
@@ -331,9 +550,9 @@ export function AccountingAdmin() {
         <CardContent>
           {loading ? (
             <div className="text-center py-8 text-gray-300">Chargement...</div>
-          ) : transactions.length === 0 ? (
+          ) : filteredTransactions.length === 0 ? (
             <div className="text-center py-8 text-gray-400">
-              Aucune transaction enregistrée
+              {transactions.length === 0 ? 'Aucune transaction enregistrée' : 'Aucune transaction correspondant aux filtres'}
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -342,7 +561,7 @@ export function AccountingAdmin() {
                   <TableRow className="border-terex-gray">
                     <TableHead className="text-gray-300">Date</TableHead>
                     <TableHead className="text-gray-300">Client</TableHead>
-                    <TableHead className="text-gray-300">Crypto</TableHead>
+                    <TableHead className="text-gray-300">Quantité</TableHead>
                     <TableHead className="text-gray-300">Prix Achat</TableHead>
                     <TableHead className="text-gray-300">Prix Vente</TableHead>
                     <TableHead className="text-gray-300">Montant</TableHead>
@@ -352,7 +571,7 @@ export function AccountingAdmin() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {transactions.map((transaction) => (
+                  {filteredTransactions.map((transaction) => (
                     <TableRow key={transaction.id} className="border-terex-gray hover:bg-terex-gray/40">
                       <TableCell className="text-white">
                         {format(new Date(transaction.transaction_date), 'dd MMM yyyy HH:mm', { locale: fr })}
@@ -364,7 +583,7 @@ export function AccountingAdmin() {
                         </div>
                       </TableCell>
                       <TableCell className="text-white">
-                        {transaction.crypto_amount} {transaction.crypto_currency}
+                        {transaction.crypto_amount} unités
                       </TableCell>
                       <TableCell className="text-gray-300">{transaction.buy_price.toFixed(4)}</TableCell>
                       <TableCell className="text-gray-300">{transaction.sell_price.toFixed(4)}</TableCell>
