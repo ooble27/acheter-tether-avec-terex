@@ -359,24 +359,24 @@ export function AccountingAdmin() {
 
       {/* Filters Section */}
       <Card className="bg-terex-darker border-terex-gray/50 shadow-sm">
-        <CardContent className="pt-4 sm:pt-6">
-          <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4">
-            <div className="flex-1 min-w-0 sm:min-w-[200px]">
+        <CardContent className="pt-6">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex-1 min-w-[200px]">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Rechercher..."
+                  placeholder="Rechercher par client, téléphone..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 bg-terex-dark border-terex-gray text-white placeholder-gray-400 text-sm"
+                  className="pl-10 bg-terex-dark border-terex-gray text-white placeholder-gray-400"
                 />
               </div>
             </div>
             
             <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-gray-400 hidden sm:block" />
+              <Filter className="h-4 w-4 text-gray-400" />
               <Select value={dateFilter} onValueChange={(v) => setDateFilter(v as any)}>
-                <SelectTrigger className="w-full sm:w-[140px] bg-terex-dark border-terex-gray text-white text-sm">
+                <SelectTrigger className="w-[140px] bg-terex-dark border-terex-gray text-white">
                   <SelectValue placeholder="Période" />
                 </SelectTrigger>
                 <SelectContent className="bg-terex-dark border-terex-gray">
@@ -390,19 +390,19 @@ export function AccountingAdmin() {
             </div>
 
             {dateFilter === 'custom' && (
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+              <div className="flex items-center gap-2">
                 <Input
                   type="date"
                   value={customStartDate}
                   onChange={(e) => setCustomStartDate(e.target.value)}
-                  className="bg-terex-dark border-terex-gray text-white w-full sm:w-[130px] text-sm"
+                  className="bg-terex-dark border-terex-gray text-white w-[140px]"
                 />
-                <span className="text-gray-400 text-center hidden sm:block">à</span>
+                <span className="text-gray-400">à</span>
                 <Input
                   type="date"
                   value={customEndDate}
                   onChange={(e) => setCustomEndDate(e.target.value)}
-                  className="bg-terex-dark border-terex-gray text-white w-full sm:w-[130px] text-sm"
+                  className="bg-terex-dark border-terex-gray text-white w-[140px]"
                 />
               </div>
             )}
@@ -445,8 +445,8 @@ export function AccountingAdmin() {
         <Card className="bg-terex-darker border-terex-gray/50 shadow-sm hover:border-terex-accent/50 transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-300">Marge Moyenne</CardTitle>
-            <div className="w-10 h-10 bg-terex-accent/20 rounded-full flex items-center justify-center">
-              <TrendingUp className="h-5 w-5 text-terex-accent" />
+            <div className="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center">
+              <TrendingUp className="h-5 w-5 text-purple-400" />
             </div>
           </CardHeader>
           <CardContent>
@@ -514,7 +514,7 @@ export function AccountingAdmin() {
         <Card className="bg-terex-darker border-terex-gray/50 shadow-sm">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <Activity className="h-5 w-5 text-terex-accent" />
+              <Activity className="h-5 w-5 text-blue-400" />
               Volume et Transactions par Mois
             </CardTitle>
           </CardHeader>
@@ -534,7 +534,7 @@ export function AccountingAdmin() {
                     labelStyle={{ color: '#fff' }}
                   />
                   <Legend />
-                  <Bar dataKey="count" fill="#3b968f" name="Nombre de transactions" />
+                  <Bar dataKey="count" fill="#8b5cf6" name="Nombre de transactions" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -545,7 +545,7 @@ export function AccountingAdmin() {
       {/* Transactions Table */}
       <Card className="bg-terex-darker border-terex-gray/50 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-white text-lg">Historique des Transactions</CardTitle>
+          <CardTitle className="text-white">Historique des Transactions</CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -555,122 +555,74 @@ export function AccountingAdmin() {
               {transactions.length === 0 ? 'Aucune transaction enregistrée' : 'Aucune transaction correspondant aux filtres'}
             </div>
           ) : (
-            <>
-              {/* Mobile view - cards */}
-              <div className="block sm:hidden space-y-3">
-                {filteredTransactions.map((transaction) => (
-                  <div key={transaction.id} className="bg-terex-dark rounded-lg p-4 border border-terex-gray/30 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm text-gray-400">
-                        {format(new Date(transaction.transaction_date), 'dd MMM yyyy', { locale: fr })}
-                      </div>
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-terex-accent/10 text-terex-accent">
-                        {transaction.profit_percentage.toFixed(1)}%
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="font-medium text-white">{transaction.client_name || 'Client'}</div>
-                        <div className="text-xs text-gray-400">{transaction.crypto_amount} unités</div>
-                      </div>
-                      <div className="text-right">
-                        <div className="font-bold text-terex-accent">+{transaction.profit.toFixed(2)} {transaction.currency}</div>
-                        <div className="text-xs text-gray-400">{transaction.amount.toFixed(0)} {transaction.currency}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-end gap-2 pt-2 border-t border-terex-gray/30">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => generateInvoicePDF(transaction)}
-                        className="text-terex-accent hover:bg-terex-accent/10 text-xs"
-                      >
-                        <FileText className="h-4 w-4 mr-1" />
-                        Facture
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(transaction.id)}
-                        className="text-red-400 hover:bg-red-500/10 text-xs"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Desktop view - table */}
-              <div className="hidden sm:block overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="border-terex-gray">
-                      <TableHead className="text-gray-300 text-xs">Date</TableHead>
-                      <TableHead className="text-gray-300 text-xs">Client</TableHead>
-                      <TableHead className="text-gray-300 text-xs">Qté</TableHead>
-                      <TableHead className="text-gray-300 text-xs">Achat</TableHead>
-                      <TableHead className="text-gray-300 text-xs">Vente</TableHead>
-                      <TableHead className="text-gray-300 text-xs">Montant</TableHead>
-                      <TableHead className="text-gray-300 text-xs">Bénéfice</TableHead>
-                      <TableHead className="text-gray-300 text-xs">Marge</TableHead>
-                      <TableHead className="text-gray-300 text-xs">Actions</TableHead>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-terex-gray">
+                    <TableHead className="text-gray-300">Date</TableHead>
+                    <TableHead className="text-gray-300">Client</TableHead>
+                    <TableHead className="text-gray-300">Quantité</TableHead>
+                    <TableHead className="text-gray-300">Prix Achat</TableHead>
+                    <TableHead className="text-gray-300">Prix Vente</TableHead>
+                    <TableHead className="text-gray-300">Montant</TableHead>
+                    <TableHead className="text-gray-300">Bénéfice</TableHead>
+                    <TableHead className="text-gray-300">Marge</TableHead>
+                    <TableHead className="text-gray-300">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredTransactions.map((transaction) => (
+                    <TableRow key={transaction.id} className="border-terex-gray hover:bg-terex-gray/40">
+                      <TableCell className="text-white">
+                        {format(new Date(transaction.transaction_date), 'dd MMM yyyy HH:mm', { locale: fr })}
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium text-white">{transaction.client_name || 'N/A'}</div>
+                          <div className="text-sm text-gray-400">{transaction.client_phone}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-white">
+                        {transaction.crypto_amount} unités
+                      </TableCell>
+                      <TableCell className="text-gray-300">{transaction.buy_price.toFixed(4)}</TableCell>
+                      <TableCell className="text-gray-300">{transaction.sell_price.toFixed(4)}</TableCell>
+                      <TableCell className="text-white">{transaction.amount.toFixed(2)} {transaction.currency}</TableCell>
+                      <TableCell className="font-bold text-terex-accent">
+                        +{transaction.profit.toFixed(2)} {transaction.currency}
+                      </TableCell>
+                      <TableCell>
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-terex-accent/10 text-terex-accent">
+                          {transaction.profit_percentage.toFixed(2)}%
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => generateInvoicePDF(transaction)}
+                            className="text-terex-accent hover:bg-terex-accent/10"
+                            title="Générer facture PDF"
+                          >
+                            <FileText className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDelete(transaction.id)}
+                            className="text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                            title="Supprimer"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredTransactions.map((transaction) => (
-                      <TableRow key={transaction.id} className="border-terex-gray hover:bg-terex-gray/40">
-                        <TableCell className="text-white text-xs whitespace-nowrap">
-                          {format(new Date(transaction.transaction_date), 'dd MMM yyyy', { locale: fr })}
-                        </TableCell>
-                        <TableCell>
-                          <div>
-                            <div className="font-medium text-white text-sm">{transaction.client_name || 'N/A'}</div>
-                            <div className="text-xs text-gray-400">{transaction.client_phone}</div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-white text-xs">
-                          {transaction.crypto_amount}
-                        </TableCell>
-                        <TableCell className="text-gray-300 text-xs">{transaction.buy_price.toFixed(2)}</TableCell>
-                        <TableCell className="text-gray-300 text-xs">{transaction.sell_price.toFixed(2)}</TableCell>
-                        <TableCell className="text-white text-xs whitespace-nowrap">{transaction.amount.toFixed(0)} {transaction.currency}</TableCell>
-                        <TableCell className="font-bold text-terex-accent text-xs whitespace-nowrap">
-                          +{transaction.profit.toFixed(2)}
-                        </TableCell>
-                        <TableCell>
-                          <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-terex-accent/10 text-terex-accent">
-                            {transaction.profit_percentage.toFixed(1)}%
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-0.5">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => generateInvoicePDF(transaction)}
-                              className="text-terex-accent hover:bg-terex-accent/10 h-7 w-7 p-0"
-                              title="Générer facture PDF"
-                            >
-                              <FileText className="h-3.5 w-3.5" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleDelete(transaction.id)}
-                              className="text-red-400 hover:bg-red-500/10 hover:text-red-300 h-7 w-7 p-0"
-                              title="Supprimer"
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>

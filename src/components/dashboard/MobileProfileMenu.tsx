@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
@@ -14,8 +13,7 @@ import {
   Gift,
   Phone,
   Share2,
-  FileText,
-  Settings
+  FileText
 } from 'lucide-react';
 import { useUserRole } from '@/hooks/useUserRole';
 
@@ -28,7 +26,6 @@ interface MobileProfileMenuProps {
 export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }: MobileProfileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { isKYCReviewer, isAdmin } = useUserRole();
-  const navigate = useNavigate();
 
   const handleItemClick = (section: string) => {
     setActiveSection(section);
@@ -38,11 +35,6 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
   const handleLogout = () => {
     setIsOpen(false);
     onLogout();
-  };
-
-  const handleAdminPortal = () => {
-    setIsOpen(false);
-    navigate('/admin');
   };
 
   const profileItems = [
@@ -60,6 +52,12 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
     { id: 'referral', label: 'Parrainage', icon: Gift, description: 'Invitez vos amis' },
     { id: 'share-app', label: 'Partager l\'App', icon: Share2, description: 'Partager Terex' },
     { id: 'terms', label: 'Conditions d\'Utilisation', icon: FileText, description: 'CGU et politique' },
+  ];
+
+  const adminItems = [
+    { id: 'kyc-admin', label: 'Administration KYC', icon: Shield, description: 'Vérifications d\'identité' },
+    { id: 'orders-admin', label: 'Gestion Commandes', icon: Shield, description: 'Ordres et transactions' },
+    { id: 'job-applications', label: 'Candidatures', icon: UserCheck, description: 'Gestion des candidatures' },
   ];
 
   const renderMenuSection = (title: string, items: any[]) => (
@@ -154,34 +152,8 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
                 {/* Section Plus */}
                 {renderMenuSection('Plus', moreItems)}
 
-                {/* Lien Portail Admin */}
-                {(isKYCReviewer() || isAdmin()) && (
-                  <>
-                    <div className="pt-4 pb-2">
-                      <div className="flex items-center space-x-2 px-4">
-                        <div className="h-px bg-terex-gray/40 flex-1"></div>
-                        <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Administration</span>
-                        <div className="h-px bg-terex-gray/40 flex-1"></div>
-                      </div>
-                    </div>
-                    
-                    <Button
-                      variant="ghost"
-                      onClick={handleAdminPortal}
-                      className="w-full justify-start p-4 h-auto rounded-xl transition-all duration-200 text-orange-400 hover:bg-orange-600/20 hover:text-orange-300"
-                    >
-                      <div className="flex items-center space-x-4 w-full">
-                        <div className="p-2 rounded-lg bg-orange-600/20">
-                          <Settings className="h-5 w-5" />
-                        </div>
-                        <div className="flex-1 text-left">
-                          <div className="font-medium text-sm">Portail Administrateur</div>
-                          <div className="text-xs opacity-75">Gestion complète</div>
-                        </div>
-                      </div>
-                    </Button>
-                  </>
-                )}
+                {/* Section Administration */}
+                {isKYCReviewer() && renderMenuSection('Administration', adminItems)}
 
                 {/* Bouton de déconnexion */}
                 <div className="pt-4 pb-2">
