@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
+import { TrendingUp, TrendingDown, RefreshCw, ArrowRightLeft } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import { useCryptoRates } from '@/hooks/useCryptoRates';
+import { Input } from '@/components/ui/input';
+import { useTerexRates } from '@/hooks/useTerexRates';
 
 interface PriceData {
   priceHistory: number[];
@@ -10,12 +11,49 @@ interface PriceData {
 }
 
 export function USDTPriceWidget() {
-  const { usdtToCfa, loading: ratesLoading, lastUpdated } = useCryptoRates();
+  const { terexRateCfa, terexBuyRateCfa, loading: ratesLoading, lastUpdated } = useTerexRates();
   const [data, setData] = useState<PriceData>({
     priceHistory: [],
     change24h: 0,
     loading: true
   });
+  
+  // Converter state
+  const [usdtAmount, setUsdtAmount] = useState<string>('100');
+  const [cfaAmount, setCfaAmount] = useState<string>('');
+  const [convertDirection, setConvertDirection] = useState<'usdt-to-cfa' | 'cfa-to-usdt'>('usdt-to-cfa');
+
+  // Update CFA amount when USDT changes or rate changes
+  useEffect(() => {
+    if (convertDirection === 'usdt-to-cfa') {
+      const usdt = parseFloat(usdtAmount) || 0;
+      const cfa = Math.round(usdt * terexBuyRateCfa);
+      setCfaAmount(cfa > 0 ? cfa.toLocaleString('fr-FR') : '');
+    }
+  }, [usdtAmount, terexBuyRateCfa, convertDirection]);
+
+  // Update USDT amount when CFA changes
+  useEffect(() => {
+    if (convertDirection === 'cfa-to-usdt') {
+      const cfa = parseFloat(cfaAmount.replace(/\s/g, '').replace(/,/g, '')) || 0;
+      const usdt = cfa / terexRateCfa;
+      setUsdtAmount(usdt > 0 ? usdt.toFixed(2) : '');
+    }
+  }, [cfaAmount, terexRateCfa, convertDirection]);
+
+  const handleUsdtChange = (value: string) => {
+    setConvertDirection('usdt-to-cfa');
+    setUsdtAmount(value);
+  };
+
+  const handleCfaChange = (value: string) => {
+    setConvertDirection('cfa-to-usdt');
+    setCfaAmount(value);
+  };
+
+  const toggleDirection = () => {
+    setConvertDirection(prev => prev === 'usdt-to-cfa' ? 'cfa-to-usdt' : 'usdt-to-cfa');
+  };
 
   const fetchSparkline = async () => {
     try {
@@ -40,7 +78,7 @@ export function USDTPriceWidget() {
 
   useEffect(() => {
     fetchSparkline();
-    const interval = setInterval(fetchSparkline, 60000); // Update every minute
+    const interval = setInterval(fetchSparkline, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -67,7 +105,7 @@ export function USDTPriceWidget() {
             />
             <div>
               <h3 className="text-white font-semibold text-sm">USDT</h3>
-              <p className="text-gray-400 text-xs">Tether</p>
+              <p className="text-gray-400 text-xs">Prix Terex</p>
             </div>
           </div>
           
@@ -85,17 +123,78 @@ export function USDTPriceWidget() {
           )}
         </div>
 
-        {/* Price in CFA */}
-        <div className="mb-3">
-          <span className="text-2xl font-bold text-terex-highlight">
-            {usdtToCfa.toLocaleString('fr-FR')}
-          </span>
-          <span className="text-gray-400 text-sm ml-2">FCFA</span>
+        {/* Prices */}
+        <div className="mb-4 space-y-1">
+          <div className="flex items-baseline gap-2">
+            <span className="text-xs text-gray-400">Vente:</span>
+            <span className="text-xl font-bold text-terex-highlight">
+              {terexBuyRateCfa.toLocaleString('fr-FR')}
+            </span>
+            <span className="text-gray-400 text-xs">FCFA</span>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-xs text-gray-400">Achat:</span>
+            <span className="text-sm font-medium text-white">
+              {terexRateCfa.toLocaleString('fr-FR')}
+            </span>
+            <span className="text-gray-500 text-xs">FCFA</span>
+          </div>
+        </div>
+
+        {/* Quick Converter */}
+        <div className="bg-terex-dark/50 rounded-xl p-3 border border-terex-gray/30">
+          <p className="text-xs text-gray-400 mb-2">Convertisseur rapide</p>
+          
+          <div className="flex items-center gap-2">
+            {/* USDT Input */}
+            <div className="flex-1">
+              <div className="relative">
+                <Input
+                  type="number"
+                  value={usdtAmount}
+                  onChange={(e) => handleUsdtChange(e.target.value)}
+                  className="bg-terex-darker border-terex-gray text-white pr-14 text-sm h-9"
+                  placeholder="0"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-terex-accent font-medium">
+                  USDT
+                </span>
+              </div>
+            </div>
+
+            {/* Toggle Button */}
+            <button
+              onClick={toggleDirection}
+              className="w-8 h-8 rounded-lg bg-terex-accent/20 flex items-center justify-center hover:bg-terex-accent/30 transition-colors"
+            >
+              <ArrowRightLeft className="w-4 h-4 text-terex-accent" />
+            </button>
+
+            {/* CFA Input */}
+            <div className="flex-1">
+              <div className="relative">
+                <Input
+                  type="text"
+                  value={cfaAmount}
+                  onChange={(e) => handleCfaChange(e.target.value)}
+                  className="bg-terex-darker border-terex-gray text-white pr-12 text-sm h-9"
+                  placeholder="0"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-terex-highlight font-medium">
+                  CFA
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <p className="text-[10px] text-gray-500 mt-2 text-center">
+            Taux de vente Terex • {lastUpdated ? new Date(lastUpdated).toLocaleTimeString('fr-FR') : '--:--'}
+          </p>
         </div>
 
         {/* Mini Sparkline Chart */}
         {data.priceHistory.length > 0 && (
-          <div className="h-12 flex items-end gap-px">
+          <div className="h-8 flex items-end gap-px mt-3">
             {data.priceHistory.map((price, index) => {
               const height = ((price - minPrice) / range) * 100;
               return (
@@ -113,10 +212,6 @@ export function USDTPriceWidget() {
             })}
           </div>
         )}
-        
-        <p className="text-gray-500 text-xs mt-2 text-center">
-          {lastUpdated ? `Mis à jour ${new Date(lastUpdated).toLocaleTimeString('fr-FR')}` : 'Dernières 24h'}
-        </p>
       </div>
     </Card>
   );
