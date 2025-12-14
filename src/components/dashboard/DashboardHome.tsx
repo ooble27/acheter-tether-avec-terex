@@ -1,27 +1,16 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Globe, 
-  ArrowUpRight, 
-  Bitcoin,
-  Handshake,
-  TrendingUp
-} from 'lucide-react';
+import { useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
-import { useEffect } from 'react';
+import { USDTPriceWidget } from '@/components/dashboard/widgets/USDTPriceWidget';
+import { UserStatsWidget } from '@/components/dashboard/widgets/UserStatsWidget';
+import { CryptoNewsWidget } from '@/components/dashboard/widgets/CryptoNewsWidget';
+import { QuickActionsWidget } from '@/components/dashboard/widgets/QuickActionsWidget';
+import { Bell } from 'lucide-react';
 
 interface DashboardHomeProps {
   user: { email: string; name: string } | null;
   onNavigate?: (section: string) => void;
 }
-
-const TetherLogo = ({ className }: { className?: string }) => (
-  <img 
-    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
-    alt="Tether Logo"
-    className={className}
-  />
-);
 
 export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   const isMobile = useIsMobile();
@@ -34,12 +23,10 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   // Force le scroll en haut quand le composant se monte (spécialement pour PWA mobile)
   useEffect(() => {
     if (isPWA && isMobile) {
-      // Scroll immédiat et forcé pour PWA mobile
       window.scrollTo(0, 0);
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
       
-      // Double vérification après un petit délai
       const timer = setTimeout(() => {
         window.scrollTo(0, 0);
         document.body.scrollTop = 0;
@@ -50,187 +37,120 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
     }
   }, [isPWA, isMobile]);
 
-  const handleServiceClick = (service: string) => {
-    if (onNavigate) {
-      onNavigate(service);
-    }
-  };
+  const firstName = user?.name?.split(' ')[0] || 'Utilisateur';
+  const currentHour = new Date().getHours();
+  const greeting = currentHour < 12 ? 'Bonjour' : currentHour < 18 ? 'Bon après-midi' : 'Bonsoir';
 
   if (isMobile) {
-    // Design mobile avec px-0 pour tous les conteneurs
     return (
-      <div className="min-h-screen bg-terex-dark px-0 py-3 space-y-3 text-xs overflow-y-auto scrollbar-hide">
-        {/* Header avec px-0 */}
-        <div className="flex items-center space-x-3 mb-6 px-0">
-          <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
-            <img src="/bitcoin-logo.png" alt="Bitcoin" className="w-12 h-12 object-contain" />
+      <div className="min-h-screen bg-terex-dark pb-24 overflow-y-auto scrollbar-hide">
+        {/* Header */}
+        <div className="sticky top-0 z-10 bg-terex-dark/95 backdrop-blur-lg border-b border-terex-gray/20 px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-terex-accent to-terex-teal flex items-center justify-center">
+                <span className="text-terex-dark font-bold text-lg">
+                  {firstName.charAt(0).toUpperCase()}
+                </span>
+              </div>
+              <div>
+                <p className="text-gray-400 text-xs">{greeting}</p>
+                <h1 className="text-white font-semibold text-lg">
+                  {firstName}
+                </h1>
+              </div>
+            </div>
+            <button className="w-10 h-10 rounded-full bg-terex-darker flex items-center justify-center border border-terex-gray hover:border-terex-accent transition-colors">
+              <Bell className="w-5 h-5 text-gray-400" />
+            </button>
           </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="px-4 py-4 space-y-4">
+          {/* USDT Price Widget */}
+          <USDTPriceWidget />
+
+          {/* Quick Actions */}
           <div>
-            <h1 className="text-2xl md:text-3xl font-light text-white mb-1">
-              Bienvenue, <span className="text-terex-accent">{user?.name?.split(' ')[0]}</span>
-            </h1>
-            <p className="text-sm text-gray-400 font-light">Plateforme USDT</p>
+            <h2 className="text-white font-semibold text-sm mb-3">Actions rapides</h2>
+            <QuickActionsWidget onNavigate={onNavigate} />
+          </div>
+
+          {/* User Stats */}
+          <UserStatsWidget />
+
+          {/* Crypto News */}
+          <CryptoNewsWidget />
+
+          {/* Recent Transactions */}
+          <div>
+            <h2 className="text-white font-semibold text-sm mb-3">Transactions récentes</h2>
+            <RecentTransactions onNavigate={onNavigate} />
           </div>
         </div>
-
-        {/* Services Grid - 2x2 avec px-0 */}
-        <div className="grid grid-cols-2 gap-3 mb-4 px-0">
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('buy')}
-          >
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
-                  <TetherLogo className="w-5 h-5" />
-                </div>
-              </div>
-              <h3 className="text-white text-sm font-light mb-1">Acheter USDT</h3>
-              <p className="text-gray-400 text-xs">Achat rapide</p>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('sell')}
-          >
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
-                  <TetherLogo className="w-5 h-5" />
-                </div>
-              </div>
-              <h3 className="text-white text-sm font-light mb-1">Vendre USDT</h3>
-              <p className="text-gray-400 text-xs">Vente rapide</p>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('otc')}
-          >
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                  <Handshake className="w-4 h-4 text-purple-400" />
-                </div>
-              </div>
-              <h3 className="text-white text-sm font-light mb-1">Trading OTC</h3>
-              <p className="text-gray-400 text-xs">Gros volumes</p>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('transfer')}
-          >
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-terex-accent/20 rounded-lg flex items-center justify-center">
-                  <Globe className="w-4 h-4 text-terex-accent" />
-                </div>
-              </div>
-              <h3 className="text-white text-sm font-light mb-1">Virement</h3>
-              <p className="text-gray-400 text-xs">International</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Section Historique des transactions récentes - px-0 */}
-        <div className="px-0">
-          <RecentTransactions onNavigate={onNavigate} />
-        </div>
-
       </div>
     );
   }
 
-  // Design desktop centré comme mobile
+  // Desktop Layout
   return (
-    <div className="min-h-[calc(100vh-10rem)] flex items-start justify-center py-8 px-4">
-      <div className="w-full max-w-2xl space-y-6">
-        {/* Header Section */}
-        <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
-            <img src="/bitcoin-logo.png" alt="Bitcoin" className="w-12 h-12 object-contain" />
+    <div className="min-h-[calc(100vh-10rem)] py-8 px-6">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-terex-accent to-terex-teal flex items-center justify-center shadow-lg shadow-terex-accent/20">
+              <span className="text-terex-dark font-bold text-2xl">
+                {firstName.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            <div>
+              <p className="text-gray-400 text-sm">{greeting}</p>
+              <h1 className="text-white font-semibold text-2xl">
+                {firstName}
+              </h1>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-light text-white">
-              Bienvenue, <span className="text-terex-accent">{user?.name?.split(' ')[0]}</span>
-            </h1>
-            <p className="text-gray-400 text-sm">Plateforme USDT</p>
-          </div>
+          <button className="w-11 h-11 rounded-xl bg-terex-darker flex items-center justify-center border border-terex-gray hover:border-terex-accent transition-colors">
+            <Bell className="w-5 h-5 text-gray-400" />
+          </button>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-2 gap-4">
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('buy')}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
-                  <TetherLogo className="w-6 h-6" />
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-terex-accent" />
+        {/* Main Grid Layout */}
+        <div className="grid grid-cols-12 gap-6">
+          {/* Left Column - Main Content */}
+          <div className="col-span-8 space-y-6">
+            {/* Top Row - Price + Quick Actions */}
+            <div className="grid grid-cols-5 gap-6">
+              {/* USDT Price Widget */}
+              <div className="col-span-2">
+                <USDTPriceWidget />
               </div>
-              <h3 className="text-white font-light mb-1">Acheter USDT</h3>
-              <p className="text-gray-400 text-sm">Achat rapide</p>
-            </CardContent>
-          </Card>
+              
+              {/* Quick Actions */}
+              <div className="col-span-3">
+                <h2 className="text-white font-semibold text-sm mb-3">Actions rapides</h2>
+                <QuickActionsWidget onNavigate={onNavigate} />
+              </div>
+            </div>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('sell')}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center">
-                  <TetherLogo className="w-6 h-6" />
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-terex-accent" />
-              </div>
-              <h3 className="text-white font-light mb-1">Vendre USDT</h3>
-              <p className="text-gray-400 text-sm">Vente rapide</p>
-            </CardContent>
-          </Card>
+            {/* Recent Transactions */}
+            <div>
+              <h2 className="text-white font-semibold text-sm mb-3">Transactions récentes</h2>
+              <RecentTransactions onNavigate={onNavigate} />
+            </div>
+          </div>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('otc')}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                  <Handshake className="w-5 h-5 text-purple-400" />
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-terex-accent" />
-              </div>
-              <h3 className="text-white font-light mb-1">Trading OTC</h3>
-              <p className="text-gray-400 text-sm">Gros volumes</p>
-            </CardContent>
-          </Card>
+          {/* Right Column - Sidebar */}
+          <div className="col-span-4 space-y-6">
+            {/* User Stats */}
+            <UserStatsWidget />
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('transfer')}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 bg-terex-accent/20 rounded-lg flex items-center justify-center">
-                  <Globe className="w-5 h-5 text-terex-accent" />
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-terex-accent" />
-              </div>
-              <h3 className="text-white font-light mb-1">Virement</h3>
-              <p className="text-gray-400 text-sm">International</p>
-            </CardContent>
-          </Card>
+            {/* Crypto News */}
+            <CryptoNewsWidget />
+          </div>
         </div>
-
-        {/* Recent Transactions */}
-        <RecentTransactions onNavigate={onNavigate} />
       </div>
     </div>
   );
