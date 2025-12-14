@@ -16,6 +16,7 @@ import { CTASection } from './sections/CTASection';
 import { FooterSection } from './sections/FooterSection';
 import { PhoneMockupSection } from './sections/PhoneMockupSection';
 import { NetworksSection } from './sections/NetworksSection';
+import { DashboardPreviewSection } from './sections/DashboardPreviewSection';
 
 interface PublicHomeProps {
   onGetStarted: () => void;
@@ -69,6 +70,8 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       <CurrencyConverterSection />
 
       <WhyChooseTerexSection />
+
+      <DashboardPreviewSection />
 
       <PhoneMockupSection />
 
