@@ -19,7 +19,7 @@ export function DashboardPreviewSection() {
         </div>
 
         {/* Desktop and Mobile side by side */}
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-[1.3fr_1fr] gap-8 lg:gap-12 items-center max-w-7xl mx-auto">
           {/* Desktop Version - Left */}
           <div className="relative order-1">
             <div className="flex items-center justify-center gap-2 mb-4">
@@ -31,17 +31,17 @@ export function DashboardPreviewSection() {
             <div className="absolute inset-0 bg-terex-teal/20 blur-3xl rounded-full scale-75 opacity-20" />
             
             {/* Desktop frame */}
-            <div className="relative bg-gradient-to-b from-terex-gray/50 to-terex-gray/30 rounded-2xl p-2 border border-white/10 shadow-2xl">
+            <div className="relative bg-gradient-to-b from-terex-gray/50 to-terex-gray/30 rounded-2xl p-3 border border-white/10 shadow-2xl">
               <img
                 src={dashboardPreview}
                 alt="Tableau de bord Terex - Interface desktop"
-                className="rounded-xl w-full h-auto shadow-lg"
+                className="rounded-xl w-full h-auto shadow-lg min-h-[400px] lg:min-h-[500px] object-cover"
               />
             </div>
           </div>
 
           {/* Mobile Version - Right */}
-          <div className="relative order-2 flex flex-col items-center">
+          <div className="relative order-2 flex flex-col items-center justify-center h-full">
             <div className="flex items-center justify-center gap-2 mb-4">
               <Smartphone className="w-5 h-5 text-terex-accent" />
               <span className="text-white font-medium">Version Mobile</span>
@@ -51,7 +51,7 @@ export function DashboardPreviewSection() {
             <div className="absolute inset-0 bg-terex-accent/20 blur-3xl rounded-full scale-75 opacity-20" />
             
             {/* Phone mockup */}
-            <div className="relative scale-90 lg:scale-100">
+            <div className="relative">
               <PhoneMockup />
             </div>
           </div>
