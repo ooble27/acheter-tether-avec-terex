@@ -14,7 +14,6 @@ import { HowItWorksSection } from './sections/HowItWorksSection';
 import { PaymentMethodsSection } from './sections/PaymentMethodsSection';
 import { CTASection } from './sections/CTASection';
 import { FooterSection } from './sections/FooterSection';
-import { PhoneMockupSection } from './sections/PhoneMockupSection';
 import { NetworksSection } from './sections/NetworksSection';
 import { DashboardPreviewSection } from './sections/DashboardPreviewSection';
 
@@ -72,8 +71,6 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       <WhyChooseTerexSection />
 
       <DashboardPreviewSection />
-
-      <PhoneMockupSection />
 
       <NetworksSection />
 
