@@ -1,11 +1,4 @@
-import { Card } from '@/components/ui/card';
-import { 
-  ArrowDownCircle, 
-  ArrowUpCircle, 
-  Globe, 
-  Handshake,
-  ArrowRight
-} from 'lucide-react';
+import { ArrowDownToLine, ArrowUpFromLine, Send, Briefcase, ChevronRight } from 'lucide-react';
 
 interface QuickActionsWidgetProps {
   onNavigate?: (section: string) => void;
@@ -15,80 +8,59 @@ export function QuickActionsWidget({ onNavigate }: QuickActionsWidgetProps) {
   const actions = [
     {
       id: 'buy',
-      icon: ArrowDownCircle,
-      title: 'Acheter',
-      subtitle: 'USDT',
-      description: 'Achat rapide et sécurisé',
-      gradient: 'from-green-500/20 to-green-600/10',
-      iconColor: 'text-green-400',
-      borderColor: 'border-green-500/30 hover:border-green-500/50'
+      icon: ArrowDownToLine,
+      label: 'Acheter',
+      description: 'USDT',
+      gradient: 'from-terex-teal/20 to-terex-teal/5',
+      iconBg: 'bg-terex-teal',
+      border: 'border-terex-teal/30',
     },
     {
       id: 'sell',
-      icon: ArrowUpCircle,
-      title: 'Vendre',
-      subtitle: 'USDT',
-      description: 'Conversion instantanée',
-      gradient: 'from-red-500/20 to-red-600/10',
-      iconColor: 'text-red-400',
-      borderColor: 'border-red-500/30 hover:border-red-500/50'
+      icon: ArrowUpFromLine,
+      label: 'Vendre',
+      description: 'USDT',
+      gradient: 'from-terex-accent/20 to-terex-accent/5',
+      iconBg: 'bg-terex-accent',
+      border: 'border-terex-accent/30',
     },
     {
       id: 'transfer',
-      icon: Globe,
-      title: 'Transfert',
-      subtitle: 'International',
-      description: 'Envoi vers 15+ pays',
-      gradient: 'from-terex-accent/20 to-terex-teal/10',
-      iconColor: 'text-terex-accent',
-      borderColor: 'border-terex-accent/30 hover:border-terex-accent/50'
+      icon: Send,
+      label: 'Transfert',
+      description: 'International',
+      gradient: 'from-blue-500/20 to-blue-500/5',
+      iconBg: 'bg-blue-500',
+      border: 'border-blue-500/30',
     },
     {
       id: 'otc',
-      icon: Handshake,
-      title: 'OTC',
-      subtitle: 'Trading',
-      description: 'Gros volumes',
-      gradient: 'from-purple-500/20 to-purple-600/10',
-      iconColor: 'text-purple-400',
-      borderColor: 'border-purple-500/30 hover:border-purple-500/50'
-    }
+      icon: Briefcase,
+      label: 'OTC',
+      description: 'Gros volume',
+      gradient: 'from-purple-500/20 to-purple-500/5',
+      iconBg: 'bg-purple-500',
+      border: 'border-purple-500/30',
+    },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
       {actions.map((action) => (
-        <Card
+        <button
           key={action.id}
           onClick={() => onNavigate?.(action.id)}
-          className={`
-            bg-gradient-to-br ${action.gradient} 
-            ${action.borderColor}
-            cursor-pointer transition-all duration-300
-            hover:scale-[1.02] hover:shadow-lg hover:shadow-black/20
-            group relative overflow-hidden
-          `}
+          className={`relative overflow-hidden flex items-center gap-3 p-3 rounded-xl bg-gradient-to-br ${action.gradient} border ${action.border} hover:border-opacity-60 transition-all group`}
         >
-          {/* Hover glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          
-          <div className="p-4 relative z-10">
-            <div className="flex items-start justify-between mb-3">
-              <div className={`w-10 h-10 rounded-xl bg-terex-dark/50 flex items-center justify-center`}>
-                <action.icon className={`w-5 h-5 ${action.iconColor}`} />
-              </div>
-              <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-white group-hover:translate-x-1 transition-all" />
-            </div>
-            
-            <div>
-              <h3 className="text-white font-semibold text-base">
-                {action.title}
-                <span className={`ml-1 ${action.iconColor}`}>{action.subtitle}</span>
-              </h3>
-              <p className="text-gray-400 text-xs mt-1">{action.description}</p>
-            </div>
+          <div className={`w-9 h-9 rounded-lg ${action.iconBg} flex items-center justify-center shadow-lg`}>
+            <action.icon className="w-4 h-4 text-terex-dark" />
           </div>
-        </Card>
+          <div className="text-left flex-1">
+            <span className="text-white text-sm font-semibold block">{action.label}</span>
+            <span className="text-gray-400 text-xs">{action.description}</span>
+          </div>
+          <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-white transition-colors" />
+        </button>
       ))}
     </div>
   );

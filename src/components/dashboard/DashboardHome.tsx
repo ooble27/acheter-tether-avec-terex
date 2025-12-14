@@ -44,24 +44,24 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   if (isMobile) {
     return (
       <div className="min-h-screen bg-terex-dark pb-24 overflow-y-auto scrollbar-hide">
-        {/* Header */}
-        <div className="sticky top-0 z-10 bg-terex-dark/95 backdrop-blur-lg border-b border-terex-gray/20 px-4 py-4">
+        {/* Binance-style Header */}
+        <div className="sticky top-0 z-10 bg-terex-dark/98 backdrop-blur-xl border-b border-terex-accent/10 px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-terex-accent to-terex-teal flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-terex-accent to-terex-accent/60 flex items-center justify-center shadow-lg shadow-terex-accent/20">
                 <span className="text-terex-dark font-bold text-lg">
                   {firstName.charAt(0).toUpperCase()}
                 </span>
               </div>
               <div>
-                <p className="text-gray-400 text-xs">{greeting}</p>
-                <h1 className="text-white font-semibold text-lg">
+                <p className="text-gray-500 text-[10px] uppercase tracking-wider">{greeting}</p>
+                <h1 className="text-white font-bold text-base">
                   {firstName}
                 </h1>
               </div>
             </div>
-            <button className="w-10 h-10 rounded-full bg-terex-darker flex items-center justify-center border border-terex-gray hover:border-terex-accent transition-colors">
-              <Bell className="w-5 h-5 text-gray-400" />
+            <button className="w-9 h-9 rounded-lg bg-terex-gray/20 flex items-center justify-center border border-terex-gray/30 hover:border-terex-accent/50 hover:bg-terex-accent/10 transition-all">
+              <Bell className="w-4 h-4 text-gray-400" />
             </button>
           </div>
         </div>
@@ -72,10 +72,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           <USDTPriceWidget />
 
           {/* Quick Actions */}
-          <div>
-            <h2 className="text-white font-semibold text-sm mb-3">Actions rapides</h2>
-            <QuickActionsWidget onNavigate={onNavigate} />
-          </div>
+          <QuickActionsWidget onNavigate={onNavigate} />
 
           {/* User Stats */}
           <UserStatsWidget />
@@ -85,7 +82,15 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
 
           {/* Recent Transactions */}
           <div>
-            <h2 className="text-white font-semibold text-sm mb-3">Transactions récentes</h2>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-white font-semibold text-sm">Transactions récentes</h2>
+              <button 
+                onClick={() => onNavigate?.('history')}
+                className="text-terex-accent text-xs hover:underline"
+              >
+                Voir tout
+              </button>
+            </div>
             <RecentTransactions onNavigate={onNavigate} />
           </div>
         </div>
@@ -93,36 +98,41 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
     );
   }
 
-  // Desktop Layout
+  // Desktop Layout - Binance Style
   return (
-    <div className="min-h-[calc(100vh-10rem)] py-8 px-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-[calc(100vh-10rem)] py-6 px-6 bg-terex-dark">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-terex-accent to-terex-teal flex items-center justify-center shadow-lg shadow-terex-accent/20">
-              <span className="text-terex-dark font-bold text-2xl">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-terex-accent to-terex-accent/60 flex items-center justify-center shadow-lg shadow-terex-accent/30">
+              <span className="text-terex-dark font-bold text-xl">
                 {firstName.charAt(0).toUpperCase()}
               </span>
             </div>
             <div>
-              <p className="text-gray-400 text-sm">{greeting}</p>
-              <h1 className="text-white font-semibold text-2xl">
+              <p className="text-gray-500 text-xs uppercase tracking-wider">{greeting}</p>
+              <h1 className="text-white font-bold text-xl">
                 {firstName}
               </h1>
             </div>
           </div>
-          <button className="w-11 h-11 rounded-xl bg-terex-darker flex items-center justify-center border border-terex-gray hover:border-terex-accent transition-colors">
-            <Bell className="w-5 h-5 text-gray-400" />
-          </button>
+          <div className="flex items-center gap-3">
+            <button className="px-4 py-2 rounded-lg bg-terex-accent/10 border border-terex-accent/30 text-terex-accent text-sm font-medium hover:bg-terex-accent/20 transition-colors">
+              Déposer
+            </button>
+            <button className="w-10 h-10 rounded-lg bg-terex-gray/20 flex items-center justify-center border border-terex-gray/30 hover:border-terex-accent/50 hover:bg-terex-accent/10 transition-all">
+              <Bell className="w-4 h-4 text-gray-400" />
+            </button>
+          </div>
         </div>
 
         {/* Main Grid Layout */}
-        <div className="grid grid-cols-12 gap-6">
+        <div className="grid grid-cols-12 gap-5">
           {/* Left Column - Main Content */}
-          <div className="col-span-8 space-y-6">
+          <div className="col-span-8 space-y-5">
             {/* Top Row - Price + Quick Actions */}
-            <div className="grid grid-cols-5 gap-6">
+            <div className="grid grid-cols-5 gap-5">
               {/* USDT Price Widget */}
               <div className="col-span-2">
                 <USDTPriceWidget />
@@ -130,20 +140,27 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
               
               {/* Quick Actions */}
               <div className="col-span-3">
-                <h2 className="text-white font-semibold text-sm mb-3">Actions rapides</h2>
                 <QuickActionsWidget onNavigate={onNavigate} />
               </div>
             </div>
 
             {/* Recent Transactions */}
-            <div>
-              <h2 className="text-white font-semibold text-sm mb-3">Transactions récentes</h2>
+            <div className="bg-gradient-to-br from-terex-darker to-terex-dark border border-terex-accent/20 rounded-xl p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-white font-semibold text-sm">Transactions récentes</h2>
+                <button 
+                  onClick={() => onNavigate?.('history')}
+                  className="text-terex-accent text-xs hover:underline"
+                >
+                  Voir tout →
+                </button>
+              </div>
               <RecentTransactions onNavigate={onNavigate} />
             </div>
           </div>
 
           {/* Right Column - Sidebar */}
-          <div className="col-span-4 space-y-6">
+          <div className="col-span-4 space-y-5">
             {/* User Stats */}
             <UserStatsWidget />
 
