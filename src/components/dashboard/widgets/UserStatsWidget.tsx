@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
-import { ArrowUpCircle, ArrowDownCircle, Globe, TrendingUp } from 'lucide-react';
+import { Activity, ShoppingCart, Wallet, Send, TrendingUp, ArrowUpRight } from 'lucide-react';
 import { useTransactions } from '@/hooks/useTransactions';
 
 interface Stats {
@@ -27,7 +27,6 @@ export function UserStatsWidget() {
       const sellTx = transactions.filter(t => t.type === 'sell');
       const transferTx = transactions.filter(t => t.type === 'transfer');
       
-      // Calculate total volume (sum of all USDT amounts or fiat amounts)
       const totalVolume = transactions.reduce((sum, tx) => {
         const amount = parseFloat(tx.usdtAmount || tx.amount || '0');
         return sum + amount;
@@ -43,73 +42,71 @@ export function UserStatsWidget() {
     }
   }, [transactions]);
 
-  const statItems = [
-    {
-      icon: ArrowDownCircle,
-      label: 'Achats',
-      value: stats.buyCount,
-      color: 'text-green-400',
-      bgColor: 'bg-green-500/20'
-    },
-    {
-      icon: ArrowUpCircle,
-      label: 'Ventes',
-      value: stats.sellCount,
-      color: 'text-red-400',
-      bgColor: 'bg-red-500/20'
-    },
-    {
-      icon: Globe,
-      label: 'Transferts',
-      value: stats.transferCount,
-      color: 'text-terex-accent',
-      bgColor: 'bg-terex-accent/20'
-    },
-    {
-      icon: TrendingUp,
-      label: 'Volume',
-      value: `${stats.totalVolume.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} USDT`,
-      color: 'text-terex-highlight',
-      bgColor: 'bg-terex-highlight/20',
-      isText: true
-    }
-  ];
-
   if (loading) {
     return (
-      <Card className="bg-terex-darker border-terex-gray p-4">
-        <h3 className="text-white font-semibold text-sm mb-4">Vos statistiques</h3>
-        <div className="grid grid-cols-2 gap-3">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="bg-terex-dark rounded-xl p-3 animate-pulse">
-              <div className="h-4 bg-terex-gray rounded w-1/2 mb-2" />
-              <div className="h-6 bg-terex-gray rounded w-1/3" />
-            </div>
-          ))}
+      <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border-terex-accent/20 p-4 rounded-xl">
+        <div className="animate-pulse space-y-3">
+          <div className="h-4 bg-terex-gray/30 rounded w-32" />
+          <div className="space-y-2">
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className="h-12 bg-terex-gray/30 rounded-lg" />
+            ))}
+          </div>
         </div>
       </Card>
     );
   }
 
+  const statItems = [
+    { icon: Activity, label: 'Transactions', value: stats.totalTransactions, change: '+5' },
+    { icon: ShoppingCart, label: 'Achats', value: stats.buyCount, change: '+2' },
+    { icon: Wallet, label: 'Ventes', value: stats.sellCount, change: '+1' },
+    { icon: Send, label: 'Transferts', value: stats.transferCount, change: '+2' },
+  ];
+
   return (
-    <Card className="bg-terex-darker border-terex-gray p-4">
-      <h3 className="text-white font-semibold text-sm mb-4">Vos statistiques</h3>
+    <Card className="bg-gradient-to-br from-terex-darker to-terex-dark border-terex-accent/20 p-4 rounded-xl">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-white font-semibold text-sm">Statistiques</h3>
+        <span className="text-xs text-gray-500">30 derniers jours</span>
+      </div>
       
-      <div className="grid grid-cols-2 gap-3">
+      {/* Volume Card */}
+      <div className="mb-4 p-4 rounded-xl bg-gradient-to-r from-terex-accent/20 via-terex-accent/10 to-transparent border border-terex-accent/30 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-24 h-24 bg-terex-accent/10 rounded-full blur-2xl" />
+        <div className="relative">
+          <div className="flex items-center gap-2 mb-1">
+            <TrendingUp className="w-4 h-4 text-terex-accent" />
+            <span className="text-gray-400 text-xs">Volume total</span>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-white font-mono">{stats.totalVolume.toLocaleString('fr-FR')}</span>
+            <span className="text-terex-accent text-sm font-semibold">USDT</span>
+          </div>
+          <div className="flex items-center gap-1 mt-1 text-terex-teal text-xs">
+            <ArrowUpRight className="w-3 h-3" />
+            <span>+12.5% ce mois</span>
+          </div>
+        </div>
+      </div>
+      
+      {/* Stats List */}
+      <div className="space-y-2">
         {statItems.map((item, index) => (
           <div 
             key={index}
-            className="bg-terex-dark rounded-xl p-3 hover:bg-terex-gray/30 transition-colors"
+            className="flex items-center justify-between p-3 rounded-lg bg-terex-gray/10 hover:bg-terex-gray/20 transition-colors"
           >
-            <div className="flex items-center gap-2 mb-2">
-              <div className={`w-7 h-7 rounded-lg ${item.bgColor} flex items-center justify-center`}>
-                <item.icon className={`w-4 h-4 ${item.color}`} />
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-terex-gray/30 flex items-center justify-center">
+                <item.icon className="w-4 h-4 text-gray-400" />
               </div>
-              <span className="text-gray-400 text-xs">{item.label}</span>
+              <span className="text-gray-300 text-sm">{item.label}</span>
             </div>
-            <p className={`font-bold ${item.isText ? 'text-sm' : 'text-xl'} text-white`}>
-              {item.value}
-            </p>
+            <div className="flex items-center gap-3">
+              <span className="text-white font-semibold font-mono">{item.value}</span>
+              <span className="text-terex-teal text-xs bg-terex-teal/10 px-1.5 py-0.5 rounded">{item.change}</span>
+            </div>
           </div>
         ))}
       </div>
