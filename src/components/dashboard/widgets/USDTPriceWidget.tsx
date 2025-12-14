@@ -1,23 +1,23 @@
 import { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { useCryptoRates } from '@/hooks/useCryptoRates';
 
 interface PriceData {
-  price: number;
-  change24h: number;
   priceHistory: number[];
+  change24h: number;
   loading: boolean;
 }
 
 export function USDTPriceWidget() {
+  const { usdtToCfa, loading: ratesLoading, lastUpdated } = useCryptoRates();
   const [data, setData] = useState<PriceData>({
-    price: 1.0,
-    change24h: 0,
     priceHistory: [],
+    change24h: 0,
     loading: true
   });
 
-  const fetchPrice = async () => {
+  const fetchSparkline = async () => {
     try {
       const response = await fetch(
         'https://api.coingecko.com/api/v3/coins/tether?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true',
@@ -27,21 +27,20 @@ export function USDTPriceWidget() {
       if (response.ok) {
         const result = await response.json();
         setData({
-          price: result.market_data?.current_price?.usd || 1.0,
-          change24h: result.market_data?.price_change_percentage_24h || 0,
           priceHistory: result.market_data?.sparkline_7d?.price?.slice(-24) || [],
+          change24h: result.market_data?.price_change_percentage_24h || 0,
           loading: false
         });
       }
     } catch (error) {
-      console.warn('Price fetch failed:', error);
+      console.warn('Sparkline fetch failed:', error);
       setData(prev => ({ ...prev, loading: false }));
     }
   };
 
   useEffect(() => {
-    fetchPrice();
-    const interval = setInterval(fetchPrice, 30000);
+    fetchSparkline();
+    const interval = setInterval(fetchSparkline, 60000); // Update every minute
     return () => clearInterval(interval);
   }, []);
 
@@ -49,6 +48,8 @@ export function USDTPriceWidget() {
   const maxPrice = Math.max(...(data.priceHistory.length ? data.priceHistory : [1]));
   const minPrice = Math.min(...(data.priceHistory.length ? data.priceHistory : [1]));
   const range = maxPrice - minPrice || 0.001;
+
+  const isLoading = ratesLoading || data.loading;
 
   return (
     <Card className="bg-gradient-to-br from-terex-accent/20 via-terex-darker to-terex-darker border-terex-accent/30 p-4 relative overflow-hidden">
@@ -70,7 +71,7 @@ export function USDTPriceWidget() {
             </div>
           </div>
           
-          {data.loading ? (
+          {isLoading ? (
             <RefreshCw className="w-4 h-4 text-terex-accent animate-spin" />
           ) : (
             <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
@@ -84,10 +85,12 @@ export function USDTPriceWidget() {
           )}
         </div>
 
-        {/* Price */}
+        {/* Price in CFA */}
         <div className="mb-3">
-          <span className="text-2xl font-bold text-white">${data.price.toFixed(4)}</span>
-          <span className="text-gray-400 text-sm ml-2">USD</span>
+          <span className="text-2xl font-bold text-terex-highlight">
+            {usdtToCfa.toLocaleString('fr-FR')}
+          </span>
+          <span className="text-gray-400 text-sm ml-2">FCFA</span>
         </div>
 
         {/* Mini Sparkline Chart */}
@@ -111,7 +114,9 @@ export function USDTPriceWidget() {
           </div>
         )}
         
-        <p className="text-gray-500 text-xs mt-2 text-center">Dernières 24h</p>
+        <p className="text-gray-500 text-xs mt-2 text-center">
+          {lastUpdated ? `Mis à jour ${new Date(lastUpdated).toLocaleTimeString('fr-FR')}` : 'Dernières 24h'}
+        </p>
       </div>
     </Card>
   );
