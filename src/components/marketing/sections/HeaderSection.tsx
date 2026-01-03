@@ -21,7 +21,6 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
       await onLogout();
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);
-      // Force reload on error to ensure clean state
       window.location.reload();
     }
   };
@@ -39,10 +38,10 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   ];
 
   return (
-    <header className={`${isMobile ? 'relative bg-transparent' : 'bg-terex-darker border-b border-terex-accent/20'} pt-safe`}>
+    <header className={`${isMobile ? 'relative bg-white' : 'bg-white border-b border-gray-100'} pt-safe`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo seul */}
+          {/* Logo */}
           <div className="flex items-center">
             <img 
               src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
@@ -52,41 +51,39 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
             />
           </div>
           
-          {/* Desktop Navigation - Navigation étalée */}
+          {/* Desktop Navigation */}
           {!isMobile && (
             <div className="flex items-center space-x-8">
-              {/* Navigation Links */}
               <nav className="flex items-center space-x-6">
                 {navigationItems.map((item) => (
                   <button
                     key={item.href}
                     onClick={() => navigate(item.href)}
-                    className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm font-light"
+                    className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm font-light"
                   >
                     {item.label}
                   </button>
                 ))}
               </nav>
 
-              {/* User Actions */}
-              <div className="flex items-center space-x-4 ml-8 border-l border-terex-gray/30 pl-8">
+              <div className="flex items-center space-x-4 ml-8 border-l border-gray-100 pl-8">
                 {user ? (
                   <>
                     <Button
                       onClick={onShowDashboard}
                       variant="ghost"
-                      className="text-gray-300 hover:text-white"
+                      className="text-gray-600 hover:text-gray-900"
                     >
                       <User className="w-4 h-4 mr-2" />
                       Dashboard
                     </Button>
-                    <div className="flex items-center space-x-2 text-gray-300">
+                    <div className="flex items-center space-x-2 text-gray-600">
                       <span className="text-sm">{user.name}</span>
                       <Button
                         onClick={handleLogout}
                         variant="ghost"
                         size="sm"
-                        className="text-gray-400 hover:text-red-400"
+                        className="text-gray-400 hover:text-red-500"
                       >
                         <LogOut className="w-4 h-4" />
                       </Button>
@@ -95,9 +92,9 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                 ) : (
                   <Button
                     onClick={() => navigate('/auth')}
-                    className="bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
+                    className="bg-gray-900 hover:bg-gray-800 text-white font-light rounded-lg"
                   >
-                    Se Connecter
+                    Connexion
                   </Button>
                 )}
               </div>
@@ -111,16 +108,16 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-white hover:bg-terex-accent/20"
+                  className="text-gray-900 hover:bg-gray-100"
                 >
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-full bg-terex-darker border-none p-0">
+              <SheetContent side="right" className="w-full bg-white border-none p-0">
                 <ScrollArea className="h-full">
                   <div className="flex flex-col min-h-full pt-safe">
                     {/* Header avec logo */}
-                    <div className="p-6 border-b border-terex-gray/20">
+                    <div className="p-6 border-b border-gray-100">
                       <div className="flex items-center space-x-3">
                         <img 
                           src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
@@ -128,13 +125,13 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                           className="w-10 h-10 rounded-lg"
                         />
                         <div>
-                          <h2 className="text-lg font-semibold text-white">Navigation</h2>
+                          <h2 className="text-lg font-medium text-gray-900">Navigation</h2>
                         </div>
                       </div>
                     </div>
 
                     {/* Navigation Section */}
-                    <div className="p-4 space-y-2">
+                    <div className="p-4 space-y-1">
                       {navigationItems.map((item) => {
                         const IconComponent = item.icon;
                         return (
@@ -142,15 +139,15 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                             key={item.href}
                             variant="ghost"
                             onClick={() => navigate(item.href)}
-                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
+                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
                           >
                             <div className="flex items-center space-x-4 w-full">
-                              <div className="p-2 rounded-lg bg-terex-gray/30">
-                                <IconComponent className="h-5 w-5" />
+                              <div className="p-2 rounded-lg bg-gray-100">
+                                <IconComponent className="h-5 w-5 text-gray-600" />
                               </div>
                               <div className="flex-1 text-left">
                                 <div className="font-medium text-sm">{item.label}</div>
-                                <div className="text-xs opacity-75">{item.description}</div>
+                                <div className="text-xs text-gray-400">{item.description}</div>
                               </div>
                             </div>
                           </Button>
@@ -159,12 +156,12 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                     </div>
 
                     {/* Support Section */}
-                    <div className="px-4 pb-4 space-y-2">
+                    <div className="px-4 pb-4 space-y-1">
                       <div className="pt-4 pb-2">
                         <div className="flex items-center space-x-2">
-                          <div className="h-px bg-terex-gray/40 flex-1"></div>
+                          <div className="h-px bg-gray-100 flex-1"></div>
                           <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Support</span>
-                          <div className="h-px bg-terex-gray/40 flex-1"></div>
+                          <div className="h-px bg-gray-100 flex-1"></div>
                         </div>
                       </div>
                       {supportItems.map((item) => {
@@ -174,15 +171,15 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                             key={item.href}
                             variant="ghost"
                             onClick={() => navigate(item.href)}
-                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
+                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
                           >
                             <div className="flex items-center space-x-4 w-full">
-                              <div className="p-2 rounded-lg bg-terex-gray/30">
-                                <IconComponent className="h-5 w-5" />
+                              <div className="p-2 rounded-lg bg-gray-100">
+                                <IconComponent className="h-5 w-5 text-gray-600" />
                               </div>
                               <div className="flex-1 text-left">
                                 <div className="font-medium text-sm">{item.label}</div>
-                                <div className="text-xs opacity-75">{item.description}</div>
+                                <div className="text-xs text-gray-400">{item.description}</div>
                               </div>
                             </div>
                           </Button>
@@ -190,32 +187,32 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                       })}
                     </div>
 
-                    {/* Footer avec bouton de connexion */}
-                    <div className="p-4 border-t border-terex-gray/20 mt-auto pb-safe">
+                    {/* Footer */}
+                    <div className="p-4 border-t border-gray-100 mt-auto pb-safe">
                       {user ? (
                         <div className="space-y-2">
                           <Button
                             onClick={onShowDashboard}
                             variant="ghost"
-                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
+                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
                           >
                             <div className="flex items-center space-x-4 w-full">
-                              <div className="p-2 rounded-lg bg-terex-gray/30">
-                                <User className="h-5 w-5" />
+                              <div className="p-2 rounded-lg bg-gray-100">
+                                <User className="h-5 w-5 text-gray-600" />
                               </div>
                               <div className="flex-1 text-left">
                                 <div className="font-medium text-sm">Mon Dashboard</div>
-                                <div className="text-xs opacity-75">Accéder à mon compte</div>
+                                <div className="text-xs text-gray-400">Accéder à mon compte</div>
                               </div>
                             </div>
                           </Button>
                           <Button
                             onClick={handleLogout}
                             variant="ghost"
-                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
+                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-400 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
                           >
                             <div className="flex items-center space-x-4 w-full">
-                              <div className="p-2 rounded-lg bg-terex-gray/30">
+                              <div className="p-2 rounded-lg bg-gray-100">
                                 <LogOut className="h-5 w-5" />
                               </div>
                               <div className="flex-1 text-left">
@@ -228,7 +225,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                       ) : (
                         <Button
                           onClick={() => navigate('/auth')}
-                          className="w-full bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-medium py-6 rounded-xl shadow-lg shadow-terex-accent/25"
+                          className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-6 rounded-xl"
                         >
                           Se Connecter
                         </Button>
