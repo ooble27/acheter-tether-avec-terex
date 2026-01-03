@@ -54,8 +54,8 @@ const testimonials = [
 ];
 
 const TestimonialCard = ({ testimonial }: { testimonial: typeof testimonials[0] }) => (
-  <Card className="bg-terex-darker border-terex-gray/30 min-w-[320px] max-w-[400px] flex-shrink-0 mx-3">
-    <CardContent className="p-6">
+  <Card className="bg-terex-darker border-terex-gray/30 min-w-[280px] sm:min-w-[320px] max-w-[320px] sm:max-w-[400px] flex-shrink-0 mx-2 sm:mx-3">
+    <CardContent className="p-4 sm:p-6">
       <div className="flex items-start space-x-3 mb-4">
         <Quote className="w-6 h-6 text-terex-accent flex-shrink-0 mt-1" />
         <p className="text-gray-400 text-sm leading-relaxed italic font-light line-clamp-3">
