@@ -2,20 +2,14 @@
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { PWAInstallPrompt } from '../PWAInstallPrompt';
-import { HeroSection } from './HeroSection';
+import { SpiceHeader } from './sections/SpiceHeader';
+import { SpiceHero } from './sections/SpiceHero';
+import { SpiceFeatures } from './sections/SpiceFeatures';
+import { SpiceStats } from './sections/SpiceStats';
 import { TestimonialsSection } from './TestimonialsSection';
-import { StatsSection } from './StatsSection';
-import { HeaderSection } from './sections/HeaderSection';
-import { CurrencyConverterSection } from './sections/CurrencyConverterSection';
-import { WhyChooseTerexSection } from './sections/WhyChooseTerexSection';
-import { HowItWorksSection } from './sections/HowItWorksSection';
-import { PaymentMethodsSection } from './sections/PaymentMethodsSection';
-import { CTASection } from './sections/CTASection';
-import { FooterSection } from './sections/FooterSection';
-import { NetworksSection } from './sections/NetworksSection';
-import { DashboardPreviewSection } from './sections/DashboardPreviewSection';
+import { SpiceCTA } from './sections/SpiceCTA';
+import { SpiceFooter } from './sections/SpiceFooter';
 
 interface PublicHomeProps {
   onGetStarted: () => void;
@@ -26,15 +20,6 @@ interface PublicHomeProps {
 export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomeProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const isMobile = useIsMobile();
-
-  const handleGetStarted = () => {
-    navigate('/auth');
-  };
-
-  const handleBlockchainInfo = () => {
-    navigate('/blockchain');
-  };
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -55,36 +40,26 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark">
+    <div className="min-h-screen bg-black">
       <PWAInstallPrompt />
       
-      <HeaderSection 
+      <SpiceHeader 
         user={user}
         onShowDashboard={onShowDashboard}
         onLogout={handleLogout}
       />
       
-      <HeroSection user={user} onShowDashboard={onShowDashboard} />
+      <SpiceHero user={user} onShowDashboard={onShowDashboard} />
       
-      <CurrencyConverterSection />
+      <SpiceFeatures />
 
-      <WhyChooseTerexSection />
-
-      <DashboardPreviewSection />
-
-      <NetworksSection />
-
-      <HowItWorksSection onBlockchainInfoClick={handleBlockchainInfo} />
-
-      <StatsSection />
+      <SpiceStats />
       
-      <PaymentMethodsSection />
-
       <TestimonialsSection />
       
-      <CTASection user={user} onGetStarted={handleGetStarted} />
+      <SpiceCTA user={user} />
 
-      <FooterSection />
+      <SpiceFooter />
     </div>
   );
 }

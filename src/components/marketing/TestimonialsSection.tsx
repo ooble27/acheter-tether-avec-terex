@@ -54,22 +54,22 @@ const testimonials = [
 ];
 
 const TestimonialCard = ({ testimonial }: { testimonial: typeof testimonials[0] }) => (
-  <Card className="bg-terex-darker border-terex-gray/30 min-w-[220px] sm:min-w-[300px] max-w-[240px] sm:max-w-[360px] flex-shrink-0 mx-1.5 sm:mx-3">
+  <Card className="bg-zinc-900 border-white/5 min-w-[220px] sm:min-w-[300px] max-w-[240px] sm:max-w-[360px] flex-shrink-0 mx-1.5 sm:mx-3">
     <CardContent className="p-3 sm:p-5">
       <div className="flex items-start space-x-2 sm:space-x-3 mb-3 sm:mb-4">
-        <Quote className="w-4 h-4 sm:w-6 sm:h-6 text-terex-accent flex-shrink-0 mt-0.5" />
-        <p className="text-gray-400 text-xs sm:text-sm leading-relaxed italic font-light line-clamp-3">
+        <Quote className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 flex-shrink-0 mt-0.5" />
+        <p className="text-gray-400 text-xs sm:text-sm leading-relaxed line-clamp-3">
           "{testimonial.text}"
         </p>
       </div>
       
       <div className="flex items-center space-x-2 sm:space-x-3">
-        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center">
-          <User className="w-4 h-4 sm:w-5 sm:h-5 text-terex-accent" />
+        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-pink-500/20 to-purple-500/10 rounded-full flex items-center justify-center">
+          <User className="w-4 h-4 sm:w-5 sm:h-5 text-pink-400" />
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="text-white font-light text-xs sm:text-sm truncate">{testimonial.name}</h4>
-          <p className="text-terex-accent text-[10px] sm:text-xs font-light">{testimonial.location}</p>
+          <h4 className="text-white text-xs sm:text-sm truncate">{testimonial.name}</h4>
+          <p className="text-gray-500 text-[10px] sm:text-xs">{testimonial.location}</p>
         </div>
         <div className="flex space-x-0.5">
           {[...Array(testimonial.rating)].map((_, i) => (
@@ -87,13 +87,13 @@ export function TestimonialsSection() {
   const row2 = [...testimonials.slice().reverse(), ...testimonials.slice().reverse()];
 
   return (
-    <section className="py-20 bg-terex-dark overflow-hidden">
+    <section className="py-20 bg-black overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
-            Ils nous font <span className="text-terex-accent">confiance</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl text-white mb-6 italic">
+            Ils nous font confiance
           </h2>
-          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto font-light">
+          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto">
             Découvrez ce que nos utilisateurs disent de leur expérience avec Terex
           </p>
         </div>
@@ -120,20 +120,20 @@ export function TestimonialsSection() {
       {/* Badge de confiance */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mt-16">
-          <div className="inline-flex items-center space-x-6 bg-terex-darker/50 border border-terex-gray/30 rounded-2xl px-8 py-4">
+          <div className="inline-flex items-center space-x-6 bg-zinc-900 border border-white/5 rounded-2xl px-8 py-4">
             <div className="text-center">
-              <div className="text-2xl font-light text-terex-accent">4.9/5</div>
-              <div className="text-sm text-gray-400 font-light">Note moyenne</div>
+              <div className="text-2xl text-white">4.9/5</div>
+              <div className="text-sm text-gray-500">Note moyenne</div>
             </div>
-            <div className="w-px h-8 bg-terex-gray/30"></div>
+            <div className="w-px h-8 bg-white/10"></div>
             <div className="text-center">
-              <div className="text-2xl font-light text-terex-accent">1000+</div>
-              <div className="text-sm text-gray-400 font-light">Clients satisfaits</div>
+              <div className="text-2xl text-white">1000+</div>
+              <div className="text-sm text-gray-500">Clients satisfaits</div>
             </div>
-            <div className="w-px h-8 bg-terex-gray/30"></div>
+            <div className="w-px h-8 bg-white/10"></div>
             <div className="text-center">
-              <div className="text-2xl font-light text-terex-accent">24/7</div>
-              <div className="text-sm text-gray-400 font-light">Support client</div>
+              <div className="text-2xl text-white">24/7</div>
+              <div className="text-sm text-gray-500">Support client</div>
             </div>
           </div>
         </div>
