@@ -1041,22 +1041,3 @@
 .animate-scroll-right:hover {
   animation-play-state: paused;
 }
-
-/* Animation spin lente pour les orbites */
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 20s linear infinite;
-}
-
-/* Gradient radial pour backgrounds */
-.bg-gradient-radial {
-  background: radial-gradient(circle, var(--tw-gradient-stops));
-}
