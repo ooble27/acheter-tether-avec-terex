@@ -1,12 +1,9 @@
 
-
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Shield, Globe, ArrowRightLeft, Send, Banknote, TrendingUp, Users, Clock } from 'lucide-react';
+import { ArrowRight, Zap, Shield, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { DeviceMockups } from './DeviceMockups';
 import { PhoneMockup } from './PhoneMockup';
-import { useState, useEffect } from 'react';
+import { DeviceMockups } from './DeviceMockups';
 
 interface HeroSectionProps {
   user?: { email: string; name: string } | null;
@@ -27,7 +24,6 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
   };
 
   const handleHowItWorks = () => {
-    // Scroll to "Comment ça marche" section
     const element = document.getElementById('how-it-works');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -35,127 +31,155 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
   };
 
   return (
-    <div className="bg-terex-dark min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-        {/* Layout principal en grid pour desktop, stack pour mobile */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[600px]">
+    <div className="relative min-h-screen bg-terex-dark overflow-hidden">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-terex-accent/10 rounded-full blur-[150px] animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-terex-teal/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-terex-accent/5 to-transparent rounded-full" />
+      </div>
+      
+      {/* Grid pattern overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(59,150,143,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,150,143,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
+      
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 lg:pt-32 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           
-          {/* Colonne de gauche - Contenu textuel */}
-          <div className="order-2 lg:order-1 text-center lg:text-left">
-            {/* Titre centré sur mobile */}
-            <div className="lg:hidden">
+          {/* Left Content */}
+          <div className="text-center lg:text-left order-2 lg:order-1">
+            {/* Mobile mockup */}
+            <div className="lg:hidden mb-8">
               <DeviceMockups />
             </div>
             
-            {/* Mockup téléphone visible uniquement sur mobile entre titre et sous-titre */}
-            <div className="lg:hidden flex justify-center my-8">
-              <div className="relative scale-75">
-                <PhoneMockup />
-              </div>
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-terex-accent/10 border border-terex-accent/20 mb-8">
+              <Zap className="w-4 h-4 text-terex-accent" />
+              <span className="text-terex-accent text-sm">La plateforme #1 en Afrique</span>
             </div>
             
-            {/* DeviceMockups pour desktop seulement */}
             <div className="hidden lg:block">
               <DeviceMockups />
             </div>
             
-            <p className="text-lg sm:text-xl text-gray-400 mb-8 max-w-2xl leading-relaxed mx-auto lg:mx-0 font-light">
-              Achetez et vendez des USDT facilement, 
-              effectuez des transferts d'argent vers l'Afrique instantanément. Rapide, sécurisé et sans commission.
+            {/* Subtitle */}
+            <p className="text-lg sm:text-xl text-gray-400 mb-10 max-w-xl leading-relaxed mx-auto lg:mx-0">
+              Achetez, vendez des USDT et envoyez de l'argent vers l'Afrique
+              <span className="text-terex-accent"> instantanément</span>. 
+              Rapide, sécurisé, sans commission cachée.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 justify-center lg:justify-start">
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-16 justify-center lg:justify-start">
               {user ? (
                 <Button 
                   onClick={handleDashboard}
                   size="lg" 
-                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-light px-6 py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto"
+                  className="group bg-terex-accent hover:bg-terex-accent/90 text-black px-8 py-6 text-lg rounded-2xl shadow-[0_0_40px_rgba(59,150,143,0.3)] hover:shadow-[0_0_60px_rgba(59,150,143,0.5)] transition-all duration-500"
                 >
                   Aller au Dashboard
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               ) : (
                 <Button 
                   onClick={handleGetStarted}
                   size="lg" 
-                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-light px-6 py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto"
+                  className="group bg-terex-accent hover:bg-terex-accent/90 text-black px-8 py-6 text-lg rounded-2xl shadow-[0_0_40px_rgba(59,150,143,0.3)] hover:shadow-[0_0_60px_rgba(59,150,143,0.5)] transition-all duration-500"
                 >
                   Commencer maintenant
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               )}
               <Button 
                 onClick={handleHowItWorks}
-                variant="outline" 
+                variant="ghost" 
                 size="lg"
-                className="border-gray-600 text-gray-300 hover:bg-terex-gray px-6 py-4 text-base sm:text-lg rounded-xl backdrop-blur-sm w-64 sm:w-auto mx-auto h-12 sm:h-auto"
+                className="text-gray-300 hover:text-white hover:bg-white/5 px-8 py-6 text-lg rounded-2xl border border-white/10 hover:border-white/20 transition-all duration-300"
               >
-                Voir comment ça marche
+                Comment ça marche ?
               </Button>
             </div>
             
-            {/* Stats rapides */}
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <div className="text-2xl font-light text-terex-accent">5min</div>
-                <div className="text-sm text-gray-400">Transfert rapide</div>
+            {/* Stats inline */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8 lg:gap-12">
+              <div className="text-center lg:text-left">
+                <div className="text-3xl lg:text-4xl text-white mb-1">
+                  <span className="bg-gradient-to-r from-terex-accent to-terex-teal bg-clip-text text-transparent">5</span>
+                  <span className="text-gray-400 text-lg ml-1">min</span>
+                </div>
+                <div className="text-sm text-gray-500">Transfert rapide</div>
               </div>
-              <div>
-                <div className="text-2xl font-light text-terex-accent">6</div>
-                <div className="text-sm text-gray-400">Pays supportés</div>
+              <div className="w-px h-10 bg-gradient-to-b from-transparent via-terex-accent/30 to-transparent hidden sm:block" />
+              <div className="text-center lg:text-left">
+                <div className="text-3xl lg:text-4xl text-white mb-1">
+                  <span className="bg-gradient-to-r from-terex-accent to-terex-teal bg-clip-text text-transparent">6</span>
+                  <span className="text-gray-400 text-lg ml-1">pays</span>
+                </div>
+                <div className="text-sm text-gray-500">Supportés</div>
               </div>
-              <div>
-                <div className="text-2xl font-light text-terex-accent">24/7</div>
-                <div className="text-sm text-gray-400">Disponibilité</div>
+              <div className="w-px h-10 bg-gradient-to-b from-transparent via-terex-accent/30 to-transparent hidden sm:block" />
+              <div className="text-center lg:text-left">
+                <div className="text-3xl lg:text-4xl text-white mb-1">
+                  <span className="bg-gradient-to-r from-terex-accent to-terex-teal bg-clip-text text-transparent">24/7</span>
+                </div>
+                <div className="text-sm text-gray-500">Disponibilité</div>
               </div>
             </div>
           </div>
           
-          {/* Colonne de droite - PhoneMockup visible uniquement sur desktop */}
-          <div className="order-1 lg:order-2 hidden lg:flex justify-center">
-            <div className="relative scale-75 sm:scale-90 lg:scale-100">
+          {/* Right - Phone Mockup (Desktop only) */}
+          <div className="hidden lg:flex justify-center order-1 lg:order-2">
+            <div className="relative">
+              {/* Glow behind phone */}
+              <div className="absolute inset-0 bg-gradient-to-b from-terex-accent/20 to-terex-teal/20 blur-[100px] scale-150" />
               <PhoneMockup />
             </div>
           </div>
         </div>
         
-        {/* Cartes des fonctionnalités - en bas */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-16 lg:mt-24">
-          <Card className="bg-terex-darker border-terex-accent/20 backdrop-blur-sm hover:bg-terex-gray transition-all duration-300 hover:scale-105 group shadow-lg">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                {/* Logo USDT de CoinMarketCap */}
+        {/* Features ribbon */}
+        <div className="mt-20 lg:mt-32">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 lg:gap-20">
+            <div className="flex items-center gap-4 group">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-terex-accent/20 to-transparent flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 <img 
                   src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                  alt="USDT Tether" 
+                  alt="USDT" 
                   className="w-8 h-8"
                 />
               </div>
-              <h3 className="text-white font-light mb-2 text-sm sm:text-base">Échange USDT Tether</h3>
-              <p className="text-gray-400 text-xs sm:text-sm font-light">Achetez et vendez vos USDT au meilleur taux</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-terex-darker border-terex-accent/20 backdrop-blur-sm hover:bg-terex-gray transition-all duration-300 hover:scale-105 group shadow-lg">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                <Globe className="w-6 h-6 text-terex-accent" />
+              <div>
+                <div className="text-white text-lg">Échange USDT</div>
+                <div className="text-gray-500 text-sm">Meilleurs taux</div>
               </div>
-              <h3 className="text-white font-light mb-2 text-sm sm:text-base">Transferts vers l'Afrique</h3>
-              <p className="text-gray-400 text-xs sm:text-sm font-light">Transférez de l'argent partout en Afrique</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-terex-darker border-terex-accent/20 backdrop-blur-sm hover:bg-terex-gray transition-all duration-300 hover:scale-105 group sm:col-span-2 lg:col-span-1 shadow-lg">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                <Shield className="w-6 h-6 text-terex-accent" />
+            </div>
+            
+            <div className="hidden sm:block w-px h-12 bg-gradient-to-b from-transparent via-white/10 to-transparent" />
+            
+            <div className="flex items-center gap-4 group">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-terex-accent/20 to-transparent flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <Globe className="w-7 h-7 text-terex-accent" />
               </div>
-              <h3 className="text-white font-light mb-2 text-sm sm:text-base">100% Sécurisé</h3>
-              <p className="text-gray-400 text-xs sm:text-sm font-light">Chiffrement 256-bit et conformité réglementaire</p>
-            </CardContent>
-          </Card>
+              <div>
+                <div className="text-white text-lg">Transferts Afrique</div>
+                <div className="text-gray-500 text-sm">6 pays couverts</div>
+              </div>
+            </div>
+            
+            <div className="hidden sm:block w-px h-12 bg-gradient-to-b from-transparent via-white/10 to-transparent" />
+            
+            <div className="flex items-center gap-4 group">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-terex-accent/20 to-transparent flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <Shield className="w-7 h-7 text-terex-accent" />
+              </div>
+              <div>
+                <div className="text-white text-lg">100% Sécurisé</div>
+                <div className="text-gray-500 text-sm">Chiffrement 256-bit</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
