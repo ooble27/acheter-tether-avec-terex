@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 interface CTASectionProps {
   user?: { email: string; name: string } | null;
@@ -9,36 +9,75 @@ interface CTASectionProps {
 
 export function CTASection({ user, onGetStarted }: CTASectionProps) {
   return (
-    <section className="py-16 sm:py-20 bg-terex-dark">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
+    <section className="py-24 lg:py-32 bg-terex-dark relative overflow-hidden">
+      {/* Background gradient orbs */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-terex-accent/10 rounded-full blur-[150px]" />
+      </div>
+      
+      {/* Decorative lines */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-terex-accent/20 to-transparent" />
+      
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        {/* Sparkle badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-terex-accent/10 border border-terex-accent/20 mb-8">
+          <Sparkles className="w-4 h-4 text-terex-accent" />
+          <span className="text-terex-accent text-sm">Rejoignez-nous aujourd'hui</span>
+        </div>
+        
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl text-white mb-6">
           {user ? (
-            <>Continuez votre expérience avec <span className="text-terex-accent">Terex</span></>
+            <>
+              Continuez votre expérience avec{' '}
+              <span className="bg-gradient-to-r from-terex-accent to-terex-teal bg-clip-text text-transparent">
+                Terex
+              </span>
+            </>
           ) : (
-            <>Prêt à commencer avec <span className="text-terex-accent">Terex</span> ?</>
+            <>
+              Prêt à commencer avec{' '}
+              <span className="bg-gradient-to-r from-terex-accent to-terex-teal bg-clip-text text-transparent">
+                Terex
+              </span>
+              {' '}?
+            </>
           )}
         </h2>
-        <p className="text-lg sm:text-xl text-gray-400 mb-8 font-light">
+        
+        <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
           {user ? (
-            "Explorez nos services d'échange USDT et de transferts vers l'Afrique, ou découvrez notre boutique crypto."
+            "Explorez nos services d'échange USDT et de transferts vers l'Afrique."
           ) : (
             "Rejoignez des milliers d'utilisateurs qui nous font confiance pour leurs échanges USDT et transferts vers l'Afrique."
           )}
         </p>
+        
         {!user && (
-          <>
+          <div className="space-y-6">
             <Button 
               onClick={onGetStarted}
               size="lg" 
-              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-light px-4 sm:px-8 py-3 sm:py-4 text-sm sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-full max-w-80 sm:max-w-none sm:w-auto mx-auto"
+              className="group bg-terex-accent hover:bg-terex-accent/90 text-black px-10 py-7 text-xl rounded-2xl shadow-[0_0_60px_rgba(59,150,143,0.4)] hover:shadow-[0_0_80px_rgba(59,150,143,0.6)] transition-all duration-500"
             >
-              <span className="truncate">Créer mon compte gratuitement</span>
-              <ArrowRight className="ml-2 w-4 h-4 flex-shrink-0" />
+              Créer mon compte gratuitement
+              <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <p className="text-gray-400 text-sm mt-4">
-              Inscription gratuite • Vérification en 24h • Support 24/7
-            </p>
-          </>
+            
+            <div className="flex flex-wrap items-center justify-center gap-6 text-gray-500 text-sm">
+              <span className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-terex-accent rounded-full" />
+                Inscription gratuite
+              </span>
+              <span className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-terex-accent rounded-full" />
+                Vérification en 24h
+              </span>
+              <span className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-terex-accent rounded-full" />
+                Support 24/7
+              </span>
+            </div>
+          </div>
         )}
       </div>
     </section>
