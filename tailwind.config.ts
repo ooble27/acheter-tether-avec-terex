@@ -84,18 +84,6 @@ export default {
 					'accent-light': '#4BA89F',
 					gray: '#2A2A2A',
 					'gray-light': '#3A3A3A',
-				},
-				// Attio-style light theme colors
-				attio: {
-					bg: '#FFFFFF',
-					'bg-subtle': '#FAFAFA',
-					'bg-muted': '#F5F5F5',
-					border: '#E5E5E5',
-					'border-subtle': '#EBEBEB',
-					text: '#1A1A1A',
-					'text-muted': '#666666',
-					'text-subtle': '#999999',
-					accent: '#3B968F',
 				}
 			},
 			borderRadius: {

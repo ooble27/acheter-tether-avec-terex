@@ -7,61 +7,53 @@ const stats = [
     icon: TrendingUp,
     value: "10M+ CFA",
     label: "Volume traité mensuellement",
-    description: "Transactions sécurisées chaque mois",
-    iconBg: "bg-emerald-50",
-    iconColor: "text-emerald-600"
+    description: "Transactions sécurisées chaque mois"
   },
   {
     icon: Users,
     value: "500+",
     label: "Utilisateurs actifs",
-    description: "Nous font confiance pour leurs échanges",
-    iconBg: "bg-blue-50",
-    iconColor: "text-blue-600"
+    description: "Nous font confiance pour leurs échanges"
   },
   {
     icon: Globe,
     value: "5",
     label: "Pays couverts",
-    description: "Transferts vers l'Afrique disponibles",
-    iconBg: "bg-purple-50",
-    iconColor: "text-purple-600"
+    description: "Transferts vers l'Afrique disponibles"
   },
   {
     icon: Shield,
     value: "99.9%",
     label: "Taux de disponibilité",
-    description: "Service fiable et sécurisé",
-    iconBg: "bg-orange-50",
-    iconColor: "text-orange-600"
+    description: "Service fiable et sécurisé"
   }
 ];
 
 export function StatsSection() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-terex-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-medium text-gray-900 mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
             Une plateforme de confiance <span className="text-terex-accent">en croissance</span>
           </h2>
-          <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto font-light">
+          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto font-light">
             Terex démarre avec des bases solides pour servir la communauté africaine
           </p>
         </div>
         
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => {
             const IconComponent = stat.icon;
             return (
-              <Card key={index} className="bg-white border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300 text-center rounded-2xl">
+              <Card key={index} className="bg-terex-darker/50 border-terex-gray/30 hover:border-terex-accent/30 transition-all duration-300 hover:scale-105 text-center">
                 <CardContent className="p-8">
-                  <div className={`w-14 h-14 ${stat.iconBg} rounded-2xl flex items-center justify-center mx-auto mb-6`}>
-                    <IconComponent className={`w-7 h-7 ${stat.iconColor}`} />
+                  <div className="w-16 h-16 bg-gradient-to-br from-terex-accent/20 to-terex-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <IconComponent className="w-8 h-8 text-terex-accent" />
                   </div>
-                  <div className="text-4xl font-medium text-gray-900 mb-2">{stat.value}</div>
-                  <h3 className="text-lg font-medium text-terex-accent mb-2">{stat.label}</h3>
-                  <p className="text-gray-500 text-sm font-light">{stat.description}</p>
+                  <div className="text-4xl font-light text-white mb-2">{stat.value}</div>
+                  <h3 className="text-lg font-light text-terex-accent mb-2">{stat.label}</h3>
+                  <p className="text-gray-400 text-sm font-light">{stat.description}</p>
                 </CardContent>
               </Card>
             );
@@ -70,19 +62,19 @@ export function StatsSection() {
         
         {/* Badges de confiance */}
         <div className="mt-16 text-center">
-          <h3 className="text-2xl font-medium text-gray-900 mb-8">Certifié et réglementé</h3>
-          <div className="flex flex-wrap justify-center items-center gap-4">
-            <div className="flex items-center space-x-2 bg-gray-50 border border-gray-100 rounded-xl px-6 py-3">
-              <Shield className="w-5 h-5 text-terex-accent" />
-              <span className="text-gray-700 font-light text-sm">SSL 256-bit</span>
+          <h3 className="text-2xl font-light text-white mb-8">Certifié et réglementé</h3>
+          <div className="flex flex-wrap justify-center items-center gap-8 opacity-70">
+            <div className="flex items-center space-x-2 bg-terex-darker/50 border border-terex-gray/20 rounded-lg px-6 py-3">
+              <Shield className="w-6 h-6 text-terex-accent" />
+              <span className="text-white font-light">SSL 256-bit</span>
             </div>
-            <div className="flex items-center space-x-2 bg-gray-50 border border-gray-100 rounded-xl px-6 py-3">
-              <Shield className="w-5 h-5 text-terex-accent" />
-              <span className="text-gray-700 font-light text-sm">Conformité KYC/AML</span>
+            <div className="flex items-center space-x-2 bg-terex-darker/50 border border-terex-gray/20 rounded-lg px-6 py-3">
+              <Shield className="w-6 h-6 text-terex-accent" />
+              <span className="text-white font-light">Conformité KYC/AML</span>
             </div>
-            <div className="flex items-center space-x-2 bg-gray-50 border border-gray-100 rounded-xl px-6 py-3">
-              <Shield className="w-5 h-5 text-terex-accent" />
-              <span className="text-gray-700 font-light text-sm">Régulé au Sénégal</span>
+            <div className="flex items-center space-x-2 bg-terex-darker/50 border border-terex-gray/20 rounded-lg px-6 py-3">
+              <Shield className="w-6 h-6 text-terex-accent" />
+              <span className="text-white font-light">Régulé au Sénégal</span>
             </div>
           </div>
         </div>

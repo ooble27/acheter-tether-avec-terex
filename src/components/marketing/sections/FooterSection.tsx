@@ -57,13 +57,13 @@ export function FooterSection() {
   ];
 
   return (
-    <footer className="bg-gray-900 border-t border-gray-800">
+    <footer className="bg-terex-darker border-t border-terex-accent/20">
       {/* Newsletter Section */}
-      <div className="bg-gray-800/50">
+      <div className="bg-gradient-to-r from-terex-accent/10 via-terex-accent/5 to-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid lg:grid-cols-2 gap-8 items-center">
             <div>
-              <h3 className="text-2xl font-medium text-white mb-4">
+              <h3 className="text-2xl font-light text-white mb-4">
                 Restez informé des dernières actualités crypto
               </h3>
               <p className="text-gray-400 text-lg font-light">
@@ -73,9 +73,9 @@ export function FooterSection() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Input 
                 placeholder="Votre adresse email"
-                className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 flex-1"
+                className="bg-terex-dark border-terex-gray text-white placeholder:text-gray-400 flex-1"
               />
-              <Button className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-8">
+              <Button className="bg-terex-accent hover:bg-terex-accent/90 text-black font-light px-8">
                 S'abonner
               </Button>
             </div>
@@ -95,7 +95,7 @@ export function FooterSection() {
                 className="w-12 h-12 rounded-xl"
               />
               <div>
-                <h3 className="text-2xl font-medium text-white">Terex</h3>
+                <h3 className="text-2xl font-light text-white">Terex</h3>
                 <p className="text-terex-accent text-sm font-light">Teranga Exchange</p>
               </div>
             </div>
@@ -119,10 +119,14 @@ export function FooterSection() {
                 <Mail className="w-4 h-4 mr-3 text-terex-accent" />
                 <span className="text-sm">terangaexchange@gmail.com</span>
               </div>
+              <div className="flex items-center text-gray-300">
+                <Phone className="w-4 h-4 mr-3 text-terex-accent" />
+                <span className="text-sm">WhatsApp: +1 418 261 9091</span>
+              </div>
             </div>
 
             {/* Social Links */}
-            <div className="flex space-x-3">
+            <div className="flex space-x-4">
               {socialLinks.map((social, index) => {
                 const IconComponent = social.icon;
                 return (
@@ -131,7 +135,7 @@ export function FooterSection() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 bg-gray-800 hover:bg-terex-accent rounded-lg flex items-center justify-center text-gray-400 hover:text-black transition-all duration-300"
+                    className="w-10 h-10 bg-terex-gray hover:bg-terex-accent rounded-lg flex items-center justify-center text-gray-300 hover:text-black transition-all duration-300"
                   >
                     <IconComponent className="w-5 h-5" />
                   </a>
@@ -143,13 +147,13 @@ export function FooterSection() {
           {/* Footer Links */}
           {footerSections.map((section, index) => (
             <div key={index} className="lg:col-span-1">
-              <h4 className="text-white font-medium mb-6">{section.title}</h4>
+              <h4 className="text-white font-light mb-6">{section.title}</h4>
               <ul className="space-y-3">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <button
                       onClick={() => navigate(link.href)}
-                      className="text-gray-400 hover:text-terex-accent transition-colors duration-200 text-sm block"
+                      className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm block"
                     >
                       {link.label}
                     </button>
@@ -160,11 +164,11 @@ export function FooterSection() {
           ))}
         </div>
 
-        <Separator className="my-12 bg-gray-800" />
+        <Separator className="my-12 bg-terex-gray" />
 
         {/* Bottom Footer */}
         <div className="text-center">
-          <div className="text-gray-500 text-sm">
+          <div className="text-gray-400 text-sm">
             <p>&copy; 2025 Terex. Tous droits réservés.</p>
           </div>
         </div>

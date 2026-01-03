@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 export function DeviceMockups() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Messages harmonisés pour avoir la même longueur et éviter les décalages
   const titleMessages = [
     "Échange USDT et transferts vers l'Afrique",
     "Achetez des USDT facilement avec Terex", 
@@ -21,7 +22,7 @@ export function DeviceMockups() {
   }, [titleMessages.length]);
 
   return (
-    <h1 className="text-3xl sm:text-4xl lg:text-6xl font-medium text-gray-900 mb-6 leading-tight">
+    <h1 className="text-3xl sm:text-4xl lg:text-6xl font-light text-white mb-6 leading-tight">
       <span className="transition-all duration-700 ease-in-out">
         {currentSlide === 0 ? (
           <>
