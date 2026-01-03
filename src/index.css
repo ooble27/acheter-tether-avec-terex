@@ -1029,11 +1029,26 @@
 }
 
 .animate-scroll-left {
-  animation: scroll-left 30s linear infinite;
+  animation: scroll-left 25s linear infinite;
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .animate-scroll-right {
-  animation: scroll-right 30s linear infinite;
+  animation: scroll-right 25s linear infinite;
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+@media (max-width: 768px) {
+  .animate-scroll-left {
+    animation: scroll-left 20s linear infinite;
+  }
+  .animate-scroll-right {
+    animation: scroll-right 20s linear infinite;
+  }
 }
 
 /* Pause au survol */
