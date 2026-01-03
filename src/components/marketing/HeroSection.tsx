@@ -2,11 +2,10 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Shield, Globe, ArrowRightLeft, Send, Banknote, TrendingUp, Users, Clock } from 'lucide-react';
+import { Shield, Globe, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DeviceMockups } from './DeviceMockups';
 import { PhoneMockup } from './PhoneMockup';
-import { useState, useEffect } from 'react';
 
 interface HeroSectionProps {
   user?: { email: string; name: string } | null;
@@ -27,7 +26,6 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
   };
 
   const handleHowItWorks = () => {
-    // Scroll to "Comment ça marche" section
     const element = document.getElementById('how-it-works');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -35,33 +33,33 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
   };
 
   return (
-    <div className="bg-terex-dark min-h-screen">
+    <div className="bg-white min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-        {/* Layout principal en grid pour desktop, stack pour mobile */}
+        {/* Layout principal */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[600px]">
           
           {/* Colonne de gauche - Contenu textuel */}
           <div className="order-2 lg:order-1 text-center lg:text-left">
-            {/* Titre centré sur mobile */}
+            {/* Titre mobile */}
             <div className="lg:hidden">
               <DeviceMockups />
             </div>
             
-            {/* Mockup téléphone visible uniquement sur mobile entre titre et sous-titre */}
+            {/* Mockup téléphone mobile */}
             <div className="lg:hidden flex justify-center my-8">
               <div className="relative scale-75">
                 <PhoneMockup />
               </div>
             </div>
             
-            {/* DeviceMockups pour desktop seulement */}
+            {/* DeviceMockups desktop */}
             <div className="hidden lg:block">
               <DeviceMockups />
             </div>
             
-            <p className="text-lg sm:text-xl text-gray-400 mb-8 max-w-2xl leading-relaxed mx-auto lg:mx-0 font-light">
+            <p className="text-lg sm:text-xl text-gray-500 mb-8 max-w-2xl leading-relaxed mx-auto lg:mx-0 font-light">
               Achetez et vendez des USDT facilement, 
-              effectuez des transferts d'argent vers l'Afrique instantanément. Rapide, sécurisé et sans commission.
+              effectuez des transferts d'argent vers l'Afrique instantanément. <span className="text-terex-accent">Rapide, sécurisé et sans commission.</span>
             </p>
             
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 justify-center lg:justify-start">
@@ -69,47 +67,49 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 <Button 
                   onClick={handleDashboard}
                   size="lg" 
-                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-light px-6 py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto"
+                  className="bg-gray-900 hover:bg-gray-800 text-white font-light px-6 py-4 text-base sm:text-lg rounded-lg transition-all duration-300 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto group"
                 >
                   Aller au Dashboard
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               ) : (
                 <Button 
                   onClick={handleGetStarted}
                   size="lg" 
-                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-light px-6 py-4 text-base sm:text-lg rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto"
+                  className="bg-gray-900 hover:bg-gray-800 text-white font-light px-6 py-4 text-base sm:text-lg rounded-lg transition-all duration-300 hover:scale-105 w-64 sm:w-auto mx-auto h-12 sm:h-auto group"
                 >
                   Commencer maintenant
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               )}
               <Button 
                 onClick={handleHowItWorks}
                 variant="outline" 
                 size="lg"
-                className="border-gray-600 text-gray-300 hover:bg-terex-gray px-6 py-4 text-base sm:text-lg rounded-xl backdrop-blur-sm w-64 sm:w-auto mx-auto h-12 sm:h-auto"
+                className="border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 px-6 py-4 text-base sm:text-lg rounded-lg w-64 sm:w-auto mx-auto h-12 sm:h-auto"
               >
                 Voir comment ça marche
               </Button>
             </div>
             
-            {/* Stats rapides */}
+            {/* Stats rapides - Style Attio */}
             <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <div className="text-2xl font-light text-terex-accent">5min</div>
-                <div className="text-sm text-gray-400">Transfert rapide</div>
+              <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50">
+                <div className="text-2xl font-medium text-gray-900">5min</div>
+                <div className="text-sm text-gray-500">Transfert rapide</div>
               </div>
-              <div>
-                <div className="text-2xl font-light text-terex-accent">6</div>
-                <div className="text-sm text-gray-400">Pays supportés</div>
+              <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50">
+                <div className="text-2xl font-medium text-gray-900">6</div>
+                <div className="text-sm text-gray-500">Pays supportés</div>
               </div>
-              <div>
-                <div className="text-2xl font-light text-terex-accent">24/7</div>
-                <div className="text-sm text-gray-400">Disponibilité</div>
+              <div className="p-4 rounded-xl border border-gray-100 bg-gray-50/50">
+                <div className="text-2xl font-medium text-gray-900">24/7</div>
+                <div className="text-sm text-gray-500">Disponibilité</div>
               </div>
             </div>
           </div>
           
-          {/* Colonne de droite - PhoneMockup visible uniquement sur desktop */}
+          {/* Colonne de droite - PhoneMockup desktop */}
           <div className="order-1 lg:order-2 hidden lg:flex justify-center">
             <div className="relative scale-75 sm:scale-90 lg:scale-100">
               <PhoneMockup />
@@ -117,40 +117,39 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           </div>
         </div>
         
-        {/* Cartes des fonctionnalités - en bas */}
+        {/* Cartes des fonctionnalités - Style Attio */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-16 lg:mt-24">
-          <Card className="bg-terex-darker border-terex-accent/20 backdrop-blur-sm hover:bg-terex-gray transition-all duration-300 hover:scale-105 group shadow-lg">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                {/* Logo USDT de CoinMarketCap */}
+          <Card className="bg-white border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300 group rounded-2xl">
+            <CardContent className="p-6 text-center">
+              <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <img 
                   src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                   alt="USDT Tether" 
-                  className="w-8 h-8"
+                  className="w-7 h-7"
                 />
               </div>
-              <h3 className="text-white font-light mb-2 text-sm sm:text-base">Échange USDT Tether</h3>
-              <p className="text-gray-400 text-xs sm:text-sm font-light">Achetez et vendez vos USDT au meilleur taux</p>
+              <h3 className="text-gray-900 font-medium mb-2 text-sm sm:text-base">Échange USDT Tether</h3>
+              <p className="text-gray-500 text-xs sm:text-sm font-light">Achetez et vendez vos USDT au meilleur taux</p>
             </CardContent>
           </Card>
           
-          <Card className="bg-terex-darker border-terex-accent/20 backdrop-blur-sm hover:bg-terex-gray transition-all duration-300 hover:scale-105 group shadow-lg">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                <Globe className="w-6 h-6 text-terex-accent" />
+          <Card className="bg-white border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300 group rounded-2xl">
+            <CardContent className="p-6 text-center">
+              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <Globe className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="text-white font-light mb-2 text-sm sm:text-base">Transferts vers l'Afrique</h3>
-              <p className="text-gray-400 text-xs sm:text-sm font-light">Transférez de l'argent partout en Afrique</p>
+              <h3 className="text-gray-900 font-medium mb-2 text-sm sm:text-base">Transferts vers l'Afrique</h3>
+              <p className="text-gray-500 text-xs sm:text-sm font-light">Transférez de l'argent partout en Afrique</p>
             </CardContent>
           </Card>
           
-          <Card className="bg-terex-darker border-terex-accent/20 backdrop-blur-sm hover:bg-terex-gray transition-all duration-300 hover:scale-105 group sm:col-span-2 lg:col-span-1 shadow-lg">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                <Shield className="w-6 h-6 text-terex-accent" />
+          <Card className="bg-white border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300 group sm:col-span-2 lg:col-span-1 rounded-2xl">
+            <CardContent className="p-6 text-center">
+              <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <Shield className="w-6 h-6 text-purple-600" />
               </div>
-              <h3 className="text-white font-light mb-2 text-sm sm:text-base">100% Sécurisé</h3>
-              <p className="text-gray-400 text-xs sm:text-sm font-light">Chiffrement 256-bit et conformité réglementaire</p>
+              <h3 className="text-gray-900 font-medium mb-2 text-sm sm:text-base">100% Sécurisé</h3>
+              <p className="text-gray-500 text-xs sm:text-sm font-light">Chiffrement 256-bit et conformité réglementaire</p>
             </CardContent>
           </Card>
         </div>
@@ -158,4 +157,3 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
     </div>
   );
 }
-

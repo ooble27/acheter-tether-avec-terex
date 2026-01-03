@@ -45,13 +45,13 @@ export function PaymentMethodsSection() {
   };
 
   return (
-    <section className="py-12 sm:py-16 bg-terex-dark">
+    <section className="py-12 sm:py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-white mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-medium text-gray-900 mb-4">
             Méthodes de <span className="text-terex-accent">paiement</span>
           </h2>
-          <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto font-light">
+          <p className="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto font-light">
             Plusieurs options sécurisées pour vos transactions
           </p>
         </div>
@@ -65,9 +65,9 @@ export function PaymentMethodsSection() {
             >
               {paymentMethods.map((method) => (
                 <div key={method.id} className="w-full flex-shrink-0 px-1 sm:px-2">
-                  <div className="grid md:grid-cols-2 gap-0 rounded-2xl overflow-hidden shadow-xl bg-terex-dark/50 border border-terex-accent/20">
+                  <div className="grid md:grid-cols-2 gap-0 rounded-2xl overflow-hidden shadow-lg bg-white border border-gray-100">
                     {/* Left Block - Image */}
-                    <div className="relative bg-transparent flex items-center justify-center p-8 md:p-10 min-h-[200px] md:min-h-[250px]">
+                    <div className="relative bg-gray-50 flex items-center justify-center p-8 md:p-10 min-h-[200px] md:min-h-[250px]">
                       <div className="relative z-10 w-full h-full flex items-center justify-center">
                         <img 
                           src={method.image} 
@@ -79,16 +79,16 @@ export function PaymentMethodsSection() {
                     </div>
 
                     {/* Right Block - Content */}
-                    <div className="bg-transparent p-6 md:p-8 flex flex-col justify-center">
+                    <div className="bg-white p-6 md:p-8 flex flex-col justify-center">
                       <div className="mb-4">
-                        <span className="inline-block text-xs font-semibold px-3 py-1.5 rounded-full bg-terex-accent/20 text-terex-accent uppercase tracking-wide">
+                        <span className="inline-block text-xs font-medium px-3 py-1.5 rounded-full bg-terex-accent/10 text-terex-accent uppercase tracking-wide">
                           {method.category}
                         </span>
                       </div>
-                      <h3 className="text-xl md:text-2xl font-bold text-white mb-3 leading-tight">
+                      <h3 className="text-xl md:text-2xl font-medium text-gray-900 mb-3 leading-tight">
                         {method.title}
                       </h3>
-                      <p className="text-gray-300 leading-relaxed text-sm md:text-base">
+                      <p className="text-gray-500 leading-relaxed text-sm md:text-base font-light">
                         {method.description}
                       </p>
                     </div>
@@ -104,9 +104,9 @@ export function PaymentMethodsSection() {
               variant="outline"
               size="icon"
               onClick={handlePrevious}
-              className="h-10 w-10 rounded-full bg-background shadow-lg hover:bg-background/90 border-2"
+              className="h-10 w-10 rounded-full bg-white shadow-lg hover:bg-gray-50 border border-gray-200"
             >
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-5 w-5 text-gray-600" />
             </Button>
           </div>
           <div className="absolute top-1/2 -translate-y-1/2 right-2 lg:-mr-12 z-20">
@@ -114,9 +114,9 @@ export function PaymentMethodsSection() {
               variant="outline"
               size="icon"
               onClick={handleNext}
-              className="h-10 w-10 rounded-full bg-background shadow-lg hover:bg-background/90 border-2"
+              className="h-10 w-10 rounded-full bg-white shadow-lg hover:bg-gray-50 border border-gray-200"
             >
-              <ChevronRight className="h-5 w-5" />
+              <ChevronRight className="h-5 w-5 text-gray-600" />
             </Button>
           </div>
 
@@ -129,7 +129,7 @@ export function PaymentMethodsSection() {
                 className={`h-2 rounded-full transition-all ${
                   index === currentIndex 
                     ? "w-8 bg-terex-accent" 
-                    : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                    : "w-2 bg-gray-300 hover:bg-gray-400"
                 }`}
                 aria-label={`Aller à la méthode ${index + 1}`}
               />

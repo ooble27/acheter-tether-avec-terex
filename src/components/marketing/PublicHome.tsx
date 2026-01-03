@@ -55,7 +55,7 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark">
+    <div className="min-h-screen bg-white">
       <PWAInstallPrompt />
       
       <HeaderSection 
