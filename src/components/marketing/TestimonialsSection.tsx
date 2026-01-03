@@ -54,26 +54,26 @@ const testimonials = [
 ];
 
 const TestimonialCard = ({ testimonial }: { testimonial: typeof testimonials[0] }) => (
-  <Card className="bg-terex-darker border-terex-gray/30 min-w-[280px] sm:min-w-[320px] max-w-[320px] sm:max-w-[400px] flex-shrink-0 mx-2 sm:mx-3">
-    <CardContent className="p-4 sm:p-6">
-      <div className="flex items-start space-x-3 mb-4">
-        <Quote className="w-6 h-6 text-terex-accent flex-shrink-0 mt-1" />
-        <p className="text-gray-400 text-sm leading-relaxed italic font-light line-clamp-3">
+  <Card className="bg-terex-darker border-terex-gray/30 min-w-[220px] sm:min-w-[300px] max-w-[240px] sm:max-w-[360px] flex-shrink-0 mx-1.5 sm:mx-3">
+    <CardContent className="p-3 sm:p-5">
+      <div className="flex items-start space-x-2 sm:space-x-3 mb-3 sm:mb-4">
+        <Quote className="w-4 h-4 sm:w-6 sm:h-6 text-terex-accent flex-shrink-0 mt-0.5" />
+        <p className="text-gray-400 text-xs sm:text-sm leading-relaxed italic font-light line-clamp-3">
           "{testimonial.text}"
         </p>
       </div>
       
-      <div className="flex items-center space-x-3">
-        <div className="w-10 h-10 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center">
-          <User className="w-5 h-5 text-terex-accent" />
+      <div className="flex items-center space-x-2 sm:space-x-3">
+        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center">
+          <User className="w-4 h-4 sm:w-5 sm:h-5 text-terex-accent" />
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="text-white font-light text-sm truncate">{testimonial.name}</h4>
-          <p className="text-terex-accent text-xs font-light">{testimonial.location}</p>
+          <h4 className="text-white font-light text-xs sm:text-sm truncate">{testimonial.name}</h4>
+          <p className="text-terex-accent text-[10px] sm:text-xs font-light">{testimonial.location}</p>
         </div>
         <div className="flex space-x-0.5">
           {[...Array(testimonial.rating)].map((_, i) => (
-            <Star key={i} className="w-3.5 h-3.5 text-yellow-400 fill-current" />
+            <Star key={i} className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-yellow-400 fill-current" />
           ))}
         </div>
       </div>
