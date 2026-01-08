@@ -30,21 +30,14 @@ export function PaymentMethodsSection() {
           </p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
+        <div className="flex flex-wrap justify-center items-center gap-10 sm:gap-14 lg:gap-20">
           {paymentMethods.map((method, index) => (
-            <div 
+            <img 
               key={index}
-              className="flex items-center gap-4 p-4 sm:p-6 rounded-xl bg-terex-gray/30 hover:bg-terex-gray/50 transition-all duration-300 hover:scale-105"
-            >
-              <img 
-                src={method.logo} 
-                alt={method.name}
-                className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
-              />
-              <span className="text-white text-sm sm:text-base font-medium">
-                {method.name}
-              </span>
-            </div>
+              src={method.logo} 
+              alt={method.name}
+              className="w-16 h-16 sm:w-20 sm:h-20 object-contain hover:scale-110 transition-transform duration-300"
+            />
           ))}
         </div>
       </div>
