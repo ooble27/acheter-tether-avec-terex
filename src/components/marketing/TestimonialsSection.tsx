@@ -34,62 +34,14 @@ const testimonials = [
     rating: 5,
     text: "Support client réactif et processus KYC simple. J'utilise Terex pour tous mes virements vers le Canada. Service de qualité !",
     transaction: "Virement international CFA → CAD"
-  },
-  {
-    id: 5,
-    name: "Ibrahima Ndiaye",
-    location: "Abidjan, Côte d'Ivoire",
-    rating: 5,
-    text: "La meilleure plateforme pour acheter des cryptos en Afrique de l'Ouest. Transactions rapides et sécurisées. Top !",
-    transaction: "Achat USDT - 100 000 XOF"
-  },
-  {
-    id: 6,
-    name: "Marie Koné",
-    location: "Toronto, Canada",
-    rating: 5,
-    text: "J'envoie de l'argent à ma famille au Sénégal chaque mois. Terex est devenu indispensable. Merci pour ce service !",
-    transaction: "Virement international CAD → CFA"
   }
 ];
 
-const TestimonialCard = ({ testimonial }: { testimonial: typeof testimonials[0] }) => (
-  <Card className="bg-terex-darker border-terex-gray/30 min-w-[220px] sm:min-w-[300px] max-w-[240px] sm:max-w-[360px] flex-shrink-0 mx-1.5 sm:mx-3">
-    <CardContent className="p-3 sm:p-5">
-      <div className="flex items-start space-x-2 sm:space-x-3 mb-3 sm:mb-4">
-        <Quote className="w-4 h-4 sm:w-6 sm:h-6 text-terex-accent flex-shrink-0 mt-0.5" />
-        <p className="text-gray-400 text-xs sm:text-sm leading-relaxed italic font-light line-clamp-3">
-          "{testimonial.text}"
-        </p>
-      </div>
-      
-      <div className="flex items-center space-x-2 sm:space-x-3">
-        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center">
-          <User className="w-4 h-4 sm:w-5 sm:h-5 text-terex-accent" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h4 className="text-white font-light text-xs sm:text-sm truncate">{testimonial.name}</h4>
-          <p className="text-terex-accent text-[10px] sm:text-xs font-light">{testimonial.location}</p>
-        </div>
-        <div className="flex space-x-0.5">
-          {[...Array(testimonial.rating)].map((_, i) => (
-            <Star key={i} className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-yellow-400 fill-current" />
-          ))}
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-);
-
 export function TestimonialsSection() {
-  // Dupliquer les témoignages pour l'effet infini
-  const row1 = [...testimonials, ...testimonials];
-  const row2 = [...testimonials.slice().reverse(), ...testimonials.slice().reverse()];
-
   return (
-    <section className="py-20 bg-terex-dark overflow-hidden">
+    <section className="py-20 bg-terex-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
+        <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
             Ils nous font <span className="text-terex-accent">confiance</span>
           </h2>
@@ -97,28 +49,39 @@ export function TestimonialsSection() {
             Découvrez ce que nos utilisateurs disent de leur expérience avec Terex
           </p>
         </div>
-      </div>
-      
-      {/* Ligne 1 - Défilement vers la gauche */}
-      <div className="relative mb-6">
-        <div className="flex animate-scroll-left">
-          {row1.map((testimonial, index) => (
-            <TestimonialCard key={`row1-${testimonial.id}-${index}`} testimonial={testimonial} />
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+          {testimonials.map((testimonial) => (
+            <Card key={testimonial.id} className="bg-terex-darker border-terex-gray/30 hover:border-terex-accent/30 transition-all duration-300 hover:scale-105">
+              <CardContent className="p-8">
+                <div className="flex items-start space-x-4 mb-6">
+                  <Quote className="w-8 h-8 text-terex-accent flex-shrink-0 mt-1" />
+                  <p className="text-gray-400 text-lg leading-relaxed italic font-light">
+                    "{testimonial.text}"
+                  </p>
+                </div>
+                
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center">
+                    <User className="w-6 h-6 text-terex-accent" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-white font-light">{testimonial.name}</h4>
+                    <p className="text-terex-accent text-sm font-light">{testimonial.location}</p>
+                    <p className="text-gray-400 text-xs mt-1">{testimonial.transaction}</p>
+                  </div>
+                  <div className="flex space-x-1">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
-      </div>
-      
-      {/* Ligne 2 - Défilement vers la droite */}
-      <div className="relative">
-        <div className="flex animate-scroll-right">
-          {row2.map((testimonial, index) => (
-            <TestimonialCard key={`row2-${testimonial.id}-${index}`} testimonial={testimonial} />
-          ))}
-        </div>
-      </div>
-      
-      {/* Badge de confiance */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Badge de confiance */}
         <div className="text-center mt-16">
           <div className="inline-flex items-center space-x-6 bg-terex-darker/50 border border-terex-gray/30 rounded-2xl px-8 py-4">
             <div className="text-center">
