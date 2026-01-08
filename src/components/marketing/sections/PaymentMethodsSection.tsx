@@ -29,7 +29,7 @@ export function PaymentMethodsSection() {
           {paymentMethods.map((method, index) => (
             <div 
               key={index}
-              className="flex items-center gap-4 p-4 rounded-xl bg-terex-gray/30 hover:bg-terex-gray/50 transition-all duration-300 hover:scale-105"
+              className="flex items-center gap-4 p-4 rounded-xl bg-terex-gray/30 hover:bg-terex-gray/50 transition-all duration-300 hover:scale-105 min-w-[180px] sm:min-w-[200px]"
             >
               <img 
                 src={method.logo} 
