@@ -60,24 +60,6 @@ export function StatsSection() {
           })}
         </div>
         
-        {/* Badges de confiance */}
-        <div className="mt-16 text-center">
-          <h3 className="text-2xl font-light text-white mb-8">Certifié et réglementé</h3>
-          <div className="flex flex-wrap justify-center items-center gap-8 opacity-70">
-            <div className="flex items-center space-x-2 bg-terex-darker/50 border border-terex-gray/20 rounded-lg px-6 py-3">
-              <Shield className="w-6 h-6 text-terex-accent" />
-              <span className="text-white font-light">SSL 256-bit</span>
-            </div>
-            <div className="flex items-center space-x-2 bg-terex-darker/50 border border-terex-gray/20 rounded-lg px-6 py-3">
-              <Shield className="w-6 h-6 text-terex-accent" />
-              <span className="text-white font-light">Conformité KYC/AML</span>
-            </div>
-            <div className="flex items-center space-x-2 bg-terex-darker/50 border border-terex-gray/20 rounded-lg px-6 py-3">
-              <Shield className="w-6 h-6 text-terex-accent" />
-              <span className="text-white font-light">Régulé au Sénégal</span>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
