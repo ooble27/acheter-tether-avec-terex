@@ -47,8 +47,6 @@ export function DashboardPreviewSection() {
               <span className="text-white font-medium">Version Mobile</span>
             </div>
             
-            {/* Glow effect */}
-            <div className="absolute inset-0 bg-terex-accent/20 blur-3xl rounded-full scale-75 opacity-20" />
             
             {/* Phone mockup */}
             <div className="relative">
