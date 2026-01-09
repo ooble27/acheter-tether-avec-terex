@@ -88,7 +88,7 @@ export function StatsSection() {
               
               return (
                 <AnimatedItem key={index} index={index}>
-                  <div className="group text-center py-6 px-4 rounded-2xl bg-terex-darker/50 border border-terex-accent/10">
+                  <div className="group text-center py-6 px-4">
                     <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-terex-accent/10 mb-3">
                       <IconComponent className="w-4 h-4 text-terex-accent" />
                     </div>
