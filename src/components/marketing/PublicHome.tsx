@@ -16,6 +16,7 @@ import { CTASection } from './sections/CTASection';
 import { FooterSection } from './sections/FooterSection';
 import { NetworksSection } from './sections/NetworksSection';
 import { DashboardPreviewSection } from './sections/DashboardPreviewSection';
+import { BuyUSDTShowcase, NetworkSelectionShowcase, ConfirmationShowcase } from './sections/FeatureShowcaseSection';
 
 interface PublicHomeProps {
   onGetStarted: () => void;
@@ -73,6 +74,11 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       <HeroSection user={user} onShowDashboard={onShowDashboard} />
       
       <CurrencyConverterSection />
+
+      {/* Feature showcases avant "Nos avantages" */}
+      <BuyUSDTShowcase />
+      <NetworkSelectionShowcase />
+      <ConfirmationShowcase />
 
       <WhyChooseTerexSection />
 
