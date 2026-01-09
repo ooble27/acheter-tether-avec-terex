@@ -57,23 +57,22 @@ const row1 = testimonials.slice(0, 3);
 const row2 = testimonials.slice(3, 6);
 
 function TestimonialCard({ testimonial }: { testimonial: typeof testimonials[0] }) {
+  const initials = testimonial.name.split(' ').map(n => n[0]).join('').slice(0, 2);
+  
   return (
-    <Card className="bg-terex-darker border-terex-gray/30 min-w-[220px] sm:min-w-[250px] flex-shrink-0">
-      <CardContent className="p-2.5 flex items-center gap-2.5">
-        <div className="w-7 h-7 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
-          <User className="w-3.5 h-3.5 text-terex-accent" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-gray-400 text-[10px] leading-tight italic font-light line-clamp-1 mb-0.5">
-            "{testimonial.text}"
-          </p>
-          <div className="flex items-center justify-between">
-            <span className="text-white font-light text-[10px] truncate">{testimonial.name}</span>
-            <div className="flex space-x-0.5 ml-1">
-              {[...Array(Math.min(testimonial.rating, 3))].map((_, i) => (
-                <Star key={i} className="w-1.5 h-1.5 text-yellow-400 fill-current" />
-              ))}
-            </div>
+    <Card className="bg-white/5 border-terex-gray/20 w-[280px] sm:w-[300px] flex-shrink-0 rounded-2xl">
+      <CardContent className="p-5">
+        <p className="text-gray-300 text-sm leading-relaxed font-light mb-5">
+          "{testimonial.text}"
+        </p>
+        
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-terex-dark rounded-full flex items-center justify-center flex-shrink-0">
+            <span className="text-white text-xs font-medium">{initials}</span>
+          </div>
+          <div>
+            <h4 className="text-white font-medium text-sm">{testimonial.name}</h4>
+            <p className="text-gray-400 text-xs">{testimonial.transaction}</p>
           </div>
         </div>
       </CardContent>
