@@ -25,11 +25,11 @@ export function PaymentMethodsSection() {
           </p>
         </div>
 
-        <div className="flex justify-center items-center gap-6 sm:gap-8">
+        <div className="flex justify-center items-center gap-6 sm:gap-8 px-4 sm:px-8 lg:px-16">
           {paymentMethods.map((method, index) => (
             <div 
               key={index}
-              className="flex items-center gap-4 p-4 rounded-xl bg-terex-gray/30 hover:bg-terex-gray/50 transition-all duration-300 hover:scale-105 min-w-[180px] sm:min-w-[200px]"
+              className="flex items-center gap-4 p-4 sm:p-5 rounded-xl bg-terex-gray/30 hover:bg-terex-gray/50 transition-all duration-300 hover:scale-105 min-w-[160px] sm:min-w-[200px]"
             >
               <img 
                 src={method.logo} 
