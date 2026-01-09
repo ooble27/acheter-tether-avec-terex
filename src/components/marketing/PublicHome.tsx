@@ -17,7 +17,6 @@ import { FooterSection } from './sections/FooterSection';
 import { NetworksSection } from './sections/NetworksSection';
 import { DashboardPreviewSection } from './sections/DashboardPreviewSection';
 import { BuyUSDTShowcase, NetworkSelectionShowcase, ConfirmationShowcase } from './sections/FeatureShowcaseSection';
-import { GoodbyeSection } from './sections/GoodbyeSection';
 
 interface PublicHomeProps {
   onGetStarted: () => void;
@@ -75,9 +74,6 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       <HeroSection user={user} onShowDashboard={onShowDashboard} />
       
       <CurrencyConverterSection />
-
-      {/* Goodbye section */}
-      <GoodbyeSection />
 
       {/* Feature showcases avant "Nos avantages" */}
       <BuyUSDTShowcase />
