@@ -158,7 +158,7 @@ const AboutPage = () => {
               <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-8 leading-relaxed break-words">
                 Chez Terex, nous croyons que chaque africain mérite un accès simple et sécurisé aux 
                 services financiers numériques. Notre plateforme connecte les crypto-monnaies aux 
-                monnaies locales (FCFA), facilitant les échanges et les transferts via Orange Money, Free Money et Moov Money.
+                monnaies locales (FCFA), facilitant les échanges et les transferts via Orange Money et Wave.
               </p>
               
               <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-12 leading-relaxed break-words">

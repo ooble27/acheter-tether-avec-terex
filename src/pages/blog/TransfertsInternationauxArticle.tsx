@@ -54,7 +54,7 @@ export default function TransfertsInternationauxArticle() {
 
       <h3>Étape 2 : Acheter de l'USDT</h3>
       <p>
-        Achetez de l'USDT avec votre monnaie locale via Mobile Money (Orange Money, MTN, etc.) ou 
+        Achetez de l'USDT avec votre monnaie locale via Mobile Money (Orange Money, Wave) ou 
         virement bancaire. Le taux de change est transparent et compétitif.
       </p>
 

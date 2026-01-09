@@ -30,20 +30,10 @@ export default function MobileMoneyCryptoArticle() {
         Leader en Afrique francophone.
       </p>
 
-      <h3>M-Pesa</h3>
+      <h3>Wave</h3>
       <p>
-        Pionnier du Mobile Money, lancé au Kenya en 2007. Traite des milliards de dollars 
-        de transactions annuellement.
-      </p>
-
-      <h3>MTN Mobile Money</h3>
-      <p>
-        Opérationnel dans 21 pays africains avec plus de 60 millions d'utilisateurs actifs.
-      </p>
-
-      <h3>Airtel Money & Wave</h3>
-      <p>
-        Autres acteurs majeurs offrant des services similaires à travers le continent.
+        Leader au Sénégal et en Côte d'Ivoire, Wave se distingue par ses frais très bas 
+        et son interface simple. Plus de 10 millions d'utilisateurs actifs.
       </p>
 
       <h2>La convergence Mobile Money et Crypto</h2>
@@ -229,10 +219,10 @@ export default function MobileMoneyCryptoArticle() {
 
       <blockquote>
         <p>
-          "Je vends des bijoux en ligne. Mes clients paient en USDT, je reçois sur MTN Mobile Money. 
+          "Je vends des bijoux en ligne. Mes clients paient en USDT, je reçois sur Orange Money. 
           Simple, rapide, pas de complications bancaires."
         </p>
-        <footer>— Grace, Ghana</footer>
+        <footer>— Grace, Côte d'Ivoire</footer>
       </blockquote>
 
       <h2>Conclusion</h2>

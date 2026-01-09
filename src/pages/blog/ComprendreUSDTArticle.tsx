@@ -52,7 +52,7 @@ export default function ComprendreUSDTArticle() {
         Terex facilite l'achat et la vente d'USDT en Afrique. Vous pouvez :
       </p>
       <ul className="text-gray-300">
-        <li>Acheter de l'USDT avec Orange Money, MTN Mobile Money ou virement bancaire</li>
+        <li>Acheter de l'USDT avec Orange Money, Wave ou virement bancaire</li>
         <li>Vendre vos USDT et recevoir des francs CFA directement sur votre mobile money</li>
         <li>Envoyer de l'USDT partout dans le monde en quelques minutes</li>
       </ul>

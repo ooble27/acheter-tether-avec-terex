@@ -25,7 +25,7 @@ export function AdCopyGenerator() {
       transfer: [
         {
           title: "Post Transfert Afrique - Émotionnel",
-          copy: "❤️ VOTRE FAMILLE VOUS ATTEND...\n\n🌍 Envoyez de l'argent vers l'Afrique en 5 minutes !\n\n📱 Avec Terex, vos proches reçoivent instantanément sur :\n• Orange Money (Sénégal, Mali, Côte d'Ivoire)\n• Wave (Sénégal)\n• MTN Mobile Money\n• Free Money\n\n💝 \"Maman a reçu l'argent en 3 minutes. Merci Terex !\" - Fatou B.\n\n✨ Frais transparents, pas de surprise\n✨ Suivi en temps réel\n✨ Support multilingue\n\n👉 Premier transfert : terex.lovable.app\n\n#TransfertAfrique #Famille #MobileMoney #Diaspora"
+          copy: "❤️ VOTRE FAMILLE VOUS ATTEND...\n\n🌍 Envoyez de l'argent vers l'Afrique en 5 minutes !\n\n📱 Avec Terex, vos proches reçoivent instantanément sur :\n• Orange Money (Sénégal, Mali, Côte d'Ivoire)\n• Wave (Sénégal, Côte d'Ivoire)\n\n💝 \"Maman a reçu l'argent en 3 minutes. Merci Terex !\" - Fatou B.\n\n✨ Frais transparents, pas de surprise\n✨ Suivi en temps réel\n✨ Support multilingue\n\n👉 Premier transfert : terex.lovable.app\n\n#TransfertAfrique #Famille #MobileMoney #Diaspora"
         }
       ]
     },

@@ -310,7 +310,7 @@ function TransferSlide({ deviceType }: { deviceType: 'desktop' | 'mobile' }) {
                 </div>
                 <div className="flex-1">
                   <p className="font-medium text-white">Cameroun</p>
-                  <p className="text-sm text-gray-400">Mobile Money • MTN, Orange</p>
+                  <p className="text-sm text-gray-400">Mobile Money • Orange</p>
                 </div>
                 <CheckCircle className="w-5 h-5 text-blue-400" />
               </div>
