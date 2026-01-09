@@ -110,7 +110,6 @@ Sénégal :
 Côte d'Ivoire :
 - Orange Money : Instantané, frais 0.8%
 - Wave : Rapide (2-8 min), frais 1%
-- MTN Money : Standard (10-30 min), frais 1.5%
 
 Mali :
 - Orange Money : Rapide (5-15 min), frais 1%
@@ -122,7 +121,7 @@ Burkina Faso :
 
 Niger :
 - Orange Money : Standard (15-30 min), frais 1.2%
-- Airtel Money : Standard (20-45 min), frais 1.5%
+- Wave : Standard (20-45 min), frais 1.5%
 
 TAUX DE CHANGE EN TEMPS RÉEL :
 Les taux varient selon le marché mais généralement :
@@ -362,8 +361,6 @@ const extractProvider = (message: string): string | null => {
   const msg = message.toLowerCase();
   if (msg.includes('wave')) return 'wave';
   if (msg.includes('orange')) return 'orange';
-  if (msg.includes('free money')) return 'free';
-  if (msg.includes('mtn')) return 'mtn';
   return null;
 };
 

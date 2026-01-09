@@ -220,7 +220,7 @@ export const helpArticles: HelpArticleData[] = [
       steps: [
         {
           title: 'Mobile Money',
-          description: 'Orange Money, MTN Money, Moov Money sont acceptés dans la plupart des pays africains. Paiement instantané et sécurisé.'
+          description: 'Orange Money et Wave sont acceptés dans la plupart des pays africains. Paiement instantané et sécurisé.'
         },
         {
           title: 'Wave',

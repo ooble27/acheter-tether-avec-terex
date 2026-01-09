@@ -876,8 +876,6 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                     <div className="flex flex-wrap gap-2">
                       <span className="bg-terex-darker px-3 py-1 rounded text-sm">Orange Money</span>
                       <span className="bg-terex-darker px-3 py-1 rounded text-sm">Wave</span>
-                      <span className="bg-terex-darker px-3 py-1 rounded text-sm">MTN Mobile Money</span>
-                      <span className="bg-terex-darker px-3 py-1 rounded text-sm">Moov Money</span>
                     </div>
                   </div>
                 </div>

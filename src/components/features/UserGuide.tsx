@@ -237,16 +237,6 @@ export function UserGuide({ onBack }: UserGuideProps) {
                         <p className="text-xs">Sénégal, Côte d'Ivoire</p>
                         <p className="text-xs">Scan QR code ou envoi direct</p>
                       </div>
-                      <div className="bg-terex-gray p-3 rounded">
-                        <h6 className="text-purple-400 font-medium">Free Money</h6>
-                        <p className="text-xs">Burkina Faso, Mali</p>
-                        <p className="text-xs">Paiement instantané</p>
-                      </div>
-                      <div className="bg-terex-gray p-3 rounded">
-                        <h6 className="text-yellow-400 font-medium">Moov Money</h6>
-                        <p className="text-xs">Côte d'Ivoire, Niger</p>
-                        <p className="text-xs">Paiement rapide</p>
-                      </div>
                     </div>
                   </div>
                 </div>

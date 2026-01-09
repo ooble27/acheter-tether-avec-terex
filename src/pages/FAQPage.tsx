@@ -127,7 +127,7 @@ const FAQPage = () => {
         },
         {
           question: "Quelles méthodes de paiement acceptez-vous ?",
-          answer: "Nous acceptons : Mobile Money (Orange Money, Free Money, Wave, Moov Money) dans tous les pays CFA, cartes bancaires Visa/Mastercard, virements bancaires locaux, et paiements par QR code. Chaque méthode a ses propres délais : Mobile Money (instantané), cartes (1-3 minutes), virements (5-15 minutes)."
+          answer: "Nous acceptons : Mobile Money (Orange Money, Wave) dans tous les pays CFA, cartes bancaires Visa/Mastercard, virements bancaires locaux, et paiements par QR code. Chaque méthode a ses propres délais : Mobile Money (instantané), cartes (1-3 minutes), virements (5-15 minutes)."
         },
         {
           question: "Comment fonctionne le taux de change ?",
