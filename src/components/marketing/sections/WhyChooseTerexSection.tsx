@@ -102,25 +102,22 @@ export function WhyChooseTerexSection() {
           </div>
         </div>
         
-        {/* Mobile: Minimal list with accent numbers */}
-        <div className="lg:hidden space-y-8">
+        {/* Mobile: Minimal list */}
+        <div className="lg:hidden space-y-6">
           {advantages.map((advantage, index) => {
             const IconComponent = advantage.icon;
             
             return (
               <AnimatedItem key={index} index={index}>
-                <div className="group flex gap-4">
-                  {/* Number indicator */}
-                  <div className="flex-shrink-0 relative">
-                    <span className="text-4xl text-terex-accent/10 font-bold">{String(index + 1).padStart(2, '0')}</span>
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-terex-darker/80 border border-terex-accent/20 flex items-center justify-center">
-                      <IconComponent className="w-5 h-5 text-terex-accent" />
-                    </div>
+                <div className="group flex gap-4 items-start">
+                  {/* Icon */}
+                  <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-terex-darker/80 border border-terex-accent/20 flex items-center justify-center">
+                    <IconComponent className="w-5 h-5 text-terex-accent" />
                   </div>
                   
                   {/* Content */}
-                  <div className="flex-1 pt-1">
-                    <div className="flex items-center gap-2 mb-2">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
                       <h3 className="text-white font-light">{advantage.title}</h3>
                       <span className="text-terex-accent text-xs bg-terex-accent/10 px-2 py-0.5 rounded-full">
                         {advantage.stat} {advantage.statLabel}
