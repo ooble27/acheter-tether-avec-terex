@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -21,12 +20,19 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
       await onLogout();
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);
-      // Force reload on error to ensure clean state
       window.location.reload();
     }
   };
 
   const navigationItems = [
+    { label: 'Accueil', href: '/' },
+    { label: 'Fonctionnalités', href: '/#features' },
+    { label: 'À propos', href: '/about' },
+    { label: 'Carrières', href: '/careers' },
+    { label: 'Contact', href: '/contact' },
+  ];
+
+  const mobileNavItems = [
     { label: 'Accueil', href: '/', icon: Home, description: 'Page d\'accueil' },
     { label: 'À propos', href: '/about', icon: Building2, description: 'Découvrez Terex' },
     { label: 'Carrières', href: '/careers', icon: Briefcase, description: 'Rejoignez l\'équipe' },
@@ -39,207 +45,217 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   ];
 
   return (
-    <header className={`${isMobile ? 'relative bg-transparent' : 'bg-terex-darker border-b border-terex-accent/20'} pt-safe`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo seul */}
-          <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-              alt="Terex Logo" 
-              className="w-10 h-10 rounded-lg cursor-pointer"
+    <header className="fixed top-0 left-0 right-0 z-50 pt-4 px-4">
+      <div className="max-w-5xl mx-auto">
+        {/* Floating Pill Navbar */}
+        <nav className="bg-white/95 backdrop-blur-md rounded-full shadow-lg shadow-black/5 border border-gray-100 px-3 py-2">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <div 
+              className="flex items-center cursor-pointer pl-2"
               onClick={() => navigate('/')}
-            />
-          </div>
-          
-          {/* Desktop Navigation - Navigation étalée */}
-          {!isMobile && (
-            <div className="flex items-center space-x-8">
-              {/* Navigation Links */}
-              <nav className="flex items-center space-x-6">
+            >
+              <img 
+                src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+                alt="Terex Logo" 
+                className="w-9 h-9 rounded-lg"
+              />
+              <span className="ml-2 text-lg font-semibold text-gray-900">Terex</span>
+            </div>
+            
+            {/* Desktop Navigation Links */}
+            {!isMobile && (
+              <div className="flex items-center space-x-1">
                 {navigationItems.map((item) => (
                   <button
                     key={item.href}
                     onClick={() => navigate(item.href)}
-                    className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm font-light"
+                    className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors rounded-full hover:bg-gray-100"
                   >
                     {item.label}
                   </button>
                 ))}
-              </nav>
+              </div>
+            )}
 
-              {/* User Actions */}
-              <div className="flex items-center space-x-4 ml-8 border-l border-terex-gray/30 pl-8">
+            {/* Desktop CTA Buttons */}
+            {!isMobile && (
+              <div className="flex items-center space-x-2 pr-1">
                 {user ? (
                   <>
                     <Button
                       onClick={onShowDashboard}
                       variant="ghost"
-                      className="text-gray-300 hover:text-white"
+                      className="rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                     >
                       <User className="w-4 h-4 mr-2" />
                       Dashboard
                     </Button>
-                    <div className="flex items-center space-x-2 text-gray-300">
-                      <span className="text-sm">{user.name}</span>
-                      <Button
-                        onClick={handleLogout}
-                        variant="ghost"
-                        size="sm"
-                        className="text-gray-400 hover:text-red-400"
-                      >
-                        <LogOut className="w-4 h-4" />
-                      </Button>
-                    </div>
+                    <Button
+                      onClick={handleLogout}
+                      className="rounded-full bg-gray-900 hover:bg-gray-800 text-white px-5"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Déconnexion
+                    </Button>
                   </>
                 ) : (
-                  <Button
-                    onClick={() => navigate('/auth')}
-                    className="bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
-                  >
-                    Se Connecter
-                  </Button>
+                  <>
+                    <Button
+                      onClick={() => navigate('/auth')}
+                      variant="outline"
+                      className="rounded-full border-gray-300 text-gray-700 hover:bg-gray-100 px-5"
+                    >
+                      Se Connecter
+                    </Button>
+                    <Button
+                      onClick={() => navigate('/auth')}
+                      className="rounded-full bg-gray-900 hover:bg-gray-800 text-white px-5"
+                    >
+                      Commencer
+                    </Button>
+                  </>
                 )}
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Mobile Hamburger Menu */}
-          {isMobile && (
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-white hover:bg-terex-accent/20"
-                >
-                  <Menu className="h-6 w-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-full bg-terex-darker border-none p-0">
-                <ScrollArea className="h-full">
-                  <div className="flex flex-col min-h-full pt-safe">
-                    {/* Header avec logo */}
-                    <div className="p-6 border-b border-terex-gray/20">
-                      <div className="flex items-center space-x-3">
-                        <img 
-                          src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-                          alt="Terex Logo" 
-                          className="w-10 h-10 rounded-lg"
-                        />
-                        <div>
-                          <h2 className="text-lg font-semibold text-white">Navigation</h2>
+            {/* Mobile Hamburger Menu */}
+            {isMobile && (
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-gray-700 hover:bg-gray-100 rounded-full"
+                  >
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-full bg-terex-darker border-none p-0">
+                  <ScrollArea className="h-full">
+                    <div className="flex flex-col min-h-full pt-safe">
+                      {/* Header avec logo */}
+                      <div className="p-6 border-b border-terex-gray/20">
+                        <div className="flex items-center space-x-3">
+                          <img 
+                            src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+                            alt="Terex Logo" 
+                            className="w-10 h-10 rounded-lg"
+                          />
+                          <div>
+                            <h2 className="text-lg font-semibold text-white">Navigation</h2>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Navigation Section */}
-                    <div className="p-4 space-y-2">
-                      {navigationItems.map((item) => {
-                        const IconComponent = item.icon;
-                        return (
-                          <Button
-                            key={item.href}
-                            variant="ghost"
-                            onClick={() => navigate(item.href)}
-                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
-                          >
-                            <div className="flex items-center space-x-4 w-full">
-                              <div className="p-2 rounded-lg bg-terex-gray/30">
-                                <IconComponent className="h-5 w-5" />
+                      {/* Navigation Section */}
+                      <div className="p-4 space-y-2">
+                        {mobileNavItems.map((item) => {
+                          const IconComponent = item.icon;
+                          return (
+                            <Button
+                              key={item.href}
+                              variant="ghost"
+                              onClick={() => navigate(item.href)}
+                              className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
+                            >
+                              <div className="flex items-center space-x-4 w-full">
+                                <div className="p-2 rounded-lg bg-terex-gray/30">
+                                  <IconComponent className="h-5 w-5" />
+                                </div>
+                                <div className="flex-1 text-left">
+                                  <div className="font-medium text-sm">{item.label}</div>
+                                  <div className="text-xs opacity-75">{item.description}</div>
+                                </div>
                               </div>
-                              <div className="flex-1 text-left">
-                                <div className="font-medium text-sm">{item.label}</div>
-                                <div className="text-xs opacity-75">{item.description}</div>
-                              </div>
-                            </div>
-                          </Button>
-                        );
-                      })}
-                    </div>
-
-                    {/* Support Section */}
-                    <div className="px-4 pb-4 space-y-2">
-                      <div className="pt-4 pb-2">
-                        <div className="flex items-center space-x-2">
-                          <div className="h-px bg-terex-gray/40 flex-1"></div>
-                          <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Support</span>
-                          <div className="h-px bg-terex-gray/40 flex-1"></div>
-                        </div>
+                            </Button>
+                          );
+                        })}
                       </div>
-                      {supportItems.map((item) => {
-                        const IconComponent = item.icon;
-                        return (
-                          <Button
-                            key={item.href}
-                            variant="ghost"
-                            onClick={() => navigate(item.href)}
-                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
-                          >
-                            <div className="flex items-center space-x-4 w-full">
-                              <div className="p-2 rounded-lg bg-terex-gray/30">
-                                <IconComponent className="h-5 w-5" />
-                              </div>
-                              <div className="flex-1 text-left">
-                                <div className="font-medium text-sm">{item.label}</div>
-                                <div className="text-xs opacity-75">{item.description}</div>
-                              </div>
-                            </div>
-                          </Button>
-                        );
-                      })}
-                    </div>
 
-                    {/* Footer avec bouton de connexion */}
-                    <div className="p-4 border-t border-terex-gray/20 mt-auto pb-safe">
-                      {user ? (
-                        <div className="space-y-2">
-                          <Button
-                            onClick={onShowDashboard}
-                            variant="ghost"
-                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
-                          >
-                            <div className="flex items-center space-x-4 w-full">
-                              <div className="p-2 rounded-lg bg-terex-gray/30">
-                                <User className="h-5 w-5" />
-                              </div>
-                              <div className="flex-1 text-left">
-                                <div className="font-medium text-sm">Mon Dashboard</div>
-                                <div className="text-xs opacity-75">Accéder à mon compte</div>
-                              </div>
-                            </div>
-                          </Button>
-                          <Button
-                            onClick={handleLogout}
-                            variant="ghost"
-                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
-                          >
-                            <div className="flex items-center space-x-4 w-full">
-                              <div className="p-2 rounded-lg bg-terex-gray/30">
-                                <LogOut className="h-5 w-5" />
-                              </div>
-                              <div className="flex-1 text-left">
-                                <div className="font-medium text-sm">Déconnexion</div>
-                                <div className="text-xs opacity-75">Se déconnecter</div>
-                              </div>
-                            </div>
-                          </Button>
+                      {/* Support Section */}
+                      <div className="px-4 pb-4 space-y-2">
+                        <div className="pt-4 pb-2">
+                          <div className="flex items-center space-x-2">
+                            <div className="h-px bg-terex-gray/40 flex-1"></div>
+                            <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Support</span>
+                            <div className="h-px bg-terex-gray/40 flex-1"></div>
+                          </div>
                         </div>
-                      ) : (
-                        <Button
-                          onClick={() => navigate('/auth')}
-                          className="w-full bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-medium py-6 rounded-xl shadow-lg shadow-terex-accent/25"
-                        >
-                          Se Connecter
-                        </Button>
-                      )}
+                        {supportItems.map((item) => {
+                          const IconComponent = item.icon;
+                          return (
+                            <Button
+                              key={item.href}
+                              variant="ghost"
+                              onClick={() => navigate(item.href)}
+                              className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
+                            >
+                              <div className="flex items-center space-x-4 w-full">
+                                <div className="p-2 rounded-lg bg-terex-gray/30">
+                                  <IconComponent className="h-5 w-5" />
+                                </div>
+                                <div className="flex-1 text-left">
+                                  <div className="font-medium text-sm">{item.label}</div>
+                                  <div className="text-xs opacity-75">{item.description}</div>
+                                </div>
+                              </div>
+                            </Button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Footer avec bouton de connexion */}
+                      <div className="p-4 border-t border-terex-gray/20 mt-auto pb-safe">
+                        {user ? (
+                          <div className="space-y-2">
+                            <Button
+                              onClick={onShowDashboard}
+                              variant="ghost"
+                              className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
+                            >
+                              <div className="flex items-center space-x-4 w-full">
+                                <div className="p-2 rounded-lg bg-terex-gray/30">
+                                  <User className="h-5 w-5" />
+                                </div>
+                                <div className="flex-1 text-left">
+                                  <div className="font-medium text-sm">Mon Dashboard</div>
+                                  <div className="text-xs opacity-75">Accéder à mon compte</div>
+                                </div>
+                              </div>
+                            </Button>
+                            <Button
+                              onClick={handleLogout}
+                              variant="ghost"
+                              className="w-full justify-start p-4 h-auto rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
+                            >
+                              <div className="flex items-center space-x-4 w-full">
+                                <div className="p-2 rounded-lg bg-terex-gray/30">
+                                  <LogOut className="h-5 w-5" />
+                                </div>
+                                <div className="flex-1 text-left">
+                                  <div className="font-medium text-sm">Déconnexion</div>
+                                  <div className="text-xs opacity-75">Se déconnecter</div>
+                                </div>
+                              </div>
+                            </Button>
+                          </div>
+                        ) : (
+                          <Button
+                            onClick={() => navigate('/auth')}
+                            className="w-full bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-medium py-6 rounded-xl shadow-lg shadow-terex-accent/25"
+                          >
+                            Se Connecter
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </ScrollArea>
-              </SheetContent>
-            </Sheet>
-          )}
-        </div>
+                  </ScrollArea>
+                </SheetContent>
+              </Sheet>
+            )}
+          </div>
+        </nav>
       </div>
     </header>
   );
