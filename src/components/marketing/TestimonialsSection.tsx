@@ -58,26 +58,26 @@ const row2 = testimonials.slice(3, 6);
 
 function TestimonialCard({ testimonial }: { testimonial: typeof testimonials[0] }) {
   return (
-    <Card className="bg-terex-darker border-terex-gray/30 min-w-[350px] md:min-w-[400px] flex-shrink-0">
-      <CardContent className="p-6">
-        <div className="flex items-start space-x-3 mb-4">
-          <Quote className="w-6 h-6 text-terex-accent flex-shrink-0" />
-          <p className="text-gray-400 text-sm leading-relaxed italic font-light line-clamp-3">
+    <Card className="bg-terex-darker border-terex-gray/30 min-w-[260px] sm:min-w-[300px] md:min-w-[320px] flex-shrink-0">
+      <CardContent className="p-4 sm:p-5">
+        <div className="flex items-start space-x-2 mb-3">
+          <Quote className="w-4 h-4 sm:w-5 sm:h-5 text-terex-accent flex-shrink-0" />
+          <p className="text-gray-400 text-xs sm:text-sm leading-relaxed italic font-light line-clamp-2">
             "{testimonial.text}"
           </p>
         </div>
         
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center">
-            <User className="w-5 h-5 text-terex-accent" />
+        <div className="flex items-center space-x-2">
+          <div className="w-8 h-8 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center">
+            <User className="w-4 h-4 text-terex-accent" />
           </div>
-          <div className="flex-1">
-            <h4 className="text-white font-light text-sm">{testimonial.name}</h4>
-            <p className="text-terex-accent text-xs font-light">{testimonial.location}</p>
+          <div className="flex-1 min-w-0">
+            <h4 className="text-white font-light text-xs sm:text-sm truncate">{testimonial.name}</h4>
+            <p className="text-terex-accent text-[10px] sm:text-xs font-light truncate">{testimonial.location}</p>
           </div>
           <div className="flex space-x-0.5">
             {[...Array(testimonial.rating)].map((_, i) => (
-              <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+              <Star key={i} className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-yellow-400 fill-current" />
             ))}
           </div>
         </div>
@@ -105,9 +105,9 @@ export function TestimonialsSection() {
       </div>
       
       {/* Row 1 - Scrolling Left */}
-      <div className="relative mb-6">
+      <div className="relative mb-4 sm:mb-6">
         <div 
-          className="flex gap-6 animate-scroll-left"
+          className="flex gap-3 sm:gap-4 md:gap-5 animate-scroll-left"
           style={{
             width: 'max-content',
           }}
@@ -121,7 +121,7 @@ export function TestimonialsSection() {
       {/* Row 2 - Scrolling Right */}
       <div className="relative">
         <div 
-          className="flex gap-6 animate-scroll-right"
+          className="flex gap-3 sm:gap-4 md:gap-5 animate-scroll-right"
           style={{
             width: 'max-content',
           }}
@@ -174,11 +174,11 @@ export function TestimonialsSection() {
         }
         
         .animate-scroll-left {
-          animation: scroll-left 30s linear infinite;
+          animation: scroll-left 50s linear infinite;
         }
         
         .animate-scroll-right {
-          animation: scroll-right 30s linear infinite;
+          animation: scroll-right 50s linear infinite;
         }
         
         .animate-scroll-left:hover,
