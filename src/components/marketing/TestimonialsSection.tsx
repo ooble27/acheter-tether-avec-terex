@@ -58,27 +58,22 @@ const row2 = testimonials.slice(3, 6);
 
 function TestimonialCard({ testimonial }: { testimonial: typeof testimonials[0] }) {
   return (
-    <Card className="bg-terex-darker border-terex-gray/30 min-w-[200px] sm:min-w-[220px] md:min-w-[240px] flex-shrink-0">
-      <CardContent className="p-3">
-        <div className="flex items-start space-x-1.5 mb-2">
-          <Quote className="w-3 h-3 text-terex-accent flex-shrink-0 mt-0.5" />
-          <p className="text-gray-400 text-[11px] leading-relaxed italic font-light line-clamp-2">
+    <Card className="bg-terex-darker border-terex-gray/30 min-w-[220px] sm:min-w-[250px] flex-shrink-0">
+      <CardContent className="p-2.5 flex items-center gap-2.5">
+        <div className="w-7 h-7 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
+          <User className="w-3.5 h-3.5 text-terex-accent" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-gray-400 text-[10px] leading-tight italic font-light line-clamp-1 mb-0.5">
             "{testimonial.text}"
           </p>
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <div className="w-6 h-6 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center">
-            <User className="w-3 h-3 text-terex-accent" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h4 className="text-white font-light text-[11px] truncate">{testimonial.name}</h4>
-            <p className="text-terex-accent text-[9px] font-light truncate">{testimonial.location}</p>
-          </div>
-          <div className="flex space-x-0.5">
-            {[...Array(testimonial.rating)].map((_, i) => (
-              <Star key={i} className="w-2 h-2 text-yellow-400 fill-current" />
-            ))}
+          <div className="flex items-center justify-between">
+            <span className="text-white font-light text-[10px] truncate">{testimonial.name}</span>
+            <div className="flex space-x-0.5 ml-1">
+              {[...Array(Math.min(testimonial.rating, 3))].map((_, i) => (
+                <Star key={i} className="w-1.5 h-1.5 text-yellow-400 fill-current" />
+              ))}
+            </div>
           </div>
         </div>
       </CardContent>
