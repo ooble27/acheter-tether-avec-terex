@@ -56,9 +56,8 @@ export default function AcheterUSDTArticle() {
       
       <h3 className="text-white text-xl mt-6">Mobile Money (Recommandé)</h3>
       <ul className="text-gray-300">
-        <li><strong className="text-white">Orange Money</strong> : Disponible au Sénégal, Côte d'Ivoire, Mali</li>
-        <li><strong className="text-white">MTN Mobile Money</strong> : Disponible dans 15 pays africains</li>
-        <li><strong className="text-white">Moov Money</strong> : Bénin, Burkina Faso, Côte d'Ivoire</li>
+        <li><strong className="text-white">Orange Money</strong> : Disponible au Sénégal, Côte d'Ivoire, Mali, Burkina Faso</li>
+        <li><strong className="text-white">Wave</strong> : Disponible au Sénégal, Côte d'Ivoire, Mali, Burkina Faso</li>
       </ul>
       <p className="text-gray-300">
         Processus : Après validation de votre commande, vous recevrez une notification de paiement sur votre téléphone. 
