@@ -85,7 +85,13 @@ export default function BlogPage() {
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark">
+    <div className="min-h-screen bg-terex-dark relative">
+      {/* Grid background pattern */}
+      <div className="fixed inset-0 opacity-[0.03] pointer-events-none" style={{
+        backgroundImage: `linear-gradient(#3B968F 1px, transparent 1px),
+                          linear-gradient(90deg, #3B968F 1px, transparent 1px)`,
+        backgroundSize: '60px 60px'
+      }} />
       <HeaderSection 
         onShowDashboard={() => navigate("/dashboard")}
         onLogout={handleLogout}
