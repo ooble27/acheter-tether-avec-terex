@@ -34,14 +34,67 @@ const testimonials = [
     rating: 5,
     text: "Support client réactif et processus KYC simple. J'utilise Terex pour tous mes virements vers le Canada. Service de qualité !",
     transaction: "Virement international CFA → CAD"
+  },
+  {
+    id: 5,
+    name: "Ibrahima Ndiaye",
+    location: "Abidjan, Côte d'Ivoire",
+    rating: 5,
+    text: "La meilleure plateforme pour convertir mes USDT en mobile money. Transfert instantané sur Orange Money !",
+    transaction: "Vente USDT - 150 000 XOF"
+  },
+  {
+    id: 6,
+    name: "Mariama Keita",
+    location: "Toronto, Canada",
+    rating: 5,
+    text: "Je peux enfin envoyer de l'argent à ma famille sans frais exorbitants. Terex a changé ma vie !",
+    transaction: "Virement international CAD → CFA"
   }
 ];
 
-export function TestimonialsSection() {
+const row1 = testimonials.slice(0, 3);
+const row2 = testimonials.slice(3, 6);
+
+function TestimonialCard({ testimonial }: { testimonial: typeof testimonials[0] }) {
   return (
-    <section className="py-20 bg-terex-dark">
+    <Card className="bg-terex-darker border-terex-gray/30 min-w-[350px] md:min-w-[400px] flex-shrink-0">
+      <CardContent className="p-6">
+        <div className="flex items-start space-x-3 mb-4">
+          <Quote className="w-6 h-6 text-terex-accent flex-shrink-0" />
+          <p className="text-gray-400 text-sm leading-relaxed italic font-light line-clamp-3">
+            "{testimonial.text}"
+          </p>
+        </div>
+        
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center">
+            <User className="w-5 h-5 text-terex-accent" />
+          </div>
+          <div className="flex-1">
+            <h4 className="text-white font-light text-sm">{testimonial.name}</h4>
+            <p className="text-terex-accent text-xs font-light">{testimonial.location}</p>
+          </div>
+          <div className="flex space-x-0.5">
+            {[...Array(testimonial.rating)].map((_, i) => (
+              <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+            ))}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function TestimonialsSection() {
+  // Duplicate testimonials for seamless infinite scroll
+  const row1Extended = [...row1, ...row1, ...row1, ...row1];
+  const row2Extended = [...row2, ...row2, ...row2, ...row2];
+
+  return (
+    <section className="py-20 bg-terex-dark overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
             Ils nous font <span className="text-terex-accent">confiance</span>
           </h2>
@@ -49,39 +102,38 @@ export function TestimonialsSection() {
             Découvrez ce que nos utilisateurs disent de leur expérience avec Terex
           </p>
         </div>
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-          {testimonials.map((testimonial) => (
-            <Card key={testimonial.id} className="bg-terex-darker border-terex-gray/30 hover:border-terex-accent/30 transition-all duration-300 hover:scale-105">
-              <CardContent className="p-8">
-                <div className="flex items-start space-x-4 mb-6">
-                  <Quote className="w-8 h-8 text-terex-accent flex-shrink-0 mt-1" />
-                  <p className="text-gray-400 text-lg leading-relaxed italic font-light">
-                    "{testimonial.text}"
-                  </p>
-                </div>
-                
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center">
-                    <User className="w-6 h-6 text-terex-accent" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-white font-light">{testimonial.name}</h4>
-                    <p className="text-terex-accent text-sm font-light">{testimonial.location}</p>
-                    <p className="text-gray-400 text-xs mt-1">{testimonial.transaction}</p>
-                  </div>
-                  <div className="flex space-x-1">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+      </div>
+      
+      {/* Row 1 - Scrolling Left */}
+      <div className="relative mb-6">
+        <div 
+          className="flex gap-6 animate-scroll-left"
+          style={{
+            width: 'max-content',
+          }}
+        >
+          {row1Extended.map((testimonial, index) => (
+            <TestimonialCard key={`row1-${testimonial.id}-${index}`} testimonial={testimonial} />
           ))}
         </div>
-        
-        {/* Badge de confiance */}
+      </div>
+      
+      {/* Row 2 - Scrolling Right */}
+      <div className="relative">
+        <div 
+          className="flex gap-6 animate-scroll-right"
+          style={{
+            width: 'max-content',
+          }}
+        >
+          {row2Extended.map((testimonial, index) => (
+            <TestimonialCard key={`row2-${testimonial.id}-${index}`} testimonial={testimonial} />
+          ))}
+        </div>
+      </div>
+      
+      {/* Badge de confiance */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mt-16">
           <div className="inline-flex items-center space-x-6 bg-terex-darker/50 border border-terex-gray/30 rounded-2xl px-8 py-4">
             <div className="text-center">
@@ -101,6 +153,39 @@ export function TestimonialsSection() {
           </div>
         </div>
       </div>
+      
+      <style>{`
+        @keyframes scroll-left {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        
+        @keyframes scroll-right {
+          0% {
+            transform: translateX(-50%);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+        
+        .animate-scroll-left {
+          animation: scroll-left 30s linear infinite;
+        }
+        
+        .animate-scroll-right {
+          animation: scroll-right 30s linear infinite;
+        }
+        
+        .animate-scroll-left:hover,
+        .animate-scroll-right:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
     </section>
   );
 }
