@@ -48,11 +48,8 @@ const advantages = [
 
 export function WhyChooseTerexSection() {
   return (
-    <section className="py-24 bg-terex-dark overflow-hidden relative">
-      {/* Subtle background accent */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-terex-accent/5 rounded-full blur-[150px] pointer-events-none" />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+    <section className="py-24 bg-terex-dark overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="text-center mb-20">
           <span className="text-terex-accent text-sm tracking-[0.2em] uppercase mb-4 block">Nos avantages</span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
