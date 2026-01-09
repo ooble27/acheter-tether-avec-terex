@@ -30,7 +30,7 @@ export function NetworksSection() {
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-terex-dark relative overflow-hidden">
+    <section className="py-16 sm:py-24 relative overflow-hidden">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <AnimatedSection className="text-center mb-16">
