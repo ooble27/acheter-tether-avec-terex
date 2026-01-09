@@ -7,17 +7,15 @@ import confirmScreen from '@/assets/dashboard-confirm.jpeg';
 // Composant Phone Frame réutilisable
 function PhoneFrame({ image, alt }: { image: string; alt: string }) {
   return (
-    <div className="relative mx-auto w-[260px] sm:w-[280px]">
-      <div className="relative bg-gradient-to-br from-white/20 to-white/10 rounded-[3rem] p-2 shadow-2xl border border-white/30">
-        <div className="w-full h-full bg-black rounded-[2.5rem] p-1 overflow-hidden">
-          <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-20 h-5 bg-black rounded-full z-20"></div>
+    <div className="relative mx-auto w-[300px] sm:w-[340px]">
+      <div className="relative bg-gradient-to-br from-white/20 to-white/10 rounded-[2.5rem] p-2 shadow-2xl border border-white/30">
+        <div className="w-full h-full bg-black rounded-[2rem] overflow-hidden">
           <img 
             src={image} 
             alt={alt}
-            className="w-full h-auto rounded-[2.2rem] object-cover"
+            className="w-full h-auto object-cover"
           />
         </div>
-        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-white rounded-full opacity-60"></div>
       </div>
     </div>
   );
