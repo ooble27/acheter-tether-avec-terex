@@ -1,12 +1,10 @@
-
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Shield, Globe, ArrowRightLeft, Send, Banknote, TrendingUp, Users, Clock } from 'lucide-react';
+import { Shield, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DeviceMockups } from './DeviceMockups';
 import { PhoneMockup } from './PhoneMockup';
-import { useState, useEffect } from 'react';
+import { AnimatedSection, AnimatedItem } from '@/hooks/useScrollAnimation';
 
 interface HeroSectionProps {
   user?: { email: string; name: string } | null;
@@ -41,7 +39,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[600px]">
           
           {/* Colonne de gauche - Contenu textuel */}
-          <div className="order-2 lg:order-1 text-center lg:text-left">
+          <AnimatedSection className="order-2 lg:order-1 text-center lg:text-left" delay={100}>
             {/* Titre centré sur mobile */}
             <div className="lg:hidden">
               <DeviceMockups />
@@ -107,18 +105,19 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 <div className="text-sm text-gray-400">Disponibilité</div>
               </div>
             </div>
-          </div>
+          </AnimatedSection>
           
           {/* Colonne de droite - PhoneMockup visible uniquement sur desktop */}
-          <div className="order-1 lg:order-2 hidden lg:flex justify-center">
+          <AnimatedSection className="order-1 lg:order-2 hidden lg:flex justify-center" delay={300} direction="right">
             <div className="relative scale-75 sm:scale-90 lg:scale-100">
               <PhoneMockup />
             </div>
-          </div>
+          </AnimatedSection>
         </div>
         
         {/* Cartes des fonctionnalités - en bas */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-16 lg:mt-24">
+          <AnimatedItem index={0}>
           <Card className="bg-terex-darker border-terex-accent/20 backdrop-blur-sm hover:bg-terex-gray transition-all duration-300 hover:scale-105 group shadow-lg">
             <CardContent className="p-4 sm:p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
@@ -133,7 +132,9 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               <p className="text-gray-400 text-xs sm:text-sm font-light">Achetez et vendez vos USDT au meilleur taux</p>
             </CardContent>
           </Card>
+          </AnimatedItem>
           
+          <AnimatedItem index={1}>
           <Card className="bg-terex-darker border-terex-accent/20 backdrop-blur-sm hover:bg-terex-gray transition-all duration-300 hover:scale-105 group shadow-lg">
             <CardContent className="p-4 sm:p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
@@ -143,7 +144,9 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               <p className="text-gray-400 text-xs sm:text-sm font-light">Transférez de l'argent partout en Afrique</p>
             </CardContent>
           </Card>
+          </AnimatedItem>
           
+          <AnimatedItem index={2}>
           <Card className="bg-terex-darker border-terex-accent/20 backdrop-blur-sm hover:bg-terex-gray transition-all duration-300 hover:scale-105 group sm:col-span-2 lg:col-span-1 shadow-lg">
             <CardContent className="p-4 sm:p-6 text-center">
               <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
@@ -153,6 +156,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               <p className="text-gray-400 text-xs sm:text-sm font-light">Chiffrement 256-bit et conformité réglementaire</p>
             </CardContent>
           </Card>
+          </AnimatedItem>
         </div>
       </div>
     </div>

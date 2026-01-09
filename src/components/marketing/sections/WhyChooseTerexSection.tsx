@@ -1,6 +1,6 @@
-
 import { Card, CardContent } from '@/components/ui/card';
 import { TrendingDown, Clock, Shield, Headphones, Smartphone, Globe } from 'lucide-react';
+import { AnimatedSection, AnimatedItem } from '@/hooks/useScrollAnimation';
 
 const advantages = [
   {
@@ -45,7 +45,7 @@ export function WhyChooseTerexSection() {
   return (
     <section className="py-20 bg-terex-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <AnimatedSection className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
             Pourquoi choisir <span className="text-terex-accent">Terex</span> ?
           </h2>
@@ -53,38 +53,39 @@ export function WhyChooseTerexSection() {
             Découvrez les avantages uniques qui font de Terex la plateforme de référence 
             pour vos échanges USDT et transferts d'argent vers l'Afrique
           </p>
-        </div>
+        </AnimatedSection>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {advantages.map((advantage, index) => {
             const IconComponent = advantage.icon;
             return (
-              <Card 
-                key={index} 
-                className="bg-terex-darker/50 border-terex-gray/30 hover:border-terex-accent/30 transition-all duration-300 hover:scale-105 group shadow-lg"
-              >
-                <CardContent className="p-8 text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-terex-accent/20 to-terex-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                    <IconComponent className="w-8 h-8 text-terex-accent" />
-                  </div>
-                  
-                  <h3 className="text-xl font-light text-white mb-3">{advantage.title}</h3>
-                  
-                  <p className="text-gray-400 mb-4 leading-relaxed font-light">
-                    {advantage.description}
-                  </p>
-                  
-                  <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-4 py-2 border border-terex-accent/20">
-                    <span className="text-terex-accent font-light text-sm">{advantage.highlight}</span>
-                  </div>
-                </CardContent>
-              </Card>
+              <AnimatedItem key={index} index={index}>
+                <Card 
+                  className="bg-terex-darker/50 border-terex-gray/30 hover:border-terex-accent/30 transition-all duration-300 hover:scale-105 group shadow-lg h-full"
+                >
+                  <CardContent className="p-8 text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-terex-accent/20 to-terex-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                      <IconComponent className="w-8 h-8 text-terex-accent" />
+                    </div>
+                    
+                    <h3 className="text-xl font-light text-white mb-3">{advantage.title}</h3>
+                    
+                    <p className="text-gray-400 mb-4 leading-relaxed font-light">
+                      {advantage.description}
+                    </p>
+                    
+                    <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-4 py-2 border border-terex-accent/20">
+                      <span className="text-terex-accent font-light text-sm">{advantage.highlight}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </AnimatedItem>
             );
           })}
         </div>
         
         {/* Call to action bottom - version responsive */}
-        <div className="text-center mt-16">
+        <AnimatedSection className="text-center mt-16" delay={400}>
           <div className="bg-terex-darker/50 border border-terex-gray/30 rounded-2xl p-6 max-w-4xl mx-auto">
             {/* Version desktop */}
             <div className="hidden md:flex items-center justify-center space-x-8">
@@ -120,7 +121,7 @@ export function WhyChooseTerexSection() {
               </div>
             </div>
           </div>
-        </div>
+        </AnimatedSection>
       </div>
     </section>
   );
