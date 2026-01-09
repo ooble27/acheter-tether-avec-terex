@@ -58,26 +58,26 @@ const row2 = testimonials.slice(3, 6);
 
 function TestimonialCard({ testimonial }: { testimonial: typeof testimonials[0] }) {
   return (
-    <Card className="bg-terex-darker border-terex-gray/30 min-w-[260px] sm:min-w-[300px] md:min-w-[320px] flex-shrink-0">
-      <CardContent className="p-4 sm:p-5">
-        <div className="flex items-start space-x-2 mb-3">
-          <Quote className="w-4 h-4 sm:w-5 sm:h-5 text-terex-accent flex-shrink-0" />
-          <p className="text-gray-400 text-xs sm:text-sm leading-relaxed italic font-light line-clamp-2">
+    <Card className="bg-terex-darker border-terex-gray/30 min-w-[200px] sm:min-w-[220px] md:min-w-[240px] flex-shrink-0">
+      <CardContent className="p-3">
+        <div className="flex items-start space-x-1.5 mb-2">
+          <Quote className="w-3 h-3 text-terex-accent flex-shrink-0 mt-0.5" />
+          <p className="text-gray-400 text-[11px] leading-relaxed italic font-light line-clamp-2">
             "{testimonial.text}"
           </p>
         </div>
         
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center">
-            <User className="w-4 h-4 text-terex-accent" />
+          <div className="w-6 h-6 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full flex items-center justify-center">
+            <User className="w-3 h-3 text-terex-accent" />
           </div>
           <div className="flex-1 min-w-0">
-            <h4 className="text-white font-light text-xs sm:text-sm truncate">{testimonial.name}</h4>
-            <p className="text-terex-accent text-[10px] sm:text-xs font-light truncate">{testimonial.location}</p>
+            <h4 className="text-white font-light text-[11px] truncate">{testimonial.name}</h4>
+            <p className="text-terex-accent text-[9px] font-light truncate">{testimonial.location}</p>
           </div>
           <div className="flex space-x-0.5">
             {[...Array(testimonial.rating)].map((_, i) => (
-              <Star key={i} className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-yellow-400 fill-current" />
+              <Star key={i} className="w-2 h-2 text-yellow-400 fill-current" />
             ))}
           </div>
         </div>
