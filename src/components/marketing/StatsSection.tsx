@@ -31,12 +31,6 @@ const stats = [
 export function StatsSection() {
   return (
     <section className="py-20 bg-terex-dark relative overflow-hidden">
-      {/* Subtle grid background */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: `linear-gradient(#3B968F 1px, transparent 1px),
-                          linear-gradient(90deg, #3B968F 1px, transparent 1px)`,
-        backgroundSize: '60px 60px'
-      }} />
       
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <AnimatedSection className="text-center mb-16">
