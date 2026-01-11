@@ -63,8 +63,8 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
         {!useHamburgerMenu ? (
           <div className={`backdrop-blur-md rounded-2xl border shadow-lg transition-all duration-300 px-6 flex items-center justify-between ${
             isScrolled 
-              ? 'bg-terex-darker/95 border-terex-accent/30 shadow-black/30 py-2' 
-              : 'bg-terex-darker/80 border-terex-accent/20 shadow-black/20 py-3'
+              ? 'bg-terex-darker/95 border-white/30 shadow-black/30 py-2' 
+              : 'bg-terex-darker/80 border-white/20 shadow-black/20 py-3'
           }`}>
             {/* Logo */}
             <div className="flex items-center">
@@ -141,8 +141,8 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
         ) : (
           <div className={`backdrop-blur-md rounded-2xl border shadow-lg transition-all duration-300 px-4 flex items-center justify-between ${
             isScrolled 
-              ? 'bg-terex-darker/95 border-terex-accent/30 shadow-black/30 py-2' 
-              : 'bg-terex-darker/80 border-terex-accent/20 shadow-black/20 py-3'
+              ? 'bg-terex-darker/95 border-white/30 shadow-black/30 py-2' 
+              : 'bg-terex-darker/80 border-white/20 shadow-black/20 py-3'
           }`}>
             {/* Logo */}
             <div className="flex items-center">
