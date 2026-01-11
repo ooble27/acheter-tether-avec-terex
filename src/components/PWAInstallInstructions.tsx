@@ -1,11 +1,15 @@
 
-import { useState } from 'react';
+import { useState, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Smartphone, Share, Plus, X, Download } from 'lucide-react';
+import { Smartphone, Share, Plus, Download } from 'lucide-react';
 
-export function PWAInstallInstructions() {
+interface PWAInstallInstructionsProps {
+  trigger?: ReactNode;
+}
+
+export function PWAInstallInstructions({ trigger }: PWAInstallInstructionsProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const isIOS = () => {
@@ -16,17 +20,21 @@ export function PWAInstallInstructions() {
     return /Android/.test(navigator.userAgent);
   };
 
+  const defaultTrigger = (
+    <Button 
+      variant="outline" 
+      size="sm"
+      className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10"
+    >
+      <Smartphone className="w-4 h-4 mr-2" />
+      Installer l'app
+    </Button>
+  );
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button 
-          variant="outline" 
-          size="sm"
-          className="border-terex-accent/30 text-terex-accent hover:bg-terex-accent/10"
-        >
-          <Smartphone className="w-4 h-4 mr-2" />
-          Installer l'app
-        </Button>
+        {trigger || defaultTrigger}
       </DialogTrigger>
       <DialogContent className="bg-terex-darker border-terex-gray text-white max-w-md">
         <DialogHeader>
