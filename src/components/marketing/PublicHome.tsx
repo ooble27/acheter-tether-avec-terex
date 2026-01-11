@@ -56,7 +56,7 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
   };
 
   return (
-    <div className="min-h-screen bg-terex-dark relative">
+    <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
       {/* Grid background pattern */}
       <div className="fixed inset-0 opacity-[0.03] pointer-events-none" style={{
         backgroundImage: `linear-gradient(#3B968F 1px, transparent 1px),
