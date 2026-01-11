@@ -20,7 +20,7 @@ export function PhoneMockupSection() {
 
             {/* Phone Mockup - Only visible on mobile between title and subtitle */}
             <div className="flex justify-center mb-6 md:mb-8 lg:hidden scrollbar-hide">
-              <div className="relative scale-75">
+              <div className="relative scale-[0.65]">
                 <PhoneMockup />
               </div>
             </div>
