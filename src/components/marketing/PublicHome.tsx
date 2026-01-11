@@ -18,7 +18,7 @@ import { NetworksSection } from './sections/NetworksSection';
 import { DashboardPreviewSection } from './sections/DashboardPreviewSection';
 import { BuyUSDTShowcase, NetworkSelectionShowcase, ConfirmationShowcase } from './sections/FeatureShowcaseSection';
 import { FounderSection } from './sections/FounderSection';
-import { SectionDividerWithLabel } from './sections/SectionDivider';
+import { SectionDividerWithLabel, VerticalGridLines } from './sections/SectionDivider';
 
 interface PublicHomeProps {
   onGetStarted: () => void;
@@ -60,11 +60,15 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
   return (
     <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
       {/* Grid background pattern - white with more density like Attio */}
-      <div className="fixed inset-0 opacity-[0.06] pointer-events-none" style={{
+      <div className="fixed inset-0 opacity-[0.06] pointer-events-none z-0" style={{
         backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
                           linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px)`,
         backgroundSize: '40px 40px'
       }} />
+      
+      {/* Vertical grid lines for Attio-style structure */}
+      <VerticalGridLines />
+      
       <PWAInstallPrompt />
       
       <HeaderSection 
