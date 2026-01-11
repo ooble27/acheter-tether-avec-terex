@@ -63,11 +63,11 @@ export function WhyChooseTerexSection() {
             const IconComponent = advantage.icon;
             
             return (
-              <AnimatedItem key={index} index={index}>
-                <div className="group relative bg-terex-darker/40 backdrop-blur-sm border border-white/5 rounded-xl p-4 hover:border-terex-accent/30 transition-all duration-300 hover:bg-terex-darker/60">
+              <AnimatedItem key={index} index={index} className="h-full">
+                <div className="group relative bg-terex-darker/40 backdrop-blur-sm border border-white/5 rounded-xl p-4 hover:border-terex-accent/30 transition-all duration-300 hover:bg-terex-darker/60 h-full min-h-[140px] flex flex-col">
                   {/* Header avec icône et stat */}
                   <div className="flex items-start justify-between mb-3">
-                    <div className="w-9 h-9 rounded-lg bg-terex-accent/10 flex items-center justify-center">
+                    <div className="w-9 h-9 rounded-lg bg-terex-accent/10 flex items-center justify-center flex-shrink-0">
                       <IconComponent className="w-4 h-4 text-terex-accent" />
                     </div>
                     <div className="text-right">
@@ -77,12 +77,14 @@ export function WhyChooseTerexSection() {
                   </div>
                   
                   {/* Titre et description */}
-                  <h3 className="text-sm font-medium text-white mb-1 group-hover:text-terex-accent transition-colors">
-                    {advantage.title}
-                  </h3>
-                  <p className="text-xs text-gray-400 leading-relaxed">
-                    {advantage.description}
-                  </p>
+                  <div className="flex-grow">
+                    <h3 className="text-sm font-medium text-white mb-1 group-hover:text-terex-accent transition-colors">
+                      {advantage.title}
+                    </h3>
+                    <p className="text-xs text-gray-400 leading-relaxed">
+                      {advantage.description}
+                    </p>
+                  </div>
                 </div>
               </AnimatedItem>
             );
