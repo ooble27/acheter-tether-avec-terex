@@ -46,41 +46,41 @@
   }
 
   .light {
-    --background: 0 0% 98%;
-    --foreground: 172 44% 40%;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 172 44% 40%;
+    --card-foreground: 240 10% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 172 44% 40%;
+    --popover-foreground: 240 10% 10%;
 
     --primary: 172 44% 40%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 172 10% 95%;
-    --secondary-foreground: 172 44% 40%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 10% 10%;
 
-    --muted: 172 10% 95%;
-    --muted-foreground: 172 30% 45%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
 
-    --accent: 172 10% 95%;
-    --accent-foreground: 172 44% 40%;
+    --accent: 240 5% 96%;
+    --accent-foreground: 240 10% 10%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 172 20% 85%;
-    --input: 172 20% 90%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
     --ring: 172 44% 40%;
 
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 172 44% 40%;
+    --sidebar-foreground: 240 10% 10%;
     --sidebar-primary: 172 44% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 172 10% 95%;
-    --sidebar-accent-foreground: 172 44% 40%;
-    --sidebar-border: 172 20% 85%;
+    --sidebar-accent: 240 5% 96%;
+    --sidebar-accent-foreground: 240 10% 10%;
+    --sidebar-border: 240 6% 90%;
     --sidebar-ring: 172 44% 40%;
   }
 }
@@ -110,29 +110,17 @@
   }
 
   /* Mode sombre - fond noir */
-  .dark #root,
-  .dark body,
-  .dark html {
+  .dark #root {
     min-height: 100vh;
     height: 100%;
     background-color: #141414 !important;
   }
 
-  /* Mode clair - fond blanc avec grille noire style Attio */
-  .light html,
-  .light body {
-    background-color: #FAFAFA !important;
-    background-image: 
-      linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
-    background-size: 40px 40px;
-    background-attachment: fixed;
-  }
-
+  /* Mode clair - fond blanc */
   .light #root {
     min-height: 100vh;
     height: 100%;
-    background: transparent !important;
+    background-color: #ffffff !important;
   }
 
   #root {
@@ -165,16 +153,9 @@
     }
     
     .light html,
-    .light body {
-      background-color: #FAFAFA !important;
-      background-image: 
-        linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
-    
+    .light body,
     .light #root {
-      background: transparent !important;
+      background-color: #ffffff !important;
     }
   }
 }
@@ -186,36 +167,29 @@
     background: #141414 !important;
   }
   
-  .light html, .light body {
-    background-color: #FAFAFA !important;
-    background-image: 
-      linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px) !important;
-    background-size: 40px 40px !important;
-  }
-  
-  .light #root {
-    background: transparent !important;
+  .light html, .light body, .light #root {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
   }
 }
 
 /* Règles spécifiques pour Safari mobile pour éviter le flash de couleur verte */
 @supports (-webkit-appearance: none) {
   @media screen and (max-width: 768px) {
-    .dark html {
+    html {
       background-color: #141414 !important;
     }
     
-    .dark body {
+    body {
       background-color: #141414 !important;
     }
     
-    .dark #root {
+    #root {
       background-color: #141414 !important;
     }
     
-    /* Forcer le fond noir sur tous les éléments racine - Mode sombre uniquement */
-    .dark body::before {
+    /* Forcer le fond noir sur tous les éléments racine */
+    body::before {
       content: '';
       position: fixed;
       top: 0;
@@ -228,15 +202,15 @@
   }
 }
 
-/* Protection supplémentaire pour iOS Safari - Mode sombre uniquement */
+/* Protection supplémentaire pour iOS Safari */
 @supports (-webkit-touch-callout: none) {
-  .dark html, .dark body, .dark #root {
+  html, body, #root {
     background-color: #141414 !important;
     background: #141414 !important;
   }
   
-  /* Éviter tout flash de couleur au chargement - Mode sombre */
-  .dark body {
+  /* Éviter tout flash de couleur au chargement */
+  body {
     opacity: 1 !important;
     background: #141414 !important;
   }
@@ -293,104 +267,88 @@
   }
 }
 
-/* ===== Mode clair - Style Attio avec grilles noires ===== */
+/* ===== Mode clair - Overrides pour les composants Terex ===== */
 
-/* Fond de page transparent pour laisser voir la grille */
-.light .min-h-screen {
-  background: transparent !important;
-}
-
-/* Glass cards en mode clair - Style Attio avec bordures visibles */
+/* Glass cards en mode clair */
 .light .glass-card {
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.12) !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+  background: rgba(0, 0, 0, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 /* Terex dark backgrounds en mode clair */
 .light .bg-terex-dark {
-  background-color: rgba(255, 255, 255, 0.9) !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  background-color: #f8f9fa !important;
 }
 
 .light .bg-terex-darker {
   background-color: #ffffff !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
 
 .light .bg-terex-gray {
-  background-color: rgba(245, 245, 245, 0.9) !important;
+  background-color: #f1f3f4 !important;
 }
 
-/* Texte en mode clair - utiliser le vert Terex pour la lisibilité */
+/* Texte en mode clair */
 .light .text-white {
-  color: #2a9d8f !important;
+  color: #1a1a1a !important;
 }
 
 .light .text-gray-300 {
-  color: #2a9d8f !important;
+  color: #4a4a4a !important;
 }
 
 .light .text-gray-400 {
-  color: #3d8b80 !important;
+  color: #6b6b6b !important;
 }
 
 .light .text-gray-500 {
-  color: #4a7c73 !important;
+  color: #8b8b8b !important;
 }
 
-/* Bordures visibles en mode clair - Style Attio avec accent vert */
+/* Bordures en mode clair */
 .light .border-terex-gray {
-  border-color: rgba(42, 157, 143, 0.2) !important;
+  border-color: #e5e7eb !important;
 }
 
 .light .border-terex-gray\/20 {
-  border-color: rgba(42, 157, 143, 0.15) !important;
+  border-color: rgba(229, 231, 235, 0.6) !important;
 }
 
 .light .border-white\/10,
 .light .border-white\/20,
 .light .border-white\/30 {
-  border-color: rgba(42, 157, 143, 0.15) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Cards et popover en mode clair */
 .light [class*="bg-terex-darker"] {
   background-color: #ffffff !important;
-  color: #2a9d8f;
-  border: 1px solid rgba(42, 157, 143, 0.15) !important;
+  color: #1a1a1a;
 }
 
-.light [class*="bg-terex-dark"]:not(.bg-terex-darker) {
-  background-color: rgba(250, 250, 250, 0.95) !important;
+.light [class*="bg-terex-dark"] {
+  background-color: #f8f9fa !important;
 }
 
-/* Header/Navbar en mode clair - transparent pour voir la grille */
+/* Header/Navbar en mode clair */
 .light .bg-terex-darker\/80,
 .light .bg-terex-darker\/95 {
-  background-color: rgba(250, 250, 250, 0.9) !important;
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(42, 157, 143, 0.15) !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(12px);
 }
 
-/* Header parent doit être transparent */
-.light header {
-  background: transparent !important;
-}
-
-/* Boutons et accents - garder la couleur terex-accent verte */
+/* Boutons et accents - garder la couleur terex-accent */
 .light .bg-terex-accent {
-  background-color: #2a9d8f !important;
-  color: #ffffff !important;
+  background-color: #3B968F !important;
 }
 
 .light .text-terex-accent {
-  color: #2a9d8f !important;
+  color: #3B968F !important;
 }
 
 .light .border-terex-accent\/30 {
-  border-color: rgba(42, 157, 143, 0.3) !important;
+  border-color: rgba(59, 150, 143, 0.3) !important;
 }
 
 /* Inputs en mode clair */
@@ -398,15 +356,8 @@
 .light textarea,
 .light select {
   background-color: #ffffff !important;
-  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  border-color: #e5e7eb !important;
   color: #1a1a1a !important;
-}
-
-.light input:focus,
-.light textarea:focus,
-.light select:focus {
-  border-color: rgba(0, 0, 0, 0.3) !important;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05) !important;
 }
 
 .light input::placeholder,
@@ -414,120 +365,46 @@
   color: #9ca3af !important;
 }
 
-/* Cards avec background transparent - Style Attio */
+/* Cards avec background transparent */
 .light .bg-white\/5,
 .light .bg-white\/\[0\.02\],
 .light .bg-white\/\[0\.03\] {
-  background-color: rgba(255, 255, 255, 0.9) !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  background-color: rgba(0, 0, 0, 0.02) !important;
 }
 
-/* Shadows style Attio en mode clair */
+/* Shadows en mode clair */
 .light .shadow-lg {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.04) !important;
-}
-
-.light .shadow-md {
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.03) !important;
-}
-
-.light .shadow-sm {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04) !important;
 }
 
 .light .shadow-black\/20,
 .light .shadow-black\/30 {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08) !important;
 }
 
 /* Hover states en mode clair */
 .light .hover\:bg-terex-accent\/10:hover {
-  background-color: rgba(0, 0, 0, 0.05) !important;
+  background-color: rgba(59, 150, 143, 0.1) !important;
 }
 
 .light .hover\:bg-terex-gray\/50:hover {
-  background-color: rgba(0, 0, 0, 0.04) !important;
+  background-color: rgba(241, 243, 244, 0.8) !important;
 }
 
 /* Dialog/Sheet en mode clair */
 .light [role="dialog"] {
   background-color: #ffffff !important;
   color: #1a1a1a !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
 
 .light .bg-terex-gray\/30,
 .light .bg-terex-gray\/50 {
-  background-color: rgba(0, 0, 0, 0.03) !important;
+  background-color: rgba(241, 243, 244, 0.6) !important;
 }
 
 /* Grid background pour mode clair */
 .light .bg-\[linear-gradient\(rgba\(255\,255\,255\,0\.03\)_1px\,transparent_1px\)\,linear-gradient\(90deg\,rgba\(255\,255\,255\,0\.03\)_1px\,transparent_1px\)\] {
-  background-image: linear-gradient(rgba(0,0,0,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.08) 1px, transparent 1px) !important;
-}
-
-/* Cards spécifiques - bien tracées et visibles */
-.light .rounded-xl,
-.light .rounded-2xl,
-.light .rounded-3xl {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-/* Popover et dropdown en mode clair */
-.light [data-radix-popper-content-wrapper] > div {
-  background-color: #ffffff !important;
-  border: 1px solid rgba(0, 0, 0, 0.12) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-}
-
-/* Boutons secondaires en mode clair */
-.light .bg-white\/10,
-.light .bg-black\/10 {
-  background-color: rgba(0, 0, 0, 0.05) !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Badge et tags en mode clair */
-.light .bg-terex-accent\/10,
-.light .bg-terex-accent\/20 {
-  background-color: rgba(42, 157, 143, 0.1) !important;
-  color: #2a9d8f !important;
-}
-
-/* Titres principaux en mode clair - vert foncé pour lisibilité */
-.light h1,
-.light h2,
-.light h3,
-.light h4,
-.light h5,
-.light h6 {
-  color: #1a5c52 !important;
-}
-
-/* Paragraphes en mode clair */
-.light p {
-  color: #2a9d8f !important;
-}
-
-/* Liens en mode clair */
-.light a {
-  color: #2a9d8f !important;
-}
-
-.light a:hover {
-  color: #1a5c52 !important;
-}
-
-/* Grille avec teinte verte subtile */
-.light html,
-.light body {
-  background-color: #FAFAFA !important;
-  background-image: 
-    linear-gradient(to right, rgba(42, 157, 143, 0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(42, 157, 143, 0.1) 1px, transparent 1px) !important;
-  background-size: 40px 40px !important;
-  background-attachment: fixed !important;
+  background-image: linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px) !important;
 }
 
 /* ===== Fin des overrides mode clair ===== */
