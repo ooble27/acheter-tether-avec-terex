@@ -110,22 +110,29 @@
   }
 
   /* Mode sombre - fond noir */
-  .dark #root {
+  .dark #root,
+  .dark body,
+  .dark html {
     min-height: 100vh;
     height: 100%;
     background-color: #141414 !important;
   }
 
   /* Mode clair - fond blanc avec grille noire style Attio */
-  .light #root {
-    min-height: 100vh;
-    height: 100%;
+  .light html,
+  .light body {
     background-color: #FAFAFA !important;
     background-image: 
       linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
     background-size: 40px 40px;
     background-attachment: fixed;
+  }
+
+  .light #root {
+    min-height: 100vh;
+    height: 100%;
+    background: transparent !important;
   }
 
   #root {
@@ -158,13 +165,16 @@
     }
     
     .light html,
-    .light body,
-    .light #root {
+    .light body {
       background-color: #FAFAFA !important;
       background-image: 
         linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
       background-size: 40px 40px;
+    }
+    
+    .light #root {
+      background: transparent !important;
     }
   }
 }
@@ -176,12 +186,16 @@
     background: #141414 !important;
   }
   
-  .light html, .light body, .light #root {
+  .light html, .light body {
     background-color: #FAFAFA !important;
     background-image: 
       linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px) !important;
     background-size: 40px 40px !important;
+  }
+  
+  .light #root {
+    background: transparent !important;
   }
 }
 
@@ -352,12 +366,17 @@
   background-color: rgba(250, 250, 250, 0.95) !important;
 }
 
-/* Header/Navbar en mode clair */
+/* Header/Navbar en mode clair - transparent pour voir la grille */
 .light .bg-terex-darker\/80,
 .light .bg-terex-darker\/95 {
-  background-color: rgba(255, 255, 255, 0.92) !important;
+  background-color: rgba(250, 250, 250, 0.85) !important;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Header parent doit être transparent */
+.light header {
+  background: transparent !important;
 }
 
 /* Boutons et accents - garder la couleur terex-accent */
