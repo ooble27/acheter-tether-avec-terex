@@ -120,7 +120,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           <AnimatedItem index={0}>
           <Card className="bg-white/5 border-terex-gray/20 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:scale-105 group shadow-lg rounded-2xl">
             <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 bg-terex-dark/50 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 {/* Logo USDT de CoinMarketCap */}
                 <img 
                   src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
@@ -137,8 +137,8 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           <AnimatedItem index={1}>
           <Card className="bg-white/5 border-terex-gray/20 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:scale-105 group shadow-lg rounded-2xl">
             <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 bg-terex-dark/50 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                <Globe className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <Globe className="w-6 h-6 text-terex-accent" />
               </div>
               <h3 className="text-white font-light mb-2 text-sm sm:text-base">Transferts vers l'Afrique</h3>
               <p className="text-gray-400 text-xs sm:text-sm font-light">Transférez de l'argent partout en Afrique</p>
@@ -149,8 +149,8 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           <AnimatedItem index={2}>
           <Card className="bg-white/5 border-terex-gray/20 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:scale-105 group sm:col-span-2 lg:col-span-1 shadow-lg rounded-2xl">
             <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 bg-terex-dark/50 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                <Shield className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <Shield className="w-6 h-6 text-terex-accent" />
               </div>
               <h3 className="text-white font-light mb-2 text-sm sm:text-base">100% Sécurisé</h3>
               <p className="text-gray-400 text-xs sm:text-sm font-light">Chiffrement 256-bit et conformité réglementaire</p>
