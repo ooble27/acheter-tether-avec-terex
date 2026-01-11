@@ -24,14 +24,14 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
           <AnimatedItem index={0}>
             <Card className="bg-white/5 border-terex-gray/20 hover:bg-white/10 transition-all duration-300 hover:scale-105 h-full rounded-2xl">
               <CardContent className="p-4 sm:p-6 text-center">
-                <div className="w-12 h-12 bg-terex-dark/50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-xl font-light text-white">1</span>
+                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <span className="text-xl font-light text-terex-accent">1</span>
                 </div>
                 <h3 className="text-base sm:text-lg font-light text-white mb-3">Inscription gratuite</h3>
                 <p className="text-gray-400 mb-4 text-sm font-light">
                   Créez votre compte en moins de 2 minutes. Processus de vérification KYC simple et rapide.
                 </p>
-                <div className="flex items-center justify-center space-x-2 text-gray-300">
+                <div className="flex items-center justify-center space-x-2 text-terex-accent">
                   <CheckCircle className="w-4 h-4" />
                   <span className="text-xs">100% gratuit</span>
                 </div>
@@ -42,14 +42,14 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
           <AnimatedItem index={1}>
             <Card className="bg-white/5 border-terex-gray/20 hover:bg-white/10 transition-all duration-300 hover:scale-105 h-full rounded-2xl">
               <CardContent className="p-4 sm:p-6 text-center">
-                <div className="w-12 h-12 bg-terex-dark/50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-xl font-light text-white">2</span>
+                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <span className="text-xl font-light text-terex-accent">2</span>
                 </div>
                 <h3 className="text-base sm:text-lg font-light text-white mb-3">Choisissez votre service</h3>
                 <p className="text-gray-400 mb-4 text-sm font-light">
                   Achat/vente USDT ou transfert vers l'Afrique. Interface intuitive pour tous vos besoins.
                 </p>
-                <div className="flex items-center justify-center space-x-2 text-gray-300">
+                <div className="flex items-center justify-center space-x-2 text-terex-accent">
                   <CheckCircle className="w-4 h-4" />
                   <span className="text-xs">Taux en temps réel</span>
                 </div>
@@ -60,14 +60,14 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
           <AnimatedItem index={2}>
             <Card className="bg-white/5 border-terex-gray/20 hover:bg-white/10 transition-all duration-300 hover:scale-105 h-full rounded-2xl">
               <CardContent className="p-4 sm:p-6 text-center">
-                <div className="w-12 h-12 bg-terex-dark/50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-xl font-light text-white">3</span>
+                <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <span className="text-xl font-light text-terex-accent">3</span>
                 </div>
                 <h3 className="text-base sm:text-lg font-light text-white mb-3">Transaction sécurisée</h3>
                 <p className="text-gray-400 mb-4 text-sm font-light">
                   Confirmez et finalisez votre transaction. Suivi en temps réel jusqu'à la réception.
                 </p>
-                <div className="flex items-center justify-center space-x-2 text-gray-300">
+                <div className="flex items-center justify-center space-x-2 text-terex-accent">
                   <CheckCircle className="w-4 h-4" />
                   <span className="text-xs">3-5 minutes</span>
                 </div>
