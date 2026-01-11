@@ -3,10 +3,11 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { User, LogOut, Menu, Home, Building2, Briefcase, HelpCircle, Phone, MessageCircle } from 'lucide-react';
+import { User, LogOut, Menu, Home, Building2, Briefcase, HelpCircle, Phone, MessageCircle, Sun, Moon } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface HeaderSectionProps {
   user?: { email: string; name: string } | null;
@@ -18,6 +19,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -101,6 +103,19 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
 
             {/* User Actions - Right */}
             <div className="flex items-center space-x-3">
+              {/* Theme Toggle */}
+              <Button
+                onClick={toggleTheme}
+                variant="ghost"
+                size="icon"
+                className="text-gray-300 hover:text-white hover:bg-terex-accent/10 rounded-xl"
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-5 h-5" />
+                ) : (
+                  <Moon className="w-5 h-5" />
+                )}
+              </Button>
               {user ? (
                 <>
                   <Button
@@ -155,17 +170,31 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
               <span className="ml-2 text-lg font-semibold text-white">Terex</span>
             </div>
 
-            {/* Hamburger Menu */}
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-white hover:bg-terex-accent/20"
-                >
-                  <Menu className="h-6 w-6" />
-                </Button>
-              </SheetTrigger>
+            {/* Theme Toggle & Hamburger Menu */}
+            <div className="flex items-center space-x-2">
+              <Button
+                onClick={toggleTheme}
+                variant="ghost"
+                size="icon"
+                className="text-gray-300 hover:text-white hover:bg-terex-accent/10"
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-5 h-5" />
+                ) : (
+                  <Moon className="w-5 h-5" />
+                )}
+              </Button>
+              
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-white hover:bg-terex-accent/20"
+                  >
+                    <Menu className="h-6 w-6" />
+                  </Button>
+                </SheetTrigger>
               <SheetContent side="right" className="w-full bg-terex-darker border-none p-0">
                 <ScrollArea className="h-full">
                   <div className="flex flex-col min-h-full pt-safe">
@@ -288,6 +317,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                 </ScrollArea>
               </SheetContent>
             </Sheet>
+            </div>
           </div>
         )}
       </div>
