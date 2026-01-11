@@ -51,37 +51,37 @@ export function StatsSection() {
         </AnimatedSection>
         
         {/* Stats Grid - Responsive */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {stats.map((stat, index) => {
             const IconComponent = stat.icon;
             
             return (
-              <AnimatedItem key={index} index={index}>
-                <div className="group relative bg-white/5 border border-terex-gray/20 rounded-2xl p-5 sm:p-6 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] overflow-hidden">
+              <AnimatedItem key={index} index={index} className="h-full">
+                <div className="group relative bg-white/5 border border-terex-gray/20 rounded-2xl p-4 sm:p-6 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] overflow-hidden h-full min-h-[160px] sm:min-h-0 flex flex-col">
                   {/* Background decoration */}
                   <div className="absolute -top-12 -right-12 w-24 h-24 bg-terex-accent/5 rounded-full blur-2xl group-hover:bg-terex-accent/10 transition-colors" />
                   
                   {/* Trend badge */}
-                  <div className="absolute top-4 right-4 flex items-center gap-1 text-xs text-terex-accent bg-terex-accent/10 px-2 py-1 rounded-full">
-                    <ArrowUpRight className="w-3 h-3" />
+                  <div className="absolute top-3 right-3 sm:top-4 sm:right-4 flex items-center gap-1 text-[10px] sm:text-xs text-terex-accent bg-terex-accent/10 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full">
+                    <ArrowUpRight className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                     <span>{stat.trend}</span>
                   </div>
                   
                   {/* Icon */}
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-terex-accent/20 to-terex-accent/5 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-terex-accent" />
+                  <div className="w-9 h-9 sm:w-12 sm:h-12 bg-gradient-to-br from-terex-accent/20 to-terex-accent/5 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                    <IconComponent className="w-4 h-4 sm:w-6 sm:h-6 text-terex-accent" />
                   </div>
                   
                   {/* Value */}
-                  <div className="mb-1">
-                    <span className="text-3xl sm:text-4xl font-light text-white">{stat.value}</span>
+                  <div className="mb-1 flex-grow">
+                    <span className="text-2xl sm:text-4xl font-light text-white">{stat.value}</span>
                     {stat.suffix && (
-                      <span className="text-sm sm:text-base text-gray-400 ml-1.5 font-light">{stat.suffix}</span>
+                      <span className="text-xs sm:text-base text-gray-400 ml-1 font-light">{stat.suffix}</span>
                     )}
                   </div>
                   
                   {/* Label */}
-                  <h3 className="text-sm sm:text-base text-white font-medium mb-1">{stat.label}</h3>
+                  <h3 className="text-xs sm:text-base text-white font-medium mb-1">{stat.label}</h3>
                   
                   {/* Description - Hidden on mobile */}
                   <p className="hidden sm:block text-xs text-gray-500 font-light">{stat.description}</p>
