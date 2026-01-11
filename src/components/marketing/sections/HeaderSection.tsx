@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -17,6 +18,16 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const navigate = useNavigate();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -44,11 +55,17 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   const useHamburgerMenu = isMobile || isTablet;
 
   return (
-    <header className="pt-safe relative z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      isScrolled ? 'pt-2' : 'pt-4'
+    }`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Floating navbar container */}
         {!useHamburgerMenu ? (
-          <div className="bg-terex-darker/90 backdrop-blur-sm rounded-2xl border border-terex-accent/20 shadow-lg shadow-black/20 px-6 py-3 flex items-center justify-between">
+          <div className={`backdrop-blur-md rounded-2xl border shadow-lg transition-all duration-300 px-6 flex items-center justify-between ${
+            isScrolled 
+              ? 'bg-terex-darker/95 border-terex-accent/30 shadow-black/30 py-2' 
+              : 'bg-terex-darker/80 border-terex-accent/20 shadow-black/20 py-3'
+          }`}>
             {/* Logo */}
             <div className="flex items-center">
               <img 
@@ -122,7 +139,11 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
             </div>
           </div>
         ) : (
-          <div className="bg-terex-darker/90 backdrop-blur-sm rounded-2xl border border-terex-accent/20 shadow-lg shadow-black/20 px-4 py-3 flex items-center justify-between">
+          <div className={`backdrop-blur-md rounded-2xl border shadow-lg transition-all duration-300 px-4 flex items-center justify-between ${
+            isScrolled 
+              ? 'bg-terex-darker/95 border-terex-accent/30 shadow-black/30 py-2' 
+              : 'bg-terex-darker/80 border-terex-accent/20 shadow-black/20 py-3'
+          }`}>
             {/* Logo */}
             <div className="flex items-center">
               <img 
