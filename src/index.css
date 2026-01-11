@@ -46,41 +46,41 @@
   }
 
   .light {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 10%;
+    --background: 0 0% 98%;
+    --foreground: 172 44% 40%;
 
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 10%;
+    --card-foreground: 172 44% 40%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 10%;
+    --popover-foreground: 172 44% 40%;
 
     --primary: 172 44% 40%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 5% 96%;
-    --secondary-foreground: 240 10% 10%;
+    --secondary: 172 10% 95%;
+    --secondary-foreground: 172 44% 40%;
 
-    --muted: 240 5% 96%;
-    --muted-foreground: 240 4% 46%;
+    --muted: 172 10% 95%;
+    --muted-foreground: 172 30% 45%;
 
-    --accent: 240 5% 96%;
-    --accent-foreground: 240 10% 10%;
+    --accent: 172 10% 95%;
+    --accent-foreground: 172 44% 40%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 6% 90%;
-    --input: 240 6% 90%;
+    --border: 172 20% 85%;
+    --input: 172 20% 90%;
     --ring: 172 44% 40%;
 
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 10% 10%;
+    --sidebar-foreground: 172 44% 40%;
     --sidebar-primary: 172 44% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 5% 96%;
-    --sidebar-accent-foreground: 240 10% 10%;
-    --sidebar-border: 240 6% 90%;
+    --sidebar-accent: 172 10% 95%;
+    --sidebar-accent-foreground: 172 44% 40%;
+    --sidebar-border: 172 20% 85%;
     --sidebar-ring: 172 44% 40%;
   }
 }
@@ -323,43 +323,43 @@
   background-color: rgba(245, 245, 245, 0.9) !important;
 }
 
-/* Texte en mode clair */
+/* Texte en mode clair - utiliser le vert Terex pour la lisibilité */
 .light .text-white {
-  color: #1a1a1a !important;
+  color: #2a9d8f !important;
 }
 
 .light .text-gray-300 {
-  color: #3a3a3a !important;
+  color: #2a9d8f !important;
 }
 
 .light .text-gray-400 {
-  color: #5a5a5a !important;
+  color: #3d8b80 !important;
 }
 
 .light .text-gray-500 {
-  color: #7a7a7a !important;
+  color: #4a7c73 !important;
 }
 
-/* Bordures visibles en mode clair - Style Attio */
+/* Bordures visibles en mode clair - Style Attio avec accent vert */
 .light .border-terex-gray {
-  border-color: rgba(0, 0, 0, 0.12) !important;
+  border-color: rgba(42, 157, 143, 0.2) !important;
 }
 
 .light .border-terex-gray\/20 {
-  border-color: rgba(0, 0, 0, 0.1) !important;
+  border-color: rgba(42, 157, 143, 0.15) !important;
 }
 
 .light .border-white\/10,
 .light .border-white\/20,
 .light .border-white\/30 {
-  border-color: rgba(0, 0, 0, 0.12) !important;
+  border-color: rgba(42, 157, 143, 0.15) !important;
 }
 
 /* Cards et popover en mode clair */
 .light [class*="bg-terex-darker"] {
   background-color: #ffffff !important;
-  color: #1a1a1a;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: #2a9d8f;
+  border: 1px solid rgba(42, 157, 143, 0.15) !important;
 }
 
 .light [class*="bg-terex-dark"]:not(.bg-terex-darker) {
@@ -369,9 +369,9 @@
 /* Header/Navbar en mode clair - transparent pour voir la grille */
 .light .bg-terex-darker\/80,
 .light .bg-terex-darker\/95 {
-  background-color: rgba(250, 250, 250, 0.85) !important;
+  background-color: rgba(250, 250, 250, 0.9) !important;
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid rgba(42, 157, 143, 0.15) !important;
 }
 
 /* Header parent doit être transparent */
@@ -379,18 +379,18 @@
   background: transparent !important;
 }
 
-/* Boutons et accents - garder la couleur terex-accent */
+/* Boutons et accents - garder la couleur terex-accent verte */
 .light .bg-terex-accent {
-  background-color: #1a1a1a !important;
+  background-color: #2a9d8f !important;
   color: #ffffff !important;
 }
 
 .light .text-terex-accent {
-  color: #1a1a1a !important;
+  color: #2a9d8f !important;
 }
 
 .light .border-terex-accent\/30 {
-  border-color: rgba(26, 26, 26, 0.3) !important;
+  border-color: rgba(42, 157, 143, 0.3) !important;
 }
 
 /* Inputs en mode clair */
@@ -491,8 +491,43 @@
 /* Badge et tags en mode clair */
 .light .bg-terex-accent\/10,
 .light .bg-terex-accent\/20 {
-  background-color: rgba(0, 0, 0, 0.06) !important;
-  color: #1a1a1a !important;
+  background-color: rgba(42, 157, 143, 0.1) !important;
+  color: #2a9d8f !important;
+}
+
+/* Titres principaux en mode clair - vert foncé pour lisibilité */
+.light h1,
+.light h2,
+.light h3,
+.light h4,
+.light h5,
+.light h6 {
+  color: #1a5c52 !important;
+}
+
+/* Paragraphes en mode clair */
+.light p {
+  color: #2a9d8f !important;
+}
+
+/* Liens en mode clair */
+.light a {
+  color: #2a9d8f !important;
+}
+
+.light a:hover {
+  color: #1a5c52 !important;
+}
+
+/* Grille avec teinte verte subtile */
+.light html,
+.light body {
+  background-color: #FAFAFA !important;
+  background-image: 
+    linear-gradient(to right, rgba(42, 157, 143, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(42, 157, 143, 0.1) 1px, transparent 1px) !important;
+  background-size: 40px 40px !important;
+  background-attachment: fixed !important;
 }
 
 /* ===== Fin des overrides mode clair ===== */
