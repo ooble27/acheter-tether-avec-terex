@@ -17,6 +17,7 @@ import { FooterSection } from './sections/FooterSection';
 import { NetworksSection } from './sections/NetworksSection';
 import { DashboardPreviewSection } from './sections/DashboardPreviewSection';
 import { BuyUSDTShowcase, NetworkSelectionShowcase, ConfirmationShowcase } from './sections/FeatureShowcaseSection';
+import { FounderSection } from './sections/FounderSection';
 
 interface PublicHomeProps {
   onGetStarted: () => void;
@@ -96,6 +97,8 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       <PaymentMethodsSection />
 
       <TestimonialsSection />
+
+      <FounderSection />
       
       <CTASection user={user} onGetStarted={handleGetStarted} />
 
