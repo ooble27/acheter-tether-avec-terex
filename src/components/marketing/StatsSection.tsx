@@ -1,4 +1,4 @@
-import { TrendingUp, Users, Globe, Shield } from 'lucide-react';
+import { TrendingUp, Users, Globe, Shield, ArrowUpRight } from 'lucide-react';
 import { AnimatedSection, AnimatedItem } from '@/hooks/useScrollAnimation';
 
 const stats = [
@@ -7,105 +7,88 @@ const stats = [
     value: "10M+",
     suffix: "CFA",
     label: "Volume mensuel",
+    description: "Traités chaque mois",
+    trend: "+45%"
   },
   {
     icon: Users,
     value: "500+",
     suffix: "",
     label: "Utilisateurs actifs",
+    description: "Font confiance à Terex",
+    trend: "+120%"
   },
   {
     icon: Globe,
-    value: "5",
+    value: "6",
     suffix: "pays",
     label: "Pays couverts",
+    description: "En Afrique de l'Ouest",
+    trend: "+2"
   },
   {
     icon: Shield,
     value: "99.9",
     suffix: "%",
     label: "Disponibilité",
+    description: "Uptime garanti",
+    trend: "24/7"
   }
 ];
 
 export function StatsSection() {
   return (
     <section className="py-20 relative overflow-hidden">
-      
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <AnimatedSection className="text-center mb-16">
+        <AnimatedSection className="text-center mb-12 sm:mb-16">
           <span className="text-terex-accent text-sm tracking-[0.2em] uppercase mb-4 block">En chiffres</span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-4">
             Une plateforme en <span className="text-terex-accent">croissance</span>
           </h2>
+          <p className="text-gray-400 font-light max-w-xl mx-auto">
+            Des performances qui témoignent de la confiance de nos utilisateurs
+          </p>
         </AnimatedSection>
         
-        {/* Desktop: Inline with separator dots */}
-        <div className="hidden md:block">
-          <AnimatedSection>
-            <div className="flex items-center justify-center">
-              {stats.map((stat, index) => {
-                const IconComponent = stat.icon;
-                const isLast = index === stats.length - 1;
-                
-                return (
-                  <AnimatedItem key={index} index={index}>
-                    <div className="flex items-center">
-                      <div className="group text-center px-8 lg:px-12">
-                        {/* Icon with subtle background */}
-                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-terex-accent/10 border border-terex-accent/20 mb-4 group-hover:bg-terex-accent/20 transition-colors">
-                          <IconComponent className="w-5 h-5 text-terex-accent" />
-                        </div>
-                        
-                        {/* Value */}
-                        <div className="mb-2">
-                          <span className="text-4xl lg:text-5xl font-light text-terex-accent">{stat.value}</span>
-                          {stat.suffix && (
-                            <span className="text-lg text-gray-400 ml-1 font-light">{stat.suffix}</span>
-                          )}
-                        </div>
-                        
-                        <span className="text-sm text-gray-400 font-light">{stat.label}</span>
-                      </div>
-                      
-                      {/* Separator dot */}
-                      {!isLast && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-terex-accent/30" />
-                      )}
-                    </div>
-                  </AnimatedItem>
-                );
-              })}
-            </div>
-          </AnimatedSection>
-        </div>
-        
-        {/* Mobile: 2x2 grid */}
-        <div className="md:hidden">
-          <div className="grid grid-cols-2 gap-6">
-            {stats.map((stat, index) => {
-              const IconComponent = stat.icon;
-              
-              return (
-                <AnimatedItem key={index} index={index}>
-                  <div className="group text-center py-6 px-4 rounded-2xl bg-terex-darker/50 border border-terex-accent/10">
-                    <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-terex-accent/10 mb-3">
-                      <IconComponent className="w-4 h-4 text-terex-accent" />
-                    </div>
-                    
-                    <div className="mb-1">
-                      <span className="text-2xl font-light text-terex-accent">{stat.value}</span>
-                      {stat.suffix && (
-                        <span className="text-xs text-gray-400 ml-1">{stat.suffix}</span>
-                      )}
-                    </div>
-                    
-                    <span className="text-xs text-gray-400 font-light">{stat.label}</span>
+        {/* Stats Grid - Responsive */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {stats.map((stat, index) => {
+            const IconComponent = stat.icon;
+            
+            return (
+              <AnimatedItem key={index} index={index}>
+                <div className="group relative bg-white/5 border border-terex-gray/20 rounded-2xl p-5 sm:p-6 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] overflow-hidden">
+                  {/* Background decoration */}
+                  <div className="absolute -top-12 -right-12 w-24 h-24 bg-terex-accent/5 rounded-full blur-2xl group-hover:bg-terex-accent/10 transition-colors" />
+                  
+                  {/* Trend badge */}
+                  <div className="absolute top-4 right-4 flex items-center gap-1 text-xs text-terex-accent bg-terex-accent/10 px-2 py-1 rounded-full">
+                    <ArrowUpRight className="w-3 h-3" />
+                    <span>{stat.trend}</span>
                   </div>
-                </AnimatedItem>
-              );
-            })}
-          </div>
+                  
+                  {/* Icon */}
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-terex-accent/20 to-terex-accent/5 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-terex-accent" />
+                  </div>
+                  
+                  {/* Value */}
+                  <div className="mb-1">
+                    <span className="text-3xl sm:text-4xl font-light text-white">{stat.value}</span>
+                    {stat.suffix && (
+                      <span className="text-sm sm:text-base text-gray-400 ml-1.5 font-light">{stat.suffix}</span>
+                    )}
+                  </div>
+                  
+                  {/* Label */}
+                  <h3 className="text-sm sm:text-base text-white font-medium mb-1">{stat.label}</h3>
+                  
+                  {/* Description - Hidden on mobile */}
+                  <p className="hidden sm:block text-xs text-gray-500 font-light">{stat.description}</p>
+                </div>
+              </AnimatedItem>
+            );
+          })}
         </div>
       </div>
     </section>
