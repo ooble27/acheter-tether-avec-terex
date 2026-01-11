@@ -39,73 +39,96 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   ];
 
   return (
-    <header className={`${isMobile ? 'relative bg-transparent' : 'bg-terex-darker border-b border-terex-accent/20'} pt-safe`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo seul */}
-          <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-              alt="Terex Logo" 
-              className="w-10 h-10 rounded-lg cursor-pointer"
-              onClick={() => navigate('/')}
-            />
-          </div>
-          
-          {/* Desktop Navigation - Navigation étalée */}
-          {!isMobile && (
-            <div className="flex items-center space-x-8">
-              {/* Navigation Links */}
-              <nav className="flex items-center space-x-6">
-                {navigationItems.map((item) => (
-                  <button
-                    key={item.href}
-                    onClick={() => navigate(item.href)}
-                    className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm font-light"
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
+    <header className="pt-safe relative z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        {/* Floating navbar container - Prismo style */}
+        {!isMobile ? (
+          <div className="bg-white/95 backdrop-blur-sm rounded-full shadow-lg shadow-black/5 px-6 py-3 flex items-center justify-between">
+            {/* Logo */}
+            <div className="flex items-center">
+              <img 
+                src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+                alt="Terex Logo" 
+                className="w-9 h-9 rounded-lg cursor-pointer"
+                onClick={() => navigate('/')}
+              />
+              <span className="ml-2 text-lg font-semibold text-gray-900">Terex</span>
+            </div>
 
-              {/* User Actions */}
-              <div className="flex items-center space-x-4 ml-8 border-l border-terex-gray/30 pl-8">
-                {user ? (
-                  <>
-                    <Button
-                      onClick={onShowDashboard}
-                      variant="ghost"
-                      className="text-gray-300 hover:text-white"
-                    >
-                      <User className="w-4 h-4 mr-2" />
-                      Dashboard
-                    </Button>
-                    <div className="flex items-center space-x-2 text-gray-300">
-                      <span className="text-sm">{user.name}</span>
-                      <Button
-                        onClick={handleLogout}
-                        variant="ghost"
-                        size="sm"
-                        className="text-gray-400 hover:text-red-400"
-                      >
-                        <LogOut className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </>
-                ) : (
+            {/* Navigation Links - Center */}
+            <nav className="flex items-center space-x-8">
+              {navigationItems.map((item) => (
+                <button
+                  key={item.href}
+                  onClick={() => navigate(item.href)}
+                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm font-medium"
+                >
+                  {item.label}
+                </button>
+              ))}
+              {supportItems.slice(0, 2).map((item) => (
+                <button
+                  key={item.href}
+                  onClick={() => navigate(item.href)}
+                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm font-medium"
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+
+            {/* User Actions - Right */}
+            <div className="flex items-center space-x-3">
+              {user ? (
+                <>
+                  <Button
+                    onClick={onShowDashboard}
+                    variant="outline"
+                    className="rounded-full border-gray-300 text-gray-700 hover:bg-gray-100 px-5"
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    Dashboard
+                  </Button>
+                  <Button
+                    onClick={handleLogout}
+                    className="rounded-full bg-gray-900 hover:bg-gray-800 text-white px-5"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Déconnexion
+                  </Button>
+                </>
+              ) : (
+                <>
                   <Button
                     onClick={() => navigate('/auth')}
-                    className="bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
+                    variant="outline"
+                    className="rounded-full border-gray-300 text-gray-700 hover:bg-gray-100 px-5"
                   >
-                    Se Connecter
+                    Connexion
                   </Button>
-                )}
-              </div>
+                  <Button
+                    onClick={() => navigate('/auth')}
+                    className="rounded-full bg-gray-900 hover:bg-gray-800 text-white px-5"
+                  >
+                    Commencer
+                  </Button>
+                </>
+              )}
             </div>
-          )}
+          </div>
+        ) : (
+          <div className="flex items-center justify-between h-16">
+            {/* Mobile: Logo seul */}
+            <div className="flex items-center">
+              <img 
+                src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+                alt="Terex Logo" 
+                className="w-10 h-10 rounded-lg cursor-pointer"
+                onClick={() => navigate('/')}
+              />
+            </div>
 
-          {/* Mobile Hamburger Menu */}
-          {isMobile && (
+            {/* Mobile Hamburger Menu */}
             <Sheet>
               <SheetTrigger asChild>
                 <Button
@@ -238,8 +261,8 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                 </ScrollArea>
               </SheetContent>
             </Sheet>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </header>
   );
