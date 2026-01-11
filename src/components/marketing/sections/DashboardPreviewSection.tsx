@@ -47,9 +47,8 @@ export function DashboardPreviewSection() {
               <span className="text-white font-medium">Version Mobile</span>
             </div>
             
-            
-            {/* Phone mockup */}
-            <div className="relative">
+            {/* Phone mockup - smaller on mobile */}
+            <div className="relative scale-[0.7] sm:scale-[0.85] lg:scale-100 origin-top">
               <PhoneMockup />
             </div>
           </div>
