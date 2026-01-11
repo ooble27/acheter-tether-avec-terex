@@ -102,7 +102,7 @@ export function CurrencyConverter() {
   };
 
   return (
-    <Card className="bg-terex-darker/80 border-terex-accent/30 backdrop-blur-sm mx-1 md:mx-0">
+    <Card className="bg-white/5 border-terex-gray/20 backdrop-blur-sm mx-1 md:mx-0 rounded-2xl">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-white text-lg flex items-center">
