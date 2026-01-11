@@ -118,14 +118,14 @@
     background-color: #141414 !important;
   }
 
-  /* Mode clair - fond blanc avec petite grille noire précise */
+  /* Mode clair - fond blanc avec grille noire style Attio */
   .light html,
   .light body {
     background-color: #FAFAFA !important;
     background-image: 
-      linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
-    background-size: 16px 16px;
+      linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+    background-size: 40px 40px;
     background-attachment: fixed;
   }
 
@@ -168,9 +168,9 @@
     .light body {
       background-color: #FAFAFA !important;
       background-image: 
-        linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
-      background-size: 16px 16px;
+        linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+      background-size: 40px 40px;
     }
     
     .light #root {
@@ -189,9 +189,9 @@
   .light html, .light body {
     background-color: #FAFAFA !important;
     background-image: 
-      linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px) !important;
-    background-size: 16px 16px !important;
+      linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px) !important;
+    background-size: 40px 40px !important;
   }
   
   .light #root {
