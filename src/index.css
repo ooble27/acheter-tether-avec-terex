@@ -46,41 +46,42 @@
   }
 
   .light {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 10%;
+    /* Attio-inspired light mode - Soft #FAFAFA background */
+    --background: 0 0% 98%;
+    --foreground: 220 13% 18%;
 
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 10%;
+    --card-foreground: 220 13% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 10%;
+    --popover-foreground: 220 13% 18%;
 
     --primary: 172 44% 40%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 5% 96%;
-    --secondary-foreground: 240 10% 10%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 13% 18%;
 
-    --muted: 240 5% 96%;
-    --muted-foreground: 240 4% 46%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 240 5% 96%;
-    --accent-foreground: 240 10% 10%;
+    --accent: 220 14% 96%;
+    --accent-foreground: 220 13% 18%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 6% 90%;
-    --input: 240 6% 90%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
     --ring: 172 44% 40%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 10% 10%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 13% 18%;
     --sidebar-primary: 172 44% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 5% 96%;
-    --sidebar-accent-foreground: 240 10% 10%;
-    --sidebar-border: 240 6% 90%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 220 13% 18%;
+    --sidebar-border: 220 13% 91%;
     --sidebar-ring: 172 44% 40%;
   }
 }
@@ -116,11 +117,15 @@
     background-color: #141414 !important;
   }
 
-  /* Mode clair - fond blanc */
+  /* Mode clair - Attio style fond #FAFAFA avec grille subtile */
   .light #root {
     min-height: 100vh;
     height: 100%;
-    background-color: #ffffff !important;
+    background-color: #FAFAFA !important;
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
   }
 
   #root {
@@ -155,7 +160,7 @@
     .light html,
     .light body,
     .light #root {
-      background-color: #ffffff !important;
+      background-color: #FAFAFA !important;
     }
   }
 }
@@ -168,8 +173,7 @@
   }
   
   .light html, .light body, .light #root {
-    background-color: #ffffff !important;
-    background: #ffffff !important;
+    background-color: #FAFAFA !important;
   }
 }
 
@@ -267,75 +271,78 @@
   }
 }
 
-/* ===== Mode clair - Overrides pour les composants Terex ===== */
+/* ===== Mode clair Attio - Overrides élégants ===== */
 
-/* Glass cards en mode clair */
+/* Glass cards en mode clair - style Attio avec ombres douces */
 .light .glass-card {
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
-/* Terex dark backgrounds en mode clair */
+/* Terex dark backgrounds en mode clair Attio */
 .light .bg-terex-dark {
-  background-color: #f8f9fa !important;
+  background-color: #FAFAFA !important;
 }
 
 .light .bg-terex-darker {
-  background-color: #ffffff !important;
+  background-color: #FFFFFF !important;
 }
 
 .light .bg-terex-gray {
-  background-color: #f1f3f4 !important;
+  background-color: #F5F5F7 !important;
 }
 
-/* Texte en mode clair */
+/* Texte en mode clair - tons plus doux Attio */
 .light .text-white {
-  color: #1a1a1a !important;
+  color: #1D1D1F !important;
 }
 
 .light .text-gray-300 {
-  color: #4a4a4a !important;
+  color: #3D3D3F !important;
 }
 
 .light .text-gray-400 {
-  color: #6b6b6b !important;
+  color: #6E6E73 !important;
 }
 
 .light .text-gray-500 {
-  color: #8b8b8b !important;
+  color: #86868B !important;
 }
 
-/* Bordures en mode clair */
+/* Bordures en mode clair - délicates */
 .light .border-terex-gray {
-  border-color: #e5e7eb !important;
+  border-color: #E5E5EA !important;
 }
 
 .light .border-terex-gray\/20 {
-  border-color: rgba(229, 231, 235, 0.6) !important;
+  border-color: rgba(229, 229, 234, 0.6) !important;
 }
 
 .light .border-white\/10,
 .light .border-white\/20,
 .light .border-white\/30 {
-  border-color: rgba(0, 0, 0, 0.1) !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
 }
 
-/* Cards et popover en mode clair */
+/* Cards et popover en mode clair Attio */
 .light [class*="bg-terex-darker"] {
-  background-color: #ffffff !important;
-  color: #1a1a1a;
+  background-color: #FFFFFF !important;
+  color: #1D1D1F;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .light [class*="bg-terex-dark"] {
-  background-color: #f8f9fa !important;
+  background-color: #FAFAFA !important;
 }
 
-/* Header/Navbar en mode clair */
+/* Header/Navbar en mode clair Attio */
 .light .bg-terex-darker\/80,
 .light .bg-terex-darker\/95 {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(12px);
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 /* Boutons et accents - garder la couleur terex-accent */
@@ -351,63 +358,102 @@
   border-color: rgba(59, 150, 143, 0.3) !important;
 }
 
-/* Inputs en mode clair */
+/* Inputs en mode clair Attio */
 .light input,
 .light textarea,
 .light select {
-  background-color: #ffffff !important;
-  border-color: #e5e7eb !important;
-  color: #1a1a1a !important;
+  background-color: #FFFFFF !important;
+  border-color: #E5E5EA !important;
+  color: #1D1D1F !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.light input:focus,
+.light textarea:focus,
+.light select:focus {
+  border-color: #3B968F !important;
+  box-shadow: 0 0 0 3px rgba(59, 150, 143, 0.1);
 }
 
 .light input::placeholder,
 .light textarea::placeholder {
-  color: #9ca3af !important;
+  color: #86868B !important;
 }
 
-/* Cards avec background transparent */
+/* Cards avec background transparent Attio */
 .light .bg-white\/5,
 .light .bg-white\/\[0\.02\],
 .light .bg-white\/\[0\.03\] {
-  background-color: rgba(0, 0, 0, 0.02) !important;
+  background-color: rgba(255, 255, 255, 0.6) !important;
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
-/* Shadows en mode clair */
+/* Shadows en mode clair Attio - très subtiles */
 .light .shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03) !important;
 }
 
 .light .shadow-black\/20,
 .light .shadow-black\/30 {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
 }
 
-/* Hover states en mode clair */
+/* Hover states en mode clair Attio */
 .light .hover\:bg-terex-accent\/10:hover {
-  background-color: rgba(59, 150, 143, 0.1) !important;
+  background-color: rgba(59, 150, 143, 0.08) !important;
 }
 
 .light .hover\:bg-terex-gray\/50:hover {
-  background-color: rgba(241, 243, 244, 0.8) !important;
+  background-color: rgba(245, 245, 247, 0.9) !important;
 }
 
-/* Dialog/Sheet en mode clair */
+/* Dialog/Sheet en mode clair Attio */
 .light [role="dialog"] {
-  background-color: #ffffff !important;
-  color: #1a1a1a !important;
+  background-color: #FFFFFF !important;
+  color: #1D1D1F !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 }
 
 .light .bg-terex-gray\/30,
 .light .bg-terex-gray\/50 {
-  background-color: rgba(241, 243, 244, 0.6) !important;
+  background-color: rgba(245, 245, 247, 0.7) !important;
 }
 
-/* Grid background pour mode clair */
+/* Grid background pour mode clair Attio */
 .light .bg-\[linear-gradient\(rgba\(255\,255\,255\,0\.03\)_1px\,transparent_1px\)\,linear-gradient\(90deg\,rgba\(255\,255\,255\,0\.03\)_1px\,transparent_1px\)\] {
-  background-image: linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px) !important;
+  background-image: linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px) !important;
 }
 
-/* ===== Fin des overrides mode clair ===== */
+/* Badges et tags en mode clair */
+.light .bg-terex-accent\/10 {
+  background-color: rgba(59, 150, 143, 0.08) !important;
+}
+
+/* Buttons outline en mode clair */
+.light .border-terex-accent {
+  border-color: #3B968F !important;
+}
+
+/* Scrollbar style Attio (si visible) */
+.light *::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.light *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.light *::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+.light *::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+/* ===== Fin des overrides mode clair Attio ===== */
 
 /* Style Binance pour le logo et branding */
 .terex-brand {
