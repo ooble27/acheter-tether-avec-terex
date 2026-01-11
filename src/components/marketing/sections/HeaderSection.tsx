@@ -43,7 +43,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         {/* Floating navbar container - Prismo style */}
         {!isMobile ? (
-          <div className="bg-white/95 backdrop-blur-sm rounded-full shadow-lg shadow-black/5 px-6 py-3 flex items-center justify-between">
+          <div className="bg-terex-darker/90 backdrop-blur-sm rounded-2xl border border-terex-accent/20 shadow-lg shadow-black/20 px-6 py-3 flex items-center justify-between">
             {/* Logo */}
             <div className="flex items-center">
               <img 
@@ -52,7 +52,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                 className="w-9 h-9 rounded-lg cursor-pointer"
                 onClick={() => navigate('/')}
               />
-              <span className="ml-2 text-lg font-semibold text-gray-900">Terex</span>
+              <span className="ml-2 text-lg font-semibold text-white">Terex</span>
             </div>
 
             {/* Navigation Links - Center */}
@@ -61,7 +61,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                 <button
                   key={item.href}
                   onClick={() => navigate(item.href)}
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm font-medium"
+                  className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm font-medium"
                 >
                   {item.label}
                 </button>
@@ -70,7 +70,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                 <button
                   key={item.href}
                   onClick={() => navigate(item.href)}
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm font-medium"
+                  className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm font-medium"
                 >
                   {item.label}
                 </button>
@@ -84,14 +84,14 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                   <Button
                     onClick={onShowDashboard}
                     variant="outline"
-                    className="rounded-full border-gray-300 text-gray-700 hover:bg-gray-100 px-5"
+                    className="rounded-xl border-terex-accent/30 text-gray-300 hover:bg-terex-accent/10 hover:text-white px-5"
                   >
                     <User className="w-4 h-4 mr-2" />
                     Dashboard
                   </Button>
                   <Button
                     onClick={handleLogout}
-                    className="rounded-full bg-gray-900 hover:bg-gray-800 text-white px-5"
+                    className="rounded-xl bg-terex-accent hover:bg-terex-accent/90 text-black px-5"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
                     Déconnexion
@@ -102,13 +102,13 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                   <Button
                     onClick={() => navigate('/auth')}
                     variant="outline"
-                    className="rounded-full border-gray-300 text-gray-700 hover:bg-gray-100 px-5"
+                    className="rounded-xl border-terex-accent/30 text-gray-300 hover:bg-terex-accent/10 hover:text-white px-5"
                   >
                     Connexion
                   </Button>
                   <Button
                     onClick={() => navigate('/auth')}
-                    className="rounded-full bg-gray-900 hover:bg-gray-800 text-white px-5"
+                    className="rounded-xl bg-terex-accent hover:bg-terex-accent/90 text-black px-5"
                   >
                     Commencer
                   </Button>
