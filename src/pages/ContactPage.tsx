@@ -127,8 +127,8 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-screen bg-terex-dark relative">
-      {/* Grid background pattern */}
-      <div className="fixed inset-0 opacity-[0.03] pointer-events-none" style={{
+      {/* Grid background pattern (mode sombre uniquement) */}
+      <div className="fixed inset-0 opacity-[0.03] pointer-events-none hidden dark:block" style={{
         backgroundImage: `linear-gradient(#3B968F 1px, transparent 1px),
                           linear-gradient(90deg, #3B968F 1px, transparent 1px)`,
         backgroundSize: '60px 60px'
