@@ -4,6 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { User, LogOut, Menu, Home, Building2, Briefcase, HelpCircle, Phone, MessageCircle } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsTablet } from '@/hooks/use-tablet';
 import { useNavigate } from 'react-router-dom';
 
 interface HeaderSectionProps {
@@ -14,6 +15,7 @@ interface HeaderSectionProps {
 
 export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSectionProps) {
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -38,11 +40,14 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
     { label: 'FAQ', href: '/faq', icon: MessageCircle, description: 'Questions fréquentes' }
   ];
 
+  // Use hamburger menu for mobile and tablet
+  const useHamburgerMenu = isMobile || isTablet;
+
   return (
     <header className="pt-safe relative z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        {/* Floating navbar container - Prismo style */}
-        {!isMobile ? (
+        {/* Floating navbar container */}
+        {!useHamburgerMenu ? (
           <div className="bg-terex-darker/90 backdrop-blur-sm rounded-2xl border border-terex-accent/20 shadow-lg shadow-black/20 px-6 py-3 flex items-center justify-between">
             {/* Logo */}
             <div className="flex items-center">
@@ -56,7 +61,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
             </div>
 
             {/* Navigation Links - Center */}
-            <nav className="flex items-center space-x-8">
+            <nav className="flex items-center space-x-6 xl:space-x-8">
               {navigationItems.map((item) => (
                 <button
                   key={item.href}
@@ -117,18 +122,19 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
             </div>
           </div>
         ) : (
-          <div className="flex items-center justify-between h-16">
-            {/* Mobile: Logo seul */}
+          <div className="bg-terex-darker/90 backdrop-blur-sm rounded-2xl border border-terex-accent/20 shadow-lg shadow-black/20 px-4 py-3 flex items-center justify-between">
+            {/* Logo */}
             <div className="flex items-center">
               <img 
                 src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
                 alt="Terex Logo" 
-                className="w-10 h-10 rounded-lg cursor-pointer"
+                className="w-9 h-9 rounded-lg cursor-pointer"
                 onClick={() => navigate('/')}
               />
+              <span className="ml-2 text-lg font-semibold text-white">Terex</span>
             </div>
 
-            {/* Mobile Hamburger Menu */}
+            {/* Hamburger Menu */}
             <Sheet>
               <SheetTrigger asChild>
                 <Button
