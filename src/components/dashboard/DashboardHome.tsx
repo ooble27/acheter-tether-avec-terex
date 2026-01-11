@@ -59,7 +59,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   if (isMobile) {
     // Design mobile avec px-0 pour tous les conteneurs
     return (
-      <div className="min-h-screen bg-terex-dark px-0 py-3 space-y-3 text-xs overflow-y-auto scrollbar-hide">
+      <div className="min-h-screen bg-transparent px-0 py-3 space-y-3 text-xs overflow-y-auto scrollbar-hide relative z-10">
         {/* Header avec px-0 */}
         <div className="flex items-center space-x-3 mb-6 px-0">
           <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
@@ -147,7 +147,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
 
   // Design desktop centré comme mobile
   return (
-    <div className="min-h-[calc(100vh-10rem)] flex items-start justify-center py-8 px-4">
+    <div className="min-h-[calc(100vh-10rem)] flex items-start justify-center py-8 px-4 relative z-10">
       <div className="w-full max-w-2xl space-y-6">
         {/* Header Section */}
         <div className="flex items-center space-x-3">
