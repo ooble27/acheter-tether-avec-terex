@@ -77,7 +77,7 @@ export function FounderSection() {
               {/* Quote */}
               <blockquote className="mb-8">
                 <p className="text-xl sm:text-2xl lg:text-3xl text-white font-light leading-relaxed">
-                  "Les stablecoins représentent l'avenir des transactions financières en Afrique. 
+                  "Notre mission est de rendre les stablecoins accessibles à tous. 
                   Avec Terex, ma vision est de démocratiser l'accès à cette technologie pour offrir 
                   à chacun la liberté d'envoyer et recevoir de l'argent instantanément, sans frontières 
                   ni frais excessifs."
