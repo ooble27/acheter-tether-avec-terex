@@ -68,7 +68,7 @@ export function PWAInstallPrompt() {
   // Si on a le prompt natif (Android/Chrome), l'utiliser directement
   if (deferredPrompt) {
     return (
-      <div className="fixed bottom-20 right-4 z-50">
+      <div className="fixed bottom-6 right-4 z-50">
         <Button
           onClick={handleInstall}
           className="w-12 h-12 rounded-full bg-terex-accent text-black hover:bg-terex-accent/90 shadow-lg"
@@ -82,7 +82,7 @@ export function PWAInstallPrompt() {
 
   // Sinon, afficher l'icône qui ouvre les instructions
   return (
-    <div className="fixed bottom-20 right-4 z-50 flex items-center gap-2">
+    <div className="fixed bottom-6 right-4 z-50 flex items-center gap-2">
       <PWAInstallInstructions 
         trigger={
           <Button
