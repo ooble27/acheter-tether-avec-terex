@@ -76,7 +76,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
         {/* Services Grid - 2x2 avec px-0 */}
         <div className="grid grid-cols-2 gap-3 mb-4 px-0">
           <Card 
-            className="bg-transparent border-white/10 hover:border-terex-accent/50 transition-colors cursor-pointer backdrop-blur-sm"
+            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
             onClick={() => handleServiceClick('buy')}
           >
             <CardContent className="p-3">
@@ -91,7 +91,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </Card>
 
           <Card 
-            className="bg-transparent border-white/10 hover:border-terex-accent/50 transition-colors cursor-pointer backdrop-blur-sm"
+            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
             onClick={() => handleServiceClick('sell')}
           >
             <CardContent className="p-3">
@@ -106,7 +106,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </Card>
 
           <Card 
-            className="bg-transparent border-white/10 hover:border-terex-accent/50 transition-colors cursor-pointer backdrop-blur-sm"
+            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
             onClick={() => handleServiceClick('otc')}
           >
             <CardContent className="p-3">
@@ -121,7 +121,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </Card>
 
           <Card 
-            className="bg-transparent border-white/10 hover:border-terex-accent/50 transition-colors cursor-pointer backdrop-blur-sm"
+            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
             onClick={() => handleServiceClick('transfer')}
           >
             <CardContent className="p-3">
