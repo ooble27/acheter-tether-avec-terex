@@ -176,13 +176,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   return (
     <TransactionProvider>
       <SidebarProvider>
-        <div className="min-h-screen flex flex-col w-full bg-terex-dark relative">
-          {/* Grid background pattern - same as landing page */}
-          <div className="fixed inset-0 opacity-[0.06] pointer-events-none z-0" style={{
-            backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px)`,
-            backgroundSize: '40px 40px'
-          }} />
+        <div className="min-h-screen flex flex-col w-full bg-terex-dark">
           {/* Bouton hamburger flottant (masqué en PWA mobile) */}
           {isMobile && !isPWA ? (
             <Button
