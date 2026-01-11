@@ -71,6 +71,9 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
         onLogout={handleLogout}
       />
       
+      {/* Spacer for fixed navbar */}
+      <div className="h-20" />
+      
       <HeroSection user={user} onShowDashboard={onShowDashboard} />
       
       <CurrencyConverterSection />
