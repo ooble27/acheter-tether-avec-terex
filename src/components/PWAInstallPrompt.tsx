@@ -1,8 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Download, X, Info } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { PWAInstallInstructions } from './PWAInstallInstructions';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -15,14 +14,13 @@ interface BeforeInstallPromptEvent extends Event {
 
 export function PWAInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [showPrompt, setShowPrompt] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(false);
+  const [showIcon, setShowIcon] = useState(false);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setShowPrompt(true);
+      setShowIcon(true);
     };
 
     // Vérifier si on est déjà en mode standalone (PWA installée)
@@ -30,140 +28,71 @@ export function PWAInstallPrompt() {
                         (window.navigator as any).standalone ||
                         document.referrer.includes('android-app://');
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    // Vérifier si l'utilisateur a déjà fermé l'icône
+    const iconDismissed = localStorage.getItem('terex-install-icon-dismissed');
 
-    // Afficher les instructions si pas encore installé et pas de prompt automatique
-    if (!isStandalone && !deferredPrompt) {
-      // Attendre un peu avant d'afficher les instructions
-      setTimeout(() => {
-        setShowInstructions(true);
-      }, 3000);
+    if (!isStandalone && !iconDismissed) {
+      setShowIcon(true);
     }
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
-  }, [deferredPrompt]);
+  }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
-
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-    } else {
-      console.log('User dismissed the install prompt');
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      
+      if (outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+        setShowIcon(false);
+      }
+      
+      setDeferredPrompt(null);
     }
-    
-    setDeferredPrompt(null);
-    setShowPrompt(false);
   };
 
   const handleDismiss = () => {
-    setShowPrompt(false);
-    setDeferredPrompt(null);
+    setShowIcon(false);
+    localStorage.setItem('terex-install-icon-dismissed', 'true');
   };
 
-  const handleDismissInstructions = () => {
-    setShowInstructions(false);
-    // Sauvegarder que l'utilisateur a vu les instructions
-    localStorage.setItem('terex-install-instructions-seen', 'true');
-  };
+  if (!showIcon) {
+    return null;
+  }
 
-  // Vérifier si les instructions ont déjà été vues
-  useEffect(() => {
-    const instructionsSeen = localStorage.getItem('terex-install-instructions-seen');
-    if (instructionsSeen) {
-      setShowInstructions(false);
-    }
-  }, []);
-
-  // Prompt d'installation automatique (Android/Chrome)
-  if (showPrompt && deferredPrompt) {
+  // Si on a le prompt natif (Android/Chrome), l'utiliser directement
+  if (deferredPrompt) {
     return (
-      <div className="fixed bottom-2 right-2 md:bottom-4 md:right-4 z-50 max-w-[280px] md:max-w-xs">
-        <Card className="bg-terex-darker border-terex-accent/30 shadow-lg">
-          <CardContent className="p-2 md:p-3">
-            <div className="flex items-start space-x-2">
-              <div className="flex-shrink-0">
-                <img 
-                  src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-                  alt="Terex" 
-                  className="w-6 h-6 md:w-8 md:h-8 rounded"
-                />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-white font-semibold text-xs md:text-sm">
-                  Installer Terex
-                </h3>
-                <p className="text-gray-300 text-[10px] md:text-xs mt-0.5">
-                  Accès rapide depuis votre écran
-                </p>
-                <div className="flex space-x-1.5 mt-2">
-                  <Button
-                    size="sm"
-                    onClick={handleInstall}
-                    className="bg-terex-accent text-black hover:bg-terex-accent/90 h-7 md:h-8 px-2 md:px-3 text-[10px] md:text-xs"
-                  >
-                    <Download className="w-3 h-3 mr-1" />
-                    Installer
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={handleDismiss}
-                    className="text-gray-400 hover:text-white h-7 md:h-8 px-1.5 md:px-2"
-                  >
-                    <X className="w-3 h-3" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="fixed bottom-20 right-4 z-50">
+        <Button
+          onClick={handleInstall}
+          className="w-12 h-12 rounded-full bg-terex-accent text-black hover:bg-terex-accent/90 shadow-lg"
+          size="icon"
+        >
+          <Download className="w-5 h-5" />
+        </Button>
       </div>
     );
   }
 
-  // Instructions manuelles pour iOS et autres navigateurs
-  if (showInstructions) {
-    return (
-      <div className="fixed bottom-2 right-2 md:bottom-4 md:right-4 z-50 max-w-[280px] md:max-w-xs">
-        <Card className="bg-terex-darker border-blue-500/30 shadow-lg">
-          <CardContent className="p-2 md:p-3">
-            <div className="flex items-start space-x-2">
-              <div className="flex-shrink-0">
-                <div className="w-6 h-6 md:w-8 md:h-8 bg-blue-500/20 rounded-full flex items-center justify-center">
-                  <Info className="w-3 h-3 md:w-4 md:h-4 text-blue-400" />
-                </div>
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-white font-semibold text-xs md:text-sm">
-                  Installer l'app Terex
-                </h3>
-                <p className="text-gray-300 text-[10px] md:text-xs mt-0.5">
-                  Accès rapide depuis votre écran
-                </p>
-                <div className="flex space-x-1.5 mt-2">
-                  <PWAInstallInstructions />
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={handleDismissInstructions}
-                    className="text-gray-400 hover:text-white h-7 md:h-8 px-1.5 md:px-2"
-                  >
-                    <X className="w-3 h-3" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  return null;
+  // Sinon, afficher l'icône qui ouvre les instructions
+  return (
+    <div className="fixed bottom-20 right-4 z-50 flex items-center gap-2">
+      <PWAInstallInstructions 
+        trigger={
+          <Button
+            className="w-12 h-12 rounded-full bg-terex-accent text-black hover:bg-terex-accent/90 shadow-lg"
+            size="icon"
+          >
+            <Download className="w-5 h-5" />
+          </Button>
+        }
+      />
+    </div>
+  );
 }
