@@ -202,20 +202,20 @@
 /* Règles spécifiques pour Safari mobile pour éviter le flash de couleur verte */
 @supports (-webkit-appearance: none) {
   @media screen and (max-width: 768px) {
-    html {
+    .dark html {
       background-color: #141414 !important;
     }
     
-    body {
+    .dark body {
       background-color: #141414 !important;
     }
     
-    #root {
+    .dark #root {
       background-color: #141414 !important;
     }
     
-    /* Forcer le fond noir sur tous les éléments racine */
-    body::before {
+    /* Forcer le fond noir sur tous les éléments racine - Mode sombre uniquement */
+    .dark body::before {
       content: '';
       position: fixed;
       top: 0;
@@ -228,15 +228,15 @@
   }
 }
 
-/* Protection supplémentaire pour iOS Safari */
+/* Protection supplémentaire pour iOS Safari - Mode sombre uniquement */
 @supports (-webkit-touch-callout: none) {
-  html, body, #root {
+  .dark html, .dark body, .dark #root {
     background-color: #141414 !important;
     background: #141414 !important;
   }
   
-  /* Éviter tout flash de couleur au chargement */
-  body {
+  /* Éviter tout flash de couleur au chargement - Mode sombre */
+  .dark body {
     opacity: 1 !important;
     background: #141414 !important;
   }
