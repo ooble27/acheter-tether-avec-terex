@@ -281,11 +281,12 @@
 
 /* ===== Mode clair - Overrides pour les composants Terex ===== */
 
-/* Glass cards en mode clair */
+/* Glass cards en mode clair - Style Attio */
 .light .glass-card {
-  background: rgba(0, 0, 0, 0.03);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
 /* Terex dark backgrounds en mode clair */
@@ -318,19 +319,19 @@
   color: #8b8b8b !important;
 }
 
-/* Bordures en mode clair */
+/* Bordures subtiles en mode clair - Style Attio */
 .light .border-terex-gray {
-  border-color: #e5e7eb !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
 }
 
 .light .border-terex-gray\/20 {
-  border-color: rgba(229, 231, 235, 0.6) !important;
+  border-color: rgba(0, 0, 0, 0.05) !important;
 }
 
 .light .border-white\/10,
 .light .border-white\/20,
 .light .border-white\/30 {
-  border-color: rgba(0, 0, 0, 0.1) !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
 }
 
 /* Cards et popover en mode clair */
@@ -377,21 +378,31 @@
   color: #9ca3af !important;
 }
 
-/* Cards avec background transparent */
+/* Cards avec background transparent - Style Attio */
 .light .bg-white\/5,
 .light .bg-white\/\[0\.02\],
 .light .bg-white\/\[0\.03\] {
-  background-color: rgba(0, 0, 0, 0.02) !important;
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
 }
 
-/* Shadows en mode clair */
+/* Shadows douces style Attio en mode clair */
 .light .shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+}
+
+.light .shadow-md {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+}
+
+.light .shadow-sm {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
 }
 
 .light .shadow-black\/20,
 .light .shadow-black\/30 {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03) !important;
 }
 
 /* Hover states en mode clair */
