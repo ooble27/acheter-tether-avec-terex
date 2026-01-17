@@ -14,12 +14,14 @@ import {
   UserCheck,
   Menu,
   ArrowLeft,
-  Calculator
+  Calculator,
+  Mail
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
 import { AccountingAdmin } from '@/components/admin/AccountingAdmin';
+import { NewsletterAdmin } from '@/components/admin/NewsletterAdmin';
 import { useUserRole } from '@/hooks/useUserRole';
 
 export function AdminPortal() {
@@ -61,34 +63,41 @@ export function AdminPortal() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-terex-gray grid grid-cols-4 w-full">
+          <TabsList className="bg-terex-gray grid grid-cols-5 w-full">
             <TabsTrigger 
               value="orders" 
               className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
             >
               <ShoppingCart className="w-4 h-4" />
-              <span>Commandes</span>
+              <span className="hidden sm:inline">Commandes</span>
             </TabsTrigger>
             <TabsTrigger 
               value="accounting" 
               className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
             >
               <Calculator className="w-4 h-4" />
-              <span>Comptabilité</span>
+              <span className="hidden sm:inline">Comptabilité</span>
             </TabsTrigger>
             <TabsTrigger 
               value="kyc" 
               className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
             >
               <FileCheck className="w-4 h-4" />
-              <span>KYC</span>
+              <span className="hidden sm:inline">KYC</span>
             </TabsTrigger>
             <TabsTrigger 
               value="applications" 
               className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
             >
               <UserCheck className="w-4 h-4" />
-              <span>Candidatures</span>
+              <span className="hidden sm:inline">Candidatures</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="newsletter" 
+              className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
+            >
+              <Mail className="w-4 h-4" />
+              <span className="hidden sm:inline">Newsletter</span>
             </TabsTrigger>
           </TabsList>
 
@@ -106,6 +115,10 @@ export function AdminPortal() {
 
           <TabsContent value="applications">
             <JobApplicationsAdmin />
+          </TabsContent>
+
+          <TabsContent value="newsletter">
+            <NewsletterAdmin />
           </TabsContent>
         </Tabs>
       </div>
