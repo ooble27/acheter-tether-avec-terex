@@ -40,10 +40,7 @@ export function FooterSection() {
       title: "Légal",
       links: [
         { label: "Conditions d'Utilisation", href: "/terms" },
-        { label: "Politique de Confidentialité", href: "/privacy" },
-        { label: "Politique de Sécurité", href: "/security" },
-        { label: "Conformité AML/KYC", href: "/compliance" },
-        { label: "Mentions Légales", href: "/legal" }
+        { label: "Politique de Confidentialité", href: "/privacy" }
       ]
     }
   ];
