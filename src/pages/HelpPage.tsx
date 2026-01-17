@@ -96,7 +96,13 @@ const HelpPage = () => {
   // Vue de sélection du flux (page principale)
   if (!selectedFlowId) {
     return (
-      <div className="min-h-screen bg-terex-dark">
+      <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
+        {/* Grid background pattern - white with more density like Attio */}
+        <div className="fixed inset-0 opacity-[0.06] pointer-events-none" style={{
+          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px)`,
+          backgroundSize: '40px 40px'
+        }} />
         <HeaderSection 
           user={user ? {
             email: user.email || '',
@@ -205,7 +211,13 @@ const HelpPage = () => {
 
   // Vue de conversation (questions/réponses/solution)
   return (
-    <div className="min-h-screen bg-terex-dark">
+    <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
+      {/* Grid background pattern - white with more density like Attio */}
+      <div className="fixed inset-0 opacity-[0.06] pointer-events-none" style={{
+        backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px)`,
+        backgroundSize: '40px 40px'
+      }} />
       <HeaderSection 
         user={user ? {
           email: user.email || '',

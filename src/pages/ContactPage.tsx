@@ -126,12 +126,12 @@ const ContactPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-terex-dark relative">
-      {/* Grid background pattern */}
-      <div className="fixed inset-0 opacity-[0.03] pointer-events-none" style={{
-        backgroundImage: `linear-gradient(#3B968F 1px, transparent 1px),
-                          linear-gradient(90deg, #3B968F 1px, transparent 1px)`,
-        backgroundSize: '60px 60px'
+    <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
+      {/* Grid background pattern - white with more density like Attio */}
+      <div className="fixed inset-0 opacity-[0.06] pointer-events-none" style={{
+        backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px)`,
+        backgroundSize: '40px 40px'
       }} />
       <HeaderSection 
         user={user ? {
