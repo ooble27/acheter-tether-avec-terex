@@ -20,15 +20,10 @@ interface NewsletterRequest {
   subject: string;
   previewText: string;
   heroTitle: string;
-  heroSubtitle: string;
-  updates: Array<{
-    icon: string;
-    title: string;
-    description: string;
-  }>;
+  content: string;
   ctaText?: string;
   ctaUrl?: string;
-  testEmail?: string; // Pour envoyer un test à une seule adresse
+  testEmail?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -42,17 +37,14 @@ const handler = async (req: Request): Promise<Response> => {
     console.log('Début de l\'envoi de newsletter:', {
       subject: requestData.subject,
       testEmail: requestData.testEmail,
-      updatesCount: requestData.updates.length
     });
 
     let recipients: { email: string; name: string }[] = [];
 
-    // Si c'est un test, envoyer uniquement à l'adresse de test
     if (requestData.testEmail) {
-      recipients = [{ email: requestData.testEmail, name: 'Test' }];
+      recipients = [{ email: requestData.testEmail, name: 'Cher client' }];
       console.log('Mode test - envoi à:', requestData.testEmail);
     } else {
-      // Récupérer tous les utilisateurs avec leur profil
       const { data: users, error: usersError } = await supabase.auth.admin.listUsers();
       
       if (usersError) {
@@ -60,7 +52,6 @@ const handler = async (req: Request): Promise<Response> => {
         throw new Error('Impossible de récupérer la liste des utilisateurs');
       }
 
-      // Récupérer les noms depuis les profils
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('id, full_name');
@@ -71,12 +62,11 @@ const handler = async (req: Request): Promise<Response> => {
 
       const profileMap = new Map(profiles?.map(p => [p.id, p.full_name]) || []);
 
-      // Filtrer les utilisateurs avec email valide
       recipients = users.users
         .filter(user => user.email && user.email_confirmed_at)
         .map(user => ({
           email: user.email!,
-          name: profileMap.get(user.id) || user.email!.split('@')[0]
+          name: profileMap.get(user.id) || 'Cher client'
         }));
 
       console.log(`${recipients.length} destinataires trouvés`);
@@ -93,7 +83,6 @@ const handler = async (req: Request): Promise<Response> => {
     let errorCount = 0;
     const errors: string[] = [];
 
-    // Envoyer les emails par lots de 10
     const batchSize = 10;
     for (let i = 0; i < recipients.length; i += batchSize) {
       const batch = recipients.slice(i, i + batchSize);
@@ -106,10 +95,9 @@ const handler = async (req: Request): Promise<Response> => {
               subject: requestData.subject,
               previewText: requestData.previewText,
               heroTitle: requestData.heroTitle,
-              heroSubtitle: requestData.heroSubtitle,
-              updates: requestData.updates,
-              ctaText: requestData.ctaText,
-              ctaUrl: requestData.ctaUrl,
+              content: requestData.content,
+              ctaText: requestData.ctaText || 'Accéder à mon compte',
+              ctaUrl: requestData.ctaUrl || 'https://terangaexchange.com',
             })
           );
 
@@ -143,7 +131,6 @@ const handler = async (req: Request): Promise<Response> => {
         }
       });
 
-      // Petite pause entre les lots pour éviter les limites de rate
       if (i + batchSize < recipients.length) {
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
@@ -154,12 +141,13 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(
       JSON.stringify({
         success: true,
+        totalSent: successCount,
         message: `Newsletter envoyée à ${successCount} destinataire(s)`,
         stats: {
           total: recipients.length,
           success: successCount,
           errors: errorCount,
-          errorDetails: errors.slice(0, 10) // Limiter à 10 erreurs
+          errorDetails: errors.slice(0, 10)
         }
       }),
       {

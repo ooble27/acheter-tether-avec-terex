@@ -4,7 +4,6 @@ import {
   Head,
   Heading,
   Html,
-  Img,
   Link,
   Preview,
   Section,
@@ -19,12 +18,7 @@ interface NewsletterEmailProps {
   subject: string;
   previewText: string;
   heroTitle: string;
-  heroSubtitle: string;
-  updates: Array<{
-    icon: string;
-    title: string;
-    description: string;
-  }>;
+  content: string;
   ctaText?: string;
   ctaUrl?: string;
 }
@@ -34,9 +28,8 @@ export const NewsletterEmail = ({
   subject,
   previewText,
   heroTitle,
-  heroSubtitle,
-  updates,
-  ctaText = 'Découvrir maintenant',
+  content,
+  ctaText = 'Accéder à mon compte',
   ctaUrl = 'https://terangaexchange.com',
 }: NewsletterEmailProps) => (
   <Html>
@@ -44,89 +37,62 @@ export const NewsletterEmail = ({
     <Preview>{previewText}</Preview>
     <Body style={main}>
       <Container style={container}>
-        {/* Header avec logo */}
-        <Section style={headerSection}>
-          <table width="100%" cellPadding="0" cellSpacing="0" style={{ textAlign: 'center' }}>
+        {/* Header */}
+        <Section style={header}>
+          <table width="100%" cellPadding="0" cellSpacing="0">
             <tr>
               <td>
                 <Text style={logoText}>TEREX</Text>
-                <Text style={tagline}>L'avenir des transferts d'argent</Text>
+              </td>
+              <td style={{ textAlign: 'right' }}>
+                <Link href={ctaUrl} style={headerLink}>
+                  Se connecter
+                </Link>
               </td>
             </tr>
           </table>
         </Section>
 
-        {/* Hero Section */}
-        <Section style={heroSection}>
-          <Text style={heroEmoji}>🚀</Text>
-          <Heading style={heroHeading}>{heroTitle}</Heading>
-          <Text style={heroText}>{heroSubtitle}</Text>
-        </Section>
-
-        {/* Greeting */}
+        {/* Main Content */}
         <Section style={contentSection}>
-          <Text style={greeting}>Bonjour {userName},</Text>
-          <Text style={introText}>
-            Nous sommes ravis de vous partager les dernières nouveautés de Terex ! 
-            Voici ce qui a changé pour améliorer votre expérience :
+          <Heading style={heroHeading}>{heroTitle}</Heading>
+          
+          <Text style={greeting}>{userName},</Text>
+          
+          <Text style={bodyText}>{content}</Text>
+
+          {/* CTA Button */}
+          <Section style={ctaSection}>
+            <Button href={ctaUrl} style={ctaButton}>
+              {ctaText}
+            </Button>
+          </Section>
+
+          <Text style={supportText}>
+            Si vous avez des questions, répondez à cet email pour contacter notre équipe de support client.
           </Text>
         </Section>
 
-        {/* Updates Grid */}
-        <Section style={updatesSection}>
-          {updates.map((update, index) => (
-            <Section key={index} style={updateCard}>
-              <Text style={updateIcon}>{update.icon}</Text>
-              <Heading as="h3" style={updateTitle}>{update.title}</Heading>
-              <Text style={updateDescription}>{update.description}</Text>
-            </Section>
-          ))}
-        </Section>
-
         <Hr style={divider} />
-
-        {/* CTA Section */}
-        <Section style={ctaSection}>
-          <Text style={ctaText_style}>Prêt à profiter de ces nouveautés ?</Text>
-          <Button href={ctaUrl} style={ctaButton}>
-            {ctaText}
-          </Button>
-        </Section>
-
-        <Hr style={divider} />
-
-        {/* Benefits reminder */}
-        <Section style={benefitsSection}>
-          <Heading as="h3" style={benefitsTitle}>Pourquoi choisir Terex ?</Heading>
-          <table width="100%" cellPadding="0" cellSpacing="0">
-            <tr>
-              <td style={benefitItem}>✅ Taux compétitifs</td>
-              <td style={benefitItem}>✅ Sécurité maximale</td>
-            </tr>
-            <tr>
-              <td style={benefitItem}>✅ Transferts rapides</td>
-              <td style={benefitItem}>✅ Support 24/7</td>
-            </tr>
-          </table>
-        </Section>
 
         {/* Footer */}
         <Section style={footer}>
+          <Text style={footerLogo}>TEREX</Text>
+          
           <Text style={footerText}>
-            L'équipe Terex vous remercie de votre confiance.
+            Vous avez reçu cet email en raison de votre inscription chez Terex, pour assurer la mise en œuvre de nos Conditions de service et (ou) pour d'autres questions légitimes.
           </Text>
-          <Text style={socialLinks}>
-            <Link href="https://wa.me/14182619091" style={socialLink}>WhatsApp</Link>
-            {' • '}
-            <Link href="https://terangaexchange.com" style={socialLink}>Site Web</Link>
-          </Text>
-          <Text style={footerNote}>
-            Vous recevez cet email car vous êtes inscrit sur Terex.
-            <br />
-            <Link href="https://terangaexchange.com/unsubscribe" style={unsubscribeLink}>
-              Se désabonner
+
+          <Text style={footerLinks}>
+            <Link href="https://terangaexchange.com/privacy" style={footerLink}>
+              Politique de Confidentialité
+            </Link>
+            {' | '}
+            <Link href="https://terangaexchange.com/help" style={footerLink}>
+              Centre d'aide
             </Link>
           </Text>
+
           <Text style={copyright}>© 2025 Terex. Tous droits réservés.</Text>
         </Section>
       </Container>
@@ -136,9 +102,9 @@ export const NewsletterEmail = ({
 
 export default NewsletterEmail
 
-// Styles
+// Styles - Clean and simple
 const main = {
-  backgroundColor: '#0a0a0a',
+  backgroundColor: '#111111',
   fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
 }
 
@@ -148,184 +114,111 @@ const container = {
   maxWidth: '600px',
 }
 
-const headerSection = {
-  backgroundColor: '#111111',
-  padding: '30px 20px',
-  borderBottom: '1px solid #222222',
+const header = {
+  backgroundColor: '#1a1a1a',
+  padding: '20px 30px',
+  borderBottom: '1px solid #333',
 }
 
 const logoText = {
-  fontSize: '32px',
+  fontSize: '24px',
   fontWeight: 'bold',
   color: '#0FA958',
   margin: '0',
-  letterSpacing: '4px',
-}
-
-const tagline = {
-  fontSize: '12px',
-  color: '#888888',
-  margin: '8px 0 0 0',
   letterSpacing: '2px',
-  textTransform: 'uppercase' as const,
 }
 
-const heroSection = {
-  background: 'linear-gradient(135deg, #0FA958 0%, #08a045 100%)',
-  padding: '50px 30px',
-  textAlign: 'center' as const,
+const headerLink = {
+  color: '#ffffff',
+  fontSize: '14px',
+  textDecoration: 'none',
+  border: '1px solid #444',
+  padding: '8px 16px',
+  borderRadius: '4px',
 }
 
-const heroEmoji = {
-  fontSize: '48px',
-  margin: '0 0 20px 0',
+const contentSection = {
+  backgroundColor: '#1a1a1a',
+  padding: '40px 30px',
 }
 
 const heroHeading = {
   color: '#ffffff',
   fontSize: '28px',
   fontWeight: 'bold',
-  margin: '0 0 15px 0',
+  margin: '0 0 30px 0',
   lineHeight: '1.3',
-}
-
-const heroText = {
-  color: 'rgba(255, 255, 255, 0.9)',
-  fontSize: '16px',
-  margin: '0',
-  lineHeight: '1.5',
-}
-
-const contentSection = {
-  backgroundColor: '#111111',
-  padding: '40px 30px 20px',
 }
 
 const greeting = {
   color: '#ffffff',
-  fontSize: '18px',
-  fontWeight: '600',
-  margin: '0 0 15px 0',
+  fontSize: '16px',
+  margin: '0 0 20px 0',
 }
 
-const introText = {
-  color: '#aaaaaa',
-  fontSize: '15px',
+const bodyText = {
+  color: '#cccccc',
+  fontSize: '16px',
   lineHeight: '1.6',
-  margin: '0',
-}
-
-const updatesSection = {
-  backgroundColor: '#111111',
-  padding: '20px 30px 40px',
-}
-
-const updateCard = {
-  backgroundColor: '#1a1a1a',
-  borderRadius: '12px',
-  padding: '25px',
-  marginBottom: '15px',
-  border: '1px solid #222222',
-}
-
-const updateIcon = {
-  fontSize: '32px',
-  margin: '0 0 15px 0',
-}
-
-const updateTitle = {
-  color: '#ffffff',
-  fontSize: '18px',
-  fontWeight: '600',
-  margin: '0 0 10px 0',
-}
-
-const updateDescription = {
-  color: '#888888',
-  fontSize: '14px',
-  lineHeight: '1.6',
-  margin: '0',
-}
-
-const divider = {
-  borderColor: '#222222',
-  margin: '0',
+  margin: '0 0 30px 0',
 }
 
 const ctaSection = {
-  backgroundColor: '#111111',
-  padding: '40px 30px',
   textAlign: 'center' as const,
-}
-
-const ctaText_style = {
-  color: '#ffffff',
-  fontSize: '18px',
-  margin: '0 0 25px 0',
+  margin: '30px 0',
 }
 
 const ctaButton = {
   backgroundColor: '#0FA958',
-  borderRadius: '8px',
+  borderRadius: '6px',
   color: '#ffffff',
   fontSize: '16px',
   fontWeight: '600',
-  padding: '14px 40px',
+  padding: '16px 32px',
   textDecoration: 'none',
   display: 'inline-block',
 }
 
-const benefitsSection = {
-  backgroundColor: '#0a0a0a',
-  padding: '40px 30px',
-}
-
-const benefitsTitle = {
-  color: '#ffffff',
-  fontSize: '18px',
-  fontWeight: '600',
-  margin: '0 0 20px 0',
-  textAlign: 'center' as const,
-}
-
-const benefitItem = {
+const supportText = {
   color: '#888888',
   fontSize: '14px',
-  padding: '8px 10px',
+  lineHeight: '1.6',
+  margin: '30px 0 0 0',
+}
+
+const divider = {
+  borderColor: '#333',
+  margin: '0',
 }
 
 const footer = {
   backgroundColor: '#111111',
-  padding: '40px 30px',
-  borderTop: '1px solid #222222',
+  padding: '30px',
   textAlign: 'center' as const,
 }
 
-const footerText = {
-  color: '#888888',
-  fontSize: '14px',
-  margin: '0 0 20px 0',
-}
-
-const socialLinks = {
-  margin: '0 0 20px 0',
-}
-
-const socialLink = {
+const footerLogo = {
+  fontSize: '20px',
+  fontWeight: 'bold',
   color: '#0FA958',
-  fontSize: '14px',
-  textDecoration: 'none',
+  margin: '0 0 20px 0',
+  letterSpacing: '2px',
 }
 
-const footerNote = {
+const footerText = {
   color: '#666666',
   fontSize: '12px',
   lineHeight: '1.6',
+  margin: '0 0 20px 0',
+}
+
+const footerLinks = {
   margin: '0 0 15px 0',
 }
 
-const unsubscribeLink = {
-  color: '#666666',
+const footerLink = {
+  color: '#888888',
+  fontSize: '12px',
   textDecoration: 'underline',
 }
 
