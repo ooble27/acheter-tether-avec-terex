@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { UnifiedOrder } from '@/hooks/useOrders';
 import { 
   User, 
@@ -18,7 +19,8 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  AlertCircle
+  AlertCircle,
+  MailCheck
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -40,6 +42,9 @@ export function OrderDetailsDialog({ order, open, onOpenChange, onStatusUpdate }
   const [userEmail, setUserEmail] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [userPhone, setUserPhone] = useState<string>('');
+  const [cancellationReason, setCancellationReason] = useState('');
+  const [showCancellationForm, setShowCancellationForm] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -477,7 +482,66 @@ export function OrderDetailsDialog({ order, open, onOpenChange, onStatusUpdate }
           )}
 
           {/* Actions */}
-          <div className="flex flex-wrap gap-3 pt-4 border-t border-terex-gray/50">
+          <div className="space-y-4 pt-4 border-t border-terex-gray/50">
+            {/* Cancellation email form */}
+            {(order.status === 'cancelled' || showCancellationForm) && (
+              <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-4 space-y-3">
+                <h4 className="text-white font-semibold flex items-center gap-2">
+                  <MailCheck className="w-4 h-4 text-red-400" />
+                  Envoyer un email d'annulation au client
+                </h4>
+                <Textarea
+                  placeholder="Motif d'annulation (optionnel)..."
+                  value={cancellationReason}
+                  onChange={(e) => setCancellationReason(e.target.value)}
+                  className="bg-terex-dark border-terex-gray text-white placeholder:text-gray-500 min-h-[80px]"
+                />
+                <Button
+                  onClick={async () => {
+                    setSendingEmail(true);
+                    try {
+                      const { error } = await supabase.functions.invoke('send-email-notification', {
+                        body: {
+                          userId: order.user_id,
+                          orderId: order.id,
+                          emailAddress: null,
+                          emailType: 'cancellation_confirmation',
+                          transactionType: order.type,
+                          orderData: {
+                            ...order,
+                            cancellation_reason: cancellationReason,
+                            status: 'cancelled'
+                          }
+                        }
+                      });
+                      if (error) throw error;
+                      toast({
+                        title: "Email envoyé",
+                        description: "Le client a reçu la confirmation d'annulation",
+                      });
+                      setShowCancellationForm(false);
+                      setCancellationReason('');
+                    } catch (err) {
+                      console.error('Erreur envoi email annulation:', err);
+                      toast({
+                        title: "Erreur",
+                        description: "Impossible d'envoyer l'email",
+                        variant: "destructive"
+                      });
+                    } finally {
+                      setSendingEmail(false);
+                    }
+                  }}
+                  disabled={sendingEmail}
+                  className="w-full bg-red-600 hover:bg-red-700"
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  {sendingEmail ? 'Envoi en cours...' : 'Envoyer l\'email d\'annulation'}
+                </Button>
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-3">
             {order.status === 'pending' && (
               <>
                 <Button
@@ -488,7 +552,10 @@ export function OrderDetailsDialog({ order, open, onOpenChange, onStatusUpdate }
                   Mettre en traitement
                 </Button>
                 <Button
-                  onClick={() => onStatusUpdate(order.id, 'cancelled')}
+                  onClick={() => {
+                    onStatusUpdate(order.id, 'cancelled');
+                    setShowCancellationForm(true);
+                  }}
                   variant="destructive"
                   className="flex-1"
                 >
@@ -508,7 +575,10 @@ export function OrderDetailsDialog({ order, open, onOpenChange, onStatusUpdate }
                   Marquer comme terminé
                 </Button>
                 <Button
-                  onClick={() => onStatusUpdate(order.id, 'cancelled')}
+                  onClick={() => {
+                    onStatusUpdate(order.id, 'cancelled');
+                    setShowCancellationForm(true);
+                  }}
                   variant="destructive"
                   className="flex-1"
                 >
@@ -517,6 +587,7 @@ export function OrderDetailsDialog({ order, open, onOpenChange, onStatusUpdate }
                 </Button>
               </>
             )}
+            </div>
           </div>
         </div>
       </DialogContent>
