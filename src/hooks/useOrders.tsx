@@ -485,6 +485,7 @@ export function useOrders() {
     refreshOrders,
     moveToTrash,
     restoreFromTrash,
-    deletePermanently
+    deletePermanently,
+    purgeAllOrders
   };
 }
