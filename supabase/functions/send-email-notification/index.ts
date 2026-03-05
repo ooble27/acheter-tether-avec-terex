@@ -545,6 +545,73 @@ const handler = async (req: Request): Promise<Response> => {
         `;
         break;
 
+      case 'cancellation_confirmation':
+        const cancelTypeLabel = transactionType === 'buy' ? 'achat' : transactionType === 'sell' ? 'vente' : 'transfert';
+        subject = `Confirmation d'annulation - Votre ${cancelTypeLabel} USDT a été annulé`;
+        htmlContent = `
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; padding: 0;">
+            <div style="background: #0FA958; padding: 30px; text-align: center;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 22px; font-weight: 600;">TEREX</h1>
+            </div>
+            
+            <div style="padding: 40px 30px;">
+              <h2 style="color: #333; font-size: 20px; margin: 0 0 20px 0;">
+                Annulation confirmée
+              </h2>
+              
+              <p style="color: #555; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                Bonjour,
+              </p>
+              
+              <p style="color: #555; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                Nous vous confirmons que votre demande de ${cancelTypeLabel} d'un montant de 
+                <strong>${orderData.amount?.toLocaleString()} ${orderData.currency || 'CFA'}</strong> 
+                (${orderData.usdt_amount || 0} USDT) a été annulée.
+              </p>
+              
+              <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                <p style="color: #333; font-weight: 600; margin: 0 0 10px 0;">Détails :</p>
+                <p style="color: #555; margin: 5px 0;">Référence : TEREX-${(orderData.id || '').slice(-8).toUpperCase()}</p>
+                <p style="color: #555; margin: 5px 0;">Type : ${cancelTypeLabel.charAt(0).toUpperCase() + cancelTypeLabel.slice(1)} USDT</p>
+                <p style="color: #555; margin: 5px 0;">Montant : ${orderData.amount?.toLocaleString()} ${orderData.currency || 'CFA'}</p>
+                <p style="color: #555; margin: 5px 0;">Statut : Annulé</p>
+              </div>
+
+              ${orderData.cancellation_reason ? `
+                <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                  <p style="color: #856404; margin: 0; font-size: 14px;">
+                    <strong>Motif :</strong> ${orderData.cancellation_reason}
+                  </p>
+                </div>
+              ` : ''}
+              
+              <p style="color: #555; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+                Si un paiement a été effectué, un remboursement sera traité dans les 3 à 5 jours ouvrables.
+              </p>
+              
+              <p style="color: #555; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+                Si vous avez des questions, n'hésitez pas à nous contacter sur 
+                <a href="https://wa.me/14182619091" style="color: #0FA958; text-decoration: none;">WhatsApp</a> 
+                ou par email à <a href="mailto:terangaexchange@gmail.com" style="color: #0FA958; text-decoration: none;">terangaexchange@gmail.com</a>.
+              </p>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="https://terangaexchange.com" style="background: #0FA958; color: white; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block;">
+                  Retour à Terex
+                </a>
+              </div>
+            </div>
+            
+            <div style="border-top: 1px solid #eee; padding: 20px 30px; text-align: center;">
+              <p style="color: #999; font-size: 12px; margin: 0;">
+                Cordialement, L'équipe Terex<br>
+                <a href="https://terangaexchange.com" style="color: #0FA958; text-decoration: none;">terangaexchange.com</a>
+              </p>
+            </div>
+          </div>
+        `;
+        break;
+
       default:
         throw new Error(`Type d'email non supporté: ${emailType}`);
     }

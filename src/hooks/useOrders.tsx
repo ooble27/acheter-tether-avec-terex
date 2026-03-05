@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useEmailNotifications } from '@/hooks/useEmailNotifications';
+import { useAdminNotifications } from '@/hooks/useAdminNotifications';
 import type { Database } from '@/integrations/supabase/types';
 
 type OrderStatus = Database['public']['Enums']['order_status'];
@@ -65,6 +66,7 @@ export function useOrders() {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const { sendEmailNotification } = useEmailNotifications();
+  const { notifyNewOrder } = useAdminNotifications();
 
   const fetchOrders = async () => {
     try {
@@ -194,7 +196,7 @@ export function useOrders() {
 
       console.log('Commande créée avec succès:', data);
 
-      // Envoyer l'email de confirmation selon le type de commande
+      // Envoyer l'email de confirmation au client + notification admin
       try {
         console.log('Envoi de l\'email de confirmation pour:', orderData.type);
         await sendEmailNotification('order_confirmation', orderData.type, {
@@ -205,6 +207,24 @@ export function useOrders() {
         }, data.id);
       } catch (emailError) {
         console.error('Erreur lors de l\'envoi de l\'email de confirmation:', emailError);
+      }
+
+      // Notifier l'admin par email qu'une nouvelle commande a été créée
+      try {
+        console.log('Envoi de la notification admin pour nouvelle commande');
+        await notifyNewOrder({
+          id: data.id,
+          type: orderData.type,
+          amount: orderData.amount,
+          currency: orderData.currency,
+          usdt_amount: orderData.usdt_amount,
+          payment_method: orderData.payment_method,
+          status: data.status,
+          user_id: orderData.user_id,
+          created_at: data.created_at
+        });
+      } catch (adminError) {
+        console.error('Erreur notification admin:', adminError);
       }
 
       await fetchOrders();
