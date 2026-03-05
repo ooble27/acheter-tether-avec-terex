@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -11,8 +11,9 @@ import {
   TrendingDown,
   Send,
   Trash2,
-  Archive,
-  Users
+  Users,
+  Download,
+  AlertTriangle
 } from 'lucide-react';
 import { useOrders } from '@/hooks/useOrders';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -20,9 +21,59 @@ import { BuyOrdersTable } from './BuyOrdersTable';
 import { SellOrdersTable } from './SellOrdersTable';
 import { TransferOrdersTable } from './TransferOrdersTable';
 import { TrashOrdersTable } from './TrashOrdersTable';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+
+function exportOrdersCSV(orders: any[]) {
+  const headers = ['ID', 'Type', 'Statut', 'Montant', 'Devise', 'USDT', 'Méthode', 'Date', 'Client ID', 'Destinataire', 'Notes'];
+  const rows = orders.map(o => [
+    o.id, o.type, o.status, o.amount, o.currency, o.usdt_amount || '', 
+    o.payment_method || '', new Date(o.created_at).toLocaleDateString('fr-FR'),
+    o.user_id, o.recipient_name || '', (o.notes || '').replace(/,/g, ';')
+  ]);
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `terex-commandes-${new Date().toISOString().slice(0, 10)}.csv`;
+  link.click();
+}
+
+async function exportOrdersPDF(orders: any[]) {
+  const { default: jsPDF } = await import('jspdf');
+  const { default: autoTable } = await import('jspdf-autotable');
+  const doc = new jsPDF({ orientation: 'landscape' });
+  doc.setFontSize(18);
+  doc.text('Terex - Export Commandes', 14, 22);
+  doc.setFontSize(10);
+  doc.text(`Date: ${new Date().toLocaleDateString('fr-FR')}  |  Total: ${orders.length} commandes`, 14, 30);
+
+  autoTable(doc, {
+    startY: 36,
+    head: [['ID', 'Type', 'Statut', 'Montant', 'Devise', 'USDT', 'Méthode', 'Date']],
+    body: orders.map(o => [
+      `TEREX-${o.id.slice(-8)}`, o.type, o.status, o.amount, o.currency,
+      o.usdt_amount || '-', o.payment_method || '-',
+      new Date(o.created_at).toLocaleDateString('fr-FR')
+    ]),
+    styles: { fontSize: 8 },
+    headStyles: { fillColor: [59, 150, 143] },
+  });
+
+  doc.save(`terex-commandes-${new Date().toISOString().slice(0, 10)}.pdf`);
+}
 
 export function OrdersDashboardNew() {
-  const { orders, loading, updateOrderStatus, refreshOrders, moveToTrash, restoreFromTrash, deletePermanently } = useOrders();
+  const { orders, loading, updateOrderStatus, refreshOrders, moveToTrash, restoreFromTrash, deletePermanently, purgeAllOrders } = useOrders();
   const { isAdmin, isKYCReviewer } = useUserRole();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('buy');
@@ -40,7 +91,6 @@ export function OrdersDashboardNew() {
     );
   }
 
-  // Séparer les commandes par type et exclure celles dans la corbeille
   const activeOrders = orders.filter(order => !order.is_deleted);
   const trashedOrders = orders.filter(order => order.is_deleted);
   
@@ -48,28 +98,11 @@ export function OrdersDashboardNew() {
   const sellOrders = activeOrders.filter(order => order.type === 'sell');
   const transferOrders = activeOrders.filter(order => order.type === 'transfer');
 
-  const filteredBuyOrders = buyOrders.filter(order => 
+  const filterOrders = (list: typeof orders) => list.filter(order => 
     order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
     order.wallet_address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.payment_reference?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const filteredSellOrders = sellOrders.filter(order => 
-    order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.wallet_address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.payment_reference?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const filteredTransferOrders = transferOrders.filter(order => 
-    order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.recipient_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.payment_reference?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const filteredTrashedOrders = trashedOrders.filter(order => 
-    order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.recipient_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.payment_reference?.toLowerCase().includes(searchTerm.toLowerCase())
+    order.payment_reference?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.recipient_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) {
@@ -85,18 +118,70 @@ export function OrdersDashboardNew() {
 
   return (
     <div className="min-h-screen bg-terex-dark p-3 sm:p-6 space-y-4 sm:space-y-8">
-      {/* Header redesigné avec responsive mobile */}
+      {/* Header */}
       <div className="relative overflow-hidden bg-gradient-to-br from-terex-accent/20 to-terex-dark rounded-xl sm:rounded-2xl p-4 sm:p-8 border border-terex-gray/30">
-        <div className="relative z-10">
-          <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2 sm:mb-3">Gestion des Commandes</h1>
-          <p className="text-terex-accent/80 text-sm sm:text-lg">Gérez efficacement toutes vos transactions</p>
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2 sm:mb-3">Gestion des Commandes</h1>
+            <p className="text-terex-accent/80 text-sm sm:text-lg">Gérez efficacement toutes vos transactions</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              onClick={() => exportOrdersCSV(orders)}
+              variant="outline"
+              size="sm"
+              className="border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
+            >
+              <Download className="w-4 h-4 mr-1" />
+              CSV
+            </Button>
+            <Button
+              onClick={() => exportOrdersPDF(orders)}
+              variant="outline"
+              size="sm"
+              className="border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
+            >
+              <Download className="w-4 h-4 mr-1" />
+              PDF
+            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm">
+                  <Trash2 className="w-4 h-4 mr-1" />
+                  Tout supprimer
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="bg-terex-darker border-terex-gray">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-white flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-red-500" />
+                    Supprimer toutes les commandes ?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-gray-400">
+                    Cette action est <strong className="text-red-400">irréversible</strong>. Toutes les commandes (achats, ventes, transferts) seront supprimées définitivement.
+                    <br /><br />
+                    💡 Pensez à exporter vos données en CSV ou PDF avant de continuer.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="bg-terex-gray text-white border-terex-gray">Annuler</AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-red-600 hover:bg-red-700 text-white"
+                    onClick={async () => {
+                      await purgeAllOrders();
+                    }}
+                  >
+                    Supprimer tout
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
-        
         <div className="absolute top-0 right-0 w-32 sm:w-64 h-32 sm:h-64 bg-terex-accent/10 rounded-full -translate-y-16 sm:-translate-y-32 translate-x-16 sm:translate-x-32"></div>
-        <div className="absolute bottom-0 left-0 w-16 sm:w-32 h-16 sm:h-32 bg-terex-accent/5 rounded-full translate-y-8 sm:translate-y-16 -translate-x-8 sm:-translate-x-16"></div>
       </div>
 
-      {/* Stats Cards redesignées pour mobile */}
+      {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
         <Card className="bg-terex-darker border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-300">
           <CardContent className="p-3 sm:p-6">
@@ -145,7 +230,7 @@ export function OrdersDashboardNew() {
         </Card>
       </div>
 
-      {/* Barre de recherche optimisée mobile */}
+      {/* Search */}
       <Card className="bg-terex-darker border-terex-gray/50">
         <CardContent className="p-3 sm:p-6">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
@@ -165,45 +250,32 @@ export function OrdersDashboardNew() {
               className="border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white text-xs sm:text-sm px-3 py-2 h-10 sm:h-auto"
             >
               <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-              <span className="hidden sm:inline">Actualiser</span>
-              <span className="sm:hidden">Actualiser</span>
+              Actualiser
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      {/* Tabs redesignés pour mobile */}
+      {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
         <div className="bg-terex-darker rounded-lg p-1 sm:p-2 border border-terex-gray/50 overflow-x-auto">
           <TabsList className="bg-transparent w-full grid grid-cols-4 gap-1 sm:gap-2 min-w-max">
-            <TabsTrigger 
-              value="buy" 
-              className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap"
-            >
+            <TabsTrigger value="buy" className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap">
               <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
               <span className="hidden sm:inline">Achats ({buyOrders.length})</span>
               <span className="sm:hidden">Achats</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="sell" 
-              className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap"
-            >
+            <TabsTrigger value="sell" className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap">
               <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
               <span className="hidden sm:inline">Ventes ({sellOrders.length})</span>
               <span className="sm:hidden">Ventes</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="transfer" 
-              className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap"
-            >
+            <TabsTrigger value="transfer" className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap">
               <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
               <span className="hidden sm:inline">Transferts ({transferOrders.length})</span>
               <span className="sm:hidden">Transferts</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="trash" 
-              className="data-[state=active]:bg-red-600 data-[state=active]:text-white text-red-400 border border-transparent data-[state=active]:border-red-500/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap"
-            >
+            <TabsTrigger value="trash" className="data-[state=active]:bg-red-600 data-[state=active]:text-white text-red-400 border border-transparent data-[state=active]:border-red-500/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap">
               <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
               <span className="hidden sm:inline">Corbeille ({trashedOrders.length})</span>
               <span className="sm:hidden">Corbeille</span>
@@ -212,35 +284,16 @@ export function OrdersDashboardNew() {
         </div>
 
         <TabsContent value="buy">
-          <BuyOrdersTable 
-            orders={filteredBuyOrders}
-            onStatusUpdate={updateOrderStatus}
-            onMoveToTrash={moveToTrash}
-          />
+          <BuyOrdersTable orders={filterOrders(buyOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} />
         </TabsContent>
-
         <TabsContent value="sell">
-          <SellOrdersTable 
-            orders={filteredSellOrders}
-            onStatusUpdate={updateOrderStatus}
-            onMoveToTrash={moveToTrash}
-          />
+          <SellOrdersTable orders={filterOrders(sellOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} />
         </TabsContent>
-
         <TabsContent value="transfer">
-          <TransferOrdersTable 
-            orders={filteredTransferOrders}
-            onStatusUpdate={updateOrderStatus}
-            onMoveToTrash={moveToTrash}
-          />
+          <TransferOrdersTable orders={filterOrders(transferOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} />
         </TabsContent>
-
         <TabsContent value="trash">
-          <TrashOrdersTable 
-            orders={filteredTrashedOrders}
-            onRestoreFromTrash={restoreFromTrash}
-            onDeletePermanently={deletePermanently}
-          />
+          <TrashOrdersTable orders={filterOrders(trashedOrders)} onRestoreFromTrash={restoreFromTrash} onDeletePermanently={deletePermanently} />
         </TabsContent>
       </Tabs>
     </div>
