@@ -114,7 +114,8 @@ export function useOrders() {
         processed_at: order.processed_at,
         processed_by: order.processed_by,
         payment_status: order.payment_status,
-        is_deleted: false,
+        is_deleted: order.is_deleted ?? false,
+        deleted_at: order.deleted_at ?? undefined,
       })) || [];
 
       // Transform transfers to unified format
@@ -353,37 +354,75 @@ export function useOrders() {
     }
   };
 
-  // Local simulation for trash functionality (will be replaced with real DB logic later)
   const moveToTrash = async (orderId: string) => {
-    // For now, just update local state
-    setOrders(prevOrders => 
-      prevOrders.map(order => 
-        order.id === orderId 
-          ? { ...order, is_deleted: true, deleted_at: new Date().toISOString() }
-          : order
-      )
-    );
-    
-    toast({
-      title: "Succès",
-      description: "Commande déplacée vers la corbeille",
-    });
+    try {
+      const order = orders.find(o => o.id === orderId);
+      if (!order) return;
+
+      if (order.type === 'transfer') {
+        // Transfers don't have is_deleted column, delete directly
+        const { error } = await supabase
+          .from('international_transfers')
+          .delete()
+          .eq('id', orderId);
+        if (error) throw error;
+        setOrders(prev => prev.filter(o => o.id !== orderId));
+      } else {
+        const { error } = await supabase
+          .from('orders')
+          .update({ is_deleted: true, deleted_at: new Date().toISOString() })
+          .eq('id', orderId);
+        if (error) throw error;
+        setOrders(prev => prev.map(o => o.id === orderId ? { ...o, is_deleted: true, deleted_at: new Date().toISOString() } : o));
+      }
+
+      toast({ title: "Succès", description: "Commande déplacée vers la corbeille" });
+    } catch (error) {
+      console.error('Error moving to trash:', error);
+      toast({ title: "Erreur", description: "Impossible de supprimer", variant: "destructive" });
+    }
   };
 
   const restoreFromTrash = async (orderId: string) => {
-    // For now, just update local state
-    setOrders(prevOrders => 
-      prevOrders.map(order => 
-        order.id === orderId 
-          ? { ...order, is_deleted: false, deleted_at: undefined }
-          : order
-      )
-    );
-    
-    toast({
-      title: "Succès",
-      description: "Commande restaurée",
-    });
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .update({ is_deleted: false, deleted_at: null })
+        .eq('id', orderId);
+      if (error) throw error;
+
+      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, is_deleted: false, deleted_at: undefined } : o));
+      toast({ title: "Succès", description: "Commande restaurée" });
+    } catch (error) {
+      console.error('Error restoring from trash:', error);
+      toast({ title: "Erreur", description: "Impossible de restaurer", variant: "destructive" });
+    }
+  };
+
+  const purgeAllOrders = async () => {
+    try {
+      // Delete all orders
+      const { error: ordersError } = await supabase
+        .from('orders')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // delete all
+
+      if (ordersError) throw ordersError;
+
+      // Delete all international transfers
+      const { error: transfersError } = await supabase
+        .from('international_transfers')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // delete all
+
+      if (transfersError) throw transfersError;
+
+      setOrders([]);
+      toast({ title: "Succès", description: "Toutes les commandes ont été supprimées" });
+    } catch (error) {
+      console.error('Error purging all orders:', error);
+      toast({ title: "Erreur", description: "Impossible de purger les commandes", variant: "destructive" });
+    }
   };
 
   const deletePermanently = async (orderId: string) => {
@@ -446,6 +485,7 @@ export function useOrders() {
     refreshOrders,
     moveToTrash,
     restoreFromTrash,
-    deletePermanently
+    deletePermanently,
+    purgeAllOrders
   };
 }
