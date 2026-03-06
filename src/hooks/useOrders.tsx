@@ -401,27 +401,38 @@ export function useOrders() {
 
   const purgeAllOrders = async () => {
     try {
-      // Delete all orders
+      // 1. D'abord supprimer les email_notifications liées aux commandes
+      const { error: notifError } = await supabase
+        .from('email_notifications')
+        .delete()
+        .not('order_id', 'is', null);
+
+      if (notifError) {
+        console.error('Error deleting email notifications:', notifError);
+        // Continue even if this fails (FK is now SET NULL)
+      }
+
+      // 2. Supprimer toutes les commandes
       const { error: ordersError } = await supabase
         .from('orders')
         .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000'); // delete all
+        .neq('id', '00000000-0000-0000-0000-000000000000');
 
       if (ordersError) throw ordersError;
 
-      // Delete all international transfers
+      // 3. Supprimer tous les transferts internationaux
       const { error: transfersError } = await supabase
         .from('international_transfers')
         .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000'); // delete all
+        .neq('id', '00000000-0000-0000-0000-000000000000');
 
       if (transfersError) throw transfersError;
 
       setOrders([]);
       toast({ title: "Succès", description: "Toutes les commandes ont été supprimées" });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error purging all orders:', error);
-      toast({ title: "Erreur", description: "Impossible de purger les commandes", variant: "destructive" });
+      toast({ title: "Erreur", description: error?.message || "Impossible de purger les commandes", variant: "destructive" });
     }
   };
 
