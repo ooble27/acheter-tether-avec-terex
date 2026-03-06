@@ -80,11 +80,16 @@ export const useTransactions = () => {
       setLoading(true);
       console.log('useTransactions: Fetching from database for user', userId);
 
-      // Limiter à 50 transactions récentes pour éviter les problèmes de performance
+      // Historique client : limité aux 3 derniers mois
+      const threeMonthsAgo = new Date();
+      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+      const cutoffDate = threeMonthsAgo.toISOString();
+
       const { data: orders, error: ordersError } = await supabase
         .from('orders')
         .select('*')
         .eq('user_id', userId)
+        .gte('created_at', cutoffDate)
         .order('created_at', { ascending: false })
         .limit(50);
 
@@ -96,6 +101,7 @@ export const useTransactions = () => {
         .from('international_transfers')
         .select('*')
         .eq('user_id', userId)
+        .gte('created_at', cutoffDate)
         .order('created_at', { ascending: false })
         .limit(50);
 

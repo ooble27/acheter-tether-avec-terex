@@ -76,6 +76,7 @@ export function useOrders() {
       const { data: ordersData, error: ordersError } = await supabase
         .from('orders')
         .select('*')
+        .neq('admin_hidden', true)
         .order('created_at', { ascending: false });
 
       if (ordersError) {
@@ -87,6 +88,7 @@ export function useOrders() {
       const { data: transfersData, error: transfersError } = await supabase
         .from('international_transfers')
         .select('*')
+        .neq('admin_hidden', true)
         .order('created_at', { ascending: false });
 
       if (transfersError) {
@@ -401,38 +403,27 @@ export function useOrders() {
 
   const purgeAllOrders = async () => {
     try {
-      // 1. D'abord supprimer les email_notifications liées aux commandes
-      const { error: notifError } = await supabase
-        .from('email_notifications')
-        .delete()
-        .not('order_id', 'is', null);
-
-      if (notifError) {
-        console.error('Error deleting email notifications:', notifError);
-        // Continue even if this fails (FK is now SET NULL)
-      }
-
-      // 2. Supprimer toutes les commandes
+      // Masquer toutes les commandes côté admin (sans supprimer les données client)
       const { error: ordersError } = await supabase
         .from('orders')
-        .delete()
+        .update({ admin_hidden: true })
         .neq('id', '00000000-0000-0000-0000-000000000000');
 
       if (ordersError) throw ordersError;
 
-      // 3. Supprimer tous les transferts internationaux
+      // Masquer tous les transferts internationaux côté admin
       const { error: transfersError } = await supabase
         .from('international_transfers')
-        .delete()
+        .update({ admin_hidden: true })
         .neq('id', '00000000-0000-0000-0000-000000000000');
 
       if (transfersError) throw transfersError;
 
       setOrders([]);
-      toast({ title: "Succès", description: "Toutes les commandes ont été supprimées" });
+      toast({ title: "Succès", description: "Toutes les commandes ont été masquées du tableau de bord admin" });
     } catch (error: any) {
-      console.error('Error purging all orders:', error);
-      toast({ title: "Erreur", description: error?.message || "Impossible de purger les commandes", variant: "destructive" });
+      console.error('Error hiding all orders:', error);
+      toast({ title: "Erreur", description: error?.message || "Impossible de masquer les commandes", variant: "destructive" });
     }
   };
 
