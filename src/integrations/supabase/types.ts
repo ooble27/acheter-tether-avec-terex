@@ -481,6 +481,7 @@ export type Database = {
       }
       international_transfers: {
         Row: {
+          admin_hidden: boolean | null
           amount: number
           created_at: string
           exchange_rate: number
@@ -506,6 +507,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          admin_hidden?: boolean | null
           amount: number
           created_at?: string
           exchange_rate: number
@@ -531,6 +533,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          admin_hidden?: boolean | null
           amount?: number
           created_at?: string
           exchange_rate?: number
@@ -850,6 +853,7 @@ export type Database = {
       }
       orders: {
         Row: {
+          admin_hidden: boolean | null
           amount: number
           created_at: string
           currency: string
@@ -879,6 +883,7 @@ export type Database = {
           wallet_address: string | null
         }
         Insert: {
+          admin_hidden?: boolean | null
           amount: number
           created_at?: string
           currency?: string
@@ -908,6 +913,7 @@ export type Database = {
           wallet_address?: string | null
         }
         Update: {
+          admin_hidden?: boolean | null
           amount?: number
           created_at?: string
           currency?: string
