@@ -59,7 +59,7 @@ export function HeroBuyForm() {
 
   return (
     <div className="w-[340px] sm:w-[360px] lg:w-[420px] max-w-[92vw]">
-      <div className="relative bg-gradient-to-b from-[hsl(220,12%,13%)] to-[hsl(220,12%,10%)] backdrop-blur-2xl border border-[hsl(220,10%,25%)]/30 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.4)] overflow-hidden">
+      <div className="relative bg-gradient-to-b from-[hsl(0,0%,14%)] to-[hsl(0,0%,11%)] backdrop-blur-2xl border border-[hsl(0,0%,22%)]/30 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.4)] overflow-hidden">
         
         {/* Subtle accent glow at top */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-terex-accent/50 to-transparent" />
