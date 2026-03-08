@@ -47,7 +47,7 @@ export function DeviceMockups() {
   const displayText = useTypewriter(titles, 35, 2500);
 
   return (
-    <h1 className="text-3xl sm:text-4xl lg:text-6xl font-light text-foreground mb-6 leading-tight min-h-[2.5em] sm:min-h-[2em]">
+    <h1 className="text-3xl sm:text-4xl lg:text-6xl font-light text-foreground mb-6 leading-tight h-[4.5em] sm:h-[4em] lg:h-[3.5em]">
       <span>{displayText}</span>
       <span className="inline-block w-[2px] h-[1em] bg-terex-accent ml-1 animate-pulse align-baseline" />
     </h1>
