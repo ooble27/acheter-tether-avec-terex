@@ -66,10 +66,10 @@ const CareersPage = () => {
   ];
 
   const perks = [
-    { emoji: "🌍", title: "100% Remote", desc: "Travaillez de n'importe où en Afrique" },
-    { emoji: "💰", title: "Salaire compétitif", desc: "Rémunération en crypto ou fiat" },
-    { emoji: "📈", title: "Croissance rapide", desc: "Startup en pleine expansion" },
-    { emoji: "🎓", title: "Formation continue", desc: "Budget formation annuel" },
+    { icon: Globe, title: "100% Remote", desc: "Travaillez de n'importe où en Afrique" },
+    { icon: Wallet, title: "Salaire compétitif", desc: "Rémunération en crypto ou fiat" },
+    { icon: TrendingUp, title: "Croissance rapide", desc: "Startup en pleine expansion" },
+    { icon: GraduationCap, title: "Formation continue", desc: "Budget formation annuel" },
   ];
 
   return (
