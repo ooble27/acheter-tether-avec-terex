@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ArrowRight, CheckCircle, Users, Globe, TrendingUp, Shield, Zap, Award, Target, User } from 'lucide-react';
+import { ArrowRight, Users, Globe, TrendingUp, Award, Shield, Target, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -14,339 +13,188 @@ const AboutPage = () => {
   const { toast } = useToast();
   const { user } = useAuth();
 
-  // Scroll to top when component mounts
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de se déconnecter",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Déconnexion réussie",
-        description: "Vous avez été déconnecté avec succès",
-        className: "bg-green-600 text-white border-green-600",
-      });
-      window.location.reload();
-    }
+    if (!error) { toast({ title: "Déconnexion réussie", description: "À bientôt", className: "bg-green-600 text-white border-green-600" }); window.location.reload(); }
   };
-
-  const handleShowDashboard = () => {
-    navigate('/');
-  };
-
-  const stats = [
-    { label: "Volume Traité", value: "10M FCFA", icon: TrendingUp },
-    { label: "Utilisateurs", value: "500+", icon: Users },
-    { label: "Pays", value: "4", icon: Globe },
-    { label: "Disponibilité", value: "99.9%", icon: Award }
-  ];
 
   const team = [
-    {
-      name: "Mohamed Lo",
-      role: "CEO & Fondateur", 
-      bio: "Visionnaire et entrepreneur passionné par l'innovation fintech en Afrique, avec une expertise en blockchain et services financiers numériques",
-      specialties: ["Leadership", "Fintech", "Blockchain"]
-    },
-    {
-      name: "Sidi Ndiaye",
-      role: "Directeur des Opérations",
-      bio: "Expert en gestion des opérations et coordination d'équipes, spécialisé dans l'optimisation des processus et la croissance",
-      specialties: ["Opérations", "Gestion", "Processus"]
-    },
-    {
-      name: "Adesina",
-      role: "Head of Marketing",
-      bio: "Spécialiste du marketing digital et de la communication stratégique pour l'écosystème fintech africain",
-      specialties: ["Marketing", "Communication", "Growth"]
-    }
-  ];
-
-  const values = [
-    {
-      icon: Shield,
-      title: "Sécurité",
-      description: "Protection maximale de vos fonds et données personnelles avec les dernières technologies de chiffrement."
-    },
-    {
-      icon: Target,
-      title: "Transparence", 
-      description: "Tarifs clairs, processus transparent et communication honnête avec nos utilisateurs."
-    },
-    {
-      icon: Globe,
-      title: "Accessibilité",
-      description: "Démocratiser l'accès aux services financiers numériques partout en Afrique."
-    },
-    {
-      icon: Users,
-      title: "Communauté",
-      description: "Construire une communauté forte autour de l'inclusion financière africaine."
-    }
+    { name: "Mohamed Lo", role: "CEO & Fondateur", bio: "Visionnaire passionné par l'innovation fintech en Afrique, avec une expertise en blockchain et services financiers numériques" },
+    { name: "Sidi Ndiaye", role: "Directeur des Opérations", bio: "Expert en gestion des opérations et coordination d'équipes, spécialisé dans l'optimisation des processus" },
+    { name: "Adesina", role: "Head of Marketing", bio: "Spécialiste du marketing digital et de la communication stratégique pour l'écosystème fintech africain" }
   ];
 
   const milestones = [
-    { year: "2024", title: "Fondation de Terex", desc: "Lancement officiel à Dakar avec l'équipe fondatrice" },
-    { year: "Q2 2024", title: "Partenariats clés", desc: "Intégration Orange Money et Free Money" },
-    { year: "Q3 2024", title: "Lancement MVP", desc: "Version bêta pour les premiers utilisateurs au Sénégal" },
-    { year: "Q4 2024", title: "Expansion UEMOA", desc: "Ouverture vers Burkina Faso, Côte d'Ivoire et Mali" },
-    { year: "2025", title: "Croissance régionale", desc: "Expansion vers toute la zone UEMOA" }
+    { year: "2024", title: "Fondation de Terex", desc: "Lancement officiel à Dakar" },
+    { year: "Q2 2024", title: "Partenariats clés", desc: "Orange Money et Free Money" },
+    { year: "Q3 2024", title: "Lancement MVP", desc: "Version bêta au Sénégal" },
+    { year: "Q4 2024", title: "Expansion UEMOA", desc: "Burkina, Côte d'Ivoire, Mali" },
+    { year: "2025", title: "Croissance régionale", desc: "Toute la zone UEMOA" }
   ];
 
   return (
     <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
-      {/* Grid background pattern - white with more density like Attio */}
-      <div className="fixed inset-0 opacity-[0.06] pointer-events-none" style={{
-        backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
-                          linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px)`,
+      <div className="fixed inset-0 opacity-[0.04] pointer-events-none" style={{
+        backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
         backgroundSize: '40px 40px'
       }} />
-      <HeaderSection 
-        user={user ? {
-          email: user.email || '',
-          name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
-        } : null}
-        onShowDashboard={handleShowDashboard}
-        onLogout={handleLogout}
-      />
+      <HeaderSection user={user ? { email: user.email || '', name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur' } : null} onShowDashboard={() => navigate('/')} onLogout={handleLogout} />
+      <div className="h-16 md:h-20" />
 
-      {/* Spacer for fixed navbar */}
-      <div className="h-20" />
-
-      {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
-        <div className="text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light text-foreground mb-3">
-            À propos de <span className="text-terex-accent">Terex</span>
+      {/* Hero */}
+      <section className="pt-12 pb-6 md:pt-24 md:pb-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-4">/ À PROPOS</p>
+          <h1 className="text-3xl md:text-5xl font-light text-foreground mb-2">
+            À propos de Terex
           </h1>
-          <p className="text-terex-accent text-sm sm:text-base font-medium mb-6">Teranga Exchange</p>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Terex révolutionne les échanges crypto-fiat et les transferts d'argent en Afrique de l'Ouest. 
-            Notre mission : rendre les services financiers numériques accessibles, sécurisés et abordables pour tous.
+          <p className="text-terex-accent text-sm font-medium mb-4">Teranga Exchange</p>
+          <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
+            La première plateforme d'échange crypto-fiat dédiée à l'Afrique francophone
           </p>
         </div>
-      </div>
+      </section>
 
-      {/* Mission & Vision Section - Fluid Layout */}
-      <div className="py-24 bg-terex-dark">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-5 gap-16 items-center">
-            <div className="lg:col-span-3 px-4 lg:px-0">
-              <div className="flex items-center mb-8">
-                <div className="w-1 h-12 sm:h-16 bg-gradient-to-b from-terex-accent to-transparent mr-4 sm:mr-6 flex-shrink-0"></div>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white break-words">Notre Mission</h2>
-              </div>
-              
-              <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-8 leading-relaxed break-words">
-                Chez Terex, nous croyons que chaque africain mérite un accès simple et sécurisé aux 
-                services financiers numériques. Notre plateforme connecte les crypto-monnaies aux 
-                monnaies locales (FCFA), facilitant les échanges et les transferts via Orange Money et Wave.
-              </p>
-              
-              <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-12 leading-relaxed break-words">
-                Fondée en 2024 et basée à Dakar, Sénégal, Terex s'appuie sur la technologie blockchain pour offrir des solutions 
-                innovantes qui répondent aux besoins spécifiques du marché ouest-africain.
-              </p>
+      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
 
-              {/* Compact metrics */}
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                {[
-                  { metric: "99.9%", label: "Disponibilité" },
-                  { metric: "24/7", label: "Support Client" },
-                  { metric: "< 5min", label: "Temps moyen" },
-                  { metric: "ISO 27001", label: "Certification" }
-                ].map((item, index) => (
-                  <div key={index} className="text-center p-4 sm:p-6 bg-gradient-to-br from-terex-accent/10 to-transparent rounded-xl border border-terex-accent/20">
-                    <div className="text-xl sm:text-2xl font-bold text-terex-accent mb-1 break-words">{item.metric}</div>
-                    <div className="text-gray-300 text-xs sm:text-sm break-words">{item.label}</div>
+      {/* Mission */}
+      <section className="py-8 md:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+            <div>
+              <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-4">Notre Mission</p>
+              <p className="text-foreground/80 text-sm md:text-base leading-relaxed mb-4">
+                Chez Terex, nous croyons que chaque africain mérite un accès simple et sécurisé aux services financiers numériques.
+              </p>
+              <p className="text-foreground/80 text-sm md:text-base leading-relaxed">
+                Notre plateforme connecte les crypto-monnaies aux monnaies locales (FCFA), facilitant les échanges et les transferts via Orange Money et Wave.
+              </p>
+            </div>
+            <div>
+              <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-4">Vision 2030</p>
+              <p className="text-foreground/80 text-sm md:text-base leading-relaxed mb-4">
+                Devenir la référence ouest-africaine pour les échanges crypto-fiat en servant plus d'un million d'utilisateurs.
+              </p>
+              <div className="space-y-2 mt-4">
+                {["Zone UEMOA complète", "1M+ utilisateurs actifs", "100M+ FCFA de volume"].map((goal, i) => (
+                  <div key={i} className="flex items-center gap-2 text-foreground/60 text-xs">
+                    <div className="w-1 h-1 bg-terex-accent rounded-full" />
+                    {goal}
                   </div>
                 ))}
               </div>
             </div>
-            
-            <div className="lg:col-span-2 px-4 lg:px-0">
-              <div className="relative">
-                <div className="bg-gradient-to-br from-terex-accent/20 via-terex-accent/10 to-transparent rounded-3xl p-6 sm:p-8 backdrop-blur-sm border border-terex-accent/30">
-                  <Target className="w-12 h-12 sm:w-16 sm:h-16 text-terex-accent mb-6" />
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 break-words">Vision 2030</h3>
-                  <p className="text-gray-300 text-xs sm:text-sm md:text-base mb-8 leading-relaxed break-words">
-                    Devenir la référence ouest-africaine pour les échanges crypto-fiat et 
-                    les transferts d'argent, en servant plus de 1 million d'utilisateurs 
-                    à travers toute la zone UEMOA et au-delà.
-                  </p>
-                  
-                  <div className="space-y-4">
-                    {["Zone UEMOA complète", "1M+ utilisateurs actifs", "100M+ FCFA de volume traité"].map((goal, index) => (
-                      <div key={index} className="flex items-start text-gray-300 text-xs sm:text-sm md:text-base">
-                        <div className="w-2 h-2 bg-terex-accent rounded-full mr-3 sm:mr-4 flex-shrink-0 mt-1.5"></div>
-                        <span className="break-words flex-1">{goal}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+
+      {/* Stats */}
+      <section className="py-8 md:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-6">En chiffres</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            {[
+              { value: "99.9%", label: "Disponibilité" },
+              { value: "24/7", label: "Support" },
+              { value: "< 5min", label: "Temps moyen" },
+              { value: "500+", label: "Utilisateurs" }
+            ].map((stat, i) => (
+              <div key={i} className="p-4 md:p-6 rounded-xl border border-white/[0.06] bg-white/[0.02] text-center">
+                <p className="text-terex-accent text-xl md:text-2xl font-semibold mb-1">{stat.value}</p>
+                <p className="text-muted-foreground text-xs">{stat.label}</p>
               </div>
-            </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Stats Section - Same green color scheme */}
-      <div className="py-20 bg-gradient-to-r from-terex-darker via-terex-dark to-terex-darker">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 px-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 break-words">Terex en chiffres</h2>
-            <p className="text-gray-300 text-sm sm:text-base md:text-lg break-words">Des résultats qui parlent d'eux-mêmes</p>
-          </div>
-          
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-8 px-4">
-            {stats.map((stat, index) => {
-              const IconComponent = stat.icon;
-              return (
-                <div key={index} className="group text-center">
-                  <div className="bg-gradient-to-br from-terex-accent/10 to-transparent backdrop-blur-sm rounded-2xl p-3 sm:p-4 lg:p-8 border border-terex-accent/20 group-hover:border-terex-accent/50 transition-all duration-500 group-hover:scale-105 h-full flex flex-col justify-center min-h-[140px] sm:min-h-[160px] lg:min-h-[200px]">
-                    <IconComponent className="w-6 h-6 sm:w-8 sm:h-8 lg:w-12 lg:h-12 text-terex-accent mx-auto mb-2 sm:mb-3 lg:mb-4 group-hover:scale-110 transition-transform duration-300" />
-                    <div className="text-xl sm:text-2xl lg:text-4xl font-bold text-white mb-1 lg:mb-2 group-hover:text-terex-accent transition-colors duration-300 leading-tight break-words">
-                      {stat.value}
-                    </div>
-                    <div className="text-gray-300 font-medium text-xs sm:text-sm lg:text-base leading-tight px-1 break-words">
-                      {stat.label}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
 
-      {/* Timeline Section */}
-      <div className="py-24 bg-terex-dark">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 px-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 break-words">Notre Parcours</h2>
-            <p className="text-gray-300 text-sm sm:text-base md:text-lg break-words">L'évolution de Terex depuis sa création</p>
-          </div>
-          
-          <div className="relative">
-            {/* Timeline line - hidden on mobile */}
-            <div className="absolute left-1/2 transform -translate-x-px h-full w-0.5 bg-gradient-to-b from-terex-accent via-terex-accent/50 to-transparent hidden md:block"></div>
-            
-            <div className="space-y-8 md:space-y-12">
-              {milestones.map((milestone, index) => (
-                <div key={index} className={`flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} flex-col md:space-y-0 space-y-0`}>
-                  <div className={`w-full md:w-1/2 ${index % 2 === 0 ? 'md:pr-8 md:text-right' : 'md:pl-8 md:text-left'} text-left px-4 md:px-0`}>
-                    <div className="bg-gradient-to-br from-terex-accent/10 to-transparent rounded-xl p-4 sm:p-6 border border-terex-accent/20 max-w-md mx-auto md:mx-0">
-                      <div className="text-terex-accent font-bold text-base sm:text-lg mb-2 break-words">{milestone.year}</div>
-                      <h3 className="text-white font-semibold text-lg sm:text-xl mb-2 leading-tight break-words">{milestone.title}</h3>
-                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed break-words">{milestone.desc}</p>
-                    </div>
-                  </div>
-                  
-                  {/* Timeline dot - hidden on mobile */}
-                  <div className="flex-shrink-0 w-4 h-4 bg-terex-accent rounded-full border-4 border-terex-dark hidden md:block"></div>
-                  
-                  <div className="hidden md:block md:w-1/2"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Values Section - Same green color scheme */}
-      <div className="py-24 bg-gradient-to-b from-terex-darker to-terex-dark">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 px-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 break-words">Nos Valeurs</h2>
-            <p className="text-gray-300 text-sm sm:text-base md:text-lg break-words">Les principes qui guident chaque décision chez Terex</p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 px-4">
-            {values.map((value, index) => {
-              const IconComponent = value.icon;
-              return (
-                <div key={index} className="bg-gradient-to-br from-terex-accent/10 to-transparent backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-terex-accent/20 hover:border-terex-accent/50 transition-all duration-500 hover:scale-[1.02]">
-                  <IconComponent className="w-10 h-10 sm:w-12 sm:h-12 text-terex-accent mb-6" />
-                  <h3 className="text-white font-bold text-lg sm:text-xl mb-4 break-words">{value.title}</h3>
-                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed break-words">{value.description}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* Team Section - Using person icons */}
-      <div className="py-24 bg-terex-dark">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 px-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 break-words">Notre Équipe</h2>
-            <p className="text-gray-300 text-sm sm:text-base md:text-lg break-words">Des experts passionnés qui construisent l'avenir de la fintech ouest-africaine</p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {team.map((member, index) => (
-              <div key={index} className="group h-full">
-                <div className="bg-gradient-to-br from-terex-accent/10 to-transparent rounded-2xl p-8 border border-terex-accent/20 hover:border-terex-accent/50 transition-all duration-500 hover:scale-105 h-full flex flex-col">
-                  <div className="relative mb-6">
-                    <div className="w-24 h-24 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-full mx-auto flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <User className="w-12 h-12 text-terex-accent" />
-                    </div>
-                  </div>
-                  
-                   <div className="text-center flex-1 flex flex-col">
-                    <h3 className="text-white font-bold text-lg md:text-xl mb-2 break-words px-2">{member.name}</h3>
-                    <p className="text-terex-accent font-medium text-sm md:text-base mb-4 px-2">{member.role}</p>
-                    <p className="text-gray-300 text-xs md:text-sm leading-relaxed mb-6 flex-1 px-2">{member.bio}</p>
-                    
-                    <div className="flex flex-wrap justify-center gap-2 mt-auto">
-                      {member.specialties.map((specialty, idx) => (
-                        <span key={idx} className="bg-terex-accent/20 text-terex-accent text-xs px-3 py-1 rounded-full">
-                          {specialty}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+      {/* Timeline */}
+      <section className="py-8 md:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-6">Parcours</p>
+          <div className="space-y-3">
+            {milestones.map((m, i) => (
+              <div key={i} className="flex items-start gap-4 p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+                <span className="text-terex-accent text-xs font-mono font-medium min-w-[70px]">{m.year}</span>
+                <div>
+                  <p className="text-foreground text-sm font-medium">{m.title}</p>
+                  <p className="text-muted-foreground text-xs">{m.desc}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* CTA Section - Full Width Gradient */}
-      <div className="py-24 bg-gradient-to-r from-terex-accent/10 via-terex-accent/5 to-terex-accent/10 border-t border-terex-accent/20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">
-            Rejoignez la révolution Terex
-          </h3>
-          <p className="text-gray-300 mb-8 text-base md:text-xl leading-relaxed">
-            Découvrez nos services et commencez à échanger vos USDT en FCFA dès aujourd'hui.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Button 
-              onClick={() => navigate('/auth')}
-              className="bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-12 py-4 text-lg rounded-xl"
-            >
-              Créer un Compte
+      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+
+      {/* Values */}
+      <section className="py-8 md:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-6">Nos valeurs</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { icon: Shield, title: "Sécurité" },
+              { icon: Target, title: "Transparence" },
+              { icon: Globe, title: "Accessibilité" },
+              { icon: Users, title: "Communauté" },
+            ].map((v, i) => {
+              const Icon = v.icon;
+              return (
+                <div key={i} className="p-4 md:p-5 rounded-xl border border-white/[0.06] bg-white/[0.02] text-center">
+                  <Icon className="w-5 h-5 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-foreground text-sm font-medium">{v.title}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+
+      {/* Team */}
+      <section className="py-8 md:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-6">Équipe</p>
+          <div className="grid md:grid-cols-3 gap-3 md:gap-4">
+            {team.map((member, i) => (
+              <div key={i} className="p-5 md:p-6 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+                <div className="w-12 h-12 bg-white/[0.06] rounded-full flex items-center justify-center mb-4 mx-auto md:mx-0">
+                  <User className="w-6 h-6 text-muted-foreground" />
+                </div>
+                <h3 className="text-foreground font-medium text-sm mb-0.5 text-center md:text-left">{member.name}</h3>
+                <p className="text-terex-accent text-xs mb-2 text-center md:text-left">{member.role}</p>
+                <p className="text-muted-foreground text-xs leading-relaxed text-center md:text-left">{member.bio}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+
+      {/* CTA */}
+      <section className="py-10 md:py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-xl md:text-2xl font-light text-foreground mb-3">Rejoignez la révolution Terex</h2>
+          <p className="text-muted-foreground text-sm mb-6">Échangez vos USDT en FCFA dès aujourd'hui</p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button onClick={() => navigate('/auth')} className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11">
+              Créer un compte <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
-            <Button 
-              onClick={() => navigate('/careers')}
-              variant="outline"
-              className="border-terex-accent text-terex-accent hover:bg-terex-accent/10 px-12 py-4 text-lg rounded-xl"
-            >
-              Nous Rejoindre
+            <Button onClick={() => navigate('/careers')} variant="outline" className="border-white/[0.12] text-foreground hover:bg-white/[0.04] h-11">
+              Nous rejoindre
             </Button>
           </div>
         </div>
-      </div>
+      </section>
 
       <FooterSection />
     </div>

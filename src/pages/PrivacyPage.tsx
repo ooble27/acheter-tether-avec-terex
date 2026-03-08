@@ -1,7 +1,3 @@
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Shield, Eye, Lock, Database } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -10,212 +6,61 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
+const sections = [
+  { title: "1. Collecte des Données", content: "Nous collectons les informations suivantes :\n\n• Informations d'identification : Nom, prénom, date de naissance, adresse\n• Informations de contact : Email, numéro de téléphone\n• Documents KYC : Pièce d'identité, justificatif de domicile\n• Informations de transaction : Historique des échanges et transferts\n• Données techniques : Adresse IP, type de navigateur" },
+  { title: "2. Utilisation des Données", content: "Vos données sont utilisées pour :\n\n• Vérifier votre identité (KYC/AML)\n• Traiter vos transactions et transferts\n• Prévenir la fraude et assurer la sécurité\n• Vous contacter concernant votre compte\n• Améliorer nos services\n• Respecter nos obligations légales" },
+  { title: "3. Partage des Données", content: "Nous ne vendons jamais vos données. Nous les partageons uniquement avec :\n\n• Partenaires de confiance : Processeurs de paiement, fournisseurs KYC\n• Autorités compétentes : En cas d'obligation légale\n• Prestataires techniques : Hébergement sécurisé et maintenance" },
+  { title: "4. Sécurité des Données", content: "Mesures de sécurité en place :\n\n• Chiffrement AES-256 pour toutes les données sensibles\n• Authentification à deux facteurs (2FA)\n• Surveillance 24/7 des systèmes\n• Audits de sécurité réguliers\n• Accès limité selon le principe du moindre privilège" },
+  { title: "5. Conservation", content: "Durées de conservation :\n\n• Services actifs : Durée de la relation contractuelle\n• Obligations légales : 5 ans minimum après fin de relation\n• Prévention fraude : Jusqu'à 10 ans selon réglementations" },
+  { title: "6. Vos Droits", content: "Conformément au RGPD :\n\n• Droit d'accès : Connaître les données détenues\n• Droit de rectification : Corriger les données inexactes\n• Droit d'effacement : Demander la suppression\n• Droit de portabilité : Récupérer vos données\n• Droit d'opposition : Refuser le traitement marketing" },
+  { title: "7. Cookies", content: "Nous utilisons des cookies pour améliorer votre expérience. Vous pouvez gérer vos préférences dans les paramètres de votre navigateur." },
+  { title: "8. Transferts Internationaux", content: "Vos données peuvent être traitées hors de votre pays de résidence avec des garanties de protection appropriées." },
+  { title: "9. Modifications", content: "Cette politique peut être mise à jour. Les modifications importantes vous seront communiquées par email." },
+  { title: "10. Contact", content: "Email : terangaexchange@gmail.com\nWhatsApp : +1 (418) 261-9091\nAdresse : Plateau, Avenue Léopold Sédar Senghor, Dakar, Sénégal" },
+];
+
 const PrivacyPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de se déconnecter",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Déconnexion réussie",
-        description: "Vous avez été déconnecté avec succès",
-        className: "bg-green-600 text-white border-green-600",
-      });
-      window.location.reload();
-    }
-  };
-
-  const handleShowDashboard = () => {
-    navigate('/');
+    if (!error) { toast({ title: "Déconnexion réussie", description: "À bientôt", className: "bg-green-600 text-white border-green-600" }); window.location.reload(); }
   };
 
   return (
     <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
-      {/* Grid background pattern - white with more density like Attio */}
-      <div className="fixed inset-0 opacity-[0.06] pointer-events-none" style={{
-        backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
-                          linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px)`,
+      <div className="fixed inset-0 opacity-[0.04] pointer-events-none" style={{
+        backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
         backgroundSize: '40px 40px'
       }} />
-      <HeaderSection 
-        user={user ? {
-          email: user.email || '',
-          name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
-        } : null}
-        onShowDashboard={handleShowDashboard}
-        onLogout={handleLogout}
-      />
+      <HeaderSection user={user ? { email: user.email || '', name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur' } : null} onShowDashboard={() => navigate('/')} onLogout={handleLogout} />
+      <div className="h-16 md:h-20" />
 
-      {/* Hero Section */}
-      <div className="relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-6 py-3 mb-8 border border-terex-accent/20">
-              <Eye className="w-5 h-5 text-terex-accent mr-2" />
-              <span className="text-terex-accent font-medium">Politique de Confidentialité</span>
+      <section className="pt-12 pb-6 md:pt-24 md:pb-12">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-4">/ CONFIDENTIALITÉ</p>
+          <h1 className="text-3xl md:text-5xl font-light text-foreground mb-3">Politique de Confidentialité</h1>
+          <p className="text-muted-foreground text-sm">Dernière mise à jour : mars 2025</p>
+        </div>
+      </section>
+
+      <div className="max-w-3xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+
+      <section className="py-8 md:py-16">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 space-y-6">
+          {sections.map((s, i) => (
+            <div key={i}>
+              <h2 className="text-foreground font-medium text-sm md:text-base mb-2">{s.title}</h2>
+              <p className="text-muted-foreground text-xs md:text-sm leading-relaxed whitespace-pre-line">{s.content}</p>
+              {i < sections.length - 1 && <div className="border-t border-dashed border-white/[0.06] mt-6" />}
             </div>
-            
-            <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
-              Politique de <span className="text-terex-accent">Confidentialité</span>
-            </h1>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Votre vie privée est notre priorité. Découvrez comment nous protégeons vos données personnelles.
-            </p>
-          </div>
+          ))}
         </div>
-      </div>
-
-      {/* Privacy Content */}
-      <div className="py-24 bg-terex-dark">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Card className="bg-gradient-to-br from-terex-darker to-terex-gray/30 border-terex-accent/20">
-            <CardHeader>
-              <CardTitle className="text-white text-2xl flex items-center">
-                <Lock className="w-6 h-6 mr-3 text-terex-accent" />
-                Protection de vos Données Personnelles
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[600px] pr-4">
-                <div className="space-y-8 text-gray-300">
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">1. Collecte des Données</h2>
-                    <p className="leading-relaxed mb-4">
-                      Nous collectons les informations suivantes pour vous fournir nos services:
-                    </p>
-                    <ul className="list-disc pl-6 space-y-2">
-                      <li><strong>Informations d'identification:</strong> Nom, prénom, date de naissance, adresse</li>
-                      <li><strong>Informations de contact:</strong> Email, numéro de téléphone</li>
-                      <li><strong>Documents KYC:</strong> Pièce d'identité, justificatif de domicile</li>
-                      <li><strong>Informations de transaction:</strong> Historique des échanges et transferts</li>
-                      <li><strong>Données techniques:</strong> Adresse IP, type de navigateur, géolocalisation</li>
-                    </ul>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">2. Utilisation des Données</h2>
-                    <p className="leading-relaxed mb-4">
-                      Vos données personnelles sont utilisées pour:
-                    </p>
-                    <ul className="list-disc pl-6 space-y-2">
-                      <li>Vérifier votre identité et respecter les obligations KYC/AML</li>
-                      <li>Traiter vos transactions et transferts</li>
-                      <li>Prévenir la fraude et assurer la sécurité</li>
-                      <li>Vous contacter concernant votre compte</li>
-                      <li>Améliorer nos services et l'expérience utilisateur</li>
-                      <li>Respecter nos obligations légales et réglementaires</li>
-                    </ul>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">3. Partage des Données</h2>
-                    <p className="leading-relaxed mb-4">
-                      Nous ne vendons jamais vos données personnelles. Nous pouvons les partager uniquement avec:
-                    </p>
-                    <ul className="list-disc pl-6 space-y-2">
-                      <li><strong>Partenaires de confiance:</strong> Processeurs de paiement, fournisseurs de services KYC</li>
-                      <li><strong>Autorités compétentes:</strong> En cas d'obligation légale ou d'enquête</li>
-                      <li><strong>Prestataires techniques:</strong> Hébergement sécurisé et maintenance</li>
-                    </ul>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">4. Sécurité des Données</h2>
-                    <p className="leading-relaxed mb-4">
-                      Nous mettons en place des mesures de sécurité strictes:
-                    </p>
-                    <ul className="list-disc pl-6 space-y-2">
-                      <li>Chiffrement AES-256 pour toutes les données sensibles</li>
-                      <li>Authentification à deux facteurs (2FA) obligatoire</li>
-                      <li>Surveillance 24/7 des systèmes</li>
-                      <li>Audits de sécurité réguliers</li>
-                      <li>Accès limité aux données selon le principe du moindre privilège</li>
-                    </ul>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">5. Conservation des Données</h2>
-                    <p className="leading-relaxed">
-                      Nous conservons vos données personnelles pendant la durée nécessaire pour:
-                    </p>
-                    <ul className="list-disc pl-6 space-y-2 mt-4">
-                      <li>Fournir nos services: Durée de la relation contractuelle</li>
-                      <li>Obligations légales: 5 ans minimum après la fin de la relation</li>
-                      <li>Prévention de la fraude: Jusqu'à 10 ans selon les réglementations</li>
-                    </ul>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">6. Vos Droits</h2>
-                    <p className="leading-relaxed mb-4">
-                      Conformément au RGPD et aux lois applicables, vous disposez des droits suivants:
-                    </p>
-                    <ul className="list-disc pl-6 space-y-2">
-                      <li><strong>Droit d'accès:</strong> Connaître les données que nous détenons sur vous</li>
-                      <li><strong>Droit de rectification:</strong> Corriger les données inexactes</li>
-                      <li><strong>Droit d'effacement:</strong> Demander la suppression de vos données</li>
-                      <li><strong>Droit de portabilité:</strong> Récupérer vos données dans un format structuré</li>
-                      <li><strong>Droit d'opposition:</strong> Vous opposer au traitement à des fins de marketing</li>
-                    </ul>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">7. Cookies et Technologies Similaires</h2>
-                    <p className="leading-relaxed">
-                      Nous utilisons des cookies pour améliorer votre expérience sur notre plateforme. 
-                      Ces cookies nous aident à comprendre comment vous utilisez nos services et à personnaliser 
-                      votre expérience. Vous pouvez gérer vos préférences de cookies dans les paramètres de votre navigateur.
-                    </p>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">8. Transferts Internationaux</h2>
-                    <p className="leading-relaxed">
-                      Vos données peuvent être transférées et traitées dans des pays en dehors de votre pays de résidence. 
-                      Nous nous assurons que ces transferts respectent les standards de protection des données applicables 
-                      et que des garanties appropriées sont en place.
-                    </p>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">9. Modifications de la Politique</h2>
-                    <p className="leading-relaxed">
-                      Nous pouvons mettre à jour cette politique de confidentialité périodiquement. Les modifications 
-                      importantes vous seront communiquées par email ou via notre plateforme. Nous vous encourageons 
-                      à consulter régulièrement cette page.
-                    </p>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">10. Contact</h2>
-                    <p className="leading-relaxed mb-4">
-                      Pour toute question concernant cette politique de confidentialité ou l'exercice de vos droits:
-                    </p>
-                    <div className="space-y-2">
-                      <p><strong>Délégué à la Protection des Données:</strong></p>
-                      <p>Email: terangaexchange@gmail.com</p>
-                      <p>WhatsApp: +1 4182619091</p>
-                      <p>Adresse: Plateau, Avenue Léopold Sédar Senghor, Dakar, Sénégal</p>
-                    </div>
-                  </section>
-                </div>
-              </ScrollArea>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      </section>
 
       <FooterSection />
     </div>
