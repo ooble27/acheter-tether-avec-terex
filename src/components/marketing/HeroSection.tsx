@@ -50,23 +50,11 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
           </AnimatedSection>
 
-          {/* Floating cards — compact horizontal scroll on mobile only (hidden on sm+ to avoid duplicate with desktop cards) */}
-          <AnimatedSection className="w-full sm:hidden mt-8" delay={300}>
-            <div className="flex gap-3 overflow-x-auto pb-2 px-1 snap-x snap-mandatory scrollbar-hide">
-              {/* Card 1 */}
+          {/* Floating cards — compact horizontal scroll on mobile only */}
+          <AnimatedSection className="w-full sm:hidden mt-14" delay={300}>
+            <div className="flex gap-3 overflow-x-auto pb-2 px-1 snap-x snap-mandatory scrollbar-hide" ref={(el) => { if (el) { const card = el.children[1] as HTMLElement; if (card) { setTimeout(() => el.scrollLeft = card.offsetLeft - (el.clientWidth - card.clientWidth) / 2, 50); } } }}>
+              {/* Card 1 - Transferts */}
               <div className="snap-center shrink-0 w-[260px] bg-terex-darker/80 backdrop-blur-md rounded-xl border border-terex-gray/25 p-4">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-6 h-6" />
-                  <span className="text-foreground text-sm font-medium">Échange USDT</span>
-                </div>
-                <div className="space-y-1.5 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>Achat instantané</span></div>
-                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>Vente rapide</span></div>
-                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>Meilleur taux CFA</span></div>
-                </div>
-              </div>
-              {/* Card 2 */}
-              <div className="snap-center shrink-0 w-[260px] bg-terex-darker/80 backdrop-blur-md rounded-xl border border-terex-accent/25 p-4">
                 <div className="flex items-center gap-2.5 mb-3">
                   <Globe className="w-5 h-5 text-terex-accent" />
                   <span className="text-foreground text-sm font-medium">Transferts</span>
@@ -78,7 +66,19 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                   <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>En moins de 5 min</span></div>
                 </div>
               </div>
-              {/* Card 3 */}
+              {/* Card 2 - Échange USDT (center, default visible) */}
+              <div className="snap-center shrink-0 w-[260px] bg-terex-darker/80 backdrop-blur-md rounded-xl border border-terex-accent/25 p-4">
+                <div className="flex items-center gap-2.5 mb-3">
+                  <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-6 h-6" />
+                  <span className="text-foreground text-sm font-medium">Échange USDT</span>
+                </div>
+                <div className="space-y-1.5 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>Achat instantané</span></div>
+                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>Vente rapide</span></div>
+                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>Meilleur taux CFA</span></div>
+                </div>
+              </div>
+              {/* Card 3 - Sécurité */}
               <div className="snap-center shrink-0 w-[260px] bg-terex-darker/80 backdrop-blur-md rounded-xl border border-terex-gray/25 p-4">
                 <div className="flex items-center gap-2.5 mb-3">
                   <Shield className="w-5 h-5 text-terex-accent" />
