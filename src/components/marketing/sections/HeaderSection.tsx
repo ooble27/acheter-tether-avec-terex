@@ -154,8 +154,8 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
           </div>
         ) : (
           <div ref={menuRef} className="relative">
-            <div className={`backdrop-blur-md rounded-2xl border shadow-lg transition-all duration-300 px-4 flex items-center justify-between ${
-              isScrolled ? 'bg-terex-darker/95 border-white/30 shadow-black/30 py-2' : 'bg-terex-darker/80 border-white/20 shadow-black/20 py-3'
+            <div className={`rounded-2xl border shadow-lg transition-all duration-300 px-4 flex items-center justify-between ${
+              isScrolled ? 'bg-terex-darker border-white/30 shadow-black/30 py-2' : 'bg-terex-darker border-white/20 shadow-black/20 py-3'
             }`}>
               <div className="flex items-center">
                 <img src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" alt="Terex Logo" className="w-9 h-9 rounded-lg cursor-pointer" onClick={() => navigate('/')} />
