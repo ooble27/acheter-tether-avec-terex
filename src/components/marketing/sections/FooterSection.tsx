@@ -87,11 +87,6 @@ export function FooterSection() {
               ))}
             </div>
 
-            {/* Status */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.06] bg-white/[0.02]">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              <span className="text-muted-foreground text-xs">Tous les systèmes opérationnels</span>
-            </div>
           </div>
 
           {/* Link columns */}
