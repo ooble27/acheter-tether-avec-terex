@@ -114,44 +114,91 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           </AnimatedSection>
         </div>
         
-        {/* Feature constellation - non-card layout */}
-        <div className="mt-20 lg:mt-28 border-t border-terex-gray/20 pt-12">
-          <div className="relative">
-            <div className="hidden sm:block absolute top-7 left-[12%] right-[12%] border-t border-dashed border-terex-gray/30" />
+        {/* Floating interactive visual — Attio-inspired connected objects */}
+        <AnimatedSection className="mt-24 lg:mt-32" delay={400}>
+          <div className="relative max-w-4xl mx-auto">
+            {/* Connection lines (SVG) */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none hidden sm:block" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
+              <line x1="200" y1="100" x2="400" y2="100" stroke="hsl(var(--terex-accent))" strokeWidth="1" strokeDasharray="6 4" opacity="0.3" />
+              <line x1="400" y1="100" x2="600" y2="100" stroke="hsl(var(--terex-accent))" strokeWidth="1" strokeDasharray="6 4" opacity="0.3" />
+              <circle cx="200" cy="100" r="4" fill="hsl(var(--terex-accent))" opacity="0.5" />
+              <circle cx="400" cy="100" r="4" fill="hsl(var(--terex-accent))" opacity="0.5" />
+              <circle cx="600" cy="100" r="4" fill="hsl(var(--terex-accent))" opacity="0.5" />
+            </svg>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-6">
-              {[
-                {
-                  icon: <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-7 h-7" />,
-                  title: 'Échange USDT',
-                  subtitle: 'Achat & vente au meilleur taux',
-                },
-                {
-                  icon: <Globe className="w-6 h-6 text-terex-accent" />,
-                  title: 'Transferts Afrique',
-                  subtitle: '6 pays couverts, en moins de 5 min',
-                },
-                {
-                  icon: <Shield className="w-6 h-6 text-terex-accent" />,
-                  title: '100% Sécurisé',
-                  subtitle: 'Chiffrement 256-bit, non-custodial',
-                },
-              ].map((item, index) => (
-                <AnimatedItem key={index} index={index}>
-                  <div className="relative flex flex-col items-center text-center gap-4">
-                    <div className="w-14 h-14 rounded-full border border-terex-accent/30 bg-terex-accent/10 flex items-center justify-center">
-                      {item.icon}
-                    </div>
-                    <div>
-                      <h3 className="text-foreground text-base sm:text-lg font-medium tracking-tight">{item.title}</h3>
-                      <p className="text-muted-foreground text-sm font-light">{item.subtitle}</p>
-                    </div>
+            <div className="relative grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-4">
+              {/* Object 1 — Floating card style */}
+              <div className="relative bg-terex-darker/80 backdrop-blur-md rounded-2xl border border-terex-gray/25 p-5 sm:p-6 shadow-xl hover:border-terex-accent/30 transition-all duration-500 hover:-translate-y-1">
+                <div className="flex items-center gap-3 mb-4">
+                  <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-8 h-8" />
+                  <span className="text-foreground font-medium">Échange USDT</span>
+                </div>
+                <div className="space-y-2.5 text-sm">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="w-1.5 h-1.5 rounded-full bg-terex-accent" />
+                    <span>Achat instantané</span>
                   </div>
-                </AnimatedItem>
-              ))}
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="w-1.5 h-1.5 rounded-full bg-terex-accent" />
+                    <span>Vente rapide</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="w-1.5 h-1.5 rounded-full bg-terex-accent" />
+                    <span>Meilleur taux CFA</span>
+                  </div>
+                </div>
+                <div className="mt-4 text-xs text-muted-foreground/60">+ 3 réseaux supportés</div>
+              </div>
+
+              {/* Object 2 — Central, slightly elevated */}
+              <div className="relative bg-terex-darker/80 backdrop-blur-md rounded-2xl border border-terex-accent/25 p-5 sm:p-6 shadow-xl sm:-translate-y-3 hover:border-terex-accent/40 transition-all duration-500 hover:-translate-y-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <Globe className="w-7 h-7 text-terex-accent" />
+                  <span className="text-foreground font-medium">Transferts</span>
+                  <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full border border-terex-accent/30 text-terex-accent">Live</span>
+                </div>
+                <div className="space-y-2.5 text-sm">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="w-1.5 h-1.5 rounded-full bg-terex-accent" />
+                    <span>6 pays d'Afrique</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="w-1.5 h-1.5 rounded-full bg-terex-accent" />
+                    <span>Mobile Money</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="w-1.5 h-1.5 rounded-full bg-terex-accent" />
+                    <span>En moins de 5 min</span>
+                  </div>
+                </div>
+                <div className="mt-4 text-xs text-muted-foreground/60">+ Suivi en temps réel</div>
+              </div>
+
+              {/* Object 3 */}
+              <div className="relative bg-terex-darker/80 backdrop-blur-md rounded-2xl border border-terex-gray/25 p-5 sm:p-6 shadow-xl hover:border-terex-accent/30 transition-all duration-500 hover:-translate-y-1">
+                <div className="flex items-center gap-3 mb-4">
+                  <Shield className="w-7 h-7 text-terex-accent" />
+                  <span className="text-foreground font-medium">Sécurité</span>
+                </div>
+                <div className="space-y-2.5 text-sm">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="w-1.5 h-1.5 rounded-full bg-terex-accent" />
+                    <span>Chiffrement 256-bit</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="w-1.5 h-1.5 rounded-full bg-terex-accent" />
+                    <span>Non-custodial</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="w-1.5 h-1.5 rounded-full bg-terex-accent" />
+                    <span>KYC vérifié</span>
+                  </div>
+                </div>
+                <div className="mt-4 text-xs text-muted-foreground/60">+ Conformité réglementaire</div>
+              </div>
             </div>
           </div>
-        </div>
+        </AnimatedSection>
       </div>
     </div>
   );
