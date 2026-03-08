@@ -2,11 +2,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Globe, Handshake, Clock, RefreshCw } from 'lucide-react';
 
 const TetherLogo = ({ className, variant }: { className?: string; variant: 'green' | 'red' }) => (
-  <img 
-    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
-    alt="Tether Logo"
-    className={`${className} ${variant === 'red' ? 'hue-rotate-[140deg] saturate-150' : ''}`}
-  />
+  <div className={`${className} relative`}>
+    <img 
+      src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
+      alt="Tether Logo"
+      className="w-full h-full"
+      style={variant === 'red' ? { filter: 'brightness(0) saturate(100%) invert(20%) sepia(95%) saturate(6000%) hue-rotate(355deg) brightness(100%) contrast(110%)' } : undefined}
+    />
+  </div>
 );
 
 const BitcoinLogo = ({ className }: { className?: string }) => (

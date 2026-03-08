@@ -1,9 +1,7 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { User, LogOut, Menu, Home, Building2, Briefcase, HelpCircle, Phone, MessageCircle, ArrowRight } from 'lucide-react';
+import { User, LogOut, Menu, Home, Building2, Briefcase, HelpCircle, Phone, MessageCircle, ArrowRight, X } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useNavigate } from 'react-router-dom';
@@ -20,15 +18,37 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close menu on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    if (menuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [menuOpen]);
+
+  // Close menu on scroll
+  useEffect(() => {
+    if (menuOpen) {
+      const close = () => setMenuOpen(false);
+      window.addEventListener('scroll', close, { passive: true });
+      return () => window.removeEventListener('scroll', close);
+    }
+  }, [menuOpen]);
 
   const handleLogout = async () => {
     try {
@@ -40,15 +60,15 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   };
 
   const navigationItems = [
-    { label: 'Accueil', href: '/', icon: Home, description: 'Page d\'accueil' },
-    { label: 'À propos', href: '/about', icon: Building2, description: 'Découvrez Terex' },
-    { label: 'Carrières', href: '/careers', icon: Briefcase, description: 'Rejoignez l\'équipe' },
+    { label: 'Accueil', href: '/', icon: Home },
+    { label: 'À propos', href: '/about', icon: Building2 },
+    { label: 'Carrières', href: '/careers', icon: Briefcase },
   ];
 
   const supportItems = [
-    { label: 'Support', href: '/support', icon: HelpCircle, description: 'Centre d\'aide' },
-    { label: 'Contact', href: '/contact', icon: Phone, description: 'Nous contacter' },
-    { label: 'FAQ', href: '/faq', icon: MessageCircle, description: 'Questions fréquentes' }
+    { label: 'Support', href: '/support', icon: HelpCircle },
+    { label: 'Contact', href: '/contact', icon: Phone },
+    { label: 'FAQ', href: '/faq', icon: MessageCircle },
   ];
 
   const useHamburgerMenu = isMobile || isTablet;
@@ -104,7 +124,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                   <Button
                     onClick={onShowDashboard}
                     variant="outline"
-                    className="rounded-xl border-terex-accent/30 text-gray-300 hover:bg-terex-accent/10 hover:text-white px-5"
+                    className="rounded-xl border-terex-gray/30 text-gray-300 hover:bg-terex-gray/15 hover:text-white px-5"
                   >
                     <User className="w-4 h-4 mr-2" />
                     Dashboard
@@ -137,181 +157,133 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
             </div>
           </div>
         ) : (
-          <div className={`backdrop-blur-md rounded-2xl border shadow-lg transition-all duration-300 px-4 flex items-center justify-between ${
-            isScrolled 
-              ? 'bg-terex-darker/95 border-white/30 shadow-black/30 py-2' 
-              : 'bg-terex-darker/80 border-white/20 shadow-black/20 py-3'
-          }`}>
-            {/* Logo */}
-            <div className="flex items-center">
-              <img 
-                src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-                alt="Terex Logo" 
-                className="w-9 h-9 rounded-lg cursor-pointer"
-                onClick={() => navigate('/')}
-              />
-              <span className="ml-2 text-lg font-semibold text-white">Terex</span>
+          <div ref={menuRef} className="relative">
+            <div className={`backdrop-blur-md rounded-2xl border shadow-lg transition-all duration-300 px-4 flex items-center justify-between ${
+              isScrolled 
+                ? 'bg-terex-darker/95 border-white/30 shadow-black/30 py-2' 
+                : 'bg-terex-darker/80 border-white/20 shadow-black/20 py-3'
+            }`}>
+              {/* Logo */}
+              <div className="flex items-center">
+                <img 
+                  src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+                  alt="Terex Logo" 
+                  className="w-9 h-9 rounded-lg cursor-pointer"
+                  onClick={() => navigate('/')}
+                />
+                <span className="ml-2 text-lg font-semibold text-white">Terex</span>
+              </div>
+
+              {/* Hamburger toggle */}
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="relative w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/5 transition-colors"
+                aria-label="Menu"
+              >
+                {menuOpen ? (
+                  <X className="w-5 h-5 text-white" />
+                ) : (
+                  <Menu className="w-5 h-5 text-white" />
+                )}
+              </button>
             </div>
 
-            {/* Hamburger Menu — Full-screen Attio style */}
-            <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-              <SheetTrigger asChild>
-                <button
-                  className="relative w-11 h-11 flex items-center justify-center rounded-xl hover:bg-white/5 transition-colors"
-                  aria-label="Ouvrir le menu"
-                >
-                  <span className="sr-only">Ouvrir le menu</span>
-                  <div className="flex flex-col items-center gap-1.5">
-                    <span className={`block h-0.5 bg-foreground rounded-full transition-all duration-300 ${menuOpen ? 'w-6 translate-y-2 rotate-45' : 'w-6'}`} />
-                    <span className={`block h-0.5 bg-foreground rounded-full transition-all duration-300 ${menuOpen ? 'opacity-0 w-0' : 'w-4 opacity-100'}`} />
-                    <span className={`block h-0.5 bg-foreground rounded-full transition-all duration-300 ${menuOpen ? 'w-6 -translate-y-2 -rotate-45' : 'w-5'}`} />
-                  </div>
-                </button>
-              </SheetTrigger>
-
-              <SheetContent 
-                side="right" 
-                className="w-full sm:max-w-full bg-terex-dark border-none p-0 [&>button]:hidden"
-              >
-                <SheetTitle className="sr-only">Menu de navigation</SheetTitle>
-                <div className="flex min-h-full flex-col">
-                  {/* Top bar with logo & close */}
-                  <div className="px-6 py-5 flex items-center justify-between border-b border-white/5">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
-                        alt="Terex Logo"
-                        className="w-10 h-10 rounded-lg"
-                      />
-                      <span className="text-xl font-semibold text-white">Terex</span>
-                    </div>
-                    <button
-                      onClick={() => setMenuOpen(false)}
-                      className="w-11 h-11 flex items-center justify-center rounded-xl hover:bg-white/5 transition-colors"
-                      aria-label="Fermer le menu"
-                    >
-                      <div className="flex flex-col items-center gap-1.5">
-                        <span className="block h-0.5 w-6 bg-foreground rounded-full translate-y-1 rotate-45" />
-                        <span className="block h-0.5 w-6 bg-foreground rounded-full -translate-y-1 -rotate-45" />
-                      </div>
-                    </button>
-                  </div>
-
-                  {/* Navigation items — large, clean, spaced */}
-                  <ScrollArea className="flex-1">
-                    <div className="px-6 py-8">
-                      {/* Section label */}
-                      <p className="text-[11px] text-gray-500 uppercase tracking-[0.2em] font-medium mb-4 px-2">Navigation</p>
-                      <div className="space-y-1 mb-8">
-                        {navigationItems.map((item, index) => {
-                          const IconComponent = item.icon;
-                          return (
-                            <button
-                              key={item.href}
-                              onClick={() => {
-                                navigate(item.href);
-                                setMenuOpen(false);
-                              }}
-                              className="w-full flex items-center gap-4 px-3 py-4 rounded-2xl text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-200 group"
-                              style={{ animationDelay: `${index * 50}ms` }}
-                            >
-                              <div className="p-2.5 rounded-xl bg-white/5 group-hover:bg-white/10 transition-colors">
-                                <IconComponent className="h-5 w-5" />
-                              </div>
-                              <div className="flex-1 text-left">
-                                <p className="font-medium text-[15px]">{item.label}</p>
-                                <p className="text-xs text-gray-500">{item.description}</p>
-                              </div>
-                              <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-50 transition-opacity" />
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      {/* Support section */}
-                      <p className="text-[11px] text-gray-500 uppercase tracking-[0.2em] font-medium mb-4 px-2">Support</p>
-                      <div className="space-y-1">
-                        {supportItems.map((item, index) => {
-                          const IconComponent = item.icon;
-                          return (
-                            <button
-                              key={item.href}
-                              onClick={() => {
-                                navigate(item.href);
-                                setMenuOpen(false);
-                              }}
-                              className="w-full flex items-center gap-4 px-3 py-4 rounded-2xl text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-200 group"
-                              style={{ animationDelay: `${(navigationItems.length + index) * 50}ms` }}
-                            >
-                              <div className="p-2.5 rounded-xl bg-white/5 group-hover:bg-white/10 transition-colors">
-                                <IconComponent className="h-5 w-5" />
-                              </div>
-                              <div className="flex-1 text-left">
-                                <p className="font-medium text-[15px]">{item.label}</p>
-                                <p className="text-xs text-gray-500">{item.description}</p>
-                              </div>
-                              <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-50 transition-opacity" />
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </ScrollArea>
-
-                  {/* Bottom CTA */}
-                  <div className="p-6 border-t border-white/5 pb-safe">
-                    {user ? (
-                      <div className="space-y-3">
-                        <Button
-                          onClick={() => {
-                            onShowDashboard?.();
-                            setMenuOpen(false);
-                          }}
-                          className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black py-6 rounded-2xl text-base font-medium"
-                        >
-                          <User className="w-4 h-4 mr-2" />
-                          Mon Dashboard
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            handleLogout();
-                            setMenuOpen(false);
-                          }}
-                          variant="ghost"
-                          className="w-full text-gray-400 hover:text-white hover:bg-white/5 py-5 rounded-2xl"
-                        >
-                          <LogOut className="w-4 h-4 mr-2" />
-                          Déconnexion
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="space-y-3">
-                        <Button
-                          onClick={() => {
-                            navigate('/auth');
-                            setMenuOpen(false);
-                          }}
-                          className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black py-6 rounded-2xl text-base font-medium"
-                        >
-                          Commencer
-                          <ArrowRight className="w-4 h-4 ml-2" />
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            navigate('/auth');
-                            setMenuOpen(false);
-                          }}
-                          variant="ghost"
-                          className="w-full text-gray-400 hover:text-white hover:bg-white/5 py-5 rounded-2xl"
-                        >
-                          Se connecter
-                        </Button>
-                      </div>
-                    )}
-                  </div>
+            {/* Dropdown menu — Attio style */}
+            <div className={`absolute top-full left-0 right-0 mt-2 transition-all duration-300 origin-top ${
+              menuOpen 
+                ? 'opacity-100 scale-y-100 translate-y-0' 
+                : 'opacity-0 scale-y-95 -translate-y-2 pointer-events-none'
+            }`}>
+              <div className="bg-terex-darker/98 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden">
+                {/* Navigation items */}
+                <div className="p-3">
+                  {navigationItems.map((item, i) => {
+                    const Icon = item.icon;
+                    return (
+                      <button
+                        key={item.href}
+                        onClick={() => { navigate(item.href); setMenuOpen(false); }}
+                        className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-150 group"
+                        style={{ animationDelay: `${i * 40}ms` }}
+                      >
+                        <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.08] group-hover:border-white/10 transition-all">
+                          <Icon className="w-4 h-4 text-gray-400 group-hover:text-terex-accent transition-colors" />
+                        </div>
+                        <span className="font-medium text-sm">{item.label}</span>
+                        <ArrowRight className="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-40 transition-opacity -translate-x-1 group-hover:translate-x-0" />
+                      </button>
+                    );
+                  })}
                 </div>
-              </SheetContent>
-            </Sheet>
+
+                {/* Divider */}
+                <div className="mx-4 h-px bg-white/[0.06]" />
+
+                {/* Support items */}
+                <div className="p-3">
+                  {supportItems.map((item, i) => {
+                    const Icon = item.icon;
+                    return (
+                      <button
+                        key={item.href}
+                        onClick={() => { navigate(item.href); setMenuOpen(false); }}
+                        className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-150 group"
+                        style={{ animationDelay: `${(navigationItems.length + i) * 40}ms` }}
+                      >
+                        <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.08] group-hover:border-white/10 transition-all">
+                          <Icon className="w-4 h-4 text-gray-400 group-hover:text-terex-accent transition-colors" />
+                        </div>
+                        <span className="font-medium text-sm">{item.label}</span>
+                        <ArrowRight className="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-40 transition-opacity -translate-x-1 group-hover:translate-x-0" />
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Divider */}
+                <div className="mx-4 h-px bg-white/[0.06]" />
+
+                {/* Bottom CTA */}
+                <div className="p-3">
+                  {user ? (
+                    <div className="space-y-2">
+                      <Button
+                        onClick={() => { onShowDashboard?.(); setMenuOpen(false); }}
+                        className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black py-5 rounded-xl text-sm font-medium"
+                      >
+                        <User className="w-4 h-4 mr-2" />
+                        Mon Dashboard
+                      </Button>
+                      <Button
+                        onClick={() => { handleLogout(); setMenuOpen(false); }}
+                        variant="ghost"
+                        className="w-full text-gray-400 hover:text-white hover:bg-white/5 py-4 rounded-xl text-sm"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Déconnexion
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <Button
+                        onClick={() => { navigate('/auth'); setMenuOpen(false); }}
+                        className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black py-5 rounded-xl text-sm font-medium"
+                      >
+                        Commencer
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                      <Button
+                        onClick={() => { navigate('/auth'); setMenuOpen(false); }}
+                        variant="ghost"
+                        className="w-full text-gray-400 hover:text-white hover:bg-white/5 py-4 rounded-xl text-sm"
+                      >
+                        Se connecter
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

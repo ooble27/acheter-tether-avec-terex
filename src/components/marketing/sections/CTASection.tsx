@@ -20,7 +20,6 @@ export function CTASection({ user, onGetStarted }: CTASectionProps) {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="bg-white/[0.02] border border-white/10 rounded-3xl p-12 lg:p-16 text-center backdrop-blur-sm">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-terex-accent/10 border border-terex-accent/20 rounded-full text-terex-accent text-sm font-medium mb-8">
-            <Sparkles className="w-4 h-4" />
             Rejoignez Terex
           </div>
 
