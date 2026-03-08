@@ -65,13 +65,13 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               </p>
               <div className="flex flex-col sm:flex-row gap-3 lg:gap-4">
                 {user ? (
-                  <Button onClick={handleDashboard} size="lg" className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-6 lg:px-8 py-4 h-12 lg:h-14 min-w-[180px] lg:min-w-[220px] rounded-xl text-base lg:text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group">
-                    Aller au Dashboard
+                  <Button onClick={handleDashboard} size="lg" className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-6 lg:px-8 py-4 h-12 lg:h-14 min-w-[140px] lg:min-w-[220px] rounded-xl text-base lg:text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group">
+                    Dashboard
                     <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
                   </Button>
                 ) : (
-                  <Button onClick={handleGetStarted} size="lg" className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-6 lg:px-8 py-4 h-12 lg:h-14 min-w-[180px] lg:min-w-[220px] rounded-xl text-base lg:text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group">
-                    Commencer maintenant
+                  <Button onClick={handleGetStarted} size="lg" className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-6 lg:px-8 py-4 h-12 lg:h-14 min-w-[140px] lg:min-w-[220px] rounded-xl text-base lg:text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group">
+                    Commencer
                     <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
                   </Button>
                 )}
