@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Users, Globe, TrendingUp, Award, Shield, Target, User } from 'lucide-react';
+import { ArrowRight, Users, Globe, Shield, Target, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -43,44 +43,77 @@ const AboutPage = () => {
       <HeaderSection user={user ? { email: user.email || '', name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur' } : null} onShowDashboard={() => navigate('/')} onLogout={handleLogout} />
       <div className="h-16 md:h-20" />
 
-      {/* Hero */}
-      <section className="pt-12 pb-6 md:pt-24 md:pb-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-4">/ À PROPOS</p>
-          <h1 className="text-3xl md:text-5xl font-light text-foreground mb-2">
-            À propos de Terex
+      {/* Hero — Attio-style big typography */}
+      <section className="pt-16 pb-8 md:pt-32 md:pb-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="inline-flex items-center px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] mb-8">
+            <span className="text-muted-foreground text-xs">À propos</span>
+          </div>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-light text-foreground leading-[1.1] mb-6">
+            Notre mission est de<br className="hidden md:block" />
+            démocratiser la crypto<br className="hidden md:block" />
+            en Afrique.
           </h1>
-          <p className="text-terex-accent text-sm font-medium mb-4">Teranga Exchange</p>
-          <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
-            La première plateforme d'échange crypto-fiat dédiée à l'Afrique francophone
+          <p className="text-muted-foreground text-base md:text-xl max-w-2xl leading-relaxed mb-8">
+            Nous construisons la plateforme d'échange crypto-fiat la plus accessible d'Afrique francophone — simple, rapide, sécurisée.
           </p>
+          <div className="flex items-center gap-4">
+            <Button onClick={() => navigate('/auth')} className="bg-foreground text-background hover:bg-foreground/90 font-medium px-6 h-11 rounded-xl">
+              Rejoindre Terex
+            </Button>
+            <div className="flex -space-x-2">
+              {[0,1,2].map(i => (
+                <div key={i} className="w-8 h-8 rounded-full bg-white/10 border-2 border-terex-dark flex items-center justify-center">
+                  <User className="w-3.5 h-3.5 text-muted-foreground" />
+                </div>
+              ))}
+              <div className="w-8 h-8 rounded-full bg-white/10 border-2 border-terex-dark flex items-center justify-center text-[10px] text-muted-foreground font-medium">
+                +500
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+      {/* Decorative dots grid — Attio-style */}
+      <section className="py-8 md:py-12 overflow-hidden">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="flex flex-wrap gap-2 opacity-20">
+            {Array.from({ length: 80 }).map((_, i) => (
+              <div key={i} className="w-2.5 h-2.5 rounded-sm bg-muted-foreground/40" style={{ opacity: Math.random() * 0.6 + 0.2 }} />
+            ))}
+          </div>
+          <p className="text-muted-foreground text-xs mt-4">Fonctionnalités, améliorations, jalons au fil du temps.</p>
+        </div>
+      </section>
 
-      {/* Mission */}
-      <section className="py-8 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-            <div>
-              <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-4">Notre Mission</p>
-              <p className="text-foreground/80 text-sm md:text-base leading-relaxed mb-4">
-                Chez Terex, nous croyons que chaque africain mérite un accès simple et sécurisé aux services financiers numériques.
-              </p>
-              <p className="text-foreground/80 text-sm md:text-base leading-relaxed">
-                Notre plateforme connecte les crypto-monnaies aux monnaies locales (FCFA), facilitant les échanges et les transferts via Orange Money et Wave.
+      <div className="max-w-5xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+
+      {/* Mission & Vision — large cards */}
+      <section className="py-12 md:py-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+            <div className="p-8 md:p-10 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
+              <p className="text-terex-accent text-xs uppercase tracking-[0.15em] mb-4 font-medium">01 — Mission</p>
+              <h2 className="text-foreground text-2xl md:text-3xl font-light mb-4 leading-tight">
+                Rendre la crypto accessible à tous
+              </h2>
+              <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
+                Chez Terex, nous croyons que chaque africain mérite un accès simple et sécurisé aux services financiers numériques. Notre plateforme connecte les crypto-monnaies aux monnaies locales (FCFA), facilitant les échanges et les transferts via Orange Money et Wave.
               </p>
             </div>
-            <div>
-              <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-4">Vision 2030</p>
-              <p className="text-foreground/80 text-sm md:text-base leading-relaxed mb-4">
+            <div className="p-8 md:p-10 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
+              <p className="text-terex-accent text-xs uppercase tracking-[0.15em] mb-4 font-medium">02 — Vision 2030</p>
+              <h2 className="text-foreground text-2xl md:text-3xl font-light mb-4 leading-tight">
+                La référence en Afrique de l'Ouest
+              </h2>
+              <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-6">
                 Devenir la référence ouest-africaine pour les échanges crypto-fiat en servant plus d'un million d'utilisateurs.
               </p>
-              <div className="space-y-2 mt-4">
+              <div className="space-y-2">
                 {["Zone UEMOA complète", "1M+ utilisateurs actifs", "100M+ FCFA de volume"].map((goal, i) => (
-                  <div key={i} className="flex items-center gap-2 text-foreground/60 text-xs">
-                    <div className="w-1 h-1 bg-terex-accent rounded-full" />
+                  <div key={i} className="flex items-center gap-3 text-foreground/70 text-sm">
+                    <div className="w-1.5 h-1.5 bg-terex-accent rounded-full" />
                     {goal}
                   </div>
                 ))}
@@ -90,66 +123,68 @@ const AboutPage = () => {
         </div>
       </section>
 
-      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+      <div className="max-w-5xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
 
-      {/* Stats */}
-      <section className="py-8 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-6">En chiffres</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+      {/* Stats — large numbers */}
+      <section className="py-12 md:py-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {[
-              { value: "99.9%", label: "Disponibilité" },
-              { value: "24/7", label: "Support" },
-              { value: "< 5min", label: "Temps moyen" },
-              { value: "500+", label: "Utilisateurs" }
+              { value: "99.9%", label: "Disponibilité", sub: "uptime garanti" },
+              { value: "24/7", label: "Support", sub: "toujours disponible" },
+              { value: "< 5min", label: "Temps moyen", sub: "par transaction" },
+              { value: "500+", label: "Utilisateurs", sub: "et en croissance" }
             ].map((stat, i) => (
-              <div key={i} className="p-4 md:p-6 rounded-xl border border-white/[0.06] bg-white/[0.02] text-center">
-                <p className="text-terex-accent text-xl md:text-2xl font-semibold mb-1">{stat.value}</p>
-                <p className="text-muted-foreground text-xs">{stat.label}</p>
+              <div key={i} className="p-5 md:p-8 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
+                <p className="text-foreground text-3xl md:text-4xl font-light mb-1">{stat.value}</p>
+                <p className="text-foreground text-sm font-medium">{stat.label}</p>
+                <p className="text-muted-foreground text-xs mt-0.5">{stat.sub}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+      <div className="max-w-5xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
 
       {/* Timeline */}
-      <section className="py-8 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-6">Parcours</p>
-          <div className="space-y-3">
+      <section className="py-12 md:py-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-8">Parcours</p>
+          <div className="space-y-0">
             {milestones.map((m, i) => (
-              <div key={i} className="flex items-start gap-4 p-4 rounded-xl border border-white/[0.06] bg-white/[0.02]">
-                <span className="text-terex-accent text-xs font-mono font-medium min-w-[70px]">{m.year}</span>
-                <div>
-                  <p className="text-foreground text-sm font-medium">{m.title}</p>
-                  <p className="text-muted-foreground text-xs">{m.desc}</p>
+              <div key={i} className="flex items-start gap-6 py-5 border-b border-white/[0.06] group hover:bg-white/[0.01] transition-colors px-2 -mx-2 rounded-lg">
+                <span className="text-muted-foreground text-xs font-mono min-w-[80px] pt-0.5">{m.year}</span>
+                <div className="flex-1">
+                  <p className="text-foreground text-base md:text-lg font-medium">{m.title}</p>
+                  <p className="text-muted-foreground text-sm">{m.desc}</p>
                 </div>
+                <ArrowRight className="w-4 h-4 text-white/0 group-hover:text-white/40 transition-colors mt-1" />
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+      <div className="max-w-5xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
 
-      {/* Values */}
-      <section className="py-8 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-6">Nos valeurs</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {/* Values — bold grid */}
+      <section className="py-12 md:py-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-8">Nos valeurs</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { icon: Shield, title: "Sécurité" },
-              { icon: Target, title: "Transparence" },
-              { icon: Globe, title: "Accessibilité" },
-              { icon: Users, title: "Communauté" },
+              { icon: Shield, title: "Sécurité", desc: "Protection maximale de vos fonds" },
+              { icon: Target, title: "Transparence", desc: "Frais clairs, sans surprise" },
+              { icon: Globe, title: "Accessibilité", desc: "Ouvert à toute l'Afrique" },
+              { icon: Users, title: "Communauté", desc: "Construite avec nos utilisateurs" },
             ].map((v, i) => {
               const Icon = v.icon;
               return (
-                <div key={i} className="p-4 md:p-5 rounded-xl border border-white/[0.06] bg-white/[0.02] text-center">
-                  <Icon className="w-5 h-5 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-foreground text-sm font-medium">{v.title}</p>
+                <div key={i} className="p-6 md:p-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] group hover:border-white/[0.15] transition-all">
+                  <Icon className="w-6 h-6 text-muted-foreground mb-4 group-hover:text-terex-accent transition-colors" />
+                  <p className="text-foreground text-base font-medium mb-1">{v.title}</p>
+                  <p className="text-muted-foreground text-xs">{v.desc}</p>
                 </div>
               );
             })}
@@ -157,39 +192,42 @@ const AboutPage = () => {
         </div>
       </section>
 
-      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+      <div className="max-w-5xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
 
       {/* Team */}
-      <section className="py-8 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-6">Équipe</p>
-          <div className="grid md:grid-cols-3 gap-3 md:gap-4">
+      <section className="py-12 md:py-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-2">L'équipe</p>
+          <h2 className="text-foreground text-2xl md:text-4xl font-light mb-8">Les visages derrière Terex</h2>
+          <div className="grid md:grid-cols-3 gap-4 md:gap-6">
             {team.map((member, i) => (
-              <div key={i} className="p-5 md:p-6 rounded-xl border border-white/[0.06] bg-white/[0.02]">
-                <div className="w-12 h-12 bg-white/[0.06] rounded-full flex items-center justify-center mb-4 mx-auto md:mx-0">
-                  <User className="w-6 h-6 text-muted-foreground" />
+              <div key={i} className="p-6 md:p-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] group hover:border-white/[0.15] transition-all">
+                <div className="w-16 h-16 bg-white/[0.06] rounded-2xl flex items-center justify-center mb-5 group-hover:bg-white/[0.1] transition-colors">
+                  <User className="w-7 h-7 text-muted-foreground" />
                 </div>
-                <h3 className="text-foreground font-medium text-sm mb-0.5 text-center md:text-left">{member.name}</h3>
-                <p className="text-terex-accent text-xs mb-2 text-center md:text-left">{member.role}</p>
-                <p className="text-muted-foreground text-xs leading-relaxed text-center md:text-left">{member.bio}</p>
+                <h3 className="text-foreground font-medium text-lg mb-0.5">{member.name}</h3>
+                <p className="text-terex-accent text-xs font-medium mb-3">{member.role}</p>
+                <p className="text-muted-foreground text-sm leading-relaxed">{member.bio}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+      <div className="max-w-5xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
 
       {/* CTA */}
-      <section className="py-10 md:py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-xl md:text-2xl font-light text-foreground mb-3">Rejoignez la révolution Terex</h2>
-          <p className="text-muted-foreground text-sm mb-6">Échangez vos USDT en FCFA dès aujourd'hui</p>
+      <section className="py-16 md:py-28">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-3xl md:text-5xl font-light text-foreground mb-4 leading-tight">
+            Prêt à rejoindre la<br />révolution Terex ?
+          </h2>
+          <p className="text-muted-foreground text-base md:text-lg mb-8 max-w-lg mx-auto">Échangez vos USDT en FCFA dès aujourd'hui, simplement et en toute sécurité.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button onClick={() => navigate('/auth')} className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11">
+            <Button onClick={() => navigate('/auth')} className="bg-foreground text-background hover:bg-foreground/90 font-medium px-8 h-12 rounded-xl text-base">
               Créer un compte <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
-            <Button onClick={() => navigate('/careers')} variant="outline" className="border-white/[0.12] text-foreground hover:bg-white/[0.04] h-11">
+            <Button onClick={() => navigate('/careers')} variant="outline" className="border-white/[0.15] text-foreground hover:bg-white/[0.04] h-12 rounded-xl">
               Nous rejoindre
             </Button>
           </div>

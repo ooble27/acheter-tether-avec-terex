@@ -96,6 +96,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   const navigationItems = [
     { label: 'Accueil', href: '/', icon: IconHome, description: 'Page d\'accueil' },
     { label: 'À propos', href: '/about', icon: IconBuilding, description: 'Découvrez Terex' },
+    { label: 'Blog', href: '/blog', icon: IconFAQ, description: 'Articles & actualités' },
     { label: 'Carrières', href: '/careers', icon: IconBriefcase, description: 'Rejoignez l\'équipe' },
   ];
 
