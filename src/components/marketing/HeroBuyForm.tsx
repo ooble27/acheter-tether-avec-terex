@@ -168,7 +168,7 @@ export function HeroBuyForm() {
               {/* Info row */}
               <div className="flex items-center justify-between px-1 text-[10px] lg:text-[11px]">
                 <div className="flex items-center gap-3">
-                  <span className="text-muted-foreground">Taux <span className="text-foreground font-medium">{rate.toLocaleString()} CFA</span></span>
+                  <span className="text-muted-foreground">1 USDT = <span className="text-foreground font-medium">{rate.toLocaleString()} CFA</span></span>
                   <span className="text-muted-foreground/30">•</span>
                   <span className="text-muted-foreground">Frais <span className="text-terex-accent font-medium">2%</span></span>
                 </div>
