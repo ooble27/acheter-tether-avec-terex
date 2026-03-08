@@ -1,8 +1,5 @@
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Play, Clock, User, CheckCircle, ArrowRight } from 'lucide-react';
+import { Play, Clock, ArrowRight, ArrowLeft, BookOpen, Shield, Send, Wallet } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -21,6 +18,7 @@ interface Guide {
   steps: string[];
   category: string;
   videoUrl: string;
+  icon: React.ReactNode;
 }
 
 const GuidePage = () => {
@@ -36,68 +34,40 @@ const GuidePage = () => {
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de se déconnecter",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Déconnexion réussie",
-        description: "Vous avez été déconnecté avec succès",
-        className: "bg-green-600 text-white border-green-600",
-      });
+    if (!error) {
+      toast({ title: "Déconnexion réussie", description: "À bientôt", className: "bg-green-600 text-white border-green-600" });
       window.location.reload();
     }
   };
 
-  const handleShowDashboard = () => {
-    navigate('/');
-  };
-
-  // Afficher la vidéo du guide sélectionné
+  // Video sub-view
   if (selectedGuide) {
     return (
       <div className="min-h-screen bg-terex-dark">
         <HeaderSection 
-          user={user ? {
-            email: user.email || '',
-            name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
-          } : null}
-          onShowDashboard={handleShowDashboard}
+          user={user ? { email: user.email || '', name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur' } : null}
+          onShowDashboard={() => navigate('/')}
           onLogout={handleLogout}
         />
-        
-        <VideoGuide
-          title={selectedGuide.title}
-          videoUrl={selectedGuide.videoUrl}
-          description={selectedGuide.description}
-          onBack={() => setSelectedGuide(null)}
-        />
-        
+        <VideoGuide title={selectedGuide.title} videoUrl={selectedGuide.videoUrl} description={selectedGuide.description} onBack={() => setSelectedGuide(null)} />
         <FooterSection />
       </div>
     );
   }
 
-  // Afficher le guide complet avec captures d'écran
+  // Detailed guide sub-view
   if (showDetailedGuide) {
     return (
       <div className="min-h-screen bg-terex-dark">
         <HeaderSection 
-          user={user ? {
-            email: user.email || '',
-            name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
-          } : null}
-          onShowDashboard={handleShowDashboard}
+          user={user ? { email: user.email || '', name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur' } : null}
+          onShowDashboard={() => navigate('/')}
           onLogout={handleLogout}
         />
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="h-16 md:h-20" />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
           <UserGuide onBack={() => setShowDetailedGuide(false)} />
         </div>
-        
         <FooterSection />
       </div>
     );
@@ -105,187 +75,169 @@ const GuidePage = () => {
 
   const guides: Guide[] = [
     {
-      title: "Guide de Démarrage Rapide",
-      description: "Apprenez les bases de Terex en 10 minutes",
+      title: "Démarrage rapide",
+      description: "Créez votre compte et effectuez votre première transaction en quelques minutes.",
       duration: "10 min",
       difficulty: "Débutant",
-      steps: [
-        "Créer votre compte",
-        "Vérifier votre identité",
-        "Effectuer votre première transaction",
-        "Configurer vos préférences"
-      ],
+      steps: ["Créer votre compte", "Vérifier votre identité", "Première transaction", "Configurer vos préférences"],
       category: "Démarrage",
-      videoUrl: "https://www.youtube.com/watch?v=VOTRE_VIDEO_ID_1"
+      videoUrl: "https://www.youtube.com/watch?v=VOTRE_VIDEO_ID_1",
+      icon: <BookOpen className="w-5 h-5" />,
     },
     {
-      title: "Maîtriser l'Achat d'USDT",
-      description: "Guide complet pour acheter des USDT en toute sécurité",
+      title: "Acheter des USDT",
+      description: "Guide complet pour acheter des USDT via Mobile Money en toute sécurité.",
       duration: "15 min",
       difficulty: "Intermédiaire",
-      steps: [
-        "Choisir le montant",
-        "Sélectionner la méthode de paiement",
-        "Confirmer la transaction",
-        "Recevoir vos USDT"
-      ],
+      steps: ["Choisir le montant", "Sélectionner le paiement", "Confirmer la transaction", "Recevoir vos USDT"],
       category: "Trading",
-      videoUrl: "https://youtu.be/yqMAOvQTzGY?si=O0_LI8sC0877bvL6"
+      videoUrl: "https://youtu.be/yqMAOvQTzGY?si=O0_LI8sC0877bvL6",
+      icon: <Wallet className="w-5 h-5" />,
     },
     {
-      title: "Transferts Internationaux",
-      description: "Envoyez de l'argent vers l'Afrique facilement",
+      title: "Transferts internationaux",
+      description: "Envoyez de l'argent vers l'Afrique rapidement et à moindre coût.",
       duration: "12 min",
       difficulty: "Intermédiaire",
-      steps: [
-        "Saisir les informations du destinataire",
-        "Choisir la méthode de réception",
-        "Confirmer le transfert",
-        "Suivre l'envoi"
-      ],
+      steps: ["Informations du destinataire", "Méthode de réception", "Confirmer le transfert", "Suivre l'envoi"],
       category: "Transferts",
-      videoUrl: "https://www.youtube.com/watch?v=VOTRE_VIDEO_ID_3"
+      videoUrl: "https://www.youtube.com/watch?v=VOTRE_VIDEO_ID_3",
+      icon: <Send className="w-5 h-5" />,
     },
     {
-      title: "Sécurité et Bonnes Pratiques",
-      description: "Protégez votre compte et vos transactions",
+      title: "Sécurité",
+      description: "Protégez votre compte avec les bonnes pratiques de sécurité crypto.",
       duration: "20 min",
       difficulty: "Avancé",
-      steps: [
-        "Configurer l'authentification 2FA",
-        "Reconnaître les tentatives de phishing",
-        "Sécuriser vos wallets",
-        "Bonnes pratiques de trading"
-      ],
+      steps: ["Authentification 2FA", "Reconnaître le phishing", "Sécuriser vos wallets", "Bonnes pratiques"],
       category: "Sécurité",
-      videoUrl: "https://www.youtube.com/watch?v=VOTRE_VIDEO_ID_4"
+      videoUrl: "https://www.youtube.com/watch?v=VOTRE_VIDEO_ID_4",
+      icon: <Shield className="w-5 h-5" />,
     }
   ];
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Débutant': return 'bg-green-600';
-      case 'Intermédiaire': return 'bg-yellow-600';
-      case 'Avancé': return 'bg-red-600';
-      default: return 'bg-gray-600';
-    }
-  };
-
   return (
     <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
-      {/* Grid background pattern - white with more density like Attio */}
-      <div className="fixed inset-0 opacity-[0.06] pointer-events-none" style={{
+      {/* Grid background */}
+      <div className="fixed inset-0 opacity-[0.04] pointer-events-none" style={{
         backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
                           linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px)`,
         backgroundSize: '40px 40px'
       }} />
+      
       <HeaderSection 
-        user={user ? {
-          email: user.email || '',
-          name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
-        } : null}
-        onShowDashboard={handleShowDashboard}
+        user={user ? { email: user.email || '', name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur' } : null}
+        onShowDashboard={() => navigate('/')}
         onLogout={handleLogout}
       />
 
-      {/* Hero Section */}
-      <div className="relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-6 py-3 mb-8 border border-terex-accent/20">
-              <User className="w-5 h-5 text-terex-accent mr-2" />
-              <span className="text-terex-accent font-medium">Guide Utilisateur</span>
-            </div>
-            
-            <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
-              Maîtrisez <span className="text-terex-accent">Terex</span> étape par étape
-            </h1>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
-              Des guides détaillés pour vous accompagner dans toutes vos opérations crypto-fiat.
-            </p>
+      <div className="h-16 md:h-20" />
 
-            {/* Guide complet button */}
-            <Button 
-              onClick={() => setShowDetailedGuide(true)}
-              size="lg"
-              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-8 py-4 text-lg rounded-xl mb-8"
-            >
-              📖 Guide Complet avec Captures d'Écran
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-          </div>
+      {/* Hero */}
+      <section className="pt-12 pb-6 md:pt-24 md:pb-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-4">/ GUIDE</p>
+          <h1 className="text-3xl md:text-5xl font-light text-foreground mb-3">
+            Maîtrisez Terex étape par étape
+          </h1>
+          <p className="text-muted-foreground text-base md:text-lg max-w-xl mx-auto mb-8">
+            Des guides détaillés pour toutes vos opérations
+          </p>
+          <Button 
+            onClick={() => setShowDetailedGuide(true)}
+            className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11"
+          >
+            Guide complet avec captures d'écran
+            <ArrowRight className="w-4 h-4 ml-2" />
+          </Button>
         </div>
+      </section>
+
+      {/* Dashed separator */}
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="border-t border-dashed border-white/10" />
       </div>
 
       {/* Guides Grid */}
-      <div className="py-24 bg-terex-dark">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8">
+      <section className="py-8 md:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-6">Guides disponibles</p>
+          
+          <div className="grid md:grid-cols-2 gap-3 md:gap-4">
             {guides.map((guide, index) => (
-              <Card key={index} className="bg-gradient-to-br from-terex-darker to-terex-gray/30 border-terex-accent/20 hover:border-terex-accent/40 transition-all duration-300 hover:scale-105">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <Badge variant="outline" className="text-terex-accent border-terex-accent/30">
-                          {guide.category}
-                        </Badge>
-                        <Badge className={`${getDifficultyColor(guide.difficulty)} text-white`}>
-                          {guide.difficulty}
-                        </Badge>
-                      </div>
-                      <CardTitle className="text-white text-xl mb-2">{guide.title}</CardTitle>
-                      <CardDescription className="text-gray-300 text-base">
-                        {guide.description}
-                      </CardDescription>
-                    </div>
-                    <div className="flex items-center text-gray-400 text-sm ml-4">
-                      <Clock className="w-4 h-4 mr-1" />
+              <button
+                key={index}
+                onClick={() => setSelectedGuide(guide)}
+                className="group p-5 md:p-6 rounded-xl border border-white/[0.06] hover:border-white/[0.12] bg-white/[0.02] hover:bg-white/[0.04] transition-all text-left"
+              >
+                {/* Header row */}
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/[0.06] flex items-center justify-center text-muted-foreground">
+                    {guide.icon}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground text-[11px] flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
                       {guide.duration}
+                    </span>
+                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
+                      guide.difficulty === 'Débutant' ? 'bg-white/[0.06] text-white/50' :
+                      guide.difficulty === 'Intermédiaire' ? 'bg-terex-accent/10 text-terex-accent' :
+                      'bg-white/[0.06] text-white/50'
+                    }`}>
+                      {guide.difficulty}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Title & description */}
+                <h3 className="text-foreground font-medium text-sm md:text-base mb-1">{guide.title}</h3>
+                <p className="text-muted-foreground text-xs leading-relaxed mb-4">{guide.description}</p>
+
+                {/* Steps */}
+                <div className="space-y-1.5 mb-4">
+                  {guide.steps.map((step, si) => (
+                    <div key={si} className="flex items-center gap-2">
+                      <span className="text-muted-foreground text-[10px] font-mono w-4">{String(si + 1).padStart(2, '0')}</span>
+                      <span className="text-foreground/70 text-xs">{step}</span>
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3 mb-6">
-                    {guide.steps.map((step, stepIndex) => (
-                      <div key={stepIndex} className="flex items-center space-x-3">
-                        <div className="w-6 h-6 bg-terex-accent/20 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-terex-accent text-sm font-medium">{stepIndex + 1}</span>
-                        </div>
-                        <span className="text-gray-300">{step}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <Button 
-                    onClick={() => setSelectedGuide(guide)}
-                    className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold"
-                  >
-                    <Play className="w-4 h-4 mr-2" />
-                    Regarder la Vidéo
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </CardContent>
-              </Card>
+                  ))}
+                </div>
+
+                {/* CTA */}
+                <div className="flex items-center gap-1.5 text-terex-accent text-xs font-medium group-hover:gap-2.5 transition-all">
+                  <Play className="w-3 h-3" />
+                  Regarder la vidéo
+                </div>
+              </button>
             ))}
           </div>
-
-          {/* Call to Action */}
-          <div className="mt-16 text-center">
-            <h2 className="text-3xl font-bold text-white mb-6">Prêt à commencer ?</h2>
-            <p className="text-gray-300 text-lg mb-8">
-              Créez votre compte et suivez nos guides pour réussir vos premières transactions
-            </p>
-            <Button 
-              onClick={() => navigate('/auth')}
-              size="lg"
-              className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold px-8 py-4 text-lg rounded-xl"
-            >
-              Créer mon Compte
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-          </div>
         </div>
+      </section>
+
+      {/* Dashed separator */}
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="border-t border-dashed border-white/10" />
       </div>
+
+      {/* CTA */}
+      <section className="py-10 md:py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-xl md:text-2xl font-light text-foreground mb-3">
+            Prêt à commencer ?
+          </h2>
+          <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">
+            Créez votre compte et suivez nos guides
+          </p>
+          <Button 
+            onClick={() => navigate('/auth')}
+            className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11"
+          >
+            Créer mon compte
+            <ArrowRight className="w-4 h-4 ml-2" />
+          </Button>
+        </div>
+      </section>
 
       <FooterSection />
     </div>
