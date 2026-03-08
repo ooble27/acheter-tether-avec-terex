@@ -338,33 +338,34 @@ const FAQPage = () => {
         onLogout={handleLogout}
       />
 
-      {/* Hero Section */}
-      <div className="bg-terex-darker border-b border-terex-accent/20">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="text-center space-y-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-white">
-              Comment pouvons-nous vous aider ?
-            </h1>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-              Voici quelques questions fréquemment posées...
-            </p>
+      {/* Spacer for fixed navbar */}
+      <div className="h-20" />
 
-            {/* Search Bar */}
-            <div className="max-w-2xl mx-auto pt-4">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <Input
-                  type="text"
-                  placeholder="Rechercher ici..."
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                    setSelectedCategory(null);
-                    setSelectedFaq(null);
-                  }}
-                  className="pl-12 py-6 text-base bg-terex-gray border-terex-gray-light text-white placeholder:text-gray-400 focus:border-terex-accent focus:ring-terex-accent"
-                />
-              </div>
+      {/* Hero Section */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+        <div className="text-center space-y-8">
+          <h1 className="text-4xl sm:text-5xl font-light text-foreground">
+            Comment pouvons-nous vous <span className="text-terex-accent">aider</span> ?
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Voici quelques questions fréquemment posées...
+          </p>
+
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto pt-4">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+              <Input
+                type="text"
+                placeholder="Rechercher ici..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setSelectedCategory(null);
+                  setSelectedFaq(null);
+                }}
+                className="pl-12 py-6 text-base bg-terex-gray border-terex-gray/50 text-foreground placeholder:text-muted-foreground focus:border-terex-accent focus:ring-terex-accent"
+              />
             </div>
           </div>
         </div>

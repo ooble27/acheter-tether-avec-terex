@@ -142,27 +142,18 @@ const ContactPage = () => {
         onLogout={handleLogout}
       />
 
+      {/* Spacer for fixed navbar */}
+      <div className="h-20" />
+
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-terex-darker via-terex-dark to-terex-darker">
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-terex-accent/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-terex-accent/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-6 py-3 mb-8 border border-terex-accent/20">
-              <MessageCircle className="w-5 h-5 text-terex-accent mr-2" />
-              <span className="text-terex-accent font-medium">Contactez-Nous</span>
-            </div>
-            
-            <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
-              Parlons de votre <span className="text-terex-accent">projet</span>
-            </h1>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
-              Notre équipe est là pour répondre à toutes vos questions et vous accompagner dans vos opérations crypto-fiat.
-            </p>
-          </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+        <div className="text-center">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light text-foreground mb-6">
+            Parlons de votre <span className="text-terex-accent">projet</span>
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Notre équipe est là pour répondre à toutes vos questions et vous accompagner dans vos opérations crypto-fiat.
+          </p>
         </div>
       </div>
 

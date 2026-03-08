@@ -117,37 +117,20 @@ const AboutPage = () => {
         onLogout={handleLogout}
       />
 
-      {/* Hero Section avec parallax effect */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-terex-darker via-terex-dark to-terex-darker">
-        <div className="absolute inset-0 bg-gradient-to-r from-terex-accent/5 via-transparent to-terex-accent/5"></div>
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-terex-accent/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-terex-accent/5 rounded-full blur-3xl"></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <div className="text-center mb-8 px-4">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2 break-words">
-                À propos de <span className="text-terex-accent">Terex</span>
-              </h1>
-              <p className="text-terex-accent text-sm sm:text-base md:text-lg font-medium">Teranga Exchange</p>
-            </div>
-            <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12 px-4 break-words">
-              Terex révolutionne les échanges crypto-fiat et les transferts d'argent en Afrique de l'Ouest. 
-              Notre mission : rendre les services financiers numériques accessibles, sécurisés et abordables pour tous au Burkina Faso, en Côte d'Ivoire, au Sénégal et au Mali.
-            </p>
-            
-            {/* Live metrics */}
-            <div className="flex flex-col sm:flex-row justify-center items-center sm:space-x-8 space-y-2 sm:space-y-0 text-xs sm:text-sm text-gray-400 px-4">
-              <div className="flex items-center">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse flex-shrink-0"></div>
-                <span className="break-words">Systèmes opérationnels</span>
-              </div>
-              <div className="break-words">99.9% de disponibilité</div>
-              <div className="break-words">Support 24/7</div>
-            </div>
-          </div>
+      {/* Spacer for fixed navbar */}
+      <div className="h-20" />
+
+      {/* Hero Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+        <div className="text-center">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light text-foreground mb-3">
+            À propos de <span className="text-terex-accent">Terex</span>
+          </h1>
+          <p className="text-terex-accent text-sm sm:text-base font-medium mb-6">Teranga Exchange</p>
+          <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Terex révolutionne les échanges crypto-fiat et les transferts d'argent en Afrique de l'Ouest. 
+            Notre mission : rendre les services financiers numériques accessibles, sécurisés et abordables pour tous.
+          </p>
         </div>
       </div>
 
