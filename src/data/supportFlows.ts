@@ -143,7 +143,7 @@ export const supportFlows: SupportFlow[] = [
         answers: [
           {
             text: "Je n'ai pas encore de compte",
-            solution: "Créer un compte est simple et rapide:\n1. Cliquez sur 'S'inscrire' en haut à droite\n2. Entrez votre adresse email\n3. Vous recevrez un lien de connexion par email\n4. Cliquez sur le lien pour vous connecter\n5. Complétez votre profil\n\nPas de mot de passe à retenir ! Vous recevez un lien magique à chaque connexion. C'est plus sécurisé et plus simple."
+            solution: "Créer un compte est simple et rapide:\n1. Allez sur terangaexchange.com\n2. Cliquez sur 'S'inscrire'\n3. Entrez votre email et créez un mot de passe\n4. Confirmez votre email via le lien reçu\n5. Complétez votre profil\n\nVotre mot de passe doit contenir au moins 8 caractères. Conservez-le en lieu sûr."
           },
           {
             text: "Je ne reçois pas l'email de connexion",
