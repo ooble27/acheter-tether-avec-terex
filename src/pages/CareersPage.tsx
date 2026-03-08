@@ -244,7 +244,7 @@ const CareersPage = () => {
 
       {/* Application Dialog */}
       <Dialog open={showApplicationForm} onOpenChange={setShowApplicationForm}>
-        <DialogContent className="max-w-2xl bg-terex-dark border-white/[0.08] max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl lg:max-w-4xl bg-terex-dark border-white/[0.08] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-foreground">Postuler : {selectedPosition}</DialogTitle>
           </DialogHeader>
