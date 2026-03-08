@@ -19,6 +19,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   const isTablet = useIsTablet();
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
