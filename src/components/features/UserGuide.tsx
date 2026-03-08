@@ -1,12 +1,19 @@
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Shield, AlertTriangle } from 'lucide-react';
-import dashboardBuyUsdt from '@/assets/dashboard-buy-usdt.jpeg';
-import dashboardConfirm from '@/assets/dashboard-confirm.jpeg';
-import dashboardDestination from '@/assets/dashboard-destination.jpeg';
+
+import { ArrowLeft, Shield, AlertTriangle, CheckCircle2 } from 'lucide-react';
+
+// Real screenshots
+import guideLogin from '@/assets/guide-login.jpeg';
+import guideSignup from '@/assets/guide-signup.jpeg';
+import guideBuyUsdt from '@/assets/dashboard-buy-usdt.jpeg';
+import guideDestination from '@/assets/guide-destination.jpeg';
+import guideWalletAddress from '@/assets/guide-wallet-address.jpeg';
+import guideConfirmOrder from '@/assets/guide-confirm-order.jpeg';
+import guideNaboopayCheckout from '@/assets/guide-naboopay-checkout.jpeg';
+import guideNaboopaySummary from '@/assets/guide-naboopay-summary.jpeg';
+import guideWaveConfirm from '@/assets/guide-wave-confirm.jpeg';
+import guideTransactionDetails from '@/assets/guide-transaction-details.jpeg';
+import guideSellUsdt from '@/assets/guide-sell-usdt.jpeg';
 import dashboardPreview from '@/assets/dashboard-preview.jpeg';
-import orangeMoneyLogo from '@/assets/orange-money-logo.png';
-import waveLogo from '@/assets/wave-logo.png';
-import usdtLogo from '@/assets/usdt-logo.png';
 
 interface UserGuideProps {
   onBack: () => void;
@@ -18,11 +25,38 @@ const StepNumber = ({ n }: { n: number | string }) => (
   </div>
 );
 
-const Screenshot = ({ src, alt }: { src: string; alt: string }) => (
-  <div className="my-4 rounded-xl overflow-hidden border border-white/10">
-    <img src={src} alt={alt} className="w-full" loading="lazy" />
+const Screenshot = ({ src, alt, caption }: { src: string; alt: string; caption?: string }) => (
+  <div className="my-4">
+    <div className="rounded-xl overflow-hidden border border-white/10">
+      <img src={src} alt={alt} className="w-full" loading="lazy" />
+    </div>
+    {caption && <p className="text-white/30 text-[11px] mt-1.5 text-center italic">{caption}</p>}
   </div>
 );
+
+const InfoBox = ({ icon: Icon, color, title, children }: { icon: any; color: string; title: string; children: React.ReactNode }) => {
+  const colors: Record<string, string> = {
+    blue: 'bg-blue-500/10 border-blue-500/20 text-blue-200',
+    red: 'bg-red-500/10 border-red-500/20 text-red-200',
+    green: 'bg-green-500/10 border-green-500/20 text-green-200',
+  };
+  const iconColors: Record<string, string> = {
+    blue: 'text-blue-400',
+    red: 'text-red-400',
+    green: 'text-green-400',
+  };
+  return (
+    <div className={`${colors[color]} border rounded-lg p-4 mt-3`}>
+      <div className="flex items-start gap-2">
+        <Icon className={`w-4 h-4 ${iconColors[color]} mt-0.5 flex-shrink-0`} />
+        <div>
+          <p className="text-sm font-medium">{title}</p>
+          <div className="text-xs mt-1 opacity-70">{children}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export function UserGuide({ onBack }: UserGuideProps) {
   return (
@@ -47,7 +81,7 @@ export function UserGuide({ onBack }: UserGuideProps) {
         <h2 className="text-white font-medium text-lg mb-3">Bienvenue sur Terex</h2>
         <p className="text-white/60 text-sm leading-relaxed mb-4">
           Terex est la plateforme la plus simple pour acheter et vendre des USDT en Afrique de l'Ouest.
-          Paiement automatique via Wave et Orange Money, envoi instantané des USDT.
+          Paiement automatique via Wave et Orange Money grâce à NabooPay, envoi instantané des USDT.
         </p>
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-terex-darker/80 rounded-lg p-3 text-center">
@@ -55,8 +89,8 @@ export function UserGuide({ onBack }: UserGuideProps) {
             <p className="text-white/40 text-[11px]">Traitement</p>
           </div>
           <div className="bg-terex-darker/80 rounded-lg p-3 text-center">
-            <p className="text-terex-accent text-sm font-medium">1-2%</p>
-            <p className="text-white/40 text-[11px]">Frais transparents</p>
+            <p className="text-terex-accent text-sm font-medium">Automatique</p>
+            <p className="text-white/40 text-[11px]">Paiement NabooPay</p>
           </div>
           <div className="bg-terex-darker/80 rounded-lg p-3 text-center">
             <p className="text-terex-accent text-sm font-medium">24/7</p>
@@ -65,142 +99,137 @@ export function UserGuide({ onBack }: UserGuideProps) {
         </div>
       </section>
 
-      {/* Step 1: Account */}
+      {/* ─── ÉTAPE 1 : CRÉER UN COMPTE ─── */}
       <section className="space-y-4">
         <h2 className="text-white font-medium text-lg flex items-center gap-2">
           <StepNumber n={1} />
           Créer votre compte
         </h2>
-        <div className="pl-9 space-y-3 text-sm text-white/60">
-          <p>L'inscription est rapide et sans mot de passe :</p>
+        <div className="pl-9 space-y-4 text-sm text-white/60">
+          <p>L'inscription se fait avec un email et un mot de passe :</p>
           <ol className="space-y-2 list-decimal list-inside">
-            <li>Cliquez sur <span className="text-white">"S'inscrire"</span> depuis la page d'accueil</li>
-            <li>Entrez votre adresse email</li>
-            <li>Vous recevez un <span className="text-white">lien magique</span> par email — cliquez dessus pour vous connecter</li>
-            <li>Complétez votre profil (nom, téléphone, pays)</li>
+            <li>Cliquez sur <span className="text-white">"S'inscrire"</span> depuis la page de connexion</li>
+            <li>Entrez votre <span className="text-white">nom complet</span>, votre <span className="text-white">adresse email</span> et un <span className="text-white">mot de passe</span></li>
+            <li>Vous pouvez entrer un <span className="text-white">code de parrainage</span> si vous en avez un</li>
+            <li>Acceptez les conditions d'utilisation et cliquez sur <span className="text-white">"Continuer"</span></li>
           </ol>
-          <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 mt-3">
-            <div className="flex items-start gap-2">
-              <Shield className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-blue-200 text-sm font-medium">Vérification KYC</p>
-                <p className="text-blue-100/70 text-xs mt-1">
-                  Pour des montants élevés, fournissez: pièce d'identité (CNI/passeport), selfie avec la pièce, et justificatif de domicile. Validation sous 24-48h.
-                </p>
-              </div>
-            </div>
-          </div>
+
+          <Screenshot src={guideSignup} alt="Page d'inscription Terex" caption="Page d'inscription — Nom, email et mot de passe" />
+
+          <p className="mt-2">Pour vous connecter ensuite, entrez simplement votre email et mot de passe :</p>
+
+          <Screenshot src={guideLogin} alt="Page de connexion Terex" caption="Page de connexion — Email et mot de passe" />
+
+          <InfoBox icon={Shield} color="blue" title="Vérification KYC">
+            <p>Pour des montants élevés, fournissez : pièce d'identité (CNI/passeport), selfie avec la pièce, et justificatif de domicile. Validation sous 24-48h.</p>
+          </InfoBox>
         </div>
       </section>
 
       <div className="border-t border-dashed border-white/10" />
 
-      {/* Step 2: Buy USDT */}
+      {/* ─── ÉTAPE 2 : ACHETER DES USDT ─── */}
       <section className="space-y-4">
         <h2 className="text-white font-medium text-lg flex items-center gap-2">
           <StepNumber n={2} />
-          Acheter des USDT
+          Acheter des USDT — Le processus complet
         </h2>
-        <div className="pl-9 space-y-4 text-sm text-white/60">
-          <p>Accédez à <span className="text-white">"Acheter USDT"</span> depuis le tableau de bord.</p>
+        <div className="pl-9 space-y-6 text-sm text-white/60">
 
-          <div className="space-y-4">
-            <div>
-              <p className="text-white/80 font-medium mb-2">2.1 — Entrez le montant en FCFA</p>
-              <p>Le convertisseur affiche en temps réel le nombre d'USDT que vous recevrez.</p>
-              <Screenshot src={dashboardBuyUsdt} alt="Écran d'achat USDT - Saisie du montant" />
-            </div>
-
-            <div>
-              <p className="text-white/80 font-medium mb-2">2.2 — Choisissez votre destination</p>
-              <p>Sélectionnez où recevoir vos USDT :</p>
-              <ul className="space-y-1 mt-2">
-                <li className="flex items-center gap-2">
-                  <img src={usdtLogo} alt="USDT" className="w-4 h-4" />
-                  <span><span className="text-white">Adresse wallet</span> — collez votre adresse TRC20, BEP20 ou ERC20</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-4 h-4 bg-yellow-500 rounded text-[8px] flex items-center justify-center font-bold text-black">B</span>
-                  <span><span className="text-white">Binance Pay</span> — entrez simplement votre email Binance</span>
-                </li>
-              </ul>
-              <Screenshot src={dashboardDestination} alt="Écran de sélection de destination" />
-            </div>
-
-            <div>
-              <p className="text-white/80 font-medium mb-2">2.3 — Confirmez votre commande</p>
-              <p>Vérifiez le récapitulatif : montant, taux, frais, USDT reçus.</p>
-              <Screenshot src={dashboardConfirm} alt="Écran de confirmation de commande" />
-            </div>
-
-            <div>
-              <p className="text-white/80 font-medium mb-2">2.4 — Payez automatiquement</p>
-              <p>Vous êtes redirigé vers votre application de paiement. Le montant est prélevé automatiquement :</p>
-              <div className="flex gap-3 mt-3">
-                <div className="flex items-center gap-2 bg-terex-darker/80 rounded-lg px-4 py-3 border border-white/10">
-                  <img src={waveLogo} alt="Wave" className="w-6 h-6 object-contain" />
-                  <span className="text-white text-sm">Wave</span>
-                </div>
-                <div className="flex items-center gap-2 bg-terex-darker/80 rounded-lg px-4 py-3 border border-white/10">
-                  <img src={orangeMoneyLogo} alt="Orange Money" className="w-6 h-6 object-contain" />
-                  <span className="text-white text-sm">Orange Money</span>
-                </div>
-              </div>
-              <p className="mt-3 text-white/40 text-xs">
-                Pas besoin de faire un transfert manuel. NabooPay prélève directement de votre compte Wave ou Orange Money.
-              </p>
-            </div>
-
-            <div>
-              <p className="text-white/80 font-medium mb-2">2.5 — Recevez vos USDT</p>
-              <p>Après confirmation du paiement, vos USDT sont envoyés <span className="text-white">automatiquement</span> à votre wallet via l'API Binance. Délai moyen : 5-15 minutes.</p>
-            </div>
+          {/* 2.1 Montant */}
+          <div>
+            <p className="text-white/80 font-medium mb-2">2.1 — Entrez le montant en FCFA</p>
+            <p>Accédez à <span className="text-white">"Acheter"</span> depuis la barre de navigation. Le convertisseur affiche en temps réel le nombre d'USDT que vous recevrez selon le taux actuel.</p>
+            <Screenshot src={guideBuyUsdt} alt="Saisie du montant FCFA" caption="Entrez le montant en CFA — conversion USDT en temps réel" />
           </div>
 
-          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-            <div className="flex items-start gap-2">
-              <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-red-200 text-sm font-medium">Attention</p>
-                <ul className="text-red-100/70 text-xs mt-1 space-y-1">
-                  <li>• Vérifiez 3 fois l'adresse wallet avant de confirmer</li>
-                  <li>• L'adresse doit correspondre au réseau choisi (TRC20 recommandé)</li>
-                  <li>• Une erreur d'adresse = perte définitive des fonds</li>
-                </ul>
-              </div>
-            </div>
+          {/* 2.2 Destination */}
+          <div>
+            <p className="text-white/80 font-medium mb-2">2.2 — Choisissez votre destination</p>
+            <p>Sélectionnez le réseau blockchain sur lequel vous souhaitez recevoir vos USDT :</p>
+            <ul className="space-y-1 mt-2 ml-2">
+              <li>• <span className="text-white">TRC20</span> — Réseau Tron (frais les plus bas)</li>
+              <li>• <span className="text-white">BEP20</span> — Binance Smart Chain</li>
+              <li>• <span className="text-white">ERC20</span> — Réseau Ethereum</li>
+              <li>• <span className="text-white">Polygon</span> — Réseau Polygon</li>
+              <li>• <span className="text-white">Solana</span> — Réseau Solana</li>
+              <li>• <span className="text-white">Aptos</span> — Réseau Aptos</li>
+              <li>• <span className="text-white">Binance</span> — Via Binance Pay (email Binance)</li>
+            </ul>
+            <Screenshot src={guideDestination} alt="Sélection de la destination" caption="Choisissez votre réseau — TRC20, BEP20, Polygon, Solana, etc." />
           </div>
+
+          {/* 2.3 Adresse */}
+          <div>
+            <p className="text-white/80 font-medium mb-2">2.3 — Entrez votre adresse de réception</p>
+            <p>Collez l'adresse de votre wallet correspondant au réseau choisi. <span className="text-white">Vérifiez bien que l'adresse correspond au bon réseau.</span></p>
+            <Screenshot src={guideWalletAddress} alt="Saisie de l'adresse wallet" caption="Collez votre adresse de réception — vérifiez 3 fois !" />
+          </div>
+
+          {/* 2.4 Confirmation */}
+          <div>
+            <p className="text-white/80 font-medium mb-2">2.4 — Confirmez votre commande</p>
+            <p>Vérifiez le récapitulatif de votre achat : montant en CFA, USDT que vous recevrez, réseau de destination et adresse wallet.</p>
+            <Screenshot src={guideConfirmOrder} alt="Confirmation de la commande" caption="Vérifiez les détails — Montant, USDT, destination et adresse" />
+          </div>
+
+          {/* 2.5 Paiement NabooPay */}
+          <div>
+            <p className="text-white/80 font-medium mb-2">2.5 — Paiement automatique via NabooPay</p>
+            <p>En cliquant sur <span className="text-white">"Confirmer et payer"</span>, vous êtes redirigé vers la page de paiement sécurisée NabooPay. Choisissez votre méthode de paiement :</p>
+            <ul className="space-y-1 mt-2 ml-2">
+              <li>• <span className="text-white">Wave</span> — Paiement mobile sécurisé (le plus populaire)</li>
+              <li>• <span className="text-white">Orange Money</span> — Scannez le QR code pour payer</li>
+            </ul>
+            <p className="mt-2">Remplissez vos informations (prénom, nom, numéro de téléphone) et le résumé de la commande s'affiche avec les frais.</p>
+            <Screenshot src={guideNaboopayCheckout} alt="Page de paiement NabooPay" caption="NabooPay — Choisissez Wave ou Orange Money" />
+            <Screenshot src={guideNaboopaySummary} alt="Résumé et paiement NabooPay" caption="Résumé de la commande — Sous-total, frais et montant total" />
+          </div>
+
+          {/* 2.6 Confirmation Wave */}
+          <div>
+            <p className="text-white/80 font-medium mb-2">2.6 — Confirmation sur Wave</p>
+            <p>Si vous choisissez Wave, l'application Wave s'ouvre automatiquement sur votre téléphone avec une demande de confirmation. Le montant est <span className="text-white">prélevé automatiquement</span> — pas besoin de faire de transfert manuel.</p>
+            <Screenshot src={guideWaveConfirm} alt="Confirmation de paiement Wave" caption="Wave — Confirmez le paiement automatique d'un simple clic" />
+          </div>
+
+          {/* 2.7 Réception */}
+          <div>
+            <p className="text-white/80 font-medium mb-2">2.7 — Recevez vos USDT</p>
+            <p>Après confirmation du paiement, vos USDT sont envoyés <span className="text-white">automatiquement</span> à votre wallet via l'API Binance. Délai moyen : <span className="text-white">5-15 minutes</span>.</p>
+          </div>
+
+          <InfoBox icon={AlertTriangle} color="red" title="Attention — Vérifiez votre adresse !">
+            <ul className="space-y-1">
+              <li>• Vérifiez 3 fois l'adresse wallet avant de confirmer</li>
+              <li>• L'adresse doit correspondre au réseau choisi</li>
+              <li>• Une erreur d'adresse = perte définitive des fonds</li>
+            </ul>
+          </InfoBox>
         </div>
       </section>
 
       <div className="border-t border-dashed border-white/10" />
 
-      {/* Step 3: Sell USDT */}
+      {/* ─── ÉTAPE 3 : VENDRE DES USDT ─── */}
       <section className="space-y-4">
         <h2 className="text-white font-medium text-lg flex items-center gap-2">
           <StepNumber n={3} />
           Vendre des USDT
         </h2>
-        <div className="pl-9 space-y-3 text-sm text-white/60">
-          <p>Convertissez vos USDT en FCFA directement sur votre Orange Money ou Wave.</p>
+        <div className="pl-9 space-y-4 text-sm text-white/60">
+          <p>Convertissez vos USDT en FCFA directement sur votre Wave ou Orange Money.</p>
+
+          <Screenshot src={guideSellUsdt} alt="Page Vendre USDT" caption="Vendre USDT — Entrez le montant et voyez la conversion en CFA" />
+
           <ol className="space-y-2 list-decimal list-inside">
-            <li>Accédez à <span className="text-white">"Vendre USDT"</span></li>
-            <li>Indiquez le montant d'USDT à vendre (min. 10 USDT)</li>
-            <li>Choisissez votre méthode de réception :
-              <div className="flex items-center gap-4 mt-2 ml-4">
-                <span className="flex items-center gap-1.5">
-                  <img src={orangeMoneyLogo} alt="Orange Money" className="w-4 h-4 object-contain" />
-                  Orange Money
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <img src={waveLogo} alt="Wave" className="w-4 h-4 object-contain" />
-                  Wave
-                </span>
-              </div>
-            </li>
-            <li>Entrez votre numéro de téléphone (format international sans le +)</li>
+            <li>Accédez à <span className="text-white">"Vendre"</span> depuis la barre de navigation</li>
+            <li>Entrez le montant d'USDT que vous souhaitez vendre</li>
+            <li>Le taux de conversion et le montant en CFA s'affichent en temps réel</li>
+            <li>Choisissez votre méthode de réception : <span className="text-white">Wave</span> ou <span className="text-white">Orange Money</span></li>
+            <li>Entrez votre numéro de téléphone</li>
             <li>Terex génère une <span className="text-white">adresse unique</span> — envoyez-y vos USDT depuis votre wallet</li>
-            <li>Collez le <span className="text-white">hash de transaction</span> dans votre tableau de bord</li>
+            <li>Collez le <span className="text-white">hash de transaction</span> pour confirmer l'envoi</li>
             <li>Recevez votre argent en <span className="text-white">10-30 minutes</span></li>
           </ol>
         </div>
@@ -208,7 +237,7 @@ export function UserGuide({ onBack }: UserGuideProps) {
 
       <div className="border-t border-dashed border-white/10" />
 
-      {/* Step 4: International Transfer */}
+      {/* ─── ÉTAPE 4 : TRANSFERTS INTERNATIONAUX ─── */}
       <section className="space-y-4">
         <h2 className="text-white font-medium text-lg flex items-center gap-2">
           <StepNumber n={4} />
@@ -217,16 +246,16 @@ export function UserGuide({ onBack }: UserGuideProps) {
         <div className="pl-9 space-y-3 text-sm text-white/60">
           <p>Envoyez de l'argent vers l'Afrique de l'Ouest rapidement et à moindre coût.</p>
           <ol className="space-y-2 list-decimal list-inside">
-            <li>Accédez à <span className="text-white">"Virement International"</span></li>
+            <li>Accédez à <span className="text-white">"Virement"</span> depuis la barre de navigation</li>
             <li>Choisissez le pays de destination (Sénégal, Côte d'Ivoire, Mali, etc.)</li>
             <li>Entrez le montant en FCFA à envoyer</li>
             <li>Remplissez les infos du destinataire :
               <ul className="ml-4 mt-1 space-y-1 list-disc list-inside text-white/50">
                 <li>Nom complet</li>
-                <li>Numéro Orange Money ou Wave</li>
+                <li>Numéro Wave ou Orange Money</li>
               </ul>
             </li>
-            <li>Validez — le paiement est prélevé automatiquement de votre Wave/Orange Money</li>
+            <li>Validez — le paiement est prélevé automatiquement via NabooPay</li>
             <li>Le destinataire reçoit l'argent en <span className="text-white">15-60 minutes</span></li>
           </ol>
         </div>
@@ -234,20 +263,17 @@ export function UserGuide({ onBack }: UserGuideProps) {
 
       <div className="border-t border-dashed border-white/10" />
 
-      {/* Step 5: Dashboard */}
+      {/* ─── ÉTAPE 5 : SUIVI DES TRANSACTIONS ─── */}
       <section className="space-y-4">
         <h2 className="text-white font-medium text-lg flex items-center gap-2">
           <StepNumber n={5} />
-          Tableau de bord et suivi
+          Suivi de vos transactions
         </h2>
-        <div className="pl-9 space-y-3 text-sm text-white/60">
-          <p>Votre tableau de bord centralise toute votre activité :</p>
-          <Screenshot src={dashboardPreview} alt="Aperçu du tableau de bord Terex" />
-          <ul className="space-y-1.5">
-            <li>• <span className="text-white">Transactions récentes</span> — statut en temps réel</li>
-            <li>• <span className="text-white">Historique complet</span> — filtres par date et type</li>
-            <li>• <span className="text-white">Profil et KYC</span> — gérez vos informations</li>
-          </ul>
+        <div className="pl-9 space-y-4 text-sm text-white/60">
+          <p>Retrouvez l'historique complet de vos transactions avec tous les détails : type, montant, statut, réseau, adresse wallet et date.</p>
+
+          <Screenshot src={guideTransactionDetails} alt="Détails de transaction" caption="Historique — Cliquez sur une transaction pour voir tous les détails" />
+
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
             <div className="bg-yellow-500/10 border border-yellow-500/20 p-2.5 rounded-lg text-center">
               <p className="text-yellow-400 text-xs font-medium">En attente</p>
@@ -267,7 +293,27 @@ export function UserGuide({ onBack }: UserGuideProps) {
 
       <div className="border-t border-dashed border-white/10" />
 
-      {/* Security */}
+      {/* ─── ÉTAPE 6 : TABLEAU DE BORD ─── */}
+      <section className="space-y-4">
+        <h2 className="text-white font-medium text-lg flex items-center gap-2">
+          <StepNumber n={6} />
+          Votre tableau de bord
+        </h2>
+        <div className="pl-9 space-y-3 text-sm text-white/60">
+          <p>Le tableau de bord centralise toute votre activité sur Terex :</p>
+          <Screenshot src={dashboardPreview} alt="Tableau de bord Terex" caption="Tableau de bord — Vue d'ensemble de votre activité" />
+          <ul className="space-y-1.5">
+            <li>• <span className="text-white">Transactions récentes</span> — statut en temps réel</li>
+            <li>• <span className="text-white">Historique complet</span> — filtres par date et type</li>
+            <li>• <span className="text-white">Profil et KYC</span> — gérez vos informations</li>
+            <li>• <span className="text-white">Actions rapides</span> — Acheter, Vendre, Virement</li>
+          </ul>
+        </div>
+      </section>
+
+      <div className="border-t border-dashed border-white/10" />
+
+      {/* Sécurité */}
       <section className="space-y-4">
         <h2 className="text-white font-medium text-lg flex items-center gap-2">
           <Shield className="w-5 h-5 text-terex-accent" />
@@ -278,10 +324,10 @@ export function UserGuide({ onBack }: UserGuideProps) {
             <div className="bg-terex-gray/60 rounded-lg p-4 border border-white/10">
               <p className="text-white font-medium text-sm mb-2">Sécurité du compte</p>
               <ul className="space-y-1 text-xs">
-                <li>• Email sécurisé avec 2FA activée</li>
-                <li>• Déconnexion sur appareils publics</li>
+                <li>• Utilisez un mot de passe fort et unique</li>
+                <li>• Déconnectez-vous sur les appareils publics</li>
                 <li>• Vérifiez toujours l'URL : terex.sn</li>
-                <li>• Complétez votre KYC</li>
+                <li>• Complétez votre vérification KYC</li>
               </ul>
             </div>
             <div className="bg-terex-gray/60 rounded-lg p-4 border border-white/10">
