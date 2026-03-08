@@ -24,7 +24,7 @@ const stats = [
     suffix: 'pays',
     label: 'Pays couverts',
     description: "En Afrique de l'Ouest",
-    glow: 'from-secondary/50 to-transparent',
+    glow: 'from-terex-accent/15 to-transparent',
   },
   {
     icon: Shield,
