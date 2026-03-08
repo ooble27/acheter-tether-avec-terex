@@ -648,7 +648,7 @@ export const supportFlows: SupportFlow[] = [
           },
           {
             text: "Je veux renforcer la sécurité de mon compte",
-            solution: "Mesures recommandées:\n\n✅ Utilisez un email sécurisé (Gmail, Outlook) avec 2FA activée\n✅ Complétez la vérification KYC\n✅ Ne sauvegardez pas les liens de connexion\n✅ Déconnectez-vous après chaque session\n✅ N'utilisez pas de WiFi public\n✅ Vérifiez toujours l'URL: terex.sn\n✅ Ne partagez jamais vos accès\n\nEn cas de doute: WhatsApp +1 4182619091"
+            solution: "Mesures recommandées:\n\n✅ Utilisez un email sécurisé (Gmail, Outlook) avec 2FA activée\n✅ Complétez la vérification KYC\n✅ Utilisez un mot de passe fort et unique\n✅ Déconnectez-vous après chaque session\n✅ N'utilisez pas de WiFi public\n✅ Vérifiez toujours l'URL: terangaexchange.com\n✅ Ne partagez jamais vos accès\n\nEn cas de doute: WhatsApp +1 4182619091"
           }
         ]
       },
