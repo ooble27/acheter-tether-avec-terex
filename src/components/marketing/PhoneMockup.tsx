@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Globe, Handshake, Star, Zap, Clock, Shield, Users, Award } from 'lucide-react';
+import { Globe, Handshake, Clock } from 'lucide-react';
 
 const BitcoinLogo = ({ className }: { className?: string }) => (
   <img src="/bitcoin-logo.png" alt="Bitcoin Logo" className={className} />
