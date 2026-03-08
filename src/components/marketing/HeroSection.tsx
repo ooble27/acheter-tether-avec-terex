@@ -157,7 +157,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 onClick={handleHowItWorks}
                 variant="outline" 
                 size="lg"
-                className="border-terex-gray/50 text-foreground hover:bg-terex-gray/20 px-8 py-4 h-14 rounded-full text-lg backdrop-blur-sm transition-all duration-300 hover:border-terex-accent/40"
+                className="border-terex-gray/50 text-foreground hover:bg-terex-gray/20 px-8 py-4 h-14 rounded-xl text-lg backdrop-blur-sm transition-all duration-300 hover:border-terex-accent/40"
               >
                 Comment ça marche
               </Button>
