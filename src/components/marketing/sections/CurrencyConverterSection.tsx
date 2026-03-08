@@ -11,9 +11,6 @@ export function CurrencyConverterSection() {
               Découvrez nos <span className="text-terex-accent">Taux en temps réel</span>
             </h2>
           </div>
-          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-8 font-light">
-            Utilisez nos convertisseurs pour connaître instantanément nos taux USDT et virements internationaux
-          </p>
         </div>
         
         <UnifiedConverter />
