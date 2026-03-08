@@ -8,7 +8,7 @@ const stats = [
     suffix: 'CFA',
     label: 'Volume mensuel',
     description: 'Traités chaque mois',
-    glow: 'from-terex-accent/30 to-transparent',
+    glow: 'from-terex-accent/20 to-transparent',
   },
   {
     icon: Users,
@@ -16,7 +16,7 @@ const stats = [
     suffix: '',
     label: 'Utilisateurs actifs',
     description: 'Font confiance à Terex',
-    glow: 'from-primary/30 to-transparent',
+    glow: 'from-terex-accent/15 to-transparent',
   },
   {
     icon: Globe,
@@ -24,7 +24,7 @@ const stats = [
     suffix: 'pays',
     label: 'Pays couverts',
     description: "En Afrique de l'Ouest",
-    glow: 'from-secondary/50 to-transparent',
+    glow: 'from-terex-accent/15 to-transparent',
   },
   {
     icon: Shield,
@@ -39,8 +39,8 @@ const stats = [
 export function StatsSection() {
   return (
     <section className="py-24 sm:py-28 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,hsl(var(--primary)/0.15),transparent_40%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,hsl(var(--accent)/0.12),transparent_40%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(59,150,143,0.06),transparent_40%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(59,150,143,0.04),transparent_40%)]" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <AnimatedSection className="text-center mb-14 sm:mb-16">
