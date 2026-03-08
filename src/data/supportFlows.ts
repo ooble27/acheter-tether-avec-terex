@@ -150,8 +150,8 @@ export const supportFlows: SupportFlow[] = [
             solution: "Si vous ne recevez pas l'email de confirmation:\n• Vérifiez vos spams/courriers indésirables\n• Attendez 5 minutes (l'email peut prendre du temps)\n• Vérifiez que vous avez bien entré votre email\n• Ajoutez noreply@terangaexchange.com à vos contacts\n\nToujours rien ? Contactez-nous sur WhatsApp: +1 4182619091"
           },
           {
-            text: "Le lien de connexion a expiré",
-            solution: "Les liens de connexion expirent après 1 heure pour votre sécurité. Demandez simplement un nouveau lien:\n1. Allez sur terex.sn\n2. Cliquez sur 'Se connecter'\n3. Entrez votre email\n4. Recevez un nouveau lien valide\n\nPour éviter l'expiration, utilisez le lien dès réception."
+            text: "J'ai oublié mon mot de passe",
+            solution: "Pour réinitialiser votre mot de passe:\n1. Allez sur terangaexchange.com\n2. Cliquez sur 'Se connecter'\n3. Cliquez sur 'Mot de passe oublié'\n4. Entrez votre email\n5. Suivez le lien reçu pour créer un nouveau mot de passe\n\nLe lien de réinitialisation expire après 1 heure."
           },
           {
             text: "Mon compte est bloqué",
