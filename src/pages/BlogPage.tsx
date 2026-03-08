@@ -5,7 +5,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
-import { ChevronRight, GraduationCap, FileText, Menu, X, Search } from "lucide-react";
+import { ChevronRight, GraduationCap, FileText, Menu, Search } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 
