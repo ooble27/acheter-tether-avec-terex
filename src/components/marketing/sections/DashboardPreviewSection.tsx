@@ -65,7 +65,9 @@ export function DashboardPreviewSection() {
                 <DesktopFrame />
               </div>
               <div className={`${activeView === 'mobile' ? 'block' : 'hidden'}`}>
-                <PhoneMockup />
+                <div className="scale-100">
+                  <PhoneMockup />
+                </div>
               </div>
             </div>
           </div>
