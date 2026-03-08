@@ -126,8 +126,9 @@ export function FooterSection() {
                   <li key={linkIndex}>
                     <button
                       onClick={() => navigate(link.href)}
-                      className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm block"
+                      className="flex items-center gap-2 text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm"
                     >
+                      <link.icon className="w-3.5 h-3.5 opacity-50" />
                       {link.label}
                     </button>
                   </li>
