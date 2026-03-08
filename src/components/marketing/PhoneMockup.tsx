@@ -112,7 +112,7 @@ export function PhoneMockup() {
                       </div>
                       <div className="text-right">
                         <p className="text-red-400 text-[10px] font-medium">-300 USDT</p>
-                        <p className="text-gray-500 text-[9px]">414 CAD</p>
+                        <p className="text-gray-500 text-[9px]">195 000 CFA</p>
                       </div>
                     </div>
                     <div className="flex items-center justify-between p-1.5 bg-terex-dark/50 rounded-lg">
