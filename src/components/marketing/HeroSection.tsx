@@ -56,7 +56,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               <DeviceMockups />
             </div>
             
-            <p className="text-lg sm:text-xl text-gray-400 mb-8 max-w-2xl leading-relaxed mx-auto lg:mx-0 font-light">
+            <p className="hidden sm:block text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl leading-relaxed mx-auto lg:mx-0 font-light">
               Achetez et vendez des USDT facilement, 
               effectuez des transferts d'argent vers l'Afrique instantanément. Rapide, sécurisé et sans commission.
             </p>
