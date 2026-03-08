@@ -155,139 +155,83 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
               <span className="ml-2 text-lg font-semibold text-white">Terex</span>
             </div>
 
-            {/* Hamburger Menu */}
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-white hover:bg-terex-accent/20"
-                >
-                  <Menu className="h-6 w-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-full bg-terex-darker border-none p-0">
-                <ScrollArea className="h-full">
-                  <div className="flex flex-col min-h-full pt-safe">
-                    {/* Header avec logo */}
-                    <div className="p-6 border-b border-terex-gray/20">
-                      <div className="flex items-center space-x-3">
-                        <img 
-                          src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-                          alt="Terex Logo" 
-                          className="w-10 h-10 rounded-lg"
-                        />
-                        <div>
-                          <h2 className="text-lg font-semibold text-white">Navigation</h2>
-                        </div>
-                      </div>
-                    </div>
+            {/* Animated Hamburger Button */}
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="relative w-10 h-10 flex items-center justify-center focus:outline-none z-[60]"
+              aria-label="Menu"
+            >
+              <div className="flex flex-col items-end gap-[5px]">
+                <span className={`block h-[2px] bg-white rounded-full transition-all duration-300 ease-out ${menuOpen ? 'w-6 rotate-45 translate-y-[7px]' : 'w-6'}`} />
+                <span className={`block h-[2px] bg-white rounded-full transition-all duration-300 ease-out ${menuOpen ? 'w-0 opacity-0' : 'w-4'}`} />
+                <span className={`block h-[2px] bg-white rounded-full transition-all duration-300 ease-out ${menuOpen ? 'w-6 -rotate-45 -translate-y-[7px]' : 'w-5'}`} />
+              </div>
+            </button>
 
-                    {/* Navigation Section */}
-                    <div className="p-4 space-y-2">
-                      {navigationItems.map((item) => {
-                        const IconComponent = item.icon;
-                        return (
-                          <Button
-                            key={item.href}
-                            variant="ghost"
-                            onClick={() => navigate(item.href)}
-                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
-                          >
-                            <div className="flex items-center space-x-4 w-full">
-                              <div className="p-2 rounded-lg bg-terex-gray/30">
-                                <IconComponent className="h-5 w-5" />
-                              </div>
-                              <div className="flex-1 text-left">
-                                <div className="font-medium text-sm">{item.label}</div>
-                                <div className="text-xs opacity-75">{item.description}</div>
-                              </div>
-                            </div>
-                          </Button>
-                        );
-                      })}
-                    </div>
-
-                    {/* Support Section */}
-                    <div className="px-4 pb-4 space-y-2">
-                      <div className="pt-4 pb-2">
-                        <div className="flex items-center space-x-2">
-                          <div className="h-px bg-terex-gray/40 flex-1"></div>
-                          <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Support</span>
-                          <div className="h-px bg-terex-gray/40 flex-1"></div>
+            {/* Fullscreen overlay menu */}
+            <div className={`fixed inset-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+            }`}>
+              {/* Backdrop blur */}
+              <div className="absolute inset-0 bg-terex-darker/98 backdrop-blur-xl" onClick={() => setMenuOpen(false)} />
+              
+              <div className="relative h-full flex flex-col justify-between px-8 py-24 pb-safe overflow-y-auto">
+                {/* Nav items - large, staggered */}
+                <nav className="space-y-1">
+                  {[...navigationItems, ...supportItems].map((item, i) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <button
+                        key={item.href}
+                        onClick={() => { navigate(item.href); setMenuOpen(false); }}
+                        className={`group w-full flex items-center gap-4 py-4 border-b border-white/5 transition-all duration-500 ease-out ${
+                          menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                        }`}
+                        style={{ transitionDelay: menuOpen ? `${i * 60 + 100}ms` : '0ms' }}
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-terex-accent/20 transition-colors duration-300">
+                          <IconComponent className="w-5 h-5 text-gray-400 group-hover:text-terex-accent transition-colors" />
                         </div>
-                      </div>
-                      {supportItems.map((item) => {
-                        const IconComponent = item.icon;
-                        return (
-                          <Button
-                            key={item.href}
-                            variant="ghost"
-                            onClick={() => navigate(item.href)}
-                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
-                          >
-                            <div className="flex items-center space-x-4 w-full">
-                              <div className="p-2 rounded-lg bg-terex-gray/30">
-                                <IconComponent className="h-5 w-5" />
-                              </div>
-                              <div className="flex-1 text-left">
-                                <div className="font-medium text-sm">{item.label}</div>
-                                <div className="text-xs opacity-75">{item.description}</div>
-                              </div>
-                            </div>
-                          </Button>
-                        );
-                      })}
-                    </div>
-
-                    {/* Footer avec bouton de connexion */}
-                    <div className="p-4 border-t border-terex-gray/20 mt-auto pb-safe">
-                      {user ? (
-                        <div className="space-y-2">
-                          <Button
-                            onClick={onShowDashboard}
-                            variant="ghost"
-                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
-                          >
-                            <div className="flex items-center space-x-4 w-full">
-                              <div className="p-2 rounded-lg bg-terex-gray/30">
-                                <User className="h-5 w-5" />
-                              </div>
-                              <div className="flex-1 text-left">
-                                <div className="font-medium text-sm">Mon Dashboard</div>
-                                <div className="text-xs opacity-75">Accéder à mon compte</div>
-                              </div>
-                            </div>
-                          </Button>
-                          <Button
-                            onClick={handleLogout}
-                            variant="ghost"
-                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
-                          >
-                            <div className="flex items-center space-x-4 w-full">
-                              <div className="p-2 rounded-lg bg-terex-gray/30">
-                                <LogOut className="h-5 w-5" />
-                              </div>
-                              <div className="flex-1 text-left">
-                                <div className="font-medium text-sm">Déconnexion</div>
-                                <div className="text-xs opacity-75">Se déconnecter</div>
-                              </div>
-                            </div>
-                          </Button>
+                        <div className="text-left">
+                          <span className="text-xl font-light text-white group-hover:text-terex-accent transition-colors">{item.label}</span>
+                          <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
                         </div>
-                      ) : (
-                        <Button
-                          onClick={() => navigate('/auth')}
-                          className="w-full bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-medium py-6 rounded-xl shadow-lg shadow-terex-accent/25"
-                        >
-                          Se Connecter
-                        </Button>
-                      )}
+                      </button>
+                    );
+                  })}
+                </nav>
+
+                {/* Footer CTA */}
+                <div className={`pt-8 transition-all duration-500 ease-out ${
+                  menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                }`} style={{ transitionDelay: menuOpen ? '500ms' : '0ms' }}>
+                  {user ? (
+                    <div className="space-y-3">
+                      <Button
+                        onClick={() => { onShowDashboard?.(); setMenuOpen(false); }}
+                        className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-medium py-6 rounded-2xl"
+                      >
+                        <User className="w-5 h-5 mr-2" />
+                        Mon Dashboard
+                      </Button>
+                      <button
+                        onClick={() => { handleLogout(); setMenuOpen(false); }}
+                        className="w-full text-center text-sm text-gray-500 hover:text-red-400 transition-colors py-2"
+                      >
+                        Déconnexion
+                      </button>
                     </div>
-                  </div>
-                </ScrollArea>
-              </SheetContent>
-            </Sheet>
+                  ) : (
+                    <Button
+                      onClick={() => { navigate('/auth'); setMenuOpen(false); }}
+                      className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-medium py-6 rounded-2xl shadow-lg shadow-terex-accent/20"
+                    >
+                      Se Connecter
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
