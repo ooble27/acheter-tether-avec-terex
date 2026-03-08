@@ -76,151 +76,69 @@ const SupportPage = () => {
       </div>
 
       {/* Contact Options */}
-      <div className="py-24 bg-terex-dark">
+      <div className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Comment pouvons-nous vous aider ?</h2>
-            <p className="text-gray-300 text-lg">Choisissez l'option qui vous convient le mieux</p>
+            <h2 className="text-3xl font-light text-foreground mb-4">Comment pouvons-nous vous aider ?</h2>
+            <p className="text-muted-foreground">Choisissez l'option qui vous convient le mieux</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {/* WhatsApp Support */}
-            <div className="group relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 via-terex-accent/10 to-terex-accent/20 rounded-2xl blur opacity-25 group-hover:opacity-75 transition-all duration-500"></div>
-              
-              <div className="relative bg-gradient-to-br from-terex-darker to-terex-gray/30 rounded-2xl p-8 border border-terex-gray/50 group-hover:border-terex-accent/50">
-                <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mr-4">
-                    <MessageCircle className="w-6 h-6 text-green-400" />
+            {[
+              {
+                icon: MessageCircle,
+                title: 'WhatsApp',
+                description: 'Contactez-nous directement sur WhatsApp pour une assistance rapide.',
+                badge: 'Réponse immédiate',
+                buttonText: '+1 (418) 261-9091',
+                onClick: () => window.open('https://wa.me/+14182619091', '_blank'),
+              },
+              {
+                icon: Mail,
+                title: 'Support par email',
+                description: 'Envoyez-nous un email et nous vous répondrons rapidement.',
+                badge: 'Réponse en 24 heures',
+                buttonText: 'terangaexchange@gmail.com',
+                onClick: () => window.location.href = 'mailto:terangaexchange@gmail.com',
+              },
+              {
+                icon: Phone,
+                title: 'Support téléphonique',
+                description: 'Appelez-nous pour une assistance immédiate (Canada/International).',
+                badge: 'Disponible 24/7',
+                buttonText: '+1 (418) 261-9091',
+                onClick: () => window.location.href = 'tel:+14182619091',
+              },
+            ].map((item, index) => {
+              const IconComponent = item.icon;
+              return (
+                <div key={index} className="rounded-2xl p-8 border border-terex-gray/30 hover:border-terex-accent/40 transition-all duration-300">
+                  <div className="flex items-center mb-6">
+                    <div className="w-12 h-12 bg-terex-accent/10 rounded-xl flex items-center justify-center mr-4">
+                      <IconComponent className="w-6 h-6 text-terex-accent" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-foreground">{item.title}</h3>
                   </div>
-                  <h3 className="text-2xl font-bold text-white">WhatsApp</h3>
+                  
+                  <p className="text-muted-foreground mb-6 leading-relaxed">
+                    {item.description}
+                  </p>
+                  
+                  <Badge className="bg-terex-accent/10 text-terex-accent border-terex-accent/20">
+                    <Clock className="w-3 h-3 mr-1" />
+                    {item.badge}
+                  </Badge>
+                  
+                  <Button 
+                    className="mt-6 bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-6 py-3 w-full"
+                    onClick={item.onClick}
+                  >
+                    {item.buttonText}
+                    <ArrowRight className="ml-2 w-4 h-4" />
+                  </Button>
                 </div>
-                
-                <p className="text-gray-300 mb-6 leading-relaxed">
-                  Contactez-nous directement sur WhatsApp pour une assistance rapide.
-                </p>
-                
-                <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                  <Clock className="w-3 h-3 mr-1" />
-                  Réponse immédiate
-                </Badge>
-                
-                <Button 
-                  className="mt-6 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 w-full"
-                  onClick={() => window.open('https://wa.me/+14182619091', '_blank')}
-                >
-                  +1 (418) 261-9091
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Email Support */}
-            <div className="group relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 via-terex-accent/10 to-terex-accent/20 rounded-2xl blur opacity-25 group-hover:opacity-75 transition-all duration-500"></div>
-              
-              <div className="relative bg-gradient-to-br from-terex-darker to-terex-gray/30 rounded-2xl p-8 border border-terex-gray/50 group-hover:border-terex-accent/50">
-                <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 bg-terex-accent/20 rounded-xl flex items-center justify-center mr-4">
-                    <Mail className="w-6 h-6 text-terex-accent" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white">Support par email</h3>
-                </div>
-                
-                <p className="text-gray-300 mb-6 leading-relaxed">
-                  Envoyez-nous un email et nous vous répondrons rapidement.
-                </p>
-                
-                <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">
-                  <Clock className="w-3 h-3 mr-1" />
-                  Réponse en 24 heures
-                </Badge>
-                
-                <Button 
-                  className="mt-6 bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-6 py-3 w-full"
-                  onClick={() => window.location.href = 'mailto:terangaexchange@gmail.com'}
-                >
-                  terangaexchange@gmail.com
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Phone Support */}
-            <div className="group relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 via-terex-accent/10 to-terex-accent/20 rounded-2xl blur opacity-25 group-hover:opacity-75 transition-all duration-500"></div>
-              
-              <div className="relative bg-gradient-to-br from-terex-darker to-terex-gray/30 rounded-2xl p-8 border border-terex-gray/50 group-hover:border-terex-accent/50">
-                <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 bg-terex-accent/20 rounded-xl flex items-center justify-center mr-4">
-                    <Phone className="w-6 h-6 text-terex-accent" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white">Support téléphonique</h3>
-                </div>
-                
-                <p className="text-gray-300 mb-6 leading-relaxed">
-                  Appelez-nous pour une assistance immédiate (Canada/International).
-                </p>
-                
-                <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
-                  <Clock className="w-3 h-3 mr-1" />
-                  Disponible 24/7
-                </Badge>
-                
-                <Button 
-                  className="mt-6 bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold px-6 py-3 w-full"
-                  onClick={() => window.location.href = 'tel:+14182619091'}
-                >
-                  +1 (418) 261-9091
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Why Terex Support */}
-      <div className="py-24 bg-gradient-to-br from-terex-darker via-terex-dark to-terex-darker border-t border-terex-accent/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Pourquoi choisir le support Terex ?</h2>
-            <p className="text-gray-300 text-lg">Un support client de qualité pour une expérience optimale</p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Expertise */}
-            <div className="text-center">
-              <div className="w-16 h-16 bg-terex-accent/20 rounded-2xl mx-auto mb-4 flex items-center justify-center">
-                <CheckCircle className="w-8 h-8 text-terex-accent" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Expertise</h3>
-              <p className="text-gray-300 leading-relaxed">
-                Nos agents sont formés pour répondre à toutes vos questions.
-              </p>
-            </div>
-
-            {/* Rapidité */}
-            <div className="text-center">
-              <div className="w-16 h-16 bg-terex-accent/20 rounded-2xl mx-auto mb-4 flex items-center justify-center">
-                <Clock className="w-8 h-8 text-terex-accent" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Rapidité</h3>
-              <p className="text-gray-300 leading-relaxed">
-                Nous nous engageons à vous répondre dans les plus brefs délais.
-              </p>
-            </div>
-
-            {/* Disponibilité */}
-            <div className="text-center">
-              <div className="w-16 h-16 bg-terex-accent/20 rounded-2xl mx-auto mb-4 flex items-center justify-center">
-                <MessageCircle className="w-8 h-8 text-terex-accent" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Disponibilité</h3>
-              <p className="text-gray-300 leading-relaxed">
-                Notre équipe est disponible 24h/7j pour vous assister.
-              </p>
-            </div>
+              );
+            })}
           </div>
         </div>
       </div>
