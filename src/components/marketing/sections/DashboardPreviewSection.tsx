@@ -54,21 +54,6 @@ export function DashboardPreviewSection() {
           </div>
         </div>
 
-        {/* Feature badges */}
-        <div className="flex flex-wrap justify-center gap-3 mt-12">
-          <div className="flex items-center gap-2 bg-terex-gray/50 px-4 py-2 rounded-full border border-white/10">
-            <div className="w-2 h-2 bg-green-500 rounded-full" />
-            <span className="text-sm text-gray-300">Transactions en temps réel</span>
-          </div>
-          <div className="flex items-center gap-2 bg-terex-gray/50 px-4 py-2 rounded-full border border-white/10">
-            <div className="w-2 h-2 bg-terex-teal rounded-full" />
-            <span className="text-sm text-gray-300">Multi-plateforme</span>
-          </div>
-          <div className="flex items-center gap-2 bg-terex-gray/50 px-4 py-2 rounded-full border border-white/10">
-            <div className="w-2 h-2 bg-orange-500 rounded-full" />
-            <span className="text-sm text-gray-300">Expérience unifiée</span>
-          </div>
-        </div>
       </div>
     </section>
   );

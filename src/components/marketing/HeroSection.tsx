@@ -115,48 +115,39 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           </AnimatedSection>
         </div>
         
-        {/* Cartes des fonctionnalités - en bas */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-16 lg:mt-24">
-          <AnimatedItem index={0}>
-          <Card className="bg-white/5 border-terex-gray/20 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:scale-105 group shadow-lg rounded-2xl">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                {/* Logo USDT de CoinMarketCap */}
-                <img 
-                  src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                  alt="USDT Tether" 
-                  className="w-8 h-8"
-                />
-              </div>
-              <h3 className="text-white font-light mb-2 text-sm sm:text-base">Échange USDT Tether</h3>
-              <p className="text-gray-400 text-xs sm:text-sm font-light">Achetez et vendez vos USDT au meilleur taux</p>
-            </CardContent>
-          </Card>
-          </AnimatedItem>
-          
-          <AnimatedItem index={1}>
-          <Card className="bg-white/5 border-terex-gray/20 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:scale-105 group shadow-lg rounded-2xl">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                <Globe className="w-6 h-6 text-terex-accent" />
-              </div>
-              <h3 className="text-white font-light mb-2 text-sm sm:text-base">Transferts vers l'Afrique</h3>
-              <p className="text-gray-400 text-xs sm:text-sm font-light">Transférez de l'argent partout en Afrique</p>
-            </CardContent>
-          </Card>
-          </AnimatedItem>
-          
-          <AnimatedItem index={2}>
-          <Card className="bg-white/5 border-terex-gray/20 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:scale-105 group sm:col-span-2 lg:col-span-1 shadow-lg rounded-2xl">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-terex-accent/30 to-terex-accent/10 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                <Shield className="w-6 h-6 text-terex-accent" />
-              </div>
-              <h3 className="text-white font-light mb-2 text-sm sm:text-base">100% Sécurisé</h3>
-              <p className="text-gray-400 text-xs sm:text-sm font-light">Chiffrement 256-bit et conformité réglementaire</p>
-            </CardContent>
-          </Card>
-          </AnimatedItem>
+        {/* Feature strip - editorial horizontal layout */}
+        <div className="mt-20 lg:mt-28 border-t border-terex-gray/20 pt-12">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-terex-gray/20">
+            {[
+              {
+                icon: <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-7 h-7" />,
+                title: 'Échange USDT',
+                subtitle: 'Achat & vente au meilleur taux',
+              },
+              {
+                icon: <Globe className="w-6 h-6 text-terex-accent" />,
+                title: 'Transferts Afrique',
+                subtitle: '6 pays couverts, en 5 min',
+              },
+              {
+                icon: <Shield className="w-6 h-6 text-terex-accent" />,
+                title: '100% Sécurisé',
+                subtitle: 'Chiffrement 256-bit, non-custodial',
+              },
+            ].map((item, index) => (
+              <AnimatedItem key={index} index={index}>
+                <div className="flex items-center gap-5 py-6 sm:py-0 sm:px-8 first:sm:pl-0 last:sm:pr-0 group cursor-default">
+                  <div className="w-12 h-12 rounded-xl bg-terex-accent/10 flex items-center justify-center flex-shrink-0 group-hover:bg-terex-accent/15 transition-colors">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-foreground font-medium text-sm sm:text-base">{item.title}</h3>
+                    <p className="text-muted-foreground text-xs sm:text-sm font-light">{item.subtitle}</p>
+                  </div>
+                </div>
+              </AnimatedItem>
+            ))}
+          </div>
         </div>
       </div>
     </div>
