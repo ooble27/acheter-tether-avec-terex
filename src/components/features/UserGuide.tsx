@@ -283,6 +283,19 @@ export function UserGuide({ onBack }: UserGuideProps) {
             <p className="text-white/80 font-medium mb-2">3.6 — Recevez vos CFA</p>
             <p>Une fois l'envoi confirmé, Terex traite votre paiement en <span className="text-white">2-5 minutes</span>. L'argent est envoyé directement sur votre Wave ou Orange Money.</p>
           </div>
+        </div>
+      </section>
+
+      <div className="border-t border-dashed border-white/10" />
+
+      {/* ─── ÉTAPE 4 : TRANSFERTS INTERNATIONAUX ─── */}
+      <section className="space-y-4">
+        <h2 className="text-white font-medium text-lg flex items-center gap-2">
+          <StepNumber n={4} />
+          Transferts internationaux
+        </h2>
+        <div className="pl-9 space-y-3 text-sm text-white/60">
+          <p>Envoyez de l'argent vers l'Afrique de l'Ouest rapidement et à moindre coût.</p>
           <ol className="space-y-2 list-decimal list-inside">
             <li>Accédez à <span className="text-white">"Virement"</span> depuis la barre de navigation</li>
             <li>Choisissez le pays de destination (Sénégal, Côte d'Ivoire, Mali, etc.)</li>
