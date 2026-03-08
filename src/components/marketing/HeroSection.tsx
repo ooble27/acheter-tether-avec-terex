@@ -47,7 +47,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               {user ? (
                 <Button 
                   onClick={handleDashboard}
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11 rounded-full text-sm shadow-lg shadow-terex-accent/20 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02]"
+                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11 rounded-xl text-sm shadow-lg shadow-terex-accent/20 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02]"
                 >
                   Dashboard
                   <ArrowRight className="w-4 h-4 ml-1" />
@@ -55,7 +55,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               ) : (
                 <Button 
                   onClick={handleGetStarted}
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11 rounded-full text-sm shadow-lg shadow-terex-accent/20 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02]"
+                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11 rounded-xl text-sm shadow-lg shadow-terex-accent/20 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02]"
                 >
                   Commencer
                   <ArrowRight className="w-4 h-4 ml-1" />
