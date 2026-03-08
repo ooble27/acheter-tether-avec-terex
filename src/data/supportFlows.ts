@@ -693,12 +693,12 @@ export const supportFlows: SupportFlow[] = [
         question: "Que se passe-t-il quand vous essayez de vous connecter ?",
         answers: [
           {
-            text: "Je ne reçois pas l'email de connexion",
-            nextQuestionId: "magic-link-issue"
+            text: "J'ai oublié mon mot de passe",
+            solution: "Pour réinitialiser votre mot de passe:\n1. Allez sur terangaexchange.com\n2. Cliquez sur 'Se connecter'\n3. Cliquez sur 'Mot de passe oublié'\n4. Entrez votre email\n5. Suivez le lien reçu pour créer un nouveau mot de passe\n\nLe lien expire après 1 heure. Si vous ne recevez rien, vérifiez vos spams."
           },
           {
-            text: "Le lien de connexion ne fonctionne pas",
-            solution: "Les liens expirent après 1 heure. Demandez un nouveau lien. Si le problème persiste, vérifiez que vous utilisez le même navigateur et videz votre cache."
+            text: "Mon mot de passe est refusé",
+            solution: "Vérifiez que:\n• Vous utilisez bien le bon email\n• La touche Majuscule n'est pas activée\n• Vous n'avez pas d'espace en trop\n\nSi le problème persiste, réinitialisez votre mot de passe via 'Mot de passe oublié'. Si ça ne fonctionne toujours pas, contactez-nous: WhatsApp +1 4182619091"
           },
           {
             text: "J'ai oublié mon email de connexion",
