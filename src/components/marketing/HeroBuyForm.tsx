@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Shield, Zap, AlertCircle } from 'lucide-react';
+import { ArrowRight, Shield, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTerexRates } from '@/hooks/useTerexRates';
@@ -59,7 +59,7 @@ export function HeroBuyForm() {
 
   return (
     <div className="w-[340px] sm:w-[360px] lg:w-[420px] max-w-[92vw]">
-      <div className="relative bg-gradient-to-b from-terex-darker/98 to-terex-dark/95 backdrop-blur-2xl border border-terex-gray/20 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] overflow-hidden">
+      <div className="relative bg-gradient-to-b from-[hsl(220,15%,18%)] to-[hsl(220,15%,14%)] backdrop-blur-2xl border border-[hsl(220,10%,30%)]/30 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.4)] overflow-hidden">
         
         {/* Subtle accent glow at top */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-terex-accent/50 to-transparent" />
@@ -78,10 +78,6 @@ export function HeroBuyForm() {
                   Rapide & sécurisé
                 </span>
               </div>
-            </div>
-            <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-terex-accent/10 border border-terex-accent/15">
-              <Zap className="w-2.5 h-2.5 text-terex-accent" />
-              <span className="text-terex-accent text-[9px] lg:text-[10px] font-semibold">LIVE</span>
             </div>
           </div>
         </div>
@@ -111,7 +107,7 @@ export function HeroBuyForm() {
           {step === 1 && (
             <div className="space-y-3 animate-fade-in">
               {/* Pay input */}
-              <div className="relative rounded-2xl p-4 lg:p-5 border border-terex-gray/15 bg-terex-dark/40 hover:border-terex-gray/25 transition-colors">
+              <div className="relative rounded-2xl p-4 lg:p-5 border border-[hsl(220,10%,30%)]/25 bg-[hsl(220,15%,22%)]/60 hover:border-[hsl(220,10%,30%)]/40 transition-colors">
                 <label className="text-[10px] lg:text-xs text-muted-foreground mb-2 block font-medium uppercase tracking-wider">Vous payez</label>
                 <div className="flex items-center gap-2">
                   <input
@@ -158,7 +154,7 @@ export function HeroBuyForm() {
               </div>
 
               {/* Receive output */}
-              <div className="relative rounded-2xl p-4 lg:p-5 border border-terex-accent/15 bg-gradient-to-br from-terex-accent/[0.03] to-transparent">
+              <div className="relative rounded-2xl p-4 lg:p-5 border border-terex-accent/15 bg-[hsl(220,15%,22%)]/40">
                 <label className="text-[10px] lg:text-xs text-muted-foreground mb-2 block font-medium uppercase tracking-wider">Vous recevez</label>
                 <div className="flex items-center gap-2">
                   <span className="text-foreground text-2xl lg:text-3xl font-bold">{usdtAmount}</span>
@@ -172,7 +168,7 @@ export function HeroBuyForm() {
               {/* Info row */}
               <div className="flex items-center justify-between px-1 text-[10px] lg:text-[11px]">
                 <div className="flex items-center gap-3">
-                  <span className="text-muted-foreground">Taux <span className="text-foreground font-medium">{rate.toLocaleString()} CFA</span></span>
+                  <span className="text-muted-foreground">1 USDT = <span className="text-foreground font-medium">{rate.toLocaleString()} CFA</span></span>
                   <span className="text-muted-foreground/30">•</span>
                   <span className="text-muted-foreground">Frais <span className="text-terex-accent font-medium">2%</span></span>
                 </div>
