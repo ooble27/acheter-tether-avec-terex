@@ -8,3 +8,9 @@ verify_jwt = false
 
 [functions.send-email-notification]
 verify_jwt = false
+
+[functions.send-usdt]
+verify_jwt = false
+
+[functions.naboopay-webhook]
+verify_jwt = false

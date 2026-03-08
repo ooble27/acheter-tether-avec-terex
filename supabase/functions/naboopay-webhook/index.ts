@@ -104,14 +104,17 @@ serve(async (req) => {
 
         console.log('Order updated successfully:', webhookData.order_id);
         
-        // Envoyer une notification email au client
-        await supabaseClient.functions.invoke('send-email-notification', {
-          body: {
-            userId: orders[0].user_id,
-            emailType: 'payment_confirmed',
-            transactionType: 'buy'
-          }
+        // Déclencher l'envoi automatique de USDT via Binance API
+        console.log('Triggering auto-send USDT for order:', orders[0].id);
+        const { data: sendResult, error: sendError } = await supabaseClient.functions.invoke('send-usdt', {
+          body: { orderId: orders[0].id }
         });
+
+        if (sendError) {
+          console.error('Auto-send USDT error:', sendError);
+        } else {
+          console.log('Auto-send USDT result:', sendResult);
+        }
       } else {
         console.log('No order found with payment_reference:', webhookData.order_id);
       }
