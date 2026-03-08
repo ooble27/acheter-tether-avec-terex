@@ -101,26 +101,14 @@ export function DashboardPreviewSection() {
   );
 }
 
-/** iMac-style desktop frame with clearer borders */
+/** iMac-style desktop frame — clean, slightly brighter borders */
 function DesktopFrame({ large }: { large?: boolean }) {
   return (
     <div className="relative">
-      <div className={`bg-gradient-to-b from-[hsl(0,0%,35%)] to-[hsl(0,0%,22%)] ${large ? 'rounded-2xl p-3' : 'rounded-xl p-1.5'} border-2 border-[hsl(0,0%,45%)] shadow-2xl`}>
-        {/* Top bar with camera and dots */}
-        <div className={`flex items-center ${large ? 'mb-2 px-3' : 'mb-1 px-2'}`}>
-          <div className="flex gap-1.5">
-            <div className={`${large ? 'w-3 h-3' : 'w-2 h-2'} rounded-full bg-red-500/80`} />
-            <div className={`${large ? 'w-3 h-3' : 'w-2 h-2'} rounded-full bg-yellow-500/80`} />
-            <div className={`${large ? 'w-3 h-3' : 'w-2 h-2'} rounded-full bg-green-500/80`} />
-          </div>
-          <div className="flex-1 flex justify-center">
-            <div className={`${large ? 'w-2.5 h-2.5' : 'w-2 h-2'} bg-[hsl(0,0%,50%)] rounded-full`} />
-          </div>
-          <div className="flex gap-1.5 opacity-0">
-            <div className={`${large ? 'w-3 h-3' : 'w-2 h-2'} rounded-full`} />
-            <div className={`${large ? 'w-3 h-3' : 'w-2 h-2'} rounded-full`} />
-            <div className={`${large ? 'w-3 h-3' : 'w-2 h-2'} rounded-full`} />
-          </div>
+      <div className={`bg-gradient-to-b from-terex-gray/60 to-terex-gray/35 ${large ? 'rounded-2xl p-3' : 'rounded-xl p-1.5'} border border-white/20 shadow-2xl`}>
+        {/* Camera */}
+        <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-10">
+          <div className={`${large ? 'w-2.5 h-2.5' : 'w-2 h-2'} bg-terex-gray/60 rounded-full`} />
         </div>
         <img
           src={dashboardPreview}
@@ -130,10 +118,10 @@ function DesktopFrame({ large }: { large?: boolean }) {
       </div>
       {/* Stand */}
       <div className="flex justify-center mt-0">
-        <div className={`${large ? 'w-32 h-5' : 'w-24 h-3'} bg-gradient-to-b from-[hsl(0,0%,35%)] to-[hsl(0,0%,25%)] rounded-b-xl border-x-2 border-b-2 border-[hsl(0,0%,45%)]`} />
+        <div className={`${large ? 'w-32 h-4' : 'w-24 h-3'} bg-gradient-to-b from-terex-gray/40 to-terex-gray/15 rounded-b-xl border-x border-b border-white/15`} />
       </div>
       <div className="flex justify-center -mt-0.5">
-        <div className={`${large ? 'w-48 h-2.5' : 'w-36 h-1.5'} bg-[hsl(0,0%,30%)] rounded-full border border-[hsl(0,0%,40%)]`} />
+        <div className={`${large ? 'w-48 h-2' : 'w-36 h-1.5'} bg-terex-gray/25 rounded-full border border-white/10`} />
       </div>
     </div>
   );
