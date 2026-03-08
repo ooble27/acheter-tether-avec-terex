@@ -216,7 +216,7 @@ const SupportPage = () => {
         <main className="flex-1 lg:pl-12 pt-16 md:pt-24 pb-20 md:pb-32">
           
           {/* Hero title */}
-          <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="max-w-2xl mb-10">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-light text-foreground mb-4 tracking-tight">
               Comment pouvons-nous vous aider ?
             </h1>
