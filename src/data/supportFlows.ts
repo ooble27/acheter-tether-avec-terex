@@ -662,7 +662,7 @@ export const supportFlows: SupportFlow[] = [
           },
           {
             text: "J'ai eu une mauvaise expérience",
-            solution: "Nous sommes désolés ! Avant de supprimer, donnez-nous une chance:\n• WhatsApp: +1 4182619091\n• Décrivez votre problème\n• Compensation possible selon le cas\n\nSi suppression maintenue: email à support@terex.sn avec 'Suppression compte' en objet."
+            solution: "Nous sommes désolés ! Avant de supprimer, donnez-nous une chance:\n• WhatsApp: +1 4182619091\n• Décrivez votre problème\n• Compensation possible selon le cas\n\nSi suppression maintenue: email à terangaexchange@gmail.com avec 'Suppression compte' en objet."
           },
           {
             text: "Je veux créer un nouveau compte",
