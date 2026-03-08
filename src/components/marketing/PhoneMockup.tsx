@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Globe, Handshake, Star, Zap, Clock, Shield, Users, Award } from 'lucide-react';
+import { Globe, Handshake, Clock } from 'lucide-react';
 
 const BitcoinLogo = ({ className }: { className?: string }) => (
   <img src="/bitcoin-logo.png" alt="Bitcoin Logo" className={className} />
@@ -95,78 +95,57 @@ export function PhoneMockup() {
                 </Card>
               </div>
 
-              {/* Avantages Terex */}
+              {/* Historique des transactions */}
               <Card className="bg-terex-darker border-terex-gray mb-3">
                 <CardContent className="p-2">
                   <h3 className="text-white text-xs font-medium mb-2 flex items-center">
-                    <Star className="w-3 h-3 mr-1 text-terex-accent" />
-                    Avantages Terex
+                    <Clock className="w-3 h-3 mr-1 text-terex-accent" />
+                    Historique récent
                   </h3>
                   <div className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center flex-shrink-0">
-                        <Star className="w-2 h-2 text-terex-accent" />
+                    <div className="flex items-center justify-between p-1.5 bg-terex-dark/50 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-5 h-5 bg-green-500/20 rounded flex items-center justify-center flex-shrink-0">
+                          <TetherLogo className="w-3 h-3" />
+                        </div>
+                        <div>
+                          <p className="text-white text-[10px] font-medium text-left">Achat USDT</p>
+                          <p className="text-gray-500 text-[9px] text-left">Il y a 2h</p>
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <p className="text-white text-xs text-left">Frais gratuits</p>
-                        <p className="text-gray-400 text-xs text-left">0% de frais</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-green-500/20 rounded flex items-center justify-center flex-shrink-0">
-                        <Zap className="w-2 h-2 text-green-400" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-white text-xs text-left">Rapide</p>
-                        <p className="text-gray-400 text-xs text-left">Instantané</p>
+                      <div className="text-right">
+                        <p className="text-green-400 text-[10px] font-medium">+500 USDT</p>
+                        <p className="text-gray-500 text-[9px]">690 CAD</p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-blue-500/20 rounded flex items-center justify-center flex-shrink-0">
-                        <Clock className="w-2 h-2 text-blue-400" />
+                    <div className="flex items-center justify-between p-1.5 bg-terex-dark/50 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-5 h-5 bg-blue-500/20 rounded flex items-center justify-center flex-shrink-0">
+                          <Globe className="w-3 h-3 text-blue-400" />
+                        </div>
+                        <div>
+                          <p className="text-white text-[10px] font-medium text-left">Virement</p>
+                          <p className="text-gray-500 text-[9px] text-left">Hier</p>
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <p className="text-white text-xs text-left">24/7</p>
-                        <p className="text-gray-400 text-xs text-left">Toujours disponible</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Section Sécurité et Confiance */}
-              <Card className="bg-terex-darker border-terex-gray">
-                <CardContent className="p-2">
-                  <h3 className="text-white text-xs font-medium mb-2 flex items-center">
-                    <Shield className="w-3 h-3 mr-1 text-blue-400" />
-                    Sécurité & Confiance
-                  </h3>
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-blue-500/20 rounded flex items-center justify-center flex-shrink-0">
-                        <Shield className="w-2 h-2 text-blue-400" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-white text-xs text-left">Sécurisé</p>
-                        <p className="text-gray-400 text-xs text-left">Cryptage SSL</p>
+                      <div className="text-right">
+                        <p className="text-blue-400 text-[10px] font-medium">-200 CAD</p>
+                        <p className="text-gray-500 text-[9px]">Cameroun</p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-yellow-500/20 rounded flex items-center justify-center flex-shrink-0">
-                        <Award className="w-2 h-2 text-yellow-400" />
+                    <div className="flex items-center justify-between p-1.5 bg-terex-dark/50 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-5 h-5 bg-red-500/20 rounded flex items-center justify-center flex-shrink-0">
+                          <TetherLogo className="w-3 h-3" />
+                        </div>
+                        <div>
+                          <p className="text-white text-[10px] font-medium text-left">Vente USDT</p>
+                          <p className="text-gray-500 text-[9px] text-left">Il y a 3j</p>
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <p className="text-white text-xs text-left">Certifié</p>
-                        <p className="text-gray-400 text-xs text-left">Plateforme agréée</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-terex-accent/20 rounded flex items-center justify-center flex-shrink-0">
-                        <Users className="w-2 h-2 text-terex-accent" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-white text-xs text-left">Support</p>
-                        <p className="text-gray-400 text-xs text-left">Équipe dédiée</p>
+                      <div className="text-right">
+                        <p className="text-red-400 text-[10px] font-medium">-300 USDT</p>
+                        <p className="text-gray-500 text-[9px]">414 CAD</p>
                       </div>
                     </div>
                   </div>
