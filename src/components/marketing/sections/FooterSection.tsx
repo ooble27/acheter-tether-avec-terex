@@ -1,6 +1,4 @@
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Mail, Phone, MapPin, Twitter, Facebook, Linkedin, Instagram, Youtube, ShoppingCart, ArrowLeftRight, Globe, Code, TrendingUp, Building2, BookOpen, Briefcase, LifeBuoy, MessageCircle, BookMarked, HelpCircle, FileText, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -12,123 +10,101 @@ export function FooterSection() {
     {
       title: "Produits",
       links: [
-        { label: "Acheter USDT", href: "/auth", icon: ShoppingCart },
-        { label: "Vendre USDT", href: "/auth", icon: ArrowLeftRight },
-        { label: "Transfert International", href: "/auth", icon: Globe },
-        { label: "API Marchands", href: "/auth", icon: Code },
-        { label: "Taux de Change", href: "/", icon: TrendingUp }
+        { label: "Acheter USDT", href: "/auth" },
+        { label: "Vendre USDT", href: "/auth" },
+        { label: "Transfert International", href: "/auth" },
+        { label: "Taux de Change", href: "/" }
       ]
     },
     {
       title: "Entreprise",
       links: [
-        { label: "À Propos", href: "/about", icon: Building2 },
-        { label: "Blog", href: "/blog", icon: BookOpen },
-        { label: "Carrières", href: "/careers", icon: Briefcase }
+        { label: "À Propos", href: "/about" },
+        { label: "Academy", href: "/blog" },
+        { label: "Carrières", href: "/careers" }
       ]
     },
     {
       title: "Support",
       links: [
-        { label: "Centre d'Aide", href: "/help", icon: LifeBuoy },
-        { label: "Nous Contacter", href: "/contact", icon: MessageCircle },
-        { label: "Guide Utilisateur", href: "/guide", icon: BookMarked },
-        { label: "FAQ", href: "/faq", icon: HelpCircle }
+        { label: "Centre d'Aide", href: "/help" },
+        { label: "Contact", href: "/contact" },
+        { label: "Guide", href: "/guide" },
+        { label: "FAQ", href: "/faq" }
       ]
     },
     {
       title: "Légal",
       links: [
-        { label: "Conditions d'Utilisation", href: "/terms", icon: FileText },
-        { label: "Politique de Confidentialité", href: "/privacy", icon: Shield }
+        { label: "Conditions d'Utilisation", href: "/terms" },
+        { label: "Confidentialité", href: "/privacy" },
+        { label: "Sécurité", href: "/security" }
       ]
     }
   ];
 
   const socialLinks = [
-    { icon: Twitter, href: "https://twitter.com/terex_official" },
-    { icon: Facebook, href: "https://www.facebook.com/profile.php?id=61582482405934" },
-    { icon: Linkedin, href: "https://www.linkedin.com/company/teranga-exchange/" },
-    { icon: Instagram, href: "https://instagram.com/terex_official" },
-    { icon: Youtube, href: "https://youtube.com/@terex-official" }
+    { icon: Twitter, href: "https://twitter.com/terex_official", label: "X" },
+    { icon: Facebook, href: "https://www.facebook.com/profile.php?id=61582482405934", label: "Facebook" },
+    { icon: Linkedin, href: "https://www.linkedin.com/company/teranga-exchange/", label: "LinkedIn" },
+    { icon: Instagram, href: "https://instagram.com/terex_official", label: "Instagram" },
+    { icon: Youtube, href: "https://youtube.com/@terex-official", label: "YouTube" }
   ];
 
   return (
-    <footer className="bg-terex-darker border-t border-terex-accent/20">
-
-      {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid lg:grid-cols-6 gap-12">
-          {/* Brand Section */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
+    <footer className="bg-white/[0.03] border-t border-white/[0.06]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-10">
+          
+          {/* Brand */}
+          <div className="col-span-2">
+            <div className="flex items-center gap-3 mb-4">
               <img 
                 src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
                 alt="Terex Logo" 
-                className="w-12 h-12 rounded-xl"
+                className="w-9 h-9 rounded-lg"
               />
-              <div>
-                <h3 className="text-2xl font-light text-white">Terex</h3>
-                <p className="text-terex-accent text-sm font-light">Teranga Exchange</p>
-              </div>
+              <span className="text-foreground text-lg font-medium tracking-tight">Terex</span>
             </div>
             
-            <p className="text-gray-400 mb-6 leading-relaxed font-light">
-              La plateforme leader d'échange crypto-fiat en Afrique. Échangez vos USDT contre 
-              des devises locales en toute sécurité avec les meilleurs taux du marché.
+            <p className="text-muted-foreground text-sm leading-relaxed mb-6 max-w-xs">
+              La plateforme leader d'échange crypto-fiat en Afrique de l'Ouest.
             </p>
 
-            {/* Contact Info */}
-            <div className="space-y-3 mb-6">
-              <div className="flex items-center text-gray-300">
-                <MapPin className="w-4 h-4 mr-3 text-terex-accent" />
-                <span className="text-sm">Dakar, Sénégal</span>
-              </div>
-              <div className="flex items-center text-gray-300">
-                <Phone className="w-4 h-4 mr-3 text-terex-accent" />
-                <span className="text-sm">WhatsApp: +1 4182619091</span>
-              </div>
-              <div className="flex items-center text-gray-300">
-                <Mail className="w-4 h-4 mr-3 text-terex-accent" />
-                <span className="text-sm">terangaexchange@gmail.com</span>
-              </div>
-              <div className="flex items-center text-gray-300">
-                <Phone className="w-4 h-4 mr-3 text-terex-accent" />
-                <span className="text-sm">WhatsApp: +1 418 261 9091</span>
-              </div>
+            {/* Social */}
+            <div className="flex gap-3 mb-6">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  className="w-8 h-8 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <social.icon className="w-4 h-4" />
+                </a>
+              ))}
             </div>
 
-            {/* Social Links */}
-            <div className="flex space-x-4">
-              {socialLinks.map((social, index) => {
-                const IconComponent = social.icon;
-                return (
-                  <a
-                    key={index}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 bg-terex-gray hover:bg-terex-accent rounded-lg flex items-center justify-center text-gray-300 hover:text-black transition-all duration-300"
-                  >
-                    <IconComponent className="w-5 h-5" />
-                  </a>
-                );
-              })}
+            {/* Status */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.06] bg-white/[0.02]">
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span className="text-muted-foreground text-xs">Tous les systèmes opérationnels</span>
             </div>
           </div>
 
-          {/* Footer Links */}
-          {footerSections.map((section, index) => (
-            <div key={index} className="lg:col-span-1">
-              <h4 className="text-white font-light mb-6">{section.title}</h4>
-              <ul className="space-y-3">
-                {section.links.map((link, linkIndex) => (
-                  <li key={linkIndex}>
+          {/* Link columns */}
+          {footerSections.map((section) => (
+            <div key={section.title}>
+              <h4 className="text-foreground text-sm font-semibold mb-4">{section.title}</h4>
+              <ul className="space-y-2.5">
+                {section.links.map((link) => (
+                  <li key={link.label}>
                     <button
                       onClick={() => navigate(link.href)}
-                      className="flex items-center gap-2 text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm"
+                      className="text-muted-foreground hover:text-foreground transition-colors text-sm"
                     >
-                      <link.icon className="w-3.5 h-3.5 opacity-50" />
                       {link.label}
                     </button>
                   </li>
@@ -137,13 +113,24 @@ export function FooterSection() {
             </div>
           ))}
         </div>
+      </div>
 
-        <Separator className="my-12 bg-terex-gray" />
-
-        {/* Bottom Footer */}
-        <div className="text-center">
-          <div className="text-gray-400 text-sm">
-            <p>&copy; 2025 Terex. Tous droits réservés.</p>
+      {/* Bottom bar */}
+      <div className="border-t border-white/[0.06]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-muted-foreground text-xs">
+            &copy; 2025 Terex — Teranga Exchange Inc.
+          </p>
+          <div className="flex items-center gap-5">
+            <button onClick={() => navigate('/privacy')} className="text-muted-foreground hover:text-foreground text-xs transition-colors">
+              Confidentialité
+            </button>
+            <button onClick={() => navigate('/terms')} className="text-muted-foreground hover:text-foreground text-xs transition-colors">
+              Conditions
+            </button>
+            <button onClick={() => navigate('/security')} className="text-muted-foreground hover:text-foreground text-xs transition-colors">
+              Sécurité
+            </button>
           </div>
         </div>
       </div>
