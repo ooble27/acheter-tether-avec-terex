@@ -684,7 +684,7 @@ export const supportFlows: SupportFlow[] = [
           },
           {
             text: "Mon nom ou informations personnelles",
-            solution: "Infos modifiables dans Profil: nom d'affichage, téléphone, pays, langue.\n\nInfos KYC (nom légal, date de naissance): nécessitent validation manuelle.\n→ Email à support@terex.sn avec nouvelle pièce d'identité\n→ Délai: 24-72 heures"
+            solution: "Infos modifiables dans Profil: nom d'affichage, téléphone, pays, langue.\n\nInfos KYC (nom légal, date de naissance): nécessitent validation manuelle.\n→ Email à terangaexchange@gmail.com avec nouvelle pièce d'identité\n→ Délai: 24-72 heures"
           }
         ]
       },
