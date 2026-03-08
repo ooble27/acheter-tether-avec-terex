@@ -658,7 +658,7 @@ export const supportFlows: SupportFlow[] = [
         answers: [
           {
             text: "Je n'utilise plus le service",
-            solution: "Avant de supprimer:\n• Votre compte reste gratuit même inactif\n• Votre KYC sera perdu (à refaire si vous revenez)\n• Historique supprimé définitivement\n\nSi vous êtes sûr:\n1. Aucune transaction en cours\n2. Email à: support@terex.sn (Objet: 'Suppression de compte')\n3. Indiquez votre email et raison\n4. Pièce d'identité pour confirmation\n\nDélai: vérification 24-48h, suppression sous 7 jours."
+            solution: "Avant de supprimer:\n• Votre compte reste gratuit même inactif\n• Votre KYC sera perdu (à refaire si vous revenez)\n• Historique supprimé définitivement\n\nSi vous êtes sûr:\n1. Aucune transaction en cours\n2. Email à: terangaexchange@gmail.com (Objet: 'Suppression de compte')\n3. Indiquez votre email et raison\n4. Pièce d'identité pour confirmation\n\nDélai: vérification 24-48h, suppression sous 7 jours."
           },
           {
             text: "J'ai eu une mauvaise expérience",
