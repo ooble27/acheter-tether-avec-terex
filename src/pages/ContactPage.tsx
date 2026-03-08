@@ -99,7 +99,7 @@ const ContactPage = () => {
                   <div>
                     <label className="block text-foreground text-sm font-medium mb-2">Prénom *</label>
                     <Input 
-                      className="bg-white/[0.03] border-white/[0.08] text-foreground h-12 text-sm rounded-lg" 
+                      className="bg-white/[0.03] border-white/[0.08] text-foreground h-10 text-sm rounded-lg"
                       placeholder="Prénom" 
                       value={formData.firstName}
                       onChange={(e) => handleInputChange('firstName', e.target.value)}
