@@ -13,130 +13,111 @@ interface HeroSectionProps {
 export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
   const navigate = useNavigate();
 
-  const handleGetStarted = () => {
-    navigate('/auth');
-  };
-
-  const handleDashboard = () => {
-    if (onShowDashboard) {
-      onShowDashboard();
-    }
-  };
+  const handleGetStarted = () => navigate('/auth');
+  const handleDashboard = () => onShowDashboard?.();
 
   const handleHowItWorks = () => {
     const element = document.getElementById('how-it-works');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (element) element.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <div className="bg-terex-dark min-h-[90vh] lg:min-h-screen overflow-x-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20 overflow-hidden">
         
-        {/* ===== MOBILE LAYOUT ===== */}
-        <div className="lg:hidden flex flex-col items-center text-center">
+        {/* ===== MOBILE LAYOUT — Attio-style ===== */}
+        <div className="lg:hidden flex flex-col items-center text-center pt-16">
           <AnimatedSection className="w-full" delay={100}>
-            {/* Typewriter title */}
-            <div className="mb-4">
-              <DeviceMockups />
+            <h1 className="text-[2.5rem] sm:text-5xl font-bold text-foreground leading-[1.1] tracking-tight mb-4">
+              Échange USDT<br />
+              <span className="text-terex-accent">vers l'Afrique.</span>
+            </h1>
+            <p className="text-base text-muted-foreground font-light max-w-sm mx-auto mb-8">
+              Achetez, vendez des USDT et transférez de l'argent vers l'Afrique. Rapide et sécurisé.
+            </p>
+          </AnimatedSection>
+
+          <AnimatedSection className="w-full" delay={200}>
+            <div className="flex flex-col items-center gap-3 mb-10">
+              {user ? (
+                <Button 
+                  onClick={handleDashboard}
+                  size="lg" 
+                  className="w-full max-w-sm bg-black dark:bg-white text-white dark:text-black font-semibold py-6 rounded-2xl text-base"
+                >
+                  Aller au Dashboard
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              ) : (
+                <Button 
+                  onClick={handleGetStarted}
+                  size="lg" 
+                  className="w-full max-w-sm bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold py-6 rounded-2xl text-base shadow-lg shadow-terex-accent/20"
+                >
+                  Commencer maintenant
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              )}
+              <button 
+                onClick={handleHowItWorks}
+                className="text-muted-foreground text-sm font-medium flex items-center gap-1.5 hover:text-foreground transition-colors"
+              >
+                Comment ça marche
+                <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
           </AnimatedSection>
 
-          <AnimatedSection className="w-full" delay={180}>
-            {/* Interactive buy form — mobile, fixed area below text */}
-            <div className="flex justify-center mb-6 w-full">
+          {/* Feature tabs — Attio style */}
+          <AnimatedSection className="w-full" delay={300}>
+            <div className="grid grid-cols-3 gap-2 max-w-sm mx-auto mb-6">
+              {[
+                { icon: <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-5 h-5" />, label: 'Échange USDT' },
+                { icon: <Globe className="w-5 h-5 text-terex-accent" />, label: 'Transferts' },
+                { icon: <Shield className="w-5 h-5 text-terex-accent" />, label: 'Sécurité' },
+              ].map((tab, i) => (
+                <div key={i} className="flex flex-col items-center gap-2 py-3 px-2 rounded-xl bg-terex-darker/60 border border-white/5">
+                  {tab.icon}
+                  <span className="text-[11px] text-muted-foreground font-medium">{tab.label}</span>
+                </div>
+              ))}
+            </div>
+          </AnimatedSection>
+
+          {/* Buy form card */}
+          <AnimatedSection className="w-full" delay={400}>
+            <div className="flex justify-center w-full">
               <HeroBuyForm />
-            </div>
-          </AnimatedSection>
-
-          {/* Floating cards — compact horizontal scroll on mobile only */}
-          <AnimatedSection className="w-full sm:hidden mt-14" delay={300}>
-            <div className="flex gap-3 overflow-x-auto pb-2 px-1 snap-x snap-mandatory scrollbar-hide" ref={(el) => { if (el) { const card = el.children[1] as HTMLElement; if (card) { setTimeout(() => el.scrollLeft = card.offsetLeft - (el.clientWidth - card.clientWidth) / 2, 50); } } }}>
-              {/* Card 1 - Transferts */}
-              <div className="snap-center shrink-0 w-[260px] bg-terex-darker/80 backdrop-blur-md rounded-xl border border-terex-gray/25 p-4">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <Globe className="w-5 h-5 text-terex-accent" />
-                  <span className="text-foreground text-sm font-medium">Transferts</span>
-                  <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full border border-terex-accent/30 text-terex-accent">Live</span>
-                </div>
-                <div className="space-y-1.5 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>6 pays d'Afrique</span></div>
-                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>Mobile Money</span></div>
-                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>En moins de 5 min</span></div>
-                </div>
-              </div>
-              {/* Card 2 - Échange USDT (center, default visible) */}
-              <div className="snap-center shrink-0 w-[260px] bg-terex-darker/80 backdrop-blur-md rounded-xl border border-terex-accent/25 p-4">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-6 h-6" />
-                  <span className="text-foreground text-sm font-medium">Échange USDT</span>
-                </div>
-                <div className="space-y-1.5 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>Achat instantané</span></div>
-                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>Vente rapide</span></div>
-                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>Meilleur taux CFA</span></div>
-                </div>
-              </div>
-              {/* Card 3 - Sécurité */}
-              <div className="snap-center shrink-0 w-[260px] bg-terex-darker/80 backdrop-blur-md rounded-xl border border-terex-gray/25 p-4">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <Shield className="w-5 h-5 text-terex-accent" />
-                  <span className="text-foreground text-sm font-medium">Sécurité</span>
-                </div>
-                <div className="space-y-1.5 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>Chiffrement 256-bit</span></div>
-                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>Non-custodial</span></div>
-                  <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-terex-accent" /><span>KYC vérifié</span></div>
-                </div>
-              </div>
             </div>
           </AnimatedSection>
         </div>
 
         {/* ===== DESKTOP LAYOUT ===== */}
         <div className="hidden lg:grid grid-cols-2 gap-16 items-center min-h-[600px]">
-          {/* Left — Text */}
           <AnimatedSection className="text-left" delay={100}>
             <DeviceMockups />
-            
             <p className="text-lg xl:text-xl text-muted-foreground mb-10 max-w-2xl leading-relaxed font-light">
               Achetez et vendez des USDT facilement, 
               effectuez des transferts d'argent vers l'Afrique instantanément. Rapide, sécurisé et sans commission.
             </p>
-            
             <div className="flex gap-4">
               {user ? (
-                <Button 
-                  onClick={handleDashboard}
-                  size="lg" 
-                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 min-w-[220px] rounded-xl text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group"
-                >
+                <Button onClick={handleDashboard} size="lg" className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 min-w-[220px] rounded-xl text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group">
                   Aller au Dashboard
                   <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
                 </Button>
               ) : (
-                <Button 
-                  onClick={handleGetStarted}
-                  size="lg" 
-                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 min-w-[220px] rounded-xl text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group"
-                >
+                <Button onClick={handleGetStarted} size="lg" className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 min-w-[220px] rounded-xl text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group">
                   Commencer maintenant
                   <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
                 </Button>
               )}
-              <Button 
-                onClick={handleHowItWorks}
-                variant="outline" 
-                size="lg"
-                className="border-terex-gray/50 text-foreground hover:bg-terex-gray/20 px-8 py-4 h-14 min-w-[220px] rounded-xl text-lg backdrop-blur-sm transition-all duration-300 hover:border-terex-accent/40"
-              >
+              <Button onClick={handleHowItWorks} variant="outline" size="lg" className="border-terex-gray/50 text-foreground hover:bg-terex-gray/20 px-8 py-4 h-14 min-w-[220px] rounded-xl text-lg backdrop-blur-sm transition-all duration-300 hover:border-terex-accent/40">
                 Comment ça marche
               </Button>
             </div>
           </AnimatedSection>
           
-          {/* Right — Interactive Buy Form */}
           <AnimatedSection className="flex justify-center" delay={300} direction="right">
             <HeroBuyForm />
           </AnimatedSection>

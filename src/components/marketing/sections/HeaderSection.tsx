@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { User, LogOut, Menu, Home, Building2, Briefcase, HelpCircle, Phone, MessageCircle, ArrowRight, X } from 'lucide-react';
+import { User, LogOut, Menu, X, ArrowRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,51 @@ interface HeaderSectionProps {
   onLogout: () => void;
 }
 
+// Attio-style geometric SVG icons
+const IconHome = () => (
+  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M3 12L12 4l9 8" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const IconBuilding = () => (
+  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <rect x="4" y="3" width="16" height="18" rx="1.5" strokeLinecap="round" />
+    <path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h6" strokeLinecap="round" />
+  </svg>
+);
+
+const IconBriefcase = () => (
+  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <rect x="3" y="7" width="18" height="13" rx="2" />
+    <path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2" strokeLinecap="round" />
+    <path d="M3 12h18" strokeLinecap="round" opacity="0.5" />
+  </svg>
+);
+
+const IconSupport = () => (
+  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <circle cx="12" cy="12" r="9" />
+    <circle cx="12" cy="12" r="3" />
+    <path d="M12 3v6M12 15v6M3 12h6M15 12h6" strokeLinecap="round" />
+  </svg>
+);
+
+const IconPhone = () => (
+  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
+  </svg>
+);
+
+const IconFAQ = () => (
+  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+    <circle cx="12" cy="10" r="0.5" fill="currentColor" stroke="none" />
+    <path d="M10 8a2 2 0 114 0c0 1-2 1.5-2 3" strokeLinecap="round" />
+  </svg>
+);
+
 export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSectionProps) {
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
@@ -21,27 +66,21 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menu on click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setMenuOpen(false);
       }
     };
-    if (menuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+    if (menuOpen) document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [menuOpen]);
 
-  // Close menu on scroll
   useEffect(() => {
     if (menuOpen) {
       const close = () => setMenuOpen(false);
@@ -51,105 +90,62 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   }, [menuOpen]);
 
   const handleLogout = async () => {
-    try {
-      await onLogout();
-    } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
-      window.location.reload();
-    }
+    try { await onLogout(); } catch { window.location.reload(); }
   };
 
   const navigationItems = [
-    { label: 'Accueil', href: '/', icon: Home },
-    { label: 'À propos', href: '/about', icon: Building2 },
-    { label: 'Carrières', href: '/careers', icon: Briefcase },
+    { label: 'Accueil', href: '/', icon: IconHome, description: 'Page d\'accueil' },
+    { label: 'À propos', href: '/about', icon: IconBuilding, description: 'Découvrez Terex' },
+    { label: 'Carrières', href: '/careers', icon: IconBriefcase, description: 'Rejoignez l\'équipe' },
   ];
 
   const supportItems = [
-    { label: 'Support', href: '/support', icon: HelpCircle },
-    { label: 'Contact', href: '/contact', icon: Phone },
-    { label: 'FAQ', href: '/faq', icon: MessageCircle },
+    { label: 'Support', href: '/support', icon: IconSupport, description: 'Centre d\'aide' },
+    { label: 'Contact', href: '/contact', icon: IconPhone, description: 'Nous contacter' },
+    { label: 'FAQ', href: '/faq', icon: IconFAQ, description: 'Questions fréquentes' },
   ];
 
   const useHamburgerMenu = isMobile || isTablet;
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'pt-2' : 'pt-4'
-    }`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'pt-2' : 'pt-4'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {!useHamburgerMenu ? (
           <div className={`backdrop-blur-md rounded-2xl border shadow-lg transition-all duration-300 px-6 flex items-center justify-between ${
-            isScrolled 
-              ? 'bg-terex-darker/95 border-white/30 shadow-black/30 py-2' 
-              : 'bg-terex-darker/80 border-white/20 shadow-black/20 py-3'
+            isScrolled ? 'bg-terex-darker/95 border-white/30 shadow-black/30 py-2' : 'bg-terex-darker/80 border-white/20 shadow-black/20 py-3'
           }`}>
-            {/* Logo */}
             <div className="flex items-center">
-              <img 
-                src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-                alt="Terex Logo" 
-                className="w-9 h-9 rounded-lg cursor-pointer"
-                onClick={() => navigate('/')}
-              />
+              <img src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" alt="Terex Logo" className="w-9 h-9 rounded-lg cursor-pointer" onClick={() => navigate('/')} />
               <span className="ml-2 text-lg font-semibold text-white">Terex</span>
             </div>
-
-            {/* Navigation Links - Center */}
             <nav className="flex items-center space-x-6 xl:space-x-8">
               {navigationItems.map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => navigate(item.href)}
-                  className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm font-medium"
-                >
+                <button key={item.href} onClick={() => navigate(item.href)} className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm font-medium">
                   {item.label}
                 </button>
               ))}
               {supportItems.slice(0, 2).map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => navigate(item.href)}
-                  className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm font-medium"
-                >
+                <button key={item.href} onClick={() => navigate(item.href)} className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm font-medium">
                   {item.label}
                 </button>
               ))}
             </nav>
-
-            {/* User Actions - Right */}
             <div className="flex items-center space-x-3">
               {user ? (
                 <>
-                  <Button
-                    onClick={onShowDashboard}
-                    variant="outline"
-                    className="rounded-xl border-terex-gray/30 text-gray-300 hover:bg-terex-gray/15 hover:text-white px-5"
-                  >
-                    <User className="w-4 h-4 mr-2" />
-                    Dashboard
+                  <Button onClick={onShowDashboard} variant="outline" className="rounded-xl border-terex-gray/30 text-gray-300 hover:bg-terex-gray/15 hover:text-white px-5">
+                    <User className="w-4 h-4 mr-2" />Dashboard
                   </Button>
-                  <Button
-                    onClick={handleLogout}
-                    className="rounded-xl bg-terex-accent hover:bg-terex-accent/90 text-black px-5"
-                  >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Déconnexion
+                  <Button onClick={handleLogout} className="rounded-xl bg-terex-accent hover:bg-terex-accent/90 text-black px-5">
+                    <LogOut className="w-4 h-4 mr-2" />Déconnexion
                   </Button>
                 </>
               ) : (
                 <>
-                  <Button
-                    onClick={() => navigate('/auth')}
-                    variant="outline"
-                    className="rounded-xl border-terex-gray/30 text-gray-300 hover:bg-terex-gray/15 hover:text-white px-5"
-                  >
+                  <Button onClick={() => navigate('/auth')} variant="outline" className="rounded-xl border-terex-gray/30 text-gray-300 hover:bg-terex-gray/15 hover:text-white px-5">
                     Connexion
                   </Button>
-                  <Button
-                    onClick={() => navigate('/auth')}
-                    className="rounded-xl bg-terex-accent hover:bg-terex-accent/90 text-black px-5"
-                  >
+                  <Button onClick={() => navigate('/auth')} className="rounded-xl bg-terex-accent hover:bg-terex-accent/90 text-black px-5">
                     Commencer
                   </Button>
                 </>
@@ -159,124 +155,89 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
         ) : (
           <div ref={menuRef} className="relative">
             <div className={`backdrop-blur-md rounded-2xl border shadow-lg transition-all duration-300 px-4 flex items-center justify-between ${
-              isScrolled 
-                ? 'bg-terex-darker/95 border-white/30 shadow-black/30 py-2' 
-                : 'bg-terex-darker/80 border-white/20 shadow-black/20 py-3'
+              isScrolled ? 'bg-terex-darker/95 border-white/30 shadow-black/30 py-2' : 'bg-terex-darker/80 border-white/20 shadow-black/20 py-3'
             }`}>
-              {/* Logo */}
               <div className="flex items-center">
-                <img 
-                  src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-                  alt="Terex Logo" 
-                  className="w-9 h-9 rounded-lg cursor-pointer"
-                  onClick={() => navigate('/')}
-                />
+                <img src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" alt="Terex Logo" className="w-9 h-9 rounded-lg cursor-pointer" onClick={() => navigate('/')} />
                 <span className="ml-2 text-lg font-semibold text-white">Terex</span>
               </div>
-
-              {/* Hamburger toggle */}
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="relative w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/5 transition-colors"
-                aria-label="Menu"
-              >
-                {menuOpen ? (
-                  <X className="w-5 h-5 text-white" />
-                ) : (
-                  <Menu className="w-5 h-5 text-white" />
-                )}
+              <button onClick={() => setMenuOpen(!menuOpen)} className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/5 transition-colors" aria-label="Menu">
+                {menuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
               </button>
             </div>
 
-            {/* Dropdown menu — Attio style */}
-            <div className={`absolute top-full left-0 right-0 mt-2 transition-all duration-300 origin-top ${
-              menuOpen 
-                ? 'opacity-100 scale-y-100 translate-y-0' 
-                : 'opacity-0 scale-y-95 -translate-y-2 pointer-events-none'
+            {/* Dropdown — right-aligned, compact */}
+            <div className={`absolute top-full right-0 mt-2 w-72 transition-all duration-200 origin-top-right ${
+              menuOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-1 pointer-events-none'
             }`}>
-              <div className="bg-terex-darker/98 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden">
-                {/* Navigation items */}
-                <div className="p-3">
+              <div className="bg-terex-darker/98 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/50 overflow-hidden">
+                {/* Nav section */}
+                <div className="p-2 pt-3">
+                  <p className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-medium mb-1.5 px-3">Navigation</p>
                   {navigationItems.map((item, i) => {
                     const Icon = item.icon;
                     return (
                       <button
                         key={item.href}
                         onClick={() => { navigate(item.href); setMenuOpen(false); }}
-                        className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-150 group"
-                        style={{ animationDelay: `${i * 40}ms` }}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/[0.04] hover:text-white transition-all duration-150 group"
                       >
-                        <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.08] group-hover:border-white/10 transition-all">
-                          <Icon className="w-4 h-4 text-gray-400 group-hover:text-terex-accent transition-colors" />
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-white/[0.06] to-white/[0.02] border border-white/[0.08] flex items-center justify-center group-hover:border-white/15 transition-all">
+                          <span className="text-gray-400 group-hover:text-terex-accent transition-colors"><Icon /></span>
                         </div>
-                        <span className="font-medium text-sm">{item.label}</span>
-                        <ArrowRight className="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-40 transition-opacity -translate-x-1 group-hover:translate-x-0" />
+                        <div className="flex-1 text-left">
+                          <p className="font-medium text-[13px] leading-tight">{item.label}</p>
+                          <p className="text-[10px] text-gray-500 leading-tight">{item.description}</p>
+                        </div>
                       </button>
                     );
                   })}
                 </div>
 
-                {/* Divider */}
-                <div className="mx-4 h-px bg-white/[0.06]" />
+                <div className="mx-3 h-px bg-white/[0.06]" />
 
-                {/* Support items */}
-                <div className="p-3">
+                {/* Support section */}
+                <div className="p-2">
+                  <p className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-medium mb-1.5 px-3">Support</p>
                   {supportItems.map((item, i) => {
                     const Icon = item.icon;
                     return (
                       <button
                         key={item.href}
                         onClick={() => { navigate(item.href); setMenuOpen(false); }}
-                        className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-150 group"
-                        style={{ animationDelay: `${(navigationItems.length + i) * 40}ms` }}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/[0.04] hover:text-white transition-all duration-150 group"
                       >
-                        <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.08] group-hover:border-white/10 transition-all">
-                          <Icon className="w-4 h-4 text-gray-400 group-hover:text-terex-accent transition-colors" />
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-white/[0.06] to-white/[0.02] border border-white/[0.08] flex items-center justify-center group-hover:border-white/15 transition-all">
+                          <span className="text-gray-400 group-hover:text-terex-accent transition-colors"><Icon /></span>
                         </div>
-                        <span className="font-medium text-sm">{item.label}</span>
-                        <ArrowRight className="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-40 transition-opacity -translate-x-1 group-hover:translate-x-0" />
+                        <div className="flex-1 text-left">
+                          <p className="font-medium text-[13px] leading-tight">{item.label}</p>
+                          <p className="text-[10px] text-gray-500 leading-tight">{item.description}</p>
+                        </div>
                       </button>
                     );
                   })}
                 </div>
 
-                {/* Divider */}
-                <div className="mx-4 h-px bg-white/[0.06]" />
+                <div className="mx-3 h-px bg-white/[0.06]" />
 
-                {/* Bottom CTA */}
+                {/* CTA */}
                 <div className="p-3">
                   {user ? (
-                    <div className="space-y-2">
-                      <Button
-                        onClick={() => { onShowDashboard?.(); setMenuOpen(false); }}
-                        className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black py-5 rounded-xl text-sm font-medium"
-                      >
-                        <User className="w-4 h-4 mr-2" />
-                        Mon Dashboard
+                    <div className="space-y-1.5">
+                      <Button onClick={() => { onShowDashboard?.(); setMenuOpen(false); }} className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black py-4 rounded-xl text-sm font-medium">
+                        <User className="w-4 h-4 mr-2" />Mon Dashboard
                       </Button>
-                      <Button
-                        onClick={() => { handleLogout(); setMenuOpen(false); }}
-                        variant="ghost"
-                        className="w-full text-gray-400 hover:text-white hover:bg-white/5 py-4 rounded-xl text-sm"
-                      >
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Déconnexion
+                      <Button onClick={() => { handleLogout(); setMenuOpen(false); }} variant="ghost" className="w-full text-gray-400 hover:text-white hover:bg-white/5 py-3 rounded-xl text-xs">
+                        <LogOut className="w-4 h-4 mr-2" />Déconnexion
                       </Button>
                     </div>
                   ) : (
-                    <div className="space-y-2">
-                      <Button
-                        onClick={() => { navigate('/auth'); setMenuOpen(false); }}
-                        className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black py-5 rounded-xl text-sm font-medium"
-                      >
-                        Commencer
-                        <ArrowRight className="w-4 h-4 ml-2" />
+                    <div className="space-y-1.5">
+                      <Button onClick={() => { navigate('/auth'); setMenuOpen(false); }} className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black py-4 rounded-xl text-sm font-medium">
+                        Commencer<ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
-                      <Button
-                        onClick={() => { navigate('/auth'); setMenuOpen(false); }}
-                        variant="ghost"
-                        className="w-full text-gray-400 hover:text-white hover:bg-white/5 py-4 rounded-xl text-sm"
-                      >
+                      <Button onClick={() => { navigate('/auth'); setMenuOpen(false); }} variant="ghost" className="w-full text-gray-400 hover:text-white hover:bg-white/5 py-3 rounded-xl text-xs">
                         Se connecter
                       </Button>
                     </div>
