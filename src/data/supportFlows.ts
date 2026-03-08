@@ -143,19 +143,19 @@ export const supportFlows: SupportFlow[] = [
         answers: [
           {
             text: "Je n'ai pas encore de compte",
-            solution: "Créer un compte est simple et rapide:\n1. Cliquez sur 'S'inscrire' en haut à droite\n2. Entrez votre adresse email\n3. Vous recevrez un lien de connexion par email\n4. Cliquez sur le lien pour vous connecter\n5. Complétez votre profil\n\nPas de mot de passe à retenir ! Vous recevez un lien magique à chaque connexion. C'est plus sécurisé et plus simple."
+            solution: "Créer un compte est simple et rapide:\n1. Allez sur terangaexchange.com\n2. Cliquez sur 'S'inscrire'\n3. Entrez votre email et créez un mot de passe\n4. Confirmez votre email via le lien reçu\n5. Complétez votre profil\n\nVotre mot de passe doit contenir au moins 8 caractères. Conservez-le en lieu sûr."
           },
           {
             text: "Je ne reçois pas l'email de connexion",
-            solution: "Si vous ne recevez pas l'email:\n• Vérifiez vos spams/courriers indésirables\n• Attendez 5 minutes (l'email peut prendre du temps)\n• Vérifiez que vous avez bien entré votre email\n• Ajoutez noreply@terex.sn à vos contacts\n• Demandez un nouveau lien de connexion\n\nToujours rien ? Contactez-nous sur WhatsApp: +1 4182619091"
+            solution: "Si vous ne recevez pas l'email de confirmation:\n• Vérifiez vos spams/courriers indésirables\n• Attendez 5 minutes (l'email peut prendre du temps)\n• Vérifiez que vous avez bien entré votre email\n• Ajoutez noreply@terangaexchange.com à vos contacts\n\nToujours rien ? Contactez-nous sur WhatsApp: +1 4182619091"
           },
           {
-            text: "Le lien de connexion a expiré",
-            solution: "Les liens de connexion expirent après 1 heure pour votre sécurité. Demandez simplement un nouveau lien:\n1. Allez sur terex.sn\n2. Cliquez sur 'Se connecter'\n3. Entrez votre email\n4. Recevez un nouveau lien valide\n\nPour éviter l'expiration, utilisez le lien dès réception."
+            text: "J'ai oublié mon mot de passe",
+            solution: "Pour réinitialiser votre mot de passe:\n1. Allez sur terangaexchange.com\n2. Cliquez sur 'Se connecter'\n3. Cliquez sur 'Mot de passe oublié'\n4. Entrez votre email\n5. Suivez le lien reçu pour créer un nouveau mot de passe\n\nLe lien de réinitialisation expire après 1 heure."
           },
           {
             text: "Mon compte est bloqué",
-            solution: "Si votre compte est bloqué, cela peut être dû à:\n• Activité suspecte détectée\n• Problème de vérification KYC\n• Tentatives de connexion multiples\n\nContactez immédiatement notre support:\n• WhatsApp: +1 4182619091\n• Email: support@terex.sn\n• Indiquez votre email de compte\n\nNous traiterons votre cas en priorité."
+            solution: "Si votre compte est bloqué, cela peut être dû à:\n• Activité suspecte détectée\n• Problème de vérification KYC\n• Tentatives de connexion multiples\n\nContactez immédiatement notre support:\n• WhatsApp: +1 4182619091\n• Email: terangaexchange@gmail.com\n• Indiquez votre email de compte\n\nNous traiterons votre cas en priorité."
           }
         ]
       },
@@ -644,11 +644,11 @@ export const supportFlows: SupportFlow[] = [
           },
           {
             text: "J'ai reçu un email ou SMS suspect",
-            solution: "⚠️ Tentative de phishing possible !\n\nEmails légitimes Terex:\n• Envoyés depuis @terex.sn\n• Ne demandent JAMAIS votre mot de passe ou codes PIN\n\nQue faire:\n1. NE CLIQUEZ PAS sur les liens suspects\n2. NE DONNEZ AUCUNE information\n3. Supprimez l'email/SMS\n4. Signalez sur WhatsApp: +1 4182619091\n\nEn cas de doute, contactez-nous directement."
+            solution: "⚠️ Tentative de phishing possible !\n\nEmails légitimes Terex:\n• Envoyés depuis @terangaexchange.com\n• Ne demandent JAMAIS votre mot de passe ou codes PIN\n\nQue faire:\n1. NE CLIQUEZ PAS sur les liens suspects\n2. NE DONNEZ AUCUNE information\n3. Supprimez l'email/SMS\n4. Signalez sur WhatsApp: +1 4182619091\n\nEn cas de doute, contactez-nous directement."
           },
           {
             text: "Je veux renforcer la sécurité de mon compte",
-            solution: "Mesures recommandées:\n\n✅ Utilisez un email sécurisé (Gmail, Outlook) avec 2FA activée\n✅ Complétez la vérification KYC\n✅ Ne sauvegardez pas les liens de connexion\n✅ Déconnectez-vous après chaque session\n✅ N'utilisez pas de WiFi public\n✅ Vérifiez toujours l'URL: terex.sn\n✅ Ne partagez jamais vos accès\n\nEn cas de doute: WhatsApp +1 4182619091"
+            solution: "Mesures recommandées:\n\n✅ Utilisez un email sécurisé (Gmail, Outlook) avec 2FA activée\n✅ Complétez la vérification KYC\n✅ Utilisez un mot de passe fort et unique\n✅ Déconnectez-vous après chaque session\n✅ N'utilisez pas de WiFi public\n✅ Vérifiez toujours l'URL: terangaexchange.com\n✅ Ne partagez jamais vos accès\n\nEn cas de doute: WhatsApp +1 4182619091"
           }
         ]
       },
@@ -658,11 +658,11 @@ export const supportFlows: SupportFlow[] = [
         answers: [
           {
             text: "Je n'utilise plus le service",
-            solution: "Avant de supprimer:\n• Votre compte reste gratuit même inactif\n• Votre KYC sera perdu (à refaire si vous revenez)\n• Historique supprimé définitivement\n\nSi vous êtes sûr:\n1. Aucune transaction en cours\n2. Email à: support@terex.sn (Objet: 'Suppression de compte')\n3. Indiquez votre email et raison\n4. Pièce d'identité pour confirmation\n\nDélai: vérification 24-48h, suppression sous 7 jours."
+            solution: "Avant de supprimer:\n• Votre compte reste gratuit même inactif\n• Votre KYC sera perdu (à refaire si vous revenez)\n• Historique supprimé définitivement\n\nSi vous êtes sûr:\n1. Aucune transaction en cours\n2. Email à: terangaexchange@gmail.com (Objet: 'Suppression de compte')\n3. Indiquez votre email et raison\n4. Pièce d'identité pour confirmation\n\nDélai: vérification 24-48h, suppression sous 7 jours."
           },
           {
             text: "J'ai eu une mauvaise expérience",
-            solution: "Nous sommes désolés ! Avant de supprimer, donnez-nous une chance:\n• WhatsApp: +1 4182619091\n• Décrivez votre problème\n• Compensation possible selon le cas\n\nSi suppression maintenue: email à support@terex.sn avec 'Suppression compte' en objet."
+            solution: "Nous sommes désolés ! Avant de supprimer, donnez-nous une chance:\n• WhatsApp: +1 4182619091\n• Décrivez votre problème\n• Compensation possible selon le cas\n\nSi suppression maintenue: email à terangaexchange@gmail.com avec 'Suppression compte' en objet."
           },
           {
             text: "Je veux créer un nouveau compte",
@@ -676,7 +676,7 @@ export const supportFlows: SupportFlow[] = [
         answers: [
           {
             text: "Mon adresse email de connexion",
-            solution: "Procédure:\n1. Contactez support@terex.sn ou WhatsApp: +1 4182619091\n2. Indiquez email actuel + nouvel email\n3. Joindre pièce d'identité\n4. Vérification: 2-6 heures\n\nTout l'historique et le KYC sont préservés."
+            solution: "Procédure:\n1. Contactez terangaexchange@gmail.com ou WhatsApp: +1 4182619091\n2. Indiquez email actuel + nouvel email\n3. Joindre pièce d'identité\n4. Vérification: 2-6 heures\n\nTout l'historique et le KYC sont préservés."
           },
           {
             text: "Mon numéro de téléphone",
@@ -684,7 +684,7 @@ export const supportFlows: SupportFlow[] = [
           },
           {
             text: "Mon nom ou informations personnelles",
-            solution: "Infos modifiables dans Profil: nom d'affichage, téléphone, pays, langue.\n\nInfos KYC (nom légal, date de naissance): nécessitent validation manuelle.\n→ Email à support@terex.sn avec nouvelle pièce d'identité\n→ Délai: 24-72 heures"
+            solution: "Infos modifiables dans Profil: nom d'affichage, téléphone, pays, langue.\n\nInfos KYC (nom légal, date de naissance): nécessitent validation manuelle.\n→ Email à terangaexchange@gmail.com avec nouvelle pièce d'identité\n→ Délai: 24-72 heures"
           }
         ]
       },
@@ -693,12 +693,12 @@ export const supportFlows: SupportFlow[] = [
         question: "Que se passe-t-il quand vous essayez de vous connecter ?",
         answers: [
           {
-            text: "Je ne reçois pas l'email de connexion",
-            nextQuestionId: "magic-link-issue"
+            text: "J'ai oublié mon mot de passe",
+            solution: "Pour réinitialiser votre mot de passe:\n1. Allez sur terangaexchange.com\n2. Cliquez sur 'Se connecter'\n3. Cliquez sur 'Mot de passe oublié'\n4. Entrez votre email\n5. Suivez le lien reçu pour créer un nouveau mot de passe\n\nLe lien expire après 1 heure. Si vous ne recevez rien, vérifiez vos spams."
           },
           {
-            text: "Le lien de connexion ne fonctionne pas",
-            solution: "Les liens expirent après 1 heure. Demandez un nouveau lien. Si le problème persiste, vérifiez que vous utilisez le même navigateur et videz votre cache."
+            text: "Mon mot de passe est refusé",
+            solution: "Vérifiez que:\n• Vous utilisez bien le bon email\n• La touche Majuscule n'est pas activée\n• Vous n'avez pas d'espace en trop\n\nSi le problème persiste, réinitialisez votre mot de passe via 'Mot de passe oublié'. Si ça ne fonctionne toujours pas, contactez-nous: WhatsApp +1 4182619091"
           },
           {
             text: "J'ai oublié mon email de connexion",
@@ -716,7 +716,7 @@ export const supportFlows: SupportFlow[] = [
           },
           {
             text: "Je vais vérifier",
-            solution: "Vérifiez votre dossier spam/courriers indésirables. Ajoutez noreply@terex.sn à vos contacts pour recevoir nos emails. Si toujours rien, demandez un nouveau lien."
+            solution: "Vérifiez votre dossier spam/courriers indésirables. Ajoutez noreply@terangaexchange.com à vos contacts pour recevoir nos emails. Si toujours rien, réessayez la réinitialisation."
           }
         ]
       },

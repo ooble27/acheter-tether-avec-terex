@@ -88,7 +88,7 @@ export const NewsletterEmail = ({
               Politique de Confidentialité
             </Link>
             {' | '}
-            <Link href="https://terangaexchange.com/help" style={footerLink}>
+            <Link href="https://terangaexchange.com/guide" style={footerLink}>
               Centre d'aide
             </Link>
           </Text>

@@ -377,7 +377,7 @@ export function UserGuide({ onBack }: UserGuideProps) {
               <ul className="space-y-1 text-xs">
                 <li>• Utilisez un mot de passe fort et unique</li>
                 <li>• Déconnectez-vous sur les appareils publics</li>
-                <li>• Vérifiez toujours l'URL : terex.sn</li>
+                <li>• Vérifiez toujours l'URL : terangaexchange.com</li>
                 <li>• Complétez votre vérification KYC</li>
               </ul>
             </div>
@@ -408,7 +408,7 @@ export function UserGuide({ onBack }: UserGuideProps) {
           </div>
           <div className="bg-terex-darker/80 rounded-lg p-3 text-center">
             <p className="text-white font-medium text-sm">Centre d'aide</p>
-            <p className="text-white/40 text-xs">terex.sn/help</p>
+            <p className="text-white/40 text-xs">terangaexchange.com/guide</p>
           </div>
         </div>
       </section>
