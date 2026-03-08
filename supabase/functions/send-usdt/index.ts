@@ -26,8 +26,16 @@ const NETWORK_MAP: Record<string, string> = {
 const COIN = 'USDT';
 
 async function signRequest(queryString: string, apiSecret: string): Promise<string> {
-  const signature = hmac('sha256', apiSecret, queryString, 'utf8', 'hex');
-  return signature as string;
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(apiSecret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(queryString));
+  return [...new Uint8Array(signature)].map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 async function binanceWithdraw(
