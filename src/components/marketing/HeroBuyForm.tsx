@@ -59,7 +59,7 @@ export function HeroBuyForm() {
 
   return (
     <div className="w-[340px] sm:w-[360px] lg:w-[420px] max-w-[92vw]">
-      <div className="relative bg-gradient-to-b from-[hsl(220,15%,18%)] to-[hsl(220,15%,14%)] backdrop-blur-2xl border border-[hsl(220,10%,30%)]/30 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.4)] overflow-hidden">
+      <div className="relative bg-gradient-to-b from-[hsl(220,12%,13%)] to-[hsl(220,12%,10%)] backdrop-blur-2xl border border-[hsl(220,10%,25%)]/30 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.4)] overflow-hidden">
         
         {/* Subtle accent glow at top */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-terex-accent/50 to-transparent" />
@@ -107,7 +107,7 @@ export function HeroBuyForm() {
           {step === 1 && (
             <div className="space-y-3 animate-fade-in">
               {/* Pay input */}
-              <div className="relative rounded-2xl p-4 lg:p-5 border border-[hsl(220,10%,30%)]/25 bg-[hsl(220,15%,22%)]/60 hover:border-[hsl(220,10%,30%)]/40 transition-colors">
+              <div className="relative rounded-2xl p-4 lg:p-5 border border-[hsl(220,10%,25%)]/25 bg-[hsl(220,12%,16%)]/60 hover:border-[hsl(220,10%,25%)]/40 transition-colors">
                 <label className="text-[10px] lg:text-xs text-muted-foreground mb-2 block font-medium uppercase tracking-wider">Vous payez</label>
                 <div className="flex items-center gap-2">
                   <input
@@ -154,7 +154,7 @@ export function HeroBuyForm() {
               </div>
 
               {/* Receive output */}
-              <div className="relative rounded-2xl p-4 lg:p-5 border border-terex-accent/15 bg-[hsl(220,15%,22%)]/40">
+              <div className="relative rounded-2xl p-4 lg:p-5 border border-terex-accent/15 bg-[hsl(220,12%,16%)]/40">
                 <label className="text-[10px] lg:text-xs text-muted-foreground mb-2 block font-medium uppercase tracking-wider">Vous recevez</label>
                 <div className="flex items-center gap-2">
                   <span className="text-foreground text-2xl lg:text-3xl font-bold">{usdtAmount}</span>
