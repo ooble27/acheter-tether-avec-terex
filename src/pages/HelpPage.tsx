@@ -237,10 +237,10 @@ const HelpPage = () => {
         onLogout={handleLogout}
       />
 
-      <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-16">
+      <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-16">
         <button
           onClick={handleReset}
-          className="flex items-center gap-2 text-white/50 hover:text-white text-sm mb-8 transition-colors"
+          className="flex items-center gap-2 text-white/60 hover:text-white text-sm mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Retour aux catégories
@@ -263,11 +263,11 @@ const HelpPage = () => {
         {conversationPath.length > 0 && (
           <div className="space-y-3 mb-8">
             {conversationPath.map((item, index) => (
-              <div key={index} className="bg-white/[0.03] border border-white/[0.06] rounded-lg p-4 sm:p-5">
-                <p className="text-white/80 font-medium mb-2 text-sm">{item.question}</p>
+              <div key={index} className="bg-terex-gray/80 border border-white/10 rounded-lg p-4 sm:p-5">
+                <p className="text-white font-medium mb-2 text-sm">{item.question}</p>
                 <div className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-white/40 flex-shrink-0 mt-0.5" />
-                  <p className="text-white/50 text-sm">{item.answer}</p>
+                  <CheckCircle className="w-4 h-4 text-terex-accent flex-shrink-0 mt-0.5" />
+                  <p className="text-white/70 text-sm">{item.answer}</p>
                 </div>
               </div>
             ))}
@@ -276,13 +276,13 @@ const HelpPage = () => {
 
         {/* Current question */}
         {currentQuestion && !solution && (
-          <div className="bg-white/[0.04] border border-white/[0.08] rounded-lg p-5 sm:p-6">
+          <div className="bg-terex-gray/80 border border-white/10 rounded-lg p-5 sm:p-6">
             <h3 className="text-white font-medium text-lg mb-4">{currentQuestion.question}</h3>
             <div className="space-y-2">
               {currentQuestion.answers.map((answer, index) => (
                 <button
                   key={index}
-                  className="w-full text-left py-3 px-4 rounded-lg border border-white/[0.06] text-white/60 hover:bg-white/[0.06] hover:text-white hover:border-white/[0.12] transition-all text-sm"
+                  className="w-full text-left py-3 px-4 rounded-lg border border-white/10 bg-terex-darker/60 text-white/70 hover:bg-terex-darker hover:text-white hover:border-white/20 transition-all text-sm"
                   onClick={() => handleSelectAnswer(answer.text, answer.nextQuestionId, answer.solution)}
                 >
                   {answer.text}
@@ -294,27 +294,27 @@ const HelpPage = () => {
 
         {/* Solution */}
         {solution && (
-          <div className="bg-white/[0.04] border border-white/[0.08] rounded-lg p-5 sm:p-6">
+          <div className="bg-terex-gray/80 border border-white/10 rounded-lg p-5 sm:p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-full bg-white/[0.06] flex items-center justify-center">
-                <CheckCircle className="w-5 h-5 text-white/50" />
+              <div className="w-9 h-9 rounded-full bg-terex-accent/20 flex items-center justify-center">
+                <CheckCircle className="w-5 h-5 text-terex-accent" />
               </div>
               <h3 className="text-white font-medium text-lg">Solution</h3>
             </div>
-            <p className="text-white/60 whitespace-pre-line leading-relaxed text-sm mb-6">{solution}</p>
+            <p className="text-white/70 whitespace-pre-line leading-relaxed text-sm mb-6">{solution}</p>
 
-            <div className="pt-5 border-t border-white/[0.06]">
-              <p className="text-white/40 mb-4 text-sm">Cette solution a-t-elle résolu votre problème ?</p>
+            <div className="pt-5 border-t border-white/10">
+              <p className="text-white/50 mb-4 text-sm">Cette solution a-t-elle résolu votre problème ?</p>
               <div className="flex flex-col sm:flex-row gap-2">
                 <Button
                   onClick={handleReset}
-                  className="bg-white/[0.08] hover:bg-white/[0.12] text-white border border-white/[0.1] font-normal text-sm"
+                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium text-sm"
                 >
                   Oui, merci !
                 </Button>
                 <Button
                   variant="ghost"
-                  className="text-white/50 hover:text-white hover:bg-white/[0.06] text-sm"
+                  className="text-white/60 hover:text-white hover:bg-white/[0.08] text-sm"
                   onClick={() => window.open('https://wa.me/14182619091', '_blank')}
                 >
                   Non, contacter le support
