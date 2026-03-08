@@ -126,27 +126,6 @@ export function TestimonialsSection() {
         </div>
       </div>
       
-      {/* Badge de confiance */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mt-16">
-          <div className="inline-flex items-center space-x-6 bg-terex-darker/50 border border-terex-gray/30 rounded-2xl px-8 py-4">
-            <div className="text-center">
-              <div className="text-2xl font-light text-terex-accent">4.9/5</div>
-              <div className="text-sm text-gray-400 font-light">Note moyenne</div>
-            </div>
-            <div className="w-px h-8 bg-terex-gray/30"></div>
-            <div className="text-center">
-              <div className="text-2xl font-light text-terex-accent">1000+</div>
-              <div className="text-sm text-gray-400 font-light">Clients satisfaits</div>
-            </div>
-            <div className="w-px h-8 bg-terex-gray/30"></div>
-            <div className="text-center">
-              <div className="text-2xl font-light text-terex-accent">24/7</div>
-              <div className="text-sm text-gray-400 font-light">Support client</div>
-            </div>
-          </div>
-        </div>
-      </div>
       
       <style>{`
         @keyframes scroll-left {

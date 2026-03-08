@@ -59,15 +59,13 @@ export function DashboardPreviewSection() {
               </div>
             </div>
 
-            {/* Content — both rendered, toggle visibility for instant switch */}
+            {/* Content — fixed height container to prevent gap changes */}
             <div className="flex justify-center">
-              <div className={`w-full max-w-lg transition-opacity duration-300 ${activeView === 'desktop' ? 'block' : 'hidden'}`}>
+              <div className={`w-full max-w-lg ${activeView === 'desktop' ? 'block' : 'hidden'}`}>
                 <DesktopFrame />
               </div>
-              <div className={`transition-opacity duration-300 ${activeView === 'mobile' ? 'block' : 'hidden'}`}>
-                <div className="scale-[0.65] origin-top">
-                  <PhoneMockup />
-                </div>
+              <div className={`${activeView === 'mobile' ? 'block' : 'hidden'}`}>
+                <PhoneMockup />
               </div>
             </div>
           </div>

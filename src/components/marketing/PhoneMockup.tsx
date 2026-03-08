@@ -1,5 +1,13 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Globe, Handshake, Clock, ArrowDown, ArrowUp } from 'lucide-react';
+import { Globe, Handshake, Clock, RefreshCw } from 'lucide-react';
+
+const TetherLogo = ({ className, variant }: { className?: string; variant: 'green' | 'red' }) => (
+  <img 
+    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
+    alt="Tether Logo"
+    className={`${className} ${variant === 'red' ? 'hue-rotate-[140deg] saturate-150' : ''}`}
+  />
+);
 
 const BitcoinLogo = ({ className }: { className?: string }) => (
   <img src="/bitcoin-logo.png" alt="Bitcoin Logo" className={className} />
@@ -47,7 +55,7 @@ export function PhoneMockup() {
                   <CardContent className="p-2">
                     <div className="flex items-center justify-between mb-1">
                       <div className="w-6 h-6 bg-green-500/20 rounded-lg flex items-center justify-center">
-                        <ArrowDown className="w-3.5 h-3.5 text-green-400" />
+                        <TetherLogo className="w-4 h-4" variant="green" />
                       </div>
                     </div>
                     <h3 className="text-white text-xs font-medium text-left">Acheter USDT</h3>
@@ -59,7 +67,7 @@ export function PhoneMockup() {
                   <CardContent className="p-2">
                     <div className="flex items-center justify-between mb-1">
                       <div className="w-6 h-6 bg-red-500/20 rounded-lg flex items-center justify-center">
-                        <ArrowUp className="w-3.5 h-3.5 text-red-400" />
+                        <TetherLogo className="w-4 h-4" variant="red" />
                       </div>
                     </div>
                     <h3 className="text-white text-xs font-medium text-left">Vendre USDT</h3>
@@ -103,32 +111,30 @@ export function PhoneMockup() {
                     <div className="flex items-center justify-between p-1.5 bg-terex-dark/50 rounded-lg">
                       <div className="flex items-center space-x-2">
                         <div className="w-5 h-5 bg-red-500/20 rounded flex items-center justify-center flex-shrink-0">
-                          <ArrowUp className="w-3 h-3 text-red-400" />
+                          <TetherLogo className="w-3 h-3" variant="red" />
                         </div>
                         <div>
                           <p className="text-white text-[10px] font-medium text-left">Vente USDT</p>
                           <p className="text-gray-500 text-[9px] text-left">Il y a 2h</p>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <p className="text-red-400 text-[10px] font-medium">-300 USDT</p>
-                        <p className="text-gray-500 text-[9px]">195 000 CFA</p>
-                      </div>
+                      <button className="w-5 h-5 rounded flex items-center justify-center bg-white/5 hover:bg-white/10 transition-colors">
+                        <RefreshCw className="w-2.5 h-2.5 text-gray-400" />
+                      </button>
                     </div>
                     <div className="flex items-center justify-between p-1.5 bg-terex-dark/50 rounded-lg">
                       <div className="flex items-center space-x-2">
                         <div className="w-5 h-5 bg-green-500/20 rounded flex items-center justify-center flex-shrink-0">
-                          <ArrowDown className="w-3 h-3 text-green-400" />
+                          <TetherLogo className="w-3 h-3" variant="green" />
                         </div>
                         <div>
                           <p className="text-white text-[10px] font-medium text-left">Achat USDT</p>
                           <p className="text-gray-500 text-[9px] text-left">Hier</p>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <p className="text-green-400 text-[10px] font-medium">+500 USDT</p>
-                        <p className="text-gray-500 text-[9px]">325 000 CFA</p>
-                      </div>
+                      <button className="w-5 h-5 rounded flex items-center justify-center bg-white/5 hover:bg-white/10 transition-colors">
+                        <RefreshCw className="w-2.5 h-2.5 text-gray-400" />
+                      </button>
                     </div>
                   </div>
                 </CardContent>
