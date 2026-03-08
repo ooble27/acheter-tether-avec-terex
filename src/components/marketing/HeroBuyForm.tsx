@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Shield, Zap, AlertCircle } from 'lucide-react';
+import { ArrowRight, Shield, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTerexRates } from '@/hooks/useTerexRates';
