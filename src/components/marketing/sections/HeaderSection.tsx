@@ -166,104 +166,119 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-full bg-white border-none p-0">
+              <SheetContent side="right" className="w-full bg-terex-darker border-none p-0">
                 <ScrollArea className="h-full">
                   <div className="flex flex-col min-h-full pt-safe">
-                    {/* Header Attio-style */}
-                    <div className="px-6 pt-6 pb-4 border-b border-gray-100">
+                    {/* Header avec logo */}
+                    <div className="p-6 border-b border-terex-gray/20">
                       <div className="flex items-center space-x-3">
                         <img 
                           src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
                           alt="Terex Logo" 
-                          className="w-8 h-8 rounded-lg"
+                          className="w-10 h-10 rounded-lg"
                         />
-                        <span className="text-lg font-semibold text-gray-900">Terex</span>
+                        <div>
+                          <h2 className="text-lg font-semibold text-white">Navigation</h2>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Navigation Section - Attio clean list */}
-                    <div className="px-6 pt-6">
-                      <p className="text-xs font-medium text-gray-400 uppercase tracking-[0.15em] mb-3">Navigation</p>
-                      <div className="space-y-1">
-                        {navigationItems.map((item) => {
-                          const IconComponent = item.icon;
-                          return (
-                            <button
-                              key={item.href}
-                              onClick={() => navigate(item.href)}
-                              className="w-full flex items-center space-x-4 py-3 px-1 rounded-lg hover:bg-gray-50 transition-colors duration-150"
-                            >
-                              <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
-                                <IconComponent className="h-5 w-5 text-gray-600" />
+                    {/* Navigation Section */}
+                    <div className="p-4 space-y-2">
+                      {navigationItems.map((item) => {
+                        const IconComponent = item.icon;
+                        return (
+                          <Button
+                            key={item.href}
+                            variant="ghost"
+                            onClick={() => navigate(item.href)}
+                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
+                          >
+                            <div className="flex items-center space-x-4 w-full">
+                              <div className="p-2 rounded-lg bg-terex-gray/30">
+                                <IconComponent className="h-5 w-5" />
                               </div>
-                              <div className="text-left">
-                                <div className="font-medium text-sm text-gray-900">{item.label}</div>
-                                <div className="text-xs text-gray-500">{item.description}</div>
+                              <div className="flex-1 text-left">
+                                <div className="font-medium text-sm">{item.label}</div>
+                                <div className="text-xs opacity-75">{item.description}</div>
                               </div>
-                            </button>
-                          );
-                        })}
-                      </div>
+                            </div>
+                          </Button>
+                        );
+                      })}
                     </div>
 
-                    {/* Support Section - Attio clean list */}
-                    <div className="px-6 pt-6">
-                      <p className="text-xs font-medium text-gray-400 uppercase tracking-[0.15em] mb-3">Support</p>
-                      <div className="space-y-1">
-                        {supportItems.map((item) => {
-                          const IconComponent = item.icon;
-                          return (
-                            <button
-                              key={item.href}
-                              onClick={() => navigate(item.href)}
-                              className="w-full flex items-center space-x-4 py-3 px-1 rounded-lg hover:bg-gray-50 transition-colors duration-150"
-                            >
-                              <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
-                                <IconComponent className="h-5 w-5 text-gray-600" />
-                              </div>
-                              <div className="text-left">
-                                <div className="font-medium text-sm text-gray-900">{item.label}</div>
-                                <div className="text-xs text-gray-500">{item.description}</div>
-                              </div>
-                            </button>
-                          );
-                        })}
+                    {/* Support Section */}
+                    <div className="px-4 pb-4 space-y-2">
+                      <div className="pt-4 pb-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="h-px bg-terex-gray/40 flex-1"></div>
+                          <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Support</span>
+                          <div className="h-px bg-terex-gray/40 flex-1"></div>
+                        </div>
                       </div>
+                      {supportItems.map((item) => {
+                        const IconComponent = item.icon;
+                        return (
+                          <Button
+                            key={item.href}
+                            variant="ghost"
+                            onClick={() => navigate(item.href)}
+                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
+                          >
+                            <div className="flex items-center space-x-4 w-full">
+                              <div className="p-2 rounded-lg bg-terex-gray/30">
+                                <IconComponent className="h-5 w-5" />
+                              </div>
+                              <div className="flex-1 text-left">
+                                <div className="font-medium text-sm">{item.label}</div>
+                                <div className="text-xs opacity-75">{item.description}</div>
+                              </div>
+                            </div>
+                          </Button>
+                        );
+                      })}
                     </div>
 
-                    {/* Footer - clean CTA */}
-                    <div className="px-6 pt-8 mt-auto pb-safe pb-6">
+                    {/* Footer avec bouton de connexion */}
+                    <div className="p-4 border-t border-terex-gray/20 mt-auto pb-safe">
                       {user ? (
-                        <div className="space-y-1">
-                          <button
+                        <div className="space-y-2">
+                          <Button
                             onClick={onShowDashboard}
-                            className="w-full flex items-center space-x-4 py-3 px-1 rounded-lg hover:bg-gray-50 transition-colors duration-150"
+                            variant="ghost"
+                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-300 hover:bg-terex-gray/50 hover:text-white transition-all duration-200"
                           >
-                            <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
-                              <User className="h-5 w-5 text-gray-600" />
+                            <div className="flex items-center space-x-4 w-full">
+                              <div className="p-2 rounded-lg bg-terex-gray/30">
+                                <User className="h-5 w-5" />
+                              </div>
+                              <div className="flex-1 text-left">
+                                <div className="font-medium text-sm">Mon Dashboard</div>
+                                <div className="text-xs opacity-75">Accéder à mon compte</div>
+                              </div>
                             </div>
-                            <div className="text-left">
-                              <div className="font-medium text-sm text-gray-900">Mon Dashboard</div>
-                              <div className="text-xs text-gray-500">Accéder à mon compte</div>
-                            </div>
-                          </button>
-                          <button
+                          </Button>
+                          <Button
                             onClick={handleLogout}
-                            className="w-full flex items-center space-x-4 py-3 px-1 rounded-lg hover:bg-red-50 transition-colors duration-150"
+                            variant="ghost"
+                            className="w-full justify-start p-4 h-auto rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
                           >
-                            <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
-                              <LogOut className="h-5 w-5 text-red-500" />
+                            <div className="flex items-center space-x-4 w-full">
+                              <div className="p-2 rounded-lg bg-terex-gray/30">
+                                <LogOut className="h-5 w-5" />
+                              </div>
+                              <div className="flex-1 text-left">
+                                <div className="font-medium text-sm">Déconnexion</div>
+                                <div className="text-xs opacity-75">Se déconnecter</div>
+                              </div>
                             </div>
-                            <div className="text-left">
-                              <div className="font-medium text-sm text-red-600">Déconnexion</div>
-                              <div className="text-xs text-red-400">Se déconnecter</div>
-                            </div>
-                          </button>
+                          </Button>
                         </div>
                       ) : (
                         <Button
                           onClick={() => navigate('/auth')}
-                          className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-6 rounded-xl"
+                          className="w-full bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-medium py-6 rounded-xl shadow-lg shadow-terex-accent/25"
                         >
                           Se Connecter
                         </Button>
