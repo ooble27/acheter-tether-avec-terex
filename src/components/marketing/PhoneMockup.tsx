@@ -1,13 +1,10 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Globe, Handshake, Clock } from 'lucide-react';
+import { Globe, Handshake, Clock, ArrowDown, ArrowUp } from 'lucide-react';
 
 const BitcoinLogo = ({ className }: { className?: string }) => (
   <img src="/bitcoin-logo.png" alt="Bitcoin Logo" className={className} />
 );
 
-const TetherLogo = ({ className }: { className?: string }) => (
-  <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="Tether Logo" className={className} />
-);
 export function PhoneMockup() {
   return <div className="relative mx-auto">
       {/* Phone Frame */}
@@ -50,7 +47,7 @@ export function PhoneMockup() {
                   <CardContent className="p-2">
                     <div className="flex items-center justify-between mb-1">
                       <div className="w-6 h-6 bg-green-500/20 rounded-lg flex items-center justify-center">
-                        <TetherLogo className="w-4 h-4" />
+                        <ArrowDown className="w-3.5 h-3.5 text-green-400" />
                       </div>
                     </div>
                     <h3 className="text-white text-xs font-medium text-left">Acheter USDT</h3>
@@ -62,7 +59,7 @@ export function PhoneMockup() {
                   <CardContent className="p-2">
                     <div className="flex items-center justify-between mb-1">
                       <div className="w-6 h-6 bg-red-500/20 rounded-lg flex items-center justify-center">
-                        <TetherLogo className="w-4 h-4" />
+                        <ArrowUp className="w-3.5 h-3.5 text-red-400" />
                       </div>
                     </div>
                     <h3 className="text-white text-xs font-medium text-left">Vendre USDT</h3>
@@ -89,63 +86,48 @@ export function PhoneMockup() {
                         <Globe className="w-3 h-3 text-terex-accent" />
                       </div>
                     </div>
-                    <h3 className="text-white text-xs font-medium text-left">Virements</h3>
+                    <h3 className="text-white text-xs font-medium text-left">Transferts</h3>
                     <p className="text-gray-400 text-xs text-left">International</p>
                   </CardContent>
                 </Card>
               </div>
 
-              {/* Historique des transactions */}
+              {/* Activités récentes */}
               <Card className="bg-terex-darker border-terex-gray mb-3">
                 <CardContent className="p-2">
                   <h3 className="text-white text-xs font-medium mb-2 flex items-center">
                     <Clock className="w-3 h-3 mr-1 text-terex-accent" />
-                    Historique récent
+                    Activités récentes
                   </h3>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between p-1.5 bg-terex-dark/50 rounded-lg">
                       <div className="flex items-center space-x-2">
-                        <div className="w-5 h-5 bg-green-500/20 rounded flex items-center justify-center flex-shrink-0">
-                          <TetherLogo className="w-3 h-3" />
-                        </div>
-                        <div>
-                          <p className="text-white text-[10px] font-medium text-left">Achat USDT</p>
-                          <p className="text-gray-500 text-[9px] text-left">Il y a 2h</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-green-400 text-[10px] font-medium">+500 USDT</p>
-                        <p className="text-gray-500 text-[9px]">690 CAD</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between p-1.5 bg-terex-dark/50 rounded-lg">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-5 h-5 bg-blue-500/20 rounded flex items-center justify-center flex-shrink-0">
-                          <Globe className="w-3 h-3 text-blue-400" />
-                        </div>
-                        <div>
-                          <p className="text-white text-[10px] font-medium text-left">Virement</p>
-                          <p className="text-gray-500 text-[9px] text-left">Hier</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-blue-400 text-[10px] font-medium">-200 CAD</p>
-                        <p className="text-gray-500 text-[9px]">Cameroun</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between p-1.5 bg-terex-dark/50 rounded-lg">
-                      <div className="flex items-center space-x-2">
                         <div className="w-5 h-5 bg-red-500/20 rounded flex items-center justify-center flex-shrink-0">
-                          <TetherLogo className="w-3 h-3" />
+                          <ArrowUp className="w-3 h-3 text-red-400" />
                         </div>
                         <div>
                           <p className="text-white text-[10px] font-medium text-left">Vente USDT</p>
-                          <p className="text-gray-500 text-[9px] text-left">Il y a 3j</p>
+                          <p className="text-gray-500 text-[9px] text-left">Il y a 2h</p>
                         </div>
                       </div>
                       <div className="text-right">
                         <p className="text-red-400 text-[10px] font-medium">-300 USDT</p>
                         <p className="text-gray-500 text-[9px]">414 CAD</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between p-1.5 bg-terex-dark/50 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-5 h-5 bg-green-500/20 rounded flex items-center justify-center flex-shrink-0">
+                          <ArrowDown className="w-3 h-3 text-green-400" />
+                        </div>
+                        <div>
+                          <p className="text-white text-[10px] font-medium text-left">Achat USDT</p>
+                          <p className="text-gray-500 text-[9px] text-left">Hier</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-green-400 text-[10px] font-medium">+500 USDT</p>
+                        <p className="text-gray-500 text-[9px]">690 CAD</p>
                       </div>
                     </div>
                   </div>

@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Shield, Globe, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DeviceMockups } from './DeviceMockups';
-import { PhoneMockup } from './PhoneMockup';
+import { HeroBuyForm } from './HeroBuyForm';
 import { AnimatedSection } from '@/hooks/useScrollAnimation';
 
 interface HeroSectionProps {
@@ -42,12 +42,12 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               <DeviceMockups />
             </div>
 
-            {/* CTA buttons — pill style, compact */}
+            {/* CTA buttons — same size */}
             <div className="flex gap-3 justify-center mb-8">
               {user ? (
                 <Button 
                   onClick={handleDashboard}
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11 rounded-xl text-sm shadow-lg shadow-terex-accent/20 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02]"
+                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11 min-w-[160px] rounded-xl text-sm shadow-lg shadow-terex-accent/20 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02]"
                 >
                   Dashboard
                   <ArrowRight className="w-4 h-4 ml-1" />
@@ -55,7 +55,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               ) : (
                 <Button 
                   onClick={handleGetStarted}
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11 rounded-xl text-sm shadow-lg shadow-terex-accent/20 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02]"
+                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11 min-w-[160px] rounded-xl text-sm shadow-lg shadow-terex-accent/20 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02]"
                 >
                   Commencer
                   <ArrowRight className="w-4 h-4 ml-1" />
@@ -64,17 +64,15 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               <Button 
                 onClick={handleHowItWorks}
                 variant="outline" 
-                className="border-terex-gray/40 text-muted-foreground hover:bg-terex-gray/20 px-5 h-11 rounded-xl text-sm backdrop-blur-sm"
+                className="border-terex-gray/40 text-muted-foreground hover:bg-terex-gray/20 px-6 h-11 min-w-[160px] rounded-xl text-sm backdrop-blur-sm"
               >
                 Comment ça marche
               </Button>
             </div>
 
-            {/* Phone mockup — centered, compact */}
-            <div className="flex justify-center mb-8">
-              <div className="relative scale-[0.7]">
-                <PhoneMockup />
-              </div>
+            {/* Interactive buy form — mobile */}
+            <div className="flex justify-center mb-8 w-full">
+              <HeroBuyForm />
             </div>
           </AnimatedSection>
 
@@ -138,7 +136,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 <Button 
                   onClick={handleDashboard}
                   size="lg" 
-                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 rounded-xl text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group"
+                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 min-w-[220px] rounded-xl text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group"
                 >
                   Aller au Dashboard
                   <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
@@ -147,7 +145,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 <Button 
                   onClick={handleGetStarted}
                   size="lg" 
-                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 rounded-xl text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group"
+                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 min-w-[220px] rounded-xl text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group"
                 >
                   Commencer maintenant
                   <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
@@ -157,25 +155,23 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 onClick={handleHowItWorks}
                 variant="outline" 
                 size="lg"
-                className="border-terex-gray/50 text-foreground hover:bg-terex-gray/20 px-8 py-4 h-14 rounded-xl text-lg backdrop-blur-sm transition-all duration-300 hover:border-terex-accent/40"
+                className="border-terex-gray/50 text-foreground hover:bg-terex-gray/20 px-8 py-4 h-14 min-w-[220px] rounded-xl text-lg backdrop-blur-sm transition-all duration-300 hover:border-terex-accent/40"
               >
                 Comment ça marche
               </Button>
             </div>
           </AnimatedSection>
           
-          {/* Right — Phone */}
+          {/* Right — Interactive Buy Form */}
           <AnimatedSection className="flex justify-center" delay={300} direction="right">
-            <div className="relative">
-              <PhoneMockup />
-            </div>
+            <HeroBuyForm />
           </AnimatedSection>
         </div>
         
-        {/* Floating cards — Desktop only, with SVG lines */}
+        {/* Floating cards — Desktop & Tablet, with SVG lines */}
         <AnimatedSection className="mt-24 lg:mt-32 hidden sm:block" delay={400}>
           <div className="relative max-w-4xl mx-auto">
-            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
+            <svg className="absolute inset-0 w-full h-full pointer-events-none hidden lg:block" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
               <line x1="200" y1="100" x2="400" y2="100" stroke="hsl(var(--terex-accent))" strokeWidth="1" strokeDasharray="6 4" opacity="0.3" />
               <line x1="400" y1="100" x2="600" y2="100" stroke="hsl(var(--terex-accent))" strokeWidth="1" strokeDasharray="6 4" opacity="0.3" />
               <circle cx="200" cy="100" r="4" fill="hsl(var(--terex-accent))" opacity="0.5" />
@@ -183,7 +179,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               <circle cx="600" cy="100" r="4" fill="hsl(var(--terex-accent))" opacity="0.5" />
             </svg>
 
-            <div className="relative grid grid-cols-3 gap-4">
+            <div className="relative grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="relative bg-terex-darker/80 backdrop-blur-md rounded-2xl border border-terex-gray/25 p-6 shadow-xl hover:border-terex-accent/30 transition-all duration-500 hover:-translate-y-1">
                 <div className="flex items-center gap-3 mb-4">
                   <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-8 h-8" />
@@ -197,7 +193,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 <div className="mt-4 text-xs text-muted-foreground/60">+ 3 réseaux supportés</div>
               </div>
 
-              <div className="relative bg-terex-darker/80 backdrop-blur-md rounded-2xl border border-terex-accent/25 p-6 shadow-xl -translate-y-3 hover:border-terex-accent/40 transition-all duration-500 hover:-translate-y-4">
+              <div className="relative bg-terex-darker/80 backdrop-blur-md rounded-2xl border border-terex-accent/25 p-6 shadow-xl lg:-translate-y-3 hover:border-terex-accent/40 transition-all duration-500 hover:-translate-y-4">
                 <div className="flex items-center gap-3 mb-4">
                   <Globe className="w-7 h-7 text-terex-accent" />
                   <span className="text-foreground font-medium">Transferts</span>

@@ -4,18 +4,41 @@ import buyUsdtScreen from '@/assets/dashboard-buy-usdt.jpeg';
 import destinationScreen from '@/assets/dashboard-destination.jpeg';
 import confirmScreen from '@/assets/dashboard-confirm.jpeg';
 
-// Composant Phone Frame réutilisable
-function PhoneFrame({ image, alt }: { image: string; alt: string }) {
+/** iMac-style desktop frame for feature showcases */
+function DesktopShowcaseFrame({ image, alt }: { image: string; alt: string }) {
   return (
     <div className="relative mx-auto w-[320px] sm:w-[360px] lg:w-[400px]">
-      <div className="relative bg-gradient-to-br from-white/20 to-white/10 rounded-[2.5rem] p-2 shadow-2xl border border-white/30">
-        <div className="w-full h-full bg-black rounded-[2rem] overflow-hidden">
+      <div className="bg-gradient-to-b from-[hsl(0,0%,35%)] to-[hsl(0,0%,22%)] rounded-xl p-2 border-2 border-[hsl(0,0%,45%)] shadow-2xl">
+        {/* Top bar */}
+        <div className="flex items-center mb-1.5 px-2">
+          <div className="flex gap-1">
+            <div className="w-2 h-2 rounded-full bg-red-500/80" />
+            <div className="w-2 h-2 rounded-full bg-yellow-500/80" />
+            <div className="w-2 h-2 rounded-full bg-green-500/80" />
+          </div>
+          <div className="flex-1 flex justify-center">
+            <div className="w-2 h-2 bg-[hsl(0,0%,50%)] rounded-full" />
+          </div>
+          <div className="flex gap-1 opacity-0">
+            <div className="w-2 h-2" />
+            <div className="w-2 h-2" />
+            <div className="w-2 h-2" />
+          </div>
+        </div>
+        <div className="w-full bg-black rounded-lg overflow-hidden">
           <img 
             src={image} 
             alt={alt}
             className="w-full h-auto object-cover"
           />
         </div>
+      </div>
+      {/* Stand */}
+      <div className="flex justify-center mt-0">
+        <div className="w-20 h-3 bg-gradient-to-b from-[hsl(0,0%,35%)] to-[hsl(0,0%,25%)] rounded-b-lg border-x-2 border-b-2 border-[hsl(0,0%,45%)]" />
+      </div>
+      <div className="flex justify-center -mt-0.5">
+        <div className="w-32 h-1.5 bg-[hsl(0,0%,30%)] rounded-full border border-[hsl(0,0%,40%)]" />
       </div>
     </div>
   );
@@ -60,9 +83,9 @@ export function BuyUSDTShowcase() {
             </div>
           </AnimatedSection>
 
-          {/* Phone mockup - Right */}
+          {/* Desktop mockup - Right */}
           <AnimatedSection direction="left" className="order-1 lg:order-2 flex justify-center">
-            <PhoneFrame image={buyUsdtScreen} alt="Écran d'achat USDT Terex" />
+            <DesktopShowcaseFrame image={buyUsdtScreen} alt="Écran d'achat USDT Terex" />
           </AnimatedSection>
         </div>
       </div>
@@ -82,9 +105,9 @@ export function NetworkSelectionShowcase() {
     <section className="py-16 md:py-24">
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
-          {/* Phone mockup - Left */}
+          {/* Desktop mockup - Left */}
           <AnimatedSection direction="right" className="flex justify-center">
-            <PhoneFrame image={destinationScreen} alt="Sélection du réseau blockchain" />
+            <DesktopShowcaseFrame image={destinationScreen} alt="Sélection du réseau blockchain" />
           </AnimatedSection>
 
           {/* Text content - Right */}
@@ -158,9 +181,9 @@ export function ConfirmationShowcase() {
             </div>
           </AnimatedSection>
 
-          {/* Phone mockup - Right */}
+          {/* Desktop mockup - Right */}
           <AnimatedSection direction="left" className="order-1 lg:order-2 flex justify-center">
-            <PhoneFrame image={confirmScreen} alt="Écran de confirmation Terex" />
+            <DesktopShowcaseFrame image={confirmScreen} alt="Écran de confirmation Terex" />
           </AnimatedSection>
         </div>
       </div>
