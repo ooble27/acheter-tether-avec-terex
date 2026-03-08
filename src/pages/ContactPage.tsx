@@ -78,7 +78,7 @@ const ContactPage = () => {
       {/* Hero - monumental */}
       <section className="pt-20 pb-10 md:pt-32 md:pb-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-light text-foreground mb-5 tracking-tight leading-[1.05]">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-light text-foreground mb-5 tracking-tight">
             Contactez notre équipe
           </h1>
           <p className="text-muted-foreground text-base md:text-lg max-w-lg mx-auto">
