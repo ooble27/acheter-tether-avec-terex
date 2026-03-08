@@ -66,11 +66,7 @@ const TermsPage = () => {
         </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-6 py-3 mb-8 border border-terex-accent/20">
-              <FileText className="w-5 h-5 text-terex-accent mr-2" />
-              <span className="text-terex-accent font-medium">Conditions d'Utilisation</span>
-            </div>
+           <div className="text-center">
             
             <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
               Conditions <span className="text-terex-accent">d'Utilisation</span>
