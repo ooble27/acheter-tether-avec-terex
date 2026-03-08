@@ -154,7 +154,7 @@ export function HeroBuyForm() {
               </div>
 
               {/* Receive output */}
-              <div className="relative rounded-2xl p-4 lg:p-5 border border-terex-accent/15 bg-[hsl(220,15%,22%)]/40">
+              <div className="relative rounded-2xl p-4 lg:p-5 border border-terex-accent/15 bg-[hsl(220,12%,16%)]/40">
                 <label className="text-[10px] lg:text-xs text-muted-foreground mb-2 block font-medium uppercase tracking-wider">Vous recevez</label>
                 <div className="flex items-center gap-2">
                   <span className="text-foreground text-2xl lg:text-3xl font-bold">{usdtAmount}</span>
