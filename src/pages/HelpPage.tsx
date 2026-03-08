@@ -158,19 +158,33 @@ const HelpPage = () => {
               return (
                 <Card
                   key={category.flowId}
-                  className="bg-white/[0.03] border-white/[0.06] hover:border-white/[0.12] transition-all duration-300 cursor-pointer group overflow-hidden"
+                  className="bg-terex-gray/80 border-white/10 hover:border-white/20 hover:bg-terex-gray transition-all duration-300 cursor-pointer group overflow-hidden rounded-xl"
                   onClick={() => handleSelectFlow(category.flowId)}
                 >
-                  {/* Icon preview area */}
-                  <div className="relative h-32 sm:h-36 bg-white/[0.02] border-b border-white/[0.06] flex items-center justify-center">
-                    <div className="w-14 h-14 rounded-xl bg-white/[0.06] border border-white/[0.08] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors">
-                      <IconComponent className="w-7 h-7 text-white/60 group-hover:text-white/80 transition-colors" />
+                  {/* Preview mockup area */}
+                  <div className="relative h-36 sm:h-44 bg-terex-darker/50 border-b border-white/10 flex items-center justify-center p-4 overflow-hidden">
+                    {/* Simulated UI preview */}
+                    <div className="w-full max-w-[200px] bg-terex-dark rounded-lg border border-white/10 p-3 shadow-lg">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-terex-accent/20 flex items-center justify-center">
+                          <IconComponent className="w-4 h-4 text-terex-accent" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="h-2 w-16 bg-white/20 rounded" />
+                          <div className="h-1.5 w-10 bg-white/10 rounded mt-1" />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="h-2 w-full bg-white/10 rounded" />
+                        <div className="h-2 w-3/4 bg-white/10 rounded" />
+                        <div className="h-6 w-full bg-terex-accent/30 rounded mt-3" />
+                      </div>
                     </div>
                   </div>
 
                   <CardContent className="p-5 sm:p-6">
-                    <h3 className="text-white font-medium text-lg mb-1.5">{category.title}</h3>
-                    <p className="text-white/40 text-sm leading-relaxed">{category.description}</p>
+                    <h3 className="text-white font-semibold text-lg mb-1.5">{category.title}</h3>
+                    <p className="text-white/50 text-sm leading-relaxed">{category.description}</p>
                   </CardContent>
                 </Card>
               );
