@@ -1,7 +1,3 @@
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { FileText, Calendar, User, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -10,223 +6,66 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
+const sections = [
+  { title: "1. Acceptation", content: "En utilisant Terex, vous acceptez ces conditions. Si vous ne les acceptez pas, veuillez ne pas utiliser nos services." },
+  { title: "2. Description du Service", content: "Terex est une plateforme d'échange crypto-fiat permettant de :\n\n• Acheter et vendre des USDT\n• Effectuer des transferts vers l'Afrique\n• Accéder à des services de change\n• Utiliser des outils de trading" },
+  { title: "3. Éligibilité", content: "Vous devez :\n\n• Être âgé d'au moins 18 ans\n• Avoir la capacité juridique de contracter\n• Ne pas résider dans un pays où nos services sont interdits\n• Fournir des informations exactes et à jour" },
+  { title: "4. Vérification KYC", content: "Conformément aux réglementations, une vérification d'identité est requise. Elle inclut la fourniture de documents d'identité valides et peut prendre jusqu'à 24 heures." },
+  { title: "5. Frais et Commissions", content: "Nos frais sont transparents :\n\n• Échange USDT : 0.5% par transaction\n• Transferts internationaux : 2-3% selon la destination\n• Frais de réseau blockchain variables" },
+  { title: "6. Sécurité", content: "Nous mettons en œuvre des mesures de sécurité robustes. Vous êtes responsable de la sécurité de votre compte, mot de passe et authentification 2FA." },
+  { title: "7. Interdictions", content: "Il est interdit d'utiliser nos services pour :\n\n• Le blanchiment d'argent ou financement du terrorisme\n• Toute activité illégale ou frauduleuse\n• La manipulation des marchés\n• L'accès non autorisé à nos systèmes" },
+  { title: "8. Résiliation", content: "Nous pouvons suspendre ou fermer votre compte en cas de violation, activité suspecte ou conformité réglementaire." },
+  { title: "9. Limitation de Responsabilité", content: "Terex ne peut être tenu responsable des pertes indirectes ou dommages consécutifs. Notre responsabilité est limitée aux frais payés pour le service concerné." },
+  { title: "10. Modifications", content: "Ces conditions peuvent être modifiées à tout moment. Les changements entrent en vigueur 30 jours après publication." },
+  { title: "11. Droit Applicable", content: "Ces conditions sont régies par le droit sénégalais. Les litiges relèvent de la juridiction des tribunaux de Dakar." },
+  { title: "12. Contact", content: "Email : terangaexchange@gmail.com\nWhatsApp : +1 (418) 261-9091\nAdresse : Plateau, Avenue Léopold Sédar Senghor, Dakar, Sénégal" },
+];
+
 const TermsPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de se déconnecter",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Déconnexion réussie",
-        description: "Vous avez été déconnecté avec succès",
-        className: "bg-green-600 text-white border-green-600",
-      });
-      window.location.reload();
-    }
-  };
-
-  const handleShowDashboard = () => {
-    navigate('/');
+    if (!error) { toast({ title: "Déconnexion réussie", description: "À bientôt", className: "bg-green-600 text-white border-green-600" }); window.location.reload(); }
   };
 
   return (
     <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
-      {/* Grid background pattern - white with more density like Attio */}
-      <div className="fixed inset-0 opacity-[0.06] pointer-events-none" style={{
-        backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
-                          linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px)`,
+      <div className="fixed inset-0 opacity-[0.04] pointer-events-none" style={{
+        backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
         backgroundSize: '40px 40px'
       }} />
-      <HeaderSection 
-        user={user ? {
-          email: user.email || '',
-          name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
-        } : null}
-        onShowDashboard={handleShowDashboard}
-        onLogout={handleLogout}
-      />
+      <HeaderSection user={user ? { email: user.email || '', name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur' } : null} onShowDashboard={() => navigate('/')} onLogout={handleLogout} />
+      <div className="h-16 md:h-20" />
 
-      {/* Hero Section */}
-      <div className="relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-6 py-3 mb-8 border border-terex-accent/20">
-              <FileText className="w-5 h-5 text-terex-accent mr-2" />
-              <span className="text-terex-accent font-medium">Conditions d'Utilisation</span>
-            </div>
-            
-            <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
-              Conditions <span className="text-terex-accent">d'Utilisation</span>
-            </h1>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
-              Veuillez lire attentivement ces conditions avant d'utiliser nos services.
-            </p>
-            
-            <div className="flex items-center justify-center space-x-6 text-gray-400">
-              <div className="flex items-center space-x-2">
-                <Calendar className="w-4 h-4" />
-                <span>Dernière mise à jour: 15 janvier 2024</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <User className="w-4 h-4" />
-                <span>Version 2.1</span>
-              </div>
-            </div>
+      <section className="pt-12 pb-6 md:pt-24 md:pb-12">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-4">/ CONDITIONS</p>
+          <h1 className="text-3xl md:text-5xl font-light text-foreground mb-3">Conditions d'Utilisation</h1>
+          <div className="flex items-center gap-4 text-muted-foreground text-xs">
+            <span>Dernière mise à jour : janvier 2024</span>
+            <span>Version 2.1</span>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Terms Content */}
-      <div className="py-24 bg-terex-dark">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Card className="bg-gradient-to-br from-terex-darker to-terex-gray/30 border-terex-accent/20">
-            <CardHeader>
-              <CardTitle className="text-white text-2xl flex items-center">
-                <Shield className="w-6 h-6 mr-3 text-terex-accent" />
-                Conditions Générales d'Utilisation
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[600px] pr-4">
-                <div className="space-y-8 text-gray-300">
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">1. Acceptation des Conditions</h2>
-                    <p className="leading-relaxed">
-                      En accédant et en utilisant la plateforme Terex, vous acceptez d'être lié par ces conditions d'utilisation. 
-                      Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser nos services.
-                    </p>
-                  </section>
+      <div className="max-w-3xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
 
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">2. Description du Service</h2>
-                    <p className="leading-relaxed mb-4">
-                      Terex est une plateforme d'échange crypto-fiat qui permet aux utilisateurs de:
-                    </p>
-                    <ul className="list-disc pl-6 space-y-2">
-                      <li>Acheter et vendre des USDT (Tether)</li>
-                      <li>Effectuer des transferts d'argent vers l'Afrique</li>
-                      <li>Accéder à des services de change de devises</li>
-                      <li>Utiliser des outils de trading et d'analyse</li>
-                    </ul>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">3. Éligibilité</h2>
-                    <p className="leading-relaxed">
-                      Pour utiliser nos services, vous devez:
-                    </p>
-                    <ul className="list-disc pl-6 space-y-2 mt-4">
-                      <li>Être âgé d'au moins 18 ans</li>
-                      <li>Avoir la capacité juridique de contracter</li>
-                      <li>Ne pas être résident d'un pays où nos services sont interdits</li>
-                      <li>Fournir des informations exactes et à jour</li>
-                    </ul>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">4. Vérification d'Identité (KYC)</h2>
-                    <p className="leading-relaxed">
-                      Conformément aux réglementations en vigueur, nous exigeons une vérification d'identité (KYC) pour tous les utilisateurs. 
-                      Cette procédure inclut la fourniture de documents d'identité valides et peut prendre jusqu'à 24 heures.
-                    </p>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">5. Frais et Commissions</h2>
-                    <p className="leading-relaxed mb-4">
-                      Nos frais sont transparents et affichés avant chaque transaction:
-                    </p>
-                    <ul className="list-disc pl-6 space-y-2">
-                      <li>Échange USDT: 0.5% par transaction</li>
-                      <li>Transferts internationaux: 2-3% selon la destination</li>
-                      <li>Frais de réseau blockchain variables</li>
-                    </ul>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">6. Sécurité</h2>
-                    <p className="leading-relaxed">
-                      Nous mettons en œuvre des mesures de sécurité robustes pour protéger vos fonds et vos données. 
-                      Cependant, vous êtes responsable de la sécurité de votre compte, notamment de votre mot de passe 
-                      et de l'authentification à deux facteurs.
-                    </p>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">7. Interdictions</h2>
-                    <p className="leading-relaxed mb-4">
-                      Il est strictement interdit d'utiliser nos services pour:
-                    </p>
-                    <ul className="list-disc pl-6 space-y-2">
-                      <li>Le blanchiment d'argent ou le financement du terrorisme</li>
-                      <li>Toute activité illégale ou frauduleuse</li>
-                      <li>La manipulation des marchés</li>
-                      <li>L'accès non autorisé à nos systèmes</li>
-                    </ul>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">8. Résiliation</h2>
-                    <p className="leading-relaxed">
-                      Nous nous réservons le droit de suspendre ou de fermer votre compte en cas de violation de ces conditions, 
-                      d'activité suspecte ou pour des raisons de conformité réglementaire.
-                    </p>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">9. Limitation de Responsabilité</h2>
-                    <p className="leading-relaxed">
-                      Terex ne peut être tenu responsable des pertes indirectes, des dommages consécutifs ou de la perte de profits 
-                      résultant de l'utilisation de nos services. Notre responsabilité est limitée au montant des frais payés 
-                      pour le service concerné.
-                    </p>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">10. Modifications</h2>
-                    <p className="leading-relaxed">
-                      Nous nous réservons le droit de modifier ces conditions à tout moment. Les modifications seront communiquées 
-                      via notre plateforme et entreront en vigueur 30 jours après leur publication.
-                    </p>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">11. Droit Applicable</h2>
-                    <p className="leading-relaxed">
-                      Ces conditions sont régies par le droit sénégalais. Tout litige sera soumis à la juridiction exclusive 
-                      des tribunaux de Dakar, Sénégal.
-                    </p>
-                  </section>
-
-                  <section>
-                    <h2 className="text-xl font-semibold text-white mb-4">12. Contact</h2>
-                    <p className="leading-relaxed">
-                      Pour toute question concernant ces conditions d'utilisation, veuillez nous contacter à:
-                    </p>
-                    <div className="mt-4 space-y-2">
-                      <p>Email: terangaexchange@gmail.com</p>
-                      <p>WhatsApp: +1 4182619091</p>
-                      <p>Adresse: Plateau, Avenue Léopold Sédar Senghor, Dakar, Sénégal</p>
-                    </div>
-                  </section>
-                </div>
-              </ScrollArea>
-            </CardContent>
-          </Card>
+      <section className="py-8 md:py-16">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 space-y-6">
+          {sections.map((s, i) => (
+            <div key={i}>
+              <h2 className="text-foreground font-medium text-sm md:text-base mb-2">{s.title}</h2>
+              <p className="text-muted-foreground text-xs md:text-sm leading-relaxed whitespace-pre-line">{s.content}</p>
+              {i < sections.length - 1 && <div className="border-t border-dashed border-white/[0.06] mt-6" />}
+            </div>
+          ))}
         </div>
-      </div>
+      </section>
 
       <FooterSection />
     </div>

@@ -1,7 +1,4 @@
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Shield, Lock, Eye, Server, FileCheck, AlertTriangle } from 'lucide-react';
+import { Lock, Shield, Eye, Server, FileCheck, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -15,260 +12,138 @@ const SecurityPage = () => {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de se déconnecter",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Déconnexion réussie",
-        description: "Vous avez été déconnecté avec succès",
-        className: "bg-green-600 text-white border-green-600",
-      });
-      window.location.reload();
-    }
+    if (!error) { toast({ title: "Déconnexion réussie", description: "À bientôt", className: "bg-green-600 text-white border-green-600" }); window.location.reload(); }
   };
 
-  const handleShowDashboard = () => {
-    navigate('/');
-  };
-
-  const securityFeatures = [
-    {
-      title: "Chiffrement de Bout en Bout",
-      description: "Toutes vos données sont chiffrées avec AES-256, le même standard utilisé par les banques.",
-      icon: Lock,
-      level: "Élevé"
-    },
-    {
-      title: "Authentification à 2 Facteurs",
-      description: "Protection supplémentaire avec codes SMS, applications authenticator ou clés physiques.",
-      icon: Shield,
-      level: "Élevé"
-    },
-    {
-      title: "Stockage Sécurisé des Fonds",
-      description: "95% des fonds sont stockés hors ligne dans des cold wallets multi-signatures.",
-      icon: Server,
-      level: "Maximum"
-    },
-    {
-      title: "Surveillance Continue",
-      description: "Monitoring 24/7 avec détection automatique des activités suspectes.",
-      icon: Eye,
-      level: "Élevé"
-    },
-    {
-      title: "Conformité Réglementaire",
-      description: "Respect des normes KYC/AML et des réglementations financières internationales.",
-      icon: FileCheck,
-      level: "Maximum"
-    },
-    {
-      title: "Audits de Sécurité",
-      description: "Audits réguliers par des sociétés de cybersécurité reconnues.",
-      icon: AlertTriangle,
-      level: "Élevé"
-    }
+  const features = [
+    { icon: Lock, title: "Chiffrement AES-256", desc: "Toutes vos données sont chiffrées avec le standard bancaire." },
+    { icon: Shield, title: "Authentification 2FA", desc: "Protection supplémentaire avec codes SMS ou authenticator." },
+    { icon: Server, title: "Cold Wallets", desc: "95% des fonds stockés hors ligne en multi-signatures." },
+    { icon: Eye, title: "Surveillance 24/7", desc: "Détection automatique des activités suspectes." },
+    { icon: FileCheck, title: "Conformité KYC/AML", desc: "Respect des réglementations financières internationales." },
+    { icon: AlertTriangle, title: "Audits réguliers", desc: "Par des sociétés de cybersécurité reconnues." },
   ];
 
-  const certifications = [
-    {
-      name: "ISO 27001",
-      description: "Certification de sécurité de l'information",
-      status: "Certifié"
-    },
-    {
-      name: "SOC 2 Type II",
-      description: "Audit des contrôles de sécurité",
-      status: "Certifié"
-    },
-    {
-      name: "PCI DSS",
-      description: "Sécurité des données de cartes de paiement",
-      status: "Conforme"
-    }
-  ];
-
-  const getLevelColor = (level: string) => {
-    switch (level) {
-      case 'Maximum': return 'bg-red-600';
-      case 'Élevé': return 'bg-orange-600';
-      case 'Moyen': return 'bg-yellow-600';
-      default: return 'bg-gray-600';
-    }
+  const tips = {
+    account: ["Mot de passe unique et complexe", "Authentification à deux facteurs", "Ne partagez jamais vos identifiants", "Déconnectez-vous après chaque session"],
+    fraud: ["Vérifiez toujours l'URL officielle", "Méfiez-vous des emails de phishing", "Ne donnez jamais vos codes par téléphone", "Contactez-nous en cas de doute"]
   };
 
   return (
     <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
-      {/* Grid background pattern - white with more density like Attio */}
-      <div className="fixed inset-0 opacity-[0.06] pointer-events-none" style={{
-        backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
-                          linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px)`,
+      <div className="fixed inset-0 opacity-[0.04] pointer-events-none" style={{
+        backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
         backgroundSize: '40px 40px'
       }} />
-      <HeaderSection 
-        user={user ? {
-          email: user.email || '',
-          name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
-        } : null}
-        onShowDashboard={handleShowDashboard}
-        onLogout={handleLogout}
-      />
+      <HeaderSection user={user ? { email: user.email || '', name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur' } : null} onShowDashboard={() => navigate('/')} onLogout={handleLogout} />
+      <div className="h-16 md:h-20" />
 
-      {/* Hero Section */}
-      <div className="relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <div className="inline-flex items-center bg-terex-accent/10 rounded-full px-6 py-3 mb-8 border border-terex-accent/20">
-              <Shield className="w-5 h-5 text-terex-accent mr-2" />
-              <span className="text-terex-accent font-medium">Politique de Sécurité</span>
-            </div>
-            
-            <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6">
-              Sécurité de <span className="text-terex-accent">Niveau Bancaire</span>
-            </h1>
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-12">
-              Votre sécurité est notre priorité absolue. Découvrez les mesures que nous prenons pour protéger vos fonds et vos données.
-            </p>
-            
-            <div className="flex items-center justify-center space-x-8 text-terex-accent">
-              <div className="text-center">
-                <div className="text-3xl font-bold">256-bit</div>
-                <div className="text-sm text-gray-400">Chiffrement AES</div>
+      {/* Hero */}
+      <section className="pt-12 pb-6 md:pt-24 md:pb-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-4">/ SÉCURITÉ</p>
+          <h1 className="text-3xl md:text-5xl font-light text-foreground mb-3">
+            Sécurité & Conformité
+          </h1>
+          <p className="text-muted-foreground text-base md:text-lg max-w-2xl">
+            Votre sécurité est notre priorité absolue. Découvrez nos mesures de protection.
+          </p>
+          <p className="text-muted-foreground text-xs mt-4">Dernière mise à jour : mars 2025</p>
+        </div>
+      </section>
+
+      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+
+      {/* Key metrics */}
+      <section className="py-8 md:py-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-3 gap-3">
+            {[{ v: "256-bit", l: "Chiffrement" }, { v: "95%", l: "Fonds hors ligne" }, { v: "24/7", l: "Surveillance" }].map((s, i) => (
+              <div key={i} className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] text-center">
+                <p className="text-terex-accent text-lg md:text-xl font-semibold">{s.v}</p>
+                <p className="text-muted-foreground text-xs">{s.l}</p>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold">95%</div>
-                <div className="text-sm text-gray-400">Fonds hors ligne</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold">24/7</div>
-                <div className="text-sm text-gray-400">Surveillance</div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Security Features */}
-      <div className="py-24 bg-terex-dark">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-white mb-12 text-center">Mesures de Sécurité</h2>
-          
-          <div className="grid lg:grid-cols-2 gap-8 mb-16">
-            {securityFeatures.map((feature, index) => {
-              const IconComponent = feature.icon;
+      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+
+      {/* Security features */}
+      <section className="py-8 md:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-6">Mesures de sécurité</p>
+          <div className="grid md:grid-cols-2 gap-3">
+            {features.map((f, i) => {
+              const Icon = f.icon;
               return (
-                <Card key={index} className="bg-gradient-to-br from-terex-darker to-terex-gray/30 border-terex-accent/20 hover:border-terex-accent/40 transition-all duration-300">
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-terex-accent/20 rounded-xl flex items-center justify-center">
-                          <IconComponent className="w-6 h-6 text-terex-accent" />
-                        </div>
-                        <div>
-                          <CardTitle className="text-white text-lg">{feature.title}</CardTitle>
-                        </div>
-                      </div>
-                      <Badge className={`${getLevelColor(feature.level)} text-white`}>
-                        {feature.level}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-300">{feature.description}</p>
-                  </CardContent>
-                </Card>
+                <div key={i} className="flex items-start gap-4 p-4 md:p-5 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+                  <Icon className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-foreground text-sm font-medium mb-0.5">{f.title}</p>
+                    <p className="text-muted-foreground text-xs leading-relaxed">{f.desc}</p>
+                  </div>
+                </div>
               );
             })}
           </div>
+        </div>
+      </section>
 
-          {/* Certifications */}
-          <div className="bg-gradient-to-r from-terex-darker to-terex-gray/30 rounded-2xl p-8 border border-terex-accent/20">
-            <h3 className="text-2xl font-bold text-white mb-8 text-center">Certifications et Conformité</h3>
-            <div className="grid md:grid-cols-3 gap-6">
-              {certifications.map((cert, index) => (
-                <div key={index} className="text-center">
-                  <div className="w-16 h-16 bg-terex-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <FileCheck className="w-8 h-8 text-terex-accent" />
-                  </div>
-                  <h4 className="text-white font-semibold mb-2">{cert.name}</h4>
-                  <p className="text-gray-300 text-sm mb-3">{cert.description}</p>
-                  <Badge className="bg-green-600 text-white">{cert.status}</Badge>
-                </div>
-              ))}
-            </div>
+      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
+
+      {/* Certifications */}
+      <section className="py-8 md:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-6">Certifications</p>
+          <div className="grid grid-cols-3 gap-3">
+            {[{ name: "ISO 27001", desc: "Sécurité de l'information" }, { name: "SOC 2", desc: "Contrôles de sécurité" }, { name: "PCI DSS", desc: "Données de paiement" }].map((c, i) => (
+              <div key={i} className="p-4 md:p-5 rounded-xl border border-white/[0.06] bg-white/[0.02] text-center">
+                <p className="text-foreground font-medium text-sm mb-1">{c.name}</p>
+                <p className="text-muted-foreground text-[11px]">{c.desc}</p>
+              </div>
+            ))}
           </div>
+        </div>
+      </section>
 
-          {/* Security Best Practices */}
-          <div className="mt-16">
-            <h3 className="text-2xl font-bold text-white mb-8 text-center">Conseils de Sécurité</h3>
-            <div className="grid md:grid-cols-2 gap-8">
-              <Card className="bg-terex-darker/80 border-terex-accent/20">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center">
-                    <Shield className="w-5 h-5 mr-2 text-terex-accent" />
-                    Pour votre Compte
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 text-gray-300">
-                  <div className="flex items-start space-x-2">
-                    <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
-                    <p>Utilisez un mot de passe unique et complexe</p>
-                  </div>
-                  <div className="flex items-start space-x-2">
-                    <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
-                    <p>Activez l'authentification à deux facteurs</p>
-                  </div>
-                  <div className="flex items-start space-x-2">
-                    <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
-                    <p>Ne partagez jamais vos identifiants</p>
-                  </div>
-                  <div className="flex items-start space-x-2">
-                    <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
-                    <p>Déconnectez-vous après chaque session</p>
-                  </div>
-                </CardContent>
-              </Card>
+      <div className="max-w-4xl mx-auto px-4"><div className="border-t border-dashed border-white/10" /></div>
 
-              <Card className="bg-terex-darker/80 border-terex-accent/20">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center">
-                    <AlertTriangle className="w-5 h-5 mr-2 text-terex-accent" />
-                    Vigilance contre les Fraudes
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 text-gray-300">
-                  <div className="flex items-start space-x-2">
-                    <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
-                    <p>Vérifiez toujours l'URL officielle</p>
+      {/* Tips */}
+      <section className="py-8 md:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-6">Conseils de sécurité</p>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="p-5 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+              <p className="text-foreground text-sm font-medium mb-3">Pour votre compte</p>
+              <div className="space-y-2">
+                {tips.account.map((t, i) => (
+                  <div key={i} className="flex items-center gap-2 text-muted-foreground text-xs">
+                    <div className="w-1 h-1 bg-terex-accent rounded-full flex-shrink-0" />
+                    {t}
                   </div>
-                  <div className="flex items-start space-x-2">
-                    <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
-                    <p>Méfiez-vous des emails de phishing</p>
+                ))}
+              </div>
+            </div>
+            <div className="p-5 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+              <p className="text-foreground text-sm font-medium mb-3">Vigilance anti-fraude</p>
+              <div className="space-y-2">
+                {tips.fraud.map((t, i) => (
+                  <div key={i} className="flex items-center gap-2 text-muted-foreground text-xs">
+                    <div className="w-1 h-1 bg-terex-accent rounded-full flex-shrink-0" />
+                    {t}
                   </div>
-                  <div className="flex items-start space-x-2">
-                    <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
-                    <p>Ne donnez jamais vos codes par téléphone</p>
-                  </div>
-                  <div className="flex items-start space-x-2">
-                    <div className="w-2 h-2 bg-terex-accent rounded-full mt-2 flex-shrink-0"></div>
-                    <p>Contactez-nous en cas de doute</p>
-                  </div>
-                </CardContent>
-              </Card>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       <FooterSection />
     </div>
