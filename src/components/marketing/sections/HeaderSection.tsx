@@ -125,7 +125,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                   <Button
                     onClick={() => navigate('/auth')}
                     variant="outline"
-                    className="rounded-xl border-terex-accent/30 text-gray-300 hover:bg-terex-accent/10 hover:text-white px-5"
+                    className="rounded-xl border-terex-gray/30 text-gray-300 hover:bg-terex-gray/15 hover:text-white px-5"
                   >
                     Connexion
                   </Button>
