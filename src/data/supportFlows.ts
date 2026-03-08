@@ -644,7 +644,7 @@ export const supportFlows: SupportFlow[] = [
           },
           {
             text: "J'ai reçu un email ou SMS suspect",
-            solution: "⚠️ Tentative de phishing possible !\n\nEmails légitimes Terex:\n• Envoyés depuis @terex.sn\n• Ne demandent JAMAIS votre mot de passe ou codes PIN\n\nQue faire:\n1. NE CLIQUEZ PAS sur les liens suspects\n2. NE DONNEZ AUCUNE information\n3. Supprimez l'email/SMS\n4. Signalez sur WhatsApp: +1 4182619091\n\nEn cas de doute, contactez-nous directement."
+            solution: "⚠️ Tentative de phishing possible !\n\nEmails légitimes Terex:\n• Envoyés depuis @terangaexchange.com\n• Ne demandent JAMAIS votre mot de passe ou codes PIN\n\nQue faire:\n1. NE CLIQUEZ PAS sur les liens suspects\n2. NE DONNEZ AUCUNE information\n3. Supprimez l'email/SMS\n4. Signalez sur WhatsApp: +1 4182619091\n\nEn cas de doute, contactez-nous directement."
           },
           {
             text: "Je veux renforcer la sécurité de mon compte",
