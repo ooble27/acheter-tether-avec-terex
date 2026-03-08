@@ -229,31 +229,60 @@ export function UserGuide({ onBack }: UserGuideProps) {
         <div className="pl-9 space-y-4 text-sm text-white/60">
           <p>Convertissez vos USDT en FCFA directement sur votre Wave ou Orange Money.</p>
 
-          <Screenshot src={guideSellUsdt} alt="Page Vendre USDT" caption="Vendre USDT — Entrez le montant et voyez la conversion en CFA" />
+          {/* 3.1 Montant */}
+          <div>
+            <p className="text-white/80 font-medium mb-2">3.1 — Entrez le montant d'USDT à vendre</p>
+            <p>Le taux de conversion et le montant en CFA que vous recevrez s'affichent en temps réel.</p>
+            <Screenshot src={guideSellAmount} alt="Montant de vente USDT" caption="Entrez le montant — ex: 60 USDT = 33 360 CFA" />
+          </div>
 
-          <ol className="space-y-2 list-decimal list-inside">
-            <li>Accédez à <span className="text-white">"Vendre"</span> depuis la barre de navigation</li>
-            <li>Entrez le montant d'USDT que vous souhaitez vendre</li>
-            <li>Le taux de conversion et le montant en CFA s'affichent en temps réel</li>
-            <li>Choisissez votre méthode de réception : <span className="text-white">Wave</span> ou <span className="text-white">Orange Money</span></li>
-            <li>Entrez votre numéro de téléphone</li>
-            <li>Terex génère une <span className="text-white">adresse unique</span> — envoyez-y vos USDT depuis votre wallet</li>
-            <li>Collez le <span className="text-white">hash de transaction</span> pour confirmer l'envoi</li>
-            <li>Recevez votre argent en <span className="text-white">10-30 minutes</span></li>
-          </ol>
-        </div>
-      </section>
+          {/* 3.2 Mode d'envoi */}
+          <div>
+            <p className="text-white/80 font-medium mb-2">3.2 — Choisissez le mode d'envoi de vos USDT</p>
+            <p>Deux options s'offrent à vous :</p>
+            <ul className="space-y-1 mt-2 ml-2">
+              <li>• <span className="text-white">Réseau blockchain</span> — Envoyez depuis votre wallet (TRC20, BEP20, ERC20, Solana, Aptos)</li>
+              <li>• <span className="text-white">Binance Pay</span> — Envoi instantané depuis votre compte Binance</li>
+            </ul>
+            <Screenshot src={guideSellNetwork} alt="Choix du réseau blockchain" caption="Option 1 : Réseau blockchain — TRC20 recommandé (frais les plus bas)" />
+            <Screenshot src={guideSellBinancePay} alt="Option Binance Pay" caption="Option 2 : Binance Pay — Envoi instantané depuis Binance" />
+          </div>
 
-      <div className="border-t border-dashed border-white/10" />
+          {/* 3.3 Infos de paiement */}
+          <div>
+            <p className="text-white/80 font-medium mb-2">3.3 — Informations de réception</p>
+            <p>Choisissez comment recevoir vos CFA : <span className="text-white">Wave</span> ou <span className="text-white">Orange Money</span>, puis entrez votre numéro de téléphone.</p>
+            <Screenshot src={guideSellPaymentInfo} alt="Informations de paiement" caption="Choisissez Wave ou Orange Money et entrez votre numéro" />
+          </div>
 
-      {/* ─── ÉTAPE 4 : TRANSFERTS INTERNATIONAUX ─── */}
-      <section className="space-y-4">
-        <h2 className="text-white font-medium text-lg flex items-center gap-2">
-          <StepNumber n={4} />
-          Transferts internationaux
-        </h2>
-        <div className="pl-9 space-y-3 text-sm text-white/60">
-          <p>Envoyez de l'argent vers l'Afrique de l'Ouest rapidement et à moindre coût.</p>
+          {/* 3.4 Confirmation */}
+          <div>
+            <p className="text-white/80 font-medium mb-2">3.4 — Confirmez la vente</p>
+            <p>Vérifiez le récapitulatif : USDT envoyés, CFA reçus, réseau, service mobile money et numéro de téléphone.</p>
+            <Screenshot src={guideSellConfirm} alt="Confirmation de vente" caption="Récapitulatif — Via réseau blockchain (TRC20)" />
+            <Screenshot src={guideSellConfirmBinance} alt="Confirmation de vente Binance Pay" caption="Récapitulatif — Via Binance Pay" />
+          </div>
+
+          {/* 3.5 Envoi des USDT */}
+          <div>
+            <p className="text-white/80 font-medium mb-2">3.5 — Envoyez vos USDT</p>
+            <p>Terex vous donne les instructions précises pour envoyer vos USDT :</p>
+            
+            <p className="text-white/70 text-xs font-medium mt-3 mb-1">Via réseau blockchain :</p>
+            <p>Envoyez le montant exact à l'adresse indiquée sur le bon réseau. Copiez l'adresse en un clic.</p>
+            <Screenshot src={guideSellSendUsdt} alt="Instructions d'envoi USDT" caption="Envoyez exactement 60 USDT sur le réseau TRC20 à l'adresse indiquée" />
+
+            <p className="text-white/70 text-xs font-medium mt-3 mb-1">Via Binance Pay :</p>
+            <p>Suivez les instructions pour envoyer via Binance Pay avec l'email ou l'ID Binance fourni.</p>
+            <Screenshot src={guideSellBinanceInstructions} alt="Instructions Binance Pay" caption="Instructions détaillées pour l'envoi via Binance Pay" />
+            <Screenshot src={guideSellSendBinance} alt="Envoi via Binance Pay" caption="Envoyez via Binance Pay — Email et ID fournis" />
+          </div>
+
+          {/* 3.6 Réception */}
+          <div>
+            <p className="text-white/80 font-medium mb-2">3.6 — Recevez vos CFA</p>
+            <p>Une fois l'envoi confirmé, Terex traite votre paiement en <span className="text-white">2-5 minutes</span>. L'argent est envoyé directement sur votre Wave ou Orange Money.</p>
+          </div>
           <ol className="space-y-2 list-decimal list-inside">
             <li>Accédez à <span className="text-white">"Virement"</span> depuis la barre de navigation</li>
             <li>Choisissez le pays de destination (Sénégal, Côte d'Ivoire, Mali, etc.)</li>
