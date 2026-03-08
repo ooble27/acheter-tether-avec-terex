@@ -1,80 +1,76 @@
 import { Button } from '@/components/ui/button';
 import { AnimatedSection, AnimatedItem } from '@/hooks/useScrollAnimation';
-import { ShieldCheck, Wallet, ArrowLeftRight, CheckCircle2 } from 'lucide-react';
 
 interface HowItWorksSectionProps {
   onBlockchainInfoClick: () => void;
 }
 
-const features = [
+const steps = [
   {
-    icon: Wallet,
-    title: 'Inscription rapide et compte sécurisé',
-    description: 'Créez votre compte en 2 minutes avec un parcours KYC fluide, pensé mobile-first.',
-    highlight: 'Onboarding express',
+    number: '01',
+    title: 'Inscription',
+    titleHighlight: 'rapide',
+    description: 'Créez votre compte en 2 minutes. Vérification KYC simple, rapide — commencez à trader immédiatement.',
   },
   {
-    icon: ArrowLeftRight,
-    title: 'Échange et transfert en un seul flux',
-    description: 'Choisissez achat, vente ou transfert international avec des taux en temps réel.',
-    highlight: 'Processus unifié',
+    number: '02',
+    title: 'Échange',
+    titleHighlight: 'intelligent',
+    description: 'Achat, vente USDT ou transfert international. Taux en temps réel, interface intuitive — tout en un seul flux.',
   },
   {
-    icon: ShieldCheck,
-    title: 'Validation et exécution instantanées',
-    description: 'Confirmation claire, suivi temps réel et exécution sécurisée de bout en bout.',
-    highlight: 'Fiabilité opérationnelle',
+    number: '03',
+    title: 'Exécution',
+    titleHighlight: 'sécurisée',
+    description: 'Transaction confirmée et exécutée en quelques minutes. Suivi en temps réel jusqu\'à la réception.',
   },
 ];
 
 export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionProps) {
   return (
-    <section id="how-it-works" className="py-24 sm:py-28 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_20%,rgba(59,150,143,0.05),transparent_35%)]" />
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <AnimatedSection className="mb-14 sm:mb-16">
+    <section id="how-it-works" className="py-24 sm:py-32 relative">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <AnimatedSection className="mb-16 sm:mb-20">
           <div className="max-w-3xl">
-            <span className="text-xs tracking-[0.18em] uppercase text-muted-foreground mb-4 block">Comment ça marche</span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-foreground leading-tight">
-              Un parcours clair, <span className="text-terex-accent">sans friction</span>
+              Comment ça <span className="text-terex-accent">marche</span> ?
             </h2>
           </div>
         </AnimatedSection>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
-          {features.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <AnimatedItem key={item.title} index={index}>
-                <article className="group relative h-full rounded-3xl border border-border/60 bg-card/40 backdrop-blur-xl p-6 sm:p-7 overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:border-terex-accent/40">
-                  <div className="absolute -top-12 -right-12 w-36 h-36 rounded-full bg-terex-accent/10 blur-2xl group-hover:bg-terex-accent/20 transition-colors" />
+        {/* Steps - Ooble-inspired layout */}
+        <div className="space-y-0 divide-y divide-terex-gray/30">
+          {steps.map((step, index) => (
+            <AnimatedItem key={step.number} index={index}>
+              <div className="grid grid-cols-[60px_1fr] sm:grid-cols-[100px_1fr_1fr] gap-4 sm:gap-8 py-12 sm:py-16 items-center">
+                {/* Big number */}
+                <span className="text-5xl sm:text-8xl font-extralight text-terex-gray/60 select-none">
+                  {step.number}
+                </span>
 
-                  <div className="relative flex flex-col h-full">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="w-12 h-12 rounded-2xl bg-background/50 border border-border/60 flex items-center justify-center">
-                        <Icon className="w-5 h-5 text-terex-accent" />
-                      </div>
-                      <span className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-background/40 px-3 py-1 text-[11px] text-muted-foreground">
-                        <CheckCircle2 className="w-3 h-3 text-terex-accent" />
-                        {item.highlight}
-                      </span>
-                    </div>
+                {/* Title */}
+                <h3 className="text-xl sm:text-3xl font-light text-foreground leading-snug">
+                  <span className="border-b-2 border-terex-accent pb-0.5">{step.title}</span>{' '}
+                  <span className="text-muted-foreground">{step.titleHighlight}</span>
+                </h3>
 
-                    <h3 className="text-xl sm:text-2xl font-light text-foreground mb-3 leading-snug">{item.title}</h3>
-                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{item.description}</p>
-                  </div>
-                </article>
-              </AnimatedItem>
-            );
-          })}
+                {/* Description - below on mobile, right on desktop */}
+                <p className="col-span-2 sm:col-span-1 text-sm sm:text-base text-muted-foreground font-light leading-relaxed sm:text-right">
+                  {step.description}
+                </p>
+              </div>
+            </AnimatedItem>
+          ))}
         </div>
+
+        {/* Divider */}
+        <div className="border-t border-terex-gray/30" />
 
         <AnimatedSection className="text-center mt-14" delay={250}>
           <Button
             onClick={onBlockchainInfoClick}
             variant="outline"
-            className="rounded-xl border-border/80 bg-card/20 text-foreground hover:bg-card/50 px-7 py-5"
+            className="rounded-full border-terex-gray/40 text-foreground hover:bg-terex-gray/20 px-8 py-5 text-sm"
           >
             En savoir plus sur la blockchain
           </Button>

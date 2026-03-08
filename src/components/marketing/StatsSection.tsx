@@ -1,96 +1,105 @@
-import { TrendingUp, Users, Globe, Shield, Sparkles } from 'lucide-react';
 import { AnimatedSection, AnimatedItem } from '@/hooks/useScrollAnimation';
 
 const stats = [
   {
-    icon: TrendingUp,
     value: '10M+',
     suffix: 'CFA',
     label: 'Volume mensuel',
-    description: 'Traités chaque mois',
-    glow: 'from-terex-accent/20 to-transparent',
+    description: 'Traités chaque mois sur notre plateforme',
   },
   {
-    icon: Users,
     value: '500+',
     suffix: '',
     label: 'Utilisateurs actifs',
-    description: 'Font confiance à Terex',
-    glow: 'from-terex-accent/15 to-transparent',
+    description: 'Font confiance à Terex au quotidien',
   },
   {
-    icon: Globe,
     value: '6',
     suffix: 'pays',
     label: 'Pays couverts',
-    description: "En Afrique de l'Ouest",
-    glow: 'from-terex-accent/15 to-transparent',
+    description: "Présents en Afrique de l'Ouest",
   },
   {
-    icon: Shield,
     value: '99.9',
     suffix: '%',
     label: 'Disponibilité',
-    description: 'Uptime garanti',
-    glow: 'from-terex-accent/20 to-transparent',
+    description: 'Uptime garanti 24h/24, 7j/7',
   },
+];
+
+const tags = [
+  'Mobile Money',
+  'USDT',
+  'Transferts',
+  'Blockchain',
+  'KYC rapide',
+  'Multi-réseau',
+  'Temps réel',
+  'Sécurisé',
 ];
 
 export function StatsSection() {
   return (
-    <section className="py-24 sm:py-28 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(59,150,143,0.06),transparent_40%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(59,150,143,0.04),transparent_40%)]" />
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <AnimatedSection className="text-center mb-14 sm:mb-16">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/30 px-4 py-1.5 mb-5">
-            <Sparkles className="w-3.5 h-3.5 text-terex-accent" />
-            <span className="text-xs tracking-[0.18em] uppercase text-muted-foreground">En chiffres</span>
+    <section className="py-24 sm:py-32 relative overflow-hidden">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Big headline - Ooble style */}
+        <AnimatedSection className="mb-16 sm:mb-20">
+          <div className="max-w-3xl">
+            <h2 className="text-3xl sm:text-4xl lg:text-[3.2rem] font-light text-foreground leading-[1.15]">
+              Nous connectons{' '}
+              <span className="text-muted-foreground">la crypto à l'Afrique</span>{' '}
+              et on simplifie tout.
+            </h2>
+            <p className="text-muted-foreground font-light mt-6 text-base sm:text-lg max-w-lg">
+              Pas de complexité inutile. On s'intègre aux outils que vous utilisez déjà — Mobile Money, Binance, wallets crypto.
+            </p>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-foreground">
-            Une plateforme en <span className="text-terex-accent">croissance</span>
-          </h2>
         </AnimatedSection>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5 auto-rows-[180px]">
-          {stats.map((stat, index) => {
-            const IconComponent = stat.icon;
-            const areaClass =
-              index === 0
-                ? 'md:col-span-7'
-                : index === 1
-                  ? 'md:col-span-5'
-                  : index === 2
-                    ? 'md:col-span-5'
-                    : 'md:col-span-7';
+        {/* Tags row */}
+        <AnimatedSection delay={100}>
+          <div className="flex flex-wrap gap-2.5 mb-20 sm:mb-24">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="inline-block rounded-full border border-terex-gray/40 px-4 py-2 text-sm text-muted-foreground hover:border-terex-accent/50 hover:text-foreground transition-colors cursor-default"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </AnimatedSection>
 
-            return (
-              <AnimatedItem key={stat.label} index={index} className={areaClass}>
-                <article className="group relative h-full rounded-3xl border border-border/60 bg-card/30 backdrop-blur-xl p-5 sm:p-7 overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:border-terex-accent/40">
-                  <div className={`absolute -top-10 -right-10 w-36 h-36 rounded-full bg-gradient-to-br ${stat.glow} blur-2xl opacity-70 group-hover:opacity-100 transition-opacity`} />
+        {/* Divider */}
+        <div className="border-t border-terex-gray/30 mb-16 sm:mb-20" />
 
-                  <div className="relative flex h-full flex-col justify-between">
-                    <div className="flex items-start justify-between">
-                      <div className="w-11 h-11 rounded-2xl bg-background/50 border border-border/60 flex items-center justify-center">
-                        <IconComponent className="w-5 h-5 text-terex-accent" />
-                      </div>
-                      <span className="text-xs text-muted-foreground">Live</span>
-                    </div>
+        {/* Stats - large numbers, clean rows */}
+        <div className="space-y-0 divide-y divide-terex-gray/30">
+          {stats.map((stat, index) => (
+            <AnimatedItem key={stat.label} index={index}>
+              <div className="grid grid-cols-[1fr_auto] sm:grid-cols-[200px_1fr_auto] gap-4 sm:gap-8 py-8 sm:py-10 items-center">
+                {/* Label */}
+                <h3 className="text-sm sm:text-base text-foreground font-medium">
+                  {stat.label}
+                </h3>
 
-                    <div>
-                      <div className="mb-2">
-                        <span className="text-4xl sm:text-5xl font-light text-foreground">{stat.value}</span>
-                        {stat.suffix && <span className="text-sm text-muted-foreground ml-1">{stat.suffix}</span>}
-                      </div>
-                      <h3 className="text-base sm:text-lg text-foreground font-medium">{stat.label}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">{stat.description}</p>
-                    </div>
-                  </div>
-                </article>
-              </AnimatedItem>
-            );
-          })}
+                {/* Description - hidden on mobile */}
+                <p className="hidden sm:block text-sm text-muted-foreground font-light">
+                  {stat.description}
+                </p>
+
+                {/* Value */}
+                <div className="text-right">
+                  <span className="text-3xl sm:text-5xl font-extralight text-foreground tabular-nums">
+                    {stat.value}
+                  </span>
+                  {stat.suffix && (
+                    <span className="text-sm text-muted-foreground ml-1.5">{stat.suffix}</span>
+                  )}
+                </div>
+              </div>
+            </AnimatedItem>
+          ))}
         </div>
       </div>
     </section>
