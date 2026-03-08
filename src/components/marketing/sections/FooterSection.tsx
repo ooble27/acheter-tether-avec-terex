@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { Mail, Phone, MapPin, Twitter, Facebook, Linkedin, Instagram, Youtube } from 'lucide-react';
+import { Mail, Phone, MapPin, Twitter, Facebook, Linkedin, Instagram, Youtube, ShoppingCart, ArrowLeftRight, Globe, Code, TrendingUp, Building2, BookOpen, Briefcase, LifeBuoy, MessageCircle, BookMarked, HelpCircle, FileText, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function FooterSection() {
@@ -12,35 +12,35 @@ export function FooterSection() {
     {
       title: "Produits",
       links: [
-        { label: "Acheter USDT", href: "/auth" },
-        { label: "Vendre USDT", href: "/auth" },
-        { label: "Transfert International", href: "/auth" },
-        { label: "API Marchands", href: "/auth" },
-        { label: "Taux de Change", href: "/" }
+        { label: "Acheter USDT", href: "/auth", icon: ShoppingCart },
+        { label: "Vendre USDT", href: "/auth", icon: ArrowLeftRight },
+        { label: "Transfert International", href: "/auth", icon: Globe },
+        { label: "API Marchands", href: "/auth", icon: Code },
+        { label: "Taux de Change", href: "/", icon: TrendingUp }
       ]
     },
     {
       title: "Entreprise",
       links: [
-        { label: "À Propos", href: "/about" },
-        { label: "Blog", href: "/blog" },
-        { label: "Carrières", href: "/careers" }
+        { label: "À Propos", href: "/about", icon: Building2 },
+        { label: "Blog", href: "/blog", icon: BookOpen },
+        { label: "Carrières", href: "/careers", icon: Briefcase }
       ]
     },
     {
       title: "Support",
       links: [
-        { label: "Centre d'Aide", href: "/help" },
-        { label: "Nous Contacter", href: "/contact" },
-        { label: "Guide Utilisateur", href: "/guide" },
-        { label: "FAQ", href: "/faq" }
+        { label: "Centre d'Aide", href: "/help", icon: LifeBuoy },
+        { label: "Nous Contacter", href: "/contact", icon: MessageCircle },
+        { label: "Guide Utilisateur", href: "/guide", icon: BookMarked },
+        { label: "FAQ", href: "/faq", icon: HelpCircle }
       ]
     },
     {
       title: "Légal",
       links: [
-        { label: "Conditions d'Utilisation", href: "/terms" },
-        { label: "Politique de Confidentialité", href: "/privacy" }
+        { label: "Conditions d'Utilisation", href: "/terms", icon: FileText },
+        { label: "Politique de Confidentialité", href: "/privacy", icon: Shield }
       ]
     }
   ];
@@ -126,8 +126,9 @@ export function FooterSection() {
                   <li key={linkIndex}>
                     <button
                       onClick={() => navigate(link.href)}
-                      className="text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm block"
+                      className="flex items-center gap-2 text-gray-300 hover:text-terex-accent transition-colors duration-200 text-sm"
                     >
+                      <link.icon className="w-3.5 h-3.5 opacity-50" />
                       {link.label}
                     </button>
                   </li>
