@@ -16,7 +16,7 @@ const stats = [
     suffix: '',
     label: 'Utilisateurs actifs',
     description: 'Font confiance à Terex',
-    glow: 'from-primary/30 to-transparent',
+    glow: 'from-terex-accent/15 to-transparent',
   },
   {
     icon: Globe,
