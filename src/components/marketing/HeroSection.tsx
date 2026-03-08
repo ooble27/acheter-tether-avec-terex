@@ -64,7 +64,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               <Button 
                 onClick={handleHowItWorks}
                 variant="outline" 
-                className="border-terex-gray/40 text-muted-foreground hover:bg-terex-gray/20 px-5 h-11 rounded-full text-sm backdrop-blur-sm"
+                className="border-terex-gray/40 text-muted-foreground hover:bg-terex-gray/20 px-5 h-11 rounded-xl text-sm backdrop-blur-sm"
               >
                 Comment ça marche
               </Button>
