@@ -38,40 +38,12 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
         <div className="lg:hidden flex flex-col items-center text-center">
           <AnimatedSection delay={100}>
             {/* Typewriter title */}
-            <div className="mb-6">
+            <div className="mb-4">
               <DeviceMockups />
             </div>
 
-            {/* CTA buttons — same size */}
-            <div className="flex gap-3 justify-center mb-8">
-              {user ? (
-                <Button 
-                  onClick={handleDashboard}
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11 min-w-[160px] rounded-xl text-sm shadow-lg shadow-terex-accent/20 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02]"
-                >
-                  Dashboard
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              ) : (
-                <Button 
-                  onClick={handleGetStarted}
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11 min-w-[160px] rounded-xl text-sm shadow-lg shadow-terex-accent/20 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02]"
-                >
-                  Commencer
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              )}
-              <Button 
-                onClick={handleHowItWorks}
-                variant="outline" 
-                className="border-terex-gray/40 text-muted-foreground hover:bg-terex-gray/20 px-6 h-11 min-w-[160px] rounded-xl text-sm backdrop-blur-sm"
-              >
-                Comment ça marche
-              </Button>
-            </div>
-
-            {/* Interactive buy form — mobile */}
-            <div className="flex justify-center mb-8 w-full">
+            {/* Interactive buy form — mobile, directly below text */}
+            <div className="flex justify-center mb-6 w-full">
               <HeroBuyForm />
             </div>
           </AnimatedSection>
@@ -168,7 +140,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
           </AnimatedSection>
         </div>
         
-        {/* Floating cards — Desktop & Tablet, with SVG lines */}
+        {/* Floating cards — Desktop & Tablet */}
         <AnimatedSection className="mt-24 lg:mt-32 hidden sm:block" delay={400}>
           <div className="relative max-w-4xl mx-auto">
             <svg className="absolute inset-0 w-full h-full pointer-events-none hidden lg:block" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
