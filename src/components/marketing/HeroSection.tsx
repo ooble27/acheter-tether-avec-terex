@@ -138,7 +138,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 <Button 
                   onClick={handleDashboard}
                   size="lg" 
-                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 rounded-full text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group"
+                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 rounded-xl text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group"
                 >
                   Aller au Dashboard
                   <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
@@ -147,7 +147,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 <Button 
                   onClick={handleGetStarted}
                   size="lg" 
-                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 rounded-full text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group"
+                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 rounded-xl text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group"
                 >
                   Commencer maintenant
                   <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
