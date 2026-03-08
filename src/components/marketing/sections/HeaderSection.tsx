@@ -1,9 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { User, LogOut, Menu, Home, Building2, Briefcase, HelpCircle, Phone, MessageCircle } from 'lucide-react';
+import { User, LogOut, Home, Building2, Briefcase, HelpCircle, Phone, MessageCircle } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useNavigate } from 'react-router-dom';
