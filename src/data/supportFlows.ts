@@ -716,7 +716,7 @@ export const supportFlows: SupportFlow[] = [
           },
           {
             text: "Je vais vérifier",
-            solution: "Vérifiez votre dossier spam/courriers indésirables. Ajoutez noreply@terex.sn à vos contacts pour recevoir nos emails. Si toujours rien, demandez un nouveau lien."
+            solution: "Vérifiez votre dossier spam/courriers indésirables. Ajoutez noreply@terangaexchange.com à vos contacts pour recevoir nos emails. Si toujours rien, réessayez la réinitialisation."
           }
         ]
       },
