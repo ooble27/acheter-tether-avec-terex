@@ -107,7 +107,7 @@ export function HeroBuyForm() {
           {step === 1 && (
             <div className="space-y-3 animate-fade-in">
               {/* Pay input */}
-              <div className="relative rounded-2xl p-4 lg:p-5 border border-[hsl(220,10%,25%)]/25 bg-[hsl(220,12%,16%)]/60 hover:border-[hsl(220,10%,25%)]/40 transition-colors">
+              <div className="relative rounded-2xl p-4 lg:p-5 border border-[hsl(0,0%,20%)]/25 bg-[hsl(0,0%,17%)]/60 hover:border-[hsl(0,0%,25%)]/40 transition-colors">
                 <label className="text-[10px] lg:text-xs text-muted-foreground mb-2 block font-medium uppercase tracking-wider">Vous payez</label>
                 <div className="flex items-center gap-2">
                   <input
