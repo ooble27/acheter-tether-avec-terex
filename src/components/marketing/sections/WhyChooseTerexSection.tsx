@@ -80,24 +80,6 @@ export function WhyChooseTerexSection() {
           </AnimatedItem>
         </div>
 
-        {/* Bottom feature row — minimal */}
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-terex-gray/20 border-y border-terex-gray/20">
-          {[
-            { label: 'Support', value: '24/7', desc: 'Assistance en français' },
-            { label: 'Sécurité', value: '99.9%', desc: 'Uptime & chiffrement' },
-            { label: 'Interface', value: '3 clics', desc: 'Pour chaque opération' },
-          ].map((item, i) => (
-            <AnimatedItem key={i} index={i + 3}>
-              <div className="py-6 sm:px-8 first:sm:pl-0 last:sm:pr-0 flex items-center justify-between sm:flex-col sm:items-start sm:gap-1">
-                <div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider">{item.label}</div>
-                  <div className="text-2xl font-extralight text-terex-accent mt-1">{item.value}</div>
-                </div>
-                <div className="text-sm text-muted-foreground">{item.desc}</div>
-              </div>
-            </AnimatedItem>
-          ))}
-        </div>
       </div>
     </section>
   );
