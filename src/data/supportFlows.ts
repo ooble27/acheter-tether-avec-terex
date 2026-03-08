@@ -676,7 +676,7 @@ export const supportFlows: SupportFlow[] = [
         answers: [
           {
             text: "Mon adresse email de connexion",
-            solution: "Procédure:\n1. Contactez support@terex.sn ou WhatsApp: +1 4182619091\n2. Indiquez email actuel + nouvel email\n3. Joindre pièce d'identité\n4. Vérification: 2-6 heures\n\nTout l'historique et le KYC sont préservés."
+            solution: "Procédure:\n1. Contactez terangaexchange@gmail.com ou WhatsApp: +1 4182619091\n2. Indiquez email actuel + nouvel email\n3. Joindre pièce d'identité\n4. Vérification: 2-6 heures\n\nTout l'historique et le KYC sont préservés."
           },
           {
             text: "Mon numéro de téléphone",
