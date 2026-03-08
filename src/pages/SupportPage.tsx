@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
-import { Search, ArrowRight, BookOpen, Shield, Zap, HelpCircle, FileText, Phone, Mail, ChevronRight, MessageCircle, Send, Globe, Wallet, CreditCard, Users, Settings, LifeBuoy } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Search, ArrowRight, BookOpen, Shield, Zap, HelpCircle, FileText, Phone, Mail, ChevronRight, MessageCircle, Send, Globe, Wallet, CreditCard, Users, Settings, LifeBuoy, Menu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
