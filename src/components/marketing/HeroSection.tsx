@@ -48,8 +48,8 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
             </div>
           </AnimatedSection>
 
-          {/* Floating cards — compact horizontal scroll on mobile */}
-          <AnimatedSection className="w-full" delay={300}>
+          {/* Floating cards — compact horizontal scroll on mobile only (hidden on sm+ to avoid duplicate with desktop cards) */}
+          <AnimatedSection className="w-full sm:hidden mt-8" delay={300}>
             <div className="flex gap-3 overflow-x-auto pb-2 px-1 snap-x snap-mandatory scrollbar-hide">
               {/* Card 1 */}
               <div className="snap-center shrink-0 w-[260px] bg-terex-darker/80 backdrop-blur-md rounded-xl border border-terex-gray/25 p-4">
