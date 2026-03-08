@@ -214,7 +214,55 @@ const SupportPage = () => {
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 lg:pl-12 pt-16 md:pt-24 pb-20 md:pb-32">
+        <main className="flex-1 lg:pl-12 pt-12 md:pt-24 pb-20 md:pb-32">
+
+          {/* Mobile sidebar trigger */}
+          <div className="lg:hidden mb-6">
+            <Sheet>
+              <SheetTrigger asChild>
+                <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-white/[0.08] bg-white/[0.03] text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Menu className="w-4 h-4" />
+                  <span>Navigation</span>
+                </button>
+              </SheetTrigger>
+              <SheetContent side="left" className="bg-terex-dark border-white/[0.06] w-72 p-6 overflow-y-auto">
+                <div className="relative mb-6 mt-4">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input 
+                    placeholder="Rechercher..."
+                    className="pl-9 bg-white/[0.03] border-white/[0.08] text-foreground h-9 text-sm rounded-lg"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+                <nav className="space-y-6">
+                  {sidebarSections.map((section) => (
+                    <div key={section.title}>
+                      <div className="flex items-center gap-2 mb-3">
+                        <section.icon className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-xs font-semibold tracking-wider text-muted-foreground">{section.title}</span>
+                      </div>
+                      <ul className="space-y-1">
+                        {section.items
+                          .filter(item => !searchQuery || item.label.toLowerCase().includes(searchQuery.toLowerCase()))
+                          .map((item) => (
+                            <li key={item.label}>
+                              <button
+                                onClick={() => handleNavClick(item.href, (item as any).external)}
+                                className="flex items-center gap-2 w-full text-left px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-white/[0.04]"
+                              >
+                                <ChevronRight className="w-3 h-3 flex-shrink-0 opacity-40" />
+                                <span>{item.label}</span>
+                              </button>
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
+                  ))}
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
           
           {/* Hero title */}
           <div className="max-w-2xl mb-10">
