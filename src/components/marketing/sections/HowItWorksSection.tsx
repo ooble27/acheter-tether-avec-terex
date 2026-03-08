@@ -30,7 +30,7 @@ const features = [
 export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionProps) {
   return (
     <section id="how-it-works" className="py-24 sm:py-28 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_20%,hsl(var(--terex-accent-hsl)/0.06),transparent_35%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_20%,rgba(59,150,143,0.05),transparent_35%)]" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <AnimatedSection className="mb-14 sm:mb-16">
