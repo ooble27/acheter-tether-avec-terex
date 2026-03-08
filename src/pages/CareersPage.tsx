@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { MapPin, Send, ArrowRight, ChevronDown, ChevronUp, User } from 'lucide-react';
+import { MapPin, Send, ArrowRight, ChevronDown, ChevronUp, User, Globe, Wallet, TrendingUp, GraduationCap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -66,10 +66,10 @@ const CareersPage = () => {
   ];
 
   const perks = [
-    { emoji: "🌍", title: "100% Remote", desc: "Travaillez de n'importe où en Afrique" },
-    { emoji: "💰", title: "Salaire compétitif", desc: "Rémunération en crypto ou fiat" },
-    { emoji: "📈", title: "Croissance rapide", desc: "Startup en pleine expansion" },
-    { emoji: "🎓", title: "Formation continue", desc: "Budget formation annuel" },
+    { icon: Globe, title: "100% Remote", desc: "Travaillez de n'importe où en Afrique" },
+    { icon: Wallet, title: "Salaire compétitif", desc: "Rémunération en crypto ou fiat" },
+    { icon: TrendingUp, title: "Croissance rapide", desc: "Startup en pleine expansion" },
+    { icon: GraduationCap, title: "Formation continue", desc: "Budget formation annuel" },
   ];
 
   return (
@@ -135,7 +135,9 @@ const CareersPage = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {perks.map((perk, i) => (
               <div key={i} className="p-6 md:p-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] group hover:border-white/[0.15] transition-all">
-                <span className="text-2xl md:text-3xl mb-4 block">{perk.emoji}</span>
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/[0.06] border border-white/[0.08] flex items-center justify-center mb-4 group-hover:bg-white/[0.1] transition-colors">
+                  <perk.icon className="w-5 h-5 md:w-6 md:h-6 text-foreground" strokeWidth={1.5} />
+                </div>
                 <p className="text-foreground text-sm md:text-base font-medium mb-1">{perk.title}</p>
                 <p className="text-muted-foreground text-xs">{perk.desc}</p>
               </div>
