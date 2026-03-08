@@ -47,7 +47,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               {user ? (
                 <Button 
                   onClick={handleDashboard}
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11 rounded-full text-sm shadow-lg shadow-terex-accent/20 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02]"
+                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11 rounded-xl text-sm shadow-lg shadow-terex-accent/20 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02]"
                 >
                   Dashboard
                   <ArrowRight className="w-4 h-4 ml-1" />
@@ -55,7 +55,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               ) : (
                 <Button 
                   onClick={handleGetStarted}
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11 rounded-full text-sm shadow-lg shadow-terex-accent/20 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02]"
+                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11 rounded-xl text-sm shadow-lg shadow-terex-accent/20 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02]"
                 >
                   Commencer
                   <ArrowRight className="w-4 h-4 ml-1" />
@@ -64,7 +64,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
               <Button 
                 onClick={handleHowItWorks}
                 variant="outline" 
-                className="border-terex-gray/40 text-muted-foreground hover:bg-terex-gray/20 px-5 h-11 rounded-full text-sm backdrop-blur-sm"
+                className="border-terex-gray/40 text-muted-foreground hover:bg-terex-gray/20 px-5 h-11 rounded-xl text-sm backdrop-blur-sm"
               >
                 Comment ça marche
               </Button>
@@ -138,7 +138,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 <Button 
                   onClick={handleDashboard}
                   size="lg" 
-                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 rounded-full text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group"
+                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 rounded-xl text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group"
                 >
                   Aller au Dashboard
                   <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
@@ -147,7 +147,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 <Button 
                   onClick={handleGetStarted}
                   size="lg" 
-                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 rounded-full text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group"
+                  className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-8 py-4 h-14 rounded-xl text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group"
                 >
                   Commencer maintenant
                   <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
@@ -157,7 +157,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
                 onClick={handleHowItWorks}
                 variant="outline" 
                 size="lg"
-                className="border-terex-gray/50 text-foreground hover:bg-terex-gray/20 px-8 py-4 h-14 rounded-full text-lg backdrop-blur-sm transition-all duration-300 hover:border-terex-accent/40"
+                className="border-terex-gray/50 text-foreground hover:bg-terex-gray/20 px-8 py-4 h-14 rounded-xl text-lg backdrop-blur-sm transition-all duration-300 hover:border-terex-accent/40"
               >
                 Comment ça marche
               </Button>
