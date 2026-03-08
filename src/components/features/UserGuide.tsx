@@ -377,7 +377,7 @@ export function UserGuide({ onBack }: UserGuideProps) {
               <ul className="space-y-1 text-xs">
                 <li>• Utilisez un mot de passe fort et unique</li>
                 <li>• Déconnectez-vous sur les appareils publics</li>
-                <li>• Vérifiez toujours l'URL : terex.sn</li>
+                <li>• Vérifiez toujours l'URL : terangaexchange.com</li>
                 <li>• Complétez votre vérification KYC</li>
               </ul>
             </div>
