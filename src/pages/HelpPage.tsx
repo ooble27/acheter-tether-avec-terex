@@ -162,15 +162,7 @@ const HelpPage = () => {
                   onClick={() => handleSelectFlow(category.flowId)}
                 >
                   {/* Icon preview area */}
-                  <div className="relative h-36 sm:h-40 bg-white/[0.02] border-b border-white/[0.06] flex items-center justify-center overflow-hidden">
-                    <div className="absolute inset-0 opacity-[0.04]" style={{
-                      backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
-                                        linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px)`,
-                      backgroundSize: '24px 24px'
-                    }} />
-                    {/* Diamond decorators */}
-                    <div className="absolute top-3 right-3 w-1.5 h-1.5 rotate-45 bg-white/10" />
-                    <div className="absolute bottom-3 left-3 w-1.5 h-1.5 rotate-45 bg-white/10" />
+                  <div className="relative h-32 sm:h-36 bg-white/[0.02] border-b border-white/[0.06] flex items-center justify-center">
                     <div className="w-14 h-14 rounded-xl bg-white/[0.06] border border-white/[0.08] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors">
                       <IconComponent className="w-7 h-7 text-white/60 group-hover:text-white/80 transition-colors" />
                     </div>
