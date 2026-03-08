@@ -131,7 +131,7 @@ const HelpPage = () => {
           onLogout={handleLogout}
         />
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-20 pb-8">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 md:pt-36 pb-8">
           {/* Title */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-white mb-2">
             Centre d'Aide
