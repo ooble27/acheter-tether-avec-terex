@@ -36,13 +36,15 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
         
         {/* ===== MOBILE LAYOUT ===== */}
         <div className="lg:hidden flex flex-col items-center text-center">
-          <AnimatedSection delay={100}>
+          <AnimatedSection className="w-full" delay={100}>
             {/* Typewriter title */}
             <div className="mb-4">
               <DeviceMockups />
             </div>
+          </AnimatedSection>
 
-            {/* Interactive buy form — mobile, directly below text */}
+          <AnimatedSection className="w-full" delay={180}>
+            {/* Interactive buy form — mobile, fixed area below text */}
             <div className="flex justify-center mb-6 w-full">
               <HeroBuyForm />
             </div>
