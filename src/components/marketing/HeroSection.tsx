@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Shield, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DeviceMockups } from './DeviceMockups';
