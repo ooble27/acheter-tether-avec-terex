@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { hmac } from "https://deno.land/x/hmac@v2.0.1/mod.ts";
+import { crypto } from "https://deno.land/std@0.168.0/crypto/mod.ts";
+import { encode as hexEncode } from "https://deno.land/std@0.168.0/encoding/hex.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -25,8 +26,16 @@ const NETWORK_MAP: Record<string, string> = {
 const COIN = 'USDT';
 
 async function signRequest(queryString: string, apiSecret: string): Promise<string> {
-  const signature = hmac('sha256', apiSecret, queryString, 'utf8', 'hex');
-  return signature as string;
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(apiSecret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(queryString));
+  return [...new Uint8Array(signature)].map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 async function binanceWithdraw(
