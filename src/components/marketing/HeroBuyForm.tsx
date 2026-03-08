@@ -1,147 +1,231 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ArrowRight, Wallet, ChevronDown } from 'lucide-react';
+import { ArrowRight, Check, Copy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTerexRates } from '@/hooks/useTerexRates';
 
 const networks = [
-  { id: 'TRC20', label: 'TRC20 (Tron)' },
-  { id: 'BEP20', label: 'BEP20 (BSC)' },
-  { id: 'ERC20', label: 'ERC20 (Ethereum)' },
-  { id: 'SOL', label: 'Solana' },
-  { id: 'POLYGON', label: 'Polygon' },
+  { id: 'TRC20', label: 'TRC20', subtitle: 'Tron', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png', color: 'bg-red-500/15 border-red-500/20' },
+  { id: 'BEP20', label: 'BEP20', subtitle: 'BNB Chain', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png', color: 'bg-yellow-500/15 border-yellow-500/20' },
+  { id: 'ERC20', label: 'ERC20', subtitle: 'Ethereum', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', color: 'bg-blue-500/15 border-blue-500/20' },
+  { id: 'SOL', label: 'SOL', subtitle: 'Solana', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png', color: 'bg-purple-500/15 border-purple-500/20' },
+  { id: 'POLYGON', label: 'Polygon', subtitle: 'Matic', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png', color: 'bg-violet-500/15 border-violet-500/20' },
+  { id: 'APTOS', label: 'Aptos', subtitle: 'APT', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png', color: 'bg-teal-500/15 border-teal-500/20' },
 ];
 
 export function HeroBuyForm() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { terexRateCfa, terexRateCad } = useTerexRates(2);
+  const { terexRateCfa } = useTerexRates(2);
 
   const [amount, setAmount] = useState('');
-  const [currency, setCurrency] = useState<'CFA' | 'CAD'>('CFA');
   const [network, setNetwork] = useState('TRC20');
   const [walletAddress, setWalletAddress] = useState('');
-  const [showNetworks, setShowNetworks] = useState(false);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
 
-  const rate = currency === 'CFA' ? terexRateCfa : terexRateCad;
+  const rate = terexRateCfa;
   const usdtAmount = amount ? (parseFloat(amount) / rate).toFixed(2) : '0.00';
+  const fees = amount ? (parseFloat(amount) * 0.02).toFixed(0) : '0';
 
   const handleProceed = () => {
     if (!user) {
       navigate('/auth');
       return;
     }
-    // Navigate to dashboard buy page with pre-filled data
-    navigate('/dashboard', { state: { action: 'buy', amount, currency, network, walletAddress } });
+    navigate('/dashboard', { state: { action: 'buy', amount, currency: 'CFA', network, walletAddress } });
   };
 
-  const isValid = amount && parseFloat(amount) > 0 && walletAddress.length > 10;
+  const canGoStep2 = amount && parseFloat(amount) > 0;
+  const canGoStep3 = walletAddress.length > 10;
 
   return (
-    <div className="w-full max-w-md">
-      <div className="bg-terex-darker/90 backdrop-blur-xl border border-terex-gray/30 rounded-2xl p-5 shadow-2xl">
+    <div className="w-full max-w-[420px]">
+      <div className="bg-terex-darker/95 backdrop-blur-xl border border-terex-gray/25 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden">
+        
         {/* Header */}
-        <div className="flex items-center gap-2 mb-5">
-          <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-6 h-6" />
-          <span className="text-foreground font-medium text-sm">Acheter USDT</span>
-          <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/20">En ligne</span>
+        <div className="px-5 pt-5 pb-3 border-b border-terex-gray/15">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-terex-accent/15 flex items-center justify-center">
+              <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-foreground font-semibold text-sm block leading-tight">Acheter USDT</span>
+              <span className="text-muted-foreground text-[10px]">Achat rapide et sécurisé</span>
+            </div>
+            <span className="ml-auto text-[9px] px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/20 font-medium">● En ligne</span>
+          </div>
         </div>
 
-        {/* Amount input */}
-        <div className="space-y-3 mb-4">
-          <div className="bg-terex-dark/60 rounded-xl p-3 border border-terex-gray/20">
-            <label className="text-[11px] text-muted-foreground mb-1 block">Vous payez</label>
-            <div className="flex items-center gap-2">
-              <Input
-                type="number"
-                placeholder="0"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="bg-transparent border-0 text-foreground text-xl font-medium p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              />
-              <button
-                onClick={() => setCurrency(currency === 'CFA' ? 'CAD' : 'CFA')}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-terex-gray/30 text-foreground text-xs font-medium hover:bg-terex-gray/50 transition-colors shrink-0"
+        {/* Steps indicator */}
+        <div className="px-5 pt-3 pb-1">
+          <div className="flex items-center gap-1">
+            {[1, 2, 3].map((s) => (
+              <div key={s} className="flex-1 flex items-center gap-1">
+                <div className={`flex-1 h-1 rounded-full transition-all duration-300 ${step >= s ? 'bg-terex-accent' : 'bg-terex-gray/20'}`} />
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-between mt-1 mb-2">
+            <span className={`text-[9px] ${step >= 1 ? 'text-terex-accent' : 'text-muted-foreground/40'}`}>Montant</span>
+            <span className={`text-[9px] ${step >= 2 ? 'text-terex-accent' : 'text-muted-foreground/40'}`}>Réseau</span>
+            <span className={`text-[9px] ${step >= 3 ? 'text-terex-accent' : 'text-muted-foreground/40'}`}>Adresse</span>
+          </div>
+        </div>
+
+        <div className="px-5 pb-5">
+          {/* Step 1: Amount */}
+          {step === 1 && (
+            <div className="space-y-3 animate-fade-in">
+              <div className="bg-terex-dark/50 rounded-xl p-4 border border-terex-gray/15">
+                <label className="text-[11px] text-muted-foreground mb-2 block font-medium">Vous payez</label>
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="number"
+                    placeholder="50 000"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="bg-transparent border-0 text-foreground text-2xl font-semibold p-0 h-auto focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-terex-gray/25 shrink-0">
+                    <span className="text-foreground text-xs font-semibold">CFA</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-terex-dark/50 rounded-xl p-4 border border-terex-accent/15">
+                <label className="text-[11px] text-muted-foreground mb-2 block font-medium">Vous recevez</label>
+                <div className="flex items-center gap-2">
+                  <span className="text-foreground text-2xl font-semibold">{usdtAmount}</span>
+                  <div className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-terex-accent/10 border border-terex-accent/20 shrink-0">
+                    <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-4 h-4" />
+                    <span className="text-terex-accent text-xs font-semibold">USDT</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Info row */}
+              <div className="bg-terex-dark/30 rounded-lg p-3 space-y-1.5">
+                <div className="flex justify-between text-[11px]">
+                  <span className="text-muted-foreground">Taux TEREX</span>
+                  <span className="text-foreground font-medium">1 USDT = {rate.toLocaleString()} CFA</span>
+                </div>
+                <div className="flex justify-between text-[11px]">
+                  <span className="text-muted-foreground">Frais</span>
+                  <span className="text-foreground font-medium">2% ({parseInt(fees).toLocaleString()} CFA)</span>
+                </div>
+              </div>
+
+              <Button
+                onClick={() => canGoStep2 && setStep(2)}
+                disabled={!canGoStep2}
+                className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold text-sm rounded-xl shadow-lg shadow-terex-accent/25 transition-all duration-300 disabled:opacity-30 disabled:shadow-none group"
               >
-                {currency}
-                <ChevronDown className="w-3 h-3" />
-              </button>
+                Continuer
+                <ArrowRight className="w-4 h-4 ml-1.5 transition-transform group-hover:translate-x-0.5" />
+              </Button>
             </div>
-          </div>
+          )}
 
-          <div className="bg-terex-dark/60 rounded-xl p-3 border border-terex-accent/20">
-            <label className="text-[11px] text-muted-foreground mb-1 block">Vous recevez</label>
-            <div className="flex items-center gap-2">
-              <span className="text-foreground text-xl font-medium">{usdtAmount}</span>
-              <span className="ml-auto text-xs text-muted-foreground px-2.5 py-1 rounded-lg bg-terex-gray/20">USDT</span>
-            </div>
-          </div>
-        </div>
+          {/* Step 2: Network */}
+          {step === 2 && (
+            <div className="space-y-3 animate-fade-in">
+              <p className="text-muted-foreground text-xs mb-1">Choisissez le réseau de réception</p>
+              <div className="grid grid-cols-3 gap-2">
+                {networks.map((n) => (
+                  <button
+                    key={n.id}
+                    onClick={() => setNetwork(n.id)}
+                    className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all duration-200 ${
+                      network === n.id
+                        ? 'bg-terex-accent/10 border-terex-accent/40 shadow-md shadow-terex-accent/10'
+                        : `${n.color} hover:border-white/20`
+                    }`}
+                  >
+                    <img src={n.logo} alt={n.label} className="w-7 h-7 rounded-full" />
+                    <span className={`text-[11px] font-semibold ${network === n.id ? 'text-terex-accent' : 'text-foreground'}`}>{n.label}</span>
+                    <span className="text-[9px] text-muted-foreground leading-none">{n.subtitle}</span>
+                  </button>
+                ))}
+              </div>
 
-        {/* Rate info */}
-        <div className="flex justify-between text-[11px] text-muted-foreground mb-4 px-1">
-          <span>Taux: 1 USDT = {rate} {currency}</span>
-          <span className="text-terex-accent">0% frais</span>
-        </div>
-
-        {/* Network selector */}
-        <div className="mb-3">
-          <button
-            onClick={() => setShowNetworks(!showNetworks)}
-            className="w-full flex items-center justify-between bg-terex-dark/60 rounded-xl p-3 border border-terex-gray/20 text-sm hover:border-terex-gray/40 transition-colors"
-          >
-            <span className="text-muted-foreground text-xs">Réseau</span>
-            <span className="text-foreground text-xs font-medium flex items-center gap-1">
-              {networks.find(n => n.id === network)?.label}
-              <ChevronDown className={`w-3 h-3 transition-transform ${showNetworks ? 'rotate-180' : ''}`} />
-            </span>
-          </button>
-          {showNetworks && (
-            <div className="mt-1 bg-terex-dark border border-terex-gray/30 rounded-xl overflow-hidden">
-              {networks.map((n) => (
-                <button
-                  key={n.id}
-                  onClick={() => { setNetwork(n.id); setShowNetworks(false); }}
-                  className={`w-full text-left px-3 py-2 text-xs hover:bg-terex-gray/20 transition-colors ${network === n.id ? 'text-terex-accent bg-terex-accent/5' : 'text-foreground'}`}
+              <div className="flex gap-2 pt-1">
+                <Button
+                  onClick={() => setStep(1)}
+                  variant="outline"
+                  className="flex-1 h-11 border-terex-gray/30 text-muted-foreground hover:bg-terex-gray/15 rounded-xl text-xs"
                 >
-                  {n.label}
-                </button>
-              ))}
+                  Retour
+                </Button>
+                <Button
+                  onClick={() => setStep(3)}
+                  className="flex-1 h-11 bg-terex-accent hover:bg-terex-accent/90 text-black font-semibold rounded-xl text-sm shadow-lg shadow-terex-accent/25 group"
+                >
+                  Continuer
+                  <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-0.5" />
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Step 3: Wallet Address */}
+          {step === 3 && (
+            <div className="space-y-3 animate-fade-in">
+              {/* Summary */}
+              <div className="bg-terex-dark/50 rounded-xl p-3 border border-terex-gray/15 space-y-2">
+                <div className="flex justify-between text-[11px]">
+                  <span className="text-muted-foreground">Montant</span>
+                  <span className="text-foreground font-medium">{parseInt(amount).toLocaleString()} CFA → {usdtAmount} USDT</span>
+                </div>
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="text-muted-foreground">Réseau</span>
+                  <div className="flex items-center gap-1.5">
+                    <img src={networks.find(n => n.id === network)?.logo} alt="" className="w-4 h-4 rounded-full" />
+                    <span className="text-foreground font-medium">{networks.find(n => n.id === network)?.label}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-terex-dark/50 rounded-xl p-4 border border-terex-gray/15">
+                <label className="text-[11px] text-muted-foreground mb-2 block font-medium">
+                  Adresse {networks.find(n => n.id === network)?.label}
+                </label>
+                <Input
+                  type="text"
+                  placeholder={`Collez votre adresse ${network}`}
+                  value={walletAddress}
+                  onChange={(e) => setWalletAddress(e.target.value)}
+                  className="bg-transparent border-0 text-foreground text-sm p-0 h-auto focus-visible:ring-0 placeholder:text-muted-foreground/40"
+                />
+              </div>
+
+              <div className="flex gap-2 pt-1">
+                <Button
+                  onClick={() => setStep(2)}
+                  variant="outline"
+                  className="flex-1 h-12 border-terex-gray/30 text-muted-foreground hover:bg-terex-gray/15 rounded-xl text-xs"
+                >
+                  Retour
+                </Button>
+                <Button
+                  onClick={handleProceed}
+                  disabled={!canGoStep3}
+                  className="flex-1 h-12 bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-bold rounded-xl text-sm shadow-lg shadow-terex-accent/25 transition-all duration-300 disabled:opacity-30 disabled:shadow-none group"
+                >
+                  Acheter
+                  <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-0.5" />
+                </Button>
+              </div>
+
+              {!user && (
+                <p className="text-center text-[10px] text-muted-foreground/50 mt-1">
+                  Vous serez invité à vous connecter pour finaliser
+                </p>
+              )}
             </div>
           )}
         </div>
-
-        {/* Wallet address */}
-        <div className="mb-4">
-          <div className="bg-terex-dark/60 rounded-xl p-3 border border-terex-gray/20">
-            <label className="text-[11px] text-muted-foreground mb-1 block">Adresse {network}</label>
-            <Input
-              type="text"
-              placeholder="Collez votre adresse wallet"
-              value={walletAddress}
-              onChange={(e) => setWalletAddress(e.target.value)}
-              className="bg-transparent border-0 text-foreground text-xs p-0 h-auto focus-visible:ring-0 placeholder:text-muted-foreground/50"
-            />
-          </div>
-        </div>
-
-        {/* CTA */}
-        <Button
-          onClick={handleProceed}
-          disabled={!isValid}
-          className="w-full h-11 bg-terex-accent hover:bg-terex-accent/90 text-black font-medium text-sm rounded-xl shadow-lg shadow-terex-accent/20 transition-all duration-300 disabled:opacity-40 disabled:shadow-none group"
-        >
-          {user ? 'Acheter maintenant' : 'Créer un compte'}
-          <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-0.5" />
-        </Button>
-
-        {!user && (
-          <p className="text-center text-[10px] text-muted-foreground/60 mt-2">
-            Connectez-vous pour finaliser votre achat
-          </p>
-        )}
       </div>
     </div>
   );
