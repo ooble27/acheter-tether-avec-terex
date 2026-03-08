@@ -1,683 +1,320 @@
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, BookOpen, CreditCard, Send, Smartphone, Shield, Clock, CheckCircle, AlertTriangle, Users, Globe, Zap, Camera, Eye, Download } from 'lucide-react';
+import { ArrowLeft, Shield, AlertTriangle } from 'lucide-react';
+import dashboardBuyUsdt from '@/assets/dashboard-buy-usdt.jpeg';
+import dashboardConfirm from '@/assets/dashboard-confirm.jpeg';
+import dashboardDestination from '@/assets/dashboard-destination.jpeg';
+import dashboardPreview from '@/assets/dashboard-preview.jpeg';
+import orangeMoneyLogo from '@/assets/orange-money-logo.png';
+import waveLogo from '@/assets/wave-logo.png';
+import usdtLogo from '@/assets/usdt-logo.png';
 
 interface UserGuideProps {
   onBack: () => void;
 }
 
+const StepNumber = ({ n }: { n: number | string }) => (
+  <div className="w-7 h-7 rounded-full bg-terex-accent text-black flex items-center justify-center text-xs font-bold flex-shrink-0">
+    {n}
+  </div>
+);
+
+const Screenshot = ({ src, alt }: { src: string; alt: string }) => (
+  <div className="my-4 rounded-xl overflow-hidden border border-white/10">
+    <img src={src} alt={alt} className="w-full" loading="lazy" />
+  </div>
+);
+
 export function UserGuide({ onBack }: UserGuideProps) {
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex items-center space-x-4">
-        <Button
-          variant="ghost"
+    <div className="space-y-8 animate-fade-in max-w-3xl mx-auto">
+      {/* Header */}
+      <div>
+        <button
           onClick={onBack}
-          className="text-gray-400 hover:text-white"
+          className="flex items-center gap-2 text-white/50 hover:text-white text-sm mb-6 transition-colors"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Retour
-        </Button>
-        <div>
-          <h1 className="text-3xl font-light text-white mb-2">Guide d'utilisation complet Terex</h1>
-          <p className="text-gray-400">
-            Maîtrisez toutes les fonctionnalités de Terex étape par étape
-          </p>
+          <ArrowLeft className="w-4 h-4" />
+          Retour aux guides
+        </button>
+        <h1 className="text-2xl sm:text-3xl font-light text-white mb-2">Guide d'utilisation Terex</h1>
+        <p className="text-white/40 text-sm">
+          Maîtrisez toutes les fonctionnalités étape par étape avec de vraies captures d'écran.
+        </p>
+      </div>
+
+      {/* Intro */}
+      <section className="bg-terex-gray/60 rounded-xl p-5 sm:p-6 border border-white/10">
+        <h2 className="text-white font-medium text-lg mb-3">Bienvenue sur Terex</h2>
+        <p className="text-white/60 text-sm leading-relaxed mb-4">
+          Terex est la plateforme la plus simple pour acheter et vendre des USDT en Afrique de l'Ouest.
+          Paiement automatique via Wave et Orange Money, envoi instantané des USDT.
+        </p>
+        <div className="grid grid-cols-3 gap-3">
+          <div className="bg-terex-darker/80 rounded-lg p-3 text-center">
+            <p className="text-terex-accent text-sm font-medium">~5 min</p>
+            <p className="text-white/40 text-[11px]">Traitement</p>
+          </div>
+          <div className="bg-terex-darker/80 rounded-lg p-3 text-center">
+            <p className="text-terex-accent text-sm font-medium">1-2%</p>
+            <p className="text-white/40 text-[11px]">Frais transparents</p>
+          </div>
+          <div className="bg-terex-darker/80 rounded-lg p-3 text-center">
+            <p className="text-terex-accent text-sm font-medium">24/7</p>
+            <p className="text-white/40 text-[11px]">Support</p>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="grid grid-cols-1 gap-6">
-        <Card className="bg-gradient-to-r from-terex-accent/10 to-blue-500/10 border-terex-accent/20">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <BookOpen className="w-5 h-5 mr-2 text-terex-accent" />
-              Bienvenue sur Terex - Votre passerelle crypto
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
-            <p className="text-lg">
-              Terex révolutionne l'accès aux cryptomonnaies en Afrique. Notre plateforme intuitive 
-              vous permet d'acheter, vendre des USDT et d'effectuer des virements internationaux 
-              en quelques clics seulement.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-terex-darker p-4 rounded-lg">
-                <h4 className="text-terex-accent font-medium mb-2">🚀 Rapidité</h4>
-                <p className="text-sm">Transactions traitées en moins de 15 minutes</p>
-              </div>
-              <div className="bg-terex-darker p-4 rounded-lg">
-                <h4 className="text-terex-accent font-medium mb-2">🔒 Sécurité</h4>
-                <p className="text-sm">Chiffrement bancaire et fonds sécurisés</p>
-              </div>
-              <div className="bg-terex-darker p-4 rounded-lg">
-                <h4 className="text-terex-accent font-medium mb-2">💰 Transparence</h4>
-                <p className="text-sm">Aucun frais caché, taux équitables</p>
+      {/* Step 1: Account */}
+      <section className="space-y-4">
+        <h2 className="text-white font-medium text-lg flex items-center gap-2">
+          <StepNumber n={1} />
+          Créer votre compte
+        </h2>
+        <div className="pl-9 space-y-3 text-sm text-white/60">
+          <p>L'inscription est rapide et sans mot de passe :</p>
+          <ol className="space-y-2 list-decimal list-inside">
+            <li>Cliquez sur <span className="text-white">"S'inscrire"</span> depuis la page d'accueil</li>
+            <li>Entrez votre adresse email</li>
+            <li>Vous recevez un <span className="text-white">lien magique</span> par email — cliquez dessus pour vous connecter</li>
+            <li>Complétez votre profil (nom, téléphone, pays)</li>
+          </ol>
+          <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 mt-3">
+            <div className="flex items-start gap-2">
+              <Shield className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-blue-200 text-sm font-medium">Vérification KYC</p>
+                <p className="text-blue-100/70 text-xs mt-1">
+                  Pour des montants élevés, fournissez: pièce d'identité (CNI/passeport), selfie avec la pièce, et justificatif de domicile. Validation sous 24-48h.
+                </p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+      </section>
 
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <Users className="w-5 h-5 mr-2 text-terex-accent" />
-              Étape 1: Création de compte et vérification
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
-            <h4 className="text-white font-medium">Inscription sur Terex:</h4>
-            <div className="space-y-3">
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">1</div>
-                <div>
-                  <h5 className="text-white font-medium">Accédez à la page d'inscription</h5>
-                  <p className="text-sm">Cliquez sur "S'inscrire" depuis la page d'accueil</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">2</div>
-                <div>
-                  <h5 className="text-white font-medium">Remplissez vos informations</h5>
-                  <p className="text-sm">Email valide, mot de passe sécurisé (8+ caractères, majuscules, chiffres)</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">3</div>
-                <div>
-                  <h5 className="text-white font-medium">Vérifiez votre email</h5>
-                  <p className="text-sm">Cliquez sur le lien de confirmation envoyé dans votre boîte mail</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">4</div>
-                <div>
-                  <h5 className="text-white font-medium">Première connexion</h5>
-                  <p className="text-sm">Connectez-vous avec vos identifiants pour accéder au tableau de bord</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 mt-4">
-              <div className="flex items-start space-x-3">
-                <Shield className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <div>
-                  <h5 className="text-blue-200 font-medium">Vérification KYC (Know Your Customer)</h5>
-                  <p className="text-blue-100 text-sm mt-2">
-                    Pour des transactions de montants élevés, une vérification d'identité sera requise:
-                  </p>
-                  <ul className="text-blue-100 text-sm mt-2 space-y-1">
-                    <li>• Pièce d'identité valide (CNI, passeport, permis de conduire)</li>
-                    <li>• Selfie avec votre pièce d'identité</li>
-                    <li>• Justificatif de domicile récent (facture, relevé bancaire)</li>
-                    <li>• Délai de validation: 24-48 heures ouvrées</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="border-t border-dashed border-white/10" />
 
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <CreditCard className="w-5 h-5 mr-2 text-terex-accent" />
-              Étape 2: Acheter des USDT - Guide détaillé
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
-            <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
-              <h4 className="text-green-200 font-medium mb-2">💡 Qu'est-ce que l'USDT?</h4>
-              <p className="text-green-100 text-sm">
-                L'USDT (Tether) est une cryptomonnaie stable indexée sur le dollar américain (1 USDT = 1 USD). 
-                Elle permet de stocker de la valeur sans la volatilité des autres cryptomonnaies.
+      {/* Step 2: Buy USDT */}
+      <section className="space-y-4">
+        <h2 className="text-white font-medium text-lg flex items-center gap-2">
+          <StepNumber n={2} />
+          Acheter des USDT
+        </h2>
+        <div className="pl-9 space-y-4 text-sm text-white/60">
+          <p>Accédez à <span className="text-white">"Acheter USDT"</span> depuis le tableau de bord.</p>
+
+          <div className="space-y-4">
+            <div>
+              <p className="text-white/80 font-medium mb-2">2.1 — Entrez le montant en FCFA</p>
+              <p>Le convertisseur affiche en temps réel le nombre d'USDT que vous recevrez.</p>
+              <Screenshot src={dashboardBuyUsdt} alt="Écran d'achat USDT - Saisie du montant" />
+            </div>
+
+            <div>
+              <p className="text-white/80 font-medium mb-2">2.2 — Choisissez votre destination</p>
+              <p>Sélectionnez où recevoir vos USDT :</p>
+              <ul className="space-y-1 mt-2">
+                <li className="flex items-center gap-2">
+                  <img src={usdtLogo} alt="USDT" className="w-4 h-4" />
+                  <span><span className="text-white">Adresse wallet</span> — collez votre adresse TRC20, BEP20 ou ERC20</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-4 h-4 bg-yellow-500 rounded text-[8px] flex items-center justify-center font-bold text-black">B</span>
+                  <span><span className="text-white">Binance Pay</span> — entrez simplement votre email Binance</span>
+                </li>
+              </ul>
+              <Screenshot src={dashboardDestination} alt="Écran de sélection de destination" />
+            </div>
+
+            <div>
+              <p className="text-white/80 font-medium mb-2">2.3 — Confirmez votre commande</p>
+              <p>Vérifiez le récapitulatif : montant, taux, frais, USDT reçus.</p>
+              <Screenshot src={dashboardConfirm} alt="Écran de confirmation de commande" />
+            </div>
+
+            <div>
+              <p className="text-white/80 font-medium mb-2">2.4 — Payez automatiquement</p>
+              <p>Vous êtes redirigé vers votre application de paiement. Le montant est prélevé automatiquement :</p>
+              <div className="flex gap-3 mt-3">
+                <div className="flex items-center gap-2 bg-terex-darker/80 rounded-lg px-4 py-3 border border-white/10">
+                  <img src={waveLogo} alt="Wave" className="w-6 h-6 object-contain" />
+                  <span className="text-white text-sm">Wave</span>
+                </div>
+                <div className="flex items-center gap-2 bg-terex-darker/80 rounded-lg px-4 py-3 border border-white/10">
+                  <img src={orangeMoneyLogo} alt="Orange Money" className="w-6 h-6 object-contain" />
+                  <span className="text-white text-sm">Orange Money</span>
+                </div>
+              </div>
+              <p className="mt-3 text-white/40 text-xs">
+                Pas besoin de faire un transfert manuel. NabooPay prélève directement de votre compte Wave ou Orange Money.
               </p>
             </div>
 
-            <h4 className="text-white font-medium">Processus d'achat étape par étape:</h4>
-            <div className="space-y-4">
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">1</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Accédez à la section "Acheter USDT"</h5>
-                  <p className="text-sm mb-2">Dans le menu latéral, cliquez sur "Acheter USDT"</p>
-                  <div className="bg-terex-gray p-3 rounded border-l-4 border-terex-accent">
-                    <p className="text-xs text-gray-400">💡 Astuce: Vous pouvez aussi utiliser le raccourci depuis le tableau de bord</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">2</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Sélectionnez votre devise locale</h5>
-                  <div className="bg-terex-gray p-3 rounded mt-2">
-                    <h6 className="text-terex-accent font-medium">🌍 CFA (Afrique de l'Ouest)</h6>
-                    <p className="text-xs">Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger</p>
-                    <p className="text-xs text-terex-accent">Minimum: 10,000 CFA</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">3</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Entrez le montant à convertir</h5>
-                  <p className="text-sm mb-2">Le calculateur affiche automatiquement le montant d'USDT que vous recevrez</p>
-                  <div className="bg-terex-gray p-3 rounded">
-                    <p className="text-xs">Exemple: 50,000 CFA ≈ 76.92 USDT (taux en temps réel)</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">4</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Choisissez le réseau blockchain</h5>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-2">
-                    <div className="bg-terex-gray p-3 rounded">
-                      <h6 className="text-red-400 font-medium">TRC20 (Tron)</h6>
-                      <p className="text-xs">• Frais très bas (~1 TRX)</p>
-                      <p className="text-xs">• Rapide (1-3 minutes)</p>
-                      <p className="text-xs text-green-400">⭐ Recommandé</p>
-                    </div>
-                    <div className="bg-terex-gray p-3 rounded">
-                      <h6 className="text-yellow-400 font-medium">BEP20 (BSC)</h6>
-                      <p className="text-xs">• Frais modérés (~0.001 BNB)</p>
-                      <p className="text-xs">• Rapide (1-5 minutes)</p>
-                    </div>
-                    <div className="bg-terex-gray p-3 rounded">
-                      <h6 className="text-blue-400 font-medium">ERC20 (Ethereum)</h6>
-                      <p className="text-xs">• Frais élevés (variable)</p>
-                      <p className="text-xs">• Plus lent (5-15 minutes)</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">5</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Saisissez votre adresse de portefeuille USDT</h5>
-                  <div className="space-y-2">
-                    <p className="text-sm">Copiez l'adresse de réception depuis votre portefeuille (MetaMask, Trust Wallet, Binance, etc.)</p>
-                    <div className="bg-red-500/10 border border-red-500/20 rounded p-3">
-                      <div className="flex items-start space-x-2">
-                        <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <p className="text-red-200 text-sm font-medium">⚠️ ATTENTION CRITIQUE</p>
-                          <ul className="text-red-100 text-xs mt-1 space-y-1">
-                            <li>• Vérifiez 3 fois l'adresse avant de confirmer</li>
-                            <li>• L'adresse doit correspondre au réseau choisi</li>
-                            <li>• Une erreur = perte définitive des fonds</li>
-                            <li>• Testez avec un petit montant d'abord</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">6</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Confirmez et procédez au paiement</h5>
-                  <p className="text-sm mb-2">Vérifiez tous les détails dans le résumé de commande</p>
-                  <div className="space-y-2">
-                    <h6 className="text-terex-accent font-medium">Méthodes de paiement disponibles:</h6>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div className="bg-terex-gray p-3 rounded">
-                        <h6 className="text-orange-400 font-medium">Orange Money</h6>
-                        <p className="text-xs">Sénégal, Mali, Côte d'Ivoire</p>
-                        <p className="text-xs">Code: #144*4*montant*code_marchand#</p>
-                      </div>
-                      <div className="bg-terex-gray p-3 rounded">
-                        <h6 className="text-blue-400 font-medium">Wave</h6>
-                        <p className="text-xs">Sénégal, Côte d'Ivoire</p>
-                        <p className="text-xs">Scan QR code ou envoi direct</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">✓</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Réception des USDT</h5>
-                  <p className="text-sm">Une fois le paiement confirmé (5-15 minutes maximum), vos USDT sont envoyés automatiquement</p>
-                  <div className="bg-green-500/10 border border-green-500/20 rounded p-3 mt-2">
-                    <p className="text-green-200 text-sm">
-                      💚 Vous recevrez un email de confirmation avec le hash de transaction pour suivre l'envoi sur la blockchain
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <div>
+              <p className="text-white/80 font-medium mb-2">2.5 — Recevez vos USDT</p>
+              <p>Après confirmation du paiement, vos USDT sont envoyés <span className="text-white">automatiquement</span> à votre wallet via l'API Binance. Délai moyen : 5-15 minutes.</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <Smartphone className="w-5 h-5 mr-2 text-terex-accent" />
-              Étape 3: Vendre des USDT - Convertir en monnaie locale
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
-              <h4 className="text-blue-200 font-medium mb-2">💰 Pourquoi vendre ses USDT?</h4>
-              <p className="text-blue-100 text-sm">
-                Convertissez vos USDT en CFA ou CAD pour utiliser votre argent localement, 
-                payer des factures ou effectuer des achats dans votre devise locale.
-              </p>
-            </div>
-
-            <h4 className="text-white font-medium">Guide de vente détaillé:</h4>
-            <div className="space-y-4">
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">1</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Accédez à "Vendre USDT"</h5>
-                  <p className="text-sm">Menu principal → Vendre USDT</p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">2</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Entrez le montant d'USDT à vendre</h5>
-                  <div className="space-y-2">
-                    <p className="text-sm">Minimum: 10 USDT • Maximum: selon votre limite KYC</p>
-                    <div className="bg-terex-gray p-3 rounded">
-                      <p className="text-xs">Exemple: 100 USDT ≈ 65,000 CFA (taux en temps réel)</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">3</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Sélectionnez le réseau d'envoi</h5>
-                  <p className="text-sm mb-2">Choisissez le réseau où se trouvent vos USDT</p>
-                  <div className="bg-yellow-500/10 border border-yellow-500/20 rounded p-3">
-                    <p className="text-yellow-200 text-sm">
-                      ⚠️ Le réseau doit correspondre à celui de votre portefeuille source
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">4</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Choisissez votre méthode de réception</h5>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
-                    <div className="bg-terex-gray p-3 rounded">
-                      <h6 className="text-orange-400 font-medium">📱 Orange Money</h6>
-                      <p className="text-xs mb-2">Réception instantanée</p>
-                      <ul className="text-xs space-y-1">
-                        <li>• Numéro de téléphone</li>
-                        <li>• Nom complet du titulaire</li>
-                        <li>• Pays (Sénégal, Mali, CI...)</li>
-                      </ul>
-                    </div>
-                    <div className="bg-terex-gray p-3 rounded">
-                      <h6 className="text-blue-400 font-medium">🌊 Wave</h6>
-                      <p className="text-xs mb-2">Transfert rapide</p>
-                      <ul className="text-xs space-y-1">
-                        <li>• Numéro Wave</li>
-                        <li>• Nom du bénéficiaire</li>
-                        <li>• Pays de réception</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">5</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Confirmez et obtenez l'adresse de dépôt</h5>
-                  <p className="text-sm mb-2">Terex génère une adresse unique pour votre transaction</p>
-                  <div className="space-y-2">
-                    <div className="bg-terex-gray p-3 rounded">
-                      <h6 className="text-terex-accent font-medium">📋 Informations fournies:</h6>
-                      <ul className="text-xs mt-1 space-y-1">
-                        <li>• Adresse de dépôt Terex</li>
-                        <li>• QR code pour scan rapide</li>
-                        <li>• Montant exact à envoyer</li>
-                        <li>• ID de transaction unique</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">6</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Envoyez vos USDT</h5>
-                  <p className="text-sm mb-2">Depuis votre portefeuille, envoyez le montant exact</p>
-                  <div className="bg-red-500/10 border border-red-500/20 rounded p-3">
-                    <div className="flex items-start space-x-2">
-                      <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <p className="text-red-200 text-sm font-medium">Points critiques:</p>
-                        <ul className="text-red-100 text-xs mt-1 space-y-1">
-                          <li>• Envoyez exactement le montant demandé</li>
-                          <li>• Utilisez le bon réseau</li>
-                          <li>• Ne fermez pas la page pendant le processus</li>
-                          <li>• Délai limite: 30 minutes</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">✓</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Réception de votre argent</h5>
-                  <p className="text-sm">Une fois la blockchain confirmée (1-3 confirmations), votre argent est envoyé</p>
-                  <div className="bg-green-500/10 border border-green-500/20 rounded p-3 mt-2">
-                    <p className="text-green-200 text-sm">
-                      ⚡ Délai moyen: 5-15 minutes après confirmation blockchain
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <Send className="w-5 h-5 mr-2 text-terex-accent" />
-              Étape 4: Virements internationaux - Envoi d'argent rapide
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
-            <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4">
-              <h4 className="text-purple-200 font-medium mb-2">🌍 Service de virement international</h4>
-              <p className="text-purple-100 text-sm">
-                Envoyez de l'argent depuis le Canada vers l'Afrique de l'Ouest en quelques minutes, 
-                bien plus rapide et moins cher que les banques traditionnelles.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-terex-gray p-4 rounded-lg">
-                <h5 className="text-terex-accent font-medium mb-2">💸 Pays de départ</h5>
-                <p className="text-sm">🇨🇦 Canada (CAD)</p>
-                <p className="text-xs text-gray-400">Minimum: 25 CAD</p>
-              </div>
-              <div className="bg-terex-gray p-4 rounded-lg">
-                <h5 className="text-terex-accent font-medium mb-2">🎯 Pays de destination</h5>
-                <div className="space-y-1 text-sm">
-                  <p>🇸🇳 Sénégal • 🇨🇮 Côte d'Ivoire</p>
-                  <p>🇲🇱 Mali • 🇧🇫 Burkina Faso • 🇳🇪 Niger</p>
-                </div>
-              </div>
-            </div>
-
-            <h4 className="text-white font-medium">Processus de virement étape par étape:</h4>
-            <div className="space-y-4">
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">1</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Accédez au service de virement</h5>
-                  <p className="text-sm">Menu → Virement International</p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">2</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Sélectionnez les pays</h5>
-                  <div className="space-y-2">
-                    <p className="text-sm">Pays d'envoi: Canada • Pays de réception: Au choix</p>
-                    <div className="bg-terex-gray p-3 rounded">
-                      <p className="text-xs">Taux de change affiché en temps réel CAD → CFA</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">3</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Entrez le montant à envoyer</h5>
-                  <div className="space-y-2">
-                    <p className="text-sm">Indiquez le montant en CAD ou le montant à recevoir en CFA</p>
-                    <div className="bg-terex-gray p-3 rounded">
-                      <p className="text-xs">Exemple: 100 CAD → 48,500 CFA (incluant nos frais)</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">4</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Informations du bénéficiaire</h5>
-                  <div className="space-y-2">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div className="bg-terex-gray p-3 rounded">
-                        <h6 className="text-terex-accent font-medium text-sm">Informations requises:</h6>
-                        <ul className="text-xs mt-1 space-y-1">
-                          <li>• Nom complet du bénéficiaire</li>
-                          <li>• Numéro de téléphone mobile</li>
-                          <li>• Service (Orange Money/Wave)</li>
-                          <li>• Pays de réception</li>
-                        </ul>
-                      </div>
-                      <div className="bg-terex-gray p-3 rounded">
-                        <h6 className="text-terex-accent font-medium text-sm">Vérifications:</h6>
-                        <ul className="text-xs mt-1 space-y-1">
-                          <li>• Nom exact sur le compte mobile</li>
-                          <li>• Numéro actif et correct</li>
-                          <li>• Compte mobile money existant</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-terex-accent text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">5</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Méthode de paiement (Canada)</h5>
-                  <div className="bg-terex-gray p-3 rounded">
-                    <h6 className="text-green-400 font-medium">💳 Virement Interac e-Transfer</h6>
-                    <ul className="text-xs mt-2 space-y-1">
-                      <li>• Email de transfert fourni par Terex</li>
-                      <li>• Question de sécurité personnalisée</li>
-                      <li>• Réponse fournie dans les instructions</li>
-                      <li>• Confirmation automatique</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">✓</div>
-                <div className="flex-1">
-                  <h5 className="text-white font-medium">Transfert et réception</h5>
-                  <div className="space-y-2">
-                    <p className="text-sm">Une fois votre paiement reçu, le virement est traité immédiatement</p>
-                    <div className="bg-green-500/10 border border-green-500/20 rounded p-3">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div>
-                          <p className="text-green-200 text-sm font-medium">⚡ Délais typiques:</p>
-                          <ul className="text-green-100 text-xs mt-1 space-y-1">
-                            <li>• Orange Money: 2-5 minutes</li>
-                            <li>• Wave: 1-3 minutes</li>
-                            <li>• Maximum: 15 minutes</li>
-                          </ul>
-                        </div>
-                        <div>
-                          <p className="text-green-200 text-sm font-medium">📱 Notifications:</p>
-                          <ul className="text-green-100 text-xs mt-1 space-y-1">
-                            <li>• SMS au bénéficiaire</li>
-                            <li>• Email de confirmation</li>
-                            <li>• Suivi en temps réel</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <Eye className="w-5 h-5 mr-2 text-terex-accent" />
-              Suivi des transactions et historique
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-terex-gray p-4 rounded-lg">
-                <h5 className="text-terex-accent font-medium mb-2">📊 Tableau de bord</h5>
-                <ul className="text-sm space-y-1">
-                  <li>• Transactions récentes</li>
-                  <li>• Statuts en temps réel</li>
-                  <li>• Montants totaux</li>
-                  <li>• Graphiques de l'activité</li>
-                </ul>
-              </div>
-              <div className="bg-terex-gray p-4 rounded-lg">
-                <h5 className="text-terex-accent font-medium mb-2">📜 Historique complet</h5>
-                <ul className="text-sm space-y-1">
-                  <li>• Toutes vos transactions</li>
-                  <li>• Filtres par date/type</li>
-                  <li>• Export PDF/Excel</li>
-                  <li>• Recherche avancée</li>
+          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-red-200 text-sm font-medium">Attention</p>
+                <ul className="text-red-100/70 text-xs mt-1 space-y-1">
+                  <li>• Vérifiez 3 fois l'adresse wallet avant de confirmer</li>
+                  <li>• L'adresse doit correspondre au réseau choisi (TRC20 recommandé)</li>
+                  <li>• Une erreur d'adresse = perte définitive des fonds</li>
                 </ul>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <h5 className="text-white font-medium">États des transactions:</h5>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-              <div className="bg-yellow-500/10 border border-yellow-500/20 p-3 rounded">
-                <p className="text-yellow-400 font-medium text-sm">🟡 En attente</p>
-                <p className="text-xs">Paiement en cours de traitement</p>
+      <div className="border-t border-dashed border-white/10" />
+
+      {/* Step 3: Sell USDT */}
+      <section className="space-y-4">
+        <h2 className="text-white font-medium text-lg flex items-center gap-2">
+          <StepNumber n={3} />
+          Vendre des USDT
+        </h2>
+        <div className="pl-9 space-y-3 text-sm text-white/60">
+          <p>Convertissez vos USDT en FCFA directement sur votre Orange Money ou Wave.</p>
+          <ol className="space-y-2 list-decimal list-inside">
+            <li>Accédez à <span className="text-white">"Vendre USDT"</span></li>
+            <li>Indiquez le montant d'USDT à vendre (min. 10 USDT)</li>
+            <li>Choisissez votre méthode de réception :
+              <div className="flex items-center gap-4 mt-2 ml-4">
+                <span className="flex items-center gap-1.5">
+                  <img src={orangeMoneyLogo} alt="Orange Money" className="w-4 h-4 object-contain" />
+                  Orange Money
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <img src={waveLogo} alt="Wave" className="w-4 h-4 object-contain" />
+                  Wave
+                </span>
               </div>
-              <div className="bg-blue-500/10 border border-blue-500/20 p-3 rounded">
-                <p className="text-blue-400 font-medium text-sm">🔵 En cours</p>
-                <p className="text-xs">Transaction confirmée, envoi en cours</p>
-              </div>
-              <div className="bg-green-500/10 border border-green-500/20 p-3 rounded">
-                <p className="text-green-400 font-medium text-sm">🟢 Complétée</p>
-                <p className="text-xs">Transaction réussie</p>
-              </div>
-              <div className="bg-red-500/10 border border-red-500/20 p-3 rounded">
-                <p className="text-red-400 font-medium text-sm">🔴 Échouée</p>
-                <p className="text-xs">Erreur, contactez le support</p>
-              </div>
+            </li>
+            <li>Entrez votre numéro de téléphone (format international sans le +)</li>
+            <li>Terex génère une <span className="text-white">adresse unique</span> — envoyez-y vos USDT depuis votre wallet</li>
+            <li>Collez le <span className="text-white">hash de transaction</span> dans votre tableau de bord</li>
+            <li>Recevez votre argent en <span className="text-white">10-30 minutes</span></li>
+          </ol>
+        </div>
+      </section>
+
+      <div className="border-t border-dashed border-white/10" />
+
+      {/* Step 4: International Transfer */}
+      <section className="space-y-4">
+        <h2 className="text-white font-medium text-lg flex items-center gap-2">
+          <StepNumber n={4} />
+          Transferts internationaux
+        </h2>
+        <div className="pl-9 space-y-3 text-sm text-white/60">
+          <p>Envoyez de l'argent vers l'Afrique de l'Ouest rapidement et à moindre coût.</p>
+          <ol className="space-y-2 list-decimal list-inside">
+            <li>Accédez à <span className="text-white">"Virement International"</span></li>
+            <li>Choisissez le pays de destination (Sénégal, Côte d'Ivoire, Mali, etc.)</li>
+            <li>Entrez le montant en FCFA à envoyer</li>
+            <li>Remplissez les infos du destinataire :
+              <ul className="ml-4 mt-1 space-y-1 list-disc list-inside text-white/50">
+                <li>Nom complet</li>
+                <li>Numéro Orange Money ou Wave</li>
+              </ul>
+            </li>
+            <li>Validez — le paiement est prélevé automatiquement de votre Wave/Orange Money</li>
+            <li>Le destinataire reçoit l'argent en <span className="text-white">15-60 minutes</span></li>
+          </ol>
+        </div>
+      </section>
+
+      <div className="border-t border-dashed border-white/10" />
+
+      {/* Step 5: Dashboard */}
+      <section className="space-y-4">
+        <h2 className="text-white font-medium text-lg flex items-center gap-2">
+          <StepNumber n={5} />
+          Tableau de bord et suivi
+        </h2>
+        <div className="pl-9 space-y-3 text-sm text-white/60">
+          <p>Votre tableau de bord centralise toute votre activité :</p>
+          <Screenshot src={dashboardPreview} alt="Aperçu du tableau de bord Terex" />
+          <ul className="space-y-1.5">
+            <li>• <span className="text-white">Transactions récentes</span> — statut en temps réel</li>
+            <li>• <span className="text-white">Historique complet</span> — filtres par date et type</li>
+            <li>• <span className="text-white">Profil et KYC</span> — gérez vos informations</li>
+          </ul>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
+            <div className="bg-yellow-500/10 border border-yellow-500/20 p-2.5 rounded-lg text-center">
+              <p className="text-yellow-400 text-xs font-medium">En attente</p>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <Shield className="w-5 h-5 mr-2 text-terex-accent" />
-              Sécurité et bonnes pratiques
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-3">
-                <h5 className="text-terex-accent font-medium">🔐 Sécurité du compte</h5>
-                <ul className="text-sm space-y-1">
-                  <li>• Mot de passe unique et complexe</li>
-                  <li>• Activation de l'authentification 2FA</li>
-                  <li>• Déconnexion sur appareils publics</li>
-                  <li>• Vérification régulière des sessions</li>
-                </ul>
-              </div>
-              <div className="space-y-3">
-                <h5 className="text-terex-accent font-medium">💰 Sécurité des fonds</h5>
-                <ul className="text-sm space-y-1">
-                  <li>• Vérification triple des adresses</li>
-                  <li>• Tests avec petits montants</li>
-                  <li>• Sauvegarde des informations importantes</li>
-                  <li>• Contacts officiels uniquement</li>
-                </ul>
-              </div>
+            <div className="bg-blue-500/10 border border-blue-500/20 p-2.5 rounded-lg text-center">
+              <p className="text-blue-400 text-xs font-medium">En cours</p>
             </div>
+            <div className="bg-green-500/10 border border-green-500/20 p-2.5 rounded-lg text-center">
+              <p className="text-green-400 text-xs font-medium">Complétée</p>
+            </div>
+            <div className="bg-red-500/10 border border-red-500/20 p-2.5 rounded-lg text-center">
+              <p className="text-red-400 text-xs font-medium">Échouée</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-              <h5 className="text-red-200 font-medium mb-2">🚨 Signaux d'alerte - Ne jamais:</h5>
-              <ul className="text-red-100 text-sm space-y-1">
-                <li>• Partager vos identifiants de connexion</li>
-                <li>• Envoyer de l'argent à des inconnus</li>
-                <li>• Cliquer sur des liens suspects par email</li>
-                <li>• Faire confiance aux offres trop avantageuses</li>
-                <li>• Utiliser des réseaux WiFi publics pour des transactions</li>
+      <div className="border-t border-dashed border-white/10" />
+
+      {/* Security */}
+      <section className="space-y-4">
+        <h2 className="text-white font-medium text-lg flex items-center gap-2">
+          <Shield className="w-5 h-5 text-terex-accent" />
+          Sécurité et bonnes pratiques
+        </h2>
+        <div className="pl-7 space-y-3 text-sm text-white/60">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-terex-gray/60 rounded-lg p-4 border border-white/10">
+              <p className="text-white font-medium text-sm mb-2">Sécurité du compte</p>
+              <ul className="space-y-1 text-xs">
+                <li>• Email sécurisé avec 2FA activée</li>
+                <li>• Déconnexion sur appareils publics</li>
+                <li>• Vérifiez toujours l'URL : terex.sn</li>
+                <li>• Complétez votre KYC</li>
               </ul>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <Clock className="w-5 h-5 mr-2 text-terex-accent" />
-              Support client et assistance
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-gray-300 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-terex-gray p-4 rounded-lg text-center">
-                <h5 className="text-terex-accent font-medium mb-2">📧 Email</h5>
-                <p className="text-sm">Terangaexchange@gmail.com</p>
-                <p className="text-xs text-gray-400">Réponse sous 30 minutes</p>
-              </div>
-              <div className="bg-terex-gray p-4 rounded-lg text-center">
-                <h5 className="text-terex-accent font-medium mb-2">📞 Téléphone</h5>
-                <p className="text-sm">+1 (418) 261-9091</p>
-                <p className="text-xs text-gray-400">Disponible 24/7</p>
-              </div>
-              <div className="bg-terex-gray p-4 rounded-lg text-center">
-                <h5 className="text-terex-accent font-medium mb-2">💬 Chat</h5>
-                <p className="text-sm">Chat en direct</p>
-                <p className="text-xs text-gray-400">Support instantané</p>
-              </div>
-            </div>
-
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
-              <h5 className="text-blue-200 font-medium mb-2">💡 Conseils pour un support efficace</h5>
-              <ul className="text-blue-100 text-sm space-y-1">
-                <li>• Gardez votre ID de transaction à portée de main</li>
-                <li>• Décrivez le problème de manière détaillée</li>
-                <li>• Joignez des captures d'écran si nécessaire</li>
-                <li>• Indiquez l'heure et la date du problème</li>
-                <li>• Restez courtois, notre équipe est là pour vous aider</li>
+            <div className="bg-terex-gray/60 rounded-lg p-4 border border-white/10">
+              <p className="text-white font-medium text-sm mb-2">Sécurité des fonds</p>
+              <ul className="space-y-1 text-xs">
+                <li>• Vérifiez 3x les adresses wallet</li>
+                <li>• Testez avec un petit montant d'abord</li>
+                <li>• Ne partagez jamais vos accès</li>
+                <li>• Ignorez les offres trop avantageuses</li>
               </ul>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div className="text-center bg-gradient-to-r from-terex-accent/10 to-blue-500/10 rounded-lg p-6">
-              <h5 className="text-white font-medium mb-2">🎯 Notre engagement</h5>
-              <p className="text-gray-300 text-sm">
-                Résolution de 95% des problèmes en moins de 2 heures. 
-                Votre satisfaction est notre priorité absolue.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Support */}
+      <section className="bg-terex-gray/60 rounded-xl p-5 sm:p-6 border border-white/10">
+        <h2 className="text-white font-medium mb-3">Besoin d'aide ?</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+          <div className="bg-terex-darker/80 rounded-lg p-3 text-center">
+            <p className="text-white font-medium text-sm">WhatsApp</p>
+            <p className="text-white/40 text-xs">+1 (418) 261-9091</p>
+          </div>
+          <div className="bg-terex-darker/80 rounded-lg p-3 text-center">
+            <p className="text-white font-medium text-sm">Email</p>
+            <p className="text-white/40 text-xs">Terangaexchange@gmail.com</p>
+          </div>
+          <div className="bg-terex-darker/80 rounded-lg p-3 text-center">
+            <p className="text-white font-medium text-sm">Centre d'aide</p>
+            <p className="text-white/40 text-xs">terex.sn/help</p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
