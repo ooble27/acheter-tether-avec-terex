@@ -79,10 +79,6 @@ export function HeroBuyForm() {
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-terex-accent/10 border border-terex-accent/15">
-              <Zap className="w-2.5 h-2.5 text-terex-accent" />
-              <span className="text-terex-accent text-[9px] lg:text-[10px] font-semibold">LIVE</span>
-            </div>
           </div>
         </div>
 
