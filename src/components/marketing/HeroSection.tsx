@@ -29,17 +29,26 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
         
         {/* ===== MOBILE ONLY — Attio-style minimal ===== */}
         {isMobile && (
-          <div className="flex flex-col items-center text-center pt-20 pb-8">
-            <AnimatedSection className="w-full mb-10" delay={100}>
-              <h1 className="text-[2.75rem] font-bold text-foreground leading-[1.05] tracking-tight mb-5">
-                Achetez des USDT.
+          <div className="flex flex-col items-center text-center pt-12 pb-8">
+            <AnimatedSection className="w-full mb-8" delay={100}>
+              <h1 className="text-[2.5rem] font-bold text-foreground leading-[1.1] tracking-tight mb-4">
+                Achetez et vendez<br />
+                des{' '}
+                <span className="inline-flex items-center gap-2">
+                  USDT
+                  <img 
+                    src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
+                    alt="USDT" 
+                    className="w-8 h-8 inline-block"
+                  />
+                </span>
               </h1>
-              <p className="text-[15px] text-muted-foreground font-light max-w-[280px] mx-auto leading-relaxed">
-                Plateforme d'échange USDT et transferts vers l'Afrique.
+              <p className="text-[14px] text-muted-foreground font-light max-w-[260px] mx-auto leading-relaxed">
+                Échange de stablecoins simple et sécurisé.
               </p>
             </AnimatedSection>
 
-            <AnimatedSection className="w-full" delay={250}>
+            <AnimatedSection className="w-full flex justify-center" delay={250}>
               <HeroBuyForm />
             </AnimatedSection>
           </div>
