@@ -94,7 +94,7 @@ const ContactPage = () => {
             
             {/* Left: Form */}
             <div className="lg:col-span-3">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-foreground text-sm font-medium mb-2">Prénom *</label>
