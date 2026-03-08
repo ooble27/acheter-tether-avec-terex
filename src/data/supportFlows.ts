@@ -155,7 +155,7 @@ export const supportFlows: SupportFlow[] = [
           },
           {
             text: "Mon compte est bloqué",
-            solution: "Si votre compte est bloqué, cela peut être dû à:\n• Activité suspecte détectée\n• Problème de vérification KYC\n• Tentatives de connexion multiples\n\nContactez immédiatement notre support:\n• WhatsApp: +1 4182619091\n• Email: support@terex.sn\n• Indiquez votre email de compte\n\nNous traiterons votre cas en priorité."
+            solution: "Si votre compte est bloqué, cela peut être dû à:\n• Activité suspecte détectée\n• Problème de vérification KYC\n• Tentatives de connexion multiples\n\nContactez immédiatement notre support:\n• WhatsApp: +1 4182619091\n• Email: terangaexchange@gmail.com\n• Indiquez votre email de compte\n\nNous traiterons votre cas en priorité."
           }
         ]
       },
