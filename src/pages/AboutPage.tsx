@@ -23,7 +23,7 @@ const AboutPage = () => {
   const team = [
     { name: "Mohamed Lo", role: "CEO & Fondateur", bio: "Visionnaire passionné par l'innovation fintech en Afrique, avec une expertise en blockchain et services financiers numériques" },
     { name: "Sidi Ndiaye", role: "Directeur des Opérations", bio: "Expert en gestion des opérations et coordination d'équipes, spécialisé dans l'optimisation des processus" },
-    { name: "Adesina", role: "Head of Marketing", bio: "Spécialiste du marketing digital et de la communication stratégique pour l'écosystème fintech africain" }
+    { name: "Adechina Olaitan", role: "Head of Marketing", bio: "Spécialiste du marketing digital et de la communication stratégique pour l'écosystème fintech africain" }
   ];
 
   const milestones = [
