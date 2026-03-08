@@ -13,10 +13,6 @@ const BitcoinLogo = ({ className }: { className?: string }) => (
   <img src="/bitcoin-logo.png" alt="Bitcoin Logo" className={className} />
 );
 
-const BitcoinLogo = ({ className }: { className?: string }) => (
-  <img src="/bitcoin-logo.png" alt="Bitcoin Logo" className={className} />
-);
-
 export function PhoneMockup() {
   return <div className="relative mx-auto">
       {/* Phone Frame */}
