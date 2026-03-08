@@ -97,9 +97,9 @@ const ContactPage = () => {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-foreground text-sm font-medium mb-2">Prénom *</label>
+                    <label className="block text-foreground text-xs font-medium mb-1.5">Prénom *</label>
                     <Input 
-                      className="bg-white/[0.03] border-white/[0.08] text-foreground h-10 text-sm rounded-lg"
+                      className="bg-white/[0.03] border-white/[0.08] text-foreground h-9 text-sm rounded-lg"
                       placeholder="Prénom" 
                       value={formData.firstName}
                       onChange={(e) => handleInputChange('firstName', e.target.value)}
@@ -107,9 +107,9 @@ const ContactPage = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-foreground text-sm font-medium mb-2">Nom *</label>
+                    <label className="block text-foreground text-xs font-medium mb-1.5">Nom *</label>
                     <Input 
-                      className="bg-white/[0.03] border-white/[0.08] text-foreground h-12 text-sm rounded-lg" 
+                      className="bg-white/[0.03] border-white/[0.08] text-foreground h-9 text-sm rounded-lg" 
                       placeholder="Nom" 
                       value={formData.lastName}
                       onChange={(e) => handleInputChange('lastName', e.target.value)}
@@ -119,10 +119,10 @@ const ContactPage = () => {
                 </div>
                 
                 <div>
-                  <label className="block text-foreground text-sm font-medium mb-2">Email *</label>
+                  <label className="block text-foreground text-xs font-medium mb-1.5">Email *</label>
                   <Input 
                     type="email" 
-                    className="bg-white/[0.03] border-white/[0.08] text-foreground h-12 text-sm rounded-lg" 
+                    className="bg-white/[0.03] border-white/[0.08] text-foreground h-9 text-sm rounded-lg" 
                     placeholder="votre@email.com" 
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
@@ -131,9 +131,9 @@ const ContactPage = () => {
                 </div>
                 
                 <div>
-                  <label className="block text-foreground text-sm font-medium mb-2">Téléphone</label>
+                  <label className="block text-foreground text-xs font-medium mb-1.5">Téléphone</label>
                   <Input 
-                    className="bg-white/[0.03] border-white/[0.08] text-foreground h-12 text-sm rounded-lg" 
+                    className="bg-white/[0.03] border-white/[0.08] text-foreground h-9 text-sm rounded-lg" 
                     placeholder="+1 (418) 261-9091" 
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
@@ -141,9 +141,9 @@ const ContactPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-foreground text-sm font-medium mb-2">Sujet *</label>
+                  <label className="block text-foreground text-xs font-medium mb-1.5">Sujet *</label>
                   <Input 
-                    className="bg-white/[0.03] border-white/[0.08] text-foreground h-12 text-sm rounded-lg" 
+                    className="bg-white/[0.03] border-white/[0.08] text-foreground h-9 text-sm rounded-lg" 
                     placeholder="Objet de votre message" 
                     value={formData.subject}
                     onChange={(e) => handleInputChange('subject', e.target.value)}
@@ -152,9 +152,9 @@ const ContactPage = () => {
                 </div>
                 
                 <div>
-                  <label className="block text-foreground text-sm font-medium mb-2">Message *</label>
+                  <label className="block text-foreground text-xs font-medium mb-1.5">Message *</label>
                   <Textarea 
-                    className="bg-white/[0.03] border-white/[0.08] text-foreground min-h-[160px] text-sm resize-none rounded-lg" 
+                    className="bg-white/[0.03] border-white/[0.08] text-foreground min-h-[120px] text-sm resize-none rounded-lg" 
                     placeholder="Décrivez votre demande..."
                     value={formData.message}
                     onChange={(e) => handleInputChange('message', e.target.value)}
@@ -165,7 +165,7 @@ const ContactPage = () => {
                 <Button 
                   type="submit" 
                   disabled={loading}
-                  className="w-full bg-foreground hover:bg-foreground/90 text-background font-medium h-12 rounded-lg"
+                  className="w-full bg-foreground hover:bg-foreground/90 text-background font-medium h-10 rounded-lg"
                 >
                   {loading ? 'Envoi en cours...' : 'Envoyer le message'}
                   <Send className="ml-2 w-4 h-4" />
