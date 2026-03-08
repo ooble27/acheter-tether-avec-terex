@@ -1,9 +1,9 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { User, LogOut, Menu, Home, Building2, Briefcase, HelpCircle, Phone, MessageCircle } from 'lucide-react';
+import { User, LogOut, Menu, Home, Building2, Briefcase, HelpCircle, Phone, MessageCircle, ArrowRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useNavigate } from 'react-router-dom';
@@ -35,7 +35,6 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
       await onLogout();
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);
-      // Force reload on error to ensure clean state
       window.location.reload();
     }
   };
@@ -52,7 +51,6 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
     { label: 'FAQ', href: '/faq', icon: MessageCircle, description: 'Questions fréquentes' }
   ];
 
-  // Use hamburger menu for mobile and tablet
   const useHamburgerMenu = isMobile || isTablet;
 
   return (
@@ -60,7 +58,6 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
       isScrolled ? 'pt-2' : 'pt-4'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Floating navbar container */}
         {!useHamburgerMenu ? (
           <div className={`backdrop-blur-md rounded-2xl border shadow-lg transition-all duration-300 px-6 flex items-center justify-between ${
             isScrolled 
@@ -156,7 +153,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
               <span className="ml-2 text-lg font-semibold text-white">Terex</span>
             </div>
 
-            {/* Hamburger Menu */}
+            {/* Hamburger Menu — Full-screen Attio style */}
             <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
               <SheetTrigger asChild>
                 <button
@@ -172,90 +169,147 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                 </button>
               </SheetTrigger>
 
-              <SheetContent side="right" className="w-full bg-terex-darker/95 border-white/10 backdrop-blur-xl p-0">
-                <ScrollArea className="h-full">
-                  <div className="flex min-h-full flex-col pt-safe">
-                    <div className="px-6 py-5 border-b border-white/10">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
-                          alt="Terex Logo"
-                          className="w-10 h-10 rounded-lg"
-                        />
-                        <div>
-                          <p className="text-xs text-muted-foreground uppercase tracking-[0.2em]">Menu</p>
-                          <h2 className="text-lg text-foreground font-medium">Navigation</h2>
-                        </div>
-                      </div>
+              <SheetContent 
+                side="right" 
+                className="w-full sm:max-w-full bg-terex-dark border-none p-0 [&>button]:hidden"
+              >
+                <SheetTitle className="sr-only">Menu de navigation</SheetTitle>
+                <div className="flex min-h-full flex-col">
+                  {/* Top bar with logo & close */}
+                  <div className="px-6 py-5 flex items-center justify-between border-b border-white/5">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
+                        alt="Terex Logo"
+                        className="w-10 h-10 rounded-lg"
+                      />
+                      <span className="text-xl font-semibold text-white">Terex</span>
                     </div>
+                    <button
+                      onClick={() => setMenuOpen(false)}
+                      className="w-11 h-11 flex items-center justify-center rounded-xl hover:bg-white/5 transition-colors"
+                      aria-label="Fermer le menu"
+                    >
+                      <div className="flex flex-col items-center gap-1.5">
+                        <span className="block h-0.5 w-6 bg-foreground rounded-full translate-y-1 rotate-45" />
+                        <span className="block h-0.5 w-6 bg-foreground rounded-full -translate-y-1 -rotate-45" />
+                      </div>
+                    </button>
+                  </div>
 
-                    <div className="p-4 space-y-2">
-                      {[...navigationItems, ...supportItems].map((item, index) => {
-                        const IconComponent = item.icon;
-                        return (
-                          <Button
-                            key={item.href}
-                            variant="ghost"
-                            onClick={() => {
-                              navigate(item.href);
-                              setMenuOpen(false);
-                            }}
-                            className="w-full justify-start p-4 h-auto rounded-2xl text-muted-foreground hover:bg-white/5 hover:text-foreground transition-all duration-300"
-                            style={{ animationDelay: `${index * 40}ms` }}
-                          >
-                            <div className="flex items-center gap-4 w-full">
-                              <div className="p-2.5 rounded-xl bg-white/5">
+                  {/* Navigation items — large, clean, spaced */}
+                  <ScrollArea className="flex-1">
+                    <div className="px-6 py-8">
+                      {/* Section label */}
+                      <p className="text-[11px] text-gray-500 uppercase tracking-[0.2em] font-medium mb-4 px-2">Navigation</p>
+                      <div className="space-y-1 mb-8">
+                        {navigationItems.map((item, index) => {
+                          const IconComponent = item.icon;
+                          return (
+                            <button
+                              key={item.href}
+                              onClick={() => {
+                                navigate(item.href);
+                                setMenuOpen(false);
+                              }}
+                              className="w-full flex items-center gap-4 px-3 py-4 rounded-2xl text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-200 group"
+                              style={{ animationDelay: `${index * 50}ms` }}
+                            >
+                              <div className="p-2.5 rounded-xl bg-white/5 group-hover:bg-white/10 transition-colors">
                                 <IconComponent className="h-5 w-5" />
                               </div>
                               <div className="flex-1 text-left">
-                                <p className="font-medium text-sm">{item.label}</p>
-                                <p className="text-xs opacity-70">{item.description}</p>
+                                <p className="font-medium text-[15px]">{item.label}</p>
+                                <p className="text-xs text-gray-500">{item.description}</p>
                               </div>
-                            </div>
-                          </Button>
-                        );
-                      })}
-                    </div>
+                              <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-50 transition-opacity" />
+                            </button>
+                          );
+                        })}
+                      </div>
 
-                    <div className="p-4 border-t border-white/10 mt-auto pb-safe">
-                      {user ? (
-                        <div className="space-y-2">
-                          <Button
-                            onClick={() => {
-                              onShowDashboard?.();
-                              setMenuOpen(false);
-                            }}
-                            className="w-full bg-terex-accent hover:bg-terex-accent/90 text-terex-dark py-6 rounded-2xl"
-                          >
-                            <User className="w-4 h-4 mr-2" />
-                            Mon Dashboard
-                          </Button>
-                          <Button
-                            onClick={() => {
-                              handleLogout();
-                              setMenuOpen(false);
-                            }}
-                            variant="ghost"
-                            className="w-full text-muted-foreground hover:text-foreground"
-                          >
-                            <LogOut className="w-4 h-4 mr-2" />
-                            Déconnexion
-                          </Button>
-                        </div>
-                      ) : (
+                      {/* Support section */}
+                      <p className="text-[11px] text-gray-500 uppercase tracking-[0.2em] font-medium mb-4 px-2">Support</p>
+                      <div className="space-y-1">
+                        {supportItems.map((item, index) => {
+                          const IconComponent = item.icon;
+                          return (
+                            <button
+                              key={item.href}
+                              onClick={() => {
+                                navigate(item.href);
+                                setMenuOpen(false);
+                              }}
+                              className="w-full flex items-center gap-4 px-3 py-4 rounded-2xl text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-200 group"
+                              style={{ animationDelay: `${(navigationItems.length + index) * 50}ms` }}
+                            >
+                              <div className="p-2.5 rounded-xl bg-white/5 group-hover:bg-white/10 transition-colors">
+                                <IconComponent className="h-5 w-5" />
+                              </div>
+                              <div className="flex-1 text-left">
+                                <p className="font-medium text-[15px]">{item.label}</p>
+                                <p className="text-xs text-gray-500">{item.description}</p>
+                              </div>
+                              <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-50 transition-opacity" />
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </ScrollArea>
+
+                  {/* Bottom CTA */}
+                  <div className="p-6 border-t border-white/5 pb-safe">
+                    {user ? (
+                      <div className="space-y-3">
+                        <Button
+                          onClick={() => {
+                            onShowDashboard?.();
+                            setMenuOpen(false);
+                          }}
+                          className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black py-6 rounded-2xl text-base font-medium"
+                        >
+                          <User className="w-4 h-4 mr-2" />
+                          Mon Dashboard
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            handleLogout();
+                            setMenuOpen(false);
+                          }}
+                          variant="ghost"
+                          className="w-full text-gray-400 hover:text-white hover:bg-white/5 py-5 rounded-2xl"
+                        >
+                          <LogOut className="w-4 h-4 mr-2" />
+                          Déconnexion
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
                         <Button
                           onClick={() => {
                             navigate('/auth');
                             setMenuOpen(false);
                           }}
-                          className="w-full bg-terex-accent hover:bg-terex-accent/90 text-terex-dark py-6 rounded-2xl"
+                          className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black py-6 rounded-2xl text-base font-medium"
+                        >
+                          Commencer
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            navigate('/auth');
+                            setMenuOpen(false);
+                          }}
+                          variant="ghost"
+                          className="w-full text-gray-400 hover:text-white hover:bg-white/5 py-5 rounded-2xl"
                         >
                           Se connecter
                         </Button>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
-                </ScrollArea>
+                </div>
               </SheetContent>
             </Sheet>
           </div>
