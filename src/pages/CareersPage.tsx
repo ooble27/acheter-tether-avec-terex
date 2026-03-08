@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { MapPin, Send, ArrowRight, ChevronDown, ChevronUp, User } from 'lucide-react';
+import { MapPin, Send, ArrowRight, ChevronDown, ChevronUp, User, Globe, Wallet, TrendingUp, GraduationCap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
