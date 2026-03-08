@@ -374,7 +374,7 @@ export default function BlogPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex relative">
         {/* Desktop sidebar */}
-        <aside className="hidden lg:block w-[240px] flex-shrink-0 sticky top-24 self-start pr-6 py-12 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-thin">
+        <aside className="hidden lg:block w-[240px] flex-shrink-0 pr-6 py-12">
           <SidebarContent />
         </aside>
 
