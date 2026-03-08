@@ -55,30 +55,6 @@ export function FooterSection() {
 
   return (
     <footer className="bg-terex-darker border-t border-terex-accent/20">
-      {/* Newsletter Section */}
-      <div className="bg-gradient-to-r from-terex-accent/10 via-terex-accent/5 to-transparent">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
-            <div>
-              <h3 className="text-2xl font-light text-white mb-4">
-                Restez informé des dernières actualités crypto
-              </h3>
-              <p className="text-gray-400 text-lg font-light">
-                Recevez nos analyses de marché, nouvelles fonctionnalités et conseils de trading directement dans votre boîte mail.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Input 
-                placeholder="Votre adresse email"
-                className="bg-terex-dark border-terex-gray text-white placeholder:text-gray-400 flex-1"
-              />
-              <Button className="bg-terex-accent hover:bg-terex-accent/90 text-black font-light px-8">
-                S'abonner
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
