@@ -88,9 +88,9 @@ const ContactPage = () => {
       </section>
 
       {/* Main Content */}
-      <section className="pb-20 md:pb-32">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="grid lg:grid-cols-5 gap-12 lg:gap-20">
+      <section className="pb-16 md:pb-24">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="grid lg:grid-cols-5 gap-10 lg:gap-16">
             
             {/* Left: Form */}
             <div className="lg:col-span-3">
