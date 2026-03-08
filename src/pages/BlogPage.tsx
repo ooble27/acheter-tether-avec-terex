@@ -5,7 +5,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
-import { ChevronRight, GraduationCap, FileText, Menu, X, Search } from "lucide-react";
+import { ChevronRight, GraduationCap, FileText, Menu, Search } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 
@@ -374,26 +375,24 @@ export default function BlogPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex relative">
         {/* Desktop sidebar */}
-        <aside className="hidden lg:block w-[240px] flex-shrink-0 sticky top-24 self-start pr-6 py-12 max-h-[calc(100vh-6rem)] overflow-y-auto scrollbar-thin">
+        <aside className="hidden lg:block w-[240px] flex-shrink-0 pr-6 py-12">
           <SidebarContent />
         </aside>
 
-        {/* Mobile sidebar toggle */}
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="lg:hidden fixed bottom-6 left-6 z-50 w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center shadow-lg"
-        >
-          {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
-
-        {/* Mobile sidebar overlay */}
-        {sidebarOpen && (
-          <div className="lg:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" onClick={() => setSidebarOpen(false)}>
-            <aside className="absolute left-0 top-0 h-full w-[280px] bg-terex-dark border-r border-white/[0.08] p-6 pt-24 overflow-y-auto" onClick={e => e.stopPropagation()}>
-              <SidebarContent />
-            </aside>
-          </div>
-        )}
+        {/* Mobile sidebar - using Sheet */}
+        <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+          <SheetTrigger asChild>
+            <button
+              className="lg:hidden fixed bottom-20 left-4 z-50 w-11 h-11 rounded-full bg-foreground text-background flex items-center justify-center shadow-lg"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-[280px] bg-terex-dark border-r border-white/[0.08] p-6 pt-12 overflow-y-auto z-[60]">
+            <SheetTitle className="sr-only">Navigation Academy</SheetTitle>
+            <SidebarContent />
+          </SheetContent>
+        </Sheet>
 
         {/* Main content */}
         <main className="flex-1 min-w-0 py-12 lg:py-16 lg:pl-6">
