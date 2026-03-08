@@ -39,8 +39,8 @@ export function HeroBuyForm() {
   const canGoStep3 = walletAddress.length > 10;
 
   return (
-    <div className="w-full max-w-[380px] lg:max-w-[420px]">
-      <div className="bg-terex-darker/95 backdrop-blur-xl border border-terex-gray/25 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden">
+    <div className="w-full max-w-[320px] sm:max-w-[380px] lg:max-w-[420px]">
+      <div className="bg-terex-darker/95 backdrop-blur-xl border border-terex-gray/25 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden min-h-[340px] sm:min-h-[360px] lg:min-h-[400px]">
         
         {/* Header */}
         <div className="px-4 lg:px-5 pt-4 lg:pt-5 pb-2.5 border-b border-terex-gray/15">
