@@ -8,7 +8,7 @@ const stats = [
     suffix: 'CFA',
     label: 'Volume mensuel',
     description: 'Traités chaque mois',
-    glow: 'from-terex-accent/30 to-transparent',
+    glow: 'from-terex-accent/20 to-transparent',
   },
   {
     icon: Users,
