@@ -1,7 +1,9 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { User, LogOut, Home, Building2, Briefcase, HelpCircle, Phone, MessageCircle } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { User, LogOut, Menu, Home, Building2, Briefcase, HelpCircle, Phone, MessageCircle } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useNavigate } from 'react-router-dom';
@@ -154,83 +156,108 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
               <span className="ml-2 text-lg font-semibold text-white">Terex</span>
             </div>
 
-            {/* Animated Hamburger Button */}
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="relative w-10 h-10 flex items-center justify-center focus:outline-none z-[60]"
-              aria-label="Menu"
-            >
-              <div className="flex flex-col items-end gap-[5px]">
-                <span className={`block h-[2px] bg-white rounded-full transition-all duration-300 ease-out ${menuOpen ? 'w-6 rotate-45 translate-y-[7px]' : 'w-6'}`} />
-                <span className={`block h-[2px] bg-white rounded-full transition-all duration-300 ease-out ${menuOpen ? 'w-0 opacity-0' : 'w-4'}`} />
-                <span className={`block h-[2px] bg-white rounded-full transition-all duration-300 ease-out ${menuOpen ? 'w-6 -rotate-45 -translate-y-[7px]' : 'w-5'}`} />
-              </div>
-            </button>
+            {/* Hamburger Menu */}
+            <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+              <SheetTrigger asChild>
+                <button
+                  className="relative w-11 h-11 flex items-center justify-center rounded-xl hover:bg-white/5 transition-colors"
+                  aria-label="Ouvrir le menu"
+                >
+                  <span className="sr-only">Ouvrir le menu</span>
+                  <div className="flex flex-col items-center gap-1.5">
+                    <span className={`block h-0.5 bg-foreground rounded-full transition-all duration-300 ${menuOpen ? 'w-6 translate-y-2 rotate-45' : 'w-6'}`} />
+                    <span className={`block h-0.5 bg-foreground rounded-full transition-all duration-300 ${menuOpen ? 'opacity-0 w-0' : 'w-4 opacity-100'}`} />
+                    <span className={`block h-0.5 bg-foreground rounded-full transition-all duration-300 ${menuOpen ? 'w-6 -translate-y-2 -rotate-45' : 'w-5'}`} />
+                  </div>
+                </button>
+              </SheetTrigger>
 
-            {/* Fullscreen overlay menu */}
-            <div className={`fixed inset-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-            }`}>
-              {/* Backdrop blur */}
-              <div className="absolute inset-0 bg-terex-darker/98 backdrop-blur-xl" onClick={() => setMenuOpen(false)} />
-              
-              <div className="relative h-full flex flex-col justify-between px-8 py-24 pb-safe overflow-y-auto">
-                {/* Nav items - large, staggered */}
-                <nav className="space-y-1">
-                  {[...navigationItems, ...supportItems].map((item, i) => {
-                    const IconComponent = item.icon;
-                    return (
-                      <button
-                        key={item.href}
-                        onClick={() => { navigate(item.href); setMenuOpen(false); }}
-                        className={`group w-full flex items-center gap-4 py-4 border-b border-white/5 transition-all duration-500 ease-out ${
-                          menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                        }`}
-                        style={{ transitionDelay: menuOpen ? `${i * 60 + 100}ms` : '0ms' }}
-                      >
-                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-terex-accent/20 transition-colors duration-300">
-                          <IconComponent className="w-5 h-5 text-gray-400 group-hover:text-terex-accent transition-colors" />
+              <SheetContent side="right" className="w-full bg-terex-darker/95 border-white/10 backdrop-blur-xl p-0">
+                <ScrollArea className="h-full">
+                  <div className="flex min-h-full flex-col pt-safe">
+                    <div className="px-6 py-5 border-b border-white/10">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
+                          alt="Terex Logo"
+                          className="w-10 h-10 rounded-lg"
+                        />
+                        <div>
+                          <p className="text-xs text-muted-foreground uppercase tracking-[0.2em]">Menu</p>
+                          <h2 className="text-lg text-foreground font-medium">Navigation</h2>
                         </div>
-                        <div className="text-left">
-                          <span className="text-xl font-light text-white group-hover:text-terex-accent transition-colors">{item.label}</span>
-                          <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </nav>
-
-                {/* Footer CTA */}
-                <div className={`pt-8 transition-all duration-500 ease-out ${
-                  menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                }`} style={{ transitionDelay: menuOpen ? '500ms' : '0ms' }}>
-                  {user ? (
-                    <div className="space-y-3">
-                      <Button
-                        onClick={() => { onShowDashboard?.(); setMenuOpen(false); }}
-                        className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-medium py-6 rounded-2xl"
-                      >
-                        <User className="w-5 h-5 mr-2" />
-                        Mon Dashboard
-                      </Button>
-                      <button
-                        onClick={() => { handleLogout(); setMenuOpen(false); }}
-                        className="w-full text-center text-sm text-gray-500 hover:text-red-400 transition-colors py-2"
-                      >
-                        Déconnexion
-                      </button>
+                      </div>
                     </div>
-                  ) : (
-                    <Button
-                      onClick={() => { navigate('/auth'); setMenuOpen(false); }}
-                      className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black font-medium py-6 rounded-2xl shadow-lg shadow-terex-accent/20"
-                    >
-                      Se Connecter
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </div>
+
+                    <div className="p-4 space-y-2">
+                      {[...navigationItems, ...supportItems].map((item, index) => {
+                        const IconComponent = item.icon;
+                        return (
+                          <Button
+                            key={item.href}
+                            variant="ghost"
+                            onClick={() => {
+                              navigate(item.href);
+                              setMenuOpen(false);
+                            }}
+                            className="w-full justify-start p-4 h-auto rounded-2xl text-muted-foreground hover:bg-white/5 hover:text-foreground transition-all duration-300"
+                            style={{ animationDelay: `${index * 40}ms` }}
+                          >
+                            <div className="flex items-center gap-4 w-full">
+                              <div className="p-2.5 rounded-xl bg-white/5">
+                                <IconComponent className="h-5 w-5" />
+                              </div>
+                              <div className="flex-1 text-left">
+                                <p className="font-medium text-sm">{item.label}</p>
+                                <p className="text-xs opacity-70">{item.description}</p>
+                              </div>
+                            </div>
+                          </Button>
+                        );
+                      })}
+                    </div>
+
+                    <div className="p-4 border-t border-white/10 mt-auto pb-safe">
+                      {user ? (
+                        <div className="space-y-2">
+                          <Button
+                            onClick={() => {
+                              onShowDashboard?.();
+                              setMenuOpen(false);
+                            }}
+                            className="w-full bg-terex-accent hover:bg-terex-accent/90 text-terex-dark py-6 rounded-2xl"
+                          >
+                            <User className="w-4 h-4 mr-2" />
+                            Mon Dashboard
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              handleLogout();
+                              setMenuOpen(false);
+                            }}
+                            variant="ghost"
+                            className="w-full text-muted-foreground hover:text-foreground"
+                          >
+                            <LogOut className="w-4 h-4 mr-2" />
+                            Déconnexion
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          onClick={() => {
+                            navigate('/auth');
+                            setMenuOpen(false);
+                          }}
+                          className="w-full bg-terex-accent hover:bg-terex-accent/90 text-terex-dark py-6 rounded-2xl"
+                        >
+                          Se connecter
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </ScrollArea>
+              </SheetContent>
+            </Sheet>
           </div>
         )}
       </div>
