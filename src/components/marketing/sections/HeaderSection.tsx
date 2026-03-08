@@ -170,49 +170,49 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
             <div className={`absolute top-full right-0 mt-2 w-72 transition-all duration-200 origin-top-right ${
               menuOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-1 pointer-events-none'
             }`}>
-              <div className="bg-terex-darker/98 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/50 overflow-hidden">
+              <div className="bg-terex-darker/98 backdrop-blur-xl border border-white/15 rounded-2xl shadow-2xl shadow-black/50 overflow-hidden">
                 {/* Nav section */}
                 <div className="p-2 pt-3">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-medium mb-1.5 px-3">Navigation</p>
+                  <p className="text-[10px] text-white/50 uppercase tracking-[0.15em] font-medium mb-1.5 px-3">Navigation</p>
                   {navigationItems.map((item, i) => {
                     const Icon = item.icon;
                     return (
                       <button
                         key={item.href}
                         onClick={() => { navigate(item.href); setMenuOpen(false); }}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/[0.04] hover:text-white transition-all duration-150 group"
+                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/90 hover:bg-white/[0.08] hover:text-white transition-all duration-150 group"
                       >
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-white/[0.06] to-white/[0.02] border border-white/[0.08] flex items-center justify-center group-hover:border-white/15 transition-all">
-                          <span className="text-gray-400 group-hover:text-terex-accent transition-colors"><Icon /></span>
+                        <div className="w-8 h-8 rounded-lg bg-white/[0.08] border border-white/15 flex items-center justify-center group-hover:border-white/25 transition-all">
+                          <span className="text-white/70 group-hover:text-terex-accent transition-colors"><Icon /></span>
                         </div>
                         <div className="flex-1 text-left">
-                          <p className="font-medium text-[13px] leading-tight">{item.label}</p>
-                          <p className="text-[10px] text-gray-500 leading-tight">{item.description}</p>
+                          <p className="font-medium text-[13px] leading-tight text-white">{item.label}</p>
+                          <p className="text-[10px] text-white/50 leading-tight">{item.description}</p>
                         </div>
                       </button>
                     );
                   })}
                 </div>
 
-                <div className="mx-3 h-px bg-white/[0.06]" />
+                <div className="mx-3 h-px bg-white/10" />
 
                 {/* Support section */}
                 <div className="p-2">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-[0.15em] font-medium mb-1.5 px-3">Support</p>
+                  <p className="text-[10px] text-white/50 uppercase tracking-[0.15em] font-medium mb-1.5 px-3">Support</p>
                   {supportItems.map((item, i) => {
                     const Icon = item.icon;
                     return (
                       <button
                         key={item.href}
                         onClick={() => { navigate(item.href); setMenuOpen(false); }}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-300 hover:bg-white/[0.04] hover:text-white transition-all duration-150 group"
+                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/90 hover:bg-white/[0.08] hover:text-white transition-all duration-150 group"
                       >
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-white/[0.06] to-white/[0.02] border border-white/[0.08] flex items-center justify-center group-hover:border-white/15 transition-all">
-                          <span className="text-gray-400 group-hover:text-terex-accent transition-colors"><Icon /></span>
+                        <div className="w-8 h-8 rounded-lg bg-white/[0.08] border border-white/15 flex items-center justify-center group-hover:border-white/25 transition-all">
+                          <span className="text-white/70 group-hover:text-terex-accent transition-colors"><Icon /></span>
                         </div>
                         <div className="flex-1 text-left">
-                          <p className="font-medium text-[13px] leading-tight">{item.label}</p>
-                          <p className="text-[10px] text-gray-500 leading-tight">{item.description}</p>
+                          <p className="font-medium text-[13px] leading-tight text-white">{item.label}</p>
+                          <p className="text-[10px] text-white/50 leading-tight">{item.description}</p>
                         </div>
                       </button>
                     );
