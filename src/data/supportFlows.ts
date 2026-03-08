@@ -147,7 +147,7 @@ export const supportFlows: SupportFlow[] = [
           },
           {
             text: "Je ne reçois pas l'email de connexion",
-            solution: "Si vous ne recevez pas l'email:\n• Vérifiez vos spams/courriers indésirables\n• Attendez 5 minutes (l'email peut prendre du temps)\n• Vérifiez que vous avez bien entré votre email\n• Ajoutez noreply@terex.sn à vos contacts\n• Demandez un nouveau lien de connexion\n\nToujours rien ? Contactez-nous sur WhatsApp: +1 4182619091"
+            solution: "Si vous ne recevez pas l'email de confirmation:\n• Vérifiez vos spams/courriers indésirables\n• Attendez 5 minutes (l'email peut prendre du temps)\n• Vérifiez que vous avez bien entré votre email\n• Ajoutez noreply@terangaexchange.com à vos contacts\n\nToujours rien ? Contactez-nous sur WhatsApp: +1 4182619091"
           },
           {
             text: "Le lien de connexion a expiré",
