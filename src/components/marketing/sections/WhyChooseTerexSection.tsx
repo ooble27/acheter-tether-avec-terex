@@ -64,8 +64,7 @@ export function WhyChooseTerexSection() {
           {/* Panel 3 — Coverage */}
           <AnimatedItem index={2}>
             <div className="group relative rounded-2xl bg-terex-darker/60 backdrop-blur-sm border border-terex-gray/20 overflow-hidden hover:border-terex-accent/30 transition-all duration-500">
-              <div className="h-48 sm:h-56 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-terex-accent/5 to-transparent" />
+              <div className="h-32 sm:h-56 flex items-center justify-center relative overflow-hidden">
                 <div className="relative text-center">
                   <div className="text-7xl sm:text-8xl font-extralight text-terex-accent leading-none mb-1">6</div>
                   <div className="text-muted-foreground text-sm">pays couverts</div>
