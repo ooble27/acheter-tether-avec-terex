@@ -31,19 +31,19 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
         {isMobile && (
           <div className="flex flex-col items-center text-center pt-12 pb-8">
             <AnimatedSection className="w-full mb-8" delay={100}>
-              <h1 className="text-[2rem] font-semibold text-foreground leading-[1.15] tracking-[-0.02em] mb-3">
+              <h1 className="text-[2.75rem] leading-[1.08] font-bold text-foreground tracking-[-0.03em] mb-4">
                 Achetez et vendez<br />
                 des{' '}
-                <span className="inline-flex items-center gap-1.5">
+                <span className="inline-flex items-center gap-2">
                   USDT
                   <img 
                     src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                     alt="USDT" 
-                    className="w-6 h-6 inline-block"
+                    className="w-8 h-8 inline-block"
                   />
                 </span>
               </h1>
-              <p className="text-[13px] text-muted-foreground/80 font-normal tracking-[-0.01em] max-w-[240px] mx-auto leading-relaxed">
+              <p className="text-[15px] text-muted-foreground/70 font-normal tracking-[-0.01em] max-w-[280px] mx-auto leading-relaxed">
                 Échange de stablecoins simple et sécurisé.
               </p>
             </AnimatedSection>
