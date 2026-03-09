@@ -31,15 +31,15 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
         {isMobile && (
           <div className="flex flex-col items-center text-center pt-12 pb-8">
             <AnimatedSection className="w-full mb-8" delay={100}>
-              <h1 className="text-[2.75rem] leading-[1.08] font-bold text-foreground tracking-[-0.03em] mb-4">
+              <h1 className="text-[2.25rem] leading-[1.12] font-bold text-foreground tracking-[-0.02em] mb-4">
                 Achetez et vendez<br />
                 des{' '}
-                <span className="inline-flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5">
                   USDT
                   <img 
                     src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
                     alt="USDT" 
-                    className="w-8 h-8 inline-block"
+                    className="w-7 h-7 inline-block"
                   />
                 </span>
               </h1>
