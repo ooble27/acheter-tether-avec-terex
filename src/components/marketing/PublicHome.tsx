@@ -100,7 +100,10 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       <SectionDividerWithLabel leftLabel="[06] PROCESSUS" rightLabel="/ COMMENT ÇA MARCHE" className="mt-8" />
       <HowItWorksSection onBlockchainInfoClick={handleBlockchainInfo} />
 
-      <SectionDividerWithLabel leftLabel="[07] STATISTIQUES" rightLabel="/ PERFORMANCES" className="mt-8" />
+      <SectionDividerWithLabel leftLabel="[07] EN DIRECT" rightLabel="/ ACTIVITÉ LIVE" className="mt-8" />
+      <LiveSocialProof />
+
+      <SectionDividerWithLabel leftLabel="[08] STATISTIQUES" rightLabel="/ PERFORMANCES" className="mt-8" />
       <StatsSection />
       
       <SectionDividerWithLabel leftLabel="[08] PAIEMENTS" rightLabel="/ MÉTHODES ACCEPTÉES" className="mt-8" />
