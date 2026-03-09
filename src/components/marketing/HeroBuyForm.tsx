@@ -47,11 +47,15 @@ export function HeroBuyForm() {
   };
 
   const handleProceed = () => {
+    const buyData = { amount, currency: 'CFA', network, walletAddress, timestamp: Date.now() };
     if (!user) {
+      // Save form data before redirecting to auth
+      localStorage.setItem('pendingBuyOrder', JSON.stringify(buyData));
       navigate('/auth');
       return;
     }
-    navigate('/dashboard', { state: { action: 'buy', amount, currency: 'CFA', network, walletAddress } });
+    localStorage.setItem('pendingBuyOrder', JSON.stringify(buyData));
+    navigate('/dashboard', { state: { action: 'buy' } });
   };
 
   const canGoStep2 = isValidAmount;
