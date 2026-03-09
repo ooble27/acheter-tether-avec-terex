@@ -42,6 +42,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const { signOut } = useAuth();
