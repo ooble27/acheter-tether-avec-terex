@@ -15,7 +15,13 @@ const AuthPage = () => {
 
   useEffect(() => {
     if (user && !loading) {
-      navigate('/');
+      // Check if there's a pending buy order from the Hero form
+      const pendingBuy = localStorage.getItem('pendingBuyOrder');
+      if (pendingBuy) {
+        navigate('/dashboard', { state: { action: 'buy' } });
+      } else {
+        navigate('/');
+      }
     }
   }, [user, loading, navigate]);
 

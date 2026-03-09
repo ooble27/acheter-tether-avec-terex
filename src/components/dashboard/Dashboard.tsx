@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { MobileMenu } from '@/components/dashboard/AppSidebar';
 import { DesktopMenuPopover } from '@/components/dashboard/DesktopMenuPopover';
@@ -42,6 +42,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const { signOut } = useAuth();
@@ -51,6 +52,16 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
                (window.navigator as any).standalone ||
                document.referrer.includes('android-app://');
+
+  // Auto-navigate to buy section if redirected from Hero form
+  useEffect(() => {
+    const state = location.state as { action?: string } | null;
+    if (state?.action === 'buy') {
+      setActiveSection('buy');
+      // Clear the navigation state to prevent re-triggering
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   // Effet pour remonter en haut à chaque changement de section
   useEffect(() => {
