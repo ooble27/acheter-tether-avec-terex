@@ -46,6 +46,27 @@ export function DesktopBuyUSDT() {
   const exchangeRate = currency === 'CFA' ? terexRateCfa : terexRateCad;
   const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
   const numericAmount = parseFloat(fiatAmount) || 0;
+
+  // Pre-fill from pending Hero buy order
+  useEffect(() => {
+    const pending = localStorage.getItem('pendingBuyOrder');
+    if (pending) {
+      try {
+        const data = JSON.parse(pending);
+        if (data.timestamp && Date.now() - data.timestamp < 30 * 60 * 1000) {
+          if (data.amount) setFiatAmount(data.amount);
+          if (data.network) setNetwork(data.network);
+          if (data.walletAddress) setWalletAddress(data.walletAddress);
+          if (data.walletAddress) {
+            setStep('confirm');
+          } else if (data.network) {
+            setStep('address');
+          }
+        }
+      } catch (e) { /* ignore */ }
+      localStorage.removeItem('pendingBuyOrder');
+    }
+  }, []);
   const usdtAmount = fiatAmount && numericAmount >= (limits?.min || 0) 
     ? (numericAmount / exchangeRate).toFixed(2) 
     : '0';
