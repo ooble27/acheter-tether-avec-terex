@@ -106,16 +106,16 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       <SectionDividerWithLabel leftLabel="[08] STATISTIQUES" rightLabel="/ PERFORMANCES" className="mt-8" />
       <StatsSection />
       
-      <SectionDividerWithLabel leftLabel="[08] PAIEMENTS" rightLabel="/ MÉTHODES ACCEPTÉES" className="mt-8" />
+      <SectionDividerWithLabel leftLabel="[09] PAIEMENTS" rightLabel="/ MÉTHODES ACCEPTÉES" className="mt-8" />
       <PaymentMethodsSection />
 
-      <SectionDividerWithLabel leftLabel="[09] TÉMOIGNAGES" rightLabel="/ AVIS CLIENTS" className="mt-8" />
+      <SectionDividerWithLabel leftLabel="[10] TÉMOIGNAGES" rightLabel="/ AVIS CLIENTS" className="mt-8" />
       <TestimonialsSection />
 
-      <SectionDividerWithLabel leftLabel="[10] FONDATEUR" rightLabel="/ NOTRE HISTOIRE" className="mt-8" />
+      <SectionDividerWithLabel leftLabel="[11] FONDATEUR" rightLabel="/ NOTRE HISTOIRE" className="mt-8" />
       <FounderSection />
       
-      <SectionDividerWithLabel leftLabel="[11] DÉMARRER" rightLabel="/ REJOIGNEZ-NOUS" className="mt-8" />
+      <SectionDividerWithLabel leftLabel="[12] DÉMARRER" rightLabel="/ REJOIGNEZ-NOUS" className="mt-8" />
       <CTASection user={user} onGetStarted={handleGetStarted} />
 
       <FooterSection />
