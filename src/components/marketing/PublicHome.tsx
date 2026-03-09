@@ -7,7 +7,6 @@ import { PWAInstallPrompt } from '../PWAInstallPrompt';
 import { HeroSection } from './HeroSection';
 import { TestimonialsSection } from './TestimonialsSection';
 import { StatsSection } from './StatsSection';
-import { LiveSocialProof } from './LiveSocialProof';
 import { HeaderSection } from './sections/HeaderSection';
 import { CurrencyConverterSection } from './sections/CurrencyConverterSection';
 import { WhyChooseTerexSection } from './sections/WhyChooseTerexSection';
@@ -100,22 +99,19 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       <SectionDividerWithLabel leftLabel="[06] PROCESSUS" rightLabel="/ COMMENT ÇA MARCHE" className="mt-8" />
       <HowItWorksSection onBlockchainInfoClick={handleBlockchainInfo} />
 
-      <SectionDividerWithLabel leftLabel="[07] EN DIRECT" rightLabel="/ ACTIVITÉ LIVE" className="mt-8" />
-      <LiveSocialProof />
-
-      <SectionDividerWithLabel leftLabel="[08] STATISTIQUES" rightLabel="/ PERFORMANCES" className="mt-8" />
+      <SectionDividerWithLabel leftLabel="[07] STATISTIQUES" rightLabel="/ PERFORMANCES" className="mt-8" />
       <StatsSection />
       
-      <SectionDividerWithLabel leftLabel="[09] PAIEMENTS" rightLabel="/ MÉTHODES ACCEPTÉES" className="mt-8" />
+      <SectionDividerWithLabel leftLabel="[08] PAIEMENTS" rightLabel="/ MÉTHODES ACCEPTÉES" className="mt-8" />
       <PaymentMethodsSection />
 
-      <SectionDividerWithLabel leftLabel="[10] TÉMOIGNAGES" rightLabel="/ AVIS CLIENTS" className="mt-8" />
+      <SectionDividerWithLabel leftLabel="[09] TÉMOIGNAGES" rightLabel="/ AVIS CLIENTS" className="mt-8" />
       <TestimonialsSection />
 
-      <SectionDividerWithLabel leftLabel="[11] FONDATEUR" rightLabel="/ NOTRE HISTOIRE" className="mt-8" />
+      <SectionDividerWithLabel leftLabel="[10] FONDATEUR" rightLabel="/ NOTRE HISTOIRE" className="mt-8" />
       <FounderSection />
       
-      <SectionDividerWithLabel leftLabel="[12] DÉMARRER" rightLabel="/ REJOIGNEZ-NOUS" className="mt-8" />
+      <SectionDividerWithLabel leftLabel="[11] DÉMARRER" rightLabel="/ REJOIGNEZ-NOUS" className="mt-8" />
       <CTASection user={user} onGetStarted={handleGetStarted} />
 
       <FooterSection />
