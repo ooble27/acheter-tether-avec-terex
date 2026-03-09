@@ -53,6 +53,16 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                (window.navigator as any).standalone ||
                document.referrer.includes('android-app://');
 
+  // Auto-navigate to buy section if redirected from Hero form
+  useEffect(() => {
+    const state = location.state as { action?: string } | null;
+    if (state?.action === 'buy') {
+      setActiveSection('buy');
+      // Clear the navigation state to prevent re-triggering
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
   // Effet pour remonter en haut à chaque changement de section
   useEffect(() => {
     // Pour le PWA mobile, scroll immédiatement et de façon synchrone
