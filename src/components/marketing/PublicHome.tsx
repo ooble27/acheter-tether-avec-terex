@@ -7,6 +7,7 @@ import { PWAInstallPrompt } from '../PWAInstallPrompt';
 import { HeroSection } from './HeroSection';
 import { TestimonialsSection } from './TestimonialsSection';
 import { StatsSection } from './StatsSection';
+import { LiveSocialProof } from './LiveSocialProof';
 import { HeaderSection } from './sections/HeaderSection';
 import { CurrencyConverterSection } from './sections/CurrencyConverterSection';
 import { WhyChooseTerexSection } from './sections/WhyChooseTerexSection';
