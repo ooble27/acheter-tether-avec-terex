@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { MaintenanceNotice, MAINTENANCE_MODE } from './MaintenanceNotice';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useInternationalTransfers } from '@/hooks/useInternationalTransfers';
@@ -22,6 +23,7 @@ import { MobileInternationalTransfer } from './international-transfer/MobileInte
 
 export function InternationalTransfer() {
   const isMobile = useIsMobile();
+  if (MAINTENANCE_MODE) return <MaintenanceNotice />;
   const [showKYCPage, setShowKYCPage] = useState(false);
   const [currentStep, setCurrentStep] = useState('form');
   const [sendAmount, setSendAmount] = useState('');
