@@ -23,7 +23,6 @@ import { MobileInternationalTransfer } from './international-transfer/MobileInte
 
 export function InternationalTransfer() {
   const isMobile = useIsMobile();
-  if (MAINTENANCE_MODE) return <MaintenanceNotice />;
   const [showKYCPage, setShowKYCPage] = useState(false);
   const [currentStep, setCurrentStep] = useState('form');
   const [sendAmount, setSendAmount] = useState('');
