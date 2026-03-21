@@ -43,6 +43,8 @@ export function InternationalTransfer() {
   const { toast } = useToast();
   const { usdtToCfa, usdtToCad, loading: ratesLoading, error: ratesError, lastUpdated, refresh } = useCryptoRates();
 
+  if (MAINTENANCE_MODE) return <MaintenanceNotice />;
+
   // Si mobile, utiliser la version mobile
   if (isMobile) {
     return (
