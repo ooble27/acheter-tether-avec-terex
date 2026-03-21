@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { MaintenanceNotice, MAINTENANCE_MODE } from './MaintenanceNotice';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -46,6 +47,7 @@ const NETWORK_LOGOS = {
 
 export function SellUSDT() {
   const isMobile = useIsMobile();
+  if (MAINTENANCE_MODE) return <MaintenanceNotice />;
   return isMobile ? <MobileSellUSDT /> : <DesktopSellUSDTComponent />;
 }
 

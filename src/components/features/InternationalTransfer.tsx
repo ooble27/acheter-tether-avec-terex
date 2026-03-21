@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { MaintenanceNotice, MAINTENANCE_MODE } from './MaintenanceNotice';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useInternationalTransfers } from '@/hooks/useInternationalTransfers';
@@ -41,6 +42,8 @@ export function InternationalTransfer() {
   const { user } = useAuth();
   const { toast } = useToast();
   const { usdtToCfa, usdtToCad, loading: ratesLoading, error: ratesError, lastUpdated, refresh } = useCryptoRates();
+
+  if (MAINTENANCE_MODE) return <MaintenanceNotice />;
 
   // Si mobile, utiliser la version mobile
   if (isMobile) {
