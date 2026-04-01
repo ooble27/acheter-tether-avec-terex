@@ -471,10 +471,10 @@ export function LoginForm() {
                       {isLoading ? (
                         <>
                           <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                          Création du compte...
+                          {t.auth.creatingAccount}
                         </>
                       ) : (
-                        'CONTINUER'
+                        t.auth.continueBtn
                       )}
                     </Button>
 
