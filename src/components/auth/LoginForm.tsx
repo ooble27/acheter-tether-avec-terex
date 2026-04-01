@@ -100,8 +100,8 @@ export function LoginForm() {
             signUpError.message.includes("already registered") ||
             signUpError.message.includes("already been registered")) {
           toast({
-            title: "Email déjà utilisé",
-            description: "Cet email est déjà enregistré. Veuillez vous connecter.",
+            title: t.auth.emailAlreadyUsed,
+            description: t.auth.emailAlreadyUsedDesc,
             variant: "destructive",
           });
           setActiveTab('login');
