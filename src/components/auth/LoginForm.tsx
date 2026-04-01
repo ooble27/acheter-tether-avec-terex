@@ -107,7 +107,7 @@ export function LoginForm() {
           setActiveTab('login');
         } else {
           toast({
-            title: "Erreur d'inscription",
+            title: t.auth.signupError,
             description: signUpError.message,
             variant: "destructive",
           });
