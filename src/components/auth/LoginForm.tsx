@@ -79,8 +79,8 @@ export function LoginForm() {
         });
       } else {
         toast({
-          title: "Erreur de connexion",
-          description: "Impossible de se connecter. Vérifiez vos identifiants.",
+          title: t.auth.loginError,
+          description: t.auth.loginErrorDesc,
           variant: "destructive",
         });
       }
