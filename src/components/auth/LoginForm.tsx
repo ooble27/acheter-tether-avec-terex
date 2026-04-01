@@ -343,8 +343,8 @@ export function LoginForm() {
 
                 <TabsContent value="register" className="space-y-8 animate-fade-in">
                   <div>
-                    <h2 className="text-2xl font-light text-white mb-2">CRÉER VOTRE COMPTE</h2>
-                    <p className="text-gray-400 text-sm">Entrez votre email pour commencer.</p>
+                    <h2 className="text-2xl font-light text-white mb-2">{t.auth.registerTitle}</h2>
+                    <p className="text-gray-400 text-sm">{t.auth.registerSubtitle}</p>
                   </div>
 
                   <form onSubmit={handleSignUp} className="space-y-6">
