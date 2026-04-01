@@ -371,7 +371,7 @@ export function LoginForm() {
                       <Input
                         id="email-register"
                         type="email"
-                        placeholder="votre@email.com"
+                        placeholder={t.auth.emailPlaceholder}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
