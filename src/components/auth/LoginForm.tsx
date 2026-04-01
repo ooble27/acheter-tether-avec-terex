@@ -67,8 +67,8 @@ export function LoginForm() {
       if (error.message.includes("Invalid login credentials") || 
           error.message.includes("Email not confirmed")) {
         toast({
-          title: "Identifiants incorrects",
-          description: "L'email ou le mot de passe que vous avez saisi est incorrect.",
+          title: t.auth.invalidCredentials,
+          description: t.auth.invalidCredentialsDesc,
           variant: "destructive",
         });
       } else if (error.message.includes("For security purposes")) {
