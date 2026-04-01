@@ -418,7 +418,7 @@ export function LoginForm() {
                       }}
                       className="text-sm text-gray-400 hover:text-terex-accent transition-colors underline"
                     >
-                      Avez-vous un code de parrainage?
+                      {t.auth.referralCode}
                     </button>
 
                     <div id="referral-code-input" className="hidden space-y-2">
