@@ -423,7 +423,7 @@ export function LoginForm() {
 
                     <div id="referral-code-input" className="hidden space-y-2">
                       <Label htmlFor="referral-code" className="text-gray-300 text-sm font-normal">
-                        Code de parrainage
+                        {t.auth.referralCode}
                       </Label>
                       <Input
                         id="referral-code"
