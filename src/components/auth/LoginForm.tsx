@@ -254,7 +254,7 @@ export function LoginForm() {
                         : 'text-gray-500 hover:text-gray-300'
                     }`}
                   >
-                    S'inscrire
+                    {t.auth.signUp}
                     {activeTab === 'register' && (
                       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-terex-accent"></div>
                     )}
