@@ -116,8 +116,8 @@ export function LoginForm() {
         // Vérifier si l'utilisateur existe déjà (identities vide = email déjà utilisé)
         if (data?.user && data.user.identities && data.user.identities.length === 0) {
           toast({
-            title: "Email déjà utilisé",
-            description: "Cet email est déjà enregistré. Veuillez vous connecter.",
+            title: t.auth.emailAlreadyUsed,
+            description: t.auth.emailAlreadyUsedDesc,
             variant: "destructive",
           });
           setActiveTab('login');
