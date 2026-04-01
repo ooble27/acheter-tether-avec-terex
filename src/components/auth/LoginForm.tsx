@@ -439,19 +439,19 @@ export function LoginForm() {
                     {password && (
                       <div className="space-y-2 text-xs text-gray-500">
                         <div className={passwordRequirements.minLength ? 'text-green-400' : ''}>
-                          • Au moins 6 caractères
+                          • {t.auth.passwordRequirements.minLength}
                         </div>
                         <div className={passwordRequirements.hasUppercase ? 'text-green-400' : ''}>
-                          • Une lettre majuscule
+                          • {t.auth.passwordRequirements.uppercase}
                         </div>
                         <div className={passwordRequirements.hasLowercase ? 'text-green-400' : ''}>
-                          • Une lettre minuscule
+                          • {t.auth.passwordRequirements.lowercase}
                         </div>
                         <div className={passwordRequirements.hasNumber ? 'text-green-400' : ''}>
-                          • Un chiffre
+                          • {t.auth.passwordRequirements.number}
                         </div>
                         <div className={passwordRequirements.hasSpecialChar ? 'text-green-400' : ''}>
-                          • Un caractère spécial
+                          • {t.auth.passwordRequirements.specialChar}
                         </div>
                       </div>
                     )}
