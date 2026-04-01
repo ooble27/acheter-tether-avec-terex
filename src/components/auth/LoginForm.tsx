@@ -270,7 +270,7 @@ export function LoginForm() {
                   <form onSubmit={handlePasswordLogin} className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-gray-300 text-sm font-normal">
-                        Email
+                        {t.auth.email}
                       </Label>
                       <Input
                         id="email"
