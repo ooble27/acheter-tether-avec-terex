@@ -214,7 +214,7 @@ export function LoginForm() {
         {/* Right Column - Form */}
         <div className="flex flex-col bg-terex-dark">
           {/* Mobile Logo */}
-          <div className="lg:hidden flex items-center justify-between p-6 border-b border-terex-gray">
+            <div className="flex items-center justify-between p-6 border-b border-terex-gray">
             <div className="flex items-center gap-3">
               <img 
                 src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" 
