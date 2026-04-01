@@ -263,8 +263,8 @@ export function LoginForm() {
               
                 <TabsContent value="login" className="space-y-8 animate-fade-in">
                   <div>
-                    <h2 className="text-2xl font-light text-white mb-2">CONNEXION</h2>
-                    <p className="text-gray-400 text-sm">Entrez vos identifiants pour vous connecter.</p>
+                    <h2 className="text-2xl font-light text-white mb-2">{t.auth.loginTitle}</h2>
+                    <p className="text-gray-400 text-sm">{t.auth.loginSubtitle}</p>
                   </div>
 
                   <form onSubmit={handlePasswordLogin} className="space-y-6">
