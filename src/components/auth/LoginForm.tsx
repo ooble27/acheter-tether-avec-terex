@@ -350,7 +350,7 @@ export function LoginForm() {
                   <form onSubmit={handleSignUp} className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="name" className="text-gray-300 text-sm font-normal">
-                        Nom complet
+                        {t.auth.fullName}
                       </Label>
                       <Input
                         id="name"
