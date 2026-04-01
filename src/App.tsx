@@ -43,6 +43,7 @@ import { AppLoader } from "./components/AppLoader";
 
 function App() {
   return (
+    <LanguageProvider>
     <ThemeProvider>
       <AppLoader>
         <Router>
