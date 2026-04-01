@@ -57,8 +57,8 @@ export function LoginForm() {
       }
 
       toast({
-        title: "✅ Connexion réussie !",
-        description: "Vous êtes maintenant connecté à Terex.",
+        title: t.auth.loginSuccess,
+        description: t.auth.loginSuccessDesc,
         className: "bg-green-600 text-white border-green-600",
       });
 
