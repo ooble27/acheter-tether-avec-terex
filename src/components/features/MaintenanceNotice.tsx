@@ -1,7 +1,7 @@
 import { AlertTriangle, Wrench } from 'lucide-react';
 
 // Toggle this to enable/disable maintenance mode for transactions
-export const MAINTENANCE_MODE = true;
+export const MAINTENANCE_MODE = false;
 export const MAINTENANCE_MESSAGE = "Notre système de paiement est en cours de maintenance. Les transactions seront disponibles très prochainement. Merci de votre patience.";
 
 export function MaintenanceNotice() {
