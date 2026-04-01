@@ -355,7 +355,7 @@ export function LoginForm() {
                       <Input
                         id="name"
                         type="text"
-                        placeholder="Votre nom complet"
+                        placeholder={t.auth.fullNamePlaceholder}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
