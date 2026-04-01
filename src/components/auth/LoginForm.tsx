@@ -73,8 +73,8 @@ export function LoginForm() {
         });
       } else if (error.message.includes("For security purposes")) {
         toast({
-          title: "Trop de tentatives",
-          description: "Veuillez attendre quelques minutes avant de réessayer.",
+          title: t.auth.tooManyAttempts,
+          description: t.auth.tooManyAttemptsDesc,
           variant: "destructive",
         });
       } else {
