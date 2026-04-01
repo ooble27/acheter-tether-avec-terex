@@ -457,10 +457,10 @@ export function LoginForm() {
                     )}
 
                     <p className="text-xs text-gray-500">
-                      En continuant, vous acceptez nos{' '}
-                      <a href="/terms" className="text-terex-accent hover:underline">Conditions d'utilisation</a>
-                      {' '}et{' '}
-                      <a href="/privacy" className="text-terex-accent hover:underline">Politique de confidentialité</a>.
+                      {t.auth.termsAgreement}{' '}
+                      <a href="/terms" className="text-terex-accent hover:underline">{t.auth.termsLink}</a>
+                      {' '}{t.auth.and}{' '}
+                      <a href="/privacy" className="text-terex-accent hover:underline">{t.auth.privacyLink}</a>.
                     </p>
 
                     <Button 
