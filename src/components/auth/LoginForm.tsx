@@ -182,15 +182,15 @@ export function LoginForm() {
               </div>
 
               <h2 className="text-5xl font-light leading-tight">
-                <span className="text-terex-accent font-normal">Rejoignez</span>
+                <span className="text-terex-accent font-normal">{t.auth.joinTerex}</span>
                 <br />
                 <span className="text-terex-accent font-normal">Terex,</span>
                 <br />
-                <span className="text-white">la plateforme</span>
+                <span className="text-white">{t.auth.thePlatform}</span>
                 <br />
-                <span className="text-white">d'échange USDT</span>
+                <span className="text-white">{t.auth.ofExchange}</span>
                 <br />
-                <span className="text-white">en Afrique</span>
+                <span className="text-white">{t.auth.inAfrica}</span>
               </h2>
 
               <div className="space-y-4 text-gray-400 text-sm pt-8">
