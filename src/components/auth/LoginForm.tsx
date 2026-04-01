@@ -479,13 +479,13 @@ export function LoginForm() {
                     </Button>
 
                     <p className="text-center text-sm text-gray-400">
-                      Vous avez déjà un compte?{' '}
+                      {t.auth.hasAccount}{' '}
                       <button
                         type="button"
                         onClick={() => setActiveTab('login')}
                         className="text-terex-accent hover:underline font-medium"
                       >
-                        Se connecter
+                        {t.auth.signIn}
                       </button>
                     </p>
                   </form>
