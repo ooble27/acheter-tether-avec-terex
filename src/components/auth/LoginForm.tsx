@@ -23,6 +23,7 @@ export function LoginForm() {
   
   const { signUp } = useAuth();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const validatePassword = (password: string) => {
     const requirements = {
