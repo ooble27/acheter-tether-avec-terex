@@ -136,21 +136,21 @@ export function LoginForm() {
       if (error?.message?.includes("duplicate") || 
           error?.message?.includes("unique") ||
           error?.message?.includes("already")) {
-        toast({
-          title: "Email déjà utilisé",
-          description: "Cet email est déjà enregistré. Veuillez vous connecter.",
-          variant: "destructive",
-        });
-        setActiveTab('login');
-      } else {
-        toast({
-          title: "Erreur",
-          description: "Une erreur inattendue s'est produite",
-          variant: "destructive",
-        });
+          toast({
+            title: t.auth.emailAlreadyUsed,
+            description: t.auth.emailAlreadyUsedDesc,
+            variant: "destructive",
+          });
+          setActiveTab('login');
+        } else {
+          toast({
+            title: t.auth.unexpectedError,
+            description: t.auth.unexpectedErrorDesc,
+            variant: "destructive",
+          });
+        }
       }
-    }
-  };
+    };
 
   return (
     <div className="min-h-screen w-full bg-terex-dark">
