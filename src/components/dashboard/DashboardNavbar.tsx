@@ -3,8 +3,6 @@ import { Button } from '@/components/ui/button';
 import { DesktopMenuPopover } from './DesktopMenuPopover';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useState } from 'react';
-import { useLanguage } from '@/i18n/LanguageContext';
-import { LanguageToggle } from '@/components/LanguageToggle';
 
 interface DashboardNavbarProps {
   onMenuClick: () => void;
@@ -16,10 +14,27 @@ interface DashboardNavbarProps {
 export function DashboardNavbar({ onMenuClick, activeSection, setActiveSection, onLogout }: DashboardNavbarProps) {
   const isMobile = useIsMobile();
   const [menuPopoverOpen, setMenuPopoverOpen] = useState(false);
-  const { t } = useLanguage();
 
   const getSectionTitle = (section: string) => {
-    return t.dashboard.sectionTitles[section] || 'Terex';
+    const titles: Record<string, string> = {
+      'home': 'Tableau de bord',
+      'buy': 'Acheter USDT',
+      'sell': 'Vendre USDT',
+      'transfer': 'Virement International',
+      'history': 'Historique',
+      'profile': 'Mon Profil',
+      'faq': 'FAQ',
+      'kyc': 'Vérification KYC',
+      'kyc-admin': 'Administration KYC',
+      'orders-admin': 'Gestion des commandes',
+      'job-applications': 'Candidatures',
+      'otc': 'Gros Volume',
+      'user-guide': 'Guide Utilisateur',
+      'security-policy': 'Politique de Sécurité',
+      'terms-of-service': 'Conditions d\'utilisation',
+      'about-terex': 'À propos de Terex'
+    };
+    return titles[section] || 'Terex';
   };
 
   return (
@@ -27,8 +42,8 @@ export function DashboardNavbar({ onMenuClick, activeSection, setActiveSection, 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {isMobile ? (
-            <div className="w-full flex items-center justify-end gap-2">
-              <LanguageToggle />
+            /* Mobile: uniquement le bouton hamburger centré */
+            <div className="w-full flex items-center justify-end">
               <Button
                 variant="ghost"
                 size="icon"
@@ -39,7 +54,9 @@ export function DashboardNavbar({ onMenuClick, activeSection, setActiveSection, 
               </Button>
             </div>
           ) : (
+            /* Desktop: layout complet */
             <>
+              {/* Logo et titre de section */}
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-3">
                   <div className="relative flex items-center gap-2">
@@ -64,14 +81,16 @@ export function DashboardNavbar({ onMenuClick, activeSection, setActiveSection, 
                   </div>
                 </div>
 
+                {/* Titre de la section active - visible sur desktop */}
                 <div className="hidden md:block h-8 w-px bg-terex-gray/30"></div>
                 <h2 className="hidden md:block text-sm font-medium text-gray-300">
                   {getSectionTitle(activeSection)}
                 </h2>
               </div>
 
+              {/* Actions à droite */}
               <div className="flex items-center space-x-2">
-                <LanguageToggle />
+                {/* Bouton notifications (optionnel) */}
                 <Button
                   variant="ghost"
                   size="icon"
@@ -81,6 +100,7 @@ export function DashboardNavbar({ onMenuClick, activeSection, setActiveSection, 
                   <span className="absolute top-1 right-1 w-2 h-2 bg-terex-accent rounded-full"></span>
                 </Button>
 
+                {/* Bouton Menu Hamburger Desktop */}
                 <DesktopMenuPopover
                   activeSection={activeSection}
                   setActiveSection={setActiveSection || (() => {})}

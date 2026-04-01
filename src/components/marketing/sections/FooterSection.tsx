@@ -1,46 +1,44 @@
 
 import { Separator } from '@/components/ui/separator';
-import { Mail, Phone, MapPin, Twitter, Facebook, Linkedin, Instagram, Youtube } from 'lucide-react';
+import { Mail, Phone, MapPin, Twitter, Facebook, Linkedin, Instagram, Youtube, ShoppingCart, ArrowLeftRight, Globe, Code, TrendingUp, Building2, BookOpen, Briefcase, LifeBuoy, MessageCircle, BookMarked, HelpCircle, FileText, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '@/i18n/LanguageContext';
 
 export function FooterSection() {
   const navigate = useNavigate();
-  const { t } = useLanguage();
 
   const footerSections = [
     {
-      title: t.footer.products,
+      title: "Produits",
       links: [
-        { label: t.footer.buyUsdt, href: "/auth" },
-        { label: t.footer.sellUsdt, href: "/auth" },
-        { label: t.footer.internationalTransfer, href: "/auth" },
-        { label: t.footer.exchangeRate, href: "/" }
+        { label: "Acheter USDT", href: "/auth" },
+        { label: "Vendre USDT", href: "/auth" },
+        { label: "Transfert International", href: "/auth" },
+        { label: "Taux de Change", href: "/" }
       ]
     },
     {
-      title: t.footer.company,
+      title: "Entreprise",
       links: [
-        { label: t.footer.about, href: "/about" },
-        { label: t.footer.academy, href: "/blog" },
-        { label: t.footer.careers, href: "/careers" }
+        { label: "À Propos", href: "/about" },
+        { label: "Academy", href: "/blog" },
+        { label: "Carrières", href: "/careers" }
       ]
     },
     {
-      title: t.footer.support,
+      title: "Support",
       links: [
-        { label: t.footer.helpCenter, href: "/help" },
-        { label: t.footer.contact, href: "/contact" },
-        { label: t.footer.guide, href: "/guide" },
-        { label: t.footer.faq, href: "/faq" }
+        { label: "Centre d'Aide", href: "/help" },
+        { label: "Contact", href: "/contact" },
+        { label: "Guide", href: "/guide" },
+        { label: "FAQ", href: "/faq" }
       ]
     },
     {
-      title: t.footer.legal,
+      title: "Légal",
       links: [
-        { label: t.footer.terms, href: "/terms" },
-        { label: t.footer.privacy, href: "/privacy" },
-        { label: t.footer.security, href: "/security" }
+        { label: "Conditions d'Utilisation", href: "/terms" },
+        { label: "Confidentialité", href: "/privacy" },
+        { label: "Sécurité", href: "/security" }
       ]
     }
   ];
@@ -70,7 +68,7 @@ export function FooterSection() {
             </div>
             
             <p className="text-muted-foreground text-sm leading-relaxed mb-6 max-w-xs">
-              {t.footer.tagline}
+              La plateforme leader d'échange crypto-fiat en Afrique de l'Ouest.
             </p>
 
             {/* Social */}
@@ -116,17 +114,17 @@ export function FooterSection() {
       <div className="border-t border-white/[0.06]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-muted-foreground text-xs">
-            {t.footer.copyright}
+            &copy; 2026 Terex — Teranga Exchange Inc.
           </p>
           <div className="flex items-center gap-5">
             <button onClick={() => navigate('/privacy')} className="text-muted-foreground hover:text-foreground text-xs transition-colors">
-              {t.footer.privacy}
+              Confidentialité
             </button>
             <button onClick={() => navigate('/terms')} className="text-muted-foreground hover:text-foreground text-xs transition-colors">
-              {t.footer.terms}
+              Conditions
             </button>
             <button onClick={() => navigate('/security')} className="text-muted-foreground hover:text-foreground text-xs transition-colors">
-              {t.footer.security}
+              Sécurité
             </button>
           </div>
         </div>

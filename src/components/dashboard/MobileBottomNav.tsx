@@ -2,7 +2,6 @@
 import React from 'react';
 import { Home, TrendingDown, Globe, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useLanguage } from '@/i18n/LanguageContext';
 
 const TetherLogo = ({ className, isActive }: { className?: string; isActive?: boolean }) => (
   <img 
@@ -19,13 +18,11 @@ interface MobileBottomNavProps {
 }
 
 export function MobileBottomNav({ activeSection, setActiveSection }: MobileBottomNavProps) {
-  const { t } = useLanguage();
-
   const navItems = [
-    { id: 'home', icon: Home, label: t.bottomNav.home },
-    { id: 'buy', icon: TetherLogo, label: t.bottomNav.buy, isCustomIcon: true },
-    { id: 'sell', icon: TrendingDown, label: t.bottomNav.sell },
-    { id: 'transfer', icon: Globe, label: t.bottomNav.transfer },
+    { id: 'home', icon: Home, label: 'Accueil' },
+    { id: 'buy', icon: TetherLogo, label: 'Acheter', isCustomIcon: true },
+    { id: 'sell', icon: TrendingDown, label: 'Vendre' },
+    { id: 'transfer', icon: Globe, label: 'Virement' },
   ];
 
   return (
