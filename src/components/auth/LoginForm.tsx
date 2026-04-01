@@ -286,7 +286,7 @@ export function LoginForm() {
 
                     <div className="space-y-2">
                       <Label htmlFor="password" className="text-gray-300 text-sm font-normal">
-                        Mot de passe
+                        {t.auth.password}
                       </Label>
                       <div className="relative">
                         <Input
