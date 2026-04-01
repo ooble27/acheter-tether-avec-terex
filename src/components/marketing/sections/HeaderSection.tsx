@@ -5,6 +5,8 @@ import { User, LogOut, Menu, X, ArrowRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useNavigate } from 'react-router-dom';
+import { LanguageToggle } from '@/components/LanguageToggle';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface HeaderSectionProps {
   user?: { email: string; name: string } | null;
@@ -61,6 +63,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -94,16 +97,16 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   };
 
   const navigationItems = [
-    { label: 'Accueil', href: '/', icon: IconHome, description: 'Page d\'accueil' },
-    { label: 'À propos', href: '/about', icon: IconBuilding, description: 'Découvrez Terex' },
-    { label: 'Blog', href: '/blog', icon: IconFAQ, description: 'Articles & actualités' },
-    { label: 'Carrières', href: '/careers', icon: IconBriefcase, description: 'Rejoignez l\'équipe' },
+    { label: t.header.home, href: '/', icon: IconHome, description: t.header.homeDesc },
+    { label: t.header.about, href: '/about', icon: IconBuilding, description: t.header.aboutDesc },
+    { label: t.header.blog, href: '/blog', icon: IconFAQ, description: t.header.blogDesc },
+    { label: t.header.careers, href: '/careers', icon: IconBriefcase, description: t.header.careersDesc },
   ];
 
   const supportItems = [
-    { label: 'Support', href: '/support', icon: IconSupport, description: 'Centre d\'aide' },
-    { label: 'Contact', href: '/contact', icon: IconPhone, description: 'Nous contacter' },
-    { label: 'FAQ', href: '/faq', icon: IconFAQ, description: 'Questions fréquentes' },
+    { label: t.header.support, href: '/support', icon: IconSupport, description: t.header.supportDesc },
+    { label: t.header.contact, href: '/contact', icon: IconPhone, description: t.header.contactDesc },
+    { label: t.header.faq, href: '/faq', icon: IconFAQ, description: t.header.faqDesc },
   ];
 
   const useHamburgerMenu = isMobile || isTablet;
@@ -132,22 +135,23 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
               ))}
             </nav>
             <div className="flex items-center space-x-3">
+              <LanguageToggle />
               {user ? (
                 <>
                   <Button onClick={onShowDashboard} variant="outline" className="rounded-xl border-terex-gray/30 text-gray-300 hover:bg-terex-gray/15 hover:text-white px-5">
-                    <User className="w-4 h-4 mr-2" />Dashboard
+                    <User className="w-4 h-4 mr-2" />{t.header.dashboard}
                   </Button>
                   <Button onClick={handleLogout} className="rounded-xl bg-terex-accent hover:bg-terex-accent/90 text-black px-5">
-                    <LogOut className="w-4 h-4 mr-2" />Déconnexion
+                    <LogOut className="w-4 h-4 mr-2" />{t.header.logout}
                   </Button>
                 </>
               ) : (
                 <>
                   <Button onClick={() => navigate('/auth')} variant="outline" className="rounded-xl border-terex-gray/30 text-gray-300 hover:bg-terex-gray/15 hover:text-white px-5">
-                    Connexion
+                    {t.header.login}
                   </Button>
                   <Button onClick={() => navigate('/auth')} className="rounded-xl bg-terex-accent hover:bg-terex-accent/90 text-black px-5">
-                    Commencer
+                    {t.header.getStarted}
                   </Button>
                 </>
               )}
@@ -162,20 +166,23 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                 <img src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" alt="Terex Logo" className="w-9 h-9 rounded-lg cursor-pointer" onClick={() => navigate('/')} />
                 <span className="ml-2 text-lg font-semibold text-white">Terex</span>
               </div>
-              <button onClick={() => setMenuOpen(!menuOpen)} className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/5 transition-colors" aria-label="Menu">
-                {menuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
-              </button>
+              <div className="flex items-center gap-2">
+                <LanguageToggle />
+                <button onClick={() => setMenuOpen(!menuOpen)} className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/5 transition-colors" aria-label="Menu">
+                  {menuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
+                </button>
+              </div>
             </div>
 
-            {/* Dropdown — right-aligned, compact */}
+            {/* Dropdown */}
             <div className={`absolute top-full right-0 mt-2 w-72 transition-all duration-200 origin-top-right ${
               menuOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-1 pointer-events-none'
             }`}>
               <div className="bg-terex-darker/98 backdrop-blur-xl border border-white/15 rounded-2xl shadow-2xl shadow-black/50 overflow-hidden">
                 {/* Nav section */}
                 <div className="p-2 pt-3">
-                  <p className="text-[10px] text-white/50 uppercase tracking-[0.15em] font-medium mb-1.5 px-3">Navigation</p>
-                  {navigationItems.map((item, i) => {
+                  <p className="text-[10px] text-white/50 uppercase tracking-[0.15em] font-medium mb-1.5 px-3">{t.header.navigation}</p>
+                  {navigationItems.map((item) => {
                     const Icon = item.icon;
                     return (
                       <button
@@ -199,8 +206,8 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
 
                 {/* Support section */}
                 <div className="p-2">
-                  <p className="text-[10px] text-white/50 uppercase tracking-[0.15em] font-medium mb-1.5 px-3">Support</p>
-                  {supportItems.map((item, i) => {
+                  <p className="text-[10px] text-white/50 uppercase tracking-[0.15em] font-medium mb-1.5 px-3">{t.header.support}</p>
+                  {supportItems.map((item) => {
                     const Icon = item.icon;
                     return (
                       <button
@@ -227,19 +234,19 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
                   {user ? (
                     <div className="space-y-1.5">
                       <Button onClick={() => { onShowDashboard?.(); setMenuOpen(false); }} className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black py-4 rounded-xl text-sm font-medium">
-                        <User className="w-4 h-4 mr-2" />Mon Dashboard
+                        <User className="w-4 h-4 mr-2" />{t.header.myDashboard}
                       </Button>
                       <Button onClick={() => { handleLogout(); setMenuOpen(false); }} variant="ghost" className="w-full text-gray-400 hover:text-white hover:bg-white/5 py-3 rounded-xl text-xs">
-                        <LogOut className="w-4 h-4 mr-2" />Déconnexion
+                        <LogOut className="w-4 h-4 mr-2" />{t.header.logout}
                       </Button>
                     </div>
                   ) : (
                     <div className="space-y-1.5">
                       <Button onClick={() => { navigate('/auth'); setMenuOpen(false); }} className="w-full bg-terex-accent hover:bg-terex-accent/90 text-black py-4 rounded-xl text-sm font-medium">
-                        Commencer<ArrowRight className="w-4 h-4 ml-2" />
+                        {t.header.getStarted}<ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
                       <Button onClick={() => { navigate('/auth'); setMenuOpen(false); }} variant="ghost" className="w-full text-gray-400 hover:text-white hover:bg-white/5 py-3 rounded-xl text-xs">
-                        Se connecter
+                        {t.header.signIn}
                       </Button>
                     </div>
                   )}

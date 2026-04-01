@@ -36,12 +36,14 @@ import TransfertsInternationauxArticle from "./pages/blog/TransfertsInternationa
 import BlockchainSimpleArticle from "./pages/blog/BlockchainSimpleArticle";
 import MobileMoneyCryptoArticle from "./pages/blog/MobileMoneyCryptoArticle";
 import { TransactionProvider } from "./contexts/TransactionContext";
+import { LanguageProvider } from "./i18n/LanguageContext";
 import { PWASessionSync } from "./components/PWASessionSync";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { AppLoader } from "./components/AppLoader";
 
 function App() {
   return (
+    <LanguageProvider>
     <ThemeProvider>
       <AppLoader>
         <Router>
@@ -85,6 +87,7 @@ function App() {
         </Router>
       </AppLoader>
     </ThemeProvider>
+    </LanguageProvider>
   );
 }
 

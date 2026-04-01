@@ -9,6 +9,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Eye, EyeOff, Info } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/i18n/LanguageContext';
+import { LanguageToggle } from '@/components/LanguageToggle';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
@@ -21,6 +23,7 @@ export function LoginForm() {
   
   const { signUp } = useAuth();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const validatePassword = (password: string) => {
     const requirements = {
@@ -54,8 +57,8 @@ export function LoginForm() {
       }
 
       toast({
-        title: "✅ Connexion réussie !",
-        description: "Vous êtes maintenant connecté à Terex.",
+        title: t.auth.loginSuccess,
+        description: t.auth.loginSuccessDesc,
         className: "bg-green-600 text-white border-green-600",
       });
 
@@ -64,20 +67,20 @@ export function LoginForm() {
       if (error.message.includes("Invalid login credentials") || 
           error.message.includes("Email not confirmed")) {
         toast({
-          title: "Identifiants incorrects",
-          description: "L'email ou le mot de passe que vous avez saisi est incorrect.",
+          title: t.auth.invalidCredentials,
+          description: t.auth.invalidCredentialsDesc,
           variant: "destructive",
         });
       } else if (error.message.includes("For security purposes")) {
         toast({
-          title: "Trop de tentatives",
-          description: "Veuillez attendre quelques minutes avant de réessayer.",
+          title: t.auth.tooManyAttempts,
+          description: t.auth.tooManyAttemptsDesc,
           variant: "destructive",
         });
       } else {
         toast({
-          title: "Erreur de connexion",
-          description: "Impossible de se connecter. Vérifiez vos identifiants.",
+          title: t.auth.loginError,
+          description: t.auth.loginErrorDesc,
           variant: "destructive",
         });
       }
@@ -97,14 +100,14 @@ export function LoginForm() {
             signUpError.message.includes("already registered") ||
             signUpError.message.includes("already been registered")) {
           toast({
-            title: "Email déjà utilisé",
-            description: "Cet email est déjà enregistré. Veuillez vous connecter.",
+            title: t.auth.emailAlreadyUsed,
+            description: t.auth.emailAlreadyUsedDesc,
             variant: "destructive",
           });
           setActiveTab('login');
         } else {
           toast({
-            title: "Erreur d'inscription",
+            title: t.auth.signupError,
             description: signUpError.message,
             variant: "destructive",
           });
@@ -113,15 +116,15 @@ export function LoginForm() {
         // Vérifier si l'utilisateur existe déjà (identities vide = email déjà utilisé)
         if (data?.user && data.user.identities && data.user.identities.length === 0) {
           toast({
-            title: "Email déjà utilisé",
-            description: "Cet email est déjà enregistré. Veuillez vous connecter.",
+            title: t.auth.emailAlreadyUsed,
+            description: t.auth.emailAlreadyUsedDesc,
             variant: "destructive",
           });
           setActiveTab('login');
         } else {
           toast({
-            title: "Inscription réussie !",
-            description: "Vérifiez votre email pour activer votre compte",
+            title: t.auth.signupSuccess,
+            description: t.auth.signupSuccessDesc,
             className: "bg-green-600 text-white border-green-600",
           });
         }
@@ -133,21 +136,21 @@ export function LoginForm() {
       if (error?.message?.includes("duplicate") || 
           error?.message?.includes("unique") ||
           error?.message?.includes("already")) {
-        toast({
-          title: "Email déjà utilisé",
-          description: "Cet email est déjà enregistré. Veuillez vous connecter.",
-          variant: "destructive",
-        });
-        setActiveTab('login');
-      } else {
-        toast({
-          title: "Erreur",
-          description: "Une erreur inattendue s'est produite",
-          variant: "destructive",
-        });
+          toast({
+            title: t.auth.emailAlreadyUsed,
+            description: t.auth.emailAlreadyUsedDesc,
+            variant: "destructive",
+          });
+          setActiveTab('login');
+        } else {
+          toast({
+            title: t.auth.unexpectedError,
+            description: t.auth.unexpectedErrorDesc,
+            variant: "destructive",
+          });
+        }
       }
-    }
-  };
+    };
 
   return (
     <div className="min-h-screen w-full bg-terex-dark">
@@ -179,29 +182,29 @@ export function LoginForm() {
               </div>
 
               <h2 className="text-5xl font-light leading-tight">
-                <span className="text-terex-accent font-normal">Rejoignez</span>
+                <span className="text-terex-accent font-normal">{t.auth.joinTerex}</span>
                 <br />
                 <span className="text-terex-accent font-normal">Terex,</span>
                 <br />
-                <span className="text-white">la plateforme</span>
+                <span className="text-white">{t.auth.thePlatform}</span>
                 <br />
-                <span className="text-white">d'échange USDT</span>
+                <span className="text-white">{t.auth.ofExchange}</span>
                 <br />
-                <span className="text-white">en Afrique</span>
+                <span className="text-white">{t.auth.inAfrica}</span>
               </h2>
 
               <div className="space-y-4 text-gray-400 text-sm pt-8">
                 <p className="flex items-center gap-3">
                   <span className="w-1.5 h-1.5 rounded-full bg-terex-accent"></span>
-                  Transactions rapides et sécurisées
+                  {t.auth.fastTransactions}
                 </p>
                 <p className="flex items-center gap-3">
                   <span className="w-1.5 h-1.5 rounded-full bg-terex-accent"></span>
-                  Transferts internationaux simplifiés
+                  {t.auth.simplifiedTransfers}
                 </p>
                 <p className="flex items-center gap-3">
                   <span className="w-1.5 h-1.5 rounded-full bg-terex-accent"></span>
-                  Support client dédié 24/7
+                  {t.auth.dedicatedSupport}
                 </p>
               </div>
             </div>
@@ -211,7 +214,7 @@ export function LoginForm() {
         {/* Right Column - Form */}
         <div className="flex flex-col bg-terex-dark">
           {/* Mobile Logo */}
-          <div className="lg:hidden flex items-center justify-between p-6 border-b border-terex-gray">
+            <div className="flex items-center justify-between p-6 border-b border-terex-gray">
             <div className="flex items-center gap-3">
               <img 
                 src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" 
@@ -238,7 +241,7 @@ export function LoginForm() {
                         : 'text-gray-500 hover:text-gray-300'
                     }`}
                   >
-                    Se connecter
+                    {t.auth.signIn}
                     {activeTab === 'login' && (
                       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-terex-accent"></div>
                     )}
@@ -251,7 +254,7 @@ export function LoginForm() {
                         : 'text-gray-500 hover:text-gray-300'
                     }`}
                   >
-                    S'inscrire
+                    {t.auth.signUp}
                     {activeTab === 'register' && (
                       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-terex-accent"></div>
                     )}
@@ -260,19 +263,19 @@ export function LoginForm() {
               
                 <TabsContent value="login" className="space-y-8 animate-fade-in">
                   <div>
-                    <h2 className="text-2xl font-light text-white mb-2">CONNEXION</h2>
-                    <p className="text-gray-400 text-sm">Entrez vos identifiants pour vous connecter.</p>
+                    <h2 className="text-2xl font-light text-white mb-2">{t.auth.loginTitle}</h2>
+                    <p className="text-gray-400 text-sm">{t.auth.loginSubtitle}</p>
                   </div>
 
                   <form onSubmit={handlePasswordLogin} className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-gray-300 text-sm font-normal">
-                        Email
+                        {t.auth.email}
                       </Label>
                       <Input
                         id="email"
                         type="email"
-                        placeholder="votre@email.com"
+                        placeholder={t.auth.emailPlaceholder}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
@@ -283,7 +286,7 @@ export function LoginForm() {
 
                     <div className="space-y-2">
                       <Label htmlFor="password" className="text-gray-300 text-sm font-normal">
-                        Mot de passe
+                        {t.auth.password}
                       </Label>
                       <div className="relative">
                         <Input
@@ -318,21 +321,21 @@ export function LoginForm() {
                       {isLoading ? (
                         <>
                           <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                          Connexion en cours...
+                          {t.auth.loggingIn}
                         </>
                       ) : (
-                        'CONTINUER'
+                        t.auth.continueBtn
                       )}
                     </Button>
 
                     <p className="text-center text-sm text-gray-400">
-                      Vous n'avez pas de compte?{' '}
+                      {t.auth.noAccount}{' '}
                       <button
                         type="button"
                         onClick={() => setActiveTab('register')}
                         className="text-terex-accent hover:underline font-medium"
                       >
-                        S'inscrire
+                        {t.auth.signUp}
                       </button>
                     </p>
                   </form>
@@ -340,19 +343,19 @@ export function LoginForm() {
 
                 <TabsContent value="register" className="space-y-8 animate-fade-in">
                   <div>
-                    <h2 className="text-2xl font-light text-white mb-2">CRÉER VOTRE COMPTE</h2>
-                    <p className="text-gray-400 text-sm">Entrez votre email pour commencer.</p>
+                    <h2 className="text-2xl font-light text-white mb-2">{t.auth.registerTitle}</h2>
+                    <p className="text-gray-400 text-sm">{t.auth.registerSubtitle}</p>
                   </div>
 
                   <form onSubmit={handleSignUp} className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="name" className="text-gray-300 text-sm font-normal">
-                        Nom complet
+                        {t.auth.fullName}
                       </Label>
                       <Input
                         id="name"
                         type="text"
-                        placeholder="Votre nom complet"
+                        placeholder={t.auth.fullNamePlaceholder}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
@@ -363,12 +366,12 @@ export function LoginForm() {
 
                     <div className="space-y-2">
                       <Label htmlFor="email-register" className="text-gray-300 text-sm font-normal">
-                        Email
+                        {t.auth.email}
                       </Label>
                       <Input
                         id="email-register"
                         type="email"
-                        placeholder="votre@email.com"
+                        placeholder={t.auth.emailPlaceholder}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="bg-transparent border-0 border-b border-gray-700 text-white placeholder:text-gray-600 rounded-none focus:border-terex-accent focus:ring-0 h-12 px-0"
@@ -379,7 +382,7 @@ export function LoginForm() {
 
                     <div className="space-y-2">
                       <Label htmlFor="password-register" className="text-gray-300 text-sm font-normal">
-                        Mot de passe
+                        {t.auth.password}
                       </Label>
                       <div className="relative">
                         <Input
@@ -415,12 +418,12 @@ export function LoginForm() {
                       }}
                       className="text-sm text-gray-400 hover:text-terex-accent transition-colors underline"
                     >
-                      Avez-vous un code de parrainage?
+                      {t.auth.referralCode}
                     </button>
 
                     <div id="referral-code-input" className="hidden space-y-2">
                       <Label htmlFor="referral-code" className="text-gray-300 text-sm font-normal">
-                        Code de parrainage
+                        {t.auth.referralCode}
                       </Label>
                       <Input
                         id="referral-code"
@@ -436,28 +439,28 @@ export function LoginForm() {
                     {password && (
                       <div className="space-y-2 text-xs text-gray-500">
                         <div className={passwordRequirements.minLength ? 'text-green-400' : ''}>
-                          • Au moins 6 caractères
+                          • {t.auth.passwordRequirements.minLength}
                         </div>
                         <div className={passwordRequirements.hasUppercase ? 'text-green-400' : ''}>
-                          • Une lettre majuscule
+                          • {t.auth.passwordRequirements.uppercase}
                         </div>
                         <div className={passwordRequirements.hasLowercase ? 'text-green-400' : ''}>
-                          • Une lettre minuscule
+                          • {t.auth.passwordRequirements.lowercase}
                         </div>
                         <div className={passwordRequirements.hasNumber ? 'text-green-400' : ''}>
-                          • Un chiffre
+                          • {t.auth.passwordRequirements.number}
                         </div>
                         <div className={passwordRequirements.hasSpecialChar ? 'text-green-400' : ''}>
-                          • Un caractère spécial
+                          • {t.auth.passwordRequirements.specialChar}
                         </div>
                       </div>
                     )}
 
                     <p className="text-xs text-gray-500">
-                      En continuant, vous acceptez nos{' '}
-                      <a href="/terms" className="text-terex-accent hover:underline">Conditions d'utilisation</a>
-                      {' '}et{' '}
-                      <a href="/privacy" className="text-terex-accent hover:underline">Politique de confidentialité</a>.
+                      {t.auth.termsAgreement}{' '}
+                      <a href="/terms" className="text-terex-accent hover:underline">{t.auth.termsLink}</a>
+                      {' '}{t.auth.and}{' '}
+                      <a href="/privacy" className="text-terex-accent hover:underline">{t.auth.privacyLink}</a>.
                     </p>
 
                     <Button 
@@ -468,21 +471,21 @@ export function LoginForm() {
                       {isLoading ? (
                         <>
                           <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                          Création du compte...
+                          {t.auth.creatingAccount}
                         </>
                       ) : (
-                        'CONTINUER'
+                        t.auth.continueBtn
                       )}
                     </Button>
 
                     <p className="text-center text-sm text-gray-400">
-                      Vous avez déjà un compte?{' '}
+                      {t.auth.hasAccount}{' '}
                       <button
                         type="button"
                         onClick={() => setActiveTab('login')}
                         className="text-terex-accent hover:underline font-medium"
                       >
-                        Se connecter
+                        {t.auth.signIn}
                       </button>
                     </p>
                   </form>

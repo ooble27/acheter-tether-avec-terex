@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 function useTypewriter(texts: string[], typingSpeed = 40, pauseDuration = 3000) {
   const [displayText, setDisplayText] = useState('');
@@ -17,14 +18,12 @@ function useTypewriter(texts: string[], typingSpeed = 40, pauseDuration = 3000) 
         }, typingSpeed);
         return () => clearTimeout(timer);
       } else {
-        // Done typing, pause
         const timer = setTimeout(() => {
           setIsTyping(false);
         }, pauseDuration);
         return () => clearTimeout(timer);
       }
     } else {
-      // Move to next text
       charIndex.current = 0;
       setCurrentIndex((prev) => (prev + 1) % texts.length);
       setDisplayText('');
@@ -35,16 +34,9 @@ function useTypewriter(texts: string[], typingSpeed = 40, pauseDuration = 3000) 
   return displayText;
 }
 
-const titles = [
-  "Échange USDT et transferts vers l'Afrique",
-  "Achetez des USDT facilement avec Terex",
-  "Vendez vos stablecoins en toute sécurité",
-  "Envoyez de l'argent à vos proches",
-  "Plateforme sécurisée et réglementée",
-];
-
 export function DeviceMockups() {
-  const displayText = useTypewriter(titles, 35, 2500);
+  const { t } = useLanguage();
+  const displayText = useTypewriter(t.typewriter, 35, 2500);
 
   return (
     <h1 className="text-3xl sm:text-4xl lg:text-6xl font-light text-foreground mb-6 leading-tight h-[4.5em] sm:h-[4em] lg:h-[3.5em]">
