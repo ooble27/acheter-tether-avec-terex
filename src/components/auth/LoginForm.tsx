@@ -123,8 +123,8 @@ export function LoginForm() {
           setActiveTab('login');
         } else {
           toast({
-            title: "Inscription réussie !",
-            description: "Vérifiez votre email pour activer votre compte",
+            title: t.auth.signupSuccess,
+            description: t.auth.signupSuccessDesc,
             className: "bg-green-600 text-white border-green-600",
           });
         }
