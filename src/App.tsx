@@ -87,6 +87,7 @@ function App() {
         </Router>
       </AppLoader>
     </ThemeProvider>
+    </LanguageProvider>
   );
 }
 
