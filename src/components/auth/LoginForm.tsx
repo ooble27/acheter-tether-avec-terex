@@ -329,13 +329,13 @@ export function LoginForm() {
                     </Button>
 
                     <p className="text-center text-sm text-gray-400">
-                      Vous n'avez pas de compte?{' '}
+                      {t.auth.noAccount}{' '}
                       <button
                         type="button"
                         onClick={() => setActiveTab('register')}
                         className="text-terex-accent hover:underline font-medium"
                       >
-                        S'inscrire
+                        {t.auth.signUp}
                       </button>
                     </p>
                   </form>
