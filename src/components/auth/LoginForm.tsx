@@ -366,7 +366,7 @@ export function LoginForm() {
 
                     <div className="space-y-2">
                       <Label htmlFor="email-register" className="text-gray-300 text-sm font-normal">
-                        Email
+                        {t.auth.email}
                       </Label>
                       <Input
                         id="email-register"
