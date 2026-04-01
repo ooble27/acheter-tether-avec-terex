@@ -196,15 +196,15 @@ export function LoginForm() {
               <div className="space-y-4 text-gray-400 text-sm pt-8">
                 <p className="flex items-center gap-3">
                   <span className="w-1.5 h-1.5 rounded-full bg-terex-accent"></span>
-                  Transactions rapides et sécurisées
+                  {t.auth.fastTransactions}
                 </p>
                 <p className="flex items-center gap-3">
                   <span className="w-1.5 h-1.5 rounded-full bg-terex-accent"></span>
-                  Transferts internationaux simplifiés
+                  {t.auth.simplifiedTransfers}
                 </p>
                 <p className="flex items-center gap-3">
                   <span className="w-1.5 h-1.5 rounded-full bg-terex-accent"></span>
-                  Support client dédié 24/7
+                  {t.auth.dedicatedSupport}
                 </p>
               </div>
             </div>
