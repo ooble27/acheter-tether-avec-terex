@@ -15,13 +15,15 @@ import {
   Menu,
   ArrowLeft,
   Calculator,
-  Mail
+  Mail,
+  Sparkles
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
 import { AccountingAdmin } from '@/components/admin/AccountingAdmin';
 import { NewsletterAdmin } from '@/components/admin/NewsletterAdmin';
+import { NeobankVision } from '@/components/admin/neobank/NeobankVision';
 import { useUserRole } from '@/hooks/useUserRole';
 
 export function AdminPortal() {
