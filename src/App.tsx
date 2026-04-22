@@ -39,6 +39,7 @@ import { TransactionProvider } from "./contexts/TransactionContext";
 import { PWASessionSync } from "./components/PWASessionSync";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { AppLoader } from "./components/AppLoader";
+import NeobankVisionPage from "./pages/NeobankVisionPage";
 
 function App() {
   return (
@@ -78,6 +79,7 @@ function App() {
                 <Route path="/blog/blockchain-simple" element={<BlockchainSimpleArticle />} />
                 <Route path="/blog/mobile-money-crypto" element={<MobileMoneyCryptoArticle />} />
                 <Route path="/admin/*" element={<AdminPage />} />
+                <Route path="/neobank-vision" element={<NeobankVisionPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </TransactionProvider>

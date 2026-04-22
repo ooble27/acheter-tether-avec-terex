@@ -15,13 +15,15 @@ import {
   Menu,
   ArrowLeft,
   Calculator,
-  Mail
+  Mail,
+  Sparkles
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
 import { AccountingAdmin } from '@/components/admin/AccountingAdmin';
 import { NewsletterAdmin } from '@/components/admin/NewsletterAdmin';
+import { NeobankVision } from '@/components/admin/neobank/NeobankVision';
 import { useUserRole } from '@/hooks/useUserRole';
 
 export function AdminPortal() {
@@ -63,7 +65,7 @@ export function AdminPortal() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-terex-gray grid grid-cols-5 w-full">
+          <TabsList className="bg-terex-gray grid grid-cols-3 sm:grid-cols-6 w-full h-auto">
             <TabsTrigger 
               value="orders" 
               className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
@@ -99,6 +101,13 @@ export function AdminPortal() {
               <Mail className="w-4 h-4" />
               <span className="hidden sm:inline">Newsletter</span>
             </TabsTrigger>
+            <TabsTrigger 
+              value="neobank" 
+              className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span className="hidden sm:inline">Vision</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
@@ -119,6 +128,10 @@ export function AdminPortal() {
 
           <TabsContent value="newsletter">
             <NewsletterAdmin />
+          </TabsContent>
+
+          <TabsContent value="neobank">
+            <NeobankVision />
           </TabsContent>
         </Tabs>
       </div>
