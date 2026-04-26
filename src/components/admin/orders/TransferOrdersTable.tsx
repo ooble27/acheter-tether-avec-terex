@@ -224,6 +224,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                 </div>
               </div>
             </div>
+            <ClientStrip client={clientInfos[order.user_id]} />
           </div>
         );
       })}

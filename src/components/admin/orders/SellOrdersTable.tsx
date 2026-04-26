@@ -250,6 +250,7 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
                 </div>
               </div>
             </div>
+            <ClientStrip client={clientInfos[order.user_id]} />
           </div>
         );
       })}
