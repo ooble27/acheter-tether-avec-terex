@@ -15,360 +15,264 @@ interface PaymentConfirmedProps {
   transactionType: string;
 }
 
+const TEREX_GREEN = '#3B968F';
+const TEREX_GREEN_BG = '#eaf5f4';
+const TEREX_DARK = '#0F1411';
+const TEREX_MUTED = '#64748b';
+const TEREX_BORDER = '#eef0ef';
+const TEREX_SOFT_BG = '#fafbfa';
+
 export const PaymentConfirmedEmail = ({ orderData, transactionType }: PaymentConfirmedProps) => {
-  let title = '';
-  let preview = '';
-  let introMessage = '';
+  let title = 'Transaction finalisée';
+  let subtitle = 'Votre transaction a été traitée avec succès.';
+  let preview = 'Transaction Terex finalisée';
 
   if (transactionType === 'buy') {
-    title = 'Votre achat USDT a été finalisé avec succès';
-    preview = `Votre achat de ${orderData.usdt_amount || 0} USDT a été finalisé`;
-    introMessage = `Votre achat de ${orderData.usdt_amount || 0} USDT a été finalisé avec succès.`;
+    title = 'Achat USDT finalisé';
+    subtitle = `Votre achat de ${orderData.usdt_amount || 0} USDT a été traité avec succès.`;
+    preview = `Achat de ${orderData.usdt_amount || 0} USDT finalisé`;
   } else if (transactionType === 'sell') {
-    title = 'Votre vente USDT a été finalisée avec succès';
-    preview = `Votre vente de ${orderData.usdt_amount || 0} USDT a été finalisée`;
-    introMessage = `Votre vente de ${orderData.usdt_amount || 0} USDT a été finalisée avec succès.`;
+    title = 'Vente USDT finalisée';
+    subtitle = `Votre vente de ${orderData.usdt_amount || 0} USDT a été traitée avec succès.`;
+    preview = `Vente de ${orderData.usdt_amount || 0} USDT finalisée`;
   } else if (transactionType === 'transfer') {
-    title = 'Votre transfert a été déposé avec succès';
-    preview = `Votre transfert de ${orderData.amount || 0} ${orderData.from_currency || 'USDT'} à ${orderData.recipient_name} a été déposé`;
-    introMessage = `Le transfert de ${orderData.amount || 0} ${orderData.from_currency || 'USDT'} que vous avez envoyé à ${orderData.recipient_name} a été déposé.`;
-  } else {
-    title = 'Votre transaction a été finalisée avec succès';
-    preview = 'Votre transaction a été finalisée avec succès';
-    introMessage = 'Votre transaction a été finalisée avec succès.';
+    title = 'Transfert déposé';
+    subtitle = `Le transfert vers ${orderData.recipient_name || 'votre destinataire'} a été déposé.`;
+    preview = `Transfert de ${orderData.amount || 0} ${orderData.from_currency || 'USDT'} déposé`;
   }
 
-  // Parser les notes pour récupérer les informations du client
-  let clientInfo = null;
+  let clientInfo: any = null;
   try {
-    if (orderData.notes) {
-      clientInfo = JSON.parse(orderData.notes);
-    }
-  } catch (e) {
-    console.log('Impossible de parser les notes:', e);
-  }
+    if (orderData.notes) clientInfo = JSON.parse(orderData.notes);
+  } catch (_) {}
 
   const phoneNumber = clientInfo?.phoneNumber || orderData.phone_number || orderData.recipient_phone || 'N/A';
   const provider = clientInfo?.provider || orderData.payment_method || orderData.provider || 'N/A';
-  const providerName = provider === 'wave' ? 'Wave' : provider === 'orange' ? 'Orange Money' : provider === 'orange_money' ? 'Orange Money' : 'Mobile Money';
-  
+  const providerName =
+    provider === 'wave' ? 'Wave' :
+    provider === 'orange' || provider === 'orange_money' ? 'Orange Money' :
+    'Mobile Money';
+
+  const reference = `#TEREX-${orderData.id?.slice(-8) || 'N/A'}`;
+  const dateStr = new Date(orderData.processed_at || orderData.updated_at || Date.now()).toLocaleString('fr-FR');
+
   return (
-    <BaseEmail preview={preview} title={title}>
-      {/* Message d'introduction simple */}
-      <Section style={introSection}>
-        <Text style={introText}>
-          Bonjour,
-        </Text>
-        <Text style={mainMessage}>
-          {introMessage}
-        </Text>
+    <BaseEmail preview={preview} title={title} subtitle={subtitle}>
+      {/* Bandeau succès */}
+      <Section style={successBanner}>
+        <table width="100%" cellPadding={0} cellSpacing={0} role="presentation">
+          <tbody>
+            <tr>
+              <td style={checkCell}>
+                <div style={checkCircle}>
+                  <span style={checkMark}>✓</span>
+                </div>
+              </td>
+              <td style={successTextCell}>
+                <Text style={successTitle}>Confirmé</Text>
+                <Text style={successSub}>{reference} • {dateStr}</Text>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </Section>
+
+      {/* Détails */}
+      <Text style={sectionTitle}>Récapitulatif</Text>
+      <Container style={detailsContainer}>
+        {transactionType === 'buy' && (
+          <>
+            <DetailRow label="Montant payé" value={`${orderData.amount || 0} ${orderData.currency || 'CFA'}`} />
+            <DetailRow label="USDT reçu" value={`${orderData.usdt_amount || 0} USDT`} accent />
+            <DetailRow label="Adresse" value={orderData.wallet_address || 'N/A'} mono wrap />
+          </>
+        )}
+
+        {transactionType === 'sell' && (
+          <>
+            <DetailRow label="USDT vendu" value={`${orderData.usdt_amount || 0} USDT`} />
+            <DetailRow label="Montant reçu" value={`${orderData.amount || 0} ${orderData.currency || 'CFA'}`} accent />
+            <DetailRow label="Service" value={providerName} />
+            <DetailRow label="Numéro" value={phoneNumber} mono />
+          </>
+        )}
+
+        {transactionType === 'transfer' && (
+          <>
+            <DetailRow label="Envoyé" value={`${orderData.amount || 0} ${orderData.from_currency || 'USDT'}`} />
+            <DetailRow label="Reçu" value={`${orderData.total_amount || 0} ${orderData.to_currency || ''}`} accent />
+            <DetailRow label="Destinataire" value={orderData.recipient_name || 'N/A'} />
+            <DetailRow label="Service" value={providerName} />
+            <DetailRow label="Numéro" value={phoneNumber} mono />
+          </>
+        )}
+      </Container>
 
       <Hr style={divider} />
 
-      {/* Détails de la transaction */}
-      <Section style={transactionDetails}>
-        <Text style={sectionTitle}>DÉTAILS DE VOTRE TRANSACTION</Text>
-        
-        <Container style={detailsContainer}>
-          <Row>
-            <Column style={labelColumn}>
-              <Text style={labelText}>Numéro de référence :</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={valueText}>#TEREX-{orderData.id?.slice(-8) || 'N/A'}</Text>
-            </Column>
-          </Row>
-          
-          <Row>
-            <Column style={labelColumn}>
-              <Text style={labelText}>Date de finalisation :</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={valueText}>{new Date(orderData.processed_at || orderData.updated_at || Date.now()).toLocaleString('fr-FR')}</Text>
-            </Column>
-          </Row>
-
-          {transactionType === 'buy' && (
-            <>
-              <Row>
-                <Column style={labelColumn}>
-                  <Text style={labelText}>Montant payé :</Text>
-                </Column>
-                <Column style={valueColumn}>
-                  <Text style={amountText}>{orderData.amount || 0} {orderData.currency || 'CFA'}</Text>
-                </Column>
-              </Row>
-              
-              <Row>
-                <Column style={labelColumn}>
-                  <Text style={labelText}>USDT reçu :</Text>
-                </Column>
-                <Column style={valueColumn}>
-                  <Text style={amountText}>{orderData.usdt_amount || 0} USDT</Text>
-                </Column>
-              </Row>
-              
-              <Row>
-                <Column style={labelColumn}>
-                  <Text style={labelText}>Adresse de réception :</Text>
-                </Column>
-                <Column style={valueColumn}>
-                  <Text style={addressText}>{orderData.wallet_address || 'N/A'}</Text>
-                </Column>
-              </Row>
-            </>
-          )}
-
-          {transactionType === 'sell' && (
-            <>
-              <Row>
-                <Column style={labelColumn}>
-                  <Text style={labelText}>USDT vendu :</Text>
-                </Column>
-                <Column style={valueColumn}>
-                  <Text style={amountText}>{orderData.usdt_amount || 0} USDT</Text>
-                </Column>
-              </Row>
-              
-              <Row>
-                <Column style={labelColumn}>
-                  <Text style={labelText}>Montant reçu :</Text>
-                </Column>
-                <Column style={valueColumn}>
-                  <Text style={amountText}>{orderData.amount || 0} {orderData.currency || 'CFA'}</Text>
-                </Column>
-              </Row>
-              
-              <Row>
-                <Column style={labelColumn}>
-                  <Text style={labelText}>Service de réception :</Text>
-                </Column>
-                <Column style={valueColumn}>
-                  <Text style={valueText}>{providerName}</Text>
-                </Column>
-              </Row>
-              
-              <Row>
-                <Column style={labelColumn}>
-                  <Text style={labelText}>Numéro de réception :</Text>
-                </Column>
-                <Column style={valueColumn}>
-                  <Text style={phoneText}>{phoneNumber}</Text>
-                </Column>
-              </Row>
-            </>
-          )}
-
-          {transactionType === 'transfer' && (
-            <>
-              <Row>
-                <Column style={labelColumn}>
-                  <Text style={labelText}>Montant envoyé :</Text>
-                </Column>
-                <Column style={valueColumn}>
-                  <Text style={amountText}>{orderData.amount || 0} {orderData.from_currency || 'USDT'}</Text>
-                </Column>
-              </Row>
-              
-              <Row>
-                <Column style={labelColumn}>
-                  <Text style={labelText}>Montant reçu :</Text>
-                </Column>
-                <Column style={valueColumn}>
-                  <Text style={amountText}>{orderData.total_amount || 0} {orderData.to_currency || 'N/A'}</Text>
-                </Column>
-              </Row>
-              
-              <Row>
-                <Column style={labelColumn}>
-                  <Text style={labelText}>Destinataire :</Text>
-                </Column>
-                <Column style={valueColumn}>
-                  <Text style={valueText}>{orderData.recipient_name || 'N/A'}</Text>
-                </Column>
-              </Row>
-
-              <Row>
-                <Column style={labelColumn}>
-                  <Text style={labelText}>Service de réception :</Text>
-                </Column>
-                <Column style={valueColumn}>
-                  <Text style={valueText}>{providerName}</Text>
-                </Column>
-              </Row>
-              
-              <Row>
-                <Column style={labelColumn}>
-                  <Text style={labelText}>Numéro de réception :</Text>
-                </Column>
-                <Column style={valueColumn}>
-                  <Text style={phoneText}>{phoneNumber}</Text>
-                </Column>
-              </Row>
-            </>
-          )}
-        </Container>
-      </Section>
-
-      <Hr style={divider} />
-
-      {/* Message de confirmation final */}
-      <Section style={confirmationSection}>
-        <Text style={confirmationText}>
-          {transactionType === 'transfer' 
-            ? 'Le bénéficiaire a été notifié de la réception des fonds.'
-            : 'Votre transaction a été traitée avec succès.'
-          }
-        </Text>
-      </Section>
-
-      <Text style={thankYouText}>
-        Merci de faire confiance à Terex !
-      </Text>
-      <Text style={teamText}>
-        L'équipe Terex - Votre partenaire crypto de confiance
+      <Text style={signature}>
+        {transactionType === 'transfer'
+          ? 'Le bénéficiaire a été notifié de la réception des fonds.'
+          : 'Vos fonds sont disponibles.'}
+        <br />
+        <span style={signatureBrand}>L'équipe Terex</span>
       </Text>
     </BaseEmail>
   );
 };
 
-// Styles
-const introSection = {
-  margin: '0 0 30px 0',
+const DetailRow = ({ label, value, mono, wrap, accent }: { label: string; value: string; mono?: boolean; wrap?: boolean; accent?: boolean }) => {
+  let style = valueText;
+  if (accent) style = valueAccent;
+  else if (mono) style = wrap ? addressText : monoText;
+  return (
+    <Row style={detailRowStyle}>
+      <Column style={labelColumn}>
+        <Text style={labelText}>{label}</Text>
+      </Column>
+      <Column style={valueColumn}>
+        <Text style={style}>{value}</Text>
+      </Column>
+    </Row>
+  );
 };
 
-const introText = {
-  color: '#1e293b',
+/* — Styles — */
+
+const successBanner = {
+  backgroundColor: TEREX_GREEN_BG,
+  borderRadius: '10px',
+  padding: '16px 20px',
+  margin: '0 0 28px 0',
+  border: `1px solid ${TEREX_GREEN}33`,
+};
+
+const checkCell = {
+  width: '52px',
+  verticalAlign: 'middle' as const,
+};
+
+const checkCircle = {
+  width: '40px',
+  height: '40px',
+  borderRadius: '50%',
+  backgroundColor: TEREX_GREEN,
+  textAlign: 'center' as const,
+  lineHeight: '40px',
+};
+
+const checkMark = {
+  color: '#ffffff',
+  fontSize: '20px',
+  fontWeight: '700' as const,
+  lineHeight: '40px',
+};
+
+const successTextCell = {
+  verticalAlign: 'middle' as const,
+};
+
+const successTitle = {
+  color: TEREX_DARK,
   fontSize: '16px',
-  margin: '0 0 15px 0',
-  lineHeight: '1.4',
+  fontWeight: '700' as const,
+  margin: '0',
+  lineHeight: '1.2',
 };
 
-const mainMessage = {
-  color: '#059669',
-  fontSize: '18px',
-  fontWeight: '600',
-  margin: '0 0 15px 0',
-  lineHeight: '1.4',
-};
-
-const divider = {
-  borderColor: '#e2e8f0',
-  margin: '30px 0',
-  borderWidth: '1px',
-};
-
-const transactionDetails = {
-  margin: '0 0 30px 0',
+const successSub = {
+  color: TEREX_MUTED,
+  fontSize: '12px',
+  margin: '4px 0 0 0',
+  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
 };
 
 const sectionTitle = {
-  color: '#1e293b',
-  fontSize: '18px',
-  fontWeight: '700',
-  margin: '0 0 20px 0',
+  color: TEREX_DARK,
+  fontSize: '13px',
+  fontWeight: '700' as const,
+  margin: '0 0 12px 0',
   textTransform: 'uppercase' as const,
-  letterSpacing: '0.5px',
-  borderLeft: '4px solid #059669',
-  paddingLeft: '12px',
+  letterSpacing: '0.6px',
 };
 
 const detailsContainer = {
-  backgroundColor: '#f8fafc',
-  border: '1px solid #e2e8f0',
-  borderRadius: '8px',
-  padding: '20px',
+  backgroundColor: TEREX_SOFT_BG,
+  border: `1px solid ${TEREX_BORDER}`,
+  borderRadius: '10px',
+  padding: '8px 18px',
+  margin: '0 0 24px 0',
+};
+
+const detailRowStyle = {
+  borderBottom: `1px solid ${TEREX_BORDER}`,
 };
 
 const labelColumn = {
   width: '40%',
-  paddingRight: '15px',
-  verticalAlign: 'top' as const,
+  paddingRight: '12px',
+  verticalAlign: 'middle' as const,
 };
 
 const valueColumn = {
   width: '60%',
-  verticalAlign: 'top' as const,
+  verticalAlign: 'middle' as const,
 };
 
 const labelText = {
-  color: '#64748b',
-  fontSize: '14px',
-  fontWeight: '500',
-  margin: '8px 0',
-  lineHeight: '1.5',
+  color: TEREX_MUTED,
+  fontSize: '13px',
+  fontWeight: '500' as const,
+  margin: '12px 0',
+  lineHeight: '1.4',
 };
 
 const valueText = {
-  color: '#1e293b',
-  fontSize: '14px',
-  fontWeight: '600',
-  margin: '8px 0',
-  lineHeight: '1.5',
+  color: TEREX_DARK,
+  fontSize: '13px',
+  fontWeight: '600' as const,
+  margin: '12px 0',
+  lineHeight: '1.4',
+  textAlign: 'right' as const,
 };
 
-const amountText = {
-  color: '#059669',
-  fontSize: '16px',
-  fontWeight: '700',
-  margin: '8px 0',
-  lineHeight: '1.5',
+const valueAccent = {
+  ...valueText,
+  color: TEREX_GREEN,
+  fontSize: '15px',
+  fontWeight: '700' as const,
+};
+
+const monoText = {
+  ...valueText,
+  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
 };
 
 const addressText = {
-  color: '#1e293b',
+  color: TEREX_DARK,
   fontSize: '12px',
-  fontWeight: '500',
-  margin: '8px 0',
+  fontWeight: '500' as const,
+  margin: '10px 0',
   lineHeight: '1.4',
-  fontFamily: 'monospace',
-  backgroundColor: '#f1f5f9',
-  padding: '6px 8px',
-  borderRadius: '4px',
+  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
   wordBreak: 'break-all' as const,
+  textAlign: 'right' as const,
 };
 
-const phoneText = {
-  color: '#1e293b',
-  fontSize: '16px',
-  fontWeight: '700',
-  margin: '8px 0',
-  lineHeight: '1.5',
-  fontFamily: 'monospace',
+const divider = {
+  borderColor: TEREX_BORDER,
+  margin: '20px 0 16px 0',
+  borderWidth: '1px',
 };
 
-const confirmationSection = {
-  textAlign: 'center' as const,
-  margin: '0 0 30px 0',
-  padding: '20px',
-  backgroundColor: '#f0fdf4',
-  borderRadius: '8px',
-  border: '1px solid #bbf7d0',
-};
-
-const confirmationText = {
-  color: '#059669',
-  fontSize: '16px',
-  fontWeight: '600',
+const signature = {
+  color: TEREX_MUTED,
+  fontSize: '13px',
   margin: '0',
-  lineHeight: '1.4',
+  lineHeight: '1.6',
 };
 
-const thankYouText = {
-  color: '#2563eb',
-  fontSize: '20px',
-  fontWeight: '700',
-  margin: '30px 0 10px 0',
-  textAlign: 'center' as const,
-  lineHeight: '1.3',
-};
-
-const teamText = {
-  color: '#64748b',
-  fontSize: '14px',
-  margin: '0',
-  fontStyle: 'italic',
-  textAlign: 'center' as const,
-  lineHeight: '1.4',
+const signatureBrand = {
+  color: TEREX_DARK,
+  fontWeight: '600' as const,
 };

@@ -2,6 +2,10 @@
 import {
   Text,
   Section,
+  Container,
+  Row,
+  Column,
+  Hr,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 import { BaseEmail } from './base-email.tsx';
@@ -11,235 +15,282 @@ interface StatusUpdateProps {
   transactionType: string;
 }
 
+const TEREX_GREEN = '#3B968F';
+const TEREX_DARK = '#0F1411';
+const TEREX_MUTED = '#64748b';
+const TEREX_BORDER = '#eef0ef';
+const TEREX_SOFT_BG = '#fafbfa';
+
+const STATUS_META: Record<string, { label: string; color: string; bg: string; emoji: string }> = {
+  processing: { label: 'En cours de traitement', color: '#b45309', bg: '#fef3c7', emoji: '⏳' },
+  completed:  { label: 'Terminée avec succès',   color: TEREX_GREEN, bg: '#eaf5f4', emoji: '✓' },
+  cancelled:  { label: 'Annulée',                color: '#b91c1c', bg: '#fee2e2', emoji: '✕' },
+  failed:     { label: 'Échec',                  color: '#b91c1c', bg: '#fee2e2', emoji: '✕' },
+};
+
 export const StatusUpdateEmail = ({ orderData, transactionType }: StatusUpdateProps) => {
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'processing':
-        return 'En cours de traitement';
-      case 'completed':
-        return 'Terminée avec succès';
-      case 'cancelled':
-        return 'Annulée';
-      case 'failed':
-        return 'Échec de la transaction';
-      default:
-        return status;
-    }
-  };
+  const meta = STATUS_META[orderData.status] || { label: orderData.status, color: TEREX_DARK, bg: TEREX_SOFT_BG, emoji: '•' };
+  const isTransfer = transactionType === 'transfer';
+  const objectName = isTransfer ? 'transfert international' : (transactionType === 'buy' ? 'achat USDT' : transactionType === 'sell' ? 'vente USDT' : 'transaction');
 
-  const title = `Mise à jour de votre ${transactionType === 'transfer' ? 'transfert' : 'commande'}`;
-  const preview = `Votre ${transactionType === 'transfer' ? 'transfert' : 'commande'} a été mise à jour`;
-  
+  const title = `Mise à jour de votre ${isTransfer ? 'transfert' : 'commande'}`;
+  const subtitle = `Statut : ${meta.label}.`;
+  const preview = `${objectName} — ${meta.label}`;
+  const reference = `#TEREX-${orderData.id?.slice(-8) || 'N/A'}`;
+
   return (
-    <BaseEmail preview={preview} title={title}>
-      <Text style={statusText}>
-        📊 Le statut de votre {transactionType === 'transfer' ? 'transfert international' : 'commande'} a été mis à jour.
-      </Text>
+    <BaseEmail preview={preview} title={title} subtitle={subtitle}>
+      {/* Badge de statut */}
+      <Section style={{ ...statusBanner, backgroundColor: meta.bg, borderColor: `${meta.color}33` }}>
+        <table width="100%" cellPadding={0} cellSpacing={0} role="presentation">
+          <tbody>
+            <tr>
+              <td style={statusIconCell}>
+                <div style={{ ...statusIcon, backgroundColor: meta.color }}>
+                  <span style={statusIconText}>{meta.emoji}</span>
+                </div>
+              </td>
+              <td style={statusTextCell}>
+                <Text style={{ ...statusLabel, color: meta.color }}>{meta.label}</Text>
+                <Text style={statusRef}>{reference}</Text>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Section>
 
-      <Text style={newStatusText}>
-        <strong>Nouveau statut : {getStatusText(orderData.status)}</strong>
-      </Text>
+      {/* Détails */}
+      <Text style={sectionTitle}>Détails</Text>
+      <Container style={detailsContainer}>
+        <DetailRow label="Référence" value={reference} mono />
+        <DetailRow label="Création" value={new Date(orderData.created_at || Date.now()).toLocaleString('fr-FR')} />
+        <DetailRow label="Mise à jour" value={new Date(orderData.updated_at || Date.now()).toLocaleString('fr-FR')} />
 
-      <Text style={sectionTitle}>DÉTAILS DE VOTRE TRANSACTION</Text>
-      
-      <Text style={detailText}>
-        <strong>Numéro :</strong> {transactionType === 'transfer' ? 'Transfert' : 'Commande'} #TEREX-{orderData.id?.slice(-8) || 'N/A'}
-      </Text>
-      
-      <Text style={detailText}>
-        <strong>Date de création :</strong> {new Date(orderData.created_at || Date.now()).toLocaleString('fr-FR')}
-      </Text>
-      
-      <Text style={detailText}>
-        <strong>Dernière mise à jour :</strong> {new Date(orderData.updated_at || Date.now()).toLocaleString('fr-FR')}
-      </Text>
+        {!isTransfer && (
+          <>
+            <DetailRow label="Type" value={orderData.type === 'buy' ? 'Achat USDT' : 'Vente USDT'} />
+            <DetailRow label="Montant" value={`${orderData.amount || 0} ${orderData.currency || 'CFA'}`} />
+            <DetailRow label="USDT" value={`${orderData.usdt_amount || 0} USDT`} accent />
+            <DetailRow label="Réseau" value={orderData.network || 'TRC20'} />
+          </>
+        )}
 
-      {transactionType !== 'transfer' && (
-        <>
-          <Text style={detailText}>
-            <strong>Type :</strong> {orderData.type === 'buy' ? 'Achat USDT' : 'Vente USDT'}
-          </Text>
-          <Text style={detailText}>
-            <strong>Montant :</strong> {orderData.amount || 0} {orderData.currency || 'CFA'}
-          </Text>
-          <Text style={detailText}>
-            <strong>USDT :</strong> {orderData.usdt_amount || 0} USDT
-          </Text>
-          <Text style={detailText}>
-            <strong>Réseau :</strong> {orderData.network || 'TRC20'}
-          </Text>
-        </>
-      )}
-      
-      {transactionType === 'transfer' && (
-        <>
-          <Text style={detailText}>
-            <strong>Montant envoyé :</strong> {orderData.amount || 0} {orderData.from_currency || 'USDT'}
-          </Text>
-          <Text style={detailText}>
-            <strong>Montant à recevoir :</strong> {orderData.total_amount || 0} {orderData.to_currency || 'N/A'}
-          </Text>
-          <Text style={detailText}>
-            <strong>Destinataire :</strong> {orderData.recipient_name || 'N/A'}
-          </Text>
-          <Text style={detailText}>
-            <strong>Pays :</strong> {orderData.recipient_country || 'N/A'}
-          </Text>
-        </>
-      )}
-      
-      <Text style={detailText}>
-        <strong>Méthode de paiement :</strong> {
-          orderData.payment_method === 'card' ? 'Carte bancaire' : 
-          orderData.payment_method === 'wave' ? 'Wave' :
-          orderData.payment_method === 'orange' ? 'Orange Money' : 
-          orderData.payment_method || 'N/A'
-        }
-      </Text>
-      
-      <Text style={detailText}>
-        <strong>Référence :</strong> {orderData.payment_reference || orderData.id?.slice(-8) || 'N/A'}
-      </Text>
+        {isTransfer && (
+          <>
+            <DetailRow label="Envoyé" value={`${orderData.amount || 0} ${orderData.from_currency || 'USDT'}`} />
+            <DetailRow label="À recevoir" value={`${orderData.total_amount || 0} ${orderData.to_currency || ''}`} accent />
+            <DetailRow label="Destinataire" value={orderData.recipient_name || 'N/A'} />
+            <DetailRow label="Pays" value={orderData.recipient_country || 'N/A'} />
+          </>
+        )}
+      </Container>
 
-      {/* Messages spécifiques selon le statut */}
-      {orderData.status === 'completed' && (
-        <>
-          <Text style={sectionTitle}>TRANSACTION TERMINÉE AVEC SUCCÈS</Text>
-          <Text style={completedText}>
-            🎉 Parfait ! Votre {transactionType === 'transfer' ? 'transfert international' : 'transaction USDT'} a été finalisée avec succès.
-          </Text>
-          {transactionType === 'transfer' ? (
-            <Text style={detailText}>
-              Montant envoyé : {orderData.amount || 0} {orderData.from_currency || 'USDT'}{'\n'}
-              Montant reçu : {orderData.total_amount || 0} {orderData.to_currency || 'N/A'}{'\n'}
-              Destinataire : {orderData.recipient_name || 'N/A'}{'\n'}
-              ✅ Les fonds ont été crédités avec succès
-            </Text>
-          ) : (
-            <Text style={detailText}>
-              {orderData.type === 'buy' ? 'Achat' : 'Vente'} USDT terminé{'\n'}
-              Montant : {orderData.amount || 0} {orderData.currency || 'CFA'}{'\n'}
-              USDT : {orderData.usdt_amount || 0} USDT{'\n'}
-              ✅ Transaction terminée avec succès
-            </Text>
-          )}
-        </>
-      )}
-      
+      {/* Message contextuel */}
       {orderData.status === 'processing' && (
-        <>
-          <Text style={sectionTitle}>TRANSACTION EN COURS DE TRAITEMENT</Text>
-          <Text style={progressText}>⏳ Traitement en cours - 70% terminé</Text>
-          <Text style={detailText}>
-            Notre équipe traite activement votre {transactionType === 'transfer' ? 'transfert' : 'commande'}.{'\n'}
-            Délai estimé restant : 5 minutes{'\n'}
-            Vous serez notifié immédiatement une fois le traitement terminé.
+        <Section style={infoBox}>
+          <Text style={infoText}>
+            Notre équipe traite activement votre {isTransfer ? 'transfert' : 'commande'}. Vous recevrez une nouvelle notification dès la finalisation.
           </Text>
-        </>
-      )}
-      
-      {(orderData.status === 'cancelled' || orderData.status === 'failed') && (
-        <>
-          <Text style={sectionTitle}>
-            {orderData.status === 'cancelled' ? 'TRANSACTION ANNULÉE' : 'ÉCHEC DE LA TRANSACTION'}
-          </Text>
-          {orderData.status === 'cancelled' ? (
-            <Text style={problemText}>
-              ❌ Votre {transactionType === 'transfer' ? 'transfert' : 'commande'} a été annulée.{'\n'}
-              Date d'annulation : {new Date(orderData.updated_at || Date.now()).toLocaleString('fr-FR')}{'\n'}
-              Raison : {orderData.cancellation_reason || 'Annulation demandée'}{'\n'}
-              Si vous avez effectué un paiement, celui-ci sera remboursé dans un délai de 3-5 jours ouvrables.
-            </Text>
-          ) : (
-            <Text style={problemText}>
-              ⚠️ Une erreur s'est produite lors du traitement.{'\n'}
-              Description : {orderData.error_message || 'Erreur technique temporaire'}{'\n'}
-              Notre équipe technique a été notifiée et travaille sur une solution.
-            </Text>
-          )}
-        </>
+        </Section>
       )}
 
-      <Text style={thankYouText}>
-        🙏 Merci de faire confiance à Terex !
-      </Text>
-      <Text style={teamText}>
-        Notre équipe reste à votre disposition pour toute question.
+      {orderData.status === 'completed' && (
+        <Section style={infoBox}>
+          <Text style={infoText}>
+            {isTransfer
+              ? 'Les fonds ont été crédités au destinataire avec succès.'
+              : 'Votre transaction a été traitée avec succès.'}
+          </Text>
+        </Section>
+      )}
+
+      {(orderData.status === 'cancelled' || orderData.status === 'failed') && (
+        <Section style={alertBox}>
+          <Text style={alertText}>
+            {orderData.status === 'cancelled'
+              ? `Votre ${isTransfer ? 'transfert' : 'commande'} a été annulée. ${orderData.cancellation_reason ? `Raison : ${orderData.cancellation_reason}.` : ''} Si un paiement a été effectué, il sera remboursé sous 3 à 5 jours ouvrables.`
+              : `Une erreur s'est produite. ${orderData.error_message || 'Notre équipe technique a été notifiée.'}`}
+          </Text>
+        </Section>
+      )}
+
+      <Hr style={divider} />
+
+      <Text style={signature}>
+        Pour toute question, contactez-nous via WhatsApp ou par email.<br />
+        <span style={signatureBrand}>L'équipe Terex</span>
       </Text>
     </BaseEmail>
   );
 };
 
-// Styles simples et lisibles
-const statusText = {
-  color: '#2563eb',
-  fontSize: '16px',
-  fontWeight: '600',
-  margin: '0 0 20px 0',
-  lineHeight: '1.4',
+const DetailRow = ({ label, value, mono, accent }: { label: string; value: string; mono?: boolean; accent?: boolean }) => {
+  let style = valueText;
+  if (accent) style = valueAccent;
+  else if (mono) style = monoText;
+  return (
+    <Row style={detailRowStyle}>
+      <Column style={labelColumn}>
+        <Text style={labelText}>{label}</Text>
+      </Column>
+      <Column style={valueColumn}>
+        <Text style={style}>{value}</Text>
+      </Column>
+    </Row>
+  );
 };
 
-const newStatusText = {
-  color: '#059669',
-  fontSize: '18px',
-  fontWeight: '700',
-  margin: '0 0 30px 0',
+/* — Styles — */
+
+const statusBanner = {
+  borderRadius: '10px',
+  padding: '14px 18px',
+  margin: '0 0 28px 0',
+  border: '1px solid',
+};
+
+const statusIconCell = {
+  width: '52px',
+  verticalAlign: 'middle' as const,
+};
+
+const statusIcon = {
+  width: '40px',
+  height: '40px',
+  borderRadius: '50%',
   textAlign: 'center' as const,
+  lineHeight: '40px',
+};
+
+const statusIconText = {
+  color: '#ffffff',
+  fontSize: '18px',
+  fontWeight: '700' as const,
+  lineHeight: '40px',
+};
+
+const statusTextCell = {
+  verticalAlign: 'middle' as const,
+};
+
+const statusLabel = {
+  fontSize: '15px',
+  fontWeight: '700' as const,
+  margin: '0',
+  lineHeight: '1.2',
+};
+
+const statusRef = {
+  color: TEREX_MUTED,
+  fontSize: '12px',
+  margin: '4px 0 0 0',
+  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
 };
 
 const sectionTitle = {
-  color: '#2563eb',
-  fontSize: '16px',
-  fontWeight: '700',
-  margin: '30px 0 15px 0',
+  color: TEREX_DARK,
+  fontSize: '13px',
+  fontWeight: '700' as const,
+  margin: '0 0 12px 0',
   textTransform: 'uppercase' as const,
-  letterSpacing: '0.5px',
+  letterSpacing: '0.6px',
 };
 
-const detailText = {
-  color: '#333333',
-  fontSize: '14px',
-  margin: '8px 0',
-  lineHeight: '1.5',
-  whiteSpace: 'pre-line' as const,
+const detailsContainer = {
+  backgroundColor: TEREX_SOFT_BG,
+  border: `1px solid ${TEREX_BORDER}`,
+  borderRadius: '10px',
+  padding: '8px 18px',
+  margin: '0 0 24px 0',
 };
 
-const completedText = {
-  color: '#059669',
-  fontSize: '16px',
-  fontWeight: '600',
-  margin: '0 0 15px 0',
+const detailRowStyle = {
+  borderBottom: `1px solid ${TEREX_BORDER}`,
+};
+
+const labelColumn = {
+  width: '40%',
+  paddingRight: '12px',
+  verticalAlign: 'middle' as const,
+};
+
+const valueColumn = {
+  width: '60%',
+  verticalAlign: 'middle' as const,
+};
+
+const labelText = {
+  color: TEREX_MUTED,
+  fontSize: '13px',
+  fontWeight: '500' as const,
+  margin: '12px 0',
   lineHeight: '1.4',
 };
 
-const progressText = {
-  color: '#f59e0b',
-  fontSize: '14px',
-  fontWeight: '600',
-  margin: '0 0 15px 0',
-  textAlign: 'center' as const,
+const valueText = {
+  color: TEREX_DARK,
+  fontSize: '13px',
+  fontWeight: '600' as const,
+  margin: '12px 0',
+  lineHeight: '1.4',
+  textAlign: 'right' as const,
 };
 
-const problemText = {
-  color: '#dc2626',
-  fontSize: '14px',
-  margin: '0 0 15px 0',
-  lineHeight: '1.5',
-  whiteSpace: 'pre-line' as const,
+const valueAccent = {
+  ...valueText,
+  color: TEREX_GREEN,
+  fontWeight: '700' as const,
 };
 
-const thankYouText = {
-  color: '#2563eb',
-  fontSize: '18px',
-  fontWeight: '600',
-  margin: '30px 0 8px 0',
-  textAlign: 'center' as const,
+const monoText = {
+  ...valueText,
+  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
 };
 
-const teamText = {
-  color: '#666666',
-  fontSize: '14px',
+const infoBox = {
+  backgroundColor: '#eaf5f4',
+  border: `1px solid ${TEREX_GREEN}33`,
+  borderRadius: '10px',
+  padding: '14px 18px',
+  margin: '0 0 24px 0',
+};
+
+const infoText = {
+  color: TEREX_DARK,
+  fontSize: '13px',
   margin: '0',
-  fontStyle: 'italic',
-  textAlign: 'center' as const,
+  lineHeight: '1.6',
+};
+
+const alertBox = {
+  backgroundColor: '#fee2e2',
+  border: '1px solid #fca5a533',
+  borderRadius: '10px',
+  padding: '14px 18px',
+  margin: '0 0 24px 0',
+};
+
+const alertText = {
+  color: '#7f1d1d',
+  fontSize: '13px',
+  margin: '0',
+  lineHeight: '1.6',
+};
+
+const divider = {
+  borderColor: TEREX_BORDER,
+  margin: '20px 0 16px 0',
+  borderWidth: '1px',
+};
+
+const signature = {
+  color: TEREX_MUTED,
+  fontSize: '13px',
+  margin: '0',
+  lineHeight: '1.6',
+};
+
+const signatureBrand = {
+  color: TEREX_DARK,
+  fontWeight: '600' as const,
 };
