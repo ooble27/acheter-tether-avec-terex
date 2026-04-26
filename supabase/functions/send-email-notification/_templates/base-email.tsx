@@ -10,80 +10,88 @@ import {
   Text,
   Link,
   Hr,
+  Img,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 
 interface BaseEmailProps {
   preview: string;
   title: string;
+  subtitle?: string;
   children: React.ReactNode;
 }
 
-export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
+const TEREX_GREEN = '#3B968F';
+const TEREX_GREEN_DARK = '#2E7873';
+const TEREX_DARK = '#0F1411';
+const LOGO_URL = 'https://terangaexchange.com/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png';
+
+export const BaseEmail = ({ preview, title, subtitle, children }: BaseEmailProps) => {
   return (
     <Html>
       <Head />
       <Preview>{preview}</Preview>
       <Body style={main}>
         <Container style={container}>
-          {/* Header professionnel inspiré d'Interac */}
+          {/* Header avec identité Terex */}
           <Section style={header}>
-            <Container style={headerContainer}>
-              <Text style={brandName}>TEREX</Text>
-              <Text style={brandSubtitle}>Plateforme d'échange crypto & transferts internationaux</Text>
-            </Container>
-            <Hr style={headerDivider} />
+            <table width="100%" cellPadding={0} cellSpacing={0} role="presentation">
+              <tbody>
+                <tr>
+                  <td style={logoCell}>
+                    <Img src={LOGO_URL} alt="Terex" width="32" height="32" style={logoImg} />
+                  </td>
+                  <td style={brandCell}>
+                    <Text style={brandName}>TEREX</Text>
+                    <Text style={brandTagline}>Teranga Exchange</Text>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </Section>
+
+          {/* Bande accent verte */}
+          <div style={accentBar} />
+
+          {/* Titre principal */}
+          <Section style={titleSection}>
             <Heading style={titleStyle}>{title}</Heading>
+            {subtitle && <Text style={subtitleStyle}>{subtitle}</Text>}
           </Section>
 
-          {/* Contenu principal */}
-          <Section style={contentSection}>
-            {children}
-          </Section>
+          {/* Contenu */}
+          <Section style={contentSection}>{children}</Section>
 
-          {/* Footer professionnel */}
+          {/* Footer */}
           <Section style={footer}>
             <Hr style={footerDivider} />
-            
-            {/* Informations de contact */}
-            <Container style={contactSection}>
-              <Text style={footerTitle}>📞 Support Client 24h/7j</Text>
-              <Text style={contactText}>📧 terangaexchange@gmail.com</Text>
-              <Text style={contactText}>📱 +221 77 397 27 49</Text>
-              <Text style={contactText}>💬 WhatsApp : +1 418 261 9091</Text>
-            </Container>
-            
-            {/* Accès plateforme */}
-            <Container style={platformSection}>
-              <Text style={footerTitle}>🚀 Accédez à votre compte</Text>
-              <Link href="https://terangaexchange.com" style={platformLink}>
-                Ouvrir la plateforme Terex →
-              </Link>
-            </Container>
 
-            {/* Sécurité */}
-            <Container style={securitySection}>
-              <Text style={footerTitle}>🔒 Sécurité & Conformité</Text>
-              <Text style={securityText}>
-                • Cryptage SSL 256-bit{'\n'}
-                • Portefeuilles multi-signatures{'\n'}
-                • Surveillance 24h/7j{'\n'}
-                • Conformité réglementaire internationale
-              </Text>
-            </Container>
+            <table width="100%" cellPadding={0} cellSpacing={0} role="presentation">
+              <tbody>
+                <tr>
+                  <td style={footerCol}>
+                    <Text style={footerColTitle}>Support</Text>
+                    <Text style={footerText}>terangaexchange@gmail.com</Text>
+                    <Text style={footerText}>WhatsApp : +1 418 261 9091</Text>
+                  </td>
+                  <td style={footerCol}>
+                    <Text style={footerColTitle}>Plateforme</Text>
+                    <Link href="https://terangaexchange.com" style={footerLink}>
+                      terangaexchange.com
+                    </Link>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
 
-            {/* Informations légales */}
-            <Container style={legalSection}>
-              <Text style={legalText}>
-                <strong>Terex</strong> - Votre partenaire crypto de confiance
-              </Text>
-              <Text style={legalText}>
-                Fondé par Mohamed Lo • Basé au Sénégal, Dakar
-              </Text>
-              <Text style={copyrightText}>
-                © 2025 Terex. Tous droits réservés.
-              </Text>
-            </Container>
+            <Hr style={footerDivider} />
+
+            <Text style={legalText}>
+              Terex — Plateforme d'échange USDT et transferts internationaux.
+            </Text>
+            <Text style={copyrightText}>
+              © {new Date().getFullYear()} Teranga Exchange. Tous droits réservés.
+            </Text>
           </Section>
         </Container>
       </Body>
@@ -91,148 +99,143 @@ export const BaseEmail = ({ preview, title, children }: BaseEmailProps) => {
   );
 };
 
-// Styles inspirés des emails Interac - professionnels et modernes
+/* — Styles — */
+
 const main = {
-  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif',
+  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif',
   margin: '0',
-  padding: '20px 0',
-  backgroundColor: '#f3f4f6',
-  color: '#1f2937',
+  padding: '24px 0',
+  backgroundColor: '#f5f7f6',
+  color: '#0F1411',
 };
 
 const container = {
-  maxWidth: '680px',
+  maxWidth: '600px',
   margin: '0 auto',
   backgroundColor: '#ffffff',
   borderRadius: '12px',
   overflow: 'hidden',
-  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+  boxShadow: '0 4px 16px rgba(15, 20, 17, 0.08)',
 };
 
 const header = {
-  backgroundColor: '#1e293b',
-  padding: '40px 30px',
-  textAlign: 'center' as const,
+  backgroundColor: TEREX_DARK,
+  padding: '24px 32px',
 };
 
-const headerContainer = {
-  marginBottom: '20px',
+const logoCell = {
+  width: '40px',
+  verticalAlign: 'middle' as const,
+  paddingRight: '12px',
+};
+
+const logoImg = {
+  display: 'block',
+  borderRadius: '6px',
+};
+
+const brandCell = {
+  verticalAlign: 'middle' as const,
 };
 
 const brandName = {
   color: '#ffffff',
-  fontSize: '32px',
-  fontWeight: '800',
-  margin: '0 0 8px 0',
+  fontSize: '20px',
+  fontWeight: '700' as const,
+  margin: '0',
   letterSpacing: '2px',
+  lineHeight: '1.2',
+};
+
+const brandTagline = {
+  color: '#94a3b8',
+  fontSize: '11px',
+  margin: '2px 0 0 0',
+  letterSpacing: '1px',
   textTransform: 'uppercase' as const,
 };
 
-const brandSubtitle = {
-  color: '#94a3b8',
-  fontSize: '14px',
-  margin: '0',
-  fontWeight: '400',
-  letterSpacing: '0.5px',
+const accentBar = {
+  height: '3px',
+  backgroundColor: TEREX_GREEN,
 };
 
-const headerDivider = {
-  borderColor: '#475569',
-  margin: '20px 0',
-  borderWidth: '1px',
+const titleSection = {
+  padding: '32px 32px 0 32px',
 };
 
 const titleStyle = {
-  color: '#ffffff',
-  fontSize: '22px',
-  fontWeight: '600',
+  color: '#0F1411',
+  fontSize: '24px',
+  fontWeight: '700' as const,
+  margin: '0 0 8px 0',
+  lineHeight: '1.3',
+  letterSpacing: '-0.4px',
+};
+
+const subtitleStyle = {
+  color: '#64748b',
+  fontSize: '14px',
   margin: '0',
-  lineHeight: '1.4',
+  lineHeight: '1.5',
 };
 
 const contentSection = {
-  padding: '40px 30px',
-  backgroundColor: '#ffffff',
+  padding: '24px 32px 32px 32px',
 };
 
 const footer = {
-  backgroundColor: '#f8fafc',
-  padding: '30px',
-  borderTop: '1px solid #e2e8f0',
+  backgroundColor: '#fafbfa',
+  padding: '24px 32px 28px 32px',
+  borderTop: '1px solid #eef0ef',
 };
 
 const footerDivider = {
-  borderColor: '#e2e8f0',
-  margin: '0 0 25px 0',
+  borderColor: '#e5e7e6',
+  margin: '0 0 18px 0',
   borderWidth: '1px',
 };
 
-const contactSection = {
-  marginBottom: '25px',
+const footerCol = {
+  width: '50%',
+  verticalAlign: 'top' as const,
+  padding: '4px 0',
 };
 
-const footerTitle = {
-  color: '#1e293b',
-  fontSize: '16px',
-  fontWeight: '700',
-  margin: '0 0 10px 0',
+const footerColTitle = {
+  color: '#0F1411',
+  fontSize: '12px',
+  fontWeight: '700' as const,
+  margin: '0 0 6px 0',
+  textTransform: 'uppercase' as const,
   letterSpacing: '0.5px',
 };
 
-const contactText = {
-  color: '#64748b',
-  fontSize: '14px',
-  margin: '5px 0',
-  fontWeight: '400',
-};
-
-const platformSection = {
-  marginBottom: '25px',
-};
-
-const platformLink = {
-  color: '#2563eb',
-  fontSize: '16px',
-  fontWeight: '600',
-  textDecoration: 'none',
-  display: 'inline-block',
-  margin: '8px 0',
-  padding: '12px 24px',
-  backgroundColor: '#eff6ff',
-  borderRadius: '8px',
-  border: '2px solid #2563eb',
-  transition: 'all 0.2s',
-};
-
-const securitySection = {
-  marginBottom: '25px',
-};
-
-const securityText = {
+const footerText = {
   color: '#64748b',
   fontSize: '13px',
-  margin: '8px 0',
-  lineHeight: '1.6',
-  whiteSpace: 'pre-line' as const,
+  margin: '3px 0',
+  lineHeight: '1.5',
 };
 
-const legalSection = {
-  textAlign: 'center' as const,
-  borderTop: '1px solid #e2e8f0',
-  paddingTop: '20px',
+const footerLink = {
+  color: TEREX_GREEN,
+  fontSize: '13px',
+  textDecoration: 'none',
+  fontWeight: '500' as const,
 };
 
 const legalText = {
   color: '#94a3b8',
   fontSize: '12px',
-  margin: '8px 0',
-  lineHeight: '1.4',
+  margin: '8px 0 4px 0',
+  lineHeight: '1.5',
+  textAlign: 'center' as const,
 };
 
 const copyrightText = {
-  color: '#9ca3af',
+  color: '#94a3b8',
   fontSize: '11px',
-  margin: '15px 0 0 0',
-  lineHeight: '1.4',
-  fontWeight: '500',
+  margin: '0',
+  textAlign: 'center' as const,
 };
