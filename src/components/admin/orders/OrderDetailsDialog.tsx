@@ -2,15 +2,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
 import { UnifiedOrder } from '@/hooks/useOrders';
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  MapPin, 
+import {
+  User,
+  Mail,
+  Phone,
   Calendar,
   Wallet,
-  Network,
   Hash,
   TrendingUp,
   TrendingDown,
@@ -20,7 +19,11 @@ import {
   XCircle,
   Clock,
   AlertCircle,
-  MailCheck
+  MailCheck,
+  ArrowRight,
+  Globe,
+  CreditCard,
+  FileText,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -28,6 +31,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 import { useToast } from '@/hooks/use-toast';
+import { parseOrderNotes } from '@/lib/orderNotesParser';
 
 type OrderStatus = Database['public']['Enums']['order_status'];
 
@@ -38,7 +42,38 @@ interface OrderDetailsDialogProps {
   onStatusUpdate: (orderId: string, status: OrderStatus, paymentStatus?: string) => void;
 }
 
-export function OrderDetailsDialog({ order, open, onOpenChange, onStatusUpdate }: OrderDetailsDialogProps) {
+const PAYMENT_LABELS: Record<string, string> = {
+  card: 'Carte bancaire',
+  mobile: 'Mobile Money',
+  wave: 'Wave',
+  orange_money: 'Orange Money',
+  bank: 'Virement bancaire',
+  bank_transfer: 'Virement bancaire',
+  interac: 'Interac',
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  pending: 'En attente',
+  processing: 'En traitement',
+  completed: 'Terminé',
+  cancelled: 'Annulé',
+  failed: 'Échoué',
+};
+
+const STATUS_STYLES: Record<string, string> = {
+  pending: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30',
+  processing: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
+  completed: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+  cancelled: 'bg-red-500/10 text-red-400 border-red-500/30',
+  failed: 'bg-red-500/10 text-red-400 border-red-500/30',
+};
+
+export function OrderDetailsDialog({
+  order,
+  open,
+  onOpenChange,
+  onStatusUpdate,
+}: OrderDetailsDialogProps) {
   const [userEmail, setUserEmail] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [userPhone, setUserPhone] = useState<string>('');
@@ -48,508 +83,365 @@ export function OrderDetailsDialog({ order, open, onOpenChange, onStatusUpdate }
   const { toast } = useToast();
 
   useEffect(() => {
-    if (order) {
-      const fetchUserInfo = async () => {
-        try {
-          const { data: { user } } = await supabase.auth.admin.getUserById(order.user_id);
-          if (user?.email) {
-            setUserEmail(user.email);
-          }
-
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('full_name, phone')
-            .eq('id', order.user_id)
-            .single();
-
-          if (profile?.full_name) {
-            setUserName(profile.full_name);
-          }
-          if (profile?.phone) {
-            setUserPhone(profile.phone);
-          }
-        } catch (error) {
-          console.error('Error fetching user info:', error);
+    if (!order) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data } = await supabase.auth.admin.getUserById(order.user_id);
+        if (!cancelled && data?.user?.email) setUserEmail(data.user.email);
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name, phone')
+          .eq('id', order.user_id)
+          .single();
+        if (!cancelled) {
+          setUserName(profile?.full_name || '');
+          setUserPhone(profile?.phone || '');
         }
-      };
-
-      fetchUserInfo();
-    }
+      } catch (e) {
+        console.error('Error fetching user info:', e);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [order]);
 
   if (!order) return null;
 
-  const getOrderTypeInfo = () => {
+  const parsedNotes = parseOrderNotes(order.notes);
+
+  const orderTypeMeta = (() => {
     switch (order.type) {
       case 'buy':
-        return {
-          icon: TrendingUp,
-          color: 'text-green-500',
-          bgColor: 'bg-green-500/20',
-          label: 'Achat USDT'
-        };
+        return { Icon: TrendingUp, label: 'Achat USDT', accent: 'text-terex-accent', bg: 'bg-terex-accent/15' };
       case 'sell':
-        return {
-          icon: TrendingDown,
-          color: 'text-blue-500',
-          bgColor: 'bg-blue-500/20',
-          label: 'Vente USDT'
-        };
+        return { Icon: TrendingDown, label: 'Vente USDT', accent: 'text-orange-400', bg: 'bg-orange-500/15' };
       case 'transfer':
-        return {
-          icon: Send,
-          color: 'text-purple-500',
-          bgColor: 'bg-purple-500/20',
-          label: 'Transfert International'
-        };
+        return { Icon: Send, label: 'Transfert international', accent: 'text-purple-400', bg: 'bg-purple-500/15' };
       default:
-        return {
-          icon: Hash,
-          color: 'text-gray-500',
-          bgColor: 'bg-gray-500/20',
-          label: 'Transaction'
-        };
+        return { Icon: Hash, label: 'Transaction', accent: 'text-gray-400', bg: 'bg-gray-500/15' };
+    }
+  })();
+
+  const copy = (value: string, label = 'Copié') => {
+    navigator.clipboard.writeText(value);
+    toast({ title: label, description: value.length > 40 ? `${value.slice(0, 40)}…` : value });
+  };
+
+  const statusBadge = (status: string) => (
+    <Badge variant="outline" className={STATUS_STYLES[status] || 'bg-gray-500/10 text-gray-400'}>
+      {STATUS_LABELS[status] || status}
+    </Badge>
+  );
+
+  const Icon = orderTypeMeta.Icon;
+
+  const sendCancellationEmail = async () => {
+    setSendingEmail(true);
+    try {
+      const { error } = await supabase.functions.invoke('send-email-notification', {
+        body: {
+          userId: order.user_id,
+          orderId: order.id,
+          emailAddress: null,
+          emailType: 'cancellation_confirmation',
+          transactionType: order.type,
+          orderData: { ...order, cancellation_reason: cancellationReason, status: 'cancelled' },
+        },
+      });
+      if (error) throw error;
+      toast({ title: 'Email envoyé', description: 'Le client a reçu la confirmation' });
+      setShowCancellationForm(false);
+      setCancellationReason('');
+    } catch (err) {
+      console.error(err);
+      toast({ title: 'Erreur', description: "Impossible d'envoyer l'email", variant: 'destructive' });
+    } finally {
+      setSendingEmail(false);
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    const statusStyles = {
-      pending: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
-      processing: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-      completed: 'bg-green-500/10 text-green-500 border-green-500/20',
-      cancelled: 'bg-red-500/10 text-red-500 border-red-500/20',
-      failed: 'bg-red-500/10 text-red-500 border-red-500/20'
-    };
-
-    const statusLabels = {
-      pending: 'En attente',
-      processing: 'En traitement',
-      completed: 'Terminé',
-      cancelled: 'Annulé',
-      failed: 'Échoué'
-    };
-
-    return (
-      <Badge 
-        variant="outline" 
-        className={statusStyles[status as keyof typeof statusStyles] || 'bg-gray-500/10 text-gray-500'}
-      >
-        {statusLabels[status as keyof typeof statusLabels] || status}
-      </Badge>
-    );
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast({
-      title: "Copié !",
-      description: "Texte copié dans le presse-papier",
-    });
-  };
-
-  const getPaymentMethodLabel = (method?: string) => {
-    const labels: Record<string, string> = {
-      card: 'Carte bancaire',
-      mobile: 'Mobile Money',
-      wave: 'Wave',
-      orange_money: 'Orange Money',
-      bank: 'Virement bancaire',
-      bank_transfer: 'Virement bancaire',
-      interac: 'Interac'
-    };
-    return method ? labels[method] || method : 'Non spécifié';
-  };
-
-  const orderType = getOrderTypeInfo();
-  const OrderIcon = orderType.icon;
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-terex-dark border-terex-gray">
-        <DialogHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className={`w-12 h-12 ${orderType.bgColor} rounded-xl flex items-center justify-center`}>
-                <OrderIcon className={`w-6 h-6 ${orderType.color}`} />
-              </div>
-              <div>
-                <DialogTitle className="text-2xl font-bold text-white">
-                  {orderType.label}
-                </DialogTitle>
-                <p className="text-gray-400 text-sm">
-                  Référence: TEREX-{order.id.slice(-8).toUpperCase()}
-                </p>
-              </div>
-            </div>
-            {getStatusBadge(order.status)}
-          </div>
-        </DialogHeader>
-
-        <div className="space-y-6 mt-6">
-          {/* Action à effectuer - Section principale */}
-          {order.type === 'buy' && (
-            <div className="bg-gradient-to-br from-terex-accent/10 via-terex-dark to-terex-dark border-2 border-terex-accent/30 rounded-2xl p-6 shadow-xl">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-terex-accent/20 rounded-xl flex items-center justify-center">
-                  <Send className="w-6 h-6 text-terex-accent" />
+      <DialogContent className="max-w-4xl max-h-[92vh] overflow-y-auto bg-terex-darker border-terex-gray/40 p-0">
+        {/* HEADER */}
+        <div className="sticky top-0 z-10 bg-terex-darker/95 backdrop-blur border-b border-terex-gray/30 px-6 py-5">
+          <DialogHeader>
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className={`w-11 h-11 rounded-lg flex items-center justify-center ${orderTypeMeta.bg}`}>
+                  <Icon className={`w-5 h-5 ${orderTypeMeta.accent}`} />
                 </div>
-                <h3 className="text-xl font-bold text-white">Action à effectuer</h3>
-              </div>
-              
-              <div className="bg-terex-darker/50 backdrop-blur rounded-xl p-5 space-y-4">
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-terex-accent to-terex-accent/70 rounded-xl flex items-center justify-center">
-                    <span className="text-2xl">💸</span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-white font-semibold text-lg mb-2">Envoyer l'USDT au client</p>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between bg-terex-dark/50 rounded-lg p-3">
-                        <span className="text-gray-400">Montant à envoyer</span>
-                        <span className="text-2xl font-bold text-terex-accent">{order.usdt_amount} USDT</span>
-                      </div>
-                      <div className="flex items-center justify-between bg-terex-dark/50 rounded-lg p-3">
-                        <span className="text-gray-400">Réseau blockchain</span>
-                        <span className="text-white font-semibold">{order.network || 'TRC20'}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {order.wallet_address && (
-                  <div className="bg-terex-dark rounded-xl p-4 border border-terex-accent/20">
-                    <p className="text-gray-400 text-sm mb-2 flex items-center">
-                      <Wallet className="w-4 h-4 mr-2" />
-                      Adresse de destination du client
-                    </p>
-                    <div className="flex items-center space-x-2 bg-terex-darker/50 p-3 rounded-lg">
-                      <code className="text-white font-mono text-sm flex-1 break-all">{order.wallet_address}</code>
-                      <button
-                        onClick={() => copyToClipboard(order.wallet_address!)}
-                        className="flex-shrink-0 p-2 hover:bg-terex-accent/20 rounded-lg transition-colors"
-                      >
-                        <Copy className="w-5 h-5 text-terex-accent" />
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                <div className="bg-terex-accent/5 border border-terex-accent/20 rounded-lg p-4">
-                  <div className="flex items-start space-x-2">
-                    <AlertCircle className="w-5 h-5 text-terex-accent flex-shrink-0 mt-0.5" />
-                    <div className="text-sm">
-                      <p className="text-gray-300">
-                        Le client a payé <span className="text-white font-bold">{order.amount.toLocaleString()} {order.currency}</span> via <span className="text-white font-semibold">{getPaymentMethodLabel(order.payment_method)}</span>
-                      </p>
-                      <p className="text-gray-400 mt-1">
-                        Taux appliqué: <span className="text-terex-accent font-semibold">{order.exchange_rate} {order.currency}/USDT</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {order.type === 'sell' && (
-            <div className="bg-gradient-to-br from-blue-500/10 via-terex-dark to-terex-dark border-2 border-blue-500/30 rounded-2xl p-6 shadow-xl">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
-                  <Send className="w-6 h-6 text-blue-500" />
-                </div>
-                <h3 className="text-xl font-bold text-white">Action à effectuer</h3>
-              </div>
-              
-              <div className="bg-terex-darker/50 backdrop-blur rounded-xl p-5 space-y-4">
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                    <span className="text-2xl">💰</span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-white font-semibold text-lg mb-2">Envoyer les fonds au client</p>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between bg-terex-dark/50 rounded-lg p-3">
-                        <span className="text-gray-400">Montant à envoyer</span>
-                        <span className="text-2xl font-bold text-blue-400">{order.amount.toLocaleString()} {order.currency}</span>
-                      </div>
-                      <div className="flex items-center justify-between bg-terex-dark/50 rounded-lg p-3">
-                        <span className="text-gray-400">Méthode de paiement</span>
-                        <span className="text-white font-semibold">{getPaymentMethodLabel(order.payment_method)}</span>
-                      </div>
-                      {order.recipient_phone && (
-                        <div className="bg-terex-dark rounded-xl p-4 border border-blue-500/20">
-                          <p className="text-gray-400 text-sm mb-2 flex items-center">
-                            <Phone className="w-4 h-4 mr-2" />
-                            Numéro du client pour le transfert
-                          </p>
-                          <div className="flex items-center space-x-2 bg-terex-darker/50 p-3 rounded-lg">
-                            <code className="text-white font-mono text-lg flex-1">{order.recipient_phone}</code>
-                            <button
-                              onClick={() => copyToClipboard(order.recipient_phone!)}
-                              className="flex-shrink-0 p-2 hover:bg-blue-500/20 rounded-lg transition-colors"
-                            >
-                              <Copy className="w-5 h-5 text-blue-400" />
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-4">
-                  <div className="flex items-start space-x-2">
-                    <AlertCircle className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
-                    <div className="text-sm">
-                      <p className="text-gray-300">
-                        Le client nous envoie <span className="text-white font-bold">{order.usdt_amount} USDT</span> sur notre adresse
-                      </p>
-                      <p className="text-gray-400 mt-1">
-                        Taux appliqué: <span className="text-blue-400 font-semibold">{order.exchange_rate} {order.currency}/USDT</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Informations du client */}
-          <div className="bg-terex-darker rounded-xl p-6 border border-terex-gray/50">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-              <User className="w-5 h-5 mr-2 text-terex-accent" />
-              Informations du client
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-terex-dark rounded-lg p-4">
-                <div className="flex items-center space-x-2 mb-2">
-                  <User className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-400 text-sm">Nom complet</span>
-                </div>
-                <p className="text-white font-semibold text-lg">{userName || 'Non renseigné'}</p>
-              </div>
-
-              <div className="bg-terex-dark rounded-lg p-4">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Mail className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-400 text-sm">Email</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-white font-medium">{userEmail || 'Non renseigné'}</p>
-                  {userEmail && (
-                    <button
-                      onClick={() => copyToClipboard(userEmail)}
-                      className="p-1 hover:bg-terex-gray/30 rounded transition-colors"
-                    >
-                      <Copy className="w-4 h-4 text-gray-400" />
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="bg-terex-dark rounded-lg p-4">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Phone className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-400 text-sm">Téléphone</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-white font-medium">{userPhone || 'Non renseigné'}</p>
-                  {userPhone && (
-                    <button
-                      onClick={() => copyToClipboard(userPhone)}
-                      className="p-1 hover:bg-terex-gray/30 rounded transition-colors"
-                    >
-                      <Copy className="w-4 h-4 text-gray-400" />
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="bg-terex-dark rounded-lg p-4">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Hash className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-400 text-sm">ID Client</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-white font-mono text-xs">{order.user_id.slice(0, 16)}...</p>
+                <div>
+                  <DialogTitle className="text-lg font-semibold text-white tracking-tight">
+                    {orderTypeMeta.label}
+                  </DialogTitle>
                   <button
-                    onClick={() => copyToClipboard(order.user_id)}
-                    className="p-1 hover:bg-terex-gray/30 rounded transition-colors"
+                    onClick={() => copy(`TEREX-${order.id.slice(-8).toUpperCase()}`, 'Référence copiée')}
+                    className="flex items-center gap-1.5 mt-0.5 text-xs text-gray-400 hover:text-terex-accent transition"
                   >
-                    <Copy className="w-4 h-4 text-gray-400" />
+                    <Hash className="w-3 h-3" />
+                    TEREX-{order.id.slice(-8).toUpperCase()}
+                    <Copy className="w-3 h-3" />
                   </button>
                 </div>
               </div>
+              {statusBadge(order.status)}
             </div>
-          </div>
+          </DialogHeader>
+        </div>
 
-          {/* Détails de la transaction */}
-          <div className="bg-terex-darker rounded-xl p-6 border border-terex-gray/50">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-              <Hash className="w-5 h-5 mr-2 text-terex-accent" />
-              Détails de la transaction
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <div className="bg-terex-dark rounded-lg p-4">
-                <p className="text-gray-400 text-sm mb-1">Montant {order.currency}</p>
-                <p className="text-white font-bold text-xl">{order.amount.toLocaleString()}</p>
-              </div>
-              <div className="bg-terex-dark rounded-lg p-4">
-                <p className="text-gray-400 text-sm mb-1">Montant USDT</p>
-                <p className="text-terex-accent font-bold text-xl">{order.usdt_amount}</p>
-              </div>
-              <div className="bg-terex-dark rounded-lg p-4">
-                <p className="text-gray-400 text-sm mb-1">Taux de change</p>
-                <p className="text-white font-semibold">{order.exchange_rate}</p>
-              </div>
+        <div className="px-6 py-5 space-y-5">
+          {/* CLIENT — toujours en premier, toujours visible */}
+          <Card title="Client" icon={<User className="w-4 h-4" />}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Field icon={<User className="w-3.5 h-3.5" />} label="Nom complet" value={userName || '—'} />
+              <Field
+                icon={<Mail className="w-3.5 h-3.5" />}
+                label="Email"
+                value={userEmail || '—'}
+                onCopy={userEmail ? () => copy(userEmail, 'Email copié') : undefined}
+              />
+              <Field
+                icon={<Phone className="w-3.5 h-3.5" />}
+                label="Téléphone"
+                value={userPhone || '—'}
+                onCopy={userPhone ? () => copy(userPhone, 'Téléphone copié') : undefined}
+              />
+              <Field
+                icon={<Hash className="w-3.5 h-3.5" />}
+                label="ID utilisateur"
+                value={`${order.user_id.slice(0, 8)}…${order.user_id.slice(-4)}`}
+                mono
+                onCopy={() => copy(order.user_id, 'ID copié')}
+              />
             </div>
-          </div>
+          </Card>
 
-          {/* Transfert international details */}
-          {order.type === 'transfer' && (
-            <div className="bg-terex-darker rounded-xl p-6 border border-terex-gray/50">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <Send className="w-5 h-5 mr-2 text-purple-500" />
-                Détails du transfert international
-              </h3>
-              <div className="space-y-3">
-                {order.recipient_name && (
-                  <div className="flex items-center justify-between bg-terex-dark rounded-lg p-3">
-                    <span className="text-gray-400">Bénéficiaire</span>
-                    <span className="text-white font-medium">{order.recipient_name}</span>
-                  </div>
-                )}
-                {order.recipient_country && (
-                  <div className="flex items-center justify-between bg-terex-dark rounded-lg p-3">
-                    <span className="text-gray-400">Pays</span>
-                    <span className="text-white font-medium">{order.recipient_country}</span>
-                  </div>
-                )}
-                {order.recipient_phone && (
-                  <div className="flex items-center justify-between bg-terex-dark rounded-lg p-3">
-                    <span className="text-gray-400">Téléphone</span>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-white font-medium">{order.recipient_phone}</span>
-                      <button
-                        onClick={() => copyToClipboard(order.recipient_phone!)}
-                        className="text-gray-400 hover:text-terex-accent"
-                      >
-                        <Copy className="w-3 h-3" />
-                      </button>
-                    </div>
-                  </div>
-                )}
-                {order.fees && (
-                  <div className="flex items-center justify-between bg-terex-dark rounded-lg p-3">
-                    <span className="text-gray-400">Frais</span>
-                    <span className="text-white font-medium">{order.fees} {order.currency}</span>
-                  </div>
-                )}
+          {/* ACTION REQUISE */}
+          {order.type === 'buy' && order.status !== 'completed' && order.status !== 'cancelled' && (
+            <ActionCard
+              title="Action à effectuer"
+              subtitle="Envoyer l'USDT au wallet du client"
+              accent="terex"
+            >
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                <Stat label="Montant USDT" value={`${order.usdt_amount} USDT`} accent />
+                <Stat label="Réseau" value={order.network || 'TRC20'} />
               </div>
-            </div>
-          )}
-
-          {/* Dates */}
-          <div className="bg-terex-darker rounded-xl p-6 border border-terex-gray/50">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-              <Calendar className="w-5 h-5 mr-2 text-terex-accent" />
-              Historique
-            </h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between bg-terex-dark rounded-lg p-3">
-                <span className="text-gray-400">Date de création</span>
-                <span className="text-white font-medium">
-                  {format(new Date(order.created_at), 'dd MMM yyyy à HH:mm', { locale: fr })}
-                </span>
-              </div>
-              {order.processed_at && (
-                <div className="flex items-center justify-between bg-terex-dark rounded-lg p-3">
-                  <span className="text-gray-400">Date de traitement</span>
-                  <span className="text-white font-medium">
-                    {format(new Date(order.processed_at), 'dd MMM yyyy à HH:mm', { locale: fr })}
-                  </span>
+              {order.wallet_address && (
+                <div className="bg-terex-darker/60 border border-terex-accent/20 rounded-lg p-3">
+                  <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-1.5">
+                    <Wallet className="w-3 h-3" /> Adresse de réception
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 text-xs font-mono text-white break-all">
+                      {order.wallet_address}
+                    </code>
+                    <button
+                      onClick={() => copy(order.wallet_address!, 'Adresse copiée')}
+                      className="flex-shrink-0 p-1.5 hover:bg-terex-accent/20 rounded transition"
+                    >
+                      <Copy className="w-3.5 h-3.5 text-terex-accent" />
+                    </button>
+                  </div>
                 </div>
               )}
-            </div>
-          </div>
-
-          {/* Notes */}
-          {order.notes && (
-            <div className="bg-terex-darker rounded-xl p-6 border border-terex-gray/50">
-              <h3 className="text-lg font-semibold text-white mb-3">Notes</h3>
-              <p className="text-gray-300 whitespace-pre-wrap">{order.notes}</p>
-            </div>
+              <div className="mt-3 flex items-start gap-2 text-xs text-gray-400">
+                <AlertCircle className="w-3.5 h-3.5 text-terex-accent mt-0.5 flex-shrink-0" />
+                <p>
+                  Le client a payé <span className="text-white font-medium">{order.amount.toLocaleString()} {order.currency}</span> via{' '}
+                  <span className="text-white font-medium">{PAYMENT_LABELS[order.payment_method || ''] || order.payment_method}</span> au taux de{' '}
+                  <span className="text-terex-accent font-medium">{order.exchange_rate} {order.currency}/USDT</span>.
+                </p>
+              </div>
+            </ActionCard>
           )}
 
-          {/* Actions */}
-          <div className="space-y-4 pt-4 border-t border-terex-gray/50">
-            {/* Cancellation email form */}
-            {(order.status === 'cancelled' || showCancellationForm) && (
-              <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-4 space-y-3">
-                <h4 className="text-white font-semibold flex items-center gap-2">
-                  <MailCheck className="w-4 h-4 text-red-400" />
-                  Envoyer un email d'annulation au client
-                </h4>
-                <Textarea
-                  placeholder="Motif d'annulation (optionnel)..."
-                  value={cancellationReason}
-                  onChange={(e) => setCancellationReason(e.target.value)}
-                  className="bg-terex-dark border-terex-gray text-white placeholder:text-gray-500 min-h-[80px]"
+          {order.type === 'sell' && order.status !== 'completed' && order.status !== 'cancelled' && (
+            <ActionCard
+              title="Action à effectuer"
+              subtitle="Envoyer les fonds au client"
+              accent="orange"
+            >
+              <div className="grid grid-cols-2 gap-3">
+                <Stat label="Montant à envoyer" value={`${order.amount.toLocaleString()} ${order.currency}`} accent />
+                <Stat
+                  label="Méthode"
+                  value={PAYMENT_LABELS[order.payment_method || ''] || order.payment_method || '—'}
                 />
-                <Button
-                  onClick={async () => {
-                    setSendingEmail(true);
-                    try {
-                      const { error } = await supabase.functions.invoke('send-email-notification', {
-                        body: {
-                          userId: order.user_id,
-                          orderId: order.id,
-                          emailAddress: null,
-                          emailType: 'cancellation_confirmation',
-                          transactionType: order.type,
-                          orderData: {
-                            ...order,
-                            cancellation_reason: cancellationReason,
-                            status: 'cancelled'
-                          }
-                        }
-                      });
-                      if (error) throw error;
-                      toast({
-                        title: "Email envoyé",
-                        description: "Le client a reçu la confirmation d'annulation",
-                      });
-                      setShowCancellationForm(false);
-                      setCancellationReason('');
-                    } catch (err) {
-                      console.error('Erreur envoi email annulation:', err);
-                      toast({
-                        title: "Erreur",
-                        description: "Impossible d'envoyer l'email",
-                        variant: "destructive"
-                      });
-                    } finally {
-                      setSendingEmail(false);
-                    }
-                  }}
-                  disabled={sendingEmail}
-                  className="w-full bg-red-600 hover:bg-red-700"
-                >
-                  <Mail className="w-4 h-4 mr-2" />
-                  {sendingEmail ? 'Envoi en cours...' : 'Envoyer l\'email d\'annulation'}
-                </Button>
               </div>
-            )}
+              <div className="mt-3 flex items-start gap-2 text-xs text-gray-400">
+                <AlertCircle className="w-3.5 h-3.5 text-orange-400 mt-0.5 flex-shrink-0" />
+                <p>
+                  Le client envoie <span className="text-white font-medium">{order.usdt_amount} USDT</span> au taux de{' '}
+                  <span className="text-orange-400 font-medium">{order.exchange_rate} {order.currency}/USDT</span>.
+                </p>
+              </div>
+            </ActionCard>
+          )}
 
-            <div className="flex flex-wrap gap-3">
+          {/* TRANSACTION */}
+          <Card title="Transaction" icon={<ArrowRight className="w-4 h-4" />}>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <Stat label={`Montant ${order.currency}`} value={order.amount.toLocaleString()} />
+              <Stat label="USDT" value={String(order.usdt_amount || 0)} accent />
+              <Stat label="Taux" value={String(order.exchange_rate)} />
+              {order.payment_method && (
+                <Stat
+                  label="Méthode de paiement"
+                  value={PAYMENT_LABELS[order.payment_method] || order.payment_method}
+                />
+              )}
+              {order.network && <Stat label="Réseau blockchain" value={order.network} />}
+              {order.payment_reference && (
+                <Stat label="Référence paiement" value={order.payment_reference} mono />
+              )}
+            </div>
+          </Card>
+
+          {/* DESTINATION (achat) */}
+          {order.type === 'buy' && order.wallet_address && (
+            <Card title="Destination crypto" icon={<Wallet className="w-4 h-4" />}>
+              <div className="bg-terex-dark/60 border border-terex-gray/30 rounded-lg p-3">
+                <div className="text-xs text-gray-400 mb-1.5">Adresse wallet ({order.network || 'TRC20'})</div>
+                <div className="flex items-center gap-2">
+                  <code className="flex-1 text-xs font-mono text-white break-all">
+                    {order.wallet_address}
+                  </code>
+                  <button
+                    onClick={() => copy(order.wallet_address!, 'Adresse copiée')}
+                    className="flex-shrink-0 p-1.5 hover:bg-terex-accent/20 rounded transition"
+                  >
+                    <Copy className="w-3.5 h-3.5 text-terex-accent" />
+                  </button>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* TRANSFERT INTERNATIONAL */}
+          {order.type === 'transfer' && (
+            <Card title="Bénéficiaire du transfert" icon={<Globe className="w-4 h-4" />}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {order.recipient_name && <Field label="Nom" value={order.recipient_name} />}
+                {order.recipient_country && <Field label="Pays" value={order.recipient_country} />}
+                {order.recipient_phone && (
+                  <Field
+                    label="Téléphone"
+                    value={order.recipient_phone}
+                    onCopy={() => copy(order.recipient_phone!, 'Téléphone copié')}
+                  />
+                )}
+                {order.recipient_email && <Field label="Email" value={order.recipient_email} />}
+                {order.fees !== undefined && order.fees > 0 && (
+                  <Field label="Frais" value={`${order.fees} ${order.currency}`} />
+                )}
+                {order.total_amount !== undefined && (
+                  <Field
+                    label="Montant à recevoir"
+                    value={`${order.total_amount} ${order.to_currency || ''}`}
+                  />
+                )}
+              </div>
+            </Card>
+          )}
+
+          {/* NOTES PARSÉES */}
+          {parsedNotes.sections.length > 0 && (
+            <Card title="Détails de la commande" icon={<FileText className="w-4 h-4" />}>
+              <div className="space-y-4">
+                {parsedNotes.sections.map((section, i) => (
+                  <div key={i}>
+                    {i > 0 && <Separator className="bg-terex-gray/30 mb-4" />}
+                    <div className="text-xs uppercase tracking-wider text-gray-500 mb-2.5 font-medium">
+                      {section.title}
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {section.fields.map((field, j) => (
+                        <div
+                          key={j}
+                          className={`bg-terex-dark/50 border border-terex-gray/20 rounded-md px-3 py-2 ${
+                            field.highlight ? 'ring-1 ring-terex-accent/30' : ''
+                          }`}
+                        >
+                          <div className="text-[11px] text-gray-500 mb-0.5">{field.label}</div>
+                          <div className="flex items-center justify-between gap-2">
+                            <div
+                              className={`text-sm font-medium break-all ${
+                                field.highlight ? 'text-terex-accent' : 'text-white'
+                              }`}
+                            >
+                              {field.value}
+                            </div>
+                            {field.copyable && (
+                              <button
+                                onClick={() => copy(field.value, `${field.label} copié`)}
+                                className="flex-shrink-0 p-1 hover:bg-terex-gray/40 rounded transition"
+                              >
+                                <Copy className="w-3 h-3 text-gray-400" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
+
+          {/* HISTORIQUE */}
+          <Card title="Historique" icon={<Calendar className="w-4 h-4" />}>
+            <div className="space-y-2">
+              <TimelineRow
+                label="Création"
+                date={order.created_at}
+                icon={<Clock className="w-3.5 h-3.5 text-gray-400" />}
+              />
+              {order.processed_at && (
+                <TimelineRow
+                  label="Traitement"
+                  date={order.processed_at}
+                  icon={<CheckCircle className="w-3.5 h-3.5 text-emerald-400" />}
+                />
+              )}
+            </div>
+          </Card>
+
+          {/* CANCELLATION FORM */}
+          {(order.status === 'cancelled' || showCancellationForm) && (
+            <Card title="Email d'annulation" icon={<MailCheck className="w-4 h-4 text-red-400" />}>
+              <Textarea
+                placeholder="Motif d'annulation (optionnel)…"
+                value={cancellationReason}
+                onChange={(e) => setCancellationReason(e.target.value)}
+                className="bg-terex-dark border-terex-gray/40 text-white placeholder:text-gray-500 min-h-[80px]"
+              />
+              <Button
+                onClick={sendCancellationEmail}
+                disabled={sendingEmail}
+                className="w-full mt-3 bg-red-600 hover:bg-red-700"
+              >
+                <Mail className="w-4 h-4 mr-2" />
+                {sendingEmail ? 'Envoi…' : "Envoyer l'email d'annulation"}
+              </Button>
+            </Card>
+          )}
+        </div>
+
+        {/* FOOTER ACTIONS */}
+        <div className="sticky bottom-0 bg-terex-darker/95 backdrop-blur border-t border-terex-gray/30 px-6 py-4">
+          <div className="flex flex-wrap gap-2">
             {order.status === 'pending' && (
               <>
                 <Button
                   onClick={() => onStatusUpdate(order.id, 'processing')}
-                  className="flex-1 bg-terex-accent hover:bg-terex-accent/80"
+                  className="flex-1 min-w-[140px] bg-terex-accent hover:bg-terex-accent/90"
                 >
-                  <Clock className="w-4 h-4 mr-2" />
-                  Mettre en traitement
+                  <Clock className="w-4 h-4 mr-2" /> Mettre en traitement
                 </Button>
                 <Button
                   onClick={() => {
@@ -557,22 +449,19 @@ export function OrderDetailsDialog({ order, open, onOpenChange, onStatusUpdate }
                     setShowCancellationForm(true);
                   }}
                   variant="destructive"
-                  className="flex-1"
+                  className="flex-1 min-w-[140px]"
                 >
-                  <XCircle className="w-4 h-4 mr-2" />
-                  Annuler
+                  <XCircle className="w-4 h-4 mr-2" /> Annuler
                 </Button>
               </>
             )}
-            
             {order.status === 'processing' && (
               <>
                 <Button
                   onClick={() => onStatusUpdate(order.id, 'completed', 'paid')}
-                  className="flex-1 bg-green-600 hover:bg-green-700"
+                  className="flex-1 min-w-[140px] bg-emerald-600 hover:bg-emerald-700"
                 >
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  Marquer comme terminé
+                  <CheckCircle className="w-4 h-4 mr-2" /> Marquer comme terminé
                 </Button>
                 <Button
                   onClick={() => {
@@ -580,17 +469,144 @@ export function OrderDetailsDialog({ order, open, onOpenChange, onStatusUpdate }
                     setShowCancellationForm(true);
                   }}
                   variant="destructive"
-                  className="flex-1"
+                  className="flex-1 min-w-[140px]"
                 >
-                  <XCircle className="w-4 h-4 mr-2" />
-                  Annuler
+                  <XCircle className="w-4 h-4 mr-2" /> Annuler
                 </Button>
               </>
             )}
-            </div>
+            {(order.status === 'completed' || order.status === 'cancelled') && (
+              <div className="flex-1 text-center text-sm text-gray-400 py-2">
+                Cette commande est {order.status === 'completed' ? 'terminée' : 'annulée'}.
+              </div>
+            )}
           </div>
         </div>
       </DialogContent>
     </Dialog>
+  );
+}
+
+/* — Sub-components — */
+
+function Card({
+  title,
+  icon,
+  children,
+}: {
+  title: string;
+  icon?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="bg-terex-dark/40 border border-terex-gray/30 rounded-xl p-4">
+      <h3 className="flex items-center gap-2 text-sm font-semibold text-white mb-3">
+        {icon && <span className="text-terex-accent">{icon}</span>}
+        {title}
+      </h3>
+      {children}
+    </section>
+  );
+}
+
+function ActionCard({
+  title,
+  subtitle,
+  accent,
+  children,
+}: {
+  title: string;
+  subtitle: string;
+  accent: 'terex' | 'orange';
+  children: React.ReactNode;
+}) {
+  const styles =
+    accent === 'terex'
+      ? 'border-terex-accent/40 bg-gradient-to-br from-terex-accent/10 to-transparent'
+      : 'border-orange-500/40 bg-gradient-to-br from-orange-500/10 to-transparent';
+  const iconColor = accent === 'terex' ? 'text-terex-accent' : 'text-orange-400';
+  return (
+    <section className={`border rounded-xl p-5 ${styles}`}>
+      <div className="flex items-center gap-2 mb-3">
+        <Send className={`w-4 h-4 ${iconColor}`} />
+        <div>
+          <div className="text-xs uppercase tracking-wider text-gray-400 font-medium">{title}</div>
+          <div className="text-sm font-semibold text-white">{subtitle}</div>
+        </div>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function Field({
+  label,
+  value,
+  icon,
+  mono,
+  onCopy,
+}: {
+  label: string;
+  value: string;
+  icon?: React.ReactNode;
+  mono?: boolean;
+  onCopy?: () => void;
+}) {
+  return (
+    <div className="bg-terex-dark/50 border border-terex-gray/20 rounded-lg px-3 py-2.5">
+      <div className="flex items-center gap-1.5 text-[11px] text-gray-500 mb-1">
+        {icon} {label}
+      </div>
+      <div className="flex items-center justify-between gap-2">
+        <div className={`text-sm text-white break-all ${mono ? 'font-mono' : 'font-medium'}`}>{value}</div>
+        {onCopy && value !== '—' && (
+          <button
+            onClick={onCopy}
+            className="flex-shrink-0 p-1 hover:bg-terex-gray/40 rounded transition"
+          >
+            <Copy className="w-3 h-3 text-gray-400" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Stat({
+  label,
+  value,
+  accent,
+  mono,
+}: {
+  label: string;
+  value: string;
+  accent?: boolean;
+  mono?: boolean;
+}) {
+  return (
+    <div className="bg-terex-dark/50 border border-terex-gray/20 rounded-lg px-3 py-2.5">
+      <div className="text-[11px] text-gray-500 mb-1">{label}</div>
+      <div
+        className={`text-base font-semibold break-all ${
+          accent ? 'text-terex-accent' : 'text-white'
+        } ${mono ? 'font-mono text-sm' : ''}`}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function TimelineRow({ label, date, icon }: { label: string; date: string; icon: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-between bg-terex-dark/50 border border-terex-gray/20 rounded-lg px-3 py-2.5">
+      <div className="flex items-center gap-2 text-sm text-gray-400">
+        {icon}
+        {label}
+      </div>
+      <div className="text-sm text-white font-medium">
+        {format(new Date(date), 'dd MMM yyyy à HH:mm', { locale: fr })}
+      </div>
+    </div>
   );
 }
