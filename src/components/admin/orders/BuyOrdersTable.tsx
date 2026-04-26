@@ -195,6 +195,7 @@ export function BuyOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: BuyOrd
               </div>
             </div>
           </div>
+          <ClientStrip client={clientInfos[order.user_id]} />
         </div>
         ))}
       </div>
