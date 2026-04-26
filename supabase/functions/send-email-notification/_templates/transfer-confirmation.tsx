@@ -14,331 +14,281 @@ interface TransferConfirmationProps {
   transferData: any;
 }
 
+const TEREX_GREEN = '#3B968F';
+const TEREX_DARK = '#0F1411';
+const TEREX_MUTED = '#64748b';
+const TEREX_BORDER = '#eef0ef';
+const TEREX_SOFT_BG = '#fafbfa';
+
+const COUNTRIES: Record<string, string> = {
+  SN: 'Sénégal', CI: "Côte d'Ivoire", ML: 'Mali', BF: 'Burkina Faso', NG: 'Nigeria', BJ: 'Bénin',
+};
+
 export const TransferConfirmationEmail = ({ transferData }: TransferConfirmationProps) => {
-  const title = 'Confirmation de transfert international';
-  const preview = `Votre transfert #TEREX-${transferData.id?.slice(-8)} vers ${transferData.recipient_country} a été confirmé`;
-  
-  const getCountryName = (code: string) => {
-    const countries = {
-      'SN': 'Sénégal',
-      'CI': 'Côte d\'Ivoire',
-      'ML': 'Mali',
-      'BF': 'Burkina Faso',
-      'NG': 'Nigeria',
-      'BJ': 'Bénin'
-    };
-    return countries[code as keyof typeof countries] || code;
-  };
+  const country = COUNTRIES[transferData.recipient_country] || transferData.recipient_country;
+  const providerName =
+    transferData.provider === 'wave' ? 'Wave' :
+    transferData.provider === 'orange' || transferData.provider === 'orange_money' ? 'Orange Money' :
+    'Mobile Money';
 
-  const getReceiveMethodName = () => {
-    if (transferData.provider === 'wave') return 'Wave';
-    if (transferData.provider === 'orange') return 'Orange Money';
-    if (transferData.receive_method === 'mobile') return transferData.provider === 'wave' ? 'Wave' : 'Orange Money';
-    return 'Mobile Money';
-  };
-  
+  const reference = `#TEREX-${transferData.id?.slice(-8) || 'N/A'}`;
+  const title = 'Transfert international confirmé';
+  const subtitle = `Vers ${transferData.recipient_name} — ${country}.`;
+  const preview = `Transfert ${reference} vers ${country} confirmé`;
+
   return (
-    <BaseEmail preview={preview} title={title}>
-      {/* Message d'introduction simple */}
-      <Section style={introSection}>
-        <Text style={introText}>
-          Bonjour,
-        </Text>
-        <Text style={mainMessage}>
-          Votre transfert de {transferData.amount} {transferData.from_currency} vers {getCountryName(transferData.recipient_country)} a été confirmé et est en cours de traitement.
-        </Text>
+    <BaseEmail preview={preview} title={title} subtitle={subtitle}>
+      {/* Récapitulatif visuel */}
+      <Section style={summaryCard}>
+        <Row>
+          <Column>
+            <Text style={summaryLabel}>Vous envoyez</Text>
+            <Text style={summaryAmount}>{transferData.amount} {transferData.from_currency}</Text>
+          </Column>
+          <Column style={arrowCell}>
+            <Text style={arrowText}>→</Text>
+          </Column>
+          <Column>
+            <Text style={summaryLabel}>Destinataire reçoit</Text>
+            <Text style={summaryAmountAccent}>{transferData.total_amount} {transferData.to_currency}</Text>
+          </Column>
+        </Row>
       </Section>
+
+      {/* Détails du transfert */}
+      <Text style={sectionTitle}>Détails du transfert</Text>
+      <Container style={detailsContainer}>
+        <DetailRow label="Référence" value={reference} mono />
+        <DetailRow label="Date" value={new Date(transferData.created_at || Date.now()).toLocaleString('fr-FR')} />
+        <DetailRow label="Taux" value={`1 ${transferData.from_currency} = ${transferData.exchange_rate} ${transferData.to_currency}`} />
+        <DetailRow label="Frais" value={`${transferData.fees} ${transferData.from_currency}`} />
+      </Container>
+
+      {/* Destinataire */}
+      <Text style={sectionTitle}>Destinataire</Text>
+      <Container style={detailsContainer}>
+        <DetailRow label="Nom" value={transferData.recipient_name || 'N/A'} />
+        <DetailRow label="Pays" value={country} />
+        <DetailRow label="Service" value={providerName} accent />
+        {transferData.recipient_phone && (
+          <DetailRow label="Téléphone" value={transferData.recipient_phone} mono />
+        )}
+      </Container>
+
+      {/* Étapes */}
+      <Text style={sectionTitle}>Suivi</Text>
+      <Container style={stepsContainer}>
+        <Step done label="Demande confirmée" />
+        <Step label="Instructions de paiement" />
+        <Step label="Vérification du paiement" />
+        <Step label="Traitement du transfert" />
+        <Step label="Réception confirmée chez le destinataire" />
+      </Container>
 
       <Hr style={divider} />
 
-      {/* Informations du transfert */}
-      <Section style={transferDetails}>
-        <Text style={sectionTitle}>DÉTAILS DE VOTRE TRANSFERT</Text>
-        
-        <Container style={detailsContainer}>
-          <Row>
-            <Column style={labelColumn}>
-              <Text style={labelText}>Numéro de référence :</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={valueText}>#TEREX-{transferData.id?.slice(-8)}</Text>
-            </Column>
-          </Row>
-          
-          <Row>
-            <Column style={labelColumn}>
-              <Text style={labelText}>Date et heure :</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={valueText}>{new Date(transferData.created_at || Date.now()).toLocaleString('fr-FR')}</Text>
-            </Column>
-          </Row>
-
-          <Row>
-            <Column style={labelColumn}>
-              <Text style={labelText}>Vous envoyez :</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={amountText}>{transferData.amount} {transferData.from_currency}</Text>
-            </Column>
-          </Row>
-          
-          <Row>
-            <Column style={labelColumn}>
-              <Text style={labelText}>Destinataire reçoit :</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={amountText}>{transferData.total_amount} {transferData.to_currency}</Text>
-            </Column>
-          </Row>
-
-          <Row>
-            <Column style={labelColumn}>
-              <Text style={labelText}>Taux de change :</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={valueText}>1 {transferData.from_currency} = {transferData.exchange_rate} {transferData.to_currency}</Text>
-            </Column>
-          </Row>
-          
-          <Row>
-            <Column style={labelColumn}>
-              <Text style={labelText}>Frais de transfert :</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={feesText}>{transferData.fees} {transferData.from_currency}</Text>
-            </Column>
-          </Row>
-        </Container>
-      </Section>
-
-      <Hr style={divider} />
-
-      {/* Informations du destinataire */}
-      <Section style={recipientSection}>
-        <Text style={sectionTitle}>INFORMATIONS DU DESTINATAIRE</Text>
-        
-        <Container style={detailsContainer}>
-          <Row>
-            <Column style={labelColumn}>
-              <Text style={labelText}>Nom complet :</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={valueText}>{transferData.recipient_name}</Text>
-            </Column>
-          </Row>
-          
-          <Row>
-            <Column style={labelColumn}>
-              <Text style={labelText}>Pays de destination :</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={valueText}>{getCountryName(transferData.recipient_country)}</Text>
-            </Column>
-          </Row>
-
-          <Row>
-            <Column style={labelColumn}>
-              <Text style={labelText}>Service de réception :</Text>
-            </Column>
-            <Column style={valueColumn}>
-              <Text style={serviceText}>{getReceiveMethodName()}</Text>
-            </Column>
-          </Row>
-          
-          {transferData.recipient_phone && (
-            <Row>
-              <Column style={labelColumn}>
-                <Text style={labelText}>Numéro de téléphone :</Text>
-              </Column>
-              <Column style={valueColumn}>
-                <Text style={phoneText}>{transferData.recipient_phone}</Text>
-              </Column>
-            </Row>
-          )}
-        </Container>
-      </Section>
-
-      <Hr style={divider} />
-
-      {/* Processus de transfert */}
-      <Section style={processSection}>
-        <Text style={sectionTitle}>PROCESSUS DE TRANSFERT</Text>
-        
-        <Container style={stepsContainer}>
-          <Text style={stepCompleted}>1. ✅ Demande confirmée</Text>
-          <Text style={stepPending}>2. ⏳ Instructions de paiement</Text>
-          <Text style={stepPending}>3. ⏳ Vérification du paiement</Text>
-          <Text style={stepPending}>4. ⏳ Traitement du transfert</Text>
-          <Text style={stepPending}>5. ⏳ Réception confirmée chez le destinataire</Text>
-        </Container>
-      </Section>
-
-      <Hr style={divider} />
-
-      <Text style={thankYouText}>
-        Merci de faire confiance à Terex pour vos transferts internationaux !
-      </Text>
-      <Text style={teamText}>
-        L'équipe Terex - Vos transferts en toute sécurité
+      <Text style={signature}>
+        Vos transferts en toute sécurité.<br />
+        <span style={signatureBrand}>L'équipe Terex</span>
       </Text>
     </BaseEmail>
   );
 };
 
-// Styles simples et propres
-const introSection = {
-  margin: '0 0 30px 0',
+const DetailRow = ({ label, value, mono, accent }: { label: string; value: string; mono?: boolean; accent?: boolean }) => {
+  let style = valueText;
+  if (accent) style = valueAccent;
+  else if (mono) style = monoText;
+  return (
+    <Row style={detailRowStyle}>
+      <Column style={labelColumn}>
+        <Text style={labelText}>{label}</Text>
+      </Column>
+      <Column style={valueColumn}>
+        <Text style={style}>{value}</Text>
+      </Column>
+    </Row>
+  );
 };
 
-const introText = {
-  color: '#1e293b',
-  fontSize: '16px',
-  margin: '0 0 15px 0',
-  lineHeight: '1.4',
+const Step = ({ label, done }: { label: string; done?: boolean }) => (
+  <Row style={stepRow}>
+    <Column style={stepDotColumn}>
+      <div style={done ? stepDotDone : stepDot} />
+    </Column>
+    <Column>
+      <Text style={done ? stepLabelDone : stepLabel}>{label}</Text>
+    </Column>
+  </Row>
+);
+
+/* — Styles — */
+
+const summaryCard = {
+  backgroundColor: TEREX_DARK,
+  borderRadius: '10px',
+  padding: '20px 24px',
+  margin: '0 0 28px 0',
 };
 
-const mainMessage = {
-  color: '#1e293b',
-  fontSize: '16px',
-  fontWeight: '500',
-  margin: '0 0 15px 0',
-  lineHeight: '1.4',
+const arrowCell = {
+  width: '40px',
+  textAlign: 'center' as const,
+  verticalAlign: 'middle' as const,
 };
 
-const divider = {
-  borderColor: '#e2e8f0',
-  margin: '30px 0',
-  borderWidth: '1px',
+const arrowText = {
+  color: TEREX_GREEN,
+  fontSize: '20px',
+  fontWeight: '700' as const,
+  margin: '0',
 };
 
-const transferDetails = {
-  margin: '0 0 30px 0',
+const summaryLabel = {
+  color: '#94a3b8',
+  fontSize: '11px',
+  fontWeight: '600' as const,
+  margin: '0 0 6px 0',
+  textTransform: 'uppercase' as const,
+  letterSpacing: '0.5px',
+};
+
+const summaryAmount = {
+  color: '#ffffff',
+  fontSize: '17px',
+  fontWeight: '700' as const,
+  margin: '0',
+  lineHeight: '1.2',
+};
+
+const summaryAmountAccent = {
+  color: TEREX_GREEN,
+  fontSize: '17px',
+  fontWeight: '700' as const,
+  margin: '0',
+  lineHeight: '1.2',
 };
 
 const sectionTitle = {
-  color: '#1e293b',
-  fontSize: '18px',
-  fontWeight: '700',
-  margin: '0 0 20px 0',
+  color: TEREX_DARK,
+  fontSize: '13px',
+  fontWeight: '700' as const,
+  margin: '0 0 12px 0',
   textTransform: 'uppercase' as const,
-  letterSpacing: '0.5px',
-  borderLeft: '4px solid #2563eb',
-  paddingLeft: '12px',
+  letterSpacing: '0.6px',
 };
 
 const detailsContainer = {
-  backgroundColor: '#ffffff',
-  border: '1px solid #e2e8f0',
-  borderRadius: '8px',
-  padding: '20px',
+  backgroundColor: TEREX_SOFT_BG,
+  border: `1px solid ${TEREX_BORDER}`,
+  borderRadius: '10px',
+  padding: '8px 18px',
+  margin: '0 0 24px 0',
+};
+
+const detailRowStyle = {
+  borderBottom: `1px solid ${TEREX_BORDER}`,
 };
 
 const labelColumn = {
   width: '40%',
-  paddingRight: '15px',
-  verticalAlign: 'top' as const,
+  paddingRight: '12px',
+  verticalAlign: 'middle' as const,
 };
 
 const valueColumn = {
   width: '60%',
-  verticalAlign: 'top' as const,
+  verticalAlign: 'middle' as const,
 };
 
 const labelText = {
-  color: '#64748b',
-  fontSize: '14px',
-  fontWeight: '500',
-  margin: '8px 0',
-  lineHeight: '1.5',
+  color: TEREX_MUTED,
+  fontSize: '13px',
+  fontWeight: '500' as const,
+  margin: '12px 0',
+  lineHeight: '1.4',
 };
 
 const valueText = {
-  color: '#1e293b',
-  fontSize: '14px',
-  fontWeight: '600',
-  margin: '8px 0',
-  lineHeight: '1.5',
+  color: TEREX_DARK,
+  fontSize: '13px',
+  fontWeight: '600' as const,
+  margin: '12px 0',
+  lineHeight: '1.4',
+  textAlign: 'right' as const,
 };
 
-const amountText = {
-  color: '#059669',
-  fontSize: '16px',
-  fontWeight: '700',
-  margin: '8px 0',
-  lineHeight: '1.5',
+const valueAccent = {
+  ...valueText,
+  color: TEREX_GREEN,
+  fontWeight: '700' as const,
 };
 
-const serviceText = {
-  color: '#2563eb',
-  fontSize: '15px',
-  fontWeight: '700',
-  margin: '8px 0',
-  lineHeight: '1.5',
-};
-
-const feesText = {
-  color: '#dc2626',
-  fontSize: '14px',
-  fontWeight: '600',
-  margin: '8px 0',
-  lineHeight: '1.5',
-};
-
-const phoneText = {
-  color: '#1e293b',
-  fontSize: '16px',
-  fontWeight: '700',
-  margin: '8px 0',
-  lineHeight: '1.5',
-  fontFamily: 'monospace',
-};
-
-const recipientSection = {
-  margin: '0 0 30px 0',
-};
-
-const processSection = {
-  margin: '0 0 30px 0',
+const monoText = {
+  ...valueText,
+  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
 };
 
 const stepsContainer = {
-  backgroundColor: '#f8fafc',
-  border: '1px solid #e2e8f0',
-  borderRadius: '8px',
-  padding: '20px',
+  padding: '0',
+  margin: '0 0 16px 0',
 };
 
-const stepCompleted = {
-  color: '#059669',
-  fontSize: '14px',
-  fontWeight: '600',
+const stepRow = {
+  marginBottom: '4px',
+};
+
+const stepDotColumn = {
+  width: '20px',
+  verticalAlign: 'middle' as const,
+};
+
+const stepDot = {
+  width: '8px',
+  height: '8px',
+  borderRadius: '50%',
+  backgroundColor: '#cbd5d4',
+  display: 'inline-block',
+};
+
+const stepDotDone = {
+  width: '8px',
+  height: '8px',
+  borderRadius: '50%',
+  backgroundColor: TEREX_GREEN,
+  display: 'inline-block',
+};
+
+const stepLabel = {
+  color: TEREX_MUTED,
+  fontSize: '13px',
+  fontWeight: '500' as const,
   margin: '8px 0',
-  lineHeight: '1.5',
-};
-
-const stepPending = {
-  color: '#64748b',
-  fontSize: '14px',
-  fontWeight: '500',
-  margin: '8px 0',
-  lineHeight: '1.5',
-};
-
-const thankYouText = {
-  color: '#2563eb',
-  fontSize: '20px',
-  fontWeight: '700',
-  margin: '30px 0 10px 0',
-  textAlign: 'center' as const,
-  lineHeight: '1.3',
-};
-
-const teamText = {
-  color: '#64748b',
-  fontSize: '14px',
-  margin: '0',
-  fontStyle: 'italic',
-  textAlign: 'center' as const,
   lineHeight: '1.4',
+};
+
+const stepLabelDone = {
+  color: TEREX_DARK,
+  fontSize: '13px',
+  fontWeight: '600' as const,
+  margin: '8px 0',
+  lineHeight: '1.4',
+};
+
+const divider = {
+  borderColor: TEREX_BORDER,
+  margin: '20px 0 16px 0',
+  borderWidth: '1px',
+};
+
+const signature = {
+  color: TEREX_MUTED,
+  fontSize: '13px',
+  margin: '0',
+  lineHeight: '1.6',
+};
+
+const signatureBrand = {
+  color: TEREX_DARK,
+  fontWeight: '600' as const,
 };
