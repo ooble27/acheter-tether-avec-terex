@@ -1,6 +1,6 @@
 
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
@@ -15,6 +15,8 @@ import {
 import { UnifiedOrder } from '@/hooks/useOrders';
 import type { Database } from '@/integrations/supabase/types';
 import { OrderDetailsDialog } from './OrderDetailsDialog';
+import { useClientInfos } from '@/hooks/useClientInfos';
+import { ClientStrip } from './ClientStrip';
 
 type OrderStatus = Database['public']['Enums']['order_status'];
 
@@ -27,6 +29,8 @@ interface SellOrdersTableProps {
 export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellOrdersTableProps) {
   const [selectedOrder, setSelectedOrder] = useState<UnifiedOrder | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const userIds = useMemo(() => orders.map((o) => o.user_id), [orders]);
+  const clientInfos = useClientInfos(userIds);
 
   const getStatusBadge = (status: string) => {
     const statusStyles = {
