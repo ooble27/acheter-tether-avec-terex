@@ -21,25 +21,26 @@ interface AdminNotificationEmailProps {
   data: any;
 }
 
-// Palette dark premium (alignée sur les emails clients)
+// Palette neutre / light (compatible dark mode système iOS / Gmail)
+// Fond blanc + texte sombre : laisse le client mail gérer dark/light naturellement
 const T = {
   green: '#3B968F',
-  greenSoft: '#1F2D2C',
-  bg: '#0F1411',
-  surface: '#161D1B',
-  surfaceAlt: '#1B2422',
-  border: '#243029',
-  borderSoft: '#1F2926',
-  text: '#F1F5F4',
-  textSoft: '#B8C2BF',
-  textMuted: '#7C8783',
-  white: '#ffffff',
+  greenSoft: '#E8F3F1',
+  bg: '#F5F7F6',
+  surface: '#FFFFFF',
+  surfaceAlt: '#F8FAF9',
+  border: '#E4E9E7',
+  borderSoft: '#EEF1F0',
+  text: '#0F1411',
+  textSoft: '#3F4946',
+  textMuted: '#6B7470',
+  white: '#0F1411',         // utilisé pour titres → mappé au texte sombre
   buy: '#3B968F',
-  sell: '#E8A93C',
-  transfer: '#5BA8F2',
-  kyc: '#E8C547',
-  vip: '#C084FC',
-  status: '#7DD3FC',
+  sell: '#B8860B',
+  transfer: '#2563EB',
+  kyc: '#B8860B',
+  vip: '#7C3AED',
+  status: '#0EA5E9',
 };
 
 const LOGO_URL = 'https://terangaexchange.com/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png';
