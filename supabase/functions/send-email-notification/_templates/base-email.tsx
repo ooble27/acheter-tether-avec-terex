@@ -22,22 +22,23 @@ interface BaseEmailProps {
   children: React.ReactNode;
 }
 
-// Palette Terex — version premium dark (inspirée Desjardins / Stripe / Linear)
+// Palette Terex — version neutre / light (compatible dark mode système iOS / Gmail)
+// Fond blanc + texte sombre : le client mail respecte les préférences système naturellement
 export const TEREX = {
   green: '#3B968F',
   greenDark: '#2E7873',
-  greenSoft: '#1F2D2C',
-  bg: '#0F1411',          // fond principal (page)
-  surface: '#161D1B',     // carte / container
-  surfaceAlt: '#1B2422',  // surface secondaire / détails
-  border: '#243029',      // bordure subtile
-  borderSoft: '#1F2926',
-  text: '#F1F5F4',
-  textSoft: '#B8C2BF',
-  textMuted: '#7C8783',
-  white: '#ffffff',
-  accentYellow: '#E8C547',
-  accentRed: '#E5484D',
+  greenSoft: '#E8F3F1',     // vert très clair pour halos / accents
+  bg: '#F5F7F6',            // fond extérieur de la page (gris très léger)
+  surface: '#FFFFFF',       // carte / container principal
+  surfaceAlt: '#F8FAF9',    // surface secondaire (détails, summary)
+  border: '#E4E9E7',        // bordure subtile
+  borderSoft: '#EEF1F0',
+  text: '#0F1411',          // texte principal sombre
+  textSoft: '#3F4946',      // texte secondaire
+  textMuted: '#6B7470',     // texte muted / labels
+  white: '#0F1411',         // ⚠ "white" est utilisé pour titres → on le mappe au texte sombre
+  accentYellow: '#B8860B',
+  accentRed: '#C73841',
 };
 
 const LOGO_URL = 'https://terangaexchange.com/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png';
