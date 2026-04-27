@@ -8,20 +8,25 @@ import {
   Column,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
-import { BaseEmail, TEREX } from './base-email.tsx';
+import { BaseEmail } from './base-email.tsx';
 
 interface OrderConfirmationProps {
   orderData: any;
   transactionType: 'buy' | 'sell';
-  clientName?: string;
 }
 
-export const OrderConfirmationEmail = ({ orderData, transactionType, clientName }: OrderConfirmationProps) => {
+const TEREX_GREEN = '#3B968F';
+const TEREX_DARK = '#0F1411';
+const TEREX_MUTED = '#64748b';
+const TEREX_BORDER = '#eef0ef';
+const TEREX_SOFT_BG = '#fafbfa';
+
+export const OrderConfirmationEmail = ({ orderData, transactionType }: OrderConfirmationProps) => {
   const isBuy = transactionType === 'buy';
   const title = isBuy ? `Demande d'achat USDT confirmée` : `Demande de vente USDT confirmée`;
   const subtitle = isBuy
-    ? `Nous avons bien reçu votre commande d'achat de ${orderData.usdt_amount || 0} USDT. Notre équipe la traite actuellement.`
-    : `Nous avons bien reçu votre commande de vente de ${orderData.usdt_amount || 0} USDT. Notre équipe la traite actuellement.`;
+    ? `Votre commande d'achat de ${orderData.usdt_amount || 0} USDT est en cours de traitement.`
+    : `Votre commande de vente de ${orderData.usdt_amount || 0} USDT est en cours de traitement.`;
   const preview = `Référence #TEREX-${orderData.id?.slice(-8) || 'N/A'} — ${orderData.usdt_amount || 0} USDT`;
 
   let clientInfo: any = null;
@@ -38,18 +43,17 @@ export const OrderConfirmationEmail = ({ orderData, transactionType, clientName 
 
   const reference = `#TEREX-${orderData.id?.slice(-8) || 'N/A'}`;
   const dateStr = new Date(orderData.created_at || Date.now()).toLocaleString('fr-FR');
-  const greeting = clientName ? `Bonjour ${clientName},` : 'Bonjour,';
 
   return (
-    <BaseEmail preview={preview} title={title} subtitle={subtitle} greeting={greeting}>
-      {/* Carte récapitulative — flux Pay → Receive */}
+    <BaseEmail preview={preview} title={title} subtitle={subtitle}>
+      {/* Carte récapitulative */}
       <Section style={summaryCard}>
         <Row>
           <Column>
             <Text style={summaryLabel}>{isBuy ? 'Vous payez' : 'Vous envoyez'}</Text>
             <Text style={summaryAmount}>
               {isBuy
-                ? `${Number(orderData.amount || 0).toLocaleString('fr-FR')} ${orderData.currency || 'CFA'}`
+                ? `${orderData.amount || 0} ${orderData.currency || 'CFA'}`
                 : `${orderData.usdt_amount || 0} USDT`}
             </Text>
           </Column>
@@ -57,11 +61,11 @@ export const OrderConfirmationEmail = ({ orderData, transactionType, clientName 
             <Text style={arrowText}>→</Text>
           </Column>
           <Column>
-            <Text style={summaryLabel}>Vous recevez</Text>
+            <Text style={summaryLabel}>{isBuy ? 'Vous recevez' : 'Vous recevez'}</Text>
             <Text style={summaryAmountAccent}>
               {isBuy
                 ? `${orderData.usdt_amount || 0} USDT`
-                : `${Number(orderData.amount || 0).toLocaleString('fr-FR')} ${orderData.currency || 'CFA'}`}
+                : `${orderData.amount || 0} ${orderData.currency || 'CFA'}`}
             </Text>
           </Column>
         </Row>
@@ -75,25 +79,25 @@ export const OrderConfirmationEmail = ({ orderData, transactionType, clientName 
         <DetailRow label="Type" value={isBuy ? 'Achat USDT' : 'Vente USDT'} />
         <DetailRow label="Taux" value={`${orderData.exchange_rate || 0} ${orderData.currency || 'CFA'} / USDT`} />
         {isBuy ? (
-          <DetailRow label="Adresse de réception" value={orderData.wallet_address || 'N/A'} mono wrap last />
+          <DetailRow label="Adresse de réception" value={orderData.wallet_address || 'N/A'} mono wrap />
         ) : (
           <>
             <DetailRow label="Service de réception" value={providerName} />
-            <DetailRow label="Numéro" value={phoneNumber} mono last />
+            <DetailRow label="Numéro" value={phoneNumber} mono />
           </>
         )}
       </Container>
 
-      {/* Suivi */}
+      {/* Étapes */}
       <Text style={sectionTitle}>Suivi de votre commande</Text>
       <Container style={stepsContainer}>
         <Step done label="Demande reçue" />
-        <Step label={isBuy ? 'Instructions de paiement' : "Instructions d'envoi USDT"} />
+        <Step label={isBuy ? 'Instructions de paiement' : 'Instructions d\'envoi USDT'} />
         <Step label="Traitement & vérification" />
         <Step
           label={isBuy
             ? `Envoi de ${orderData.usdt_amount || 0} USDT vers votre wallet`
-            : `Envoi de ${Number(orderData.amount || 0).toLocaleString('fr-FR')} ${orderData.currency || 'CFA'} vers ${providerName}`}
+            : `Envoi de ${orderData.amount || 0} ${orderData.currency || 'CFA'} vers ${providerName}`}
         />
       </Container>
 
@@ -107,8 +111,8 @@ export const OrderConfirmationEmail = ({ orderData, transactionType, clientName 
   );
 };
 
-const DetailRow = ({ label, value, mono, wrap, last }: { label: string; value: string; mono?: boolean; wrap?: boolean; last?: boolean }) => (
-  <Row style={last ? detailRowLast : detailRowStyle}>
+const DetailRow = ({ label, value, mono, wrap }: { label: string; value: string; mono?: boolean; wrap?: boolean }) => (
+  <Row style={detailRowStyle}>
     <Column style={labelColumn}>
       <Text style={labelText}>{label}</Text>
     </Column>
@@ -129,14 +133,13 @@ const Step = ({ label, done }: { label: string; done?: boolean }) => (
   </Row>
 );
 
-/* — Styles dark — */
+/* — Styles — */
 
 const summaryCard = {
-  backgroundColor: TEREX.surfaceAlt,
-  borderRadius: '12px',
-  padding: '22px 26px',
-  margin: '0 0 32px 0',
-  border: `1px solid ${TEREX.border}`,
+  backgroundColor: TEREX_DARK,
+  borderRadius: '10px',
+  padding: '20px 24px',
+  margin: '0 0 28px 0',
 };
 
 const arrowCell = {
@@ -146,60 +149,56 @@ const arrowCell = {
 };
 
 const arrowText = {
-  color: TEREX.green,
-  fontSize: '22px',
+  color: TEREX_GREEN,
+  fontSize: '20px',
   fontWeight: '700' as const,
   margin: '0',
 };
 
 const summaryLabel = {
-  color: TEREX.textMuted,
+  color: '#94a3b8',
   fontSize: '11px',
   fontWeight: '600' as const,
-  margin: '0 0 8px 0',
+  margin: '0 0 6px 0',
   textTransform: 'uppercase' as const,
-  letterSpacing: '0.6px',
+  letterSpacing: '0.5px',
 };
 
 const summaryAmount = {
-  color: TEREX.white,
-  fontSize: '19px',
+  color: '#ffffff',
+  fontSize: '18px',
   fontWeight: '700' as const,
   margin: '0',
   lineHeight: '1.2',
 };
 
 const summaryAmountAccent = {
-  color: TEREX.green,
-  fontSize: '19px',
+  color: TEREX_GREEN,
+  fontSize: '18px',
   fontWeight: '700' as const,
   margin: '0',
   lineHeight: '1.2',
 };
 
 const sectionTitle = {
-  color: TEREX.textMuted,
-  fontSize: '11px',
+  color: TEREX_DARK,
+  fontSize: '13px',
   fontWeight: '700' as const,
-  margin: '0 0 14px 0',
+  margin: '0 0 12px 0',
   textTransform: 'uppercase' as const,
-  letterSpacing: '0.8px',
+  letterSpacing: '0.6px',
 };
 
 const detailsContainer = {
-  backgroundColor: TEREX.surfaceAlt,
-  border: `1px solid ${TEREX.border}`,
-  borderRadius: '12px',
-  padding: '6px 20px',
-  margin: '0 0 30px 0',
+  backgroundColor: TEREX_SOFT_BG,
+  border: `1px solid ${TEREX_BORDER}`,
+  borderRadius: '10px',
+  padding: '8px 18px',
+  margin: '0 0 28px 0',
 };
 
 const detailRowStyle = {
-  borderBottom: `1px solid ${TEREX.borderSoft}`,
-};
-
-const detailRowLast = {
-  borderBottom: 'none',
+  borderBottom: `1px solid ${TEREX_BORDER}`,
 };
 
 const labelColumn = {
@@ -214,18 +213,18 @@ const valueColumn = {
 };
 
 const labelText = {
-  color: TEREX.textMuted,
+  color: TEREX_MUTED,
   fontSize: '13px',
   fontWeight: '500' as const,
-  margin: '14px 0',
+  margin: '12px 0',
   lineHeight: '1.4',
 };
 
 const valueText = {
-  color: TEREX.text,
+  color: TEREX_DARK,
   fontSize: '13px',
   fontWeight: '600' as const,
-  margin: '14px 0',
+  margin: '12px 0',
   lineHeight: '1.4',
   textAlign: 'right' as const,
 };
@@ -236,10 +235,10 @@ const monoText = {
 };
 
 const addressText = {
-  color: TEREX.text,
+  color: TEREX_DARK,
   fontSize: '12px',
   fontWeight: '500' as const,
-  margin: '12px 0',
+  margin: '10px 0',
   lineHeight: '1.4',
   fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
   wordBreak: 'break-all' as const,
@@ -247,7 +246,7 @@ const addressText = {
 };
 
 const stepsContainer = {
-  padding: '4px 0',
+  padding: '0',
   margin: '0 0 24px 0',
 };
 
@@ -256,7 +255,7 @@ const stepRow = {
 };
 
 const stepDotColumn = {
-  width: '22px',
+  width: '20px',
   verticalAlign: 'middle' as const,
 };
 
@@ -264,7 +263,7 @@ const stepDot = {
   width: '8px',
   height: '8px',
   borderRadius: '50%',
-  backgroundColor: TEREX.border,
+  backgroundColor: '#cbd5d4',
   display: 'inline-block',
 };
 
@@ -272,13 +271,12 @@ const stepDotDone = {
   width: '8px',
   height: '8px',
   borderRadius: '50%',
-  backgroundColor: TEREX.green,
+  backgroundColor: TEREX_GREEN,
   display: 'inline-block',
-  boxShadow: `0 0 0 3px ${TEREX.greenSoft}`,
 };
 
 const stepLabel = {
-  color: TEREX.textMuted,
+  color: TEREX_MUTED,
   fontSize: '13px',
   fontWeight: '500' as const,
   margin: '8px 0',
@@ -286,7 +284,7 @@ const stepLabel = {
 };
 
 const stepLabelDone = {
-  color: TEREX.text,
+  color: TEREX_DARK,
   fontSize: '13px',
   fontWeight: '600' as const,
   margin: '8px 0',
@@ -294,19 +292,19 @@ const stepLabelDone = {
 };
 
 const divider = {
-  borderColor: TEREX.border,
-  margin: '24px 0 18px 0',
+  borderColor: TEREX_BORDER,
+  margin: '24px 0 16px 0',
   borderWidth: '1px',
 };
 
 const signature = {
-  color: TEREX.textSoft,
+  color: TEREX_MUTED,
   fontSize: '13px',
   margin: '0',
   lineHeight: '1.6',
 };
 
 const signatureBrand = {
-  color: TEREX.white,
+  color: TEREX_DARK,
   fontWeight: '600' as const,
 };

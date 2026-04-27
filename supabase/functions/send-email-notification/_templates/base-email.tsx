@@ -18,50 +18,31 @@ interface BaseEmailProps {
   preview: string;
   title: string;
   subtitle?: string;
-  greeting?: string; // ex: "Bonjour Mohamed,"
   children: React.ReactNode;
 }
 
-// Palette Terex — version neutre / light (compatible dark mode système iOS / Gmail)
-// Fond blanc + texte sombre : le client mail respecte les préférences système naturellement
-export const TEREX = {
-  green: '#3B968F',
-  greenDark: '#2E7873',
-  greenSoft: '#E8F3F1',     // vert très clair pour halos / accents
-  bg: '#F5F7F6',            // fond extérieur de la page (gris très léger)
-  surface: '#FFFFFF',       // carte / container principal
-  surfaceAlt: '#F8FAF9',    // surface secondaire (détails, summary)
-  border: '#E4E9E7',        // bordure subtile
-  borderSoft: '#EEF1F0',
-  text: '#0F1411',          // texte principal sombre
-  textSoft: '#3F4946',      // texte secondaire
-  textMuted: '#6B7470',     // texte muted / labels
-  white: '#0F1411',         // ⚠ "white" est utilisé pour titres → on le mappe au texte sombre
-  accentYellow: '#B8860B',
-  accentRed: '#C73841',
-};
-
+const TEREX_GREEN = '#3B968F';
+const TEREX_GREEN_DARK = '#2E7873';
+const TEREX_DARK = '#0F1411';
 const LOGO_URL = 'https://terangaexchange.com/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png';
 
-export const BaseEmail = ({ preview, title, subtitle, greeting, children }: BaseEmailProps) => {
+export const BaseEmail = ({ preview, title, subtitle, children }: BaseEmailProps) => {
   return (
     <Html>
       <Head />
       <Preview>{preview}</Preview>
       <Body style={main}>
         <Container style={container}>
-          {/* Top bar / brand */}
-          <Section style={topBar}>
+          {/* Header avec identité Terex */}
+          <Section style={header}>
             <table width="100%" cellPadding={0} cellSpacing={0} role="presentation">
               <tbody>
                 <tr>
                   <td style={logoCell}>
-                    <Img src={LOGO_URL} alt="Terex" width="28" height="28" style={logoImg} />
+                    <Img src={LOGO_URL} alt="Terex" width="32" height="32" style={logoImg} />
                   </td>
                   <td style={brandCell}>
                     <Text style={brandName}>TEREX</Text>
-                  </td>
-                  <td style={brandRightCell}>
                     <Text style={brandTagline}>Teranga Exchange</Text>
                   </td>
                 </tr>
@@ -69,12 +50,11 @@ export const BaseEmail = ({ preview, title, subtitle, greeting, children }: Base
             </table>
           </Section>
 
-          {/* Accent bar */}
+          {/* Bande accent verte */}
           <div style={accentBar} />
 
-          {/* Hero — salutation + titre */}
-          <Section style={heroSection}>
-            {greeting && <Text style={greetingStyle}>{greeting}</Text>}
+          {/* Titre principal */}
+          <Section style={titleSection}>
             <Heading style={titleStyle}>{title}</Heading>
             {subtitle && <Text style={subtitleStyle}>{subtitle}</Text>}
           </Section>
@@ -92,15 +72,12 @@ export const BaseEmail = ({ preview, title, subtitle, greeting, children }: Base
                   <td style={footerCol}>
                     <Text style={footerColTitle}>Support</Text>
                     <Text style={footerText}>terangaexchange@gmail.com</Text>
-                    <Text style={footerText}>WhatsApp · +1 418 261 9091</Text>
+                    <Text style={footerText}>WhatsApp : +1 418 261 9091</Text>
                   </td>
-                  <td style={footerColRight}>
+                  <td style={footerCol}>
                     <Text style={footerColTitle}>Plateforme</Text>
                     <Link href="https://terangaexchange.com" style={footerLink}>
                       terangaexchange.com
-                    </Link>
-                    <Link href="https://terangaexchange.com/dashboard" style={footerLink}>
-                      Mon tableau de bord
                     </Link>
                   </td>
                 </tr>
@@ -117,9 +94,6 @@ export const BaseEmail = ({ preview, title, subtitle, greeting, children }: Base
             </Text>
           </Section>
         </Container>
-
-        {/* Spacer external */}
-        <div style={{ height: '32px' }} />
       </Body>
     </Html>
   );
@@ -130,30 +104,29 @@ export const BaseEmail = ({ preview, title, subtitle, greeting, children }: Base
 const main = {
   fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif',
   margin: '0',
-  padding: '32px 12px',
-  backgroundColor: TEREX.bg,
-  color: TEREX.text,
+  padding: '24px 0',
+  backgroundColor: '#f5f7f6',
+  color: '#0F1411',
 };
 
 const container = {
-  maxWidth: '620px',
+  maxWidth: '600px',
   margin: '0 auto',
-  backgroundColor: TEREX.surface,
-  borderRadius: '14px',
+  backgroundColor: '#ffffff',
+  borderRadius: '12px',
   overflow: 'hidden',
-  border: `1px solid ${TEREX.border}`,
+  boxShadow: '0 4px 16px rgba(15, 20, 17, 0.08)',
 };
 
-const topBar = {
-  backgroundColor: TEREX.bg,
-  padding: '20px 32px',
-  borderBottom: `1px solid ${TEREX.border}`,
+const header = {
+  backgroundColor: TEREX_DARK,
+  padding: '24px 32px',
 };
 
 const logoCell = {
-  width: '36px',
+  width: '40px',
   verticalAlign: 'middle' as const,
-  paddingRight: '10px',
+  paddingRight: '12px',
 };
 
 const logoImg = {
@@ -165,57 +138,46 @@ const brandCell = {
   verticalAlign: 'middle' as const,
 };
 
-const brandRightCell = {
-  verticalAlign: 'middle' as const,
-  textAlign: 'right' as const,
-};
-
 const brandName = {
-  color: TEREX.white,
-  fontSize: '15px',
+  color: '#ffffff',
+  fontSize: '20px',
   fontWeight: '700' as const,
   margin: '0',
-  letterSpacing: '2.5px',
-  lineHeight: '1',
+  letterSpacing: '2px',
+  lineHeight: '1.2',
 };
 
 const brandTagline = {
-  color: TEREX.textMuted,
+  color: '#94a3b8',
   fontSize: '11px',
-  margin: '0',
-  letterSpacing: '0.5px',
+  margin: '2px 0 0 0',
+  letterSpacing: '1px',
+  textTransform: 'uppercase' as const,
 };
 
 const accentBar = {
-  height: '2px',
-  backgroundColor: TEREX.green,
+  height: '3px',
+  backgroundColor: TEREX_GREEN,
 };
 
-const heroSection = {
-  padding: '36px 32px 8px 32px',
-};
-
-const greetingStyle = {
-  color: TEREX.textSoft,
-  fontSize: '14px',
-  margin: '0 0 16px 0',
-  fontWeight: '500' as const,
+const titleSection = {
+  padding: '32px 32px 0 32px',
 };
 
 const titleStyle = {
-  color: TEREX.white,
-  fontSize: '26px',
+  color: '#0F1411',
+  fontSize: '24px',
   fontWeight: '700' as const,
-  margin: '0 0 12px 0',
-  lineHeight: '1.25',
-  letterSpacing: '-0.5px',
+  margin: '0 0 8px 0',
+  lineHeight: '1.3',
+  letterSpacing: '-0.4px',
 };
 
 const subtitleStyle = {
-  color: TEREX.textSoft,
-  fontSize: '15px',
+  color: '#64748b',
+  fontSize: '14px',
   margin: '0',
-  lineHeight: '1.55',
+  lineHeight: '1.5',
 };
 
 const contentSection = {
@@ -223,13 +185,13 @@ const contentSection = {
 };
 
 const footer = {
-  backgroundColor: TEREX.bg,
+  backgroundColor: '#fafbfa',
   padding: '24px 32px 28px 32px',
-  borderTop: `1px solid ${TEREX.border}`,
+  borderTop: '1px solid #eef0ef',
 };
 
 const footerDivider = {
-  borderColor: TEREX.border,
+  borderColor: '#e5e7e6',
   margin: '0 0 18px 0',
   borderWidth: '1px',
 };
@@ -240,40 +202,31 @@ const footerCol = {
   padding: '4px 0',
 };
 
-const footerColRight = {
-  width: '50%',
-  verticalAlign: 'top' as const,
-  padding: '4px 0',
-  textAlign: 'right' as const,
-};
-
 const footerColTitle = {
-  color: TEREX.textMuted,
-  fontSize: '11px',
+  color: '#0F1411',
+  fontSize: '12px',
   fontWeight: '700' as const,
-  margin: '0 0 8px 0',
+  margin: '0 0 6px 0',
   textTransform: 'uppercase' as const,
-  letterSpacing: '0.8px',
+  letterSpacing: '0.5px',
 };
 
 const footerText = {
-  color: TEREX.textSoft,
+  color: '#64748b',
   fontSize: '13px',
   margin: '3px 0',
   lineHeight: '1.5',
 };
 
 const footerLink = {
-  color: TEREX.green,
+  color: TEREX_GREEN,
   fontSize: '13px',
   textDecoration: 'none',
   fontWeight: '500' as const,
-  display: 'block',
-  margin: '3px 0',
 };
 
 const legalText = {
-  color: TEREX.textMuted,
+  color: '#94a3b8',
   fontSize: '12px',
   margin: '8px 0 4px 0',
   lineHeight: '1.5',
@@ -281,7 +234,7 @@ const legalText = {
 };
 
 const copyrightText = {
-  color: TEREX.textMuted,
+  color: '#94a3b8',
   fontSize: '11px',
   margin: '0',
   textAlign: 'center' as const,

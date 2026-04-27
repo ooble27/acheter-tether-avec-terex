@@ -92,36 +92,6 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('Adresse email manquante');
     }
 
-    // Récupérer le prénom du client pour la salutation des templates
-    let clientName: string | undefined = undefined;
-    try {
-      const targetUid = userId || (orderData?.user_id ?? null);
-      if (targetUid) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('full_name, first_name, last_name')
-          .eq('id', targetUid)
-          .maybeSingle();
-        if (profile) {
-          clientName = (profile as any).first_name
-            || ((profile as any).full_name ? String((profile as any).full_name).split(' ')[0] : undefined)
-            || undefined;
-        }
-        if (!clientName) {
-          const { data: authU } = await supabase.auth.admin.getUserById(targetUid);
-          const meta: any = authU?.user?.user_metadata || {};
-          clientName = meta.first_name || meta.firstName
-            || (meta.full_name ? String(meta.full_name).split(' ')[0] : undefined)
-            || (authU?.user?.email ? authU.user.email.split('@')[0] : undefined);
-        }
-      }
-      if (!clientName && orderData?.recipient_name) {
-        clientName = String(orderData.recipient_name).split(' ')[0];
-      }
-    } catch (e) {
-      console.warn('Impossible de récupérer le nom du client:', e);
-    }
-
     // Générer le contenu de l'email en fonction du type
     let subject = '';
     let htmlContent = '';
@@ -138,8 +108,7 @@ const handler = async (req: Request): Promise<Response> => {
         htmlContent = await renderAsync(
           React.createElement(OrderConfirmationEmail, {
             orderData,
-            transactionType: transactionType as 'buy' | 'sell',
-            clientName,
+            transactionType: transactionType as 'buy' | 'sell'
           })
         );
         break;
@@ -157,8 +126,7 @@ const handler = async (req: Request): Promise<Response> => {
         htmlContent = await renderAsync(
           React.createElement(StatusUpdateEmail, {
             orderData,
-            transactionType,
-            clientName,
+            transactionType
           })
         );
         break;
@@ -187,8 +155,7 @@ const handler = async (req: Request): Promise<Response> => {
         htmlContent = await renderAsync(
           React.createElement(PaymentConfirmedEmail, {
             orderData: emailData,
-            transactionType,
-            clientName,
+            transactionType
           })
         );
         break;
@@ -197,8 +164,7 @@ const handler = async (req: Request): Promise<Response> => {
         subject = `Votre transfert de ${orderData.amount || 0} ${orderData.from_currency || 'USDT'} à ${orderData.recipient_name} a été confirmé`;
         htmlContent = await renderAsync(
           React.createElement(TransferConfirmationEmail, {
-            transferData: orderData,
-            clientName,
+            transferData: orderData
           })
         );
         break;
