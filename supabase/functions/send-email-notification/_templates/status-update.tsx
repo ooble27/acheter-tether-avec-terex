@@ -8,46 +8,42 @@ import {
   Hr,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
-import { BaseEmail } from './base-email.tsx';
+import { BaseEmail, TEREX } from './base-email.tsx';
 
 interface StatusUpdateProps {
   orderData: any;
   transactionType: string;
+  clientName?: string;
 }
 
-const TEREX_GREEN = '#3B968F';
-const TEREX_DARK = '#0F1411';
-const TEREX_MUTED = '#64748b';
-const TEREX_BORDER = '#eef0ef';
-const TEREX_SOFT_BG = '#fafbfa';
-
-const STATUS_META: Record<string, { label: string; color: string; bg: string; emoji: string }> = {
-  processing: { label: 'En cours de traitement', color: '#b45309', bg: '#fef3c7', emoji: '⏳' },
-  completed:  { label: 'Terminée avec succès',   color: TEREX_GREEN, bg: '#eaf5f4', emoji: '✓' },
-  cancelled:  { label: 'Annulée',                color: '#b91c1c', bg: '#fee2e2', emoji: '✕' },
-  failed:     { label: 'Échec',                  color: '#b91c1c', bg: '#fee2e2', emoji: '✕' },
+const STATUS_META: Record<string, { label: string; color: string; bg: string; border: string; icon: string }> = {
+  processing: { label: 'En cours de traitement', color: TEREX.accentYellow, bg: '#2A2510', border: '#3F3815', icon: '⏳' },
+  completed:  { label: 'Terminée avec succès',   color: TEREX.green,        bg: TEREX.greenSoft, border: `${TEREX.green}55`, icon: '✓' },
+  cancelled:  { label: 'Annulée',                color: TEREX.accentRed,    bg: '#2C1416',       border: '#4A1F22', icon: '✕' },
+  failed:     { label: 'Échec',                  color: TEREX.accentRed,    bg: '#2C1416',       border: '#4A1F22', icon: '✕' },
 };
 
-export const StatusUpdateEmail = ({ orderData, transactionType }: StatusUpdateProps) => {
-  const meta = STATUS_META[orderData.status] || { label: orderData.status, color: TEREX_DARK, bg: TEREX_SOFT_BG, emoji: '•' };
+export const StatusUpdateEmail = ({ orderData, transactionType, clientName }: StatusUpdateProps) => {
+  const meta = STATUS_META[orderData.status] || { label: orderData.status, color: TEREX.text, bg: TEREX.surfaceAlt, border: TEREX.border, icon: '•' };
   const isTransfer = transactionType === 'transfer';
   const objectName = isTransfer ? 'transfert international' : (transactionType === 'buy' ? 'achat USDT' : transactionType === 'sell' ? 'vente USDT' : 'transaction');
 
   const title = `Mise à jour de votre ${isTransfer ? 'transfert' : 'commande'}`;
-  const subtitle = `Statut : ${meta.label}.`;
+  const subtitle = `Le statut de votre ${objectName} a évolué : ${meta.label.toLowerCase()}.`;
   const preview = `${objectName} — ${meta.label}`;
   const reference = `#TEREX-${orderData.id?.slice(-8) || 'N/A'}`;
+  const greeting = clientName ? `Bonjour ${clientName},` : 'Bonjour,';
 
   return (
-    <BaseEmail preview={preview} title={title} subtitle={subtitle}>
-      {/* Badge de statut */}
-      <Section style={{ ...statusBanner, backgroundColor: meta.bg, borderColor: `${meta.color}33` }}>
+    <BaseEmail preview={preview} title={title} subtitle={subtitle} greeting={greeting}>
+      {/* Bandeau de statut */}
+      <Section style={{ ...statusBanner, backgroundColor: meta.bg, borderColor: meta.border }}>
         <table width="100%" cellPadding={0} cellSpacing={0} role="presentation">
           <tbody>
             <tr>
               <td style={statusIconCell}>
                 <div style={{ ...statusIcon, backgroundColor: meta.color }}>
-                  <span style={statusIconText}>{meta.emoji}</span>
+                  <span style={statusIconText}>{meta.icon}</span>
                 </div>
               </td>
               <td style={statusTextCell}>
@@ -69,9 +65,9 @@ export const StatusUpdateEmail = ({ orderData, transactionType }: StatusUpdatePr
         {!isTransfer && (
           <>
             <DetailRow label="Type" value={orderData.type === 'buy' ? 'Achat USDT' : 'Vente USDT'} />
-            <DetailRow label="Montant" value={`${orderData.amount || 0} ${orderData.currency || 'CFA'}`} />
+            <DetailRow label="Montant" value={`${Number(orderData.amount || 0).toLocaleString('fr-FR')} ${orderData.currency || 'CFA'}`} />
             <DetailRow label="USDT" value={`${orderData.usdt_amount || 0} USDT`} accent />
-            <DetailRow label="Réseau" value={orderData.network || 'TRC20'} />
+            <DetailRow label="Réseau" value={orderData.network || 'TRC20'} last />
           </>
         )}
 
@@ -80,7 +76,7 @@ export const StatusUpdateEmail = ({ orderData, transactionType }: StatusUpdatePr
             <DetailRow label="Envoyé" value={`${orderData.amount || 0} ${orderData.from_currency || 'USDT'}`} />
             <DetailRow label="À recevoir" value={`${orderData.total_amount || 0} ${orderData.to_currency || ''}`} accent />
             <DetailRow label="Destinataire" value={orderData.recipient_name || 'N/A'} />
-            <DetailRow label="Pays" value={orderData.recipient_country || 'N/A'} />
+            <DetailRow label="Pays" value={orderData.recipient_country || 'N/A'} last />
           </>
         )}
       </Container>
@@ -95,7 +91,7 @@ export const StatusUpdateEmail = ({ orderData, transactionType }: StatusUpdatePr
       )}
 
       {orderData.status === 'completed' && (
-        <Section style={infoBox}>
+        <Section style={infoBoxSuccess}>
           <Text style={infoText}>
             {isTransfer
               ? 'Les fonds ont été crédités au destinataire avec succès.'
@@ -109,7 +105,7 @@ export const StatusUpdateEmail = ({ orderData, transactionType }: StatusUpdatePr
           <Text style={alertText}>
             {orderData.status === 'cancelled'
               ? `Votre ${isTransfer ? 'transfert' : 'commande'} a été annulée. ${orderData.cancellation_reason ? `Raison : ${orderData.cancellation_reason}.` : ''} Si un paiement a été effectué, il sera remboursé sous 3 à 5 jours ouvrables.`
-              : `Une erreur s'est produite. ${orderData.error_message || 'Notre équipe technique a été notifiée.'}`}
+              : `Une erreur s'est produite. ${orderData.error_message || 'Notre équipe technique a été notifiée et reviendra vers vous rapidement.'}`}
           </Text>
         </Section>
       )}
@@ -124,12 +120,12 @@ export const StatusUpdateEmail = ({ orderData, transactionType }: StatusUpdatePr
   );
 };
 
-const DetailRow = ({ label, value, mono, accent }: { label: string; value: string; mono?: boolean; accent?: boolean }) => {
+const DetailRow = ({ label, value, mono, accent, last }: { label: string; value: string; mono?: boolean; accent?: boolean; last?: boolean }) => {
   let style = valueText;
   if (accent) style = valueAccent;
   else if (mono) style = monoText;
   return (
-    <Row style={detailRowStyle}>
+    <Row style={last ? detailRowLast : detailRowStyle}>
       <Column style={labelColumn}>
         <Text style={labelText}>{label}</Text>
       </Column>
@@ -143,16 +139,13 @@ const DetailRow = ({ label, value, mono, accent }: { label: string; value: strin
 /* — Styles — */
 
 const statusBanner = {
-  borderRadius: '10px',
-  padding: '14px 18px',
-  margin: '0 0 28px 0',
+  borderRadius: '12px',
+  padding: '16px 20px',
+  margin: '0 0 30px 0',
   border: '1px solid',
 };
 
-const statusIconCell = {
-  width: '52px',
-  verticalAlign: 'middle' as const,
-};
+const statusIconCell = { width: '54px', verticalAlign: 'middle' as const };
 
 const statusIcon = {
   width: '40px',
@@ -163,15 +156,13 @@ const statusIcon = {
 };
 
 const statusIconText = {
-  color: '#ffffff',
+  color: '#0F1411',
   fontSize: '18px',
-  fontWeight: '700' as const,
+  fontWeight: '800' as const,
   lineHeight: '40px',
 };
 
-const statusTextCell = {
-  verticalAlign: 'middle' as const,
-};
+const statusTextCell = { verticalAlign: 'middle' as const };
 
 const statusLabel = {
   fontSize: '15px',
@@ -181,116 +172,98 @@ const statusLabel = {
 };
 
 const statusRef = {
-  color: TEREX_MUTED,
+  color: TEREX.textMuted,
   fontSize: '12px',
   margin: '4px 0 0 0',
   fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
 };
 
 const sectionTitle = {
-  color: TEREX_DARK,
-  fontSize: '13px',
+  color: TEREX.textMuted,
+  fontSize: '11px',
   fontWeight: '700' as const,
-  margin: '0 0 12px 0',
+  margin: '0 0 14px 0',
   textTransform: 'uppercase' as const,
-  letterSpacing: '0.6px',
+  letterSpacing: '0.8px',
 };
 
 const detailsContainer = {
-  backgroundColor: TEREX_SOFT_BG,
-  border: `1px solid ${TEREX_BORDER}`,
-  borderRadius: '10px',
-  padding: '8px 18px',
+  backgroundColor: TEREX.surfaceAlt,
+  border: `1px solid ${TEREX.border}`,
+  borderRadius: '12px',
+  padding: '6px 20px',
   margin: '0 0 24px 0',
 };
 
-const detailRowStyle = {
-  borderBottom: `1px solid ${TEREX_BORDER}`,
-};
+const detailRowStyle = { borderBottom: `1px solid ${TEREX.borderSoft}` };
+const detailRowLast = { borderBottom: 'none' };
 
-const labelColumn = {
-  width: '40%',
-  paddingRight: '12px',
-  verticalAlign: 'middle' as const,
-};
+const labelColumn = { width: '40%', paddingRight: '12px', verticalAlign: 'middle' as const };
+const valueColumn = { width: '60%', verticalAlign: 'middle' as const };
 
-const valueColumn = {
-  width: '60%',
-  verticalAlign: 'middle' as const,
-};
-
-const labelText = {
-  color: TEREX_MUTED,
-  fontSize: '13px',
-  fontWeight: '500' as const,
-  margin: '12px 0',
-  lineHeight: '1.4',
-};
+const labelText = { color: TEREX.textMuted, fontSize: '13px', fontWeight: '500' as const, margin: '14px 0', lineHeight: '1.4' };
 
 const valueText = {
-  color: TEREX_DARK,
+  color: TEREX.text,
   fontSize: '13px',
   fontWeight: '600' as const,
-  margin: '12px 0',
+  margin: '14px 0',
   lineHeight: '1.4',
   textAlign: 'right' as const,
 };
 
-const valueAccent = {
-  ...valueText,
-  color: TEREX_GREEN,
-  fontWeight: '700' as const,
-};
-
-const monoText = {
-  ...valueText,
-  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-};
+const valueAccent = { ...valueText, color: TEREX.green, fontWeight: '700' as const };
+const monoText = { ...valueText, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' };
 
 const infoBox = {
-  backgroundColor: '#eaf5f4',
-  border: `1px solid ${TEREX_GREEN}33`,
+  backgroundColor: '#2A2510',
+  border: '1px solid #3F3815',
+  borderRadius: '10px',
+  padding: '14px 18px',
+  margin: '0 0 24px 0',
+};
+
+const infoBoxSuccess = {
+  backgroundColor: TEREX.greenSoft,
+  border: `1px solid ${TEREX.green}55`,
   borderRadius: '10px',
   padding: '14px 18px',
   margin: '0 0 24px 0',
 };
 
 const infoText = {
-  color: TEREX_DARK,
+  color: TEREX.text,
   fontSize: '13px',
   margin: '0',
   lineHeight: '1.6',
 };
 
 const alertBox = {
-  backgroundColor: '#fee2e2',
-  border: '1px solid #fca5a533',
+  backgroundColor: '#2C1416',
+  border: '1px solid #4A1F22',
   borderRadius: '10px',
   padding: '14px 18px',
   margin: '0 0 24px 0',
 };
 
 const alertText = {
-  color: '#7f1d1d',
+  color: '#FFB4B7',
   fontSize: '13px',
   margin: '0',
   lineHeight: '1.6',
 };
 
 const divider = {
-  borderColor: TEREX_BORDER,
-  margin: '20px 0 16px 0',
+  borderColor: TEREX.border,
+  margin: '24px 0 18px 0',
   borderWidth: '1px',
 };
 
 const signature = {
-  color: TEREX_MUTED,
+  color: TEREX.textSoft,
   fontSize: '13px',
   margin: '0',
   lineHeight: '1.6',
 };
 
-const signatureBrand = {
-  color: TEREX_DARK,
-  fontWeight: '600' as const,
-};
+const signatureBrand = { color: TEREX.white, fontWeight: '600' as const };
