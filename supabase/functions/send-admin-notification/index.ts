@@ -106,31 +106,31 @@ const handler = async (req: Request): Promise<Response> => {
         break;
 
       case 'kyc_submission':
-        subject = `🆔 Nouvelle vérification KYC - ${data.firstName} ${data.lastName}`;
+        subject = `🆔 Nouvelle vérification KYC — ${data.firstName} ${data.lastName}`;
         emailContent = await renderAsync(
           React.createElement(AdminNotificationEmail, {
             notificationType: 'kyc_submission',
-            data
+            data: enrichedData,
           })
         );
         break;
 
       case 'high_volume_request':
-        subject = `💰 Demande de gros volume - ${data.clientInfo?.firstName} ${data.clientInfo?.lastName} - ${data.clientInfo?.amount} CFA`;
+        subject = `💎 Demande de gros volume — ${data.clientInfo?.firstName} ${data.clientInfo?.lastName} · ${Number(data.clientInfo?.amount || 0).toLocaleString('fr-FR')} CFA`;
         emailContent = await renderAsync(
           React.createElement(AdminNotificationEmail, {
             notificationType: 'high_volume_request',
-            data
+            data: enrichedData,
           })
         );
         break;
 
       case 'status_update':
-        subject = `📊 Mise à jour commande #${data.orderId.slice(-8)} - ${data.newStatus}`;
+        subject = `📊 Mise à jour commande #${data.orderId.slice(-8)} → ${data.newStatus}`;
         emailContent = await renderAsync(
           React.createElement(AdminNotificationEmail, {
             notificationType: 'status_update',
-            data
+            data: enrichedData,
           })
         );
         break;
