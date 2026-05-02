@@ -1,18 +1,14 @@
 import {
-  Body,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Preview,
   Text,
   Section,
-  Hr,
-  Link,
+  Container,
+  Row,
+  Column,
   Button,
-  Img,
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
+import { BaseEmail } from './base-email.tsx';
+import { EMAIL_ILLUSTRATIONS } from './illustrations.ts';
 
 interface KYCApprovedEmailProps {
   magicLink: string;
@@ -20,331 +16,77 @@ interface KYCApprovedEmailProps {
   userLastName: string;
 }
 
+const TEREX_GREEN = '#3B968F';
+const TEREX_GREEN_LIGHT = '#eaf5f4';
+const TEREX_DARK = '#0F1411';
+const TEREX_MUTED = '#64748b';
+const TEREX_BORDER = '#eef0ef';
+
 export const KYCApprovedEmail = ({ magicLink, userFirstName, userLastName }: KYCApprovedEmailProps) => (
-  <Html>
-    <Head />
-    <Preview>Votre vérification d'identité a été approuvée - Accédez à votre compte Terex</Preview>
-    <Body style={main}>
-      <Container style={container}>
-        {/* Header avec branding Terex */}
-        <Section style={header}>
-          <div style={logoContainer}>
-            <div style={logoCircle}>
-              <Text style={logoText}>T</Text>
-            </div>
-          </div>
-          <Heading style={h1}>
-            <span style={brandName}>Terex</span>
-          </Heading>
-          <Text style={tagline}>Votre plateforme d'échange USDT de confiance</Text>
-        </Section>
-        
-        {/* Contenu principal */}
-        <Section style={content}>
-          <div style={iconContainer}>
-            <div style={successIcon}>✅</div>
-          </div>
-          
-          <Heading style={h2}>Félicitations ! Votre identité est vérifiée</Heading>
-          
-          <Text style={greeting}>
-            Bonjour {userFirstName} {userLastName},
-          </Text>
-          
-          <Text style={text}>
-            Excellente nouvelle ! Votre vérification d'identité (KYC) a été <strong>approuvée avec succès</strong>.
-          </Text>
-          
-          <Text style={text}>
-            Vous pouvez maintenant :
-          </Text>
-          
-          <div style={benefitsList}>
-            <div style={benefitItem}>
-              <span style={benefitIcon}>💰</span>
-              <span>Effectuer des achats et ventes USDT sans limite</span>
-            </div>
-            <div style={benefitItem}>
-              <span style={benefitIcon}>🌍</span>
-              <span>Réaliser des transferts internationaux</span>
-            </div>
-            <div style={benefitItem}>
-              <span style={benefitIcon}>🔒</span>
-              <span>Accéder à toutes les fonctionnalités sécurisées</span>
-            </div>
-          </div>
-          
-          <Text style={text}>
-            Cliquez sur le bouton ci-dessous pour accéder directement à votre compte :
-          </Text>
-          
-          {/* Bouton de connexion stylisé */}
-          <Section style={buttonContainer}>
-            <Button style={button} href={magicLink}>
-              <div style={buttonContent}>
-                <span style={buttonIcon}>🚀</span>
-                <span>Accéder à mon compte Terex</span>
-              </div>
-            </Button>
-          </Section>
-          
-          {/* Informations de sécurité */}
-          <Section style={securityInfo}>
-            <Text style={securityText}>
-              <span style={warningIcon}>⏰</span>
-              Ce lien de connexion est valable pendant <strong>10 minutes</strong> pour votre sécurité.
-            </Text>
-          </Section>
-          
-          <Hr style={hr} />
-          
-          <Text style={welcomeText}>
-            Bienvenue dans la communauté Terex ! Nous sommes ravis de vous accompagner dans vos échanges USDT.
-          </Text>
-        </Section>
-        
-        <Hr style={hr} />
-        
-        {/* Footer */}
-        <Section style={footer}>
-          <Text style={footerText}>
-            Cet email a été envoyé par <strong>Terex</strong><br />
-            Votre plateforme de confiance pour les échanges USDT
-          </Text>
-          <Text style={footerLinks}>
-            <Link href="https://terangaexchange.com" style={link}>
-              🌐 Accéder à la plateforme
-            </Link>
-            {' • '}
-            <Link href="mailto:terangaexchange@gmail.com" style={link}>
-              💬 Support client
-            </Link>
-          </Text>
-        </Section>
-      </Container>
-    </Body>
-  </Html>
+  <BaseEmail
+    preview={`${userFirstName}, votre identité est vérifiée — accédez à votre compte Terex`}
+    title="Votre identité est vérifiée"
+    highlightTitle="vérifiée"
+    subtitle="Félicitations ! Vous pouvez désormais accéder à toutes les fonctionnalités Terex."
+    heroImageUrl={EMAIL_ILLUSTRATIONS.kyc}
+    heroImageAlt="KYC approuvé"
+    greeting={`Bonjour ${userFirstName} 🎉`}
+    intro="Votre vérification d'identité (KYC) a été approuvée avec succès. Bienvenue dans la communauté Terex."
+  >
+    {/* Carte avantages */}
+    <Container style={benefitsCard}>
+      <Text style={cardTitle}>✨ CE QUE VOUS POUVEZ FAIRE MAINTENANT</Text>
+      <Benefit icon="₮" title="Acheter et vendre des USDT" desc="Sans limite de montant, à tout moment." />
+      <Benefit icon="🌍" title="Transferts internationaux" desc="Envoyez de l'argent partout en Afrique." />
+      <Benefit icon="🔒" title="Toutes les fonctionnalités sécurisées" desc="Profil complet, historique, supports prioritaire." />
+    </Container>
+
+    {/* Bouton CTA */}
+    <Section style={ctaSection}>
+      <Button href={magicLink} style={ctaButton}>
+        Accéder à mon compte →
+      </Button>
+      <Text style={ctaNote}>⏰ Ce lien est valable pendant 10 minutes pour votre sécurité.</Text>
+    </Section>
+  </BaseEmail>
 );
 
-// Styles avec les couleurs Terex
-const main = {
-  backgroundColor: '#141414',
-  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-  padding: '20px 0',
-};
+const Benefit = ({ icon, title, desc }: { icon: string; title: string; desc: string }) => (
+  <Row style={benefitRow}>
+    <Column style={benefitIconCol}>
+      <div style={benefitIconBadge}><span style={benefitIconText}>{icon}</span></div>
+    </Column>
+    <Column>
+      <Text style={benefitTitle}>{title}</Text>
+      <Text style={benefitDesc}>{desc}</Text>
+    </Column>
+  </Row>
+);
 
-const container = {
-  margin: '0 auto',
-  padding: '0',
-  maxWidth: '600px',
-  backgroundColor: '#1e1e1e',
-  borderRadius: '16px',
-  overflow: 'hidden',
-  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
-  border: '1px solid #2A2A2A',
-};
+/* ============= STYLES ============= */
 
-const header = {
-  textAlign: 'center' as const,
-  padding: '40px 30px 30px',
-  background: 'linear-gradient(135deg, #3B968F 0%, #4BA89F 100%)',
-  color: '#ffffff',
+const benefitsCard = {
+  backgroundColor: '#ffffff', border: `1px solid ${TEREX_BORDER}`,
+  borderRadius: '14px', padding: '20px 22px', margin: '0 0 24px 0',
 };
-
-const logoContainer = {
-  marginBottom: '20px',
+const cardTitle = {
+  color: TEREX_GREEN, fontSize: '11px', fontWeight: '700' as const,
+  margin: '0 0 16px 0', letterSpacing: '0.8px', textTransform: 'uppercase' as const,
 };
-
-const logoCircle = {
-  width: '60px',
-  height: '60px',
-  borderRadius: '50%',
-  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  margin: '0 auto',
-  border: '2px solid rgba(255, 255, 255, 0.3)',
+const benefitRow = { borderBottom: `1px solid ${TEREX_BORDER}` };
+const benefitIconCol = { width: '48px', verticalAlign: 'middle' as const, paddingTop: '14px', paddingBottom: '14px' };
+const benefitIconBadge = {
+  width: '36px', height: '36px', borderRadius: '8px',
+  backgroundColor: TEREX_GREEN_LIGHT, textAlign: 'center' as const, lineHeight: '36px',
 };
+const benefitIconText = { color: TEREX_GREEN, fontSize: '16px', fontWeight: '700' as const, lineHeight: '36px' };
+const benefitTitle = { color: TEREX_DARK, fontSize: '14px', fontWeight: '700' as const, margin: '14px 0 2px 0' };
+const benefitDesc = { color: TEREX_MUTED, fontSize: '12px', margin: '0 0 14px 0', lineHeight: '1.4' };
 
-const logoText = {
-  fontSize: '28px',
-  fontWeight: 'bold',
-  color: '#ffffff',
-  margin: '0',
-};
-
-const h1 = {
-  color: '#ffffff',
-  fontSize: '32px',
-  fontWeight: 'bold',
-  margin: '0 0 8px',
-  lineHeight: '1.2',
-};
-
-const brandName = {
-  textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-};
-
-const tagline = {
-  color: 'rgba(255, 255, 255, 0.9)',
-  fontSize: '16px',
-  margin: '0',
-  fontWeight: '400',
-};
-
-const content = {
-  padding: '40px 30px',
-  backgroundColor: '#1e1e1e',
-};
-
-const iconContainer = {
-  textAlign: 'center' as const,
-  marginBottom: '24px',
-};
-
-const successIcon = {
-  fontSize: '48px',
-  background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
-  WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
-  backgroundClip: 'text',
-};
-
-const h2 = {
-  color: '#ffffff',
-  fontSize: '28px',
-  fontWeight: '700',
-  margin: '0 0 24px',
-  lineHeight: '1.3',
-  textAlign: 'center' as const,
-};
-
-const greeting = {
-  color: '#ffffff',
-  fontSize: '18px',
-  fontWeight: '600',
-  margin: '0 0 16px',
-};
-
-const text = {
-  color: '#e2e8f0',
-  fontSize: '16px',
-  lineHeight: '1.6',
-  margin: '0 0 16px',
-};
-
-const benefitsList = {
-  margin: '24px 0',
-  padding: '20px',
-  backgroundColor: '#2A2A2A',
-  borderRadius: '12px',
-  border: '1px solid #3B968F',
-};
-
-const benefitItem = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '12px',
-  margin: '12px 0',
-  color: '#e2e8f0',
-  fontSize: '15px',
-};
-
-const benefitIcon = {
-  fontSize: '20px',
-  minWidth: '24px',
-};
-
-const buttonContainer = {
-  textAlign: 'center' as const,
-  margin: '32px 0',
-};
-
-const button = {
-  background: 'linear-gradient(135deg, #3B968F 0%, #4BA89F 100%)',
-  borderRadius: '12px',
-  color: '#ffffff',
-  fontSize: '16px',
-  fontWeight: '600',
-  textDecoration: 'none',
-  textAlign: 'center' as const,
+const ctaSection = { textAlign: 'center' as const, margin: '8px 0 16px 0' };
+const ctaButton = {
+  backgroundColor: TEREX_GREEN, color: '#ffffff', fontSize: '15px', fontWeight: '700' as const,
+  padding: '14px 28px', borderRadius: '12px', textDecoration: 'none',
   display: 'inline-block',
-  lineHeight: '1.5',
-  padding: '16px 32px',
-  border: 'none',
-  boxShadow: '0 4px 12px rgba(59, 150, 143, 0.4)',
-  transition: 'all 0.2s ease',
 };
-
-const buttonContent = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '8px',
-};
-
-const buttonIcon = {
-  fontSize: '18px',
-};
-
-const securityInfo = {
-  backgroundColor: '#3a1f1f',
-  border: '1px solid #e53e3e',
-  borderRadius: '8px',
-  padding: '16px',
-  margin: '24px 0',
-};
-
-const securityText = {
-  color: '#feb2b2',
-  fontSize: '14px',
-  margin: '0',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px',
-  fontWeight: '500',
-};
-
-const warningIcon = {
-  fontSize: '16px',
-};
-
-const welcomeText = {
-  color: '#22c55e',
-  fontSize: '16px',
-  lineHeight: '1.5',
-  margin: '0',
-  fontWeight: '500',
-  textAlign: 'center' as const,
-};
-
-const hr = {
-  borderColor: '#2A2A2A',
-  margin: '20px 0',
-};
-
-const footer = {
-  textAlign: 'center' as const,
-  padding: '30px',
-  backgroundColor: '#2A2A2A',
-};
-
-const footerText = {
-  color: '#ffffff',
-  fontSize: '14px',
-  lineHeight: '1.4',
-  margin: '0 0 16px',
-};
-
-const footerLinks = {
-  color: '#ffffff',
-  fontSize: '14px',
-  margin: '0',
-};
-
-const link = {
-  color: '#3B968F',
-  textDecoration: 'none',
-  fontWeight: '500',
-};
+const ctaNote = { color: TEREX_MUTED, fontSize: '12px', margin: '12px 0 0 0', textAlign: 'center' as const };
