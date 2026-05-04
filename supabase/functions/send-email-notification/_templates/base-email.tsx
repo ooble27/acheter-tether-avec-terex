@@ -120,29 +120,17 @@ export const BaseEmail = ({
           {/* ============= Contenu principal ============= */}
           <Section style={contentSection}>{children}</Section>
 
-          {/* ============= Bloc "Besoin d'aide ?" ============= */}
+          {/* ============= Bloc "Besoin d'aide ?" — dark, mobile friendly ============= */}
           {!hideHelpBlock && (
             <Section style={helpSection}>
-              <table width="100%" cellPadding={0} cellSpacing={0} role="presentation">
-                <tbody>
-                  <tr>
-                    <td style={helpIconCell}>
-                      <div style={helpIcon}>
-                        <span style={helpIconText}>?</span>
-                      </div>
-                    </td>
-                    <td style={helpTextCell}>
-                      <Text style={helpTitle}>Besoin d'aide ?</Text>
-                      <Text style={helpDescription}>{helpText}</Text>
-                    </td>
-                    <td style={helpButtonCell}>
-                      <Link href={`${SITE_URL}/contact`} style={helpButton}>
-                        Nous contacter →
-                      </Link>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div style={helpIconWrap}>
+                <div style={helpIcon}><span style={helpIconText}>?</span></div>
+              </div>
+              <Text style={helpTitle}>Besoin d'aide&nbsp;?</Text>
+              <Text style={helpDescription}>{helpText}</Text>
+              <Link href={`${SITE_URL}/contact`} style={helpButton}>
+                Nous contacter →
+              </Link>
             </Section>
           )}
 
@@ -310,61 +298,54 @@ const contentSection = {
   padding: '24px 36px 8px 36px',
 };
 
-/* ===== Help block ===== */
+/* ===== Help block — dark, centered, mobile-safe ===== */
 
 const helpSection = {
   margin: '8px 36px 28px 36px',
-  backgroundColor: TEREX_GREEN_LIGHT,
-  borderRadius: '12px',
-  padding: '18px 22px',
+  backgroundColor: TEREX_DARK,
+  borderRadius: '14px',
+  padding: '24px 22px',
+  textAlign: 'center' as const,
 };
 
-const helpIconCell = {
-  width: '54px',
-  verticalAlign: 'middle' as const,
+const helpIconWrap = {
+  textAlign: 'center' as const,
+  marginBottom: '12px',
 };
 
 const helpIcon = {
-  width: '40px',
-  height: '40px',
+  width: '44px',
+  height: '44px',
   borderRadius: '50%',
-  backgroundColor: '#ffffff',
+  backgroundColor: 'rgba(59, 150, 143, 0.18)',
   border: `1.5px solid ${TEREX_GREEN}`,
   textAlign: 'center' as const,
-  lineHeight: '38px',
+  lineHeight: '42px',
+  margin: '0 auto',
 };
 
 const helpIconText = {
   color: TEREX_GREEN,
-  fontSize: '18px',
+  fontSize: '20px',
   fontWeight: '700' as const,
-  lineHeight: '38px',
-};
-
-const helpTextCell = {
-  verticalAlign: 'middle' as const,
-  paddingRight: '12px',
+  lineHeight: '42px',
 };
 
 const helpTitle = {
-  color: TEREX_DARK,
-  fontSize: '15px',
+  color: '#ffffff',
+  fontSize: '16px',
   fontWeight: '700' as const,
-  margin: '0',
+  margin: '0 0 6px 0',
   lineHeight: '1.2',
+  textAlign: 'center' as const,
 };
 
 const helpDescription = {
-  color: TEREX_MUTED,
-  fontSize: '12px',
-  margin: '4px 0 0 0',
-  lineHeight: '1.4',
-};
-
-const helpButtonCell = {
-  verticalAlign: 'middle' as const,
-  textAlign: 'right' as const,
-  width: '160px',
+  color: '#94a3b8',
+  fontSize: '13px',
+  margin: '0 0 16px 0',
+  lineHeight: '1.5',
+  textAlign: 'center' as const,
 };
 
 const helpButton = {
