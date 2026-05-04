@@ -120,29 +120,17 @@ export const BaseEmail = ({
           {/* ============= Contenu principal ============= */}
           <Section style={contentSection}>{children}</Section>
 
-          {/* ============= Bloc "Besoin d'aide ?" ============= */}
+          {/* ============= Bloc "Besoin d'aide ?" — dark, mobile friendly ============= */}
           {!hideHelpBlock && (
             <Section style={helpSection}>
-              <table width="100%" cellPadding={0} cellSpacing={0} role="presentation">
-                <tbody>
-                  <tr>
-                    <td style={helpIconCell}>
-                      <div style={helpIcon}>
-                        <span style={helpIconText}>?</span>
-                      </div>
-                    </td>
-                    <td style={helpTextCell}>
-                      <Text style={helpTitle}>Besoin d'aide ?</Text>
-                      <Text style={helpDescription}>{helpText}</Text>
-                    </td>
-                    <td style={helpButtonCell}>
-                      <Link href={`${SITE_URL}/contact`} style={helpButton}>
-                        Nous contacter →
-                      </Link>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div style={helpIconWrap}>
+                <div style={helpIcon}><span style={helpIconText}>?</span></div>
+              </div>
+              <Text style={helpTitle}>Besoin d'aide&nbsp;?</Text>
+              <Text style={helpDescription}>{helpText}</Text>
+              <Link href={`${SITE_URL}/contact`} style={helpButton}>
+                Nous contacter →
+              </Link>
             </Section>
           )}
 
