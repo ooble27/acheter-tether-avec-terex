@@ -27,53 +27,110 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const { notificationType, data, adminUserId } = await req.json();
 
-    console.log('Notification admin:', { notificationType, data });
+    console.log('Notification admin:', { notificationType, dataKeys: Object.keys(data || {}) });
 
-    // Email admin fixe - VOTRE ADRESSE EMAIL PERSONNELLE ICI
+    // Email admin fixe
     const adminEmail = "terangaexchange@gmail.com";
+
+    // ───── Enrichissement serveur des données client (pour new_order et status_update) ─────
+    let enrichedData: any = { ...data };
+    try {
+      const targetUid = data?.userId || data?.user_id || null;
+      if (targetUid && (notificationType === 'new_order' || notificationType === 'status_update')) {
+        // Profile (téléphone, nom)
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name, first_name, last_name, phone')
+          .eq('id', targetUid)
+          .maybeSingle();
+
+        // Auth user (email + metadata)
+        const { data: authU } = await supabase.auth.admin.getUserById(targetUid);
+        const meta: any = authU?.user?.user_metadata || {};
+
+        const firstName = (profile as any)?.first_name || meta.first_name || meta.firstName || '';
+        const lastName = (profile as any)?.last_name || meta.last_name || meta.lastName || '';
+        const fullName = (profile as any)?.full_name || meta.full_name || `${firstName} ${lastName}`.trim();
+
+        enrichedData = {
+          ...enrichedData,
+          user_id: targetUid,
+          client_first_name: firstName || undefined,
+          client_last_name: lastName || undefined,
+          client_name: fullName || undefined,
+          client_email: authU?.user?.email || enrichedData.email,
+          client_phone: (profile as any)?.phone || meta.phone || enrichedData.phone,
+        };
+
+        // Si on a un orderId, récupérer plus de détails (notes, wallet, méthode...)
+        const orderId = data?.orderId || data?.id;
+        if (orderId && notificationType === 'new_order') {
+          const { data: order } = await supabase
+            .from('orders')
+            .select('*')
+            .eq('id', orderId)
+            .maybeSingle();
+          if (order) {
+            // Parse notes JSON pour extraire provider/numero
+            let notesInfo: any = null;
+            try { if ((order as any).notes) notesInfo = JSON.parse((order as any).notes); } catch (_) {}
+            enrichedData = {
+              ...enrichedData,
+              ...(order as any),
+              id: orderId,
+              provider: notesInfo?.provider || (order as any).payment_method,
+              phone_number: notesInfo?.phoneNumber || (order as any).phone_number,
+            };
+          }
+        }
+      }
+    } catch (enrichErr) {
+      console.warn('Enrichissement client échoué (non bloquant):', enrichErr);
+    }
 
     let subject = '';
     let emailContent = '';
 
     switch (notificationType) {
       case 'new_order':
-        const orderTypeText = data.type === 'buy' ? 'Achat USDT' : 
-                            data.type === 'sell' ? 'Vente USDT' : 'Transfert International';
-        subject = `🔔 Nouvelle commande ${orderTypeText} - ${data.amount} ${data.currency}`;
+        const orderTypeText = enrichedData.type === 'buy' ? 'Achat USDT' :
+                            enrichedData.type === 'sell' ? 'Vente USDT' : 'Transfert International';
+        const clientLabel = enrichedData.client_name ? ` · ${enrichedData.client_name}` : '';
+        subject = `🔔 Nouvelle commande ${orderTypeText} — ${Number(enrichedData.amount || 0).toLocaleString('fr-FR')} ${enrichedData.currency || 'CFA'}${clientLabel}`;
         emailContent = await renderAsync(
           React.createElement(AdminNotificationEmail, {
             notificationType: 'new_order',
-            data
+            data: enrichedData,
           })
         );
         break;
 
       case 'kyc_submission':
-        subject = `🆔 Nouvelle vérification KYC - ${data.firstName} ${data.lastName}`;
+        subject = `🆔 Nouvelle vérification KYC — ${data.firstName} ${data.lastName}`;
         emailContent = await renderAsync(
           React.createElement(AdminNotificationEmail, {
             notificationType: 'kyc_submission',
-            data
+            data: enrichedData,
           })
         );
         break;
 
       case 'high_volume_request':
-        subject = `💰 Demande de gros volume - ${data.clientInfo?.firstName} ${data.clientInfo?.lastName} - ${data.clientInfo?.amount} CFA`;
+        subject = `💎 Demande de gros volume — ${data.clientInfo?.firstName} ${data.clientInfo?.lastName} · ${Number(data.clientInfo?.amount || 0).toLocaleString('fr-FR')} CFA`;
         emailContent = await renderAsync(
           React.createElement(AdminNotificationEmail, {
             notificationType: 'high_volume_request',
-            data
+            data: enrichedData,
           })
         );
         break;
 
       case 'status_update':
-        subject = `📊 Mise à jour commande #${data.orderId.slice(-8)} - ${data.newStatus}`;
+        subject = `📊 Mise à jour commande #${data.orderId.slice(-8)} → ${data.newStatus}`;
         emailContent = await renderAsync(
           React.createElement(AdminNotificationEmail, {
             notificationType: 'status_update',
-            data
+            data: enrichedData,
           })
         );
         break;
