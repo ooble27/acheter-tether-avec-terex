@@ -1,14 +1,4 @@
-import { Section, Text } from 'npm:@react-email/components@0.0.22';
-import * as React from 'npm:react@18.3.1';
-import {
-  BaseEmail,
-  Hero,
-  InfoTable,
-  InfoRow,
-  NoticeBox,
-  PrimaryButton,
-  TEREX,
-} from './base-email.tsx';
+import { wrapEmail, hero, infoTable, noticeBox, ctaButton } from './html-utils.ts';
 
 interface ReengagementEmailProps {
   userFirstName?: string;
@@ -16,38 +6,32 @@ interface ReengagementEmailProps {
   dashboardLink?: string;
 }
 
-export const ReengagementEmail = ({
+export function reengagementHtml({
   userFirstName,
   currentRate,
   dashboardLink = 'https://terangaexchange.com/dashboard',
-}: ReengagementEmailProps) => (
-  <BaseEmail
-    preview={`${userFirstName ? `${userFirstName}, o` : 'O'}n pense à vous — Le taux du jour est disponible sur Terex`}
-    topRight={<span style={{ fontSize: '11px', color: TEREX.textDim }}>terangaexchange.com</span>}
-  >
-    <Hero
-      eyebrow="On pense à vous"
-      title={<>Ça fait un moment{userFirstName ? `, ${userFirstName} 👋` : ' 👋'}</>}
-      subtitle={
-        currentRate
-          ? `Vous n'avez pas effectué de transaction depuis un moment. Le taux du jour est de ${currentRate} CFA/USDT — achetez ou vendez en quelques minutes.`
-          : "Vous n'avez pas effectué de transaction depuis un moment. Le tarif du jour est disponible sur Terex — achetez ou vendez en quelques minutes."
-      }
-    />
+}: ReengagementEmailProps): string {
+  const greeting = userFirstName ? `Ça fait un moment, ${userFirstName}` : 'Ça fait un moment';
+  const subtitle = currentRate
+    ? `Vous n'avez pas effectué de transaction depuis un moment. Le taux du jour est de ${currentRate} CFA/USDT — achetez ou vendez en quelques minutes.`
+    : "Vous n'avez pas effectué de transaction depuis un moment. Le tarif du jour est disponible sur Terex — achetez ou vendez en quelques minutes.";
 
-    <div style={{ height: '36px' }} />
+  const rows =
+    hero({ eyebrow: 'On pense à vous', title: greeting, subtitle }) +
+    `<tr><td style="height:28px;"></td></tr>` +
+    infoTable([
+      { label: 'Paiement',   value: 'Orange Money · Wave',        green: true },
+      { label: 'Délai',      value: '~3 minutes par transaction' },
+      { label: 'Commission', value: '2% fixe, sans surprise' },
+      { label: 'Réseaux',    value: '7 réseaux pris en charge',   last: true },
+    ], 'Pourquoi revenir sur Terex ?') +
+    noticeBox('Votre compte est toujours actif et sécurisé. Connectez-vous pour voir le taux du jour et effectuer une transaction en quelques minutes.') +
+    ctaButton('Voir le tarif du jour', dashboardLink);
 
-    <InfoTable title="Pourquoi revenir sur Terex ?">
-      <InfoRow label="Paiement" value="Orange Money · Wave" green />
-      <InfoRow label="Délai" value="~3 minutes par transaction" />
-      <InfoRow label="Commission" value="2% fixe, sans surprise" />
-      <InfoRow label="Réseaux" value="7 réseaux pris en charge" last />
-    </InfoTable>
-
-    <NoticeBox>
-      Votre compte est toujours actif et sécurisé. Connectez-vous pour voir le taux du jour et effectuer une transaction en quelques minutes.
-    </NoticeBox>
-
-    <PrimaryButton href={dashboardLink}>Voir le tarif du jour</PrimaryButton>
-  </BaseEmail>
-);
+  return wrapEmail(
+    `${userFirstName ? `${userFirstName}, o` : 'O'}n pense à vous — Le taux du jour est disponible sur Terex`,
+    rows,
+    'terangaexchange.com',
+    'Vous avez reçu cet email car votre compte Terex est inactif depuis un moment.'
+  );
+}

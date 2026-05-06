@@ -1,15 +1,4 @@
-import { Section, Text } from 'npm:@react-email/components@0.0.22';
-import * as React from 'npm:react@18.3.1';
-import {
-  BaseEmail,
-  Hero,
-  InfoTable,
-  InfoRow,
-  NoticeBox,
-  PrimaryButton,
-  StatusPill,
-  TEREX,
-} from './base-email.tsx';
+import { wrapEmail, hero, infoTable, noticeBox, ctaButton, statusBadge, dotBadge, C } from './html-utils.ts';
 
 interface StatusUpdateProps {
   orderData: any;
@@ -20,90 +9,67 @@ interface StatusUpdateProps {
 const STATUS_META: Record<string, { label: string; tone: 'success' | 'warning' | 'danger' | 'neutral' }> = {
   processing: { label: 'En cours de traitement', tone: 'warning' },
   completed:  { label: 'Terminée avec succès',   tone: 'success' },
-  cancelled:  { label: 'Annulée',                tone: 'danger' },
-  failed:     { label: 'Échec',                  tone: 'danger' },
+  cancelled:  { label: 'Annulée',                tone: 'danger'  },
+  failed:     { label: 'Échec',                  tone: 'danger'  },
 };
 
-export const StatusUpdateEmail = ({ orderData, transactionType, clientName }: StatusUpdateProps) => {
+export function statusUpdateHtml({ orderData, transactionType, clientName }: StatusUpdateProps): string {
   const meta = STATUS_META[orderData.status] || { label: orderData.status || 'Mise à jour', tone: 'neutral' as const };
   const reference = `#TEREX-${(orderData.id || '').slice(-8).toUpperCase() || 'N/A'}`;
   const isTransfer = transactionType === 'transfer';
-  const objectName = isTransfer
-    ? 'transfert international'
-    : transactionType === 'buy'
-    ? 'achat USDT'
-    : transactionType === 'sell'
-    ? 'vente USDT'
+  const objectName = isTransfer ? 'transfert international'
+    : transactionType === 'buy' ? 'achat USDT'
+    : transactionType === 'sell' ? 'vente USDT'
     : 'transaction';
 
-  return (
-    <BaseEmail preview={`${reference} — ${meta.label}`} topRight={<StatusPill label={meta.label} tone={meta.tone} />}>
-      <Hero
-        reference={`Référence · ${reference}`}
-        title={
-          <>
-            Mise à jour de votre<br />
-            {isTransfer ? 'transfert' : 'commande'}
-          </>
-        }
-        date={new Date(orderData.updated_at || Date.now()).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' })}
-        subtitle={
-          clientName
-            ? `Bonjour ${clientName}, le statut de votre ${objectName} a évolué : ${meta.label.toLowerCase()}.`
-            : `Le statut de votre ${objectName} a évolué : ${meta.label.toLowerCase()}.`
-        }
-      />
+  const subtitle = clientName
+    ? `Bonjour ${clientName}, le statut de votre ${objectName} a évolué : ${meta.label.toLowerCase()}.`
+    : `Le statut de votre ${objectName} a évolué : ${meta.label.toLowerCase()}.`;
 
-      <div style={{ height: '36px' }} />
+  const baseRows = [
+    { label: 'Référence',   value: reference, mono: true },
+    { label: 'Création',    value: new Date(orderData.created_at || Date.now()).toLocaleString('fr-FR') },
+    { label: 'Mise à jour', value: new Date(orderData.updated_at || Date.now()).toLocaleString('fr-FR') },
+  ];
 
-      <InfoTable title="Détails">
-        <InfoRow label="Référence" value={reference} mono />
-        <InfoRow label="Création" value={new Date(orderData.created_at || Date.now()).toLocaleString('fr-FR')} />
-        <InfoRow label="Mise à jour" value={new Date(orderData.updated_at || Date.now()).toLocaleString('fr-FR')} />
+  const typeRows = !isTransfer ? [
+    { label: 'Type',    value: transactionType === 'buy' ? 'Achat USDT' : 'Vente USDT' },
+    { label: 'Montant', value: `${Number(orderData.amount || 0).toLocaleString('fr-FR')} ${orderData.currency || 'CFA'}` },
+    { label: 'USDT',    value: `${Number(orderData.usdt_amount || 0).toLocaleString('fr-FR')} USDT`, green: true },
+    { label: 'Réseau',  value: orderData.network || 'TRC-20', last: true },
+  ] : [
+    { label: 'Envoyé',      value: `${orderData.amount || 0} ${orderData.from_currency || 'USDT'}` },
+    { label: 'À recevoir',  value: `${Number(orderData.total_amount || 0).toLocaleString('fr-FR')} ${orderData.to_currency || ''}`, green: true },
+    { label: 'Destinataire',value: orderData.recipient_name || 'N/A' },
+    { label: 'Pays',        value: orderData.recipient_country || 'N/A', last: true },
+  ];
 
-        {!isTransfer && (
-          <>
-            <InfoRow label="Type" value={transactionType === 'buy' ? 'Achat USDT' : 'Vente USDT'} />
-            <InfoRow label="Montant" value={`${Number(orderData.amount || 0).toLocaleString('fr-FR')} ${orderData.currency || 'CFA'}`} />
-            <InfoRow label="USDT" value={`${Number(orderData.usdt_amount || 0).toLocaleString('fr-FR')} USDT`} green />
-            <InfoRow label="Réseau" value={orderData.network || 'TRC-20'} last />
-          </>
-        )}
+  let notice = '';
+  if (orderData.status === 'processing') {
+    notice = noticeBox(`Notre équipe traite activement votre ${isTransfer ? 'transfert' : 'commande'}. Vous recevrez une nouvelle notification dès la finalisation.`, 'warning');
+  } else if (orderData.status === 'completed') {
+    notice = noticeBox(isTransfer ? 'Les fonds ont été crédités au destinataire avec succès.' : 'Votre transaction a été traitée avec succès.', 'success');
+  } else if (orderData.status === 'cancelled') {
+    const reason = orderData.cancellation_reason ? `Motif : ${orderData.cancellation_reason}. ` : '';
+    notice = noticeBox(`Votre ${isTransfer ? 'transfert' : 'commande'} a été annulé. ${reason}Si un paiement a été effectué, il sera remboursé sous 3 à 5 jours ouvrables.`, 'danger');
+  } else if (orderData.status === 'failed') {
+    notice = noticeBox(`Une erreur s'est produite. ${orderData.error_message || 'Notre équipe technique a été notifiée.'}`, 'danger');
+  }
 
-        {isTransfer && (
-          <>
-            <InfoRow label="Envoyé" value={`${orderData.amount || 0} ${orderData.from_currency || 'USDT'}`} />
-            <InfoRow label="À recevoir" value={`${Number(orderData.total_amount || 0).toLocaleString('fr-FR')} ${orderData.to_currency || ''}`} green />
-            <InfoRow label="Destinataire" value={orderData.recipient_name || 'N/A'} />
-            <InfoRow label="Pays" value={orderData.recipient_country || 'N/A'} last />
-          </>
-        )}
-      </InfoTable>
+  const topRight = meta.tone === 'success' ? statusBadge(meta.label, 'success')
+    : meta.tone === 'danger' ? statusBadge(meta.label, 'danger')
+    : dotBadge(meta.label, C.amber);
 
-      {orderData.status === 'processing' && (
-        <NoticeBox tone="warning">
-          Notre équipe traite activement votre {isTransfer ? 'transfert' : 'commande'}. Vous recevrez une nouvelle
-          notification dès la finalisation.
-        </NoticeBox>
-      )}
-      {orderData.status === 'completed' && (
-        <NoticeBox tone="success">
-          {isTransfer
-            ? 'Les fonds ont été crédités au destinataire avec succès.'
-            : 'Votre transaction a été traitée avec succès.'}
-        </NoticeBox>
-      )}
-      {(orderData.status === 'cancelled' || orderData.status === 'failed') && (
-        <NoticeBox tone="danger">
-          {orderData.status === 'cancelled'
-            ? `Votre ${isTransfer ? 'transfert' : 'commande'} a été annulé. ${
-                orderData.cancellation_reason ? `Motif : ${orderData.cancellation_reason}. ` : ''
-              }Si un paiement a été effectué, il sera remboursé sous 3 à 5 jours ouvrables.`
-            : `Une erreur s'est produite. ${orderData.error_message || 'Notre équipe technique a été notifiée.'}`}
-        </NoticeBox>
-      )}
+  const rows =
+    hero({ reference: `Référence · ${reference}`, title: `Mise à jour de votre ${isTransfer ? 'transfert' : 'commande'}`, date: new Date(orderData.updated_at || Date.now()).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' }), subtitle }) +
+    infoTable([...baseRows, ...typeRows], 'Détails') +
+    notice +
+    ctaButton('Voir le détail', 'https://terangaexchange.com/dashboard');
 
-      <PrimaryButton href="https://terangaexchange.com/dashboard">Voir le détail</PrimaryButton>
-    </BaseEmail>
+  return wrapEmail(
+    `${reference} — ${meta.label}`,
+    rows,
+    topRight,
+    'Vous avez reçu cet email suite à une mise à jour de votre transaction sur Terex.'
   );
-};
+}
