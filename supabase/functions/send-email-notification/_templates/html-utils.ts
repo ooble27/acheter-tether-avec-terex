@@ -39,20 +39,21 @@ html,body{margin:0;padding:0;background-color:#0d0d0d !important;color:#efefef !
   .egreen{color:#3B968F !important;}
   .ered{color:#f87171 !important;}
 }
-/* dark system → prevent client from inverting our already-dark email */
+/* dark system → le fond sera blanc (Gmail l'inverse), on rend le texte sombre pour rester lisible */
 @media (prefers-color-scheme:dark){
   html,body,.ebg{background-color:#0d0d0d !important;color-scheme:only dark !important;}
   .ecard{background-color:#161616 !important;}
   .efooter,.ebar{background-color:#0a0a0a !important;}
   .einfo{background-color:#0d0d0d !important;border-color:#2a2a2a !important;}
   .erow{background-color:#1e1e1e !important;}
-  .etxt{color:#efefef !important;}
-  .emuted{color:#7a7a7a !important;}
-  .edim{color:#3d3d3d !important;}
-  .egreen{color:#3B968F !important;}
-  .ered{color:#f87171 !important;}
+  /* texte sombre → lisible même si Gmail inverse le fond en blanc */
+  .etxt{color:#111111 !important;}
+  .emuted{color:#333333 !important;}
+  .edim{color:#555555 !important;}
+  .egreen{color:#1f6b67 !important;}
+  .ered{color:#b91c1c !important;}
 }
-/* Gmail Android dark mode — targets elements Gmail rewrites in dark mode */
+/* Gmail Android dark mode [data-ogsc] — texte sombre pour fond blanc imposé par Gmail */
 [data-ogsc] body,[data-ogsb] body{background-color:#0d0d0d !important;}
 [data-ogsc] table,[data-ogsb] table{background-color:transparent !important;}
 [data-ogsc] .ecard,[data-ogsb] .ecard{background-color:#161616 !important;}
@@ -60,14 +61,11 @@ html,body{margin:0;padding:0;background-color:#0d0d0d !important;color:#efefef !
 [data-ogsc] .efooter,[data-ogsb] .efooter{background-color:#0a0a0a !important;}
 [data-ogsc] .einfo,[data-ogsb] .einfo{background-color:#0d0d0d !important;}
 [data-ogsc] .erow,[data-ogsb] .erow{background-color:#1e1e1e !important;}
-[data-ogsc] .etxt,[data-ogsb] .etxt{color:#efefef !important;}
-[data-ogsc] .emuted,[data-ogsb] .emuted{color:#7a7a7a !important;}
-[data-ogsc] .egreen,[data-ogsb] .egreen{color:#3B968F !important;}
-[data-ogsc] .ered,[data-ogsb] .ered{color:#f87171 !important;}
-/* Apple Mail / iOS Mail dark mode */
-@media (prefers-color-scheme:dark){
-  [data-ogsc] body,[data-ogsb] body{background-color:#0d0d0d !important;}
-}
+[data-ogsc] .etxt,[data-ogsb] .etxt{color:#111111 !important;}
+[data-ogsc] .emuted,[data-ogsb] .emuted{color:#333333 !important;}
+[data-ogsc] .edim,[data-ogsb] .edim{color:#555555 !important;}
+[data-ogsc] .egreen,[data-ogsb] .egreen{color:#1f6b67 !important;}
+[data-ogsc] .ered,[data-ogsb] .ered{color:#b91c1c !important;}
 /* Mobile */
 @media only screen and (max-width:620px){
   .w600{width:100% !important;max-width:100% !important;}
