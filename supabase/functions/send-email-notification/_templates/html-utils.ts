@@ -23,10 +23,12 @@ const BASE = `https://terangaexchange.com`;
 
 // ─── CSS — always dark, both light+dark system prefs, Gmail dark mode overrides ────────────
 const CSS = `
-html,body{margin:0;padding:0;background-color:#0d0d0d !important;color:#efefef !important;-webkit-text-size-adjust:100%;color-scheme:dark;}
+/* force dark everywhere — color-scheme:only dark tells ALL clients not to transform */
+:root{color-scheme:only dark !important;}
+html,body{margin:0;padding:0;background-color:#0d0d0d !important;color:#efefef !important;-webkit-text-size-adjust:100%;color-scheme:only dark !important;}
 /* light system → keep dark */
 @media (prefers-color-scheme:light){
-  html,body,.ebg{background-color:#0d0d0d !important;}
+  html,body,.ebg{background-color:#0d0d0d !important;color-scheme:only dark !important;}
   .ecard{background-color:#161616 !important;}
   .efooter,.ebar{background-color:#0a0a0a !important;}
   .einfo{background-color:#0d0d0d !important;border-color:#2a2a2a !important;}
@@ -36,11 +38,10 @@ html,body{margin:0;padding:0;background-color:#0d0d0d !important;color:#efefef !
   .edim{color:#3d3d3d !important;}
   .egreen{color:#3B968F !important;}
   .ered{color:#f87171 !important;}
-  .eborder{border-color:#2a2a2a !important;}
 }
-/* dark system → keep OUR dark, prevent client inversion */
+/* dark system → prevent client from inverting our already-dark email */
 @media (prefers-color-scheme:dark){
-  html,body,.ebg{background-color:#0d0d0d !important;}
+  html,body,.ebg{background-color:#0d0d0d !important;color-scheme:only dark !important;}
   .ecard{background-color:#161616 !important;}
   .efooter,.ebar{background-color:#0a0a0a !important;}
   .einfo{background-color:#0d0d0d !important;border-color:#2a2a2a !important;}
@@ -50,10 +51,10 @@ html,body{margin:0;padding:0;background-color:#0d0d0d !important;color:#efefef !
   .edim{color:#3d3d3d !important;}
   .egreen{color:#3B968F !important;}
   .ered{color:#f87171 !important;}
-  .eborder{border-color:#2a2a2a !important;}
 }
-/* Gmail dark mode class overrides */
+/* Gmail Android dark mode — targets elements Gmail rewrites in dark mode */
 [data-ogsc] body,[data-ogsb] body{background-color:#0d0d0d !important;}
+[data-ogsc] table,[data-ogsb] table{background-color:transparent !important;}
 [data-ogsc] .ecard,[data-ogsb] .ecard{background-color:#161616 !important;}
 [data-ogsc] .ebar,[data-ogsb] .ebar{background-color:#0a0a0a !important;}
 [data-ogsc] .efooter,[data-ogsb] .efooter{background-color:#0a0a0a !important;}
@@ -63,6 +64,10 @@ html,body{margin:0;padding:0;background-color:#0d0d0d !important;color:#efefef !
 [data-ogsc] .emuted,[data-ogsb] .emuted{color:#7a7a7a !important;}
 [data-ogsc] .egreen,[data-ogsb] .egreen{color:#3B968F !important;}
 [data-ogsc] .ered,[data-ogsb] .ered{color:#f87171 !important;}
+/* Apple Mail / iOS Mail dark mode */
+@media (prefers-color-scheme:dark){
+  [data-ogsc] body,[data-ogsb] body{background-color:#0d0d0d !important;}
+}
 /* Mobile */
 @media only screen and (max-width:620px){
   .w600{width:100% !important;max-width:100% !important;}
@@ -80,11 +85,11 @@ html,body{margin:0;padding:0;background-color:#0d0d0d !important;color:#efefef !
 // ─── Header ─── clean TEREX only, no right text ───────────────────────────────
 export function header(): string {
   return `
-<tr>
+<tr bgcolor="${C.cardBg}">
   <td class="ecard" bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:20px 28px;border-bottom:1px solid ${C.borderSoft};">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td style="vertical-align:middle;">
+      <tr bgcolor="${C.cardBg}">
+        <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};vertical-align:middle;">
           <img src="${LOGO}" width="24" height="24" alt="" style="display:inline-block;vertical-align:middle;border-radius:5px;margin-right:10px;border:0;">
           <span class="egreen" style="font-family:${F};font-size:13px;font-weight:800;letter-spacing:5px;color:${C.green};vertical-align:middle;text-transform:uppercase;">TEREX</span>
         </td>
@@ -98,11 +103,11 @@ export function header(): string {
 export function footer(note = "Vous avez reçu cet email suite à une activité sur votre compte Terex."): string {
   const yr = new Date().getFullYear();
   return `
-<tr>
+<tr bgcolor="${C.footerBg}">
   <td class="efooter" bgcolor="${C.footerBg}" style="background-color:${C.footerBg};padding:28px;border-top:1px solid ${C.borderSoft};">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td>
+      <tr bgcolor="${C.footerBg}">
+        <td bgcolor="${C.footerBg}" style="background-color:${C.footerBg};">
           <p class="egreen" style="font-family:${F};font-size:11px;font-weight:800;letter-spacing:4px;color:${C.green};margin:0 0 12px 0;text-transform:uppercase;">TEREX</p>
           <p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};line-height:1.8;margin:0 0 4px 0;">${note}</p>
           <p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};line-height:1.8;margin:0 0 14px 0;">© ${yr} Teranga Exchange — Tous droits réservés.</p>
@@ -130,7 +135,7 @@ export function hero(opts: {
   iconHtml?: string;
 }): string {
   return `
-<tr>
+<tr bgcolor="${C.cardBg}">
   <td class="ecard mpad" bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:40px 28px 32px;">
     ${opts.iconHtml ? `<div style="margin-bottom:22px;">${opts.iconHtml}</div>` : ''}
     ${opts.eyebrow ? `<p class="egreen" style="font-family:${F};font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:${C.green};margin:0 0 16px 0;">${opts.eyebrow}</p>` : ''}
@@ -194,18 +199,19 @@ export function flowBar(
 }
 
 // ─── Info table ───────────────────────────────────────────────────────────────
+// ─── Info table ───────────────────────────────────────────────────────────────
 export function infoTable(
   rows: Array<{ label: string; value: string; mono?: boolean; green?: boolean; big?: boolean; last?: boolean }>,
   title?: string
 ): string {
   const rowsHtml = rows.map(r => `
-    <tr class="irow">
-      <td class="emuted" style="padding:13px 18px;font-family:${F};font-size:12px;color:${C.textMuted};${r.last ? '' : `border-bottom:1px solid ${C.borderSoft};`}vertical-align:middle;width:44%;">${r.label}</td>
-      <td class="${r.green ? 'egreen' : 'etxt'}" style="padding:13px 18px;font-family:${r.mono ? FM : F};font-size:${r.big ? '15px' : r.mono ? '11px' : '12px'};font-weight:${r.big ? 700 : 500};color:${r.green ? C.green : C.text};${r.last ? '' : `border-bottom:1px solid ${C.borderSoft};`}text-align:right;word-break:break-word;vertical-align:middle;">${r.value}</td>
+    <tr class="irow" bgcolor="${C.infoBg}">
+      <td bgcolor="${C.infoBg}" class="emuted" style="background-color:${C.infoBg};padding:13px 18px;font-family:${F};font-size:12px;color:${C.textMuted};${r.last ? '' : `border-bottom:1px solid ${C.borderSoft};`}vertical-align:middle;width:44%;">${r.label}</td>
+      <td bgcolor="${C.infoBg}" class="${r.green ? 'egreen' : 'etxt'}" style="background-color:${C.infoBg};padding:13px 18px;font-family:${r.mono ? FM : F};font-size:${r.big ? '15px' : r.mono ? '11px' : '12px'};font-weight:${r.big ? 700 : 500};color:${r.green ? C.green : C.text};${r.last ? '' : `border-bottom:1px solid ${C.borderSoft};`}text-align:right;word-break:break-word;vertical-align:middle;">${r.value}</td>
     </tr>`).join('');
   return `
-<tr>
-  <td style="padding:0 28px 24px;">
+<tr bgcolor="${C.cardBg}">
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 28px 24px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:12px;overflow:hidden;border-collapse:separate;border-spacing:0;">
       ${title ? `<tr><td colspan="2" class="edim" style="padding:11px 18px;font-family:${F};font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${C.textDim};border-bottom:1px solid ${C.borderSoft};">${title}</td></tr>` : ''}
       ${rowsHtml}
@@ -223,8 +229,8 @@ export function noticeBox(text: string, tone: 'neutral' | 'warning' | 'danger' |
     success: { bg: '#0b1f1e', border: 'rgba(59,150,143,0.3)',color: C.text      },
   }[tone];
   return `
-<tr>
-  <td style="padding:0 28px 24px;">
+<tr bgcolor="${C.cardBg}">
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 28px 24px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td style="padding:14px 18px;background-color:${s.bg};border:1px solid ${s.border};border-radius:10px;font-family:${F};font-size:12px;color:${s.color};line-height:1.75;">${text}</td>
@@ -237,8 +243,8 @@ export function noticeBox(text: string, tone: 'neutral' | 'warning' | 'danger' |
 // ─── CTA Button ───────────────────────────────────────────────────────────────
 export function ctaButton(text: string, href: string): string {
   return `
-<tr>
-  <td align="center" style="padding:4px 28px 36px;">
+<tr bgcolor="${C.cardBg}">
+  <td bgcolor="${C.cardBg}" align="center" style="background-color:${C.cardBg};padding:4px 28px 36px;">
     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td align="center" bgcolor="${C.green}" style="background-color:${C.green};border-radius:9px;">
@@ -253,8 +259,8 @@ export function ctaButton(text: string, href: string): string {
 // ─── Section label ────────────────────────────────────────────────────────────
 export function sectionLabel(text: string): string {
   return `
-<tr>
-  <td style="padding:0 28px 12px;">
+<tr bgcolor="${C.cardBg}">
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 28px 12px;">
     <p class="edim" style="font-family:${F};font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${C.textDim};margin:0;">${text}</p>
   </td>
 </tr>`;
@@ -262,7 +268,7 @@ export function sectionLabel(text: string): string {
 
 // ─── Spacer ───────────────────────────────────────────────────────────────────
 export function spacer(h = 24): string {
-  return `<tr><td style="height:${h}px;line-height:${h}px;font-size:1px;">&nbsp;</td></tr>`;
+  return `<tr bgcolor="${C.cardBg}"><td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};height:${h}px;line-height:${h}px;font-size:1px;">&nbsp;</td></tr>`;
 }
 
 // ─── Divider ──────────────────────────────────────────────────────────────────
@@ -308,8 +314,8 @@ export function steps(items: Array<{ text: string; done?: boolean }>): string {
       </td>
     </tr>`).join('');
   return `
-<tr>
-  <td style="padding:0 28px 28px;">
+<tr bgcolor="${C.cardBg}">
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 28px 28px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       ${rows}
     </table>
@@ -320,8 +326,8 @@ export function steps(items: Array<{ text: string; done?: boolean }>): string {
 // ─── OTP Card ─────────────────────────────────────────────────────────────────
 export function otpCard(code: string): string {
   return `
-<tr>
-  <td style="padding:0 28px 24px;">
+<tr bgcolor="${C.cardBg}">
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 28px 24px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td class="einfo" align="center" bgcolor="${C.infoBg}" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:12px;padding:32px 24px;">
@@ -339,8 +345,8 @@ export function otpCard(code: string): string {
 export function linkBox(url: string): string {
   const display = url.length > 55 ? url.slice(0, 55) + '...' : url;
   return `
-<tr>
-  <td style="padding:0 28px 24px;">
+<tr bgcolor="${C.cardBg}">
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 28px 24px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td class="einfo" bgcolor="${C.infoBg}" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:9px;padding:13px 16px;">
@@ -357,16 +363,16 @@ export function wrapEmail(preview: string, rows: string, _topRightOrNote?: strin
   // If only 3 args and 3rd doesn't look like a badge/HTML, treat it as footerNote
   const note = footerNote ?? (_topRightOrNote && !_topRightOrNote.includes('<') ? _topRightOrNote : undefined);
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" style="color-scheme:dark;">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" bgcolor="${C.pageBg}" style="background-color:${C.pageBg};color-scheme:only dark;">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="color-scheme" content="dark"/>
+<meta name="color-scheme" content="only dark"/>
 <meta name="supported-color-schemes" content="dark"/>
 <title>${preview}</title>
 <style type="text/css">${CSS}</style>
 </head>
-<body class="ebg" bgcolor="${C.pageBg}" style="margin:0;padding:0;background-color:${C.pageBg};color-scheme:dark;">
+<body class="ebg" bgcolor="${C.pageBg}" style="margin:0;padding:0;background-color:${C.pageBg};color-scheme:only dark;">
 <!--[if mso]><table role="presentation" width="100%"><tr><td><![endif]-->
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="${C.pageBg}" class="ebg" style="background-color:${C.pageBg};">
 <tr><td align="center" style="padding:0;">
