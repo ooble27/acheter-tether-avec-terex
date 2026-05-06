@@ -1,13 +1,4 @@
-import { Section, Text, Link } from 'npm:@react-email/components@0.0.22';
-import * as React from 'npm:react@18.3.1';
-import {
-  BaseEmail,
-  Hero,
-  InfoTable,
-  InfoRow,
-  NoticeBox,
-  TEREX,
-} from './base-email.tsx';
+import { wrapEmail, hero, infoTable, noticeBox, alertRing, C } from './html-utils.ts';
 
 interface SecurityAlertEmailProps {
   device?: string;
@@ -16,131 +7,46 @@ interface SecurityAlertEmailProps {
   secureLink?: string;
 }
 
-const AlertRing: React.FC = () => (
-  <table cellPadding={0} cellSpacing={0} role="presentation">
-    <tbody>
-      <tr>
-        <td
-          style={{
-            width: '52px',
-            height: '52px',
-            borderRadius: '50%',
-            border: `1.5px solid ${TEREX.red}`,
-            textAlign: 'center',
-            verticalAlign: 'middle',
-            lineHeight: '52px',
-            color: TEREX.red,
-            fontSize: '24px',
-          }}
-        >
-          ⚠
-        </td>
-      </tr>
-    </tbody>
-  </table>
-);
-
-const RedBadge: React.FC = () => (
-  <span
-    style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '5px',
-      fontSize: '10px',
-      fontWeight: 700,
-      color: TEREX.red,
-      letterSpacing: '0.5px',
-    }}
-  >
-    <span
-      style={{
-        display: 'inline-block',
-        width: '5px',
-        height: '5px',
-        borderRadius: '50%',
-        background: TEREX.red,
-      }}
-    />
-    Alerte sécurité
-  </span>
-);
-
-export const SecurityAlertEmail = ({
+export function securityAlertHtml({
   device = 'Appareil inconnu',
   location = 'Localisation inconnue',
   date,
   secureLink = 'https://terangaexchange.com/dashboard',
-}: SecurityAlertEmailProps) => {
-  const dateStr = date
-    ? date
-    : new Date().toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' });
+}: SecurityAlertEmailProps): string {
+  const dateStr = date || new Date().toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' });
+  const F = `-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif`;
 
-  return (
-    <BaseEmail
-      preview="Connexion depuis un nouvel appareil détectée sur votre compte Terex"
-      topRight={<RedBadge />}
-    >
-      <Hero
-        iconRing={<AlertRing />}
-        title="Connexion depuis un nouvel appareil"
-        subtitle="Une connexion à votre compte Terex a été détectée depuis un appareil inconnu. Si ce n'est pas vous, sécurisez votre compte immédiatement."
-      />
+  const dualButtons = `
+<tr>
+  <td style="padding:0 24px 32px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="padding-right:10px;">
+          <a href="${secureLink}" style="display:inline-block;background-color:${C.green};color:#ffffff;font-family:${F};font-size:13px;font-weight:600;padding:13px 28px;border-radius:8px;text-decoration:none;">Sécuriser mon compte</a>
+        </td>
+        <td>
+          <a href="https://terangaexchange.com/dashboard" class="emuted" style="display:inline-block;background-color:${C.rowBg};color:${C.textMuted};font-family:${F};font-size:13px;font-weight:500;padding:13px 28px;border-radius:8px;text-decoration:none;border:1px solid ${C.border};">C'est moi</a>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>`;
 
-      <div style={{ height: '36px' }} />
+  const rows =
+    hero({ iconHtml: alertRing('⚠', C.red), title: 'Connexion depuis un nouvel appareil', subtitle: "Une connexion à votre compte Terex a été détectée depuis un appareil inconnu. Si ce n'est pas vous, sécurisez votre compte immédiatement." }) +
+    `<tr><td style="height:28px;"></td></tr>` +
+    infoTable([
+      { label: 'Date',        value: dateStr },
+      { label: 'Appareil',    value: device },
+      { label: 'Localisation',value: location, last: true },
+    ], 'Détails de la connexion') +
+    noticeBox("Si c'est bien vous, ignorez cet email. Sinon, cliquez sur \"Sécuriser mon compte\" pour changer votre mot de passe et révoquer l'accès.", 'warning') +
+    dualButtons;
 
-      <InfoTable title="Détails de la connexion">
-        <InfoRow label="Date" value={dateStr} />
-        <InfoRow label="Appareil" value={device} />
-        <InfoRow label="Localisation" value={location} last />
-      </InfoTable>
-
-      <NoticeBox tone="warning">
-        Si c'est bien vous, ignorez cet email. Sinon, cliquez sur "Sécuriser mon compte" pour changer votre mot de passe et révoquer l'accès.
-      </NoticeBox>
-
-      <Section style={{ padding: '0 40px 40px', display: 'flex', gap: '12px' }}>
-        <table width="100%" cellPadding={0} cellSpacing={0} role="presentation">
-          <tbody>
-            <tr>
-              <td style={{ paddingRight: '10px' }}>
-                <Link
-                  href={secureLink}
-                  style={{
-                    display: 'inline-block',
-                    background: TEREX.green,
-                    color: '#ffffff',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    padding: '13px 28px',
-                    borderRadius: '8px',
-                    textDecoration: 'none',
-                  }}
-                >
-                  Sécuriser mon compte
-                </Link>
-              </td>
-              <td>
-                <Link
-                  href="https://terangaexchange.com/dashboard"
-                  style={{
-                    display: 'inline-block',
-                    background: TEREX.surface2,
-                    color: TEREX.textMuted,
-                    fontSize: '13px',
-                    fontWeight: 500,
-                    padding: '13px 28px',
-                    borderRadius: '8px',
-                    textDecoration: 'none',
-                    border: `1px solid ${TEREX.border}`,
-                  }}
-                >
-                  C'est moi
-                </Link>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </Section>
-    </BaseEmail>
+  return wrapEmail(
+    'Connexion depuis un nouvel appareil — Terex',
+    rows,
+    `<span style="font-family:-apple-system,sans-serif;font-size:10px;font-weight:700;color:${C.red};">&#9679; Alerte sécurité</span>`,
+    'Vous avez reçu cet email suite à une activité de connexion sur votre compte Terex.'
   );
-};
+}

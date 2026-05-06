@@ -1,14 +1,4 @@
-import { Section, Text } from 'npm:@react-email/components@0.0.22';
-import * as React from 'npm:react@18.3.1';
-import {
-  BaseEmail,
-  Hero,
-  InfoTable,
-  InfoRow,
-  PrimaryButton,
-  SectionLabel,
-  TEREX,
-} from './base-email.tsx';
+import { wrapEmail, hero, infoTable, ctaButton, sectionLabel, C } from './html-utils.ts';
 
 interface TransferConfirmationProps {
   transferData: any;
@@ -19,7 +9,7 @@ const COUNTRIES: Record<string, string> = {
   SN: 'Sénégal', CI: "Côte d'Ivoire", ML: 'Mali', BF: 'Burkina Faso', NG: 'Nigeria', BJ: 'Bénin',
 };
 
-export const TransferConfirmationEmail = ({ transferData, clientName }: TransferConfirmationProps) => {
+export function transferConfirmationHtml({ transferData, clientName }: TransferConfirmationProps): string {
   const country = COUNTRIES[transferData.recipient_country] || transferData.recipient_country || 'N/A';
   const providerName =
     transferData.provider === 'wave' ? 'Wave' :
@@ -36,182 +26,84 @@ export const TransferConfirmationEmail = ({ transferData, clientName }: Transfer
     .join('')
     .toUpperCase();
 
-  const amountSent = `${Number(transferData.amount || 0).toLocaleString('fr-FR')}`;
-  const amountReceived = `${Number(transferData.total_amount || 0).toLocaleString('fr-FR')}`;
+  const amountSent = Number(transferData.amount || 0).toLocaleString('fr-FR');
+  const amountReceived = Number(transferData.total_amount || 0).toLocaleString('fr-FR');
   const fromCur = transferData.from_currency || 'USDT';
   const toCur = transferData.to_currency || 'CFA';
-  const dateStr = new Date(transferData.created_at || Date.now()).toLocaleString('fr-FR', {
-    dateStyle: 'long',
-    timeStyle: 'short',
-  });
+  const dateStr = new Date(transferData.created_at || Date.now()).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' });
 
-  return (
-    <BaseEmail
-      preview={`${reference} — ${recipName} (${country})`}
-      topRight={<span style={{ fontSize: '11px', color: TEREX.textDim, letterSpacing: '0.5px' }}>Transfert international</span>}
-    >
-      <Hero
-        reference={`Référence · ${reference}`}
-        title={<>Transfert déposé<br />avec succès</>}
-        date={dateStr}
-        subtitle={
-          clientName
-            ? `Bonjour ${clientName}, votre transfert vers ${recipName} (${country}) est confirmé.`
-            : `Votre transfert vers ${recipName} (${country}) est confirmé.`
-        }
-      />
+  const F = `-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif`;
+  const FM = `ui-monospace,SFMono-Regular,Menlo,'Courier New',monospace`;
 
-      {/* Flow bar custom */}
-      <Section
-        style={{
-          background: TEREX.bg,
-          borderTop: `1px solid ${TEREX.border}`,
-          borderBottom: `1px solid ${TEREX.border}`,
-          padding: '26px 40px',
-        }}
-      >
-        <table width="100%" cellPadding={0} cellSpacing={0} role="presentation">
-          <tbody>
-            <tr>
-              <td style={{ verticalAlign: 'top', width: '42%' }}>
-                <Text style={flowLabel}>Vous avez envoyé</Text>
-                <Text style={flowAmountOut}>
-                  {amountSent} <span style={flowAmountSub}>{fromCur}</span>
-                </Text>
-              </td>
-              <td style={{ width: '16%', textAlign: 'center', verticalAlign: 'middle' }}>
-                <Text style={{ color: TEREX.green, fontSize: '20px', margin: 0, fontWeight: 700 }}>→</Text>
-                <Text style={{ fontSize: '11px', color: TEREX.textDim, margin: '6px 0 0' }}>
-                  1 {fromCur} = {transferData.exchange_rate || 0} {toCur}
-                </Text>
-              </td>
-              <td style={{ verticalAlign: 'top', width: '42%', textAlign: 'right' }}>
-                <Text style={flowLabel}>Bénéficiaire reçoit</Text>
-                <Text style={flowAmountIn}>
-                  {amountReceived} <span style={flowAmountSubGreen}>{toCur}</span>
-                </Text>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </Section>
+  const subtitle = clientName
+    ? `Bonjour ${clientName}, votre transfert vers ${recipName} (${country}) est confirmé.`
+    : `Votre transfert vers ${recipName} (${country}) est confirmé.`;
 
-      <div style={{ height: '36px' }} />
+  const flowBar = `
+<tr>
+  <td class="ebar" bgcolor="${C.footerBg}" style="background-color:${C.footerBg};border-top:1px solid ${C.border};border-bottom:1px solid ${C.border};padding:20px 24px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="vertical-align:top;width:42%;">
+          <p class="edim" style="font-family:${F};font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:${C.textDim};margin:0 0 6px 0;">Vous avez envoyé</p>
+          <p class="etxt" style="font-family:${F};font-size:24px;font-weight:600;color:${C.text};margin:0;line-height:1.1;">${amountSent} <span class="emuted" style="font-size:14px;font-weight:500;color:${C.textMuted};">${fromCur}</span></p>
+        </td>
+        <td style="width:16%;text-align:center;vertical-align:middle;">
+          <p class="egreen" style="font-family:${F};font-size:20px;font-weight:700;color:${C.green};margin:0;">→</p>
+          <p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};margin:6px 0 0 0;">1 ${fromCur} = ${transferData.exchange_rate || 0} ${toCur}</p>
+        </td>
+        <td style="vertical-align:top;width:42%;text-align:right;">
+          <p class="edim" style="font-family:${F};font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:${C.textDim};margin:0 0 6px 0;">Bénéficiaire reçoit</p>
+          <p class="egreen" style="font-family:${F};font-size:24px;font-weight:600;color:${C.green};margin:0;line-height:1.1;">${amountReceived} <span style="font-size:14px;font-weight:500;">${toCur}</span></p>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>`;
 
-      <SectionLabel>Bénéficiaire</SectionLabel>
-      <Section
-        style={{
-          margin: '0 40px 24px',
-          background: TEREX.bg,
-          border: `1px solid ${TEREX.border}`,
-          borderRadius: '10px',
-          padding: '18px 22px',
-        }}
-      >
-        <table width="100%" cellPadding={0} cellSpacing={0} role="presentation">
-          <tbody>
-            <tr>
-              <td style={{ width: '56px', verticalAlign: 'middle' }}>
-                <div
-                  style={{
-                    width: '44px',
-                    height: '44px',
-                    borderRadius: '50%',
-                    background: TEREX.surface2,
-                    border: `1px solid ${TEREX.border}`,
-                    color: TEREX.textMuted,
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    textAlign: 'center',
-                    lineHeight: '44px',
-                    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-                  }}
-                >
-                  {initials}
-                </div>
-              </td>
-              <td style={{ verticalAlign: 'middle' }}>
-                <Text style={{ fontSize: '14px', fontWeight: 500, color: TEREX.text, margin: '0 0 3px' }}>
-                  {recipName}
-                </Text>
-                {transferData.recipient_phone && (
-                  <Text
-                    style={{
-                      fontSize: '12px',
-                      color: TEREX.textMuted,
-                      fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-                      margin: 0,
-                    }}
-                  >
-                    {transferData.recipient_phone}
-                  </Text>
-                )}
-              </td>
-              <td style={{ verticalAlign: 'middle', textAlign: 'right' }}>
-                <span
-                  style={{
-                    fontSize: '11px',
-                    color: TEREX.textDim,
-                    background: TEREX.surface2,
-                    border: `1px solid ${TEREX.border}`,
-                    padding: '5px 12px',
-                    borderRadius: '6px',
-                  }}
-                >
-                  {providerName}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </Section>
+  const recipientCard = `
+<tr>
+  <td style="padding:0 24px 24px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:10px;overflow:hidden;">
+      <tr>
+        <td style="padding:16px 20px;vertical-align:middle;width:56px;">
+          <div style="width:44px;height:44px;border-radius:50%;background-color:${C.rowBg};border:1px solid ${C.border};color:${C.textMuted};font-size:13px;font-weight:600;text-align:center;line-height:44px;font-family:${FM};">${initials}</div>
+        </td>
+        <td style="padding:16px 0;vertical-align:middle;">
+          <p class="etxt" style="font-family:${F};font-size:14px;font-weight:500;color:${C.text};margin:0 0 3px 0;">${recipName}</p>
+          ${transferData.recipient_phone ? `<p class="emuted" style="font-family:${FM};font-size:12px;color:${C.textMuted};margin:0;">${transferData.recipient_phone}</p>` : ''}
+        </td>
+        <td style="padding:16px 20px;vertical-align:middle;text-align:right;">
+          <span class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};background-color:${C.rowBg};border:1px solid ${C.border};padding:5px 12px;border-radius:6px;">${providerName}</span>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>`;
 
-      <SectionLabel>Détail du transfert</SectionLabel>
-      <InfoTable>
-        <InfoRow label="Référence" value={reference} mono />
-        <InfoRow label="Date" value={dateStr} />
-        <InfoRow label="Montant envoyé" value={`${amountSent} ${fromCur}`} />
-        <InfoRow label="Montant reçu" value={`${amountReceived} ${toCur}`} green />
-        <InfoRow label="Frais de service" value={`${Number(transferData.fees || 0).toLocaleString('fr-FR')} ${fromCur}`} />
-        <InfoRow label="Taux de change" value={`${transferData.exchange_rate || 0} ${toCur} / ${fromCur}`} />
-        <InfoRow label="Pays destination" value={country} />
-        <InfoRow label="Statut" value="Déposé" green last />
-      </InfoTable>
+  const rows =
+    hero({ reference: `Référence · ${reference}`, title: 'Transfert déposé avec succès', date: dateStr, subtitle }) +
+    flowBar +
+    `<tr><td style="height:28px;"></td></tr>` +
+    sectionLabel('Bénéficiaire') +
+    recipientCard +
+    sectionLabel('Détail du transfert') +
+    infoTable([
+      { label: 'Référence',       value: reference,                                                     mono: true },
+      { label: 'Date',            value: dateStr },
+      { label: 'Montant envoyé',  value: `${amountSent} ${fromCur}` },
+      { label: 'Montant reçu',    value: `${amountReceived} ${toCur}`,                                  green: true },
+      { label: 'Frais de service',value: `${Number(transferData.fees || 0).toLocaleString('fr-FR')} ${fromCur}` },
+      { label: 'Taux de change',  value: `${transferData.exchange_rate || 0} ${toCur} / ${fromCur}` },
+      { label: 'Pays destination',value: country },
+      { label: 'Statut',          value: 'Déposé',                                                      green: true, last: true },
+    ]) +
+    ctaButton("Voir l'historique", 'https://terangaexchange.com/dashboard');
 
-      <PrimaryButton href="https://terangaexchange.com/dashboard">Voir l'historique</PrimaryButton>
-    </BaseEmail>
+  return wrapEmail(
+    `${reference} — ${recipName} (${country})`,
+    rows,
+    'Transfert international',
+    'Vous avez reçu cet email suite à votre transfert international sur Terex.'
   );
-};
-
-const flowLabel: React.CSSProperties = {
-  fontSize: '10px',
-  letterSpacing: '1.5px',
-  textTransform: 'uppercase',
-  color: TEREX.textDim,
-  margin: '0 0 8px',
-};
-
-const flowAmountOut: React.CSSProperties = {
-  fontSize: '26px',
-  fontWeight: 600,
-  color: TEREX.text,
-  margin: 0,
-  lineHeight: 1.1,
-};
-
-const flowAmountIn: React.CSSProperties = {
-  ...flowAmountOut,
-  color: TEREX.green,
-};
-
-const flowAmountSub: React.CSSProperties = {
-  fontSize: '14px',
-  color: TEREX.textMuted,
-  fontWeight: 500,
-};
-
-const flowAmountSubGreen: React.CSSProperties = {
-  fontSize: '14px',
-  color: TEREX.green,
-  fontWeight: 500,
-};
+}
