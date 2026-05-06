@@ -16,6 +16,12 @@ import { securityAlertHtml } from './_templates/security-alert-email.tsx';
 import { referralHtml } from './_templates/referral-email.tsx';
 import { reengagementHtml } from './_templates/reengagement-email.tsx';
 import { magicLinkHtml } from './_templates/magic-link-email.tsx';
+import { jobApplicationConfirmationHtml } from './_templates/job-application-confirmation.tsx';
+import { jobApplicationStatusHtml } from './_templates/job-application-status.tsx';
+import { jobApplicationAdminHtml } from './_templates/job-application-admin.tsx';
+import { cancellationConfirmationHtml } from './_templates/cancellation-confirmation.tsx';
+import { contactConfirmationHtml } from './_templates/contact-confirmation.tsx';
+import { adminNewOrderHtml } from './_templates/admin-new-order.tsx';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -138,9 +144,29 @@ const handler = async (req: Request): Promise<Response> => {
         } else if (transactionType === 'sell') {
           subject = `Votre demande de vente de ${orderData.usdt_amount || 0} USDT a été reçue`;
         } else {
-          subject = `Votre demande a été reçue - TEREX-${orderData.id?.slice(-8)}`;
+          subject = `Votre demande a été reçue — TEREX-${orderData.id?.slice(-8)}`;
         }
         htmlContent = orderConfirmationHtml({ orderData, transactionType: transactionType as 'buy' | 'sell', clientName });
+
+        // Notification admin pour nouvelle commande
+        try {
+          const adminOrderRef = `#TEREX-${(orderData.id || '').slice(-8).toUpperCase()}`;
+          const adminTypeLabel = transactionType === 'buy' ? 'Achat USDT' : transactionType === 'sell' ? 'Vente USDT' : 'Commande';
+          await resend.emails.send({
+            from: "Terex Admin <noreply@terangaexchange.com>",
+            to: ["terangaexchange@gmail.com"],
+            subject: `[Commande] ${adminTypeLabel} · ${adminOrderRef}`,
+            html: adminNewOrderHtml({
+              orderData,
+              transactionType,
+              clientName,
+              clientEmail: finalEmailAddress,
+            }),
+          });
+          console.log('Notification admin nouvelle commande envoyée');
+        } catch (adminErr) {
+          console.error('Erreur notification admin commande:', adminErr);
+        }
         break;
 
       case 'status_update':
@@ -176,44 +202,8 @@ const handler = async (req: Request): Promise<Response> => {
 
       case 'contact_message': {
         // Email de confirmation pour le client
-        subject = `Nous avons bien reçu votre message - ${orderData.subject}`;
-        htmlContent = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px; text-align: center;">
-              <h1 style="margin: 0; font-size: 28px;">Merci pour votre message !</h1>
-            </div>
-
-            <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 20px 0;">
-              <h2 style="color: #333; margin-bottom: 20px;">Bonjour ${orderData.user_name},</h2>
-
-              <p style="color: #555; line-height: 1.6; margin-bottom: 20px;">
-                Nous avons bien reçu votre message concernant "<strong>${orderData.subject}</strong>" et nous vous remercions de nous avoir contactés.
-              </p>
-
-              <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea; margin: 20px 0;">
-                <h3 style="color: #333; margin-top: 0;">Votre message :</h3>
-                <p style="color: #555; line-height: 1.6; font-style: italic;">"${orderData.message}"</p>
-              </div>
-
-              <p style="color: #555; line-height: 1.6; margin-bottom: 20px;">
-                Notre équipe va examiner votre demande et vous répondra dans les plus brefs délais, généralement sous 24 heures.
-              </p>
-
-              <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                <p style="color: #1976d2; margin: 0; text-align: center;">
-                  Besoin d'une réponse urgente ? Contactez-nous sur WhatsApp : <a href="https://wa.me/14182619091" style="color: #1976d2;">+1 418 261 9091</a>
-                </p>
-              </div>
-            </div>
-
-            <div style="text-align: center; padding: 20px; color: #666; font-size: 14px;">
-              <p>Cordialement,<br><strong>L'équipe Terex</strong></p>
-              <p style="margin-top: 20px;">
-                <a href="https://app.terangaexchange.com" style="color: #667eea; text-decoration: none;">app.terangaexchange.com</a>
-              </p>
-            </div>
-          </div>
-        `;
+        subject = `Nous avons bien reçu votre message — ${orderData.subject}`;
+        htmlContent = contactConfirmationHtml({ contactData: orderData });
 
         // Envoyer aussi une notification à l'équipe Terex
         try {
@@ -257,61 +247,30 @@ const handler = async (req: Request): Promise<Response> => {
 
       case 'job_application':
         // Email de confirmation pour le candidat
-        subject = `Candidature reçue - ${orderData.position} chez Terex`;
-        htmlContent = `
-          <div style="font-family: Arial, sans-serif; max-width: 896px; margin: 0 auto; padding: 0;">
-            <div style="background: linear-gradient(135deg, #0FA958 0%, #08a045 100%); color: white; padding: 30px; border-radius: 10px; text-align: center;">
-              <h1 style="margin: 0; font-size: 28px;">Candidature reçue avec succès</h1>
-            </div>
+        subject = `Candidature reçue — ${orderData.position} chez Terex`;
+        htmlContent = jobApplicationConfirmationHtml({
+          firstName: orderData.first_name || 'Candidat',
+          lastName: orderData.last_name || '',
+          position: orderData.position || 'Poste',
+          appliedAt: orderData.created_at,
+        });
 
-            <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 20px 0;">
-              <h2 style="color: #333; margin-bottom: 20px;">Bonjour ${orderData.first_name},</h2>
-
-              <p style="color: #555; line-height: 1.6; margin-bottom: 20px;">
-                Nous avons bien reçu votre candidature pour le poste de <strong>${orderData.position}</strong> chez Terex.
-              </p>
-
-              <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <h3 style="color: #1976d2; margin-top: 0;">Prochaines étapes</h3>
-                <ul style="color: #555; line-height: 1.6;">
-                  <li>Notre équipe RH va examiner votre candidature dans les 48 heures</li>
-                  <li>Si votre profil correspond à nos besoins, nous vous contacterons pour un premier entretien</li>
-                  <li>Le processus de recrutement comprend généralement 2-3 étapes d'entretiens</li>
-                </ul>
-              </div>
-            </div>
-
-            <div style="text-align: center; padding: 20px; color: #666; font-size: 14px;">
-              <p>Cordialement,<br><strong>L'équipe Terex</strong></p>
-              <p style="margin-top: 20px;">
-                <a href="https://terangaexchange.com" style="color: #0FA958; text-decoration: none;">terangaexchange.com</a>
-              </p>
-            </div>
-          </div>
-        `;
-
-        // Envoyer aussi une notification à l'équipe RH Terex
+        // Notification admin RH Terex
         try {
-          const adminNotificationHtml = `
-            <div style="font-family: Arial, sans-serif; max-width: 896px; margin: 0 auto;">
-              <h1 style="background: #0FA958; color: white; padding: 20px; margin: 0; font-size: 24px;">Nouvelle Candidature</h1>
-              <div style="padding: 20px;">
-                <h2>Poste : ${orderData.position}</h2>
-                <p><strong>Nom :</strong> ${orderData.first_name} ${orderData.last_name}</p>
-                <p><strong>Email :</strong> ${orderData.email}</p>
-                ${orderData.phone ? `<p><strong>Téléphone :</strong> ${orderData.phone}</p>` : ''}
-                ${orderData.cover_letter ? `<div style="border-left: 4px solid #0FA958; padding-left: 16px; margin: 20px 0;"><h3>Lettre de motivation</h3><p>${orderData.cover_letter}</p></div>` : ''}
-              </div>
-            </div>
-          `;
-
           await resend.emails.send({
             from: "Terex Careers <noreply@terangaexchange.com>",
             to: ["terangaexchange@gmail.com"],
-            subject: `Nouvelle candidature : ${orderData.position}`,
-            html: adminNotificationHtml,
+            subject: `[RH] Nouvelle candidature : ${orderData.position} — ${orderData.first_name} ${orderData.last_name || ''}`,
+            html: jobApplicationAdminHtml({
+              firstName: orderData.first_name || '',
+              lastName: orderData.last_name || '',
+              email: orderData.email || finalEmailAddress,
+              phone: orderData.phone || undefined,
+              position: orderData.position || 'Poste',
+              coverLetter: orderData.cover_letter || undefined,
+              appliedAt: orderData.created_at,
+            }),
           });
-
           console.log('Notification RH envoyée à l\'équipe Terex');
         } catch (teamError) {
           console.error('Erreur lors de l\'envoi de la notification RH:', teamError);
@@ -319,92 +278,28 @@ const handler = async (req: Request): Promise<Response> => {
         break;
 
       case 'job_application_status_update': {
-        const statusMessages: Record<string, string> = {
-          pending: 'En attente d\'examen',
+        const statusLabels: Record<string, string> = {
+          pending:   "En attente d'examen",
           reviewing: 'En cours d\'examen',
           interview: 'Entretien programmé',
-          accepted: 'Félicitations ! Votre candidature a été acceptée',
-          rejected: 'Candidature non retenue'
+          accepted:  'Candidature acceptée',
+          rejected:  'Candidature non retenue',
         };
-
-        const statusMessage = statusMessages[orderData.status] || 'Mise à jour de votre candidature';
-        subject = `Candidature ${orderData.position} - ${statusMessage}`;
-
-        htmlContent = `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; max-width: 896px; margin: 0 auto; background: #000000; color: #ffffff; padding: 0;">
-            <div style="padding: 40px 30px; text-align: center; border-bottom: 1px solid #333333;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600;">TEREX</h1>
-            </div>
-            <div style="padding: 40px 30px;">
-              <h2 style="color: #ffffff; font-size: 22px; font-weight: 600; margin: 0 0 10px 0;">${statusMessage}</h2>
-              <p style="color: #888888; font-size: 16px; margin: 0 0 30px 0;">${orderData.position}</p>
-              <p style="color: #ffffff; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Bonjour ${orderData.first_name},</p>
-              ${orderData.status === 'accepted' ? `<p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Nous avons le plaisir de vous informer que votre candidature pour le poste de <strong style="color: #ffffff;">${orderData.position}</strong> a été retenue. Notre équipe RH vous contactera dans les prochaines 48 heures.</p>` :
-              orderData.status === 'rejected' ? `<p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Après examen attentif, nous ne pouvons pas donner suite à votre candidature pour ce poste. Votre profil a été ajouté à notre base de talents et nous vous contacterons si d'autres opportunités se présentent.</p>` :
-              orderData.status === 'interview' ? `<p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Votre candidature a retenu notre attention. Un membre de notre équipe RH vous contactera dans les prochaines 48 heures pour organiser un entretien.</p>` :
-              `<p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Votre candidature est ${orderData.status === 'reviewing' ? 'en cours d\'examen' : 'en attente d\'examen'} par notre équipe.</p>`}
-              ${orderData.admin_notes ? `<div style="background: #111111; border: 1px solid #333333; border-radius: 8px; padding: 20px; margin: 30px 0;"><p style="color: #ffffff; font-weight: 600; margin: 0 0 10px 0;">Message de notre équipe RH</p><p style="color: #cccccc; margin: 0; font-style: italic;">"${orderData.admin_notes}"</p></div>` : ''}
-            </div>
-            <div style="border-top: 1px solid #333333; padding: 30px; text-align: center;">
-              <p style="color: #888888; margin: 0; font-size: 14px;">Cordialement,<br><strong style="color: #ffffff;">L'équipe Terex</strong></p>
-            </div>
-          </div>
-        `;
+        const statusLabel = statusLabels[orderData.status] || 'Mise à jour';
+        subject = `Candidature ${orderData.position} — ${statusLabel}`;
+        htmlContent = jobApplicationStatusHtml({
+          firstName:   orderData.first_name || 'Candidat',
+          position:    orderData.position   || 'Poste',
+          status:      orderData.status     || 'pending',
+          adminNotes:  orderData.admin_notes || undefined,
+        });
         break;
       }
 
       case 'cancellation_confirmation': {
         const cancelTypeLabel = transactionType === 'buy' ? 'achat' : transactionType === 'sell' ? 'vente' : 'transfert';
-        subject = `Confirmation d'annulation - Votre ${cancelTypeLabel} USDT a été annulé`;
-        htmlContent = `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; padding: 0;">
-            <div style="background: #0FA958; padding: 30px; text-align: center;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 22px; font-weight: 600;">TEREX</h1>
-            </div>
-
-            <div style="padding: 40px 30px;">
-              <h2 style="color: #333; font-size: 20px; margin: 0 0 20px 0;">Annulation confirmée</h2>
-              <p style="color: #555; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
-                Nous vous confirmons que votre demande de ${cancelTypeLabel} d'un montant de
-                <strong>${orderData.amount?.toLocaleString()} ${orderData.currency || 'CFA'}</strong>
-                (${orderData.usdt_amount || 0} USDT) a été annulée.
-              </p>
-
-              <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin: 20px 0;">
-                <p style="color: #333; font-weight: 600; margin: 0 0 10px 0;">Détails :</p>
-                <p style="color: #555; margin: 5px 0;">Référence : TEREX-${(orderData.id || '').slice(-8).toUpperCase()}</p>
-                <p style="color: #555; margin: 5px 0;">Type : ${cancelTypeLabel.charAt(0).toUpperCase() + cancelTypeLabel.slice(1)} USDT</p>
-                <p style="color: #555; margin: 5px 0;">Montant : ${orderData.amount?.toLocaleString()} ${orderData.currency || 'CFA'}</p>
-                <p style="color: #555; margin: 5px 0;">Statut : Annulé</p>
-              </div>
-
-              ${orderData.cancellation_reason ? `
-                <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 4px;">
-                  <p style="color: #856404; margin: 0; font-size: 14px;">
-                    <strong>Motif :</strong> ${orderData.cancellation_reason}
-                  </p>
-                </div>
-              ` : ''}
-
-              <p style="color: #555; font-size: 16px; line-height: 1.6; margin: 20px 0;">
-                Si un paiement a été effectué, un remboursement sera traité dans les 3 à 5 jours ouvrables.
-              </p>
-
-              <div style="text-align: center; margin: 30px 0;">
-                <a href="https://terangaexchange.com" style="background: #0FA958; color: white; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block;">
-                  Retour à Terex
-                </a>
-              </div>
-            </div>
-
-            <div style="border-top: 1px solid #eee; padding: 20px 30px; text-align: center;">
-              <p style="color: #999; font-size: 12px; margin: 0;">
-                Cordialement, L'équipe Terex<br>
-                <a href="https://terangaexchange.com" style="color: #0FA958; text-decoration: none;">terangaexchange.com</a>
-              </p>
-            </div>
-          </div>
-        `;
+        subject = `Confirmation d'annulation — Votre ${cancelTypeLabel} USDT a été annulé`;
+        htmlContent = cancellationConfirmationHtml({ orderData, transactionType, clientName });
         break;
       }
 
