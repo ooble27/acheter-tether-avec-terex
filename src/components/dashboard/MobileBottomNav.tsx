@@ -1,14 +1,11 @@
-
 import React from 'react';
-import { Home, TrendingDown, Globe, User } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Home, TrendingDown, Globe, Clock } from 'lucide-react';
 
-const TetherLogo = ({ className, isActive }: { className?: string; isActive?: boolean }) => (
-  <img 
-    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" 
-    alt="Tether Logo" 
-    className={`${className} usdt-icon-force-visible`}
-    style={{ filter: 'none' }}
+const UsdtIcon = ({ active }: { active: boolean }) => (
+  <img
+    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
+    alt="USDT"
+    style={{ width: 22, height: 22, objectFit: 'contain', display: 'block', filter: active ? 'none' : 'grayscale(60%) opacity(0.55)' }}
   />
 );
 
@@ -17,64 +14,106 @@ interface MobileBottomNavProps {
   setActiveSection: (section: string) => void;
 }
 
-export function MobileBottomNav({ activeSection, setActiveSection }: MobileBottomNavProps) {
-  const navItems = [
-    { id: 'home', icon: Home, label: 'Accueil' },
-    { id: 'buy', icon: TetherLogo, label: 'Acheter', isCustomIcon: true },
-    { id: 'sell', icon: TrendingDown, label: 'Vendre' },
-    { id: 'transfer', icon: Globe, label: 'Virement' },
-  ];
+const navItems = [
+  { id: 'home',     icon: Home,        label: 'Accueil',  custom: false },
+  { id: 'buy',      icon: null,        label: 'Acheter',  custom: true  },
+  { id: 'sell',     icon: TrendingDown, label: 'Vendre',  custom: false },
+  { id: 'history',  icon: Clock,       label: 'Historique', custom: false },
+];
 
+export function MobileBottomNav({ activeSection, setActiveSection }: MobileBottomNavProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 pb-safe">
-      <style>
-        {`
-          .usdt-icon-force-visible {
-            filter: none !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            display: inline-block !important;
-            background: none !important;
-            -webkit-filter: none !important;
-            backdrop-filter: none !important;
-          }
-        `}
-      </style>
-      
-      <div className="mx-3 mb-3 bg-terex-darker/95 backdrop-blur-lg rounded-[1.5rem] shadow-2xl border border-terex-gray/20 p-2">
-        <div className="flex justify-around items-center gap-1">
-          {navItems.map((item) => {
-            const IconComponent = item.icon;
-            const isActive = activeSection === item.id;
-            
-            return (
-              <Button
-                key={item.id}
-                variant="ghost"
-                onClick={() => setActiveSection(item.id)}
-                className={`flex flex-col items-center justify-center gap-1 h-auto py-2 px-3 rounded-[1rem] transition-all duration-300 ${
-                  isActive 
-                    ? 'bg-gradient-to-br from-terex-accent to-terex-accent/90 text-white shadow-lg shadow-terex-accent/40' 
-                    : 'text-gray-400 hover:text-gray-300 hover:bg-transparent'
-                }`}
-              >
-                <div className="relative">
-                  {item.isCustomIcon ? (
-                    <IconComponent className="h-5 w-5" isActive={isActive} />
-                  ) : (
-                    <IconComponent className="h-5 w-5" />
-                  )}
-                </div>
-                
-                <span className={`text-[10px] font-medium whitespace-nowrap transition-all duration-300 ${
-                  isActive ? 'text-white' : 'text-gray-400'
-                }`}>
-                  {item.label}
-                </span>
-              </Button>
-            );
-          })}
-        </div>
+    <div
+      style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        paddingBottom: 'env(safe-area-inset-bottom, 8px)',
+        paddingLeft: 12,
+        paddingRight: 12,
+        paddingTop: 0,
+      }}
+    >
+      <div
+        style={{
+          background: 'rgba(18,18,18,0.92)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderRadius: 24,
+          border: '1px solid rgba(255,255,255,0.07)',
+          boxShadow: '0 -2px 40px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.04) inset',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          padding: '6px 4px',
+          marginBottom: 8,
+        }}
+      >
+        {navItems.map((item) => {
+          const isActive = activeSection === item.id;
+          const Icon = item.icon;
+
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveSection(item.id)}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 4,
+                padding: '8px 16px',
+                borderRadius: 16,
+                border: 'none',
+                cursor: 'pointer',
+                background: isActive ? 'rgba(59,150,143,0.15)' : 'transparent',
+                transition: 'background 0.2s',
+                WebkitTapHighlightColor: 'transparent',
+                minWidth: 60,
+                flex: 1,
+              }}
+            >
+              {/* icon */}
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {item.custom ? (
+                  <UsdtIcon active={isActive} />
+                ) : (
+                  <Icon
+                    size={22}
+                    strokeWidth={isActive ? 2.2 : 1.6}
+                    color={isActive ? '#3B968F' : 'rgba(255,255,255,0.35)'}
+                  />
+                )}
+                {isActive && (
+                  <span style={{
+                    position: 'absolute',
+                    bottom: -5,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 4,
+                    height: 4,
+                    borderRadius: '50%',
+                    background: '#3B968F',
+                    display: 'block',
+                  }} />
+                )}
+              </div>
+              {/* label */}
+              <span style={{
+                fontSize: 10,
+                fontWeight: isActive ? 600 : 400,
+                color: isActive ? '#3B968F' : 'rgba(255,255,255,0.35)',
+                letterSpacing: '0.01em',
+                whiteSpace: 'nowrap',
+              }}>
+                {item.label}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
