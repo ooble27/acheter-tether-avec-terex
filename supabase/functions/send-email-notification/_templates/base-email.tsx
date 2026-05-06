@@ -14,15 +14,15 @@ import * as React from 'npm:react@18.3.1';
 
 // Palette Terex — moodboard dark premium (zinc + Tether green)
 export const TEREX = {
-  green: '#26a17b',
-  greenDark: '#1a7358',
-  greenBg: '#0d1f18',
+  green: '#3B968F',
+  greenDark: '#2d726c',
+  greenBg: '#0b1f1e',
   pageBg: '#050507',
-  bg: '#09090b',
-  surface: '#111113',
-  surface2: '#18181b',
+  bg: '#0e0e0e',
+  surface: '#141414',
+  surface2: '#1a1a1a',
   border: '#1f1f23',
-  borderSoft: '#141416',
+  borderSoft: '#111111',
   text: '#fafafa',
   textMuted: '#71717a',
   textDim: '#3f3f46',

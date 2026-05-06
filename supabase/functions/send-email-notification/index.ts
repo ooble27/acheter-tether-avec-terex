@@ -10,7 +10,13 @@ import { StatusUpdateEmail } from './_templates/status-update.tsx';
 import { PaymentConfirmedEmail } from './_templates/payment-confirmed.tsx';
 import { TransferConfirmationEmail } from './_templates/transfer-confirmation.tsx';
 import { KYCApprovedEmail } from './_templates/kyc-approved-email.tsx';
+import { KYCRejectedEmail } from './_templates/kyc-rejected-email.tsx';
 import { ContactNotificationEmail } from './_templates/contact-notification.tsx';
+import { WelcomeEmail } from './_templates/welcome-email.tsx';
+import { PasswordResetEmail } from './_templates/password-reset-email.tsx';
+import { SecurityAlertEmail } from './_templates/security-alert-email.tsx';
+import { ReferralEmail } from './_templates/referral-email.tsx';
+import { ReengagementEmail } from './_templates/reengagement-email.tsx';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -644,6 +650,71 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
           </div>
         `;
+        break;
+
+      case 'welcome':
+        subject = `Bienvenue sur Terex${clientName ? `, ${clientName}` : ''} — Commencez par vérifier votre identité`;
+        htmlContent = await renderAsync(
+          React.createElement(WelcomeEmail, {
+            userFirstName: clientName,
+            kycLink: 'https://terangaexchange.com/dashboard',
+          })
+        );
+        break;
+
+      case 'kyc_rejected':
+        subject = `Votre vérification KYC n'a pas abouti — Action requise`;
+        htmlContent = await renderAsync(
+          React.createElement(KYCRejectedEmail, {
+            userFirstName: clientName,
+            reasons: orderData?.reasons || undefined,
+            resubmitLink: 'https://terangaexchange.com/dashboard',
+          })
+        );
+        break;
+
+      case 'password_reset':
+        subject = `Réinitialisation de votre mot de passe Terex`;
+        htmlContent = await renderAsync(
+          React.createElement(PasswordResetEmail, {
+            resetLink: orderData?.resetLink || '#',
+            userEmail: finalEmailAddress,
+          })
+        );
+        break;
+
+      case 'security_alert':
+        subject = `Alerte sécurité — Connexion depuis un nouvel appareil`;
+        htmlContent = await renderAsync(
+          React.createElement(SecurityAlertEmail, {
+            device: orderData?.device || 'Appareil inconnu',
+            location: orderData?.location || 'Localisation inconnue',
+            date: orderData?.date || undefined,
+            secureLink: orderData?.secureLink || 'https://terangaexchange.com/dashboard',
+          })
+        );
+        break;
+
+      case 'referral':
+        subject = `${orderData?.referrerName || 'Un ami'} vous invite à rejoindre Terex`;
+        htmlContent = await renderAsync(
+          React.createElement(ReferralEmail, {
+            referrerName: orderData?.referrerName || 'Un ami',
+            referralLink: orderData?.referralLink || 'https://terangaexchange.com',
+            recipientEmail: finalEmailAddress,
+          })
+        );
+        break;
+
+      case 'reengagement':
+        subject = `Ça fait un moment${clientName ? `, ${clientName}` : ''} — Le taux du jour vous attend sur Terex`;
+        htmlContent = await renderAsync(
+          React.createElement(ReengagementEmail, {
+            userFirstName: clientName,
+            currentRate: orderData?.currentRate || undefined,
+            dashboardLink: 'https://terangaexchange.com/dashboard',
+          })
+        );
         break;
 
       default:
