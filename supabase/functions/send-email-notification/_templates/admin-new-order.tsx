@@ -1,4 +1,4 @@
-import { wrapEmail, hero, ctaButton, dotBadge, C } from './html-utils.ts';
+import { wrapEmail, ctaButton, dotBadge, C } from './html-utils.ts';
 
 interface AdminNewOrderProps {
   orderData: any;
@@ -7,29 +7,75 @@ interface AdminNewOrderProps {
   clientEmail?: string;
 }
 
-const F = `-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif`;
+const F  = `-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif`;
+const FM = `'SF Mono','Fira Code','Fira Mono','Roboto Mono',monospace`;
 
-// Bloc valeur mise en évidence (wallet, numéro, montant clé)
-function highlight(value: string, color = C.green): string {
-  return `<span style="font-family:monospace,monospace;font-size:13px;font-weight:700;color:${color};background:rgba(59,150,143,0.08);border:1px solid rgba(59,150,143,0.2);border-radius:6px;padding:2px 8px;display:inline-block;word-break:break-all;">${value}</span>`;
+/* ── Blocs de valeur mis en évidence ─────────────────────────────────────── */
+
+function bigValue(label: string, value: string, sub?: string, color = C.green): string {
+  return `
+<div style="margin-bottom:10px;">
+  <p style="font-family:${F};font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${C.textDim};margin:0 0 6px 0;">${label}</p>
+  <div style="background:${color}14;border:1.5px solid ${color}33;border-radius:12px;padding:14px 18px;">
+    <p style="font-family:${FM};font-size:22px;font-weight:800;color:${color};margin:0;line-height:1.1;word-break:break-all;">${value}</p>
+    ${sub ? `<p style="font-family:${F};font-size:11px;color:${C.textMuted};margin:5px 0 0 0;">${sub}</p>` : ''}
+  </div>
+</div>`;
 }
 
-// Une étape numérotée avec un titre et un corps
+function infoChip(label: string, value: string): string {
+  return `<span style="display:inline-block;background:${C.rowBg};border:1px solid ${C.border};border-radius:8px;padding:5px 12px;font-family:${FM};font-size:12px;color:${C.textMuted};margin:3px 4px 3px 0;">${label}&nbsp;<strong style="color:${C.text};">${value}</strong></span>`;
+}
+
+/* ── Étape numérotée grande ─────────────────────────────────────────────── */
+
 function step(num: number, title: string, body: string, accent = C.green): string {
   return `
 <tr>
-  <td style="padding:0 24px 14px;">
+  <td style="padding:0 24px 18px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
-      style="background-color:${C.cardBg};border:1px solid ${C.border};border-radius:14px;overflow:hidden;border-collapse:separate;border-spacing:0;">
+      style="border-collapse:separate;border-spacing:0;">
       <tr>
-        <td style="width:48px;padding:18px 0 18px 18px;vertical-align:top;">
-          <div style="width:32px;height:32px;border-radius:10px;background:${accent};display:flex;align-items:center;justify-content:center;font-family:${F};font-size:14px;font-weight:800;color:#fff;text-align:center;line-height:32px;">
-            ${num}
-          </div>
+        <!-- numéro cercle -->
+        <td style="width:52px;vertical-align:top;padding-top:2px;">
+          <div style="width:44px;height:44px;border-radius:14px;background:${accent};
+            font-family:${F};font-size:20px;font-weight:900;color:#fff;
+            text-align:center;line-height:44px;">${num}</div>
         </td>
-        <td style="padding:18px 18px 18px 12px;vertical-align:top;">
-          <p style="font-family:${F};font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:${accent};margin:0 0 6px 0;">${title}</p>
-          <p style="font-family:${F};font-size:13px;color:${C.textMuted};line-height:1.7;margin:0;">${body}</p>
+        <!-- contenu -->
+        <td style="vertical-align:top;padding-left:14px;">
+          <p style="font-family:${F};font-size:15px;font-weight:700;color:${C.text};margin:0 0 10px 0;line-height:1.3;">${title}</p>
+          ${body}
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr><td style="height:6px;"></td></tr>`;
+}
+
+/* ── Bandeau montants (hero de commande) ────────────────────────────────── */
+
+function orderBanner(left: {label:string;val:string;sub:string}, right: {label:string;val:string;sub:string}): string {
+  return `
+<tr>
+  <td style="padding:0 24px 28px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+      style="background:linear-gradient(135deg,#0e1f1d 0%,#0a1210 100%);
+             border:1px solid rgba(59,150,143,0.25);border-radius:16px;
+             overflow:hidden;border-collapse:separate;border-spacing:0;">
+      <tr>
+        <!-- gauche -->
+        <td style="padding:22px 20px;width:50%;border-right:1px solid rgba(59,150,143,0.15);vertical-align:middle;">
+          <p style="font-family:${F};font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin:0 0 8px 0;">${left.label}</p>
+          <p style="font-family:${FM};font-size:26px;font-weight:900;color:#fff;margin:0;line-height:1;">${left.val}</p>
+          <p style="font-family:${F};font-size:11px;color:rgba(255,255,255,0.4);margin:5px 0 0 0;">${left.sub}</p>
+        </td>
+        <!-- droite -->
+        <td style="padding:22px 20px;width:50%;vertical-align:middle;">
+          <p style="font-family:${F};font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin:0 0 8px 0;">${right.label}</p>
+          <p style="font-family:${FM};font-size:26px;font-weight:900;color:${C.green};margin:0;line-height:1;">${right.val}</p>
+          <p style="font-family:${F};font-size:11px;color:rgba(255,255,255,0.4);margin:5px 0 0 0;">${right.sub}</p>
         </td>
       </tr>
     </table>
@@ -37,24 +83,24 @@ function step(num: number, title: string, body: string, accent = C.green): strin
 </tr>`;
 }
 
-// Séparateur entre étapes
-const gap = `<tr><td style="height:4px;"></td></tr>`;
+/* ── Diviseur section ───────────────────────────────────────────────────── */
 
-// En-tête de section "À FAIRE"
-function sectionHeader(label: string): string {
+function sectionTitle(label: string): string {
   return `
 <tr>
-  <td style="padding:4px 24px 12px;">
-    <p style="font-family:${F};font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${C.textDim};margin:0;">${label}</p>
+  <td style="padding:4px 24px 18px;">
+    <p style="font-family:${F};font-size:11px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:${C.textDim};margin:0;border-left:3px solid ${C.green};padding-left:10px;">${label}</p>
   </td>
 </tr>`;
 }
+
+/* ── Composant principal ────────────────────────────────────────────────── */
 
 export function adminNewOrderHtml({ orderData, transactionType, clientName, clientEmail }: AdminNewOrderProps): string {
   const isBuy  = transactionType === 'buy';
   const isSell = transactionType === 'sell';
 
-  const typeLabel = isBuy ? 'Achat USDT' : isSell ? 'Vente USDT' : 'Virement international';
+  const typeLabel = isBuy ? 'Achat USDT' : isSell ? 'Vente USDT' : 'Virement';
   const reference = `#TEREX-${(orderData.id || '').slice(-8).toUpperCase() || 'N/A'}`;
   const dateStr   = new Date(orderData.created_at || Date.now()).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' });
   const amount    = Number(orderData.amount || 0).toLocaleString('fr-FR');
@@ -65,106 +111,126 @@ export function adminNewOrderHtml({ orderData, transactionType, clientName, clie
   let clientInfo: any = null;
   try { if (orderData.notes) clientInfo = JSON.parse(orderData.notes); } catch (_) {}
 
-  const phoneNumber  = clientInfo?.phoneNumber || orderData.phone_number || 'N/A';
+  const phone        = clientInfo?.phoneNumber || orderData.phone_number || 'N/A';
   const provider     = clientInfo?.provider || orderData.payment_method || 'wave';
   const providerName = provider === 'wave' ? 'Wave' : (provider === 'orange' || provider === 'orange_money') ? 'Orange Money' : 'Mobile Money';
   const network      = orderData.network || 'TRC-20';
   const wallet       = orderData.wallet_address || null;
   const client       = clientName || 'Client';
 
-  let steps = '';
+  /* ── Hero header ────────────────────────────────────────────────────── */
+  const headerHtml = `
+<tr>
+  <td style="background:linear-gradient(160deg,#0a1615 0%,#080f0e 100%);padding:32px 24px 28px;border-bottom:1px solid ${C.border};">
+    <!-- eyebrow -->
+    <p style="font-family:${F};font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:${C.green};margin:0 0 10px 0;">
+      ● Admin · ${typeLabel}
+    </p>
+    <!-- titre principal -->
+    <p style="font-family:${F};font-size:26px;font-weight:900;color:#fff;margin:0 0 6px 0;line-height:1.15;">
+      Nouvelle commande
+    </p>
+    <p style="font-family:${FM};font-size:13px;color:${C.textMuted};margin:0 0 14px 0;">${reference}</p>
+    <!-- client chip -->
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.05);border:1px solid ${C.border};border-radius:100px;padding:6px 14px;">
+      <span style="font-family:${F};font-size:12px;color:#fff;font-weight:600;">${client}</span>
+      ${clientEmail ? `<span style="font-family:${F};font-size:11px;color:${C.textDim};">${clientEmail}</span>` : ''}
+    </div>
+  </td>
+</tr>
+<tr><td style="height:24px;"></td></tr>`;
+
+  /* ── Bandeau montants ───────────────────────────────────────────────── */
+  let banner = '';
+  if (isBuy) {
+    banner = orderBanner(
+      { label: 'Client paie',   val: `${amount} ${currency}`, sub: providerName },
+      { label: 'Vous envoyez',  val: `${usdt} USDT`,           sub: `TRON · ${network}` }
+    );
+  } else if (isSell) {
+    banner = orderBanner(
+      { label: 'Client envoie', val: `${usdt} USDT`,           sub: `TRON · ${network}` },
+      { label: 'Vous versez',   val: `${amount} ${currency}`,   sub: providerName }
+    );
+  } else {
+    const toAmt = Number(orderData.total_amount || orderData.amount || 0).toLocaleString('fr-FR');
+    banner = orderBanner(
+      { label: 'Montant',      val: `${amount} ${currency}`,   sub: 'Virement international' },
+      { label: 'Destinataire', val: orderData.recipient_name || 'N/A', sub: '' }
+    );
+  }
+
+  /* ── Étapes ─────────────────────────────────────────────────────────── */
+  let steps = sectionTitle('Ce que vous devez faire');
 
   if (isBuy) {
-    // Client paie CFA → admin envoie USDT
-    steps =
-      sectionHeader('Ce que vous devez faire — dans l\'ordre') +
-      step(1, 'Vérifier le paiement reçu',
-        `Confirmez que ${highlight(`${amount} ${currency}`)} ont bien été reçus via ${highlight(providerName)} depuis le numéro ${highlight(phoneNumber)}.`,
+    steps +=
+      step(1, `Vérifier que le paiement a bien été reçu`,
+        bigValue(`${providerName} · Numéro`, phone, undefined, C.amber) +
+        bigValue('Montant attendu', `${amount} ${currency}`, `Taux : ${rate} ${currency}/USDT`, C.amber),
         C.amber
       ) +
-      gap +
-      step(2, 'Envoyer les USDT au client',
-        `Transférez ${highlight(`${usdt} USDT`)} sur le réseau ${highlight(`TRON · ${network}`)} à l'adresse suivante :<br/><br/>${highlight(wallet || 'Adresse non renseignée')}`,
+      step(2, `Envoyer les USDT au client`,
+        bigValue('Montant à envoyer', `${usdt} USDT`, `Réseau TRON · ${network}`, C.green) +
+        (wallet ? bigValue('Adresse destination', wallet, 'Copiez cette adresse exactement', C.green) : ''),
         C.green
       ) +
-      gap +
-      step(3, 'Finaliser la commande',
-        `Dans le dashboard, marquez la commande ${highlight(reference)} comme <strong style="color:${C.green};">Finalisée</strong> et envoyez la confirmation au client.`,
+      step(3, `Finaliser la commande dans le dashboard`,
+        `<p style="font-family:${F};font-size:13px;color:${C.textMuted};margin:0;line-height:1.6;">
+          Marquez la commande <strong style="font-family:${FM};color:${C.text};">${reference}</strong>
+          comme <strong style="color:${C.green};">Finalisée</strong>. Le client recevra sa confirmation automatiquement.
+        </p>`,
         C.green
       );
   } else if (isSell) {
-    // Client envoie USDT → admin verse CFA
-    steps =
-      sectionHeader('Ce que vous devez faire — dans l\'ordre') +
-      step(1, 'Vérifier la réception des USDT',
-        `Confirmez la réception de ${highlight(`${usdt} USDT`)} sur notre adresse TRON (réseau ${highlight(`TRON · ${network}`)}).`,
+    steps +=
+      step(1, `Vérifier la réception des USDT`,
+        bigValue('USDT attendus', `${usdt} USDT`, `Réseau TRON · ${network}`, C.amber),
         C.amber
       ) +
-      gap +
-      step(2, 'Verser les fonds au client',
-        `Envoyez ${highlight(`${amount} ${currency}`)} via ${highlight(providerName)} au numéro ${highlight(phoneNumber)}.`,
+      step(2, `Verser les fonds au client`,
+        bigValue(`${providerName} · Numéro à créditer`, phone, undefined, C.green) +
+        bigValue('Montant à verser', `${amount} ${currency}`, `Taux appliqué : ${rate} ${currency}/USDT`, C.green),
         C.green
       ) +
-      gap +
-      step(3, 'Finaliser la commande',
-        `Dans le dashboard, marquez la commande ${highlight(reference)} comme <strong style="color:${C.green};">Finalisée</strong> et envoyez la confirmation au client.`,
+      step(3, `Finaliser la commande dans le dashboard`,
+        `<p style="font-family:${F};font-size:13px;color:${C.textMuted};margin:0;line-height:1.6;">
+          Marquez la commande <strong style="font-family:${FM};color:${C.text};">${reference}</strong>
+          comme <strong style="color:${C.green};">Finalisée</strong>. Le client recevra sa confirmation automatiquement.
+        </p>`,
         C.green
       );
   } else {
-    // Virement
-    const recipientName  = orderData.recipient_name || 'N/A';
-    const fromCurrency   = orderData.from_currency || 'USDT';
-    steps =
-      sectionHeader('Ce que vous devez faire — dans l\'ordre') +
-      step(1, 'Vérifier la demande de virement',
-        `Confirmez la demande de ${highlight(`${amount} ${fromCurrency}`)} pour le destinataire ${highlight(recipientName)}.`,
+    steps +=
+      step(1, `Vérifier la demande de virement`,
+        bigValue('Montant', `${amount} ${currency}`, 'Virement international', C.amber) +
+        bigValue('Destinataire', orderData.recipient_name || 'N/A', '', C.amber),
         C.amber
       ) +
-      gap +
-      step(2, 'Effectuer le virement',
-        `Procédez au virement international vers ${highlight(recipientName)} selon les informations renseignées dans le dashboard.`,
+      step(2, `Effectuer le virement`,
+        `<p style="font-family:${F};font-size:13px;color:${C.textMuted};margin:0;line-height:1.6;">
+          Procédez au virement selon les informations renseignées dans le dashboard par le client.
+        </p>`,
         C.green
       ) +
-      gap +
-      step(3, 'Confirmer et finaliser',
-        `Marquez la commande ${highlight(reference)} comme <strong style="color:${C.green};">Finalisée</strong> une fois le virement confirmé.`,
+      step(3, `Confirmer et finaliser`,
+        `<p style="font-family:${F};font-size:13px;color:${C.textMuted};margin:0;line-height:1.6;">
+          Marquez la commande <strong style="font-family:${FM};color:${C.text};">${reference}</strong>
+          comme <strong style="color:${C.green};">Finalisée</strong>.
+        </p>`,
         C.green
       );
   }
 
-  // Bloc info client compact (juste ce qui est utile en un coup d'œil)
-  const clientBlock = `
-<tr>
-  <td style="padding:0 24px 24px;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
-      style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:12px;border-collapse:separate;border-spacing:0;">
-      <tr>
-        <td style="padding:10px 16px 10px;font-family:${F};font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:${C.textDim};border-bottom:1px solid ${C.borderSoft};">
-          Infos client
-        </td>
-      </tr>
-      <tr>
-        <td style="padding:14px 16px;font-family:${F};font-size:12px;color:${C.textMuted};line-height:2;">
-          <strong style="color:${C.text};">${client}</strong>${clientEmail ? ` &nbsp;·&nbsp; <a href="mailto:${clientEmail}" style="color:${C.green};text-decoration:none;font-family:monospace;">${clientEmail}</a>` : ''}<br/>
-          Taux appliqué : <strong style="color:${C.text};">${rate} ${currency}/USDT</strong> &nbsp;·&nbsp; ${dateStr}
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>`;
-
+  /* ── Assemblage ─────────────────────────────────────────────────────── */
   const rows =
-    hero({
-      eyebrow: `Admin · ${typeLabel}`,
-      title: `Nouvelle commande — ${reference}`,
-      subtitle: `<strong style="color:#fafafa;">${client}</strong> vient de soumettre une demande de <strong style="color:#fafafa;">${typeLabel.toLowerCase()}</strong>. Traitez-la dès que possible.`,
-    }) +
-    `<tr><td style="height:8px;"></td></tr>` +
+    headerHtml +
+    banner +
     steps +
     `<tr><td style="height:8px;"></td></tr>` +
-    clientBlock +
     ctaButton('Ouvrir le dashboard admin', 'https://terangaexchange.com/dashboard');
 
+  // wrapEmail sans hero standard — on utilise notre propre header
   return wrapEmail(
     `[${typeLabel}] ${reference} — Action requise`,
     rows,
