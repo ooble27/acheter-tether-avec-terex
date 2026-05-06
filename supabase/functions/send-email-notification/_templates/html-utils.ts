@@ -10,8 +10,8 @@ export const C = {
   border:     '#2a2a2a',
   borderSoft: '#1d1d1d',
   text:       '#efefef',
-  textMuted:  '#7a7a7a',
-  textDim:    '#3d3d3d',
+  textMuted:  '#b8b8b8',
+  textDim:    '#8a8a8a',
   red:        '#f87171',
   amber:      '#fbbf24',
 };
@@ -39,21 +39,20 @@ html,body{margin:0;padding:0;background-color:#0d0d0d !important;color:#efefef !
   .egreen{color:#3B968F !important;}
   .ered{color:#f87171 !important;}
 }
-/* dark system → le fond sera blanc (Gmail l'inverse), on rend le texte sombre pour rester lisible */
+/* dark system → Gmail inverse le fond en blanc : on force le texte en sombre pour rester lisible */
 @media (prefers-color-scheme:dark){
   html,body,.ebg{background-color:#0d0d0d !important;color-scheme:only dark !important;}
   .ecard{background-color:#161616 !important;}
   .efooter,.ebar{background-color:#0a0a0a !important;}
   .einfo{background-color:#0d0d0d !important;border-color:#2a2a2a !important;}
   .erow{background-color:#1e1e1e !important;}
-  /* texte sombre → lisible même si Gmail inverse le fond en blanc */
   .etxt{color:#111111 !important;}
-  .emuted{color:#333333 !important;}
-  .edim{color:#555555 !important;}
+  .emuted{color:#222222 !important;}
+  .edim{color:#444444 !important;}
   .egreen{color:#1f6b67 !important;}
   .ered{color:#b91c1c !important;}
 }
-/* Gmail Android dark mode [data-ogsc] — texte sombre pour fond blanc imposé par Gmail */
+/* Gmail Android [data-ogsc] — texte sombre forcé sur fond blanc imposé par Gmail */
 [data-ogsc] body,[data-ogsb] body{background-color:#0d0d0d !important;}
 [data-ogsc] table,[data-ogsb] table{background-color:transparent !important;}
 [data-ogsc] .ecard,[data-ogsb] .ecard{background-color:#161616 !important;}
@@ -62,8 +61,8 @@ html,body{margin:0;padding:0;background-color:#0d0d0d !important;color:#efefef !
 [data-ogsc] .einfo,[data-ogsb] .einfo{background-color:#0d0d0d !important;}
 [data-ogsc] .erow,[data-ogsb] .erow{background-color:#1e1e1e !important;}
 [data-ogsc] .etxt,[data-ogsb] .etxt{color:#111111 !important;}
-[data-ogsc] .emuted,[data-ogsb] .emuted{color:#333333 !important;}
-[data-ogsc] .edim,[data-ogsb] .edim{color:#555555 !important;}
+[data-ogsc] .emuted,[data-ogsb] .emuted{color:#222222 !important;}
+[data-ogsc] .edim,[data-ogsb] .edim{color:#444444 !important;}
 [data-ogsc] .egreen,[data-ogsb] .egreen{color:#1f6b67 !important;}
 [data-ogsc] .ered,[data-ogsb] .ered{color:#b91c1c !important;}
 /* Mobile */
