@@ -29,12 +29,12 @@ export function orderConfirmationHtml({ orderData, transactionType, clientName }
   const detailRows = isBuy ? [
     { label: 'Référence',            value: reference,           mono: true },
     { label: 'Mode de paiement',     value: providerName },
-    { label: 'Réseau',               value: `TRON (${network})` },
+    { label: 'Réseau',               value: network },
     { label: 'Adresse portefeuille', value: wallet,              mono: true, last: true },
   ] : [
     { label: 'Référence',          value: reference,      mono: true },
     { label: 'USDT à envoyer',     value: `${usdt} USDT` },
-    { label: 'Réseau',             value: `TRON (${network})` },
+    { label: 'Réseau',             value: network },
     { label: 'Service réception',  value: providerName },
     { label: 'Numéro',             value: phoneNumber,    mono: true, last: true },
   ];
@@ -54,8 +54,8 @@ export function orderConfirmationHtml({ orderData, transactionType, clientName }
   const rows =
     hero({ reference: `Référence · ${reference}`, title: isBuy ? "Votre demande d'achat a été reçue" : 'Votre demande de vente a été reçue', date: dateStr, subtitle: greeting }) +
     summaryBar([
-      { label: isBuy ? 'Vous payez'    : 'Vous envoyez',  value: isBuy ? `${amount} ${currency}` : `${usdt} USDT`,    sub: isBuy ? providerName : `TRON · ${network}` },
-      { label: isBuy ? 'Vous recevez'  : 'Vous recevez',  value: isBuy ? `${usdt} USDT`          : `${amount} ${currency}`, sub: isBuy ? `TRON · ${network}` : providerName, green: true },
+      { label: isBuy ? 'Vous payez'    : 'Vous envoyez',  value: isBuy ? `${amount} ${currency}` : `${usdt} USDT`,    sub: isBuy ? providerName : network },
+      { label: isBuy ? 'Vous recevez'  : 'Vous recevez',  value: isBuy ? `${usdt} USDT`          : `${amount} ${currency}`, sub: isBuy ? network : providerName, green: true },
       { label: 'Taux appliqué',                            value: String(orderData.exchange_rate || 0), sub: `${currency} / USDT` },
     ]) +
     spacer(28) +

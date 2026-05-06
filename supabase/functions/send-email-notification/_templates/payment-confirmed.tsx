@@ -34,20 +34,20 @@ export function paymentConfirmedHtml({ orderData, transactionType, clientName }:
       : `Les ${usdt} USDT ont été envoyés sur votre adresse de réception.`;
     bar = flowBar(
       { label: 'Vous avez payé',  amount: `${amount} ${currency}`, sub: providerName },
-      { label: 'Vous avez reçu', amount: `${usdt} USDT`,           sub: `TRON · ${network}` },
+      { label: 'Vous avez reçu', amount: `${usdt} USDT`,           sub: network },
       `Taux : ${orderData.exchange_rate || 0} ${currency}/USDT`
     );
     detailRows = [
       { label: 'Référence',   value: reference,                        mono: true },
       { label: 'Date',        value: dateStr },
       { label: 'USDT envoyé', value: `${usdt} USDT`,                   green: true, big: true },
-      { label: 'Réseau',      value: `TRON (${network})` },
+      { label: 'Réseau',      value: network },
       { label: 'Adresse',     value: orderData.wallet_address || 'N/A', mono: true },
       ...(orderData.transaction_hash
         ? [{ label: 'Hash TX', value: orderData.transaction_hash, mono: true, last: true }]
         : [{ label: 'Type',    value: 'Achat USDT',               last: true }]),
     ];
-    notice = 'La confirmation sur le réseau TRON peut prendre quelques minutes.';
+    notice = 'La confirmation sur le réseau peut prendre quelques minutes.';
 
   } else if (transactionType === 'sell') {
     title    = 'Votre vente USDT a été finalisée';
@@ -55,7 +55,7 @@ export function paymentConfirmedHtml({ orderData, transactionType, clientName }:
       ? `Félicitations ${clientName}, le montant de ${amount} ${currency} a été versé sur ${providerName}.`
       : `Le montant de ${amount} ${currency} a été versé sur ${providerName}.`;
     bar = flowBar(
-      { label: 'Vous avez envoyé', amount: `${usdt} USDT`,         sub: `TRON · ${network}` },
+      { label: 'Vous avez envoyé', amount: `${usdt} USDT`,         sub: network },
       { label: 'Vous avez reçu',   amount: `${amount} ${currency}`, sub: providerName },
       `Taux : ${orderData.exchange_rate || 0} ${currency}/USDT`
     );
