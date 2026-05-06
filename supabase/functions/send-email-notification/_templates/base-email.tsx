@@ -12,6 +12,50 @@ import {
 } from 'npm:@react-email/components@0.0.22';
 import * as React from 'npm:react@18.3.1';
 
+const FORCE_DARK_CSS = `
+/* ── Force dark theme ── */
+:root { color-scheme: dark; }
+body, html {
+  background-color: #141414 !important;
+  color: #fafafa !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+/* Override light mode — keep email always dark */
+@media (prefers-color-scheme: light) {
+  body, html { background-color: #141414 !important; }
+  .t-bg    { background-color: #141414 !important; }
+  .t-card  { background-color: #141414 !important; border-color: #1f1f23 !important; }
+  .t-bar   { background-color: #0e0e0e !important; border-color: #1f1f23 !important; }
+  .t-row   { background-color: #1a1a1a !important; }
+  .t-foot  { background-color: #0e0e0e !important; }
+  .t-infocard { background-color: #0e0e0e !important; border-color: #1f1f23 !important; }
+  .t-text  { color: #fafafa !important; }
+  .t-muted { color: #71717a !important; }
+  .t-dim   { color: #3f3f46 !important; }
+  .t-green { color: #3B968F !important; }
+}
+/* ── Mobile responsive ── */
+@media only screen and (max-width: 620px) {
+  .t-card  { border-radius: 0 !important; }
+  .t-hero  { padding: 28px 16px 22px !important; }
+  .t-body  { padding-left: 16px !important; padding-right: 16px !important; }
+  .t-section { padding-left: 16px !important; padding-right: 16px !important; }
+  .t-infocard { margin-left: 16px !important; margin-right: 16px !important; }
+  .t-notice { margin-left: 16px !important; margin-right: 16px !important; }
+  .t-btn-wrap { padding-left: 16px !important; padding-right: 16px !important; }
+  .t-h1   { font-size: 20px !important; }
+  .t-otp  { font-size: 28px !important; letter-spacing: 6px !important; }
+  .t-stat-col { display: block !important; width: 100% !important; border-right: none !important; border-bottom: 1px solid #1f1f23 !important; }
+  .t-stat-last { border-bottom: none !important; }
+  .t-inforow td { padding: 10px 14px !important; }
+  .t-topbar { padding: 14px 16px !important; }
+  .t-foot  { padding: 20px 16px !important; }
+  .t-ref   { font-size: 9px !important; }
+}
+`;
+
+
 // Palette Terex — moodboard dark premium (zinc + Tether green)
 export const TEREX = {
   green: '#3B968F',
@@ -46,13 +90,17 @@ interface BaseEmailProps {
  * Chaque template fournit son propre hero / contenu.
  */
 export const BaseEmail = ({ preview, topRight, children }: BaseEmailProps) => (
-  <Html>
-    <Head />
+  <Html lang="fr">
+    <Head>
+      <meta name="color-scheme" content="dark" />
+      <meta name="supported-color-schemes" content="dark" />
+      <style dangerouslySetInnerHTML={{ __html: FORCE_DARK_CSS }} />
+    </Head>
     <Preview>{preview}</Preview>
     <Body style={main}>
-      <Container style={card}>
+      <Container style={card} className="t-card">
         {/* TOP BAR */}
-        <Section style={topBar}>
+        <Section style={topBar} className="t-topbar t-bg">
           <table width="100%" cellPadding={0} cellSpacing={0} role="presentation" style={{ borderCollapse: 'collapse' }}>
             <tbody>
               <tr>
@@ -64,7 +112,7 @@ export const BaseEmail = ({ preview, topRight, children }: BaseEmailProps) => (
                           <Img src={LOGO_URL} alt="Terex" width="22" height="22" style={{ display: 'block', borderRadius: '4px' }} />
                         </td>
                         <td style={{ verticalAlign: 'middle' }}>
-                          <Text style={brandText}>TEREX</Text>
+                          <Text style={brandText} className="t-green">TEREX</Text>
                         </td>
                       </tr>
                     </tbody>
@@ -72,8 +120,8 @@ export const BaseEmail = ({ preview, topRight, children }: BaseEmailProps) => (
                 </td>
                 <td style={topRightCell}>
                   {typeof topRight === 'string' || typeof topRight === 'number' ? (
-                    <Text style={topRightText}>{topRight}</Text>
-                  ) : (topRight ?? <Text style={topRightText}>terangaexchange.com</Text>)}
+                    <Text style={topRightText} className="t-dim">{topRight}</Text>
+                  ) : (topRight ?? <Text style={topRightText} className="t-dim">terangaexchange.com</Text>)}
                 </td>
               </tr>
             </tbody>
@@ -85,20 +133,20 @@ export const BaseEmail = ({ preview, topRight, children }: BaseEmailProps) => (
 
         {/* FOOTER */}
         <Hr style={footerDivider} />
-        <Section style={footer}>
-          <Text style={footerLogo}>TEREX</Text>
-          <Text style={footerText}>
+        <Section style={footer} className="t-foot t-bar">
+          <Text style={footerLogo} className="t-dim">TEREX</Text>
+          <Text style={footerText} className="t-dim">
             Vous avez reçu cet email suite à une activité sur votre compte Terex.
           </Text>
-          <Text style={footerText}>
+          <Text style={footerText} className="t-dim">
             © {new Date().getFullYear()} Teranga Exchange — Tous droits réservés.
           </Text>
           <Text style={footerLinks}>
-            <Link href="https://terangaexchange.com/privacy" style={footerLink}>Confidentialité</Link>
+            <Link href="https://terangaexchange.com/privacy" style={footerLink} className="t-dim">Confidentialité</Link>
             <span style={footerSep}> · </span>
-            <Link href="https://terangaexchange.com/help" style={footerLink}>Centre d'aide</Link>
+            <Link href="https://terangaexchange.com/help" style={footerLink} className="t-dim">Centre d'aide</Link>
             <span style={footerSep}> · </span>
-            <Link href="https://terangaexchange.com" style={footerLink}>terangaexchange.com</Link>
+            <Link href="https://terangaexchange.com" style={footerLink} className="t-dim">terangaexchange.com</Link>
           </Text>
         </Section>
       </Container>
@@ -110,12 +158,12 @@ export const BaseEmail = ({ preview, topRight, children }: BaseEmailProps) => (
 /* — Atomes réutilisables exportés pour les templates — */
 
 export const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <Text style={sectionLabelStyle}>{children}</Text>
+  <Text style={sectionLabelStyle} className="t-section t-dim">{children}</Text>
 );
 
 export const InfoTable: React.FC<{ children: React.ReactNode; title?: string }> = ({ children, title }) => (
-  <Section style={infoCard}>
-    {title && <Text style={infoHead}>{title}</Text>}
+  <Section style={infoCard} className="t-infocard">
+    {title && <Text style={infoHead} className="t-dim">{title}</Text>}
     {children}
   </Section>
 );
@@ -137,7 +185,8 @@ export const InfoRow: React.FC<{
       ? 'ui-monospace, SFMono-Regular, Menlo, monospace'
       : '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     textAlign: 'right',
-    wordBreak: mono ? 'break-all' : 'normal',
+    wordBreak: 'break-word',
+    overflowWrap: 'break-word',
   };
   return (
     <table
@@ -145,6 +194,7 @@ export const InfoRow: React.FC<{
       cellPadding={0}
       cellSpacing={0}
       role="presentation"
+      className="t-inforow"
       style={{
         borderCollapse: 'collapse',
         borderBottom: last ? 'none' : `1px solid ${TEREX.borderSoft}`,
@@ -152,11 +202,11 @@ export const InfoRow: React.FC<{
     >
       <tbody>
         <tr>
-          <td style={{ padding: '13px 20px', verticalAlign: 'middle', width: '42%' }}>
-            <Text style={infoLabel}>{label}</Text>
+          <td style={{ padding: '12px 16px', verticalAlign: 'middle', width: '40%' }}>
+            <Text style={infoLabel} className="t-muted">{label}</Text>
           </td>
-          <td style={{ padding: '13px 20px', verticalAlign: 'middle' }}>
-            <Text style={valueStyle}>{value}</Text>
+          <td style={{ padding: '12px 16px', verticalAlign: 'middle' }}>
+            <Text style={valueStyle} className={green ? 't-green' : 't-text'}>{value}</Text>
           </td>
         </tr>
       </tbody>
@@ -165,7 +215,7 @@ export const InfoRow: React.FC<{
 };
 
 export const PrimaryButton: React.FC<{ href: string; children: React.ReactNode }> = ({ href, children }) => (
-  <Section style={{ textAlign: 'center', padding: '0 40px 40px' }}>
+  <Section style={{ textAlign: 'center', padding: '0 28px 36px' }} className="t-btn-wrap">
     <Link href={href} style={primaryBtn}>
       {children}
     </Link>
@@ -179,7 +229,7 @@ export const NoticeBox: React.FC<{ children: React.ReactNode; tone?: 'neutral' |
   const toneStyle: React.CSSProperties = (() => {
     switch (tone) {
       case 'success':
-        return { background: TEREX.greenBg, borderColor: 'rgba(38,161,123,0.25)', color: TEREX.text };
+        return { background: TEREX.greenBg, borderColor: 'rgba(59,150,143,0.25)', color: TEREX.text };
       case 'warning':
         return { background: '#1f1a08', borderColor: '#3a2f0f', color: '#f4d77a' };
       case 'danger':
@@ -190,9 +240,10 @@ export const NoticeBox: React.FC<{ children: React.ReactNode; tone?: 'neutral' |
   })();
   return (
     <Section
+      className="t-notice"
       style={{
-        padding: '16px 20px',
-        margin: '0 40px 28px',
+        padding: '14px 18px',
+        margin: '0 28px 28px',
         borderRadius: '8px',
         border: `1px solid ${toneStyle.borderColor}`,
         backgroundColor: toneStyle.background as string,
@@ -210,22 +261,22 @@ export const NoticeBox: React.FC<{ children: React.ReactNode; tone?: 'neutral' |
 const main: React.CSSProperties = {
   fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif',
   margin: 0,
-  padding: '32px 12px',
-  backgroundColor: TEREX.pageBg,
+  padding: 0,
+  backgroundColor: TEREX.surface,
   color: TEREX.text,
 };
 
 const card: React.CSSProperties = {
-  maxWidth: '620px',
+  maxWidth: '680px',
+  width: '100%',
   margin: '0 auto',
   backgroundColor: TEREX.surface,
-  borderRadius: '12px',
+  borderRadius: '0',
   overflow: 'hidden',
-  border: `1px solid ${TEREX.border}`,
 };
 
 const topBar: React.CSSProperties = {
-  padding: '20px 28px',
+  padding: '18px 28px',
   backgroundColor: TEREX.surface,
   borderBottom: `1px solid ${TEREX.borderSoft}`,
 };
@@ -254,11 +305,11 @@ const sectionLabelStyle: React.CSSProperties = {
   fontWeight: 600,
   letterSpacing: '1.8px',
   textTransform: 'uppercase',
-  margin: '0 40px 14px',
+  margin: '0 28px 12px',
 };
 
 const infoCard: React.CSSProperties = {
-  margin: '0 40px 28px',
+  margin: '0 28px 28px',
   background: TEREX.bg,
   border: `1px solid ${TEREX.border}`,
   borderRadius: '10px',
@@ -301,7 +352,7 @@ const footerDivider: React.CSSProperties = {
 };
 
 const footer: React.CSSProperties = {
-  padding: '28px 40px',
+  padding: '24px 28px',
   backgroundColor: TEREX.bg,
 };
 
@@ -340,10 +391,9 @@ export const Hero: React.FC<{
   title: React.ReactNode;
   date?: string;
   subtitle?: React.ReactNode;
-  /** Optional check/icon ring above the title (use ICON_CHECK / ICON_SHIELD). */
   iconRing?: React.ReactNode;
 }> = ({ eyebrow, reference, title, date, subtitle, iconRing }) => (
-  <Section style={{ padding: '48px 40px 36px', backgroundColor: TEREX.surface }}>
+  <Section style={{ padding: '40px 28px 32px', backgroundColor: TEREX.surface }} className="t-hero t-bg">
     {iconRing && <div style={{ marginBottom: '24px' }}>{iconRing}</div>}
     {eyebrow && (
       <Text
@@ -453,6 +503,7 @@ export const SummaryBar: React.FC<{
   cols: { label: string; value: React.ReactNode; sub?: string; green?: boolean }[];
 }> = ({ cols }) => (
   <Section
+    className="t-bar"
     style={{
       background: TEREX.bg,
       borderTop: `1px solid ${TEREX.border}`,
@@ -465,21 +516,26 @@ export const SummaryBar: React.FC<{
           {cols.map((c, i) => (
             <React.Fragment key={i}>
               {i > 0 && <td style={{ width: '1px', background: TEREX.border }} />}
-              <td style={{ padding: '20px 22px', verticalAlign: 'top', width: `${100 / cols.length}%` }}>
+              <td
+                className={`t-stat-col${i === cols.length - 1 ? ' t-stat-last' : ''}`}
+                style={{ padding: '18px 16px', verticalAlign: 'top', width: `${100 / cols.length}%` }}
+              >
                 <Text
+                  className="t-dim"
                   style={{
-                    fontSize: '10px',
+                    fontSize: '9px',
                     letterSpacing: '1.5px',
                     textTransform: 'uppercase',
                     color: TEREX.textDim,
-                    margin: '0 0 7px',
+                    margin: '0 0 6px',
                   }}
                 >
                   {c.label}
                 </Text>
                 <Text
+                  className={c.green ? 't-green' : 't-text'}
                   style={{
-                    fontSize: '18px',
+                    fontSize: '17px',
                     fontWeight: 600,
                     color: c.green ? TEREX.green : TEREX.text,
                     margin: 0,
@@ -489,7 +545,7 @@ export const SummaryBar: React.FC<{
                   {c.value}
                 </Text>
                 {c.sub && (
-                  <Text style={{ fontSize: '11px', color: TEREX.textDim, margin: '4px 0 0' }}>{c.sub}</Text>
+                  <Text className="t-dim" style={{ fontSize: '10px', color: TEREX.textDim, margin: '3px 0 0' }}>{c.sub}</Text>
                 )}
               </td>
             </React.Fragment>
