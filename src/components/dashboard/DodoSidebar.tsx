@@ -77,7 +77,7 @@ export function DodoSidebar({ activeSection, onSectionChange, onLogout }: DodoSi
   };
 
   return (
-    <aside className="hidden lg:flex flex-col fixed left-0 top-0 h-screen w-[240px] bg-[#0d0d0d] border-r border-white/5 z-40">
+    <aside className="hidden md:flex flex-col fixed left-0 top-0 h-screen w-[240px] bg-[#0d0d0d] border-r border-white/5 z-40">
       {/* Brand */}
       <div className="px-5 py-5 border-b border-white/5">
         <button

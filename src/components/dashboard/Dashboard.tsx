@@ -220,7 +220,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             onClose={() => setMenuOpen(false)}
           />
 
-          <div className={`min-h-screen flex flex-col ${!isMobile ? 'lg:pl-[240px]' : ''}`}>
+          <div className={`min-h-screen flex flex-col ${!isMobile ? 'md:pl-[240px]' : ''}`}>
             {!isMobile && <DodoTopBar user={user} />}
 
             <main
