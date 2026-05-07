@@ -8,27 +8,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Eye, EyeOff, Check, X, Quote } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
-const testimonials = [
-  {
-    quote: "Avec Terex, j'envoie et je reçois de l'USDT en quelques minutes depuis Dakar. Plus besoin de passer par des intermédiaires douteux — c'est rapide, transparent et sécurisé.",
-    name: 'Ousmane D.',
-    role: 'Entrepreneur, Dakar',
-    initials: 'OD',
-  },
-  {
-    quote: "Je gère mes paiements internationaux en USDT sans stress. Le taux est clair, le support répond vite. Je ne reviendrais jamais en arrière.",
-    name: 'Fatou K.',
-    role: 'Freelance, Abidjan',
-    initials: 'FK',
-  },
-  {
-    quote: "Terex m'a permis de recevoir mes paiements clients en crypto sans complications. La plateforme est professionnelle et digne de confiance.",
-    name: 'Ibrahima S.',
-    role: 'Développeur, Lomé',
-    initials: 'IS',
-  },
-];
-
 export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -40,8 +19,6 @@ export function LoginForm() {
 
   const { signUp } = useAuth();
   const { toast } = useToast();
-
-  const testimonial = testimonials[0];
 
   const passwordRequirements = {
     minLength: password.length >= 6,
@@ -366,63 +343,31 @@ export function LoginForm() {
         {/* Contenu */}
         <div className="relative z-10 flex-1 flex flex-col justify-center px-14 pb-10">
 
-          {/* Titre section */}
-          <p className="text-xs font-semibold tracking-widest uppercase mb-10" style={{ color: 'rgba(59,150,143,0.7)' }}>
-            Ce que disent nos utilisateurs
-          </p>
-
-          {/* Carte témoignage */}
-          <div className="rounded-2xl p-8 mb-8"
-            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-
-            {/* Icône guillemet */}
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-6"
-              style={{ background: 'rgba(59,150,143,0.12)', border: '1px solid rgba(59,150,143,0.2)' }}>
-              <Quote className="w-5 h-5" style={{ color: '#3b968f' }} />
-            </div>
-
-            {/* Citation */}
-            <p className="text-lg font-light leading-relaxed text-white mb-8" style={{ lineHeight: '1.7' }}>
-              "{testimonial.quote}"
-            </p>
-
-            {/* Auteur */}
-            <div className="flex items-center gap-4">
-              {/* Avatar initiales */}
-              <div className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 font-bold text-sm"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(59,150,143,0.3), rgba(59,150,143,0.1))',
-                  border: '2px solid rgba(59,150,143,0.4)',
-                  color: '#3b968f',
-                }}>
-                {testimonial.initials}
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-white">{testimonial.name}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{testimonial.role}</p>
-              </div>
-              {/* Badge vérifié */}
-              <div className="ml-auto flex items-center gap-1.5 px-3 py-1 rounded-full"
-                style={{ background: 'rgba(59,150,143,0.1)', border: '1px solid rgba(59,150,143,0.2)' }}>
-                <Check className="w-3 h-3" style={{ color: '#3b968f' }} />
-                <span className="text-xs font-medium" style={{ color: '#3b968f' }}>Vérifié</span>
-              </div>
-            </div>
+          {/* Icône guillemet */}
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-8"
+            style={{ background: 'rgba(59,150,143,0.12)', border: '1px solid rgba(59,150,143,0.2)' }}>
+            <Quote className="w-5 h-5" style={{ color: '#3b968f' }} />
           </div>
 
-          {/* Stats rapides */}
-          <div className="grid grid-cols-3 gap-4">
-            {[
-              { value: '5 000+', label: 'Utilisateurs actifs' },
-              { value: '< 5 min', label: 'Temps de traitement' },
-              { value: '98 %', label: 'Taux de satisfaction' },
-            ].map(stat => (
-              <div key={stat.label} className="text-center p-4 rounded-xl"
-                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-                <p className="text-xl font-bold mb-1" style={{ color: '#3b968f' }}>{stat.value}</p>
-                <p className="text-xs text-gray-500 leading-tight">{stat.label}</p>
-              </div>
-            ))}
+          {/* Citation */}
+          <p className="text-2xl font-light text-white mb-10" style={{ lineHeight: '1.65' }}>
+            "Le problème fondamental avec les monnaies conventionnelles, c'est toute la confiance qu'il faut pour les faire fonctionner."
+          </p>
+
+          {/* Auteur */}
+          <div className="flex items-center gap-4">
+            <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-bold text-sm"
+              style={{
+                background: 'linear-gradient(135deg, rgba(59,150,143,0.25), rgba(59,150,143,0.08))',
+                border: '1.5px solid rgba(59,150,143,0.35)',
+                color: '#3b968f',
+              }}>
+              SN
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-white">Satoshi Nakamoto</p>
+              <p className="text-xs text-gray-500 mt-0.5">Créateur du Bitcoin</p>
+            </div>
           </div>
         </div>
 
