@@ -330,7 +330,7 @@ export function LoginForm() {
 
       {/* ── RIGHT — Citation ───────────────────────────────────────────── */}
       <div className="hidden lg:flex relative lg:w-[62%] flex-col overflow-hidden"
-        style={{ background: '#090909' }}>
+        style={{ background: '#0d0d0d' }}>
 
         {/* Contenu centré */}
         <div className="relative z-10 flex-1 flex flex-col justify-center px-20">
