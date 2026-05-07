@@ -5,8 +5,29 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Eye, EyeOff, Check, X } from 'lucide-react';
+import { Loader2, Eye, EyeOff, Check, X, Quote } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+
+const testimonials = [
+  {
+    quote: "Avec Terex, j'envoie et je reçois de l'USDT en quelques minutes depuis Dakar. Plus besoin de passer par des intermédiaires douteux — c'est rapide, transparent et sécurisé.",
+    name: 'Ousmane D.',
+    role: 'Entrepreneur, Dakar',
+    initials: 'OD',
+  },
+  {
+    quote: "Je gère mes paiements internationaux en USDT sans stress. Le taux est clair, le support répond vite. Je ne reviendrais jamais en arrière.",
+    name: 'Fatou K.',
+    role: 'Freelance, Abidjan',
+    initials: 'FK',
+  },
+  {
+    quote: "Terex m'a permis de recevoir mes paiements clients en crypto sans complications. La plateforme est professionnelle et digne de confiance.",
+    name: 'Ibrahima S.',
+    role: 'Développeur, Lomé',
+    initials: 'IS',
+  },
+];
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
@@ -19,6 +40,8 @@ export function LoginForm() {
 
   const { signUp } = useAuth();
   const { toast } = useToast();
+
+  const testimonial = testimonials[0];
 
   const passwordRequirements = {
     minLength: password.length >= 6,
@@ -84,69 +107,35 @@ export function LoginForm() {
     }
   };
 
-  const inputClass = "h-10 bg-[#1a1a1a] border border-[#2e2e2e] text-white placeholder:text-gray-600 rounded-md focus:border-terex-accent focus:ring-1 focus:ring-terex-accent/30 transition-colors text-sm px-3";
+  const inputClass =
+    "h-10 bg-[#1a1a1a] border border-[#2e2e2e] text-white placeholder:text-[#3a3a3a] rounded-md focus:border-terex-accent focus:ring-1 focus:ring-terex-accent/30 transition-colors text-sm px-3";
 
   return (
     <div className="min-h-screen w-full flex">
-      {/* Left — Branding panel */}
-      <div className="hidden lg:flex relative w-1/2 flex-col overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #0a1514 0%, #061110 60%, #030a09 100%)' }}>
-        {/* Subtle glow */}
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full opacity-20 pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(59,150,143,0.25) 0%, transparent 70%)', transform: 'translate(-30%, -30%)' }} />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full opacity-10 pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(59,150,143,0.3) 0%, transparent 70%)', transform: 'translate(30%, 30%)' }} />
 
-        {/* Logo top-left */}
-        <div className="relative z-10 p-10">
-          <div className="flex items-center gap-3">
-            <img src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" alt="Terex" className="w-9 h-9" />
-            <span className="text-xl font-black tracking-tight" style={{ color: '#3b968f' }}>TEREX</span>
-          </div>
-        </div>
-
-        {/* Center copy */}
-        <div className="relative z-10 flex-1 flex flex-col justify-center px-14 pb-20">
-          <p className="text-xs font-semibold tracking-widest uppercase mb-6" style={{ color: '#3b968f' }}>
-            Teranga Exchange
-          </p>
-          <h2 className="text-[2.6rem] font-light leading-[1.15] text-white mb-8">
-            Échangez l'USDT<br />
-            <span style={{ color: '#3b968f' }}>rapidement</span> et<br />
-            en toute sécurité.
-          </h2>
-          <div className="space-y-3">
-            {['Transactions rapides et sécurisées', 'Transferts internationaux simplifiés', 'Support client dédié 24/7'].map(item => (
-              <div key={item} className="flex items-center gap-3">
-                <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
-                  style={{ background: 'rgba(59,150,143,0.15)', border: '1px solid rgba(59,150,143,0.3)' }}>
-                  <Check className="w-3 h-3" style={{ color: '#3b968f' }} />
-                </div>
-                <span className="text-sm text-gray-400">{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom footer */}
-        <div className="relative z-10 px-10 py-6 border-t" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-          <p className="text-xs text-gray-600">© 2025 Terex · Teranga Exchange</p>
-        </div>
-      </div>
-
-      {/* Right — Form panel */}
+      {/* ── LEFT — Formulaire ──────────────────────────────────────────── */}
       <div className="flex-1 flex flex-col min-h-screen" style={{ background: '#101010' }}>
-        {/* Mobile logo */}
+
+        {/* Logo mobile */}
         <div className="lg:hidden flex items-center gap-3 p-6 border-b" style={{ borderColor: '#1f1f1f' }}>
           <img src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" alt="Terex" className="w-8 h-8" />
           <span className="text-lg font-black" style={{ color: '#3b968f' }}>TEREX</span>
         </div>
 
-        {/* Form */}
+        {/* Formulaire centré */}
         <div className="flex-1 flex items-center justify-center p-8">
           <div className="w-full max-w-[380px]">
 
-            {/* Tab switcher */}
+            {/* Logo desktop */}
+            <div className="hidden lg:flex items-center gap-3 mb-10">
+              <img src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" alt="Terex" className="w-9 h-9" />
+              <div>
+                <span className="text-xl font-black" style={{ color: '#3b968f' }}>TEREX</span>
+                <p className="text-[10px] uppercase tracking-widest" style={{ color: 'rgba(59,150,143,0.6)' }}>Teranga Exchange</p>
+              </div>
+            </div>
+
+            {/* Toggle onglets */}
             <div className="flex mb-8 rounded-lg p-1" style={{ background: '#1a1a1a', border: '1px solid #2e2e2e' }}>
               {(['login', 'register'] as const).map(tab => (
                 <button
@@ -163,7 +152,8 @@ export function LoginForm() {
               ))}
             </div>
 
-            {activeTab === 'login' ? (
+            {/* ── CONNEXION ── */}
+            {activeTab === 'login' && (
               <form onSubmit={handlePasswordLogin} className="space-y-5">
                 <div>
                   <h1 className="text-2xl font-semibold text-white mb-1">Connexion</h1>
@@ -175,7 +165,7 @@ export function LoginForm() {
                     <Label className="text-xs font-medium text-gray-400">Adresse email</Label>
                     <Input
                       type="email"
-                      placeholder="vous@exemple.com"
+                      placeholder="votre@email.com"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
                       className={inputClass}
@@ -219,13 +209,15 @@ export function LoginForm() {
                 <p className="text-center text-xs text-gray-500">
                   Pas encore de compte ?{' '}
                   <button type="button" onClick={() => setActiveTab('register')}
-                    className="underline transition-colors" style={{ color: '#3b968f' }}>
+                    className="underline" style={{ color: '#3b968f' }}>
                     Créer un compte
                   </button>
                 </p>
               </form>
+            )}
 
-            ) : (
+            {/* ── INSCRIPTION ── */}
+            {activeTab === 'register' && (
               <form onSubmit={handleSignUp} className="space-y-5">
                 <div>
                   <h1 className="text-2xl font-semibold text-white mb-1">Créer un compte</h1>
@@ -237,7 +229,7 @@ export function LoginForm() {
                     <Label className="text-xs font-medium text-gray-400">Nom complet</Label>
                     <Input
                       type="text"
-                      placeholder="Jean Dupont"
+                      placeholder="Votre nom complet"
                       value={name}
                       onChange={e => setName(e.target.value)}
                       className={inputClass}
@@ -250,7 +242,7 @@ export function LoginForm() {
                     <Label className="text-xs font-medium text-gray-400">Adresse email</Label>
                     <Input
                       type="email"
-                      placeholder="vous@exemple.com"
+                      placeholder="votre@email.com"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
                       className={inputClass}
@@ -284,10 +276,10 @@ export function LoginForm() {
                     {password && (
                       <div className="grid grid-cols-2 gap-1 pt-1">
                         {[
-                          { key: 'minLength', label: '6 caractères min.' },
-                          { key: 'hasUppercase', label: 'Majuscule' },
-                          { key: 'hasLowercase', label: 'Minuscule' },
-                          { key: 'hasNumber', label: 'Chiffre' },
+                          { key: 'minLength',      label: '6 caractères min.' },
+                          { key: 'hasUppercase',   label: 'Majuscule' },
+                          { key: 'hasLowercase',   label: 'Minuscule' },
+                          { key: 'hasNumber',      label: 'Chiffre' },
                           { key: 'hasSpecialChar', label: 'Caractère spécial' },
                         ].map(({ key, label }) => {
                           const ok = passwordRequirements[key as keyof typeof passwordRequirements];
@@ -331,7 +323,12 @@ export function LoginForm() {
                   type="submit"
                   disabled={isLoading || !isPasswordValid}
                   className="w-full h-10 font-medium rounded-md text-sm transition-all"
-                  style={{ background: '#3b968f', color: '#fff', border: 'none', opacity: (!isPasswordValid && !isLoading) ? 0.5 : 1 }}
+                  style={{
+                    background: '#3b968f',
+                    color: '#fff',
+                    border: 'none',
+                    opacity: !isPasswordValid && !isLoading ? 0.45 : 1,
+                  }}
                 >
                   {isLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Création…</> : 'Créer un compte'}
                 </Button>
@@ -339,7 +336,7 @@ export function LoginForm() {
                 <p className="text-center text-xs text-gray-500">
                   Déjà un compte ?{' '}
                   <button type="button" onClick={() => setActiveTab('login')}
-                    className="underline transition-colors" style={{ color: '#3b968f' }}>
+                    className="underline" style={{ color: '#3b968f' }}>
                     Se connecter
                   </button>
                 </p>
@@ -348,8 +345,89 @@ export function LoginForm() {
           </div>
         </div>
 
-        {/* Footer */}
+        {/* Pied de page */}
         <div className="p-6 border-t text-center" style={{ borderColor: '#1f1f1f' }}>
+          <p className="text-xs text-gray-600">© 2025 Terex · Teranga Exchange</p>
+        </div>
+      </div>
+
+      {/* ── RIGHT — Témoignage ─────────────────────────────────────────── */}
+      <div className="hidden lg:flex relative w-1/2 flex-col overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #0a1514 0%, #061110 60%, #030a09 100%)' }}>
+
+        {/* Lueurs d'ambiance */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full opacity-25"
+            style={{ background: 'radial-gradient(circle, rgba(59,150,143,0.3) 0%, transparent 70%)' }} />
+          <div className="absolute -bottom-40 -left-20 w-[400px] h-[400px] rounded-full opacity-15"
+            style={{ background: 'radial-gradient(circle, rgba(59,150,143,0.25) 0%, transparent 70%)' }} />
+        </div>
+
+        {/* Contenu */}
+        <div className="relative z-10 flex-1 flex flex-col justify-center px-14 pb-10">
+
+          {/* Titre section */}
+          <p className="text-xs font-semibold tracking-widest uppercase mb-10" style={{ color: 'rgba(59,150,143,0.7)' }}>
+            Ce que disent nos utilisateurs
+          </p>
+
+          {/* Carte témoignage */}
+          <div className="rounded-2xl p-8 mb-8"
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+
+            {/* Icône guillemet */}
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-6"
+              style={{ background: 'rgba(59,150,143,0.12)', border: '1px solid rgba(59,150,143,0.2)' }}>
+              <Quote className="w-5 h-5" style={{ color: '#3b968f' }} />
+            </div>
+
+            {/* Citation */}
+            <p className="text-lg font-light leading-relaxed text-white mb-8" style={{ lineHeight: '1.7' }}>
+              "{testimonial.quote}"
+            </p>
+
+            {/* Auteur */}
+            <div className="flex items-center gap-4">
+              {/* Avatar initiales */}
+              <div className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 font-bold text-sm"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(59,150,143,0.3), rgba(59,150,143,0.1))',
+                  border: '2px solid rgba(59,150,143,0.4)',
+                  color: '#3b968f',
+                }}>
+                {testimonial.initials}
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-white">{testimonial.name}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{testimonial.role}</p>
+              </div>
+              {/* Badge vérifié */}
+              <div className="ml-auto flex items-center gap-1.5 px-3 py-1 rounded-full"
+                style={{ background: 'rgba(59,150,143,0.1)', border: '1px solid rgba(59,150,143,0.2)' }}>
+                <Check className="w-3 h-3" style={{ color: '#3b968f' }} />
+                <span className="text-xs font-medium" style={{ color: '#3b968f' }}>Vérifié</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats rapides */}
+          <div className="grid grid-cols-3 gap-4">
+            {[
+              { value: '5 000+', label: 'Utilisateurs actifs' },
+              { value: '< 5 min', label: 'Temps de traitement' },
+              { value: '98 %', label: 'Taux de satisfaction' },
+            ].map(stat => (
+              <div key={stat.label} className="text-center p-4 rounded-xl"
+                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <p className="text-xl font-bold mb-1" style={{ color: '#3b968f' }}>{stat.value}</p>
+                <p className="text-xs text-gray-500 leading-tight">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Pied de page droite */}
+        <div className="relative z-10 px-14 py-6 border-t" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
           <p className="text-xs text-gray-600">© 2025 Terex · Teranga Exchange</p>
         </div>
       </div>
