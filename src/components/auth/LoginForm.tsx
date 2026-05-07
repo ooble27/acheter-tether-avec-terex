@@ -91,7 +91,7 @@ export function LoginForm() {
     <div className="min-h-screen w-full flex">
 
       {/* ── LEFT — Formulaire ──────────────────────────────────────────── */}
-      <div className="flex-1 lg:w-[38%] flex flex-col min-h-screen" style={{ background: '#101010' }}>
+      <div className="flex-1 lg:w-[38%] flex flex-col min-h-screen" style={{ background: '#1a1a1a' }}>
 
         {/* Logo tablette uniquement (masqué sur mobile et desktop) */}
         <div className="hidden md:flex lg:hidden items-center gap-3 p-6 border-b" style={{ borderColor: '#1f1f1f' }}>
@@ -330,7 +330,7 @@ export function LoginForm() {
 
       {/* ── RIGHT — Citation ───────────────────────────────────────────── */}
       <div className="hidden lg:flex relative lg:w-[62%] flex-col overflow-hidden"
-        style={{ background: '#0d0d0d' }}>
+        style={{ background: '#141414' }}>
 
         {/* Contenu centré */}
         <div className="relative z-10 flex-1 flex flex-col justify-center px-20">
