@@ -1,236 +1,263 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Globe, 
-  ArrowUpRight, 
-  Bitcoin,
-  Handshake,
-  TrendingUp
-} from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { TrendingUp, TrendingDown, Globe, Handshake, ArrowUpRight, Sparkles } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useCryptoRates } from '@/hooks/useCryptoRates';
+import { useTerexRates } from '@/hooks/useTerexRates';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
-import { useEffect } from 'react';
+import { QuickTradeWidget } from '@/components/dashboard/QuickTradeWidget';
+import { cn } from '@/lib/utils';
 
 interface DashboardHomeProps {
   user: { email: string; name: string } | null;
   onNavigate?: (section: string) => void;
 }
 
-const TetherLogo = ({ className }: { className?: string }) => (
-  <img 
+const TetherIcon = ({ className }: { className?: string }) => (
+  <img
     src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
-    alt="Tether Logo"
-    className={className}
+    alt="USDT"
+    className={cn('object-contain', className)}
   />
 );
 
 export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   const isMobile = useIsMobile();
+  const { usdtToCfa, loading } = useCryptoRates();
+  const { terexRateCfa, terexBuyRateCfa } = useTerexRates();
+  const [tick, setTick] = useState(0);
 
-  // Vérifier si on est en mode PWA (standalone)
-  const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
-               (window.navigator as any).standalone ||
-               document.referrer.includes('android-app://');
-
-  // Force le scroll en haut quand le composant se monte (spécialement pour PWA mobile)
   useEffect(() => {
-    if (isPWA && isMobile) {
-      // Scroll immédiat et forcé pour PWA mobile
-      window.scrollTo(0, 0);
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-      
-      // Double vérification après un petit délai
-      const timer = setTimeout(() => {
-        window.scrollTo(0, 0);
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-      }, 100);
+    const i = setInterval(() => setTick(t => t + 1), 5000);
+    return () => clearInterval(i);
+  }, []);
 
-      return () => clearTimeout(timer);
-    }
-  }, [isPWA, isMobile]);
+  const firstName = user?.name?.split(' ')[0] || 'Trader';
 
-  const handleServiceClick = (service: string) => {
-    if (onNavigate) {
-      onNavigate(service);
-    }
-  };
-
+  // ────── MOBILE: keep existing compact layout, refined ──────
   if (isMobile) {
-    // Design mobile avec px-0 pour tous les conteneurs
     return (
-      <div className="min-h-screen bg-terex-dark px-0 py-3 space-y-3 text-xs overflow-y-auto scrollbar-hide">
-        {/* Header avec px-0 */}
-        <div className="flex items-center space-x-3 mb-6 px-0">
-          <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
-            <img src="/bitcoin-logo.png" alt="Bitcoin" className="w-12 h-12 object-contain" />
+      <div className="min-h-screen bg-terex-dark px-0 py-3 space-y-4 overflow-y-auto scrollbar-hide">
+        <div className="px-1">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500">Bienvenue</p>
+          <h1 className="text-2xl font-light text-white mt-1">
+            {firstName} <span className="text-terex-accent">.</span>
+          </h1>
+        </div>
+
+        {/* Live ticker mobile */}
+        <div className="rounded-2xl bg-[#0d0d0d] border border-white/5 p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <TetherIcon className="w-7 h-7" />
+              <div>
+                <div className="text-white text-sm font-medium">USDT / XOF</div>
+                <div className="text-[10px] text-gray-500 font-mono">
+                  {loading ? '—' : `1 USDT = ${Math.round(usdtToCfa)} XOF`}
+                </div>
+              </div>
+            </div>
+            <span className="text-[10px] px-2 py-0.5 rounded-md bg-terex-accent/15 text-terex-accent font-mono">
+              LIVE
+            </span>
           </div>
-          <div>
-            <h1 className="text-2xl md:text-3xl font-light text-white mb-1">
-              Bienvenue, <span className="text-terex-accent">{user?.name?.split(' ')[0]}</span>
-            </h1>
-            <p className="text-sm text-gray-400 font-light">Plateforme USDT</p>
+          <div className="grid grid-cols-2 gap-2 pt-3 border-t border-white/5">
+            <div>
+              <div className="text-[10px] text-gray-500 uppercase tracking-wider">Achat</div>
+              <div className="text-terex-accent text-base font-light font-mono">{terexRateCfa}</div>
+            </div>
+            <div>
+              <div className="text-[10px] text-gray-500 uppercase tracking-wider">Vente</div>
+              <div className="text-white text-base font-light font-mono">{terexBuyRateCfa}</div>
+            </div>
           </div>
         </div>
 
-        {/* Services Grid - 2x2 avec px-0 */}
-        <div className="grid grid-cols-2 gap-3 mb-4 px-0">
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('buy')}
-          >
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
-                  <TetherLogo className="w-5 h-5" />
+        <div className="grid grid-cols-2 gap-2 px-0">
+          {[
+            { id: 'buy', label: 'Acheter', icon: TetherIcon, custom: true, color: 'terex-accent' },
+            { id: 'sell', label: 'Vendre', icon: TrendingDown, color: 'red' },
+            { id: 'transfer', label: 'Virement', icon: Globe, color: 'blue' },
+            { id: 'otc', label: 'OTC', icon: Handshake, color: 'purple' },
+          ].map(it => {
+            const Icon = it.icon as any;
+            return (
+              <button
+                key={it.id}
+                onClick={() => onNavigate?.(it.id)}
+                className="group rounded-xl bg-[#0d0d0d] border border-white/5 hover:border-terex-accent/30 p-3 text-left transition-all"
+              >
+                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center mb-2">
+                  {it.custom ? <Icon className="w-5 h-5" /> : <Icon className="w-4 h-4 text-white" />}
                 </div>
-              </div>
-              <h3 className="text-white text-sm font-light mb-1">Acheter USDT</h3>
-              <p className="text-gray-400 text-xs">Achat rapide</p>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('sell')}
-          >
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
-                  <TetherLogo className="w-5 h-5" />
-                </div>
-              </div>
-              <h3 className="text-white text-sm font-light mb-1">Vendre USDT</h3>
-              <p className="text-gray-400 text-xs">Vente rapide</p>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('otc')}
-          >
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                  <Handshake className="w-4 h-4 text-purple-400" />
-                </div>
-              </div>
-              <h3 className="text-white text-sm font-light mb-1">Trading OTC</h3>
-              <p className="text-gray-400 text-xs">Gros volumes</p>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('transfer')}
-          >
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-terex-accent/20 rounded-lg flex items-center justify-center">
-                  <Globe className="w-4 h-4 text-terex-accent" />
-                </div>
-              </div>
-              <h3 className="text-white text-sm font-light mb-1">Virement</h3>
-              <p className="text-gray-400 text-xs">International</p>
-            </CardContent>
-          </Card>
+                <div className="text-white text-sm font-light">{it.label}</div>
+                <div className="text-[10px] text-gray-500">USDT</div>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Section Historique des transactions récentes - px-0 */}
         <div className="px-0">
           <RecentTransactions onNavigate={onNavigate} />
         </div>
-
       </div>
     );
   }
 
-  // Design desktop centré comme mobile
+  // ────── DESKTOP: DODO-inspired centered, 3-column ──────
   return (
-    <div className="min-h-[calc(100vh-10rem)] flex items-start justify-center py-8 px-4">
-      <div className="w-full max-w-2xl space-y-6">
-        {/* Header Section */}
-        <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
-            <img src="/bitcoin-logo.png" alt="Bitcoin" className="w-12 h-12 object-contain" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-light text-white">
-              Bienvenue, <span className="text-terex-accent">{user?.name?.split(' ')[0]}</span>
-            </h1>
-            <p className="text-gray-400 text-sm">Plateforme USDT</p>
-          </div>
+    <div className="w-full max-w-[1280px] mx-auto px-4 lg:px-8 py-6 space-y-6">
+      {/* Hero strip */}
+      <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.25em] text-gray-500 font-mono">
+            Tableau de bord
+          </p>
+          <h1 className="text-3xl lg:text-4xl font-light text-white mt-2 tracking-tight">
+            Bonjour, <span className="text-terex-accent">{firstName}</span>
+          </h1>
+          <p className="text-sm text-gray-500 mt-1 font-light">
+            Marché USDT/XOF en temps réel · Wave & Orange Money supportés
+          </p>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-2 gap-4">
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('buy')}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
-                  <TetherLogo className="w-6 h-6" />
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-terex-accent" />
+        {/* Live ticker */}
+        <div className="flex items-center gap-3">
+          {[
+            { label: 'USDT/XOF', value: loading ? '—' : Math.round(usdtToCfa).toLocaleString('fr-FR'), accent: true },
+            { label: 'Achat', value: terexRateCfa.toLocaleString('fr-FR') },
+            { label: 'Vente', value: terexBuyRateCfa.toLocaleString('fr-FR') },
+          ].map(s => (
+            <div
+              key={s.label}
+              className="px-3 py-2 rounded-lg bg-[#0d0d0d] border border-white/5 min-w-[110px]"
+            >
+              <div className="text-[10px] text-gray-500 uppercase tracking-wider font-mono">
+                {s.label}
               </div>
-              <h3 className="text-white font-light mb-1">Acheter USDT</h3>
-              <p className="text-gray-400 text-sm">Achat rapide</p>
-            </CardContent>
-          </Card>
+              <div
+                className={cn(
+                  'text-sm font-mono mt-0.5',
+                  s.accent ? 'text-terex-accent' : 'text-white'
+                )}
+              >
+                {s.value}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('sell')}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center">
-                  <TetherLogo className="w-6 h-6" />
+      {/* Main grid: center info + right action */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Center column */}
+        <div className="lg:col-span-8 space-y-6">
+          {/* Hero card USDT */}
+          <div className="relative rounded-2xl bg-gradient-to-br from-[#0d0d0d] via-[#0d0d0d] to-terex-accent/5 border border-white/5 overflow-hidden p-8">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-terex-accent/10 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none" />
+            <div className="relative flex items-start justify-between gap-6 flex-wrap">
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <TetherIcon className="w-7 h-7" />
+                  <span className="text-white text-sm font-medium">Tether USD</span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-gray-400 font-mono">
+                    USDT
+                  </span>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-terex-accent" />
+                <div className="text-5xl font-extralight text-white tracking-tight">
+                  {loading ? '—' : Math.round(usdtToCfa).toLocaleString('fr-FR')}
+                  <span className="text-xl text-gray-500 ml-2 font-light">XOF</span>
+                </div>
+                <div className="flex items-center gap-2 mt-3 text-xs">
+                  <span className="flex items-center gap-1 text-terex-accent">
+                    <TrendingUp className="w-3 h-3" />
+                    Stable
+                  </span>
+                  <span className="text-gray-600">·</span>
+                  <span className="text-gray-500 font-mono">1 USD = 1 USDT</span>
+                </div>
               </div>
-              <h3 className="text-white font-light mb-1">Vendre USDT</h3>
-              <p className="text-gray-400 text-sm">Vente rapide</p>
-            </CardContent>
-          </Card>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('otc')}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                  <Handshake className="w-5 h-5 text-purple-400" />
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-terex-accent" />
+              <div className="flex flex-col gap-2 min-w-[200px]">
+                <button
+                  onClick={() => onNavigate?.('buy')}
+                  className="h-11 px-5 rounded-xl bg-terex-accent hover:bg-terex-accent/90 text-black text-sm font-medium transition-all flex items-center justify-center gap-2 shadow-lg shadow-terex-accent/20"
+                >
+                  Acheter USDT
+                  <ArrowUpRight className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => onNavigate?.('sell')}
+                  className="h-11 px-5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-light transition-all flex items-center justify-center gap-2"
+                >
+                  Vendre USDT
+                </button>
               </div>
-              <h3 className="text-white font-light mb-1">Trading OTC</h3>
-              <p className="text-gray-400 text-sm">Gros volumes</p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('transfer')}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 bg-terex-accent/20 rounded-lg flex items-center justify-center">
-                  <Globe className="w-5 h-5 text-terex-accent" />
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-terex-accent" />
-              </div>
-              <h3 className="text-white font-light mb-1">Virement</h3>
-              <p className="text-gray-400 text-sm">International</p>
-            </CardContent>
-          </Card>
+          {/* Service grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {[
+              { id: 'buy', label: 'Acheter', sub: 'USDT instant', icon: TetherIcon, custom: true },
+              { id: 'sell', label: 'Vendre', sub: 'Wave / Orange', icon: TrendingDown },
+              { id: 'transfer', label: 'Virement', sub: 'International', icon: Globe },
+              { id: 'otc', label: 'OTC Desk', sub: 'Gros volumes', icon: Handshake },
+            ].map(it => {
+              const Icon = it.icon as any;
+              return (
+                <button
+                  key={it.id}
+                  onClick={() => onNavigate?.(it.id)}
+                  className="group relative rounded-xl bg-[#0d0d0d] border border-white/5 hover:border-terex-accent/30 p-4 text-left transition-all overflow-hidden"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-9 h-9 rounded-lg bg-white/5 group-hover:bg-terex-accent/15 flex items-center justify-center transition-all">
+                      {it.custom ? (
+                        <Icon className="w-5 h-5" />
+                      ) : (
+                        <Icon className="w-[18px] h-[18px] text-white" />
+                      )}
+                    </div>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-gray-600 group-hover:text-terex-accent transition-colors" />
+                  </div>
+                  <div className="text-white text-sm font-light">{it.label}</div>
+                  <div className="text-[10px] text-gray-500 mt-0.5">{it.sub}</div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Recent transactions */}
+          <RecentTransactions onNavigate={onNavigate} />
         </div>
 
-        {/* Recent Transactions */}
-        <RecentTransactions onNavigate={onNavigate} />
+        {/* Right column: Quick trade */}
+        <div className="lg:col-span-4">
+          <div className="lg:sticky lg:top-20 space-y-4">
+            <QuickTradeWidget onTrade={action => onNavigate?.(action)} />
+
+            <div className="rounded-2xl bg-[#0d0d0d] border border-white/5 p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="w-3.5 h-3.5 text-terex-accent" />
+                <span className="text-[11px] text-gray-400 uppercase tracking-wider font-mono">
+                  Pourquoi Terex
+                </span>
+              </div>
+              <ul className="space-y-2.5">
+                {[
+                  'Règlement < 5 minutes',
+                  'Réseaux TRC20 / BEP20 / ERC20',
+                  'Support FR 7j/7',
+                ].map(t => (
+                  <li key={t} className="flex items-center gap-2 text-xs text-gray-400 font-light">
+                    <span className="w-1 h-1 rounded-full bg-terex-accent" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
