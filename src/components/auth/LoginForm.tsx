@@ -91,10 +91,10 @@ export function LoginForm() {
     <div className="min-h-screen w-full flex">
 
       {/* ── LEFT — Formulaire ──────────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col min-h-screen" style={{ background: '#101010' }}>
+      <div className="flex-1 lg:w-[38%] flex flex-col min-h-screen" style={{ background: '#101010' }}>
 
-        {/* Logo mobile */}
-        <div className="lg:hidden flex items-center gap-3 p-6 border-b" style={{ borderColor: '#1f1f1f' }}>
+        {/* Logo tablette uniquement (masqué sur mobile et desktop) */}
+        <div className="hidden md:flex lg:hidden items-center gap-3 p-6 border-b" style={{ borderColor: '#1f1f1f' }}>
           <img src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" alt="Terex" className="w-8 h-8" />
           <span className="text-lg font-black" style={{ color: '#3b968f' }}>TEREX</span>
         </div>
@@ -322,58 +322,45 @@ export function LoginForm() {
           </div>
         </div>
 
-        {/* Pied de page */}
+        {/* Pied de page gauche uniquement */}
         <div className="p-6 border-t text-center" style={{ borderColor: '#1f1f1f' }}>
-          <p className="text-xs text-gray-600">© 2025 Terex · Teranga Exchange</p>
+          <p className="text-xs text-gray-600">© 2026 Terex · Teranga Exchange</p>
         </div>
       </div>
 
-      {/* ── RIGHT — Témoignage ─────────────────────────────────────────── */}
-      <div className="hidden lg:flex relative w-1/2 flex-col overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #0a1514 0%, #061110 60%, #030a09 100%)' }}>
+      {/* ── RIGHT — Citation ───────────────────────────────────────────── */}
+      <div className="hidden lg:flex relative lg:w-[62%] flex-col overflow-hidden"
+        style={{ background: '#000' }}>
 
-        {/* Lueurs d'ambiance */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full opacity-25"
-            style={{ background: 'radial-gradient(circle, rgba(59,150,143,0.3) 0%, transparent 70%)' }} />
-          <div className="absolute -bottom-40 -left-20 w-[400px] h-[400px] rounded-full opacity-15"
-            style={{ background: 'radial-gradient(circle, rgba(59,150,143,0.25) 0%, transparent 70%)' }} />
-        </div>
-
-        {/* Contenu */}
-        <div className="relative z-10 flex-1 flex flex-col justify-center px-14 pb-10">
+        {/* Contenu centré */}
+        <div className="relative z-10 flex-1 flex flex-col justify-center px-20">
 
           {/* Icône guillemet */}
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-8"
-            style={{ background: 'rgba(59,150,143,0.12)', border: '1px solid rgba(59,150,143,0.2)' }}>
-            <Quote className="w-5 h-5" style={{ color: '#3b968f' }} />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-10"
+            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <Quote className="w-5 h-5 text-white opacity-60" />
           </div>
 
           {/* Citation */}
-          <p className="text-2xl font-light text-white mb-10" style={{ lineHeight: '1.65' }}>
+          <p className="text-3xl font-light text-white mb-12" style={{ lineHeight: '1.6', letterSpacing: '-0.01em' }}>
             "Le problème fondamental avec les monnaies conventionnelles, c'est toute la confiance qu'il faut pour les faire fonctionner."
           </p>
 
           {/* Auteur */}
           <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-bold text-sm"
+            <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-semibold text-sm"
               style={{
-                background: 'linear-gradient(135deg, rgba(59,150,143,0.25), rgba(59,150,143,0.08))',
-                border: '1.5px solid rgba(59,150,143,0.35)',
-                color: '#3b968f',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                color: 'rgba(255,255,255,0.7)',
               }}>
               SN
             </div>
             <div>
               <p className="text-sm font-semibold text-white">Satoshi Nakamoto</p>
-              <p className="text-xs text-gray-500 mt-0.5">Créateur du Bitcoin</p>
+              <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>Créateur du Bitcoin</p>
             </div>
           </div>
-        </div>
-
-        {/* Pied de page droite */}
-        <div className="relative z-10 px-14 py-6 border-t" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-          <p className="text-xs text-gray-600">© 2025 Terex · Teranga Exchange</p>
         </div>
       </div>
     </div>
