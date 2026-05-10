@@ -1,14 +1,11 @@
-import { Home, History, User, HelpCircle, Globe, TrendingDown, Handshake, Shield, ShoppingCart, UserCheck, ChevronDown, LogOut } from 'lucide-react';
+import { Home, History, User, HelpCircle, Send, TrendingDown, Shield, ShoppingCart, UserCheck, ChevronDown, LogOut, Settings } from 'lucide-react';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useState } from 'react';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
 const TetherIcon = ({ className }: { className?: string }) => (
-  <img
-    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
-    alt="USDT"
-    className={cn('object-contain', className)}
-  />
+  <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" className={cn('object-contain', className)} />
 );
 
 interface DodoSidebarProps {
@@ -17,34 +14,29 @@ interface DodoSidebarProps {
   onLogout: () => void;
 }
 
-interface Item {
-  id: string;
-  label: string;
-  icon: any;
-  custom?: boolean;
-}
+interface Item { id: string; label: string; icon: any; custom?: boolean; }
 
 export function DodoSidebar({ activeSection, onSectionChange, onLogout }: DodoSidebarProps) {
   const { isKYCReviewer, isAdmin } = useUserRole();
-  const [moreOpen, setMoreOpen] = useState(true);
+  const [adminOpen, setAdminOpen] = useState(true);
 
   const primary: Item[] = [
-    { id: 'home', label: 'Accueil', icon: Home },
-    { id: 'buy', label: 'Acheter USDT', icon: TetherIcon, custom: true },
-    { id: 'sell', label: 'Vendre USDT', icon: TrendingDown },
-    { id: 'transfer', label: 'Virement', icon: Globe },
-    { id: 'otc', label: 'OTC Desk', icon: Handshake },
+    { id: 'home',     label: 'Tableau de bord', icon: Home },
+    { id: 'buy',      label: 'Acheter USDT',    icon: TetherIcon, custom: true },
+    { id: 'sell',     label: 'Vendre USDT',     icon: TrendingDown },
+    { id: 'transfer', label: 'Transferts',       icon: Send },
+    { id: 'otc',      label: 'OTC Desk',         icon: TrendingDown },
   ];
 
   const account: Item[] = [
     { id: 'history', label: 'Historique', icon: History },
     { id: 'profile', label: 'Mon Profil', icon: User },
-    { id: 'faq', label: 'Aide', icon: HelpCircle },
+    { id: 'faq',     label: 'Aide & FAQ', icon: HelpCircle },
   ];
 
   const adminItems: Item[] = [
-    { id: 'kyc-admin', label: 'KYC', icon: Shield },
-    { id: 'orders-admin', label: 'Commandes', icon: ShoppingCart },
+    { id: 'kyc-admin',        label: 'KYC',         icon: Shield },
+    { id: 'orders-admin',     label: 'Commandes',   icon: ShoppingCart },
     { id: 'job-applications', label: 'Candidatures', icon: UserCheck },
   ];
 
@@ -56,93 +48,94 @@ export function DodoSidebar({ activeSection, onSectionChange, onLogout }: DodoSi
         key={it.id}
         onClick={() => onSectionChange(it.id)}
         className={cn(
-          'group w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all',
+          'w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] transition-all cursor-pointer',
           active
-            ? 'bg-terex-accent/15 text-white border border-terex-accent/30'
-            : 'text-gray-400 hover:bg-white/[0.04] hover:text-white border border-transparent'
+            ? 'bg-[#171717] text-white font-medium'
+            : 'text-[#a3a3a3] hover:bg-[#171717]/60 hover:text-[#d4d4d4] font-normal'
         )}
       >
-        <span
-          className={cn(
-            'flex items-center justify-center w-5 h-5 shrink-0',
-            active ? 'text-terex-accent' : 'text-gray-500 group-hover:text-gray-300'
-          )}
-        >
-          {it.custom ? <Icon className="w-5 h-5" /> : <Icon className="w-[18px] h-[18px]" />}
+        <span className={cn('flex items-center justify-center w-4 h-4 shrink-0', active ? 'text-white' : 'text-[#737373]')}>
+          {it.custom ? <Icon className="w-4 h-4" /> : <Icon className="w-4 h-4" strokeWidth={1.8} />}
         </span>
-        <span className="truncate font-light tracking-tight">{it.label}</span>
-        {active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-terex-accent" />}
+        <span className="truncate">{it.label}</span>
+        {active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#3B968F]" />}
       </button>
     );
   };
 
   return (
-    <aside className="hidden md:flex flex-col fixed left-0 top-0 h-screen w-[240px] bg-[#0d0d0d] border-r border-white/5 z-40">
-      {/* Brand */}
-      <div className="px-5 py-5 border-b border-white/5">
-        <button
-          onClick={() => onSectionChange('home')}
-          className="flex items-center gap-2.5 group"
-        >
-          <div className="relative w-9 h-9 rounded-lg bg-gradient-to-br from-terex-accent to-terex-accent/70 flex items-center justify-center shadow-lg shadow-terex-accent/20">
-            <span className="text-white font-bold text-base">T</span>
-          </div>
-          <div className="text-left leading-tight">
-            <div className="text-white text-base font-semibold tracking-tight">Terex</div>
-            <div className="text-[10px] text-gray-500 uppercase tracking-[0.15em]">Exchange</div>
-          </div>
+    <aside className="hidden md:flex flex-col fixed left-0 top-0 h-screen w-[240px] bg-[#111] border-r border-[#262626] z-40">
+      {/* Logo */}
+      <div className="flex items-center justify-between px-4 py-4 border-b border-[#262626]">
+        <button onClick={() => onSectionChange('home')} className="flex items-center gap-2 group">
+          <img
+            src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
+            alt="Terex"
+            className="w-7 h-7 rounded-md"
+          />
+          <span className="text-[15px] font-semibold text-white tracking-tight">Terex</span>
         </button>
+        <span className="text-[9px] text-[#404040] border border-[#262626] rounded-full px-2 py-0.5">v2.4</span>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto px-3 py-5 scrollbar-hide space-y-6">
-        <div className="space-y-1">
+      <nav className="flex-1 overflow-y-auto px-3 py-4 scrollbar-hide space-y-5">
+        <div className="space-y-0.5">
           {primary.map(renderItem)}
         </div>
 
+        <Separator className="bg-[#262626]" />
+
         <div>
-          <div className="px-3 mb-2 text-[10px] uppercase tracking-[0.15em] text-gray-600 font-medium">
-            Compte
-          </div>
-          <div className="space-y-1">{account.map(renderItem)}</div>
+          <p className="px-2.5 mb-1.5 text-[10px] uppercase tracking-[0.15em] text-[#404040] font-medium">Compte</p>
+          <div className="space-y-0.5">{account.map(renderItem)}</div>
         </div>
 
         {(isKYCReviewer() || isAdmin()) && (
           <div>
             <button
-              onClick={() => setMoreOpen(o => !o)}
-              className="w-full flex items-center justify-between px-3 mb-2"
+              onClick={() => setAdminOpen(o => !o)}
+              className="w-full flex items-center justify-between px-2.5 mb-1.5"
             >
-              <span className="text-[10px] uppercase tracking-[0.15em] text-gray-600 font-medium">
-                Admin
-              </span>
-              <ChevronDown
-                className={cn(
-                  'w-3.5 h-3.5 text-gray-600 transition-transform',
-                  !moreOpen && '-rotate-90'
-                )}
-              />
+              <span className="text-[10px] uppercase tracking-[0.15em] text-[#404040] font-medium">Admin</span>
+              <ChevronDown className={cn('w-3 h-3 text-[#404040] transition-transform', !adminOpen && '-rotate-90')} />
             </button>
-            {moreOpen && <div className="space-y-1">{adminItems.map(renderItem)}</div>}
+            {adminOpen && <div className="space-y-0.5">{adminItems.map(renderItem)}</div>}
           </div>
         )}
       </nav>
 
       {/* Footer */}
-      <div className="px-3 py-4 border-t border-white/5 space-y-2">
-        <div className="px-3 py-2 rounded-lg bg-white/[0.03] border border-white/5">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] text-gray-500 uppercase tracking-wider">USDT</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-terex-accent animate-pulse" />
+      <div className="px-3 py-3 border-t border-[#262626] space-y-1">
+        <button
+          onClick={() => onSectionChange('profile')}
+          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] text-[#a3a3a3] hover:bg-[#171717]/60 hover:text-[#d4d4d4] transition-all"
+        >
+          <Settings className="w-4 h-4 text-[#737373]" strokeWidth={1.8} />
+          <span>Paramètres</span>
+        </button>
+
+        <Separator className="bg-[#262626] my-1" />
+
+        <button
+          onClick={() => onSectionChange('profile')}
+          className="w-full flex items-center gap-2.5 p-2.5 rounded-lg border border-[#262626] hover:border-[#404040] transition-colors"
+        >
+          <div className="w-7 h-7 rounded-full bg-[#3B968F]/20 flex items-center justify-center shrink-0">
+            <span className="text-[#3B968F] text-[11px] font-medium">AD</span>
           </div>
-          <div className="text-white text-sm font-medium mt-0.5">$1.00</div>
-        </div>
+          <div className="flex-1 text-left min-w-0">
+            <p className="text-[12px] font-medium text-white truncate">Mon compte</p>
+            <p className="text-[10px] text-[#737373]">Vérifié · Niveau 2</p>
+          </div>
+        </button>
+
         <button
           onClick={onLogout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-500 hover:text-red-400 hover:bg-red-500/5 transition-all"
+          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] text-[#737373] hover:text-red-400 hover:bg-red-500/5 transition-all"
         >
-          <LogOut className="w-[18px] h-[18px]" />
-          <span className="font-light">Déconnexion</span>
+          <LogOut className="w-4 h-4" strokeWidth={1.8} />
+          <span>Déconnexion</span>
         </button>
       </div>
     </aside>

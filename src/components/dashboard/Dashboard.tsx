@@ -50,27 +50,21 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   const { signOut } = useAuth();
   const { isKYCReviewer, isAdmin } = useUserRole();
 
-  // Vérifier si on est en mode PWA (standalone)
   const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
                (window.navigator as any).standalone ||
                document.referrer.includes('android-app://');
 
-  // Auto-navigate to buy section if redirected from Hero form
   useEffect(() => {
     const state = location.state as { action?: string } | null;
     if (state?.action === 'buy') {
       setActiveSection('buy');
-      // Clear the navigation state to prevent re-triggering
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
-  // Effet pour remonter en haut à chaque changement de section
   useEffect(() => {
-    // Pour le PWA mobile, scroll immédiatement et de façon synchrone
     if (isPWA && isMobile) {
       window.scrollTo(0, 0);
-      // Force aussi le scroll du body au cas où
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     } else {
@@ -78,10 +72,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     }
   }, [activeSection, isPWA, isMobile]);
 
-  // Effet spécial pour s'assurer que la page home scroll bien en haut
   useEffect(() => {
     if (activeSection === 'home' && isPWA && isMobile) {
-      // Double vérification pour la page d'accueil
       setTimeout(() => {
         window.scrollTo(0, 0);
         document.body.scrollTop = 0;
@@ -92,55 +84,32 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
   const handleLogout = async () => {
     try {
-      console.log('Dashboard: Starting logout...')
       await signOut();
-      console.log('Dashboard: Logout completed')
-      // No need to manually redirect, the auth state change will handle it
     } catch (error) {
-      console.error('Dashboard: Logout error:', error)
+      console.error('Dashboard: Logout error:', error);
     }
   };
 
-  const handleBackToHome = () => {
-    setActiveSection('home');
-  };
+  const handleBackToHome = () => setActiveSection('home');
 
   const handleNavigate = (section: string) => {
-    // Pages qui doivent ouvrir une nouvelle route
     const externalPages = ['contact', 'feedback', 'referral', 'share-app', 'terms'];
-    
     if (externalPages.includes(section)) {
-      switch (section) {
-        case 'contact':
-          navigate('/contact');
-          break;
-        case 'feedback':
-          navigate('/feedback');
-          break;
-        case 'referral':
-          navigate('/referral');
-          break;
-        case 'share-app':
-          navigate('/share');
-          break;
-        case 'terms':
-          navigate('/terms');
-          break;
-      }
+      const routes: Record<string, string> = {
+        contact: '/contact', feedback: '/feedback', referral: '/referral',
+        'share-app': '/share', terms: '/terms',
+      };
+      navigate(routes[section]);
     } else {
-      // Pages internes au dashboard
       setActiveSection(section);
     }
   };
 
   const renderContent = () => {
     switch (activeSection) {
-      case 'home':
-        return <DashboardHome user={user} onNavigate={setActiveSection} />;
-      case 'buy':
-        return <BuyUSDT />;
-      case 'sell':
-        return <SellUSDT />;
+      case 'home':        return <DashboardHome user={user} onNavigate={setActiveSection} />;
+      case 'buy':         return <BuyUSDT />;
+      case 'sell':        return <SellUSDT />;
       case 'transfer':
         return (
           <div className="max-w-2xl mx-auto mt-8 text-center">
@@ -148,49 +117,30 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               <span className="text-4xl">🚀</span>
             </div>
             <h2 className="text-white text-2xl font-light mb-3">Virements Internationaux</h2>
-            <p className="text-gray-400 text-base mb-6">
-              Cette fonctionnalité sera bientôt disponible sur Terex.
-            </p>
-            <p className="text-gray-500 text-sm">
-              Nous travaillons activement pour vous offrir le meilleur service de virements internationaux.
-            </p>
+            <p className="text-gray-400 text-base mb-6">Cette fonctionnalité sera bientôt disponible sur Terex.</p>
+            <p className="text-gray-500 text-sm">Nous travaillons activement pour vous offrir le meilleur service de virements internationaux.</p>
           </div>
         );
-      case 'otc':
-        // Redirecter vers le formulaire de demande de gros volume avec un montant par défaut
-        return <HighVolumeRequest onBack={() => setActiveSection('home')} requestedAmount="" />;
-      case 'history':
-        return <TransactionHistoryPage />;
-      case 'profile':
-        return <Profile user={user} onLogout={handleLogout} />;
-      case 'kyc':
-        return <KYCPage onBack={() => setActiveSection('profile')} />;
-      case 'faq':
-        return <FAQ onNavigate={setActiveSection} />;
-      case 'user-guide':
-        return <UserGuide onBack={() => setActiveSection('faq')} />;
-      case 'security-policy':
-        return <SecurityPolicy onBack={() => setActiveSection('faq')} />;
-      case 'terms-of-service':
-        return <TermsOfService onBack={() => setActiveSection('faq')} />;
-      case 'about-terex':
-        return <AboutTerex onBack={() => setActiveSection('faq')} />;
-      case 'kyc-admin':
-        return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
-      case 'orders-admin':
-        return isKYCReviewer() ? <OrdersDashboardNew /> : <div className="text-white">Accès non autorisé</div>;
-      case 'job-applications':
-        return (isAdmin() || isKYCReviewer()) ? <JobApplicationsAdmin /> : <div className="text-white">Accès non autorisé</div>;
-      default:
-        return <DashboardHome user={user} onNavigate={setActiveSection} />;
+      case 'otc':         return <HighVolumeRequest onBack={() => setActiveSection('home')} requestedAmount="" />;
+      case 'history':     return <TransactionHistoryPage />;
+      case 'profile':     return <Profile user={user} onLogout={handleLogout} />;
+      case 'kyc':         return <KYCPage onBack={() => setActiveSection('profile')} />;
+      case 'faq':         return <FAQ onNavigate={setActiveSection} />;
+      case 'user-guide':  return <UserGuide onBack={() => setActiveSection('faq')} />;
+      case 'security-policy': return <SecurityPolicy onBack={() => setActiveSection('faq')} />;
+      case 'terms-of-service': return <TermsOfService onBack={() => setActiveSection('faq')} />;
+      case 'about-terex': return <AboutTerex onBack={() => setActiveSection('faq')} />;
+      case 'kyc-admin':   return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
+      case 'orders-admin': return isKYCReviewer() ? <OrdersDashboardNew /> : <div className="text-white">Accès non autorisé</div>;
+      case 'job-applications': return (isAdmin() || isKYCReviewer()) ? <JobApplicationsAdmin /> : <div className="text-white">Accès non autorisé</div>;
+      default:            return <DashboardHome user={user} onNavigate={setActiveSection} />;
     }
   };
 
   return (
     <TransactionProvider>
       <SidebarProvider>
-        <div className="min-h-screen w-full bg-terex-dark">
-          {/* DODO-style persistent sidebar (desktop only) */}
+        <div className="min-h-screen w-full bg-[#0a0a0a]">
           {!isMobile && (
             <DodoSidebar
               activeSection={activeSection}
@@ -199,7 +149,6 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             />
           )}
 
-          {/* Mobile hamburger trigger */}
           {isMobile && !isPWA && (
             <Button
               variant="ghost"
@@ -211,7 +160,6 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             </Button>
           )}
 
-          {/* Menu hamburger mobile plein écran */}
           <MobileMenu
             activeSection={activeSection}
             setActiveSection={handleNavigate}
@@ -220,16 +168,14 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             onClose={() => setMenuOpen(false)}
           />
 
-          <div className={`min-h-screen flex flex-col ${!isMobile ? 'md:pl-[240px]' : ''}`}>
-            {!isMobile && <DodoTopBar user={user} />}
-
+          <div className={`${!isMobile ? 'md:pl-[240px] h-screen flex flex-col' : 'min-h-screen flex flex-col'}`}>
             <main
-              className={`flex-1 ${
+              className={`flex-1 overflow-hidden ${
                 isMobile
                   ? isPWA
                     ? 'p-4 pt-16 pb-24'
                     : 'p-4 pt-4 pb-24'
-                  : 'px-0 py-0 pb-24'
+                  : 'p-0'
               } relative`}
             >
               {isMobile && isPWA && (
@@ -244,7 +190,6 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             </main>
           </div>
 
-          {/* Bottom nav: mobile only (desktop nav lives in sidebar now) */}
           {isMobile && (
             <MobileBottomNav
               activeSection={activeSection}
