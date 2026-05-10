@@ -18,7 +18,6 @@ const TetherLogo = ({ className }: { className?: string }) => (
   <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" className={cn('object-contain', className)} />
 );
 
-// Mini SVG sparkline
 function Spark({ data, color, width = 80, height = 24, fill = true }: {
   data: number[]; color: string; width?: number; height?: number; fill?: boolean;
 }) {
@@ -43,7 +42,6 @@ function Spark({ data, color, width = 80, height = 24, fill = true }: {
   );
 }
 
-// Big area chart
 function PortfolioChart() {
   const data = [120, 135, 128, 142, 138, 155, 148, 162, 175, 168, 172, 185, 178, 192, 188, 205, 198, 215, 212, 228, 222, 240, 235, 248, 242, 258, 252, 268, 275, 290];
   const w = 800, h = 160;
@@ -85,12 +83,12 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
     ? `+ ${tx.usdt_amount?.toFixed(2) ?? '—'} USDT`
     : `- ${tx.cfa_amount?.toLocaleString('fr-FR') ?? '—'} F`;
   const getTxIcon   = (type: string) => {
-    if (type === 'buy')      return <ArrowDownLeft className="w-3.5 h-3.5" />;
-    if (type === 'sell')     return <ArrowUpRight  className="w-3.5 h-3.5" />;
+    if (type === 'buy')  return <ArrowDownLeft className="w-3.5 h-3.5" />;
+    if (type === 'sell') return <ArrowUpRight  className="w-3.5 h-3.5" />;
     return <Send className="w-3.5 h-3.5" />;
   };
 
-  // ─── MOBILE ───────────────────────────────────────────────────────────────────────────────
+  // MOBILE
   if (isMobile) {
     return (
       <div className="min-h-screen bg-[#141414] space-y-4 pb-6">
@@ -137,10 +135,10 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
 
         <div className="grid grid-cols-2 gap-2">
           {[
-            { id: 'buy',      label: 'Acheter',  sub: 'USDT instant',  icon: <TetherLogo className="w-5 h-5" />,              accent: true },
-            { id: 'sell',     label: 'Vendre',   sub: 'Wave / Orange', icon: <TrendingDown className="w-4 h-4 text-white" />, accent: false },
-            { id: 'transfer', label: 'Virement', sub: 'International', icon: <Send className="w-4 h-4 text-white" />,         accent: false },
-            { id: 'otc',      label: 'OTC Desk', sub: 'Gros volumes',  icon: <ArrowUpRight className="w-4 h-4 text-white" />, accent: false },
+            { id: 'buy',      label: 'Acheter',  sub: 'USDT instant',  icon: <TetherLogo className="w-5 h-5" />,               accent: true },
+            { id: 'sell',     label: 'Vendre',   sub: 'Wave / Orange', icon: <TrendingDown className="w-4 h-4 text-white" />,  accent: false },
+            { id: 'transfer', label: 'Virement', sub: 'International', icon: <Send className="w-4 h-4 text-white" />,          accent: false },
+            { id: 'otc',      label: 'OTC Desk', sub: 'Gros volumes',  icon: <ArrowUpRight className="w-4 h-4 text-white" />,  accent: false },
           ].map(it => (
             <button
               key={it.id}
@@ -190,10 +188,9 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
     );
   }
 
-  // ─── DESKTOP ──────────────────────────────────────────────────────────────────────────────
+  // DESKTOP
   return (
-    <div className="flex flex-col h-full bg-[#141414]">
-      {/* Top bar */}
+    <div className="flex flex-col h-full overflow-hidden bg-[#141414]">
       <header className="flex items-center justify-between px-7 py-5 border-b border-[#2e2e2e] shrink-0">
         <div>
           <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-white">Bonjour {firstName}</h1>
@@ -218,10 +215,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
         </div>
       </header>
 
-      {/* Content */}
       <div className="flex-1 overflow-auto p-7 space-y-5">
-
-        {/* Stat cards */}
         <div className="grid grid-cols-4 gap-3.5">
           {[
             { label: 'Taux marché',  value: loading ? '—' : Math.round(usdtToCfa).toLocaleString('fr-FR'), unit: 'XOF', sub: 'USDT/XOF · temps réel',   spark: UP_SPARK,   color: '#3B968F', up: true },
@@ -245,7 +239,6 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           ))}
         </div>
 
-        {/* Chart + Activity */}
         <div className="grid gap-3.5" style={{ gridTemplateColumns: '1.6fr 1fr' }}>
           <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
             <CardContent className="p-5">
@@ -283,7 +276,6 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   Tout voir →
                 </button>
               </div>
-
               {txLoading ? (
                 <p className="text-xs text-gray-500 text-center py-8">Chargement…</p>
               ) : recentTx.length === 0 ? (
@@ -321,7 +313,6 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </Card>
         </div>
 
-        {/* Markets + Quick actions */}
         <div className="grid grid-cols-2 gap-3.5">
           <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
             <CardContent className="p-5">
@@ -355,10 +346,10 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
               <p className="text-[14px] font-medium text-white mb-4">Actions rapides</p>
               <div className="grid grid-cols-2 gap-2 mb-4">
                 {[
-                  { id: 'buy',      label: 'Acheter USDT', icon: <TetherLogo className="w-4 h-4" />,         accent: true },
-                  { id: 'sell',     label: 'Vendre USDT',  icon: <TrendingDown className="w-4 h-4" />,        accent: false },
-                  { id: 'transfer', label: 'Virement',      icon: <Send className="w-4 h-4" />,               accent: false },
-                  { id: 'otc',      label: 'OTC Desk',      icon: <ArrowUpRight className="w-4 h-4" />,       accent: false },
+                  { id: 'buy',      label: 'Acheter USDT', icon: <TetherLogo className="w-4 h-4" />,        accent: true },
+                  { id: 'sell',     label: 'Vendre USDT',  icon: <TrendingDown className="w-4 h-4" />,       accent: false },
+                  { id: 'transfer', label: 'Virement',      icon: <Send className="w-4 h-4" />,              accent: false },
+                  { id: 'otc',      label: 'OTC Desk',      icon: <ArrowUpRight className="w-4 h-4" />,      accent: false },
                 ].map(it => (
                   <button
                     key={it.id}
@@ -375,9 +366,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   </button>
                 ))}
               </div>
-
               <Separator className="bg-[#2e2e2e] mb-4" />
-
               <div className="space-y-2.5">
                 {[
                   'Réseau TRC20 (TRON)',

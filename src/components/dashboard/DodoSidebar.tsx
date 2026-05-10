@@ -14,13 +14,16 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
 
 const TetherIcon = ({ className }: { className?: string }) => (
-  <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" className={cn('object-contain', className)} />
+  <img
+    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
+    alt="USDT"
+    className={cn('object-contain', className)}
+  />
 );
 
 interface DodoSidebarProps {
@@ -29,13 +32,18 @@ interface DodoSidebarProps {
   onLogout: () => void;
 }
 
-interface Item { id: string; label: string; icon: any; custom?: boolean; }
+interface NavItem {
+  id: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  custom?: boolean;
+}
 
 export function DodoSidebar({ activeSection, onSectionChange, onLogout }: DodoSidebarProps) {
   const { isKYCReviewer, isAdmin } = useUserRole();
   const [adminOpen, setAdminOpen] = useState(true);
 
-  const primary: Item[] = [
+  const primary: NavItem[] = [
     { id: 'home',     label: 'Tableau de bord', icon: Home },
     { id: 'buy',      label: 'Acheter USDT',    icon: TetherIcon, custom: true },
     { id: 'sell',     label: 'Vendre USDT',     icon: TrendingDown },
@@ -43,50 +51,59 @@ export function DodoSidebar({ activeSection, onSectionChange, onLogout }: DodoSi
     { id: 'otc',      label: 'OTC Desk',         icon: TrendingDown },
   ];
 
-  const account: Item[] = [
+  const account: NavItem[] = [
     { id: 'history', label: 'Historique', icon: History },
     { id: 'profile', label: 'Mon Profil', icon: User },
     { id: 'faq',     label: 'Aide & FAQ', icon: HelpCircle },
   ];
 
-  const adminItems: Item[] = [
+  const adminItems: NavItem[] = [
     { id: 'kyc-admin',        label: 'KYC',          icon: Shield },
     { id: 'orders-admin',     label: 'Commandes',    icon: ShoppingCart },
     { id: 'job-applications', label: 'Candidatures', icon: UserCheck },
   ];
 
-  const renderItem = (it: Item) => {
-    const Icon = it.icon;
-    const active = activeSection === it.id;
+  const NavButton = ({ item }: { item: NavItem }) => {
+    const Icon = item.icon;
+    const active = activeSection === item.id;
     return (
-      <SidebarMenuItem key={it.id}>
-        <SidebarMenuButton
-          isActive={active}
-          onClick={() => onSectionChange(it.id)}
+      <SidebarMenuItem>
+        <button
+          onClick={() => onSectionChange(item.id)}
           className={cn(
-            'w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] transition-all cursor-pointer h-auto',
+            'w-full flex items-center gap-2.5 px-3 py-[7px] rounded-lg text-[13px] transition-colors',
             active
-              ? '!bg-[#252525] !text-white font-medium'
-              : '!text-[#888] hover:!bg-[#1f1f1f] hover:!text-[#ccc] font-normal'
+              ? 'bg-[#252525] text-white'
+              : 'text-[#888] hover:bg-[#222] hover:text-[#ccc]'
           )}
         >
           <span className={cn('flex items-center justify-center w-4 h-4 shrink-0', active ? 'text-white' : 'text-[#555]')}>
-            {it.custom ? <Icon className="w-4 h-4" /> : <Icon className="w-4 h-4" strokeWidth={1.8} />}
+            {item.custom
+              ? <Icon className="w-4 h-4" />
+              : <Icon className="w-4 h-4" strokeWidth={1.8} />
+            }
           </span>
-          <span className="truncate">{it.label}</span>
+          <span className="truncate font-normal">{item.label}</span>
           {active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#3B968F] shrink-0" />}
-        </SidebarMenuButton>
+        </button>
       </SidebarMenuItem>
     );
   };
 
   return (
     <Sidebar
-      className="hidden md:flex border-r"
-      style={{ '--sidebar-width': '240px', borderColor: '#2e2e2e', background: '#1a1a1a' } as React.CSSProperties}
+      collapsible="none"
+      className="border-r"
+      style={{ borderColor: '#2e2e2e', background: '#1a1a1a' } as React.CSSProperties}
     >
-      <SidebarHeader className="px-4 py-4 border-b" style={{ borderColor: '#2e2e2e', background: '#1a1a1a' }}>
-        <button onClick={() => onSectionChange('home')} className="flex items-center justify-between w-full">
+      <SidebarHeader
+        className="px-4 py-4 border-b shrink-0"
+        style={{ borderColor: '#2e2e2e', background: '#1a1a1a' }}
+      >
+        <button
+          onClick={() => onSectionChange('home')}
+          className="flex items-center justify-between w-full"
+        >
           <div className="flex items-center gap-2">
             <img
               src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
@@ -95,28 +112,39 @@ export function DodoSidebar({ activeSection, onSectionChange, onLogout }: DodoSi
             />
             <span className="text-[15px] font-semibold text-white tracking-tight">Terex</span>
           </div>
-          <span className="text-[9px] border rounded-full px-2 py-0.5" style={{ color: '#444', borderColor: '#2e2e2e' }}>v2.4</span>
+          <span
+            className="text-[9px] border rounded-full px-2 py-0.5"
+            style={{ color: '#444', borderColor: '#2e2e2e' }}
+          >
+            v2.4
+          </span>
         </button>
       </SidebarHeader>
 
-      <SidebarContent className="px-3 py-4 space-y-0" style={{ background: '#1a1a1a' }}>
-        <SidebarGroup className="p-0 pb-4">
+      <SidebarContent
+        className="flex-1 overflow-y-auto px-3 py-4 space-y-0"
+        style={{ background: '#1a1a1a' }}
+      >
+        <SidebarGroup className="p-0 pb-3">
           <SidebarGroupContent>
             <SidebarMenu className="gap-0.5">
-              {primary.map(renderItem)}
+              {primary.map(item => <NavButton key={item.id} item={item} />)}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
         <SidebarSeparator style={{ background: '#2e2e2e' }} />
 
-        <SidebarGroup className="p-0 pt-4 pb-4">
-          <SidebarGroupLabel className="px-2.5 mb-1 text-[10px] uppercase tracking-[0.15em] font-medium h-auto pb-1" style={{ color: '#444' }}>
+        <SidebarGroup className="p-0 pt-3 pb-3">
+          <SidebarGroupLabel
+            className="px-3 mb-1 text-[10px] uppercase tracking-[0.15em] font-medium h-auto pb-1"
+            style={{ color: '#444' }}
+          >
             Compte
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-0.5">
-              {account.map(renderItem)}
+              {account.map(item => <NavButton key={item.id} item={item} />)}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -124,18 +152,26 @@ export function DodoSidebar({ activeSection, onSectionChange, onLogout }: DodoSi
         {(isKYCReviewer() || isAdmin()) && (
           <>
             <SidebarSeparator style={{ background: '#2e2e2e' }} />
-            <SidebarGroup className="p-0 pt-4">
+            <SidebarGroup className="p-0 pt-3">
               <button
                 onClick={() => setAdminOpen(o => !o)}
-                className="w-full flex items-center justify-between px-2.5 mb-1"
+                className="w-full flex items-center justify-between px-3 mb-1"
               >
-                <span className="text-[10px] uppercase tracking-[0.15em] font-medium" style={{ color: '#444' }}>Admin</span>
-                <ChevronDown className={cn('w-3 h-3 transition-transform', !adminOpen && '-rotate-90')} style={{ color: '#444' }} />
+                <span
+                  className="text-[10px] uppercase tracking-[0.15em] font-medium"
+                  style={{ color: '#444' }}
+                >
+                  Admin
+                </span>
+                <ChevronDown
+                  className={cn('w-3 h-3 transition-transform', !adminOpen && '-rotate-90')}
+                  style={{ color: '#444' }}
+                />
               </button>
               {adminOpen && (
                 <SidebarGroupContent>
                   <SidebarMenu className="gap-0.5">
-                    {adminItems.map(renderItem)}
+                    {adminItems.map(item => <NavButton key={item.id} item={item} />)}
                   </SidebarMenu>
                 </SidebarGroupContent>
               )}
@@ -144,23 +180,29 @@ export function DodoSidebar({ activeSection, onSectionChange, onLogout }: DodoSi
         )}
       </SidebarContent>
 
-      <SidebarFooter className="px-3 py-3 border-t space-y-1" style={{ borderColor: '#2e2e2e', background: '#1a1a1a' }}>
+      <SidebarFooter
+        className="px-3 py-3 border-t shrink-0"
+        style={{ borderColor: '#2e2e2e', background: '#1a1a1a' }}
+      >
         <button
           onClick={() => onSectionChange('profile')}
-          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] text-[#888] hover:bg-[#1f1f1f] hover:text-[#ccc] transition-all"
+          className="w-full flex items-center gap-2.5 px-3 py-[7px] rounded-lg text-[13px] text-[#888] hover:bg-[#222] hover:text-[#ccc] transition-colors"
         >
           <Settings className="w-4 h-4 shrink-0 text-[#555]" strokeWidth={1.8} />
-          <span>Paramètres</span>
+          <span className="font-normal">Paramètres</span>
         </button>
 
-        <SidebarSeparator style={{ background: '#2e2e2e' }} />
+        <SidebarSeparator style={{ background: '#2e2e2e' }} className="my-1" />
 
         <button
           onClick={() => onSectionChange('profile')}
           className="w-full flex items-center gap-2.5 p-2.5 rounded-lg border hover:border-[#3a3a3a] transition-colors"
           style={{ borderColor: '#2e2e2e' }}
         >
-          <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(59,150,143,0.15)' }}>
+          <div
+            className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+            style={{ background: 'rgba(59,150,143,0.15)' }}
+          >
             <span className="text-[11px] font-medium" style={{ color: '#3B968F' }}>AD</span>
           </div>
           <div className="flex-1 text-left min-w-0">
@@ -171,10 +213,10 @@ export function DodoSidebar({ activeSection, onSectionChange, onLogout }: DodoSi
 
         <button
           onClick={onLogout}
-          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] text-[#666] hover:text-red-400 hover:bg-red-500/5 transition-all"
+          className="w-full flex items-center gap-2.5 px-3 py-[7px] rounded-lg text-[13px] text-[#666] hover:text-red-400 hover:bg-red-500/5 transition-colors"
         >
-          <LogOut className="w-4 h-4" strokeWidth={1.8} />
-          <span>Déconnexion</span>
+          <LogOut className="w-4 h-4 shrink-0" strokeWidth={1.8} />
+          <span className="font-normal">Déconnexion</span>
         </button>
       </SidebarFooter>
     </Sidebar>
