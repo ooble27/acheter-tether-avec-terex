@@ -140,7 +140,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   return (
     <TransactionProvider>
       <SidebarProvider>
-        <div className="min-h-screen w-full bg-[#0a0a0a]">
+        <div className="min-h-screen w-full bg-[#141414]">
           {!isMobile && (
             <DodoSidebar
               activeSection={activeSection}
