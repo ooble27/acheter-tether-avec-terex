@@ -90,10 +90,10 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
     return <Send className="w-3.5 h-3.5" />;
   };
 
-  // ─── MOBILE ───────────────────────────────────────────────────────────────
+  // ─── MOBILE ───────────────────────────────────────────────────────────────────────────────
   if (isMobile) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] space-y-4 pb-6">
+      <div className="min-h-screen bg-[#141414] space-y-4 pb-6">
         <div className="flex items-center justify-between pt-2">
           <div>
             <p className="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-mono">Tableau de bord</p>
@@ -106,7 +106,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </Button>
         </div>
 
-        <Card className="bg-[#111] border-[#262626]">
+        <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
@@ -145,7 +145,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             <button
               key={it.id}
               onClick={() => onNavigate?.(it.id)}
-              className="group rounded-xl bg-[#111] border border-[#262626] hover:border-[#3B968F]/30 p-3 text-left transition-all"
+              className="group rounded-xl bg-[#1a1a1a] border border-[#2e2e2e] hover:border-[#3B968F]/30 p-3 text-left transition-all"
             >
               <div className={cn('w-8 h-8 rounded-lg flex items-center justify-center mb-2', it.accent ? 'bg-[#3B968F]/15' : 'bg-white/5')}>
                 {it.icon}
@@ -156,7 +156,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           ))}
         </div>
 
-        <Card className="bg-[#111] border-[#262626]">
+        <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
           <CardHeader className="p-4 pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-medium text-white">Activité récente</CardTitle>
@@ -172,7 +172,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
               <p className="text-xs text-gray-500 text-center py-4">Aucune transaction</p>
             ) : recentTx.map((tx: any) => (
               <div key={tx.id} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#171717] flex items-center justify-center shrink-0" style={{ color: getTxColor(tx.type) }}>
+                <div className="w-8 h-8 rounded-lg bg-[#1f1f1f] flex items-center justify-center shrink-0" style={{ color: getTxColor(tx.type) }}>
                   {getTxIcon(tx.type)}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -190,11 +190,11 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
     );
   }
 
-  // ─── DESKTOP ──────────────────────────────────────────────────────────────
+  // ─── DESKTOP ──────────────────────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-col h-full bg-[#0a0a0a]">
+    <div className="flex flex-col h-full bg-[#141414]">
       {/* Top bar */}
-      <header className="flex items-center justify-between px-7 py-5 border-b border-[#262626] shrink-0">
+      <header className="flex items-center justify-between px-7 py-5 border-b border-[#2e2e2e] shrink-0">
         <div>
           <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-white">Bonjour {firstName}</h1>
           <p className="text-[13px] text-gray-500 mt-0.5">Voici un aperçu de votre activité financière.</p>
@@ -203,7 +203,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           <Button
             variant="outline"
             size="sm"
-            className="h-9 w-9 p-0 border-[#262626] bg-transparent text-gray-400 hover:text-white hover:bg-white/5"
+            className="h-9 w-9 p-0 border-[#2e2e2e] bg-transparent text-gray-400 hover:text-white hover:bg-white/5"
           >
             <Bell className="w-4 h-4" />
           </Button>
@@ -229,7 +229,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             { label: 'Taux vente',   value: terexBuyRateCfa.toLocaleString('fr-FR'),                        unit: 'XOF', sub: 'Par USDT vendu',             spark: FLAT_SPARK, color: '#a3a3a3', up: null },
             { label: 'Réseaux',      value: 'TRC20',                                                         unit: '',    sub: 'BEP20 · ERC20 disponibles', spark: FLAT_SPARK, color: '#3B968F', up: null },
           ].map((s, i) => (
-            <Card key={i} className="bg-[#111] border-[#262626] hover:border-[#3B968F]/25 transition-colors">
+            <Card key={i} className="bg-[#1a1a1a] border-[#2e2e2e] hover:border-[#3B968F]/25 transition-colors">
               <CardContent className="p-[18px]">
                 <p className="text-[12px] text-gray-500 mb-1.5">{s.label}</p>
                 <p className="text-[22px] font-medium tracking-[-0.02em] text-white tabular-nums leading-none">
@@ -247,7 +247,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
 
         {/* Chart + Activity */}
         <div className="grid gap-3.5" style={{ gridTemplateColumns: '1.6fr 1fr' }}>
-          <Card className="bg-[#111] border-[#262626]">
+          <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
             <CardContent className="p-5">
               <div className="flex items-center justify-between mb-4">
                 <div>
@@ -260,7 +260,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                       key={p}
                       className={cn(
                         'text-[11px] px-2.5 py-1 rounded-md transition-colors',
-                        i === 1 ? 'bg-[#171717] text-white' : 'text-gray-500 hover:text-gray-300'
+                        i === 1 ? 'bg-[#1f1f1f] text-white' : 'text-gray-500 hover:text-gray-300'
                       )}
                     >
                       {p}
@@ -275,7 +275,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </CardContent>
           </Card>
 
-          <Card className="bg-[#111] border-[#262626]">
+          <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
             <CardContent className="p-5">
               <div className="flex items-center justify-between mb-4">
                 <p className="text-[14px] font-medium text-white">Activité récente</p>
@@ -288,7 +288,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                 <p className="text-xs text-gray-500 text-center py-8">Chargement…</p>
               ) : recentTx.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-8 gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-[#171717] flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-[#1f1f1f] flex items-center justify-center">
                     <TetherLogo className="w-5 h-5 opacity-40" />
                   </div>
                   <p className="text-xs text-gray-500">Aucune transaction</p>
@@ -300,7 +300,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                 <div className="space-y-3.5">
                   {recentTx.map((tx: any) => (
                     <div key={tx.id} className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-[#171717] flex items-center justify-center shrink-0" style={{ color: getTxColor(tx.type) }}>
+                      <div className="w-8 h-8 rounded-lg bg-[#1f1f1f] flex items-center justify-center shrink-0" style={{ color: getTxColor(tx.type) }}>
                         {getTxIcon(tx.type)}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -323,7 +323,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
 
         {/* Markets + Quick actions */}
         <div className="grid grid-cols-2 gap-3.5">
-          <Card className="bg-[#111] border-[#262626]">
+          <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
             <CardContent className="p-5">
               <p className="text-[14px] font-medium text-white mb-4">Marchés</p>
               <div className="space-y-3.5">
@@ -350,7 +350,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </CardContent>
           </Card>
 
-          <Card className="bg-[#111] border-[#262626]">
+          <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
             <CardContent className="p-5">
               <p className="text-[14px] font-medium text-white mb-4">Actions rapides</p>
               <div className="grid grid-cols-2 gap-2 mb-4">
@@ -367,7 +367,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                       'flex items-center gap-2 px-3 py-2.5 rounded-lg text-[12px] font-medium transition-all text-left',
                       it.accent
                         ? 'bg-[#3B968F] text-white hover:bg-[#3B968F]/90'
-                        : 'bg-[#171717] text-gray-300 hover:bg-white/5 hover:text-white border border-[#262626]'
+                        : 'bg-[#1f1f1f] text-gray-300 hover:bg-white/5 hover:text-white border border-[#2e2e2e]'
                     )}
                   >
                     <span className={cn(it.accent ? 'text-white' : 'text-gray-400')}>{it.icon}</span>
@@ -376,7 +376,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                 ))}
               </div>
 
-              <Separator className="bg-[#262626] mb-4" />
+              <Separator className="bg-[#2e2e2e] mb-4" />
 
               <div className="space-y-2.5">
                 {[
