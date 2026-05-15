@@ -1,7 +1,7 @@
 
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck, Phone, Star, Gift, Share2, FileText } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck, Phone, Star, Gift, Share2, FileText, Briefcase } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -58,6 +58,11 @@ const menuItems = [{
   label: 'Mon Profil',
   icon: User,
   description: 'Gérer votre compte'
+}, {
+  id: 'b2b',
+  label: 'Compte Business',
+  icon: Briefcase,
+  description: 'Paiements professionnels'
 }, {
   id: 'faq',
   label: 'FAQ',
