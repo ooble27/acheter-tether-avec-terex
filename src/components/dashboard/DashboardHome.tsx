@@ -10,6 +10,7 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface DashboardHomeProps {
   user: { email: string; name: string } | null;
@@ -26,42 +27,33 @@ const TetherLogo = ({ className }: { className?: string }) => (
 
 export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
-  // Vérifier si on est en mode PWA (standalone)
   const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
                (window.navigator as any).standalone ||
                document.referrer.includes('android-app://');
 
-  // Force le scroll en haut quand le composant se monte (spécialement pour PWA mobile)
   useEffect(() => {
     if (isPWA && isMobile) {
-      // Scroll immédiat et forcé pour PWA mobile
       window.scrollTo(0, 0);
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
-      
-      // Double vérification après un petit délai
       const timer = setTimeout(() => {
         window.scrollTo(0, 0);
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
       }, 100);
-
       return () => clearTimeout(timer);
     }
   }, [isPWA, isMobile]);
 
   const handleServiceClick = (service: string) => {
-    if (onNavigate) {
-      onNavigate(service);
-    }
+    if (onNavigate) onNavigate(service);
   };
 
   if (isMobile) {
-    // Design mobile avec px-0 pour tous les conteneurs
     return (
       <div className="min-h-screen bg-terex-dark px-0 py-3 space-y-3 text-xs overflow-y-auto scrollbar-hide">
-        {/* Header avec px-0 */}
         <div className="flex items-center space-x-3 mb-6 px-0">
           <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
             <img src="/bitcoin-logo.png" alt="Bitcoin" className="w-12 h-12 object-contain" />
@@ -74,12 +66,8 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </div>
         </div>
 
-        {/* Services Grid - 2x2 avec px-0 */}
         <div className="grid grid-cols-2 gap-3 mb-4 px-0">
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('buy')}
-          >
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('buy')}>
             <CardContent className="p-3">
               <div className="flex items-center justify-between mb-2">
                 <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
@@ -91,10 +79,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </CardContent>
           </Card>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('sell')}
-          >
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('sell')}>
             <CardContent className="p-3">
               <div className="flex items-center justify-between mb-2">
                 <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
@@ -106,10 +91,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </CardContent>
           </Card>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('otc')}
-          >
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('otc')}>
             <CardContent className="p-3">
               <div className="flex items-center justify-between mb-2">
                 <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
@@ -121,10 +103,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </CardContent>
           </Card>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('transfer')}
-          >
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('transfer')}>
             <CardContent className="p-3">
               <div className="flex items-center justify-between mb-2">
                 <div className="w-8 h-8 bg-terex-accent/20 rounded-lg flex items-center justify-center">
@@ -137,11 +116,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </Card>
         </div>
 
-        {/* Bannière B2B */}
-        <div
-          className="rounded-xl border border-[#3B968F]/25 bg-[#3B968F]/10 p-3 flex items-center gap-3 cursor-pointer active:opacity-80 transition-opacity"
-          onClick={() => onNavigate?.('b2b')}
-        >
+        <div className="rounded-xl border border-[#3B968F]/25 bg-[#3B968F]/10 p-3 flex items-center gap-3 cursor-pointer active:opacity-80 transition-opacity" onClick={() => navigate('/business')}>
           <div className="w-9 h-9 rounded-lg bg-[#3B968F]/20 flex items-center justify-center shrink-0">
             <Briefcase className="w-4 h-4 text-[#3B968F]" />
           </div>
@@ -151,20 +126,16 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </div>
         </div>
 
-        {/* Section Historique des transactions récentes - px-0 */}
         <div className="px-0">
           <RecentTransactions onNavigate={onNavigate} />
         </div>
-
       </div>
     );
   }
 
-  // Design desktop centré comme mobile
   return (
     <div className="min-h-[calc(100vh-10rem)] flex items-start justify-center py-8 px-4">
       <div className="w-full max-w-2xl space-y-6">
-        {/* Header Section */}
         <div className="flex items-center space-x-3">
           <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
             <img src="/bitcoin-logo.png" alt="Bitcoin" className="w-12 h-12 object-contain" />
@@ -177,12 +148,8 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </div>
         </div>
 
-        {/* Services Grid */}
         <div className="grid grid-cols-2 gap-4">
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('buy')}
-          >
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('buy')}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
@@ -195,10 +162,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </CardContent>
           </Card>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('sell')}
-          >
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('sell')}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center">
@@ -211,10 +175,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </CardContent>
           </Card>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('otc')}
-          >
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('otc')}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
@@ -227,10 +188,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </CardContent>
           </Card>
 
-          <Card 
-            className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer"
-            onClick={() => handleServiceClick('transfer')}
-          >
+          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('transfer')}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-10 h-10 bg-terex-accent/20 rounded-lg flex items-center justify-center">
@@ -244,11 +202,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </Card>
         </div>
 
-        {/* Bannière B2B */}
-        <div
-          className="rounded-xl border border-[#3B968F]/25 bg-[#3B968F]/10 p-4 flex items-center gap-4 cursor-pointer hover:bg-[#3B968F]/15 transition-colors"
-          onClick={() => onNavigate?.('b2b')}
-        >
+        <div className="rounded-xl border border-[#3B968F]/25 bg-[#3B968F]/10 p-4 flex items-center gap-4 cursor-pointer hover:bg-[#3B968F]/15 transition-colors" onClick={() => navigate('/business')}>
           <div className="w-10 h-10 rounded-lg bg-[#3B968F]/20 flex items-center justify-center shrink-0">
             <Briefcase className="w-5 h-5 text-[#3B968F]" />
           </div>
@@ -259,7 +213,6 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           <ArrowUpRight className="w-4 h-4 text-[#3B968F] shrink-0" />
         </div>
 
-        {/* Recent Transactions */}
         <RecentTransactions onNavigate={onNavigate} />
       </div>
     </div>

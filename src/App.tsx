@@ -40,6 +40,7 @@ import { PWASessionSync } from "./components/PWASessionSync";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { AppLoader } from "./components/AppLoader";
 import NeobankVisionPage from "./pages/NeobankVisionPage";
+import BusinessPage from "./pages/BusinessPage";
 
 function App() {
   return (
@@ -80,6 +81,7 @@ function App() {
                 <Route path="/blog/mobile-money-crypto" element={<MobileMoneyCryptoArticle />} />
                 <Route path="/admin/*" element={<AdminPage />} />
                 <Route path="/neobank-vision" element={<NeobankVisionPage />} />
+                <Route path="/business" element={<BusinessPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </TransactionProvider>
