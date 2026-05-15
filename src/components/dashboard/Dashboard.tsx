@@ -5,8 +5,6 @@ import { MobileMenu } from '@/components/dashboard/AppSidebar';
 import { DesktopMenuPopover } from '@/components/dashboard/DesktopMenuPopover';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
 import { DesktopBottomNav } from '@/components/dashboard/DesktopBottomNav';
-import { DodoSidebar } from '@/components/dashboard/DodoSidebar';
-import { DodoTopBar } from '@/components/dashboard/DodoTopBar';
 import { MobileProfileMenu } from '@/components/dashboard/MobileProfileMenu';
 import { BuyUSDT } from '@/components/features/BuyUSDT';
 import { SellUSDT } from '@/components/features/SellUSDT';
@@ -107,7 +105,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
   const handleNavigate = (section: string) => {
     // Pages qui doivent ouvrir une nouvelle route
-    const externalPages = ['contact', 'feedback', 'referral', 'share-app', 'terms'];
+    const externalPages = ['contact', 'feedback', 'referral', 'share-app', 'terms', 'b2b'];
     
     if (externalPages.includes(section)) {
       switch (section) {
@@ -125,6 +123,9 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
           break;
         case 'terms':
           navigate('/terms');
+          break;
+        case 'b2b':
+          navigate('/business');
           break;
       }
     } else {
@@ -157,7 +158,6 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
           </div>
         );
       case 'otc':
-        // Redirecter vers le formulaire de demande de gros volume avec un montant par défaut
         return <HighVolumeRequest onBack={() => setActiveSection('home')} requestedAmount="" />;
       case 'history':
         return <TransactionHistoryPage />;
@@ -189,18 +189,9 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   return (
     <TransactionProvider>
       <SidebarProvider>
-        <div className="min-h-screen w-full bg-terex-dark">
-          {/* DODO-style persistent sidebar (desktop only) */}
-          {!isMobile && (
-            <DodoSidebar
-              activeSection={activeSection}
-              onSectionChange={handleNavigate}
-              onLogout={handleLogout}
-            />
-          )}
-
-          {/* Mobile hamburger trigger */}
-          {isMobile && !isPWA && (
+        <div className="min-h-screen flex flex-col w-full bg-terex-dark">
+          {/* Bouton hamburger flottant (masqué en PWA mobile) */}
+          {isMobile && !isPWA ? (
             <Button
               variant="ghost"
               size="icon"
@@ -209,10 +200,27 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             >
               <Menu className="h-5 w-5" />
             </Button>
-          )}
-
+          ) : !isMobile ? (
+            <DesktopMenuPopover
+              activeSection={activeSection}
+              setActiveSection={handleNavigate}
+              onLogout={handleLogout}
+              isOpen={desktopMenuOpen}
+              onOpenChange={setDesktopMenuOpen}
+              trigger={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="fixed top-4 right-4 z-50 text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
+                >
+                  <Menu className="h-5 w-5" />
+                </Button>
+              }
+            />
+          ) : null}
+          
           {/* Menu hamburger mobile plein écran */}
-          <MobileMenu
+          <MobileMenu 
             activeSection={activeSection}
             setActiveSection={handleNavigate}
             onLogout={handleLogout}
@@ -220,39 +228,36 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             onClose={() => setMenuOpen(false)}
           />
 
-          <div className={`min-h-screen flex flex-col ${!isMobile ? 'md:pl-[240px]' : ''}`}>
-            {!isMobile && <DodoTopBar user={user} />}
-
-            <main
-              className={`flex-1 ${
-                isMobile
-                  ? isPWA
-                    ? 'p-4 pt-16 pb-24'
-                    : 'p-4 pt-4 pb-24'
-                  : 'px-0 py-0 pb-24'
-              } relative`}
-            >
-              {isMobile && isPWA && (
-                <MobileProfileMenu
-                  activeSection={activeSection}
-                  setActiveSection={handleNavigate}
-                  onLogout={handleLogout}
-                />
-              )}
-
-              {renderContent()}
-            </main>
-          </div>
-
-          {/* Bottom nav: mobile only (desktop nav lives in sidebar now) */}
-          {isMobile && (
+          <main className={`flex-1 ${isMobile ? (isPWA ? 'p-4 pt-16 pb-20' : 'p-4 pt-4 pb-20') : 'p-6 pt-6 pb-24'} relative`}>
+            {/* Menu profil mobile pour PWA */}
+            {isMobile && isPWA && (
+              <MobileProfileMenu
+                activeSection={activeSection}
+                setActiveSection={handleNavigate}
+                onLogout={handleLogout}
+              />
+            )}
+            
+            {renderContent()}
+          </main>
+          
+          {/* Navigation en bas */}
+          {isMobile ? (
             <MobileBottomNav
               activeSection={activeSection}
               setActiveSection={setActiveSection}
             />
+          ) : (
+            <DesktopBottomNav
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+            />
           )}
-
+          
+          {/* Prompt de permission pour les notifications push */}
           <NotificationPermissionPrompt />
+          
+          {/* Prompt de mise à jour PWA */}
           <PWAUpdatePrompt />
         </div>
       </SidebarProvider>
