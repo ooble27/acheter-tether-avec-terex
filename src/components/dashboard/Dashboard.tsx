@@ -31,6 +31,7 @@ import { useUserRole } from '@/hooks/useUserRole';
 import { Button } from '@/components/ui/button';
 import { LogOut, Menu } from 'lucide-react';
 import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
+import { B2BPage } from '@/components/features/B2BPage';
 
 interface DashboardProps {
   user: { email: string; name: string } | null;
@@ -162,6 +163,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         return <Profile user={user} onLogout={handleLogout} />;
       case 'kyc':
         return <KYCPage onBack={() => setActiveSection('profile')} />;
+      case 'b2b':
+        return <B2BPage onBack={() => setActiveSection('home')} />;
       case 'faq':
         return <FAQ onNavigate={setActiveSection} />;
       case 'user-guide':

@@ -1,10 +1,11 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Globe, 
-  ArrowUpRight, 
+import {
+  Globe,
+  ArrowUpRight,
   Bitcoin,
   Handshake,
-  TrendingUp
+  TrendingUp,
+  Briefcase
 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
@@ -136,6 +137,20 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </Card>
         </div>
 
+        {/* Bannière B2B */}
+        <div
+          className="rounded-xl border border-[#3B968F]/25 bg-[#3B968F]/10 p-3 flex items-center gap-3 cursor-pointer active:opacity-80 transition-opacity"
+          onClick={() => onNavigate?.('b2b')}
+        >
+          <div className="w-9 h-9 rounded-lg bg-[#3B968F]/20 flex items-center justify-center shrink-0">
+            <Briefcase className="w-4 h-4 text-[#3B968F]" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-white">Compte Business</p>
+            <p className="text-[11px] text-[#3B968F]/80">Payez vos fournisseurs en USDT →</p>
+          </div>
+        </div>
+
         {/* Section Historique des transactions récentes - px-0 */}
         <div className="px-0">
           <RecentTransactions onNavigate={onNavigate} />
@@ -227,6 +242,21 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
               <p className="text-gray-400 text-sm">International</p>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Bannière B2B */}
+        <div
+          className="rounded-xl border border-[#3B968F]/25 bg-[#3B968F]/10 p-4 flex items-center gap-4 cursor-pointer hover:bg-[#3B968F]/15 transition-colors"
+          onClick={() => onNavigate?.('b2b')}
+        >
+          <div className="w-10 h-10 rounded-lg bg-[#3B968F]/20 flex items-center justify-center shrink-0">
+            <Briefcase className="w-5 h-5 text-[#3B968F]" />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-medium text-white">Compte Business — Nouveau</p>
+            <p className="text-xs text-[#3B968F]/80 mt-0.5">Payez vos fournisseurs en USDT · Import/Export · Chine, Dubaï, Turquie…</p>
+          </div>
+          <ArrowUpRight className="w-4 h-4 text-[#3B968F] shrink-0" />
         </div>
 
         {/* Recent Transactions */}
