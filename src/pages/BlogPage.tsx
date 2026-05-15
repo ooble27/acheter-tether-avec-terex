@@ -5,133 +5,34 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
-import { ChevronRight, GraduationCap, FileText, Menu, Search } from "lucide-react";
+import { ChevronRight, GraduationCap, FileText, Menu, Search, Clock, ArrowRight } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 
-// ── Geometric SVG illustrations (Attio-style) ──────────────────────────
+// ── Article images map ─────────────────────────────────────────────────
 
-const illustrations: Record<string, JSX.Element> = {
-  circles: (
-    <svg viewBox="0 0 280 180" fill="none" className="w-full h-full">
-      <circle cx="90" cy="90" r="50" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <circle cx="90" cy="90" r="25" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.2" />
-      <line x1="140" y1="90" x2="190" y2="90" stroke="currentColor" strokeWidth="1" strokeDasharray="6 4" opacity="0.2" />
-      <circle cx="210" cy="90" r="35" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <circle cx="210" cy="90" r="5" fill="currentColor" opacity="0.15" />
-      <text x="230" y="75" fontSize="14" fill="currentColor" opacity="0.2">+</text>
-    </svg>
-  ),
-  rectangles: (
-    <svg viewBox="0 0 280 180" fill="none" className="w-full h-full">
-      <rect x="40" y="30" rx="12" ry="12" width="80" height="60" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <rect x="60" y="50" rx="8" ry="8" width="80" height="60" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.2" />
-      <rect x="150" y="70" rx="12" ry="12" width="80" height="80" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <text x="183" y="115" fontSize="14" fill="currentColor" opacity="0.2">+</text>
-    </svg>
-  ),
-  shield: (
-    <svg viewBox="0 0 280 180" fill="none" className="w-full h-full">
-      <path d="M140 20 L200 50 L200 110 Q200 150 140 170 Q80 150 80 110 L80 50 Z" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <path d="M140 45 L175 62 L175 100 Q175 125 140 140 Q105 125 105 100 L105 62 Z" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.2" />
-      <circle cx="140" cy="95" r="10" stroke="currentColor" strokeWidth="1.5" opacity="0.25" />
-    </svg>
-  ),
-  arrows: (
-    <svg viewBox="0 0 280 180" fill="none" className="w-full h-full">
-      <circle cx="60" cy="90" r="30" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <circle cx="220" cy="90" r="30" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <line x1="95" y1="80" x2="185" y2="80" stroke="currentColor" strokeWidth="1" opacity="0.25" />
-      <polyline points="175,72 185,80 175,88" stroke="currentColor" strokeWidth="1" opacity="0.25" />
-      <line x1="185" y1="100" x2="95" y2="100" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.2" />
-      <polyline points="105,92 95,100 105,108" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.2" />
-    </svg>
-  ),
-  blocks: (
-    <svg viewBox="0 0 280 180" fill="none" className="w-full h-full">
-      <rect x="30" y="55" rx="8" ry="8" width="55" height="55" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <line x1="85" y1="82" x2="112" y2="82" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.2" />
-      <rect x="112" y="55" rx="8" ry="8" width="55" height="55" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <line x1="167" y1="82" x2="194" y2="82" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.2" />
-      <rect x="194" y="55" rx="8" ry="8" width="55" height="55" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <circle cx="57" cy="82" r="8" stroke="currentColor" strokeWidth="1" opacity="0.2" />
-      <circle cx="139" cy="82" r="8" stroke="currentColor" strokeWidth="1" opacity="0.2" />
-      <circle cx="221" cy="82" r="8" stroke="currentColor" strokeWidth="1" opacity="0.2" />
-    </svg>
-  ),
-  phone: (
-    <svg viewBox="0 0 280 180" fill="none" className="w-full h-full">
-      <rect x="100" y="20" rx="16" ry="16" width="80" height="140" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <rect x="115" y="45" rx="4" ry="4" width="50" height="8" stroke="currentColor" strokeWidth="1" opacity="0.2" />
-      <rect x="115" y="60" rx="4" ry="4" width="35" height="8" stroke="currentColor" strokeWidth="1" opacity="0.15" />
-      <rect x="115" y="80" rx="4" ry="4" width="50" height="30" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.2" />
-      <circle cx="140" cy="145" r="6" stroke="currentColor" strokeWidth="1" opacity="0.2" />
-    </svg>
-  ),
-  wallet: (
-    <svg viewBox="0 0 280 180" fill="none" className="w-full h-full">
-      <rect x="50" y="40" rx="14" ry="14" width="160" height="100" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <rect x="150" y="70" rx="10" ry="10" width="70" height="40" stroke="currentColor" strokeWidth="1.5" opacity="0.25" />
-      <circle cx="175" cy="90" r="8" stroke="currentColor" strokeWidth="1" opacity="0.3" />
-      <circle cx="175" cy="90" r="3" fill="currentColor" opacity="0.15" />
-      <line x1="70" y1="65" x2="130" y2="65" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.15" />
-      <line x1="70" y1="80" x2="110" y2="80" stroke="currentColor" strokeWidth="1" opacity="0.12" />
-    </svg>
-  ),
-  chart: (
-    <svg viewBox="0 0 280 180" fill="none" className="w-full h-full">
-      <line x1="40" y1="150" x2="240" y2="150" stroke="currentColor" strokeWidth="1" opacity="0.2" />
-      <line x1="40" y1="150" x2="40" y2="30" stroke="currentColor" strokeWidth="1" opacity="0.2" />
-      <polyline points="60,130 100,100 130,110 160,60 200,40 230,55" stroke="currentColor" strokeWidth="1.5" opacity="0.3" fill="none" />
-      <circle cx="100" cy="100" r="3" fill="currentColor" opacity="0.2" />
-      <circle cx="160" cy="60" r="3" fill="currentColor" opacity="0.2" />
-      <circle cx="200" cy="40" r="3" fill="currentColor" opacity="0.2" />
-      <line x1="60" y1="150" x2="60" y2="130" stroke="currentColor" strokeWidth="8" opacity="0.08" strokeLinecap="round" />
-      <line x1="100" y1="150" x2="100" y2="100" stroke="currentColor" strokeWidth="8" opacity="0.08" strokeLinecap="round" />
-      <line x1="160" y1="150" x2="160" y2="60" stroke="currentColor" strokeWidth="8" opacity="0.08" strokeLinecap="round" />
-    </svg>
-  ),
-  globe: (
-    <svg viewBox="0 0 280 180" fill="none" className="w-full h-full">
-      <circle cx="140" cy="90" r="60" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <ellipse cx="140" cy="90" rx="30" ry="60" stroke="currentColor" strokeWidth="1" opacity="0.2" />
-      <line x1="80" y1="90" x2="200" y2="90" stroke="currentColor" strokeWidth="1" opacity="0.15" />
-      <ellipse cx="140" cy="65" rx="50" ry="12" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.15" />
-      <ellipse cx="140" cy="115" rx="50" ry="12" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.15" />
-    </svg>
-  ),
-  lock: (
-    <svg viewBox="0 0 280 180" fill="none" className="w-full h-full">
-      <rect x="100" y="75" rx="10" ry="10" width="80" height="70" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <path d="M115 75 L115 55 Q115 30 140 30 Q165 30 165 55 L165 75" stroke="currentColor" strokeWidth="1.5" opacity="0.25" fill="none" />
-      <circle cx="140" cy="105" r="8" stroke="currentColor" strokeWidth="1.5" opacity="0.25" />
-      <line x1="140" y1="113" x2="140" y2="125" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
-    </svg>
-  ),
-  layers: (
-    <svg viewBox="0 0 280 180" fill="none" className="w-full h-full">
-      <path d="M140 40 L220 80 L140 120 L60 80 Z" stroke="currentColor" strokeWidth="1.5" opacity="0.3" fill="none" />
-      <path d="M60 100 L140 140 L220 100" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.2" fill="none" />
-      <path d="M60 120 L140 160 L220 120" stroke="currentColor" strokeWidth="1" opacity="0.15" fill="none" />
-    </svg>
-  ),
-  coins: (
-    <svg viewBox="0 0 280 180" fill="none" className="w-full h-full">
-      <ellipse cx="120" cy="100" rx="45" ry="20" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <ellipse cx="120" cy="85" rx="45" ry="20" stroke="currentColor" strokeWidth="1" opacity="0.2" />
-      <ellipse cx="120" cy="70" rx="45" ry="20" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
-      <line x1="75" y1="70" x2="75" y2="100" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
-      <line x1="165" y1="70" x2="165" y2="100" stroke="currentColor" strokeWidth="1.5" opacity="0.2" />
-      <circle cx="200" cy="70" r="25" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" opacity="0.2" />
-      <text x="192" y="76" fontSize="18" fill="currentColor" opacity="0.2">$</text>
-    </svg>
-  ),
+const articleImages: Record<string, string> = {
+  "comprendre-usdt-stablecoin": "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80",
+  "acheter-usdt-terex-guide": "https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&w=800&q=80",
+  "securite-crypto": "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?auto=format&fit=crop&w=800&q=80",
+  "blockchain-simple": "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=800&q=80",
+  "mobile-money-crypto": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=800&q=80",
+  "transferts-internationaux": "https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&w=800&q=80",
+  "wallets-guide": "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&w=800&q=80",
+  "stablecoins-guide": "https://images.unsplash.com/photo-1591994843349-f415893b3a6b?auto=format&fit=crop&w=800&q=80",
+  "web3-defi": "https://images.unsplash.com/photo-1622630998477-20aa696ecb05?auto=format&fit=crop&w=800&q=80",
+  "reseaux-tokens": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
+  "eviter-arnaques": "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=800&q=80",
+  "marches-crypto": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80",
+  "kyc-verification": "https://images.unsplash.com/photo-1633265486064-086b219458ec?auto=format&fit=crop&w=800&q=80",
+  "smart-contracts": "https://images.unsplash.com/photo-1642132652859-3ef5a1048fd1?auto=format&fit=crop&w=800&q=80",
+  "epargne-crypto": "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=800&q=80",
+  "proteger-wallet": "https://images.unsplash.com/photo-1618044619888-009e412ff12a?auto=format&fit=crop&w=800&q=80",
+  "vendre-usdt": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
+  "fiscalite-crypto": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80",
+  "afrique-crypto": "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80",
 };
-
-const GeometricIllustration = ({ name }: { name: string }) => (
-  <div className="text-foreground">{illustrations[name] || illustrations.circles}</div>
-);
 
 // ── Sidebar categories ──────────────────────────────────────────────────
 
@@ -186,7 +87,6 @@ const sidebarCategories = [
 // ── Academy courses ─────────────────────────────────────────────────────
 
 const academyCourses = [
-  // Existing articles (with routes)
   {
     title: "Comprendre l'USDT",
     description: "Le stablecoin le plus utilisé au monde. Découvrez pourquoi l'USDT est idéale pour les paiements et comment elle maintient sa valeur.",
@@ -212,7 +112,6 @@ const academyCourses = [
     description: "L'union du Mobile Money et des cryptomonnaies crée de nouvelles opportunités pour l'inclusion financière sur le continent.",
     lessons: 3, duration: "14 min", slug: "mobile-money-crypto", illustration: "phone", category: "Guides",
   },
-  // New articles (no dedicated route yet — link to blog for now)
   {
     title: "Wallets crypto : le guide complet",
     description: "Hot wallet, cold wallet, custodial ou non-custodial. Apprenez à choisir et sécuriser le portefeuille qui vous convient.",
@@ -290,6 +189,15 @@ const existingSlugs = new Set([
   "mobile-money-crypto",
 ]);
 
+// ── Category color map ────────────────────────────────────────────────
+
+const categoryColors: Record<string, string> = {
+  "Guides": "bg-[#3B968F]/20 text-[#3B968F]",
+  "Sécurité": "bg-amber-500/20 text-amber-400",
+  "Technologie": "bg-blue-500/20 text-blue-400",
+  "Finance": "bg-purple-500/20 text-purple-400",
+};
+
 // ── Component ───────────────────────────────────────────────────────────
 
 export default function BlogPage() {
@@ -311,14 +219,25 @@ export default function BlogPage() {
   };
 
   const filteredCourses = academyCourses.filter(c => {
-    const matchesSearch = !searchQuery || 
-      c.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    const matchesSearch = !searchQuery ||
+      c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       c.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = !activeCategory || c.category === activeCategory;
     return matchesSearch && matchesCategory;
   });
 
   const categories = [...new Set(academyCourses.map(c => c.category))];
+
+  // Featured = first 3 articles that have pages (when no filter/search active)
+  const featuredArticles = academyCourses.filter(c => existingSlugs.has(c.slug)).slice(0, 3);
+  const remainingArticles = filteredCourses.filter(c => {
+    if (searchQuery || activeCategory) return true;
+    return !featuredArticles.includes(c);
+  });
+
+  const showFeatured = !searchQuery && !activeCategory;
+  const heroArticle = featuredArticles[0];
+  const secondaryFeatured = featuredArticles.slice(1, 3);
 
   const SidebarContent = () => (
     <>
@@ -379,40 +298,120 @@ export default function BlogPage() {
           <SidebarContent />
         </aside>
 
-        {/* Mobile sidebar - using Sheet */}
+        {/* Mobile sidebar */}
         <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
           <SheetTrigger asChild>
-            <button
-              className="lg:hidden fixed bottom-20 left-4 z-50 w-11 h-11 rounded-full bg-foreground text-background flex items-center justify-center shadow-lg"
-            >
+            <button className="lg:hidden fixed bottom-20 left-4 z-50 w-11 h-11 rounded-full bg-foreground text-background flex items-center justify-center shadow-lg">
               <Menu className="w-5 h-5" />
             </button>
           </SheetTrigger>
           <SheetContent side="left" className="w-[280px] bg-terex-dark border-r border-white/[0.08] p-6 pt-12 overflow-y-auto z-[60]">
-            <SheetTitle className="sr-only">Navigation Academy</SheetTitle>
+            <SheetTitle className="sr-only">Navigation Blog</SheetTitle>
             <SidebarContent />
           </SheetContent>
         </Sheet>
 
         {/* Main content */}
-        <main className="flex-1 min-w-0 py-12 lg:py-16 lg:pl-6">
-          {/* Hero */}
-          <div className="mb-10 md:mb-14">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-light text-foreground leading-[1.1] mb-4">
-              Terex Academy
+        <main className="flex-1 min-w-0 py-10 lg:py-14 lg:pl-6">
+
+          {/* Page header */}
+          <div className="mb-8 md:mb-10">
+            <p className="text-[#3B968F] text-[11px] font-medium tracking-[0.2em] uppercase mb-3">Terex Blog</p>
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-light text-foreground leading-[1.1] mb-3">
+              Guides &amp; Analyses
             </h1>
-            <p className="text-muted-foreground text-base md:text-lg max-w-2xl leading-relaxed">
-              Apprenez tout sur la crypto, l'USDT, la sécurité, les wallets, la DeFi et bien plus. Des guides simples et pratiques pour maîtriser la finance numérique.
+            <p className="text-muted-foreground text-sm md:text-base max-w-xl leading-relaxed">
+              Guides, analyses et actualités crypto pour l'Afrique
             </p>
           </div>
+
+          {/* Featured hero */}
+          {showFeatured && heroArticle && (
+            <Link
+              to={existingSlugs.has(heroArticle.slug) ? `/blog/${heroArticle.slug}` : `/blog`}
+              className="group block mb-8"
+            >
+              <div className="relative rounded-2xl overflow-hidden border border-white/[0.08] group-hover:border-white/20 transition-all">
+                <div className="relative aspect-[21/9] overflow-hidden">
+                  <img
+                    src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80"
+                    alt={heroArticle.title}
+                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/60 to-transparent" />
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[#3B968F] text-white uppercase tracking-wider">À la Une</span>
+                    <span className={`text-[10px] font-medium px-2.5 py-1 rounded-full ${categoryColors[heroArticle.category] || "bg-white/10 text-white/60"}`}>{heroArticle.category}</span>
+                  </div>
+                  <h2 className="text-2xl md:text-4xl font-light text-white mb-2 leading-snug max-w-2xl">
+                    {heroArticle.title}
+                  </h2>
+                  <p className="text-white/60 text-sm md:text-base max-w-xl leading-relaxed mb-4 line-clamp-2">
+                    {heroArticle.description}
+                  </p>
+                  <div className="flex items-center gap-4 text-white/40 text-xs">
+                    <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{heroArticle.duration} de lecture</span>
+                    <span>{heroArticle.lessons} articles</span>
+                    <span className="flex items-center gap-1 text-[#3B968F] group-hover:gap-2 transition-all font-medium">Lire <ArrowRight className="w-3.5 h-3.5" /></span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          )}
+
+          {/* Secondary featured — 2-column */}
+          {showFeatured && secondaryFeatured.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
+              {secondaryFeatured.map((article, i) => (
+                <Link
+                  key={i}
+                  to={existingSlugs.has(article.slug) ? `/blog/${article.slug}` : `/blog`}
+                  className="group block"
+                >
+                  <div className="rounded-2xl overflow-hidden border border-white/[0.08] group-hover:border-white/20 transition-all h-full">
+                    <div className="relative aspect-[16/9] overflow-hidden">
+                      <img
+                        src={articleImages[article.slug] || `https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80`}
+                        alt={article.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#141414]/80 via-transparent to-transparent" />
+                      <div className="absolute top-3 left-3">
+                        <span className={`text-[10px] font-medium px-2.5 py-1 rounded-full ${categoryColors[article.category] || "bg-white/10 text-white/60"}`}>{article.category}</span>
+                      </div>
+                    </div>
+                    <div className="p-5">
+                      <h3 className="text-foreground text-lg font-normal mb-2 group-hover:text-white transition-colors leading-snug">{article.title}</h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed mb-3 line-clamp-2">{article.description}</p>
+                      <div className="flex items-center gap-3 text-muted-foreground/50 text-xs">
+                        <span className="flex items-center gap-1.5"><Clock className="w-3 h-3" />{article.duration}</span>
+                        <span>{article.lessons} articles</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+
+          {/* Section divider */}
+          {showFeatured && (
+            <div className="flex items-center gap-4 mb-8">
+              <div className="h-px flex-1 bg-white/[0.06]" />
+              <span className="text-muted-foreground text-[11px] font-medium tracking-[0.15em] uppercase">Tous les articles</span>
+              <div className="h-px flex-1 bg-white/[0.06]" />
+            </div>
+          )}
 
           {/* Category filters */}
           <div className="flex flex-wrap gap-2 mb-8">
             <button
               onClick={() => setActiveCategory(null)}
               className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
-                !activeCategory 
-                  ? 'bg-foreground text-background' 
+                !activeCategory
+                  ? 'bg-foreground text-background'
                   : 'bg-white/[0.04] text-muted-foreground border border-white/[0.08] hover:border-white/[0.15]'
               }`}
             >
@@ -423,8 +422,8 @@ export default function BlogPage() {
                 key={cat}
                 onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
                 className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
-                  activeCategory === cat 
-                    ? 'bg-foreground text-background' 
+                  activeCategory === cat
+                    ? 'bg-foreground text-background'
                     : 'bg-white/[0.04] text-muted-foreground border border-white/[0.08] hover:border-white/[0.15]'
                 }`}
               >
@@ -433,31 +432,52 @@ export default function BlogPage() {
             ))}
           </div>
 
-          {/* Course grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
-            {filteredCourses.map((course, i) => {
+          {/* Article grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
+            {remainingArticles.map((course, i) => {
               const hasPage = existingSlugs.has(course.slug);
               const linkTo = hasPage ? `/blog/${course.slug}` : `/blog`;
+              const imgSrc = articleImages[course.slug] || `https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80`;
               return (
-                <Link key={i} to={linkTo} className="group">
-                  <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] overflow-hidden hover:border-white/[0.15] transition-all">
-                    <div className="aspect-[16/10] p-8 md:p-10 flex items-center justify-center border-b border-white/[0.06] bg-white/[0.01] group-hover:bg-white/[0.03] transition-colors">
-                      <div className="w-full max-w-[240px]">
-                        <GeometricIllustration name={course.illustration} />
+                <Link key={i} to={linkTo} className="group block">
+                  <article className="rounded-2xl overflow-hidden border border-white/[0.08] bg-white/[0.01] group-hover:border-white/20 transition-all h-full flex flex-col">
+                    <div className="relative aspect-video overflow-hidden">
+                      <img
+                        src={imgSrc}
+                        alt={course.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#141414]/60 via-transparent to-transparent" />
+                      <div className="absolute top-3 left-3 flex gap-2">
+                        <span className={`text-[10px] font-medium px-2.5 py-1 rounded-full backdrop-blur-sm ${categoryColors[course.category] || "bg-white/10 text-white/70"}`}>
+                          {course.category}
+                        </span>
+                        {!hasPage && (
+                          <span className="text-[10px] font-medium px-2.5 py-1 rounded-full backdrop-blur-sm bg-[#3B968F]/20 text-[#3B968F]">
+                            Bientôt
+                          </span>
+                        )}
                       </div>
                     </div>
-                    <div className="p-5 md:p-6">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/[0.06] text-muted-foreground">{course.category}</span>
-                        {!hasPage && <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-terex-accent/10 text-terex-accent">Bientôt</span>}
-                      </div>
-                      <h3 className="text-foreground text-lg md:text-xl font-normal mb-2 group-hover:text-white transition-colors">{course.title}</h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-2">{course.description}</p>
-                      <p className="text-muted-foreground/60 text-xs">
-                        {course.lessons} articles <span className="mx-1.5">|</span> {course.duration}
+                    <div className="p-5 flex flex-col flex-1">
+                      <h3 className="text-foreground text-base md:text-lg font-normal mb-2 group-hover:text-white transition-colors leading-snug line-clamp-2">
+                        {course.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-2 flex-1">
+                        {course.description}
                       </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3 text-muted-foreground/50 text-xs">
+                          <span className="flex items-center gap-1.5">
+                            <Clock className="w-3 h-3" />
+                            {course.duration}
+                          </span>
+                          <span>{course.lessons} articles</span>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-[#3B968F] group-hover:translate-x-0.5 transition-all" />
+                      </div>
                     </div>
-                  </div>
+                  </article>
                 </Link>
               );
             })}
