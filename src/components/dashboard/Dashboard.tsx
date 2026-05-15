@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import { MobileMenu } from '@/components/dashboard/AppSidebar';
+import { DesktopMenuPopover } from '@/components/dashboard/DesktopMenuPopover';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
+import { DesktopBottomNav } from '@/components/dashboard/DesktopBottomNav';
 import { DodoSidebar } from '@/components/dashboard/DodoSidebar';
+import { DodoTopBar } from '@/components/dashboard/DodoTopBar';
 import { MobileProfileMenu } from '@/components/dashboard/MobileProfileMenu';
 import { BuyUSDT } from '@/components/features/BuyUSDT';
 import { SellUSDT } from '@/components/features/SellUSDT';
+import { InternationalTransfer } from '@/components/features/InternationalTransfer';
 import { FAQ } from '@/components/features/FAQ';
 import { DashboardHome } from '@/components/dashboard/DashboardHome';
 import { Profile } from '@/components/features/Profile';
@@ -23,12 +27,12 @@ import { NotificationPermissionPrompt } from '@/components/notifications/Notific
 import { PWAUpdatePrompt } from '@/components/PWAUpdatePrompt';
 import { TransactionProvider } from '@/contexts/TransactionContext';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsTablet } from '@/hooks/use-tablet';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Button } from '@/components/ui/button';
-import { Menu } from 'lucide-react';
+import { LogOut, Menu } from 'lucide-react';
 import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
-import { cn } from '@/lib/utils';
 
 interface DashboardProps {
   user: { email: string; name: string } | null;
@@ -38,9 +42,11 @@ interface DashboardProps {
 export function Dashboard({ user, onLogout }: DashboardProps) {
   const [activeSection, setActiveSection] = useState('home');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
   const { signOut } = useAuth();
   const { isKYCReviewer, isAdmin } = useUserRole();
 
@@ -61,6 +67,18 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       window.scrollTo(0, 0);
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [activeSection, isPWA, isMobile]);
+
+  useEffect(() => {
+    if (activeSection === 'home' && isPWA && isMobile) {
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      }, 50);
     }
   }, [activeSection, isPWA, isMobile]);
 
@@ -68,16 +86,19 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     try {
       await signOut();
     } catch (error) {
-      console.error('Dashboard logout error:', error);
+      console.error('Dashboard: Logout error:', error);
     }
   };
 
+  const handleBackToHome = () => setActiveSection('home');
+
   const handleNavigate = (section: string) => {
-    const routes: Record<string, string> = {
-      contact: '/contact', feedback: '/feedback', referral: '/referral',
-      'share-app': '/share', terms: '/terms',
-    };
-    if (routes[section]) {
+    const externalPages = ['contact', 'feedback', 'referral', 'share-app', 'terms'];
+    if (externalPages.includes(section)) {
+      const routes: Record<string, string> = {
+        contact: '/contact', feedback: '/feedback', referral: '/referral',
+        'share-app': '/share', terms: '/terms',
+      };
       navigate(routes[section]);
     } else {
       setActiveSection(section);
@@ -86,12 +107,12 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
   const renderContent = () => {
     switch (activeSection) {
-      case 'home':             return <DashboardHome user={user} onNavigate={setActiveSection} />;
-      case 'buy':              return <BuyUSDT />;
-      case 'sell':             return <SellUSDT />;
+      case 'home':        return <DashboardHome user={user} onNavigate={setActiveSection} />;
+      case 'buy':         return <BuyUSDT />;
+      case 'sell':        return <SellUSDT />;
       case 'transfer':
         return (
-          <div className="max-w-2xl mx-auto mt-8 text-center p-6">
+          <div className="max-w-2xl mx-auto mt-8 text-center">
             <div className="w-20 h-20 bg-terex-accent/20 rounded-full flex items-center justify-center mx-auto mb-6">
               <span className="text-4xl">🚀</span>
             </div>
@@ -100,48 +121,40 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             <p className="text-gray-500 text-sm">Nous travaillons activement pour vous offrir le meilleur service de virements internationaux.</p>
           </div>
         );
-      case 'otc':              return <HighVolumeRequest onBack={() => setActiveSection('home')} requestedAmount="" />;
-      case 'history':          return <TransactionHistoryPage />;
-      case 'profile':          return <Profile user={user} onLogout={handleLogout} />;
-      case 'kyc':              return <KYCPage onBack={() => setActiveSection('profile')} />;
-      case 'faq':              return <FAQ onNavigate={setActiveSection} />;
-      case 'user-guide':       return <UserGuide onBack={() => setActiveSection('faq')} />;
-      case 'security-policy':  return <SecurityPolicy onBack={() => setActiveSection('faq')} />;
+      case 'otc':         return <HighVolumeRequest onBack={() => setActiveSection('home')} requestedAmount="" />;
+      case 'history':     return <TransactionHistoryPage />;
+      case 'profile':     return <Profile user={user} onLogout={handleLogout} />;
+      case 'kyc':         return <KYCPage onBack={() => setActiveSection('profile')} />;
+      case 'faq':         return <FAQ onNavigate={setActiveSection} />;
+      case 'user-guide':  return <UserGuide onBack={() => setActiveSection('faq')} />;
+      case 'security-policy': return <SecurityPolicy onBack={() => setActiveSection('faq')} />;
       case 'terms-of-service': return <TermsOfService onBack={() => setActiveSection('faq')} />;
-      case 'about-terex':      return <AboutTerex onBack={() => setActiveSection('faq')} />;
-      case 'kyc-admin':        return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white p-8">Accès non autorisé</div>;
-      case 'orders-admin':     return isKYCReviewer() ? <OrdersDashboardNew /> : <div className="text-white p-8">Accès non autorisé</div>;
-      case 'job-applications':
-        return (isAdmin() || isKYCReviewer()) ? <JobApplicationsAdmin /> : <div className="text-white p-8">Accès non autorisé</div>;
-      default:                 return <DashboardHome user={user} onNavigate={setActiveSection} />;
+      case 'about-terex': return <AboutTerex onBack={() => setActiveSection('faq')} />;
+      case 'kyc-admin':   return isKYCReviewer() ? <KYCAdmin /> : <div className="text-white">Accès non autorisé</div>;
+      case 'orders-admin': return isKYCReviewer() ? <OrdersDashboardNew /> : <div className="text-white">Accès non autorisé</div>;
+      case 'job-applications': return (isAdmin() || isKYCReviewer()) ? <JobApplicationsAdmin /> : <div className="text-white">Accès non autorisé</div>;
+      default:            return <DashboardHome user={user} onNavigate={setActiveSection} />;
     }
   };
 
   return (
     <TransactionProvider>
-      <SidebarProvider
-        style={{ '--sidebar-width': '240px' } as React.CSSProperties}
-        className="h-screen overflow-hidden"
-      >
-        {!isMobile && (
-          <DodoSidebar
-            activeSection={activeSection}
-            onSectionChange={handleNavigate}
-            onLogout={handleLogout}
-          />
-        )}
-
-        <SidebarInset className={cn(
-          'bg-[#141414] flex flex-col',
-          isMobile ? 'min-h-screen' : 'h-screen overflow-hidden'
-        )}>
+      <SidebarProvider>
+        <div className="min-h-screen w-full bg-[#0a0a0a]">
+          {!isMobile && (
+            <DodoSidebar
+              activeSection={activeSection}
+              onSectionChange={handleNavigate}
+              onLogout={handleLogout}
+            />
+          )}
 
           {isMobile && !isPWA && (
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setMenuOpen(true)}
-              className="fixed top-4 right-4 z-50 text-white hover:bg-white/10 rounded-xl border border-white/10"
+              className="fixed top-4 right-4 z-50 text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
             >
               <Menu className="h-5 w-5" />
             </Button>
@@ -155,21 +168,27 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             onClose={() => setMenuOpen(false)}
           />
 
-          <main className={cn(
-            'flex-1 overflow-hidden relative',
-            isMobile
-              ? isPWA ? 'p-4 pt-16 pb-24' : 'p-4 pt-4 pb-24'
-              : 'p-0 h-full'
-          )}>
-            {isMobile && isPWA && (
-              <MobileProfileMenu
-                activeSection={activeSection}
-                setActiveSection={handleNavigate}
-                onLogout={handleLogout}
-              />
-            )}
-            {renderContent()}
-          </main>
+          <div className={`${!isMobile ? 'md:pl-[240px] h-screen flex flex-col' : 'min-h-screen flex flex-col'}`}>
+            <main
+              className={`flex-1 overflow-hidden ${
+                isMobile
+                  ? isPWA
+                    ? 'p-4 pt-16 pb-24'
+                    : 'p-4 pt-4 pb-24'
+                  : 'p-0'
+              } relative`}
+            >
+              {isMobile && isPWA && (
+                <MobileProfileMenu
+                  activeSection={activeSection}
+                  setActiveSection={handleNavigate}
+                  onLogout={handleLogout}
+                />
+              )}
+
+              {renderContent()}
+            </main>
+          </div>
 
           {isMobile && (
             <MobileBottomNav
@@ -177,10 +196,10 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               setActiveSection={setActiveSection}
             />
           )}
-        </SidebarInset>
 
-        <NotificationPermissionPrompt />
-        <PWAUpdatePrompt />
+          <NotificationPermissionPrompt />
+          <PWAUpdatePrompt />
+        </div>
       </SidebarProvider>
     </TransactionProvider>
   );
