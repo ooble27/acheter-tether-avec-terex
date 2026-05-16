@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Send, Clock, Users2,
   Building2, LifeBuoy, LogOut,
   ArrowLeft, Menu, X,
-  Wallet, CalendarClock, BarChart2, UserCog, ShieldCheck, Code2
+  Wallet, CalendarClock, BarChart2, UserCog, ShieldCheck
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { BusinessOverview } from './BusinessOverview';
@@ -18,7 +18,6 @@ import { BusinessAnalytics } from './BusinessAnalytics';
 import { BusinessBatch } from './BusinessBatch';
 import { BusinessTeam } from './BusinessTeam';
 import { BusinessCompliance } from './BusinessCompliance';
-import { BusinessAPI } from './BusinessAPI';
 
 interface BusinessDashboardProps {
   user: { id?: string; email: string; name: string } | null;
@@ -53,7 +52,6 @@ const NAV_SECTIONS = [
     label: 'PARAMÈTRES',
     items: [
       { id: 'profile',    label: 'Profil entreprise',   icon: Building2 },
-      { id: 'api',        label: 'Intégrations & API',  icon: Code2 },
       { id: 'support',    label: 'Support',             icon: LifeBuoy },
     ],
   },
@@ -73,7 +71,6 @@ const PAGE_SUBTITLES: Record<string, string> = {
   team:       'Gestion des membres et permissions',
   compliance: 'Documents KYC et conformité',
   profile:    'Informations de votre société',
-  api:        'Clés API et webhooks',
   support:    'Aide et assistance dédiée B2B',
 };
 
@@ -154,7 +151,6 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
       case 'team':        return <BusinessTeam user={user} />;
       case 'compliance':  return <BusinessCompliance user={user} />;
       case 'profile':     return <BusinessProfile user={user} />;
-      case 'api':         return <BusinessAPI user={user} />;
       case 'support':     return <BusinessSupport />;
       default:            return <BusinessOverview user={user} onNavigate={setActiveSection} />;
     }
@@ -331,33 +327,39 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
 
       {/* Main content area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
-        {/* Mobile sticky top bar */}
+        {/* Mobile sticky top bar — safe-area pour iOS/iPad */}
         <div
           className="md:hidden"
           style={{
-            height: 52, background: '#141414',
+            background: '#141414',
             borderBottom: `1px solid ${C.bds}`,
-            display: 'flex', alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0 12px', flexShrink: 0,
+            flexShrink: 0,
             position: 'sticky', top: 0, zIndex: 20,
+            paddingTop: 'env(safe-area-inset-top, 0px)',
           }}
         >
-          <button
-            onClick={() => setSidebarOpen(true)}
-            style={{
-              width: 36, height: 36, borderRadius: 8,
-              background: C.l2, border: `1px solid ${C.bds}`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: C.t2, cursor: 'pointer',
-            }}
-          >
-            <Menu style={{ width: 16, height: 16 }} />
-          </button>
-          <span style={{ color: C.t1, fontSize: 13, fontWeight: 600, fontFamily: FONT }}>
-            {currentPage?.label || 'Dashboard'}
-          </span>
-          <InitialAvatar name={user?.name || 'U'} size={30} />
+          <div style={{
+            height: 52,
+            display: 'flex', alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0 12px',
+          }}>
+            <button
+              onClick={() => setSidebarOpen(true)}
+              style={{
+                width: 36, height: 36, borderRadius: 8,
+                background: C.l2, border: `1px solid ${C.bds}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: C.t2, cursor: 'pointer',
+              }}
+            >
+              <Menu style={{ width: 16, height: 16 }} />
+            </button>
+            <span style={{ color: C.t1, fontSize: 13, fontWeight: 600, fontFamily: FONT }}>
+              {currentPage?.label || 'Dashboard'}
+            </span>
+            <InitialAvatar name={user?.name || 'U'} size={30} />
+          </div>
         </div>
 
         {/* Content */}
