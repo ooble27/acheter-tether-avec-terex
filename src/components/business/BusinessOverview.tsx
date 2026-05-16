@@ -210,40 +210,6 @@ export function BusinessOverview({ user, onNavigate }: Props) {
         ))}
       </div>
 
-      {/* AreaChart — volume 7 jours */}
-      <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
-        <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.bds}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <h3 style={{ fontSize: 13, fontWeight: 600, color: C.t1, margin: 0 }}>Volume des 7 derniers jours</h3>
-            <p style={{ fontSize: 11, color: C.t3, margin: '3px 0 0' }}>En USDT{payments.length === 0 && ' · Données de démonstration'}</p>
-          </div>
-          {payments.length === 0 && (
-            <span style={{ fontSize: 10, color: C.t3, background: C.l2, border: `1px solid ${C.bds}`, borderRadius: 6, padding: '4px 8px' }}>
-              Exemple
-            </span>
-          )}
-        </div>
-        <div style={{ padding: '20px 16px 12px' }}>
-          <ResponsiveContainer width="100%" height={180}>
-            <AreaChart data={volumeData} margin={{ top: 4, right: 4, bottom: 0, left: -10 }}>
-              <defs>
-                <linearGradient id="volumeGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor={C.teal} stopOpacity={0.25} />
-                  <stop offset="95%" stopColor={C.teal} stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke={C.bds} vertical={false} />
-              <XAxis dataKey="jour" tick={{ fill: C.t3, fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: C.t3, fontSize: 11 }} axisLine={false} tickLine={false}
-                tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)} />
-              <Tooltip content={<ChartTooltip />} cursor={{ stroke: C.teal, strokeWidth: 1, strokeDasharray: '4 4' }} />
-              <Area type="monotone" dataKey="usdt" stroke={C.teal} strokeWidth={2}
-                fill="url(#volumeGrad)" dot={false} activeDot={{ r: 4, fill: C.teal, stroke: C.l1, strokeWidth: 2 }} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
       {/* Main grid: transactions + sidebar */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 16 }}>
 
@@ -334,8 +300,47 @@ export function BusinessOverview({ user, onNavigate }: Props) {
             })}
           </div>
 
-          <LiveRateCard />
         </div>
+      </div>
+
+      {/* Bottom: AreaChart gauche + LiveRate droite */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 16 }}>
+
+        {/* AreaChart — volume 7 jours */}
+        <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
+          <div style={{ padding: '12px 16px', borderBottom: `1px solid ${C.bds}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h3 style={{ fontSize: 12, fontWeight: 600, color: C.t1, margin: 0 }}>Volume des 7 derniers jours</h3>
+              <p style={{ fontSize: 10, color: C.t3, margin: '2px 0 0' }}>En USDT{payments.length === 0 && ' · Démonstration'}</p>
+            </div>
+            {payments.length === 0 && (
+              <span style={{ fontSize: 10, color: C.t3, background: C.l2, border: `1px solid ${C.bds}`, borderRadius: 6, padding: '3px 7px' }}>
+                Exemple
+              </span>
+            )}
+          </div>
+          <div style={{ padding: '12px 12px 8px' }}>
+            <ResponsiveContainer width="100%" height={120}>
+              <AreaChart data={volumeData} margin={{ top: 4, right: 4, bottom: 0, left: -10 }}>
+                <defs>
+                  <linearGradient id="volumeGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%"  stopColor={C.teal} stopOpacity={0.25} />
+                    <stop offset="95%" stopColor={C.teal} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.bds} vertical={false} />
+                <XAxis dataKey="jour" tick={{ fill: C.t3, fontSize: 10 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: C.t3, fontSize: 10 }} axisLine={false} tickLine={false}
+                  tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)} />
+                <Tooltip content={<ChartTooltip />} cursor={{ stroke: C.teal, strokeWidth: 1, strokeDasharray: '4 4' }} />
+                <Area type="monotone" dataKey="usdt" stroke={C.teal} strokeWidth={2}
+                  fill="url(#volumeGrad)" dot={false} activeDot={{ r: 3, fill: C.teal, stroke: C.l1, strokeWidth: 2 }} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <LiveRateCard />
       </div>
 
     </div>
