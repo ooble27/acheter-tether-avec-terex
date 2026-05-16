@@ -343,6 +343,30 @@ export function BusinessPayments({ user, onBack }: {
       setSuppliers(updated);
       try { localStorage.setItem(`terex_b2b_${userId}_suppliers`, JSON.stringify(updated)); } catch { /* ignore */ }
     }
+    if (step === 3) {
+      const newPayment = {
+        id: paymentRef,
+        reference: paymentRef,
+        amount: amountNum,
+        fee,
+        total,
+        currency: 'USDT',
+        network,
+        supplierName: getBenefName(),
+        wallet: getBenefWallet(),
+        note,
+        status: amountNum >= 5000 ? 'pending' : 'processing',
+        createdAt: schedDate ? `${schedDate}T${schedTime || '00:00'}:00.000Z` : new Date().toISOString(),
+        invoiceFile: invoiceFile || null,
+        scheduled: !!schedDate,
+        recurrence: recurFreq || null,
+      };
+      try {
+        const raw = localStorage.getItem(`terex_b2b_${userId}_payments`);
+        const existing = raw ? JSON.parse(raw) : [];
+        localStorage.setItem(`terex_b2b_${userId}_payments`, JSON.stringify([newPayment, ...existing]));
+      } catch { /* ignore */ }
+    }
     setStep(s => s + 1);
   };
 
@@ -524,7 +548,7 @@ export function BusinessPayments({ user, onBack }: {
               }}>
                 <div style={{ fontSize: 11, color: C.t3, fontFamily: FONT }}>Taux actuel</div>
                 <div style={{ fontSize: 18, fontWeight: 700, color: C.t1, fontFamily: MONO }}>
-                  1 USDT = 0.9452 EUR
+                  1 USDT = 0.9245 EUR
                 </div>
               </div>
               {!rateLocked ? (

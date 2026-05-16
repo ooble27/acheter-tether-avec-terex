@@ -487,9 +487,8 @@ export function BusinessProfile({ user }: Props) {
         <SectionHeader>Identité &amp; Activité</SectionHeader>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
           gap: 12,
-        }} className="profile-grid">
+        }} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           <SettingsCard
             icon={<Building2 style={{ width: 18, height: 18 }} />}
             iconBg={C.tealT} iconBorder={C.tealB} iconColor={C.teal}
@@ -519,9 +518,8 @@ export function BusinessProfile({ user }: Props) {
         <SectionHeader>Coordonnées</SectionHeader>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
           gap: 12,
-        }} className="profile-grid">
+        }} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           <SettingsCard
             icon={<Globe style={{ width: 18, height: 18 }} />}
             iconBg={C.amberT} iconBorder={C.amberB} iconColor={C.amber}
@@ -551,9 +549,8 @@ export function BusinessProfile({ user }: Props) {
         <SectionHeader>Documents &amp; KYC</SectionHeader>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
           gap: 12,
-        }} className="profile-grid">
+        }} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           <SettingsCard
             icon={<FileText style={{ width: 18, height: 18 }} />}
             iconBg={C.amberT} iconBorder={C.amberB} iconColor={C.amber}

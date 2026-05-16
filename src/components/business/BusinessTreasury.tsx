@@ -59,21 +59,21 @@ const WALLETS = [
 const RATES = [
   {
     pair: 'USDT/EUR',
-    rate: 0.9452,
-    change: +0.23,
+    rate: 0.9245,
+    change: -0.06,
     color: C.teal,
   },
   {
     pair: 'USDT/XOF',
-    rate: 619.4,
-    change: -0.11,
+    rate: 620.5,
+    change: +0.18,
     color: C.amber,
   },
   {
-    pair: 'USDT/FCFA',
-    rate: 619.4,
-    change: -0.11,
-    color: C.purple,
+    pair: 'USDT/USD',
+    rate: 1.0000,
+    change: 0,
+    color: C.blue,
   },
 ];
 
