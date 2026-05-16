@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Search, Trash2, Edit2, X, Check, Globe } from 'lucide-react';
+import { Plus, Search, Trash2, Edit2, X, Check, Globe, Send } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface Supplier {
@@ -8,7 +8,10 @@ interface Supplier {
   walletAddress: string;
   network: string;
   country: string;
+  category?: string;
   createdAt: string;
+  totalPaid?: number;
+  lastPaymentDate?: string;
 }
 
 interface Props {
@@ -16,6 +19,11 @@ interface Props {
 }
 
 const NETWORKS = ['TRC20 (TRON)', 'BEP20 (BSC)', 'ERC20 (Ethereum)', 'Polygon (MATIC)'];
+
+const CATEGORIES = [
+  'Textile', 'Électronique', 'Agroalimentaire', 'Maroquinerie',
+  'Mode', 'Logistique', 'Services', 'Autre',
+];
 
 const COUNTRIES = [
   'Chine', 'Émirats Arabes Unis', 'Turquie', 'Maroc', 'Sénégal',
@@ -28,7 +36,26 @@ const COUNTRY_FLAG: Record<string, string> = {
   'Inde': '🇮🇳', 'Pakistan': '🇵🇰', 'Autre': '🌍',
 };
 
-// ── Design tokens ─────────────────────────────────────────────────
+const COUNTRY_CODE: Record<string, string> = {
+  'Chine': 'CN', 'Émirats Arabes Unis': 'AE', 'Turquie': 'TR',
+  'Maroc': 'MA', 'Sénégal': 'SN', 'France': 'FR',
+  'Inde': 'IN', 'Pakistan': 'PK', 'Autre': '--',
+};
+
+const NET_COLOR: Record<string, string> = {
+  'TRC20 (TRON)':     '#3B968F',
+  'BEP20 (BSC)':      '#F0B90B',
+  'ERC20 (Ethereum)': '#627EEA',
+  'Polygon (MATIC)':  '#8247E5',
+};
+
+const NET_LABEL: Record<string, string> = {
+  'TRC20 (TRON)':     'TRC20',
+  'BEP20 (BSC)':      'BEP20',
+  'ERC20 (Ethereum)': 'ERC20',
+  'Polygon (MATIC)':  'MATIC',
+};
+
 const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030', l4: '#383838',
   bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
@@ -39,20 +66,141 @@ const C = {
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
 
-// ── InitialAvatar ─────────────────────────────────────────────────
-function InitialAvatar({ name, size = 30 }: { name: string; size?: number }) {
-  const parts = (name || 'U').split(' ').filter(Boolean);
-  const initials = parts.length >= 2
-    ? (parts[0][0] + parts[1][0]).toUpperCase()
-    : (parts[0]?.slice(0, 2) || 'U').toUpperCase();
+// ── Supplier card (module-level for SWC) ─────────────────────────
+function SupplierCard({
+  supplier,
+  onEdit,
+  onDelete,
+}: {
+  supplier: Supplier;
+  onEdit: () => void;
+  onDelete: () => void;
+}) {
+  const code = COUNTRY_CODE[supplier.country] || '--';
+  const netColor = NET_COLOR[supplier.network] || C.teal;
+  const netLabel = NET_LABEL[supplier.network] || supplier.network;
+
   return (
     <div style={{
-      width: size, height: size, borderRadius: 8,
-      background: 'rgba(59,150,143,0.22)', color: C.teal,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: size * 0.38, fontWeight: 600, flexShrink: 0, fontFamily: FONT,
+      background: C.l1,
+      border: `1px solid ${C.bds}`,
+      borderRadius: 14,
+      padding: '16px 16px 14px',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+      display: 'flex', flexDirection: 'column',
+      fontFamily: FONT,
     }}>
-      {initials}
+      {/* Top row: avatar + name + network badge */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
+          <div style={{
+            width: 40, height: 40, borderRadius: 9, flexShrink: 0,
+            background: C.l3, color: C.t2,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 12, fontWeight: 700, fontFamily: MONO,
+            border: `1px solid ${C.bd}`,
+          }}>
+            {code}
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <p style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {supplier.name}
+            </p>
+            <p style={{ color: C.t3, fontSize: 11, margin: '2px 0 0' }}>
+              {COUNTRY_FLAG[supplier.country] || '🌍'} {supplier.country}{supplier.category ? ` · ${supplier.category}` : ''}
+            </p>
+          </div>
+        </div>
+        <div style={{
+          background: `${netColor}1A`,
+          border: `1px solid ${netColor}45`,
+          color: netColor,
+          fontSize: 9.5, fontWeight: 700,
+          padding: '3px 9px', borderRadius: 20,
+          letterSpacing: '0.04em', flexShrink: 0, marginLeft: 8,
+        }}>
+          {netLabel}
+        </div>
+      </div>
+
+      {/* Wallet box */}
+      <div style={{ background: C.l2, border: `1px solid ${C.bds}`, borderRadius: 8, padding: '8px 12px', marginBottom: 14 }}>
+        <p style={{ color: C.t3, fontSize: 9, fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', margin: '0 0 4px' }}>
+          Adresse Wallet
+        </p>
+        <p style={{ color: C.t2, fontSize: 11, fontFamily: MONO, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {supplier.walletAddress.slice(0, 10)}...{supplier.walletAddress.slice(-6)}
+        </p>
+      </div>
+
+      {/* Stats */}
+      <div style={{ display: 'flex', gap: 16, marginBottom: 14 }}>
+        <div>
+          <p style={{ color: C.t3, fontSize: 10, margin: '0 0 3px' }}>Total payé</p>
+          <p style={{ color: C.teal, fontSize: 15, fontWeight: 600, margin: 0 }}>
+            {(supplier.totalPaid || 0).toLocaleString('fr-FR')} USDT
+          </p>
+        </div>
+        <div>
+          <p style={{ color: C.t3, fontSize: 10, margin: '0 0 3px' }}>Dernier paiement</p>
+          <p style={{ color: C.t2, fontSize: 12, margin: 0 }}>
+            {supplier.lastPaymentDate
+              ? new Date(supplier.lastPaymentDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
+              : 'Aucun'}
+          </p>
+        </div>
+      </div>
+
+      <div style={{ borderTop: `1px solid ${C.bds}`, marginBottom: 14 }} />
+
+      {/* Action buttons */}
+      <div style={{ display: 'flex', gap: 8 }}>
+        <button
+          style={{
+            flex: 1, height: 36, borderRadius: 8,
+            background: C.teal, border: 'none',
+            color: '#fff', fontSize: 13, fontWeight: 500,
+            cursor: 'pointer', fontFamily: FONT,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+            transition: 'background 0.1s',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = C.tealH)}
+          onMouseLeave={e => (e.currentTarget.style.background = C.teal)}
+        >
+          <Send style={{ width: 13, height: 13 }} />
+          Payer
+        </button>
+        <button
+          onClick={onEdit}
+          title="Modifier"
+          style={{
+            width: 36, height: 36, borderRadius: 8,
+            background: C.l2, border: `1px solid ${C.bds}`,
+            color: C.t3, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'all 0.1s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.bdh; }}
+          onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = C.bds; }}
+        >
+          <Edit2 style={{ width: 13, height: 13 }} />
+        </button>
+        <button
+          onClick={onDelete}
+          title="Supprimer"
+          style={{
+            width: 36, height: 36, borderRadius: 8,
+            background: C.l2, border: `1px solid ${C.bds}`,
+            color: C.t3, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'all 0.1s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.color = C.red; e.currentTarget.style.background = C.redT; }}
+          onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.background = C.l2; }}
+        >
+          <Trash2 style={{ width: 13, height: 13 }} />
+        </button>
+      </div>
     </div>
   );
 }
@@ -71,6 +219,7 @@ function SupplierModal({
   const [wallet, setWallet] = useState(supplier?.walletAddress || '');
   const [network, setNetwork] = useState(supplier?.network || 'TRC20 (TRON)');
   const [country, setCountry] = useState(supplier?.country || 'Chine');
+  const [category, setCategory] = useState(supplier?.category || '');
   const [nameFocused, setNameFocused] = useState(false);
   const [walletFocused, setWalletFocused] = useState(false);
 
@@ -91,20 +240,18 @@ function SupplierModal({
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-      {/* Backdrop */}
       <div
         style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)' }}
         onClick={onClose}
       />
-      {/* Modal card */}
       <div style={{
         position: 'relative', zIndex: 10, width: '100%', maxWidth: 440,
         background: C.l1, border: `1px solid ${C.bd}`,
         borderRadius: 14, padding: 24,
         boxShadow: '0 25px 50px rgba(0,0,0,0.6)',
         fontFamily: FONT,
+        maxHeight: '90vh', overflowY: 'auto',
       }}>
-        {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
           <h3 style={{ color: C.t1, fontSize: 15, fontWeight: 600, margin: 0 }}>
             {supplier ? 'Modifier le fournisseur' : 'Ajouter un fournisseur'}
@@ -139,7 +286,7 @@ function SupplierModal({
             />
           </div>
 
-          {/* Country 3x3 grid */}
+          {/* Country */}
           <div>
             <label style={labelStyle}>Pays</label>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
@@ -161,7 +308,29 @@ function SupplierModal({
             </div>
           </div>
 
-          {/* Network 2x2 grid */}
+          {/* Category */}
+          <div>
+            <label style={labelStyle}>Secteur (optionnel)</label>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6 }}>
+              {CATEGORIES.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setCategory(category === cat ? '' : cat)}
+                  style={{
+                    padding: '7px 8px', borderRadius: 7, fontSize: 11, fontWeight: 500,
+                    border: `1px solid ${category === cat ? C.tealB : C.bd}`,
+                    background: category === cat ? C.tealT : C.l2,
+                    color: category === cat ? C.teal : C.t3,
+                    cursor: 'pointer', fontFamily: FONT, transition: 'all 0.1s',
+                  }}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Network */}
           <div>
             <label style={labelStyle}>Réseau</label>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
@@ -183,7 +352,7 @@ function SupplierModal({
             </div>
           </div>
 
-          {/* Wallet (mono) */}
+          {/* Wallet */}
           <div>
             <label style={labelStyle}>Adresse wallet USDT</label>
             <input
@@ -198,7 +367,6 @@ function SupplierModal({
           </div>
         </div>
 
-        {/* Actions */}
         <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
           <button
             onClick={onClose}
@@ -206,7 +374,6 @@ function SupplierModal({
               flex: 1, height: 40, borderRadius: 8, fontSize: 13,
               background: 'transparent', border: `1px solid ${C.bd}`,
               color: C.t3, cursor: 'pointer', fontFamily: FONT,
-              transition: 'all 0.1s',
             }}
             onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.bdh; }}
             onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = C.bd; }}
@@ -215,17 +382,16 @@ function SupplierModal({
           </button>
           <button
             disabled={!valid}
-            onClick={() => { if (valid) { onSave({ name, walletAddress: wallet, network, country }); onClose(); } }}
+            onClick={() => { if (valid) { onSave({ name, walletAddress: wallet, network, country, category: category || undefined }); onClose(); } }}
             style={{
               flex: 1, height: 40, borderRadius: 8, fontSize: 13, fontWeight: 500,
               background: valid ? C.teal : 'rgba(59,150,143,0.3)',
               border: 'none', color: '#fff',
               cursor: valid ? 'pointer' : 'not-allowed', fontFamily: FONT,
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-              transition: 'background 0.1s',
             }}
-            onMouseEnter={e => { if (valid) (e.currentTarget.style.background = C.tealH); }}
-            onMouseLeave={e => { if (valid) (e.currentTarget.style.background = C.teal); }}
+            onMouseEnter={e => { if (valid) e.currentTarget.style.background = C.tealH; }}
+            onMouseLeave={e => { if (valid) e.currentTarget.style.background = C.teal; }}
           >
             <Check style={{ width: 14, height: 14 }} />
             {supplier ? 'Enregistrer' : 'Ajouter'}
@@ -284,13 +450,13 @@ export function BusinessSuppliers({ user }: Props) {
         />
       )}
 
-      {/* Page header */}
+      {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
         <div>
           <h2 style={{ color: C.t1, fontSize: 20, fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.2, margin: 0 }}>
             Fournisseurs
           </h2>
-          <p style={{ color: C.t3, fontSize: 12, marginTop: 4, margin: '4px 0 0' }}>
+          <p style={{ color: C.t3, fontSize: 12, margin: '4px 0 0' }}>
             {suppliers.length} contact{suppliers.length !== 1 ? 's' : ''} enregistré{suppliers.length !== 1 ? 's' : ''}
           </p>
         </div>
@@ -333,120 +499,39 @@ export function BusinessSuppliers({ user }: Props) {
         />
       </div>
 
-      {/* Table card */}
-      <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
-        {filtered.length === 0 ? (
-          <div style={{ padding: '60px 20px', textAlign: 'center' }}>
-            <div style={{
-              width: 40, height: 40, borderRadius: 10, background: C.l3,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px',
-            }}>
-              <Globe style={{ width: 16, height: 16, color: C.t3 }} />
-            </div>
-            <p style={{ color: C.t3, fontSize: 13, margin: 0 }}>
-              {search ? 'Aucun résultat' : 'Aucun fournisseur enregistré'}
-            </p>
-            {!search && (
-              <button
-                onClick={() => setModal({ open: true, supplier: null })}
-                style={{ color: C.teal, fontSize: 12, background: 'none', border: 'none', cursor: 'pointer', marginTop: 8, fontFamily: FONT }}
-              >
-                Ajouter votre premier fournisseur →
-              </button>
-            )}
+      {/* Card grid or empty state */}
+      {filtered.length === 0 ? (
+        <div style={{ padding: '60px 20px', textAlign: 'center' }}>
+          <div style={{
+            width: 40, height: 40, borderRadius: 10, background: C.l3,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px',
+          }}>
+            <Globe style={{ width: 16, height: 16, color: C.t3 }} />
           </div>
-        ) : (
-          <>
-            {/* Table headers */}
-            <div className="hidden md:grid" style={{
-              gridTemplateColumns: '2fr 130px 110px 1fr 80px',
-              gap: 16, padding: '10px 20px',
-              borderBottom: `1px solid ${C.bds}`,
-            }}>
-              {['Nom', 'Pays', 'Réseau', 'Wallet', 'Actions'].map((h, i) => (
-                <span key={h} style={{
-                  fontSize: 10, fontWeight: 600, color: C.t3,
-                  textTransform: 'uppercase', letterSpacing: '0.08em',
-                  textAlign: i === 4 ? 'right' : 'left',
-                }}>
-                  {h}
-                </span>
-              ))}
-            </div>
-            {/* Rows */}
-            <div>
-              {filtered.map((s, i) => (
-                <div
-                  key={s.id}
-                  style={{
-                    display: 'flex', alignItems: 'center',
-                    padding: '12px 20px',
-                    borderBottom: i < filtered.length - 1 ? `1px solid ${C.bds}` : 'none',
-                    gap: 16,
-                    transition: 'background 0.1s',
-                  }}
-                  className="md:grid"
-                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.01)')}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                >
-                  {/* Name + date */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
-                    <InitialAvatar name={s.name} size={30} />
-                    <div style={{ minWidth: 0 }}>
-                      <p style={{ fontSize: 12, fontWeight: 500, color: C.t1, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {s.name}
-                      </p>
-                      <p style={{ fontSize: 10, color: C.t3, marginTop: 2, margin: '2px 0 0' }}>
-                        Ajouté le {new Date(s.createdAt).toLocaleDateString('fr-FR')}
-                      </p>
-                    </div>
-                  </div>
-                  {/* Country */}
-                  <div className="hidden md:flex" style={{ alignItems: 'center', gap: 6 }}>
-                    <span style={{ fontSize: 13 }}>{COUNTRY_FLAG[s.country] || '🌍'}</span>
-                    <span style={{ color: C.t2, fontSize: 12 }}>{s.country}</span>
-                  </div>
-                  {/* Network */}
-                  <span className="hidden md:block" style={{ color: C.t2, fontSize: 12 }}>{s.network}</span>
-                  {/* Wallet mono truncated */}
-                  <span className="hidden md:block" style={{ color: C.t3, fontSize: 11, fontFamily: MONO, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {s.walletAddress.slice(0, 10)}...{s.walletAddress.slice(-6)}
-                  </span>
-                  {/* Actions */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4, marginLeft: 'auto' }}>
-                    <button
-                      onClick={() => setModal({ open: true, supplier: s })}
-                      style={{
-                        width: 28, height: 28, borderRadius: 7,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        background: 'transparent', border: 'none',
-                        color: C.t3, cursor: 'pointer', transition: 'all 0.1s',
-                      }}
-                      onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.background = C.l3; }}
-                      onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.background = 'transparent'; }}
-                    >
-                      <Edit2 style={{ width: 13, height: 13 }} />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(s.id)}
-                      style={{
-                        width: 28, height: 28, borderRadius: 7,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        background: 'transparent', border: 'none',
-                        color: C.t3, cursor: 'pointer', transition: 'all 0.1s',
-                      }}
-                      onMouseEnter={e => { e.currentTarget.style.color = C.red; e.currentTarget.style.background = C.redT; }}
-                      onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.background = 'transparent'; }}
-                    >
-                      <Trash2 style={{ width: 13, height: 13 }} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
+          <p style={{ color: C.t3, fontSize: 13, margin: 0 }}>
+            {search ? 'Aucun résultat' : 'Aucun fournisseur enregistré'}
+          </p>
+          {!search && (
+            <button
+              onClick={() => setModal({ open: true, supplier: null })}
+              style={{ color: C.teal, fontSize: 12, background: 'none', border: 'none', cursor: 'pointer', marginTop: 8, fontFamily: FONT }}
+            >
+              Ajouter votre premier fournisseur →
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" style={{ gap: 16 }}>
+          {filtered.map(s => (
+            <SupplierCard
+              key={s.id}
+              supplier={s}
+              onEdit={() => setModal({ open: true, supplier: s })}
+              onDelete={() => handleDelete(s.id)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

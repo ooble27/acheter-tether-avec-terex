@@ -285,14 +285,13 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
   return (
     <div style={{ display: 'flex', height: '100vh', background: C.bg, overflow: 'hidden' }}>
       {/* Desktop Sidebar */}
-      <aside style={{
-        display: 'none',
+      <aside className="hidden md:flex" style={{
         width: 220, minWidth: 220,
         background: '#141414',
         borderRight: `1px solid ${C.bds}`,
         flexShrink: 0,
         flexDirection: 'column',
-      }} className="md:flex">
+      }}>
         <SidebarContent />
       </aside>
 
@@ -341,7 +340,6 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
           <div style={{
             height: 52,
             display: 'flex', alignItems: 'center',
-            justifyContent: 'space-between',
             padding: '0 12px',
           }}>
             <button
@@ -355,10 +353,6 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
             >
               <Menu style={{ width: 16, height: 16 }} />
             </button>
-            <span style={{ color: C.t1, fontSize: 13, fontWeight: 600, fontFamily: FONT }}>
-              {currentPage?.label || 'Dashboard'}
-            </span>
-            <InitialAvatar name={user?.name || 'U'} size={30} />
           </div>
         </div>
 
