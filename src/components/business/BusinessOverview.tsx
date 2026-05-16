@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  TrendingUp, Clock, Users2, Zap,
-  Send, Plus, ChevronRight, ArrowUpRight
-} from 'lucide-react';
+import { Send, Plus, Download, Clock, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface Props {
@@ -10,25 +7,93 @@ interface Props {
   onNavigate: (section: string) => void;
 }
 
-const STATUS_STYLE: Record<string, string> = {
-  pending:    'bg-amber-500/10 text-amber-400 border-amber-500/20',
-  processing: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-  completed:  'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  failed:     'bg-red-500/10 text-red-400 border-red-500/20',
+// ── Design tokens ─────────────────────────────────────────────────
+const C = {
+  bg: '#0e0e0e', l1: '#141414', l2: '#191919', l3: '#1f1f1f', l4: '#242424',
+  bd: '#2a2a2a', bds: '#1f1f1f', bdh: '#333333',
+  teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
+  t1: '#f0f0f0', t2: '#888888', t3: '#555555', t4: '#333333',
+  amber: '#f59e0b', amberT: 'rgba(245,158,11,0.08)', amberB: 'rgba(245,158,11,0.16)',
+  blue: '#3b82f6', blueT: 'rgba(59,130,246,0.08)', blueB: 'rgba(59,130,246,0.16)',
+  em: '#22c55e', emT: 'rgba(34,197,94,0.08)', emB: 'rgba(34,197,94,0.16)',
+  red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.16)',
 };
-const STATUS_LABEL: Record<string, string> = {
-  pending: 'En attente', processing: 'En cours',
-  completed: 'Complété', failed: 'Échoué',
+const FONT = "'Inter', sans-serif";
+const MONO = '"JetBrains Mono", Consolas, monospace';
+
+// ── InitialAvatar ─────────────────────────────────────────────────
+function InitialAvatar({ name, size = 32 }: { name: string; size?: number }) {
+  const parts = (name || 'U').split(' ').filter(Boolean);
+  const initials = parts.length >= 2
+    ? (parts[0][0] + parts[1][0]).toUpperCase()
+    : (parts[0]?.slice(0, 2) || 'U').toUpperCase();
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: 8,
+      background: 'rgba(59,150,143,0.22)', color: C.teal,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontSize: size * 0.38, fontWeight: 600, flexShrink: 0, fontFamily: FONT,
+    }}>
+      {initials}
+    </div>
+  );
+}
+
+// ── StatusPill ────────────────────────────────────────────────────
+const STATUS_CONFIG: Record<string, { bg: string; border: string; color: string; label: string; Icon: React.FC<any> }> = {
+  pending:    { bg: C.amberT, border: C.amberB, color: C.amber, label: 'En attente',  Icon: Clock },
+  processing: { bg: C.blueT,  border: C.blueB,  color: C.blue,  label: 'En cours',    Icon: Loader2 },
+  completed:  { bg: C.emT,    border: C.emB,    color: C.em,    label: 'Complété',    Icon: CheckCircle2 },
+  failed:     { bg: C.redT,   border: C.redB,   color: C.red,   label: 'Échoué',      Icon: XCircle },
 };
 
 function StatusPill({ status }: { status: string }) {
+  const cfg = STATUS_CONFIG[status] || { bg: C.l3, border: C.bd, color: C.t2, label: status, Icon: Clock };
+  const { bg, border, color, label, Icon } = cfg;
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium border ${STATUS_STYLE[status] || 'bg-gray-500/10 text-gray-400 border-gray-500/20'}`}>
-      {STATUS_LABEL[status] || status}
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 4,
+      paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3,
+      borderRadius: 999, fontSize: 11, fontWeight: 500,
+      background: bg, border: `1px solid ${border}`, color,
+      fontFamily: FONT, whiteSpace: 'nowrap',
+    }}>
+      <Icon style={{ width: 9, height: 9 }} />
+      {label}
     </span>
   );
 }
 
+// ── LiveRate card ─────────────────────────────────────────────────
+function LiveRateCard() {
+  return (
+    <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
+      <div style={{ padding: '16px 20px 16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+          <span style={{ fontSize: 11, fontWeight: 600, color: C.t3, letterSpacing: '0.08em', fontFamily: FONT, textTransform: 'uppercase' }}>
+            USDT / FCFA
+          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.em }} />
+            <span style={{ fontSize: 10, color: C.t3, fontFamily: FONT }}>En direct</span>
+          </div>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 6 }}>
+          <span style={{ fontSize: 24, fontWeight: 700, color: C.t1, fontFamily: FONT, fontVariantNumeric: 'tabular-nums' }}>
+            605.42
+          </span>
+          <span style={{ fontSize: 11, color: C.t2, fontFamily: FONT }}>XOF/USDT</span>
+          <span style={{ fontSize: 11, fontWeight: 500, color: C.em, marginLeft: 4, fontFamily: FONT }}>+0.12%</span>
+        </div>
+        <p style={{ fontSize: 10, color: C.t3, marginTop: 4, fontFamily: FONT, margin: '4px 0 0' }}>
+          Actualisé il y a 5 secondes
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────────
 export function BusinessOverview({ user, onNavigate }: Props) {
   const { session } = useAuth();
   const userId = session?.user?.id || user?.email || 'guest';
@@ -49,184 +114,249 @@ export function BusinessOverview({ user, onNavigate }: Props) {
   const completed = payments.filter(p => p.status === 'completed');
   const totalVolume = completed.reduce((s, p) => s + (p.amount || 0), 0);
   const pendingCount = payments.filter(p => ['pending', 'processing'].includes(p.status)).length;
+  const savings = Math.round(totalVolume * 0.03);
   const recent = [...payments]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 6);
+    .slice(0, 5);
 
-  const kpis = [
+  const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const firstName = (user?.name || '').split(' ')[0] || 'là';
+
+  const STATS = [
     {
       label: 'Volume total',
-      value: totalVolume > 0 ? `${totalVolume.toLocaleString()}` : '—',
+      value: totalVolume > 0 ? totalVolume.toLocaleString('fr-FR') : '—',
       unit: totalVolume > 0 ? 'USDT' : '',
       sub: 'Transactions complétées',
-      icon: TrendingUp,
-      color: '#3B968F',
     },
     {
       label: 'En cours',
       value: String(pendingCount),
       unit: '',
       sub: pendingCount > 0 ? 'Paiements actifs' : 'Aucune en cours',
-      icon: Clock,
-      color: '#f59e0b',
     },
     {
       label: 'Fournisseurs',
       value: String(suppliers.length),
       unit: '',
       sub: 'Contacts enregistrés',
-      icon: Users2,
-      color: '#8b5cf6',
     },
     {
-      label: 'Économies vs SWIFT',
-      value: totalVolume > 0 ? `~${Math.round(totalVolume * 0.03).toLocaleString()}` : '—',
-      unit: totalVolume > 0 ? 'USDT' : '',
-      sub: 'Frais évités estimés',
-      icon: Zap,
-      color: '#22c55e',
+      label: 'Économies',
+      value: totalVolume > 0 ? `$${savings.toLocaleString('fr-FR')}` : '—',
+      unit: '',
+      sub: 'vs SWIFT estimé',
     },
   ];
 
   return (
-    <div className="space-y-5">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, fontFamily: FONT }}>
+      {/* Greeting */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
         <div>
-          <h2 className="text-white text-xl font-bold leading-tight">
-            {profile?.companyName || user?.name || 'Votre entreprise'}
+          <h2 style={{
+            color: C.t1, fontSize: 20, fontWeight: 700,
+            letterSpacing: '-0.025em', lineHeight: 1.2, margin: 0,
+          }}>
+            Bonjour, {firstName} 👋
           </h2>
-          <p className="text-gray-600 text-sm mt-1">
-            Vue d'ensemble ·{' '}
-            {new Date().toLocaleDateString('fr-FR', {
-              weekday: 'long', day: 'numeric', month: 'long',
-            })}
-          </p>
+          <p style={{ color: C.t3, fontSize: 12, marginTop: 4, margin: '4px 0 0' }}>{today}</p>
         </div>
         {!profile?.companyName && (
           <button
             onClick={() => onNavigate('profile')}
-            className="flex-shrink-0 flex items-center gap-1.5 text-xs text-[#3B968F] border border-[#3B968F]/25 px-3 py-1.5 rounded-lg hover:bg-[#3B968F]/5 transition-colors"
+            style={{
+              flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6,
+              fontSize: 11, color: C.teal, border: `1px solid ${C.tealB}`,
+              background: 'transparent', padding: '5px 10px', borderRadius: 6,
+              cursor: 'pointer', fontFamily: FONT,
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = C.tealT)}
+            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
           >
-            Configurer le profil <ArrowUpRight className="w-3 h-3" />
+            Configurer le profil →
           </button>
         )}
       </div>
 
-      {/* KPI cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {kpis.map(kpi => {
-          const Icon = kpi.icon;
-          return (
-            <div
-              key={kpi.label}
-              className="rounded-xl bg-[#111] border border-[#1c1c1c] p-4 hover:border-[#222] transition-colors"
-            >
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center mb-3"
-                style={{ background: `${kpi.color}15` }}
-              >
-                <Icon className="w-4 h-4" style={{ color: kpi.color }} />
-              </div>
-              <p className="text-white text-2xl font-bold leading-none">
-                {kpi.value}
-                {kpi.unit && (
-                  <span className="text-gray-500 text-sm font-normal ml-1">{kpi.unit}</span>
-                )}
-              </p>
-              <p className="text-gray-400 text-[11px] font-medium mt-1.5">{kpi.label}</p>
-              <p className="text-gray-600 text-[10px] mt-0.5">{kpi.sub}</p>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Quick actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <button
-          onClick={() => onNavigate('payment')}
-          className="group relative rounded-xl bg-gradient-to-br from-[#3B968F] to-[#2d7870] hover:from-[#3B968F]/90 hover:to-[#2d7870]/90 p-5 text-left transition-all overflow-hidden shadow-lg shadow-[#3B968F]/10"
-        >
-          <div className="absolute right-3 top-3 w-20 h-20 rounded-full bg-white/5 group-hover:scale-110 transition-transform duration-300" />
-          <Send className="w-5 h-5 text-white/70 mb-3 relative z-10" />
-          <p className="text-white font-semibold text-sm relative z-10">Initier un paiement</p>
-          <p className="text-white/50 text-xs mt-1 relative z-10">Payer un fournisseur en USDT</p>
-        </button>
-        <button
-          onClick={() => onNavigate('suppliers')}
-          className="group rounded-xl bg-[#111] border border-[#1c1c1c] hover:border-[#3B968F]/20 p-5 text-left transition-all"
-        >
-          <Plus className="w-5 h-5 text-gray-600 group-hover:text-[#3B968F] mb-3 transition-colors" />
-          <p className="text-white font-semibold text-sm">Gérer les fournisseurs</p>
-          <p className="text-gray-600 text-xs mt-1">Chine · Dubaï · Turquie · Monde</p>
-        </button>
-      </div>
-
-      {/* Recent transactions */}
-      <div className="rounded-xl bg-[#111] border border-[#1c1c1c] overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#1c1c1c]">
-          <div>
-            <h3 className="text-white text-sm font-semibold">Transactions récentes</h3>
-            <p className="text-gray-600 text-[11px] mt-0.5">{payments.length} au total</p>
-          </div>
-          <button
-            onClick={() => onNavigate('history')}
-            className="flex items-center gap-1 text-[#3B968F] text-xs hover:underline"
+      {/* Stats — ONE card with 4 columns separated by vertical dividers */}
+      <div style={{
+        background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12,
+        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+        overflow: 'hidden',
+      }}>
+        {STATS.map((stat, i) => (
+          <div
+            key={stat.label}
+            style={{
+              padding: '20px 22px',
+              borderRight: i < 3 ? `1px solid ${C.bds}` : 'none',
+            }}
           >
-            Tout voir <ChevronRight className="w-3 h-3" />
-          </button>
-        </div>
-
-        {recent.length === 0 ? (
-          <div className="py-14 text-center">
-            <div className="w-10 h-10 rounded-xl bg-[#3B968F]/8 flex items-center justify-center mx-auto mb-3">
-              <Send className="w-4 h-4 text-[#3B968F]/60" />
+            <p style={{
+              fontSize: 10, fontWeight: 600, color: C.t3,
+              letterSpacing: '0.08em', margin: 0, textTransform: 'uppercase',
+            }}>
+              {stat.label}
+            </p>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 5, marginTop: 8 }}>
+              <span style={{
+                fontSize: 28, fontWeight: 700, color: C.t1, lineHeight: 1,
+                fontVariantNumeric: 'tabular-nums',
+              }}>
+                {stat.value}
+              </span>
+              {stat.unit && (
+                <span style={{ fontSize: 12, color: C.t2 }}>{stat.unit}</span>
+              )}
             </div>
-            <p className="text-gray-600 text-sm">Aucune transaction pour le moment</p>
+            <p style={{ fontSize: 11, color: C.t3, marginTop: 4, margin: '4px 0 0' }}>{stat.sub}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Main grid: 1.4fr 1fr */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1.4fr 1fr',
+        gap: 16,
+      }}>
+        {/* LEFT: Recent transactions */}
+        <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '16px 20px', borderBottom: `1px solid ${C.bds}`,
+          }}>
+            <h3 style={{ fontSize: 13, fontWeight: 600, color: C.t1, margin: 0 }}>Transactions récentes</h3>
             <button
-              onClick={() => onNavigate('payment')}
-              className="mt-2 text-[#3B968F] text-xs hover:underline"
+              onClick={() => onNavigate('history')}
+              style={{ fontSize: 12, color: C.teal, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: FONT }}
             >
-              Créer votre premier paiement →
+              Tout voir →
             </button>
           </div>
-        ) : (
-          <>
-            <div className="hidden md:grid grid-cols-[1fr_110px_130px_100px] gap-4 px-5 py-2.5 text-[10px] font-semibold text-gray-600 uppercase tracking-wider border-b border-[#181818]">
-              <span>Fournisseur</span>
-              <span>Réseau</span>
-              <span className="text-right">Montant</span>
-              <span className="text-right">Statut</span>
+
+          {recent.length === 0 ? (
+            <div style={{ padding: '40px 20px', textAlign: 'center' }}>
+              <div style={{
+                width: 40, height: 40, borderRadius: 10, background: C.tealT,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px',
+              }}>
+                <Send style={{ width: 16, height: 16, color: C.teal }} />
+              </div>
+              <p style={{ color: C.t3, fontSize: 13, margin: 0 }}>Aucune transaction pour le moment</p>
+              <button
+                onClick={() => onNavigate('payment')}
+                style={{ color: C.teal, fontSize: 12, background: 'none', border: 'none', cursor: 'pointer', marginTop: 8, fontFamily: FONT }}
+              >
+                Créer votre premier paiement →
+              </button>
             </div>
-            <div className="divide-y divide-[#181818]">
-              {recent.map(tx => (
+          ) : (
+            <div>
+              {recent.map((tx, i) => (
                 <div
                   key={tx.id}
-                  className="flex md:grid md:grid-cols-[1fr_110px_130px_100px] gap-4 px-5 py-3 hover:bg-white/[0.015] transition-colors items-center"
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 12,
+                    padding: '11px 20px',
+                    borderBottom: i < recent.length - 1 ? `1px solid ${C.bds}` : 'none',
+                  }}
                 >
-                  <div>
-                    <p className="text-white text-xs font-medium leading-tight">
+                  <InitialAvatar name={tx.supplierName || 'Fournisseur'} size={32} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 13, fontWeight: 500, color: C.t1, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {tx.supplierName || 'Fournisseur'}
                     </p>
-                    <p className="text-gray-600 text-[10px] mt-0.5">
+                    <p style={{ fontSize: 11, color: C.t3, marginTop: 2, margin: '2px 0 0' }}>
                       {new Date(tx.createdAt).toLocaleDateString('fr-FR')}
+                      {tx.network ? ` · ${tx.network}` : ''}
+                      {tx.note ? ` · ${tx.note}` : ''}
                     </p>
                   </div>
-                  <span className="text-gray-500 text-xs hidden md:block">
-                    {tx.network || '—'}
-                  </span>
-                  <p className="text-white text-xs font-semibold text-right ml-auto md:ml-0">
-                    {(tx.amount || 0).toLocaleString()}{' '}
-                    <span className="text-gray-500 font-normal">{tx.currency || 'USDT'}</span>
-                  </p>
-                  <div className="flex justify-end">
-                    <StatusPill status={tx.status} />
+                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                    <p style={{
+                      fontSize: 13, fontWeight: 600, color: C.t1, margin: 0,
+                      fontVariantNumeric: 'tabular-nums',
+                    }}>
+                      {(tx.amount || 0).toLocaleString('fr-FR')}{' '}
+                      <span style={{ color: C.t2, fontWeight: 400 }}>{tx.currency || 'USDT'}</span>
+                    </p>
+                    <div style={{ marginTop: 4 }}>
+                      <StatusPill status={tx.status} />
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
-          </>
-        )}
+          )}
+        </div>
+
+        {/* RIGHT: Quick actions + Live rate */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {/* Quick actions */}
+          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
+            <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.bds}` }}>
+              <h3 style={{ fontSize: 13, fontWeight: 600, color: C.t1, margin: 0 }}>Actions rapides</h3>
+            </div>
+            {[
+              {
+                label: 'Initier un paiement',
+                sub: 'Payer un fournisseur en USDT',
+                Icon: Send,
+                primary: true,
+                action: () => onNavigate('payment'),
+              },
+              {
+                label: 'Ajouter un fournisseur',
+                sub: 'Enregistrer un nouveau contact',
+                Icon: Plus,
+                primary: false,
+                action: () => onNavigate('suppliers'),
+              },
+              {
+                label: 'Exporter CSV',
+                sub: "Télécharger l'historique",
+                Icon: Download,
+                primary: false,
+                action: () => onNavigate('history'),
+              },
+            ].map((item, i, arr) => {
+              const { Icon } = item;
+              return (
+                <button
+                  key={item.label}
+                  onClick={item.action}
+                  style={{
+                    width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+                    padding: '10px 8px', background: 'transparent', border: 'none',
+                    cursor: 'pointer', textAlign: 'left',
+                    borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none',
+                    borderRadius: i === arr.length - 1 ? '0 0 12px 12px' : 0,
+                    transition: 'background 0.1s',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.background = C.l3)}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                >
+                  <div style={{
+                    width: 32, height: 32, borderRadius: 8, flexShrink: 0,
+                    background: item.primary ? C.teal : C.l2,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <Icon style={{ width: 14, height: 14, color: item.primary ? '#fff' : C.t2 }} />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 12, fontWeight: 500, color: C.t1, margin: 0, fontFamily: FONT }}>{item.label}</p>
+                    <p style={{ fontSize: 10, color: C.t3, marginTop: 1, margin: '1px 0 0', fontFamily: FONT }}>{item.sub}</p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Live rate */}
+          <LiveRateCard />
+        </div>
       </div>
     </div>
   );

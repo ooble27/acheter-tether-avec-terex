@@ -3,45 +3,67 @@ import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Send, Clock, Users2,
   Building2, LifeBuoy, LogOut, Bell,
-  Plus, ChevronRight, Menu, ArrowUpRight
+  Plus, ArrowLeft, Menu, X
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { BusinessOverview } from './BusinessOverview';
 import { BusinessPayments } from './BusinessPayments';
 import { BusinessSuppliers } from './BusinessSuppliers';
 import { BusinessHistory } from './BusinessHistory';
 import { BusinessProfile } from './BusinessProfile';
+import { BusinessSupport } from './BusinessSupport';
 
 interface BusinessDashboardProps {
   user: { email: string; name: string } | null;
 }
 
 const NAV = [
-  { id: 'overview',   label: 'Tableau de bord',   icon: LayoutDashboard },
-  { id: 'payment',    label: 'Nouveau paiement',   icon: Send },
-  { id: 'history',    label: 'Historique',         icon: Clock },
-  { id: 'suppliers',  label: 'Fournisseurs',       icon: Users2 },
-  { id: 'profile',    label: 'Profil entreprise',  icon: Building2 },
-  { id: 'support',    label: 'Support',            icon: LifeBuoy },
+  { id: 'overview',   label: 'Tableau de bord',  icon: LayoutDashboard },
+  { id: 'payment',    label: 'Nouveau paiement',  icon: Send },
+  { id: 'history',    label: 'Historique',        icon: Clock },
+  { id: 'suppliers',  label: 'Fournisseurs',      icon: Users2 },
+  { id: 'profile',    label: 'Profil entreprise', icon: Building2 },
+  { id: 'support',    label: 'Support',           icon: LifeBuoy },
 ];
 
-function SupportPlaceholder() {
+const PAGE_SUBTITLES: Record<string, string> = {
+  overview:  "Vue d'ensemble de votre activité",
+  payment:   'Transfert USDT vers un fournisseur',
+  history:   'Toutes vos transactions',
+  suppliers: 'Gérez vos contacts fournisseurs',
+  profile:   'Informations de votre société',
+  support:   'Aide et assistance dédiée B2B',
+};
+
+// Design tokens
+const C = {
+  bg: '#0e0e0e', l1: '#141414', l2: '#191919', l3: '#1f1f1f', l4: '#242424',
+  bd: '#2a2a2a', bds: '#1f1f1f',
+  teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
+  t1: '#f0f0f0', t2: '#888888', t3: '#555555',
+};
+const FONT = "'Inter', sans-serif";
+
+function InitialAvatar({ name, size = 26 }: { name: string; size?: number }) {
+  const parts = (name || 'U').split(' ').filter(Boolean);
+  const initials = parts.length >= 2
+    ? (parts[0][0] + parts[1][0]).toUpperCase()
+    : (parts[0]?.slice(0, 2) || 'U').toUpperCase();
   return (
-    <div className="flex flex-col items-center justify-center py-24 text-center">
-      <div className="w-14 h-14 rounded-2xl bg-[#3B968F]/10 flex items-center justify-center mb-4">
-        <LifeBuoy className="w-6 h-6 text-[#3B968F]" />
-      </div>
-      <h2 className="text-white text-lg font-semibold mb-2">Support dédié B2B</h2>
-      <p className="text-gray-500 text-sm max-w-xs leading-relaxed">
-        Notre équipe dédiée aux entreprises est disponible pour vous accompagner dans vos paiements internationaux.
-      </p>
-      <a
-        href="mailto:business@terex.io"
-        className="mt-6 inline-flex items-center gap-2 bg-[#3B968F] hover:bg-[#3B968F]/90 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors"
-      >
-        Contacter l'équipe B2B
-      </a>
+    <div
+      style={{
+        width: size, height: size,
+        borderRadius: 8,
+        background: 'rgba(59,150,143,0.22)',
+        color: C.teal,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: size * 0.38,
+        fontWeight: 600,
+        flexShrink: 0,
+        fontFamily: FONT,
+      }}
+    >
+      {initials}
     </div>
   );
 }
@@ -64,7 +86,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
       case 'history':   return <BusinessHistory user={user} />;
       case 'suppliers': return <BusinessSuppliers user={user} />;
       case 'profile':   return <BusinessProfile user={user} />;
-      case 'support':   return <SupportPlaceholder />;
+      case 'support':   return <BusinessSupport />;
       default:          return <BusinessOverview user={user} onNavigate={setActiveSection} />;
     }
   };
@@ -72,20 +94,30 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
   const currentPage = NAV.find(n => n.id === activeSection);
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full select-none">
-      <div className="px-5 pt-6 pb-5 border-b border-[#1c1c1c]">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#3B968F] to-[#2d7870] flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#3B968F]/20">
-            <span className="text-white font-black text-[11px] tracking-tighter">TB</span>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', userSelect: 'none', fontFamily: FONT }}>
+      {/* Logo area */}
+      <div style={{ padding: '20px 16px 16px', borderBottom: `1px solid ${C.bds}` }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{
+            width: 28, height: 28, borderRadius: 6, flexShrink: 0,
+            background: `linear-gradient(135deg, ${C.teal}, ${C.tealH})`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <span style={{ color: '#fff', fontSize: 11, fontWeight: 800, letterSpacing: '-0.02em' }}>TB</span>
           </div>
           <div>
-            <p className="text-white font-bold text-[13px] leading-tight tracking-wide">TEREX BUSINESS</p>
-            <p className="text-[#3B968F]/60 text-[9px] tracking-[0.15em] uppercase mt-0.5">Portail B2B Pro</p>
+            <p style={{ color: C.t1, fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', lineHeight: 1, margin: 0 }}>
+              TEREX BUSINESS
+            </p>
+            <p style={{ color: C.teal, fontSize: 9, letterSpacing: '0.14em', marginTop: 3, margin: '3px 0 0' }}>
+              PORTAIL B2B PRO
+            </p>
           </div>
         </div>
       </div>
 
-      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+      {/* Nav */}
+      <nav style={{ flex: 1, padding: '8px', display: 'flex', flexDirection: 'column', gap: 1, overflowY: 'auto' }}>
         {NAV.map(item => {
           const Icon = item.icon;
           const isActive = activeSection === item.id;
@@ -93,94 +125,232 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
             <button
               key={item.id}
               onClick={() => { setActiveSection(item.id); setSidebarOpen(false); }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
-                isActive
-                  ? 'bg-[#3B968F]/10 text-[#3B968F] border border-[#3B968F]/20'
-                  : 'text-gray-500 hover:text-gray-200 hover:bg-white/[0.04] border border-transparent'
-              }`}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center',
+                gap: 9, paddingLeft: 10, paddingRight: 10, paddingTop: 8, paddingBottom: 8,
+                borderRadius: 7, border: 'none', cursor: 'pointer', textAlign: 'left',
+                fontSize: 13,
+                fontWeight: isActive ? 500 : 400,
+                color: isActive ? C.t1 : C.t3,
+                background: isActive ? C.l4 : 'transparent',
+                transition: 'all 0.1s',
+                fontFamily: FONT,
+              }}
+              onMouseEnter={e => {
+                if (!isActive) (e.currentTarget as HTMLButtonElement).style.color = C.t2;
+              }}
+              onMouseLeave={e => {
+                if (!isActive) (e.currentTarget as HTMLButtonElement).style.color = C.t3;
+              }}
             >
-              <Icon className="w-[15px] h-[15px] flex-shrink-0" />
-              <span className="flex-1 text-left">{item.label}</span>
-              {isActive && <ChevronRight className="w-3 h-3 opacity-50" />}
+              <Icon style={{ width: 15, height: 15, flexShrink: 0 }} />
+              <span style={{ flex: 1 }}>{item.label}</span>
             </button>
           );
         })}
       </nav>
 
-      <div className="px-3 pb-2 border-t border-[#1c1c1c] pt-3 space-y-0.5">
+      {/* Bottom */}
+      <div style={{ borderTop: `1px solid ${C.bds}`, padding: '12px 8px 8px' }}>
         <button
           onClick={() => navigate('/dashboard')}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-gray-600 hover:text-gray-400 hover:bg-white/[0.03] transition-all border border-transparent"
+          style={{
+            width: '100%', display: 'flex', alignItems: 'center', gap: 6,
+            padding: '6px 10px', borderRadius: 7, border: 'none', cursor: 'pointer',
+            fontSize: 11, color: C.t3, background: 'transparent',
+            fontFamily: FONT, marginBottom: 6,
+          }}
+          onMouseEnter={e => (e.currentTarget.style.color = C.t2)}
+          onMouseLeave={e => (e.currentTarget.style.color = C.t3)}
         >
-          <ArrowUpRight className="w-3.5 h-3.5" />
+          <ArrowLeft style={{ width: 12, height: 12 }} />
           Espace personnel
         </button>
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-red-500/50 hover:text-red-400 hover:bg-red-500/5 transition-all border border-transparent"
-        >
-          <LogOut className="w-3.5 h-3.5" />
-          Déconnexion
-        </button>
-      </div>
 
-      <div className="mx-3 mb-4 mt-2 px-3 py-2.5 rounded-lg bg-[#161616] border border-[#1e1e1e] flex items-center gap-2.5">
-        <div className="w-7 h-7 rounded-full bg-[#3B968F]/20 flex items-center justify-center flex-shrink-0">
-          <span className="text-[#3B968F] text-[11px] font-bold">
-            {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-          </span>
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-white text-xs font-medium truncate leading-tight">{user?.name || 'Utilisateur'}</p>
-          <p className="text-gray-600 text-[10px] truncate">{user?.email}</p>
+        {/* User chip */}
+        <div style={{
+          background: C.l2, border: `1px solid ${C.bds}`,
+          borderRadius: 8, padding: '7px 10px',
+          display: 'flex', alignItems: 'center', gap: 8,
+        }}>
+          <InitialAvatar name={user?.name || 'U'} size={26} />
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <p style={{ color: C.t1, fontSize: 12, fontWeight: 500, lineHeight: 1.2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', margin: 0 }}>
+              {user?.name || 'Utilisateur'}
+            </p>
+            <p style={{ color: C.t3, fontSize: 10, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', margin: 0 }}>
+              {user?.email}
+            </p>
+          </div>
+          <button
+            onClick={handleLogout}
+            title="Déconnexion"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.t3, padding: 0, display: 'flex' }}
+            onMouseEnter={e => (e.currentTarget.style.color = '#ef4444')}
+            onMouseLeave={e => (e.currentTarget.style.color = C.t3)}
+          >
+            <LogOut style={{ width: 13, height: 13 }} />
+          </button>
         </div>
       </div>
     </div>
   );
 
   return (
-    <div className="flex h-screen bg-[#141414] overflow-hidden">
-      <aside className="hidden md:flex flex-col w-56 lg:w-60 bg-[#0b0b0b] border-r border-[#1c1c1c] flex-shrink-0">
+    <div style={{ display: 'flex', height: '100vh', background: C.bg, overflow: 'hidden' }}>
+      {/* Desktop Sidebar */}
+      <aside style={{
+        display: 'none',
+        width: 220, minWidth: 220,
+        background: C.l1,
+        borderRight: `1px solid ${C.bds}`,
+        flexShrink: 0,
+        flexDirection: 'column',
+      }} className="md:flex">
         <SidebarContent />
       </aside>
 
+      {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
-        <div className="md:hidden fixed inset-0 z-50 flex">
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
-          <aside className="relative z-10 w-64 bg-[#0b0b0b] border-r border-[#1c1c1c] flex flex-col">
+        <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex' }}>
+          <div
+            style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)' }}
+            onClick={() => setSidebarOpen(false)}
+          />
+          <aside style={{
+            position: 'relative', zIndex: 10, width: 220,
+            background: C.l1, borderRight: `1px solid ${C.bds}`,
+            display: 'flex', flexDirection: 'column',
+          }}>
             <SidebarContent />
           </aside>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            style={{
+              position: 'absolute', top: 16, right: 16, zIndex: 10,
+              background: C.l3, border: `1px solid ${C.bd}`,
+              borderRadius: 8, width: 32, height: 32,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: C.t2, cursor: 'pointer',
+            }}
+          >
+            <X style={{ width: 16, height: 16 }} />
+          </button>
         </div>
       )}
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header className="h-13 bg-[#0f0f0f]/90 backdrop-blur-sm border-b border-[#1c1c1c] flex items-center justify-between px-4 md:px-6 flex-shrink-0 py-3">
-          <div className="flex items-center gap-3">
-            <button className="md:hidden w-8 h-8 rounded-lg flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/5 transition-all" onClick={() => setSidebarOpen(true)}>
-              <Menu className="w-5 h-5" />
+      {/* Main content area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
+        {/* Header */}
+        <header style={{
+          height: 56, background: C.l1,
+          borderBottom: `1px solid ${C.bds}`,
+          display: 'flex', alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 20px', flexShrink: 0,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <button
+              className="md:hidden"
+              onClick={() => setSidebarOpen(true)}
+              style={{
+                width: 32, height: 32, borderRadius: 7,
+                background: 'transparent', border: `1px solid ${C.bd}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: C.t3, cursor: 'pointer',
+              }}
+            >
+              <Menu style={{ width: 16, height: 16 }} />
             </button>
             <div>
-              <h1 className="text-white text-sm font-semibold leading-tight">{currentPage?.label || 'Tableau de bord'}</h1>
-              <p className="text-gray-600 text-[10px] hidden md:block tracking-widest uppercase mt-0.5">Terex Business Portal</p>
+              <h1 style={{
+                color: C.t1, fontSize: 14, fontWeight: 600,
+                letterSpacing: '-0.01em', lineHeight: 1.2,
+                fontFamily: FONT, margin: 0,
+              }}>
+                {currentPage?.label || 'Tableau de bord'}
+              </h1>
+              <p style={{ color: C.t3, fontSize: 11, marginTop: 1, fontFamily: FONT, margin: '1px 0 0' }}>
+                {PAGE_SUBTITLES[activeSection] || ''}
+              </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Button size="sm" onClick={() => setActiveSection('payment')} className="bg-[#3B968F] hover:bg-[#3B968F]/85 text-white h-8 text-xs gap-1.5 hidden sm:flex px-3 rounded-lg shadow-sm shadow-[#3B968F]/20">
-              <Plus className="w-3 h-3" />
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <button
+              onClick={() => setActiveSection('payment')}
+              className="hidden sm:flex"
+              style={{
+                height: 32, paddingLeft: 12, paddingRight: 12,
+                background: C.teal, border: 'none', borderRadius: 7,
+                color: '#fff', fontSize: 12, fontWeight: 500,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                fontFamily: FONT,
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = C.tealH)}
+              onMouseLeave={e => (e.currentTarget.style.background = C.teal)}
+            >
+              <Plus style={{ width: 13, height: 13 }} />
               Nouveau paiement
-            </Button>
-            <button className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/[0.08] transition-all relative">
-              <Bell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#3B968F] shadow-sm shadow-[#3B968F]/50" />
+            </button>
+
+            {/* Vertical divider */}
+            <div style={{ width: 1, height: 20, background: C.bds }} className="hidden sm:block" />
+
+            <button
+              style={{
+                width: 32, height: 32, borderRadius: 7,
+                background: 'transparent', border: `1px solid ${C.bds}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: C.t3, cursor: 'pointer', position: 'relative',
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = C.t2; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = C.t3; }}
+            >
+              <Bell style={{ width: 15, height: 15 }} />
+              <span style={{
+                position: 'absolute', top: 7, right: 7,
+                width: 6, height: 6, borderRadius: '50%',
+                background: '#ef4444',
+              }} />
             </button>
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto">
-          <div className="p-4 md:p-6 max-w-5xl mx-auto w-full">
+        {/* Content */}
+        <main style={{ flex: 1, overflowY: 'auto', background: C.bg }}>
+          <div style={{ padding: '20px 24px', maxWidth: 960, margin: '0 auto', width: '100%' }}>
             {renderContent()}
           </div>
         </main>
+
+        {/* Mobile bottom nav */}
+        <nav className="md:hidden" style={{
+          height: 56, background: C.l1, borderTop: `1px solid ${C.bds}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-around',
+          flexShrink: 0,
+        }}>
+          {NAV.slice(0, 5).map(item => {
+            const Icon = item.icon;
+            const isActive = activeSection === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveSection(item.id)}
+                style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+                  padding: '6px 8px', borderRadius: 7, border: 'none', background: 'transparent',
+                  color: isActive ? C.teal : C.t3, cursor: 'pointer',
+                }}
+              >
+                <Icon style={{ width: 18, height: 18 }} />
+                <span style={{ fontSize: 9, fontWeight: isActive ? 600 : 400, fontFamily: FONT }}>
+                  {item.label.split(' ')[0]}
+                </span>
+              </button>
+            );
+          })}
+        </nav>
       </div>
     </div>
   );

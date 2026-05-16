@@ -6,21 +6,48 @@ interface Props {
   user: { email: string; name: string } | null;
 }
 
-const STATUS_STYLE: Record<string, string> = {
-  pending:    'bg-amber-500/10 text-amber-400 border-amber-500/20',
-  processing: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-  completed:  'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  failed:     'bg-red-500/10 text-red-400 border-red-500/20',
+// ── Design tokens ─────────────────────────────────────────────────
+const C = {
+  bg: '#0e0e0e', l1: '#141414', l2: '#191919', l3: '#1f1f1f',
+  bd: '#2a2a2a', bds: '#1f1f1f', bdh: '#333333',
+  teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
+  t1: '#f0f0f0', t2: '#888888', t3: '#555555', t4: '#333333',
+  amber: '#f59e0b', amberT: 'rgba(245,158,11,0.08)', amberB: 'rgba(245,158,11,0.16)',
+  blue: '#3b82f6', blueT: 'rgba(59,130,246,0.08)', blueB: 'rgba(59,130,246,0.16)',
+  em: '#22c55e', emT: 'rgba(34,197,94,0.08)', emB: 'rgba(34,197,94,0.16)',
+  red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.16)',
 };
+const FONT = "'Inter', sans-serif";
+const MONO = '"JetBrains Mono", Consolas, monospace';
+
+// ── StatusPill ────────────────────────────────────────────────────
+const STATUS_CONFIG: Record<string, { bg: string; border: string; color: string; label: string; Icon: React.FC<any> }> = {
+  pending:    { bg: C.amberT, border: C.amberB, color: C.amber, label: 'En attente',  Icon: Clock },
+  processing: { bg: C.blueT,  border: C.blueB,  color: C.blue,  label: 'En cours',    Icon: Loader2 },
+  completed:  { bg: C.emT,    border: C.emB,    color: C.em,    label: 'Complété',    Icon: CheckCircle2 },
+  failed:     { bg: C.redT,   border: C.redB,   color: C.red,   label: 'Échoué',      Icon: XCircle },
+};
+
+function StatusPill({ status }: { status: string }) {
+  const cfg = STATUS_CONFIG[status] || { bg: C.l3, border: C.bd, color: C.t2, label: status, Icon: Clock };
+  const { bg, border, color, label, Icon } = cfg;
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 4,
+      paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3,
+      borderRadius: 999, fontSize: 11, fontWeight: 500,
+      background: bg, border: `1px solid ${border}`, color,
+      fontFamily: FONT, whiteSpace: 'nowrap',
+    }}>
+      <Icon style={{ width: 9, height: 9 }} />
+      {label}
+    </span>
+  );
+}
+
 const STATUS_LABEL: Record<string, string> = {
   pending: 'En attente', processing: 'En cours',
   completed: 'Complété', failed: 'Échoué',
-};
-const STATUS_ICON: Record<string, React.FC<{ className?: string }>> = {
-  pending:    ({ className }) => <Clock className={className} />,
-  processing: ({ className }) => <Loader2 className={className} />,
-  completed:  ({ className }) => <CheckCircle2 className={className} />,
-  failed:     ({ className }) => <XCircle className={className} />,
 };
 
 const STATUS_FILTERS = [
@@ -31,6 +58,7 @@ const STATUS_FILTERS = [
   { value: 'failed', label: 'Échoués' },
 ];
 
+// ── Main component ────────────────────────────────────────────────
 export function BusinessHistory({ user }: Props) {
   const { session } = useAuth();
   const userId = session?.user?.id || user?.email || 'guest';
@@ -38,6 +66,7 @@ export function BusinessHistory({ user }: Props) {
 
   const [payments, setPayments] = useState<any[]>([]);
   const [search, setSearch] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
   const [statusFilter, setStatusFilter] = useState('');
   const [page, setPage] = useState(1);
   const PER_PAGE = 10;
@@ -58,68 +87,96 @@ export function BusinessHistory({ user }: Props) {
     )
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-  const totalPages = Math.ceil(filtered.length / PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   const totalAmount = filtered
     .filter(p => p.status === 'completed')
     .reduce((s, p) => s + (p.amount || 0), 0);
 
+  const exportCSV = () => {
+    const csv = [
+      ['Référence', 'Date', 'Fournisseur', 'Réseau', 'Montant', 'Statut', 'Note'],
+      ...filtered.map(p => [
+        p.reference || '', new Date(p.createdAt).toLocaleDateString('fr-FR'),
+        p.supplierName || '', p.network || '', p.amount || '',
+        STATUS_LABEL[p.status] || p.status, p.note || '',
+      ]),
+    ].map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; a.click();
+  };
+
   return (
-    <div className="space-y-5">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, fontFamily: FONT }}>
+      {/* Page title */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
         <div>
-          <h2 className="text-white text-lg font-bold">Historique des transactions</h2>
-          <p className="text-gray-600 text-sm mt-0.5">
+          <h2 style={{ color: C.t1, fontSize: 20, fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.2, margin: 0 }}>
             {filtered.length} transaction{filtered.length !== 1 ? 's' : ''}
+          </h2>
+          <p style={{ color: C.t3, fontSize: 12, marginTop: 4, margin: '4px 0 0' }}>
+            Toutes vos transactions
             {totalAmount > 0 && (
-              <span> · <span className="text-emerald-400">{totalAmount.toLocaleString()} USDT</span> complétés</span>
+              <span> · <span style={{ color: C.em }}>{totalAmount.toLocaleString('fr-FR')} USDT</span> complétés</span>
             )}
           </p>
         </div>
         <button
-          onClick={() => {
-            const csv = [
-              ['Référence', 'Date', 'Fournisseur', 'Réseau', 'Montant', 'Statut', 'Note'],
-              ...filtered.map(p => [
-                p.reference || '', new Date(p.createdAt).toLocaleDateString('fr-FR'),
-                p.supplierName || '', p.network || '', p.amount || '',
-                STATUS_LABEL[p.status] || p.status, p.note || '',
-              ]),
-            ].map(r => r.join(',')).join('\n');
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; a.click();
+          onClick={exportCSV}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            fontSize: 12, color: C.t3, background: 'transparent',
+            border: `1px solid ${C.bds}`, borderRadius: 7,
+            padding: '7px 12px', cursor: 'pointer', fontFamily: FONT,
+            flexShrink: 0, transition: 'all 0.1s',
           }}
-          className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-300 border border-[#1c1c1c] hover:border-[#2a2a2a] px-3 py-2 rounded-lg transition-all"
+          onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.bdh; }}
+          onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = C.bds; }}
         >
-          <Download className="w-3.5 h-3.5" /> Exporter CSV
+          <Download style={{ width: 13, height: 13 }} /> Exporter CSV
         </button>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-600" />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {/* Search */}
+        <div style={{ position: 'relative' }}>
+          <Search style={{
+            position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
+            width: 14, height: 14, color: C.t3,
+          }} />
           <input
             type="text"
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
             placeholder="Rechercher par fournisseur, référence…"
-            className="w-full bg-[#111] border border-[#1c1c1c] rounded-lg pl-9 pr-4 py-2.5 text-white text-sm placeholder-[#333] focus:outline-none focus:border-[#3B968F]/40"
+            style={{
+              width: '100%', background: C.l1, border: `1px solid ${searchFocused ? 'rgba(59,150,143,0.35)' : C.bds}`,
+              borderRadius: 8, paddingLeft: 36, paddingRight: 16, paddingTop: 10, paddingBottom: 10,
+              color: C.t1, fontSize: 13, outline: 'none', fontFamily: FONT,
+              boxSizing: 'border-box', transition: 'border-color 0.15s',
+            }}
           />
         </div>
-        <div className="flex gap-1.5 overflow-x-auto">
+        {/* Status pills */}
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {STATUS_FILTERS.map(f => (
             <button
               key={f.value}
               onClick={() => { setStatusFilter(f.value); setPage(1); }}
-              className={`flex-shrink-0 px-3 py-2 rounded-lg text-xs font-medium border transition-all ${
-                statusFilter === f.value
-                  ? 'bg-[#3B968F]/10 border-[#3B968F]/25 text-[#3B968F]'
-                  : 'bg-[#111] border-[#1c1c1c] text-gray-600 hover:text-gray-300 hover:border-[#2a2a2a]'
-              }`}
+              style={{
+                flexShrink: 0, padding: '6px 12px', borderRadius: 7, fontSize: 12, fontWeight: 500,
+                border: `1px solid ${statusFilter === f.value ? C.tealB : C.bds}`,
+                background: statusFilter === f.value ? C.tealT : C.l1,
+                color: statusFilter === f.value ? C.teal : C.t3,
+                cursor: 'pointer', fontFamily: FONT, transition: 'all 0.1s',
+              }}
+              onMouseEnter={e => { if (statusFilter !== f.value) e.currentTarget.style.color = C.t2; }}
+              onMouseLeave={e => { if (statusFilter !== f.value) e.currentTarget.style.color = C.t3; }}
             >
               {f.label}
             </button>
@@ -127,51 +184,79 @@ export function BusinessHistory({ user }: Props) {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="rounded-xl bg-[#111] border border-[#1c1c1c] overflow-hidden">
+      {/* Table card */}
+      <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
         {paginated.length === 0 ? (
-          <div className="py-16 text-center">
-            <p className="text-gray-600 text-sm">Aucune transaction trouvée</p>
+          <div style={{ padding: '60px 20px', textAlign: 'center' }}>
+            <p style={{ color: C.t3, fontSize: 13, margin: 0 }}>Aucune transaction trouvée</p>
           </div>
         ) : (
           <>
-            <div className="hidden md:grid grid-cols-[1fr_130px_130px_130px_100px] gap-4 px-5 py-3 text-[10px] font-semibold text-gray-600 uppercase tracking-wider border-b border-[#181818]">
-              <span>Fournisseur</span>
-              <span>Référence</span>
-              <span>Réseau</span>
-              <span className="text-right">Montant</span>
-              <span className="text-right">Statut</span>
+            {/* Headers */}
+            <div className="hidden md:grid" style={{
+              gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr',
+              gap: 16, padding: '10px 20px',
+              borderBottom: `1px solid ${C.bds}`,
+            }}>
+              {['Fournisseur', 'Référence', 'Réseau', 'Montant', 'Statut'].map((h, i) => (
+                <span key={h} style={{
+                  fontSize: 10, fontWeight: 600, color: C.t3,
+                  textTransform: 'uppercase', letterSpacing: '0.08em',
+                  textAlign: i >= 3 ? 'right' : 'left',
+                }}>
+                  {h}
+                </span>
+              ))}
             </div>
-            <div className="divide-y divide-[#181818]">
-              {paginated.map(tx => {
-                const Icon = STATUS_ICON[tx.status] || Clock;
-                return (
-                  <div
-                    key={tx.id}
-                    className="flex md:grid md:grid-cols-[1fr_130px_130px_130px_100px] gap-4 px-5 py-3.5 hover:bg-white/[0.015] transition-colors items-center"
-                  >
-                    <div>
-                      <p className="text-white text-xs font-medium">{tx.supplierName || 'Fournisseur'}</p>
-                      <p className="text-gray-600 text-[10px] mt-0.5">
-                        {new Date(tx.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
-                      </p>
-                      {tx.note && <p className="text-gray-700 text-[10px] mt-0.5 italic truncate max-w-[200px]">{tx.note}</p>}
-                    </div>
-                    <span className="hidden md:block text-gray-600 text-[11px] font-mono">{tx.reference || '—'}</span>
-                    <span className="hidden md:block text-gray-500 text-xs">{tx.network || '—'}</span>
-                    <p className="text-white text-xs font-semibold text-right ml-auto md:ml-0">
-                      {(tx.amount || 0).toLocaleString()}{' '}
-                      <span className="text-gray-600 font-normal">{tx.currency || 'USDT'}</span>
+
+            {/* Rows */}
+            <div>
+              {paginated.map((tx, i) => (
+                <div
+                  key={tx.id}
+                  style={{
+                    display: 'flex', alignItems: 'center',
+                    padding: '12px 20px',
+                    borderBottom: i < paginated.length - 1 ? `1px solid ${C.bds}` : 'none',
+                    gap: 16, transition: 'background 0.1s',
+                  }}
+                  className="md:grid"
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.01)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                >
+                  {/* Vendor + date + note */}
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={{ fontSize: 12, fontWeight: 500, color: C.t1, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {tx.supplierName || 'Fournisseur'}
                     </p>
-                    <div className="flex justify-end">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium border ${STATUS_STYLE[tx.status] || 'bg-gray-500/10 text-gray-400 border-gray-500/20'}`}>
-                        <Icon className="w-2.5 h-2.5" />
-                        {STATUS_LABEL[tx.status] || tx.status}
-                      </span>
-                    </div>
+                    <p style={{ fontSize: 10, color: C.t3, marginTop: 2, margin: '2px 0 0' }}>
+                      {new Date(tx.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      {tx.note ? ` · ${tx.note}` : ''}
+                    </p>
                   </div>
-                );
-              })}
+                  {/* Reference mono */}
+                  <span className="hidden md:block" style={{ color: C.t3, fontSize: 11, fontFamily: MONO }}>
+                    {tx.reference || '—'}
+                  </span>
+                  {/* Network */}
+                  <span className="hidden md:block" style={{ color: C.t2, fontSize: 12 }}>
+                    {tx.network || '—'}
+                  </span>
+                  {/* Amount tnum right */}
+                  <p style={{
+                    fontSize: 12, fontWeight: 600, color: C.t1, margin: 0,
+                    fontVariantNumeric: 'tabular-nums', textAlign: 'right',
+                    marginLeft: 'auto',
+                  }} className="md:ml-0">
+                    {(tx.amount || 0).toLocaleString('fr-FR')}{' '}
+                    <span style={{ color: C.t3, fontWeight: 400, fontSize: 11 }}>{tx.currency || 'USDT'}</span>
+                  </p>
+                  {/* Status pill */}
+                  <div className="hidden md:flex" style={{ justifyContent: 'flex-end' }}>
+                    <StatusPill status={tx.status} />
+                  </div>
+                </div>
+              ))}
             </div>
           </>
         )}
@@ -179,22 +264,36 @@ export function BusinessHistory({ user }: Props) {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <p className="text-gray-600 text-xs">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <p style={{ color: C.t3, fontSize: 12, margin: 0 }}>
             Page {page} sur {totalPages}
           </p>
-          <div className="flex gap-1.5">
+          <div style={{ display: 'flex', gap: 6 }}>
             <button
               disabled={page === 1}
               onClick={() => setPage(p => p - 1)}
-              className="px-3 py-1.5 rounded-lg text-xs border border-[#1c1c1c] text-gray-500 hover:text-white hover:border-[#2a2a2a] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+              style={{
+                padding: '6px 14px', borderRadius: 7, fontSize: 12, fontFamily: FONT,
+                border: `1px solid ${C.bds}`, background: 'transparent',
+                color: page === 1 ? C.t4 : C.t3, cursor: page === 1 ? 'not-allowed' : 'pointer',
+                transition: 'all 0.1s',
+              }}
+              onMouseEnter={e => { if (page !== 1) e.currentTarget.style.color = C.t1; }}
+              onMouseLeave={e => { if (page !== 1) e.currentTarget.style.color = C.t3; }}
             >
               Précédent
             </button>
             <button
               disabled={page === totalPages}
               onClick={() => setPage(p => p + 1)}
-              className="px-3 py-1.5 rounded-lg text-xs border border-[#1c1c1c] text-gray-500 hover:text-white hover:border-[#2a2a2a] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+              style={{
+                padding: '6px 14px', borderRadius: 7, fontSize: 12, fontFamily: FONT,
+                border: `1px solid ${C.bds}`, background: 'transparent',
+                color: page === totalPages ? C.t4 : C.t3, cursor: page === totalPages ? 'not-allowed' : 'pointer',
+                transition: 'all 0.1s',
+              }}
+              onMouseEnter={e => { if (page !== totalPages) e.currentTarget.style.color = C.t1; }}
+              onMouseLeave={e => { if (page !== totalPages) e.currentTarget.style.color = C.t3; }}
             >
               Suivant
             </button>

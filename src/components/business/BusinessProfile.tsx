@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Check, Building2, Globe, Phone, Mail, Briefcase, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Check, Building2, Globe, Phone, Mail, Briefcase, AlertCircle, Info } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface Props {
@@ -15,10 +14,103 @@ const SECTORS = [
 ];
 
 const COUNTRIES = [
-  'France', 'Sénégal', 'Côte d\'Ivoire', 'Maroc', 'Belgique',
+  'France', 'Sénégal', "Côte d'Ivoire", 'Maroc', 'Belgique',
   'Suisse', 'Canada', 'Autre',
 ];
 
+// ── Design tokens ─────────────────────────────────────────────────
+const C = {
+  l1: '#141414', l2: '#191919', l3: '#1f1f1f', l4: '#242424',
+  bd: '#2a2a2a', bds: '#1f1f1f', bdh: '#333333',
+  teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
+  t1: '#f0f0f0', t2: '#888888', t3: '#555555',
+  amber: '#f59e0b', amberT: 'rgba(245,158,11,0.08)', amberB: 'rgba(245,158,11,0.16)',
+  em: '#22c55e', emT: 'rgba(34,197,94,0.08)', emB: 'rgba(34,197,94,0.16)',
+};
+const FONT = "'Inter', sans-serif";
+
+// ── Pill selector ─────────────────────────────────────────────────
+function PillGroup({ options, value, onChange }: { options: string[]; value: string; onChange: (v: string) => void }) {
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+      {options.map(opt => (
+        <button
+          key={opt}
+          onClick={() => onChange(opt)}
+          style={{
+            padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 500,
+            border: `1px solid ${value === opt ? C.tealB : C.bd}`,
+            background: value === opt ? C.tealT : C.l2,
+            color: value === opt ? C.teal : C.t3,
+            cursor: 'pointer', fontFamily: FONT, transition: 'all 0.1s',
+          }}
+          onMouseEnter={e => { if (value !== opt) e.currentTarget.style.borderColor = C.bdh; }}
+          onMouseLeave={e => { if (value !== opt) e.currentTarget.style.borderColor = C.bd; }}
+        >
+          {opt}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ── Input ─────────────────────────────────────────────────────────
+function TextInput({
+  value, onChange, placeholder, type = 'text', icon,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  type?: string;
+  icon?: React.ReactNode;
+}) {
+  const [focused, setFocused] = useState(false);
+  return (
+    <div style={{ position: 'relative' }}>
+      {icon && (
+        <div style={{
+          position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
+          color: C.t3, display: 'flex', pointerEvents: 'none',
+        }}>
+          {icon}
+        </div>
+      )}
+      <input
+        type={type}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        placeholder={placeholder}
+        style={{
+          width: '100%', background: C.l2,
+          border: `1px solid ${focused ? 'rgba(59,150,143,0.35)' : C.bd}`,
+          borderRadius: 8,
+          paddingLeft: icon ? 36 : 14, paddingRight: 14, paddingTop: 11, paddingBottom: 11,
+          color: C.t1, fontSize: 13, outline: 'none', fontFamily: FONT,
+          boxSizing: 'border-box', transition: 'border-color 0.15s',
+        }}
+      />
+    </div>
+  );
+}
+
+// ── Label ─────────────────────────────────────────────────────────
+function FieldLabel({ icon, children }: { icon?: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 6,
+      fontSize: 10, fontWeight: 600, color: C.t3,
+      letterSpacing: '0.08em', textTransform: 'uppercase',
+      marginBottom: 8, fontFamily: FONT,
+    }}>
+      {icon}
+      {children}
+    </div>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────────
 export function BusinessProfile({ user }: Props) {
   const { session } = useAuth();
   const userId = session?.user?.id || user?.email || 'guest';
@@ -43,168 +135,164 @@ export function BusinessProfile({ user }: Props) {
   }, [userId]);
 
   const set = (k: keyof typeof form) => (v: string) => setForm(f => ({ ...f, [k]: v }));
-  const isComplete = form.companyName && form.businessType && form.sector && form.country;
+
+  // Calculate completion percentage
+  const fields = ['companyName', 'businessType', 'sector', 'country', 'phone', 'email'] as const;
+  const filled = fields.filter(f => form[f]).length;
+  const pct = Math.round((filled / fields.length) * 100);
+  const isComplete = pct === 100;
 
   const handleSave = () => {
-    const data = { ...form, createdAt: new Date().toISOString() };
+    const data = { ...form, updatedAt: new Date().toISOString() };
     localStorage.setItem(storageKey, JSON.stringify(data));
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };
 
   return (
-    <div className="space-y-5 max-w-2xl">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 640, fontFamily: FONT }}>
+      {/* Page header */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
         <div>
-          <h2 className="text-white text-lg font-bold">Profil entreprise</h2>
-          <p className="text-gray-600 text-sm mt-0.5">Informations de votre société</p>
+          <h2 style={{ color: C.t1, fontSize: 20, fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.2, margin: 0 }}>
+            Profil entreprise
+          </h2>
+          <p style={{ color: C.t3, fontSize: 12, marginTop: 4, margin: '4px 0 0' }}>
+            Informations de votre société
+          </p>
         </div>
-        {isComplete && (
-          <span className="flex items-center gap-1.5 text-xs text-emerald-400 border border-emerald-500/20 bg-emerald-500/8 px-3 py-1.5 rounded-lg">
-            <Check className="w-3 h-3" /> Profil complet
+        {isComplete ? (
+          <span style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            fontSize: 11, fontWeight: 500, color: C.em,
+            border: `1px solid ${C.emB}`, background: C.emT,
+            padding: '5px 10px', borderRadius: 7, flexShrink: 0,
+          }}>
+            <Check style={{ width: 12, height: 12 }} /> Profil complet
           </span>
-        )}
-        {!isComplete && (
-          <span className="flex items-center gap-1.5 text-xs text-amber-400 border border-amber-500/20 bg-amber-500/8 px-3 py-1.5 rounded-lg">
-            <AlertCircle className="w-3 h-3" /> Incomplet
+        ) : (
+          <span style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            fontSize: 11, fontWeight: 500, color: C.amber,
+            border: `1px solid ${C.amberB}`, background: C.amberT,
+            padding: '5px 10px', borderRadius: 7, flexShrink: 0,
+          }}>
+            <AlertCircle style={{ width: 12, height: 12 }} /> Incomplet
           </span>
         )}
       </div>
 
-      {/* Form */}
-      <div className="rounded-xl bg-[#111] border border-[#1c1c1c] p-6 space-y-6">
-        {/* Company name */}
+      {/* Progress bar */}
+      <div>
+        <div style={{ height: 2, background: C.l3, borderRadius: 99, overflow: 'hidden' }}>
+          <div style={{
+            height: '100%', width: `${pct}%`,
+            background: C.teal, borderRadius: 99,
+            transition: 'width 0.3s ease',
+          }} />
+        </div>
+        <p style={{ color: C.t3, fontSize: 11, marginTop: 6, margin: '6px 0 0' }}>
+          {pct}% complété
+        </p>
+      </div>
+
+      {/* Form card */}
+      <div style={{
+        background: C.l1, border: `1px solid ${C.bds}`,
+        borderRadius: 12, padding: 24,
+        display: 'flex', flexDirection: 'column', gap: 24,
+      }}>
+        {/* Raison sociale */}
         <div>
-          <label className="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">
-            <Building2 className="w-3.5 h-3.5" /> Raison sociale
-          </label>
-          <input
-            type="text"
+          <FieldLabel icon={<Building2 style={{ width: 12, height: 12 }} />}>
+            Raison sociale
+          </FieldLabel>
+          <TextInput
             value={form.companyName}
-            onChange={e => set('companyName')(e.target.value)}
+            onChange={set('companyName')}
             placeholder="Nom officiel de votre entreprise"
-            className="w-full bg-[#161616] border border-[#222] rounded-lg px-4 py-3 text-white text-sm placeholder-[#333] focus:outline-none focus:border-[#3B968F]/50"
           />
         </div>
 
-        {/* Business type */}
+        {/* Forme juridique pills */}
         <div>
-          <label className="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">
-            <Briefcase className="w-3.5 h-3.5" /> Forme juridique
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {BUSINESS_TYPES.map(t => (
-              <button
-                key={t}
-                onClick={() => set('businessType')(t)}
-                className={`px-3.5 py-2 rounded-lg text-xs font-medium border transition-all ${
-                  form.businessType === t
-                    ? 'bg-[#3B968F]/10 border-[#3B968F]/30 text-[#3B968F]'
-                    : 'bg-[#161616] border-[#222] text-gray-500 hover:border-[#2a2a2a] hover:text-gray-300'
-                }`}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
+          <FieldLabel icon={<Briefcase style={{ width: 12, height: 12 }} />}>
+            Forme juridique
+          </FieldLabel>
+          <PillGroup options={BUSINESS_TYPES} value={form.businessType} onChange={set('businessType')} />
         </div>
 
-        {/* Sector */}
+        {/* Secteur pills */}
         <div>
-          <label className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider block">
-            Secteur d'activité
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {SECTORS.map(s => (
-              <button
-                key={s}
-                onClick={() => set('sector')(s)}
-                className={`px-3.5 py-2 rounded-lg text-xs font-medium border transition-all ${
-                  form.sector === s
-                    ? 'bg-[#3B968F]/10 border-[#3B968F]/30 text-[#3B968F]'
-                    : 'bg-[#161616] border-[#222] text-gray-500 hover:border-[#2a2a2a] hover:text-gray-300'
-                }`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
+          <FieldLabel>Secteur d'activité</FieldLabel>
+          <PillGroup options={SECTORS} value={form.sector} onChange={set('sector')} />
         </div>
 
-        {/* Country */}
+        {/* Pays pills */}
         <div>
-          <label className="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">
-            <Globe className="w-3.5 h-3.5" /> Pays de résidence
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {COUNTRIES.map(c => (
-              <button
-                key={c}
-                onClick={() => set('country')(c)}
-                className={`px-3.5 py-2 rounded-lg text-xs font-medium border transition-all ${
-                  form.country === c
-                    ? 'bg-[#3B968F]/10 border-[#3B968F]/30 text-[#3B968F]'
-                    : 'bg-[#161616] border-[#222] text-gray-500 hover:border-[#2a2a2a] hover:text-gray-300'
-                }`}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
+          <FieldLabel icon={<Globe style={{ width: 12, height: 12 }} />}>
+            Pays de résidence
+          </FieldLabel>
+          <PillGroup options={COUNTRIES} value={form.country} onChange={set('country')} />
         </div>
 
-        {/* Contact */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Téléphone + Email grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
           <div>
-            <label className="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">
-              <Phone className="w-3.5 h-3.5" /> Téléphone
-            </label>
-            <input
-              type="tel"
+            <FieldLabel icon={<Phone style={{ width: 12, height: 12 }} />}>Téléphone</FieldLabel>
+            <TextInput
               value={form.phone}
-              onChange={e => set('phone')(e.target.value)}
+              onChange={set('phone')}
               placeholder="+33 6 00 00 00 00"
-              className="w-full bg-[#161616] border border-[#222] rounded-lg px-4 py-3 text-white text-sm placeholder-[#333] focus:outline-none focus:border-[#3B968F]/50"
+              type="tel"
+              icon={<Phone style={{ width: 14, height: 14 }} />}
             />
           </div>
           <div>
-            <label className="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">
-              <Mail className="w-3.5 h-3.5" /> Email professionnel
-            </label>
-            <input
-              type="email"
+            <FieldLabel icon={<Mail style={{ width: 12, height: 12 }} />}>Email professionnel</FieldLabel>
+            <TextInput
               value={form.email}
-              onChange={e => set('email')(e.target.value)}
+              onChange={set('email')}
               placeholder="contact@entreprise.com"
-              className="w-full bg-[#161616] border border-[#222] rounded-lg px-4 py-3 text-white text-sm placeholder-[#333] focus:outline-none focus:border-[#3B968F]/50"
+              type="email"
+              icon={<Mail style={{ width: 14, height: 14 }} />}
             />
           </div>
         </div>
 
-        {/* Note KYC */}
-        <div className="flex items-start gap-3 p-4 rounded-lg bg-[#3B968F]/5 border border-[#3B968F]/15">
-          <AlertCircle className="w-4 h-4 text-[#3B968F]/60 flex-shrink-0 mt-0.5" />
-          <p className="text-gray-500 text-xs leading-relaxed">
+        {/* KYC info block */}
+        <div style={{
+          display: 'flex', alignItems: 'flex-start', gap: 10,
+          padding: 14, borderRadius: 8,
+          background: C.tealT, border: `1px solid ${C.tealB}`,
+        }}>
+          <Info style={{ width: 14, height: 14, color: C.t3, flexShrink: 0, marginTop: 1 }} />
+          <p style={{ color: C.t3, fontSize: 12, margin: 0, lineHeight: 1.5 }}>
             La vérification KYC entreprise sera demandée pour les volumes supérieurs à 10 000 USDT/mois.
             Notre équipe vous contactera pour vous guider dans les démarches.
           </p>
         </div>
 
-        <Button
+        {/* Save button — teal → green on save */}
+        <button
           onClick={handleSave}
-          className={`w-full h-11 text-sm transition-all ${
-            saved
-              ? 'bg-emerald-600 hover:bg-emerald-600 text-white gap-2'
-              : 'bg-[#3B968F] hover:bg-[#3B968F]/90 text-white'
-          }`}
+          style={{
+            height: 44, width: '100%', borderRadius: 8, border: 'none',
+            background: saved ? '#16a34a' : C.teal,
+            color: '#fff', fontSize: 13, fontWeight: 500,
+            cursor: 'pointer', fontFamily: FONT,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            transition: 'background 0.2s',
+          }}
+          onMouseEnter={e => { if (!saved) e.currentTarget.style.background = C.tealH; }}
+          onMouseLeave={e => { if (!saved) e.currentTarget.style.background = C.teal; }}
         >
           {saved ? (
-            <><Check className="w-4 h-4" /> Profil enregistré</>
+            <><Check style={{ width: 15, height: 15 }} /> Profil enregistré</>
           ) : (
             'Enregistrer le profil'
           )}
-        </Button>
+        </button>
       </div>
     </div>
   );

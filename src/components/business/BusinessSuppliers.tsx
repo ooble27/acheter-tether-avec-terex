@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Plus, Search, Trash2, Edit2, X, Check, Globe } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface Supplier {
@@ -29,6 +28,36 @@ const COUNTRY_FLAG: Record<string, string> = {
   'Inde': '🇮🇳', 'Pakistan': '🇵🇰', 'Autre': '🌍',
 };
 
+// ── Design tokens ─────────────────────────────────────────────────
+const C = {
+  bg: '#0e0e0e', l1: '#141414', l2: '#191919', l3: '#1f1f1f', l4: '#242424',
+  bd: '#2a2a2a', bds: '#1f1f1f', bdh: '#333333',
+  teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
+  t1: '#f0f0f0', t2: '#888888', t3: '#555555', t4: '#333333',
+  red: '#ef4444', redT: 'rgba(239,68,68,0.08)',
+};
+const FONT = "'Inter', sans-serif";
+const MONO = '"JetBrains Mono", Consolas, monospace';
+
+// ── InitialAvatar ─────────────────────────────────────────────────
+function InitialAvatar({ name, size = 30 }: { name: string; size?: number }) {
+  const parts = (name || 'U').split(' ').filter(Boolean);
+  const initials = parts.length >= 2
+    ? (parts[0][0] + parts[1][0]).toUpperCase()
+    : (parts[0]?.slice(0, 2) || 'U').toUpperCase();
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: 8,
+      background: 'rgba(59,150,143,0.22)', color: C.teal,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontSize: size * 0.38, fontWeight: 600, flexShrink: 0, fontFamily: FONT,
+    }}>
+      {initials}
+    </div>
+  );
+}
+
+// ── Supplier Modal ────────────────────────────────────────────────
 function SupplierModal({
   supplier,
   onSave,
@@ -42,103 +71,172 @@ function SupplierModal({
   const [wallet, setWallet] = useState(supplier?.walletAddress || '');
   const [network, setNetwork] = useState(supplier?.network || 'TRC20 (TRON)');
   const [country, setCountry] = useState(supplier?.country || 'Chine');
+  const [nameFocused, setNameFocused] = useState(false);
+  const [walletFocused, setWalletFocused] = useState(false);
 
-  const valid = name && wallet;
+  const valid = name.trim() && wallet.trim();
+
+  const inputStyle = (focused: boolean): React.CSSProperties => ({
+    width: '100%', background: C.l2, border: `1px solid ${focused ? 'rgba(59,150,143,0.35)' : C.bd}`,
+    borderRadius: 8, paddingLeft: 12, paddingRight: 12, paddingTop: 10, paddingBottom: 10,
+    color: C.t1, fontSize: 13, outline: 'none', fontFamily: FONT,
+    boxSizing: 'border-box', transition: 'border-color 0.15s',
+  });
+
+  const labelStyle: React.CSSProperties = {
+    display: 'block', fontSize: 10, fontWeight: 600, color: C.t3,
+    letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6,
+    fontFamily: FONT,
+  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-md rounded-2xl bg-[#111] border border-[#1e1e1e] p-6 shadow-2xl">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-white font-semibold">{supplier ? 'Modifier le fournisseur' : 'Ajouter un fournisseur'}</h3>
-          <button onClick={onClose} className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-600 hover:text-white hover:bg-white/5 transition-all">
-            <X className="w-4 h-4" />
+    <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+      {/* Backdrop */}
+      <div
+        style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)' }}
+        onClick={onClose}
+      />
+      {/* Modal card */}
+      <div style={{
+        position: 'relative', zIndex: 10, width: '100%', maxWidth: 440,
+        background: C.l1, border: `1px solid ${C.bd}`,
+        borderRadius: 14, padding: 24,
+        boxShadow: '0 25px 50px rgba(0,0,0,0.6)',
+        fontFamily: FONT,
+      }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+          <h3 style={{ color: C.t1, fontSize: 15, fontWeight: 600, margin: 0 }}>
+            {supplier ? 'Modifier le fournisseur' : 'Ajouter un fournisseur'}
+          </h3>
+          <button
+            onClick={onClose}
+            style={{
+              width: 28, height: 28, borderRadius: 7,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'transparent', border: 'none',
+              color: C.t3, cursor: 'pointer',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.background = C.l3; }}
+            onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.background = 'transparent'; }}
+          >
+            <X style={{ width: 15, height: 15 }} />
           </button>
         </div>
 
-        <div className="space-y-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {/* Name */}
           <div>
-            <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Nom</label>
+            <label style={labelStyle}>Nom</label>
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
+              onFocus={() => setNameFocused(true)}
+              onBlur={() => setNameFocused(false)}
               placeholder="Ex : Guangzhou Textiles Ltd"
-              className="w-full bg-[#161616] border border-[#222] rounded-lg px-3 py-2.5 text-white text-sm placeholder-[#333] focus:outline-none focus:border-[#3B968F]/50"
+              style={inputStyle(nameFocused)}
             />
           </div>
+
+          {/* Country 3x3 grid */}
           <div>
-            <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Pays</label>
-            <div className="grid grid-cols-3 gap-1.5">
+            <label style={labelStyle}>Pays</label>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
               {COUNTRIES.map(c => (
                 <button
                   key={c}
                   onClick={() => setCountry(c)}
-                  className={`px-2.5 py-2 rounded-lg text-xs font-medium border transition-all ${
-                    country === c
-                      ? 'bg-[#3B968F]/10 border-[#3B968F]/30 text-[#3B968F]'
-                      : 'bg-[#161616] border-[#222] text-gray-500 hover:border-[#2a2a2a] hover:text-gray-300'
-                  }`}
+                  style={{
+                    padding: '7px 8px', borderRadius: 7, fontSize: 11, fontWeight: 500,
+                    border: `1px solid ${country === c ? C.tealB : C.bd}`,
+                    background: country === c ? C.tealT : C.l2,
+                    color: country === c ? C.teal : C.t3,
+                    cursor: 'pointer', fontFamily: FONT, transition: 'all 0.1s',
+                  }}
                 >
                   {COUNTRY_FLAG[c]} {c}
                 </button>
               ))}
             </div>
           </div>
+
+          {/* Network 2x2 grid */}
           <div>
-            <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Réseau</label>
-            <div className="grid grid-cols-2 gap-1.5">
+            <label style={labelStyle}>Réseau</label>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
               {NETWORKS.map(net => (
                 <button
                   key={net}
                   onClick={() => setNetwork(net)}
-                  className={`px-3 py-2 rounded-lg text-xs font-medium border transition-all text-left ${
-                    network === net
-                      ? 'bg-[#3B968F]/10 border-[#3B968F]/30 text-[#3B968F]'
-                      : 'bg-[#161616] border-[#222] text-gray-500 hover:border-[#2a2a2a] hover:text-gray-300'
-                  }`}
+                  style={{
+                    padding: '8px 10px', borderRadius: 7, fontSize: 11, fontWeight: 500,
+                    border: `1px solid ${network === net ? C.tealB : C.bd}`,
+                    background: network === net ? C.tealT : C.l2,
+                    color: network === net ? C.teal : C.t3,
+                    cursor: 'pointer', fontFamily: FONT, transition: 'all 0.1s', textAlign: 'left',
+                  }}
                 >
                   {net}
                 </button>
               ))}
             </div>
           </div>
+
+          {/* Wallet (mono) */}
           <div>
-            <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">
-              Adresse wallet USDT
-            </label>
+            <label style={labelStyle}>Adresse wallet USDT</label>
             <input
               type="text"
               value={wallet}
               onChange={e => setWallet(e.target.value)}
+              onFocus={() => setWalletFocused(true)}
+              onBlur={() => setWalletFocused(false)}
               placeholder="Adresse blockchain..."
-              className="w-full bg-[#161616] border border-[#222] rounded-lg px-3 py-2.5 text-white text-sm font-mono placeholder-[#333] focus:outline-none focus:border-[#3B968F]/50"
+              style={{ ...inputStyle(walletFocused), fontFamily: MONO }}
             />
           </div>
         </div>
 
-        <div className="flex gap-2 mt-6">
-          <Button
-            variant="outline"
+        {/* Actions */}
+        <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+          <button
             onClick={onClose}
-            className="border-[#222] text-gray-500 hover:text-white hover:bg-white/5 h-10 flex-1 text-sm"
+            style={{
+              flex: 1, height: 40, borderRadius: 8, fontSize: 13,
+              background: 'transparent', border: `1px solid ${C.bd}`,
+              color: C.t3, cursor: 'pointer', fontFamily: FONT,
+              transition: 'all 0.1s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.bdh; }}
+            onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = C.bd; }}
           >
             Annuler
-          </Button>
-          <Button
+          </button>
+          <button
             disabled={!valid}
-            onClick={() => { onSave({ name, walletAddress: wallet, network, country }); onClose(); }}
-            className="bg-[#3B968F] hover:bg-[#3B968F]/90 text-white disabled:opacity-30 h-10 flex-1 text-sm gap-2"
+            onClick={() => { if (valid) { onSave({ name, walletAddress: wallet, network, country }); onClose(); } }}
+            style={{
+              flex: 1, height: 40, borderRadius: 8, fontSize: 13, fontWeight: 500,
+              background: valid ? C.teal : 'rgba(59,150,143,0.3)',
+              border: 'none', color: '#fff',
+              cursor: valid ? 'pointer' : 'not-allowed', fontFamily: FONT,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+              transition: 'background 0.1s',
+            }}
+            onMouseEnter={e => { if (valid) (e.currentTarget.style.background = C.tealH); }}
+            onMouseLeave={e => { if (valid) (e.currentTarget.style.background = C.teal); }}
           >
-            <Check className="w-4 h-4" />
+            <Check style={{ width: 14, height: 14 }} />
             {supplier ? 'Enregistrer' : 'Ajouter'}
-          </Button>
+          </button>
         </div>
       </div>
     </div>
   );
 }
 
+// ── Main component ────────────────────────────────────────────────
 export function BusinessSuppliers({ user }: Props) {
   const { session } = useAuth();
   const userId = session?.user?.id || user?.email || 'guest';
@@ -146,6 +244,7 @@ export function BusinessSuppliers({ user }: Props) {
 
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [search, setSearch] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
   const [modal, setModal] = useState<{ open: boolean; supplier?: Supplier | null }>({ open: false });
 
   useEffect(() => {
@@ -176,7 +275,7 @@ export function BusinessSuppliers({ user }: Props) {
   );
 
   return (
-    <div className="space-y-5">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, fontFamily: FONT }}>
       {modal.open && (
         <SupplierModal
           supplier={modal.supplier}
@@ -185,47 +284,72 @@ export function BusinessSuppliers({ user }: Props) {
         />
       )}
 
-      {/* Header */}
-      <div className="flex items-center justify-between gap-4">
+      {/* Page header */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
         <div>
-          <h2 className="text-white text-lg font-bold">Fournisseurs</h2>
-          <p className="text-gray-600 text-sm mt-0.5">{suppliers.length} contact{suppliers.length !== 1 ? 's' : ''} enregistré{suppliers.length !== 1 ? 's' : ''}</p>
+          <h2 style={{ color: C.t1, fontSize: 20, fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.2, margin: 0 }}>
+            Fournisseurs
+          </h2>
+          <p style={{ color: C.t3, fontSize: 12, marginTop: 4, margin: '4px 0 0' }}>
+            {suppliers.length} contact{suppliers.length !== 1 ? 's' : ''} enregistré{suppliers.length !== 1 ? 's' : ''}
+          </p>
         </div>
-        <Button
+        <button
           onClick={() => setModal({ open: true, supplier: null })}
-          className="bg-[#3B968F] hover:bg-[#3B968F]/90 text-white h-9 text-sm gap-2"
+          style={{
+            height: 32, paddingLeft: 12, paddingRight: 12,
+            background: C.teal, border: 'none', borderRadius: 7,
+            color: '#fff', fontSize: 12, fontWeight: 500,
+            cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+            fontFamily: FONT, flexShrink: 0,
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = C.tealH)}
+          onMouseLeave={e => (e.currentTarget.style.background = C.teal)}
         >
-          <Plus className="w-4 h-4" />
+          <Plus style={{ width: 13, height: 13 }} />
           Ajouter
-        </Button>
+        </button>
       </div>
 
       {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600" />
+      <div style={{ position: 'relative' }}>
+        <Search style={{
+          position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
+          width: 14, height: 14, color: C.t3,
+        }} />
         <input
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
+          onFocus={() => setSearchFocused(true)}
+          onBlur={() => setSearchFocused(false)}
           placeholder="Rechercher par nom ou pays…"
-          className="w-full bg-[#111] border border-[#1c1c1c] rounded-lg pl-10 pr-4 py-2.5 text-white text-sm placeholder-[#333] focus:outline-none focus:border-[#3B968F]/40"
+          style={{
+            width: '100%', background: C.l1, border: `1px solid ${searchFocused ? 'rgba(59,150,143,0.35)' : C.bds}`,
+            borderRadius: 8, paddingLeft: 36, paddingRight: 16, paddingTop: 10, paddingBottom: 10,
+            color: C.t1, fontSize: 13, outline: 'none', fontFamily: FONT,
+            boxSizing: 'border-box', transition: 'border-color 0.15s',
+          }}
         />
       </div>
 
-      {/* Table */}
-      <div className="rounded-xl bg-[#111] border border-[#1c1c1c] overflow-hidden">
+      {/* Table card */}
+      <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
         {filtered.length === 0 ? (
-          <div className="py-16 text-center">
-            <div className="w-10 h-10 rounded-xl bg-white/3 flex items-center justify-center mx-auto mb-3">
-              <Globe className="w-4 h-4 text-gray-600" />
+          <div style={{ padding: '60px 20px', textAlign: 'center' }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: 10, background: C.l3,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px',
+            }}>
+              <Globe style={{ width: 16, height: 16, color: C.t3 }} />
             </div>
-            <p className="text-gray-600 text-sm">
+            <p style={{ color: C.t3, fontSize: 13, margin: 0 }}>
               {search ? 'Aucun résultat' : 'Aucun fournisseur enregistré'}
             </p>
             {!search && (
               <button
                 onClick={() => setModal({ open: true, supplier: null })}
-                className="mt-2 text-[#3B968F] text-xs hover:underline"
+                style={{ color: C.teal, fontSize: 12, background: 'none', border: 'none', cursor: 'pointer', marginTop: 8, fontFamily: FONT }}
               >
                 Ajouter votre premier fournisseur →
               </button>
@@ -233,45 +357,88 @@ export function BusinessSuppliers({ user }: Props) {
           </div>
         ) : (
           <>
-            <div className="hidden md:grid grid-cols-[2fr_120px_140px_1fr_80px] gap-4 px-5 py-3 text-[10px] font-semibold text-gray-600 uppercase tracking-wider border-b border-[#181818]">
-              <span>Nom</span>
-              <span>Pays</span>
-              <span>Réseau</span>
-              <span>Wallet</span>
-              <span className="text-right">Actions</span>
+            {/* Table headers */}
+            <div className="hidden md:grid" style={{
+              gridTemplateColumns: '2fr 130px 110px 1fr 80px',
+              gap: 16, padding: '10px 20px',
+              borderBottom: `1px solid ${C.bds}`,
+            }}>
+              {['Nom', 'Pays', 'Réseau', 'Wallet', 'Actions'].map((h, i) => (
+                <span key={h} style={{
+                  fontSize: 10, fontWeight: 600, color: C.t3,
+                  textTransform: 'uppercase', letterSpacing: '0.08em',
+                  textAlign: i === 4 ? 'right' : 'left',
+                }}>
+                  {h}
+                </span>
+              ))}
             </div>
-            <div className="divide-y divide-[#181818]">
-              {filtered.map(s => (
+            {/* Rows */}
+            <div>
+              {filtered.map((s, i) => (
                 <div
                   key={s.id}
-                  className="flex md:grid md:grid-cols-[2fr_120px_140px_1fr_80px] gap-4 px-5 py-3.5 hover:bg-white/[0.015] transition-colors items-center"
+                  style={{
+                    display: 'flex', alignItems: 'center',
+                    padding: '12px 20px',
+                    borderBottom: i < filtered.length - 1 ? `1px solid ${C.bds}` : 'none',
+                    gap: 16,
+                    transition: 'background 0.1s',
+                  }}
+                  className="md:grid"
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.01)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                 >
-                  <div>
-                    <p className="text-white text-sm font-medium">{s.name}</p>
-                    <p className="text-gray-600 text-[11px] mt-0.5">
-                      Ajouté le {new Date(s.createdAt).toLocaleDateString('fr-FR')}
-                    </p>
+                  {/* Name + date */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
+                    <InitialAvatar name={s.name} size={30} />
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ fontSize: 12, fontWeight: 500, color: C.t1, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {s.name}
+                      </p>
+                      <p style={{ fontSize: 10, color: C.t3, marginTop: 2, margin: '2px 0 0' }}>
+                        Ajouté le {new Date(s.createdAt).toLocaleDateString('fr-FR')}
+                      </p>
+                    </div>
                   </div>
-                  <div className="hidden md:flex items-center gap-1.5">
-                    <span className="text-sm">{COUNTRY_FLAG[s.country] || '🌍'}</span>
-                    <span className="text-gray-400 text-xs">{s.country}</span>
+                  {/* Country */}
+                  <div className="hidden md:flex" style={{ alignItems: 'center', gap: 6 }}>
+                    <span style={{ fontSize: 13 }}>{COUNTRY_FLAG[s.country] || '🌍'}</span>
+                    <span style={{ color: C.t2, fontSize: 12 }}>{s.country}</span>
                   </div>
-                  <span className="hidden md:block text-gray-500 text-xs">{s.network}</span>
-                  <span className="hidden md:block text-gray-700 text-[11px] font-mono">
+                  {/* Network */}
+                  <span className="hidden md:block" style={{ color: C.t2, fontSize: 12 }}>{s.network}</span>
+                  {/* Wallet mono truncated */}
+                  <span className="hidden md:block" style={{ color: C.t3, fontSize: 11, fontFamily: MONO, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {s.walletAddress.slice(0, 10)}...{s.walletAddress.slice(-6)}
                   </span>
-                  <div className="flex items-center justify-end gap-1 ml-auto md:ml-0">
+                  {/* Actions */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4, marginLeft: 'auto' }}>
                     <button
                       onClick={() => setModal({ open: true, supplier: s })}
-                      className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-600 hover:text-white hover:bg-white/5 transition-all"
+                      style={{
+                        width: 28, height: 28, borderRadius: 7,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: 'transparent', border: 'none',
+                        color: C.t3, cursor: 'pointer', transition: 'all 0.1s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.background = C.l3; }}
+                      onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.background = 'transparent'; }}
                     >
-                      <Edit2 className="w-3.5 h-3.5" />
+                      <Edit2 style={{ width: 13, height: 13 }} />
                     </button>
                     <button
                       onClick={() => handleDelete(s.id)}
-                      className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-600 hover:text-red-400 hover:bg-red-500/5 transition-all"
+                      style={{
+                        width: 28, height: 28, borderRadius: 7,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: 'transparent', border: 'none',
+                        color: C.t3, cursor: 'pointer', transition: 'all 0.1s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.color = C.red; e.currentTarget.style.background = C.redT; }}
+                      onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.background = 'transparent'; }}
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 style={{ width: 13, height: 13 }} />
                     </button>
                   </div>
                 </div>
