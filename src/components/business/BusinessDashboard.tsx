@@ -284,18 +284,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
 
   return (
     <div style={{ display: 'flex', height: '100vh', background: C.bg, overflow: 'hidden' }}>
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:flex" style={{
-        width: 220, minWidth: 220,
-        background: '#141414',
-        borderRight: `1px solid ${C.bds}`,
-        flexShrink: 0,
-        flexDirection: 'column',
-      }}>
-        <SidebarContent />
-      </aside>
-
-      {/* Mobile Sidebar Overlay */}
+      {/* Sidebar overlay — toutes tailles d'écran */}
       {sidebarOpen && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex' }}>
           <div
@@ -326,21 +315,17 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
 
       {/* Main content area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
-        {/* Mobile sticky top bar — safe-area pour iOS/iPad */}
-        <div
-          className="md:hidden"
-          style={{
-            background: '#141414',
-            borderBottom: `1px solid ${C.bds}`,
-            flexShrink: 0,
-            position: 'sticky', top: 0, zIndex: 20,
-            paddingTop: 'env(safe-area-inset-top, 0px)',
-          }}
-        >
+        {/* Top bar — même couleur que le fond, pas de bordure, safe-area iOS */}
+        <div style={{
+          background: C.bg,
+          flexShrink: 0,
+          position: 'sticky', top: 0, zIndex: 20,
+          paddingTop: 'env(safe-area-inset-top, 0px)',
+        }}>
           <div style={{
             height: 52,
             display: 'flex', alignItems: 'center',
-            padding: '0 12px',
+            padding: '0 16px',
           }}>
             <button
               onClick={() => setSidebarOpen(true)}
