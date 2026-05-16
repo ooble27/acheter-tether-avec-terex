@@ -283,8 +283,25 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
   );
 
   return (
-    <div style={{ display: 'flex', height: '100vh', background: C.bg, overflow: 'hidden' }}>
-      {/* Sidebar overlay — toutes tailles d'écran */}
+    <div style={{ height: '100vh', background: C.bg, overflow: 'hidden', position: 'relative' }}>
+      {/* Bouton hamburger flottant — seul, sans barre */}
+      <button
+        onClick={() => setSidebarOpen(true)}
+        style={{
+          position: 'fixed',
+          top: 'calc(env(safe-area-inset-top, 0px) + 16px)',
+          left: 24,
+          zIndex: 40,
+          width: 36, height: 36, borderRadius: 8,
+          background: C.l2, border: `1px solid ${C.bds}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: C.t2, cursor: 'pointer',
+        }}
+      >
+        <Menu style={{ width: 16, height: 16 }} />
+      </button>
+
+      {/* Sidebar overlay */}
       {sidebarOpen && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex' }}>
           <div
@@ -313,41 +330,12 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
         </div>
       )}
 
-      {/* Main content area */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
-        {/* Top bar — même couleur que le fond, pas de bordure, safe-area iOS */}
-        <div style={{
-          background: C.bg,
-          flexShrink: 0,
-          position: 'sticky', top: 0, zIndex: 20,
-          paddingTop: 'env(safe-area-inset-top, 0px)',
-        }}>
-          <div style={{
-            height: 52,
-            display: 'flex', alignItems: 'center',
-            padding: '0 16px',
-          }}>
-            <button
-              onClick={() => setSidebarOpen(true)}
-              style={{
-                width: 36, height: 36, borderRadius: 8,
-                background: C.l2, border: `1px solid ${C.bds}`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: C.t2, cursor: 'pointer',
-              }}
-            >
-              <Menu style={{ width: 16, height: 16 }} />
-            </button>
-          </div>
+      {/* Content */}
+      <main style={{ height: '100%', overflowY: 'auto', background: C.bg }}>
+        <div className="p-4 md:p-8" style={{ maxWidth: 1040, margin: '0 auto', width: '100%', paddingTop: 'max(env(safe-area-inset-top, 0px) + 68px, 68px)' }}>
+          {renderContent()}
         </div>
-
-        {/* Content */}
-        <main style={{ flex: 1, overflowY: 'auto', background: C.bg }}>
-          <div className="p-4 md:p-8" style={{ maxWidth: 1040, margin: '0 auto', width: '100%' }}>
-            {renderContent()}
-          </div>
-        </main>
-      </div>
+      </main>
     </div>
   );
 }
