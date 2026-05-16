@@ -15,6 +15,10 @@ import { BusinessProfile } from './BusinessProfile';
 import { BusinessSupport } from './BusinessSupport';
 import { BusinessTreasury } from './BusinessTreasury';
 import { BusinessAnalytics } from './BusinessAnalytics';
+import { BusinessBatch } from './BusinessBatch';
+import { BusinessTeam } from './BusinessTeam';
+import { BusinessCompliance } from './BusinessCompliance';
+import { BusinessAPI } from './BusinessAPI';
 
 interface BusinessDashboardProps {
   user: { id?: string; email: string; name: string } | null;
@@ -145,12 +149,12 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
       case 'treasury':    return <BusinessTreasury user={user} />;
       case 'history':     return <BusinessHistory user={user} />;
       case 'suppliers':   return <BusinessSuppliers user={user} />;
-      case 'batch':       return <ComingSoon title="Lots & Planification" />;
+      case 'batch':       return <BusinessBatch user={user} />;
       case 'analytics':   return <BusinessAnalytics user={user} />;
-      case 'team':        return <ComingSoon title="Équipe & Accès" />;
-      case 'compliance':  return <ComingSoon title="Conformité KYC" />;
+      case 'team':        return <BusinessTeam user={user} />;
+      case 'compliance':  return <BusinessCompliance user={user} />;
       case 'profile':     return <BusinessProfile user={user} />;
-      case 'api':         return <ComingSoon title="Intégrations & API" />;
+      case 'api':         return <BusinessAPI user={user} />;
       case 'support':     return <BusinessSupport />;
       default:            return <BusinessOverview user={user} onNavigate={setActiveSection} />;
     }
