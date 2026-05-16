@@ -22,6 +22,7 @@ function Card({ children, style }: { children: React.ReactNode; style?: React.CS
     <div style={{
       background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12,
       padding: 24, boxShadow: '0 1px 3px rgba(0,0,0,0.3)', ...style,
+
     }}>
       {children}
     </div>

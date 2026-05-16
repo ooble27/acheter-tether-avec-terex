@@ -498,7 +498,7 @@ export function BusinessAPI({ user }: { user: { email: string; name: string; id?
       {/* Two columns: API Keys + Webhooks */}
       <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
         {/* LEFT: API Keys */}
-        <div style={{ flex: '0 0 50%', background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
+        <div style={{ flex: '0 0 50%', background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             padding: '18px 20px', borderBottom: `1px solid ${C.bds}`,
@@ -550,7 +550,7 @@ export function BusinessAPI({ user }: { user: { email: string; name: string; id?
         </div>
 
         {/* RIGHT: Webhooks */}
-        <div style={{ flex: '0 0 calc(50% - 20px)', background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
+        <div style={{ flex: '0 0 calc(50% - 20px)', background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             padding: '18px 20px', borderBottom: `1px solid ${C.bds}`,
@@ -616,7 +616,7 @@ export function BusinessAPI({ user }: { user: { email: string; name: string; id?
       </div>
 
       {/* Webhook logs */}
-      <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
+      <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
         <div style={{ padding: '18px 20px', borderBottom: `1px solid ${C.bds}` }}>
           <div style={{ fontSize: 14, fontWeight: 600, color: C.t1 }}>Logs des webhooks</div>
           <div style={{ fontSize: 11, color: C.t3, marginTop: 2 }}>Dernières 24h · Cliquez sur une ligne pour voir le payload</div>
@@ -638,7 +638,7 @@ export function BusinessAPI({ user }: { user: { email: string; name: string; id?
       </div>
 
       {/* Quick start snippets */}
-      <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
+      <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
         <div style={{ padding: '18px 20px', borderBottom: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 600, color: C.t1 }}>Démarrage rapide</div>

@@ -114,7 +114,7 @@ function CustomTooltip({ active, payload, label }: TooltipProps) {
     <div style={{
       background: C.l2, border: `1px solid ${C.bd}`,
       borderRadius: 8, padding: '10px 14px', fontFamily: FONT,
-      boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
     }}>
       {label && <p style={{ color: C.t3, fontSize: 10, margin: '0 0 6px' }}>{label}</p>}
       {payload.map((p, i) => (
@@ -148,7 +148,7 @@ function KpiCard({ label, value, change, positive }: KpiCardProps) {
         border: `1px solid ${hovered ? C.bdh : C.bds}`,
         borderRadius: 12, padding: '18px 20px',
         transition: 'border-color 0.15s, box-shadow 0.15s',
-        boxShadow: hovered ? '0 4px 20px rgba(0,0,0,0.2)' : 'none',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
       }}
     >
       <p style={{ color: C.t3, fontSize: 11, margin: '0 0 10px', fontFamily: FONT }}>{label}</p>
@@ -174,6 +174,7 @@ function ChartCard({ title, children, style }: { title: string; children: React.
     <div style={{
       background: C.l1, border: `1px solid ${C.bds}`,
       borderRadius: 12, padding: 20,
+      boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
       ...style,
     }}>
       <p style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: '0 0 16px', fontFamily: FONT }}>
@@ -455,6 +456,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
       <div style={{
         background: C.l1, border: `1px solid ${C.bds}`,
         borderRadius: 12, padding: 20,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
       }}>
         <p style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: '0 0 16px', fontFamily: FONT }}>
           Performance des transactions

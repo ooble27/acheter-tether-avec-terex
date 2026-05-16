@@ -74,7 +74,7 @@ function StatusPill({ status }: { status: string }) {
 
 function LiveRateCard() {
   return (
-    <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
+    <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
       <div style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
           <span style={{ fontSize: 11, fontWeight: 600, color: C.t3, letterSpacing: '0.08em', fontFamily: FONT, textTransform: 'uppercase' }}>
@@ -193,6 +193,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
       <div style={{
         background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12,
         display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', overflow: 'hidden',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
       }}>
         {STATS.map((stat, i) => (
           <div key={stat.label} style={{ padding: '20px 22px', borderRight: i < 3 ? `1px solid ${C.bds}` : 'none' }}>
@@ -214,7 +215,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
       <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 16 }}>
 
         {/* LEFT: Recent transactions */}
-        <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
+        <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: `1px solid ${C.bds}` }}>
             <h3 style={{ fontSize: 13, fontWeight: 600, color: C.t1, margin: 0 }}>Transactions récentes</h3>
             <button onClick={() => onNavigate('history')}
@@ -266,7 +267,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
 
         {/* RIGHT: Quick actions + Live rate */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
+          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
             <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.bds}` }}>
               <h3 style={{ fontSize: 13, fontWeight: 600, color: C.t1, margin: 0 }}>Actions rapides</h3>
             </div>
@@ -307,7 +308,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
       <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 16 }}>
 
         {/* AreaChart — volume 7 jours */}
-        <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
+        <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
           <div style={{ padding: '12px 16px', borderBottom: `1px solid ${C.bds}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <h3 style={{ fontSize: 12, fontWeight: 600, color: C.t1, margin: 0 }}>Volume des 7 derniers jours</h3>
