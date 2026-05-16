@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Send, Clock, Users2,
-  Building2, LifeBuoy, LogOut, Bell,
-  Plus, ArrowLeft, Menu, X,
+  Building2, LifeBuoy, LogOut,
+  ArrowLeft, Menu, X,
   Wallet, CalendarClock, BarChart2, UserCog, ShieldCheck, Code2
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -331,85 +331,23 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
 
       {/* Main content area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
-        {/* Header */}
-        <header style={{
-          height: 56, background: '#141414',
-          borderBottom: `1px solid ${C.bds}`,
-          display: 'flex', alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0 20px', flexShrink: 0,
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <button
-              className="md:hidden"
-              onClick={() => setSidebarOpen(true)}
-              style={{
-                width: 32, height: 32, borderRadius: 7,
-                background: 'transparent', border: `1px solid ${C.bd}`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: C.t3, cursor: 'pointer',
-              }}
-            >
-              <Menu style={{ width: 16, height: 16 }} />
-            </button>
-            <div>
-              <h1 style={{
-                color: C.t1, fontSize: 14, fontWeight: 600,
-                letterSpacing: '-0.01em', lineHeight: 1.2,
-                fontFamily: FONT, margin: 0,
-              }}>
-                {currentPage?.label || 'Tableau de bord'}
-              </h1>
-              <p style={{ color: C.t3, fontSize: 11, marginTop: 1, fontFamily: FONT, margin: '1px 0 0' }}>
-                {PAGE_SUBTITLES[activeSection] || ''}
-              </p>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <button
-              onClick={() => setActiveSection('payment')}
-              className="hidden sm:flex"
-              style={{
-                height: 32, paddingLeft: 12, paddingRight: 12,
-                background: C.teal, border: 'none', borderRadius: 7,
-                color: '#fff', fontSize: 12, fontWeight: 500,
-                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-                fontFamily: FONT,
-              }}
-              onMouseEnter={e => (e.currentTarget.style.background = C.tealH)}
-              onMouseLeave={e => (e.currentTarget.style.background = C.teal)}
-            >
-              <Plus style={{ width: 13, height: 13 }} />
-              Nouveau paiement
-            </button>
-
-            {/* Vertical divider */}
-            <div style={{ width: 1, height: 20, background: C.bds }} className="hidden sm:block" />
-
-            <button
-              style={{
-                width: 32, height: 32, borderRadius: 7,
-                background: 'transparent', border: `1px solid ${C.bds}`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: C.t3, cursor: 'pointer', position: 'relative',
-              }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = C.t2; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = C.t3; }}
-            >
-              <Bell style={{ width: 15, height: 15 }} />
-              <span style={{
-                position: 'absolute', top: 7, right: 7,
-                width: 6, height: 6, borderRadius: '50%',
-                background: '#ef4444',
-              }} />
-            </button>
-          </div>
-        </header>
-
-        {/* Content */}
-        <main style={{ flex: 1, overflowY: 'auto', background: C.bg }}>
-          <div className="p-4 md:p-6" style={{ maxWidth: 960, margin: '0 auto', width: '100%' }}>
+        {/* Content — no top header bar */}
+        <main style={{ flex: 1, overflowY: 'auto', background: C.bg, position: 'relative' }}>
+          {/* Mobile hamburger — floats top-left, only on mobile */}
+          <button
+            className="md:hidden"
+            onClick={() => setSidebarOpen(true)}
+            style={{
+              position: 'absolute', top: 16, left: 16, zIndex: 10,
+              width: 36, height: 36, borderRadius: 8,
+              background: '#141414', border: `1px solid ${C.bds}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: C.t2, cursor: 'pointer',
+            }}
+          >
+            <Menu style={{ width: 16, height: 16 }} />
+          </button>
+          <div className="p-4 md:p-6" style={{ maxWidth: 1040, margin: '0 auto', width: '100%' }}>
             {renderContent()}
           </div>
         </main>
