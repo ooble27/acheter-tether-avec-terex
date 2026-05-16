@@ -456,7 +456,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
       </div>
 
       {/* Wallet cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 16 }}>
+      <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 14, marginBottom: 16 }}>
         {WALLETS.map(w => (
           <WalletCard key={w.id} wallet={w} onReceive={() => setQrWallet(w)} />
         ))}
@@ -505,7 +505,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
           </h2>
           <span style={{ color: C.t3, fontSize: 11 }}>Il y a 2 min</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+        <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 12 }}>
           {RATES.map((r, i) => (
             <RateCard key={r.pair} rate={r} sparkData={SPARKLINES[i]} />
           ))}
@@ -513,7 +513,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
       </div>
 
       {/* History chart + Alerts */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 14 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr,360px]" style={{ gap: 14 }}>
         {/* History chart */}
         <div style={{
           background: C.l1, border: `1px solid ${C.bds}`,

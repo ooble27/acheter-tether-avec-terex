@@ -331,23 +331,38 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
 
       {/* Main content area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
-        {/* Content — no top header bar */}
-        <main style={{ flex: 1, overflowY: 'auto', background: C.bg, position: 'relative' }}>
-          {/* Mobile hamburger — floats top-left, only on mobile */}
+        {/* Mobile sticky top bar */}
+        <div
+          className="md:hidden"
+          style={{
+            height: 52, background: '#141414',
+            borderBottom: `1px solid ${C.bds}`,
+            display: 'flex', alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0 12px', flexShrink: 0,
+            position: 'sticky', top: 0, zIndex: 20,
+          }}
+        >
           <button
-            className="md:hidden"
             onClick={() => setSidebarOpen(true)}
             style={{
-              position: 'absolute', top: 16, left: 16, zIndex: 10,
               width: 36, height: 36, borderRadius: 8,
-              background: '#141414', border: `1px solid ${C.bds}`,
+              background: C.l2, border: `1px solid ${C.bds}`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: C.t2, cursor: 'pointer',
             }}
           >
             <Menu style={{ width: 16, height: 16 }} />
           </button>
-          <div className="p-4 md:p-6" style={{ maxWidth: 1040, margin: '0 auto', width: '100%', paddingTop: 48 }}>
+          <span style={{ color: C.t1, fontSize: 13, fontWeight: 600, fontFamily: FONT }}>
+            {currentPage?.label || 'Dashboard'}
+          </span>
+          <InitialAvatar name={user?.name || 'U'} size={30} />
+        </div>
+
+        {/* Content */}
+        <main style={{ flex: 1, overflowY: 'auto', background: C.bg }}>
+          <div className="p-4 md:p-8" style={{ maxWidth: 1040, margin: '0 auto', width: '100%' }}>
             {renderContent()}
           </div>
         </main>

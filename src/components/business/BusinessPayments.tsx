@@ -406,9 +406,9 @@ export function BusinessPayments({ user, onBack }: {
 
       {/* Step 1 */}
       {step === 1 && (
-        <div style={{ display: 'flex', gap: 20 }}>
+        <div className="flex flex-col lg:flex-row" style={{ gap: 20 }}>
           {/* Left column */}
-          <div style={{ flex: '0 0 60%', display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div className="w-full lg:w-[60%]" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <Card>
               <SectionTitle>Montant à envoyer</SectionTitle>
               {/* Large amount input */}
@@ -530,7 +530,7 @@ export function BusinessPayments({ user, onBack }: {
           </div>
 
           {/* Right column */}
-          <div style={{ flex: '0 0 40%', display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div className="w-full lg:w-[40%]" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <Card>
               <SectionTitle>Réseau blockchain</SectionTitle>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>

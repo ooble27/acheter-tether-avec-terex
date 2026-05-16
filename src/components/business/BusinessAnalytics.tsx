@@ -324,7 +324,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
       </div>
 
       {/* KPI Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 20 }}>
+      <div className="grid grid-cols-2 md:grid-cols-4" style={{ gap: 12, marginBottom: 20 }}>
         <KpiCard label="Volume total" value="128,450 USDT" change="+12.3% vs période préc." positive={true} />
         <KpiCard label="Transactions" value="47" change="+8 vs période préc." positive={true} />
         <KpiCard label="Frais payés" value="3,211 USDT" change="+2.5% vs période préc." positive={false} />
@@ -332,7 +332,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
       </div>
 
       {/* Volume + Donut */}
-      <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: 14, marginBottom: 14 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr,2fr]" style={{ gap: 14, marginBottom: 14 }}>
         <ChartCard title="Volume mensuel — Comparaison">
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={volumeData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }} barCategoryGap="30%">
@@ -382,7 +382,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
       </div>
 
       {/* Suppliers + Fees */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 14, marginBottom: 14 }}>
         <ChartCard title="Top fournisseurs par volume">
           <ResponsiveContainer width="100%" height={260}>
             <BarChart

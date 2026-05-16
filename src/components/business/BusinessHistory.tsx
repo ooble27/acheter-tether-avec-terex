@@ -415,39 +415,42 @@ export function BusinessHistory({ user }: Props) {
             <p style={{ color: C.t3, fontSize: 13, margin: 0 }}>Aucune transaction trouvée</p>
           </div>
         ) : (
-          <>
-            {/* Headers */}
-            <div className="hidden md:grid" style={{
-              gridTemplateColumns: '2fr 120px 100px 130px 120px',
-              padding: '10px 20px',
-              borderBottom: `1px solid ${C.bds}`,
-            }}>
-              {['Fournisseur', 'Référence', 'Réseau', 'Montant', 'Statut'].map((h, i) => (
-                <span key={h} style={{
-                  fontSize: 10, fontWeight: 600, color: C.t3,
-                  textTransform: 'uppercase', letterSpacing: '0.08em',
-                  textAlign: i >= 3 ? 'right' : 'left',
-                }}>
-                  {h}
-                </span>
-              ))}
-            </div>
+          <div style={{ overflowX: 'auto' }}>
+            <>
+              {/* Headers */}
+              <div className="hidden md:grid" style={{
+                gridTemplateColumns: '2fr 120px 100px 130px 120px',
+                padding: '10px 20px',
+                borderBottom: `1px solid ${C.bds}`,
+                minWidth: 600,
+              }}>
+                {['Fournisseur', 'Référence', 'Réseau', 'Montant', 'Statut'].map((h, i) => (
+                  <span key={h} style={{
+                    fontSize: 10, fontWeight: 600, color: C.t3,
+                    textTransform: 'uppercase', letterSpacing: '0.08em',
+                    textAlign: i >= 3 ? 'right' : 'left',
+                  }}>
+                    {h}
+                  </span>
+                ))}
+              </div>
 
-            <div>
-              {paginated.map((tx, i) => (
-                <div
-                  key={tx.id}
-                  onClick={() => setSelectedTx(tx)}
-                  style={{
-                    display: 'flex', alignItems: 'center',
-                    padding: '13px 20px',
-                    borderBottom: i < paginated.length - 1 ? `1px solid ${C.bds}` : 'none',
-                    gap: 12, cursor: 'pointer', transition: 'background 0.1s',
-                  }}
-                  className="md:grid"
-                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.015)')}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                >
+              <div>
+                {paginated.map((tx, i) => (
+                  <div
+                    key={tx.id}
+                    onClick={() => setSelectedTx(tx)}
+                    style={{
+                      display: 'flex', alignItems: 'center',
+                      padding: '13px 20px',
+                      borderBottom: i < paginated.length - 1 ? `1px solid ${C.bds}` : 'none',
+                      gap: 12, cursor: 'pointer', transition: 'background 0.1s',
+                      minWidth: 600,
+                    }}
+                    className="md:grid"
+                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.015)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                  >
                   {/* Vendor + date */}
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={{ fontSize: 13, fontWeight: 500, color: C.t1, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -474,9 +477,10 @@ export function BusinessHistory({ user }: Props) {
                     <StatusPill status={tx.status} />
                   </div>
                 </div>
-              ))}
-            </div>
-          </>
+                ))}
+              </div>
+            </>
+          </div>
         )}
       </div>
 

@@ -298,7 +298,7 @@ export function BusinessBatch({ user }: {
       </div>
 
       {/* Stat cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+      <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 16 }}>
         {[
           { label: 'Paiements planifiés', value: scheduledPayments.length, color: C.teal, bg: C.tealT, border: C.tealB },
           { label: 'Récurrences actives', value: activeRecurrences, color: C.em, bg: C.emT, border: C.emB },
@@ -315,9 +315,9 @@ export function BusinessBatch({ user }: {
       </div>
 
       {/* Two-column section */}
-      <div style={{ display: 'flex', gap: 20 }}>
+      <div className="flex flex-col lg:flex-row" style={{ gap: 20 }}>
         {/* LEFT: Batch payments */}
-        <div style={{ flex: '0 0 55%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div className="w-full lg:w-[55%]" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Card>
             <SectionTitle>Paiement groupé par lot</SectionTitle>
 
@@ -473,7 +473,7 @@ export function BusinessBatch({ user }: {
         </div>
 
         {/* RIGHT: Calendar */}
-        <div style={{ flex: '0 0 45%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div className="w-full lg:w-[45%]" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Card>
             <SectionTitle>Calendrier des paiements</SectionTitle>
             <MiniCalendar scheduledDates={scheduledPayments.map(p => p.date)} />

@@ -190,11 +190,14 @@ export function BusinessOverview({ user, onNavigate }: Props) {
       </div>
 
       {/* 4 stat cards */}
-      <div style={{
-        background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12,
-        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', overflow: 'hidden',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
-      }}>
+      <div
+        className="grid grid-cols-2 md:grid-cols-4"
+        style={{
+          background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12,
+          overflow: 'hidden',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+        }}
+      >
         {STATS.map((stat, i) => (
           <div key={stat.label} style={{ padding: '20px 22px', borderRight: i < 3 ? `1px solid ${C.bds}` : 'none' }}>
             <p style={{ fontSize: 10, fontWeight: 600, color: C.t3, letterSpacing: '0.08em', margin: 0, textTransform: 'uppercase' }}>
@@ -212,7 +215,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
       </div>
 
       {/* Main grid: transactions + sidebar */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 16 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-[1.4fr,1fr]" style={{ gap: 16 }}>
 
         {/* LEFT: Recent transactions */}
         <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
@@ -305,7 +308,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
       </div>
 
       {/* Bottom: AreaChart gauche + LiveRate droite */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 16 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-[1.4fr,1fr]" style={{ gap: 16 }}>
 
         {/* AreaChart — volume 7 jours */}
         <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
