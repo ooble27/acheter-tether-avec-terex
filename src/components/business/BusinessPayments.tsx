@@ -178,7 +178,8 @@ function GhostBtn({ children, onClick, style }: {
 }
 
 // ── Truncate wallet ───────────────────────────────────────────────
-function truncWallet(w: string) {
+function truncWallet(w: string | undefined | null) {
+  if (!w) return '—';
   if (w.length <= 16) return w;
   return w.slice(0, 8) + '…' + w.slice(-6);
 }
@@ -247,7 +248,11 @@ export function BusinessPayments({ user, onBack }: {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(`terex_b2b_${userId}_suppliers`);
-      if (raw) setSuppliers(JSON.parse(raw));
+      if (raw) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const parsed = JSON.parse(raw).map((s: any) => ({ ...s, wallet: s.wallet || s.walletAddress || '' }));
+        setSuppliers(parsed);
+      }
       else setSuppliers([
         { id: 's1', name: 'Shenzhen Electronics', country: 'CN', network: 'TRC20', wallet: 'TQn7hB9kNYX4zCN8e2mJfLp3kQwR5sVd7' },
         { id: 's2', name: 'Lagos Imports Ltd', country: 'NG', network: 'BEP20', wallet: '0xd3e8b4f6c2a1f9e5c7b0a3d2e1f8c4b6a5d9e2f7' },
