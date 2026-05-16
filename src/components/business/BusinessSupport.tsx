@@ -2,10 +2,10 @@ import { MessageCircle, Mail, HelpCircle, Clock, Info, ArrowRight } from 'lucide
 
 // ── Design tokens ─────────────────────────────────────────────────
 const C = {
-  l1: '#141414', l2: '#191919', l3: '#1f1f1f',
-  bd: '#2a2a2a', bds: '#1f1f1f', bdh: '#333333',
+  l1: '#212121', l2: '#282828', l3: '#303030',
+  bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
   teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
-  t1: '#f0f0f0', t2: '#888888', t3: '#555555',
+  t1: '#f0f0f0', t2: '#888888', t3: '#686868',
   em: '#22c55e', emT: 'rgba(34,197,94,0.08)', emB: 'rgba(34,197,94,0.16)',
   purple: '#a855f7', purpleT: 'rgba(168,85,247,0.08)', purpleB: 'rgba(168,85,247,0.20)',
 };
@@ -211,45 +211,6 @@ export function BusinessSupport() {
         </div>
       </div>
 
-      {/* Quick help section */}
-      <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
-        <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.bds}` }}>
-          <h3 style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: 0 }}>Questions fréquentes</h3>
-        </div>
-        {[
-          {
-            q: 'Quel est le montant minimum par paiement ?',
-            a: 'Le montant minimum est de 100 USDT par transaction.',
-          },
-          {
-            q: 'Quels réseaux blockchain sont supportés ?',
-            a: 'TRC20 (TRON), BEP20 (BSC), ERC20 (Ethereum) et Polygon (MATIC).',
-          },
-          {
-            q: "Combien de temps prend le traitement d'un paiement ?",
-            a: 'Les paiements sont traités sous 2 à 24 heures ouvrées après confirmation.',
-          },
-          {
-            q: 'Quand le KYC entreprise est-il obligatoire ?',
-            a: 'La vérification KYC est requise pour les volumes dépassant 10 000 USDT par mois.',
-          },
-          {
-            q: 'Comment récupérer ma référence de paiement ?',
-            a: "La référence est visible dans l'Historique des transactions et dans l'email de confirmation.",
-          },
-        ].map((faq, i, arr) => (
-          <div
-            key={i}
-            style={{
-              padding: '14px 20px',
-              borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none',
-            }}
-          >
-            <p style={{ color: C.t1, fontSize: 13, fontWeight: 500, margin: '0 0 4px' }}>{faq.q}</p>
-            <p style={{ color: C.t3, fontSize: 12, margin: 0, lineHeight: 1.6 }}>{faq.a}</p>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
