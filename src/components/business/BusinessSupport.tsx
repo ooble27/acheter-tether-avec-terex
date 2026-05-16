@@ -39,6 +39,7 @@ function SupportCard({
       display: 'flex', flexDirection: 'column', gap: 16,
       fontFamily: FONT,
       transition: 'border-color 0.15s',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3)',
     }}
       onMouseEnter={e => (e.currentTarget.style.borderColor = C.bdh)}
       onMouseLeave={e => (e.currentTarget.style.borderColor = C.bds)}
@@ -157,6 +158,7 @@ export function BusinessSupport() {
           borderRadius: 12, padding: 20,
           fontFamily: FONT,
           transition: 'border-color 0.15s',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3)',
         }}
           onMouseEnter={e => (e.currentTarget.style.borderColor = C.bdh)}
           onMouseLeave={e => (e.currentTarget.style.borderColor = C.bds)}
