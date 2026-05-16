@@ -199,7 +199,45 @@ export function BusinessOverview({ user, onNavigate }: Props) {
         }}
       >
         {STATS.map((stat, i) => (
-          <div key={stat.label} style={{ padding: '20px 22px', borderRight: i < 3 ? `1px solid ${C.bds}` : 'none' }}>
+          <div key={stat.label} style={{ padding: '20px 22px', borderRight: i < 3 ? `1px solid ${C.bds}` : 'none', position: 'relative', overflow: 'hidden' }}>
+            {/* Mini SVG illustration top-right */}
+            <div style={{ position: 'absolute', top: 12, right: 12, opacity: 0.18 }}>
+              {i === 0 && (
+                <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                  <path d="M8 22 L16 14 L24 20 L36 10" stroke="#3B968F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M8 30 L16 22 L24 28 L36 18" stroke="#3B968F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 2"/>
+                  <circle cx="36" cy="10" r="3" stroke="#3B968F" strokeWidth="1.5"/>
+                  <path d="M30 36 L38 36 M34 32 L34 40" stroke="#3B968F" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              )}
+              {i === 1 && (
+                <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                  <circle cx="22" cy="22" r="13" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="3 2"/>
+                  <path d="M22 10 L22 22 L30 28" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="22" cy="22" r="2" fill="#f59e0b"/>
+                  <path d="M14 8 L14 6 M30 8 L30 6" stroke="#f59e0b" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              )}
+              {i === 2 && (
+                <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                  <circle cx="14" cy="16" r="5" stroke="#3b82f6" strokeWidth="1.5"/>
+                  <circle cx="30" cy="16" r="5" stroke="#3b82f6" strokeWidth="1.5"/>
+                  <circle cx="22" cy="30" r="5" stroke="#3b82f6" strokeWidth="1.5"/>
+                  <path d="M19 16 L25 16" stroke="#3b82f6" strokeWidth="1" strokeDasharray="2 1"/>
+                  <path d="M16 21 L20 26" stroke="#3b82f6" strokeWidth="1" strokeDasharray="2 1"/>
+                  <path d="M28 21 L24 26" stroke="#3b82f6" strokeWidth="1" strokeDasharray="2 1"/>
+                </svg>
+              )}
+              {i === 3 && (
+                <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                  <path d="M10 34 L10 24 L17 24 L17 34" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M19 34 L19 18 L26 18 L26 34" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M28 34 L28 12 L35 12 L35 34" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M8 34 L37 34" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M12 20 L20 14 L28 10" stroke="#22c55e" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 1"/>
+                </svg>
+              )}
+            </div>
             <p style={{ fontSize: 10, fontWeight: 600, color: C.t3, letterSpacing: '0.08em', margin: 0, textTransform: 'uppercase' }}>
               {stat.label}
             </p>
@@ -211,6 +249,95 @@ export function BusinessOverview({ user, onNavigate }: Props) {
             </div>
             <p style={{ fontSize: 11, color: C.t3, marginTop: 4, margin: '4px 0 0' }}>{stat.sub}</p>
           </div>
+        ))}
+      </div>
+
+      {/* Featured sections — illustrated navigation cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+        {[
+          {
+            key: 'payment',
+            title: 'Paiements',
+            desc: 'Envoyez des fonds à vos fournisseurs en USDT via TRC-20 ou ERC-20',
+            gradient: 'linear-gradient(135deg, #1a2e2c 0%, #0f1f1e 100%)',
+            accentColor: '#3B968F',
+            svg: (
+              <svg width="100%" height="100%" viewBox="0 0 180 90" fill="none" style={{ display: 'block' }}>
+                <rect x="20" y="20" width="80" height="52" rx="6" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5"/>
+                <path d="M20 34 L100 34" stroke="rgba(255,255,255,0.35)" strokeWidth="1"/>
+                <rect x="28" y="42" width="30" height="6" rx="3" stroke="rgba(255,255,255,0.4)" strokeWidth="1"/>
+                <rect x="28" y="54" width="20" height="4" rx="2" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
+                <path d="M110 46 L130 46 M122 38 L130 46 L122 54" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <rect x="140" y="28" width="24" height="16" rx="4" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2"/>
+                <circle cx="152" cy="60" r="8" stroke="rgba(255,255,255,0.4)" strokeWidth="1.2"/>
+                <path d="M149 60 L151 62 L155 58" stroke="rgba(255,255,255,0.6)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            ),
+          },
+          {
+            key: 'suppliers',
+            title: 'Trésorerie',
+            desc: 'Gérez vos fournisseurs et suivez vos engagements financiers',
+            gradient: 'linear-gradient(135deg, #1c2030 0%, #111525 100%)',
+            accentColor: '#3b82f6',
+            svg: (
+              <svg width="100%" height="100%" viewBox="0 0 180 90" fill="none" style={{ display: 'block' }}>
+                <circle cx="60" cy="45" r="22" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5"/>
+                <path d="M60 26 L60 45 L74 45" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" strokeLinecap="round"/>
+                <path d="M38 45 A22 22 0 0 1 60 23" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="3 2"/>
+                <circle cx="60" cy="45" r="3" fill="rgba(255,255,255,0.5)"/>
+                <path d="M92 30 L150 30" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
+                <path d="M92 40 L140 40" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
+                <path d="M92 50 L145 50" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
+                <path d="M92 60 L132 60" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
+                <circle cx="88" cy="30" r="3" stroke="rgba(255,255,255,0.45)" strokeWidth="1"/>
+                <circle cx="88" cy="40" r="3" stroke="rgba(255,255,255,0.45)" strokeWidth="1"/>
+                <circle cx="88" cy="50" r="3" stroke="rgba(255,255,255,0.45)" strokeWidth="1"/>
+                <circle cx="88" cy="60" r="3" stroke="rgba(255,255,255,0.45)" strokeWidth="1"/>
+              </svg>
+            ),
+          },
+          {
+            key: 'history',
+            title: 'Analytique',
+            desc: 'Visualisez vos volumes, tendances et rapports mensuels',
+            gradient: 'linear-gradient(135deg, #1f1a2e 0%, #130f1f 100%)',
+            accentColor: '#a855f7',
+            svg: (
+              <svg width="100%" height="100%" viewBox="0 0 180 90" fill="none" style={{ display: 'block' }}>
+                <path d="M20 70 L20 18" stroke="rgba(255,255,255,0.25)" strokeWidth="1" strokeLinecap="round"/>
+                <path d="M20 70 L162 70" stroke="rgba(255,255,255,0.25)" strokeWidth="1" strokeLinecap="round"/>
+                <path d="M20 70 L50 52 L80 58 L110 35 L140 42 L160 24" stroke="rgba(255,255,255,0.65)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M20 70 L50 52 L80 58 L110 35 L140 42 L160 24 L160 70 Z" fill="rgba(255,255,255,0.04)"/>
+                <circle cx="50" cy="52" r="2.5" fill="rgba(255,255,255,0.5)"/>
+                <circle cx="110" cy="35" r="2.5" fill="rgba(255,255,255,0.5)"/>
+                <circle cx="160" cy="24" r="2.5" fill="rgba(255,255,255,0.5)"/>
+                <path d="M35 70 L35 68 M65 70 L65 68 M95 70 L95 68 M125 70 L125 68 M155 70 L155 68" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
+              </svg>
+            ),
+          },
+        ].map(card => (
+          <button
+            key={card.key}
+            onClick={() => onNavigate(card.key)}
+            style={{
+              background: card.gradient, border: `1px solid rgba(255,255,255,0.08)`,
+              borderRadius: 12, overflow: 'hidden', cursor: 'pointer',
+              textAlign: 'left', padding: 0, fontFamily: FONT,
+              boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+              transition: 'transform 0.15s, border-color 0.15s',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = `rgba(255,255,255,0.18)`; (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = `rgba(255,255,255,0.08)`; (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; }}
+          >
+            <div style={{ height: 90, padding: '12px 16px' }}>
+              {card.svg}
+            </div>
+            <div style={{ padding: '12px 16px 16px', borderTop: `1px solid rgba(255,255,255,0.06)` }}>
+              <p style={{ fontSize: 13, fontWeight: 600, color: '#f0f0f0', margin: '0 0 4px' }}>{card.title}</p>
+              <p style={{ fontSize: 11, color: 'rgba(240,240,240,0.45)', margin: 0, lineHeight: 1.5 }}>{card.desc}</p>
+            </div>
+          </button>
         ))}
       </div>
 
