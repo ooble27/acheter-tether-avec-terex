@@ -165,46 +165,53 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
   const SidebarContent = () => (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', userSelect: 'none', fontFamily: FONT }}>
       {/* Logo area */}
-      <div style={{ padding: '20px 16px 16px', borderBottom: `1px solid ${C.bds}` }}>
+      <div style={{ padding: '20px', borderBottom: `1px solid #2a2a2a` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
-            width: 28, height: 28, borderRadius: 6, flexShrink: 0,
+            width: 32, height: 32, borderRadius: 8, flexShrink: 0,
             background: `linear-gradient(135deg, ${C.teal}, ${C.tealH})`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            <span style={{ color: '#fff', fontSize: 11, fontWeight: 800, letterSpacing: '-0.02em' }}>TB</span>
+            <span style={{ color: '#fff', fontSize: 12, fontWeight: 800, letterSpacing: '-0.02em' }}>TB</span>
           </div>
           <div>
-            <p style={{ color: C.t1, fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', lineHeight: 1, margin: 0 }}>
-              TEREX BUSINESS
+            <p style={{ color: C.t1, fontSize: 12, fontWeight: 700, letterSpacing: '0.04em', lineHeight: 1.2, margin: 0 }}>
+              Terex Business
             </p>
-            <p style={{ color: C.teal, fontSize: 9, letterSpacing: '0.14em', marginTop: 3, margin: '3px 0 0' }}>
-              PORTAIL B2B PRO
-            </p>
+            <span style={{
+              display: 'inline-block',
+              fontSize: 9, fontWeight: 600, letterSpacing: '0.10em',
+              color: C.teal, background: 'rgba(59,150,143,0.12)',
+              border: '1px solid rgba(59,150,143,0.25)',
+              borderRadius: 4, padding: '1px 5px', marginTop: 3,
+              textTransform: 'uppercase',
+            }}>
+              Portail B2B
+            </span>
           </div>
         </div>
       </div>
 
       {/* Nav */}
-      <nav style={{ flex: 1, padding: '4px 8px 8px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+      <nav style={{ flex: 1, padding: '4px 0 8px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
         {NAV_SECTIONS.map((section, sIdx) => (
           <div key={section.label}>
             {/* Section label */}
             <p style={{
               color: '#686868',
-              fontSize: 9,
+              fontSize: 10,
               fontWeight: 600,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
               margin: 0,
-              marginBottom: 4,
-              marginTop: sIdx === 0 ? 8 : 16,
-              paddingLeft: 10,
+              marginBottom: 2,
+              marginTop: sIdx === 0 ? 12 : 20,
+              paddingLeft: 16,
             }}>
               {section.label}
             </p>
             {/* Items */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
               {section.items.map(item => {
                 const Icon = item.icon;
                 const isActive = activeSection === item.id;
@@ -214,23 +221,24 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
                     onClick={() => { setActiveSection(item.id); setSidebarOpen(false); }}
                     style={{
                       width: '100%', display: 'flex', alignItems: 'center',
-                      gap: 9, paddingLeft: 10, paddingRight: 10, paddingTop: 7, paddingBottom: 7,
-                      borderRadius: 7, border: 'none', cursor: 'pointer', textAlign: 'left',
+                      gap: 9, paddingLeft: 13, paddingRight: 12, height: 36,
+                      borderRadius: 0, border: 'none', cursor: 'pointer', textAlign: 'left',
                       fontSize: 13,
                       fontWeight: isActive ? 500 : 400,
                       color: isActive ? '#f0f0f0' : '#686868',
-                      background: isActive ? '#383838' : 'transparent',
-                      transition: 'all 0.1s',
+                      background: isActive ? 'rgba(59,150,143,0.12)' : 'transparent',
+                      borderLeft: isActive ? '3px solid #3B968F' : '3px solid transparent',
+                      transition: 'background 0.1s, color 0.1s',
                       fontFamily: FONT,
                     }}
                     onMouseEnter={e => {
-                      if (!isActive) (e.currentTarget as HTMLButtonElement).style.color = '#888';
+                      if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)';
                     }}
                     onMouseLeave={e => {
-                      if (!isActive) (e.currentTarget as HTMLButtonElement).style.color = '#686868';
+                      if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
                     }}
                   >
-                    <Icon style={{ width: 14, height: 14, flexShrink: 0 }} />
+                    <Icon style={{ width: 14, height: 14, flexShrink: 0, color: isActive ? C.teal : '#686868' }} />
                     <span style={{ flex: 1 }}>{item.label}</span>
                   </button>
                 );
@@ -241,14 +249,14 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
       </nav>
 
       {/* Bottom */}
-      <div style={{ borderTop: `1px solid ${C.bds}`, padding: '12px 8px 8px' }}>
+      <div style={{ borderTop: `1px solid #2a2a2a`, padding: '12px 0 8px' }}>
         <button
           onClick={() => navigate('/dashboard')}
           style={{
             width: '100%', display: 'flex', alignItems: 'center', gap: 6,
-            padding: '6px 10px', borderRadius: 7, border: 'none', cursor: 'pointer',
+            padding: '6px 16px', borderRadius: 0, border: 'none', cursor: 'pointer',
             fontSize: 11, color: C.t3, background: 'transparent',
-            fontFamily: FONT, marginBottom: 6,
+            fontFamily: FONT, marginBottom: 8,
           }}
           onMouseEnter={e => (e.currentTarget.style.color = C.t2)}
           onMouseLeave={e => (e.currentTarget.style.color = C.t3)}
@@ -262,6 +270,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
           background: C.l2, border: `1px solid ${C.bds}`,
           borderRadius: 8, padding: '7px 10px',
           display: 'flex', alignItems: 'center', gap: 8,
+          margin: '0 10px',
         }}>
           <InitialAvatar name={user?.name || 'U'} size={26} />
           <div style={{ minWidth: 0, flex: 1 }}>
@@ -291,9 +300,10 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
       {/* Desktop Sidebar */}
       <aside style={{
         display: 'none',
-        width: 220, minWidth: 220,
-        background: '#141414',
-        borderRight: `1px solid ${C.bds}`,
+        width: 240, minWidth: 240,
+        background: '#111111',
+        borderRight: `1px solid #2a2a2a`,
+        boxShadow: '2px 0 8px rgba(0,0,0,0.4)',
         flexShrink: 0,
         flexDirection: 'column',
       }} className="md:flex">
@@ -308,8 +318,9 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
             onClick={() => setSidebarOpen(false)}
           />
           <aside style={{
-            position: 'relative', zIndex: 10, width: 220,
-            background: '#141414', borderRight: `1px solid ${C.bds}`,
+            position: 'relative', zIndex: 10, width: 240,
+            background: '#111111', borderRight: `1px solid #2a2a2a`,
+            boxShadow: '2px 0 8px rgba(0,0,0,0.4)',
             display: 'flex', flexDirection: 'column',
           }}>
             <SidebarContent />
@@ -331,23 +342,46 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
 
       {/* Main content area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
-        {/* Content — no top header bar */}
-        <main style={{ flex: 1, overflowY: 'auto', background: C.bg, position: 'relative' }}>
-          {/* Mobile hamburger — floats top-left, only on mobile */}
+        {/* Mobile top header bar — sticky, only on mobile */}
+        <div
+          className="md:hidden"
+          style={{
+            height: 52, background: '#111111',
+            borderBottom: '1px solid #2a2a2a',
+            display: 'flex', alignItems: 'center',
+            paddingLeft: 12, paddingRight: 12,
+            gap: 12, flexShrink: 0,
+            position: 'sticky', top: 0, zIndex: 20,
+          }}
+        >
+          {/* Hamburger */}
           <button
-            className="md:hidden"
             onClick={() => setSidebarOpen(true)}
             style={{
-              position: 'absolute', top: 16, left: 16, zIndex: 10,
               width: 36, height: 36, borderRadius: 8,
-              background: '#141414', border: `1px solid ${C.bds}`,
+              background: 'transparent', border: `1px solid #2a2a2a`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: C.t2, cursor: 'pointer',
+              color: C.t2, cursor: 'pointer', flexShrink: 0,
             }}
           >
             <Menu style={{ width: 16, height: 16 }} />
           </button>
-          <div className="p-4 md:p-6" style={{ maxWidth: 1040, margin: '0 auto', width: '100%', paddingTop: 48 }}>
+
+          {/* Page title */}
+          <span style={{
+            flex: 1, textAlign: 'center',
+            fontSize: 14, fontWeight: 600, color: C.t1, fontFamily: FONT,
+          }}>
+            {currentPage?.label || 'Vue d\'ensemble'}
+          </span>
+
+          {/* User avatar initial */}
+          <InitialAvatar name={user?.name || 'U'} size={30} />
+        </div>
+
+        {/* Content */}
+        <main style={{ flex: 1, overflowY: 'auto', background: C.bg, position: 'relative' }}>
+          <div className="p-4 md:p-8" style={{ maxWidth: 1040, margin: '0 auto', width: '100%' }}>
             {renderContent()}
           </div>
         </main>
@@ -355,3 +389,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
     </div>
   );
 }
+
+// Suppress unused warning
+void PAGE_SUBTITLES;
+void ComingSoon;

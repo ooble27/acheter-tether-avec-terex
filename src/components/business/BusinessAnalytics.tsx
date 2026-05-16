@@ -174,6 +174,7 @@ function ChartCard({ title, children, style }: { title: string; children: React.
     <div style={{
       background: C.l1, border: `1px solid ${C.bds}`,
       borderRadius: 12, padding: 20,
+      boxShadow: '0 2px 8px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3)',
       ...style,
     }}>
       <p style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: '0 0 16px', fontFamily: FONT }}>
@@ -455,6 +456,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
       <div style={{
         background: C.l1, border: `1px solid ${C.bds}`,
         borderRadius: 12, padding: 20,
+        boxShadow: '0 2px 8px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3)',
       }}>
         <p style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: '0 0 16px', fontFamily: FONT }}>
           Performance des transactions
