@@ -275,12 +275,73 @@ export function BusinessCompliance({ user }: { user: { email: string; name: stri
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 0, fontFamily: FONT }}>
-      {/* Header */}
-      <div style={{ padding: '0 0 24px' }}>
-        <h2 style={{ color: C.t1, fontSize: 22, fontWeight: 700, letterSpacing: '-0.025em', margin: '0 0 4px' }}>
-          Conformité KYC
-        </h2>
-        <p style={{ color: C.t3, fontSize: 13, margin: 0 }}>Vérification et documents réglementaires</p>
+
+      {/* Hero illustrated card */}
+      <div style={{
+        borderRadius: 14, overflow: 'hidden', position: 'relative',
+        background: 'linear-gradient(135deg, #1a1f2e 0%, #0f1520 60%, #0a1018 100%)',
+        border: `1px solid rgba(59,130,246,0.18)`,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+        minHeight: 200,
+        marginBottom: 24,
+        display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+      }}>
+        {/* SVG shield/compliance illustration */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <svg width="480" height="180" viewBox="0 0 480 180" fill="none" style={{ display: 'block', opacity: 0.7 }}>
+            {/* Central shield */}
+            <path d="M240 20 L270 32 L270 72 Q270 100 240 116 Q210 100 210 72 L210 32 Z" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinejoin="round"/>
+            <path d="M240 36 L258 46 L258 72 Q258 90 240 100 Q222 90 222 72 L222 46 Z" stroke="rgba(255,255,255,0.35)" strokeWidth="1" strokeDasharray="3 2"/>
+            {/* Checkmark inside shield */}
+            <path d="M228 68 L236 76 L252 58" stroke="rgba(255,255,255,0.75)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            {/* Document stacks left */}
+            <rect x="100" y="35" width="64" height="82" rx="5" stroke="rgba(255,255,255,0.5)" strokeWidth="1.3"/>
+            <rect x="106" y="42" width="40" height="5" rx="2.5" stroke="rgba(255,255,255,0.35)" strokeWidth="1"/>
+            <rect x="106" y="52" width="32" height="4" rx="2" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
+            <rect x="106" y="60" width="36" height="4" rx="2" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
+            <rect x="106" y="68" width="28" height="4" rx="2" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
+            <circle cx="128" cy="96" r="10" stroke="rgba(34,197,94,0.6)" strokeWidth="1.3"/>
+            <path d="M123 96 L126 99 L133 93" stroke="rgba(34,197,94,0.8)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+            {/* Document stack right */}
+            <rect x="316" y="35" width="64" height="82" rx="5" stroke="rgba(255,255,255,0.5)" strokeWidth="1.3"/>
+            <rect x="322" y="42" width="40" height="5" rx="2.5" stroke="rgba(255,255,255,0.35)" strokeWidth="1"/>
+            <rect x="322" y="52" width="32" height="4" rx="2" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
+            <rect x="322" y="60" width="36" height="4" rx="2" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
+            <rect x="322" y="68" width="28" height="4" rx="2" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
+            <circle cx="344" cy="96" r="10" stroke="rgba(245,158,11,0.6)" strokeWidth="1.3"/>
+            <path d="M344 91 L344 101 M339 96 L349 96" stroke="rgba(245,158,11,0.8)" strokeWidth="1.3" strokeLinecap="round"/>
+            {/* Connecting lines from docs to shield */}
+            <path d="M164 76 L208 72" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeDasharray="4 3"/>
+            <path d="M316 76 L272 72" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeDasharray="4 3"/>
+            {/* Progress steps bottom */}
+            <circle cx="180" cy="148" r="8" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2"/>
+            <path d="M176 148 L179 151 L184 145" stroke="rgba(255,255,255,0.7)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M188 148 L220 148" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
+            <circle cx="228" cy="148" r="8" stroke="rgba(245,158,11,0.6)" strokeWidth="1.2"/>
+            <circle cx="228" cy="148" r="3" fill="rgba(245,158,11,0.5)"/>
+            <path d="M236 148 L268 148" stroke="rgba(255,255,255,0.15)" strokeWidth="1" strokeDasharray="3 2"/>
+            <circle cx="276" cy="148" r="8" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
+            <path d="M284 148 L308 148" stroke="rgba(255,255,255,0.1)" strokeWidth="1" strokeDasharray="3 2"/>
+            <circle cx="316" cy="148" r="8" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
+            {/* Floating dots */}
+            <circle cx="80" cy="130" r="2.5" fill="rgba(255,255,255,0.18)"/>
+            <circle cx="400" cy="130" r="2.5" fill="rgba(255,255,255,0.18)"/>
+            <circle cx="60" cy="55" r="2" fill="rgba(255,255,255,0.15)"/>
+            <circle cx="420" cy="55" r="2" fill="rgba(255,255,255,0.15)"/>
+          </svg>
+        </div>
+        {/* Gradient overlay */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: '55%',
+          background: 'linear-gradient(to top, rgba(10,16,24,0.95) 0%, transparent 100%)',
+        }} />
+        {/* Text */}
+        <div style={{ position: 'relative', padding: '20px 28px' }}>
+          <h2 style={{ color: C.t1, fontSize: 22, fontWeight: 700, letterSpacing: '-0.025em', margin: '0 0 4px' }}>
+            Conformité KYC
+          </h2>
+          <p style={{ color: 'rgba(240,240,240,0.5)', fontSize: 13, margin: 0 }}>Vérification et documents réglementaires</p>
+        </div>
       </div>
 
       {/* Progress bar card */}

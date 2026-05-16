@@ -367,15 +367,72 @@ export function BusinessTeam({ user }: {
 
   return (
     <div style={{ fontFamily: FONT, maxWidth: 1000, margin: '0 auto', padding: '0 0 48px', display: 'flex', flexDirection: 'column', gap: 24 }}>
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>
-          <div style={{ fontSize: 22, fontWeight: 700, color: C.t1 }}>Équipe & Accès</div>
-          <div style={{ fontSize: 13, color: C.t3, marginTop: 2 }}>Gérez les membres et leurs permissions</div>
+
+      {/* Hero illustrated card */}
+      <div style={{
+        borderRadius: 14, overflow: 'hidden', position: 'relative',
+        background: 'linear-gradient(135deg, #1a2e2c 0%, #0d1f1e 60%, #0a1715 100%)',
+        border: `1px solid rgba(59,150,143,0.2)`,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+        minHeight: 220,
+        display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+      }}>
+        {/* SVG illustration */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <svg width="480" height="200" viewBox="0 0 480 200" fill="none" style={{ display: 'block', opacity: 0.7 }}>
+            {/* Central hub node */}
+            <circle cx="240" cy="100" r="20" stroke="rgba(255,255,255,0.75)" strokeWidth="1.5"/>
+            <circle cx="240" cy="100" r="30" stroke="rgba(255,255,255,0.15)" strokeWidth="1" strokeDasharray="4 3"/>
+            <circle cx="240" cy="100" r="8" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5"/>
+            {/* Person nodes around the hub */}
+            <circle cx="100" cy="60" r="14" stroke="rgba(255,255,255,0.6)" strokeWidth="1.3"/>
+            <circle cx="100" cy="60" r="6" stroke="rgba(255,255,255,0.4)" strokeWidth="1"/>
+            <path d="M80 88 Q100 78 120 88" stroke="rgba(255,255,255,0.35)" strokeWidth="1" strokeLinecap="round"/>
+            <circle cx="380" cy="60" r="14" stroke="rgba(255,255,255,0.6)" strokeWidth="1.3"/>
+            <circle cx="380" cy="60" r="6" stroke="rgba(255,255,255,0.4)" strokeWidth="1"/>
+            <path d="M360 88 Q380 78 400 88" stroke="rgba(255,255,255,0.35)" strokeWidth="1" strokeLinecap="round"/>
+            <circle cx="100" cy="140" r="14" stroke="rgba(255,255,255,0.6)" strokeWidth="1.3"/>
+            <circle cx="100" cy="140" r="6" stroke="rgba(255,255,255,0.4)" strokeWidth="1"/>
+            <path d="M80 168 Q100 158 120 168" stroke="rgba(255,255,255,0.35)" strokeWidth="1" strokeLinecap="round"/>
+            <circle cx="380" cy="140" r="14" stroke="rgba(255,255,255,0.6)" strokeWidth="1.3"/>
+            <circle cx="380" cy="140" r="6" stroke="rgba(255,255,255,0.4)" strokeWidth="1"/>
+            <path d="M360 168 Q380 158 400 168" stroke="rgba(255,255,255,0.35)" strokeWidth="1" strokeLinecap="round"/>
+            <circle cx="60" cy="100" r="12" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2"/>
+            <circle cx="420" cy="100" r="12" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2"/>
+            {/* Connection lines */}
+            <path d="M113 67 L224 95" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="4 3"/>
+            <path d="M366 67 L256 95" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="4 3"/>
+            <path d="M113 133 L224 105" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="4 3"/>
+            <path d="M366 133 L256 105" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="4 3"/>
+            <path d="M72 100 L210 100" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeDasharray="3 3"/>
+            <path d="M270 100 L408 100" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeDasharray="3 3"/>
+            {/* Role badge shapes */}
+            <rect x="76" y="38" width="48" height="14" rx="7" stroke="rgba(168,85,247,0.6)" strokeWidth="1"/>
+            <rect x="356" y="38" width="48" height="14" rx="7" stroke="rgba(245,158,11,0.6)" strokeWidth="1"/>
+            <rect x="76" y="118" width="48" height="14" rx="7" stroke="rgba(59,130,246,0.6)" strokeWidth="1"/>
+            <rect x="356" y="118" width="48" height="14" rx="7" stroke="rgba(104,104,104,0.6)" strokeWidth="1"/>
+            {/* Floating dots */}
+            <circle cx="170" cy="40" r="2.5" fill="rgba(255,255,255,0.25)"/>
+            <circle cx="310" cy="160" r="2.5" fill="rgba(255,255,255,0.25)"/>
+            <circle cx="200" cy="165" r="2" fill="rgba(255,255,255,0.2)"/>
+            <circle cx="290" cy="35" r="2" fill="rgba(255,255,255,0.2)"/>
+          </svg>
         </div>
-        <TealBtn onClick={() => setShowInviteModal(true)}>
-          + Inviter un membre
-        </TealBtn>
+        {/* Gradient overlay for text legibility */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%',
+          background: 'linear-gradient(to top, rgba(10,23,21,0.95) 0%, transparent 100%)',
+        }} />
+        {/* Text content */}
+        <div style={{ position: 'relative', padding: '24px 28px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: C.t1, letterSpacing: '-0.02em' }}>Équipe & Accès</div>
+            <div style={{ fontSize: 13, color: 'rgba(240,240,240,0.55)', marginTop: 4 }}>Gérez les membres, rôles et permissions de votre organisation</div>
+          </div>
+          <TealBtn onClick={() => setShowInviteModal(true)}>
+            + Inviter un membre
+          </TealBtn>
+        </div>
       </div>
 
       {/* Stat pills */}
