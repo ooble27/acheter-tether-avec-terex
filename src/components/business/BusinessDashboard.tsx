@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Send, Clock, Users2,
   Building2, LifeBuoy, LogOut, Bell,
-  Plus, ArrowLeft, Menu, X
+  Plus, ArrowLeft, Menu, X,
+  Wallet, CalendarClock, BarChart2, UserCog, ShieldCheck, Code2
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { BusinessOverview } from './BusinessOverview';
@@ -12,27 +13,64 @@ import { BusinessSuppliers } from './BusinessSuppliers';
 import { BusinessHistory } from './BusinessHistory';
 import { BusinessProfile } from './BusinessProfile';
 import { BusinessSupport } from './BusinessSupport';
+import { BusinessTreasury } from './BusinessTreasury';
+import { BusinessAnalytics } from './BusinessAnalytics';
 
 interface BusinessDashboardProps {
   user: { id?: string; email: string; name: string } | null;
 }
 
-const NAV = [
-  { id: 'overview',   label: 'Tableau de bord',  icon: LayoutDashboard },
-  { id: 'payment',    label: 'Nouveau paiement',  icon: Send },
-  { id: 'history',    label: 'Historique',        icon: Clock },
-  { id: 'suppliers',  label: 'Fournisseurs',      icon: Users2 },
-  { id: 'profile',    label: 'Profil entreprise', icon: Building2 },
-  { id: 'support',    label: 'Support',           icon: LifeBuoy },
+const NAV_SECTIONS = [
+  {
+    label: 'PRINCIPAL',
+    items: [
+      { id: 'overview',   label: 'Vue d\'ensemble',    icon: LayoutDashboard },
+      { id: 'payment',    label: 'Paiements',           icon: Send },
+      { id: 'treasury',   label: 'Trésorerie',          icon: Wallet },
+    ],
+  },
+  {
+    label: 'GESTION',
+    items: [
+      { id: 'history',    label: 'Historique & Reçus',  icon: Clock },
+      { id: 'suppliers',  label: 'Fournisseurs',        icon: Users2 },
+      { id: 'batch',      label: 'Lots & Planification',icon: CalendarClock },
+    ],
+  },
+  {
+    label: 'BUSINESS',
+    items: [
+      { id: 'analytics',  label: 'Analytique',          icon: BarChart2 },
+      { id: 'team',       label: 'Équipe & Accès',      icon: UserCog },
+      { id: 'compliance', label: 'Conformité KYC',      icon: ShieldCheck },
+    ],
+  },
+  {
+    label: 'PARAMÈTRES',
+    items: [
+      { id: 'profile',    label: 'Profil entreprise',   icon: Building2 },
+      { id: 'api',        label: 'Intégrations & API',  icon: Code2 },
+      { id: 'support',    label: 'Support',             icon: LifeBuoy },
+    ],
+  },
 ];
 
+// Flat list for lookups
+const NAV_ALL = NAV_SECTIONS.flatMap(s => s.items);
+
 const PAGE_SUBTITLES: Record<string, string> = {
-  overview:  "Vue d'ensemble de votre activité",
-  payment:   'Transfert USDT vers un fournisseur',
-  history:   'Toutes vos transactions',
-  suppliers: 'Gérez vos contacts fournisseurs',
-  profile:   'Informations de votre société',
-  support:   'Aide et assistance dédiée B2B',
+  overview:   "Vue d'ensemble de votre activité",
+  payment:    'Transfert USDT vers un fournisseur',
+  treasury:   'Gestion de vos wallets et taux',
+  history:    'Toutes vos transactions et reçus',
+  suppliers:  'Gérez vos contacts fournisseurs',
+  batch:      'Paiements groupés et programmés',
+  analytics:  'Performances et insights',
+  team:       'Gestion des membres et permissions',
+  compliance: 'Documents KYC et conformité',
+  profile:    'Informations de votre société',
+  api:        'Clés API et webhooks',
+  support:    'Aide et assistance dédiée B2B',
 };
 
 // Design tokens
@@ -68,6 +106,27 @@ function InitialAvatar({ name, size = 26 }: { name: string; size?: number }) {
   );
 }
 
+// Placeholder for pages not yet implemented
+function ComingSoon({ title }: { title: string }) {
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      minHeight: 320, color: C.t3, fontFamily: FONT, textAlign: 'center',
+    }}>
+      <div style={{
+        width: 48, height: 48, borderRadius: 12,
+        background: C.l2, border: `1px solid ${C.bds}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        marginBottom: 16,
+      }}>
+        <span style={{ fontSize: 20 }}>🔧</span>
+      </div>
+      <p style={{ color: C.t2, fontSize: 14, fontWeight: 500, margin: '0 0 6px' }}>{title}</p>
+      <p style={{ color: C.t3, fontSize: 12, margin: 0 }}>Cette section sera disponible prochainement.</p>
+    </div>
+  );
+}
+
 export function BusinessDashboard({ user }: BusinessDashboardProps) {
   const [activeSection, setActiveSection] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -81,17 +140,23 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
 
   const renderContent = () => {
     switch (activeSection) {
-      case 'overview':  return <BusinessOverview user={user} onNavigate={setActiveSection} />;
-      case 'payment':   return <BusinessPayments user={user} onBack={() => setActiveSection('overview')} />;
-      case 'history':   return <BusinessHistory user={user} />;
-      case 'suppliers': return <BusinessSuppliers user={user} />;
-      case 'profile':   return <BusinessProfile user={user} />;
-      case 'support':   return <BusinessSupport />;
-      default:          return <BusinessOverview user={user} onNavigate={setActiveSection} />;
+      case 'overview':    return <BusinessOverview user={user} onNavigate={setActiveSection} />;
+      case 'payment':     return <BusinessPayments user={user} onBack={() => setActiveSection('overview')} />;
+      case 'treasury':    return <BusinessTreasury user={user} />;
+      case 'history':     return <BusinessHistory user={user} />;
+      case 'suppliers':   return <BusinessSuppliers user={user} />;
+      case 'batch':       return <ComingSoon title="Lots & Planification" />;
+      case 'analytics':   return <BusinessAnalytics user={user} />;
+      case 'team':        return <ComingSoon title="Équipe & Accès" />;
+      case 'compliance':  return <ComingSoon title="Conformité KYC" />;
+      case 'profile':     return <BusinessProfile user={user} />;
+      case 'api':         return <ComingSoon title="Intégrations & API" />;
+      case 'support':     return <BusinessSupport />;
+      default:            return <BusinessOverview user={user} onNavigate={setActiveSection} />;
     }
   };
 
-  const currentPage = NAV.find(n => n.id === activeSection);
+  const currentPage = NAV_ALL.find(n => n.id === activeSection);
 
   const SidebarContent = () => (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', userSelect: 'none', fontFamily: FONT }}>
@@ -117,37 +182,58 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
       </div>
 
       {/* Nav */}
-      <nav style={{ flex: 1, padding: '8px', display: 'flex', flexDirection: 'column', gap: 1, overflowY: 'auto' }}>
-        {NAV.map(item => {
-          const Icon = item.icon;
-          const isActive = activeSection === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => { setActiveSection(item.id); setSidebarOpen(false); }}
-              style={{
-                width: '100%', display: 'flex', alignItems: 'center',
-                gap: 9, paddingLeft: 10, paddingRight: 10, paddingTop: 8, paddingBottom: 8,
-                borderRadius: 7, border: 'none', cursor: 'pointer', textAlign: 'left',
-                fontSize: 13,
-                fontWeight: isActive ? 500 : 400,
-                color: isActive ? C.t1 : C.t3,
-                background: isActive ? C.l4 : 'transparent',
-                transition: 'all 0.1s',
-                fontFamily: FONT,
-              }}
-              onMouseEnter={e => {
-                if (!isActive) (e.currentTarget as HTMLButtonElement).style.color = C.t2;
-              }}
-              onMouseLeave={e => {
-                if (!isActive) (e.currentTarget as HTMLButtonElement).style.color = C.t3;
-              }}
-            >
-              <Icon style={{ width: 15, height: 15, flexShrink: 0 }} />
-              <span style={{ flex: 1 }}>{item.label}</span>
-            </button>
-          );
-        })}
+      <nav style={{ flex: 1, padding: '4px 8px 8px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+        {NAV_SECTIONS.map((section, sIdx) => (
+          <div key={section.label}>
+            {/* Section label */}
+            <p style={{
+              color: '#686868',
+              fontSize: 9,
+              fontWeight: 600,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              margin: 0,
+              marginBottom: 4,
+              marginTop: sIdx === 0 ? 8 : 16,
+              paddingLeft: 10,
+            }}>
+              {section.label}
+            </p>
+            {/* Items */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              {section.items.map(item => {
+                const Icon = item.icon;
+                const isActive = activeSection === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => { setActiveSection(item.id); setSidebarOpen(false); }}
+                    style={{
+                      width: '100%', display: 'flex', alignItems: 'center',
+                      gap: 9, paddingLeft: 10, paddingRight: 10, paddingTop: 7, paddingBottom: 7,
+                      borderRadius: 7, border: 'none', cursor: 'pointer', textAlign: 'left',
+                      fontSize: 13,
+                      fontWeight: isActive ? 500 : 400,
+                      color: isActive ? '#f0f0f0' : '#686868',
+                      background: isActive ? '#383838' : 'transparent',
+                      transition: 'all 0.1s',
+                      fontFamily: FONT,
+                    }}
+                    onMouseEnter={e => {
+                      if (!isActive) (e.currentTarget as HTMLButtonElement).style.color = '#888';
+                    }}
+                    onMouseLeave={e => {
+                      if (!isActive) (e.currentTarget as HTMLButtonElement).style.color = '#686868';
+                    }}
+                  >
+                    <Icon style={{ width: 14, height: 14, flexShrink: 0 }} />
+                    <span style={{ flex: 1 }}>{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* Bottom */}
