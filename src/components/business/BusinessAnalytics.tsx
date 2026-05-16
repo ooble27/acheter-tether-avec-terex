@@ -148,7 +148,7 @@ function KpiCard({ label, value, change, positive }: KpiCardProps) {
         border: `1px solid ${hovered ? C.bdh : C.bds}`,
         borderRadius: 12, padding: '18px 20px',
         transition: 'border-color 0.15s, box-shadow 0.15s',
-        boxShadow: hovered ? '0 4px 20px rgba(0,0,0,0.35)' : '0 2px 8px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3)',
+        boxShadow: hovered ? '0 4px 20px rgba(0,0,0,0.2)' : 'none',
       }}
     >
       <p style={{ color: C.t3, fontSize: 11, margin: '0 0 10px', fontFamily: FONT }}>{label}</p>

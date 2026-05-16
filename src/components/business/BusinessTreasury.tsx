@@ -468,7 +468,6 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
         borderRadius: 12, padding: '14px 20px',
         display: 'flex', flexWrap: 'wrap', gap: 12,
         alignItems: 'center', marginBottom: 24,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ color: C.t3, fontSize: 11 }}>Total consolidé</span>
@@ -497,7 +496,6 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
       <div style={{
         background: C.l1, border: `1px solid ${C.bds}`,
         borderRadius: 12, padding: '16px 20px', marginBottom: 24,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
           <h2 style={{ color: C.t1, fontSize: 14, fontWeight: 600, margin: 0 }}>
@@ -518,7 +516,6 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
         <div style={{
           background: C.l1, border: `1px solid ${C.bds}`,
           borderRadius: 12, padding: '16px 20px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3)',
         }}>
           <h2 style={{ color: C.t1, fontSize: 14, fontWeight: 600, margin: '0 0 16px' }}>
             Historique USDT/EUR — 30 jours
@@ -565,7 +562,6 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
         <div style={{
           background: C.l1, border: `1px solid ${C.bds}`,
           borderRadius: 12, padding: '16px 20px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3)',
         }}>
           <AlertPanel
             alerts={alerts}
@@ -600,7 +596,7 @@ function WalletCard({ wallet, onReceive }: WalletCardProps) {
         border: `1px solid ${hovered ? C.bdh : C.bds}`,
         borderRadius: 14, padding: 24,
         transition: 'border-color 0.15s, box-shadow 0.15s',
-        boxShadow: hovered ? '0 4px 24px rgba(0,0,0,0.35)' : '0 2px 8px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3)',
+        boxShadow: hovered ? '0 4px 24px rgba(0,0,0,0.24)' : 'none',
       }}
     >
       {/* Chain header */}

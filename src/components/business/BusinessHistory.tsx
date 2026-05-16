@@ -409,7 +409,7 @@ export function BusinessHistory({ user }: Props) {
       </div>
 
       {/* Table */}
-      <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3)' }}>
+      <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
         {paginated.length === 0 ? (
           <div style={{ padding: '60px 20px', textAlign: 'center' }}>
             <p style={{ color: C.t3, fontSize: 13, margin: 0 }}>Aucune transaction trouvée</p>
