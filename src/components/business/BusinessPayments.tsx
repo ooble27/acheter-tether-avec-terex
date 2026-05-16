@@ -737,8 +737,8 @@ export function BusinessPayments({ user, onBack }: {
       </div>
       <div style={{ fontSize: 14, color: C.t2, fontFamily: FONT, marginBottom: 24 }}>
         {amountNum >= 5000
-          ? 'En attente d'approbation administrateur'
-          : 'Traitement sous 2–24h ouvrées'}
+          ? "En attente d'approbation administrateur"
+          : "Traitement sous 2–24h ouvrées"}
       </div>
       <div style={{
         display: 'inline-block', padding: '8px 16px', background: C.l2,
