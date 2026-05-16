@@ -14,7 +14,7 @@ import { BusinessProfile } from './BusinessProfile';
 import { BusinessSupport } from './BusinessSupport';
 
 interface BusinessDashboardProps {
-  user: { email: string; name: string } | null;
+  user: { id?: string; email: string; name: string } | null;
 }
 
 const NAV = [
@@ -37,10 +37,10 @@ const PAGE_SUBTITLES: Record<string, string> = {
 
 // Design tokens
 const C = {
-  bg: '#0e0e0e', l1: '#141414', l2: '#191919', l3: '#1f1f1f', l4: '#242424',
-  bd: '#2a2a2a', bds: '#1f1f1f',
+  bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030', l4: '#383838',
+  bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
   teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
-  t1: '#f0f0f0', t2: '#888888', t3: '#555555',
+  t1: '#f0f0f0', t2: '#888888', t3: '#686868',
 };
 const FONT = "'Inter', sans-serif";
 
@@ -202,7 +202,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
       <aside style={{
         display: 'none',
         width: 220, minWidth: 220,
-        background: C.l1,
+        background: '#141414',
         borderRight: `1px solid ${C.bds}`,
         flexShrink: 0,
         flexDirection: 'column',
@@ -219,7 +219,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
           />
           <aside style={{
             position: 'relative', zIndex: 10, width: 220,
-            background: C.l1, borderRight: `1px solid ${C.bds}`,
+            background: '#141414', borderRight: `1px solid ${C.bds}`,
             display: 'flex', flexDirection: 'column',
           }}>
             <SidebarContent />
@@ -243,7 +243,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
         {/* Header */}
         <header style={{
-          height: 56, background: C.l1,
+          height: 56, background: '#141414',
           borderBottom: `1px solid ${C.bds}`,
           display: 'flex', alignItems: 'center',
           justifyContent: 'space-between',
@@ -319,38 +319,10 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
 
         {/* Content */}
         <main style={{ flex: 1, overflowY: 'auto', background: C.bg }}>
-          <div style={{ padding: '20px 24px', maxWidth: 960, margin: '0 auto', width: '100%' }}>
+          <div className="p-4 md:p-6" style={{ maxWidth: 960, margin: '0 auto', width: '100%' }}>
             {renderContent()}
           </div>
         </main>
-
-        {/* Mobile bottom nav */}
-        <nav className="md:hidden" style={{
-          height: 56, background: C.l1, borderTop: `1px solid ${C.bds}`,
-          display: 'flex', alignItems: 'center', justifyContent: 'space-around',
-          flexShrink: 0,
-        }}>
-          {NAV.slice(0, 5).map(item => {
-            const Icon = item.icon;
-            const isActive = activeSection === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveSection(item.id)}
-                style={{
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
-                  padding: '6px 8px', borderRadius: 7, border: 'none', background: 'transparent',
-                  color: isActive ? C.teal : C.t3, cursor: 'pointer',
-                }}
-              >
-                <Icon style={{ width: 18, height: 18 }} />
-                <span style={{ fontSize: 9, fontWeight: isActive ? 600 : 400, fontFamily: FONT }}>
-                  {item.label.split(' ')[0]}
-                </span>
-              </button>
-            );
-          })}
-        </nav>
       </div>
     </div>
   );

@@ -29,6 +29,7 @@ const BusinessPage = () => {
   if (!user) return null;
 
   const userData = {
+    id: user.id,
     email: user.email || '',
     name:
       user.user_metadata?.name ||
