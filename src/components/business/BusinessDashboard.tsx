@@ -136,7 +136,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
             </div>
             <div>
               <p style={{ color: C.t1, fontSize: 12, fontWeight: 700, margin: 0, lineHeight: 1.3 }}>Terex Business</p>
-              <p style={{ color: C.t3, fontSize: 10, margin: 0 }}>Portail B2B Pro</p>
+              <p style={{ color: C.t3, fontSize: 10, margin: 0 }}>Portail B2B</p>
             </div>
           </div>
           <button
@@ -202,16 +202,14 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', gap: 10,
                     padding: '8px 10px', borderRadius: 8, border: 'none', cursor: 'pointer',
-                    background: isActive ? C.tealT : 'transparent',
-                    borderLeft: `2px solid ${isActive ? C.teal : 'transparent'}`,
-                    paddingLeft: isActive ? 8 : 10,
+                    background: isActive ? 'rgba(255,255,255,0.09)' : 'transparent',
                     color: isActive ? C.t1 : C.t2, fontSize: 13, fontWeight: isActive ? 500 : 400,
                     fontFamily: FONT, textAlign: 'left', transition: 'all 0.1s',
                   }}
-                  onMouseEnter={e => { if (!isActive) { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)'; (e.currentTarget as HTMLButtonElement).style.color = C.t1; } }}
+                  onMouseEnter={e => { if (!isActive) { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.05)'; (e.currentTarget as HTMLButtonElement).style.color = C.t1; } }}
                   onMouseLeave={e => { if (!isActive) { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; (e.currentTarget as HTMLButtonElement).style.color = C.t2; } }}
                 >
-                  <Icon style={{ width: 15, height: 15, flexShrink: 0, color: isActive ? C.teal : 'currentColor' }} />
+                  <Icon style={{ width: 15, height: 15, flexShrink: 0 }} />
                   <span>{item.label}</span>
                 </button>
               );
@@ -238,16 +236,14 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
                       style={{
                         width: '100%', display: 'flex', alignItems: 'center', gap: 10,
                         padding: '8px 10px', borderRadius: 8, border: 'none', cursor: 'pointer',
-                        borderLeft: `2px solid ${isActive ? C.teal : 'transparent'}`,
-                        paddingLeft: isActive ? 8 : 10,
-                        background: isActive ? C.tealT : 'transparent',
+                        background: isActive ? 'rgba(255,255,255,0.09)' : 'transparent',
                         color: isActive ? C.t1 : C.t2, fontSize: 13, fontWeight: isActive ? 500 : 400,
                         fontFamily: FONT, textAlign: 'left', transition: 'all 0.1s',
                       }}
-                      onMouseEnter={e => { if (!isActive) { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)'; (e.currentTarget as HTMLButtonElement).style.color = C.t1; } }}
+                      onMouseEnter={e => { if (!isActive) { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.05)'; (e.currentTarget as HTMLButtonElement).style.color = C.t1; } }}
                       onMouseLeave={e => { if (!isActive) { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; (e.currentTarget as HTMLButtonElement).style.color = C.t2; } }}
                     >
-                      <Icon style={{ width: 15, height: 15, flexShrink: 0, color: isActive ? C.teal : 'currentColor' }} />
+                      <Icon style={{ width: 15, height: 15, flexShrink: 0 }} />
                       <span style={{ flex: 1 }}>{item.label}</span>
                     </button>
                   );
