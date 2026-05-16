@@ -283,7 +283,7 @@ export function BusinessBatch({ user }: {
   });
 
   return (
-    <div style={{ fontFamily: FONT, maxWidth: 1100, margin: '0 auto', padding: '0 0 48px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div style={{ fontFamily: FONT, maxWidth: 1100, margin: '0 auto', padding: '8px 0 48px', display: 'flex', flexDirection: 'column', gap: 24 }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>

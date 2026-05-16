@@ -87,7 +87,7 @@ function SupportCard({
 // ── Main component ────────────────────────────────────────────────
 export function BusinessSupport() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, fontFamily: FONT, paddingTop: 8 }}>
       {/* Page header */}
       <div>
         <h2 style={{ color: C.t1, fontSize: 20, fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.2, margin: 0 }}>

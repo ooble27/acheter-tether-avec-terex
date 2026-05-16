@@ -162,7 +162,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, fontFamily: FONT, paddingTop: 8 }}>
 
       {/* Greeting */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>

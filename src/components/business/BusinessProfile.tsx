@@ -423,7 +423,7 @@ export function BusinessProfile({ user }: Props) {
   const kycComplete = !!(form.siret && form.vatNumber);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, fontFamily: FONT, paddingTop: 8 }}>
       {/* Page header */}
       <div>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 12 }}>

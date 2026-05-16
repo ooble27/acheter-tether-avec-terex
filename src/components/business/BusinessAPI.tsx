@@ -452,7 +452,7 @@ export function BusinessAPI({ user }: { user: { email: string; name: string; id?
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, fontFamily: FONT, paddingTop: 8 }}>
       {/* Test mode banner */}
       {!liveMode && (
         <div style={{

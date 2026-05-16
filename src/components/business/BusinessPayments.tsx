@@ -385,7 +385,7 @@ export function BusinessPayments({ user, onBack }: {
   ];
 
   return (
-    <div style={{ fontFamily: FONT, maxWidth: 900, margin: '0 auto', padding: '0 0 40px' }}>
+    <div style={{ fontFamily: FONT, maxWidth: 900, margin: '0 auto', padding: '8px 0 40px' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
         <button onClick={onBack} style={{

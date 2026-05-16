@@ -330,7 +330,7 @@ export function BusinessHistory({ user }: Props) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, fontFamily: FONT, paddingTop: 8 }}>
       {selectedTx && (
         <TransactionDrawer tx={selectedTx} onClose={() => setSelectedTx(null)} />
       )}

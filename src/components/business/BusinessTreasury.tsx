@@ -414,7 +414,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
   void user;
 
   return (
-    <div style={{ fontFamily: FONT, color: C.t1 }}>
+    <div style={{ fontFamily: FONT, color: C.t1, paddingTop: 8 }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
