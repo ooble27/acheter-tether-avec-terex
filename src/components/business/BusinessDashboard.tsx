@@ -347,7 +347,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
           >
             <Menu style={{ width: 16, height: 16 }} />
           </button>
-          <div className="p-4 md:p-8" style={{ maxWidth: 1040, margin: '0 auto', width: '100%', paddingTop: 32 }}>
+          <div style={{ maxWidth: 1040, margin: '0 auto', width: '100%', padding: '48px 32px 64px' }}>
             {renderContent()}
           </div>
         </main>
