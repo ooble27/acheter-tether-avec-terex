@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Send, Plus, ArrowUpRight, TrendingUp, Users, Clock, CheckCircle2, XCircle, Loader2, AlertCircle } from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface Props {
@@ -20,7 +20,7 @@ const C = {
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
-const USDT_LOGO = '/payment-methods/tether-logo.png';
+const USDT_LOGO = 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png';
 
 // Taux USDT réels approximatifs (mis à jour manuellement — à connecter à une API en production)
 const LIVE_RATES = {
@@ -38,6 +38,16 @@ const VOLUME_DEMO = [
   { jour: 'Ven', usdt: 2100 },
   { jour: 'Sam', usdt: 4800 },
   { jour: "Auj", usdt: 1600 },
+];
+
+// Volume mensuel sur 6 mois (démonstration)
+const MONTHLY_DEMO = [
+  { mois: 'Déc', usdt: 18400, xof: Math.round(18400 * 620.5) },
+  { mois: 'Jan', usdt: 24200, xof: Math.round(24200 * 620.5) },
+  { mois: 'Fév', usdt: 19800, xof: Math.round(19800 * 620.5) },
+  { mois: 'Mar', usdt: 31500, xof: Math.round(31500 * 620.5) },
+  { mois: 'Avr', usdt: 28700, xof: Math.round(28700 * 620.5) },
+  { mois: 'Mai', usdt: 22100, xof: Math.round(22100 * 620.5) },
 ];
 
 function StatusPill({ status }: { status: string }) {
@@ -85,6 +95,11 @@ function ChartTooltip({ active, payload, label }: any) {
       <p style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: 0 }}>
         {payload[0].value.toLocaleString('fr-FR')} USDT
       </p>
+      {payload[0].payload?.xof && (
+        <p style={{ color: C.t3, fontSize: 11, margin: '2px 0 0' }}>
+          ≈ {payload[0].payload.xof.toLocaleString('fr-FR')} XOF
+        </p>
+      )}
     </div>
   );
 }
@@ -420,6 +435,36 @@ export function BusinessOverview({ user, onNavigate }: Props) {
               ))}
             </div>
           )}
+        </div>
+      </div>
+
+      {/* ── Volume mensuel (BarChart 6 mois) ─────────────────────── */}
+      <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden' }}>
+        <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.bds}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h3 style={{ fontSize: 13, fontWeight: 600, color: C.t1, margin: 0 }}>Volume mensuel</h3>
+            <p style={{ fontSize: 11, color: C.t3, margin: '3px 0 0' }}>6 derniers mois · En USDT{payments.length === 0 && ' · Données de démonstration'}</p>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: 10, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Total 6 mois</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: C.t1, fontFamily: MONO }}>
+                {MONTHLY_DEMO.reduce((s, m) => s + m.usdt, 0).toLocaleString('fr-FR')} <span style={{ fontSize: 11, color: C.t3, fontWeight: 400 }}>USDT</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style={{ padding: '20px 16px 12px' }}>
+          <ResponsiveContainer width="100%" height={160}>
+            <BarChart data={MONTHLY_DEMO} margin={{ top: 4, right: 4, bottom: 0, left: -10 }} barSize={28}>
+              <CartesianGrid strokeDasharray="3 3" stroke={C.bds} vertical={false} />
+              <XAxis dataKey="mois" tick={{ fill: C.t3, fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: C.t3, fontSize: 11 }} axisLine={false} tickLine={false}
+                tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)} />
+              <Tooltip content={<ChartTooltip />} cursor={{ fill: 'rgba(59,150,143,0.06)' }} />
+              <Bar dataKey="usdt" fill={C.teal} radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
