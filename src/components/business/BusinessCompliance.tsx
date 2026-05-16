@@ -279,8 +279,8 @@ export function BusinessCompliance({ user }: { user: { email: string; name: stri
       {/* Hero illustrated card */}
       <div style={{
         borderRadius: 14, overflow: 'hidden', position: 'relative',
-        background: 'linear-gradient(135deg, #1a1f2e 0%, #0f1520 60%, #0a1018 100%)',
-        border: `1px solid rgba(59,130,246,0.18)`,
+        background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)',
+        border: `1px solid ${C.bds}`,
         boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
         minHeight: 200,
         marginBottom: 24,
@@ -300,16 +300,16 @@ export function BusinessCompliance({ user }: { user: { email: string; name: stri
             <rect x="106" y="52" width="32" height="4" rx="2" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
             <rect x="106" y="60" width="36" height="4" rx="2" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
             <rect x="106" y="68" width="28" height="4" rx="2" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
-            <circle cx="128" cy="96" r="10" stroke="rgba(34,197,94,0.6)" strokeWidth="1.3"/>
-            <path d="M123 96 L126 99 L133 93" stroke="rgba(34,197,94,0.8)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+            <circle cx="128" cy="96" r="10" stroke="rgba(59,150,143,0.7)" strokeWidth="1.3"/>
+            <path d="M123 96 L126 99 L133 93" stroke="rgba(59,150,143,0.9)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
             {/* Document stack right */}
             <rect x="316" y="35" width="64" height="82" rx="5" stroke="rgba(255,255,255,0.5)" strokeWidth="1.3"/>
             <rect x="322" y="42" width="40" height="5" rx="2.5" stroke="rgba(255,255,255,0.35)" strokeWidth="1"/>
             <rect x="322" y="52" width="32" height="4" rx="2" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
             <rect x="322" y="60" width="36" height="4" rx="2" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
             <rect x="322" y="68" width="28" height="4" rx="2" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
-            <circle cx="344" cy="96" r="10" stroke="rgba(245,158,11,0.6)" strokeWidth="1.3"/>
-            <path d="M344 91 L344 101 M339 96 L349 96" stroke="rgba(245,158,11,0.8)" strokeWidth="1.3" strokeLinecap="round"/>
+            <circle cx="344" cy="96" r="10" stroke="rgba(255,255,255,0.3)" strokeWidth="1.3"/>
+            <path d="M344 91 L344 101 M339 96 L349 96" stroke="rgba(255,255,255,0.4)" strokeWidth="1.3" strokeLinecap="round"/>
             {/* Connecting lines from docs to shield */}
             <path d="M164 76 L208 72" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeDasharray="4 3"/>
             <path d="M316 76 L272 72" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeDasharray="4 3"/>
@@ -317,8 +317,8 @@ export function BusinessCompliance({ user }: { user: { email: string; name: stri
             <circle cx="180" cy="148" r="8" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2"/>
             <path d="M176 148 L179 151 L184 145" stroke="rgba(255,255,255,0.7)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M188 148 L220 148" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
-            <circle cx="228" cy="148" r="8" stroke="rgba(245,158,11,0.6)" strokeWidth="1.2"/>
-            <circle cx="228" cy="148" r="3" fill="rgba(245,158,11,0.5)"/>
+            <circle cx="228" cy="148" r="8" stroke="rgba(59,150,143,0.6)" strokeWidth="1.2"/>
+            <circle cx="228" cy="148" r="3" fill="rgba(59,150,143,0.5)"/>
             <path d="M236 148 L268 148" stroke="rgba(255,255,255,0.15)" strokeWidth="1" strokeDasharray="3 2"/>
             <circle cx="276" cy="148" r="8" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
             <path d="M284 148 L308 148" stroke="rgba(255,255,255,0.1)" strokeWidth="1" strokeDasharray="3 2"/>
@@ -333,7 +333,7 @@ export function BusinessCompliance({ user }: { user: { email: string; name: stri
         {/* Gradient overlay */}
         <div style={{
           position: 'absolute', bottom: 0, left: 0, right: 0, height: '55%',
-          background: 'linear-gradient(to top, rgba(10,16,24,0.95) 0%, transparent 100%)',
+          background: 'linear-gradient(to top, rgba(20,20,20,0.97) 0%, transparent 100%)',
         }} />
         {/* Text */}
         <div style={{ position: 'relative', padding: '20px 28px' }}>

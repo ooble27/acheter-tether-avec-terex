@@ -371,8 +371,8 @@ export function BusinessTeam({ user }: {
       {/* Hero illustrated card */}
       <div style={{
         borderRadius: 14, overflow: 'hidden', position: 'relative',
-        background: 'linear-gradient(135deg, #1a2e2c 0%, #0d1f1e 60%, #0a1715 100%)',
-        border: `1px solid rgba(59,150,143,0.2)`,
+        background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)',
+        border: `1px solid ${C.bds}`,
         boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
         minHeight: 220,
         display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
@@ -407,10 +407,10 @@ export function BusinessTeam({ user }: {
             <path d="M72 100 L210 100" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeDasharray="3 3"/>
             <path d="M270 100 L408 100" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeDasharray="3 3"/>
             {/* Role badge shapes */}
-            <rect x="76" y="38" width="48" height="14" rx="7" stroke="rgba(168,85,247,0.6)" strokeWidth="1"/>
-            <rect x="356" y="38" width="48" height="14" rx="7" stroke="rgba(245,158,11,0.6)" strokeWidth="1"/>
-            <rect x="76" y="118" width="48" height="14" rx="7" stroke="rgba(59,130,246,0.6)" strokeWidth="1"/>
-            <rect x="356" y="118" width="48" height="14" rx="7" stroke="rgba(104,104,104,0.6)" strokeWidth="1"/>
+            <rect x="76" y="38" width="48" height="14" rx="7" stroke="rgba(59,150,143,0.7)" strokeWidth="1"/>
+            <rect x="356" y="38" width="48" height="14" rx="7" stroke="rgba(59,150,143,0.5)" strokeWidth="1"/>
+            <rect x="76" y="118" width="48" height="14" rx="7" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
+            <rect x="356" y="118" width="48" height="14" rx="7" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
             {/* Floating dots */}
             <circle cx="170" cy="40" r="2.5" fill="rgba(255,255,255,0.25)"/>
             <circle cx="310" cy="160" r="2.5" fill="rgba(255,255,255,0.25)"/>
@@ -421,7 +421,7 @@ export function BusinessTeam({ user }: {
         {/* Gradient overlay for text legibility */}
         <div style={{
           position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%',
-          background: 'linear-gradient(to top, rgba(10,23,21,0.95) 0%, transparent 100%)',
+          background: 'linear-gradient(to top, rgba(20,20,20,0.97) 0%, transparent 100%)',
         }} />
         {/* Text content */}
         <div style={{ position: 'relative', padding: '24px 28px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
@@ -438,9 +438,9 @@ export function BusinessTeam({ user }: {
       {/* Stat pills */}
       <div style={{ display: 'flex', gap: 12 }}>
         {[
-          { label: `Membres actifs: ${activeCount}`, color: C.em, bg: C.emT, border: C.emB },
-          { label: 'Rôles: 4', color: C.blue, bg: C.blueT, border: C.blueB },
-          { label: `Invitations en attente: ${invitations.length}`, color: C.amber, bg: C.amberT, border: C.amberB },
+          { label: `Membres actifs: ${activeCount}`, color: C.teal, bg: C.tealT, border: 'rgba(59,150,143,0.25)' },
+          { label: 'Rôles: 4', color: C.t2, bg: 'rgba(255,255,255,0.04)', border: C.bds },
+          { label: `Invitations en attente: ${invitations.length}`, color: C.t2, bg: 'rgba(255,255,255,0.04)', border: C.bds },
         ].map(s => (
           <div key={s.label} style={{
             padding: '8px 16px', background: s.bg, border: `1px solid ${s.border}`,
