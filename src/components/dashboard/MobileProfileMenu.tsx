@@ -2,18 +2,19 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  User, 
-  HelpCircle, 
-  LogOut, 
-  Shield, 
-  UserCheck, 
+import {
+  User,
+  HelpCircle,
+  LogOut,
+  Shield,
+  UserCheck,
   History,
   Star,
   Gift,
   Phone,
   Share2,
-  FileText
+  FileText,
+  Briefcase
 } from 'lucide-react';
 import { useUserRole } from '@/hooks/useUserRole';
 
@@ -58,6 +59,7 @@ export function MobileProfileMenu({ activeSection, setActiveSection, onLogout }:
     { id: 'kyc-admin', label: 'Administration KYC', icon: Shield, description: 'Vérifications d\'identité' },
     { id: 'orders-admin', label: 'Gestion Commandes', icon: Shield, description: 'Ordres et transactions' },
     { id: 'job-applications', label: 'Candidatures', icon: UserCheck, description: 'Gestion des candidatures' },
+    { id: 'b2b', label: 'Portail Business', icon: Briefcase, description: 'Gestion comptes B2B' },
   ];
 
   const renderMenuSection = (title: string, items: any[]) => (

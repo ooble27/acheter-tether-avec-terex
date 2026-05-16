@@ -59,11 +59,6 @@ const menuItems = [{
   icon: User,
   description: 'Gérer votre compte'
 }, {
-  id: 'b2b',
-  label: 'Compte Business',
-  icon: Briefcase,
-  description: 'Paiements professionnels'
-}, {
   id: 'faq',
   label: 'FAQ',
   icon: HelpCircle,
@@ -246,6 +241,24 @@ const AppSidebarContent = ({
                       </div>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
+
+                  <SidebarMenuItem>
+                    <SidebarMenuButton onClick={() => {
+                  setActiveSection('b2b');
+                  onItemClick?.();
+                }} className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${activeSection === 'b2b' ? 'bg-gradient-to-r from-[#3B968F] to-[#2d7870] text-white shadow-lg shadow-[#3B968F]/25' : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'}`}>
+                      <div className="flex items-center space-x-4 w-full">
+                        <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${activeSection === 'b2b' ? 'bg-white/20' : 'bg-terex-gray/30 group-hover:bg-[#3B968F]/20'}`}>
+                          <Briefcase className="h-6 w-6" />
+                        </div>
+                        <div className="flex-1 text-left min-w-0">
+                          <div className="font-semibold text-sm truncate">Portail Business</div>
+                          <div className="text-xs opacity-75 truncate">Gestion comptes B2B</div>
+                        </div>
+                        {activeSection === 'b2b' && <div className="w-1 h-8 bg-white rounded-full opacity-60"></div>}
+                      </div>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
                 </>}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -324,6 +337,7 @@ export function MobileMenu({
     { id: 'kyc-admin', label: 'Administration KYC', icon: Shield, description: 'Vérifications d\'identité' },
     { id: 'orders-admin', label: 'Gestion Commandes', icon: Shield, description: 'Ordres et transactions' },
     { id: 'job-applications', label: 'Candidatures', icon: UserCheck, description: 'Gestion des candidatures' },
+    { id: 'b2b', label: 'Portail Business', icon: Briefcase, description: 'Gestion comptes B2B' },
   ];
 
   const renderMenuSection = (title: string, items: any[]) => (

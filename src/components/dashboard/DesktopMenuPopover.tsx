@@ -37,7 +37,6 @@ export function DesktopMenuPopover({
   const profileItems = [
     { id: 'profile', label: 'Mon Profil', icon: User },
     { id: 'history', label: 'Historique', icon: History },
-    { id: 'b2b', label: 'Compte Business', icon: Briefcase },
   ];
 
   const supportItems = [
@@ -61,6 +60,7 @@ export function DesktopMenuPopover({
     { id: 'kyc-admin', label: 'Administration KYC', icon: Shield },
     { id: 'orders-admin', label: 'Gestion Commandes', icon: Shield },
     { id: 'job-applications', label: 'Candidatures', icon: UserCheck },
+    { id: 'b2b', label: 'Portail Business', icon: Briefcase },
   ];
 
   const renderMenuSection = (title: string, items: any[]) => (
