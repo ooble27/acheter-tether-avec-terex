@@ -126,17 +126,18 @@ const DAY_HEADERS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 const MONTH_NAMES = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
   'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
-function MiniCalendar({ scheduledDates, onSelectDate }: { scheduledDates: Date[]; onSelectDate?: (date: Date) => void }) {
+function MiniCalendar({ scheduledDates }: { scheduledDates: Date[] }) {
   const today = new Date();
   const [viewDate, setViewDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
-  const [selected, setSelected] = useState<number | null>(null);
 
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
 
+  // First day of month (adjust so Monday=0)
   const firstDow = (new Date(year, month, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
+  // Payment dates set for quick lookup
   const paymentDays = new Set(
     scheduledDates
       .filter(d => d.getFullYear() === year && d.getMonth() === month)
@@ -147,15 +148,8 @@ function MiniCalendar({ scheduledDates, onSelectDate }: { scheduledDates: Date[]
   for (let i = 0; i < firstDow; i++) cells.push(null);
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
 
-  const prevMonth = () => { setViewDate(new Date(year, month - 1, 1)); setSelected(null); };
-  const nextMonth = () => { setViewDate(new Date(year, month + 1, 1)); setSelected(null); };
-
-  const handleDayClick = (day: number) => {
-    setSelected(day);
-    if (onSelectDate) {
-      onSelectDate(new Date(year, month, day));
-    }
-  };
+  const prevMonth = () => setViewDate(new Date(year, month - 1, 1));
+  const nextMonth = () => setViewDate(new Date(year, month + 1, 1));
 
   return (
     <div>
@@ -192,33 +186,24 @@ function MiniCalendar({ scheduledDates, onSelectDate }: { scheduledDates: Date[]
         {cells.map((day, i) => {
           if (day === null) return <div key={i} />;
           const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-          const isSelected = day === selected;
           const hasPay = paymentDays.has(day);
-          const isPast = new Date(year, month, day) < today && !isToday;
           return (
-            <button
-              key={i}
-              onClick={() => !isPast && handleDayClick(day)}
-              style={{
-                width: 32, height: 32, borderRadius: 6, display: 'flex', flexDirection: 'column',
-                alignItems: 'center', justifyContent: 'center',
-                background: isSelected ? C.teal : isToday ? C.tealT : 'transparent',
-                border: `1px solid ${isSelected ? C.teal : isToday ? C.tealB : 'transparent'}`,
-                color: isSelected ? '#fff' : isToday ? C.teal : isPast ? C.t3 : C.t2,
-                fontSize: 12, fontFamily: FONT, cursor: isPast ? 'default' : 'pointer',
-                position: 'relative', transition: 'all 0.1s',
-              }}
-              onMouseEnter={e => { if (!isPast && !isSelected) (e.currentTarget as HTMLButtonElement).style.background = C.l3; }}
-              onMouseLeave={e => { if (!isPast && !isSelected) (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
-            >
+            <div key={i} style={{
+              width: 32, height: 32, borderRadius: 6, display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center',
+              background: isToday ? C.tealT : 'transparent',
+              border: isToday ? `1px solid ${C.tealB}` : '1px solid transparent',
+              color: isToday ? C.teal : C.t2, fontSize: 12, fontFamily: FONT,
+              position: 'relative',
+            }}>
               {day}
               {hasPay && (
                 <div style={{
                   position: 'absolute', bottom: 3, left: '50%', transform: 'translateX(-50%)',
-                  width: 4, height: 4, borderRadius: '50%', background: isSelected ? '#fff' : C.teal,
+                  width: 4, height: 4, borderRadius: '50%', background: C.teal,
                 }} />
               )}
-            </button>
+            </div>
           );
         })}
       </div>
@@ -272,29 +257,6 @@ export function BusinessBatch({ user }: {
 
   const totalAmount = recipients.reduce((sum, r) => sum + (parseFloat(r.amount) || 0), 0);
 
-  const [calPickedDate, setCalPickedDate] = useState<Date | null>(null);
-  const [quickAdd, setQuickAdd] = useState<{ supplier: string; amount: string; network: string }>({ supplier: '', amount: '', network: 'TRC20' });
-  const [showQuickAdd, setShowQuickAdd] = useState(false);
-
-  const handleCalendarDate = (date: Date) => {
-    setCalPickedDate(date);
-    setQuickAdd({ supplier: '', amount: '', network: 'TRC20' });
-    setShowQuickAdd(true);
-  };
-
-  const confirmQuickAdd = () => {
-    if (!calPickedDate || !quickAdd.supplier || !quickAdd.amount) return;
-    setScheduledPayments(p => [...p, {
-      id: Date.now().toString(),
-      date: calPickedDate,
-      supplier: quickAdd.supplier,
-      amount: quickAdd.amount,
-      network: quickAdd.network,
-    }]);
-    setShowQuickAdd(false);
-    setCalPickedDate(null);
-  };
-
   const cancelScheduled = (id: string) => setScheduledPayments(p => p.filter(x => x.id !== id));
 
   const toggleRecurrence = (id: string) => {
@@ -334,20 +296,19 @@ export function BusinessBatch({ user }: {
         </div>
       </div>
 
-      {/* Stat cards — neutral design, no colored backgrounds */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+      {/* Stat cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
         {[
-          { label: 'Paiements planifiés', value: scheduledPayments.length, note: 'Ce mois' },
-          { label: 'Récurrences actives', value: activeRecurrences, note: `${recurrences.length} total` },
-          { label: 'En attente approbation', value: pendingCount, note: pendingCount > 0 ? 'Action requise' : 'Aucun en attente' },
+          { label: 'Paiements planifiés', value: scheduledPayments.length, color: C.teal, bg: C.tealT, border: C.tealB },
+          { label: 'Récurrences actives', value: activeRecurrences, color: C.em, bg: C.emT, border: C.emB },
+          { label: 'En attente d\'approbation', value: pendingCount, color: C.amber, bg: C.amberT, border: C.amberB },
         ].map(s => (
           <div key={s.label} style={{
-            background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 10,
-            padding: '16px 20px', boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
+            background: s.bg, border: `1px solid ${s.border}`, borderRadius: 10,
+            padding: '16px 20px',
           }}>
-            <div style={{ fontSize: 10, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>{s.label}</div>
-            <div style={{ fontSize: 28, fontWeight: 700, color: C.t1, fontFamily: MONO }}>{s.value}</div>
-            <div style={{ fontSize: 11, color: C.t3, marginTop: 4 }}>{s.note}</div>
+            <div style={{ fontSize: 28, fontWeight: 700, color: s.color, fontFamily: MONO }}>{s.value}</div>
+            <div style={{ fontSize: 12, color: C.t3, marginTop: 4 }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -514,46 +475,7 @@ export function BusinessBatch({ user }: {
         <div style={{ flex: '0 0 45%', display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Card>
             <SectionTitle>Calendrier des paiements</SectionTitle>
-            <MiniCalendar scheduledDates={scheduledPayments.map(p => p.date)} onSelectDate={handleCalendarDate} />
-
-            {/* Quick-add panel after date selection */}
-            {showQuickAdd && calPickedDate && (
-              <div style={{
-                marginTop: 12, background: C.l2, border: `1px solid ${C.tealB}`,
-                borderRadius: 10, padding: '14px 16px',
-              }}>
-                <div style={{ fontSize: 12, fontWeight: 600, color: C.teal, marginBottom: 10 }}>
-                  Planifier pour le {calPickedDate.getDate().toString().padStart(2,'0')}/{(calPickedDate.getMonth()+1).toString().padStart(2,'0')}/{calPickedDate.getFullYear()}
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <input
-                    placeholder="Nom du fournisseur"
-                    value={quickAdd.supplier}
-                    onChange={e => setQuickAdd(q => ({ ...q, supplier: e.target.value }))}
-                    style={{ height: 32, background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 6, padding: '0 10px', color: C.t1, fontSize: 12, outline: 'none', fontFamily: FONT }}
-                  />
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <input
-                      placeholder="Montant USDT"
-                      value={quickAdd.amount}
-                      onChange={e => setQuickAdd(q => ({ ...q, amount: e.target.value }))}
-                      style={{ flex: 1, height: 32, background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 6, padding: '0 10px', color: C.t1, fontSize: 12, outline: 'none', fontFamily: FONT }}
-                    />
-                    <select
-                      value={quickAdd.network}
-                      onChange={e => setQuickAdd(q => ({ ...q, network: e.target.value }))}
-                      style={{ height: 32, background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 6, padding: '0 8px', color: C.t1, fontSize: 12, outline: 'none', fontFamily: FONT }}
-                    >
-                      {['TRC20','BEP20','ERC20','Polygon'].map(n => <option key={n}>{n}</option>)}
-                    </select>
-                  </div>
-                  <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                    <button onClick={() => setShowQuickAdd(false)} style={{ height: 30, padding: '0 14px', background: 'transparent', border: `1px solid ${C.bds}`, borderRadius: 6, color: C.t3, fontSize: 12, cursor: 'pointer', fontFamily: FONT }}>Annuler</button>
-                    <button onClick={confirmQuickAdd} style={{ height: 30, padding: '0 14px', background: C.teal, border: 'none', borderRadius: 6, color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: FONT }}>Ajouter</button>
-                  </div>
-                </div>
-              </div>
-            )}
+            <MiniCalendar scheduledDates={scheduledPayments.map(p => p.date)} />
 
             {/* Upcoming payments list */}
             <div style={{ marginTop: 20, borderTop: `1px solid ${C.bds}`, paddingTop: 16 }}>
