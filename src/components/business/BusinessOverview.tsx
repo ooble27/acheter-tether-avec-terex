@@ -259,60 +259,73 @@ export function BusinessOverview({ user, onNavigate }: Props) {
             key: 'payment',
             title: 'Paiements',
             desc: 'Envoyez des fonds à vos fournisseurs en USDT via TRC-20 ou ERC-20',
-            gradient: 'linear-gradient(135deg, #1a2e2c 0%, #0f1f1e 100%)',
-            accentColor: '#3B968F',
             svg: (
               <svg width="100%" height="100%" viewBox="0 0 180 90" fill="none" style={{ display: 'block' }}>
-                <rect x="20" y="20" width="80" height="52" rx="6" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5"/>
-                <path d="M20 34 L100 34" stroke="rgba(255,255,255,0.35)" strokeWidth="1"/>
-                <rect x="28" y="42" width="30" height="6" rx="3" stroke="rgba(255,255,255,0.4)" strokeWidth="1"/>
-                <rect x="28" y="54" width="20" height="4" rx="2" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
-                <path d="M110 46 L130 46 M122 38 L130 46 L122 54" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <rect x="140" y="28" width="24" height="16" rx="4" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2"/>
-                <circle cx="152" cy="60" r="8" stroke="rgba(255,255,255,0.4)" strokeWidth="1.2"/>
-                <path d="M149 60 L151 62 L155 58" stroke="rgba(255,255,255,0.6)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                {/* Card with stripe */}
+                <rect x="18" y="18" width="84" height="54" rx="7" stroke="rgba(255,255,255,0.5)" strokeWidth="1.3"/>
+                <path d="M18 32 L102 32" stroke="rgba(255,255,255,0.3)" strokeWidth="1"/>
+                <rect x="26" y="40" width="34" height="7" rx="3.5" stroke="rgba(255,255,255,0.35)" strokeWidth="1"/>
+                <rect x="26" y="52" width="22" height="5" rx="2.5" stroke="rgba(255,255,255,0.22)" strokeWidth="1"/>
+                <rect x="26" y="60" width="28" height="5" rx="2.5" stroke="rgba(255,255,255,0.18)" strokeWidth="1"/>
+                {/* Arrow */}
+                <path d="M112 45 L134 45" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" strokeLinecap="round"/>
+                <path d="M126 38 L134 45 L126 52" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                {/* Wallet */}
+                <rect x="142" y="26" width="22" height="38" rx="5" stroke="rgba(255,255,255,0.45)" strokeWidth="1.2"/>
+                <circle cx="153" cy="50" r="6" stroke="rgba(255,255,255,0.35)" strokeWidth="1"/>
+                <path d="M150 50 L152 52 L156 48" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                {/* Dots */}
+                <circle cx="154" cy="34" r="2" fill="rgba(255,255,255,0.25)"/>
+                <circle cx="160" cy="34" r="2" fill="rgba(255,255,255,0.18)"/>
               </svg>
             ),
           },
           {
-            key: 'suppliers',
+            key: 'treasury',
             title: 'Trésorerie',
-            desc: 'Gérez vos fournisseurs et suivez vos engagements financiers',
-            gradient: 'linear-gradient(135deg, #1c2030 0%, #111525 100%)',
-            accentColor: '#3b82f6',
+            desc: 'Gérez vos wallets, taux de change et liquidités en temps réel',
             svg: (
               <svg width="100%" height="100%" viewBox="0 0 180 90" fill="none" style={{ display: 'block' }}>
-                <circle cx="60" cy="45" r="22" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5"/>
-                <path d="M60 26 L60 45 L74 45" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" strokeLinecap="round"/>
-                <path d="M38 45 A22 22 0 0 1 60 23" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="3 2"/>
-                <circle cx="60" cy="45" r="3" fill="rgba(255,255,255,0.5)"/>
-                <path d="M92 30 L150 30" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
-                <path d="M92 40 L140 40" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-                <path d="M92 50 L145 50" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
-                <path d="M92 60 L132 60" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-                <circle cx="88" cy="30" r="3" stroke="rgba(255,255,255,0.45)" strokeWidth="1"/>
-                <circle cx="88" cy="40" r="3" stroke="rgba(255,255,255,0.45)" strokeWidth="1"/>
-                <circle cx="88" cy="50" r="3" stroke="rgba(255,255,255,0.45)" strokeWidth="1"/>
-                <circle cx="88" cy="60" r="3" stroke="rgba(255,255,255,0.45)" strokeWidth="1"/>
+                {/* Vault / safe shape */}
+                <rect x="20" y="15" width="70" height="62" rx="6" stroke="rgba(255,255,255,0.5)" strokeWidth="1.3"/>
+                <rect x="28" y="23" width="54" height="46" rx="4" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
+                <circle cx="55" cy="46" r="12" stroke="rgba(255,255,255,0.45)" strokeWidth="1.2"/>
+                <circle cx="55" cy="46" r="5" stroke="rgba(255,255,255,0.3)" strokeWidth="1"/>
+                <path d="M55 34 L55 38 M55 54 L55 58 M43 46 L47 46 M63 46 L67 46" stroke="rgba(255,255,255,0.25)" strokeWidth="1" strokeLinecap="round"/>
+                <path d="M90 26 L90 77" stroke="rgba(255,255,255,0.12)" strokeWidth="1"/>
+                {/* Bars right side */}
+                <rect x="100" y="52" width="12" height="22" rx="2" stroke="rgba(255,255,255,0.35)" strokeWidth="1"/>
+                <rect x="118" y="42" width="12" height="32" rx="2" stroke="rgba(255,255,255,0.42)" strokeWidth="1"/>
+                <rect x="136" y="32" width="12" height="42" rx="2" stroke="rgba(255,255,255,0.5)" strokeWidth="1"/>
+                <path d="M96 78 L162 78" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinecap="round"/>
+                {/* Trend arrow */}
+                <path d="M100 56 L118 46 L136 36" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="3 2" strokeLinecap="round"/>
               </svg>
             ),
           },
           {
-            key: 'history',
+            key: 'analytics',
             title: 'Analytique',
             desc: 'Visualisez vos volumes, tendances et rapports mensuels',
-            gradient: 'linear-gradient(135deg, #1f1a2e 0%, #130f1f 100%)',
-            accentColor: '#a855f7',
             svg: (
               <svg width="100%" height="100%" viewBox="0 0 180 90" fill="none" style={{ display: 'block' }}>
-                <path d="M20 70 L20 18" stroke="rgba(255,255,255,0.25)" strokeWidth="1" strokeLinecap="round"/>
-                <path d="M20 70 L162 70" stroke="rgba(255,255,255,0.25)" strokeWidth="1" strokeLinecap="round"/>
-                <path d="M20 70 L50 52 L80 58 L110 35 L140 42 L160 24" stroke="rgba(255,255,255,0.65)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M20 70 L50 52 L80 58 L110 35 L140 42 L160 24 L160 70 Z" fill="rgba(255,255,255,0.04)"/>
-                <circle cx="50" cy="52" r="2.5" fill="rgba(255,255,255,0.5)"/>
-                <circle cx="110" cy="35" r="2.5" fill="rgba(255,255,255,0.5)"/>
-                <circle cx="160" cy="24" r="2.5" fill="rgba(255,255,255,0.5)"/>
-                <path d="M35 70 L35 68 M65 70 L65 68 M95 70 L95 68 M125 70 L125 68 M155 70 L155 68" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
+                {/* Axes */}
+                <path d="M22 72 L22 16" stroke="rgba(255,255,255,0.25)" strokeWidth="1" strokeLinecap="round"/>
+                <path d="M22 72 L164 72" stroke="rgba(255,255,255,0.25)" strokeWidth="1" strokeLinecap="round"/>
+                {/* Grid lines */}
+                <path d="M22 56 L160 56" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
+                <path d="M22 40 L160 40" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
+                <path d="M22 24 L160 24" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
+                {/* Area chart */}
+                <path d="M22 72 L52 54 L82 60 L112 38 L142 44 L162 26 L162 72 Z" fill="rgba(255,255,255,0.04)"/>
+                <path d="M22 72 L52 54 L82 60 L112 38 L142 44 L162 26" stroke="rgba(255,255,255,0.65)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                {/* Data points */}
+                <circle cx="52" cy="54" r="3" fill="rgba(255,255,255,0)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2"/>
+                <circle cx="112" cy="38" r="3" fill="rgba(255,255,255,0)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2"/>
+                <circle cx="162" cy="26" r="3" fill="rgba(255,255,255,0.4)"/>
+                {/* Tick marks */}
+                <path d="M52 72 L52 70 M82 72 L82 70 M112 72 L112 70 M142 72 L142 70 M162 72 L162 70" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
+                <path d="M22 56 L20 56 M22 40 L20 40 M22 24 L20 24" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
               </svg>
             ),
           },
@@ -321,7 +334,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
             key={card.key}
             onClick={() => onNavigate(card.key)}
             style={{
-              background: card.gradient, border: `1px solid rgba(255,255,255,0.08)`,
+              background: 'linear-gradient(135deg, #1e1e1e 0%, #141414 100%)', border: `1px solid ${C.bds}`,
               borderRadius: 12, overflow: 'hidden', cursor: 'pointer',
               textAlign: 'left', padding: 0, fontFamily: FONT,
               boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
