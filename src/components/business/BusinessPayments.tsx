@@ -374,7 +374,7 @@ export function BusinessPayments({ user, onBack }: {
         border: `1px solid ${C.bds}`, borderRadius: 14,
         padding: '20px 24px', marginBottom: 28,
         boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
-        display: 'flex', alignItems: 'center', gap: 20, position: 'relative', overflow: 'hidden',
+        display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap', position: 'relative', overflow: 'hidden',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1 }}>
           <img src={usdtLogo} alt="USDT" style={{ width: 44, height: 44, borderRadius: '50%', flexShrink: 0 }} />
@@ -387,7 +387,7 @@ export function BusinessPayments({ user, onBack }: {
             </p>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, alignSelf: 'flex-start' }}>
           {NETWORKS.map((n, i) => (
             <img key={n.id} src={n.logo} alt={n.label} title={n.label}
               style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', border: '2px solid #1a1a1a', marginLeft: i > 0 ? -8 : 0, zIndex: NETWORKS.length - i, position: 'relative' }}

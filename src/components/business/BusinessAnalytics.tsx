@@ -152,7 +152,7 @@ function KpiCard({ label, value, change, positive }: KpiCardProps) {
       }}
     >
       <p style={{ color: C.t3, fontSize: 11, margin: '0 0 10px', fontFamily: FONT }}>{label}</p>
-      <p style={{ color: C.t1, fontSize: 22, fontWeight: 700, fontFamily: MONO, margin: '0 0 8px', letterSpacing: '-0.02em' }}>
+      <p style={{ color: C.t1, fontSize: 'clamp(13px, 4.2vw, 22px)', fontWeight: 700, fontFamily: MONO, margin: '0 0 8px', letterSpacing: '-0.02em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
         {value}
       </p>
       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
