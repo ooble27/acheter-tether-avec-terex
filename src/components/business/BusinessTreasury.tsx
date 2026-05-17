@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   QrCode, ArrowDownToLine, ArrowUpFromLine, Copy, Check,
-  X, Bell, Trash2, Plus,
+  X, Bell, Trash2, Plus, ArrowDownLeft, ArrowUpRight,
+  RefreshCw, Calculator, TrendingUp, Activity,
 } from 'lucide-react';
 import {
   AreaChart, Area, ResponsiveContainer, Tooltip,
@@ -25,6 +26,14 @@ const WALLETS = [
   { id: 'erc20', chain: 'ERC20', network: 'Ethereum',        logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', usdt:  8100, address: '0xaB7c3D2E9F5a1C4B8D0E7F3a6C2D5E9F1B4A8C3' },
 ];
 const TOTAL_USDT = WALLETS.reduce((s, w) => s + w.usdt, 0);
+
+const RECENT_MOVEMENTS = [
+  { id: 1, type: 'in',  label: 'Dépôt TRC20',     amount: 5000,  date: '16/05', ref: 'DEP-00421' },
+  { id: 2, type: 'out', label: 'Paiement fournisseur', amount: -2300, date: '15/05', ref: 'PAY-00189' },
+  { id: 3, type: 'in',  label: 'Dépôt BEP20',     amount: 8500,  date: '14/05', ref: 'DEP-00420' },
+  { id: 4, type: 'out', label: 'Retrait EUR',      amount: -1200, date: '13/05', ref: 'RET-00077' },
+  { id: 5, type: 'in',  label: 'Dépôt TRC20',     amount: 3000,  date: '11/05', ref: 'DEP-00419' },
+];
 
 function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: { value: number }[]; label?: string }) {
   if (!active || !payload?.length) return null;
@@ -206,7 +215,6 @@ interface Alert { id: number; pair: string; condition: '<' | '>'; threshold: str
 export function BusinessTreasury({ user }: { user: { email: string; name: string; id?: string } | null }) {
   void user;
 
-  // Taux — on garde les anciennes valeurs pendant le refresh (pas de clignotement)
   const { usdtToCfa, loading: ratesLoading } = useCryptoRates();
   const [usdtToEur, setUsdtToEur] = useState(0.9245);
   const [initialLoad, setInitialLoad] = useState(true);
@@ -215,7 +223,6 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
     if (!ratesLoading) setInitialLoad(false);
   }, [ratesLoading]);
 
-  // EUR : fetch une seule fois au montage
   useEffect(() => {
     fetch('https://api.exchangerate-api.com/v4/latest/USD', { signal: AbortSignal.timeout(10000) })
       .then(r => r.json())
@@ -223,9 +230,9 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
       .catch(() => {});
   }, []);
 
-  // Graphique : on fetch en USD une seule fois, puis on convertit localement
-  const [rawPrices, setRawPrices] = useState<{ ts: number; usd: number }[]>([]);
-  const [chartPair, setChartPair] = useState<'XOF' | 'EUR' | 'USD'>('XOF');
+  // Graphique en USD, conversion locale
+  const [rawPrices, setRawPrices]   = useState<{ ts: number; usd: number }[]>([]);
+  const [chartPair, setChartPair]   = useState<'XOF' | 'EUR' | 'USD'>('XOF');
   const [chartLoading, setChartLoading] = useState(true);
 
   useEffect(() => {
@@ -235,15 +242,12 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
     )
       .then(r => r.json())
       .then(d => {
-        if (d.prices?.length) {
-          setRawPrices(d.prices.map(([ts, usd]: [number, number]) => ({ ts, usd })));
-        }
+        if (d.prices?.length) setRawPrices(d.prices.map(([ts, usd]: [number, number]) => ({ ts, usd })));
       })
       .catch(() => {})
       .finally(() => setChartLoading(false));
   }, []);
 
-  // Conversion locale selon la paire choisie — aucun re-fetch
   const chartData = useMemo(() => rawPrices.map(p => ({
     day: new Date(p.ts).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }),
     rate: chartPair === 'XOF' ? Math.round(p.usd * usdtToCfa)
@@ -255,22 +259,20 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
   const totalEur = initialLoad ? null : Math.round(TOTAL_USDT * usdtToEur);
 
   const liveRates = [
-    {
-      short: 'XOF',
-      label: 'USDT / XOF',
-      display: initialLoad ? '—' : usdtToCfa.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' XOF',
-    },
-    {
-      short: 'EUR',
-      label: 'USDT / EUR',
-      display: initialLoad ? '—' : usdtToEur.toFixed(4) + ' EUR',
-    },
-    {
-      short: 'USD',
-      label: 'USDT / USD',
-      display: '1.0000 USD',
-    },
+    { short: 'XOF', label: 'USDT / XOF', display: initialLoad ? '—' : usdtToCfa.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' XOF' },
+    { short: 'EUR', label: 'USDT / EUR', display: initialLoad ? '—' : usdtToEur.toFixed(4) + ' EUR' },
+    { short: 'USD', label: 'USDT / USD', display: '1.0000 USD' },
   ];
+
+  // Convertisseur
+  const [convInput, setConvInput]   = useState('1000');
+  const [convDir, setConvDir]       = useState<'USDT→XOF' | 'USDT→EUR' | 'XOF→USDT'>('USDT→XOF');
+  const convResult = useMemo(() => {
+    const n = parseFloat(convInput) || 0;
+    if (convDir === 'USDT→XOF') return { value: Math.round(n * usdtToCfa), unit: 'XOF' };
+    if (convDir === 'USDT→EUR') return { value: parseFloat((n * usdtToEur).toFixed(2)), unit: 'EUR' };
+    return { value: parseFloat((n / usdtToCfa).toFixed(4)), unit: 'USDT' };
+  }, [convInput, convDir, usdtToCfa, usdtToEur]);
 
   const [alerts, setAlerts]         = useState<Alert[]>([{ id: 1, pair: 'USDT/XOF', condition: '<', threshold: '560', active: true }]);
   const [alertCtr, setAlertCtr]     = useState(2);
@@ -288,48 +290,55 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
     setAlerts(prev => prev.filter(a => a.id !== id)), []);
 
   const cardSt: React.CSSProperties = {
-    background: C.l1, border: `1px solid ${C.bds}`,
-    borderRadius: 14, overflow: 'hidden',
+    background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, overflow: 'hidden',
   };
-
   const sectionHead: React.CSSProperties = {
     color: C.t3, fontSize: 10, fontWeight: 600,
     letterSpacing: '0.1em', textTransform: 'uppercase', margin: 0,
   };
+  const inpSt: React.CSSProperties = {
+    background: C.l2, border: `1px solid ${C.bd}`, borderRadius: 9,
+    padding: '11px 14px', color: C.t1, fontSize: 15, fontFamily: MONO,
+    outline: 'none', width: '100%', boxSizing: 'border-box',
+    fontWeight: 600, colorScheme: 'dark',
+  };
+
+  // Stats du mois (statiques / illustratives)
+  const monthStats = [
+    { icon: <ArrowDownLeft style={{ width: 14, height: 14 }} />, label: 'Reçu ce mois', value: '16 500', unit: 'USDT', sub: '≈ 9 495 000 XOF' },
+    { icon: <ArrowUpRight  style={{ width: 14, height: 14 }} />, label: 'Envoyé ce mois', value: '3 500',  unit: 'USDT', sub: '≈ 2 012 500 XOF' },
+    { icon: <Activity      style={{ width: 14, height: 14 }} />, label: 'Mouvements', value: '23',     unit: 'tx', sub: 'ce mois' },
+    { icon: <TrendingUp    style={{ width: 14, height: 14 }} />, label: 'Économies frais', value: '38',  unit: 'USDT', sub: 'vs banque traditionnelle' },
+  ];
 
   return (
     <div style={{ fontFamily: FONT, color: C.t1, paddingTop: 8 }}>
-
-      {/* Layout 2 colonnes : héro + graphique à gauche / wallets + taux + alertes à droite */}
       <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr]" style={{ gap: 14, alignItems: 'start' }}>
 
         {/* ══ COLONNE GAUCHE ══════════════════════════════════════════ */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-          {/* Héro — balance totale */}
+          {/* Héro — même couleur que les autres pages (gris pur) */}
           <div style={{
-            background: 'linear-gradient(150deg, #1d2020 0%, #141616 100%)',
+            background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)',
             border: `1px solid ${C.bds}`, borderRadius: 16,
             padding: '30px 28px 26px',
-            boxShadow: '0 4px 32px rgba(0,0,0,0.45)',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
-              <img src={usdtLogo} alt="USDT"
-                style={{ width: 26, height: 26, borderRadius: '50%' }} />
+              <img src={usdtLogo} alt="USDT" style={{ width: 26, height: 26, borderRadius: '50%' }} />
               <span style={{ ...sectionHead }}>Trésorerie totale</span>
             </div>
 
-            <div style={{ marginBottom: 22 }}>
-              <p style={{
-                color: C.t1, fontSize: 50, fontWeight: 700, fontFamily: MONO,
-                margin: 0, letterSpacing: '-0.04em', lineHeight: 1,
-              }}>
-                {TOTAL_USDT.toLocaleString('fr-FR')}
-                <span style={{ color: C.t3, fontSize: 18, fontWeight: 400, marginLeft: 10, letterSpacing: 0 }}>USDT</span>
-              </p>
-            </div>
+            <p style={{
+              color: C.t1, fontSize: 50, fontWeight: 700, fontFamily: MONO,
+              margin: '0 0 4px', letterSpacing: '-0.04em', lineHeight: 1,
+            }}>
+              {TOTAL_USDT.toLocaleString('fr-FR')}
+              <span style={{ color: C.t3, fontSize: 18, fontWeight: 400, marginLeft: 10, letterSpacing: 0 }}>USDT</span>
+            </p>
 
-            <div style={{ display: 'flex', gap: 0, marginBottom: 28 }}>
+            <div style={{ display: 'flex', gap: 0, marginTop: 16, marginBottom: 28 }}>
               <div style={{ paddingRight: 24 }}>
                 <p style={{ color: C.t3, fontSize: 10, margin: '0 0 3px', fontWeight: 500 }}>≈ en XOF</p>
                 <p style={{ color: C.t2, fontSize: 16, fontFamily: MONO, fontWeight: 600, margin: 0 }}>
@@ -346,14 +355,13 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
             </div>
 
             <div style={{ display: 'flex', gap: 8 }}>
-              <button
-                style={{
-                  height: 36, paddingLeft: 16, paddingRight: 16,
-                  background: 'transparent', border: `1px solid ${C.bd}`,
-                  borderRadius: 9, color: C.t2, fontSize: 12, fontWeight: 500,
-                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-                  fontFamily: FONT, whiteSpace: 'nowrap', transition: 'all 0.15s',
-                }}
+              <button style={{
+                height: 36, paddingLeft: 16, paddingRight: 16,
+                background: 'transparent', border: `1px solid ${C.bd}`,
+                borderRadius: 9, color: C.t2, fontSize: 12, fontWeight: 500,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                fontFamily: FONT, whiteSpace: 'nowrap', transition: 'all 0.15s',
+              }}
                 onMouseEnter={e => {
                   (e.currentTarget as HTMLButtonElement).style.borderColor = C.tealB;
                   (e.currentTarget as HTMLButtonElement).style.color = C.teal;
@@ -365,14 +373,13 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
               >
                 <ArrowDownToLine style={{ width: 13, height: 13 }} /> Déposer
               </button>
-              <button
-                style={{
-                  height: 36, paddingLeft: 18, paddingRight: 18,
-                  background: C.teal, border: 'none', borderRadius: 9,
-                  color: '#fff', fontSize: 12, fontWeight: 500,
-                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-                  fontFamily: FONT, whiteSpace: 'nowrap', transition: 'background 0.15s',
-                }}
+              <button style={{
+                height: 36, paddingLeft: 18, paddingRight: 18,
+                background: C.teal, border: 'none', borderRadius: 9,
+                color: '#fff', fontSize: 12, fontWeight: 500,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                fontFamily: FONT, whiteSpace: 'nowrap', transition: 'background 0.15s',
+              }}
                 onMouseEnter={e => (e.currentTarget.style.background = C.tealH)}
                 onMouseLeave={e => (e.currentTarget.style.background = C.teal)}
               >
@@ -381,7 +388,101 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
             </div>
           </div>
 
-          {/* Graphique */}
+          {/* Statistiques du mois */}
+          <div className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: 10 }}>
+            {monthStats.map(s => (
+              <div key={s.label} style={{
+                ...cardSt, padding: '16px 16px 14px', overflow: 'hidden',
+              }}>
+                <div style={{
+                  width: 28, height: 28, borderRadius: 8,
+                  background: C.tealT, border: `1px solid ${C.tealB}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: C.teal, marginBottom: 12,
+                }}>
+                  {s.icon}
+                </div>
+                <p style={{ color: C.t3, fontSize: 10, margin: '0 0 4px', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {s.label}
+                </p>
+                <p style={{ color: C.t1, fontSize: 20, fontFamily: MONO, fontWeight: 700, margin: '0 0 2px', letterSpacing: '-0.02em' }}>
+                  {s.value}
+                  <span style={{ color: C.t3, fontSize: 11, fontWeight: 400, marginLeft: 4 }}>{s.unit}</span>
+                </p>
+                <p style={{ color: C.t3, fontSize: 10, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {s.sub}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Convertisseur rapide */}
+          <div style={{ ...cardSt }}>
+            <div style={{ padding: '14px 18px', borderBottom: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Calculator style={{ width: 14, height: 14, color: C.teal }} />
+              <p style={{ ...sectionHead }}>Convertisseur rapide</p>
+            </div>
+            <div style={{ padding: '18px 18px' }}>
+              {/* Sélecteur de direction */}
+              <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
+                {(['USDT→XOF', 'USDT→EUR', 'XOF→USDT'] as const).map(d => (
+                  <button key={d} onClick={() => setConvDir(d)} style={{
+                    height: 28, paddingLeft: 10, paddingRight: 10, borderRadius: 7,
+                    border: `1px solid ${convDir === d ? C.tealB : C.bds}`,
+                    background: convDir === d ? C.tealT : 'transparent',
+                    color: convDir === d ? C.teal : C.t3,
+                    fontSize: 11, fontWeight: convDir === d ? 600 : 400,
+                    cursor: 'pointer', fontFamily: MONO, transition: 'all 0.12s',
+                  }}>{d}</button>
+                ))}
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 10, alignItems: 'center' }}>
+                {/* Entrée */}
+                <div>
+                  <p style={{ color: C.t3, fontSize: 10, fontWeight: 600, margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                    {convDir.split('→')[0]}
+                  </p>
+                  <input
+                    type="number"
+                    value={convInput}
+                    onChange={e => setConvInput(e.target.value)}
+                    style={inpSt}
+                    min="0"
+                  />
+                </div>
+
+                {/* Flèche */}
+                <div style={{ marginTop: 20, color: C.t3 }}>
+                  <RefreshCw style={{ width: 14, height: 14 }} />
+                </div>
+
+                {/* Résultat */}
+                <div>
+                  <p style={{ color: C.t3, fontSize: 10, fontWeight: 600, margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                    {convDir.split('→')[1]}
+                  </p>
+                  <div style={{
+                    ...inpSt,
+                    background: C.l3, border: `1px solid ${C.bds}`,
+                    color: initialLoad ? C.t3 : C.teal,
+                    display: 'flex', alignItems: 'center',
+                    userSelect: 'none',
+                  } as React.CSSProperties}>
+                    {initialLoad ? '—' : convResult.value.toLocaleString('fr-FR')}
+                  </div>
+                </div>
+              </div>
+
+              {!initialLoad && (
+                <p style={{ color: C.t3, fontSize: 10, margin: '10px 0 0', textAlign: 'center' }}>
+                  Taux appliqué : 1 USDT = {usdtToCfa.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} XOF · {usdtToEur.toFixed(4)} EUR
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Graphique — en bas */}
           <div style={{ ...cardSt, padding: '18px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
               <div>
@@ -405,15 +506,15 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
             </div>
 
             {chartLoading ? (
-              <div style={{ height: 250, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ height: 240, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <p style={{ color: C.t3, fontSize: 12 }}>Chargement des données…</p>
               </div>
             ) : chartData.length === 0 ? (
-              <div style={{ height: 250, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ height: 240, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <p style={{ color: C.t3, fontSize: 12 }}>Données indisponibles</p>
               </div>
             ) : (
-              <ResponsiveContainer width="100%" height={250}>
+              <ResponsiveContainer width="100%" height={240}>
                 <AreaChart data={chartData} margin={{ top: 4, right: 2, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="cGrad" x1="0" y1="0" x2="0" y2="1">
@@ -446,7 +547,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
         {/* ══ COLONNE DROITE ══════════════════════════════════════════ */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-          {/* Portefeuilles — sans barres */}
+          {/* Portefeuilles */}
           <div style={cardSt}>
             <div style={{ padding: '14px 18px', borderBottom: `1px solid ${C.bds}` }}>
               <p style={sectionHead}>Portefeuilles</p>
@@ -498,7 +599,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
             ))}
           </div>
 
-          {/* Taux de marché — 3 lignes séparées, bug EUR corrigé */}
+          {/* Taux de marché */}
           <div style={cardSt}>
             <div style={{ padding: '14px 18px', borderBottom: `1px solid ${C.bds}` }}>
               <p style={sectionHead}>Taux de marché</p>
@@ -521,13 +622,60 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
             ))}
           </div>
 
+          {/* Mouvements récents */}
+          <div style={cardSt}>
+            <div style={{ padding: '14px 18px', borderBottom: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <p style={sectionHead}>Mouvements récents</p>
+              <span style={{ color: C.t3, fontSize: 10, fontFamily: MONO }}>Ce mois</span>
+            </div>
+            {RECENT_MOVEMENTS.map((m, i) => (
+              <div key={m.id} style={{
+                padding: '12px 18px',
+                borderBottom: i < RECENT_MOVEMENTS.length - 1 ? `1px solid ${C.bds}` : 'none',
+                display: 'flex', alignItems: 'center', gap: 10,
+                transition: 'background 0.12s',
+              }}
+                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.015)')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+              >
+                <div style={{
+                  width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+                  background: m.type === 'in' ? 'rgba(59,150,143,0.10)' : 'rgba(255,255,255,0.05)',
+                  border: `1px solid ${m.type === 'in' ? C.tealB : C.bds}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: m.type === 'in' ? C.teal : C.t3,
+                }}>
+                  {m.type === 'in'
+                    ? <ArrowDownLeft style={{ width: 13, height: 13 }} />
+                    : <ArrowUpRight style={{ width: 13, height: 13 }} />
+                  }
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ color: C.t1, fontSize: 12, fontWeight: 500, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {m.label}
+                  </p>
+                  <p style={{ color: C.t3, fontSize: 10, margin: '2px 0 0', fontFamily: MONO }}>{m.ref}</p>
+                </div>
+                <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                  <p style={{
+                    color: m.type === 'in' ? C.teal : C.t2,
+                    fontSize: 12, fontFamily: MONO, fontWeight: 600, margin: 0,
+                  }}>
+                    {m.type === 'in' ? '+' : ''}{m.amount.toLocaleString('fr-FR')}
+                  </p>
+                  <p style={{ color: C.t3, fontSize: 10, margin: '2px 0 0' }}>{m.date}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
           {/* Alertes */}
           <div style={cardSt}>
             <div style={{
               padding: '14px 18px', borderBottom: `1px solid ${C.bds}`,
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             }}>
-              <p style={sectionHead}>Alertes</p>
+              <p style={sectionHead}>Alertes de taux</p>
               <button onClick={() => setAlertModal(true)} style={{
                 height: 26, paddingLeft: 10, paddingRight: 10,
                 background: C.tealT, border: `1px solid ${C.tealB}`,
@@ -544,7 +692,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
 
             <div style={{ padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 6 }}>
               {alerts.length === 0 ? (
-                <div style={{ padding: '22px 0', textAlign: 'center' }}>
+                <div style={{ padding: '20px 0', textAlign: 'center' }}>
                   <Bell style={{ width: 22, height: 22, color: C.t3, opacity: 0.3, display: 'block', margin: '0 auto 8px' }} />
                   <p style={{ color: C.t3, fontSize: 12, margin: 0 }}>Aucune alerte configurée</p>
                 </div>
