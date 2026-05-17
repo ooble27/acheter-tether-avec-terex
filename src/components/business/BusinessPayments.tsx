@@ -214,6 +214,7 @@ const dateInputStyle: React.CSSProperties = {
   width: '100%', background: C.l2, border: `1px solid ${C.bd}`,
   borderRadius: 8, padding: '11px 14px', color: C.t1, fontSize: 13,
   outline: 'none', fontFamily: FONT, boxSizing: 'border-box',
+  colorScheme: 'dark',
 };
 
 // ────────────────────────────────────────────────────────────────

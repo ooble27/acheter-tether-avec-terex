@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Clock, CheckCircle2, XCircle, Loader2, Download, X, Copy, Check, ExternalLink, FileText, Calendar, RefreshCw } from 'lucide-react';
+import { Search, Download, X, Copy, Check, ExternalLink, FileText, Calendar, RefreshCw } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import usdtLogo from '@/assets/usdt-logo.png';
 
@@ -28,26 +28,25 @@ const NET_LOGOS: Record<string, string> = {
   POLYGON: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
 };
 
-const STATUS_CONFIG: Record<string, { bg: string; border: string; color: string; label: string; Icon: React.FC<{ style?: React.CSSProperties }> }> = {
-  pending:    { bg: C.amberT, border: C.amberB, color: C.amber, label: 'En attente',  Icon: Clock },
-  processing: { bg: C.blueT,  border: C.blueB,  color: C.blue,  label: 'En cours',    Icon: Loader2 },
-  completed:  { bg: C.emT,    border: C.emB,    color: C.em,    label: 'Complété',    Icon: CheckCircle2 },
-  failed:     { bg: C.redT,   border: C.redB,   color: C.red,   label: 'Échoué',      Icon: XCircle },
+const STATUS_CONFIG: Record<string, { dot: string; label: string; color: string }> = {
+  pending:    { dot: C.amber, color: C.amber, label: 'En attente' },
+  processing: { dot: C.blue,  color: C.blue,  label: 'En cours'   },
+  completed:  { dot: C.em,    color: C.em,    label: 'Complété'   },
+  failed:     { dot: C.red,   color: C.red,   label: 'Échoué'     },
 };
 
 function StatusPill({ status }: { status: string }) {
-  const cfg = STATUS_CONFIG[status] || { bg: C.l3, border: C.bd, color: C.t2, label: status, Icon: Clock };
-  const { bg, border, color, label, Icon } = cfg;
+  const cfg = STATUS_CONFIG[status] || { dot: C.t3, color: C.t2, label: status };
   return (
     <span style={{
-      display: 'inline-flex', alignItems: 'center', gap: 4,
-      paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3,
+      display: 'inline-flex', alignItems: 'center', gap: 5,
+      paddingLeft: 8, paddingRight: 10, paddingTop: 3, paddingBottom: 3,
       borderRadius: 999, fontSize: 11, fontWeight: 500,
-      background: bg, border: `1px solid ${border}`, color,
+      background: C.l3, border: `1px solid ${C.bds}`, color: C.t2,
       fontFamily: FONT, whiteSpace: 'nowrap',
     }}>
-      <Icon style={{ width: 9, height: 9 }} />
-      {label}
+      <span style={{ width: 5, height: 5, borderRadius: '50%', background: cfg.dot, flexShrink: 0 }} />
+      {cfg.label}
     </span>
   );
 }
@@ -455,13 +454,14 @@ export function BusinessHistory({ user }: Props) {
                     key={tx.id}
                     onClick={() => setSelectedTx(tx)}
                     style={{
-                      display: 'flex', alignItems: 'center',
+                      alignItems: 'center',
                       padding: '13px 20px',
                       borderBottom: i < paginated.length - 1 ? `1px solid ${C.bds}` : 'none',
                       gap: 12, cursor: 'pointer', transition: 'background 0.1s',
                       minWidth: 600,
+                      gridTemplateColumns: '2fr 120px 100px 130px 120px',
                     }}
-                    className="md:grid"
+                    className="flex md:grid"
                     onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.015)')}
                     onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                   >
@@ -475,10 +475,10 @@ export function BusinessHistory({ user }: Props) {
                       {tx.note ? ` · ${tx.note.slice(0, 40)}${tx.note.length > 40 ? '…' : ''}` : ''}
                     </p>
                   </div>
-                  <span className="hidden md:block" style={{ color: C.t3, fontSize: 11, fontFamily: MONO }}>
+                  <span className="hidden md:block" style={{ color: C.t3, fontSize: 11, fontFamily: MONO, alignSelf: 'center' }}>
                     {tx.reference || '—'}
                   </span>
-                  <span className="hidden md:flex" style={{ alignItems: 'center', gap: 6 }}>
+                  <span className="hidden md:flex" style={{ alignItems: 'center', gap: 6, alignSelf: 'center' }}>
                     {NET_LOGOS[tx.network] && (
                       <img src={NET_LOGOS[tx.network]} alt={tx.network}
                         style={{ width: 18, height: 18, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
@@ -486,13 +486,13 @@ export function BusinessHistory({ user }: Props) {
                     )}
                     <span style={{ color: C.t2, fontSize: 12 }}>{tx.network || '—'}</span>
                   </span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end', marginLeft: 'auto' }} className="md:ml-0">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end', marginLeft: 'auto' }}>
                     <img src={usdtLogo} alt="USDT" style={{ width: 14, height: 14, borderRadius: '50%', flexShrink: 0 }} />
                     <span style={{ fontSize: 13, fontWeight: 600, color: C.t1, fontVariantNumeric: 'tabular-nums' }}>
                       {(tx.amount || 0).toLocaleString('fr-FR')}
                     </span>
                   </div>
-                  <div className="hidden md:flex" style={{ justifyContent: 'flex-end' }}>
+                  <div className="hidden md:flex" style={{ justifyContent: 'flex-end', alignSelf: 'center' }}>
                     <StatusPill status={tx.status} />
                   </div>
                 </div>

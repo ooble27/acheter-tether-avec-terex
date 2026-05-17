@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Send, Plus, Download, Clock, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Send, Plus, Download } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -48,31 +48,62 @@ function InitialAvatar({ name, size = 32 }: { name: string; size?: number }) {
   );
 }
 
-const STATUS_CONFIG: Record<string, { bg: string; border: string; color: string; label: string; Icon: React.FC<any> }> = {
-  pending:    { bg: C.amberT, border: C.amberB, color: C.amber, label: 'En attente',  Icon: Clock },
-  processing: { bg: C.blueT,  border: C.blueB,  color: C.blue,  label: 'En cours',    Icon: Loader2 },
-  completed:  { bg: C.emT,    border: C.emB,    color: C.em,    label: 'Complété',    Icon: CheckCircle2 },
-  failed:     { bg: C.redT,   border: C.redB,   color: C.red,   label: 'Échoué',      Icon: XCircle },
+const STATUS_CONFIG: Record<string, { dot: string; label: string }> = {
+  pending:    { dot: C.amber, label: 'En attente' },
+  processing: { dot: C.blue,  label: 'En cours'   },
+  completed:  { dot: C.em,    label: 'Complété'   },
+  failed:     { dot: C.red,   label: 'Échoué'     },
 };
 
 function StatusPill({ status }: { status: string }) {
-  const cfg = STATUS_CONFIG[status] || { bg: C.l3, border: C.bd, color: C.t2, label: status, Icon: Clock };
-  const { bg, border, color, label, Icon } = cfg;
+  const cfg = STATUS_CONFIG[status] || { dot: C.t3, label: status };
   return (
     <span style={{
-      display: 'inline-flex', alignItems: 'center', gap: 4,
-      paddingLeft: 8, paddingRight: 8, paddingTop: 3, paddingBottom: 3,
+      display: 'inline-flex', alignItems: 'center', gap: 5,
+      paddingLeft: 8, paddingRight: 10, paddingTop: 3, paddingBottom: 3,
       borderRadius: 999, fontSize: 11, fontWeight: 500,
-      background: bg, border: `1px solid ${border}`, color,
+      background: C.l3, border: `1px solid ${C.bds}`, color: C.t2,
       fontFamily: FONT, whiteSpace: 'nowrap',
     }}>
-      <Icon style={{ width: 9, height: 9 }} />
-      {label}
+      <span style={{ width: 5, height: 5, borderRadius: '50%', background: cfg.dot, flexShrink: 0 }} />
+      {cfg.label}
     </span>
   );
 }
 
 function LiveRateCard() {
+  const [rate, setRate] = useState<number | null>(null);
+  const [change, setChange] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [secAgo, setSecAgo] = useState(0);
+  const lastUpdatedRef = useRef<number>(0);
+
+  useEffect(() => {
+    let alive = true;
+    const doFetch = async () => {
+      try {
+        const res = await fetch(
+          'https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=xof&include_24hr_change=true'
+        );
+        const data = await res.json();
+        if (!alive) return;
+        const r = data?.tether?.xof;
+        const c = data?.tether?.xof_24h_change ?? 0;
+        if (r) { setRate(r); setChange(c); lastUpdatedRef.current = Date.now(); }
+      } catch { /* keep previous */ }
+      if (alive) setLoading(false);
+    };
+    doFetch();
+    const poll = setInterval(doFetch, 60000);
+    const tick = setInterval(() => {
+      if (lastUpdatedRef.current) setSecAgo(Math.round((Date.now() - lastUpdatedRef.current) / 1000));
+    }, 5000);
+    return () => { alive = false; clearInterval(poll); clearInterval(tick); };
+  }, []);
+
+  const displayRate = rate ?? 620.5;
+  const isUp = change >= 0;
+
   return (
     <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
       <div style={{ padding: '16px 20px' }}>
@@ -81,19 +112,31 @@ function LiveRateCard() {
             USDT / FCFA
           </span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.em }} />
-            <span style={{ fontSize: 10, color: C.t3, fontFamily: FONT }}>En direct</span>
+            <span style={{
+              display: 'inline-block', width: 6, height: 6, borderRadius: '50%',
+              background: loading ? C.t3 : C.em,
+              boxShadow: !loading && rate ? `0 0 0 3px rgba(34,197,94,0.15)` : 'none',
+            }} />
+            <span style={{ fontSize: 10, color: C.t3, fontFamily: FONT }}>
+              {loading ? 'Chargement…' : 'Temps réel'}
+            </span>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 6 }}>
-          <span style={{ fontSize: 24, fontWeight: 700, color: C.t1, fontFamily: FONT, fontVariantNumeric: 'tabular-nums' }}>
-            620.5
+          <span style={{ fontSize: 24, fontWeight: 700, color: loading ? C.t3 : C.t1, fontFamily: FONT, fontVariantNumeric: 'tabular-nums', transition: 'color 0.3s' }}>
+            {displayRate.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
           </span>
           <span style={{ fontSize: 11, color: C.t2, fontFamily: FONT }}>XOF/USDT</span>
-          <span style={{ fontSize: 11, fontWeight: 500, color: C.em, marginLeft: 4, fontFamily: FONT }}>+0.18%</span>
+          {!loading && (
+            <span style={{ fontSize: 11, fontWeight: 500, color: isUp ? C.em : C.red, marginLeft: 4, fontFamily: FONT }}>
+              {isUp ? '+' : ''}{change.toFixed(2)}%
+            </span>
+          )}
         </div>
         <p style={{ fontSize: 10, color: C.t3, marginTop: 4, fontFamily: FONT, margin: '4px 0 0' }}>
-          Actualisé il y a 5 secondes
+          {lastUpdatedRef.current
+            ? secAgo < 10 ? 'À l\'instant' : `Actualisé il y a ${secAgo}s`
+            : 'Actualisation…'}
         </p>
       </div>
     </div>

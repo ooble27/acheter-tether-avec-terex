@@ -30,12 +30,6 @@ const COUNTRIES = [
   'France', 'Inde', 'Pakistan', 'Autre',
 ];
 
-const COUNTRY_FLAG: Record<string, string> = {
-  'Chine': '🇨🇳', 'Émirats Arabes Unis': '🇦🇪', 'Turquie': '🇹🇷',
-  'Maroc': '🇲🇦', 'Sénégal': '🇸🇳', 'France': '🇫🇷',
-  'Inde': '🇮🇳', 'Pakistan': '🇵🇰', 'Autre': '🌍',
-};
-
 const COUNTRY_CODE: Record<string, string> = {
   'Chine': 'CN', 'Émirats Arabes Unis': 'AE', 'Turquie': 'TR',
   'Maroc': 'MA', 'Sénégal': 'SN', 'France': 'FR',
@@ -65,6 +59,19 @@ const C = {
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
+
+function FlagImg({ country }: { country: string }) {
+  const cc = COUNTRY_CODE[country];
+  if (!cc || cc === '--') return <span style={{ fontSize: 13, marginRight: 4 }}>🌍</span>;
+  return (
+    <img
+      src={`https://flagcdn.com/20x15/${cc.toLowerCase()}.png`}
+      alt={cc}
+      style={{ width: 20, height: 15, borderRadius: 2, objectFit: 'cover', flexShrink: 0, marginRight: 4, verticalAlign: 'middle', display: 'inline-block' }}
+      onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+    />
+  );
+}
 
 // ── Supplier card (module-level for SWC) ─────────────────────────
 function SupplierCard({
@@ -106,8 +113,8 @@ function SupplierCard({
             <p style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {supplier.name}
             </p>
-            <p style={{ color: C.t3, fontSize: 11, margin: '2px 0 0' }}>
-              {COUNTRY_FLAG[supplier.country] || '🌍'} {supplier.country}{supplier.category ? ` · ${supplier.category}` : ''}
+            <p style={{ color: C.t3, fontSize: 11, margin: '2px 0 0', display: 'flex', alignItems: 'center' }}>
+              <FlagImg country={supplier.country} />{supplier.country}{supplier.category ? ` · ${supplier.category}` : ''}
             </p>
           </div>
         </div>
