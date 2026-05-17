@@ -239,123 +239,131 @@ function LimitPicker({ value, onChange }: { value: string; onChange: (v: string)
   );
 }
 
-// ── Panneau aperçu dashboard (colonne droite InvitePage) ─────────────
+// ── Aperçu dashboard (colonne droite InvitePage) ─────────────────────
 
-function RolePreviewPanel({ role, displayName, limit }: { role: Role; displayName: string; limit: string }) {
+function DashboardPreview({ role, name }: { role: Role; name: string }) {
   const modules = ROLE_MODULES[role];
-  const accessCount = modules.filter(m => m.access).length;
+  const BARS = [28, 52, 38, 74, 56, 82, 44, 68, 32, 88, 62, 84, 46, 72, 100];
+  const TXS = [
+    { dest: 'Shenzhen Electronics', from: name || 'Vous',     amount: '-1 200', dir: 'out' as const, pending: false },
+    { dest: 'Lagos Imports Ltd',    from: 'Paiement entrant', amount: '+4 500', dir: 'in'  as const, pending: false },
+    { dest: 'Dubai Trade Co.',      from: name || 'Vous',     amount: '-2 800', dir: 'out' as const, pending: true  },
+    { dest: 'Cairo Textiles',       from: 'Fatou Ndiaye',     amount: '-650',   dir: 'out' as const, pending: false },
+  ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.10em', margin: 0 }}>Aperçu du compte membre</p>
-        <span style={{ fontSize: 10.5, color: C.teal, fontWeight: 700, fontFamily: MONO, background: C.tealT, padding: '2px 9px', borderRadius: 20, border: `1px solid ${C.tealB}` }}>{accessCount}/{modules.length} modules</span>
-      </div>
+    <div style={{ position: 'relative' }}>
+      {/* Ambient glow */}
+      <div style={{ position: 'absolute', inset: -50, background: 'radial-gradient(ellipse at 45% 15%, rgba(59,150,143,0.13) 0%, transparent 55%)', pointerEvents: 'none', zIndex: 0 }} />
 
-      {/* Mini plateforme mockup */}
-      <div style={{ background: '#111', border: `1px solid ${C.bds}`, borderRadius: 14, overflow: 'hidden', boxShadow: '0 20px 60px rgba(0,0,0,0.55)' }}>
+      <div style={{ position: 'relative', zIndex: 1, borderRadius: 18, overflow: 'hidden', boxShadow: '0 0 0 1px rgba(255,255,255,0.07), 0 40px 100px rgba(0,0,0,0.75), 0 0 80px rgba(59,150,143,0.09)' }}>
+
         {/* Browser chrome */}
-        <div style={{ background: '#0b0b0b', borderBottom: `1px solid rgba(255,255,255,0.06)`, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 7 }}>
+        <div style={{ background: '#080808', padding: '9px 14px', display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ display: 'flex', gap: 5 }}>
-            {['rgba(255,95,87,0.6)', 'rgba(254,188,46,0.6)', 'rgba(40,200,64,0.6)'].map((c, i) => (
-              <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: c }} />
-            ))}
+            {['#FF5F57', '#FFBD2E', '#28CA41'].map((c, i) => <div key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: c, opacity: 0.8 }} />)}
           </div>
-          <div style={{ flex: 1, background: 'rgba(255,255,255,0.05)', borderRadius: 4, height: 17, display: 'flex', alignItems: 'center', paddingLeft: 8 }}>
-            <span style={{ fontSize: 8.5, color: C.t3, fontFamily: MONO }}>app.terex.io/dashboard</span>
+          <div style={{ flex: 1, background: 'rgba(255,255,255,0.05)', borderRadius: 5, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
+            <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.teal, opacity: 0.7 }} />
+            <span style={{ fontSize: 9, color: C.t3, fontFamily: MONO }}>app.terex.io/dashboard</span>
           </div>
         </div>
+
         {/* App header */}
-        <div style={{ background: '#0e0e0e', borderBottom: `1px solid ${C.bds}`, padding: '7px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.teal }} />
-          <span style={{ fontSize: 9, fontWeight: 800, color: C.teal, fontFamily: MONO, letterSpacing: '0.14em' }}>TEREX</span>
+        <div style={{ background: '#0c0c0c', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '10px 16px', display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 24, height: 24, borderRadius: 7, background: C.tealT, border: `1px solid ${C.tealB}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: C.teal }} />
+            </div>
+            <span style={{ fontSize: 11.5, fontWeight: 800, color: C.teal, fontFamily: MONO, letterSpacing: '0.14em' }}>TEREX</span>
+          </div>
           <div style={{ flex: 1 }} />
-          <div style={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <User size={10} color={C.t3} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ height: 20, background: C.tealT, border: `1px solid ${C.tealB}`, borderRadius: 6, padding: '0 9px', display: 'flex', alignItems: 'center' }}>
+              <span style={{ fontSize: 9, color: C.teal, fontWeight: 700 }}>{role}</span>
+            </div>
+            <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <User size={12} color={C.t2} />
+            </div>
           </div>
         </div>
-        {/* Layout */}
-        <div style={{ display: 'flex', height: 168 }}>
+
+        {/* App body */}
+        <div style={{ display: 'flex', height: 460, background: '#0f0f0f' }}>
+
           {/* Sidebar */}
-          <div style={{ width: 68, borderRight: `1px solid ${C.bds}`, background: 'rgba(0,0,0,0.25)', paddingTop: 8, display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <div style={{ width: 60, background: 'rgba(0,0,0,0.4)', borderRight: '1px solid rgba(255,255,255,0.05)', paddingTop: 14, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
             {modules.map(mod => {
               const Icon = mod.icon;
               return (
-                <div key={mod.name} style={{ padding: '5px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, opacity: mod.access ? 1 : 0.2 }}>
-                  <div style={{ width: 26, height: 26, borderRadius: 7, background: mod.access ? 'rgba(59,150,143,0.14)' : 'rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Icon size={11} color={mod.access ? C.teal : C.t3} />
-                  </div>
-                  <span style={{ fontSize: 6.5, color: mod.access ? C.t2 : C.t3, textAlign: 'center' }}>{mod.name.split(' ')[0]}</span>
+                <div key={mod.name} title={mod.name}
+                  style={{ width: 36, height: 36, borderRadius: 10, background: mod.access ? 'rgba(59,150,143,0.15)' : 'rgba(255,255,255,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: mod.access ? 1 : 0.22 }}>
+                  <Icon size={15} color={mod.access ? C.teal : C.t3} />
                 </div>
               );
             })}
           </div>
-          {/* Content */}
-          <div style={{ flex: 1, padding: '10px', display: 'flex', flexDirection: 'column', gap: 7, overflow: 'hidden' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ width: 18, height: 18, borderRadius: '50%', background: 'rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <User size={9} color={C.t3} />
+
+          {/* Main content */}
+          <div style={{ flex: 1, padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 12, overflowY: 'auto' }}>
+
+            {/* Welcome */}
+            <div>
+              <div style={{ fontSize: 9, color: C.t3, marginBottom: 2 }}>Bonjour,</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: C.t1, letterSpacing: '-0.02em' }}>{name || 'Nouveau membre'} 👋</div>
+            </div>
+
+            {/* KPI cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+              <div style={{ background: 'linear-gradient(135deg, rgba(59,150,143,0.22) 0%, rgba(59,150,143,0.06) 100%)', border: '1px solid rgba(59,150,143,0.3)', borderRadius: 11, padding: '12px 13px' }}>
+                <div style={{ fontSize: 7.5, color: C.teal, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 7 }}>Solde</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: C.t1, fontFamily: MONO, lineHeight: 1 }}>12,450</div>
+                <div style={{ fontSize: 9, color: C.teal, marginTop: 3, fontWeight: 600 }}>USDT</div>
               </div>
-              <span style={{ fontSize: 8, fontWeight: 600, color: C.t2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 70 }}>{displayName || 'Nouveau membre'}</span>
-              <span style={{ fontSize: 7.5, color: C.teal, fontWeight: 700, marginLeft: 'auto', flexShrink: 0 }}>{role}</span>
+              <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 11, padding: '12px 13px' }}>
+                <div style={{ fontSize: 7.5, color: C.t3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 7 }}>Ce mois</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: C.t1, fontFamily: MONO, lineHeight: 1 }}>4,200</div>
+                <div style={{ fontSize: 9, color: C.t3, marginTop: 3 }}>USDT envoyés</div>
+              </div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5 }}>
-              {[{ l: 'Solde', v: '12 450 USDT' }, { l: 'Ce mois', v: '4 200 USDT' }].map(s => (
-                <div key={s.l} style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 5, padding: '5px 7px', border: `1px solid ${C.bds}` }}>
-                  <div style={{ fontSize: 6, color: C.t3, marginBottom: 2 }}>{s.l}</div>
-                  <div style={{ fontSize: 8, fontWeight: 700, color: C.t1, fontFamily: MONO }}>{s.v}</div>
-                </div>
-              ))}
+
+            {/* Bar chart */}
+            <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, padding: '11px 13px' }}>
+              <div style={{ fontSize: 7.5, color: C.t3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>Volume — 15 derniers jours</div>
+              <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2.5, height: 40 }}>
+                {BARS.map((h, i) => (
+                  <div key={i} style={{ flex: 1, height: `${h}%`, borderRadius: 2, background: i === BARS.length - 1 ? C.teal : i > 11 ? 'rgba(59,150,143,0.45)' : 'rgba(59,150,143,0.22)' }} />
+                ))}
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
+                <span style={{ fontSize: 7, color: C.t3 }}>1 mai</span>
+                <span style={{ fontSize: 7, color: C.teal, fontWeight: 600 }}>17 mai</span>
+              </div>
             </div>
-            <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 6, padding: '6px 8px', border: `1px solid ${C.bds}`, flex: 1 }}>
-              <div style={{ fontSize: 6, color: C.t3, marginBottom: 5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Activité récente</div>
-              {[
-                { n: displayName || 'Vous', a: '→ Shenzhen Electronics', v: '1 200' },
-                { n: 'Ahmed Diallo', a: '✓ Approuvé', v: '800' },
-              ].map((r, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: i === 0 ? 4 : 0 }}>
-                  <div style={{ width: 12, height: 12, borderRadius: '50%', background: 'rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <User size={6} color={C.t3} />
+
+            {/* Transactions */}
+            <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, overflow: 'hidden', flex: 1 }}>
+              <div style={{ padding: '9px 13px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <span style={{ fontSize: 7.5, color: C.t3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Transactions récentes</span>
+              </div>
+              {TXS.map((tx, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '8px 13px', borderBottom: i < TXS.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
+                  <div style={{ width: 22, height: 22, borderRadius: 7, background: tx.dir === 'in' ? 'rgba(59,150,143,0.18)' : 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <ArrowRight size={9} color={tx.dir === 'in' ? C.teal : C.t3} style={{ transform: tx.dir === 'in' ? 'rotate(180deg)' : undefined }} />
                   </div>
-                  <span style={{ fontSize: 7, color: C.t2, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {r.n} <span style={{ color: C.t3 }}>{r.a}</span>
-                  </span>
-                  <span style={{ fontSize: 7, color: C.teal, fontFamily: MONO, flexShrink: 0 }}>{r.v}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 9, fontWeight: 600, color: C.t1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.dest}</div>
+                    <div style={{ fontSize: 7.5, color: C.t3, marginTop: 1 }}>{tx.from}</div>
+                  </div>
+                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                    <div style={{ fontSize: 9.5, fontWeight: 700, color: tx.pending ? C.t3 : tx.dir === 'in' ? C.teal : C.t1, fontFamily: MONO }}>{tx.amount}</div>
+                    {tx.pending ? <div style={{ fontSize: 7, color: '#f59e0b', marginTop: 1 }}>En attente</div> : <div style={{ fontSize: 7, color: C.t3, marginTop: 1 }}>USDT</div>}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Modules accessibles */}
-      <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, padding: '18px 18px' }}>
-        <Label>Modules accessibles</Label>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {modules.map(mod => {
-            const Icon = mod.icon;
-            return (
-              <div key={mod.name} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 28, height: 28, borderRadius: 8, background: mod.access ? C.tealT : 'rgba(255,255,255,0.04)', border: `1px solid ${mod.access ? C.tealB : 'rgba(255,255,255,0.06)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.15s' }}>
-                  <Icon size={13} color={mod.access ? C.teal : C.t3} />
-                </div>
-                <span style={{ flex: 1, fontSize: 13, color: mod.access ? C.t1 : C.t3, fontWeight: mod.access ? 500 : 400 }}>{mod.name}</span>
-                {mod.access
-                  ? <Check size={13} color={C.teal} strokeWidth={2.5} />
-                  : <span style={{ fontSize: 14, color: C.t3, lineHeight: 1 }}>—</span>
-                }
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Résumé limite */}
-      <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: 13, color: C.t2 }}>Limite mensuelle</span>
-        <span style={{ fontSize: 15, fontWeight: 700, color: (!limit || limit === 'Illimitée') ? C.teal : C.t1, fontFamily: (!limit || limit === 'Illimitée') ? FONT : MONO }}>
-          {(!limit || limit === 'Illimitée') ? '∞  Illimitée' : `${limit} USDT`}
-        </span>
       </div>
     </div>
   );
@@ -380,12 +388,19 @@ function InvitePage({ onBack, onInvite }: { onBack: () => void; onInvite: (inv: 
     onBack();
   };
 
+  const inp: React.CSSProperties = {
+    ...fieldBase, height: 44, fontSize: 13.5,
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.09)',
+  };
+
   return (
     <div style={{ fontFamily: FONT, maxWidth: 1040, margin: '0 auto', paddingBottom: 48 }}>
+
       {/* Breadcrumb */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 32 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 36 }}>
         <button onClick={onBack}
-          style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', color: C.t3, fontSize: 13, padding: '6px 8px 6px 4px', borderRadius: 8, fontFamily: FONT, transition: 'color 0.12s' }}
+          style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', color: C.t3, fontSize: 13, padding: '6px 8px 6px 4px', borderRadius: 8, fontFamily: FONT, transition: 'color 0.14s' }}
           onMouseEnter={e => (e.currentTarget.style.color = C.t1)}
           onMouseLeave={e => (e.currentTarget.style.color = C.t3)}>
           <ArrowLeft size={15} /> Équipe & Accès
@@ -394,86 +409,98 @@ function InvitePage({ onBack, onInvite }: { onBack: () => void; onInvite: (inv: 
         <span style={{ fontSize: 14, fontWeight: 600, color: C.t1 }}>Inviter un membre</span>
       </div>
 
-      {/* 2 colonnes */}
-      <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 24, alignItems: 'start' }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 36, alignItems: 'start' }}>
 
         {/* ── Colonne gauche : formulaire ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
 
-          {/* Avatar live */}
-          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 16, padding: '28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: `2px solid ${displayName ? C.teal : C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'border-color 0.25s, background 0.25s' }}>
-              <User size={36} color={displayName ? C.teal : 'rgba(255,255,255,0.18)'} />
+          {/* Profile hero — gradient teal */}
+          <div style={{ background: 'linear-gradient(140deg, rgba(59,150,143,0.14) 0%, rgba(59,150,143,0.05) 55%, rgba(59,150,143,0.10) 100%)', border: '1px solid rgba(59,150,143,0.2)', borderRadius: '18px 18px 0 0', padding: '36px 32px 32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, textAlign: 'center' }}>
+            {/* Avatar avec rings concentriques */}
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 130, height: 130 }}>
+              {displayName && <>
+                <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '1px solid rgba(59,150,143,0.2)', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', inset: 10, borderRadius: '50%', border: '1px solid rgba(59,150,143,0.12)', pointerEvents: 'none' }} />
+              </>}
+              <div style={{ width: 88, height: 88, borderRadius: '50%', background: displayName ? 'radial-gradient(circle at 40% 35%, rgba(59,150,143,0.3) 0%, rgba(59,150,143,0.08) 100%)' : 'rgba(255,255,255,0.06)', border: `2px solid ${displayName ? C.teal : 'rgba(255,255,255,0.12)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s', boxShadow: displayName ? '0 0 36px rgba(59,150,143,0.22)' : 'none', position: 'relative', zIndex: 1 }}>
+                <User size={40} color={displayName ? C.teal : 'rgba(255,255,255,0.18)'} />
+              </div>
             </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 16, fontWeight: 700, color: displayName ? C.t1 : C.t3, letterSpacing: '-0.01em', transition: 'color 0.15s' }}>
-                {displayName || 'Nouveau membre'}
+            <div>
+              <div style={{ fontSize: 20, fontWeight: 700, color: displayName ? C.t1 : 'rgba(255,255,255,0.22)', letterSpacing: '-0.025em', transition: 'color 0.2s', minHeight: 28 }}>
+                {displayName || 'Nom du membre'}
               </div>
-              <div style={{ fontSize: 12, color: email ? C.t2 : C.t3, marginTop: 3, transition: 'color 0.15s' }}>
-                {email || 'adresse@email.com'}
+              <div style={{ fontSize: 13, color: email ? C.t2 : 'rgba(255,255,255,0.2)', marginTop: 5, transition: 'color 0.2s' }}>
+                {email || 'email@exemple.com'}
               </div>
-              {displayName && (
-                <div style={{ fontSize: 11.5, color: C.teal, marginTop: 6, fontWeight: 600 }}>{role}</div>
-              )}
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 10, padding: '5px 14px', borderRadius: 20, background: C.tealT, border: `1px solid ${C.tealB}`, fontSize: 11.5, color: C.teal, fontWeight: 600 }}>
+                {role}
+              </div>
             </div>
           </div>
 
-          {/* Identité */}
-          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 16, padding: '22px 22px' }}>
-            <Label>Informations</Label>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div>
-                <FieldLabel>Adresse email *</FieldLabel>
-                <input value={email} onChange={e => setEmail(e.target.value)} placeholder="contact@entreprise.com" type="email" style={fieldBase} />
-              </div>
-              <div style={{ display: 'flex', gap: 10 }}>
-                <div style={{ flex: 1 }}>
-                  <FieldLabel>Prénom *</FieldLabel>
-                  <input value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="Prénom" style={fieldBase} />
+          {/* Form body — une seule carte continue */}
+          <div style={{ background: C.l1, border: '1px solid rgba(59,150,143,0.15)', borderTop: 'none', borderRadius: '0 0 18px 18px', padding: '30px 32px' }}>
+
+            {/* Coordonnées */}
+            <div style={{ marginBottom: 28 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>Coordonnées</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Adresse email *" type="email" style={inp} />
+                <div style={{ display: 'flex', gap: 10 }}>
+                  <input value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="Prénom *" style={{ ...inp, flex: 1 }} />
+                  <input value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Nom" style={{ ...inp, flex: 1 }} />
                 </div>
-                <div style={{ flex: 1 }}>
-                  <FieldLabel>Nom</FieldLabel>
-                  <input value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Nom" style={fieldBase} />
-                </div>
               </div>
             </div>
-          </div>
 
-          {/* Rôle */}
-          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 16, padding: '22px 22px' }}>
-            <Label>Rôle & Permissions</Label>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-              {SELECTABLE_ROLES.map(r => (
-                <RoleCard key={r.id} role={r.id} desc={r.desc} icon={r.icon} selected={role === r.id} onClick={() => setRole(r.id)} />
-              ))}
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 28 }} />
+
+            {/* Rôle */}
+            <div style={{ marginBottom: 28 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>Rôle & permissions</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                {SELECTABLE_ROLES.map(r => (
+                  <RoleCard key={r.id} role={r.id} desc={r.desc} icon={r.icon} selected={role === r.id} onClick={() => setRole(r.id)} />
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Limite */}
-          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 16, padding: '22px 22px' }}>
-            <Label>Limite mensuelle</Label>
-            <LimitPicker value={limit} onChange={setLimit} />
-          </div>
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 28 }} />
 
-          {/* Message */}
-          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 16, padding: '22px 22px' }}>
-            <Label>Message d'accueil <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, fontSize: 9 }}>(optionnel)</span></Label>
-            <textarea value={message} onChange={e => setMessage(e.target.value)} placeholder="Bienvenue dans l'équipe…" rows={3}
-              style={{ ...fieldBase, height: 'auto', padding: '10px 12px', resize: 'none', lineHeight: 1.6, width: '100%', boxSizing: 'border-box' }} />
-          </div>
+            {/* Limite */}
+            <div style={{ marginBottom: 28 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>Limite mensuelle</div>
+              <LimitPicker value={limit} onChange={setLimit} />
+            </div>
 
-          {/* Actions */}
-          <div style={{ display: 'flex', gap: 10 }}>
-            <GhostBtn onClick={onBack} style={{ flex: 1 }}>Annuler</GhostBtn>
-            <TealBtn onClick={handleSubmit} disabled={!canSubmit} style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
-              <Mail size={14} /> Envoyer l'invitation
-            </TealBtn>
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 28 }} />
+
+            {/* Message */}
+            <div style={{ marginBottom: 28 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.12em' }}>Message d'accueil</div>
+                <span style={{ fontSize: 10, color: C.t3 }}>Optionnel</span>
+              </div>
+              <textarea value={message} onChange={e => setMessage(e.target.value)}
+                placeholder="Bienvenue dans l'équipe ! Voici votre accès à la plateforme Terex…"
+                rows={3}
+                style={{ ...inp, height: 'auto', padding: '12px', resize: 'none', lineHeight: 1.6, boxSizing: 'border-box', width: '100%' }} />
+            </div>
+
+            {/* Actions */}
+            <div style={{ display: 'flex', gap: 10 }}>
+              <GhostBtn onClick={onBack} style={{ flex: 1, height: 46 }}>Annuler</GhostBtn>
+              <TealBtn onClick={handleSubmit} disabled={!canSubmit} style={{ flex: 2, height: 46, fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                <Mail size={15} /> Envoyer l'invitation
+              </TealBtn>
+            </div>
           </div>
         </div>
 
-        {/* ── Colonne droite : aperçu sticky ── */}
+        {/* ── Colonne droite : dashboard mockup sticky ── */}
         <div style={{ position: 'sticky', top: 24 }}>
-          <RolePreviewPanel role={role} displayName={displayName} limit={limit} />
+          <DashboardPreview role={role} name={displayName} />
         </div>
       </div>
     </div>
@@ -646,7 +673,6 @@ export function BusinessTeam({ user: _user }: { user: { email: string; name: str
 
   const activeCount = members.filter(m => m.status === 'active').length;
 
-  // Groupes de dates pour le journal
   const dateGroups = [...new Set(ACTIVITY.map(e => e.date))].map(date => ({
     date,
     isoDate: ACTIVITY.find(e => e.date === date)!.isoDate,
@@ -661,7 +687,6 @@ export function BusinessTeam({ user: _user }: { user: { email: string; name: str
     { id: 'activity',    label: 'Activité',    icon: Clock },
   ];
 
-  // Page d'invitation : remplace tout le contenu
   if (pageView === 'invite') {
     return (
       <div style={{ fontFamily: FONT, padding: '0 0 48px' }}>
@@ -677,7 +702,7 @@ export function BusinessTeam({ user: _user }: { user: { email: string; name: str
       {editingMember    && <EditModal member={editingMember} onClose={() => setEditingMember(null)} onSave={handleSaveEdit} />}
       {editingInvitation && <EditInviteModal invitation={editingInvitation} onSave={updateInvitationRole} onClose={() => setEditingInvitation(null)} />}
 
-      {/* Input logo caché */}
+      {/* Logo input caché */}
       <input ref={logoRef} type="file" accept="image/*" style={{ display: 'none' }}
         onChange={e => {
           const file = e.target.files?.[0];
@@ -691,18 +716,14 @@ export function BusinessTeam({ user: _user }: { user: { email: string; name: str
       <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '26px 28px' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 18 }}>
-            {/* Logo équipe cliquable */}
             <button onClick={() => logoRef.current?.click()}
               style={{ width: 56, height: 56, borderRadius: 14, background: teamLogo ? 'transparent' : 'rgba(255,255,255,0.06)', border: `1px dashed ${teamLogo ? 'transparent' : C.bds}`, cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, flexShrink: 0, overflow: 'hidden', transition: 'border-color 0.15s' }}
               onMouseEnter={e => { if (!teamLogo) e.currentTarget.style.borderColor = C.teal; }}
               onMouseLeave={e => { if (!teamLogo) e.currentTarget.style.borderColor = C.bds; }}
-              title="Cliquer pour uploader le logo de l'équipe">
+              title="Uploader le logo de l'équipe">
               {teamLogo
                 ? <img src={teamLogo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="logo" />
-                : <>
-                    <Upload size={16} color={C.t3} />
-                    <span style={{ fontSize: 8, color: C.t3, fontFamily: FONT }}>Logo</span>
-                  </>
+                : <><Upload size={16} color={C.t3} /><span style={{ fontSize: 8, color: C.t3 }}>Logo</span></>
               }
             </button>
             <div>
@@ -710,9 +731,9 @@ export function BusinessTeam({ user: _user }: { user: { email: string; name: str
               <p style={{ color: C.t3, fontSize: 12, margin: '5px 0 18px' }}>Gérez les membres, rôles et accès de votre organisation</p>
               <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
                 {[
-                  { label: 'Membres actifs',         value: activeCount },
-                  { label: 'Rôles disponibles',       value: 5 },
-                  { label: 'Invitations en attente',  value: invitations.length },
+                  { label: 'Membres actifs',        value: activeCount },
+                  { label: 'Rôles disponibles',      value: 5 },
+                  { label: 'Invitations en attente', value: invitations.length },
                 ].map(s => (
                   <div key={s.label} style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
                     <span style={{ fontSize: 24, fontWeight: 700, color: C.t1, fontFamily: MONO, lineHeight: 1 }}>{s.value}</span>
@@ -878,7 +899,6 @@ export function BusinessTeam({ user: _user }: { user: { email: string; name: str
       {activeTab === 'activity' && (
         <div>
           {selectedEntries ? (
-            /* Vue détaillée d'une date */
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <button onClick={() => setActivityDate(null)}
@@ -898,10 +918,8 @@ export function BusinessTeam({ user: _user }: { user: { email: string; name: str
                   <div key={ev.id} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '16px 22px', borderBottom: i < selectedEntries.length - 1 ? `1px solid ${C.bds}` : 'none' }}>
                     <Avatar size={40} />
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div>
-                        <span style={{ fontSize: 13.5, fontWeight: 600, color: C.t1 }}>{ev.actor}</span>
-                        <span style={{ fontSize: 13.5, color: C.t2 }}> {ev.action}</span>
-                      </div>
+                      <span style={{ fontSize: 13.5, fontWeight: 600, color: C.t1 }}>{ev.actor}</span>
+                      <span style={{ fontSize: 13.5, color: C.t2 }}> {ev.action}</span>
                     </div>
                     <span style={{ fontSize: 12, color: C.t3, flexShrink: 0, fontFamily: MONO }}>{ev.time}</span>
                   </div>
@@ -909,7 +927,6 @@ export function BusinessTeam({ user: _user }: { user: { email: string; name: str
               </div>
             </div>
           ) : (
-            /* Vue aperçu — liste des groupes de dates */
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
                 <p style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.10em', margin: 0 }}>Journal d'activité</p>
@@ -920,8 +937,7 @@ export function BusinessTeam({ user: _user }: { user: { email: string; name: str
                   style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px', background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, cursor: 'pointer', textAlign: 'left', fontFamily: FONT, transition: 'border-color 0.14s', width: '100%' }}
                   onMouseEnter={e => (e.currentTarget.style.borderColor = C.teal)}
                   onMouseLeave={e => (e.currentTarget.style.borderColor = C.bds)}>
-                  {/* Icône date */}
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: C.l2, border: `1px solid ${C.bds}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 12, background: C.l2, border: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <Clock size={16} color={C.teal} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
