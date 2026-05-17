@@ -108,15 +108,15 @@ function NavItem({
     >
       <div style={{
         width: 30, height: 30, borderRadius: 8, flexShrink: 0,
-        background: isActive ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.06)',
-        border: `1px solid ${isActive ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.07)'}`,
+        background: isActive ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.08)',
+        border: `1px solid ${isActive ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.10)'}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         transition: 'all 0.12s',
       }}>
-        <Icon style={{ width: 14, height: 14, color: isActive ? '#fff' : '#707070' }} />
+        <Icon style={{ width: 14, height: 14, color: '#fff' }} />
       </div>
       <span style={{
-        color: isActive ? '#fff' : '#909090', fontSize: 13,
+        color: isActive ? '#fff' : '#cccccc', fontSize: 13,
         fontWeight: isActive ? 500 : 400, flex: 1,
         transition: 'color 0.12s',
       }}>
