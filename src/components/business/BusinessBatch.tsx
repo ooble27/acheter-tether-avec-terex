@@ -1,23 +1,40 @@
 import { useState, useRef } from 'react';
-import { Check, ChevronLeft, ChevronRight, Plus, X, Upload } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, Plus, X, Upload, Pencil } from 'lucide-react';
 
 const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
-  bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
+  bd: '#383838', bds: '#2a2a2a',
   teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.10)', tealB: 'rgba(59,150,143,0.25)',
   t1: '#f0f0f0', t2: '#999999', t3: '#686868',
   red: '#ef4444',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
-
 const DAY_HEADERS = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
 const MONTH_NAMES = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+const FREQUENCIES = ['Quotidien', 'Hebdomadaire', 'Mensuel', 'Trimestriel', 'Annuel'];
+const NETWORKS = ['TRC20', 'BEP20', 'ERC20', 'POLYGON'];
 
 interface Recipient { id: string; name: string; wallet: string; network: string; amount: string; }
 interface ScheduledPayment { id: string; date: Date; supplier: string; amount: string; network: string; }
 interface Recurrence { id: string; supplier: string; amount: string; frequency: string; nextDate: string; status: 'active' | 'paused'; }
 interface PendingApproval { id: string; supplier: string; amount: string; requestedBy: string; date: string; status: 'pending' | 'approved' | 'rejected'; }
+
+function ddmmToIso(s: string): string {
+  const p = s.split('/');
+  return p.length === 3 ? `${p[2]}-${p[1]}-${p[0]}` : '';
+}
+function isoToDdmm(s: string): string {
+  const p = s.split('-');
+  return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : '';
+}
+function fmtDate(d: Date): string {
+  return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+}
+
+function truncWallet(w: string) {
+  return w.length <= 16 ? w : w.slice(0, 8) + '…' + w.slice(-6);
+}
 
 function Card({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (
@@ -38,7 +55,8 @@ function Label({ children }: { children: React.ReactNode }) {
 function TealBtn({ children, onClick, style, disabled }: { children: React.ReactNode; onClick?: () => void; style?: React.CSSProperties; disabled?: boolean }) {
   const [hov, setHov] = useState(false);
   return (
-    <button onClick={onClick} disabled={disabled} style={{ background: disabled ? C.l3 : hov ? C.tealH : C.teal, color: disabled ? C.t3 : '#fff', border: 'none', borderRadius: 9, padding: '9px 18px', fontSize: 13, fontWeight: 600, cursor: disabled ? 'not-allowed' : 'pointer', fontFamily: FONT, transition: 'all 0.12s', ...style }}
+    <button onClick={onClick} disabled={disabled}
+      style={{ background: disabled ? C.l3 : hov ? C.tealH : C.teal, color: disabled ? C.t3 : '#fff', border: 'none', borderRadius: 9, padding: '9px 18px', fontSize: 13, fontWeight: 600, cursor: disabled ? 'not-allowed' : 'pointer', fontFamily: FONT, transition: 'all 0.12s', ...style }}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
       {children}
     </button>
@@ -48,7 +66,8 @@ function TealBtn({ children, onClick, style, disabled }: { children: React.React
 function GhostBtn({ children, onClick, style }: { children: React.ReactNode; onClick?: () => void; style?: React.CSSProperties }) {
   const [hov, setHov] = useState(false);
   return (
-    <button onClick={onClick} style={{ background: hov ? C.l3 : 'rgba(255,255,255,0.05)', color: C.t2, border: `1px solid ${C.bds}`, borderRadius: 9, padding: '9px 18px', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s', ...style }}
+    <button onClick={onClick}
+      style={{ background: hov ? C.l3 : 'rgba(255,255,255,0.05)', color: C.t2, border: `1px solid ${C.bds}`, borderRadius: 9, padding: '9px 18px', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s', ...style }}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
       {children}
     </button>
@@ -63,13 +82,129 @@ function Avatar({ name, size = 28 }: { name: string; size?: number }) {
   );
 }
 
-function truncWallet(w: string) {
-  if (w.length <= 16) return w;
-  return w.slice(0, 8) + '…' + w.slice(-6);
+function ModalWrap({ onClose, children }: { onClose: () => void; children: React.ReactNode }) {
+  return (
+    <div
+      style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(5px)' }}
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div style={{ background: '#1c1c1e', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 16, padding: 24, width: 400, maxWidth: 'calc(100vw - 32px)', boxShadow: '0 24px 64px rgba(0,0,0,0.7)', fontFamily: FONT }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function ModalHeader({ title, onClose }: { title: string; onClose: () => void }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+      <h3 style={{ color: C.t1, fontSize: 15, fontWeight: 700, margin: 0 }}>{title}</h3>
+      <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.t3, padding: 4, display: 'flex', borderRadius: 6, transition: 'color 0.12s' }}
+        onMouseEnter={e => e.currentTarget.style.color = C.t1} onMouseLeave={e => e.currentTarget.style.color = C.t3}>
+        <X size={16} />
+      </button>
+    </div>
+  );
+}
+
+function FieldWrap({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <p style={{ fontSize: 10.5, color: C.t3, fontWeight: 700, margin: '0 0 6px', fontFamily: FONT, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</p>
+      {children}
+    </div>
+  );
+}
+
+const fieldBase: React.CSSProperties = {
+  height: 36, width: '100%', background: C.l2, border: `1px solid ${C.bd}`,
+  borderRadius: 8, padding: '0 12px', color: C.t1, fontSize: 13,
+  outline: 'none', fontFamily: FONT, boxSizing: 'border-box', transition: 'border-color 0.12s',
+};
+
+function RecurrenceModal({ item, onSave, onClose }: { item: Recurrence | null; onSave: (r: Recurrence) => void; onClose: () => void; }) {
+  const [supplier, setSupplier] = useState(item?.supplier ?? '');
+  const [amount, setAmount] = useState(item ? item.amount.replace(/\s*USDT$/, '') : '');
+  const [frequency, setFrequency] = useState(item?.frequency ?? 'Mensuel');
+  const [nextDate, setNextDate] = useState(item ? ddmmToIso(item.nextDate) : '');
+
+  const handleSave = () => {
+    if (!supplier.trim() || !amount || !nextDate) return;
+    const num = parseFloat(amount.replace(/\s/g, '').replace(',', '.'));
+    onSave({
+      id: item?.id ?? Date.now().toString(),
+      supplier: supplier.trim(),
+      amount: `${isNaN(num) ? amount : num.toLocaleString('fr-FR')} USDT`,
+      frequency,
+      nextDate: isoToDdmm(nextDate),
+      status: item?.status ?? 'active',
+    });
+    onClose();
+  };
+
+  return (
+    <ModalWrap onClose={onClose}>
+      <ModalHeader title={item ? 'Modifier la récurrence' : 'Nouvelle récurrence'} onClose={onClose} />
+      <FieldWrap label="Fournisseur">
+        <input value={supplier} onChange={e => setSupplier(e.target.value)} placeholder="Nom du fournisseur" style={fieldBase} />
+      </FieldWrap>
+      <FieldWrap label="Montant (USDT)">
+        <input value={amount} onChange={e => setAmount(e.target.value)} placeholder="0" type="number" min="0" style={{ ...fieldBase, fontFamily: MONO }} />
+      </FieldWrap>
+      <FieldWrap label="Fréquence">
+        <select value={frequency} onChange={e => setFrequency(e.target.value)} style={{ ...fieldBase, appearance: 'none' as const }}>
+          {FREQUENCIES.map(f => <option key={f} value={f}>{f}</option>)}
+        </select>
+      </FieldWrap>
+      <FieldWrap label="Prochain envoi">
+        <input value={nextDate} onChange={e => setNextDate(e.target.value)} type="date" style={{ ...fieldBase, colorScheme: 'dark' }} />
+      </FieldWrap>
+      <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
+        <GhostBtn onClick={onClose} style={{ flex: 1 }}>Annuler</GhostBtn>
+        <TealBtn onClick={handleSave} style={{ flex: 1 }} disabled={!supplier.trim() || !amount || !nextDate}>Enregistrer</TealBtn>
+      </div>
+    </ModalWrap>
+  );
+}
+
+function ScheduleModal({ date, onSave, onClose }: { date: Date; onSave: (p: ScheduledPayment) => void; onClose: () => void; }) {
+  const [supplier, setSupplier] = useState('');
+  const [amount, setAmount] = useState('');
+  const [network, setNetwork] = useState('TRC20');
+
+  const handleSave = () => {
+    if (!supplier.trim() || !amount) return;
+    const num = parseFloat(amount);
+    onSave({ id: Date.now().toString(), date, supplier: supplier.trim(), amount: isNaN(num) ? amount : num.toLocaleString('fr-FR'), network });
+    onClose();
+  };
+
+  return (
+    <ModalWrap onClose={onClose}>
+      <ModalHeader title="Planifier un paiement" onClose={onClose} />
+      <p style={{ fontSize: 12, color: C.t3, margin: '-12px 0 18px', fontFamily: FONT }}>Pour le {fmtDate(date)}</p>
+      <FieldWrap label="Fournisseur">
+        <input value={supplier} onChange={e => setSupplier(e.target.value)} placeholder="Nom du fournisseur" style={fieldBase} />
+      </FieldWrap>
+      <FieldWrap label="Montant (USDT)">
+        <input value={amount} onChange={e => setAmount(e.target.value)} placeholder="0" type="number" min="0" style={{ ...fieldBase, fontFamily: MONO }} />
+      </FieldWrap>
+      <FieldWrap label="Réseau">
+        <select value={network} onChange={e => setNetwork(e.target.value)} style={{ ...fieldBase, appearance: 'none' as const }}>
+          {NETWORKS.map(n => <option key={n} value={n}>{n}</option>)}
+        </select>
+      </FieldWrap>
+      <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
+        <GhostBtn onClick={onClose} style={{ flex: 1 }}>Annuler</GhostBtn>
+        <TealBtn onClick={handleSave} style={{ flex: 1 }} disabled={!supplier.trim() || !amount}>Planifier</TealBtn>
+      </div>
+    </ModalWrap>
+  );
 }
 
 function MiniCalendar({ scheduledDates, selectedDate, onSelectDate }: { scheduledDates: Date[]; selectedDate: Date | null; onSelectDate: (d: Date) => void }) {
   const today = new Date();
+  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const [viewDate, setViewDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
@@ -81,42 +216,52 @@ function MiniCalendar({ scheduledDates, selectedDate, onSelectDate }: { schedule
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
 
   const isSel = (day: number) => selectedDate !== null && selectedDate.getFullYear() === year && selectedDate.getMonth() === month && selectedDate.getDate() === day;
+  const isPast = (day: number) => new Date(year, month, day) < todayStart;
+  const isToday = (day: number) => day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+
+  const navBtn: React.CSSProperties = { background: 'none', border: 'none', cursor: 'pointer', color: C.t3, padding: '4px 8px', borderRadius: 6, transition: 'background 0.1s', display: 'flex', alignItems: 'center' };
 
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-        <button onClick={() => setViewDate(new Date(year, month - 1, 1))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.t3, padding: '4px 8px', borderRadius: 6, transition: 'background 0.1s' }}
+        <button onClick={() => setViewDate(new Date(year, month - 1, 1))} style={navBtn}
           onMouseEnter={e => e.currentTarget.style.background = C.l3} onMouseLeave={e => e.currentTarget.style.background = 'none'}>
           <ChevronLeft size={15} />
         </button>
         <span style={{ fontSize: 13, fontWeight: 600, color: C.t1, fontFamily: FONT }}>{MONTH_NAMES[month]} {year}</span>
-        <button onClick={() => setViewDate(new Date(year, month + 1, 1))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.t3, padding: '4px 8px', borderRadius: 6, transition: 'background 0.1s' }}
+        <button onClick={() => setViewDate(new Date(year, month + 1, 1))} style={navBtn}
           onMouseEnter={e => e.currentTarget.style.background = C.l3} onMouseLeave={e => e.currentTarget.style.background = 'none'}>
           <ChevronRight size={15} />
         </button>
       </div>
-
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2, marginBottom: 4 }}>
         {DAY_HEADERS.map((h, i) => (
           <div key={i} style={{ textAlign: 'center', fontSize: 10, color: C.t3, fontFamily: FONT, padding: '4px 0' }}>{h}</div>
         ))}
       </div>
-
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2 }}>
         {cells.map((day, i) => {
           if (day === null) return <div key={i} />;
-          const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+          const past = isPast(day);
           const sel = isSel(day);
+          const tod = isToday(day);
           const hasPay = paymentDays.has(day);
           return (
             <div key={i}
-              onClick={() => onSelectDate(new Date(year, month, day))}
-              style={{ height: 32, borderRadius: 7, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: sel ? C.teal : isToday ? C.tealT : 'transparent', border: `1px solid ${sel ? C.teal : isToday ? C.tealB : 'transparent'}`, color: sel ? '#fff' : isToday ? C.teal : C.t2, fontSize: 12, fontFamily: FONT, cursor: 'pointer', position: 'relative', transition: 'all 0.1s', userSelect: 'none' }}
-              onMouseEnter={e => { if (!sel) e.currentTarget.style.background = isToday ? C.tealT : 'rgba(255,255,255,0.06)'; }}
-              onMouseLeave={e => { if (!sel) e.currentTarget.style.background = isToday ? C.tealT : 'transparent'; }}
+              onClick={past ? undefined : () => onSelectDate(new Date(year, month, day))}
+              style={{
+                height: 32, borderRadius: 7, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                background: sel ? C.teal : tod ? C.tealT : 'transparent',
+                border: `1px solid ${sel ? C.teal : tod ? C.tealB : 'transparent'}`,
+                color: past ? C.t3 : sel ? '#fff' : tod ? C.teal : C.t2,
+                fontSize: 12, fontFamily: FONT, cursor: past ? 'not-allowed' : 'pointer',
+                position: 'relative', transition: 'all 0.1s', userSelect: 'none', opacity: past ? 0.38 : 1,
+              }}
+              onMouseEnter={e => { if (!past && !sel) e.currentTarget.style.background = tod ? C.tealT : 'rgba(255,255,255,0.06)'; }}
+              onMouseLeave={e => { if (!past && !sel) e.currentTarget.style.background = tod ? C.tealT : 'transparent'; }}
             >
               {day}
-              {hasPay && !sel && (
+              {hasPay && !sel && !past && (
                 <div style={{ position: 'absolute', bottom: 2, left: '50%', transform: 'translateX(-50%)', width: 3, height: 3, borderRadius: '50%', background: C.teal }} />
               )}
             </div>
@@ -137,12 +282,14 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
   const [dragOver, setDragOver] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [schedulingDate, setSchedulingDate] = useState<Date | null>(null);
+  const [recurrenceModal, setRecurrenceModal] = useState<{ type: 'edit'; item: Recurrence } | { type: 'new' } | null>(null);
 
   const today = new Date();
   const [scheduledPayments, setScheduledPayments] = useState<ScheduledPayment[]>([
-    { id: 'sp1', date: new Date(today.getFullYear(), today.getMonth(), 8), supplier: 'Shenzhen Electronics', amount: '3 200', network: 'TRC20' },
-    { id: 'sp2', date: new Date(today.getFullYear(), today.getMonth(), 15), supplier: 'Lagos Imports Ltd', amount: '1 500', network: 'BEP20' },
-    { id: 'sp3', date: new Date(today.getFullYear(), today.getMonth(), 22), supplier: 'Dubai Trade Co.', amount: '800', network: 'ERC20' },
+    { id: 'sp1', date: new Date(today.getFullYear(), today.getMonth(), 22), supplier: 'Shenzhen Electronics', amount: '3 200', network: 'TRC20' },
+    { id: 'sp2', date: new Date(today.getFullYear(), today.getMonth(), 28), supplier: 'Lagos Imports Ltd', amount: '1 500', network: 'BEP20' },
+    { id: 'sp3', date: new Date(today.getFullYear(), today.getMonth() + 1, 5), supplier: 'Dubai Trade Co.', amount: '800', network: 'ERC20' },
   ]);
 
   const [recurrences, setRecurrences] = useState<Recurrence[]>([
@@ -162,12 +309,52 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
   const pendingCount = approvals.filter(a => a.status === 'pending').length;
   const activeRecurrences = recurrences.filter(r => r.status === 'active').length;
 
-  const inputStyle: React.CSSProperties = { height: 32, background: C.l2, border: `1px solid ${C.bds}`, borderRadius: 7, padding: '0 8px', color: C.t1, fontSize: 12, outline: 'none', fontFamily: FONT, width: '100%', boxSizing: 'border-box' };
+  const paymentsOnDate = selectedDate
+    ? scheduledPayments.filter(p => fmtDate(p.date) === fmtDate(selectedDate))
+    : [];
 
-  const fmtDate = (d: Date) => `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+  const confirmBatch = () => {
+    const label = recipients.length === 1 ? recipients[0].name || 'Fournisseur' : `Lot de ${recipients.length} fournisseurs`;
+    setApprovals(prev => [...prev, {
+      id: Date.now().toString(),
+      supplier: label,
+      amount: `${totalAmount.toLocaleString('fr-FR')} USDT`,
+      requestedBy: user?.name || 'Utilisateur',
+      date: new Date().toLocaleDateString('fr-FR'),
+      status: 'pending',
+    }]);
+    setBatchSent(true);
+  };
+
+  const saveRecurrence = (updated: Recurrence) => {
+    if (recurrenceModal?.type === 'edit') {
+      setRecurrences(prev => prev.map(x => x.id === updated.id ? updated : x));
+    } else {
+      setRecurrences(prev => [...prev, updated]);
+    }
+  };
+
+  const inputStyle: React.CSSProperties = { height: 32, background: C.l2, border: `1px solid ${C.bds}`, borderRadius: 7, padding: '0 8px', color: C.t1, fontSize: 12, outline: 'none', fontFamily: FONT, width: '100%', boxSizing: 'border-box' };
+  const actionBtn: React.CSSProperties = { padding: '4px 10px', borderRadius: 6, fontSize: 11, cursor: 'pointer', border: `1px solid ${C.bds}`, background: 'transparent', color: C.t2, fontFamily: FONT, transition: 'all 0.12s' };
 
   return (
     <div style={{ fontFamily: FONT, maxWidth: 1100, margin: '0 auto', padding: '8px 0 48px', display: 'flex', flexDirection: 'column', gap: 22 }}>
+
+      {/* Modals */}
+      {recurrenceModal && (
+        <RecurrenceModal
+          item={recurrenceModal.type === 'edit' ? recurrenceModal.item : null}
+          onSave={saveRecurrence}
+          onClose={() => setRecurrenceModal(null)}
+        />
+      )}
+      {schedulingDate && (
+        <ScheduleModal
+          date={schedulingDate}
+          onSave={p => setScheduledPayments(prev => [...prev, p])}
+          onClose={() => setSchedulingDate(null)}
+        />
+      )}
 
       {/* ── Hero ──────────────────────────────────────────────────── */}
       <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '26px 28px' }}>
@@ -179,7 +366,7 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
               {[
                 { label: 'Planifiés', value: scheduledPayments.length },
                 { label: 'Récurrences actives', value: activeRecurrences },
-                { label: 'En attente', value: pendingCount },
+                { label: 'En attente d\'approbation', value: pendingCount },
               ].map(s => (
                 <div key={s.label} style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
                   <span style={{ fontSize: 24, fontWeight: 700, color: C.t1, fontFamily: MONO, lineHeight: 1 }}>{s.value}</span>
@@ -189,8 +376,8 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
             </div>
           </div>
           <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-            <GhostBtn>Planifier</GhostBtn>
-            <TealBtn onClick={() => { setPreviewing(false); setBatchSent(false); }}>+ Nouveau lot</TealBtn>
+            <GhostBtn onClick={() => setRecurrenceModal({ type: 'new' })}>+ Récurrence</GhostBtn>
+            <TealBtn onClick={() => { setPreviewing(false); setBatchSent(false); setRecipients([]); }}>+ Nouveau lot</TealBtn>
           </div>
         </div>
       </div>
@@ -208,9 +395,12 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
                 <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                   <Check size={20} color={C.t1} strokeWidth={2.5} />
                 </div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: C.t1, marginBottom: 6 }}>Lot soumis</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: C.t1, marginBottom: 6 }}>Lot soumis pour approbation</div>
                 <div style={{ fontSize: 12, color: C.t3, marginBottom: 22 }}>
                   {recipients.length} destinataire{recipients.length > 1 ? 's' : ''} · {totalAmount.toLocaleString('fr-FR')} USDT
+                </div>
+                <div style={{ fontSize: 12, color: C.t3, marginBottom: 22, padding: '10px 16px', background: C.l2, borderRadius: 9, border: `1px solid ${C.bds}`, textAlign: 'left' }}>
+                  Le lot a été transmis à votre gestionnaire pour validation. Vous pouvez suivre l'avancement dans la section <strong style={{ color: C.t2 }}>En attente d'approbation</strong> ci-dessous.
                 </div>
                 <TealBtn onClick={() => { setBatchSent(false); setPreviewing(false); setRecipients([]); }}>
                   Nouveau lot
@@ -236,14 +426,16 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
                     <span style={{ fontSize: 12, color: C.t1, fontFamily: MONO, fontWeight: 600 }}>{totalAmount.toLocaleString('fr-FR')} USDT</span>
                   </div>
                 </div>
+                <p style={{ fontSize: 11, color: C.t3, margin: '0 0 14px', padding: '10px 12px', background: C.l2, borderRadius: 8, border: `1px solid ${C.bds}` }}>
+                  Une fois confirmé, ce lot sera soumis à votre gestionnaire pour approbation avant l'envoi des fonds.
+                </p>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <GhostBtn onClick={() => setPreviewing(false)}>Modifier</GhostBtn>
-                  <TealBtn onClick={() => setBatchSent(true)} style={{ flex: 1 }}>Confirmer le lot</TealBtn>
+                  <TealBtn onClick={confirmBatch} style={{ flex: 1 }}>Confirmer et soumettre</TealBtn>
                 </div>
               </div>
             ) : (
               <div>
-                {/* Zone CSV */}
                 <div
                   onDragOver={e => { e.preventDefault(); setDragOver(true); }}
                   onDragLeave={() => setDragOver(false)}
@@ -257,7 +449,6 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
                 </div>
                 <input ref={fileRef} type="file" accept=".csv" style={{ display: 'none' }} />
 
-                {/* Tableau destinataires */}
                 {recipients.length > 0 && (
                   <div style={{ marginBottom: 14 }}>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 90px 76px 28px', padding: '7px 10px', background: C.l2, borderRadius: '8px 8px 0 0', border: `1px solid ${C.bds}`, borderBottom: 'none', fontSize: 10, color: C.t3, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
@@ -269,7 +460,7 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
                           <input value={r.name} onChange={e => updateRecipient(r.id, 'name', e.target.value)} placeholder="Nom" style={inputStyle} />
                           <input value={r.wallet} onChange={e => updateRecipient(r.id, 'wallet', e.target.value)} placeholder="Wallet" style={{ ...inputStyle, fontFamily: MONO, fontSize: 11 }} />
                           <select value={r.network} onChange={e => updateRecipient(r.id, 'network', e.target.value)} style={{ ...inputStyle, appearance: 'none', width: 86 }}>
-                            {['TRC20', 'BEP20', 'ERC20', 'POLYGON'].map(n => <option key={n}>{n}</option>)}
+                            {NETWORKS.map(n => <option key={n}>{n}</option>)}
                           </select>
                           <input value={r.amount} onChange={e => updateRecipient(r.id, 'amount', e.target.value)} placeholder="0" type="number" style={{ ...inputStyle, textAlign: 'right', fontFamily: MONO, width: 72 }} />
                           <button onClick={() => removeRecipient(r.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: C.t3, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4, borderRadius: 4, transition: 'color 0.12s' }}
@@ -296,7 +487,7 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
                 </div>
 
                 <TealBtn onClick={() => setPreviewing(true)} disabled={recipients.length === 0} style={{ width: '100%' }}>
-                  Prévisualiser et envoyer
+                  Prévisualiser et soumettre
                 </TealBtn>
               </div>
             )}
@@ -313,10 +504,33 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
               onSelectDate={setSelectedDate}
             />
 
+            {/* Info date sélectionnée */}
             {selectedDate && (
-              <div style={{ marginTop: 14, padding: '10px 14px', background: C.l2, border: `1px solid ${C.bds}`, borderRadius: 9 }}>
-                <p style={{ fontSize: 11, color: C.t3, margin: '0 0 2px' }}>Date sélectionnée</p>
-                <p style={{ fontSize: 13, fontWeight: 600, color: C.t1, fontFamily: MONO, margin: 0 }}>{fmtDate(selectedDate)}</p>
+              <div style={{ marginTop: 14, padding: '12px 14px', background: C.l2, border: `1px solid ${C.bds}`, borderRadius: 9 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: paymentsOnDate.length > 0 ? 10 : 0 }}>
+                  <div>
+                    <p style={{ fontSize: 11, color: C.t3, margin: '0 0 2px' }}>Date sélectionnée</p>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: C.t1, fontFamily: MONO, margin: 0 }}>{fmtDate(selectedDate)}</p>
+                  </div>
+                  <button onClick={() => setSchedulingDate(selectedDate)}
+                    style={{ display: 'flex', alignItems: 'center', gap: 5, background: C.tealT, border: `1px solid ${C.tealB}`, borderRadius: 7, padding: '5px 10px', color: C.teal, fontSize: 11, fontWeight: 500, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = C.teal; e.currentTarget.style.color = '#fff'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = C.tealT; e.currentTarget.style.color = C.teal; }}>
+                    <Plus size={11} /> Planifier
+                  </button>
+                </div>
+                {paymentsOnDate.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    {paymentsOnDate.map(p => (
+                      <div key={p.id} style={{ fontSize: 11, color: C.t2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 0', borderTop: `1px solid ${C.bds}` }}>
+                        <span>{p.supplier}</span>
+                        <span style={{ fontFamily: MONO, color: C.t1 }}>{p.amount} USDT</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p style={{ fontSize: 11, color: C.t3, margin: '8px 0 0' }}>Aucun paiement prévu ce jour</p>
+                )}
               </div>
             )}
 
@@ -332,7 +546,8 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
                       <div style={{ fontSize: 12, fontWeight: 500, color: C.t1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.supplier}</div>
                       <div style={{ fontSize: 11, color: C.t3 }}>{p.amount} USDT · {p.network}</div>
                     </div>
-                    <button onClick={() => setScheduledPayments(prev => prev.filter(x => x.id !== p.id))} style={{ background: 'none', border: `1px solid ${C.bds}`, borderRadius: 6, padding: '3px 8px', fontSize: 11, color: C.t3, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s', flexShrink: 0 }}
+                    <button onClick={() => setScheduledPayments(prev => prev.filter(x => x.id !== p.id))}
+                      style={{ background: 'none', border: `1px solid ${C.bds}`, borderRadius: 6, padding: '3px 8px', fontSize: 11, color: C.t3, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s', flexShrink: 0 }}
                       onMouseEnter={e => { e.currentTarget.style.borderColor = C.red; e.currentTarget.style.color = C.red; }}
                       onMouseLeave={e => { e.currentTarget.style.borderColor = C.bds; e.currentTarget.style.color = C.t3; }}>
                       Annuler
@@ -350,7 +565,17 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
 
       {/* ── Récurrences ───────────────────────────────────────────── */}
       <Card>
-        <Label>Récurrences actives</Label>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <div>
+            <Label>Récurrences actives</Label>
+          </div>
+          <button onClick={() => setRecurrenceModal({ type: 'new' })}
+            style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'none', border: `1px dashed ${C.bds}`, borderRadius: 7, padding: '5px 11px', color: C.t3, fontSize: 11, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s', marginTop: -12 }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = C.teal; e.currentTarget.style.color = C.teal; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = C.bds; e.currentTarget.style.color = C.t3; }}>
+            <Plus size={11} /> Nouvelle
+          </button>
+        </div>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: FONT }}>
             <thead>
@@ -377,22 +602,34 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
                   </td>
                   <td style={{ padding: '12px 14px' }}>
                     <div style={{ display: 'flex', gap: 6 }}>
+                      <button onClick={() => setRecurrenceModal({ type: 'edit', item: r })} style={{ ...actionBtn, display: 'flex', alignItems: 'center', gap: 4 }}
+                        onMouseEnter={e => { e.currentTarget.style.borderColor = C.teal; e.currentTarget.style.color = C.teal; }}
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = C.bds; e.currentTarget.style.color = C.t2; }}>
+                        <Pencil size={11} /> Modifier
+                      </button>
                       <button onClick={() => setRecurrences(prev => prev.map(x => x.id === r.id ? { ...x, status: x.status === 'active' ? 'paused' : 'active' } : x))}
-                        style={{ padding: '4px 10px', borderRadius: 6, fontSize: 11, cursor: 'pointer', border: `1px solid ${C.bds}`, background: 'transparent', color: C.t2, fontFamily: FONT, transition: 'all 0.12s' }}
+                        style={actionBtn}
                         onMouseEnter={e => { e.currentTarget.style.borderColor = C.teal; e.currentTarget.style.color = C.teal; }}
                         onMouseLeave={e => { e.currentTarget.style.borderColor = C.bds; e.currentTarget.style.color = C.t2; }}>
                         {r.status === 'active' ? 'Pause' : 'Activer'}
                       </button>
                       <button onClick={() => setRecurrences(prev => prev.filter(x => x.id !== r.id))}
-                        style={{ padding: '4px 8px', borderRadius: 6, fontSize: 11, cursor: 'pointer', border: `1px solid ${C.bds}`, background: 'transparent', color: C.t3, fontFamily: FONT, transition: 'all 0.12s', display: 'flex', alignItems: 'center' }}
+                        style={{ ...actionBtn, display: 'flex', alignItems: 'center' }}
                         onMouseEnter={e => { e.currentTarget.style.borderColor = C.red; e.currentTarget.style.color = C.red; }}
-                        onMouseLeave={e => { e.currentTarget.style.borderColor = C.bds; e.currentTarget.style.color = C.t3; }}>
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = C.bds; e.currentTarget.style.color = C.t2; }}>
                         <X size={12} />
                       </button>
                     </div>
                   </td>
                 </tr>
               ))}
+              {recurrences.length === 0 && (
+                <tr>
+                  <td colSpan={6} style={{ padding: '24px 14px', textAlign: 'center', fontSize: 12, color: C.t3 }}>
+                    Aucune récurrence — <button onClick={() => setRecurrenceModal({ type: 'new' })} style={{ background: 'none', border: 'none', color: C.teal, fontSize: 12, cursor: 'pointer', fontFamily: FONT }}>en créer une</button>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -400,19 +637,25 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
 
       {/* ── Approbations ──────────────────────────────────────────── */}
       <Card>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-          <Label>Paiements en attente d'approbation</Label>
-          {pendingCount > 0 && (
-            <span style={{ background: C.l2, border: `1px solid ${C.bds}`, color: C.t2, borderRadius: 8, padding: '2px 8px', fontSize: 11, fontWeight: 600, marginTop: -12 }}>
-              {pendingCount}
-            </span>
-          )}
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Label>Paiements en attente d'approbation</Label>
+            {pendingCount > 0 && (
+              <span style={{ background: C.l2, border: `1px solid ${C.bds}`, color: C.t2, borderRadius: 8, padding: '2px 8px', fontSize: 11, fontWeight: 600, marginTop: -12 }}>
+                {pendingCount}
+              </span>
+            )}
+          </div>
+          <p style={{ fontSize: 11.5, color: C.t3, margin: '-4px 0 0', lineHeight: 1.5 }}>
+            Un membre de l'équipe a créé un paiement qui nécessite votre validation avant d'être exécuté.
+            Cette double vérification protège contre les transferts non autorisés.
+          </p>
         </div>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: FONT }}>
             <thead>
               <tr style={{ borderBottom: `1px solid ${C.bds}` }}>
-                {['Fournisseur', 'Montant', 'Demandé par', 'Date', 'Actions'].map(h => (
+                {['Fournisseur / Lot', 'Montant', 'Demandé par', 'Date', 'Actions'].map(h => (
                   <th key={h} style={{ padding: '8px 14px', textAlign: 'left', fontSize: 10, fontWeight: 700, color: C.t3, letterSpacing: '0.08em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{h}</th>
                 ))}
               </tr>
@@ -453,6 +696,13 @@ export function BusinessBatch({ user }: { user: { email: string; name: string; i
                   </td>
                 </tr>
               ))}
+              {approvals.length === 0 && (
+                <tr>
+                  <td colSpan={5} style={{ padding: '24px 14px', textAlign: 'center', fontSize: 12, color: C.t3 }}>
+                    Aucun paiement en attente
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
