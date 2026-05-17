@@ -242,15 +242,209 @@ function LimitPicker({ value, onChange }: { value: string; onChange: (v: string)
 // ── Aperçu dashboard (colonne droite InvitePage) ─────────────────────
 
 function DashboardPreview({ role, name }: { role: Role; name: string }) {
-  const modules = ROLE_MODULES[role];
-  const BARS = [28, 52, 38, 74, 56, 82, 44, 68, 32, 88, 62, 84, 46, 72, 100];
-  const TXS = [
-    { dest: 'Shenzhen Electronics', amount: '-1 200', dir: 'out' as const, pending: false },
-    { dest: 'Lagos Imports Ltd',    amount: '+4 500', dir: 'in'  as const, pending: false },
-    { dest: 'Dubai Trade Co.',      amount: '-2 800', dir: 'out' as const, pending: true  },
-    { dest: 'Cairo Textiles',       amount: '-650',   dir: 'out' as const, pending: false },
+  const displayName = name || 'Nouveau membre';
+
+  const card: React.CSSProperties = {
+    background: '#222222',
+    border: '1px solid rgba(255,255,255,0.07)',
+    borderRadius: 9,
+  };
+
+  const ACTIONS = [
+    { icon: ArrowRight, label: 'Initier un paiement',    sub: 'Payer un fournisseur en USDT', teal: true  },
+    { icon: Plus,       label: 'Ajouter un fournisseur', sub: 'Enregistrer un nouveau contact', teal: false },
+    { icon: FileText,   label: 'Exporter CSV',           sub: 'Télécharger l\'historique',      teal: false },
   ];
-  const PROVIDERS = ['Shenzhen Elec.', 'Lagos Imports', 'Dubai Trade Co.'];
+
+  return (
+    <div style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.09)', background: '#181818', fontFamily: FONT }}>
+
+      {/* Chrome navigateur */}
+      <div style={{ background: '#1e1e1e', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 7, borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+        <div style={{ display: 'flex', gap: 4 }}>
+          {['#FF5F57', '#FFBD2E', '#28CA41'].map((c, i) => (
+            <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: c, opacity: 0.65 }} />
+          ))}
+        </div>
+        <div style={{ flex: 1, background: 'rgba(255,255,255,0.05)', borderRadius: 4, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ fontSize: 7.5, color: 'rgba(255,255,255,0.22)', fontFamily: MONO }}>terex.io</span>
+        </div>
+      </div>
+
+      {/* Contenu scrollable */}
+      <div style={{ padding: '14px 14px', display: 'flex', flexDirection: 'column', gap: 9, height: 580, overflowY: 'auto' }}>
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontSize: 13.5, fontWeight: 700, color: C.t1 }}>Bonjour, {displayName} 👋</div>
+            <div style={{ fontSize: 7.5, color: C.t3, marginTop: 2 }}>dimanche 17 mai 2026</div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 9px', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 20, fontSize: 7.5, color: C.t2 }}>
+            Configurer le profil <ArrowRight size={7} />
+          </div>
+        </div>
+
+        {/* KPIs — 4 colonnes */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6 }}>
+          {[
+            { label: 'VOLUME TOTAL', value: '—',  sub: 'Transactions complétées' },
+            { label: 'EN COURS',     value: '4',   sub: 'Paiements actifs' },
+            { label: 'FOURNISSEURS', value: '3',   sub: 'Contacts enregistrés' },
+            { label: 'ÉCONOMIES',    value: '—',  sub: 'vs SWIFT estimé' },
+          ].map((kpi, i) => (
+            <div key={i} style={{ ...card, padding: '9px 9px' }}>
+              <div style={{ fontSize: 6, color: C.t3, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 6 }}>{kpi.label}</div>
+              <div style={{ fontSize: 19, fontWeight: 700, color: C.t1, fontFamily: MONO, lineHeight: 1, marginBottom: 4 }}>{kpi.value}</div>
+              <div style={{ fontSize: 6.5, color: C.t3, lineHeight: 1.3 }}>{kpi.sub}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Modules — 3 cartes avec illustrations */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+
+          {/* Paiements */}
+          <div style={{ ...card, padding: '12px 11px' }}>
+            <div style={{ height: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 9 }}>
+              <svg width="56" height="36" viewBox="0 0 56 36" fill="none">
+                <rect x="1" y="5" width="26" height="18" rx="3.5" stroke="rgba(255,255,255,0.22)" strokeWidth="1.4" />
+                <line x1="1" y1="10" x2="27" y2="10" stroke="rgba(255,255,255,0.22)" strokeWidth="1.4" />
+                <line x1="5" y1="16" x2="13" y2="16" stroke="rgba(255,255,255,0.12)" strokeWidth="1.2" />
+                <path d="M30 14 L35 14 M35 14 L33 12 M35 14 L33 16" stroke="rgba(255,255,255,0.3)" strokeWidth="1.3" strokeLinecap="round" />
+                <rect x="37" y="6" width="16" height="22" rx="3" stroke="rgba(255,255,255,0.22)" strokeWidth="1.4" />
+                <circle cx="45" cy="14" r="4" stroke="rgba(255,255,255,0.18)" strokeWidth="1.2" />
+                <line x1="41" y1="21" x2="49" y2="21" stroke="rgba(255,255,255,0.12)" strokeWidth="1.1" />
+              </svg>
+            </div>
+            <div style={{ fontSize: 9, fontWeight: 700, color: C.t1, marginBottom: 4 }}>Paiements</div>
+            <div style={{ fontSize: 7, color: C.t3, lineHeight: 1.45 }}>Envoyez des fonds à vos fournisseurs en USDT via TRC-20 ou ERC-20</div>
+          </div>
+
+          {/* Trésorerie */}
+          <div style={{ ...card, padding: '12px 11px' }}>
+            <div style={{ height: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 9 }}>
+              <svg width="56" height="36" viewBox="0 0 56 36" fill="none">
+                <rect x="4" y="6" width="24" height="20" rx="3.5" stroke="rgba(255,255,255,0.22)" strokeWidth="1.4" />
+                <circle cx="16" cy="14" r="4.5" stroke="rgba(255,255,255,0.18)" strokeWidth="1.2" />
+                <line x1="28" y1="19" x2="33" y2="19" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+                <line x1="35" y1="28" x2="35" y2="20" stroke={C.teal} strokeWidth="1.5" strokeLinecap="round" />
+                <line x1="39.5" y1="28" x2="39.5" y2="16" stroke={C.teal} strokeWidth="1.5" strokeLinecap="round" opacity="0.7" />
+                <line x1="44" y1="28" x2="44" y2="22" stroke={C.teal} strokeWidth="1.5" strokeLinecap="round" opacity="0.45" />
+                <line x1="48.5" y1="28" x2="48.5" y2="12" stroke={C.teal} strokeWidth="1.5" strokeLinecap="round" opacity="0.85" />
+              </svg>
+            </div>
+            <div style={{ fontSize: 9, fontWeight: 700, color: C.t1, marginBottom: 4 }}>Trésorerie</div>
+            <div style={{ fontSize: 7, color: C.t3, lineHeight: 1.45 }}>Gérez vos wallets, taux de change et liquidités en temps réel</div>
+          </div>
+
+          {/* Analytique */}
+          <div style={{ ...card, padding: '12px 11px' }}>
+            <div style={{ height: 46, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 9 }}>
+              <svg width="56" height="36" viewBox="0 0 56 36" fill="none">
+                <polyline points="3,30 14,22 24,26 34,12 44,6 53,10" stroke={C.teal} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                <line x1="3" y1="32" x2="53" y2="32" stroke="rgba(255,255,255,0.09)" strokeWidth="1" />
+                <line x1="3" y1="20" x2="53" y2="20" stroke="rgba(255,255,255,0.05)" strokeWidth="0.8" />
+                <line x1="3" y1="8" x2="53" y2="8" stroke="rgba(255,255,255,0.05)" strokeWidth="0.8" />
+              </svg>
+            </div>
+            <div style={{ fontSize: 9, fontWeight: 700, color: C.t1, marginBottom: 4 }}>Analytique</div>
+            <div style={{ fontSize: 7, color: C.t3, lineHeight: 1.45 }}>Visualisez vos volumes, tendances et rapports mensuels</div>
+          </div>
+        </div>
+
+        {/* Transactions + Actions rapides */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: 6 }}>
+
+          {/* Transactions */}
+          <div style={{ ...card, padding: '10px 11px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+              <span style={{ fontSize: 8.5, fontWeight: 700, color: C.t1 }}>Transactions récentes</span>
+              <span style={{ fontSize: 7, color: C.teal }}>Tout voir →</span>
+            </div>
+            {[
+              { initials: 'DG', label: 'Dubaï gold',    date: '16/05/2026 · TRC20', amount: '9 000 USDT' },
+              { initials: 'TC', label: 'Turkiy center', date: '16/05/2026 · TRC20', amount: '9 000 USDT' },
+            ].map((tx, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '6px 0', borderTop: i > 0 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                <div style={{ width: 22, height: 22, borderRadius: 7, background: C.tealT, border: `1px solid ${C.tealB}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <span style={{ fontSize: 6.5, fontWeight: 700, color: C.teal }}>{tx.initials}</span>
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 8, fontWeight: 600, color: C.t1 }}>{tx.label}</div>
+                  <div style={{ fontSize: 6.5, color: C.t3, marginTop: 1 }}>{tx.date}</div>
+                </div>
+                <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                  <div style={{ fontSize: 7.5, fontWeight: 700, color: C.t1, fontFamily: MONO }}>{tx.amount}</div>
+                  <div style={{ fontSize: 6, color: '#f59e0b', marginTop: 1 }}>En attente</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Actions rapides */}
+          <div style={{ ...card, padding: '10px 11px' }}>
+            <div style={{ fontSize: 8.5, fontWeight: 700, color: C.t1, marginBottom: 8 }}>Actions rapides</div>
+            {ACTIONS.map((a, i) => {
+              const Icon = a.icon;
+              return (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '5px 0', borderTop: i > 0 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                  <div style={{ width: 20, height: 20, borderRadius: 6, background: a.teal ? C.tealT : 'rgba(255,255,255,0.06)', border: `1px solid ${a.teal ? C.tealB : 'rgba(255,255,255,0.08)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Icon size={8} color={a.teal ? C.teal : C.t3} />
+                  </div>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: 7.5, fontWeight: 600, color: C.t1 }}>{a.label}</div>
+                    <div style={{ fontSize: 6.5, color: C.t3, marginTop: 1 }}>{a.sub}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Volume + Taux USDT/FCFA */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: 6 }}>
+
+          {/* Graphique courbe */}
+          <div style={{ ...card, padding: '10px 11px' }}>
+            <div style={{ fontSize: 8.5, fontWeight: 700, color: C.t1 }}>Volume des 7 derniers jours</div>
+            <div style={{ fontSize: 7, color: C.t3, marginBottom: 8 }}>En USDT</div>
+            <svg width="100%" height="56" viewBox="0 0 260 56" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={C.teal} stopOpacity="0.18" />
+                  <stop offset="100%" stopColor={C.teal} stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <path d="M0,50 C30,48 55,44 80,36 C105,28 120,18 140,10 C158,4 175,8 195,16 C215,24 238,44 260,50 Z" fill="url(#areaGrad)" />
+              <path d="M0,50 C30,48 55,44 80,36 C105,28 120,18 140,10 C158,4 175,8 195,16 C215,24 238,44 260,50" stroke={C.teal} strokeWidth="1.8" fill="none" strokeLinecap="round" />
+            </svg>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+              {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Auj'].map(d => (
+                <span key={d} style={{ fontSize: 6.5, color: C.t3 }}>{d}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Taux */}
+          <div style={{ ...card, padding: '10px 11px', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+              <span style={{ fontSize: 7.5, fontWeight: 700, color: C.t3 }}>USDT / FCFA</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.teal }} />
+                <span style={{ fontSize: 6.5, color: C.teal }}>Temps réel</span>
+              </div>
+            </div>
+            <div style={{ fontSize: 28, fontWeight: 700, color: C.t1, fontFamily: MONO, lineHeight: 1 }}>564</div>
+            <div style={{ fontSize: 7.5, color: C.t3, marginTop: 5 }}>XOF/USDT</div>
+            <div style={{ fontSize: 7, color: C.t3, marginTop: 2 }}>À l'instant</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
 
   const gridTexture: React.CSSProperties = {};
 
