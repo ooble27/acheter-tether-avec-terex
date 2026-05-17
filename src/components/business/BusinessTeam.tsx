@@ -245,124 +245,156 @@ function DashboardPreview({ role, name }: { role: Role; name: string }) {
   const modules = ROLE_MODULES[role];
   const BARS = [28, 52, 38, 74, 56, 82, 44, 68, 32, 88, 62, 84, 46, 72, 100];
   const TXS = [
-    { dest: 'Shenzhen Electronics', from: name || 'Vous',     amount: '-1 200', dir: 'out' as const, pending: false },
-    { dest: 'Lagos Imports Ltd',    from: 'Paiement entrant', amount: '+4 500', dir: 'in'  as const, pending: false },
-    { dest: 'Dubai Trade Co.',      from: name || 'Vous',     amount: '-2 800', dir: 'out' as const, pending: true  },
-    { dest: 'Cairo Textiles',       from: 'Fatou Ndiaye',     amount: '-650',   dir: 'out' as const, pending: false },
+    { dest: 'Shenzhen Electronics', amount: '-1 200', dir: 'out' as const, pending: false },
+    { dest: 'Lagos Imports Ltd',    amount: '+4 500', dir: 'in'  as const, pending: false },
+    { dest: 'Dubai Trade Co.',      amount: '-2 800', dir: 'out' as const, pending: true  },
+    { dest: 'Cairo Textiles',       amount: '-650',   dir: 'out' as const, pending: false },
   ];
+  const PROVIDERS = ['Shenzhen Elec.', 'Lagos Imports', 'Dubai Trade Co.'];
+
+  const gridTexture: React.CSSProperties = {
+    backgroundImage: [
+      'linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px)',
+      'linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px)',
+    ].join(', '),
+    backgroundSize: '30px 30px',
+  };
 
   return (
-    <div style={{ position: 'relative' }}>
-      {/* Ambient glow */}
-      <div style={{ position: 'absolute', inset: -50, background: 'radial-gradient(ellipse at 45% 15%, rgba(59,150,143,0.13) 0%, transparent 55%)', pointerEvents: 'none', zIndex: 0 }} />
+    <div style={{ borderRadius: 18, overflow: 'hidden', boxShadow: '0 0 0 1px rgba(255,255,255,0.09), 0 32px 72px rgba(0,0,0,0.55)' }}>
 
-      <div style={{ position: 'relative', zIndex: 1, borderRadius: 18, overflow: 'hidden', boxShadow: '0 0 0 1px rgba(255,255,255,0.07), 0 40px 100px rgba(0,0,0,0.75), 0 0 80px rgba(59,150,143,0.09)' }}>
+      {/* Browser chrome — gris neutre */}
+      <div style={{ background: '#202020', padding: '9px 14px', display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+        <div style={{ display: 'flex', gap: 5 }}>
+          {['#FF5F57', '#FFBD2E', '#28CA41'].map((c, i) => (
+            <div key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: c, opacity: 0.65 }} />
+          ))}
+        </div>
+        <div style={{ flex: 1, background: 'rgba(255,255,255,0.05)', borderRadius: 5, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
+          <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.teal, opacity: 0.7 }} />
+          <span style={{ fontSize: 8.5, color: 'rgba(255,255,255,0.25)', fontFamily: MONO }}>terex.io</span>
+        </div>
+      </div>
 
-        {/* Browser chrome */}
-        <div style={{ background: '#080808', padding: '9px 14px', display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-          <div style={{ display: 'flex', gap: 5 }}>
-            {['#FF5F57', '#FFBD2E', '#28CA41'].map((c, i) => <div key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: c, opacity: 0.8 }} />)}
+      {/* App header */}
+      <div style={{ background: '#1d1d1d', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '9px 14px', display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+          <div style={{ width: 22, height: 22, borderRadius: 6, background: C.tealT, border: `1px solid ${C.tealB}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.teal }} />
           </div>
-          <div style={{ flex: 1, background: 'rgba(255,255,255,0.05)', borderRadius: 5, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
-            <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.teal, opacity: 0.7 }} />
-            <span style={{ fontSize: 9, color: C.t3, fontFamily: MONO }}>app.terex.io/dashboard</span>
+          <span style={{ fontSize: 11, fontWeight: 800, color: C.teal, fontFamily: MONO, letterSpacing: '0.14em' }}>TEREX</span>
+        </div>
+        <div style={{ flex: 1 }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+          <div style={{ height: 19, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 6, padding: '0 8px', display: 'flex', alignItems: 'center' }}>
+            <span style={{ fontSize: 8.5, color: C.t2, fontWeight: 600 }}>{role}</span>
+          </div>
+          <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.09)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <User size={11} color={C.t3} />
           </div>
         </div>
+      </div>
 
-        {/* App header */}
-        <div style={{ background: '#0c0c0c', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '10px 16px', display: 'flex', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{ width: 24, height: 24, borderRadius: 7, background: C.tealT, border: `1px solid ${C.tealB}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: C.teal }} />
-            </div>
-            <span style={{ fontSize: 11.5, fontWeight: 800, color: C.teal, fontFamily: MONO, letterSpacing: '0.14em' }}>TEREX</span>
-          </div>
-          <div style={{ flex: 1 }} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{ height: 20, background: C.tealT, border: `1px solid ${C.tealB}`, borderRadius: 6, padding: '0 9px', display: 'flex', alignItems: 'center' }}>
-              <span style={{ fontSize: 9, color: C.teal, fontWeight: 700 }}>{role}</span>
-            </div>
-            <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <User size={12} color={C.t2} />
-            </div>
-          </div>
+      {/* App body */}
+      <div style={{ display: 'flex', height: 540, background: '#1a1a1a' }}>
+
+        {/* Sidebar — texture grise */}
+        <div style={{ width: 54, background: '#181818', borderRight: '1px solid rgba(255,255,255,0.06)', paddingTop: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+          {modules.map(mod => {
+            const Icon = mod.icon;
+            return (
+              <div key={mod.name} title={mod.name}
+                style={{ width: 33, height: 33, borderRadius: 9, background: mod.access ? 'rgba(59,150,143,0.1)' : 'transparent', border: `1px solid ${mod.access ? 'rgba(59,150,143,0.18)' : 'transparent'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: mod.access ? 1 : 0.18, transition: 'opacity 0.2s' }}>
+                <Icon size={13} color={mod.access ? C.teal : C.t2} />
+              </div>
+            );
+          })}
         </div>
 
-        {/* App body */}
-        <div style={{ display: 'flex', height: 460, background: '#0f0f0f' }}>
+        {/* Main content — grille neutre en fond */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '14px 14px', display: 'flex', flexDirection: 'column', gap: 9, ...gridTexture }}>
 
-          {/* Sidebar */}
-          <div style={{ width: 60, background: 'rgba(0,0,0,0.4)', borderRight: '1px solid rgba(255,255,255,0.05)', paddingTop: 14, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-            {modules.map(mod => {
-              const Icon = mod.icon;
-              return (
-                <div key={mod.name} title={mod.name}
-                  style={{ width: 36, height: 36, borderRadius: 10, background: mod.access ? 'rgba(59,150,143,0.15)' : 'rgba(255,255,255,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: mod.access ? 1 : 0.22 }}>
-                  <Icon size={15} color={mod.access ? C.teal : C.t3} />
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Main content */}
-          <div style={{ flex: 1, padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 12, overflowY: 'auto' }}>
-
-            {/* Welcome */}
+          {/* Titre + date */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <div style={{ fontSize: 9, color: C.t3, marginBottom: 2 }}>Bonjour,</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: C.t1, letterSpacing: '-0.02em' }}>{name || 'Nouveau membre'} 👋</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: C.t1, letterSpacing: '-0.02em' }}>{name || 'Nouveau membre'}</div>
+              <div style={{ fontSize: 8, color: C.t3, marginTop: 1 }}>{role} · Mai 2026</div>
             </div>
-
-            {/* KPI cards */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-              <div style={{ background: 'linear-gradient(135deg, rgba(59,150,143,0.22) 0%, rgba(59,150,143,0.06) 100%)', border: '1px solid rgba(59,150,143,0.3)', borderRadius: 11, padding: '12px 13px' }}>
-                <div style={{ fontSize: 7.5, color: C.teal, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 7 }}>Solde</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: C.t1, fontFamily: MONO, lineHeight: 1 }}>12,450</div>
-                <div style={{ fontSize: 9, color: C.teal, marginTop: 3, fontWeight: 600 }}>USDT</div>
-              </div>
-              <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 11, padding: '12px 13px' }}>
-                <div style={{ fontSize: 7.5, color: C.t3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 7 }}>Ce mois</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: C.t1, fontFamily: MONO, lineHeight: 1 }}>4,200</div>
-                <div style={{ fontSize: 9, color: C.t3, marginTop: 3 }}>USDT envoyés</div>
-              </div>
+            <div style={{ padding: '4px 9px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 7 }}>
+              <span style={{ fontSize: 8, color: C.t3, fontFamily: MONO }}>Mai 2026</span>
             </div>
+          </div>
 
-            {/* Bar chart */}
-            <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, padding: '11px 13px' }}>
-              <div style={{ fontSize: 7.5, color: C.t3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>Volume — 15 derniers jours</div>
-              <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2.5, height: 40 }}>
+          {/* KPI — 3 cartes horizontales */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 7 }}>
+            <div style={{ background: 'rgba(59,150,143,0.09)', border: '1px solid rgba(59,150,143,0.18)', borderRadius: 10, padding: '9px 10px' }}>
+              <div style={{ fontSize: 7, color: C.teal, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 5 }}>Solde</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: C.t1, fontFamily: MONO, lineHeight: 1 }}>12,450</div>
+              <div style={{ fontSize: 7.5, color: C.teal, marginTop: 2, fontWeight: 600 }}>USDT</div>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '9px 10px' }}>
+              <div style={{ fontSize: 7, color: C.t3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 5 }}>Ce mois</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: C.t1, fontFamily: MONO, lineHeight: 1 }}>4,200</div>
+              <div style={{ fontSize: 7.5, color: C.t3, marginTop: 2 }}>USDT</div>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '9px 10px' }}>
+              <div style={{ fontSize: 7, color: C.t3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 5 }}>Paiements</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: C.t1, fontFamily: MONO, lineHeight: 1 }}>8</div>
+              <div style={{ fontSize: 7.5, color: C.t3, marginTop: 2 }}>ce mois</div>
+            </div>
+          </div>
+
+          {/* Ligne intermédiaire — graphique + fournisseurs */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 7 }}>
+            {/* Graphique barres */}
+            <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '10px 11px' }}>
+              <div style={{ fontSize: 7, color: C.t3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 9 }}>Volume · 15 jours</div>
+              <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, height: 44 }}>
                 {BARS.map((h, i) => (
-                  <div key={i} style={{ flex: 1, height: `${h}%`, borderRadius: 2, background: i === BARS.length - 1 ? C.teal : i > 11 ? 'rgba(59,150,143,0.45)' : 'rgba(59,150,143,0.22)' }} />
+                  <div key={i} style={{ flex: 1, height: `${h}%`, borderRadius: 2, background: i === BARS.length - 1 ? C.teal : 'rgba(255,255,255,0.11)' }} />
                 ))}
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
-                <span style={{ fontSize: 7, color: C.t3 }}>1 mai</span>
-                <span style={{ fontSize: 7, color: C.teal, fontWeight: 600 }}>17 mai</span>
+                <span style={{ fontSize: 6.5, color: C.t3 }}>1 mai</span>
+                <span style={{ fontSize: 6.5, color: C.teal, fontWeight: 600 }}>17 mai</span>
               </div>
             </div>
 
-            {/* Transactions */}
-            <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, overflow: 'hidden', flex: 1 }}>
-              <div style={{ padding: '9px 13px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                <span style={{ fontSize: 7.5, color: C.t3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Transactions récentes</span>
-              </div>
-              {TXS.map((tx, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '8px 13px', borderBottom: i < TXS.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
-                  <div style={{ width: 22, height: 22, borderRadius: 7, background: tx.dir === 'in' ? 'rgba(59,150,143,0.18)' : 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <ArrowRight size={9} color={tx.dir === 'in' ? C.teal : C.t3} style={{ transform: tx.dir === 'in' ? 'rotate(180deg)' : undefined }} />
+            {/* Fournisseurs */}
+            <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '10px 11px', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ fontSize: 7, color: C.t3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 9 }}>Fournisseurs</div>
+              {PROVIDERS.map((s, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 0', borderBottom: i < PROVIDERS.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                  <div style={{ width: 17, height: 17, borderRadius: 5, background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <FileText size={7} color={C.t3} />
                   </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 9, fontWeight: 600, color: C.t1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.dest}</div>
-                    <div style={{ fontSize: 7.5, color: C.t3, marginTop: 1 }}>{tx.from}</div>
-                  </div>
-                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                    <div style={{ fontSize: 9.5, fontWeight: 700, color: tx.pending ? C.t3 : tx.dir === 'in' ? C.teal : C.t1, fontFamily: MONO }}>{tx.amount}</div>
-                    {tx.pending ? <div style={{ fontSize: 7, color: '#f59e0b', marginTop: 1 }}>En attente</div> : <div style={{ fontSize: 7, color: C.t3, marginTop: 1 }}>USDT</div>}
-                  </div>
+                  <span style={{ fontSize: 8, color: C.t2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s}</span>
                 </div>
               ))}
             </div>
           </div>
+
+          {/* Transactions récentes */}
+          <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, overflow: 'hidden', flex: 1 }}>
+            <div style={{ padding: '8px 11px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              <span style={{ fontSize: 7, color: C.t3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Transactions récentes</span>
+            </div>
+            {TXS.map((tx, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 11px', borderBottom: i < TXS.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
+                <div style={{ width: 20, height: 20, borderRadius: 6, background: tx.dir === 'in' ? 'rgba(59,150,143,0.12)' : 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <ArrowRight size={8} color={tx.dir === 'in' ? C.teal : C.t3} style={{ transform: tx.dir === 'in' ? 'rotate(180deg)' : undefined }} />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 8.5, fontWeight: 600, color: C.t1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.dest}</div>
+                </div>
+                <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                  <div style={{ fontSize: 8.5, fontWeight: 700, color: tx.pending ? C.t3 : tx.dir === 'in' ? C.teal : C.t1, fontFamily: MONO }}>{tx.amount}</div>
+                  {tx.pending && <div style={{ fontSize: 6.5, color: '#f59e0b', marginTop: 1 }}>En attente</div>}
+                </div>
+              </div>
+            ))}
+          </div>
+
         </div>
       </div>
     </div>
@@ -390,8 +422,8 @@ function InvitePage({ onBack, onInvite }: { onBack: () => void; onInvite: (inv: 
 
   const inp: React.CSSProperties = {
     ...fieldBase, height: 44, fontSize: 13.5,
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.09)',
+    background: C.l2,
+    border: `1px solid ${C.bd}`,
   };
 
   return (
@@ -414,8 +446,8 @@ function InvitePage({ onBack, onInvite }: { onBack: () => void; onInvite: (inv: 
         {/* ── Colonne gauche : formulaire ── */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
 
-          {/* Profile hero — gradient teal */}
-          <div style={{ background: 'linear-gradient(140deg, rgba(59,150,143,0.14) 0%, rgba(59,150,143,0.05) 55%, rgba(59,150,143,0.10) 100%)', border: '1px solid rgba(59,150,143,0.2)', borderRadius: '18px 18px 0 0', padding: '36px 32px 32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, textAlign: 'center' }}>
+          {/* Profile hero — texture grise neutre */}
+          <div style={{ background: 'linear-gradient(150deg, #222222 0%, #1d1d1d 50%, #202020 100%)', border: `1px solid ${C.bds}`, borderRadius: '18px 18px 0 0', padding: '36px 32px 32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, textAlign: 'center' }}>
             {/* Avatar avec rings concentriques */}
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 130, height: 130 }}>
               {displayName && <>
@@ -440,7 +472,7 @@ function InvitePage({ onBack, onInvite }: { onBack: () => void; onInvite: (inv: 
           </div>
 
           {/* Form body — une seule carte continue */}
-          <div style={{ background: C.l1, border: '1px solid rgba(59,150,143,0.15)', borderTop: 'none', borderRadius: '0 0 18px 18px', padding: '30px 32px' }}>
+          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderTop: 'none', borderRadius: '0 0 18px 18px', padding: '30px 32px' }}>
 
             {/* Coordonnées */}
             <div style={{ marginBottom: 28 }}>
