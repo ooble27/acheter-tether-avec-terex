@@ -456,8 +456,7 @@ function InvitePage({ onBack, onInvite }: { onBack: () => void; onInvite: (inv: 
   const [limit, setLimit]         = useState('Illimitée');
   const [message, setMessage]     = useState('');
 
-  const displayName = [firstName, lastName].filter(Boolean).join(' ');
-  const canSubmit   = email.includes('@') && firstName.trim().length > 0;
+  const canSubmit = email.includes('@') && firstName.trim().length > 0;
 
   const handleSubmit = () => {
     if (!canSubmit) return;
@@ -466,118 +465,127 @@ function InvitePage({ onBack, onInvite }: { onBack: () => void; onInvite: (inv: 
   };
 
   const inp: React.CSSProperties = {
-    ...fieldBase, height: 44, fontSize: 13.5,
-    background: C.l2,
-    border: `1px solid ${C.bd}`,
+    ...fieldBase, height: 42, fontSize: 13,
+    background: C.l2, border: `1px solid ${C.bd}`,
   };
+
+  const card: React.CSSProperties = {
+    background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, padding: '22px 24px',
+  };
+
+  const sectionLabel: React.CSSProperties = {
+    fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase',
+    letterSpacing: '0.11em', margin: '0 0 14px', fontFamily: FONT,
+  };
+
+  const roleKey = role === 'Administrateur' ? 'admin' : role === 'Financier' ? 'financier' : role === 'Comptable' ? 'comptable' : 'operateur';
 
   return (
     <div style={{ fontFamily: FONT, maxWidth: 1040, margin: '0 auto', paddingBottom: 48 }}>
 
-      {/* Breadcrumb */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 36 }}>
-        <button onClick={onBack}
-          style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', color: C.t3, fontSize: 13, padding: '6px 8px 6px 4px', borderRadius: 8, fontFamily: FONT, transition: 'color 0.14s' }}
-          onMouseEnter={e => (e.currentTarget.style.color = C.t1)}
-          onMouseLeave={e => (e.currentTarget.style.color = C.t3)}>
-          <ArrowLeft size={15} /> Équipe & Accès
-        </button>
-        <span style={{ color: C.bds, fontSize: 18, lineHeight: 1 }}>/</span>
-        <span style={{ fontSize: 14, fontWeight: 600, color: C.t1 }}>Inviter un membre</span>
+      {/* ── Hero — même style que les autres pages ── */}
+      <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '24px 28px', marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <button onClick={onBack}
+              style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(255,255,255,0.06)', border: `1px solid ${C.bds}`, cursor: 'pointer', color: C.t2, fontSize: 12, padding: '7px 13px', borderRadius: 9, fontFamily: FONT, transition: 'all 0.13s' }}
+              onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.bd; }}
+              onMouseLeave={e => { e.currentTarget.style.color = C.t2; e.currentTarget.style.borderColor = C.bds; }}>
+              <ArrowLeft size={13} /> Équipe & Accès
+            </button>
+            <div>
+              <h2 style={{ color: C.t1, fontSize: 20, fontWeight: 700, letterSpacing: '-0.03em', margin: 0 }}>Inviter un membre</h2>
+              <p style={{ color: C.t3, fontSize: 12, margin: '4px 0 0' }}>Ajoutez un collaborateur à votre espace Terex</p>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <GhostBtn onClick={onBack} style={{ height: 40 }}>Annuler</GhostBtn>
+            <TealBtn onClick={handleSubmit} disabled={!canSubmit}
+              style={{ height: 40, display: 'flex', alignItems: 'center', gap: 7, paddingLeft: 18, paddingRight: 18 }}>
+              <Mail size={14} /> Envoyer l'invitation
+            </TealBtn>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 36, alignItems: 'start' }}>
+      {/* ── Grille principale ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 16, alignItems: 'start' }}>
 
-        {/* ── Colonne gauche : formulaire ── */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {/* ── Colonne gauche ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-          {/* Profile hero — texture grise neutre */}
-          <div style={{ background: 'linear-gradient(150deg, #222222 0%, #1d1d1d 50%, #202020 100%)', border: `1px solid ${C.bds}`, borderRadius: '18px 18px 0 0', padding: '36px 32px 32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, textAlign: 'center' }}>
-            {/* Avatar avec rings concentriques */}
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 130, height: 130 }}>
-              {displayName && <>
-                <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '1px solid rgba(59,150,143,0.2)', pointerEvents: 'none' }} />
-                <div style={{ position: 'absolute', inset: 10, borderRadius: '50%', border: '1px solid rgba(59,150,143,0.12)', pointerEvents: 'none' }} />
-              </>}
-              <div style={{ width: 88, height: 88, borderRadius: '50%', background: displayName ? 'radial-gradient(circle at 40% 35%, rgba(59,150,143,0.3) 0%, rgba(59,150,143,0.08) 100%)' : 'rgba(255,255,255,0.06)', border: `2px solid ${displayName ? C.teal : 'rgba(255,255,255,0.12)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s', boxShadow: displayName ? '0 0 36px rgba(59,150,143,0.22)' : 'none', position: 'relative', zIndex: 1 }}>
-                <User size={40} color={displayName ? C.teal : 'rgba(255,255,255,0.18)'} />
-              </div>
-            </div>
-            <div>
-              <div style={{ fontSize: 20, fontWeight: 700, color: displayName ? C.t1 : 'rgba(255,255,255,0.22)', letterSpacing: '-0.025em', transition: 'color 0.2s', minHeight: 28 }}>
-                {displayName || 'Nom du membre'}
-              </div>
-              <div style={{ fontSize: 13, color: email ? C.t2 : 'rgba(255,255,255,0.2)', marginTop: 5, transition: 'color 0.2s' }}>
-                {email || 'email@exemple.com'}
-              </div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 10, padding: '5px 14px', borderRadius: 20, background: C.tealT, border: `1px solid ${C.tealB}`, fontSize: 11.5, color: C.teal, fontWeight: 600 }}>
-                {role}
+          {/* Coordonnées */}
+          <div style={card}>
+            <p style={sectionLabel}>Coordonnées</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
+              <input value={email} onChange={e => setEmail(e.target.value)}
+                placeholder="Adresse email *" type="email" style={inp} />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9 }}>
+                <input value={firstName} onChange={e => setFirstName(e.target.value)}
+                  placeholder="Prénom *" style={inp} />
+                <input value={lastName} onChange={e => setLastName(e.target.value)}
+                  placeholder="Nom" style={inp} />
               </div>
             </div>
           </div>
 
-          {/* Form body — une seule carte continue */}
-          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderTop: 'none', borderRadius: '0 0 18px 18px', padding: '30px 32px' }}>
+          {/* Limite mensuelle */}
+          <div style={card}>
+            <p style={sectionLabel}>Limite mensuelle</p>
+            <LimitPicker value={limit} onChange={setLimit} />
+          </div>
 
-            {/* Coordonnées */}
-            <div style={{ marginBottom: 28 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>Coordonnées</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Adresse email *" type="email" style={inp} />
-                <div style={{ display: 'flex', gap: 10 }}>
-                  <input value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="Prénom *" style={{ ...inp, flex: 1 }} />
-                  <input value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Nom" style={{ ...inp, flex: 1 }} />
-                </div>
-              </div>
+          {/* Message d'accueil */}
+          <div style={card}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+              <p style={{ ...sectionLabel, margin: 0 }}>Message d'accueil</p>
+              <span style={{ fontSize: 10.5, color: C.t3 }}>Optionnel</span>
             </div>
-
-            <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 28 }} />
-
-            {/* Rôle */}
-            <div style={{ marginBottom: 28 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>Rôle & permissions</div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                {SELECTABLE_ROLES.map(r => (
-                  <RoleCard key={r.id} role={r.id} desc={r.desc} icon={r.icon} selected={role === r.id} onClick={() => setRole(r.id)} />
-                ))}
-              </div>
-            </div>
-
-            <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 28 }} />
-
-            {/* Limite */}
-            <div style={{ marginBottom: 28 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>Limite mensuelle</div>
-              <LimitPicker value={limit} onChange={setLimit} />
-            </div>
-
-            <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 28 }} />
-
-            {/* Message */}
-            <div style={{ marginBottom: 28 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.12em' }}>Message d'accueil</div>
-                <span style={{ fontSize: 10, color: C.t3 }}>Optionnel</span>
-              </div>
-              <textarea value={message} onChange={e => setMessage(e.target.value)}
-                placeholder="Bienvenue dans l'équipe ! Voici votre accès à la plateforme Terex…"
-                rows={3}
-                style={{ ...inp, height: 'auto', padding: '12px', resize: 'none', lineHeight: 1.6, boxSizing: 'border-box', width: '100%' }} />
-            </div>
-
-            {/* Actions */}
-            <div style={{ display: 'flex', gap: 10 }}>
-              <GhostBtn onClick={onBack} style={{ flex: 1, height: 46 }}>Annuler</GhostBtn>
-              <TealBtn onClick={handleSubmit} disabled={!canSubmit} style={{ flex: 2, height: 46, fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                <Mail size={15} /> Envoyer l'invitation
-              </TealBtn>
-            </div>
+            <textarea value={message} onChange={e => setMessage(e.target.value)}
+              placeholder="Bienvenue dans l'équipe ! Voici votre accès à la plateforme Terex…"
+              rows={4}
+              style={{ ...inp, height: 'auto', padding: '12px 14px', resize: 'none', lineHeight: 1.65, boxSizing: 'border-box', width: '100%' }} />
           </div>
         </div>
 
-        {/* ── Colonne droite : dashboard mockup sticky ── */}
-        <div style={{ position: 'sticky', top: 24 }}>
-          <DashboardPreview role={role} name={displayName} />
+        {/* ── Colonne droite (sticky) ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14, position: 'sticky', top: 24 }}>
+
+          {/* Rôle */}
+          <div style={card}>
+            <p style={sectionLabel}>Rôle & permissions</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+              {SELECTABLE_ROLES.map(r => (
+                <RoleCard key={r.id} role={r.id} desc={r.desc} icon={r.icon}
+                  selected={role === r.id} onClick={() => setRole(r.id)} />
+              ))}
+            </div>
+          </div>
+
+          {/* Accès inclus */}
+          <div style={card}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <p style={{ ...sectionLabel, margin: 0 }}>Accès inclus avec ce rôle</p>
+              <div style={{ padding: '3px 10px', background: C.tealT, border: `1px solid ${C.tealB}`, borderRadius: 20, fontSize: 10.5, color: C.teal, fontWeight: 600 }}>
+                {role}
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+              {PERMISSIONS.map((p, i) => {
+                const has = p[roleKey as keyof typeof p] as boolean;
+                return (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, opacity: has ? 1 : 0.3 }}>
+                    <div style={{ width: 20, height: 20, borderRadius: 6, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: has ? C.tealT : 'rgba(255,255,255,0.04)', border: `1px solid ${has ? C.tealB : C.bds}` }}>
+                      {has
+                        ? <Check size={11} color={C.teal} strokeWidth={3} />
+                        : <X size={9} color={C.t3} strokeWidth={2} />}
+                    </div>
+                    <span style={{ fontSize: 12.5, color: has ? C.t2 : C.t3 }}>{p.label}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>
