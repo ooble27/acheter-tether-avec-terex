@@ -308,7 +308,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
 
           {/* Héro — balance totale */}
           <div style={{
-            background: 'linear-gradient(150deg, #1d2020 0%, #141616 100%)',
+            background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)',
             border: `1px solid ${C.bds}`, borderRadius: 16,
             padding: '30px 28px 26px',
             boxShadow: '0 4px 32px rgba(0,0,0,0.45)',
