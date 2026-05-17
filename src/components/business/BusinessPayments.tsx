@@ -480,12 +480,12 @@ export function BusinessPayments({ user, onBack }: {
 
               {scheduleOpen && (
                 <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
-                  <div className="grid grid-cols-2" style={{ gap: 12 }}>
-                    <div style={{ minWidth: 0 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <div>
                       <Label>Date</Label>
                       <input type="date" value={schedDate} onChange={e => setSchedDate(e.target.value)} style={dateInputStyle} />
                     </div>
-                    <div style={{ minWidth: 0 }}>
+                    <div>
                       <Label>Heure</Label>
                       <input type="time" value={schedTime} onChange={e => setSchedTime(e.target.value)} style={dateInputStyle} />
                     </div>
