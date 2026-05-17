@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { Check, ChevronDown, ChevronUp, Clock, Upload, X } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Clock, Upload, X, Zap, AlertTriangle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import usdtLogo from '@/assets/usdt-logo.png';
 
-// ── Design tokens ─────────────────────────────────────────────────
 const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030', l4: '#383838',
   bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
@@ -20,48 +20,72 @@ const MONO = '"JetBrains Mono", Consolas, monospace';
 const STEPS = ['Montant & Réseau', 'Bénéficiaire', 'Révision', 'Confirmation'];
 
 const NETWORKS = [
-  { id: 'TRC20', label: 'TRC20', sub: 'TRON', dotColor: C.red },
-  { id: 'BEP20', label: 'BEP20', sub: 'BSC', dotColor: C.amber },
-  { id: 'ERC20', label: 'ERC20', sub: 'Ethereum', dotColor: C.blue },
-  { id: 'POLYGON', label: 'Polygon', sub: 'MATIC', dotColor: C.purple },
+  {
+    id: 'TRC20', label: 'TRC20', sub: 'TRON Network',
+    logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
+    speed: '1–3 min', feeLabel: 'Frais très bas', recommended: true,
+  },
+  {
+    id: 'BEP20', label: 'BEP20', sub: 'BNB Smart Chain',
+    logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',
+    speed: '1–3 min', feeLabel: 'Frais bas', recommended: false,
+  },
+  {
+    id: 'ERC20', label: 'ERC20', sub: 'Ethereum',
+    logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
+    speed: '5–15 min', feeLabel: 'Frais élevés', recommended: false,
+  },
+  {
+    id: 'POLYGON', label: 'Polygon', sub: 'Polygon MATIC',
+    logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
+    speed: '1–5 min', feeLabel: 'Frais très bas', recommended: false,
+  },
 ];
 
 function generateRef() {
   return 'TRX-' + Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
+function truncWallet(w: string | undefined | null) {
+  if (!w) return '—';
+  if (w.length <= 16) return w;
+  return w.slice(0, 8) + '…' + w.slice(-6);
+}
+
 // ── StepBar ───────────────────────────────────────────────────────
 function StepBar({ step }: { step: number }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginBottom: 32, fontFamily: FONT, gap: 0 }}>
+    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginBottom: 32, fontFamily: FONT }}>
       {STEPS.map((label, i) => {
         const n = i + 1;
         const isActive = step === n;
         const isDone = step > n;
         return (
           <div key={n} style={{ display: 'flex', alignItems: 'flex-start' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
               <div style={{
-                width: 24, height: 24, borderRadius: '50%',
+                width: 28, height: 28, borderRadius: '50%',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 11, fontWeight: 700, flexShrink: 0,
-                background: (isDone || isActive) ? C.teal : C.l3,
-                color: '#fff',
-                transition: 'all 0.12s',
+                background: isDone ? C.teal : isActive ? C.teal : C.l3,
+                color: isDone || isActive ? '#fff' : C.t3,
+                boxShadow: isActive ? `0 0 0 4px ${C.tealT}` : 'none',
+                border: `2px solid ${isDone || isActive ? C.teal : C.bd}`,
+                transition: 'all 0.15s',
               }}>
                 {isDone ? <Check style={{ width: 12, height: 12, strokeWidth: 3 }} /> : n}
               </div>
               <span style={{
-                fontSize: 11, fontWeight: isActive ? 500 : 400,
-                color: (isDone || isActive) ? C.t2 : C.t3,
-                whiteSpace: 'nowrap',
+                fontSize: 10, fontWeight: isActive ? 600 : 400,
+                color: isActive ? C.t1 : isDone ? C.t2 : C.t3,
+                whiteSpace: 'nowrap', letterSpacing: '0.01em',
               }}>{label}</span>
             </div>
             {i < STEPS.length - 1 && (
               <div style={{
-                width: 40, height: 1, marginTop: 12, flexShrink: 0,
-                background: isDone ? C.tealB : C.bds,
-                transition: 'background 0.12s',
+                width: 48, height: 2, marginTop: 13, flexShrink: 0,
+                background: isDone ? C.teal : C.bds,
+                transition: 'background 0.15s',
               }} />
             )}
           </div>
@@ -71,7 +95,7 @@ function StepBar({ step }: { step: number }) {
   );
 }
 
-// ── Card wrapper ──────────────────────────────────────────────────
+// ── Card ──────────────────────────────────────────────────────────
 function Card({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (
     <div style={{
@@ -83,17 +107,17 @@ function Card({ children, style }: { children: React.ReactNode; style?: React.CS
   );
 }
 
-// ── Section title ─────────────────────────────────────────────────
-function SectionTitle({ children }: { children: React.ReactNode }) {
+// ── Label ─────────────────────────────────────────────────────────
+function Label({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      fontSize: 11, fontWeight: 600, color: C.t3, letterSpacing: '0.08em',
-      textTransform: 'uppercase', fontFamily: FONT, marginBottom: 12,
+      fontSize: 11, fontWeight: 600, color: C.t3, letterSpacing: '0.07em',
+      textTransform: 'uppercase', fontFamily: FONT, marginBottom: 10,
     }}>{children}</div>
   );
 }
 
-// ── Input helper ──────────────────────────────────────────────────
+// ── Input ─────────────────────────────────────────────────────────
 function Input({ value, onChange, placeholder, style, type, mono }: {
   value: string; onChange: (v: string) => void; placeholder?: string;
   style?: React.CSSProperties; type?: string; mono?: boolean;
@@ -109,34 +133,68 @@ function Input({ value, onChange, placeholder, style, type, mono }: {
       onBlur={() => setFocused(false)}
       style={{
         width: '100%', background: C.l2,
-        border: `1px solid ${focused ? 'rgba(59,150,143,0.35)' : C.bd}`,
-        borderRadius: 8, padding: '10px 14px', color: C.t1,
+        border: `1px solid ${focused ? C.teal : C.bd}`,
+        borderRadius: 8, padding: '11px 14px', color: C.t1,
         fontSize: 14, outline: 'none', fontFamily: mono ? MONO : FONT,
-        boxSizing: 'border-box', transition: 'border-color 0.12s', ...style,
+        boxSizing: 'border-box', transition: 'border-color 0.12s',
+        boxShadow: focused ? `0 0 0 3px ${C.tealT}` : 'none',
+        ...style,
       }}
     />
   );
 }
 
-// ── Network pill ──────────────────────────────────────────────────
-function NetworkPill({ net, active, onClick }: {
+// ── NetworkCard ───────────────────────────────────────────────────
+function NetworkCard({ net, active, onClick }: {
   net: typeof NETWORKS[0]; active: boolean; onClick: () => void;
 }) {
+  const [hov, setHov] = useState(false);
   return (
-    <button onClick={onClick} style={{
-      display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px',
-      borderRadius: 8, border: `1px solid ${active ? C.tealB : C.bd}`,
-      background: active ? C.tealT : C.l2, cursor: 'pointer', textAlign: 'left',
-      transition: 'all 0.12s', fontFamily: FONT,
-    }}
-      onMouseEnter={e => { if (!active) e.currentTarget.style.borderColor = C.bdh; }}
-      onMouseLeave={e => { if (!active) e.currentTarget.style.borderColor = C.bd; }}
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px',
+        borderRadius: 10,
+        border: `1px solid ${active ? C.teal : hov ? C.bdh : C.bds}`,
+        background: active ? 'rgba(59,150,143,0.06)' : hov ? C.l2 : 'transparent',
+        cursor: 'pointer', textAlign: 'left', width: '100%',
+        transition: 'all 0.12s', fontFamily: FONT, position: 'relative',
+        boxShadow: active ? `0 0 0 1px ${C.teal}` : 'none',
+      }}
     >
-      <span style={{ width: 8, height: 8, borderRadius: '50%', background: net.dotColor, flexShrink: 0, display: 'inline-block' }} />
-      <div>
-        <div style={{ fontSize: 13, fontWeight: 600, color: active ? C.teal : C.t1 }}>{net.label}</div>
+      <img
+        src={net.logo}
+        alt={net.sub}
+        style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0, objectFit: 'cover' }}
+        onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+      />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color: active ? C.teal : C.t1 }}>{net.label}</span>
+          {net.recommended && (
+            <span style={{
+              fontSize: 9, fontWeight: 600, color: C.teal,
+              background: C.tealT, border: `1px solid ${C.tealB}`,
+              borderRadius: 4, padding: '1px 5px', letterSpacing: '0.05em',
+            }}>RECOMMANDÉ</span>
+          )}
+        </div>
         <div style={{ fontSize: 11, color: C.t3 }}>{net.sub}</div>
+        <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
+          <span style={{ fontSize: 10, color: C.t3 }}>⏱ {net.speed}</span>
+          <span style={{ fontSize: 10, color: C.t3 }}>· {net.feeLabel}</span>
+        </div>
       </div>
+      {active && (
+        <div style={{
+          width: 20, height: 20, borderRadius: '50%', background: C.teal,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+        }}>
+          <Check style={{ width: 11, height: 11, color: '#fff', strokeWidth: 3 }} />
+        </div>
+      )}
     </button>
   );
 }
@@ -151,7 +209,7 @@ function TealBtn({ children, onClick, style, disabled }: {
     <button onClick={onClick} disabled={disabled} style={{
       background: disabled ? C.l3 : hov ? C.tealH : C.teal,
       color: disabled ? C.t3 : '#fff', border: 'none', borderRadius: 8,
-      padding: '10px 20px', fontSize: 14, fontWeight: 600, cursor: disabled ? 'not-allowed' : 'pointer',
+      padding: '11px 22px', fontSize: 14, fontWeight: 600, cursor: disabled ? 'not-allowed' : 'pointer',
       fontFamily: FONT, transition: 'all 0.12s', ...style,
     }}
       onMouseEnter={() => setHov(true)}
@@ -167,8 +225,8 @@ function GhostBtn({ children, onClick, style }: {
   return (
     <button onClick={onClick} style={{
       background: hov ? C.l3 : 'transparent',
-      color: C.t2, border: `1px solid ${C.bd}`, borderRadius: 8,
-      padding: '10px 20px', fontSize: 14, fontWeight: 500, cursor: 'pointer',
+      color: C.t2, border: `1px solid ${hov ? C.bd : C.bds}`, borderRadius: 8,
+      padding: '11px 22px', fontSize: 14, fontWeight: 500, cursor: 'pointer',
       fontFamily: FONT, transition: 'all 0.12s', ...style,
     }}
       onMouseEnter={() => setHov(true)}
@@ -177,22 +235,14 @@ function GhostBtn({ children, onClick, style }: {
   );
 }
 
-// ── Truncate wallet ───────────────────────────────────────────────
-function truncWallet(w: string | undefined | null) {
-  if (!w) return '—';
-  if (w.length <= 16) return w;
-  return w.slice(0, 8) + '…' + w.slice(-6);
-}
-
-// ── InitialAvatar ─────────────────────────────────────────────────
-function Avatar({ name, size = 32 }: { name: string; size?: number }) {
-  const colors = [C.teal, C.amber, C.blue, C.purple, C.red];
-  const idx = name.charCodeAt(0) % colors.length;
+// ── Avatar ────────────────────────────────────────────────────────
+function Avatar({ name, size = 36 }: { name: string; size?: number }) {
   return (
     <div style={{
-      width: size, height: size, borderRadius: '50%', background: colors[idx],
+      width: size, height: size, borderRadius: '50%',
+      background: 'rgba(59,150,143,0.18)', color: C.teal,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: size * 0.38, fontWeight: 700, color: '#fff', flexShrink: 0, fontFamily: FONT,
+      fontSize: size * 0.38, fontWeight: 700, flexShrink: 0, fontFamily: FONT,
     }}>{name.charAt(0).toUpperCase()}</div>
   );
 }
@@ -207,10 +257,9 @@ export function BusinessPayments({ user, onBack }: {
   const { session } = useAuth();
   const userId = user?.id || session?.user?.id || user?.email || 'guest';
 
-  // Step state
   const [step, setStep] = useState(1);
 
-  // Step 1 state
+  // Step 1
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
   const [network, setNetwork] = useState('TRC20');
@@ -226,7 +275,7 @@ export function BusinessPayments({ user, onBack }: {
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Step 2 state
+  // Step 2
   const [benefTab, setBenefTab] = useState<'suppliers' | 'manual'>('suppliers');
   const [supplierSearch, setSupplierSearch] = useState('');
   const [selectedSupplier, setSelectedSupplier] = useState<string | null>(null);
@@ -235,14 +284,13 @@ export function BusinessPayments({ user, onBack }: {
   const [saveSupplier, setSaveSupplier] = useState(false);
   const [templates, setTemplates] = useState<Array<{ id: string; name: string; amount: string; supplierName: string; network: string; wallet: string }>>([]);
 
-  // Step 3 state
+  // Step 3
   const [templateName, setTemplateName] = useState('');
   const [templatesSaved, setTemplatesSaved] = useState(false);
 
-  // Step 4 state
+  // Step 4
   const [paymentRef] = useState(generateRef());
 
-  // Load suppliers & templates from localStorage
   const [suppliers, setSuppliers] = useState<Array<{ id: string; name: string; country: string; network: string; wallet: string }>>([]);
 
   useEffect(() => {
@@ -252,18 +300,18 @@ export function BusinessPayments({ user, onBack }: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const parsed = JSON.parse(raw).map((s: any) => ({ ...s, wallet: s.wallet || s.walletAddress || '' }));
         setSuppliers(parsed);
+      } else {
+        setSuppliers([
+          { id: 's1', name: 'Shenzhen Electronics', country: 'CN', network: 'TRC20', wallet: 'TQn7hB9kNYX4zCN8e2mJfLp3kQwR5sVd7' },
+          { id: 's2', name: 'Lagos Imports Ltd', country: 'NG', network: 'BEP20', wallet: '0xd3e8b4f6c2a1f9e5c7b0a3d2e1f8c4b6a5d9e2f7' },
+          { id: 's3', name: 'Dubai Trade Co.', country: 'AE', network: 'ERC20', wallet: '0x9a4f2c3b1e6d7a8f5c2b4e1d9f3a6c7b2e8d5f1' },
+        ]);
       }
-      else setSuppliers([
-        { id: 's1', name: 'Shenzhen Electronics', country: 'CN', network: 'TRC20', wallet: 'TQn7hB9kNYX4zCN8e2mJfLp3kQwR5sVd7' },
-        { id: 's2', name: 'Lagos Imports Ltd', country: 'NG', network: 'BEP20', wallet: '0xd3e8b4f6c2a1f9e5c7b0a3d2e1f8c4b6a5d9e2f7' },
-        { id: 's3', name: 'Dubai Trade Co.', country: 'AE', network: 'ERC20', wallet: '0x9a4f2c3b1e6d7a8f5c2b4e1d9f3a6c7b2e8d5f1' },
-      ]);
       const rawT = localStorage.getItem(`terex_b2b_${userId}_payment_templates`);
       if (rawT) setTemplates(JSON.parse(rawT));
     } catch { /* ignore */ }
   }, [userId]);
 
-  // Rate lock countdown
   useEffect(() => {
     if (rateLocked) {
       countdownRef.current = setInterval(() => {
@@ -279,67 +327,37 @@ export function BusinessPayments({ user, onBack }: {
     return () => { if (countdownRef.current) clearInterval(countdownRef.current); };
   }, [rateLocked]);
 
-  const formatCountdown = (s: number) => {
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${m}:${sec.toString().padStart(2, '0')}`;
-  };
+  const fmt = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 
   const amountNum = parseFloat(amount) || 0;
   const fee = amountNum * 0.025;
   const total = amountNum + fee;
-
-  // Compute net for step 3
   const net = NETWORKS.find(n => n.id === network);
 
   const getSelectedSupplierObj = () => suppliers.find(s => s.id === selectedSupplier);
-  const getBenefName = () => {
-    if (benefTab === 'suppliers') return getSelectedSupplierObj()?.name || '';
-    return manualName;
-  };
-  const getBenefWallet = () => {
-    if (benefTab === 'suppliers') return getSelectedSupplierObj()?.wallet || '';
-    return manualWallet;
-  };
+  const getBenefName = () => benefTab === 'suppliers' ? getSelectedSupplierObj()?.name || '' : manualName;
+  const getBenefWallet = () => benefTab === 'suppliers' ? getSelectedSupplierObj()?.wallet || '' : manualWallet;
 
-  const handleLockRate = () => {
-    setRateLocked(true);
-    setRateCountdown(15 * 60);
-  };
+  const handleLockRate = () => { setRateLocked(true); setRateCountdown(15 * 60); };
 
   const handleUseTemplate = (t: typeof templates[0]) => {
-    setAmount(t.amount);
-    setNetwork(t.network);
-    if (t.wallet) {
-      setBenefTab('manual');
-      setManualName(t.supplierName);
-      setManualWallet(t.wallet);
-    }
+    setAmount(t.amount); setNetwork(t.network);
+    if (t.wallet) { setBenefTab('manual'); setManualName(t.supplierName); setManualWallet(t.wallet); }
     setStep(1);
   };
 
   const handleSaveTemplate = () => {
     if (!templateName.trim()) return;
-    const newT = {
-      id: Date.now().toString(),
-      name: templateName.trim(),
-      amount,
-      supplierName: getBenefName(),
-      network,
-      wallet: getBenefWallet(),
-    };
+    const newT = { id: Date.now().toString(), name: templateName.trim(), amount, supplierName: getBenefName(), network, wallet: getBenefWallet() };
     const newTemplates = [...templates, newT];
     setTemplates(newTemplates);
     try { localStorage.setItem(`terex_b2b_${userId}_payment_templates`, JSON.stringify(newTemplates)); } catch { /* ignore */ }
     setTemplatesSaved(true);
   };
 
-  const filteredSuppliers = suppliers.filter(s =>
-    s.name.toLowerCase().includes(supplierSearch.toLowerCase())
-  );
-
-  const canGoNext1 = amountNum >= 100 && network;
-  const canGoNext2 = benefTab === 'suppliers' ? !!selectedSupplier : (manualName.trim() && manualWallet.trim());
+  const filteredSuppliers = suppliers.filter(s => s.name.toLowerCase().includes(supplierSearch.toLowerCase()));
+  const canGoNext1 = amountNum >= 100 && !!network;
+  const canGoNext2 = benefTab === 'suppliers' ? !!selectedSupplier : (!!manualName.trim() && !!manualWallet.trim());
 
   const handleNext = () => {
     if (step === 2 && benefTab === 'manual' && saveSupplier && manualName && manualWallet) {
@@ -350,21 +368,12 @@ export function BusinessPayments({ user, onBack }: {
     }
     if (step === 3) {
       const newPayment = {
-        id: paymentRef,
-        reference: paymentRef,
-        amount: amountNum,
-        fee,
-        total,
-        currency: 'USDT',
-        network,
-        supplierName: getBenefName(),
-        wallet: getBenefWallet(),
-        note,
-        status: amountNum >= 5000 ? 'pending' : 'processing',
+        id: paymentRef, reference: paymentRef,
+        amount: amountNum, fee, total, currency: 'USDT', network,
+        supplierName: getBenefName(), wallet: getBenefWallet(),
+        note, status: amountNum >= 5000 ? 'pending' : 'processing',
         createdAt: schedDate ? `${schedDate}T${schedTime || '00:00'}:00.000Z` : new Date().toISOString(),
-        invoiceFile: invoiceFile || null,
-        scheduled: !!schedDate,
-        recurrence: recurFreq || null,
+        invoiceFile: invoiceFile || null, scheduled: !!schedDate, recurrence: recurFreq || null,
       };
       try {
         const raw = localStorage.getItem(`terex_b2b_${userId}_payments`);
@@ -375,14 +384,13 @@ export function BusinessPayments({ user, onBack }: {
     setStep(s => s + 1);
   };
 
-  // Step 3 recap rows
   const step3Rows = [
     { label: 'Montant', value: `${amountNum.toFixed(2)} USDT` },
     { label: 'Réseau', value: `${net?.label} · ${net?.sub}` },
     { label: 'Fournisseur', value: getBenefName() || '—' },
     { label: 'Wallet destinataire', value: getBenefWallet() || '—', mono: true },
     { label: 'Frais (2.5%)', value: `${fee.toFixed(2)} USDT` },
-    { label: 'Total', value: `${total.toFixed(2)} USDT`, bold: true },
+    { label: 'Total à débiter', value: `${total.toFixed(2)} USDT`, bold: true },
     { label: 'Note interne', value: note || '—' },
     { label: 'Facture jointe', value: invoiceFile || 'Aucune' },
     ...(schedDate ? [{ label: 'Planifié le', value: `${schedDate} ${schedTime}` }] : []),
@@ -390,120 +398,180 @@ export function BusinessPayments({ user, onBack }: {
   ];
 
   return (
-    <div style={{ fontFamily: FONT, maxWidth: 900, margin: '0 auto', padding: '8px 0 40px' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
+    <div style={{ fontFamily: FONT, maxWidth: 920, margin: '0 auto', padding: '8px 0 48px' }}>
+
+      {/* ── Hero header ─────────────────────────────────────────── */}
+      <div style={{
+        background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)',
+        border: `1px solid ${C.bds}`, borderRadius: 14,
+        padding: '20px 24px', marginBottom: 28,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
+        display: 'flex', alignItems: 'center', gap: 20, position: 'relative', overflow: 'hidden',
+      }}>
+        {/* Back button */}
         <button onClick={onBack} style={{
-          background: 'none', border: 'none', cursor: 'pointer', color: C.t3,
-          display: 'flex', alignItems: 'center', padding: 0,
+          background: C.l2, border: `1px solid ${C.bds}`, borderRadius: 8,
+          width: 34, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer', color: C.t2, flexShrink: 0,
         }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <polyline points="15 18 9 12 15 6" />
           </svg>
         </button>
-        <div>
-          <div style={{ fontSize: 20, fontWeight: 700, color: C.t1 }}>Nouveau paiement</div>
-          <div style={{ fontSize: 13, color: C.t3 }}>Envoi USDT vers un fournisseur</div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1 }}>
+          <img src={usdtLogo} alt="USDT" style={{ width: 44, height: 44, borderRadius: '50%', flexShrink: 0 }} />
+          <div>
+            <h1 style={{ fontSize: 18, fontWeight: 700, color: C.t1, margin: '0 0 3px', letterSpacing: '-0.02em' }}>
+              Nouveau paiement USDT
+            </h1>
+            <p style={{ fontSize: 12, color: C.t3, margin: 0 }}>
+              Envoi sécurisé vers un fournisseur · Blockchain · 2.5% de frais
+            </p>
+          </div>
+        </div>
+
+        {/* Network logos preview */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: -8, flexShrink: 0 }}>
+          {NETWORKS.map((n, i) => (
+            <img
+              key={n.id}
+              src={n.logo}
+              alt={n.label}
+              title={n.label}
+              style={{
+                width: 28, height: 28, borderRadius: '50%', objectFit: 'cover',
+                border: `2px solid #1a1a1a`,
+                marginLeft: i > 0 ? -8 : 0,
+                zIndex: NETWORKS.length - i,
+                position: 'relative',
+              }}
+              onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+            />
+          ))}
+          <span style={{ fontSize: 11, color: C.t3, marginLeft: 10, fontFamily: FONT }}>4 réseaux</span>
+        </div>
+
+        {/* SVG decoration */}
+        <div style={{ position: 'absolute', right: 180, top: 0, bottom: 0, opacity: 0.04, pointerEvents: 'none' }}>
+          <svg width="120" height="80" viewBox="0 0 120 80" fill="none">
+            <circle cx="60" cy="40" r="35" stroke="white" strokeWidth="1"/>
+            <circle cx="60" cy="40" r="20" stroke="white" strokeWidth="1" strokeDasharray="3 3"/>
+            <path d="M25 40 L95 40 M60 5 L60 75" stroke="white" strokeWidth="0.5"/>
+            <path d="M35 18 L85 62 M85 18 L35 62" stroke="white" strokeWidth="0.5" strokeDasharray="4 4"/>
+          </svg>
         </div>
       </div>
 
       <StepBar step={step} />
 
-      {/* Step 1 */}
+      {/* ── Step 1 : Montant & Réseau ────────────────────────────── */}
       {step === 1 && (
-        <div className="flex flex-col lg:flex-row" style={{ gap: 20 }}>
-          {/* Left column */}
-          <div className="w-full lg:w-[60%]" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div className="flex flex-col lg:flex-row" style={{ gap: 18 }}>
+
+          {/* Left */}
+          <div className="w-full lg:w-[58%]" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+            {/* Amount card */}
             <Card>
-              <SectionTitle>Montant à envoyer</SectionTitle>
-              {/* Large amount input */}
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <Label>Montant à envoyer</Label>
+              <div style={{ position: 'relative' }}>
                 <input
                   type="number"
                   value={amount}
                   onChange={e => setAmount(e.target.value)}
-                  placeholder="0"
+                  placeholder="0.00"
                   style={{
-                    width: '100%', height: 64, background: C.l2,
-                    border: `1px solid ${C.bd}`, borderRadius: 8,
-                    padding: '0 80px 0 16px', color: C.t1,
-                    fontSize: 32, fontWeight: 700, outline: 'none',
+                    width: '100%', height: 72, background: C.l2,
+                    border: `1px solid ${C.bd}`, borderRadius: 10,
+                    padding: '0 90px 0 20px', color: C.t1,
+                    fontSize: 36, fontWeight: 700, outline: 'none',
                     fontFamily: MONO, textAlign: 'right',
-                    boxSizing: 'border-box', transition: 'border-color 0.12s',
+                    boxSizing: 'border-box', transition: 'border-color 0.12s, box-shadow 0.12s',
                   }}
-                  onFocus={e => e.currentTarget.style.borderColor = 'rgba(59,150,143,0.35)'}
-                  onBlur={e => e.currentTarget.style.borderColor = C.bd}
+                  onFocus={e => { e.currentTarget.style.borderColor = C.teal; e.currentTarget.style.boxShadow = `0 0 0 3px ${C.tealT}`; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = C.bd; e.currentTarget.style.boxShadow = 'none'; }}
                 />
                 <div style={{
-                  position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
-                  background: C.tealT, border: `1px solid ${C.tealB}`, borderRadius: 6,
-                  padding: '4px 8px', fontSize: 13, fontWeight: 600, color: C.teal,
-                }}>USDT</div>
+                  position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  background: C.tealT, border: `1px solid ${C.tealB}`, borderRadius: 7,
+                  padding: '5px 10px',
+                }}>
+                  <img src={usdtLogo} alt="USDT" style={{ width: 16, height: 16, borderRadius: '50%' }} />
+                  <span style={{ fontSize: 13, fontWeight: 700, color: C.teal, fontFamily: MONO }}>USDT</span>
+                </div>
               </div>
 
               {amountNum > 0 && amountNum < 100 && (
                 <div style={{
-                  marginTop: 8, padding: '8px 12px', background: C.redT,
-                  border: `1px solid ${C.redB}`, borderRadius: 6, fontSize: 12, color: C.red,
-                }}>Minimum 100 USDT requis</div>
-              )}
-
-              {amountNum >= 100 && (
-                <div style={{ display: 'flex', gap: 16, marginTop: 8 }}>
-                  <span style={{ fontSize: 12, color: C.t3, fontFamily: MONO }}>
-                    Frais 2.5% = <span style={{ color: C.t2 }}>{fee.toFixed(2)} USDT</span>
-                  </span>
-                  <span style={{ fontSize: 12, color: C.t3, fontFamily: MONO }}>
-                    Total = <span style={{ color: C.teal, fontWeight: 600 }}>{total.toFixed(2)} USDT</span>
-                  </span>
+                  marginTop: 10, padding: '10px 14px', background: C.redT,
+                  border: `1px solid ${C.redB}`, borderRadius: 8, fontSize: 12, color: C.red,
+                  display: 'flex', alignItems: 'center', gap: 8,
+                }}>
+                  <AlertTriangle style={{ width: 13, height: 13, flexShrink: 0 }} />
+                  Minimum 100 USDT requis
                 </div>
               )}
 
-              <div style={{ marginTop: 20 }}>
-                <SectionTitle>Note interne (optionnel)</SectionTitle>
-                <Input value={note} onChange={setNote} placeholder="Ex: Facture #2024-089" />
+              {amountNum >= 100 && (
+                <div style={{
+                  display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginTop: 12,
+                }}>
+                  {[
+                    { label: 'Montant net', value: `${amountNum.toLocaleString('fr-FR')} USDT`, accent: false },
+                    { label: 'Frais 2.5%', value: `${fee.toFixed(2)} USDT`, accent: false },
+                    { label: 'Total', value: `${total.toFixed(2)} USDT`, accent: true },
+                  ].map(item => (
+                    <div key={item.label} style={{
+                      background: item.accent ? C.tealT : C.l2,
+                      border: `1px solid ${item.accent ? C.tealB : C.bds}`,
+                      borderRadius: 8, padding: '10px 12px',
+                    }}>
+                      <div style={{ fontSize: 9, color: item.accent ? C.teal : C.t3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4, fontWeight: 600 }}>{item.label}</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: item.accent ? C.teal : C.t1, fontFamily: MONO }}>{item.value}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div style={{ marginTop: 18, borderTop: `1px solid ${C.bds}`, paddingTop: 16 }}>
+                <Label>Note interne (optionnel)</Label>
+                <Input value={note} onChange={setNote} placeholder="Ex: Facture #2024-089 · Commande matières premières" />
               </div>
             </Card>
 
-            {/* Schedule section */}
+            {/* Schedule card */}
             <Card>
               <button onClick={() => setScheduleOpen(o => !o)} style={{
-                display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none',
-                cursor: 'pointer', color: C.t2, fontSize: 13, fontFamily: FONT, padding: 0,
+                display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none',
+                cursor: 'pointer', fontFamily: FONT, padding: 0, width: '100%',
               }}>
-                <Clock size={15} color={C.teal} />
-                <span style={{ fontWeight: 500, color: C.teal }}>Planifier ce paiement</span>
+                <div style={{ width: 30, height: 30, borderRadius: 8, background: C.tealT, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Clock style={{ width: 14, height: 14, color: C.teal }} />
+                </div>
+                <span style={{ fontWeight: 600, color: C.teal, fontSize: 13, flex: 1, textAlign: 'left' }}>Planifier ce paiement</span>
                 {scheduleOpen ? <ChevronUp size={14} color={C.t3} /> : <ChevronDown size={14} color={C.t3} />}
               </button>
 
               {scheduleOpen && (
-                <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
                   <div style={{ display: 'flex', gap: 12 }}>
                     <div style={{ flex: 1 }}>
-                      <SectionTitle>Date</SectionTitle>
-                      <input
-                        type="date"
-                        value={schedDate}
-                        onChange={e => setSchedDate(e.target.value)}
-                        style={{
-                          width: '100%', background: C.l2, border: `1px solid ${C.bd}`,
-                          borderRadius: 8, padding: '10px 14px', color: C.t1, fontSize: 14,
-                          outline: 'none', fontFamily: FONT, boxSizing: 'border-box',
-                        }}
-                      />
+                      <Label>Date</Label>
+                      <input type="date" value={schedDate} onChange={e => setSchedDate(e.target.value)} style={{
+                        width: '100%', background: C.l2, border: `1px solid ${C.bd}`,
+                        borderRadius: 8, padding: '11px 14px', color: C.t1, fontSize: 14,
+                        outline: 'none', fontFamily: FONT, boxSizing: 'border-box',
+                      }} />
                     </div>
                     <div style={{ flex: 1 }}>
-                      <SectionTitle>Heure</SectionTitle>
-                      <input
-                        type="time"
-                        value={schedTime}
-                        onChange={e => setSchedTime(e.target.value)}
-                        style={{
-                          width: '100%', background: C.l2, border: `1px solid ${C.bd}`,
-                          borderRadius: 8, padding: '10px 14px', color: C.t1, fontSize: 14,
-                          outline: 'none', fontFamily: FONT, boxSizing: 'border-box',
-                        }}
-                      />
+                      <Label>Heure</Label>
+                      <input type="time" value={schedTime} onChange={e => setSchedTime(e.target.value)} style={{
+                        width: '100%', background: C.l2, border: `1px solid ${C.bd}`,
+                        borderRadius: 8, padding: '11px 14px', color: C.t1, fontSize: 14,
+                        outline: 'none', fontFamily: FONT, boxSizing: 'border-box',
+                      }} />
                     </div>
                   </div>
 
@@ -511,20 +579,19 @@ export function BusinessPayments({ user, onBack }: {
                     display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none',
                     cursor: 'pointer', color: C.t3, fontSize: 12, fontFamily: FONT, padding: 0,
                   }}>
-                    <span style={{ fontSize: 14 }}>↺</span>
+                    <span style={{ fontSize: 15 }}>↺</span>
                     <span>Récurrence</span>
                     {recurOpen ? <ChevronUp size={12} color={C.t3} /> : <ChevronDown size={12} color={C.t3} />}
                   </button>
 
                   {recurOpen && (
-                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: 8 }}>
                       {['Hebdomadaire', 'Mensuel', 'Trimestriel'].map(f => (
-                        <button key={f} onClick={() => setRecurFreq(f)} style={{
-                          padding: '6px 14px', borderRadius: 6, fontSize: 12, fontFamily: FONT,
+                        <button key={f} onClick={() => setRecurFreq(f === recurFreq ? '' : f)} style={{
+                          padding: '7px 16px', borderRadius: 6, fontSize: 12, fontFamily: FONT,
                           border: `1px solid ${recurFreq === f ? C.tealB : C.bd}`,
-                          background: recurFreq === f ? C.tealT : C.l2,
-                          color: recurFreq === f ? C.teal : C.t2, cursor: 'pointer',
-                          transition: 'all 0.12s',
+                          background: recurFreq === f ? C.tealT : 'transparent',
+                          color: recurFreq === f ? C.teal : C.t2, cursor: 'pointer', transition: 'all 0.12s',
                         }}>{f}</button>
                       ))}
                     </div>
@@ -534,77 +601,97 @@ export function BusinessPayments({ user, onBack }: {
             </Card>
           </div>
 
-          {/* Right column */}
-          <div className="w-full lg:w-[40%]" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* Right */}
+          <div className="w-full lg:w-[42%]" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+            {/* Network selector */}
             <Card>
-              <SectionTitle>Réseau blockchain</SectionTitle>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+              <Label>Réseau blockchain</Label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {NETWORKS.map(n => (
-                  <NetworkPill key={n.id} net={n} active={network === n.id} onClick={() => setNetwork(n.id)} />
+                  <NetworkCard key={n.id} net={n} active={network === n.id} onClick={() => setNetwork(n.id)} />
                 ))}
               </div>
             </Card>
 
+            {/* Rate lock */}
             <Card>
-              <SectionTitle>Lock de taux</SectionTitle>
+              <Label>Taux de change</Label>
               <div style={{
-                padding: '10px 12px', background: C.blueT, border: `1px solid ${C.blueB}`,
-                borderRadius: 8, marginBottom: 12,
+                display: 'flex', alignItems: 'center', gap: 12,
+                padding: '14px 16px', background: C.l2, border: `1px solid ${C.bds}`,
+                borderRadius: 10, marginBottom: 14,
               }}>
-                <div style={{ fontSize: 11, color: C.t3, fontFamily: FONT }}>Taux actuel</div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: C.t1, fontFamily: MONO }}>
-                  1 USDT = 0.9245 EUR
+                <img src={usdtLogo} alt="USDT" style={{ width: 28, height: 28, borderRadius: '50%' }} />
+                <div>
+                  <div style={{ fontSize: 10, color: C.t3, marginBottom: 2 }}>Taux actuel</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: C.t1, fontFamily: MONO }}>
+                    1 USDT = 0.9245 EUR
+                  </div>
+                </div>
+                <div style={{ marginLeft: 'auto' }}>
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: C.em, marginBottom: 2 }} />
+                  <div style={{ fontSize: 9, color: C.t3 }}>Live</div>
                 </div>
               </div>
               {!rateLocked ? (
-                <TealBtn onClick={handleLockRate} style={{ width: '100%' }}>
-                  Figer le taux 15 min
-                </TealBtn>
+                <button onClick={() => { setRateLocked(true); setRateCountdown(15 * 60); }} style={{
+                  width: '100%', background: C.l2, border: `1px solid ${C.bd}`, borderRadius: 8,
+                  padding: '10px 16px', color: C.t2, fontSize: 13, fontWeight: 500, cursor: 'pointer',
+                  fontFamily: FONT, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center',
+                  transition: 'all 0.12s',
+                }}
+                  onMouseEnter={e => { e.currentTarget.style.background = C.l3; e.currentTarget.style.color = C.t1; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = C.l2; e.currentTarget.style.color = C.t2; }}
+                >
+                  <Zap style={{ width: 14, height: 14 }} />
+                  Figer le taux 15 minutes
+                </button>
               ) : (
                 <div style={{
                   padding: '10px 14px', background: C.emT, border: `1px solid ${C.emB}`,
                   borderRadius: 8, display: 'flex', alignItems: 'center', gap: 8,
                 }}>
-                  <Check size={14} color={C.em} />
+                  <Check style={{ width: 14, height: 14, color: C.em }} />
                   <span style={{ fontSize: 13, color: C.em, fontFamily: MONO }}>
-                    Taux figé — {formatCountdown(rateCountdown)} restantes
+                    Taux figé · {fmt(rateCountdown)} restantes
                   </span>
                 </div>
               )}
             </Card>
 
+            {/* Invoice upload */}
             <Card>
-              <SectionTitle>Joindre une facture (optionnel)</SectionTitle>
+              <Label>Joindre une facture (optionnel)</Label>
               <div
                 onDragOver={e => { e.preventDefault(); setDragOver(true); }}
                 onDragLeave={() => setDragOver(false)}
-                onDrop={e => {
-                  e.preventDefault(); setDragOver(false);
-                  const f = e.dataTransfer.files[0];
-                  if (f) setInvoiceFile(f.name);
-                }}
+                onDrop={e => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f) setInvoiceFile(f.name); }}
                 onClick={() => fileInputRef.current?.click()}
                 style={{
-                  height: 80, border: `1px dashed ${dragOver ? C.teal : C.bds}`,
-                  borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  minHeight: 80, border: `2px dashed ${dragOver ? C.teal : C.bds}`,
+                  borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
                   cursor: 'pointer', background: dragOver ? C.tealT : 'transparent',
-                  transition: 'all 0.12s', flexDirection: 'column', gap: 6,
+                  transition: 'all 0.12s', flexDirection: 'column', gap: 6, padding: 16,
                 }}
               >
                 {invoiceFile ? (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ fontSize: 13, color: C.teal }}>{invoiceFile}</span>
+                    <span style={{ fontSize: 13, color: C.teal, fontFamily: MONO }}>{invoiceFile}</span>
                     <button onClick={e => { e.stopPropagation(); setInvoiceFile(''); }} style={{
                       background: 'none', border: 'none', cursor: 'pointer', color: C.t3, padding: 0,
                     }}><X size={14} /></button>
                   </div>
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                    <Upload size={18} color={C.t3} />
-                    <span style={{ fontSize: 12, color: C.t3, fontFamily: FONT, textAlign: 'center', padding: '0 12px' }}>
-                      Déposer ou cliquer pour joindre une facture PDF
+                  <>
+                    <div style={{ width: 36, height: 36, borderRadius: 8, background: C.l2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Upload style={{ width: 16, height: 16, color: C.t3 }} />
+                    </div>
+                    <span style={{ fontSize: 12, color: C.t3, fontFamily: FONT, textAlign: 'center' }}>
+                      Déposer ou cliquer
                     </span>
-                  </div>
+                    <span style={{ fontSize: 10, color: C.t3, fontFamily: FONT }}>PDF, max 10 Mo</span>
+                  </>
                 )}
               </div>
               <input ref={fileInputRef} type="file" accept=".pdf" style={{ display: 'none' }}
@@ -614,9 +701,9 @@ export function BusinessPayments({ user, onBack }: {
         </div>
       )}
 
-      {/* Step 2 */}
+      {/* ── Step 2 : Bénéficiaire ────────────────────────────────── */}
       {step === 2 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Card>
             {/* Tabs */}
             <div style={{ display: 'flex', gap: 0, marginBottom: 20, borderBottom: `1px solid ${C.bds}` }}>
@@ -625,7 +712,7 @@ export function BusinessPayments({ user, onBack }: {
                 const active = benefTab === tab;
                 return (
                   <button key={tab} onClick={() => setBenefTab(tab)} style={{
-                    padding: '10px 16px', background: 'none', border: 'none', cursor: 'pointer',
+                    padding: '10px 18px', background: 'none', border: 'none', cursor: 'pointer',
                     fontSize: 13, fontWeight: active ? 600 : 400, fontFamily: FONT,
                     color: active ? C.teal : C.t3,
                     borderBottom: `2px solid ${active ? C.teal : 'transparent'}`,
@@ -637,30 +724,46 @@ export function BusinessPayments({ user, onBack }: {
 
             {benefTab === 'suppliers' && (
               <div>
-                <Input
-                  value={supplierSearch} onChange={setSupplierSearch}
-                  placeholder="Rechercher un fournisseur..."
-                  style={{ marginBottom: 12 }}
-                />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 280, overflowY: 'auto' }}>
-                  {filteredSuppliers.map(s => (
-                    <div key={s.id} onClick={() => setSelectedSupplier(s.id)} style={{
-                      display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px',
-                      borderRadius: 8, border: `1px solid ${selectedSupplier === s.id ? C.tealB : C.bds}`,
-                      background: selectedSupplier === s.id ? C.tealT : C.l2,
-                      cursor: 'pointer', transition: 'all 0.12s',
-                    }}>
-                      <Avatar name={s.name} size={36} />
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: C.t1 }}>{s.name}</div>
-                        <div style={{ fontSize: 11, color: C.t3 }}>{s.country} · {s.network}</div>
+                <Input value={supplierSearch} onChange={setSupplierSearch} placeholder="Rechercher un fournisseur…" style={{ marginBottom: 12 }} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 320, overflowY: 'auto' }}>
+                  {filteredSuppliers.map(s => {
+                    const isSelected = selectedSupplier === s.id;
+                    const sNet = NETWORKS.find(n => n.id === s.network);
+                    return (
+                      <div key={s.id} onClick={() => setSelectedSupplier(s.id)} style={{
+                        display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px',
+                        borderRadius: 10, border: `1px solid ${isSelected ? C.teal : C.bds}`,
+                        background: isSelected ? 'rgba(59,150,143,0.06)' : C.l2,
+                        cursor: 'pointer', transition: 'all 0.12s',
+                        boxShadow: isSelected ? `0 0 0 1px ${C.teal}` : 'none',
+                      }}>
+                        <Avatar name={s.name} size={40} />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: isSelected ? C.teal : C.t1 }}>{s.name}</div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 3 }}>
+                            <span style={{ fontSize: 11, color: C.t3 }}>{s.country}</span>
+                            {sNet && (
+                              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                                <img src={sNet.logo} alt={sNet.label} style={{ width: 14, height: 14, borderRadius: '50%' }}
+                                  onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+                                <span style={{ fontSize: 11, color: C.t3 }}>{s.network}</span>
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div style={{ fontSize: 11, color: C.t3, fontFamily: MONO, maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {truncWallet(s.wallet)}
+                        </div>
+                        {isSelected && (
+                          <div style={{ width: 22, height: 22, borderRadius: '50%', background: C.teal, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <Check style={{ width: 12, height: 12, color: '#fff', strokeWidth: 3 }} />
+                          </div>
+                        )}
                       </div>
-                      <div style={{ fontSize: 11, color: C.t3, fontFamily: MONO }}>{truncWallet(s.wallet)}</div>
-                      {selectedSupplier === s.id && <Check size={14} color={C.teal} />}
-                    </div>
-                  ))}
+                    );
+                  })}
                   {filteredSuppliers.length === 0 && (
-                    <div style={{ fontSize: 13, color: C.t3, padding: '16px 0', textAlign: 'center' }}>
+                    <div style={{ fontSize: 13, color: C.t3, padding: '24px 0', textAlign: 'center' }}>
                       Aucun fournisseur trouvé
                     </div>
                   )}
@@ -669,68 +772,92 @@ export function BusinessPayments({ user, onBack }: {
             )}
 
             {benefTab === 'manual' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div>
-                  <SectionTitle>Nom du fournisseur</SectionTitle>
+                  <Label>Nom du fournisseur</Label>
                   <Input value={manualName} onChange={setManualName} placeholder="Ex: Acme Supplies Inc." />
                 </div>
                 <div>
-                  <SectionTitle>Adresse wallet</SectionTitle>
-                  <Input value={manualWallet} onChange={setManualWallet} placeholder="0x... ou T..." mono />
+                  <Label>Adresse wallet ({net?.label})</Label>
+                  <Input value={manualWallet} onChange={setManualWallet} placeholder={network === 'TRC20' ? 'T…' : '0x…'} mono />
+                  <p style={{ fontSize: 11, color: C.t3, margin: '6px 0 0', fontFamily: FONT }}>
+                    Vérifiez que l'adresse correspond bien au réseau {net?.label} ({net?.sub})
+                  </p>
                 </div>
-                <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                  <input
-                    type="checkbox" checked={saveSupplier} onChange={e => setSaveSupplier(e.target.checked)}
-                    style={{ accentColor: C.teal }}
-                  />
-                  <span style={{ fontSize: 13, color: C.t2, fontFamily: FONT }}>Sauvegarder comme fournisseur</span>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', padding: '10px 14px', background: C.l2, borderRadius: 8, border: `1px solid ${C.bds}` }}>
+                  <input type="checkbox" checked={saveSupplier} onChange={e => setSaveSupplier(e.target.checked)} style={{ accentColor: C.teal, width: 16, height: 16 }} />
+                  <div>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: C.t1, fontFamily: FONT }}>Sauvegarder comme fournisseur</span>
+                    <p style={{ fontSize: 11, color: C.t3, margin: '1px 0 0', fontFamily: FONT }}>Retrouvez ce contact dans vos prochains paiements</p>
+                  </div>
                 </label>
               </div>
             )}
           </Card>
 
-          {/* Payment templates */}
+          {/* Templates */}
           {templates.length > 0 && (
             <Card>
-              <SectionTitle>Templates de paiement</SectionTitle>
+              <Label>Modèles de paiement rapide</Label>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {templates.map(t => (
-                  <div key={t.id} style={{
-                    display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px',
-                    borderRadius: 8, border: `1px solid ${C.bds}`, background: C.l2,
-                  }}>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: C.t1 }}>{t.name}</div>
-                      <div style={{ fontSize: 11, color: C.t3 }}>{t.supplierName} · {t.amount} USDT · {t.network}</div>
+                {templates.map(t => {
+                  const tNet = NETWORKS.find(n => n.id === t.network);
+                  return (
+                    <div key={t.id} style={{
+                      display: 'flex', alignItems: 'center', gap: 14, padding: '12px 16px',
+                      borderRadius: 10, border: `1px solid ${C.bds}`, background: C.l2,
+                    }}>
+                      {tNet && <img src={tNet.logo} alt={tNet.label} style={{ width: 32, height: 32, borderRadius: '50%' }}
+                        onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />}
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: C.t1 }}>{t.name}</div>
+                        <div style={{ fontSize: 11, color: C.t3 }}>{t.supplierName} · {t.amount} USDT · {t.network}</div>
+                      </div>
+                      <TealBtn onClick={() => handleUseTemplate(t)} style={{ padding: '7px 14px', fontSize: 12 }}>
+                        Utiliser
+                      </TealBtn>
                     </div>
-                    <TealBtn onClick={() => handleUseTemplate(t)} style={{ padding: '6px 14px', fontSize: 12 }}>
-                      Utiliser
-                    </TealBtn>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </Card>
           )}
         </div>
       )}
 
-      {/* Step 3 */}
+      {/* ── Step 3 : Révision ────────────────────────────────────── */}
       {step === 3 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Card>
-            <SectionTitle>Récapitulatif du paiement</SectionTitle>
-            <div style={{ border: `1px solid ${C.bds}`, borderRadius: 8, overflow: 'hidden' }}>
+            <Label>Récapitulatif du paiement</Label>
+
+            {/* Network badge */}
+            {net && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', background: C.l2, border: `1px solid ${C.bds}`, borderRadius: 10, marginBottom: 16 }}>
+                <img src={net.logo} alt={net.label} style={{ width: 32, height: 32, borderRadius: '50%' }}
+                  onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+                <div>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: C.t1 }}>{net.label} · {net.sub}</span>
+                  <p style={{ fontSize: 11, color: C.t3, margin: '2px 0 0' }}>Délai estimé : {net.speed}</p>
+                </div>
+              </div>
+            )}
+
+            <div style={{ border: `1px solid ${C.bds}`, borderRadius: 10, overflow: 'hidden' }}>
               {step3Rows.map((r, i) => (
                 <div key={i} style={{
-                  display: 'flex', padding: '11px 16px',
+                  display: 'flex', padding: '12px 18px',
                   borderBottom: i < step3Rows.length - 1 ? `1px solid ${C.bds}` : 'none',
-                  background: i % 2 === 0 ? 'transparent' : C.l2,
+                  background: (r as any).bold ? 'rgba(59,150,143,0.04)' : i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)',
                 }}>
-                  <div style={{ width: 200, fontSize: 13, color: C.t3, fontFamily: FONT }}>{r.label}</div>
+                  <div style={{ width: 180, fontSize: 12, color: C.t3, fontFamily: FONT }}>{r.label}</div>
                   <div style={{
                     flex: 1, fontSize: 13, fontFamily: (r as any).mono ? MONO : FONT,
-                    color: (r as any).bold ? C.teal : C.t1, fontWeight: (r as any).bold ? 700 : 400,
-                  }}>{(r as any).mono ? truncWallet(r.value) : r.value}</div>
+                    color: (r as any).bold ? C.teal : C.t1,
+                    fontWeight: (r as any).bold ? 700 : 400,
+                  }}>
+                    {(r as any).mono ? truncWallet(r.value) : r.value}
+                  </div>
                 </div>
               ))}
             </div>
@@ -739,29 +866,28 @@ export function BusinessPayments({ user, onBack }: {
               <div style={{
                 marginTop: 16, padding: '12px 16px', background: C.amberT,
                 border: `1px solid ${C.amberB}`, borderRadius: 8, fontSize: 13, color: C.amber,
-                display: 'flex', alignItems: 'center', gap: 8,
+                display: 'flex', alignItems: 'center', gap: 10,
               }}>
-                ⚠️ Ce paiement requiert l'approbation d'un administrateur
+                <AlertTriangle style={{ width: 15, height: 15, flexShrink: 0 }} />
+                Ce paiement requiert l'approbation d'un administrateur Terex
               </div>
             )}
           </Card>
 
-          {/* Save as template */}
+          {/* Save template */}
           <Card>
-            <SectionTitle>Sauvegarder comme template</SectionTitle>
+            <Label>Sauvegarder comme modèle (optionnel)</Label>
             {templatesSaved ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Check size={14} color={C.em} />
-                <span style={{ fontSize: 13, color: C.em }}>Template sauvegardé !</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 0' }}>
+                <div style={{ width: 22, height: 22, borderRadius: '50%', background: C.emT, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Check style={{ width: 12, height: 12, color: C.em }} />
+                </div>
+                <span style={{ fontSize: 13, color: C.em, fontFamily: FONT }}>Modèle sauvegardé avec succès</span>
               </div>
             ) : (
-              <div style={{ display: 'flex', gap: 8 }}>
-                <Input
-                  value={templateName} onChange={setTemplateName}
-                  placeholder="Nom du template (ex: Paiement Shenzhen mensuel)"
-                  style={{ flex: 1 }}
-                />
-                <TealBtn onClick={handleSaveTemplate} disabled={!templateName.trim()} style={{ flexShrink: 0 }}>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <Input value={templateName} onChange={setTemplateName} placeholder="Ex: Paiement Shenzhen mensuel" style={{ flex: 1 }} />
+                <TealBtn onClick={handleSaveTemplate} disabled={!templateName.trim()} style={{ flexShrink: 0, whiteSpace: 'nowrap' }}>
                   Sauvegarder
                 </TealBtn>
               </div>
@@ -770,51 +896,77 @@ export function BusinessPayments({ user, onBack }: {
         </div>
       )}
 
-      {/* Step 4 */}
+      {/* ── Step 4 : Confirmation ────────────────────────────────── */}
       {step === 4 && (
-        <Card style={{ textAlign: 'center', padding: 48 }}>
-          <div style={{
-            width: 64, height: 64, borderRadius: '50%', background: C.emT,
-            border: `2px solid ${C.emB}`, display: 'flex', alignItems: 'center',
-            justifyContent: 'center', margin: '0 auto 24px',
-          }}>
-            <Check size={28} color={C.em} strokeWidth={3} />
+        <Card style={{ padding: '56px 40px', textAlign: 'center' }}>
+          {/* Success illustration */}
+          <div style={{ marginBottom: 32 }}>
+            <svg width="120" height="100" viewBox="0 0 120 100" fill="none" style={{ margin: '0 auto', display: 'block' }}>
+              {/* Outer ring */}
+              <circle cx="60" cy="50" r="38" stroke="rgba(59,150,143,0.15)" strokeWidth="2"/>
+              <circle cx="60" cy="50" r="38" stroke={C.teal} strokeWidth="2" strokeDasharray="60 180" strokeLinecap="round" transform="rotate(-90 60 50)"/>
+              {/* Inner circle */}
+              <circle cx="60" cy="50" r="26" fill="rgba(59,150,143,0.08)" stroke={C.tealB} strokeWidth="1.5"/>
+              {/* Check */}
+              <path d="M47 50 L56 59 L74 42" stroke={C.teal} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+              {/* Network logos hints */}
+              <circle cx="18" cy="20" r="7" fill="rgba(59,150,143,0.1)" stroke={C.tealB} strokeWidth="1"/>
+              <circle cx="102" cy="20" r="5" fill="rgba(59,150,143,0.07)" stroke={C.tealB} strokeWidth="1"/>
+              <circle cx="14" cy="72" r="4" fill="rgba(59,150,143,0.07)" stroke={C.tealB} strokeWidth="1"/>
+              <circle cx="106" cy="72" r="6" fill="rgba(59,150,143,0.1)" stroke={C.tealB} strokeWidth="1"/>
+              {/* Dashed lines */}
+              <path d="M24 25 L34 34" stroke={C.tealB} strokeWidth="1" strokeDasharray="2 2"/>
+              <path d="M97 25 L86 34" stroke={C.tealB} strokeWidth="1" strokeDasharray="2 2"/>
+            </svg>
           </div>
-          <div style={{ fontSize: 24, fontWeight: 700, color: C.t1, fontFamily: FONT, marginBottom: 8 }}>
-            Paiement soumis
+
+          <div style={{ fontSize: 24, fontWeight: 700, color: C.t1, marginBottom: 8, letterSpacing: '-0.02em' }}>
+            Paiement soumis avec succès
           </div>
-          <div style={{ fontSize: 14, color: C.t2, fontFamily: FONT, marginBottom: 24 }}>
+          <div style={{ fontSize: 14, color: C.t3, marginBottom: 24, lineHeight: 1.6 }}>
             {amountNum >= 5000
-              ? "En attente d'approbation administrateur"
-              : "Traitement sous 2–24h ouvrées"}
+              ? "Ce paiement est en attente d'approbation administrateur.\nVous serez notifié par email."
+              : "Votre transaction est en cours de traitement.\nDélai estimé : 2–24h ouvrées."}
           </div>
-          <div style={{
-            display: 'inline-block', padding: '8px 16px', background: C.l2,
-            border: `1px solid ${C.bds}`, borderRadius: 8, fontFamily: MONO,
-            fontSize: 14, color: C.teal, marginBottom: 32,
-          }}>{paymentRef}</div>
+
+          {/* Reference */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '10px 20px', background: C.l2, border: `1px solid ${C.bds}`, borderRadius: 10, marginBottom: 32 }}>
+            <span style={{ fontSize: 11, color: C.t3, fontFamily: FONT }}>Référence</span>
+            <span style={{ fontSize: 15, fontWeight: 700, color: C.teal, fontFamily: MONO }}>{paymentRef}</span>
+          </div>
+
+          {/* Network used */}
+          {net && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 32 }}>
+              <img src={net.logo} alt={net.label} style={{ width: 20, height: 20, borderRadius: '50%' }}
+                onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+              <span style={{ fontSize: 12, color: C.t3 }}>Via réseau {net.label} ({net.sub}) · {net.speed}</span>
+            </div>
+          )}
+
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
             <GhostBtn onClick={onBack}>Voir l'historique</GhostBtn>
             <TealBtn onClick={() => {
               setStep(1); setAmount(''); setNote(''); setNetwork('TRC20');
               setSelectedSupplier(null); setManualName(''); setManualWallet('');
               setInvoiceFile(''); setTemplateName(''); setTemplatesSaved(false);
-            }}>Nouveau paiement</TealBtn>
+              setRateLocked(false); setSchedDate(''); setSchedTime(''); setRecurFreq('');
+            }}>+ Nouveau paiement</TealBtn>
           </div>
         </Card>
       )}
 
-      {/* Navigation */}
+      {/* ── Navigation ───────────────────────────────────────────── */}
       {step < 4 && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 24 }}>
           <GhostBtn onClick={() => { if (step === 1) onBack(); else setStep(s => s - 1); }}>
-            {step === 1 ? 'Annuler' : 'Retour'}
+            {step === 1 ? 'Annuler' : '← Retour'}
           </GhostBtn>
           <TealBtn
             onClick={handleNext}
             disabled={step === 1 ? !canGoNext1 : step === 2 ? !canGoNext2 : false}
           >
-            {step === 3 ? 'Confirmer le paiement' : 'Continuer →'}
+            {step === 3 ? '✓ Confirmer le paiement' : 'Continuer →'}
           </TealBtn>
         </div>
       )}
