@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Search, Download, X, Copy, Check, ExternalLink, FileText, Calendar, RefreshCw } from 'lucide-react';
+import { Search, Download, X, Copy, Check, ExternalLink, FileText, Calendar, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import usdtLogo from '@/assets/usdt-logo.png';
 
 interface Props { user: { email: string; name: string } | null; }
 
@@ -10,23 +9,17 @@ const C = {
   bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
   teal: '#3B968F', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
   t1: '#f0f0f0', t2: '#888888', t3: '#686868', t4: '#333333',
-  amber: '#f59e0b', em: '#22c55e', blue: '#3b82f6', red: '#ef4444',
+  amber: '#f59e0b', em: '#22c55e',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
+const PER_PAGE = 10;
 
 const NET_LOGOS: Record<string, string> = {
   TRC20:   'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
   BEP20:   'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',
   ERC20:   'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
   POLYGON: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
-};
-
-const STATUS_CFG: Record<string, { label: string; color: string }> = {
-  pending:    { label: 'En attente', color: '#f59e0b' },
-  processing: { label: 'En cours',   color: '#3b82f6' },
-  completed:  { label: 'Complété',   color: '#22c55e' },
-  failed:     { label: 'Échoué',     color: '#ef4444' },
 };
 
 const STATUS_LABEL: Record<string, string> = {
@@ -90,11 +83,12 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
 function TransactionDrawer({ tx, onClose }: { tx: any; onClose: () => void }) {
   const xofAmount = tx.amount * 620.5;
   const eurAmount = tx.amount * 0.9245;
-  const cfg = STATUS_CFG[tx.status] || { label: tx.status, color: C.t3 };
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', justifyContent: 'flex-end' }}>
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)' }} onClick={onClose} />
       <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 440, background: '#141414', borderLeft: `1px solid ${C.bds}`, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+
+        {/* Drawer header */}
         <div style={{ padding: '20px 24px', borderBottom: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, position: 'sticky', top: 0, background: '#141414', zIndex: 2 }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 600, color: C.t1, fontFamily: FONT }}>{tx.supplierName}</div>
@@ -104,22 +98,24 @@ function TransactionDrawer({ tx, onClose }: { tx: any; onClose: () => void }) {
             <X style={{ width: 14, height: 14 }} />
           </button>
         </div>
-        <div style={{ padding: '28px 24px 24px', borderBottom: `1px solid ${C.bds}`, display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <img src={usdtLogo} alt="USDT" style={{ width: 28, height: 28, borderRadius: '50%' }} />
-            <span style={{ fontSize: 32, fontWeight: 700, color: C.t1, fontFamily: MONO, letterSpacing: '-0.02em' }}>{tx.amount.toLocaleString('fr-FR')}</span>
-            <span style={{ fontSize: 16, color: C.t3, fontWeight: 500 }}>USDT</span>
+
+        {/* Amount hero — montant en premier, USDT après */}
+        <div style={{ padding: '28px 24px 22px', borderBottom: `1px solid ${C.bds}`, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+            <span style={{ fontSize: 34, fontWeight: 700, color: C.t1, fontFamily: MONO, letterSpacing: '-0.03em', lineHeight: 1 }}>
+              {tx.amount.toLocaleString('fr-FR')}
+            </span>
+            <span style={{ fontSize: 15, color: C.t3, fontWeight: 500 }}>USDT</span>
           </div>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 12, color: C.t3, fontFamily: MONO }}>≈ {xofAmount.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} XOF</span>
             <span style={{ fontSize: 12, color: C.t3 }}>·</span>
             <span style={{ fontSize: 12, color: C.t3, fontFamily: MONO }}>≈ {eurAmount.toLocaleString('fr-FR', { maximumFractionDigits: 2 })} EUR</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: cfg.color, flexShrink: 0, display: 'inline-block' }} />
-            <span style={{ fontSize: 12, color: C.t2 }}>{cfg.label}</span>
-          </div>
+          <span style={{ fontSize: 11, color: C.t3, marginTop: 2 }}>{STATUS_LABEL[tx.status] || tx.status}</span>
         </div>
+
+        {/* Details */}
         <div style={{ padding: '0 24px', flex: 1 }}>
           <DetailRow label="Réseau">
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
@@ -127,7 +123,7 @@ function TransactionDrawer({ tx, onClose }: { tx: any; onClose: () => void }) {
               <span style={{ color: C.t2 }}>{tx.network}</span>
             </span>
           </DetailRow>
-          <DetailRow label="Wallet destinataire">
+          <DetailRow label="Wallet">
             <span style={{ fontFamily: MONO, fontSize: 11, color: C.t2 }}>
               {tx.wallet ? `${tx.wallet.slice(0, 12)}...${tx.wallet.slice(-6)}` : '—'}
               {tx.wallet && <CopyBtn text={tx.wallet} />}
@@ -137,9 +133,25 @@ function TransactionDrawer({ tx, onClose }: { tx: any; onClose: () => void }) {
           <DetailRow label="Total prélevé"><span style={{ fontFamily: MONO, color: C.teal, fontWeight: 600 }}>{(tx.total || tx.amount * 1.025).toFixed(2)} USDT</span></DetailRow>
           <DetailRow label="Date"><span>{new Date(tx.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span></DetailRow>
           {tx.note && <DetailRow label="Note"><span style={{ color: C.t2 }}>{tx.note}</span></DetailRow>}
-          {tx.recurrence && <DetailRow label="Récurrence"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><RefreshCw style={{ width: 11, height: 11, color: C.teal }} /><span style={{ color: C.teal }}>{tx.recurrence}</span></span></DetailRow>}
-          {tx.scheduled && <DetailRow label="Planifié"><span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Calendar style={{ width: 11, height: 11, color: C.amber }} /><span style={{ color: C.amber }}>Oui</span></span></DetailRow>}
+          {tx.recurrence && (
+            <DetailRow label="Récurrence">
+              <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                <RefreshCw style={{ width: 11, height: 11, color: C.t3 }} />
+                <span style={{ color: C.t2 }}>{tx.recurrence}</span>
+              </span>
+            </DetailRow>
+          )}
+          {tx.scheduled && (
+            <DetailRow label="Planifié">
+              <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                <Calendar style={{ width: 11, height: 11, color: C.t3 }} />
+                <span style={{ color: C.t2 }}>Oui</span>
+              </span>
+            </DetailRow>
+          )}
         </div>
+
+        {/* Footer */}
         <div style={{ padding: '16px 24px', borderTop: `1px solid ${C.bds}`, display: 'flex', gap: 8, flexShrink: 0 }}>
           {tx.invoiceFile && (
             <button style={{ flex: 1, height: 36, borderRadius: 8, fontSize: 12, fontWeight: 500, background: C.l2, border: `1px solid ${C.bds}`, color: C.t2, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, fontFamily: FONT }}
@@ -160,34 +172,26 @@ function TransactionDrawer({ tx, onClose }: { tx: any; onClose: () => void }) {
 }
 
 function TxCard({ tx, onClick }: { tx: any; onClick: () => void }) {
-  const cfg = STATUS_CFG[tx.status] || { label: tx.status, color: C.t3 };
   return (
     <div
       onClick={onClick}
-      style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 13, cursor: 'pointer', transition: 'all 0.15s' }}
-      onMouseEnter={e => { const el = e.currentTarget; el.style.background = C.l2; el.style.borderColor = C.bd; el.style.transform = 'translateX(4px)'; }}
+      style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 14px', background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 11, cursor: 'pointer', transition: 'all 0.15s' }}
+      onMouseEnter={e => { const el = e.currentTarget; el.style.background = C.l2; el.style.borderColor = C.bd; el.style.transform = 'translateX(3px)'; }}
       onMouseLeave={e => { const el = e.currentTarget; el.style.background = C.l1; el.style.borderColor = C.bds; el.style.transform = 'translateX(0)'; }}
     >
-      <div style={{ width: 44, height: 44, borderRadius: 12, flexShrink: 0, background: C.l2, border: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+      <div style={{ width: 38, height: 38, borderRadius: 10, flexShrink: 0, background: C.l2, border: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
         {NET_LOGOS[tx.network]
-          ? <img src={NET_LOGOS[tx.network]} alt={tx.network} style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover' }} onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
-          : <span style={{ fontSize: 10, color: C.t3 }}>{tx.network?.slice(0, 3)}</span>
+          ? <img src={NET_LOGOS[tx.network]} alt={tx.network} style={{ width: 24, height: 24, borderRadius: '50%', objectFit: 'cover' }} onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+          : <span style={{ fontSize: 9, color: C.t3 }}>{tx.network?.slice(0, 3)}</span>
         }
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontSize: 13, fontWeight: 600, color: C.t1, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.supplierName}</p>
-        <p style={{ fontSize: 11, color: C.t3, margin: '3px 0 0', fontFamily: MONO }}>{tx.reference} · {tx.network}</p>
-        <p style={{ fontSize: 11, color: C.t3, margin: '2px 0 0' }}>{new Date(tx.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</p>
+        <p style={{ fontSize: 12.5, fontWeight: 600, color: C.t1, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.supplierName}</p>
+        <p style={{ fontSize: 10.5, color: C.t3, margin: '2px 0 0', fontFamily: MONO }}>{tx.reference} · {tx.network}</p>
       </div>
       <div style={{ flexShrink: 0, textAlign: 'right' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5, justifyContent: 'flex-end' }}>
-          <img src={usdtLogo} alt="USDT" style={{ width: 14, height: 14, borderRadius: '50%' }} />
-          <span style={{ fontSize: 15, fontWeight: 700, color: C.t1, fontFamily: MONO, fontVariantNumeric: 'tabular-nums' }}>{tx.amount.toLocaleString('fr-FR')}</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5, justifyContent: 'flex-end', marginTop: 5 }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: cfg.color, display: 'inline-block', flexShrink: 0 }} />
-          <span style={{ fontSize: 11, color: C.t3 }}>{cfg.label}</span>
-        </div>
+        <p style={{ fontSize: 13, fontWeight: 700, color: C.t1, fontFamily: MONO, margin: 0, fontVariantNumeric: 'tabular-nums' }}>{tx.amount.toLocaleString('fr-FR')} <span style={{ fontSize: 10, color: C.t3, fontWeight: 400 }}>USDT</span></p>
+        <p style={{ fontSize: 10.5, color: C.t3, margin: '3px 0 0' }}>{STATUS_LABEL[tx.status] || tx.status}</p>
       </div>
     </div>
   );
@@ -218,10 +222,13 @@ export function BusinessHistory({ user }: Props) {
   const [statusFilter, setStatusFilter] = useState('');
   const [periodFilter, setPeriodFilter] = useState('tout');
   const [selectedTx, setSelectedTx] = useState<any>(null);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     try { setRawPayments(JSON.parse(localStorage.getItem(key) || '[]')); } catch {}
   }, [userId]);
+
+  useEffect(() => { setPage(1); }, [search, statusFilter, periodFilter]);
 
   const payments = rawPayments.length > 0 ? rawPayments : DEMO_PAYMENTS;
   const isDemo = rawPayments.length === 0;
@@ -236,8 +243,9 @@ export function BusinessHistory({ user }: Props) {
     .filter(p => !search || (p.supplierName || '').toLowerCase().includes(search.toLowerCase()) || (p.reference || '').toLowerCase().includes(search.toLowerCase()) || (p.note || '').toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-  const groups = groupByDate(filtered);
-  const totalAmount = filtered.reduce((s, p) => s + (p.amount || 0), 0);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+  const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  const groups = groupByDate(paginated);
 
   const exportCSV = () => {
     const csv = [
@@ -255,11 +263,11 @@ export function BusinessHistory({ user }: Props) {
       {selectedTx && <TransactionDrawer tx={selectedTx} onClose={() => setSelectedTx(null)} />}
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '28px 28px' }}>
+      <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '26px 28px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
           <div>
-            <h2 style={{ color: C.t1, fontSize: 22, fontWeight: 700, letterSpacing: '-0.03em', margin: 0 }}>Historique & Reçus</h2>
-            <p style={{ color: C.t3, fontSize: 13, margin: '6px 0 0' }}>
+            <h2 style={{ color: C.t1, fontSize: 21, fontWeight: 700, letterSpacing: '-0.03em', margin: 0 }}>Historique & Reçus</h2>
+            <p style={{ color: C.t3, fontSize: 12, margin: '5px 0 0' }}>
               {filtered.length} transaction{filtered.length !== 1 ? 's' : ''}
               {isDemo && <span style={{ color: C.amber }}> · Données de démonstration</span>}
             </p>
@@ -275,8 +283,8 @@ export function BusinessHistory({ user }: Props) {
       {/* ── Layout 2 colonnes ─────────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr]" style={{ gap: 24, alignItems: 'start' }}>
 
-        {/* ── Sidebar filtres (sticky desktop) ─────────────────── */}
-        <div style={{ position: 'sticky', top: 20, display: 'flex', flexDirection: 'column', gap: 0 }}>
+        {/* ── Sidebar filtres ──────────────────────────────────── */}
+        <div style={{ position: 'sticky', top: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, overflow: 'hidden' }}>
 
             {/* Search */}
@@ -289,10 +297,22 @@ export function BusinessHistory({ user }: Props) {
               </div>
             </div>
 
-            {/* Statut */}
+            {/* Statut — dropdown sur mobile, radio sur desktop */}
             <div style={{ padding: '14px 14px 10px' }}>
               <p style={{ fontSize: 9.5, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.10em', margin: '0 0 10px' }}>Statut</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+
+              {/* Mobile: select dropdown */}
+              <select
+                value={statusFilter}
+                onChange={e => setStatusFilter(e.target.value)}
+                className="block lg:hidden"
+                style={{ width: '100%', background: C.l2, border: `1px solid ${C.bds}`, borderRadius: 8, color: C.t1, padding: '8px 10px', fontSize: 12, fontFamily: FONT, outline: 'none', cursor: 'pointer' }}
+              >
+                {STATUS_FILTERS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+              </select>
+
+              {/* Desktop: radio style */}
+              <div className="hidden lg:flex" style={{ flexDirection: 'column', gap: 2 }}>
                 {STATUS_FILTERS.map(f => {
                   const isActive = statusFilter === f.value;
                   return (
@@ -327,46 +347,87 @@ export function BusinessHistory({ user }: Props) {
             </div>
           </div>
 
-          {/* Résumé filtré */}
+          {/* Résumé — juste le nombre */}
           {filtered.length > 0 && (
-            <div style={{ marginTop: 10, background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, padding: '14px 16px' }}>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.09em', margin: '0 0 8px' }}>Résumé</p>
-              <p style={{ fontSize: 11, color: C.t3, margin: 0 }}>{filtered.length} résultat{filtered.length !== 1 ? 's' : ''}</p>
-              <p style={{ fontSize: 16, fontWeight: 700, color: C.t1, fontFamily: MONO, margin: '4px 0 0', letterSpacing: '-0.01em' }}>
-                {totalAmount.toLocaleString('fr-FR')} <span style={{ fontSize: 12, color: C.t3, fontWeight: 400 }}>USDT</span>
-              </p>
+            <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, padding: '12px 14px' }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.09em', margin: '0 0 4px' }}>Résumé</p>
+              <p style={{ fontSize: 13, fontWeight: 600, color: C.t1, margin: 0 }}>{filtered.length} résultat{filtered.length !== 1 ? 's' : ''}</p>
+              {totalPages > 1 && <p style={{ fontSize: 11, color: C.t3, margin: '2px 0 0' }}>Page {page} sur {totalPages}</p>}
             </div>
           )}
         </div>
 
-        {/* ── Feed transactions ────────────────────────────────── */}
-        {groups.length === 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 20px', background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, gap: 12 }}>
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-              <circle cx="24" cy="24" r="21" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" strokeWidth="1.5" />
-              <path d="M16 24h16M24 16v16" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-            <p style={{ color: C.t2, fontSize: 14, fontWeight: 500, margin: 0 }}>Aucune transaction trouvée</p>
-            <p style={{ color: C.t3, fontSize: 12, margin: 0 }}>Modifiez vos filtres</p>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
-            {groups.map(group => (
-              <div key={group.label}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.09em', margin: 0 }}>{group.label}</p>
-                  <div style={{ flex: 1, height: 1, background: C.bds }} />
-                  <span style={{ fontSize: 10, color: C.t4 }}>{group.items.length}</span>
+        {/* ── Feed + pagination ────────────────────────────────── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {groups.length === 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 20px', background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, gap: 10 }}>
+              <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                <circle cx="22" cy="22" r="19" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" strokeWidth="1.5" />
+                <circle cx="22" cy="22" r="10" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
+                <line x1="22" y1="14" x2="22" y2="22" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" strokeLinecap="round" />
+                <line x1="22" y1="22" x2="27" y2="25" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              <p style={{ color: C.t2, fontSize: 13, fontWeight: 500, margin: 0 }}>Aucune transaction trouvée</p>
+              <p style={{ color: C.t3, fontSize: 12, margin: 0 }}>Modifiez vos filtres</p>
+            </div>
+          ) : (
+            <>
+              {groups.map(group => (
+                <div key={group.label}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.09em', margin: 0 }}>{group.label}</p>
+                    <div style={{ flex: 1, height: 1, background: C.bds }} />
+                    <span style={{ fontSize: 10, color: C.t4 }}>{group.items.length}</span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                    {group.items.map(tx => (
+                      <TxCard key={tx.id} tx={tx} onClick={() => setSelectedTx(tx)} />
+                    ))}
+                  </div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  {group.items.map(tx => (
-                    <TxCard key={tx.id} tx={tx} onClick={() => setSelectedTx(tx)} />
-                  ))}
+              ))}
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 4 }}>
+                  <span style={{ fontSize: 12, color: C.t3 }}>
+                    {(page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, filtered.length)} sur {filtered.length}
+                  </span>
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    <button
+                      disabled={page === 1}
+                      onClick={() => setPage(p => p - 1)}
+                      style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${C.bds}`, background: 'transparent', color: page === 1 ? C.t4 : C.t2, cursor: page === 1 ? 'not-allowed' : 'pointer', transition: 'all 0.1s' }}
+                      onMouseEnter={e => { if (page !== 1) (e.currentTarget as HTMLButtonElement).style.color = C.t1; }}
+                      onMouseLeave={e => { if (page !== 1) (e.currentTarget as HTMLButtonElement).style.color = C.t2; }}
+                    >
+                      <ChevronLeft style={{ width: 14, height: 14 }} />
+                    </button>
+                    {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                      const p = totalPages <= 5 ? i + 1 : page <= 3 ? i + 1 : page >= totalPages - 2 ? totalPages - 4 + i : page - 2 + i;
+                      return (
+                        <button key={p} onClick={() => setPage(p)}
+                          style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${page === p ? 'rgba(255,255,255,0.18)' : C.bds}`, background: page === p ? 'rgba(255,255,255,0.08)' : 'transparent', color: page === p ? C.t1 : C.t3, cursor: 'pointer', fontSize: 12, fontFamily: FONT, fontWeight: page === p ? 600 : 400, transition: 'all 0.1s' }}
+                          onMouseEnter={e => { if (page !== p) (e.currentTarget as HTMLButtonElement).style.color = C.t2; }}
+                          onMouseLeave={e => { if (page !== p) (e.currentTarget as HTMLButtonElement).style.color = C.t3; }}
+                        >{p}</button>
+                      );
+                    })}
+                    <button
+                      disabled={page === totalPages}
+                      onClick={() => setPage(p => p + 1)}
+                      style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${C.bds}`, background: 'transparent', color: page === totalPages ? C.t4 : C.t2, cursor: page === totalPages ? 'not-allowed' : 'pointer', transition: 'all 0.1s' }}
+                      onMouseEnter={e => { if (page !== totalPages) (e.currentTarget as HTMLButtonElement).style.color = C.t1; }}
+                      onMouseLeave={e => { if (page !== totalPages) (e.currentTarget as HTMLButtonElement).style.color = C.t2; }}
+                    >
+                      <ChevronRight style={{ width: 14, height: 14 }} />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
