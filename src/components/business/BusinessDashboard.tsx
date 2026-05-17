@@ -347,7 +347,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
       <main style={{ height: '100%', overflowY: 'auto', background: C.bg }}>
         <div
           className="p-4 md:p-8"
-          style={{ maxWidth: 1040, margin: '0 auto', width: '100%' }}
+          style={{ maxWidth: 1040, margin: '0 auto', width: '100%', paddingTop: 68 }}
         >
           {renderContent()}
         </div>
