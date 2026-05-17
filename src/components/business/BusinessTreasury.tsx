@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   QrCode, ArrowDownToLine, ArrowUpFromLine, Copy, Check,
   X, Bell, Trash2, Plus,
@@ -10,7 +10,6 @@ import {
 import usdtLogo from '@/assets/usdt-logo.png';
 import { useCryptoRates } from '@/hooks/useCryptoRates';
 
-// ── Tokens ────────────────────────────────────────────────────────
 const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030', l4: '#383838',
   bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
@@ -20,7 +19,6 @@ const C = {
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
 
-// ── Wallets statiques ─────────────────────────────────────────────
 const WALLETS = [
   { id: 'trc20', chain: 'TRC20', network: 'TRON Network',    logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png', usdt: 45230, address: 'T9xDRaWvH3qKZ1nM8bUoFpY5jL2wX6vRs' },
   { id: 'bep20', chain: 'BEP20', network: 'BNB Smart Chain', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png', usdt: 12450, address: '0x3A7b9c2D4E8F1a6B5C0D9E3F7a2B4C8D1E5F3A9' },
@@ -28,18 +26,20 @@ const WALLETS = [
 ];
 const TOTAL_USDT = WALLETS.reduce((s, w) => s + w.usdt, 0);
 
-// ── Tooltip ───────────────────────────────────────────────────────
 function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: { value: number }[]; label?: string }) {
   if (!active || !payload?.length) return null;
+  const v = payload[0].value;
+  const display = v >= 10
+    ? v.toLocaleString('fr-FR', { maximumFractionDigits: 0 })
+    : v.toFixed(4);
   return (
     <div style={{ background: C.l2, border: `1px solid ${C.bd}`, borderRadius: 8, padding: '8px 12px', fontFamily: FONT }}>
       <p style={{ color: C.t3, fontSize: 10, margin: '0 0 2px' }}>{label}</p>
-      <p style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: 0, fontFamily: MONO }}>{payload[0].value}</p>
+      <p style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: 0, fontFamily: MONO }}>{display}</p>
     </div>
   );
 }
 
-// ── Modal QR ──────────────────────────────────────────────────────
 function QRModal({ wallet, onClose }: { wallet: typeof WALLETS[0]; onClose: () => void }) {
   const [copied, setCopied] = useState(false);
   const copy = useCallback(() => {
@@ -111,7 +111,6 @@ function QRModal({ wallet, onClose }: { wallet: typeof WALLETS[0]; onClose: () =
   );
 }
 
-// ── Modal Alerte ──────────────────────────────────────────────────
 function AlertModal({ onAdd, onClose }: {
   onAdd: (a: { pair: string; condition: '<' | '>'; threshold: string }) => void;
   onClose: () => void;
@@ -202,67 +201,81 @@ function AlertModal({ onAdd, onClose }: {
   );
 }
 
-// ── Composant principal ───────────────────────────────────────────
 interface Alert { id: number; pair: string; condition: '<' | '>'; threshold: string; active: boolean }
 
 export function BusinessTreasury({ user }: { user: { email: string; name: string; id?: string } | null }) {
   void user;
 
-  // ── Taux en direct ─────────────────────────────────────────────
-  const { usdtToCfa, loading: ratesLoading, lastUpdated } = useCryptoRates();
+  // Taux — on garde les anciennes valeurs pendant le refresh (pas de clignotement)
+  const { usdtToCfa, loading: ratesLoading } = useCryptoRates();
   const [usdtToEur, setUsdtToEur] = useState(0.9245);
-  const [secAgo, setSecAgo] = useState(0);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
-    fetch('https://api.exchangerate-api.com/v4/latest/USD')
+    if (!ratesLoading) setInitialLoad(false);
+  }, [ratesLoading]);
+
+  // EUR : fetch une seule fois au montage
+  useEffect(() => {
+    fetch('https://api.exchangerate-api.com/v4/latest/USD', { signal: AbortSignal.timeout(10000) })
       .then(r => r.json())
-      .then(d => { if (d.rates?.EUR) setUsdtToEur(parseFloat(d.rates.EUR.toFixed(4))); })
+      .then(d => { if (d.rates?.EUR) setUsdtToEur(d.rates.EUR); })
       .catch(() => {});
   }, []);
 
-  useEffect(() => {
-    const t = setInterval(() => {
-      if (lastUpdated) setSecAgo(Math.round((Date.now() - lastUpdated.getTime()) / 1000));
-    }, 5000);
-    return () => clearInterval(t);
-  }, [lastUpdated]);
-
-  const liveRates = [
-    { pair: 'USDT / XOF', short: 'XOF', value: usdtToCfa,  fmt: (v: number) => v.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) },
-    { pair: 'USDT / EUR', short: 'EUR', value: usdtToEur,  fmt: (v: number) => v.toLocaleString('fr-FR', { minimumFractionDigits: 4, maximumFractionDigits: 4 }) },
-    { pair: 'USDT / USD', short: 'USD', value: 1.0000,     fmt: (v: number) => v.toLocaleString('fr-FR', { minimumFractionDigits: 4, maximumFractionDigits: 4 }) },
-  ];
-
-  const totalXof = Math.round(TOTAL_USDT * usdtToCfa);
-  const totalEur = Math.round(TOTAL_USDT * usdtToEur);
-
-  // ── Graphique historique réel (CoinGecko) ──────────────────────
-  const [chartData, setChartData] = useState<{ day: string; rate: number }[]>([]);
+  // Graphique : on fetch en USD une seule fois, puis on convertit localement
+  const [rawPrices, setRawPrices] = useState<{ ts: number; usd: number }[]>([]);
   const [chartPair, setChartPair] = useState<'XOF' | 'EUR' | 'USD'>('XOF');
   const [chartLoading, setChartLoading] = useState(true);
 
   useEffect(() => {
-    const cur = chartPair === 'XOF' ? 'xof' : chartPair === 'EUR' ? 'eur' : 'usd';
-    setChartLoading(true);
-    fetch(`https://api.coingecko.com/api/v3/coins/tether/market_chart?vs_currency=${cur}&days=30&interval=daily`)
+    fetch(
+      'https://api.coingecko.com/api/v3/coins/tether/market_chart?vs_currency=usd&days=30&interval=daily',
+      { signal: AbortSignal.timeout(12000) }
+    )
       .then(r => r.json())
       .then(d => {
-        if (d.prices) {
-          setChartData(d.prices.map(([ts, price]: [number, number]) => ({
-            day: new Date(ts).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }),
-            rate: parseFloat(price.toFixed(chartPair === 'XOF' ? 0 : 4)),
-          })));
+        if (d.prices?.length) {
+          setRawPrices(d.prices.map(([ts, usd]: [number, number]) => ({ ts, usd })));
         }
       })
       .catch(() => {})
       .finally(() => setChartLoading(false));
-  }, [chartPair]);
+  }, []);
 
-  // ── Alertes ────────────────────────────────────────────────────
-  const [alerts, setAlerts]       = useState<Alert[]>([{ id: 1, pair: 'USDT/XOF', condition: '<', threshold: '560', active: true }]);
-  const [alertCtr, setAlertCtr]   = useState(2);
+  // Conversion locale selon la paire choisie — aucun re-fetch
+  const chartData = useMemo(() => rawPrices.map(p => ({
+    day: new Date(p.ts).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }),
+    rate: chartPair === 'XOF' ? Math.round(p.usd * usdtToCfa)
+         : chartPair === 'EUR' ? parseFloat((p.usd * usdtToEur).toFixed(4))
+         : parseFloat(p.usd.toFixed(4)),
+  })), [rawPrices, chartPair, usdtToCfa, usdtToEur]);
+
+  const totalXof = initialLoad ? null : Math.round(TOTAL_USDT * usdtToCfa);
+  const totalEur = initialLoad ? null : Math.round(TOTAL_USDT * usdtToEur);
+
+  const liveRates = [
+    {
+      short: 'XOF',
+      label: 'USDT / XOF',
+      display: initialLoad ? '—' : usdtToCfa.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' XOF',
+    },
+    {
+      short: 'EUR',
+      label: 'USDT / EUR',
+      display: initialLoad ? '—' : usdtToEur.toFixed(4) + ' EUR',
+    },
+    {
+      short: 'USD',
+      label: 'USDT / USD',
+      display: '1.0000 USD',
+    },
+  ];
+
+  const [alerts, setAlerts]         = useState<Alert[]>([{ id: 1, pair: 'USDT/XOF', condition: '<', threshold: '560', active: true }]);
+  const [alertCtr, setAlertCtr]     = useState(2);
   const [alertModal, setAlertModal] = useState(false);
-  const [qrWallet, setQrWallet]   = useState<typeof WALLETS[0] | null>(null);
+  const [qrWallet, setQrWallet]     = useState<typeof WALLETS[0] | null>(null);
 
   const addAlert = useCallback((a: Omit<Alert, 'id' | 'active'>) => {
     setAlerts(prev => [...prev, { ...a, id: alertCtr, active: true }]);
@@ -274,311 +287,300 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
   const deleteAlert = useCallback((id: number) =>
     setAlerts(prev => prev.filter(a => a.id !== id)), []);
 
+  const cardSt: React.CSSProperties = {
+    background: C.l1, border: `1px solid ${C.bds}`,
+    borderRadius: 14, overflow: 'hidden',
+  };
+
+  const sectionHead: React.CSSProperties = {
+    color: C.t3, fontSize: 10, fontWeight: 600,
+    letterSpacing: '0.1em', textTransform: 'uppercase', margin: 0,
+  };
+
   return (
-    <div style={{ fontFamily: FONT, color: C.t1, paddingTop: 8, display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div style={{ fontFamily: FONT, color: C.t1, paddingTop: 8 }}>
 
-      {/* ══════════════════════════════════════════════════════════
-          SECTION 1 — Hero : solde gauche + wallets droite
-      ══════════════════════════════════════════════════════════ */}
-      <div style={{
-        display: 'grid', gridTemplateColumns: '1fr 1fr',
-        gap: 0, borderRadius: 16, overflow: 'hidden',
-        border: `1px solid ${C.bds}`, boxShadow: '0 2px 8px rgba(0,0,0,0.35)',
-      }} className="grid grid-cols-1 md:grid-cols-2">
+      {/* Layout 2 colonnes : héro + graphique à gauche / wallets + taux + alertes à droite */}
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr]" style={{ gap: 14, alignItems: 'start' }}>
 
-        {/* Gauche : solde total */}
-        <div style={{
-          background: 'linear-gradient(160deg, #1e1e1e 0%, #161616 100%)',
-          padding: '28px 28px 24px',
-          backgroundImage: 'radial-gradient(circle, rgba(59,150,143,0.10) 1px, transparent 1px)',
-          backgroundSize: '20px 20px',
-          display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 28,
-          borderRight: `1px solid ${C.bds}`,
-        }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18 }}>
-              <img src={usdtLogo} alt="USDT" style={{ width: 28, height: 28, borderRadius: '50%' }} />
-              <span style={{ color: C.t3, fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                Trésorerie totale
-              </span>
+        {/* ══ COLONNE GAUCHE ══════════════════════════════════════════ */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+
+          {/* Héro — balance totale */}
+          <div style={{
+            background: 'linear-gradient(150deg, #1d2020 0%, #141616 100%)',
+            border: `1px solid ${C.bds}`, borderRadius: 16,
+            padding: '30px 28px 26px',
+            boxShadow: '0 4px 32px rgba(0,0,0,0.45)',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+              <img src={usdtLogo} alt="USDT"
+                style={{ width: 26, height: 26, borderRadius: '50%' }} />
+              <span style={{ ...sectionHead }}>Trésorerie totale</span>
             </div>
-            <p style={{ color: C.t1, fontSize: 44, fontWeight: 700, fontFamily: MONO, margin: '0 0 10px', letterSpacing: '-0.04em', lineHeight: 1 }}>
-              {TOTAL_USDT.toLocaleString('fr-FR')}
-            </p>
-            <p style={{ color: C.t3, fontSize: 13, margin: 0, fontFamily: MONO }}>USDT</p>
 
-            <div style={{ display: 'flex', gap: 0, marginTop: 18, flexWrap: 'wrap' }}>
-              {[
-                { v: ratesLoading ? '…' : totalXof.toLocaleString('fr-FR'), u: 'XOF' },
-                { v: ratesLoading ? '…' : totalEur.toLocaleString('fr-FR'), u: 'EUR' },
-              ].map((item, i) => (
-                <div key={item.u} style={{
-                  paddingRight: 20, marginRight: 20,
-                  borderRight: i === 0 ? `1px solid ${C.bds}` : 'none',
-                }}>
-                  <p style={{ color: C.t3, fontSize: 10, margin: '0 0 2px', fontWeight: 500 }}>≈ en {item.u}</p>
-                  <p style={{ color: C.t2, fontSize: 15, fontFamily: MONO, fontWeight: 600, margin: 0 }}>{item.v}</p>
-                </div>
-              ))}
+            <div style={{ marginBottom: 22 }}>
+              <p style={{
+                color: C.t1, fontSize: 50, fontWeight: 700, fontFamily: MONO,
+                margin: 0, letterSpacing: '-0.04em', lineHeight: 1,
+              }}>
+                {TOTAL_USDT.toLocaleString('fr-FR')}
+                <span style={{ color: C.t3, fontSize: 18, fontWeight: 400, marginLeft: 10, letterSpacing: 0 }}>USDT</span>
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', gap: 0, marginBottom: 28 }}>
+              <div style={{ paddingRight: 24 }}>
+                <p style={{ color: C.t3, fontSize: 10, margin: '0 0 3px', fontWeight: 500 }}>≈ en XOF</p>
+                <p style={{ color: C.t2, fontSize: 16, fontFamily: MONO, fontWeight: 600, margin: 0 }}>
+                  {totalXof === null ? '—' : totalXof.toLocaleString('fr-FR')}
+                </p>
+              </div>
+              <div style={{ width: 1, background: C.bds, alignSelf: 'stretch', marginRight: 24 }} />
+              <div>
+                <p style={{ color: C.t3, fontSize: 10, margin: '0 0 3px', fontWeight: 500 }}>≈ en EUR</p>
+                <p style={{ color: C.t2, fontSize: 16, fontFamily: MONO, fontWeight: 600, margin: 0 }}>
+                  {totalEur === null ? '—' : totalEur.toLocaleString('fr-FR')}
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button
+                style={{
+                  height: 36, paddingLeft: 16, paddingRight: 16,
+                  background: 'transparent', border: `1px solid ${C.bd}`,
+                  borderRadius: 9, color: C.t2, fontSize: 12, fontWeight: 500,
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                  fontFamily: FONT, whiteSpace: 'nowrap', transition: 'all 0.15s',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = C.tealB;
+                  (e.currentTarget as HTMLButtonElement).style.color = C.teal;
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = C.bd;
+                  (e.currentTarget as HTMLButtonElement).style.color = C.t2;
+                }}
+              >
+                <ArrowDownToLine style={{ width: 13, height: 13 }} /> Déposer
+              </button>
+              <button
+                style={{
+                  height: 36, paddingLeft: 18, paddingRight: 18,
+                  background: C.teal, border: 'none', borderRadius: 9,
+                  color: '#fff', fontSize: 12, fontWeight: 500,
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                  fontFamily: FONT, whiteSpace: 'nowrap', transition: 'background 0.15s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.background = C.tealH)}
+                onMouseLeave={e => (e.currentTarget.style.background = C.teal)}
+              >
+                <ArrowUpFromLine style={{ width: 13, height: 13 }} /> Retirer
+              </button>
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <button style={{
-              height: 36, paddingLeft: 16, paddingRight: 16,
-              background: 'transparent', border: `1px solid ${C.bd}`,
-              borderRadius: 9, color: C.t2, fontSize: 12, fontWeight: 500,
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-              fontFamily: FONT, transition: 'all 0.15s', whiteSpace: 'nowrap',
-            }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = C.tealB; (e.currentTarget as HTMLButtonElement).style.color = C.teal; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = C.bd; (e.currentTarget as HTMLButtonElement).style.color = C.t2; }}
-            >
-              <ArrowDownToLine style={{ width: 13, height: 13 }} /> Déposer
-            </button>
-            <button style={{
-              height: 36, paddingLeft: 16, paddingRight: 16,
-              background: C.teal, border: 'none', borderRadius: 9,
-              color: '#fff', fontSize: 12, fontWeight: 500,
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-              fontFamily: FONT, transition: 'background 0.15s', whiteSpace: 'nowrap',
-            }}
-              onMouseEnter={e => (e.currentTarget.style.background = C.tealH)}
-              onMouseLeave={e => (e.currentTarget.style.background = C.teal)}
-            >
-              <ArrowUpFromLine style={{ width: 13, height: 13 }} /> Retirer
-            </button>
+          {/* Graphique */}
+          <div style={{ ...cardSt, padding: '18px 20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <div>
+                <h2 style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: 0 }}>Évolution 30 jours</h2>
+                <p style={{ color: C.t3, fontSize: 10, margin: '3px 0 0' }}>
+                  {chartLoading ? 'Chargement…' : 'USDT / ' + chartPair + ' · données réelles'}
+                </p>
+              </div>
+              <div style={{ display: 'flex', gap: 4 }}>
+                {(['XOF', 'EUR', 'USD'] as const).map(p => (
+                  <button key={p} onClick={() => setChartPair(p)} style={{
+                    height: 26, paddingLeft: 10, paddingRight: 10, borderRadius: 7,
+                    border: `1px solid ${chartPair === p ? C.tealB : C.bds}`,
+                    background: chartPair === p ? C.tealT : 'transparent',
+                    color: chartPair === p ? C.teal : C.t3,
+                    fontSize: 11, fontWeight: chartPair === p ? 600 : 400,
+                    cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s',
+                  }}>{p}</button>
+                ))}
+              </div>
+            </div>
+
+            {chartLoading ? (
+              <div style={{ height: 250, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <p style={{ color: C.t3, fontSize: 12 }}>Chargement des données…</p>
+              </div>
+            ) : chartData.length === 0 ? (
+              <div style={{ height: 250, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <p style={{ color: C.t3, fontSize: 12 }}>Données indisponibles</p>
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height={250}>
+                <AreaChart data={chartData} margin={{ top: 4, right: 2, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="cGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%"  stopColor={C.teal} stopOpacity={0.22} />
+                      <stop offset="95%" stopColor={C.teal} stopOpacity={0.02} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
+                  <XAxis dataKey="day"
+                    tick={{ fill: C.t3, fontSize: 9, fontFamily: FONT }}
+                    tickLine={false} axisLine={false} interval={4} />
+                  <YAxis
+                    tick={{ fill: C.t3, fontSize: 9, fontFamily: MONO }}
+                    tickLine={false} axisLine={false} domain={['auto', 'auto']} width={54}
+                    tickFormatter={(v: number) =>
+                      chartPair === 'XOF'
+                        ? v.toLocaleString('fr-FR', { maximumFractionDigits: 0 })
+                        : v.toFixed(4)
+                    } />
+                  <Tooltip content={<ChartTooltip />} />
+                  <Area type="monotone" dataKey="rate" stroke={C.teal} strokeWidth={1.5}
+                    fill="url(#cGrad)" dot={false}
+                    activeDot={{ r: 4, fill: C.teal, stroke: C.l1, strokeWidth: 2 }} />
+                </AreaChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </div>
 
-        {/* Droite : liste wallets compacte */}
-        <div style={{ background: C.l1, display: 'flex', flexDirection: 'column' }}>
-          <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.bds}` }}>
-            <p style={{ color: C.t3, fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>
-              Répartition par réseau
-            </p>
-          </div>
-          {WALLETS.map((w, i) => {
-            const pct = Math.round((w.usdt / TOTAL_USDT) * 100);
-            return (
-              <div key={w.id} style={{
-                padding: '16px 20px',
-                borderBottom: i < WALLETS.length - 1 ? `1px solid ${C.bds}` : 'none',
-                display: 'flex', alignItems: 'center', gap: 14,
-                transition: 'background 0.12s',
-              }}
+        {/* ══ COLONNE DROITE ══════════════════════════════════════════ */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+
+          {/* Portefeuilles — sans barres */}
+          <div style={cardSt}>
+            <div style={{ padding: '14px 18px', borderBottom: `1px solid ${C.bds}` }}>
+              <p style={sectionHead}>Portefeuilles</p>
+            </div>
+            {WALLETS.map((w, i) => (
+              <div key={w.id}
+                style={{
+                  padding: '14px 18px',
+                  borderBottom: i < WALLETS.length - 1 ? `1px solid ${C.bds}` : 'none',
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  transition: 'background 0.12s',
+                }}
                 onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.015)')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
                 <img src={w.logo} alt={w.chain}
-                  style={{ width: 32, height: 32, borderRadius: '50%', border: `1.5px solid ${C.bds}`, flexShrink: 0 }}
+                  style={{ width: 34, height: 34, borderRadius: '50%', border: `1.5px solid ${C.bds}`, flexShrink: 0 }}
                   onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
-
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 6 }}>
-                    <div>
-                      <span style={{ color: C.t1, fontSize: 12, fontWeight: 600 }}>{w.chain}</span>
-                      <span style={{ color: C.t3, fontSize: 10, marginLeft: 6 }}>{w.network}</span>
-                    </div>
-                    <span style={{ color: C.t2, fontSize: 13, fontFamily: MONO, fontWeight: 600 }}>
-                      {w.usdt.toLocaleString('fr-FR')}
-                      <span style={{ color: C.t3, fontSize: 10, marginLeft: 4 }}>USDT</span>
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div style={{ flex: 1, height: 3, borderRadius: 99, background: C.l3, overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${pct}%`, background: `linear-gradient(90deg, ${C.tealH}, ${C.teal})`, borderRadius: 99 }} />
-                    </div>
-                    <span style={{ color: C.t3, fontSize: 10, fontFamily: MONO, flexShrink: 0 }}>{pct}%</span>
-                  </div>
+                  <p style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: 0 }}>{w.chain}</p>
+                  <p style={{ color: C.t3, fontSize: 10, margin: '2px 0 0' }}>{w.network}</p>
                 </div>
-
-                <button onClick={() => setQrWallet(w)} style={{
-                  width: 30, height: 30, borderRadius: 8, background: 'transparent',
-                  border: `1px solid ${C.bds}`, color: C.t3, cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  flexShrink: 0, transition: 'all 0.12s',
-                }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = C.tealB; (e.currentTarget as HTMLButtonElement).style.color = C.teal; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = C.bds; (e.currentTarget as HTMLButtonElement).style.color = C.t3; }}
+                <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                  <p style={{ color: C.t1, fontSize: 13, fontFamily: MONO, fontWeight: 600, margin: 0 }}>
+                    {w.usdt.toLocaleString('fr-FR')}
+                  </p>
+                  <p style={{ color: C.t3, fontSize: 10, margin: '2px 0 0' }}>USDT</p>
+                </div>
+                <button onClick={() => setQrWallet(w)}
+                  style={{
+                    width: 28, height: 28, borderRadius: 7, background: 'transparent',
+                    border: `1px solid ${C.bds}`, color: C.t3, cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                    transition: 'all 0.12s',
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = C.tealB;
+                    (e.currentTarget as HTMLButtonElement).style.color = C.teal;
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = C.bds;
+                    (e.currentTarget as HTMLButtonElement).style.color = C.t3;
+                  }}
                   title="Voir l'adresse"
                 >
-                  <QrCode style={{ width: 13, height: 13 }} />
+                  <QrCode style={{ width: 12, height: 12 }} />
                 </button>
               </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ══════════════════════════════════════════════════════════
-          SECTION 2 — Taux en direct : une bande unifiée
-      ══════════════════════════════════════════════════════════ */}
-      <div style={{
-        background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14,
-        boxShadow: '0 1px 3px rgba(0,0,0,0.28)', overflow: 'hidden',
-      }}>
-        {/* Label + last update */}
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '12px 20px', borderBottom: `1px solid ${C.bds}`,
-          background: 'rgba(255,255,255,0.01)',
-        }}>
-          <span style={{ color: C.t3, fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-            Taux de marché en direct
-          </span>
-          <span style={{ color: C.t3, fontSize: 10, fontFamily: MONO }}>
-            {ratesLoading ? 'Chargement…' : lastUpdated ? (secAgo < 10 ? 'À l\'instant' : `il y a ${secAgo}s`) : '—'}
-          </span>
-        </div>
-
-        {/* 3 taux séparés par des dividers */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1px 1fr 1px 1fr' }}>
-          {liveRates.map((r, i) => (
-            i % 2 === 0 ? (
-              <div key={r.short} style={{ padding: '20px 24px', textAlign: 'center' }}>
-                <p style={{ color: C.t3, fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 8px' }}>
-                  {r.pair}
-                </p>
-                <p style={{ color: ratesLoading ? C.t3 : C.t1, fontSize: 30, fontWeight: 700, fontFamily: MONO, margin: 0, letterSpacing: '-0.02em', transition: 'color 0.3s' }}>
-                  {ratesLoading ? '—' : r.fmt(r.value)}
-                </p>
-                <p style={{ color: C.t3, fontSize: 10, margin: '6px 0 0' }}>
-                  1 USDT = {ratesLoading ? '…' : r.fmt(r.value)} {r.short}
-                </p>
-              </div>
-            ) : (
-              <div key={`sep-${i}`} style={{ background: C.bds, alignSelf: 'stretch' }} />
-            )
-          ))}
-        </div>
-      </div>
-
-      {/* ══════════════════════════════════════════════════════════
-          SECTION 3 — Graphique + Alertes (asymétrique)
-      ══════════════════════════════════════════════════════════ */}
-      <div style={{ display: 'grid', gap: 14 }} className="grid grid-cols-1 lg:grid-cols-[1fr,300px]">
-
-        {/* Graphique réel */}
-        <div style={{
-          background: C.l1, border: `1px solid ${C.bds}`,
-          borderRadius: 14, padding: '18px 20px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.28)',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-            <div>
-              <h2 style={{ color: C.t1, fontSize: 14, fontWeight: 600, margin: 0 }}>Évolution historique — 30 jours</h2>
-              <p style={{ color: C.t3, fontSize: 11, margin: '2px 0 0' }}>
-                USDT / {chartPair} · {chartLoading ? 'Chargement…' : 'Données réelles CoinGecko'}
-              </p>
-            </div>
-            <div style={{ display: 'flex', gap: 4 }}>
-              {(['XOF', 'EUR', 'USD'] as const).map(p => (
-                <button key={p} onClick={() => setChartPair(p)} style={{
-                  height: 26, paddingLeft: 10, paddingRight: 10, borderRadius: 7,
-                  border: `1px solid ${chartPair === p ? C.tealB : C.bds}`,
-                  background: chartPair === p ? C.tealT : 'transparent',
-                  color: chartPair === p ? C.teal : C.t3,
-                  fontSize: 11, fontWeight: chartPair === p ? 600 : 400,
-                  cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s',
-                }}>{p}</button>
-              ))}
-            </div>
+            ))}
           </div>
 
-          {chartLoading ? (
-            <div style={{ height: 220, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <p style={{ color: C.t3, fontSize: 12 }}>Chargement des données…</p>
+          {/* Taux de marché — 3 lignes séparées, bug EUR corrigé */}
+          <div style={cardSt}>
+            <div style={{ padding: '14px 18px', borderBottom: `1px solid ${C.bds}` }}>
+              <p style={sectionHead}>Taux de marché</p>
             </div>
-          ) : (
-            <ResponsiveContainer width="100%" height={220}>
-              <AreaChart data={chartData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%"  stopColor={C.teal} stopOpacity={0.28}/>
-                    <stop offset="95%" stopColor={C.teal} stopOpacity={0.02}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke={C.bds} vertical={false}/>
-                <XAxis dataKey="day" tick={{ fill: C.t3, fontSize: 9, fontFamily: FONT }}
-                  tickLine={false} axisLine={false} interval={4}/>
-                <YAxis tick={{ fill: C.t3, fontSize: 9, fontFamily: MONO }}
-                  tickLine={false} axisLine={false} domain={['auto', 'auto']} width={48}
-                  tickFormatter={(v: number) => chartPair === 'XOF' ? v.toFixed(0) : v.toFixed(4)}/>
-                <Tooltip content={<ChartTooltip />}/>
-                <Area type="monotone" dataKey="rate" stroke={C.teal} strokeWidth={2}
-                  fill="url(#chartGrad)" dot={false}
-                  activeDot={{ r: 4, fill: C.teal, stroke: C.l1, strokeWidth: 2 }}/>
-              </AreaChart>
-            </ResponsiveContainer>
-          )}
-        </div>
-
-        {/* Alertes */}
-        <div style={{
-          background: C.l1, border: `1px solid ${C.bds}`,
-          borderRadius: 14, padding: '18px 20px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.28)',
-          display: 'flex', flexDirection: 'column', gap: 14,
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div>
-              <h3 style={{ color: C.t1, fontSize: 14, fontWeight: 600, margin: 0 }}>Alertes</h3>
-              <p style={{ color: C.t3, fontSize: 11, margin: '2px 0 0' }}>{alerts.length} configurée{alerts.length !== 1 ? 's' : ''}</p>
-            </div>
-            <button onClick={() => setAlertModal(true)} style={{
-              height: 30, paddingLeft: 10, paddingRight: 10,
-              background: C.tealT, border: `1px solid ${C.tealB}`,
-              borderRadius: 8, color: C.teal, fontSize: 11, fontWeight: 500,
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5,
-              fontFamily: FONT, transition: 'opacity 0.15s',
-            }}
-              onMouseEnter={e => (e.currentTarget.style.opacity = '0.7')}
-              onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-            >
-              <Plus style={{ width: 11, height: 11 }} /> Nouvelle
-            </button>
-          </div>
-
-          {alerts.length === 0 ? (
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '28px 0', textAlign: 'center' }}>
-              <Bell style={{ width: 28, height: 28, color: C.t3, opacity: 0.3, marginBottom: 10 }} />
-              <p style={{ color: C.t3, fontSize: 12, margin: 0 }}>Aucune alerte</p>
-              <p style={{ color: C.t3, fontSize: 11, margin: '4px 0 0', opacity: 0.6 }}>Crée une alerte de taux</p>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {alerts.map(a => (
-                <div key={a.id} style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  background: C.l2, border: `1px solid ${a.active ? C.tealB : C.bds}`,
-                  borderRadius: 10, padding: '10px 12px', transition: 'border-color 0.15s',
+            {liveRates.map((r, i) => (
+              <div key={r.short} style={{
+                padding: '14px 18px',
+                borderBottom: i < liveRates.length - 1 ? `1px solid ${C.bds}` : 'none',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+              }}>
+                <span style={{ color: C.t3, fontSize: 11, fontFamily: MONO }}>1 USDT =</span>
+                <span style={{
+                  color: initialLoad ? C.t3 : C.t1,
+                  fontSize: 14, fontFamily: MONO, fontWeight: 600,
+                  transition: 'color 0.4s',
                 }}>
-                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: a.active ? C.teal : C.t3, flexShrink: 0 }} />
-                  <span style={{ color: a.active ? C.t1 : C.t2, fontSize: 12, fontFamily: MONO, flex: 1 }}>
+                  {r.display}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Alertes */}
+          <div style={cardSt}>
+            <div style={{
+              padding: '14px 18px', borderBottom: `1px solid ${C.bds}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            }}>
+              <p style={sectionHead}>Alertes</p>
+              <button onClick={() => setAlertModal(true)} style={{
+                height: 26, paddingLeft: 10, paddingRight: 10,
+                background: C.tealT, border: `1px solid ${C.tealB}`,
+                borderRadius: 7, color: C.teal, fontSize: 11, fontWeight: 500,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4,
+                fontFamily: FONT, transition: 'opacity 0.15s',
+              }}
+                onMouseEnter={e => (e.currentTarget.style.opacity = '0.7')}
+                onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+              >
+                <Plus style={{ width: 10, height: 10 }} /> Nouvelle
+              </button>
+            </div>
+
+            <div style={{ padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {alerts.length === 0 ? (
+                <div style={{ padding: '22px 0', textAlign: 'center' }}>
+                  <Bell style={{ width: 22, height: 22, color: C.t3, opacity: 0.3, display: 'block', margin: '0 auto 8px' }} />
+                  <p style={{ color: C.t3, fontSize: 12, margin: 0 }}>Aucune alerte configurée</p>
+                </div>
+              ) : alerts.map(a => (
+                <div key={a.id} style={{
+                  display: 'flex', alignItems: 'center', gap: 8,
+                  background: C.l2, border: `1px solid ${a.active ? C.tealB : C.bds}`,
+                  borderRadius: 9, padding: '9px 12px', transition: 'border-color 0.15s',
+                }}>
+                  <div style={{ width: 5, height: 5, borderRadius: '50%', background: a.active ? C.teal : C.t3, flexShrink: 0 }} />
+                  <span style={{ color: a.active ? C.t1 : C.t2, fontSize: 11, fontFamily: MONO, flex: 1 }}>
                     {a.pair} {a.condition} {a.threshold}
                   </span>
                   <button onClick={() => toggleAlert(a.id)} style={{
                     fontSize: 10, color: a.active ? C.teal : C.t3,
                     background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT, padding: 0,
-                  }}>{a.active ? 'Actif' : 'Off'}</button>
+                  }}>
+                    {a.active ? 'Actif' : 'Off'}
+                  </button>
                   <button onClick={() => deleteAlert(a.id)} style={{
-                    background: 'none', border: 'none', cursor: 'pointer', color: C.t3, padding: 0, display: 'flex',
+                    background: 'none', border: 'none', cursor: 'pointer', color: C.t3, padding: 0,
+                    display: 'flex', transition: 'color 0.12s',
                   }}
                     onMouseEnter={e => (e.currentTarget.style.color = '#ef4444')}
                     onMouseLeave={e => (e.currentTarget.style.color = C.t3)}
                   >
-                    <Trash2 style={{ width: 13, height: 13 }} />
+                    <Trash2 style={{ width: 12, height: 12 }} />
                   </button>
                 </div>
               ))}
             </div>
-          )}
+          </div>
         </div>
       </div>
 
-      {/* Modales */}
-      {qrWallet  && <QRModal wallet={qrWallet} onClose={() => setQrWallet(null)} />}
+      {qrWallet   && <QRModal wallet={qrWallet} onClose={() => setQrWallet(null)} />}
       {alertModal && <AlertModal onAdd={addAlert} onClose={() => setAlertModal(false)} />}
     </div>
   );
