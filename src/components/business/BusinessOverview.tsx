@@ -431,60 +431,34 @@ export function BusinessOverview({ user, onNavigate }: Props) {
             <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.bds}` }}>
               <h3 style={{ fontSize: 13, fontWeight: 600, color: C.t1, margin: 0 }}>Actions rapides</h3>
             </div>
-            {(() => {
-              const actions = [
-                { label: 'Initier un paiement',    sub: 'Payer un fournisseur en USDT',    Icon: Send,     action: () => onNavigate('payment') },
-                { label: 'Ajouter un fournisseur', sub: 'Enregistrer un nouveau contact',  Icon: Plus,     action: () => onNavigate('suppliers') },
-                { label: 'Exporter CSV',            sub: "Télécharger l'historique",        Icon: Download, action: () => onNavigate('history') },
-              ];
-              const primary = actions[0];
-              const { Icon: PrimaryIcon } = primary;
-              const secondaries = actions.slice(1);
+            {[
+              { label: 'Initier un paiement',    sub: 'Payer un fournisseur en USDT',    Icon: Send,     primary: true,  action: () => onNavigate('payment') },
+              { label: 'Ajouter un fournisseur', sub: 'Enregistrer un nouveau contact',  Icon: Plus,     primary: false, action: () => onNavigate('suppliers') },
+              { label: 'Exporter CSV',            sub: "Télécharger l'historique",        Icon: Download, primary: false, action: () => onNavigate('history') },
+            ].map((item, i, arr) => {
+              const { Icon } = item;
               return (
-                <div style={{ padding: '8px 12px 12px' }}>
-                  {/* Primary action — full width */}
-                  <button onClick={primary.action} style={{
-                    width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-                    padding: '10px 12px', background: C.teal, border: 'none',
-                    cursor: 'pointer', textAlign: 'left', borderRadius: 9,
-                    transition: 'background 0.1s',
-                  }}
-                    onMouseEnter={e => (e.currentTarget.style.background = C.tealH)}
-                    onMouseLeave={e => (e.currentTarget.style.background = C.teal)}
-                  >
-                    <div style={{ width: 28, height: 28, borderRadius: 7, flexShrink: 0, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <PrimaryIcon style={{ width: 13, height: 13, color: '#fff' }} />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 12, fontWeight: 600, color: '#fff', margin: 0, fontFamily: FONT }}>{primary.label}</p>
-                      <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.65)', margin: '1px 0 0', fontFamily: FONT }}>{primary.sub}</p>
-                    </div>
-                  </button>
-                  {/* Secondary actions — 2 cols side by side */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 8 }}>
-                    {secondaries.map(item => {
-                      const { Icon } = item;
-                      return (
-                        <button key={item.label} onClick={item.action} style={{
-                          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6,
-                          padding: '12px 8px', background: C.l2, border: `1px solid ${C.bds}`,
-                          cursor: 'pointer', textAlign: 'center', borderRadius: 9,
-                          transition: 'background 0.1s', width: '100%',
-                        }}
-                          onMouseEnter={e => (e.currentTarget.style.background = C.l3)}
-                          onMouseLeave={e => (e.currentTarget.style.background = C.l2)}
-                        >
-                          <div style={{ width: 28, height: 28, borderRadius: 7, flexShrink: 0, background: C.l3, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <Icon style={{ width: 13, height: 13, color: C.t2 }} />
-                          </div>
-                          <p style={{ fontSize: 11, fontWeight: 500, color: C.t1, margin: 0, fontFamily: FONT, lineHeight: 1.3 }}>{item.label}</p>
-                        </button>
-                      );
-                    })}
+                <button key={item.label} onClick={item.action} style={{
+                  width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+                  padding: '10px 8px', background: 'transparent', border: 'none',
+                  cursor: 'pointer', textAlign: 'left',
+                  borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none',
+                  borderRadius: i === arr.length - 1 ? '0 0 12px 12px' : 0,
+                  transition: 'background 0.1s',
+                }}
+                  onMouseEnter={e => (e.currentTarget.style.background = C.l3)}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                >
+                  <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, background: item.primary ? C.teal : C.l2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Icon style={{ width: 14, height: 14, color: item.primary ? '#fff' : C.t2 }} />
                   </div>
-                </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 12, fontWeight: 500, color: C.t1, margin: 0, fontFamily: FONT }}>{item.label}</p>
+                    <p style={{ fontSize: 10, color: C.t3, marginTop: 1, margin: '1px 0 0', fontFamily: FONT }}>{item.sub}</p>
+                  </div>
+                </button>
               );
-            })()}
+            })}
           </div>
 
         </div>

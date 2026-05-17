@@ -376,18 +376,18 @@ export function BusinessPayments({ user, onBack }: {
         boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
         display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap', position: 'relative', overflow: 'hidden',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1 }}>
-          <img src={usdtLogo} alt="USDT" style={{ width: 44, height: 44, borderRadius: '50%', flexShrink: 0 }} />
-          <div>
-            <h1 style={{ fontSize: 18, fontWeight: 700, color: C.t1, margin: '0 0 3px', letterSpacing: '-0.02em' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
+          <img src={usdtLogo} alt="USDT" style={{ width: 38, height: 38, borderRadius: '50%', flexShrink: 0 }} />
+          <div style={{ minWidth: 0 }}>
+            <h1 style={{ fontSize: 'clamp(14px,4.5vw,18px)', fontWeight: 700, color: C.t1, margin: '0 0 3px', letterSpacing: '-0.02em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               Nouveau paiement USDT
             </h1>
-            <p style={{ fontSize: 12, color: C.t3, margin: 0 }}>
-              Envoi sécurisé vers un fournisseur · Blockchain · 2.5% de frais
+            <p style={{ fontSize: 11, color: C.t3, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              Envoi sécurisé · Blockchain · 2.5% de frais
             </p>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, alignSelf: 'flex-start' }}>
+        <div className="hidden sm:flex" style={{ alignItems: 'center', flexShrink: 0 }}>
           {NETWORKS.map((n, i) => (
             <img key={n.id} src={n.logo} alt={n.label} title={n.label}
               style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', border: '2px solid #1a1a1a', marginLeft: i > 0 ? -8 : 0, zIndex: NETWORKS.length - i, position: 'relative' }}
