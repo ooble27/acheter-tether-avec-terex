@@ -60,13 +60,11 @@ const NAV_SECTIONS = [
 
 const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
-  bds: '#252525', bd: '#383838', bdh: '#484848',
-  teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.10)',
+  bds: '#252525', bd: '#383838',
+  teal: '#3B968F',
   t1: '#f0f0f0', t2: '#a0a0a0', t3: '#606060',
-  sidebarBg: '#111111',
 };
 const FONT = "'Inter', sans-serif";
-const MONO = '"JetBrains Mono", Consolas, monospace';
 
 function InitialAvatar({ name, size = 28 }: { name: string; size?: number }) {
   const parts = (name || 'U').split(' ').filter(Boolean);
@@ -82,6 +80,49 @@ function InitialAvatar({ name, size = 28 }: { name: string; size?: number }) {
     }}>
       {initials}
     </div>
+  );
+}
+
+function NavItem({
+  item,
+  isActive,
+  onClick,
+}: {
+  item: { id: string; label: string; icon: React.ElementType };
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  const Icon = item.icon;
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+        padding: '5px 6px', borderRadius: 10, border: 'none', cursor: 'pointer',
+        background: isActive ? 'rgba(255,255,255,0.07)' : 'transparent',
+        fontFamily: FONT, textAlign: 'left',
+        transition: 'background 0.12s',
+      }}
+      onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)'; }}
+      onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
+    >
+      <div style={{
+        width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+        background: isActive ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.06)',
+        border: `1px solid ${isActive ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.07)'}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        transition: 'all 0.12s',
+      }}>
+        <Icon style={{ width: 14, height: 14, color: isActive ? '#fff' : '#707070' }} />
+      </div>
+      <span style={{
+        color: isActive ? '#fff' : '#909090', fontSize: 13,
+        fontWeight: isActive ? 500 : 400, flex: 1,
+        transition: 'color 0.12s',
+      }}>
+        {item.label}
+      </span>
+    </button>
   );
 }
 
@@ -125,51 +166,9 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
     ? allItems.filter(i => i.label.toLowerCase().includes(searchQuery.toLowerCase()))
     : null;
 
-  const activeItem = allItems.find(i => i.id === activeSection);
-
-  const NavItem = ({ item }: { item: typeof allItems[0] }) => {
-    const Icon = item.icon;
-    const isActive = activeSection === item.id;
-    return (
-      <button
-        onClick={() => handleNavigate(item.id)}
-        style={{
-          width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-          padding: '5px 6px', borderRadius: 10, border: 'none', cursor: 'pointer',
-          background: isActive ? 'rgba(59,150,143,0.12)' : 'transparent',
-          fontFamily: FONT, textAlign: 'left',
-          transition: 'background 0.12s',
-        }}
-        onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)'; }}
-        onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
-      >
-        <div style={{
-          width: 30, height: 30, borderRadius: 8, flexShrink: 0,
-          background: isActive ? 'rgba(59,150,143,0.22)' : 'rgba(255,255,255,0.06)',
-          border: `1px solid ${isActive ? 'rgba(59,150,143,0.35)' : 'rgba(255,255,255,0.06)'}`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          transition: 'all 0.12s',
-        }}>
-          <Icon style={{ width: 14, height: 14, color: isActive ? C.teal : C.t3 }} />
-        </div>
-        <span style={{
-          color: isActive ? C.t1 : C.t2, fontSize: 13,
-          fontWeight: isActive ? 500 : 400, flex: 1,
-          transition: 'color 0.12s',
-        }}>
-          {item.label}
-        </span>
-        {isActive && (
-          <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.teal, flexShrink: 0 }} />
-        )}
-      </button>
-    );
-  };
-
   return (
     <div style={{ height: '100vh', background: C.bg, overflow: 'hidden', position: 'relative' }}>
 
-      {/* Animation CSS */}
       <style>{`
         @keyframes navPanelIn {
           from { opacity: 0; transform: translateX(-12px) scale(0.97); }
@@ -181,7 +180,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
         }
       `}</style>
 
-      {/* ── Hamburger button ─────────────────────────────────────── */}
+      {/* ── Hamburger ──────────────────────────────────────────────── */}
       <button
         onClick={() => setNavOpen(v => !v)}
         style={{
@@ -190,10 +189,10 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
           left: 20,
           zIndex: 60,
           width: 36, height: 36, borderRadius: 10,
-          background: navOpen ? C.tealT : C.l2,
-          border: `1px solid ${navOpen ? 'rgba(59,150,143,0.35)' : C.bds}`,
+          background: navOpen ? 'rgba(255,255,255,0.08)' : C.l2,
+          border: `1px solid ${C.bds}`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: navOpen ? C.teal : C.t2, cursor: 'pointer',
+          color: C.t2, cursor: 'pointer',
           boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
           transition: 'all 0.15s',
         }}
@@ -204,21 +203,19 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
         }
       </button>
 
-      {/* ── Floating nav panel ────────────────────────────────────── */}
+      {/* ── Panel flottant ────────────────────────────────────────── */}
       {navOpen && (
         <>
-          {/* Backdrop */}
           <div
             style={{
               position: 'fixed', inset: 0, zIndex: 50,
-              background: 'rgba(0,0,0,0.42)',
+              background: 'rgba(0,0,0,0.38)',
               backdropFilter: 'blur(3px)',
               animation: 'navBackdropIn 0.18s ease-out',
             }}
             onClick={() => setNavOpen(false)}
           />
 
-          {/* Floating panel — détaché du bord */}
           <aside style={{
             position: 'fixed',
             top: 'calc(env(safe-area-inset-top, 0px) + 62px)',
@@ -226,10 +223,10 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
             width: 262,
             maxHeight: 'calc(100vh - 90px)',
             zIndex: 55,
-            background: '#0f0f0f',
-            border: `1px solid rgba(255,255,255,0.09)`,
+            background: '#1c1c1e',
+            border: `1px solid rgba(255,255,255,0.10)`,
             borderRadius: 18,
-            boxShadow: '0 20px 60px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.04) inset',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.60), 0 0 0 1px rgba(255,255,255,0.04) inset',
             display: 'flex', flexDirection: 'column',
             overflow: 'hidden',
             animation: 'navPanelIn 0.18s cubic-bezier(0.16,1,0.3,1)',
@@ -237,24 +234,8 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
             userSelect: 'none',
           }}>
 
-            {/* Header */}
-            <div style={{ padding: '14px 14px 12px', borderBottom: `1px solid rgba(255,255,255,0.07)` }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                <div style={{
-                  width: 32, height: 32, borderRadius: 9, flexShrink: 0,
-                  background: 'linear-gradient(135deg, #3B968F, #2a6b65)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: '0 0 0 1px rgba(59,150,143,0.4), 0 4px 12px rgba(59,150,143,0.2)',
-                }}>
-                  <span style={{ color: '#fff', fontSize: 11, fontWeight: 800, letterSpacing: '-0.02em' }}>TB</span>
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ color: C.t1, fontSize: 12, fontWeight: 700, margin: 0, letterSpacing: '0.01em' }}>Terex Business</p>
-                  <p style={{ color: C.t3, fontSize: 10, margin: 0 }}>Portail B2B</p>
-                </div>
-              </div>
-
-              {/* Search */}
+            {/* Recherche */}
+            <div style={{ padding: '12px 10px 10px', borderBottom: `1px solid rgba(255,255,255,0.07)` }}>
               <div style={{ position: 'relative' }}>
                 <Search style={{
                   position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)',
@@ -266,14 +247,14 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
                   onChange={e => setSearchQuery(e.target.value)}
                   placeholder="Rechercher…"
                   style={{
-                    width: '100%', background: 'rgba(255,255,255,0.05)',
+                    width: '100%', background: 'rgba(255,255,255,0.06)',
                     border: `1px solid rgba(255,255,255,0.09)`,
                     borderRadius: 9, paddingLeft: 30, paddingRight: 10,
                     paddingTop: 7, paddingBottom: 7,
                     color: C.t1, fontSize: 12, outline: 'none', fontFamily: FONT,
                     boxSizing: 'border-box', transition: 'border-color 0.15s',
                   }}
-                  onFocus={e => (e.currentTarget.style.borderColor = 'rgba(59,150,143,0.4)')}
+                  onFocus={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)')}
                   onBlur={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.09)')}
                 />
               </div>
@@ -286,7 +267,9 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
                   {filteredItems.length === 0 && (
                     <p style={{ color: C.t3, fontSize: 12, textAlign: 'center', marginTop: 20 }}>Aucun résultat</p>
                   )}
-                  {filteredItems.map(item => <NavItem key={item.id} item={item} />)}
+                  {filteredItems.map(item => (
+                    <NavItem key={item.id} item={item} isActive={activeSection === item.id} onClick={() => handleNavigate(item.id)} />
+                  ))}
                 </div>
               ) : (
                 NAV_SECTIONS.map((section, sIdx) => (
@@ -299,7 +282,9 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
                       {section.label}
                     </p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      {section.items.map(item => <NavItem key={item.id} item={item} />)}
+                      {section.items.map(item => (
+                        <NavItem key={item.id} item={item} isActive={activeSection === item.id} onClick={() => handleNavigate(item.id)} />
+                      ))}
                     </div>
                   </div>
                 ))
@@ -358,57 +343,8 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
         </>
       )}
 
-      {/* ── Contenu scrollable ────────────────────────────────────── */}
+      {/* ── Contenu ───────────────────────────────────────────────── */}
       <main style={{ height: '100%', overflowY: 'auto', background: C.bg }}>
-        {/* Top bar */}
-        <div style={{
-          position: 'sticky', top: 0, zIndex: 30,
-          background: 'rgba(26,26,26,0.92)', backdropFilter: 'blur(12px)',
-          borderBottom: `1px solid ${C.bds}`,
-          paddingTop: 'env(safe-area-inset-top, 0px)',
-        }}>
-          <div style={{
-            maxWidth: 1040, margin: '0 auto',
-            padding: '0 20px',
-            height: 56,
-            display: 'flex', alignItems: 'center',
-            paddingLeft: 72,
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              {activeItem && (() => {
-                const Icon = activeItem.icon;
-                return (
-                  <div style={{
-                    width: 26, height: 26, borderRadius: 7, flexShrink: 0,
-                    background: 'rgba(59,150,143,0.15)',
-                    border: '1px solid rgba(59,150,143,0.25)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <Icon style={{ width: 13, height: 13, color: C.teal }} />
-                  </div>
-                );
-              })()}
-              <span style={{ color: C.t1, fontSize: 14, fontWeight: 600, fontFamily: FONT }}>
-                {activeItem?.label || "Vue d'ensemble"}
-              </span>
-            </div>
-
-            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div style={{
-                padding: '5px 10px', borderRadius: 7,
-                background: 'rgba(59,150,143,0.08)',
-                border: '1px solid rgba(59,150,143,0.20)',
-                display: 'flex', alignItems: 'center', gap: 6,
-              }}>
-                <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.teal, flexShrink: 0 }} />
-                <span style={{ color: C.teal, fontSize: 10.5, fontFamily: MONO, fontWeight: 600 }}>
-                  {user?.name?.split(' ')[0] || 'Business'}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div
           className="p-4 md:p-8"
           style={{ maxWidth: 1040, margin: '0 auto', width: '100%' }}
