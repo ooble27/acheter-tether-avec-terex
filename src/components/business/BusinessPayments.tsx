@@ -387,7 +387,7 @@ export function BusinessPayments({ user, onBack }: {
             </p>
           </div>
         </div>
-        <div className="hidden sm:flex" style={{ alignItems: 'center', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
           {NETWORKS.map((n, i) => (
             <img key={n.id} src={n.logo} alt={n.label} title={n.label}
               style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', border: '2px solid #1a1a1a', marginLeft: i > 0 ? -8 : 0, zIndex: NETWORKS.length - i, position: 'relative' }}
