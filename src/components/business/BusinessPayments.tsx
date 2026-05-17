@@ -214,7 +214,6 @@ const dateInputStyle: React.CSSProperties = {
   width: '100%', background: C.l2, border: `1px solid ${C.bd}`,
   borderRadius: 8, padding: '11px 14px', color: C.t1, fontSize: 13,
   outline: 'none', fontFamily: FONT, boxSizing: 'border-box',
-  colorScheme: 'dark',
 };
 
 // ────────────────────────────────────────────────────────────────
@@ -480,12 +479,12 @@ export function BusinessPayments({ user, onBack }: {
 
               {scheduleOpen && (
                 <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                    <div>
+                  <div className="grid grid-cols-2" style={{ gap: 12 }}>
+                    <div style={{ minWidth: 0 }}>
                       <Label>Date</Label>
                       <input type="date" value={schedDate} onChange={e => setSchedDate(e.target.value)} style={dateInputStyle} />
                     </div>
-                    <div>
+                    <div style={{ minWidth: 0 }}>
                       <Label>Heure</Label>
                       <input type="time" value={schedTime} onChange={e => setSchedTime(e.target.value)} style={dateInputStyle} />
                     </div>

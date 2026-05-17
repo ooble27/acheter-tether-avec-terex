@@ -135,7 +135,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
   const savings = Math.round(totalVolume * 0.03);
   const recent = [...payments]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 5);
+    .slice(0, 2);
 
   const volumeData = payments.length > 0
     ? (() => {

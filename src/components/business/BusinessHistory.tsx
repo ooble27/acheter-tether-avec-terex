@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Clock, CheckCircle2, XCircle, Loader2, Download, X, Copy, Check, ExternalLink, FileText, Calendar, RefreshCw } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import usdtLogo from '@/assets/usdt-logo.png';
 
 interface Props {
   user: { email: string; name: string } | null;
@@ -19,7 +20,13 @@ const C = {
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
-const USDT_LOGO = '/payment-methods/tether-logo.png';
+
+const NET_LOGOS: Record<string, string> = {
+  TRC20:   'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
+  BEP20:   'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',
+  ERC20:   'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
+  POLYGON: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
+};
 
 const STATUS_CONFIG: Record<string, { bg: string; border: string; color: string; label: string; Icon: React.FC<{ style?: React.CSSProperties }> }> = {
   pending:    { bg: C.amberT, border: C.amberB, color: C.amber, label: 'En attente',  Icon: Clock },
@@ -170,7 +177,7 @@ function TransactionDrawer({ tx, onClose }: { tx: any; onClose: () => void }) {
           display: 'flex', flexDirection: 'column', gap: 8,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <img src={USDT_LOGO} alt="USDT" style={{ width: 28, height: 28, borderRadius: '50%' }} />
+            <img src={usdtLogo} alt="USDT" style={{ width: 28, height: 28, borderRadius: '50%' }} />
             <span style={{ fontSize: 32, fontWeight: 700, color: C.t1, fontFamily: MONO, letterSpacing: '-0.02em' }}>
               {tx.amount.toLocaleString('fr-FR')}
             </span>
@@ -193,7 +200,14 @@ function TransactionDrawer({ tx, onClose }: { tx: any; onClose: () => void }) {
         {/* Details */}
         <div style={{ padding: '0 24px', flex: 1 }}>
           <DetailRow label="Réseau">
-            <span style={{ color: C.t2 }}>{tx.network}</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              {NET_LOGOS[tx.network] && (
+                <img src={NET_LOGOS[tx.network]} alt={tx.network}
+                  style={{ width: 16, height: 16, borderRadius: '50%', objectFit: 'cover' }}
+                  onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+              )}
+              <span style={{ color: C.t2 }}>{tx.network}</span>
+            </span>
           </DetailRow>
           <DetailRow label="Wallet destinataire">
             <span style={{ fontFamily: MONO, fontSize: 11, color: C.t2 }}>
@@ -464,11 +478,16 @@ export function BusinessHistory({ user }: Props) {
                   <span className="hidden md:block" style={{ color: C.t3, fontSize: 11, fontFamily: MONO }}>
                     {tx.reference || '—'}
                   </span>
-                  <span className="hidden md:block" style={{ color: C.t2, fontSize: 12 }}>
-                    {tx.network || '—'}
+                  <span className="hidden md:flex" style={{ alignItems: 'center', gap: 6 }}>
+                    {NET_LOGOS[tx.network] && (
+                      <img src={NET_LOGOS[tx.network]} alt={tx.network}
+                        style={{ width: 18, height: 18, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+                        onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+                    )}
+                    <span style={{ color: C.t2, fontSize: 12 }}>{tx.network || '—'}</span>
                   </span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end', marginLeft: 'auto' }} className="md:ml-0">
-                    <img src={USDT_LOGO} alt="USDT" style={{ width: 14, height: 14, borderRadius: '50%', flexShrink: 0 }} />
+                    <img src={usdtLogo} alt="USDT" style={{ width: 14, height: 14, borderRadius: '50%', flexShrink: 0 }} />
                     <span style={{ fontSize: 13, fontWeight: 600, color: C.t1, fontVariantNumeric: 'tabular-nums' }}>
                       {(tx.amount || 0).toLocaleString('fr-FR')}
                     </span>
