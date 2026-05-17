@@ -39,13 +39,12 @@ function StatusPill({ status }: { status: string }) {
   const cfg = STATUS_CONFIG[status] || { dot: C.t3, color: C.t2, label: status };
   return (
     <span style={{
-      display: 'inline-flex', alignItems: 'center', gap: 5,
-      paddingLeft: 8, paddingRight: 10, paddingTop: 3, paddingBottom: 3,
+      display: 'inline-flex', alignItems: 'center',
+      paddingLeft: 9, paddingRight: 9, paddingTop: 3, paddingBottom: 3,
       borderRadius: 999, fontSize: 11, fontWeight: 500,
       background: C.l3, border: `1px solid ${C.bds}`, color: C.t2,
       fontFamily: FONT, whiteSpace: 'nowrap',
     }}>
-      <span style={{ width: 5, height: 5, borderRadius: '50%', background: cfg.dot, flexShrink: 0 }} />
       {cfg.label}
     </span>
   );

@@ -26,16 +26,16 @@ const NETWORKS = [
   { id: 'POLYGON', label: 'Polygon', sub: 'Polygon MATIC',   logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png', speed: '1–5 min',  feeLabel: 'Frais très bas', recommended: false },
 ];
 
-// Real flag images via flagcdn.com (works on all devices, no emoji issues)
+// Real flag images via flagcdn.com
 function FlagImg({ code, size = 20 }: { code: string; size?: number }) {
-  const cc = (code || '').toLowerCase().replace('—', '');
+  const cc = (code || '').toLowerCase().replace('—', '').trim();
   if (!cc || cc.length !== 2) return <span style={{ fontSize: size * 0.7, color: C.t3 }}>—</span>;
+  const w = Math.round(size * 4 / 3);
   return (
     <img
-      src={`https://flagcdn.com/${Math.round(size * 1.4)}x${size}.png`.replace(/\d+x\d+/, `${Math.round(size * 1.4)}x${size}`)}
-      srcSet={`https://flagcdn.com/${cc}.svg`}
+      src={`https://flagcdn.com/${w}x${size}/${cc}.png`}
       alt={cc.toUpperCase()}
-      style={{ width: Math.round(size * 1.4), height: size, borderRadius: 3, objectFit: 'cover', flexShrink: 0 }}
+      style={{ width: w, height: size, borderRadius: 3, objectFit: 'cover', flexShrink: 0 }}
       onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
     />
   );
@@ -304,8 +304,9 @@ export function BusinessPayments({ user, onBack }: {
   const net = NETWORKS.find(n => n.id === network);
 
   const getSelectedSupplierObj = () => suppliers.find(s => s.id === selectedSupplier);
-  const getBenefName   = () => benefTab === 'suppliers' ? getSelectedSupplierObj()?.name   || '' : manualName;
-  const getBenefWallet = () => benefTab === 'suppliers' ? getSelectedSupplierObj()?.wallet || '' : manualWallet;
+  const getBenefName    = () => benefTab === 'suppliers' ? getSelectedSupplierObj()?.name    || '' : manualName;
+  const getBenefWallet  = () => benefTab === 'suppliers' ? getSelectedSupplierObj()?.wallet  || '' : manualWallet;
+  const getBenefCountry = () => benefTab === 'suppliers' ? getSelectedSupplierObj()?.country || '' : '';
 
   const handleSaveTemplate = () => {
     if (!templateName.trim()) return;
@@ -354,7 +355,7 @@ export function BusinessPayments({ user, onBack }: {
   const step3Rows = [
     { label: 'Montant',            value: `${amountNum.toFixed(2)} USDT` },
     { label: 'Réseau',             value: `${net?.label} · ${net?.sub}` },
-    { label: 'Fournisseur',        value: getBenefName() || '—' },
+    { label: 'Fournisseur',        value: getBenefName() || '—', flag: getBenefCountry() },
     { label: 'Wallet destinataire',value: getBenefWallet() || '—', mono: true },
     { label: 'Frais (2.5%)',       value: `${fee.toFixed(2)} USDT` },
     { label: 'Total à débiter',    value: `${total.toFixed(2)} USDT`, bold: true },
@@ -480,12 +481,12 @@ export function BusinessPayments({ user, onBack }: {
 
               {scheduleOpen && (
                 <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                    <div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div style={{ minWidth: 0 }}>
                       <Label>Date</Label>
                       <input type="date" value={schedDate} onChange={e => setSchedDate(e.target.value)} style={dateInputStyle} />
                     </div>
-                    <div>
+                    <div style={{ minWidth: 0 }}>
                       <Label>Heure</Label>
                       <input type="time" value={schedTime} onChange={e => setSchedTime(e.target.value)} style={dateInputStyle} />
                     </div>
@@ -753,7 +754,10 @@ export function BusinessPayments({ user, onBack }: {
                     background: (r as any).bold ? 'rgba(59,150,143,0.05)' : i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)',
                   }}>
                     <div style={{ width: 170, fontSize: 12, color: C.t3, flexShrink: 0 }}>{r.label}</div>
-                    <div style={{ flex: 1, fontSize: 13, fontFamily: (r as any).mono ? MONO : FONT, color: (r as any).bold ? C.teal : C.t1, fontWeight: (r as any).bold ? 700 : 400 }}>
+                    <div style={{ flex: 1, fontSize: 13, fontFamily: (r as any).mono ? MONO : FONT, color: (r as any).bold ? C.teal : C.t1, fontWeight: (r as any).bold ? 700 : 400, display: 'flex', alignItems: 'center', gap: 7 }}>
+                      {(r as any).flag && (
+                        <FlagImg code={(r as any).flag} size={14} />
+                      )}
                       {(r as any).mono ? truncWallet(r.value) : r.value}
                     </div>
                   </div>

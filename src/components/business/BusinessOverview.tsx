@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+import { useCryptoRates } from '@/hooks/useCryptoRates';
 import { Send, Plus, Download } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAuth } from '@/contexts/AuthContext';
@@ -59,50 +60,27 @@ function StatusPill({ status }: { status: string }) {
   const cfg = STATUS_CONFIG[status] || { dot: C.t3, label: status };
   return (
     <span style={{
-      display: 'inline-flex', alignItems: 'center', gap: 5,
-      paddingLeft: 8, paddingRight: 10, paddingTop: 3, paddingBottom: 3,
+      display: 'inline-flex', alignItems: 'center',
+      paddingLeft: 9, paddingRight: 9, paddingTop: 3, paddingBottom: 3,
       borderRadius: 999, fontSize: 11, fontWeight: 500,
       background: C.l3, border: `1px solid ${C.bds}`, color: C.t2,
       fontFamily: FONT, whiteSpace: 'nowrap',
     }}>
-      <span style={{ width: 5, height: 5, borderRadius: '50%', background: cfg.dot, flexShrink: 0 }} />
       {cfg.label}
     </span>
   );
 }
 
 function LiveRateCard() {
-  const [rate, setRate] = useState<number | null>(null);
-  const [change, setChange] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const { usdtToCfa, loading, lastUpdated } = useCryptoRates();
   const [secAgo, setSecAgo] = useState(0);
-  const lastUpdatedRef = useRef<number>(0);
 
   useEffect(() => {
-    let alive = true;
-    const doFetch = async () => {
-      try {
-        const res = await fetch(
-          'https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=xof&include_24hr_change=true'
-        );
-        const data = await res.json();
-        if (!alive) return;
-        const r = data?.tether?.xof;
-        const c = data?.tether?.xof_24h_change ?? 0;
-        if (r) { setRate(r); setChange(c); lastUpdatedRef.current = Date.now(); }
-      } catch { /* keep previous */ }
-      if (alive) setLoading(false);
-    };
-    doFetch();
-    const poll = setInterval(doFetch, 60000);
     const tick = setInterval(() => {
-      if (lastUpdatedRef.current) setSecAgo(Math.round((Date.now() - lastUpdatedRef.current) / 1000));
+      if (lastUpdated) setSecAgo(Math.round((Date.now() - lastUpdated.getTime()) / 1000));
     }, 5000);
-    return () => { alive = false; clearInterval(poll); clearInterval(tick); };
-  }, []);
-
-  const displayRate = rate ?? 620.5;
-  const isUp = change >= 0;
+    return () => clearInterval(tick);
+  }, [lastUpdated]);
 
   return (
     <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
@@ -115,7 +93,7 @@ function LiveRateCard() {
             <span style={{
               display: 'inline-block', width: 6, height: 6, borderRadius: '50%',
               background: loading ? C.t3 : C.em,
-              boxShadow: !loading && rate ? `0 0 0 3px rgba(34,197,94,0.15)` : 'none',
+              boxShadow: !loading ? `0 0 0 3px rgba(34,197,94,0.15)` : 'none',
             }} />
             <span style={{ fontSize: 10, color: C.t3, fontFamily: FONT }}>
               {loading ? 'Chargement…' : 'Temps réel'}
@@ -123,18 +101,13 @@ function LiveRateCard() {
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 6 }}>
-          <span style={{ fontSize: 24, fontWeight: 700, color: loading ? C.t3 : C.t1, fontFamily: FONT, fontVariantNumeric: 'tabular-nums', transition: 'color 0.3s' }}>
-            {displayRate.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
+          <span style={{ fontSize: 24, fontWeight: 700, color: loading ? C.t3 : C.t1, fontFamily: FONT, fontVariantNumeric: 'tabular-nums' }}>
+            {usdtToCfa.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
           </span>
           <span style={{ fontSize: 11, color: C.t2, fontFamily: FONT }}>XOF/USDT</span>
-          {!loading && (
-            <span style={{ fontSize: 11, fontWeight: 500, color: isUp ? C.em : C.red, marginLeft: 4, fontFamily: FONT }}>
-              {isUp ? '+' : ''}{change.toFixed(2)}%
-            </span>
-          )}
         </div>
         <p style={{ fontSize: 10, color: C.t3, marginTop: 4, fontFamily: FONT, margin: '4px 0 0' }}>
-          {lastUpdatedRef.current
+          {lastUpdated
             ? secAgo < 10 ? 'À l\'instant' : `Actualisé il y a ${secAgo}s`
             : 'Actualisation…'}
         </p>
