@@ -252,16 +252,10 @@ function DashboardPreview({ role, name }: { role: Role; name: string }) {
   ];
   const PROVIDERS = ['Shenzhen Elec.', 'Lagos Imports', 'Dubai Trade Co.'];
 
-  const gridTexture: React.CSSProperties = {
-    backgroundImage: [
-      'linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px)',
-      'linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px)',
-    ].join(', '),
-    backgroundSize: '30px 30px',
-  };
+  const gridTexture: React.CSSProperties = {};
 
   return (
-    <div style={{ borderRadius: 18, overflow: 'hidden', boxShadow: '0 0 0 1px rgba(255,255,255,0.09), 0 32px 72px rgba(0,0,0,0.55)' }}>
+    <div style={{ borderRadius: 18, overflow: 'hidden', boxShadow: '0 0 0 1px rgba(255,255,255,0.09)' }}>
 
       {/* Browser chrome — gris neutre */}
       <div style={{ background: '#202020', padding: '9px 14px', display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
@@ -270,8 +264,7 @@ function DashboardPreview({ role, name }: { role: Role; name: string }) {
             <div key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: c, opacity: 0.65 }} />
           ))}
         </div>
-        <div style={{ flex: 1, background: 'rgba(255,255,255,0.05)', borderRadius: 5, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
-          <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.teal, opacity: 0.7 }} />
+        <div style={{ flex: 1, background: 'rgba(255,255,255,0.05)', borderRadius: 5, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <span style={{ fontSize: 8.5, color: 'rgba(255,255,255,0.25)', fontFamily: MONO }}>terex.io</span>
         </div>
       </div>
