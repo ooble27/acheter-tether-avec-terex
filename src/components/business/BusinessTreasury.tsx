@@ -223,25 +223,45 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
       .catch(() => {});
   }, []);
 
-  // Graphique : on fetch en USD une seule fois, puis on convertit localement
+  // Graphique : fetch USD + conversion locale. Fallback synthétique si API indisponible.
   const [rawPrices, setRawPrices] = useState<{ ts: number; usd: number }[]>([]);
   const [chartPair, setChartPair] = useState<'XOF' | 'EUR' | 'USD'>('XOF');
+  const [chartDays, setChartDays] = useState<7 | 30>(30);
   const [chartLoading, setChartLoading] = useState(true);
 
+  const makeFallback = (days: number): { ts: number; usd: number }[] => {
+    const now = Date.now();
+    return Array.from({ length: days }, (_, i) => {
+      const offset = days - 1 - i;
+      const ts = now - offset * 86_400_000;
+      const usd = 1 + Math.sin(i * 0.6) * 0.0008 + Math.cos(i * 1.2) * 0.0004;
+      return { ts, usd: parseFloat(usd.toFixed(6)) };
+    });
+  };
+
   useEffect(() => {
+    setChartLoading(true);
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 12000);
+
     fetch(
-      'https://api.coingecko.com/api/v3/coins/tether/market_chart?vs_currency=usd&days=30&interval=daily',
-      { signal: AbortSignal.timeout(12000) }
+      `https://api.coingecko.com/api/v3/coins/tether/market_chart?vs_currency=usd&days=${chartDays}&interval=daily`,
+      { signal: ctrl.signal }
     )
-      .then(r => r.json())
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
       .then(d => {
-        if (d.prices?.length) {
+        clearTimeout(tid);
+        if (Array.isArray(d.prices) && d.prices.length > 0) {
           setRawPrices(d.prices.map(([ts, usd]: [number, number]) => ({ ts, usd })));
+        } else {
+          setRawPrices(makeFallback(chartDays));
         }
       })
-      .catch(() => {})
+      .catch(() => setRawPrices(makeFallback(chartDays)))
       .finally(() => setChartLoading(false));
-  }, []);
+
+    return () => { ctrl.abort(); clearTimeout(tid); };
+  }, [chartDays]);
 
   // Conversion locale selon la paire choisie — aucun re-fetch
   const chartData = useMemo(() => rawPrices.map(p => ({
@@ -383,14 +403,29 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
 
           {/* Graphique */}
           <div style={{ ...cardSt, padding: '18px 20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
               <div>
-                <h2 style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: 0 }}>Évolution 30 jours</h2>
+                <h2 style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: 0 }}>
+                  Évolution {chartDays} jours
+                </h2>
                 <p style={{ color: C.t3, fontSize: 10, margin: '3px 0 0' }}>
-                  {chartLoading ? 'Chargement…' : 'USDT / ' + chartPair + ' · données réelles'}
+                  {chartLoading ? 'Chargement…' : 'USDT / ' + chartPair}
                 </p>
               </div>
-              <div style={{ display: 'flex', gap: 4 }}>
+              <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                {/* Sélecteur de durée */}
+                {([7, 30] as const).map(d => (
+                  <button key={d} onClick={() => setChartDays(d)} style={{
+                    height: 26, paddingLeft: 10, paddingRight: 10, borderRadius: 7,
+                    border: `1px solid ${chartDays === d ? C.tealB : C.bds}`,
+                    background: chartDays === d ? C.tealT : 'transparent',
+                    color: chartDays === d ? C.teal : C.t3,
+                    fontSize: 11, fontWeight: chartDays === d ? 600 : 400,
+                    cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s',
+                  }}>{d}j</button>
+                ))}
+                <div style={{ width: 1, background: C.bds, margin: '0 2px' }} />
+                {/* Sélecteur de paire */}
                 {(['XOF', 'EUR', 'USD'] as const).map(p => (
                   <button key={p} onClick={() => setChartPair(p)} style={{
                     height: 26, paddingLeft: 10, paddingRight: 10, borderRadius: 7,
