@@ -37,7 +37,7 @@ const GLOBAL_CSS = `
   .biz-no-anim .recharts-cartesian-grid { display: none !important; }
 
   @media (max-width: 1100px) {
-    .biz-vline { display: none !important; }
+    /* biz-vline supprimées */
   }
   @media (max-width: 900px) {
     .biz-hero-preview { display: none !important; }
@@ -274,9 +274,6 @@ export function BusinessLanding() {
     <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT, color: C.t1, position: 'relative' }}>
       <style>{GLOBAL_CSS}</style>
 
-      {/* Lignes verticales — alignées sur le container 1160px centré, masquées < 1100px */}
-      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 0 }} />
-      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 0 }} />
 
       {/* ── NAV ──────────────────────────────────────────────────── */}
       <nav className="biz-nav" style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(17,17,17,0.94)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${C.bds}`, padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -316,15 +313,15 @@ export function BusinessLanding() {
         <div className="biz-hero-preview" style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px', position: 'relative' }}>
 
           {/* Perspective 3D forte — l'élément se prolonge vers le bas sans arrondi */}
-          <div style={{ perspective: '1200px', perspectiveOrigin: '50% 20%' }}>
+          <div style={{ perspective: '900px', perspectiveOrigin: '50% 20%' }}>
             <div style={{
-              transform: 'rotateX(10deg) scale(0.98)',
+              transform: 'rotateX(20deg) scale(0.97)',
               transformOrigin: 'center top',
-              borderRadius: '14px 14px 0 0',
+              borderRadius: '16px 16px 0 0',
               overflow: 'hidden',
-              border: '1px solid rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.10)',
               borderBottom: 'none',
-              boxShadow: '0 20px 80px rgba(0,0,0,0.5)',
+              boxShadow: '0 20px 80px rgba(0,0,0,0.6)',
             }}>
               <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden', background: '#1a1a1a' }}>
                 <div style={{ transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left', width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
@@ -335,10 +332,6 @@ export function BusinessLanding() {
               </div>
             </div>
           </div>
-
-          {/* Fondu gauche + droit — masque les coins angulés de la perspective */}
-          <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 100, background: `linear-gradient(to right, ${C.bg}, transparent)`, pointerEvents: 'none', zIndex: 2 }} />
-          <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: 100, background: `linear-gradient(to left, ${C.bg}, transparent)`, pointerEvents: 'none', zIndex: 2 }} />
 
           {/* Fondu bas — couvre le bas pour s'ancrer dans la section Features */}
           <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 260, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
