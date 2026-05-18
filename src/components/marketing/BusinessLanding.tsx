@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight, Layers, Zap, Globe, BarChart2, Shield, Code2,
@@ -36,66 +36,40 @@ const GLOBAL_CSS = `
   .biz-no-anim .recharts-wrapper { overflow: hidden !important; }
   .biz-no-anim .recharts-cartesian-grid { display: none !important; }
 
+  /* Empêche tout débordement horizontal sur mobile */
+  .biz-root { overflow-x: hidden; }
+
   @media (max-width: 1100px) {
     .biz-vline { display: none !important; }
   }
-
-  /* ── Tablet 900px ─────────────────────────────────── */
   @media (max-width: 900px) {
-    .biz-hero-wrap { padding-top: 72px !important; }
-    .biz-hero-content { padding: 0 32px !important; }
-    .biz-hero-title { font-size: 44px !important; }
-    .biz-hero-preview { padding: 0 32px !important; }
-    .biz-section-row { flex-direction: column !important; gap: 40px !important; padding: 64px 32px !important; }
-    .biz-section-row-rev { flex-direction: column !important; gap: 40px !important; padding: 64px 32px !important; }
-    .biz-sections-outer { padding-left: 0 !important; padding-right: 0 !important; }
+    .biz-hero-preview { display: none !important; }
+    .biz-section-row { flex-direction: column !important; gap: 32px !important; padding: 56px 24px !important; }
+    .biz-section-row-rev { flex-direction: column !important; gap: 32px !important; padding: 56px 24px !important; }
+    .biz-preview { width: 100% !important; max-width: 480px !important; align-self: center !important; }
     .biz-features { grid-template-columns: 1fr 1fr !important; }
-    .biz-features-wrap { padding: 56px 32px !important; }
-    .biz-feat-item { border-right: none !important; border-bottom: 1px solid #222 !important; }
-    .biz-feat-item:nth-child(odd) { border-right: 1px solid #222 !important; }
-    .biz-feat-item:nth-last-child(-n+2) { border-bottom: none !important; }
     .biz-use-cases-grid { grid-template-columns: 1fr 1fr !important; }
-    .biz-usecases-wrap { padding: 64px 32px !important; }
-    .biz-uc-item { border-right: none !important; border-bottom: 1px solid #222 !important; }
-    .biz-uc-item:nth-child(odd) { border-right: 1px solid #222 !important; }
-    .biz-uc-item:nth-last-child(-n+2) { border-bottom: none !important; }
-    .biz-faq-row { flex-direction: column !important; gap: 40px !important; }
-    .biz-faq-wrap { padding: 64px 32px !important; }
-    .biz-api-row { flex-direction: column !important; gap: 40px !important; }
-    .biz-api-wrap { padding: 64px 32px !important; }
-    .biz-preview { width: 100% !important; max-width: 520px !important; align-self: center !important; }
+    .biz-faq-row { flex-direction: column !important; gap: 32px !important; }
+    .biz-api-row { flex-direction: column !important; gap: 32px !important; }
+    /* Réduire les paddings horizontaux sur les conteneurs */
+    .biz-nav { padding: 0 24px !important; }
+    .biz-outer-pad { padding-left: 24px !important; padding-right: 24px !important; }
   }
-
-  /* ── Mobile 600px ─────────────────────────────────── */
   @media (max-width: 600px) {
-    .biz-hero-wrap { padding-top: 52px !important; }
-    .biz-hero-content { padding: 0 16px !important; margin-bottom: 32px !important; }
-    .biz-hero-title { font-size: 28px !important; letter-spacing: -0.04em !important; }
+    .biz-hero-title { font-size: 34px !important; letter-spacing: -0.04em !important; }
     .biz-hero-sub { font-size: 15px !important; }
     .biz-hero-btns { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
     .biz-hero-btns button { width: 100% !important; justify-content: center !important; }
-    .biz-hero-preview { padding: 0 16px !important; }
     .biz-nav { padding: 0 16px !important; }
     .biz-nav-actions .biz-nav-link { display: none !important; }
-    .biz-section-row, .biz-section-row-rev { padding: 48px 16px !important; gap: 28px !important; }
-    .biz-sections-outer { padding-left: 0 !important; padding-right: 0 !important; }
     .biz-features { grid-template-columns: 1fr !important; }
-    .biz-features-wrap { padding: 40px 16px !important; }
-    .biz-feat-item { border-right: none !important; border-bottom: 1px solid #222 !important; }
-    .biz-feat-item:nth-child(odd) { border-right: none !important; }
-    .biz-feat-item:last-child { border-bottom: none !important; }
     .biz-use-cases-grid { grid-template-columns: 1fr !important; }
-    .biz-use-case-tabs { overflow-x: auto !important; flex-wrap: nowrap !important; -webkit-overflow-scrolling: touch !important; }
-    .biz-usecases-wrap { padding: 48px 16px !important; }
-    .biz-uc-item { border-right: none !important; border-bottom: 1px solid #222 !important; }
-    .biz-uc-item:nth-child(odd) { border-right: none !important; }
-    .biz-uc-item:last-child { border-bottom: none !important; }
-    .biz-faq-wrap { padding: 48px 16px !important; }
-    .biz-faq-row { padding: 0 !important; }
-    .biz-api-wrap { padding: 48px 16px !important; }
+    .biz-use-case-tabs { overflow-x: auto !important; flex-wrap: nowrap !important; }
+    .biz-section-row, .biz-section-row-rev { padding: 40px 16px !important; }
     .biz-api-row { padding: 0 !important; }
+    .biz-faq-row { padding: 0 !important; }
     .biz-preview { max-width: 100% !important; }
-    .biz-footer { padding: 20px 16px !important; flex-direction: column !important; align-items: flex-start !important; }
+    .biz-outer-pad { padding-left: 16px !important; padding-right: 16px !important; }
   }
 `;
 
@@ -111,106 +85,23 @@ const HERO_VH      = 460;
 const HERO_INNER_W = Math.round(HERO_VW / HERO_SCALE);
 const HERO_INNER_H = Math.round(HERO_VH / HERO_SCALE);
 
-// ── Preview responsive (scale auto selon largeur disponible) ─────────
+// ── Rendu direct sans cadre ───────────────────────────────────────────
 function InlinePreview({ children, height = 420 }: { children: React.ReactNode; height?: number }) {
-  const outerRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
-
-  useEffect(() => {
-    const el = outerRef.current;
-    if (!el) return;
-    const measure = () => {
-      const w = el.offsetWidth;
-      const s = w >= FRAME_W ? 1 : w / FRAME_W;
-      setScale(prev => Math.abs(prev - s) > 0.005 ? s : prev);
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
   const innerH = Math.round(height / SCALE);
-  const scaledH = Math.round(height * scale);
-
   return (
-    <div ref={outerRef} className="biz-preview" style={{ position: 'relative', width: FRAME_W, flexShrink: 0 }}>
-      <div style={{ height: scaledH, overflow: 'hidden', position: 'relative' }}>
+    <div className="biz-preview" style={{ position: 'relative', width: FRAME_W, height, flexShrink: 0 }}>
+      <div className="biz-no-anim" style={{ width: FRAME_W, height, overflow: 'hidden' }}>
         <div style={{
-          position: 'absolute', top: 0, left: 0,
-          transform: scale < 1 ? `scale(${scale})` : undefined,
-          transformOrigin: 'top left', width: FRAME_W,
+          transform: `scale(${SCALE})`, transformOrigin: 'top left',
+          width: INNER_W, height: innerH, overflow: 'hidden',
+          pointerEvents: 'none', userSelect: 'none', willChange: 'transform',
         }}>
-          <div className="biz-no-anim" style={{ width: FRAME_W, height, overflow: 'hidden' }}>
-            <div style={{
-              transform: `scale(${SCALE})`, transformOrigin: 'top left',
-              width: INNER_W, height: innerH, overflow: 'hidden',
-              pointerEvents: 'none', userSelect: 'none', willChange: 'transform',
-            }}>
-              <div style={{ padding: '12px 16px' }}>{children}</div>
-            </div>
-          </div>
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 72, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Hero preview 3D responsive ────────────────────────────────────────
-function HeroPreview() {
-  const clipRef = useRef<HTMLDivElement>(null);
-  const [heroS, setHeroS] = useState(() => {
-    if (typeof window === 'undefined') return 1;
-    const avail = Math.min(window.innerWidth, 1160) - 96;
-    return avail >= HERO_VW ? 1 : avail / HERO_VW;
-  });
-
-  useEffect(() => {
-    const el = clipRef.current;
-    if (!el) return;
-    const measure = () => {
-      const w = el.offsetWidth;
-      const s = w >= HERO_VW ? 1 : w / HERO_VW;
-      setHeroS(prev => Math.abs(prev - s) > 0.005 ? s : prev);
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  const scaledH = Math.round(HERO_VH * heroS);
-
-  return (
-    <div className="biz-hero-preview" style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 2 }}>
-      <div ref={clipRef} style={{ height: scaledH, overflow: 'hidden', position: 'relative' }}>
-        <div style={{
-          position: 'absolute', top: 0, left: 0,
-          transform: heroS < 1 ? `scale(${heroS})` : undefined,
-          transformOrigin: 'top left', width: HERO_VW,
-        }}>
-          <div style={{ perspective: '900px', perspectiveOrigin: '50% 20%' }}>
-            <div style={{
-              transform: 'rotateX(20deg) scale(0.97)',
-              transformOrigin: 'center top',
-              borderRadius: '16px 16px 0 0',
-              overflow: 'hidden',
-              border: '1px solid rgba(255,255,255,0.10)',
-              borderBottom: 'none',
-              boxShadow: '0 20px 80px rgba(0,0,0,0.6)',
-            }}>
-              <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden', background: '#1a1a1a' }}>
-                <div style={{ transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left', width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
-                  <div style={{ padding: '20px 28px' }}>
-                    <BusinessOverview user={DEMO_USER} onNavigate={() => {}} />
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div style={{ padding: '12px 16px' }}>
+            {children}
           </div>
         </div>
       </div>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 72, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
     </div>
   );
 }
@@ -387,7 +278,7 @@ export function BusinessLanding() {
   };
 
   return (
-    <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT, color: C.t1, position: 'relative' }}>
+    <div className="biz-root" style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT, color: C.t1, position: 'relative' }}>
       <style>{GLOBAL_CSS}</style>
 
 
@@ -412,8 +303,9 @@ export function BusinessLanding() {
       </nav>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <div className="biz-hero-wrap" style={{ background: C.bg, paddingTop: 96, overflow: 'hidden', position: 'relative' }}>
-        <div className="biz-hero-content" style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px', textAlign: 'center', marginBottom: 52 }}>
+      <div style={{ background: C.bg, paddingTop: 96, overflow: 'hidden', position: 'relative' }}>
+        {/* Titre centré */}
+        <div className="biz-outer-pad" style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px', textAlign: 'center', marginBottom: 52 }}>
           <h1 className="biz-hero-title" style={{ fontSize: 64, fontWeight: 900, color: C.t1, margin: '0 0 20px', letterSpacing: '-0.05em', lineHeight: 1.04, fontFamily: FONT }}>
             La finance de votre entreprise,<br />enfin sous contrôle
           </h1>
@@ -427,12 +319,37 @@ export function BusinessLanding() {
             <OutlineBtn large onClick={() => navigate('/auth')}>Se connecter</OutlineBtn>
           </div>
         </div>
-        <HeroPreview />
+
+        {/* Dashboard BusinessOverview — 3D ancrée dans la ligne du dessous */}
+        <div className="biz-hero-preview" style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 2 }}>
+
+          {/* Perspective 3D forte — l'élément se prolonge vers le bas sans arrondi */}
+          <div style={{ perspective: '900px', perspectiveOrigin: '50% 20%' }}>
+            <div style={{
+              transform: 'rotateX(20deg) scale(0.97)',
+              transformOrigin: 'center top',
+              borderRadius: '16px 16px 0 0',
+              overflow: 'hidden',
+              border: '1px solid rgba(255,255,255,0.10)',
+              borderBottom: 'none',
+              boxShadow: '0 20px 80px rgba(0,0,0,0.6)',
+            }}>
+              <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden', background: '#1a1a1a' }}>
+                <div style={{ transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left', width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
+                  <div style={{ padding: '20px 28px' }}>
+                    <BusinessOverview user={DEMO_USER} onNavigate={() => {}} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
 
       {/* ── FEATURES 3-COL ───────────────────────────────────────── */}
       <div id="features" style={{ borderTop: `1px solid ${C.bds}`, borderBottom: `1px solid ${C.bds}` }}>
-        <div className="biz-features-wrap" style={{ maxWidth: 1160, margin: '0 auto', padding: '72px 48px' }}>
+        <div className="biz-outer-pad" style={{ maxWidth: 1160, margin: '0 auto', padding: '72px 48px' }}>
           <div style={{ textAlign: 'center', marginBottom: 52 }}>
             <h2 style={{ fontSize: 32, fontWeight: 800, color: C.t1, margin: '0 0 10px', letterSpacing: '-0.03em', fontFamily: FONT }}>Tout ce dont votre entreprise a besoin</h2>
             <p style={{ fontSize: 15, color: C.t2, margin: 0, fontFamily: FONT }}>Un tableau de bord complet pour gérer vos flux USDT</p>
@@ -441,7 +358,7 @@ export function BusinessLanding() {
             {FEATURES.map((f, i) => {
               const Icon = f.icon;
               return (
-                <div className="biz-feat-item" key={i} style={{ padding: '32px 34px', borderRight: (i + 1) % 3 !== 0 ? `1px solid ${C.bds}` : 'none', borderBottom: i < 3 ? `1px solid ${C.bds}` : 'none' }}>
+                <div key={i} style={{ padding: '32px 34px', borderRight: (i + 1) % 3 !== 0 ? `1px solid ${C.bds}` : 'none', borderBottom: i < 3 ? `1px solid ${C.bds}` : 'none' }}>
                   <Icon style={{ width: 20, height: 20, color: C.t3, marginBottom: 18 }} />
                   <h3 style={{ fontSize: 15, fontWeight: 700, color: C.t1, margin: '0 0 8px', fontFamily: FONT, letterSpacing: '-0.012em' }}>{f.title}</h3>
                   <p style={{ fontSize: 13, color: C.t3, lineHeight: 1.65, margin: 0, fontFamily: FONT }}>{f.desc}</p>
@@ -453,7 +370,7 @@ export function BusinessLanding() {
       </div>
 
       {/* ── SECTIONS ALTERNÉES ───────────────────────────────────── */}
-      <div className="biz-sections-outer" style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px' }}>
+      <div className="biz-outer-pad" style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px' }}>
 
         <div className="biz-section-row" style={{ display: 'flex', alignItems: 'center', gap: 80, padding: '88px 0', borderBottom: `1px solid ${C.bds}` }}>
           <div style={{ flex: '1 1 0', minWidth: 0 }}>
@@ -518,7 +435,7 @@ export function BusinessLanding() {
 
       {/* ── USE CASES ────────────────────────────────────────────── */}
       <div style={{ borderTop: `1px solid ${C.bds}`, borderBottom: `1px solid ${C.bds}` }}>
-        <div className="biz-usecases-wrap" style={{ maxWidth: 1160, margin: '0 auto', padding: '80px 48px' }}>
+        <div className="biz-outer-pad" style={{ maxWidth: 1160, margin: '0 auto', padding: '80px 48px' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <h2 style={{ fontSize: 34, fontWeight: 800, color: C.t1, margin: '0 0 12px', letterSpacing: '-0.035em', fontFamily: FONT }}>Une solution, des cas d'usage illimités</h2>
             <p style={{ fontSize: 15, color: C.t2, margin: 0, fontFamily: FONT }}>Quel que soit votre secteur, Terex Business s'adapte à vos flux de paiement</p>
@@ -532,7 +449,7 @@ export function BusinessLanding() {
             {USE_CASES[activeTab].map((item, i) => {
               const Icon = item.icon;
               return (
-                <div className="biz-uc-item" key={i} style={{ padding: '28px 30px', borderRight: (i + 1) % 3 !== 0 ? `1px solid ${C.bds}` : 'none', borderBottom: i < 3 ? `1px solid ${C.bds}` : 'none' }}>
+                <div key={i} style={{ padding: '28px 30px', borderRight: (i + 1) % 3 !== 0 ? `1px solid ${C.bds}` : 'none', borderBottom: i < 3 ? `1px solid ${C.bds}` : 'none' }}>
                   <Icon style={{ width: 22, height: 22, color: C.t3, marginBottom: 16 }} />
                   <h3 style={{ fontSize: 15, fontWeight: 700, color: C.t1, margin: '0 0 10px', fontFamily: FONT }}>{item.title}</h3>
                   <p style={{ fontSize: 13, color: C.t3, lineHeight: 1.65, margin: 0, fontFamily: FONT }}>{item.desc}</p>
@@ -544,7 +461,7 @@ export function BusinessLanding() {
       </div>
 
       {/* ── API CODE ─────────────────────────────────────────────── */}
-      <div className="biz-api-wrap" style={{ maxWidth: 1160, margin: '0 auto', padding: '88px 48px' }}>
+      <div className="biz-outer-pad" style={{ maxWidth: 1160, margin: '0 auto', padding: '88px 48px' }}>
         <div className="biz-api-row" style={{ display: 'flex', alignItems: 'center', gap: 80 }}>
           <div style={{ flex: '1 1 0', minWidth: 0 }}>
             <Tag label="API" />
@@ -571,7 +488,7 @@ export function BusinessLanding() {
 
       {/* ── FAQ ──────────────────────────────────────────────────── */}
       <div style={{ borderTop: `1px solid ${C.bds}` }}>
-        <div className="biz-faq-wrap" style={{ maxWidth: 1160, margin: '0 auto', padding: '80px 48px' }}>
+        <div className="biz-outer-pad" style={{ maxWidth: 1160, margin: '0 auto', padding: '80px 48px' }}>
           <div className="biz-faq-row" style={{ display: 'flex', alignItems: 'flex-start', gap: 80 }}>
             <div style={{ flex: '0 0 280px' }}>
               <h2 style={{ fontSize: 32, fontWeight: 800, color: C.t1, margin: '0 0 14px', letterSpacing: '-0.035em', fontFamily: FONT }}>Questions<br />fréquentes</h2>
@@ -585,7 +502,7 @@ export function BusinessLanding() {
       </div>
 
       {/* ── FOOTER ───────────────────────────────────────────────── */}
-      <div className="biz-footer" style={{ borderTop: `1px solid ${C.bds}`, padding: '20px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' as const, gap: 12 }}>
+      <div className="biz-outer-pad" style={{ borderTop: `1px solid ${C.bds}`, padding: '20px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' as const, gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <img src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" alt="Terex" style={{ width: 18, height: 18, borderRadius: 4, objectFit: 'cover' }} />
           <span style={{ fontSize: 12, color: C.t3, fontFamily: FONT }}>© 2026 Terex Exchange. Tous droits réservés.</span>
