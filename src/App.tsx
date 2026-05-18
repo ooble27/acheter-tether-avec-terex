@@ -41,6 +41,7 @@ import { ScrollToTop } from "./components/ScrollToTop";
 import { AppLoader } from "./components/AppLoader";
 import NeobankVisionPage from "./pages/NeobankVisionPage";
 import BusinessPage from "./pages/BusinessPage";
+import BusinessAuthPage from "./pages/BusinessAuthPage";
 
 function App() {
   return (
@@ -82,6 +83,7 @@ function App() {
                 <Route path="/admin/*" element={<AdminPage />} />
                 <Route path="/neobank-vision" element={<NeobankVisionPage />} />
                 <Route path="/business" element={<BusinessPage />} />
+                <Route path="/business/auth" element={<BusinessAuthPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </TransactionProvider>

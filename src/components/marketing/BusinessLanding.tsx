@@ -25,7 +25,7 @@ const DEMO_USER = { email: 'demo@terex.sn', name: 'Terex Business', id: 'demo' }
 
 // CSS : animations tuées + responsive mobile
 const GLOBAL_CSS = `
-  .biz-no-anim { contain: layout; }
+  .biz-no-anim { contain: layout size; }
   .biz-no-anim * {
     animation-duration: 0.001ms !important;
     animation-delay: 0ms !important;
@@ -67,10 +67,10 @@ const SCALE   = 0.58;
 const FRAME_W = 640;
 const INNER_W = Math.round(FRAME_W / SCALE);
 
-// Héro — BusinessOverview pleine largeur
-const HERO_SCALE   = 0.65;
-const HERO_VW      = 980;
-const HERO_VH      = 500;
+// Héro — BusinessOverview avec perspective 3D
+const HERO_SCALE   = 0.62;
+const HERO_VW      = 960;
+const HERO_VH      = 420;
 const HERO_INNER_W = Math.round(HERO_VW / HERO_SCALE);
 const HERO_INNER_H = Math.round(HERO_VH / HERO_SCALE);
 
@@ -285,8 +285,8 @@ export function BusinessLanding() {
           <span style={{ color: C.t3, fontSize: 13 }}>Business</span>
         </div>
         <div className="biz-nav-actions" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <OutlineBtn className="biz-nav-link" onClick={() => navigate('/auth')}>Se connecter</OutlineBtn>
-          <PrimaryBtn onClick={() => navigate('/auth')}>Commencer <ArrowRight style={{ width: 14, height: 14 }} /></PrimaryBtn>
+          <span className="biz-nav-link"><OutlineBtn onClick={() => navigate('/business/auth')}>Se connecter</OutlineBtn></span>
+          <PrimaryBtn onClick={() => navigate('/business/auth')}>Commencer <ArrowRight style={{ width: 14, height: 14 }} /></PrimaryBtn>
         </div>
       </nav>
 
@@ -301,31 +301,38 @@ export function BusinessLanding() {
             Paiements USDT, trésorerie multi-réseaux et API webhook<br />pour les entreprises de la zone UEMOA.
           </p>
           <div className="biz-hero-btns" style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 40 }}>
-            <PrimaryBtn large onClick={() => navigate('/auth')}>
+            <PrimaryBtn large onClick={() => navigate('/business/auth')}>
               Créer un compte gratuitement <ArrowRight style={{ width: 15, height: 15 }} />
             </PrimaryBtn>
-            <OutlineBtn large onClick={() => navigate('/auth')}>Se connecter</OutlineBtn>
+            <OutlineBtn large onClick={() => navigate('/business/auth')}>Se connecter</OutlineBtn>
           </div>
         </div>
 
-        {/* Dashboard BusinessOverview — perspective 3D légère, sans cadre */}
+        {/* Dashboard BusinessOverview — perspective 3D */}
         <div style={{ maxWidth: HERO_VW, margin: '0 auto', position: 'relative' }}>
-          {/* Lueur teal */}
-          <div style={{ position: 'absolute', top: 10, left: '20%', right: '20%', height: 60, background: `radial-gradient(ellipse, ${C.teal}20 0%, transparent 70%)`, filter: 'blur(32px)', pointerEvents: 'none' }} />
 
-          {/* Perspective 3D — sans aucun cadre/border */}
-          <div style={{ perspective: '1400px', perspectiveOrigin: '50% 20%' }}>
-            <div style={{ transform: 'rotateX(5deg) scale(0.98)', transformOrigin: 'center top' }}>
+          {/* Perspective 3D prononcée */}
+          <div style={{ perspective: '1000px', perspectiveOrigin: '50% 30%' }}>
+            <div style={{
+              transform: 'rotateX(12deg) scale(0.97)',
+              transformOrigin: 'center top',
+              borderRadius: 14,
+              overflow: 'hidden',
+              border: '1px solid rgba(255,255,255,0.09)',
+              boxShadow: '0 40px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)',
+            }}>
               <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden' }}>
                 <div style={{ transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left', width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none' }}>
-                  <BusinessOverview user={DEMO_USER} onNavigate={() => {}} />
+                  <div style={{ padding: '20px 32px' }}>
+                    <BusinessOverview user={DEMO_USER} onNavigate={() => {}} />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Fondu bas */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 220, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 180, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
         </div>
       </div>
 
@@ -483,45 +490,30 @@ export function BusinessLanding() {
         </div>
       </div>
 
-      {/* ── CTA redesigné ────────────────────────────────────────── */}
-      <div style={{ borderTop: `1px solid ${C.bds}`, padding: '88px 48px' }}>
-        <div style={{ maxWidth: 1160, margin: '0 auto' }}>
-          <div className="biz-cta-row" style={{ display: 'flex', alignItems: 'center', gap: 80 }}>
-
-            {/* Texte gauche */}
-            <div style={{ flex: '1 1 0', minWidth: 0 }}>
-              <div style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: C.teal, fontWeight: 700, fontFamily: FONT, marginBottom: 16 }}>Commencer maintenant</div>
-              <h2 style={{ fontSize: 48, fontWeight: 900, color: C.t1, margin: '0 0 20px', letterSpacing: '-0.045em', lineHeight: 1.08, fontFamily: FONT }}>
-                Prêt à<br />commencer ?
-              </h2>
-              <p style={{ fontSize: 15, color: C.t2, lineHeight: 1.8, margin: '0 0 36px', fontFamily: FONT }}>
-                Créez votre compte Business en quelques minutes.<br />Dès validation de votre dossier KYC, commencez à envoyer des paiements USDT.
-              </p>
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <PrimaryBtn large onClick={() => navigate('/auth')}>
-                  Créer un compte <ArrowRight style={{ width: 15, height: 15 }} />
-                </PrimaryBtn>
-                <OutlineBtn large onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
-                  Voir les fonctionnalités
-                </OutlineBtn>
-              </div>
-            </div>
-
-            {/* Grille de métriques droite */}
-            <div className="biz-cta-cards" style={{ flex: '0 0 360px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-              {([
-                ['< 10 min', 'Confirmation blockchain'],
-                ['3 réseaux', 'TRC-20 · BEP-20 · ERC-20'],
-                ['BCEAO', 'Conformité UEMOA'],
-                ['API REST', 'Intégration directe'],
-              ] as [string, string][]).map(([val, label]) => (
-                <div key={val} style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, padding: '22px 20px' }}>
-                  <div style={{ fontSize: 17, fontWeight: 800, color: C.t1, fontFamily: MONO, letterSpacing: '-0.02em', marginBottom: 8 }}>{val}</div>
-                  <div style={{ fontSize: 12, color: C.t3, fontFamily: FONT, lineHeight: 1.4 }}>{label}</div>
-                </div>
-              ))}
-            </div>
+      {/* ── CTA ──────────────────────────────────────────────────── */}
+      <div style={{ borderTop: `1px solid ${C.bds}`, background: C.l1, padding: '100px 48px' }}>
+        <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.tealT, border: `1px solid ${C.tealB}`, borderRadius: 100, padding: '6px 16px', marginBottom: 28 }}>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.teal }} />
+            <span style={{ fontSize: 12, fontWeight: 600, color: C.teal, fontFamily: FONT }}>Disponible maintenant</span>
           </div>
+          <h2 style={{ fontSize: 52, fontWeight: 900, color: C.t1, margin: '0 0 20px', letterSpacing: '-0.045em', lineHeight: 1.06, fontFamily: FONT }}>
+            Prêt à gérer votre<br />trésorerie en USDT ?
+          </h2>
+          <p style={{ fontSize: 15, color: C.t2, lineHeight: 1.8, margin: '0 auto 40px', maxWidth: 460, fontFamily: FONT }}>
+            Créez votre compte Business en quelques minutes. Dès validation de votre dossier, commencez à envoyer des paiements USDT dans toute la zone UEMOA.
+          </p>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <PrimaryBtn large onClick={() => navigate('/business/auth')}>
+              Créer un compte Business <ArrowRight style={{ width: 15, height: 15 }} />
+            </PrimaryBtn>
+            <OutlineBtn large onClick={() => navigate('/business/auth')}>
+              Se connecter
+            </OutlineBtn>
+          </div>
+          <p style={{ fontSize: 12, color: C.t3, marginTop: 24, fontFamily: FONT }}>
+            Aucune commission cachée · KYC BCEAO · 3 réseaux blockchain
+          </p>
         </div>
       </div>
 
