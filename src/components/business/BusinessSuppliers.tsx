@@ -38,9 +38,9 @@ const COUNTRY_CODE: Record<string, string> = {
 
 const NET_COLOR: Record<string, string> = {
   'TRC20 (TRON)':     '#3B968F',
-  'BEP20 (BSC)':      '#F0B90B',
-  'ERC20 (Ethereum)': '#627EEA',
-  'Polygon (MATIC)':  '#8247E5',
+  'BEP20 (BSC)':      '#2d6b66',
+  'ERC20 (Ethereum)': '#5ab5ae',
+  'Polygon (MATIC)':  '#1e4a47',
 };
 
 const NET_LABEL: Record<string, string> = {
