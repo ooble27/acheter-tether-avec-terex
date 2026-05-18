@@ -43,10 +43,10 @@ const MONTHLY_VOLUME_12 = [
 const MONTHLY_VOLUME_6 = MONTHLY_VOLUME_12.slice(6);
 
 const PIE_DATA = [
-  { name: 'TRC20',   value: 83450, color: C.teal  },
-  { name: 'BEP20',  value: 32100, color: C.amber },
-  { name: 'ERC20',  value: 10200, color: C.gray2 },
-  { name: 'Polygon',value: 2700,  color: C.rust  },
+  { name: 'BEP20',   value: 62400, color: C.amber },
+  { name: 'TRC20',   value: 35200, color: C.teal  },
+  { name: 'ERC20',   value: 13800, color: C.gray2 },
+  { name: 'Polygon', value: 4600,  color: C.rust  },
 ];
 
 const TOP_SUPPLIERS = [

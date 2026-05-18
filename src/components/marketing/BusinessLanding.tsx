@@ -9,9 +9,9 @@ import { BusinessTreasury } from '@/components/business/BusinessTreasury';
 import { BusinessPayments } from '@/components/business/BusinessPayments';
 import { BusinessHistory } from '@/components/business/BusinessHistory';
 import { BusinessAnalytics } from '@/components/business/BusinessAnalytics';
-import { BusinessOverview } from '@/components/business/BusinessOverview';
 import { BusinessBatch } from '@/components/business/BusinessBatch';
 import { BusinessTeam } from '@/components/business/BusinessTeam';
+import { BusinessDashboard } from '@/components/business/BusinessDashboard';
 
 const C = {
   bg: '#111111', l1: '#181818', l2: '#202020', l3: '#272727',
@@ -32,8 +32,8 @@ const GRID_BG = {
   backgroundSize: '44px 44px',
 };
 
-// Kill Recharts JS animations via CSS on durations.
-// The inner-div fixed-height approach is the real jitter fix.
+// Fix Recharts jitter : forcer une largeur fixe sur ResponsiveContainer empêche
+// le ResizeObserver de détecter des changements et de relancer les animations.
 const ANIM_KILL = `
   .biz-no-anim * {
     animation-duration: 0.001ms !important;
@@ -41,17 +41,24 @@ const ANIM_KILL = `
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
+  .biz-no-anim .recharts-responsive-container {
+    width: 800px !important;
+    overflow: hidden !important;
+  }
+  .biz-no-anim .recharts-wrapper {
+    overflow: hidden !important;
+  }
 `;
 
 // ── Preview constants ─────────────────────────────────────────────────
-const SCALE   = 0.46;
-const FRAME_W = 530;
+const SCALE   = 0.50;
+const FRAME_W = 560;
 const INNER_W = Math.round(FRAME_W / SCALE);
 
-// Héro — dashboard large centré
-const HERO_SCALE  = 0.58;
-const HERO_VW     = 1100; // largeur visible
-const HERO_VH     = 480;  // hauteur visible
+// Héro — dashboard plein format (avec sidebar)
+const HERO_SCALE   = 0.62;
+const HERO_VW      = 1100;
+const HERO_VH      = 500;
 const HERO_INNER_W = Math.round(HERO_VW / HERO_SCALE);
 const HERO_INNER_H = Math.round(HERO_VH / HERO_SCALE);
 
@@ -264,8 +271,12 @@ export function BusinessLanding() {
   };
 
   return (
-    <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT, color: C.t1 }}>
+    <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT, color: C.t1, position: 'relative' }}>
       <style>{ANIM_KILL}</style>
+
+      {/* ── Lignes verticales de grille ────────────────────────── */}
+      <div style={{ position: 'fixed', top: 0, bottom: 0, left: 48, width: 1, background: 'rgba(255,255,255,0.03)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'fixed', top: 0, bottom: 0, right: 48, width: 1, background: 'rgba(255,255,255,0.03)', pointerEvents: 'none', zIndex: 0 }} />
 
       {/* ── NAV ──────────────────────────────────────────────────── */}
       <nav style={{
@@ -289,17 +300,17 @@ export function BusinessLanding() {
         </div>
       </nav>
 
-      {/* ── HERO — titre centré + dashboard large en dessous ─────── */}
-      <div style={{ ...GRID_BG, padding: '96px 48px 0' }}>
-        {/* Titre centré */}
-        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+      {/* ── HERO — titre centré + dashboard 3D en dessous ───────── */}
+      <div style={{ ...GRID_BG, padding: '96px 48px 0', overflow: 'hidden' }}>
+        {/* Titre */}
+        <div style={{ textAlign: 'center', marginBottom: 52 }}>
           <h1 style={{
             fontSize: 64, fontWeight: 900, color: C.t1,
             margin: '0 0 20px', letterSpacing: '-0.05em', lineHeight: 1.04, fontFamily: FONT,
           }}>
             La finance de votre entreprise,<br />enfin sous contrôle
           </h1>
-          <p style={{ fontSize: 18, color: C.t2, margin: '0 auto', maxWidth: 520, lineHeight: 1.65, fontFamily: FONT }}>
+          <p style={{ fontSize: 18, color: C.t2, margin: '0 auto', maxWidth: 500, lineHeight: 1.65, fontFamily: FONT }}>
             Paiements USDT, trésorerie multi-réseaux et API webhook<br />pour les entreprises de la zone UEMOA.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 36 }}>
@@ -310,37 +321,56 @@ export function BusinessLanding() {
           </div>
         </div>
 
-        {/* Dashboard grand format — sans cadre, fondu en bas */}
-        <div style={{ maxWidth: HERO_VW, margin: '0 auto', position: 'relative' }}>
-          {/* Bordure haut / côtés seulement via box-shadow inset */}
+        {/* Dashboard en perspective 3D */}
+        <div style={{ maxWidth: HERO_VW + 40, margin: '0 auto', position: 'relative' }}>
+          {/* Lueur teal sous le dashboard */}
           <div style={{
-            borderRadius: '14px 14px 0 0',
-            border: `1px solid ${C.bd}`,
-            borderBottom: 'none',
-            overflow: 'hidden',
-            background: C.l1,
-          }}>
-            {/* Chrome navigateur */}
-            <div style={{ height: 36, background: C.l2, borderBottom: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', gap: 6, padding: '0 14px' }}>
-              {['#ef4444', '#f59e0b', '#22c55e'].map(col => (
-                <div key={col} style={{ width: 10, height: 10, borderRadius: '50%', background: col, opacity: 0.45 }} />
-              ))}
-              <div style={{ flex: 1, height: 18, background: C.bg, borderRadius: 4, border: `1px solid ${C.bds}`, margin: '0 10px' }} />
-            </div>
-            {/* Contenu dashboard */}
-            <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden' }}>
+            position: 'absolute', bottom: 40, left: '15%', right: '15%', height: 80,
+            background: `radial-gradient(ellipse, ${C.teal}35 0%, transparent 70%)`,
+            filter: 'blur(28px)', pointerEvents: 'none',
+          }} />
+
+          {/* Wrapper perspective */}
+          <div style={{ perspective: '1400px', perspectiveOrigin: '50% 0%' }}>
+            <div style={{
+              transform: 'rotateX(12deg) rotateY(-3deg) scale(0.96)',
+              transformOrigin: 'center top',
+              transformStyle: 'preserve-3d',
+            }}>
+              {/* Cadre navigateur */}
               <div style={{
-                transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left',
-                width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden',
-                pointerEvents: 'none', userSelect: 'none',
+                borderRadius: '12px 12px 0 0',
+                border: `1px solid ${C.bd}`,
+                borderBottom: 'none',
+                overflow: 'hidden',
+                background: C.l1,
+                boxShadow: '0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)',
               }}>
-                <BusinessOverview user={DEMO_USER} onNavigate={() => {}} />
+                {/* Chrome */}
+                <div style={{ height: 34, background: C.l2, borderBottom: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', gap: 6, padding: '0 14px' }}>
+                  {['#ef4444', '#f59e0b', '#22c55e'].map(col => (
+                    <div key={col} style={{ width: 10, height: 10, borderRadius: '50%', background: col, opacity: 0.45 }} />
+                  ))}
+                  <div style={{ flex: 1, height: 17, background: C.bg, borderRadius: 4, border: `1px solid ${C.bds}`, margin: '0 10px' }} />
+                </div>
+
+                {/* Dashboard complet avec sidebar */}
+                <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden' }}>
+                  <div style={{
+                    transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left',
+                    width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden',
+                    pointerEvents: 'none', userSelect: 'none',
+                  }}>
+                    <BusinessDashboard user={DEMO_USER} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          {/* Fondu bas pour effet "immersif" */}
+
+          {/* Fondu bas immersif */}
           <div style={{
-            position: 'absolute', bottom: 0, left: 0, right: 0, height: 160,
+            position: 'absolute', bottom: 0, left: 0, right: 0, height: 200,
             background: `linear-gradient(transparent, ${C.bg})`,
             pointerEvents: 'none',
           }} />
@@ -471,15 +501,17 @@ export function BusinessLanding() {
 
       {/* ── VIDEO / DÉMO ─────────────────────────────────────────── */}
       <div style={{ borderTop: `1px solid ${C.bds}` }}>
-        <div style={{ maxWidth: 1160, margin: '0 auto', padding: '80px 48px' }}>
-          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 24, overflow: 'hidden', display: 'flex', alignItems: 'stretch' }}>
-            <div style={{ flex: '0 0 340px', padding: '56px 44px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 20, borderRight: `1px solid ${C.bds}` }}>
+        <div style={{ maxWidth: 1160, margin: '0 auto', padding: '64px 48px' }}>
+          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 20, overflow: 'hidden', display: 'flex', alignItems: 'stretch', minHeight: 280 }}>
+
+            {/* Texte gauche */}
+            <div style={{ flex: '0 0 320px', padding: '44px 40px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 16, borderRight: `1px solid ${C.bds}` }}>
               <div style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: C.teal, fontWeight: 700, fontFamily: FONT }}>Démo</div>
-              <h2 style={{ fontSize: 26, fontWeight: 800, color: C.t1, margin: 0, letterSpacing: '-0.03em', lineHeight: 1.28, fontFamily: FONT }}>
-                Voyez Terex Business en action
+              <h2 style={{ fontSize: 22, fontWeight: 800, color: C.t1, margin: 0, letterSpacing: '-0.03em', lineHeight: 1.3, fontFamily: FONT }}>
+                Voyez Terex Business<br />en action
               </h2>
-              <p style={{ fontSize: 14, color: C.t2, lineHeight: 1.75, margin: 0, fontFamily: FONT }}>
-                Suivez vos transactions, gérez vos fournisseurs et visualisez vos flux financiers — tout depuis un seul tableau de bord.
+              <p style={{ fontSize: 13, color: C.t2, lineHeight: 1.7, margin: 0, fontFamily: FONT }}>
+                Tableau de bord, paiements, analytiques — tout en un seul endroit.
               </p>
               <div>
                 <PrimaryBtn onClick={() => navigate('/auth')}>
@@ -487,23 +519,25 @@ export function BusinessLanding() {
                 </PrimaryBtn>
               </div>
             </div>
-            <div style={{ flex: 1, position: 'relative', overflow: 'hidden', minHeight: 380 }}>
+
+            {/* Préview + overlay play */}
+            <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
               <div className="biz-no-anim" style={{ pointerEvents: 'none', userSelect: 'none' }}>
                 <div style={{
-                  transform: 'scale(0.5)', transformOrigin: 'top left',
-                  width: Math.round(820 / 0.5), height: Math.round(760 / 0.5), overflow: 'hidden',
+                  transform: 'scale(0.52)', transformOrigin: 'top left',
+                  width: Math.round(820 / 0.52), height: Math.round(540 / 0.52), overflow: 'hidden',
                 }}>
                   <div style={{ maxWidth: 860, margin: '0 auto', padding: '14px 8px' }}>
                     <BusinessHistory user={DEMO_USER} />
                   </div>
                 </div>
               </div>
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, rgba(24,24,24,0.55) 0%, rgba(17,17,17,0.78) 100%)' }} />
-              <div onClick={() => navigate('/auth')} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: 14, cursor: 'pointer' }}>
-                <div style={{ width: 72, height: 72, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.22)', background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ width: 0, height: 0, borderTop: '11px solid transparent', borderBottom: '11px solid transparent', borderLeft: '19px solid rgba(255,255,255,0.82)', marginLeft: 5 }} />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, rgba(24,24,24,0.5) 0%, rgba(17,17,17,0.75) 100%)' }} />
+              <div onClick={() => navigate('/auth')} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: 12, cursor: 'pointer' }}>
+                <div style={{ width: 60, height: 60, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: 0, height: 0, borderTop: '9px solid transparent', borderBottom: '9px solid transparent', borderLeft: '16px solid rgba(255,255,255,0.8)', marginLeft: 4 }} />
                 </div>
-                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', fontFamily: FONT, letterSpacing: '0.04em' }}>Voir la démo</span>
+                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', fontFamily: FONT, letterSpacing: '0.04em' }}>Voir la démo</span>
               </div>
             </div>
           </div>
