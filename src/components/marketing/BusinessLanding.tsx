@@ -295,7 +295,7 @@ export function BusinessLanding() {
       </nav>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <div style={{ background: C.bg, paddingTop: 96, overflow: 'hidden' }}>
+      <div style={{ background: C.bg, paddingTop: 96, overflow: 'hidden', position: 'relative', zIndex: 1 }}>
         {/* Titre centré */}
         <div style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px', textAlign: 'center', marginBottom: 52 }}>
           <h1 className="biz-hero-title" style={{ fontSize: 64, fontWeight: 900, color: C.t1, margin: '0 0 20px', letterSpacing: '-0.05em', lineHeight: 1.04, fontFamily: FONT }}>
@@ -324,7 +324,7 @@ export function BusinessLanding() {
               overflow: 'hidden',
               border: '1px solid rgba(255,255,255,0.10)',
               borderBottom: 'none',
-              boxShadow: '0 -8px 60px rgba(59,150,143,0.06), 0 20px 80px rgba(0,0,0,0.6)',
+              boxShadow: '0 20px 80px rgba(0,0,0,0.6)',
             }}>
               <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden' }}>
                 <div style={{ transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left', width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
@@ -492,33 +492,6 @@ export function BusinessLanding() {
               {FAQ_ITEMS.map((item, i) => <FaqItem key={i} q={item.q} a={item.a} />)}
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* ── CTA ──────────────────────────────────────────────────── */}
-      <div style={{ borderTop: `1px solid ${C.bds}`, background: C.l1, padding: '100px 48px' }}>
-        <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: C.tealT, border: `1px solid ${C.tealB}`, borderRadius: 100, padding: '6px 16px', marginBottom: 28 }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.teal }} />
-            <span style={{ fontSize: 12, fontWeight: 600, color: C.teal, fontFamily: FONT }}>Disponible maintenant</span>
-          </div>
-          <h2 style={{ fontSize: 52, fontWeight: 900, color: C.t1, margin: '0 0 20px', letterSpacing: '-0.045em', lineHeight: 1.06, fontFamily: FONT }}>
-            Prêt à gérer votre<br />trésorerie en USDT ?
-          </h2>
-          <p style={{ fontSize: 15, color: C.t2, lineHeight: 1.8, margin: '0 auto 40px', maxWidth: 460, fontFamily: FONT }}>
-            Créez votre compte Business en quelques minutes. Dès validation de votre dossier, commencez à envoyer des paiements USDT dans toute la zone UEMOA.
-          </p>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <PrimaryBtn large onClick={() => navigate('/auth')}>
-              Créer un compte Business <ArrowRight style={{ width: 15, height: 15 }} />
-            </PrimaryBtn>
-            <OutlineBtn large onClick={() => navigate('/auth')}>
-              Se connecter
-            </OutlineBtn>
-          </div>
-          <p style={{ fontSize: 12, color: C.t3, marginTop: 24, fontFamily: FONT }}>
-            Aucune commission cachée · KYC BCEAO · 3 réseaux blockchain
-          </p>
         </div>
       </div>
 
