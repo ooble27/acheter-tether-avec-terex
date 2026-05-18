@@ -1287,7 +1287,13 @@ function ApiPage({ onBack, lang }: { onBack: () => void; lang: Lang }) {
 // COMPOSANT PRINCIPAL
 // ─────────────────────────────────────────────────────────────────────
 
-export function BusinessProfile({ user }: { user: { id?: string; email: string; name: string } | null }) {
+export function BusinessProfile({
+  user,
+  onLangChange,
+}: {
+  user: { id?: string; email: string; name: string } | null;
+  onLangChange?: (language: string) => void;
+}) {
   const { session } = useAuth();
   const userId = user?.id || session?.user?.id || user?.email || 'guest';
   const storKey = `terex_b2b_${userId}_profile4`;
@@ -1310,6 +1316,11 @@ export function BusinessProfile({ user }: { user: { id?: string; email: string; 
     const next = { ...form, ...partial, updatedAt: new Date().toISOString() };
     setForm(next);
     localStorage.setItem(storKey, JSON.stringify(next));
+    // Propagate language change to entire dashboard
+    if (partial.language && partial.language !== form.language) {
+      localStorage.setItem('terex_b2b_lang', partial.language);
+      onLangChange?.(partial.language);
+    }
     setFlash(true);
     setPage('main');
     setTimeout(() => setFlash(false), 2500);
