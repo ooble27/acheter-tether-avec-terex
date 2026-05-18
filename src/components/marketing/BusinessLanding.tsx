@@ -326,7 +326,7 @@ export function BusinessLanding() {
               borderBottom: 'none',
               boxShadow: '0 20px 80px rgba(0,0,0,0.6)',
             }}>
-              <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden' }}>
+              <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden', background: '#1a1a1a' }}>
                 <div style={{ transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left', width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
                   <div style={{ padding: '20px 28px' }}>
                     <BusinessOverview user={DEMO_USER} onNavigate={() => {}} />

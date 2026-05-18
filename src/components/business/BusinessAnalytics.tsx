@@ -174,6 +174,7 @@ function ChartCard({ title, children, style }: { title: string; children: React.
       background: C.l1, border: `1px solid ${C.bds}`,
       borderRadius: 12, padding: 20,
       boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+      minWidth: 0, overflow: 'hidden',
       ...style,
     }}>
       <p style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: '0 0 16px', fontFamily: FONT }}>
@@ -331,7 +332,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
       </div>
 
       {/* Volume + Donut */}
-      <div className="grid grid-cols-1 lg:grid-cols-[3fr,2fr]" style={{ gap: 14, marginBottom: 14 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr,2fr]" style={{ gap: 14, marginBottom: 14, minWidth: 0 }}>
         <ChartCard title="Volume mensuel — Comparaison">
           <div style={{ width: '100%', height: 220, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
           <ResponsiveContainer width="100%" height={220}>

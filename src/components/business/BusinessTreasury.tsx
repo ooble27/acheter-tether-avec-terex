@@ -267,13 +267,20 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
     return () => { ctrl.abort(); clearTimeout(tid); };
   }, [chartDays]);
 
-  // Conversion locale selon la paire choisie — aucun re-fetch
+  // Conversion locale — gelée après premier chargement réel (jamais de recalcul)
   const chartData = useMemo(() => rawPrices.map(p => ({
     day: new Date(p.ts).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }),
     rate: chartPair === 'XOF' ? Math.round(p.usd * chartCfa)
          : chartPair === 'EUR' ? parseFloat((p.usd * usdtToEur).toFixed(4))
          : parseFloat(p.usd.toFixed(4)),
   })), [rawPrices, chartPair, chartCfa, usdtToEur]);
+
+  // Geler le rendu du graphique après premier chargement
+  const frozenChartRef = useRef<typeof chartData>([]);
+  if (chartData.length > 0 && frozenChartRef.current.length === 0) {
+    frozenChartRef.current = chartData;
+  }
+  const displayChartData = frozenChartRef.current.length > 0 ? frozenChartRef.current : chartData;
 
   const totalXof = initialLoad ? null : Math.round(TOTAL_USDT * usdtToCfa);
   const totalEur = initialLoad ? null : Math.round(TOTAL_USDT * usdtToEur);
@@ -454,7 +461,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
             ) : (
               <div style={{ width: '100%', height: 250, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
               <ResponsiveContainer width="100%" height={250}>
-                <AreaChart data={chartData} margin={{ top: 4, right: 2, left: 0, bottom: 0 }}>
+                <AreaChart data={displayChartData} margin={{ top: 4, right: 2, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="cGrad" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%"  stopColor={C.teal} stopOpacity={0.22} />
