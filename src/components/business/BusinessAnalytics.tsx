@@ -333,6 +333,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
       {/* Volume + Donut */}
       <div className="grid grid-cols-1 lg:grid-cols-[3fr,2fr]" style={{ gap: 14, marginBottom: 14 }}>
         <ChartCard title="Volume mensuel — Comparaison">
+          <div style={{ width: '100%', height: 220, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={volumeData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }} barCategoryGap="30%">
               <CartesianGrid strokeDasharray="3 3" stroke={C.bds} vertical={false} />
@@ -348,6 +349,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
               <Bar dataKey="prev" name="Année N-1" fill={C.l4} radius={[3, 3, 0, 0]} isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
+          </div>
         </ChartCard>
 
         <ChartCard title="Répartition par réseau">

@@ -36,29 +36,33 @@ const GLOBAL_CSS = `
   .biz-no-anim .recharts-wrapper { overflow: hidden !important; }
   .biz-no-anim .recharts-cartesian-grid { display: none !important; }
 
+  @media (max-width: 1100px) {
+    .biz-vline { display: none !important; }
+  }
   @media (max-width: 900px) {
-    .biz-section-row { flex-direction: column !important; gap: 40px !important; padding: 56px 24px !important; }
-    .biz-section-row-rev { flex-direction: column !important; gap: 40px !important; padding: 56px 24px !important; }
-    .biz-preview { width: 100% !important; max-width: 100% !important; }
+    .biz-hero-preview { display: none !important; }
+    .biz-section-row { flex-direction: column !important; gap: 32px !important; padding: 56px 24px !important; }
+    .biz-section-row-rev { flex-direction: column !important; gap: 32px !important; padding: 56px 24px !important; }
+    .biz-preview { width: 100% !important; max-width: 480px !important; align-self: center !important; }
     .biz-features { grid-template-columns: 1fr 1fr !important; }
     .biz-use-cases-grid { grid-template-columns: 1fr 1fr !important; }
     .biz-faq-row { flex-direction: column !important; gap: 32px !important; }
     .biz-api-row { flex-direction: column !important; gap: 32px !important; }
-    .biz-cta-row { flex-direction: column !important; gap: 40px !important; }
-    .biz-cta-cards { grid-template-columns: 1fr 1fr !important; flex: none !important; }
   }
   @media (max-width: 600px) {
-    .biz-hero-title { font-size: 36px !important; }
+    .biz-hero-title { font-size: 34px !important; letter-spacing: -0.04em !important; }
     .biz-hero-sub { font-size: 15px !important; }
-    .biz-hero-btns { flex-direction: column !important; align-items: stretch !important; }
+    .biz-hero-btns { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
     .biz-hero-btns button { width: 100% !important; justify-content: center !important; }
-    .biz-nav { padding: 0 20px !important; }
+    .biz-nav { padding: 0 16px !important; }
     .biz-nav-actions .biz-nav-link { display: none !important; }
     .biz-features { grid-template-columns: 1fr !important; }
     .biz-use-cases-grid { grid-template-columns: 1fr !important; }
-    .biz-use-case-tabs { overflow-x: auto !important; }
-    .biz-section-pad { padding: 40px 20px !important; }
-    .biz-cta-cards { grid-template-columns: 1fr 1fr !important; }
+    .biz-use-case-tabs { overflow-x: auto !important; flex-wrap: nowrap !important; }
+    .biz-section-row, .biz-section-row-rev { padding: 40px 16px !important; }
+    .biz-api-row { padding: 0 !important; }
+    .biz-faq-row { padding: 0 !important; }
+    .biz-preview { max-width: 100% !important; }
   }
 `;
 
@@ -67,10 +71,10 @@ const SCALE   = 0.58;
 const FRAME_W = 640;
 const INNER_W = Math.round(FRAME_W / SCALE);
 
-// Héro — BusinessOverview avec perspective 3D
-const HERO_SCALE   = 0.62;
-const HERO_VW      = 960;
-const HERO_VH      = 420;
+// Héro — même largeur que le container 1160px (padding 48 inclus → 1064px utile)
+const HERO_SCALE   = 0.65;
+const HERO_VW      = 1064;
+const HERO_VH      = 460;
 const HERO_INNER_W = Math.round(HERO_VW / HERO_SCALE);
 const HERO_INNER_H = Math.round(HERO_VH / HERO_SCALE);
 
@@ -83,9 +87,9 @@ function InlinePreview({ children, height = 420 }: { children: React.ReactNode; 
         <div style={{
           transform: `scale(${SCALE})`, transformOrigin: 'top left',
           width: INNER_W, height: innerH, overflow: 'hidden',
-          pointerEvents: 'none', userSelect: 'none',
+          pointerEvents: 'none', userSelect: 'none', willChange: 'transform',
         }}>
-          <div style={{ maxWidth: 860, margin: '0 auto', padding: '14px 8px' }}>
+          <div style={{ padding: '12px 16px' }}>
             {children}
           </div>
         </div>
@@ -270,9 +274,9 @@ export function BusinessLanding() {
     <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT, color: C.t1, position: 'relative' }}>
       <style>{GLOBAL_CSS}</style>
 
-      {/* Lignes verticales — alignées sur le container 1160px centré */}
-      <div style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 0 }} />
-      <div style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 0 }} />
+      {/* Lignes verticales — alignées sur le container 1160px centré, masquées < 1100px */}
+      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 0 }} />
 
       {/* ── NAV ──────────────────────────────────────────────────── */}
       <nav className="biz-nav" style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(17,17,17,0.94)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${C.bds}`, padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -285,45 +289,46 @@ export function BusinessLanding() {
           <span style={{ color: C.t3, fontSize: 13 }}>Business</span>
         </div>
         <div className="biz-nav-actions" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <span className="biz-nav-link"><OutlineBtn onClick={() => navigate('/business/auth')}>Se connecter</OutlineBtn></span>
-          <PrimaryBtn onClick={() => navigate('/business/auth')}>Commencer <ArrowRight style={{ width: 14, height: 14 }} /></PrimaryBtn>
+          <span className="biz-nav-link"><OutlineBtn onClick={() => navigate('/auth')}>Se connecter</OutlineBtn></span>
+          <PrimaryBtn onClick={() => navigate('/auth')}>Commencer <ArrowRight style={{ width: 14, height: 14 }} /></PrimaryBtn>
         </div>
       </nav>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <div style={{ background: C.bg, padding: '96px 48px 0', overflow: 'hidden' }}>
+      <div style={{ background: C.bg, paddingTop: 96, overflow: 'hidden' }}>
         {/* Titre centré */}
-        <div style={{ textAlign: 'center', marginBottom: 52 }}>
+        <div style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px', textAlign: 'center', marginBottom: 52 }}>
           <h1 className="biz-hero-title" style={{ fontSize: 64, fontWeight: 900, color: C.t1, margin: '0 0 20px', letterSpacing: '-0.05em', lineHeight: 1.04, fontFamily: FONT }}>
             La finance de votre entreprise,<br />enfin sous contrôle
           </h1>
-          <p className="biz-hero-sub" style={{ fontSize: 18, color: C.t2, margin: '0 auto', maxWidth: 500, lineHeight: 1.65, fontFamily: FONT }}>
+          <p className="biz-hero-sub" style={{ fontSize: 18, color: C.t2, margin: '0 auto 40px', maxWidth: 500, lineHeight: 1.65, fontFamily: FONT }}>
             Paiements USDT, trésorerie multi-réseaux et API webhook<br />pour les entreprises de la zone UEMOA.
           </p>
-          <div className="biz-hero-btns" style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 40 }}>
-            <PrimaryBtn large onClick={() => navigate('/business/auth')}>
-              Créer un compte gratuitement <ArrowRight style={{ width: 15, height: 15 }} />
+          <div className="biz-hero-btns" style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+            <PrimaryBtn large onClick={() => navigate('/auth')}>
+              Créer un compte Business <ArrowRight style={{ width: 15, height: 15 }} />
             </PrimaryBtn>
-            <OutlineBtn large onClick={() => navigate('/business/auth')}>Se connecter</OutlineBtn>
+            <OutlineBtn large onClick={() => navigate('/auth')}>Se connecter</OutlineBtn>
           </div>
         </div>
 
-        {/* Dashboard BusinessOverview — perspective 3D */}
-        <div style={{ maxWidth: HERO_VW, margin: '0 auto', position: 'relative' }}>
+        {/* Dashboard BusinessOverview — 3D ancrée dans la ligne du dessous */}
+        <div className="biz-hero-preview" style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px', position: 'relative' }}>
 
-          {/* Perspective 3D prononcée */}
-          <div style={{ perspective: '1000px', perspectiveOrigin: '50% 30%' }}>
+          {/* Perspective 3D forte — l'élément se prolonge vers le bas sans arrondi */}
+          <div style={{ perspective: '900px', perspectiveOrigin: '50% 20%' }}>
             <div style={{
-              transform: 'rotateX(12deg) scale(0.97)',
+              transform: 'rotateX(20deg) scale(0.97)',
               transformOrigin: 'center top',
-              borderRadius: 14,
+              borderRadius: '16px 16px 0 0',
               overflow: 'hidden',
-              border: '1px solid rgba(255,255,255,0.09)',
-              boxShadow: '0 40px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.10)',
+              borderBottom: 'none',
+              boxShadow: '0 -8px 60px rgba(59,150,143,0.06), 0 20px 80px rgba(0,0,0,0.6)',
             }}>
               <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden' }}>
-                <div style={{ transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left', width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none' }}>
-                  <div style={{ padding: '20px 32px' }}>
+                <div style={{ transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left', width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
+                  <div style={{ padding: '20px 28px' }}>
                     <BusinessOverview user={DEMO_USER} onNavigate={() => {}} />
                   </div>
                 </div>
@@ -331,8 +336,8 @@ export function BusinessLanding() {
             </div>
           </div>
 
-          {/* Fondu bas */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 180, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
+          {/* Fondu bas — couvre le bas pour s'ancrer dans la section Features */}
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 260, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
         </div>
       </div>
 
@@ -504,10 +509,10 @@ export function BusinessLanding() {
             Créez votre compte Business en quelques minutes. Dès validation de votre dossier, commencez à envoyer des paiements USDT dans toute la zone UEMOA.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <PrimaryBtn large onClick={() => navigate('/business/auth')}>
+            <PrimaryBtn large onClick={() => navigate('/auth')}>
               Créer un compte Business <ArrowRight style={{ width: 15, height: 15 }} />
             </PrimaryBtn>
-            <OutlineBtn large onClick={() => navigate('/business/auth')}>
+            <OutlineBtn large onClick={() => navigate('/auth')}>
               Se connecter
             </OutlineBtn>
           </div>

@@ -448,6 +448,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
                 <p style={{ color: C.t3, fontSize: 12 }}>Données indisponibles</p>
               </div>
             ) : (
+              <div style={{ width: '100%', height: 250, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
               <ResponsiveContainer width="100%" height={250}>
                 <AreaChart data={chartData} margin={{ top: 4, right: 2, left: 0, bottom: 0 }}>
                   <defs>
@@ -474,6 +475,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
                     activeDot={{ r: 4, fill: C.teal, stroke: C.l1, strokeWidth: 2 }} />
                 </AreaChart>
               </ResponsiveContainer>
+              </div>
             )}
           </div>
         </div>
