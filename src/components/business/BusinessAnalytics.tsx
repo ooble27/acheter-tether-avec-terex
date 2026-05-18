@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Download, TrendingUp, TrendingDown, CheckCircle2, Clock, Loader2, XCircle } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -243,7 +243,7 @@ function StatusStat({ icon, label, count, pct, color, colorT }: StatusStatProps)
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export function BusinessAnalytics({ user }: { user: { email: string; name: string; id?: string } | null }) {
+export const BusinessAnalytics = React.memo(function BusinessAnalytics({ user }: { user: { email: string; name: string; id?: string } | null }) {
   const [period, setPeriod] = useState<'6m' | '12m' | 'year'>('12m');
   const [downloading, setDownloading] = useState(false);
 
@@ -354,6 +354,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
         </ChartCard>
 
         <ChartCard title="Répartition par réseau">
+          <div style={{ width: '100%', height: 160, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
           <ResponsiveContainer width="100%" height={160}>
             <PieChart>
               <Pie
@@ -380,6 +381,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
               />
             </PieChart>
           </ResponsiveContainer>
+          </div>
           <DonutLegend data={PIE_DATA} />
         </ChartCard>
       </div>
@@ -387,6 +389,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
       {/* Suppliers + Fees */}
       <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 14, marginBottom: 14 }}>
         <ChartCard title="Top fournisseurs par volume">
+          <div style={{ width: '100%', height: 260, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart
               data={TOP_SUPPLIERS}
@@ -422,9 +425,11 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
               />
             </BarChart>
           </ResponsiveContainer>
+          </div>
         </ChartCard>
 
         <ChartCard title={`Frais cumulés — Total: ${totalFees.toLocaleString()} USDT`}>
+          <div style={{ width: '100%', height: 260, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
           <ResponsiveContainer width="100%" height={260}>
             <AreaChart data={feesData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
               <defs>
@@ -452,6 +457,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
               />
             </AreaChart>
           </ResponsiveContainer>
+          </div>
         </ChartCard>
       </div>
 
@@ -490,6 +496,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
         </div>
 
         {/* Success rate chart */}
+        <div style={{ width: '100%', height: 160, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
         <ResponsiveContainer width="100%" height={160}>
           <LineChart data={rateData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={C.bds} vertical={false} />
@@ -515,11 +522,13 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
             />
           </LineChart>
         </ResponsiveContainer>
+        </div>
       </div>
 
     </div>
   );
-}
+});
 
 // Suppress unused import warnings
 void MONTHS;
+

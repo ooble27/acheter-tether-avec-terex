@@ -275,9 +275,9 @@ export function BusinessLanding() {
       <style>{GLOBAL_CSS}</style>
 
 
-      {/* ── VERTICAL LINES — z-index 0, passent derrière tout ───── */}
-      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 0 }} />
-      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 0 }} />
+      {/* ── VERTICAL LINES — zIndex 1, visibles sur toute la page ── */}
+      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 1 }} />
+      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 1 }} />
 
       {/* ── NAV ──────────────────────────────────────────────────── */}
       <nav className="biz-nav" style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(17,17,17,0.94)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${C.bds}`, padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -296,7 +296,7 @@ export function BusinessLanding() {
       </nav>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
-      <div style={{ background: C.bg, paddingTop: 96, overflow: 'hidden', position: 'relative', zIndex: 1 }}>
+      <div style={{ background: C.bg, paddingTop: 96, overflow: 'hidden', position: 'relative' }}>
         {/* Titre centré */}
         <div style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px', textAlign: 'center', marginBottom: 52 }}>
           <h1 className="biz-hero-title" style={{ fontSize: 64, fontWeight: 900, color: C.t1, margin: '0 0 20px', letterSpacing: '-0.05em', lineHeight: 1.04, fontFamily: FONT }}>
@@ -314,7 +314,7 @@ export function BusinessLanding() {
         </div>
 
         {/* Dashboard BusinessOverview — 3D ancrée dans la ligne du dessous */}
-        <div className="biz-hero-preview" style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px', position: 'relative' }}>
+        <div className="biz-hero-preview" style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 2 }}>
 
           {/* Perspective 3D forte — l'élément se prolonge vers le bas sans arrondi */}
           <div style={{ perspective: '900px', perspectiveOrigin: '50% 20%' }}>
