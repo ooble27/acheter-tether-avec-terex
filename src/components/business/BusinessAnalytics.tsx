@@ -345,8 +345,8 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
                 formatter={(value) => <span style={{ color: C.t3, fontSize: 11, fontFamily: FONT }}>{value}</span>}
                 wrapperStyle={{ paddingTop: 8 }}
               />
-              <Bar dataKey="current" name="Année N" fill={C.teal} radius={[3, 3, 0, 0]} />
-              <Bar dataKey="prev" name="Année N-1" fill={C.l4} radius={[3, 3, 0, 0]} />
+              <Bar dataKey="current" name="Année N" fill={C.teal} radius={[3, 3, 0, 0]} isAnimationActive={false} />
+              <Bar dataKey="prev" name="Année N-1" fill={C.l4} radius={[3, 3, 0, 0]} isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -362,6 +362,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
                 outerRadius={68}
                 paddingAngle={2}
                 dataKey="value"
+                isAnimationActive={false}
               >
                 {PIE_DATA.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
@@ -413,7 +414,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
                   color: C.t1,
                 }}
               />
-              <Bar dataKey="volume" fill={C.teal} radius={[0, 3, 3, 0]}
+              <Bar dataKey="volume" fill={C.teal} radius={[0, 3, 3, 0]} isAnimationActive={false}
                 label={{ position: 'right', fill: C.t3, fontSize: 10, fontFamily: MONO,
                   formatter: (v: number) => `${(v / 1000).toFixed(0)}k` }}
               />
@@ -444,7 +445,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
               <Area
                 type="monotone" dataKey="fees" name="Frais"
                 stroke={C.teal} strokeWidth={2}
-                fill="url(#feesGrad)" dot={false}
+                fill="url(#feesGrad)" dot={false} isAnimationActive={false}
                 activeDot={{ r: 4, fill: C.teal, stroke: C.l1, strokeWidth: 2 }}
               />
             </AreaChart>

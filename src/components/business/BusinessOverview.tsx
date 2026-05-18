@@ -495,7 +495,8 @@ export function BusinessOverview({ user, onNavigate }: Props) {
                   tickFormatter={(v) => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)} />
                 <Tooltip content={<ChartTooltip />} cursor={{ stroke: C.teal, strokeWidth: 1, strokeDasharray: '4 4' }} />
                 <Area type="monotone" dataKey="usdt" stroke={C.teal} strokeWidth={2}
-                  fill="url(#volumeGrad)" dot={false} activeDot={{ r: 3, fill: C.teal, stroke: C.l1, strokeWidth: 2 }} />
+                  fill="url(#volumeGrad)" dot={false} isAnimationActive={false}
+                  activeDot={{ r: 3, fill: C.teal, stroke: C.l1, strokeWidth: 2 }} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
