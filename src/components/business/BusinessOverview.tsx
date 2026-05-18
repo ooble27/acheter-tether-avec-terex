@@ -14,9 +14,6 @@ const C = {
   bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
   teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
   t1: '#f0f0f0', t2: '#888888', t3: '#686868', t4: '#333333',
-  amber: '#f59e0b', amberT: 'rgba(245,158,11,0.08)', amberB: 'rgba(245,158,11,0.16)',
-  blue: '#3b82f6', blueT: 'rgba(59,130,246,0.08)', blueB: 'rgba(59,130,246,0.16)',
-  em: '#22c55e', emT: 'rgba(34,197,94,0.08)', emB: 'rgba(34,197,94,0.16)',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.16)',
 };
 const FONT = "'Inter', sans-serif";
@@ -50,10 +47,10 @@ function InitialAvatar({ name, size = 32 }: { name: string; size?: number }) {
 }
 
 const STATUS_CONFIG: Record<string, { dot: string; label: string }> = {
-  pending:    { dot: C.amber, label: 'En attente' },
-  processing: { dot: C.blue,  label: 'En cours'   },
-  completed:  { dot: C.em,    label: 'Complété'   },
-  failed:     { dot: C.red,   label: 'Échoué'     },
+  pending:    { dot: C.t3,   label: 'En attente' },
+  processing: { dot: C.t2,  label: 'En cours'   },
+  completed:  { dot: C.teal, label: 'Complété'   },
+  failed:     { dot: C.red,  label: 'Échoué'     },
 };
 
 function StatusPill({ status }: { status: string }) {
@@ -92,8 +89,8 @@ function LiveRateCard() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             <span style={{
               display: 'inline-block', width: 6, height: 6, borderRadius: '50%',
-              background: loading ? C.t3 : C.em,
-              boxShadow: !loading ? `0 0 0 3px rgba(34,197,94,0.15)` : 'none',
+              background: loading ? C.t3 : C.teal,
+              boxShadow: !loading ? `0 0 0 3px ${C.tealT}` : 'none',
             }} />
             <span style={{ fontSize: 10, color: C.t3, fontFamily: FONT }}>
               {loading ? 'Chargement…' : 'Temps réel'}
@@ -228,29 +225,29 @@ export function BusinessOverview({ user, onNavigate }: Props) {
               )}
               {i === 1 && (
                 <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-                  <circle cx="22" cy="22" r="13" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="3 2"/>
-                  <path d="M22 10 L22 22 L30 28" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <circle cx="22" cy="22" r="2" fill="#f59e0b"/>
-                  <path d="M14 8 L14 6 M30 8 L30 6" stroke="#f59e0b" strokeWidth="1.5" strokeLinecap="round"/>
+                  <circle cx="22" cy="22" r="13" stroke="#3B968F" strokeWidth="1.5" strokeDasharray="3 2"/>
+                  <path d="M22 10 L22 22 L30 28" stroke="#3B968F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="22" cy="22" r="2" fill="#3B968F"/>
+                  <path d="M14 8 L14 6 M30 8 L30 6" stroke="#3B968F" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
               )}
               {i === 2 && (
                 <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-                  <circle cx="14" cy="16" r="5" stroke="#3b82f6" strokeWidth="1.5"/>
-                  <circle cx="30" cy="16" r="5" stroke="#3b82f6" strokeWidth="1.5"/>
-                  <circle cx="22" cy="30" r="5" stroke="#3b82f6" strokeWidth="1.5"/>
-                  <path d="M19 16 L25 16" stroke="#3b82f6" strokeWidth="1" strokeDasharray="2 1"/>
-                  <path d="M16 21 L20 26" stroke="#3b82f6" strokeWidth="1" strokeDasharray="2 1"/>
-                  <path d="M28 21 L24 26" stroke="#3b82f6" strokeWidth="1" strokeDasharray="2 1"/>
+                  <circle cx="14" cy="16" r="5" stroke="#3B968F" strokeWidth="1.5"/>
+                  <circle cx="30" cy="16" r="5" stroke="#3B968F" strokeWidth="1.5"/>
+                  <circle cx="22" cy="30" r="5" stroke="#3B968F" strokeWidth="1.5"/>
+                  <path d="M19 16 L25 16" stroke="#3B968F" strokeWidth="1" strokeDasharray="2 1"/>
+                  <path d="M16 21 L20 26" stroke="#3B968F" strokeWidth="1" strokeDasharray="2 1"/>
+                  <path d="M28 21 L24 26" stroke="#3B968F" strokeWidth="1" strokeDasharray="2 1"/>
                 </svg>
               )}
               {i === 3 && (
                 <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-                  <path d="M10 34 L10 24 L17 24 L17 34" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M19 34 L19 18 L26 18 L26 34" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M28 34 L28 12 L35 12 L35 34" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M8 34 L37 34" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round"/>
-                  <path d="M12 20 L20 14 L28 10" stroke="#22c55e" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 1"/>
+                  <path d="M10 34 L10 24 L17 24 L17 34" stroke="#3B968F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M19 34 L19 18 L26 18 L26 34" stroke="#3B968F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M28 34 L28 12 L35 12 L35 34" stroke="#3B968F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M8 34 L37 34" stroke="#3B968F" strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M12 20 L20 14 L28 10" stroke="#3B968F" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 1"/>
                 </svg>
               )}
             </div>

@@ -6,11 +6,7 @@ const C = {
   bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
   teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
   t1: '#f0f0f0', t2: '#999999', t3: '#686868',
-  amber: '#f59e0b', amberT: 'rgba(245,158,11,0.08)', amberB: 'rgba(245,158,11,0.16)',
-  blue: '#3b82f6', blueT: 'rgba(59,130,246,0.08)', blueB: 'rgba(59,130,246,0.16)',
-  em: '#22c55e', emT: 'rgba(34,197,94,0.08)', emB: 'rgba(34,197,94,0.16)',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.16)',
-  purple: '#a855f7', purpleT: 'rgba(168,85,247,0.08)', purpleB: 'rgba(168,85,247,0.20)',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
@@ -227,9 +223,9 @@ function ApiKeyCard({ apiKey, onRevoke }: { apiKey: ApiKey; onRevoke: (id: strin
           <span style={{ fontSize: 13, fontWeight: 600, color: C.t1, fontFamily: FONT }}>{apiKey.name}</span>
           <span style={{
             fontSize: 10, padding: '2px 6px', borderRadius: 4, fontWeight: 600,
-            background: apiKey.type === 'live' ? C.emT : C.amberT,
-            color: apiKey.type === 'live' ? C.em : C.amber,
-            border: `1px solid ${apiKey.type === 'live' ? C.emB : C.amberB}`,
+            background: apiKey.type === 'live' ? C.tealT : C.tealT,
+            color: apiKey.type === 'live' ? C.teal : C.teal,
+            border: `1px solid ${apiKey.type === 'live' ? C.tealB : C.tealB}`,
             textTransform: 'uppercase', letterSpacing: '0.06em',
           }}>
             {apiKey.type === 'live' ? 'Live' : 'Test'}
@@ -288,8 +284,8 @@ function WebhookCard({
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 10 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: webhook.active ? C.em : C.t3 }} />
-            <span style={{ fontSize: 12, color: webhook.active ? C.em : C.t3, fontFamily: FONT, fontWeight: 500 }}>
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: webhook.active ? C.teal : C.t3 }} />
+            <span style={{ fontSize: 12, color: webhook.active ? C.teal : C.t3, fontFamily: FONT, fontWeight: 500 }}>
               {webhook.active ? 'Actif' : 'Inactif'}
             </span>
           </div>
@@ -300,7 +296,7 @@ function WebhookCard({
         {webhook.events.map(ev => (
           <span key={ev} style={{
             fontSize: 10, padding: '2px 7px', borderRadius: 4,
-            background: C.blueT, color: C.blue, border: `1px solid ${C.blueB}`,
+            background: C.tealT, color: C.teal, border: `1px solid ${C.tealB}`,
             fontFamily: MONO,
           }}>
             {ev}
@@ -340,7 +336,7 @@ function WebhookLogRow({ log }: { log: WebhookLog }) {
         <span style={{ fontFamily: MONO, fontSize: 11, color: C.t3 }}>{log.timestamp}</span>
         <span style={{
           fontFamily: MONO, fontSize: 11,
-          color: log.event.includes('failed') ? C.red : log.event.includes('completed') ? C.em : C.blue,
+          color: log.event.includes('failed') ? C.red : log.event.includes('completed') ? C.teal : C.teal,
         }}>
           {log.event}
         </span>
@@ -349,9 +345,9 @@ function WebhookLogRow({ log }: { log: WebhookLog }) {
         </span>
         <span style={{
           fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 4,
-          background: isOk ? C.emT : C.redT,
-          color: isOk ? C.em : C.red,
-          border: `1px solid ${isOk ? C.emB : C.redB}`,
+          background: isOk ? C.tealT : C.redT,
+          color: isOk ? C.teal : C.red,
+          border: `1px solid ${isOk ? C.tealB : C.redB}`,
           fontFamily: MONO, textAlign: 'center',
         }}>
           {log.statusCode} {isOk ? '✓' : '✗'}
@@ -456,12 +452,12 @@ export function BusinessAPI({ user }: { user: { email: string; name: string; id?
       {/* Test mode banner */}
       {!liveMode && (
         <div style={{
-          background: C.amberT, border: `1px solid ${C.amberB}`,
+          background: C.tealT, border: `1px solid ${C.tealB}`,
           borderRadius: 10, padding: '12px 16px',
           display: 'flex', alignItems: 'center', gap: 10,
         }}>
           <span style={{ fontSize: 14 }}>⚠</span>
-          <span style={{ fontSize: 13, color: C.amber, fontFamily: FONT }}>
+          <span style={{ fontSize: 13, color: C.teal, fontFamily: FONT }}>
             Vous êtes en mode test — les opérations n'affectent pas les fonds réels
           </span>
         </div>
@@ -487,7 +483,7 @@ export function BusinessAPI({ user }: { user: { email: string; name: string; id?
           onMouseEnter={e => (e.currentTarget.style.borderColor = C.bdh)}
           onMouseLeave={e => (e.currentTarget.style.borderColor = C.bd)}
         >
-          <div style={{ width: 7, height: 7, borderRadius: '50%', background: liveMode ? C.em : C.amber }} />
+          <div style={{ width: 7, height: 7, borderRadius: '50%', background: liveMode ? C.teal : C.teal }} />
           <span style={{ fontSize: 12, fontWeight: 600, color: C.t1 }}>
             Mode {liveMode ? 'live' : 'test'}
           </span>
@@ -517,7 +513,7 @@ export function BusinessAPI({ user }: { user: { email: string; name: string; id?
             <div style={{ padding: '16px 20px', borderBottom: `1px solid ${C.bds}`, background: C.l2 }}>
               {newKeyGenerated ? (
                 <div>
-                  <div style={{ fontSize: 12, color: C.em, marginBottom: 8, fontFamily: FONT }}>
+                  <div style={{ fontSize: 12, color: C.teal, marginBottom: 8, fontFamily: FONT }}>
                     ✓ Clé créée — copiez-la maintenant, elle ne sera plus visible
                   </div>
                   <div style={{
@@ -578,9 +574,9 @@ export function BusinessAPI({ user }: { user: { email: string; name: string; id?
                         onClick={() => setNewWhEvents(prev => checked ? prev.filter(e => e !== ev) : [...prev, ev])}
                         style={{
                           fontSize: 10, padding: '3px 8px', borderRadius: 4, cursor: 'pointer',
-                          background: checked ? C.blueT : 'transparent',
-                          color: checked ? C.blue : C.t3,
-                          border: `1px solid ${checked ? C.blueB : C.bd}`,
+                          background: checked ? C.tealT : 'transparent',
+                          color: checked ? C.teal : C.t3,
+                          border: `1px solid ${checked ? C.tealB : C.bd}`,
                           fontFamily: MONO, transition: 'all 0.1s',
                         }}
                       >
@@ -602,7 +598,7 @@ export function BusinessAPI({ user }: { user: { email: string; name: string; id?
               <div key={wh.id} style={{ padding: '14px 20px', borderBottom: i < webhooks.length - 1 ? `1px solid ${C.bds}` : 'none' }}>
                 {testedWebhook === wh.id && (
                   <div style={{
-                    fontSize: 11, color: C.em, background: C.emT, border: `1px solid ${C.emB}`,
+                    fontSize: 11, color: C.teal, background: C.tealT, border: `1px solid ${C.tealB}`,
                     borderRadius: 6, padding: '5px 10px', marginBottom: 8, fontFamily: FONT,
                   }}>
                     ✓ Webhook testé — 200 OK reçu
@@ -677,9 +673,9 @@ export function BusinessAPI({ user }: { user: { email: string; name: string; id?
             style={{
               position: 'absolute', top: 12, right: 16,
               fontSize: 11, padding: '4px 10px', borderRadius: 6,
-              background: codeCopied ? C.emT : C.l3,
-              color: codeCopied ? C.em : C.t3,
-              border: `1px solid ${codeCopied ? C.emB : C.bd}`,
+              background: codeCopied ? C.tealT : C.l3,
+              color: codeCopied ? C.teal : C.t3,
+              border: `1px solid ${codeCopied ? C.tealB : C.bd}`,
               cursor: 'pointer', fontFamily: FONT, transition: 'all 0.15s',
             }}
           >

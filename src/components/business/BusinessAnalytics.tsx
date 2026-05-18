@@ -12,12 +12,9 @@ const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030', l4: '#383838',
   bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
   teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
+  teal2: '#2d6b66', teal3: '#5ab5ae', teal4: '#1e4a47',
   t1: '#f0f0f0', t2: '#999999', t3: '#686868',
-  amber: '#f59e0b', amberT: 'rgba(245,158,11,0.08)', amberB: 'rgba(245,158,11,0.16)',
-  blue: '#3b82f6', blueT: 'rgba(59,130,246,0.08)', blueB: 'rgba(59,130,246,0.16)',
-  em: '#22c55e', emT: 'rgba(34,197,94,0.08)', emB: 'rgba(34,197,94,0.16)',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.16)',
-  purple: '#a855f7', purpleT: 'rgba(168,85,247,0.08)', purpleB: 'rgba(168,85,247,0.20)',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
@@ -44,10 +41,10 @@ const MONTHLY_VOLUME_12 = [
 const MONTHLY_VOLUME_6 = MONTHLY_VOLUME_12.slice(6);
 
 const PIE_DATA = [
-  { name: 'TRC20', value: 83450, color: C.red },
-  { name: 'BEP20', value: 32100, color: C.amber },
-  { name: 'ERC20', value: 10200, color: C.blue },
-  { name: 'Polygon', value: 2700, color: C.purple },
+  { name: 'TRC20', value: 83450, color: C.teal },
+  { name: 'BEP20', value: 32100, color: C.teal2 },
+  { name: 'ERC20', value: 10200, color: C.teal3 },
+  { name: 'Polygon', value: 2700, color: C.teal4 },
 ];
 
 const TOP_SUPPLIERS = [
@@ -157,9 +154,9 @@ function KpiCard({ label, value, change, positive }: KpiCardProps) {
       </p>
       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
         {positive
-          ? <TrendingUp style={{ width: 11, height: 11, color: C.em }} />
+          ? <TrendingUp style={{ width: 11, height: 11, color: C.teal }} />
           : <TrendingDown style={{ width: 11, height: 11, color: C.red }} />}
-        <span style={{ color: positive ? C.em : C.red, fontSize: 11, fontFamily: FONT }}>
+        <span style={{ color: positive ? C.teal : C.red, fontSize: 11, fontFamily: FONT }}>
           {change}
         </span>
       </div>
@@ -467,17 +464,17 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
           <StatusStat
             icon={<CheckCircle2 style={{ width: 14, height: 14 }} />}
             label="Complétées" count={44} pct="93.6%"
-            color={C.em} colorT={C.emT}
+            color={C.teal} colorT={C.tealT}
           />
           <StatusStat
             icon={<Clock style={{ width: 14, height: 14 }} />}
             label="En attente" count={2} pct="4.3%"
-            color={C.amber} colorT={C.amberT}
+            color={C.t2} colorT='rgba(255,255,255,0.05)'
           />
           <StatusStat
             icon={<Loader2 style={{ width: 14, height: 14 }} />}
             label="En cours" count={1} pct="2.1%"
-            color={C.blue} colorT={C.blueT}
+            color={C.t3} colorT='rgba(255,255,255,0.04)'
           />
           <StatusStat
             icon={<XCircle style={{ width: 14, height: 14 }} />}
