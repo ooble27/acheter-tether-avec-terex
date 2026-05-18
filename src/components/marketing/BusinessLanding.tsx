@@ -36,40 +36,82 @@ const GLOBAL_CSS = `
   .biz-no-anim .recharts-wrapper { overflow: hidden !important; }
   .biz-no-anim .recharts-cartesian-grid { display: none !important; }
 
-  /* Empêche tout débordement horizontal sur mobile */
+  /* Empêche tout débordement horizontal */
   .biz-root { overflow-x: hidden; }
 
   @media (max-width: 1100px) {
     .biz-vline { display: none !important; }
   }
+
+  /* ── Tablet 900px ─────────────────────────────────── */
   @media (max-width: 900px) {
-    .biz-hero-preview { display: none !important; }
-    .biz-section-row { flex-direction: column !important; gap: 32px !important; padding: 56px 24px !important; }
-    .biz-section-row-rev { flex-direction: column !important; gap: 32px !important; padding: 56px 24px !important; }
-    .biz-preview { width: 100% !important; max-width: 480px !important; align-self: center !important; }
+    /* Hero preview : visible, scalé pour rentrer */
+    .biz-hero-preview { display: block !important; overflow: hidden !important; height: 368px !important; }
+    .biz-hero-3d-wrap { transform: scale(0.80) !important; transform-origin: top left !important; }
+    /* Sections : rester horizontales, juste plus petites */
+    .biz-section-row { gap: 24px !important; padding: 48px 24px !important; }
+    .biz-section-row-rev { gap: 24px !important; padding: 48px 24px !important; }
+    .biz-preview { max-width: 300px !important; }
+    /* Grilles */
     .biz-features { grid-template-columns: 1fr 1fr !important; }
     .biz-use-cases-grid { grid-template-columns: 1fr 1fr !important; }
-    .biz-faq-row { flex-direction: column !important; gap: 32px !important; }
+    /* FAQ + API */
+    .biz-faq-row { flex-direction: column !important; gap: 16px !important; }
     .biz-api-row { flex-direction: column !important; gap: 32px !important; }
-    /* Réduire les paddings horizontaux sur les conteneurs */
-    .biz-nav { padding: 0 24px !important; }
+    /* Paddings section */
     .biz-outer-pad { padding-left: 24px !important; padding-right: 24px !important; }
   }
+
+  @media (max-width: 750px) {
+    .biz-hero-preview { height: 282px !important; }
+    .biz-hero-3d-wrap { transform: scale(0.61) !important; }
+    .biz-preview { max-width: 240px !important; }
+  }
+
+  /* ── Mobile 600px ─────────────────────────────────── */
   @media (max-width: 600px) {
-    .biz-hero-title { font-size: 34px !important; letter-spacing: -0.04em !important; }
-    .biz-hero-sub { font-size: 15px !important; }
+    /* Nav : cacher boutons */
+    .biz-nav-actions { display: none !important; }
+    .biz-nav { padding: 0 16px !important; }
+    /* Hero */
+    .biz-hero-title { font-size: 26px !important; letter-spacing: -0.04em !important; }
+    .biz-hero-sub { display: none !important; }
     .biz-hero-btns { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
     .biz-hero-btns button { width: 100% !important; justify-content: center !important; }
-    .biz-nav { padding: 0 16px !important; }
-    .biz-nav-actions .biz-nav-link { display: none !important; }
+    .biz-hero-preview { height: 224px !important; }
+    .biz-hero-3d-wrap { transform: scale(0.50) !important; }
+    /* Sections horizontales, taille réduite */
+    .biz-section-row { gap: 12px !important; padding: 32px 16px !important; }
+    .biz-section-row-rev { gap: 12px !important; padding: 32px 16px !important; }
+    .biz-section-row h2, .biz-section-row-rev h2 { font-size: 16px !important; margin-bottom: 8px !important; }
+    .biz-section-row p, .biz-section-row-rev p { font-size: 11px !important; line-height: 1.6 !important; margin-bottom: 12px !important; }
+    .biz-section-row .biz-stats, .biz-section-row-rev .biz-stats { display: none !important; }
+    .biz-preview { max-width: 190px !important; }
+    /* Grilles */
     .biz-features { grid-template-columns: 1fr !important; }
     .biz-use-cases-grid { grid-template-columns: 1fr !important; }
-    .biz-use-case-tabs { overflow-x: auto !important; flex-wrap: nowrap !important; }
-    .biz-section-row, .biz-section-row-rev { padding: 40px 16px !important; }
-    .biz-api-row { padding: 0 !important; }
-    .biz-faq-row { padding: 0 !important; }
-    .biz-preview { max-width: 100% !important; }
+    .biz-use-case-tabs { width: 100% !important; overflow-x: auto !important; flex-wrap: nowrap !important; -webkit-overflow-scrolling: touch !important; }
+    .biz-use-case-tabs button { padding: 6px 12px !important; font-size: 11px !important; }
+    /* Padding */
     .biz-outer-pad { padding-left: 16px !important; padding-right: 16px !important; }
+    .biz-api-row { padding: 0 !important; }
+    .biz-faq-row { padding: 0 !important; gap: 12px !important; }
+    /* FAQ : moins d'espace */
+    .biz-faq-head { flex: none !important; }
+    .biz-faq-head h2 { font-size: 22px !important; margin-bottom: 8px !important; }
+    .biz-faq-head p { font-size: 12px !important; }
+  }
+
+  @media (max-width: 480px) {
+    .biz-hero-preview { height: 193px !important; }
+    .biz-hero-3d-wrap { transform: scale(0.43) !important; }
+    .biz-preview { max-width: 160px !important; }
+  }
+
+  @media (max-width: 390px) {
+    .biz-hero-preview { height: 156px !important; }
+    .biz-hero-3d-wrap { transform: scale(0.34) !important; }
+    .biz-preview { max-width: 140px !important; }
   }
 `;
 
@@ -169,7 +211,7 @@ function Tag({ label }: { label: string }) {
 }
 function SectionStats({ items }: { items: [string, string][] }) {
   return (
-    <div style={{ display: 'flex', gap: 32, paddingTop: 24, borderTop: `1px solid ${C.bds}`, flexWrap: 'wrap' }}>
+    <div className="biz-stats" style={{ display: 'flex', gap: 32, paddingTop: 24, borderTop: `1px solid ${C.bds}`, flexWrap: 'wrap' }}>
       {items.map(([val, label]) => (
         <div key={val}>
           <div style={{ fontSize: 18, fontWeight: 800, color: C.t1, fontFamily: MONO, letterSpacing: '-0.02em' }}>{val}</div>
@@ -341,7 +383,7 @@ export function BusinessLanding() {
         <div className="biz-hero-preview" style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 2 }}>
 
           {/* Perspective 3D forte — l'élément se prolonge vers le bas sans arrondi */}
-          <div style={{ perspective: '900px', perspectiveOrigin: '50% 20%' }}>
+          <div className="biz-hero-3d-wrap" style={{ perspective: '900px', perspectiveOrigin: '50% 20%' }}>
             <div style={{
               transform: 'rotateX(20deg) scale(0.97)',
               transformOrigin: 'center top',
@@ -507,7 +549,7 @@ export function BusinessLanding() {
       <div style={{ borderTop: `1px solid ${C.bds}` }}>
         <div className="biz-outer-pad" style={{ maxWidth: 1160, margin: '0 auto', padding: '80px 48px' }}>
           <div className="biz-faq-row" style={{ display: 'flex', alignItems: 'flex-start', gap: 80 }}>
-            <div style={{ flex: '0 0 280px' }}>
+            <div className="biz-faq-head" style={{ flex: '0 0 280px' }}>
               <h2 style={{ fontSize: 32, fontWeight: 800, color: C.t1, margin: '0 0 14px', letterSpacing: '-0.035em', fontFamily: FONT }}>Questions<br />fréquentes</h2>
               <p style={{ fontSize: 14, color: C.t2, lineHeight: 1.7, margin: 0, fontFamily: FONT }}>Tout ce que vous devez savoir avant de commencer</p>
             </div>
