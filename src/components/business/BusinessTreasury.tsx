@@ -470,7 +470,7 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
                     } />
                   <Tooltip content={<ChartTooltip />} />
                   <Area type="monotone" dataKey="rate" stroke={C.teal} strokeWidth={1.5}
-                    fill="url(#cGrad)" dot={false}
+                    fill="url(#cGrad)" dot={false} isAnimationActive={false}
                     activeDot={{ r: 4, fill: C.teal, stroke: C.l1, strokeWidth: 2 }} />
                 </AreaChart>
               </ResponsiveContainer>
