@@ -268,6 +268,28 @@ function RowItem({ icon, label, sub, val, isLast, onClick }: {
   );
 }
 
+// ── NavCard (carte de navigation en grille) ───────────────────────────
+
+function NavCard({ icon, label, sub, val, onClick }: {
+  icon: React.ReactNode; label: string; sub: string; val?: string; onClick: () => void;
+}) {
+  const [h, setH] = useState(false);
+  return (
+    <div onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
+      style={{ background: h ? '#252525' : C.l1, border: `1px solid ${h ? C.bd : C.bds}`, borderRadius: 14, padding: '18px 20px', cursor: 'pointer', transition: 'all 0.14s', display: 'flex', flexDirection: 'column', gap: 10, minHeight: 110 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+        <span style={{ color: C.t3, display: 'flex' }}>{icon}</span>
+        <ChevronRight size={14} color={C.t3} />
+      </div>
+      <div>
+        <div style={{ fontSize: 13, fontWeight: 600, color: C.t1, marginBottom: 4 }}>{label}</div>
+        <div style={{ fontSize: 11, color: C.t3, lineHeight: 1.5 }}>{sub}</div>
+      </div>
+      {val && <div style={{ fontSize: 11, color: C.t3, fontFamily: MONO, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 'auto' }}>{val}</div>}
+    </div>
+  );
+}
+
 // ─────────────────────────────────────────────────────────────────────
 // MAIN PAGE
 // ─────────────────────────────────────────────────────────────────────
@@ -276,40 +298,25 @@ function ProfileMain({ form, setPage, flash, lang }: {
   form: ProfileData; setPage: (p: ProfilePage) => void; flash: boolean; lang: Lang;
 }) {
   const T = I[lang];
-  const initials = form.companyName
-    ? form.companyName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
-    : (form.directorName ? form.directorName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) : 'TS');
   const location = [form.city, form.country].filter(Boolean).join(', ');
+  const fr = lang === 'fr';
 
-  const groups = [
-    {
-      title: T.companyInfo,
-      items: [
-        { id: 'identity' as ProfilePage, icon: <Building2 size={15} />, label: T.identity, sub: T.identitySub, val: form.companyName || '—' },
-        { id: 'director' as ProfilePage, icon: <User size={15} />,      label: T.director, sub: T.directorSub, val: form.directorName || '—' },
-        { id: 'address'  as ProfilePage, icon: <MapPin size={15} />,    label: T.address,  sub: T.addressSub,  val: location || '—' },
-      ],
-    },
-    {
-      title: T.legalDocs,
-      items: [
-        { id: 'legal' as ProfilePage, icon: <FileText size={15} />, label: T.legal, sub: T.legalSub, val: form.rccm || '—' },
-      ],
-    },
-    {
-      title: T.accountSec,
-      items: [
-        { id: 'security'    as ProfilePage, icon: <Shield size={15} />,   label: T.security, sub: T.securitySub, val: T.devices },
-        { id: 'preferences' as ProfilePage, icon: <Settings size={15} />, label: T.prefs,    sub: T.prefsSub,    val: form.language },
-      ],
-    },
-    {
-      title: T.techBilling,
-      items: [
-        { id: 'api'     as ProfilePage, icon: <Code size={15} />,       label: T.api,     sub: T.apiSub,     val: T.activeKeys },
-        { id: 'billing' as ProfilePage, icon: <CreditCard size={15} />, label: T.billing, sub: T.billingSub, val: T.plan },
-      ],
-    },
+  const navCards = [
+    { id: 'identity'    as ProfilePage, icon: <Building2 size={16} />, label: T.identity,  sub: T.identitySub,  val: form.companyName || undefined },
+    { id: 'director'    as ProfilePage, icon: <User      size={16} />, label: T.director,  sub: T.directorSub,  val: form.directorName || undefined },
+    { id: 'address'     as ProfilePage, icon: <MapPin    size={16} />, label: T.address,   sub: T.addressSub,   val: location || undefined },
+    { id: 'legal'       as ProfilePage, icon: <FileText  size={16} />, label: T.legal,     sub: T.legalSub,     val: form.rccm || undefined },
+    { id: 'security'    as ProfilePage, icon: <Shield    size={16} />, label: T.security,  sub: T.securitySub,  val: T.devices },
+    { id: 'preferences' as ProfilePage, icon: <Settings  size={16} />, label: T.prefs,     sub: T.prefsSub,     val: form.language },
+    { id: 'api'         as ProfilePage, icon: <Code      size={16} />, label: T.api,       sub: T.apiSub,       val: T.activeKeys },
+    { id: 'billing'     as ProfilePage, icon: <CreditCard size={16} />,label: T.billing,   sub: T.billingSub,   val: T.plan },
+  ];
+
+  const kycLevels = [
+    { n: 1, label: fr ? 'Basique'    : 'Basic',    limit: '5 000 USDT',    state: 'done'   as const },
+    { n: 2, label: fr ? 'Entreprise' : 'Business', limit: '50 000 USDT',   state: 'active' as const },
+    { n: 3, label: fr ? 'Avancé'    : 'Advanced',  limit: '200 000 USDT',  state: 'locked' as const },
+    { n: 4, label: 'Premium',                       limit: fr ? 'Illimitée' : 'Unlimited', state: 'locked' as const },
   ];
 
   return (
@@ -320,76 +327,142 @@ function ProfileMain({ form, setPage, flash, lang }: {
         </div>
       )}
 
-      {/* ── HÉRO ── */}
-      <div style={{ background: HERO_BG, border: `1px solid ${C.bds}`, borderRadius: 18, padding: '32px 32px 28px', marginBottom: 14, boxShadow: '0 4px 40px rgba(0,0,0,0.45)' }}>
-        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'flex-start', marginBottom: 28 }}>
-          {/* Gauche : avatar + identité */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 20, flex: 1, minWidth: 220 }}>
-            <div style={{ width: 74, height: 74, borderRadius: 20, background: 'linear-gradient(145deg, #2a2a2a 0%, #1c1c1c 100%)', border: `1px solid ${C.bd}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, fontWeight: 800, color: C.t2, fontFamily: MONO, flexShrink: 0, letterSpacing: '-0.02em' }}>
-              {initials}
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr]" style={{ gap: 14, alignItems: 'start' }}>
+
+        {/* ══ COLONNE GAUCHE ══ */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+
+          {/* Héro — style Conformité / Trésorerie */}
+          <div style={{ background: HERO_BG, border: `1px solid ${C.bds}`, borderRadius: 16, padding: '28px 28px 24px', boxShadow: '0 4px 32px rgba(0,0,0,0.45)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 22 }}>
+              <Building2 size={15} color={C.t3} />
+              <span style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.10em' }}>{T.back}</span>
             </div>
-            <div style={{ paddingTop: 4 }}>
-              <h2 style={{ fontSize: 26, fontWeight: 800, color: form.companyName ? C.t1 : C.t3, letterSpacing: '-0.03em', margin: '0 0 7px', lineHeight: 1.1 }}>
+
+            <div style={{ marginBottom: 22 }}>
+              <div style={{ fontSize: 11, color: C.t3, marginBottom: 6 }}>{fr ? 'Raison sociale' : 'Legal name'}</div>
+              <div style={{ fontSize: 34, fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.1, color: form.companyName ? C.t1 : C.t3, marginBottom: 8 }}>
                 {form.companyName || T.yourCo}
-              </h2>
-              <div style={{ fontSize: 13, color: C.t3, marginBottom: 12 }}>
+              </div>
+              <div style={{ fontSize: 13, color: C.t3 }}>
                 {[form.businessType, form.sector].filter(Boolean).join(' · ') || T.complete}
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-                {location && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                    <MapPin size={11} color={C.t3} />
-                    <span style={{ fontSize: 12, color: C.t3 }}>{location}</span>
-                  </div>
-                )}
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.bds}`, borderRadius: 6, padding: '3px 9px' }}>
-                  <Shield size={10} color={C.t3} />
-                  <span style={{ fontSize: 11, color: C.t3 }}>{T.kycVal}</span>
+            </div>
+
+            <div style={{ display: 'flex', gap: 24, marginBottom: 24 }}>
+              {[
+                { v: '4',      l: T.members },
+                { v: '27',     l: T.txMonth },
+                { v: '6 mois', l: T.since },
+              ].map((s, i, arr) => (
+                <div key={s.l} style={{ paddingRight: i < arr.length - 1 ? 24 : 0, borderRight: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none' }}>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: C.t1, fontFamily: MONO, marginBottom: 3 }}>{s.v}</div>
+                  <div style={{ fontSize: 10, color: C.t3 }}>{s.l}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <TealBtn onClick={() => setPage('identity')} style={{ height: 36, fontSize: 12 }}>
+                <Edit3 size={13} /> {T.edit}
+              </TealBtn>
+              <GhostBtn onClick={() => setPage('security')} style={{ height: 36, fontSize: 12 }}>
+                <Shield size={13} /> {T.secBtn}
+              </GhostBtn>
+              <GhostBtn onClick={() => setPage('api')} style={{ height: 36, fontSize: 12 }}>
+                <Code size={13} /> {T.apiBtn}
+              </GhostBtn>
+            </div>
+          </div>
+
+          {/* Grille 2 colonnes de cartes de navigation */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            {navCards.map(c => (
+              <NavCard key={c.id} icon={c.icon} label={c.label} sub={c.sub} val={c.val} onClick={() => setPage(c.id)} />
+            ))}
+          </div>
+        </div>
+
+        {/* ══ COLONNE DROITE (sticky) ══ */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14, position: 'sticky', top: 0 }}>
+
+          {/* Carte identité */}
+          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, overflow: 'hidden' }}>
+            <div style={{ padding: '22px 22px 18px', borderBottom: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', gap: 14 }}>
+              <div style={{ width: 46, height: 46, borderRadius: 12, background: HERO_BG, border: `1px solid ${C.bd}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Building2 size={20} color={C.t3} />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: form.companyName ? C.t1 : C.t3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {form.companyName || T.yourCo}
+                </div>
+                <div style={{ fontSize: 12, color: C.t3, marginTop: 2 }}>
+                  {[form.businessType, form.sector].filter(Boolean).join(' · ') || '—'}
                 </div>
               </div>
             </div>
+            <div style={{ padding: '4px 0' }}>
+              {[
+                { l: fr ? 'Dirigeant'    : 'Director',    v: form.directorName  || '—' },
+                { l: fr ? 'Localisation' : 'Location',    v: location            || '—' },
+                { l: 'RCCM',                               v: form.rccm          || '—' },
+                { l: 'NINEA',                              v: form.ninea         || '—' },
+                { l: fr ? 'Capital'      : 'Share capital',v: form.capital ? `${form.capital} FCFA` : '—' },
+              ].map((r, i, arr) => (
+                <div key={r.l} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 22px', borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none' }}>
+                  <span style={{ fontSize: 12, color: C.t3 }}>{r.l}</span>
+                  <span style={{ fontSize: 12, color: r.v === '—' ? C.t3 : C.t2, fontFamily: MONO, maxWidth: 130, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'right' }}>{r.v}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Droite : 3 stats */}
-          <div style={{ display: 'flex', gap: 0, alignSelf: 'center' }}>
-            {[
-              { v: '4',  l: T.members },
-              { v: '27', l: T.txMonth },
-              { v: '6 mois', l: T.since },
-            ].map((s, i, arr) => (
-              <div key={s.l} style={{ paddingLeft: i > 0 ? 28 : 0, paddingRight: i < arr.length - 1 ? 28 : 0, borderRight: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none', textAlign: 'center' }}>
-                <div style={{ fontSize: 24, fontWeight: 700, color: C.t1, fontFamily: MONO, letterSpacing: '-0.03em', marginBottom: 4 }}>{s.v}</div>
-                <div style={{ fontSize: 10, color: C.t3, whiteSpace: 'nowrap', letterSpacing: '0.02em' }}>{s.l}</div>
+          {/* Niveaux KYC */}
+          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, overflow: 'hidden' }}>
+            <div style={{ padding: '12px 20px', borderBottom: `1px solid ${C.bds}` }}>
+              <GroupHead>{fr ? 'Niveaux KYC' : 'KYC Levels'}</GroupHead>
+            </div>
+            {kycLevels.map((lv, i, arr) => (
+              <div key={lv.n} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none', opacity: lv.state === 'locked' ? 0.4 : 1 }}>
+                <div style={{ width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', background: lv.state === 'done' ? 'rgba(255,255,255,0.06)' : lv.state === 'active' ? C.tealT : C.l2, border: `1px solid ${lv.state === 'done' ? C.bd : lv.state === 'active' ? C.tealB : C.bds}`, flexShrink: 0 }}>
+                  {lv.state === 'done'   && <Check size={12} color={C.t2} strokeWidth={2.5} />}
+                  {lv.state === 'active' && <span style={{ fontSize: 10, fontWeight: 700, color: C.teal, fontFamily: MONO }}>{lv.n}</span>}
+                  {lv.state === 'locked' && <Lock size={11} color={C.t3} />}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: lv.state === 'active' ? C.t1 : C.t2 }}>
+                    {fr ? `Niveau ${lv.n}` : `Level ${lv.n}`} — {lv.label}
+                  </div>
+                  <div style={{ fontSize: 11, color: C.t3, marginTop: 1 }}>{lv.limit}{fr ? '/mois' : '/month'}</div>
+                </div>
+                {lv.state === 'active' && (
+                  <span style={{ fontSize: 10, color: C.teal, background: C.tealT, border: `1px solid ${C.tealB}`, borderRadius: 5, padding: '2px 8px', flexShrink: 0 }}>
+                    {fr ? 'Actif' : 'Active'}
+                  </span>
+                )}
               </div>
             ))}
           </div>
-        </div>
 
-        <div style={{ paddingTop: 22, borderTop: `1px solid ${C.bds}`, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          <TealBtn onClick={() => setPage('identity')} style={{ height: 36, fontSize: 12 }}>
-            <Edit3 size={13} /> {T.edit}
-          </TealBtn>
-          <GhostBtn onClick={() => setPage('security')} style={{ height: 36, fontSize: 12 }}>
-            <Shield size={13} /> {T.secBtn}
-          </GhostBtn>
-          <GhostBtn onClick={() => setPage('api')} style={{ height: 36, fontSize: 12 }}>
-            <Code size={13} /> {T.apiBtn}
-          </GhostBtn>
-        </div>
-      </div>
-
-      {/* ── NAVIGATION GROUPÉE ── */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {groups.map(g => (
-          <div key={g.title} style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, overflow: 'hidden' }}>
-            <div style={{ padding: '11px 22px', borderBottom: `1px solid ${C.bds}` }}>
-              <GroupHead>{g.title}</GroupHead>
+          {/* Contact rapide */}
+          {(form.companyEmail || form.companyPhone || form.website) && (
+            <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, overflow: 'hidden' }}>
+              <div style={{ padding: '12px 20px', borderBottom: `1px solid ${C.bds}` }}>
+                <GroupHead>{fr ? 'Contact' : 'Contact'}</GroupHead>
+              </div>
+              {[
+                form.companyEmail && { icon: <Mail size={13} color={C.t3} />, v: form.companyEmail },
+                form.companyPhone && { icon: <Phone size={13} color={C.t3} />, v: form.companyPhone },
+                form.website      && { icon: <Globe size={13} color={C.t3} />, v: form.website },
+              ].filter(Boolean).map((r: any, i, arr) => (
+                <div key={r.v} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 20px', borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none' }}>
+                  {r.icon}
+                  <span style={{ fontSize: 12, color: C.t2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.v}</span>
+                </div>
+              ))}
             </div>
-            {g.items.map((item, i) => (
-              <RowItem key={item.id} icon={item.icon} label={item.label} sub={item.sub} val={item.val} isLast={i === g.items.length - 1} onClick={() => setPage(item.id)} />
-            ))}
-          </div>
-        ))}
+          )}
+        </div>
       </div>
     </div>
   );
