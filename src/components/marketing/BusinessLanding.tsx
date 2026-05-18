@@ -37,7 +37,7 @@ const GLOBAL_CSS = `
   .biz-no-anim .recharts-cartesian-grid { display: none !important; }
 
   @media (max-width: 1100px) {
-    /* biz-vline supprimées */
+    .biz-vline { display: none !important; }
   }
   @media (max-width: 900px) {
     .biz-hero-preview { display: none !important; }
@@ -275,6 +275,10 @@ export function BusinessLanding() {
       <style>{GLOBAL_CSS}</style>
 
 
+      {/* ── VERTICAL LINES ───────────────────────────────────────── */}
+      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 0 }} />
+
       {/* ── NAV ──────────────────────────────────────────────────── */}
       <nav className="biz-nav" style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(17,17,17,0.94)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${C.bds}`, padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -333,8 +337,8 @@ export function BusinessLanding() {
             </div>
           </div>
 
-          {/* Fondu bas — couvre le bas pour s'ancrer dans la section Features */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 260, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
+          {/* Fondu bas — liseré discret pour ancrer dans la section Features */}
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 80, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
         </div>
       </div>
 
