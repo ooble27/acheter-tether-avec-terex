@@ -275,7 +275,7 @@ export function BusinessLanding() {
       <style>{GLOBAL_CSS}</style>
 
 
-      {/* ── VERTICAL LINES ───────────────────────────────────────── */}
+      {/* ── VERTICAL LINES — z-index 0, passent derrière tout ───── */}
       <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 0 }} />
       <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 0 }} />
 
@@ -337,8 +337,6 @@ export function BusinessLanding() {
             </div>
           </div>
 
-          {/* Fondu bas — liseré discret pour ancrer dans la section Features */}
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 80, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
         </div>
       </div>
 
