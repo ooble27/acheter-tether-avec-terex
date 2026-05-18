@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight, Layers, Zap, Globe, BarChart2, Shield, Code2,
   ChevronDown, ChevronUp, Copy, Check,
-  ShoppingBag, Factory, Briefcase, Store, Truck, Cpu,
+  ShoppingBag, Factory, Briefcase, Store, Truck, Cpu, Calendar, Users,
 } from 'lucide-react';
 import { BusinessTreasury } from '@/components/business/BusinessTreasury';
 import { BusinessPayments } from '@/components/business/BusinessPayments';
 import { BusinessHistory } from '@/components/business/BusinessHistory';
 import { BusinessAnalytics } from '@/components/business/BusinessAnalytics';
 import { BusinessOverview } from '@/components/business/BusinessOverview';
+import { BusinessBatch } from '@/components/business/BusinessBatch';
+import { BusinessTeam } from '@/components/business/BusinessTeam';
 
 const C = {
   bg: '#111111', l1: '#181818', l2: '#202020', l3: '#272727',
@@ -30,54 +32,57 @@ const GRID_BG = {
   backgroundSize: '44px 44px',
 };
 
+// Kill Recharts JS animations via CSS on durations.
+// The inner-div fixed-height approach is the real jitter fix.
 const ANIM_KILL = `
   .biz-no-anim * {
     animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
 `;
 
-// Preview sizing
+// ── Preview constants ─────────────────────────────────────────────────
 const SCALE   = 0.46;
 const FRAME_W = 530;
-const INNER_W = Math.round(FRAME_W / SCALE); // ~1152px
+const INNER_W = Math.round(FRAME_W / SCALE);
 
-function PreviewCard({
-  children, height = 400, chrome = false,
-}: { children: React.ReactNode; height?: number; chrome?: boolean }) {
-  const chromeH = chrome ? 32 : 0;
+// Héro — dashboard large centré
+const HERO_SCALE  = 0.58;
+const HERO_VW     = 1100; // largeur visible
+const HERO_VH     = 480;  // hauteur visible
+const HERO_INNER_W = Math.round(HERO_VW / HERO_SCALE);
+const HERO_INNER_H = Math.round(HERO_VH / HERO_SCALE);
+
+// ── Rendu direct (sans boîte/frame) ─────────────────────────────────
+// La hauteur fixe sur le div interne empêche le jitter des graphiques Recharts.
+function InlinePreview({ children, height = 420 }: { children: React.ReactNode; height?: number }) {
+  const innerH = Math.round(height / SCALE);
   return (
-    <div className="biz-no-anim" style={{
-      width: FRAME_W, height: height + chromeH, flexShrink: 0,
-      borderRadius: 14, border: `1px solid ${C.bd}`,
-      background: C.bg, overflow: 'hidden',
-    }}>
-      {chrome && (
-        <div style={{
-          height: 32, background: C.l2, borderBottom: `1px solid ${C.bds}`,
-          display: 'flex', alignItems: 'center', gap: 6, padding: '0 14px',
-        }}>
-          {['#ef4444', '#f59e0b', '#22c55e'].map(col => (
-            <div key={col} style={{ width: 10, height: 10, borderRadius: '50%', background: col, opacity: 0.5 }} />
-          ))}
-          <div style={{ flex: 1, height: 18, background: C.bg, borderRadius: 4, border: `1px solid ${C.bds}`, margin: '0 10px' }} />
-        </div>
-      )}
-      <div style={{ overflow: 'hidden', height }}>
+    <div style={{ position: 'relative', width: FRAME_W, height, flexShrink: 0 }}>
+      <div className="biz-no-anim" style={{ width: FRAME_W, height, overflow: 'hidden' }}>
         <div style={{
           transform: `scale(${SCALE})`, transformOrigin: 'top left',
-          width: INNER_W, pointerEvents: 'none', userSelect: 'none',
+          width: INNER_W, height: innerH, overflow: 'hidden',
+          pointerEvents: 'none', userSelect: 'none',
         }}>
           <div style={{ maxWidth: 860, margin: '0 auto', padding: '14px 8px' }}>
             {children}
           </div>
         </div>
       </div>
+      {/* Fondu bas pour un découpage propre */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 72,
+        background: `linear-gradient(transparent, ${C.bg})`,
+        pointerEvents: 'none',
+      }} />
     </div>
   );
 }
 
+// ── Boutons ───────────────────────────────────────────────────────────
 function PrimaryBtn({ children, onClick, large }: { children: React.ReactNode; onClick?: () => void; large?: boolean }) {
   const [hov, setHov] = useState(false);
   return (
@@ -104,15 +109,17 @@ function OutlineBtn({ children, onClick, large }: { children: React.ReactNode; o
   );
 }
 
+// ── Features ──────────────────────────────────────────────────────────
 const FEATURES = [
   { icon: Layers,    title: 'Trésorerie multi-réseaux',    desc: 'Solde consolidé sur TRC-20, BEP-20 et ERC-20 avec verrouillage de taux en temps réel.' },
   { icon: Zap,       title: 'Paiements en quelques clics', desc: 'Sélectionnez le fournisseur, confirmez le montant. Le paiement part directement sur la blockchain.' },
-  { icon: Code2,     title: 'API & Webhooks',              desc: 'Intégrez Terex Business dans votre ERP. Clé API en un clic, webhooks HMAC-SHA256.' },
+  { icon: Calendar,  title: 'Planification & Batch',       desc: 'Programmez vos paiements récurrents et envoyez plusieurs virements en une seule action.' },
   { icon: Globe,     title: 'Réseau de fournisseurs',      desc: 'Enregistrez vos contacts avec leur adresse wallet et réseau blockchain.' },
   { icon: BarChart2, title: 'Analytiques temps réel',      desc: 'Volumes, tendances et répartition par réseau. Tableaux de bord mis à jour automatiquement.' },
-  { icon: Shield,    title: 'Conformité KYC / AML',        desc: 'Quatre niveaux de vérification. Cadre UEMOA / BCEAO. Déclarations CENTIF.' },
+  { icon: Users,     title: 'Équipe & Accès',              desc: 'Invitez vos collaborateurs avec des rôles distincts : Admin, Financier, Comptable, Opérateur.' },
 ];
 
+// ── Helpers ───────────────────────────────────────────────────────────
 function Tag({ label }: { label: string }) {
   return (
     <div style={{ display: 'inline-block', background: C.l2, border: `1px solid ${C.bd}`, padding: '5px 14px', borderRadius: 100, marginBottom: 20 }}>
@@ -133,6 +140,7 @@ function SectionStats({ items }: { items: [string, string][] }) {
   );
 }
 
+// ── Use Cases ─────────────────────────────────────────────────────────
 const USE_CASE_TABS = ['Importateurs', 'Distributeurs', 'Services', 'E-commerce'] as const;
 type UseCaseTab = typeof USE_CASE_TABS[number];
 
@@ -165,12 +173,13 @@ const USE_CASES: Record<UseCaseTab, { icon: React.ElementType; title: string; de
     { icon: Store,       title: 'Marketplace B2B',           desc: "Automatisez vos paiements fournisseurs via l'API Terex intégrée à votre plateforme." },
     { icon: ShoppingBag, title: 'Dropshipping',              desc: 'Réglez vos fournisseurs asiatiques dès la commande confirmée, sans délai bancaire.' },
     { icon: Truck,       title: 'Fulfillment & Logistique',  desc: "Paiements automatiques déclenchés à l'expédition via webhooks en temps réel." },
-    { icon: Cpu,         title: 'Boutique en ligne',         desc: 'Intégrez Terex à votre stack e-commerce et automatisez le cycle d\'achat.' },
+    { icon: Cpu,         title: 'Boutique en ligne',         desc: "Intégrez Terex à votre stack e-commerce et automatisez le cycle d'achat." },
     { icon: Globe,       title: 'Abonnements & SaaS',        desc: "Gérez la facturation récurrente de vos clients entreprises via l'API Terex." },
     { icon: Code2,       title: 'Intégrateurs ERP',          desc: 'Connectez votre ERP via notre API REST et gérez tout depuis un seul système.' },
   ],
 };
 
+// ── Code section ──────────────────────────────────────────────────────
 const CODE_EXAMPLES = {
   curl: `curl -X POST https://api.terex.sn/v1/payments \\
   -H "Authorization: Bearer txb_live_xK9mP2..." \\
@@ -212,12 +221,13 @@ print(payment.id, payment.status)
 # pay_a1b2c3d4e5  "processing"`,
 };
 
+// ── FAQ ───────────────────────────────────────────────────────────────
 const FAQ_ITEMS = [
   { q: 'Quelle est la différence entre Terex et Terex Business ?', a: "Terex standard est destiné aux particuliers souhaitant acheter ou vendre des USDT. Terex Business s'adresse aux entreprises : il ajoute la gestion de fournisseurs, les paiements récurrents, l'API webhook, les analytiques avancées et un onboarding KYC adapté aux entités légales (RCCM, NINEA)." },
   { q: 'Comment fonctionne le verrouillage de taux 15 minutes ?', a: 'Lorsque vous initiez un paiement, le taux de change USDT/XOF est figé pendant 15 minutes. Si vous confirmez dans ce délai, le montant débité correspond exactement au taux affiché. Passé ce délai, un nouveau taux est proposé.' },
   { q: 'Quels documents KYC sont requis pour le compte Business ?', a: "Pour le niveau 2 (jusqu'à 50 000 USDT/mois) : RCCM, NINEA, pièce d'identité du dirigeant, justificatif de siège social. Pour les niveaux 3 et 4, des documents complémentaires (statuts notariés, états financiers) sont nécessaires. Le délai de traitement est de 24 à 48h ouvrées." },
-  { q: 'Comment intégrer Terex Business dans mon logiciel de comptabilité ?', a: "Terex Business propose une API REST avec export CSV/PDF depuis le tableau de bord Historique. L'API webhook permet de déclencher des événements dans votre ERP à chaque transaction complétée. Des connecteurs pour les principaux ERP africains sont en cours de développement." },
-  { q: 'Quel est le délai de traitement des paiements ?', a: 'Les paiements sont confirmés sur la blockchain en moins de 10 minutes pour TRC-20 et BEP-20. La confirmation interne (crédit au destinataire) intervient après 15 à 30 confirmations blockchain selon le réseau. Les clients Business+ bénéficient d\'un traitement prioritaire.' },
+  { q: 'Comment intégrer Terex Business dans mon logiciel de comptabilité ?', a: "Terex Business propose une API REST avec export CSV/PDF depuis le tableau de bord Historique. L'API webhook permet de déclencher des événements dans votre ERP à chaque transaction complétée." },
+  { q: 'Quel est le délai de traitement des paiements ?', a: 'Les paiements sont confirmés sur la blockchain en moins de 10 minutes pour TRC-20 et BEP-20. La confirmation interne intervient après 15 à 30 confirmations blockchain selon le réseau. Les clients Business+ bénéficient d\'un traitement prioritaire.' },
   { q: 'Puis-je avoir plusieurs utilisateurs sur un même compte Business ?', a: "Oui, la fonctionnalité Équipe & Accès permet d'inviter des membres avec des rôles distincts (Admin, Opérateur, Comptable, Viewer). Chaque rôle a des permissions différentes sur les paiements, la trésorerie et les exports." },
 ];
 
@@ -279,60 +289,61 @@ export function BusinessLanding() {
         </div>
       </nav>
 
-      {/* ── HERO — 2 colonnes ────────────────────────────────────── */}
-      <div style={{ ...GRID_BG, padding: '80px 48px 100px' }}>
-        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 72 }}>
+      {/* ── HERO — titre centré + dashboard large en dessous ─────── */}
+      <div style={{ ...GRID_BG, padding: '96px 48px 0' }}>
+        {/* Titre centré */}
+        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+          <h1 style={{
+            fontSize: 64, fontWeight: 900, color: C.t1,
+            margin: '0 0 20px', letterSpacing: '-0.05em', lineHeight: 1.04, fontFamily: FONT,
+          }}>
+            La finance de votre entreprise,<br />enfin sous contrôle
+          </h1>
+          <p style={{ fontSize: 18, color: C.t2, margin: '0 auto', maxWidth: 520, lineHeight: 1.65, fontFamily: FONT }}>
+            Paiements USDT, trésorerie multi-réseaux et API webhook<br />pour les entreprises de la zone UEMOA.
+          </p>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 36 }}>
+            <PrimaryBtn large onClick={() => navigate('/auth')}>
+              Créer un compte <ArrowRight style={{ width: 15, height: 15 }} />
+            </PrimaryBtn>
+            <OutlineBtn large onClick={() => navigate('/auth')}>Se connecter</OutlineBtn>
+          </div>
+        </div>
 
-          {/* Texte gauche */}
-          <div style={{ flex: '1 1 0', minWidth: 0 }}>
-            <h1 style={{ fontSize: 52, fontWeight: 900, color: C.t1, margin: '0 0 20px', letterSpacing: '-0.045em', lineHeight: 1.06, fontFamily: FONT }}>
-              Gérez vos paiements<br />USDT fournisseurs<br />à l'international
-            </h1>
-            <p style={{ fontSize: 16, color: C.t2, lineHeight: 1.75, margin: '0 0 40px', fontFamily: FONT }}>
-              Trésorerie multi-réseaux, paiements sécurisés<br />
-              et API webhook conçus pour les entreprises<br />
-              de la zone UEMOA.
-            </p>
-            <div style={{ display: 'flex', gap: 12 }}>
-              <PrimaryBtn large onClick={() => navigate('/auth')}>
-                Créer un compte <ArrowRight style={{ width: 15, height: 15 }} />
-              </PrimaryBtn>
-              <OutlineBtn large onClick={() => { document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }); }}>
-                Voir les fonctionnalités
-              </OutlineBtn>
-            </div>
-
-            {/* Chiffres clés */}
-            <div style={{ display: 'flex', gap: 32, marginTop: 52, paddingTop: 32, borderTop: `1px solid ${C.bds}` }}>
-              {[['3 réseaux', 'TRC-20, BEP-20, ERC-20'], ['< 10 min', 'Délai de confirmation'], ['UEMOA', 'Conformité BCEAO']].map(([val, label]) => (
-                <div key={val}>
-                  <div style={{ fontSize: 17, fontWeight: 800, color: C.t1, fontFamily: MONO, letterSpacing: '-0.02em' }}>{val}</div>
-                  <div style={{ fontSize: 12, color: C.t3, fontFamily: FONT, marginTop: 4 }}>{label}</div>
-                </div>
+        {/* Dashboard grand format — sans cadre, fondu en bas */}
+        <div style={{ maxWidth: HERO_VW, margin: '0 auto', position: 'relative' }}>
+          {/* Bordure haut / côtés seulement via box-shadow inset */}
+          <div style={{
+            borderRadius: '14px 14px 0 0',
+            border: `1px solid ${C.bd}`,
+            borderBottom: 'none',
+            overflow: 'hidden',
+            background: C.l1,
+          }}>
+            {/* Chrome navigateur */}
+            <div style={{ height: 36, background: C.l2, borderBottom: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', gap: 6, padding: '0 14px' }}>
+              {['#ef4444', '#f59e0b', '#22c55e'].map(col => (
+                <div key={col} style={{ width: 10, height: 10, borderRadius: '50%', background: col, opacity: 0.45 }} />
               ))}
+              <div style={{ flex: 1, height: 18, background: C.bg, borderRadius: 4, border: `1px solid ${C.bds}`, margin: '0 10px' }} />
             </div>
-          </div>
-
-          {/* Prévisualisation droite — browser frame */}
-          <div style={{ flexShrink: 0 }}>
-            <div style={{ borderRadius: 14, border: `1px solid ${C.bd}`, overflow: 'hidden', background: C.l1 }}>
-              {/* Chrome */}
-              <div style={{ height: 36, background: C.l2, borderBottom: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', gap: 6, padding: '0 14px' }}>
-                {['#ef4444', '#f59e0b', '#22c55e'].map(col => (
-                  <div key={col} style={{ width: 10, height: 10, borderRadius: '50%', background: col, opacity: 0.45 }} />
-                ))}
-                <div style={{ flex: 1, height: 18, background: C.bg, borderRadius: 4, border: `1px solid ${C.bds}`, margin: '0 10px' }} />
-              </div>
-              {/* Contenu */}
-              <div className="biz-no-anim" style={{ width: FRAME_W, height: 430, overflow: 'hidden' }}>
-                <div style={{ transform: `scale(${SCALE})`, transformOrigin: 'top left', width: INNER_W, pointerEvents: 'none', userSelect: 'none' }}>
-                  <div style={{ maxWidth: 860, margin: '0 auto', padding: '14px 8px' }}>
-                    <BusinessOverview user={DEMO_USER} onNavigate={() => {}} />
-                  </div>
-                </div>
+            {/* Contenu dashboard */}
+            <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden' }}>
+              <div style={{
+                transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left',
+                width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden',
+                pointerEvents: 'none', userSelect: 'none',
+              }}>
+                <BusinessOverview user={DEMO_USER} onNavigate={() => {}} />
               </div>
             </div>
           </div>
+          {/* Fondu bas pour effet "immersif" */}
+          <div style={{
+            position: 'absolute', bottom: 0, left: 0, right: 0, height: 160,
+            background: `linear-gradient(transparent, ${C.bg})`,
+            pointerEvents: 'none',
+          }} />
         </div>
       </div>
 
@@ -368,7 +379,7 @@ export function BusinessLanding() {
       <div style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px' }}>
 
         {/* Trésorerie */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 72, padding: '80px 0', borderBottom: `1px solid ${C.bds}` }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 80, padding: '88px 0', borderBottom: `1px solid ${C.bds}` }}>
           <div style={{ flex: '1 1 0', minWidth: 0 }}>
             <Tag label="Trésorerie" />
             <h2 style={{ fontSize: 30, fontWeight: 800, color: C.t1, margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.2, fontFamily: FONT }}>
@@ -379,11 +390,11 @@ export function BusinessLanding() {
             </p>
             <SectionStats items={[['3 réseaux', 'TRC-20, BEP-20, ERC-20'], ['15 min', 'Verrouillage de taux'], ['Temps réel', 'Mise à jour']]} />
           </div>
-          <PreviewCard height={420}><BusinessTreasury user={DEMO_USER} /></PreviewCard>
+          <InlinePreview height={420}><BusinessTreasury user={DEMO_USER} /></InlinePreview>
         </div>
 
         {/* Paiements */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 72, padding: '80px 0', borderBottom: `1px solid ${C.bds}`, flexDirection: 'row-reverse' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 80, padding: '88px 0', borderBottom: `1px solid ${C.bds}`, flexDirection: 'row-reverse' }}>
           <div style={{ flex: '1 1 0', minWidth: 0 }}>
             <Tag label="Paiements" />
             <h2 style={{ fontSize: 30, fontWeight: 800, color: C.t1, margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.2, fontFamily: FONT }}>
@@ -394,11 +405,11 @@ export function BusinessLanding() {
             </p>
             <SectionStats items={[['100 USDT', 'Montant minimum'], ['1,5 %', "Frais jusqu'à 10K"], ['< 10 min', 'Confirmation blockchain']]} />
           </div>
-          <PreviewCard height={430}><BusinessPayments user={DEMO_USER} onBack={() => {}} /></PreviewCard>
+          <InlinePreview height={430}><BusinessPayments user={DEMO_USER} onBack={() => {}} /></InlinePreview>
         </div>
 
         {/* Historique */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 72, padding: '80px 0', borderBottom: `1px solid ${C.bds}` }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 80, padding: '88px 0', borderBottom: `1px solid ${C.bds}` }}>
           <div style={{ flex: '1 1 0', minWidth: 0 }}>
             <Tag label="Historique" />
             <h2 style={{ fontSize: 30, fontWeight: 800, color: C.t1, margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.2, fontFamily: FONT }}>
@@ -409,11 +420,11 @@ export function BusinessLanding() {
             </p>
             <SectionStats items={[['Export CSV', 'Données complètes'], ['Filtres avancés', 'Recherche rapide'], ['Traçabilité', 'Blockchain']]} />
           </div>
-          <PreviewCard height={430}><BusinessHistory user={DEMO_USER} /></PreviewCard>
+          <InlinePreview height={430}><BusinessHistory user={DEMO_USER} /></InlinePreview>
         </div>
 
         {/* Analytiques */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 72, padding: '80px 0', flexDirection: 'row-reverse' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 80, padding: '88px 0', borderBottom: `1px solid ${C.bds}`, flexDirection: 'row-reverse' }}>
           <div style={{ flex: '1 1 0', minWidth: 0 }}>
             <Tag label="Analytiques" />
             <h2 style={{ fontSize: 30, fontWeight: 800, color: C.t1, margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.2, fontFamily: FONT }}>
@@ -424,7 +435,37 @@ export function BusinessLanding() {
             </p>
             <SectionStats items={[['Temps réel', 'Données actualisées'], ['3 réseaux', 'Répartition détaillée'], ['12 mois', 'Historique glissant']]} />
           </div>
-          <PreviewCard height={430}><BusinessAnalytics user={DEMO_USER} /></PreviewCard>
+          <InlinePreview height={430}><BusinessAnalytics user={DEMO_USER} /></InlinePreview>
+        </div>
+
+        {/* Planification */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 80, padding: '88px 0', borderBottom: `1px solid ${C.bds}` }}>
+          <div style={{ flex: '1 1 0', minWidth: 0 }}>
+            <Tag label="Planification" />
+            <h2 style={{ fontSize: 30, fontWeight: 800, color: C.t1, margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.2, fontFamily: FONT }}>
+              Automatisez vos<br />paiements récurrents
+            </h2>
+            <p style={{ fontSize: 14, color: C.t2, lineHeight: 1.8, margin: '0 0 28px', fontFamily: FONT }}>
+              Programmez des virements quotidiens, hebdomadaires ou mensuels. Envoyez plusieurs paiements en une seule opération avec les paiements en lot.
+            </p>
+            <SectionStats items={[['Lot', 'Paiements groupés'], ['5 fréquences', 'Récurrence flexible'], ['Calendrier', 'Vue planning']]} />
+          </div>
+          <InlinePreview height={430}><BusinessBatch user={DEMO_USER} /></InlinePreview>
+        </div>
+
+        {/* Équipe & Accès */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 80, padding: '88px 0', flexDirection: 'row-reverse' }}>
+          <div style={{ flex: '1 1 0', minWidth: 0 }}>
+            <Tag label="Équipe & Accès" />
+            <h2 style={{ fontSize: 30, fontWeight: 800, color: C.t1, margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.2, fontFamily: FONT }}>
+              Gérez les accès<br />de votre équipe
+            </h2>
+            <p style={{ fontSize: 14, color: C.t2, lineHeight: 1.8, margin: '0 0 28px', fontFamily: FONT }}>
+              Invitez vos collaborateurs avec des rôles précis. Administrateur, Financier, Comptable ou Opérateur — chacun voit uniquement ce dont il a besoin.
+            </p>
+            <SectionStats items={[['5 rôles', 'Permissions granulaires'], ['Illimité', 'Membres invitables'], ['Activité', 'Journal des actions']]} />
+          </div>
+          <InlinePreview height={430}><BusinessTeam user={DEMO_USER} /></InlinePreview>
         </div>
       </div>
 
@@ -432,12 +473,8 @@ export function BusinessLanding() {
       <div style={{ borderTop: `1px solid ${C.bds}` }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', padding: '80px 48px' }}>
           <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 24, overflow: 'hidden', display: 'flex', alignItems: 'stretch' }}>
-
-            {/* Texte gauche */}
             <div style={{ flex: '0 0 340px', padding: '56px 44px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 20, borderRight: `1px solid ${C.bds}` }}>
-              <div style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: C.teal, fontWeight: 700, fontFamily: FONT }}>
-                Démo
-              </div>
+              <div style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: C.teal, fontWeight: 700, fontFamily: FONT }}>Démo</div>
               <h2 style={{ fontSize: 26, fontWeight: 800, color: C.t1, margin: 0, letterSpacing: '-0.03em', lineHeight: 1.28, fontFamily: FONT }}>
                 Voyez Terex Business en action
               </h2>
@@ -450,47 +487,23 @@ export function BusinessLanding() {
                 </PrimaryBtn>
               </div>
             </div>
-
-            {/* Préview + overlay play */}
             <div style={{ flex: 1, position: 'relative', overflow: 'hidden', minHeight: 380 }}>
               <div className="biz-no-anim" style={{ pointerEvents: 'none', userSelect: 'none' }}>
-                <div style={{ transform: 'scale(0.5)', transformOrigin: 'top left', width: Math.round(820 / 0.5) }}>
+                <div style={{
+                  transform: 'scale(0.5)', transformOrigin: 'top left',
+                  width: Math.round(820 / 0.5), height: Math.round(760 / 0.5), overflow: 'hidden',
+                }}>
                   <div style={{ maxWidth: 860, margin: '0 auto', padding: '14px 8px' }}>
                     <BusinessHistory user={DEMO_USER} />
                   </div>
                 </div>
               </div>
-              {/* Dégradé overlay */}
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, rgba(24,24,24,0.55) 0%, rgba(17,17,17,0.78) 100%)' }} />
-              {/* Bouton play */}
-              <div
-                onClick={() => navigate('/auth')}
-                style={{
-                  position: 'absolute', top: '50%', left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: 14,
-                  cursor: 'pointer',
-                }}
-              >
-                <div style={{
-                  width: 72, height: 72, borderRadius: '50%',
-                  border: '2px solid rgba(255,255,255,0.22)',
-                  background: 'rgba(255,255,255,0.07)',
-                  backdropFilter: 'blur(10px)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  transition: 'background 0.15s',
-                }}>
-                  <div style={{
-                    width: 0, height: 0,
-                    borderTop: '11px solid transparent',
-                    borderBottom: '11px solid transparent',
-                    borderLeft: '19px solid rgba(255,255,255,0.82)',
-                    marginLeft: 5,
-                  }} />
+              <div onClick={() => navigate('/auth')} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: 14, cursor: 'pointer' }}>
+                <div style={{ width: 72, height: 72, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.22)', background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: 0, height: 0, borderTop: '11px solid transparent', borderBottom: '11px solid transparent', borderLeft: '19px solid rgba(255,255,255,0.82)', marginLeft: 5 }} />
                 </div>
-                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', fontFamily: FONT, letterSpacing: '0.04em' }}>
-                  Voir la démo
-                </span>
+                <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', fontFamily: FONT, letterSpacing: '0.04em' }}>Voir la démo</span>
               </div>
             </div>
           </div>
@@ -509,7 +522,6 @@ export function BusinessLanding() {
             </p>
           </div>
 
-          {/* Onglets sans bordure verte */}
           <div style={{ display: 'flex', gap: 4, marginBottom: 36, background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 12, padding: 4, width: 'fit-content', margin: '0 auto 36px' }}>
             {USE_CASE_TABS.map(tab => (
               <button key={tab} onClick={() => setActiveTab(tab)} style={{
@@ -522,7 +534,6 @@ export function BusinessLanding() {
             ))}
           </div>
 
-          {/* Grille de cartes */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
             {USE_CASES[activeTab].map((item, i) => {
               const Icon = item.icon;
@@ -545,8 +556,6 @@ export function BusinessLanding() {
       {/* ── API CODE ─────────────────────────────────────────────── */}
       <div style={{ maxWidth: 1160, margin: '0 auto', padding: '88px 48px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 80 }}>
-
-          {/* Texte gauche */}
           <div style={{ flex: '1 1 0', minWidth: 0 }}>
             <Tag label="API" />
             <h2 style={{ fontSize: 30, fontWeight: 800, color: C.t1, margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.2, fontFamily: FONT }}>
@@ -557,10 +566,7 @@ export function BusinessLanding() {
             </p>
             <SectionStats items={[['REST', 'API standard'], ['HMAC-256', 'Sécurité webhooks'], ['< 1 h', "Temps d'intégration"]]} />
           </div>
-
-          {/* Bloc de code droite */}
           <div style={{ flex: '1 1 0', minWidth: 0, background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 16, overflow: 'hidden' }}>
-            {/* Onglets langage */}
             <div style={{ display: 'flex', borderBottom: `1px solid ${C.bds}` }}>
               {(['curl', 'node', 'python'] as const).map(l => (
                 <button key={l} onClick={() => setCodeLang(l)} style={{
@@ -578,16 +584,10 @@ export function BusinessLanding() {
             <pre style={{ margin: 0, padding: '22px 26px', fontFamily: MONO, fontSize: 12.5, lineHeight: 1.75, color: '#d1d5db', overflowX: 'auto', whiteSpace: 'pre' }}>
               {CODE_EXAMPLES[codeLang]}
             </pre>
-            <button onClick={copyCode} style={{
-              width: '100%', padding: '13px', background: C.l2, border: 'none',
-              borderTop: `1px solid ${C.bds}`, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-              color: C.t2, fontSize: 13, fontFamily: FONT, transition: 'color 0.15s',
-            }} onMouseEnter={e => (e.currentTarget.style.color = C.t1)}
-               onMouseLeave={e => (e.currentTarget.style.color = C.t2)}>
-              {codeCopied
-                ? <><Check style={{ width: 14, height: 14 }} /> Copié !</>
-                : <><Copy style={{ width: 14, height: 14 }} /> Copier le code</>}
+            <button onClick={copyCode} style={{ width: '100%', padding: '13px', background: C.l2, border: 'none', borderTop: `1px solid ${C.bds}`, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: C.t2, fontSize: 13, fontFamily: FONT, transition: 'color 0.15s' }}
+              onMouseEnter={e => (e.currentTarget.style.color = C.t1)}
+              onMouseLeave={e => (e.currentTarget.style.color = C.t2)}>
+              {codeCopied ? <><Check style={{ width: 14, height: 14 }} /> Copié !</> : <><Copy style={{ width: 14, height: 14 }} /> Copier le code</>}
             </button>
           </div>
         </div>
@@ -597,8 +597,6 @@ export function BusinessLanding() {
       <div style={{ borderTop: `1px solid ${C.bds}` }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', padding: '80px 48px' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 80 }}>
-
-            {/* Titre gauche */}
             <div style={{ flex: '0 0 300px' }}>
               <h2 style={{ fontSize: 32, fontWeight: 800, color: C.t1, margin: '0 0 14px', letterSpacing: '-0.035em', fontFamily: FONT }}>
                 Questions<br />fréquentes
@@ -607,8 +605,6 @@ export function BusinessLanding() {
                 Tout ce que vous devez savoir avant de commencer
               </p>
             </div>
-
-            {/* Accordéons droite */}
             <div style={{ flex: 1, minWidth: 0 }}>
               {FAQ_ITEMS.map((item, i) => <FaqItem key={i} q={item.q} a={item.a} />)}
             </div>
