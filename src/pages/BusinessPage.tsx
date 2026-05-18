@@ -1,17 +1,9 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { BusinessDashboard } from '@/components/business/BusinessDashboard';
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { BusinessLanding } from '@/components/marketing/BusinessLanding';
 
 const BusinessPage = () => {
   const { user, loading } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate('/auth');
-    }
-  }, [user, loading, navigate]);
 
   if (loading) {
     return (
@@ -26,7 +18,7 @@ const BusinessPage = () => {
     );
   }
 
-  if (!user) return null;
+  if (!user) return <BusinessLanding />;
 
   const userData = {
     id: user.id,
