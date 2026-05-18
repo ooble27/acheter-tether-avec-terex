@@ -12,9 +12,11 @@ const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030', l4: '#383838',
   bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
   teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
-  teal2: '#2d6b66', teal3: '#5ab5ae', teal4: '#1e4a47',
   t1: '#f0f0f0', t2: '#999999', t3: '#686868',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.16)',
+  amber: '#C9A227', amberT: 'rgba(201,162,39,0.10)',
+  gray2: '#9E9E9E',
+  rust: '#C0392B',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
@@ -41,10 +43,10 @@ const MONTHLY_VOLUME_12 = [
 const MONTHLY_VOLUME_6 = MONTHLY_VOLUME_12.slice(6);
 
 const PIE_DATA = [
-  { name: 'TRC20', value: 83450, color: C.teal },
-  { name: 'BEP20', value: 32100, color: C.teal2 },
-  { name: 'ERC20', value: 10200, color: C.teal3 },
-  { name: 'Polygon', value: 2700, color: C.teal4 },
+  { name: 'TRC20',   value: 83450, color: C.teal  },
+  { name: 'BEP20',  value: 32100, color: C.amber },
+  { name: 'ERC20',  value: 10200, color: C.gray2 },
+  { name: 'Polygon',value: 2700,  color: C.rust  },
 ];
 
 const TOP_SUPPLIERS = [
