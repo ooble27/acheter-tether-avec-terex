@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight, Layers, Zap, Globe, BarChart2, Shield, Code2,
@@ -85,23 +85,40 @@ const HERO_VH      = 460;
 const HERO_INNER_W = Math.round(HERO_VW / HERO_SCALE);
 const HERO_INNER_H = Math.round(HERO_VH / HERO_SCALE);
 
-// ── Rendu direct sans cadre ───────────────────────────────────────────
+// ── Rendu direct sans cadre — scale auto sur mobile ──────────────────
 function InlinePreview({ children, height = 420 }: { children: React.ReactNode; height?: number }) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [s, setS] = useState(1);
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.offsetWidth;
+      setS(prev => { const n = w >= FRAME_W ? 1 : w / FRAME_W; return Math.abs(prev - n) > 0.005 ? n : prev; });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   const innerH = Math.round(height / SCALE);
+  const visH   = Math.round(height * s);
+
   return (
-    <div className="biz-preview" style={{ position: 'relative', width: FRAME_W, height, flexShrink: 0 }}>
-      <div className="biz-no-anim" style={{ width: FRAME_W, height, overflow: 'hidden' }}>
-        <div style={{
-          transform: `scale(${SCALE})`, transformOrigin: 'top left',
-          width: INNER_W, height: innerH, overflow: 'hidden',
-          pointerEvents: 'none', userSelect: 'none', willChange: 'transform',
-        }}>
-          <div style={{ padding: '12px 16px' }}>
-            {children}
+    <div ref={wrapRef} className="biz-preview" style={{ position: 'relative', width: FRAME_W, flexShrink: 0 }}>
+      {/* clip à la hauteur visuelle */}
+      <div style={{ height: visH, overflow: 'hidden', position: 'relative' }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, transformOrigin: 'top left', transform: s < 1 ? `scale(${s})` : undefined, width: FRAME_W }}>
+          <div className="biz-no-anim" style={{ width: FRAME_W, height, overflow: 'hidden' }}>
+            <div style={{ transform: `scale(${SCALE})`, transformOrigin: 'top left', width: INNER_W, height: innerH, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
+              <div style={{ padding: '12px 16px' }}>{children}</div>
+            </div>
           </div>
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 72, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
         </div>
       </div>
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 72, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
     </div>
   );
 }
