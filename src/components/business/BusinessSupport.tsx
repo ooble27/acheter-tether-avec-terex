@@ -116,6 +116,25 @@ function CodeBlock({ code, lang = 'bash' }: { code: string; lang?: string }) {
   );
 }
 
+function ContactCard({ icon: Icon, label, sub, meta, href }: { icon: React.ElementType; label: string; sub: string; meta: string; href: string }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <a href={href} target="_blank" rel="noreferrer" onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', borderRadius: 10, background: hov ? C.l2 : C.l1, border: `1px solid ${hov ? C.bd : C.bds}`, textDecoration: 'none', transition: 'all 0.15s', cursor: 'pointer' }}>
+      <div style={{ width: 38, height: 38, borderRadius: 10, background: C.l2, border: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <Icon style={{ width: 17, height: 17, color: C.t1 }} />
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: C.t1, fontFamily: FONT }}>{label}</div>
+        <div style={{ fontSize: 11, color: C.t3, fontFamily: FONT, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sub}</div>
+      </div>
+      <div style={{ textAlign: 'right', flexShrink: 0 }}>
+        <div style={{ fontSize: 10, color: C.t3, fontFamily: FONT }}>{meta}</div>
+        <ExternalLink style={{ width: 11, height: 11, color: C.t3, marginTop: 4 }} />
+      </div>
+    </a>
+  );
+}
+
 // ── Sub-page shell ─────────────────────────────────────────────────
 function SubPageShell({ title, sub, icon: Icon, backLabel = 'Support', onBack, children }: { title: string; sub: string; icon: React.ElementType; backLabel?: string; onBack: () => void; children: React.ReactNode }) {
   return (
@@ -723,28 +742,9 @@ export function BusinessSupport({ user }: Props) {
               <h3 style={{ fontSize: 10, fontWeight: 600, color: C.t3, margin: 0, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Nous contacter</h3>
             </div>
             <div style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {[
-                { icon: MessageCircle, label: 'WhatsApp Business', sub: '+1 418 261 9091', meta: 'Réponse en moins de 2h', href: 'https://wa.me/+14182619091' },
-                { icon: Mail,          label: 'Email',             sub: 'terangaexchange@gmail.com', meta: 'Réponse sous 24h', href: 'mailto:terangaexchange@gmail.com?subject=Support%20Terex%20Business' },
-                { icon: Globe,         label: 'Documentation',     sub: 'terex.io',          meta: 'Guides et tutoriels', href: 'https://terex.io' },
-              ].map(({ icon: Icon, label, sub, meta, href }) => {
-                const [hov, setHov] = useState(false);
-                return (
-                  <a key={label} href={href} target="_blank" rel="noreferrer" onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', borderRadius: 10, background: hov ? C.l2 : C.l1, border: `1px solid ${hov ? C.bd : C.bds}`, textDecoration: 'none', transition: 'all 0.15s', cursor: 'pointer' }}>
-                    <div style={{ width: 38, height: 38, borderRadius: 10, background: C.l2, border: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <Icon style={{ width: 17, height: 17, color: C.t1 }} />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: C.t1, fontFamily: FONT }}>{label}</div>
-                      <div style={{ fontSize: 11, color: C.t3, fontFamily: FONT, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sub}</div>
-                    </div>
-                    <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <div style={{ fontSize: 10, color: C.t3, fontFamily: FONT }}>{meta}</div>
-                      <ExternalLink style={{ width: 11, height: 11, color: C.t3, marginTop: 4 }} />
-                    </div>
-                  </a>
-                );
-              })}
+              <ContactCard icon={MessageCircle} label="WhatsApp Business" sub="+1 418 261 9091" meta="Réponse en moins de 2h" href="https://wa.me/+14182619091" />
+              <ContactCard icon={Mail} label="Email" sub="terangaexchange@gmail.com" meta="Réponse sous 24h" href="mailto:terangaexchange@gmail.com?subject=Support%20Terex%20Business" />
+              <ContactCard icon={Shield} label="Conformité & KYC" sub="compliance@terex.sn" meta="Questions réglementaires" href="mailto:compliance@terex.sn?subject=Conformité%20Terex%20Business" />
             </div>
           </div>
 
@@ -780,11 +780,6 @@ export function BusinessSupport({ user }: Props) {
                   </span>
                 </div>
               ))}
-            </div>
-            <div style={{ padding: '10px 18px', borderTop: `1px solid ${C.bds}` }}>
-              <a href="https://status.terex.io" target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: C.t3, textDecoration: 'none', fontFamily: FONT, transition: 'color 0.15s' }} onMouseEnter={e => (e.currentTarget.style.color = C.teal)} onMouseLeave={e => (e.currentTarget.style.color = C.t3)}>
-                <ExternalLink style={{ width: 11, height: 11 }} /> Page de statut officielle
-              </a>
             </div>
           </div>
 
