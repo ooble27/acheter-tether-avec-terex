@@ -274,6 +274,9 @@ export function BusinessLanding() {
     <div style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT, color: C.t1, position: 'relative' }}>
       <style>{GLOBAL_CSS}</style>
 
+      {/* Lignes verticales — alignées sur le container 1160px centré, masquées < 1100px */}
+      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 0 }} />
 
       {/* ── NAV ──────────────────────────────────────────────────── */}
       <nav className="biz-nav" style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(17,17,17,0.94)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${C.bds}`, padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
