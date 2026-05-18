@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   QrCode, ArrowDownToLine, ArrowUpFromLine, Copy, Check,
   X, Bell, Trash2, Plus,
@@ -208,6 +208,10 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
 
   // Taux — on garde les anciennes valeurs pendant le refresh (pas de clignotement)
   const { usdtToCfa, loading: ratesLoading } = useCryptoRates();
+  // Taux gelé pour le graphique — évite de recalculer chartData à chaque tick
+  const frozenCfaRef = useRef(0);
+  if (usdtToCfa > 0 && frozenCfaRef.current === 0) frozenCfaRef.current = usdtToCfa;
+  const chartCfa = frozenCfaRef.current || usdtToCfa;
   const [usdtToEur, setUsdtToEur] = useState(0.9245);
   const [initialLoad, setInitialLoad] = useState(true);
 
@@ -266,10 +270,10 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
   // Conversion locale selon la paire choisie — aucun re-fetch
   const chartData = useMemo(() => rawPrices.map(p => ({
     day: new Date(p.ts).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }),
-    rate: chartPair === 'XOF' ? Math.round(p.usd * usdtToCfa)
+    rate: chartPair === 'XOF' ? Math.round(p.usd * chartCfa)
          : chartPair === 'EUR' ? parseFloat((p.usd * usdtToEur).toFixed(4))
          : parseFloat(p.usd.toFixed(4)),
-  })), [rawPrices, chartPair, usdtToCfa, usdtToEur]);
+  })), [rawPrices, chartPair, chartCfa, usdtToEur]);
 
   const totalXof = initialLoad ? null : Math.round(TOTAL_USDT * usdtToCfa);
   const totalEur = initialLoad ? null : Math.round(TOTAL_USDT * usdtToEur);
