@@ -43,12 +43,20 @@ const GLOBAL_CSS = `
     .biz-vline { display: none !important; }
   }
 
-  /* ── Tablet 900px ─────────────────────────────────── */
+  /* ── Tablet ≤900px : hero scale parfait via calc() ─── */
   @media (max-width: 900px) {
-    /* Hero preview : visible, scalé pour rentrer */
-    .biz-hero-preview { display: block !important; overflow: hidden !important; height: 368px !important; }
-    .biz-hero-3d-wrap { transform: scale(0.80) !important; transform-origin: top left !important; }
-    /* Sections : rester horizontales, juste plus petites */
+    /* Hero : supprime le padding latéral et scale exactement à la largeur d'écran */
+    .biz-hero-preview {
+      display: block !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      height: calc(100vw * 0.376) !important; /* 460/1064 × ~0.87 (compression 3D) */
+    }
+    .biz-hero-3d-wrap {
+      transform: scale(calc(100vw / 1064)) !important;
+      transform-origin: top left !important;
+    }
+    /* Sections : horizontales, gaps réduits */
     .biz-section-row { gap: 24px !important; padding: 48px 24px !important; }
     .biz-section-row-rev { gap: 24px !important; padding: 48px 24px !important; }
     .biz-preview { max-width: 300px !important; }
@@ -58,35 +66,30 @@ const GLOBAL_CSS = `
     /* FAQ + API */
     .biz-faq-row { flex-direction: column !important; gap: 16px !important; }
     .biz-api-row { flex-direction: column !important; gap: 32px !important; }
-    /* Paddings section */
     .biz-outer-pad { padding-left: 24px !important; padding-right: 24px !important; }
   }
 
-  @media (max-width: 750px) {
-    .biz-hero-preview { height: 282px !important; }
-    .biz-hero-3d-wrap { transform: scale(0.61) !important; }
-    .biz-preview { max-width: 240px !important; }
-  }
-
-  /* ── Mobile 600px ─────────────────────────────────── */
+  /* ── Mobile ≤600px ────────────────────────────────── */
   @media (max-width: 600px) {
-    /* Nav : cacher boutons */
+    /* Nav */
     .biz-nav-actions { display: none !important; }
     .biz-nav { padding: 0 16px !important; }
-    /* Hero */
+    /* Hero titre + sous-titre */
     .biz-hero-title { font-size: 26px !important; letter-spacing: -0.04em !important; }
     .biz-hero-sub { display: none !important; }
-    .biz-hero-btns { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
-    .biz-hero-btns button { width: 100% !important; justify-content: center !important; }
-    .biz-hero-preview { height: 224px !important; }
-    .biz-hero-3d-wrap { transform: scale(0.50) !important; }
-    /* Sections horizontales, taille réduite */
-    .biz-section-row { gap: 12px !important; padding: 32px 16px !important; }
-    .biz-section-row-rev { gap: 12px !important; padding: 32px 16px !important; }
-    .biz-section-row h2, .biz-section-row-rev h2 { font-size: 16px !important; margin-bottom: 8px !important; }
-    .biz-section-row p, .biz-section-row-rev p { font-size: 11px !important; line-height: 1.6 !important; margin-bottom: 12px !important; }
+    /* Boutons hero : colonne centrée, pas pleine largeur */
+    .biz-hero-btns { flex-direction: column !important; align-items: center !important; gap: 8px !important; }
+    /* Hero preview : flat (annule rotateX) + scale exact */
+    .biz-hero-3d-inner { transform: scale(0.97) !important; }
+    .biz-hero-preview { height: calc(100vw * 0.432) !important; } /* 460/1064, pas de compression 3D */
+    /* Sections : vertical — texte puis preview pleine largeur */
+    .biz-section-row { flex-direction: column !important; gap: 16px !important; padding: 32px 16px !important; }
+    .biz-section-row-rev { flex-direction: column !important; gap: 16px !important; padding: 32px 16px !important; }
+    .biz-section-row h2, .biz-section-row-rev h2 { font-size: 20px !important; margin-bottom: 8px !important; }
+    .biz-section-row p, .biz-section-row-rev p { font-size: 13px !important; }
     .biz-section-row .biz-stats, .biz-section-row-rev .biz-stats { display: none !important; }
-    .biz-preview { max-width: 190px !important; }
+    /* Preview : pleine largeur du conteneur */
+    .biz-preview { width: 100% !important; max-width: 100% !important; flex-shrink: 1 !important; }
     /* Grilles */
     .biz-features { grid-template-columns: 1fr !important; }
     .biz-use-cases-grid { grid-template-columns: 1fr !important; }
@@ -96,22 +99,9 @@ const GLOBAL_CSS = `
     .biz-outer-pad { padding-left: 16px !important; padding-right: 16px !important; }
     .biz-api-row { padding: 0 !important; }
     .biz-faq-row { padding: 0 !important; gap: 12px !important; }
-    /* FAQ : moins d'espace */
     .biz-faq-head { flex: none !important; }
     .biz-faq-head h2 { font-size: 22px !important; margin-bottom: 8px !important; }
     .biz-faq-head p { font-size: 12px !important; }
-  }
-
-  @media (max-width: 480px) {
-    .biz-hero-preview { height: 193px !important; }
-    .biz-hero-3d-wrap { transform: scale(0.43) !important; }
-    .biz-preview { max-width: 160px !important; }
-  }
-
-  @media (max-width: 390px) {
-    .biz-hero-preview { height: 156px !important; }
-    .biz-hero-3d-wrap { transform: scale(0.34) !important; }
-    .biz-preview { max-width: 140px !important; }
   }
 `;
 
@@ -149,7 +139,7 @@ function InlinePreview({ children, height = 420 }: { children: React.ReactNode; 
   const visH   = Math.round(height * s);
 
   return (
-    <div ref={wrapRef} className="biz-preview" style={{ position: 'relative', width: FRAME_W, flexShrink: 0 }}>
+    <div ref={wrapRef} className="biz-preview" style={{ position: 'relative', width: FRAME_W, maxWidth: '100%', flexShrink: 0 }}>
       {/* clip à la hauteur visuelle */}
       <div style={{ height: visH, overflow: 'hidden', position: 'relative' }}>
         <div style={{ position: 'absolute', top: 0, left: 0, transformOrigin: 'top left', transform: s < 1 ? `scale(${s})` : undefined, width: FRAME_W }}>
@@ -384,7 +374,7 @@ export function BusinessLanding() {
 
           {/* Perspective 3D forte — l'élément se prolonge vers le bas sans arrondi */}
           <div className="biz-hero-3d-wrap" style={{ perspective: '900px', perspectiveOrigin: '50% 20%' }}>
-            <div style={{
+            <div className="biz-hero-3d-inner" style={{
               transform: 'rotateX(20deg) scale(0.97)',
               transformOrigin: 'center top',
               borderRadius: '16px 16px 0 0',
