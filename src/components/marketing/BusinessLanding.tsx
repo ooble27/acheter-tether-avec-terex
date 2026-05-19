@@ -45,16 +45,10 @@ const GLOBAL_CSS = `
 
   /* ── Tablet ≤900px : hero scale parfait via calc() ─── */
   @media (max-width: 900px) {
-    /* Hero : supprime le padding latéral et scale exactement à la largeur d'écran */
+    /* Hero : supprime le padding latéral (offsetWidth = viewport) */
     .biz-hero-preview {
-      display: block !important;
       padding: 0 !important;
       overflow: hidden !important;
-      height: calc(100vw * 0.376) !important; /* 460/1064 × ~0.87 (compression 3D) */
-    }
-    .biz-hero-3d-wrap {
-      transform: scale(calc(100vw / 1064)) !important;
-      transform-origin: top left !important;
     }
     /* Sections : horizontales, gaps réduits */
     .biz-section-row { gap: 24px !important; padding: 48px 24px !important; }
@@ -79,9 +73,6 @@ const GLOBAL_CSS = `
     .biz-hero-sub { display: none !important; }
     /* Boutons hero : colonne centrée, pas pleine largeur */
     .biz-hero-btns { flex-direction: column !important; align-items: center !important; gap: 8px !important; }
-    /* Hero preview : flat (annule rotateX) + scale exact */
-    .biz-hero-3d-inner { transform: scale(0.97) !important; }
-    .biz-hero-preview { height: calc(100vw * 0.432) !important; } /* 460/1064, pas de compression 3D */
     /* Sections : vertical — texte puis preview pleine largeur */
     .biz-section-row { flex-direction: column !important; gap: 16px !important; padding: 32px 16px !important; }
     .biz-section-row-rev { flex-direction: column !important; gap: 16px !important; padding: 32px 16px !important; }
@@ -120,7 +111,13 @@ const HERO_INNER_H = Math.round(HERO_VH / HERO_SCALE);
 // ── Rendu direct sans cadre — scale auto sur mobile ──────────────────
 function InlinePreview({ children, height = 420 }: { children: React.ReactNode; height?: number }) {
   const wrapRef = useRef<HTMLDivElement>(null);
-  const [s, setS] = useState(1);
+  // Init depuis window.innerWidth pour éviter le flash à s=1 sur mobile
+  const [s, setS] = useState(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 600) {
+      return Math.min(1, (window.innerWidth - 64) / FRAME_W); // 64 = paddings cumulés
+    }
+    return 1;
+  });
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -320,6 +317,22 @@ export function BusinessLanding() {
   const [codeLang, setCodeLang] = useState<'curl' | 'node' | 'python'>('curl');
   const [codeCopied, setCodeCopied] = useState(false);
 
+  // ResizeObserver pour scaler le hero preview en JS (calc(100vw/N) est invalide en CSS)
+  const heroPreviewRef = useRef<HTMLDivElement>(null);
+  const [heroScale, setHeroScale] = useState(1);
+  useEffect(() => {
+    const el = heroPreviewRef.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.offsetWidth;
+      setHeroScale(prev => { const s = w >= HERO_VW ? 1 : w / HERO_VW; return Math.abs(prev - s) > 0.005 ? s : prev; });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   const copyCode = () => {
     navigator.clipboard.writeText(CODE_EXAMPLES[codeLang]).catch(() => {});
     setCodeCopied(true);
@@ -370,13 +383,20 @@ export function BusinessLanding() {
         </div>
 
         {/* Dashboard BusinessOverview — 3D ancrée dans la ligne du dessous */}
-        <div className="biz-hero-preview" style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px', position: 'relative', zIndex: 2 }}>
-
-          {/* Perspective 3D forte — l'élément se prolonge vers le bas sans arrondi */}
-          <div className="biz-hero-3d-wrap" style={{ perspective: '900px', perspectiveOrigin: '50% 20%' }}>
+        <div
+          ref={heroPreviewRef}
+          className="biz-hero-preview"
+          style={{
+            maxWidth: 1160, margin: '0 auto', padding: '0 48px',
+            position: 'relative', zIndex: 2,
+            overflow: heroScale < 1 ? 'hidden' : undefined,
+            height: heroScale < 1 ? Math.round(HERO_VH * heroScale) : undefined,
+          }}
+        >
+          <div className="biz-hero-3d-wrap" style={{ perspective: heroScale < 1 ? 'none' : '900px', perspectiveOrigin: '50% 20%' }}>
             <div className="biz-hero-3d-inner" style={{
-              transform: 'rotateX(20deg) scale(0.97)',
-              transformOrigin: 'center top',
+              transform: heroScale < 1 ? `scale(${heroScale})` : 'rotateX(20deg) scale(0.97)',
+              transformOrigin: heroScale < 1 ? 'top left' : 'center top',
               borderRadius: '16px 16px 0 0',
               overflow: 'hidden',
               border: '1px solid rgba(255,255,255,0.10)',
