@@ -21,6 +21,7 @@ import { BusinessTeam } from './BusinessTeam';
 import { BusinessCompliance } from './BusinessCompliance';
 import { BusinessAPI } from './BusinessAPI';
 import { BusinessNotifications } from './BusinessNotifications';
+import { BusinessDeposit } from './BusinessDeposit';
 
 interface BusinessDashboardProps {
   user: { id?: string; email: string; name: string } | null;
@@ -176,6 +177,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
       case 'team':        return <BusinessTeam user={user} />;
       case 'compliance':  return <BusinessCompliance user={user} />;
       case 'api':           return <BusinessAPI user={user} />;
+      case 'deposit':       return <BusinessDeposit user={user} onBack={() => setActiveSection('overview')} />;
       case 'notifications': return <BusinessNotifications user={user} onNavigate={setActiveSection} />;
       case 'profile':     return <BusinessProfile user={user} onLangChange={handleLangChange} />;
       case 'support':     return <BusinessSupport />;
