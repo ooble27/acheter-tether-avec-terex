@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ArrowDownToLine, ArrowRight, Check, Copy, RefreshCw, Smartphone, Building2, Info, X } from 'lucide-react';
 import { useCryptoRates } from '@/hooks/useCryptoRates';
 import { useAuth } from '@/contexts/AuthContext';
+import { WaveLogo, OrangeMoneyLogo, FreeMoneyLogo, BankLogo, UsdtLogo } from './shared/BrandLogos';
 
 const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
@@ -266,9 +267,12 @@ export function BusinessDeposit({ user, onBack }: {
               {/* Total */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 14, padding: '14px 16px', background: C.tealT, border: `1px solid ${C.tealB}`, borderRadius: 10 }}>
                 <span style={{ fontSize: 12, color: C.teal, fontWeight: 600 }}>Vous recevez</span>
-                <span style={{ fontSize: 18, fontWeight: 700, color: C.teal, fontFamily: MONO }}>
-                  {usdtNet > 0 ? `${usdtNet.toFixed(2)} USDT` : '—'}
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <UsdtLogo size={20} />
+                  <span style={{ fontSize: 18, fontWeight: 700, color: C.teal, fontFamily: MONO }}>
+                    {usdtNet > 0 ? `${usdtNet.toFixed(2)} USDT` : '—'}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -296,15 +300,21 @@ export function BusinessDeposit({ user, onBack }: {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {PAYMENT_METHODS.map(m => {
                   const active = paymentMethod === m.id;
+                  const LogoMap: Record<string, JSX.Element> = {
+                    wave:  <WaveLogo size={32} />,
+                    om:    <OrangeMoneyLogo size={32} />,
+                    free:  <FreeMoneyLogo size={32} />,
+                    bank:  <BankLogo size={32} />,
+                  };
                   return (
                     <button key={m.id} onClick={() => setPaymentMethod(m.id)} style={{
                       display: 'flex', alignItems: 'center', gap: 12, padding: '13px 16px',
-                      borderRadius: 10, border: `1px solid ${active ? m.color + '40' : C.bds}`,
-                      background: active ? m.color + '10' : 'transparent',
+                      borderRadius: 10, border: `1px solid ${active ? C.teal + '60' : C.bds}`,
+                      background: active ? C.tealT : 'transparent',
                       cursor: 'pointer', textAlign: 'left', fontFamily: FONT, transition: 'all 0.1s',
                     }}>
-                      <div style={{ width: 36, height: 36, borderRadius: 9, flexShrink: 0, background: C.l2, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, border: `1px solid ${active ? m.color + '30' : C.bds}` }}>
-                        {m.emoji}
+                      <div style={{ width: 36, height: 36, borderRadius: 9, flexShrink: 0, background: C.l2, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${active ? C.tealT : C.bds}`, overflow: 'hidden' }}>
+                        {LogoMap[m.id]}
                       </div>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontSize: 13, fontWeight: 600, color: active ? C.t1 : C.t2 }}>{m.label}</div>
@@ -373,9 +383,16 @@ export function BusinessDeposit({ user, onBack }: {
                 { label: 'Réseau USDT', value: network, accent: false },
                 { label: 'Vous recevez', value: `${usdtNet.toFixed(2)} USDT`, accent: true },
               ].map((r, i, arr) => (
-                <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none' }}>
+                <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none' }}>
                   <span style={{ fontSize: 12, color: C.t3 }}>{r.label}</span>
-                  <span style={{ fontSize: 12, fontWeight: r.accent ? 700 : 400, color: r.accent ? C.teal : C.t1, fontFamily: r.accent ? MONO : FONT }}>{r.value}</span>
+                  {r.accent ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                      <UsdtLogo size={16} />
+                      <span style={{ fontSize: 12, fontWeight: 700, color: C.teal, fontFamily: MONO }}>{r.value}</span>
+                    </div>
+                  ) : (
+                    <span style={{ fontSize: 12, fontWeight: 400, color: C.t1 }}>{r.value}</span>
+                  )}
                 </div>
               ))}
               <div style={{ marginTop: 14, padding: '10px 12px', background: C.l2, border: `1px solid ${C.bds}`, borderRadius: 8 }}>
@@ -405,15 +422,22 @@ export function BusinessDeposit({ user, onBack }: {
 
           <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 8, padding: '18px 28px', background: C.l2, border: `1px solid ${C.bds}`, borderRadius: 12, marginBottom: 32, textAlign: 'left' }}>
             {[
-              { label: 'Référence', value: depRef, accent: true },
-              { label: 'Montant envoyé', value: `${xofNum.toLocaleString('fr-FR')} XOF`, accent: false },
-              { label: 'USDT attendus', value: `${usdtNet.toFixed(2)} USDT`, accent: true },
-              { label: 'Via', value: selectedMethod.label, accent: false },
-              { label: 'Réseau', value: network, accent: false },
+              { label: 'Référence', value: depRef, accent: true, usdt: false },
+              { label: 'Montant envoyé', value: `${xofNum.toLocaleString('fr-FR')} XOF`, accent: false, usdt: false },
+              { label: 'USDT attendus', value: `${usdtNet.toFixed(2)} USDT`, accent: true, usdt: true },
+              { label: 'Via', value: selectedMethod.label, accent: false, usdt: false },
+              { label: 'Réseau', value: network, accent: false, usdt: false },
             ].map(r => (
-              <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', gap: 24, fontSize: 12 }}>
+              <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 24, fontSize: 12 }}>
                 <span style={{ color: C.t3 }}>{r.label}</span>
-                <span style={{ color: r.accent ? C.teal : C.t1, fontFamily: r.accent ? MONO : FONT, fontWeight: r.accent ? 700 : 400 }}>{r.value}</span>
+                {r.usdt ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <UsdtLogo size={16} />
+                    <span style={{ color: C.teal, fontFamily: MONO, fontWeight: 700 }}>{r.value}</span>
+                  </div>
+                ) : (
+                  <span style={{ color: r.accent ? C.teal : C.t1, fontFamily: r.accent ? MONO : FONT, fontWeight: r.accent ? 700 : 400 }}>{r.value}</span>
+                )}
               </div>
             ))}
           </div>
