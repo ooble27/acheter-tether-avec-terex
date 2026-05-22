@@ -5,7 +5,7 @@ import {
   Building2, LifeBuoy, LogOut,
   ArrowLeft, Menu, X,
   Wallet, CalendarClock, BarChart2, UserCog, ShieldCheck,
-  Search,
+  Search, Code2, Bell,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { BusinessOverview } from './BusinessOverview';
@@ -19,44 +19,54 @@ import { BusinessAnalytics } from './BusinessAnalytics';
 import { BusinessBatch } from './BusinessBatch';
 import { BusinessTeam } from './BusinessTeam';
 import { BusinessCompliance } from './BusinessCompliance';
+import { BusinessAPI } from './BusinessAPI';
+import { BusinessNotifications } from './BusinessNotifications';
+import { BusinessDeposit } from './BusinessDeposit';
 
 interface BusinessDashboardProps {
   user: { id?: string; email: string; name: string } | null;
 }
 
-const NAV_SECTIONS = [
-  {
-    label: 'Principal',
-    items: [
-      { id: 'overview',    label: "Vue d'ensemble",      icon: LayoutDashboard },
-      { id: 'payment',     label: 'Paiements',            icon: Send },
-      { id: 'treasury',    label: 'Trésorerie',           icon: Wallet },
-    ],
-  },
-  {
-    label: 'Gestion',
-    items: [
-      { id: 'history',     label: 'Historique & Reçus',   icon: Clock },
-      { id: 'suppliers',   label: 'Fournisseurs',         icon: Users2 },
-      { id: 'batch',       label: 'Lots & Planification', icon: CalendarClock },
-    ],
-  },
-  {
-    label: 'Business',
-    items: [
-      { id: 'analytics',   label: 'Analytique',           icon: BarChart2 },
-      { id: 'team',        label: 'Équipe & Accès',       icon: UserCog },
-      { id: 'compliance',  label: 'Conformité KYC',       icon: ShieldCheck },
-    ],
-  },
-  {
-    label: 'Paramètres',
-    items: [
-      { id: 'profile',     label: 'Profil entreprise',    icon: Building2 },
-      { id: 'support',     label: 'Support',              icon: LifeBuoy },
-    ],
-  },
-];
+const LANG_KEY = 'terex_b2b_lang';
+
+function getNavSections(lang: 'fr' | 'en') {
+  const fr = lang === 'fr';
+  return [
+    {
+      label: fr ? 'Principal' : 'Main',
+      items: [
+        { id: 'overview',   label: fr ? "Vue d'ensemble"      : 'Overview',           icon: LayoutDashboard },
+        { id: 'payment',    label: fr ? 'Paiements'           : 'Payments',           icon: Send },
+        { id: 'treasury',   label: fr ? 'Trésorerie'          : 'Treasury',           icon: Wallet },
+      ],
+    },
+    {
+      label: fr ? 'Gestion' : 'Management',
+      items: [
+        { id: 'history',    label: fr ? 'Historique & Reçus'  : 'History & Receipts', icon: Clock },
+        { id: 'suppliers',  label: fr ? 'Fournisseurs'        : 'Suppliers',          icon: Users2 },
+        { id: 'batch',      label: fr ? 'Lots & Planification': 'Batches & Planning', icon: CalendarClock },
+      ],
+    },
+    {
+      label: 'Business',
+      items: [
+        { id: 'analytics',  label: fr ? 'Analytique'          : 'Analytics',          icon: BarChart2 },
+        { id: 'team',       label: fr ? 'Équipe & Accès'      : 'Team & Access',      icon: UserCog },
+        { id: 'compliance', label: fr ? 'Conformité KYC'      : 'KYC Compliance',     icon: ShieldCheck },
+        { id: 'api',        label: fr ? 'API & Webhooks'       : 'API & Webhooks',     icon: Code2 },
+      ],
+    },
+    {
+      label: fr ? 'Paramètres' : 'Settings',
+      items: [
+        { id: 'notifications', label: fr ? 'Notifications'     : 'Notifications',      icon: Bell },
+        { id: 'profile',    label: fr ? 'Profil entreprise'   : 'Business Profile',   icon: Building2 },
+        { id: 'support',    label: 'Support',                                          icon: LifeBuoy },
+      ],
+    },
+  ];
+}
 
 const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
@@ -130,8 +140,17 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
   const [activeSection, setActiveSection] = useState('overview');
   const [navOpen, setNavOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [lang, setLang] = useState<'fr' | 'en'>(() =>
+    localStorage.getItem(LANG_KEY) === 'English' ? 'en' : 'fr'
+  );
   const { signOut } = useAuth();
   const navigate = useNavigate();
+
+  const handleLangChange = (language: string) => {
+    const l: 'fr' | 'en' = language === 'English' ? 'en' : 'fr';
+    localStorage.setItem(LANG_KEY, language);
+    setLang(l);
+  };
 
   const handleLogout = async () => {
     await signOut();
@@ -144,18 +163,23 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
     setSearchQuery('');
   };
 
+  const NAV_SECTIONS = getNavSections(lang);
+
   const renderContent = () => {
     switch (activeSection) {
       case 'overview':    return <BusinessOverview user={user} onNavigate={setActiveSection} />;
       case 'payment':     return <BusinessPayments user={user} onBack={() => setActiveSection('overview')} />;
       case 'treasury':    return <BusinessTreasury user={user} />;
       case 'history':     return <BusinessHistory user={user} />;
-      case 'suppliers':   return <BusinessSuppliers user={user} />;
+      case 'suppliers':   return <BusinessSuppliers user={user} onNavigate={setActiveSection} />;
       case 'batch':       return <BusinessBatch user={user} />;
       case 'analytics':   return <BusinessAnalytics user={user} />;
       case 'team':        return <BusinessTeam user={user} />;
       case 'compliance':  return <BusinessCompliance user={user} />;
-      case 'profile':     return <BusinessProfile user={user} />;
+      case 'api':           return <BusinessAPI user={user} />;
+      case 'deposit':       return <BusinessDeposit user={user} onBack={() => setActiveSection('overview')} />;
+      case 'notifications': return <BusinessNotifications user={user} onNavigate={setActiveSection} />;
+      case 'profile':     return <BusinessProfile user={user} onLangChange={handleLangChange} />;
       case 'support':     return <BusinessSupport />;
       default:            return <BusinessOverview user={user} onNavigate={setActiveSection} />;
     }

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Download, TrendingUp, TrendingDown, CheckCircle2, Clock, Loader2, XCircle } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -13,11 +13,10 @@ const C = {
   bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
   teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
   t1: '#f0f0f0', t2: '#999999', t3: '#686868',
-  amber: '#f59e0b', amberT: 'rgba(245,158,11,0.08)', amberB: 'rgba(245,158,11,0.16)',
-  blue: '#3b82f6', blueT: 'rgba(59,130,246,0.08)', blueB: 'rgba(59,130,246,0.16)',
-  em: '#22c55e', emT: 'rgba(34,197,94,0.08)', emB: 'rgba(34,197,94,0.16)',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.16)',
-  purple: '#a855f7', purpleT: 'rgba(168,85,247,0.08)', purpleB: 'rgba(168,85,247,0.20)',
+  amber: '#C9A227', amberT: 'rgba(201,162,39,0.10)',
+  gray2: '#9E9E9E',
+  rust: '#C0392B',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
@@ -44,10 +43,10 @@ const MONTHLY_VOLUME_12 = [
 const MONTHLY_VOLUME_6 = MONTHLY_VOLUME_12.slice(6);
 
 const PIE_DATA = [
-  { name: 'TRC20', value: 83450, color: C.red },
-  { name: 'BEP20', value: 32100, color: C.amber },
-  { name: 'ERC20', value: 10200, color: C.blue },
-  { name: 'Polygon', value: 2700, color: C.purple },
+  { name: 'BEP20',   value: 62400, color: C.amber },
+  { name: 'TRC20',   value: 35200, color: C.teal  },
+  { name: 'ERC20',   value: 13800, color: C.gray2 },
+  { name: 'Polygon', value: 4600,  color: C.rust  },
 ];
 
 const TOP_SUPPLIERS = [
@@ -157,9 +156,9 @@ function KpiCard({ label, value, change, positive }: KpiCardProps) {
       </p>
       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
         {positive
-          ? <TrendingUp style={{ width: 11, height: 11, color: C.em }} />
+          ? <TrendingUp style={{ width: 11, height: 11, color: C.teal }} />
           : <TrendingDown style={{ width: 11, height: 11, color: C.red }} />}
-        <span style={{ color: positive ? C.em : C.red, fontSize: 11, fontFamily: FONT }}>
+        <span style={{ color: positive ? C.teal : C.red, fontSize: 11, fontFamily: FONT }}>
           {change}
         </span>
       </div>
@@ -175,6 +174,7 @@ function ChartCard({ title, children, style }: { title: string; children: React.
       background: C.l1, border: `1px solid ${C.bds}`,
       borderRadius: 12, padding: 20,
       boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+      minWidth: 0, overflow: 'hidden',
       ...style,
     }}>
       <p style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: '0 0 16px', fontFamily: FONT }}>
@@ -243,7 +243,7 @@ function StatusStat({ icon, label, count, pct, color, colorT }: StatusStatProps)
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export function BusinessAnalytics({ user }: { user: { email: string; name: string; id?: string } | null }) {
+export const BusinessAnalytics = React.memo(function BusinessAnalytics({ user }: { user: { email: string; name: string; id?: string } | null }) {
   const [period, setPeriod] = useState<'6m' | '12m' | 'year'>('12m');
   const [downloading, setDownloading] = useState(false);
 
@@ -332,8 +332,9 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
       </div>
 
       {/* Volume + Donut */}
-      <div className="grid grid-cols-1 lg:grid-cols-[3fr,2fr]" style={{ gap: 14, marginBottom: 14 }}>
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr,2fr]" style={{ gap: 14, marginBottom: 14, minWidth: 0 }}>
         <ChartCard title="Volume mensuel — Comparaison">
+          <div style={{ width: '100%', height: 220, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={volumeData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }} barCategoryGap="30%">
               <CartesianGrid strokeDasharray="3 3" stroke={C.bds} vertical={false} />
@@ -349,9 +350,11 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
               <Bar dataKey="prev" name="Année N-1" fill={C.l4} radius={[3, 3, 0, 0]} isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
+          </div>
         </ChartCard>
 
         <ChartCard title="Répartition par réseau">
+          <div style={{ width: '100%', height: 160, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
           <ResponsiveContainer width="100%" height={160}>
             <PieChart>
               <Pie
@@ -378,6 +381,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
               />
             </PieChart>
           </ResponsiveContainer>
+          </div>
           <DonutLegend data={PIE_DATA} />
         </ChartCard>
       </div>
@@ -385,6 +389,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
       {/* Suppliers + Fees */}
       <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 14, marginBottom: 14 }}>
         <ChartCard title="Top fournisseurs par volume">
+          <div style={{ width: '100%', height: 260, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart
               data={TOP_SUPPLIERS}
@@ -420,9 +425,11 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
               />
             </BarChart>
           </ResponsiveContainer>
+          </div>
         </ChartCard>
 
         <ChartCard title={`Frais cumulés — Total: ${totalFees.toLocaleString()} USDT`}>
+          <div style={{ width: '100%', height: 260, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
           <ResponsiveContainer width="100%" height={260}>
             <AreaChart data={feesData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
               <defs>
@@ -450,6 +457,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
               />
             </AreaChart>
           </ResponsiveContainer>
+          </div>
         </ChartCard>
       </div>
 
@@ -468,17 +476,17 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
           <StatusStat
             icon={<CheckCircle2 style={{ width: 14, height: 14 }} />}
             label="Complétées" count={44} pct="93.6%"
-            color={C.em} colorT={C.emT}
+            color={C.teal} colorT={C.tealT}
           />
           <StatusStat
             icon={<Clock style={{ width: 14, height: 14 }} />}
             label="En attente" count={2} pct="4.3%"
-            color={C.amber} colorT={C.amberT}
+            color={C.t2} colorT='rgba(255,255,255,0.05)'
           />
           <StatusStat
             icon={<Loader2 style={{ width: 14, height: 14 }} />}
             label="En cours" count={1} pct="2.1%"
-            color={C.blue} colorT={C.blueT}
+            color={C.t3} colorT='rgba(255,255,255,0.04)'
           />
           <StatusStat
             icon={<XCircle style={{ width: 14, height: 14 }} />}
@@ -488,6 +496,7 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
         </div>
 
         {/* Success rate chart */}
+        <div style={{ width: '100%', height: 160, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
         <ResponsiveContainer width="100%" height={160}>
           <LineChart data={rateData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={C.bds} vertical={false} />
@@ -513,11 +522,13 @@ export function BusinessAnalytics({ user }: { user: { email: string; name: strin
             />
           </LineChart>
         </ResponsiveContainer>
+        </div>
       </div>
 
     </div>
   );
-}
+});
 
 // Suppress unused import warnings
 void MONTHS;
+

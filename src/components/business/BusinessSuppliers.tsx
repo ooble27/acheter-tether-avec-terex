@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Search, Trash2, Edit2, X, Check, Globe, Send } from 'lucide-react';
+import { Plus, Search, Trash2, Edit2, X, Check, Globe, Send, Copy, Clock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface Supplier {
@@ -16,6 +16,7 @@ interface Supplier {
 
 interface Props {
   user: { email: string; name: string } | null;
+  onNavigate?: (section: string) => void;
 }
 
 const NETWORKS = ['TRC20 (TRON)', 'BEP20 (BSC)', 'ERC20 (Ethereum)', 'Polygon (MATIC)'];
@@ -38,9 +39,9 @@ const COUNTRY_CODE: Record<string, string> = {
 
 const NET_COLOR: Record<string, string> = {
   'TRC20 (TRON)':     '#3B968F',
-  'BEP20 (BSC)':      '#F0B90B',
-  'ERC20 (Ethereum)': '#627EEA',
-  'Polygon (MATIC)':  '#8247E5',
+  'BEP20 (BSC)':      '#2d6b66',
+  'ERC20 (Ethereum)': '#5ab5ae',
+  'Polygon (MATIC)':  '#1e4a47',
 };
 
 const NET_LABEL: Record<string, string> = {
@@ -78,25 +79,35 @@ function SupplierCard({
   supplier,
   onEdit,
   onDelete,
+  onPay,
+  onClick,
 }: {
   supplier: Supplier;
   onEdit: () => void;
   onDelete: () => void;
+  onPay: () => void;
+  onClick: () => void;
 }) {
   const code = COUNTRY_CODE[supplier.country] || '--';
   const netColor = NET_COLOR[supplier.network] || C.teal;
   const netLabel = NET_LABEL[supplier.network] || supplier.network;
 
   return (
-    <div style={{
-      background: C.l1,
-      border: `1px solid ${C.bds}`,
-      borderRadius: 14,
-      padding: '16px 16px 14px',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
-      display: 'flex', flexDirection: 'column',
-      fontFamily: FONT,
-    }}>
+    <div
+      onClick={onClick}
+      style={{
+        background: C.l1,
+        border: `1px solid ${C.bds}`,
+        borderRadius: 14,
+        padding: '16px 16px 14px',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+        display: 'flex', flexDirection: 'column',
+        fontFamily: FONT, cursor: 'pointer',
+        transition: 'border-color 0.12s',
+      }}
+      onMouseEnter={e => (e.currentTarget.style.borderColor = C.bdh)}
+      onMouseLeave={e => (e.currentTarget.style.borderColor = C.bds)}
+    >
       {/* Top row: avatar + name + network badge */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
@@ -163,6 +174,7 @@ function SupplierCard({
       {/* Action buttons */}
       <div style={{ display: 'flex', gap: 8 }}>
         <button
+          onClick={e => { e.stopPropagation(); onPay(); }}
           style={{
             flex: 1, height: 36, borderRadius: 8,
             background: C.teal, border: 'none',
@@ -178,7 +190,7 @@ function SupplierCard({
           Payer
         </button>
         <button
-          onClick={onEdit}
+          onClick={e => { e.stopPropagation(); onEdit(); }}
           title="Modifier"
           style={{
             width: 36, height: 36, borderRadius: 8,
@@ -193,7 +205,7 @@ function SupplierCard({
           <Edit2 style={{ width: 13, height: 13 }} />
         </button>
         <button
-          onClick={onDelete}
+          onClick={e => { e.stopPropagation(); onDelete(); }}
           title="Supprimer"
           style={{
             width: 36, height: 36, borderRadius: 8,
@@ -409,20 +421,190 @@ function SupplierModal({
   );
 }
 
+const STATUS_LABEL: Record<string, string> = {
+  pending: 'En attente', processing: 'En cours', completed: 'Complété', failed: 'Échoué',
+};
+const STATUS_COLOR: Record<string, string> = {
+  pending: '#f59e0b', processing: C.t2, completed: C.teal, failed: C.red,
+};
+
+// ── Supplier detail slide-out panel ───────────────────────────────
+function SupplierDetailPanel({
+  supplier,
+  payments,
+  onClose,
+  onEdit,
+  onDelete,
+  onPay,
+}: {
+  supplier: Supplier;
+  payments: any[];
+  onClose: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  onPay: () => void;
+}) {
+  const [copied, setCopied] = useState(false);
+  const code = COUNTRY_CODE[supplier.country] || '--';
+  const netLabel = NET_LABEL[supplier.network] || supplier.network;
+  const netColor = NET_COLOR[supplier.network] || C.teal;
+
+  const supplierPayments = payments
+    .filter(p => p.supplierName === supplier.name || p.wallet === supplier.walletAddress)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 8);
+
+  const totalPaid = payments
+    .filter(p => (p.supplierName === supplier.name || p.wallet === supplier.walletAddress) && p.status === 'completed')
+    .reduce((s, p) => s + (p.amount || 0), 0);
+
+  const copy = () => {
+    navigator.clipboard?.writeText(supplier.walletAddress).catch(() => {});
+    setCopied(true); setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <>
+      <div
+        style={{ position: 'fixed', inset: 0, zIndex: 40, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
+        onClick={onClose}
+      />
+      <div style={{
+        position: 'fixed', top: 0, right: 0, bottom: 0, zIndex: 50,
+        width: '100%', maxWidth: 420,
+        background: '#161616', borderLeft: `1px solid ${C.bd}`,
+        display: 'flex', flexDirection: 'column',
+        boxShadow: '-16px 0 40px rgba(0,0,0,0.5)',
+        fontFamily: FONT,
+      }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 20px', borderBottom: `1px solid ${C.bds}` }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 38, height: 38, borderRadius: 9, background: C.l3, color: C.t2, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, fontFamily: MONO, border: `1px solid ${C.bd}`, flexShrink: 0 }}>
+              {code}
+            </div>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: C.t1 }}>{supplier.name}</div>
+              <div style={{ fontSize: 11, color: C.t3, marginTop: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
+                {code !== '--' && (
+                  <img src={`https://flagcdn.com/20x15/${code.toLowerCase()}.png`} alt={code}
+                    style={{ width: 16, height: 12, borderRadius: 1, objectFit: 'cover' }}
+                    onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+                )}
+                {supplier.country}{supplier.category ? ` · ${supplier.category}` : ''}
+              </div>
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background: C.l3, border: `1px solid ${C.bd}`, borderRadius: 7, width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.t3, cursor: 'pointer' }}>
+            <X style={{ width: 14, height: 14 }} />
+          </button>
+        </div>
+
+        {/* Scrollable body */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '18px 20px', display: 'flex', flexDirection: 'column', gap: 18 }}>
+
+          {/* Stats row */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
+            {[
+              { label: 'Total payé', value: `${totalPaid > 0 ? totalPaid.toLocaleString('fr-FR') : '—'}`, unit: totalPaid > 0 ? 'USDT' : '' },
+              { label: 'Paiements', value: String(supplierPayments.length), unit: '' },
+              { label: 'Réseau', value: netLabel, unit: '' },
+            ].map(stat => (
+              <div key={stat.label} style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 10, padding: '12px 14px' }}>
+                <div style={{ fontSize: 10, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>{stat.label}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: stat.label === 'Réseau' ? netColor : C.t1 }}>{stat.value}</div>
+                {stat.unit && <div style={{ fontSize: 10, color: C.t3 }}>{stat.unit}</div>}
+              </div>
+            ))}
+          </div>
+
+          {/* Wallet address */}
+          <div style={{ background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 10, padding: '14px 16px' }}>
+            <div style={{ fontSize: 10, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>Adresse wallet</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <code style={{ flex: 1, fontSize: 11, color: C.t2, fontFamily: MONO, wordBreak: 'break-all', lineHeight: 1.5 }}>
+                {supplier.walletAddress}
+              </code>
+              <button onClick={copy} style={{ background: copied ? C.tealT : C.l2, border: `1px solid ${copied ? C.tealB : C.bds}`, borderRadius: 7, width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', color: copied ? C.teal : C.t3, cursor: 'pointer', flexShrink: 0, transition: 'all 0.12s' }}>
+                {copied ? <Check style={{ width: 13, height: 13 }} /> : <Copy style={{ width: 13, height: 13 }} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Payment history */}
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 600, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
+              Historique paiements
+            </div>
+            {supplierPayments.length === 0 ? (
+              <div style={{ padding: '28px 16px', textAlign: 'center', background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 10 }}>
+                <Clock style={{ width: 20, height: 20, color: C.t3, margin: '0 auto 8px', display: 'block' }} />
+                <p style={{ color: C.t3, fontSize: 12, margin: 0 }}>Aucun paiement effectué</p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 1, background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 10, overflow: 'hidden' }}>
+                {supplierPayments.map((p, i) => (
+                  <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 14px', borderBottom: i < supplierPayments.length - 1 ? `1px solid ${C.bds}` : 'none' }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: C.t1, fontFamily: MONO }}>{p.reference || p.id}</div>
+                      <div style={{ fontSize: 10, color: C.t3, marginTop: 2 }}>{new Date(p.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+                    </div>
+                    <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: C.t1, fontFamily: MONO }}>{(p.amount || 0).toLocaleString('fr-FR')} USDT</div>
+                      <div style={{ fontSize: 10, marginTop: 2, color: STATUS_COLOR[p.status] || C.t3 }}>{STATUS_LABEL[p.status] || p.status}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Member since */}
+          <div style={{ fontSize: 11, color: C.t3, textAlign: 'center' }}>
+            Ajouté le {new Date(supplier.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+          </div>
+        </div>
+
+        {/* Footer actions */}
+        <div style={{ padding: '14px 20px', borderTop: `1px solid ${C.bds}`, display: 'flex', gap: 8 }}>
+          <button onClick={onPay} style={{ flex: 1, height: 38, borderRadius: 8, background: C.teal, border: 'none', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, fontFamily: FONT, transition: 'background 0.1s' }}
+            onMouseEnter={e => (e.currentTarget.style.background = C.tealH)}
+            onMouseLeave={e => (e.currentTarget.style.background = C.teal)}>
+            <Send style={{ width: 13, height: 13 }} /> Payer
+          </button>
+          <button onClick={onEdit} style={{ width: 38, height: 38, borderRadius: 8, background: C.l2, border: `1px solid ${C.bds}`, color: C.t3, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.1s' }}
+            onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.bd; }}
+            onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = C.bds; }}>
+            <Edit2 style={{ width: 14, height: 14 }} />
+          </button>
+          <button onClick={onDelete} style={{ width: 38, height: 38, borderRadius: 8, background: C.l2, border: `1px solid ${C.bds}`, color: C.t3, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.1s' }}
+            onMouseEnter={e => { e.currentTarget.style.color = C.red; e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.background = C.l2; }}>
+            <Trash2 style={{ width: 14, height: 14 }} />
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
 // ── Main component ────────────────────────────────────────────────
-export function BusinessSuppliers({ user }: Props) {
+export function BusinessSuppliers({ user, onNavigate }: Props) {
   const { session } = useAuth();
   const userId = session?.user?.id || user?.email || 'guest';
   const storageKey = `terex_b2b_${userId}_suppliers`;
 
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [payments, setPayments] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const [modal, setModal] = useState<{ open: boolean; supplier?: Supplier | null }>({ open: false });
+  const [detailSupplier, setDetailSupplier] = useState<Supplier | null>(null);
 
   useEffect(() => {
     try {
       setSuppliers(JSON.parse(localStorage.getItem(storageKey) || '[]'));
+      setPayments(JSON.parse(localStorage.getItem(`terex_b2b_${userId}_payments`) || '[]'));
     } catch {}
   }, [userId]);
 
@@ -454,6 +636,17 @@ export function BusinessSuppliers({ user }: Props) {
           supplier={modal.supplier}
           onSave={handleAdd}
           onClose={() => setModal({ open: false })}
+        />
+      )}
+
+      {detailSupplier && (
+        <SupplierDetailPanel
+          supplier={detailSupplier}
+          payments={payments}
+          onClose={() => setDetailSupplier(null)}
+          onEdit={() => { setDetailSupplier(null); setModal({ open: true, supplier: detailSupplier }); }}
+          onDelete={() => { handleDelete(detailSupplier.id); setDetailSupplier(null); }}
+          onPay={() => { setDetailSupplier(null); onNavigate?.('payment'); }}
         />
       )}
 
@@ -533,8 +726,10 @@ export function BusinessSuppliers({ user }: Props) {
             <SupplierCard
               key={s.id}
               supplier={s}
+              onClick={() => setDetailSupplier(s)}
               onEdit={() => setModal({ open: true, supplier: s })}
               onDelete={() => handleDelete(s.id)}
+              onPay={() => { setDetailSupplier(null); onNavigate?.('payment'); }}
             />
           ))}
         </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   QrCode, ArrowDownToLine, ArrowUpFromLine, Copy, Check,
   X, Bell, Trash2, Plus,
@@ -203,11 +203,47 @@ function AlertModal({ onAdd, onClose }: {
 
 interface Alert { id: number; pair: string; condition: '<' | '>'; threshold: string; active: boolean }
 
+type ChartPoint = { day: string; rate: number };
+
+const FrozenAreaChart = React.memo(
+  ({ data, pair }: { data: ChartPoint[]; pair: 'XOF' | 'EUR' | 'USD' }) => (
+    <div style={{ width: '100%', height: 250, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
+      <ResponsiveContainer width="100%" height={250}>
+        <AreaChart data={data} margin={{ top: 4, right: 2, left: 0, bottom: 0 }}>
+          <defs>
+            <linearGradient id="cGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%"  stopColor={C.teal} stopOpacity={0.22} />
+              <stop offset="95%" stopColor={C.teal} stopOpacity={0.02} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
+          <XAxis dataKey="day" tick={{ fill: C.t3, fontSize: 9, fontFamily: FONT }}
+            tickLine={false} axisLine={false} interval={4} />
+          <YAxis tick={{ fill: C.t3, fontSize: 9, fontFamily: MONO }}
+            tickLine={false} axisLine={false} domain={['auto', 'auto']} width={54}
+            tickFormatter={(v: number) =>
+              pair === 'XOF' ? v.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) : v.toFixed(4)
+            } />
+          <Tooltip content={<ChartTooltip />} />
+          <Area type="monotone" dataKey="rate" stroke={C.teal} strokeWidth={1.5}
+            fill="url(#cGrad)" dot={false} isAnimationActive={false}
+            activeDot={{ r: 4, fill: C.teal, stroke: C.l1, strokeWidth: 2 }} />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  ),
+  (prev, next) => prev.data === next.data && prev.pair === next.pair
+);
+
 export function BusinessTreasury({ user }: { user: { email: string; name: string; id?: string } | null }) {
   void user;
 
   // Taux — on garde les anciennes valeurs pendant le refresh (pas de clignotement)
   const { usdtToCfa, loading: ratesLoading } = useCryptoRates();
+  // Taux gelé pour le graphique — évite de recalculer chartData à chaque tick
+  const frozenCfaRef = useRef(0);
+  if (usdtToCfa > 0 && frozenCfaRef.current === 0) frozenCfaRef.current = usdtToCfa;
+  const chartCfa = frozenCfaRef.current || usdtToCfa;
   const [usdtToEur, setUsdtToEur] = useState(0.9245);
   const [initialLoad, setInitialLoad] = useState(true);
 
@@ -263,13 +299,20 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
     return () => { ctrl.abort(); clearTimeout(tid); };
   }, [chartDays]);
 
-  // Conversion locale selon la paire choisie — aucun re-fetch
+  // Conversion locale — gelée après premier chargement réel (jamais de recalcul)
   const chartData = useMemo(() => rawPrices.map(p => ({
     day: new Date(p.ts).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }),
-    rate: chartPair === 'XOF' ? Math.round(p.usd * usdtToCfa)
+    rate: chartPair === 'XOF' ? Math.round(p.usd * chartCfa)
          : chartPair === 'EUR' ? parseFloat((p.usd * usdtToEur).toFixed(4))
          : parseFloat(p.usd.toFixed(4)),
-  })), [rawPrices, chartPair, usdtToCfa, usdtToEur]);
+  })), [rawPrices, chartPair, chartCfa, usdtToEur]);
+
+  // Geler le rendu du graphique après premier chargement
+  const frozenChartRef = useRef<typeof chartData>([]);
+  if (chartData.length > 0 && frozenChartRef.current.length === 0) {
+    frozenChartRef.current = chartData;
+  }
+  const displayChartData = frozenChartRef.current.length > 0 ? frozenChartRef.current : chartData;
 
   const totalXof = initialLoad ? null : Math.round(TOTAL_USDT * usdtToCfa);
   const totalEur = initialLoad ? null : Math.round(TOTAL_USDT * usdtToEur);
@@ -443,37 +486,12 @@ export function BusinessTreasury({ user }: { user: { email: string; name: string
               <div style={{ height: 250, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <p style={{ color: C.t3, fontSize: 12 }}>Chargement des données…</p>
               </div>
-            ) : chartData.length === 0 ? (
+            ) : displayChartData.length === 0 ? (
               <div style={{ height: 250, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <p style={{ color: C.t3, fontSize: 12 }}>Données indisponibles</p>
               </div>
             ) : (
-              <ResponsiveContainer width="100%" height={250}>
-                <AreaChart data={chartData} margin={{ top: 4, right: 2, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="cGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%"  stopColor={C.teal} stopOpacity={0.22} />
-                      <stop offset="95%" stopColor={C.teal} stopOpacity={0.02} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                  <XAxis dataKey="day"
-                    tick={{ fill: C.t3, fontSize: 9, fontFamily: FONT }}
-                    tickLine={false} axisLine={false} interval={4} />
-                  <YAxis
-                    tick={{ fill: C.t3, fontSize: 9, fontFamily: MONO }}
-                    tickLine={false} axisLine={false} domain={['auto', 'auto']} width={54}
-                    tickFormatter={(v: number) =>
-                      chartPair === 'XOF'
-                        ? v.toLocaleString('fr-FR', { maximumFractionDigits: 0 })
-                        : v.toFixed(4)
-                    } />
-                  <Tooltip content={<ChartTooltip />} />
-                  <Area type="monotone" dataKey="rate" stroke={C.teal} strokeWidth={1.5}
-                    fill="url(#cGrad)" dot={false} isAnimationActive={false}
-                    activeDot={{ r: 4, fill: C.teal, stroke: C.l1, strokeWidth: 2 }} />
-                </AreaChart>
-              </ResponsiveContainer>
+              <FrozenAreaChart data={displayChartData} pair={chartPair} />
             )}
           </div>
         </div>

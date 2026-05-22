@@ -9,7 +9,7 @@ const C = {
   bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
   teal: '#3B968F', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
   t1: '#f0f0f0', t2: '#888888', t3: '#686868', t4: '#333333',
-  amber: '#f59e0b', em: '#22c55e',
+  red: '#ef4444',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
@@ -63,7 +63,7 @@ function CopyBtn({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
   return (
     <button onClick={() => { navigator.clipboard.writeText(text).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 1500); }}
-      style={{ background: 'none', border: 'none', cursor: 'pointer', color: copied ? C.em : C.t3, padding: '2px 4px', display: 'inline-flex', alignItems: 'center', borderRadius: 4, transition: 'color 0.15s' }}
+      style={{ background: 'none', border: 'none', cursor: 'pointer', color: copied ? C.teal : C.t3, padding: '2px 4px', display: 'inline-flex', alignItems: 'center', borderRadius: 4, transition: 'color 0.15s' }}
       onMouseEnter={e => { if (!copied) (e.currentTarget as HTMLButtonElement).style.color = C.t1; }}
       onMouseLeave={e => { if (!copied) (e.currentTarget as HTMLButtonElement).style.color = C.t3; }}>
       {copied ? <Check style={{ width: 12, height: 12 }} /> : <Copy style={{ width: 12, height: 12 }} />}
@@ -269,7 +269,7 @@ export function BusinessHistory({ user }: Props) {
             <h2 style={{ color: C.t1, fontSize: 21, fontWeight: 700, letterSpacing: '-0.03em', margin: 0 }}>Historique & Reçus</h2>
             <p style={{ color: C.t3, fontSize: 12, margin: '5px 0 0' }}>
               {filtered.length} transaction{filtered.length !== 1 ? 's' : ''}
-              {isDemo && <span style={{ color: C.amber }}> · Données de démonstration</span>}
+              {isDemo && <span style={{ color: C.t3 }}> · Données de démonstration</span>}
             </p>
           </div>
           <button onClick={exportCSV} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12, color: C.t3, background: 'rgba(255,255,255,0.05)', border: `1px solid ${C.bds}`, borderRadius: 9, padding: '8px 16px', cursor: 'pointer', fontFamily: FONT, transition: 'all 0.1s', flexShrink: 0 }}

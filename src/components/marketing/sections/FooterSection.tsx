@@ -13,7 +13,8 @@ export function FooterSection() {
         { label: "Acheter USDT", href: "/auth" },
         { label: "Vendre USDT", href: "/auth" },
         { label: "Transfert International", href: "/auth" },
-        { label: "Taux de Change", href: "/" }
+        { label: "Taux de Change", href: "/" },
+        { label: "Business", href: "/business" }
       ]
     },
     {

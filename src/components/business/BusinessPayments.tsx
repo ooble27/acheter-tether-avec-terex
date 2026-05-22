@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Check, ChevronDown, ChevronUp, Clock, Upload, X, Zap, AlertTriangle, Timer } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCryptoRates } from '@/hooks/useCryptoRates';
 import usdtLogo from '@/assets/usdt-logo.png';
 
 const C = {
@@ -8,11 +9,7 @@ const C = {
   bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
   teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
   t1: '#f0f0f0', t2: '#999999', t3: '#686868',
-  amber: '#f59e0b', amberT: 'rgba(245,158,11,0.08)', amberB: 'rgba(245,158,11,0.16)',
-  blue: '#3b82f6', blueT: 'rgba(59,130,246,0.08)', blueB: 'rgba(59,130,246,0.16)',
-  em: '#22c55e', emT: 'rgba(34,197,94,0.08)', emB: 'rgba(34,197,94,0.16)',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.16)',
-  purple: '#a855f7', purpleT: 'rgba(168,85,247,0.08)', purpleB: 'rgba(168,85,247,0.20)',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
@@ -226,6 +223,7 @@ export function BusinessPayments({ user, onBack }: {
 }) {
   const { session } = useAuth();
   const userId = user?.id || session?.user?.id || user?.email || 'guest';
+  const { usdtToCfa, loading: rateLoading } = useCryptoRates();
 
   const [step, setStep] = useState(1);
 
@@ -234,6 +232,7 @@ export function BusinessPayments({ user, onBack }: {
   const [note, setNote] = useState('');
   const [network, setNetwork] = useState('TRC20');
   const [rateLocked, setRateLocked] = useState(false);
+  const [lockedRateValue, setLockedRateValue] = useState(0);
   const [rateCountdown, setRateCountdown] = useState(15 * 60);
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [scheduleOpen, setScheduleOpen] = useState(false);
@@ -572,15 +571,22 @@ export function BusinessPayments({ user, onBack }: {
                 <img src={usdtLogo} alt="USDT" style={{ width: 28, height: 28, borderRadius: '50%' }} />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 10, color: C.t3, marginBottom: 2 }}>Taux actuel</div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: C.t1, fontFamily: MONO }}>1 USDT = 0.9245 EUR</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: rateLoading ? C.t3 : C.t1, fontFamily: MONO }}>
+                    1 USDT = {rateLoading ? '…' : usdtToCfa.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} XOF
+                  </div>
+                  {amountNum >= 100 && !rateLoading && (
+                    <div style={{ fontSize: 12, color: C.teal, marginTop: 3 }}>
+                      ≈ {(amountNum * usdtToCfa).toLocaleString('fr-FR', { maximumFractionDigits: 0 })} XOF
+                    </div>
+                  )}
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: C.em, margin: '0 auto 2px' }} />
-                  <div style={{ fontSize: 9, color: C.t3 }}>Live</div>
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: rateLoading ? C.t3 : C.teal, margin: '0 auto 2px', boxShadow: rateLoading ? 'none' : `0 0 0 3px rgba(59,150,143,0.15)` }} />
+                  <div style={{ fontSize: 9, color: C.t3 }}>{rateLoading ? '…' : 'Live'}</div>
                 </div>
               </div>
               {!rateLocked ? (
-                <button onClick={() => { setRateLocked(true); setRateCountdown(15 * 60); }} style={{
+                <button onClick={() => { setRateLocked(true); setLockedRateValue(usdtToCfa); setRateCountdown(15 * 60); }} style={{
                   width: '100%', background: C.l2, border: `1px solid ${C.bd}`, borderRadius: 8,
                   padding: '10px 16px', color: C.t2, fontSize: 13, fontWeight: 500, cursor: 'pointer',
                   fontFamily: FONT, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center', transition: 'all 0.12s',
@@ -592,9 +598,16 @@ export function BusinessPayments({ user, onBack }: {
                   Figer le taux 15 minutes
                 </button>
               ) : (
-                <div style={{ padding: '10px 14px', background: C.emT, border: `1px solid ${C.emB}`, borderRadius: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Check style={{ width: 14, height: 14, color: C.em }} />
-                  <span style={{ fontSize: 13, color: C.em, fontFamily: MONO }}>Taux figé · {fmt(rateCountdown)} restantes</span>
+                <div style={{ padding: '10px 14px', background: C.tealT, border: `1px solid ${C.tealB}`, borderRadius: 8 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Check style={{ width: 14, height: 14, color: C.teal }} />
+                    <span style={{ fontSize: 13, color: C.teal, fontFamily: MONO }}>
+                      1 USDT = {lockedRateValue.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} XOF — figé
+                    </span>
+                  </div>
+                  <div style={{ fontSize: 11, color: C.t3, marginTop: 4, paddingLeft: 22 }}>
+                    Expire dans {fmt(rateCountdown)}
+                  </div>
                 </div>
               )}
             </Card>
@@ -765,7 +778,7 @@ export function BusinessPayments({ user, onBack }: {
               </div>
 
               {amountNum >= 5000 && (
-                <div style={{ marginTop: 16, padding: '12px 16px', background: C.amberT, border: `1px solid ${C.amberB}`, borderRadius: 8, fontSize: 13, color: C.amber, display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ marginTop: 16, padding: '12px 16px', background: C.redT, border: `1px solid ${C.redB}`, borderRadius: 8, fontSize: 13, color: C.t2, display: 'flex', alignItems: 'center', gap: 10 }}>
                   <AlertTriangle style={{ width: 15, height: 15, flexShrink: 0 }} />
                   Ce paiement requiert l'approbation d'un administrateur Terex
                 </div>
@@ -779,10 +792,10 @@ export function BusinessPayments({ user, onBack }: {
               <Label>Sauvegarder comme modèle</Label>
               {templatesSaved ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 0' }}>
-                  <div style={{ width: 22, height: 22, borderRadius: '50%', background: C.emT, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Check style={{ width: 12, height: 12, color: C.em }} />
+                  <div style={{ width: 22, height: 22, borderRadius: '50%', background: C.tealT, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Check style={{ width: 12, height: 12, color: C.teal }} />
                   </div>
-                  <span style={{ fontSize: 13, color: C.em }}>Modèle sauvegardé</span>
+                  <span style={{ fontSize: 13, color: C.teal }}>Modèle sauvegardé</span>
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

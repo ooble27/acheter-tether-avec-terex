@@ -193,7 +193,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
         </div>
         <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
           <button
-            onClick={() => onNavigate('treasury')}
+            onClick={() => onNavigate('deposit')}
             style={{
               display: 'flex', alignItems: 'center', gap: 7,
               padding: '9px 16px', borderRadius: 8, cursor: 'pointer',
@@ -369,7 +369,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
             </div>
             {[
               { label: 'Envoyer un paiement',    Icon: Send,           primary: true,  action: () => onNavigate('payment') },
-              { label: 'Déposer des fonds',       Icon: ArrowDownToLine, primary: false, action: () => onNavigate('treasury') },
+              { label: 'Déposer des fonds',       Icon: ArrowDownToLine, primary: false, action: () => onNavigate('deposit') },
               { label: 'Ajouter un fournisseur',  Icon: Plus,           primary: false, action: () => onNavigate('suppliers') },
               { label: 'Exporter CSV',             Icon: Download,       primary: false, action: () => onNavigate('history') },
             ].map((item, i, arr) => {
