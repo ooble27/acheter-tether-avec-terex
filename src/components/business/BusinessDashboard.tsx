@@ -168,7 +168,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
       case 'payment':     return <BusinessPayments user={user} onBack={() => setActiveSection('overview')} />;
       case 'treasury':    return <BusinessTreasury user={user} />;
       case 'history':     return <BusinessHistory user={user} />;
-      case 'suppliers':   return <BusinessSuppliers user={user} />;
+      case 'suppliers':   return <BusinessSuppliers user={user} onNavigate={setActiveSection} />;
       case 'batch':       return <BusinessBatch user={user} />;
       case 'analytics':   return <BusinessAnalytics user={user} />;
       case 'team':        return <BusinessTeam user={user} />;
