@@ -3,6 +3,14 @@ import { useCryptoRates } from '@/hooks/useCryptoRates';
 import { Send, Plus, Download, ArrowDownToLine, ArrowRight } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAuth } from '@/contexts/AuthContext';
+import {
+  WaveLogo,
+  OrangeMoneyLogo,
+  FreeMoneyLogo,
+  BankLogo,
+  UsdtLogo,
+  NetworkLogo,
+} from './shared/BrandLogos';
 
 interface Props {
   user: { email: string; name: string } | null;
@@ -10,21 +18,23 @@ interface Props {
 }
 
 const C = {
-  bg:   '#141414',
-  l1:   '#1a1a1a',
-  l2:   '#202020',
-  l3:   '#272727',
-  bd:   '#2e2e2e',
-  bds:  '#222222',
-  teal: '#3B968F',
-  tealD:'rgba(59,150,143,0.08)',
-  t1:   '#e8e8e8',
-  t2:   '#808080',
-  t3:   '#4e4e4e',
+  bg:    '#0f0f0f',
+  l1:    '#161616',
+  l2:    '#1c1c1c',
+  l3:    '#242424',
+  bd:    '#2a2a2a',
+  bds:   '#1e1e1e',
+  teal:  '#3B968F',
+  tealT: 'rgba(59,150,143,0.08)',
+  t1:    '#f0f0f0',
+  t2:    '#848484',
+  t3:    '#525252',
+  t4:    '#2c2c2c',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
-const CARD = 'linear-gradient(160deg, #1c1c1c 0%, #161616 100%)';
+const CARD = 'linear-gradient(160deg,#1c1c1c 0%,#161616 100%)';
+const SHADOW = '0 1px 2px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3)';
 
 const DEMO_VOLUME = [
   { j: 'Lun', v: 1200 }, { j: 'Mar', v: 3400 }, { j: 'Mer', v: 900 },
@@ -109,12 +119,12 @@ export function BusinessOverview({ user, onNavigate }: Props) {
   const rateText  = rateLoading ? '…' : usdtToCfa.toLocaleString('fr-FR', { maximumFractionDigits: 0 });
   const rateAge   = !rateLoading && lastUpdated ? (secAgo < 10 ? 'temps réel' : `il y a ${secAgo}s`) : '';
 
-  /* ─ shared card style ─ */
   const card = {
     background: CARD,
     border: `1px solid ${C.bds}`,
     borderRadius: 16,
     overflow: 'hidden' as const,
+    boxShadow: SHADOW,
   };
 
   return (
@@ -157,20 +167,27 @@ export function BusinessOverview({ user, onNavigate }: Props) {
         <div style={{ padding: '20px 24px' }}>
           <div style={{ display:'flex', alignItems:'stretch', gap:0 }}>
 
-            {/* XOF */}
+            {/* XOF side — payment method logos */}
             <div style={{ flex:1, padding:'16px 20px', borderRight:`1px solid ${C.bds}` }}>
-              <p style={{ fontSize:9, fontWeight:700, color:C.t3, letterSpacing:'0.12em', textTransform:'uppercase', margin:'0 0 12px' }}>
+              <p style={{ fontSize:9, fontWeight:700, color:C.t3, letterSpacing:'0.12em', textTransform:'uppercase', margin:'0 0 14px' }}>
                 Vous déposez
               </p>
-              <p style={{ fontSize:28, fontWeight:800, color:C.t1, margin:0, fontFamily:MONO, letterSpacing:'-0.04em', lineHeight:1 }}>
-                XOF
-              </p>
-              <p style={{ fontSize:11, color:C.t3, margin:'10px 0 0', lineHeight:1.7 }}>
-                Wave<br/>Orange Money<br/>Free Money<br/>Virement bancaire
-              </p>
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+                {[
+                  { Logo: WaveLogo,        label: 'Wave' },
+                  { Logo: OrangeMoneyLogo, label: 'Orange Money' },
+                  { Logo: FreeMoneyLogo,   label: 'Free Money' },
+                  { Logo: BankLogo,        label: 'Virement' },
+                ].map(({ Logo, label }) => (
+                  <div key={label} style={{ display:'flex', alignItems:'center', gap:8 }}>
+                    <Logo size={36} />
+                    <span style={{ fontSize:11, color:C.t2, fontWeight:500, whiteSpace:'nowrap' }}>{label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Taux */}
+            {/* Center — animated arrow + live rate */}
             <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'0 28px', flexShrink:0, gap:10 }}>
               <div style={{ display:'flex', alignItems:'center', gap:3 }}>
                 {[0,1,2,3].map(i => (
@@ -184,20 +201,30 @@ export function BusinessOverview({ user, onNavigate }: Props) {
                   {rateText}
                 </p>
                 <p style={{ fontSize:9, color:C.t3, margin:0 }}>XOF{rateAge ? ` · ${rateAge}` : ''}</p>
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:4, marginTop:5 }}>
+                  <span style={{ width:5, height:5, borderRadius:'50%', background:C.teal, display:'inline-block', boxShadow:`0 0 0 3px ${C.tealT}` }}/>
+                  <span style={{ fontSize:8, color:C.t3, letterSpacing:'0.08em', textTransform:'uppercase' }}>live</span>
+                </div>
               </div>
             </div>
 
-            {/* USDT */}
-            <div style={{ flex:1, padding:'16px 20px', borderLeft:`1px solid ${C.bds}` }}>
-              <p style={{ fontSize:9, fontWeight:700, color:C.teal, letterSpacing:'0.12em', textTransform:'uppercase', margin:'0 0 12px', opacity:0.7 }}>
+            {/* USDT side — logos + network badges */}
+            <div style={{ flex:1, padding:'16px 20px', borderLeft:`1px solid ${C.bds}`, background:'rgba(59,150,143,0.04)', borderRadius:'0 12px 12px 0' }}>
+              <p style={{ fontSize:9, fontWeight:700, color:C.teal, letterSpacing:'0.12em', textTransform:'uppercase', margin:'0 0 14px', opacity:0.8 }}>
                 Destinataire reçoit
               </p>
-              <p style={{ fontSize:28, fontWeight:800, color:C.teal, margin:0, fontFamily:MONO, letterSpacing:'-0.04em', lineHeight:1 }}>
-                USDT
-              </p>
-              <p style={{ fontSize:11, color:C.t3, margin:'10px 0 0', lineHeight:1.7 }}>
-                TRC20<br/>BEP20<br/>ERC20<br/>Polygon
-              </p>
+              <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:14 }}>
+                <UsdtLogo size={40} />
+                <span style={{ fontSize:22, fontWeight:800, color:C.teal, fontFamily:MONO, letterSpacing:'-0.04em', lineHeight:1 }}>USDT</span>
+              </div>
+              <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
+                {(['TRC20','BEP20','ERC20','POLYGON'] as const).map(net => (
+                  <div key={net} style={{ display:'flex', alignItems:'center', gap:5 }}>
+                    <NetworkLogo network={net} size={20} />
+                    <span style={{ fontSize:10, color:C.t3, fontWeight:500 }}>{net}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
           </div>
@@ -212,7 +239,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
           { label:'En attente',       value: pending > 0 ? String(pending) : '—', unit: pending > 0 ? 'paiement' + (pending>1?'s':'') : '', sub:'À traiter' },
           { label:'Fournisseurs',     value: suppliers.length > 0 ? String(suppliers.length) : '—', unit:'', sub:'Contacts enregistrés' },
         ].map(s => (
-          <div key={s.label} style={{ ...card, padding:'16px 18px' }}>
+          <div key={s.label} style={{ ...card, padding:'16px 18px', borderRadius:14 }}>
             <p style={{ fontSize:9.5, fontWeight:600, color:C.t3, letterSpacing:'0.09em', textTransform:'uppercase', margin:'0 0 10px' }}>
               {s.label}
             </p>
@@ -242,7 +269,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
 
           {recent.length === 0 ? (
             <div style={{ padding:'48px 20px', textAlign:'center' }}>
-              <div style={{ width:40, height:40, borderRadius:10, background:C.tealD, display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 12px' }}>
+              <div style={{ width:40, height:40, borderRadius:10, background:C.tealT, display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 12px' }}>
                 <Send style={{ width:15, height:15, color:C.teal }}/>
               </div>
               <p style={{ color:C.t3, fontSize:13, margin:'0 0 8px' }}>Aucune transaction</p>
@@ -264,9 +291,14 @@ export function BusinessOverview({ user, onNavigate }: Props) {
                     <p style={{ fontSize:13, fontWeight:500, color:C.t1, margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
                       {tx.supplierName || 'Fournisseur'}
                     </p>
-                    <p style={{ fontSize:11, color:C.t3, margin:'2px 0 0' }}>
+                    <p style={{ fontSize:11, color:C.t3, margin:'2px 0 0', display:'flex', alignItems:'center', gap:6 }}>
                       {new Date(tx.createdAt).toLocaleDateString('fr-FR')}
-                      {tx.network && <span style={{ marginLeft:6, background:C.l3, borderRadius:4, padding:'1px 5px', fontSize:9.5 }}>{tx.network}</span>}
+                      {tx.network && (
+                        <span style={{ display:'inline-flex', alignItems:'center', gap:3, background:C.l3, borderRadius:4, padding:'1px 5px', fontSize:9.5 }}>
+                          <NetworkLogo network={tx.network as 'TRC20'|'BEP20'|'ERC20'|'POLYGON'} size={12} />
+                          {tx.network}
+                        </span>
+                      )}
                     </p>
                   </div>
                   <div style={{ textAlign:'right', flexShrink:0 }}>
@@ -369,7 +401,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
               <Tooltip content={<Tip/>} cursor={{ stroke:C.teal, strokeWidth:1, strokeDasharray:'4 4' }}/>
               <Area type="monotone" dataKey="v" stroke={C.teal} strokeWidth={1.5}
                 fill="url(#vg)" dot={false} isAnimationActive={false}
-                activeDot={{ r:3, fill:C.teal, stroke:'#141414', strokeWidth:2 }}/>
+                activeDot={{ r:3, fill:C.teal, stroke:'#0f0f0f', strokeWidth:2 }}/>
             </AreaChart>
           </ResponsiveContainer>
         </div>
