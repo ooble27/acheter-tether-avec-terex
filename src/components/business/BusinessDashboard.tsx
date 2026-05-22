@@ -5,7 +5,7 @@ import {
   Building2, LifeBuoy, LogOut,
   ArrowLeft, Menu, X,
   Wallet, CalendarClock, BarChart2, UserCog, ShieldCheck,
-  Search, Code2,
+  Search, Code2, Bell,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { BusinessOverview } from './BusinessOverview';
@@ -20,6 +20,7 @@ import { BusinessBatch } from './BusinessBatch';
 import { BusinessTeam } from './BusinessTeam';
 import { BusinessCompliance } from './BusinessCompliance';
 import { BusinessAPI } from './BusinessAPI';
+import { BusinessNotifications } from './BusinessNotifications';
 
 interface BusinessDashboardProps {
   user: { id?: string; email: string; name: string } | null;
@@ -58,6 +59,7 @@ function getNavSections(lang: 'fr' | 'en') {
     {
       label: fr ? 'Paramètres' : 'Settings',
       items: [
+        { id: 'notifications', label: fr ? 'Notifications'     : 'Notifications',      icon: Bell },
         { id: 'profile',    label: fr ? 'Profil entreprise'   : 'Business Profile',   icon: Building2 },
         { id: 'support',    label: 'Support',                                          icon: LifeBuoy },
       ],
@@ -173,7 +175,8 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
       case 'analytics':   return <BusinessAnalytics user={user} />;
       case 'team':        return <BusinessTeam user={user} />;
       case 'compliance':  return <BusinessCompliance user={user} />;
-      case 'api':         return <BusinessAPI user={user} />;
+      case 'api':           return <BusinessAPI user={user} />;
+      case 'notifications': return <BusinessNotifications user={user} onNavigate={setActiveSection} />;
       case 'profile':     return <BusinessProfile user={user} onLangChange={handleLangChange} />;
       case 'support':     return <BusinessSupport />;
       default:            return <BusinessOverview user={user} onNavigate={setActiveSection} />;
