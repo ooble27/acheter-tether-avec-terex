@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useCryptoRates } from '@/hooks/useCryptoRates';
-import { Send, Plus, Download, ArrowDownToLine, ArrowRight, Globe, Wallet, TrendingUp, Clock } from 'lucide-react';
+import { Send, Plus, Download, ArrowDownToLine, ArrowRight } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -10,223 +10,56 @@ interface Props {
 }
 
 const C = {
-  bg: '#151515', l1: '#1c1c1c', l2: '#222222', l3: '#2a2a2a', l4: '#333333',
-  bd: '#303030', bds: '#252525', bdh: '#404040',
-  teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.07)', tealB: 'rgba(59,150,143,0.18)',
-  t1: '#efefef', t2: '#8a8a8a', t3: '#5a5a5a', t4: '#2e2e2e',
-  amber: '#d97706', amberT: 'rgba(217,119,6,0.08)',
-  blue: '#3b82f6', blueT: 'rgba(59,130,246,0.08)',
-  red: '#dc2626', redT: 'rgba(220,38,38,0.08)',
-  gold: '#c9a84c',
+  bg:   '#141414',
+  l1:   '#1a1a1a',
+  l2:   '#202020',
+  l3:   '#272727',
+  bd:   '#2e2e2e',
+  bds:  '#222222',
+  teal: '#3B968F',
+  tealD:'rgba(59,150,143,0.08)',
+  t1:   '#e8e8e8',
+  t2:   '#808080',
+  t3:   '#4e4e4e',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
-const CARD = 'linear-gradient(145deg, #1d1d1d 0%, #181818 55%, #131313 100%)';
-const CARD_BORDER = '#252525';
+const CARD = 'linear-gradient(160deg, #1c1c1c 0%, #161616 100%)';
 
-const VOLUME_DEMO = [
-  { jour: 'Lun', usdt: 1200, xof: 744000 },
-  { jour: 'Mar', usdt: 3400, xof: 2108000 },
-  { jour: 'Mer', usdt: 800,  xof: 496000 },
-  { jour: 'Jeu', usdt: 5200, xof: 3224000 },
-  { jour: 'Ven', usdt: 2100, xof: 1302000 },
-  { jour: 'Sam', usdt: 4800, xof: 2976000 },
-  { jour: 'Auj', usdt: 1600, xof: 992000 },
+const DEMO_VOLUME = [
+  { j: 'Lun', v: 1200 }, { j: 'Mar', v: 3400 }, { j: 'Mer', v: 900 },
+  { j: 'Jeu', v: 5200 }, { j: 'Ven', v: 2100 }, { j: 'Sam', v: 4600 },
+  { j: 'Auj', v: 1800 },
 ];
 
-function StatusPill({ status }: { status: string }) {
-  const map: Record<string, { label: string; bg: string; color: string }> = {
-    pending:    { label: 'En attente', bg: C.amberT, color: C.amber },
-    processing: { label: 'En cours',   bg: C.blueT,  color: C.blue  },
-    completed:  { label: 'Complété',   bg: C.tealT,  color: C.teal  },
-    failed:     { label: 'Échoué',     bg: C.redT,   color: C.red   },
-  };
-  const s = map[status] || { label: status, bg: C.l3, color: C.t3 };
-  return (
-    <span style={{
-      display: 'inline-flex', alignItems: 'center',
-      padding: '2px 8px', borderRadius: 999, fontSize: 10.5, fontWeight: 500,
-      background: s.bg, color: s.color, fontFamily: FONT, whiteSpace: 'nowrap',
-    }}>
-      {s.label}
-    </span>
-  );
-}
+const STATUS: Record<string, string> = {
+  pending:    'En attente',
+  processing: 'En cours',
+  completed:  'Complété',
+  failed:     'Échoué',
+};
 
-function InitialAvatar({ name, size = 32 }: { name: string; size?: number }) {
-  const parts = (name || 'U').split(' ').filter(Boolean);
-  const initials = parts.length >= 2
-    ? (parts[0][0] + parts[1][0]).toUpperCase()
-    : (parts[0]?.slice(0, 2) || 'U').toUpperCase();
+function Avatar({ name, size = 32 }: { name: string; size?: number }) {
+  const p = (name || 'U').split(' ').filter(Boolean);
+  const s = p.length >= 2 ? (p[0][0] + p[1][0]).toUpperCase() : (p[0]?.slice(0, 2) || 'U').toUpperCase();
   return (
     <div style={{
       width: size, height: size, borderRadius: 8,
-      background: 'rgba(59,150,143,0.14)', color: C.teal,
+      background: 'rgba(59,150,143,0.12)', color: C.teal,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: size * 0.38, fontWeight: 600, flexShrink: 0, fontFamily: FONT,
-    }}>
-      {initials}
-    </div>
+      fontSize: size * 0.38, fontWeight: 600, flexShrink: 0,
+    }}>{s}</div>
   );
 }
 
-function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number }>; label?: string }) {
+function Tip({ active, payload, label }: { active?: boolean; payload?: Array<{value:number}>; label?: string }) {
   if (!active || !payload?.length) return null;
   return (
     <div style={{ background: C.l2, border: `1px solid ${C.bd}`, borderRadius: 8, padding: '8px 12px', fontFamily: FONT }}>
-      <p style={{ color: C.t3, fontSize: 11, margin: '0 0 4px' }}>{label}</p>
+      <p style={{ color: C.t3, fontSize: 11, margin: '0 0 3px' }}>{label}</p>
       <p style={{ color: C.t1, fontSize: 13, fontWeight: 600, margin: 0, fontFamily: MONO }}>
         {payload[0].value.toLocaleString('fr-FR')} USDT
       </p>
-    </div>
-  );
-}
-
-/* ─── Composant "Flux" — visualise le pipeline XOF→USDT ─── */
-function FlowHero({ usdtToCfa, loading, firstName, today, onNavigate }: {
-  usdtToCfa: number; loading: boolean;
-  firstName: string; today: string;
-  onNavigate: (s: string) => void;
-}) {
-  return (
-    <div style={{
-      background: CARD, border: `1px solid ${CARD_BORDER}`,
-      borderRadius: 18, overflow: 'hidden', position: 'relative',
-    }}>
-      {/* Subtle top glow line */}
-      <div style={{
-        position: 'absolute', top: 0, left: '20%', right: '20%', height: 1,
-        background: `linear-gradient(90deg, transparent, ${C.teal}44, transparent)`,
-      }} />
-
-      <div style={{ padding: '22px 28px' }}>
-        {/* Header row */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 28, flexWrap: 'wrap' as const }}>
-          <div>
-            <p style={{ color: C.t3, fontSize: 11, margin: 0, textTransform: 'capitalize', fontFamily: FONT }}>
-              {today}
-            </p>
-            <h2 style={{ color: C.t1, fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em', margin: '3px 0 0', fontFamily: FONT }}>
-              Bonjour, {firstName}
-            </h2>
-          </div>
-          <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-            <button
-              onClick={() => onNavigate('deposit')}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 6,
-                padding: '7px 13px', borderRadius: 8, cursor: 'pointer',
-                fontSize: 12, fontWeight: 500, fontFamily: FONT,
-                background: 'transparent', border: `1px solid ${C.bd}`, color: C.t2,
-                transition: 'all 0.15s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = C.teal; e.currentTarget.style.color = C.t1; e.currentTarget.style.background = C.tealT; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = C.bd; e.currentTarget.style.color = C.t2; e.currentTarget.style.background = 'transparent'; }}
-            >
-              <ArrowDownToLine style={{ width: 12, height: 12 }} />
-              Déposer
-            </button>
-            <button
-              onClick={() => onNavigate('payment')}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 6,
-                padding: '7px 14px', borderRadius: 8, cursor: 'pointer',
-                fontSize: 12, fontWeight: 600, fontFamily: FONT,
-                background: C.teal, border: `1px solid ${C.teal}`, color: '#fff',
-                transition: 'background 0.15s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.tealH; e.currentTarget.style.borderColor = C.tealH; }}
-              onMouseLeave={e => { e.currentTarget.style.background = C.teal; e.currentTarget.style.borderColor = C.teal; }}
-            >
-              <Send style={{ width: 12, height: 12 }} />
-              Envoyer un paiement
-            </button>
-          </div>
-        </div>
-
-        {/* Pipeline flow */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
-
-          {/* LEFT — XOF */}
-          <div style={{
-            flex: 1, background: 'rgba(255,255,255,0.025)',
-            border: `1px solid ${C.bd}`, borderRadius: 12,
-            padding: '14px 18px',
-          }}>
-            <p style={{ fontSize: 9.5, fontWeight: 700, color: C.t3, letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 10px', fontFamily: FONT }}>
-              Vous déposez
-            </p>
-            <p style={{ fontSize: 22, fontWeight: 800, color: C.t1, margin: 0, fontFamily: MONO, letterSpacing: '-0.03em' }}>
-              XOF
-            </p>
-            <p style={{ fontSize: 11, color: C.t3, margin: '6px 0 0', fontFamily: FONT, lineHeight: 1.5 }}>
-              Wave · Orange Money<br />
-              Free Money · Virement
-            </p>
-          </div>
-
-          {/* CENTER — Arrow + rate */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 16px', flexShrink: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 8 }}>
-              {[0, 1, 2].map(i => (
-                <div key={i} style={{
-                  width: 18, height: 1.5,
-                  background: `linear-gradient(90deg, ${C.teal}${i === 0 ? '44' : i === 1 ? '99' : 'ff'}, ${C.teal}${i === 2 ? '99' : 'ff'})`,
-                  borderRadius: 2,
-                }} />
-              ))}
-              <ArrowRight style={{ width: 14, height: 14, color: C.teal }} />
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <p style={{ fontSize: 9, color: C.t3, margin: 0, letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: FONT }}>
-                taux live
-              </p>
-              <p style={{
-                fontSize: loading ? 13 : 15, fontWeight: 700,
-                color: loading ? C.t3 : C.teal,
-                margin: '3px 0 0', fontFamily: MONO,
-                letterSpacing: '-0.02em', whiteSpace: 'nowrap',
-              }}>
-                {loading ? '…' : usdtToCfa.toLocaleString('fr-FR', { maximumFractionDigits: 0 })}
-              </p>
-              <p style={{ fontSize: 9, color: C.t3, margin: '1px 0 0', fontFamily: FONT }}>
-                XOF / USDT
-              </p>
-            </div>
-          </div>
-
-          {/* RIGHT — USDT */}
-          <div style={{
-            flex: 1, background: C.tealT,
-            border: `1px solid ${C.teal}33`, borderRadius: 12,
-            padding: '14px 18px',
-          }}>
-            <p style={{ fontSize: 9.5, fontWeight: 700, color: C.teal, letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 10px', fontFamily: FONT, opacity: 0.7 }}>
-              Destinataire reçoit
-            </p>
-            <p style={{ fontSize: 22, fontWeight: 800, color: C.teal, margin: 0, fontFamily: MONO, letterSpacing: '-0.03em' }}>
-              USDT
-            </p>
-            <p style={{ fontSize: 11, color: C.t3, margin: '6px 0 0', fontFamily: FONT, lineHeight: 1.5 }}>
-              TRC20 · BEP20<br />
-              ERC20 · Polygon
-            </p>
-          </div>
-
-        </div>
-
-        {/* Bottom legend */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 14, paddingTop: 14, borderTop: `1px solid ${C.bds}` }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <Globe style={{ width: 11, height: 11, color: C.t3 }} />
-            <span style={{ fontSize: 10.5, color: C.t3, fontFamily: FONT }}>Envoi mondial · Chine, Asie, Europe…</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginLeft: 'auto' }}>
-            <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.teal }} />
-            <span style={{ fontSize: 10.5, color: C.t3, fontFamily: FONT }}>Taux actualisé en temps réel</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
@@ -235,266 +68,271 @@ export function BusinessOverview({ user, onNavigate }: Props) {
   const { session } = useAuth();
   const { usdtToCfa, loading: rateLoading, lastUpdated } = useCryptoRates();
   const userId = session?.user?.id || user?.email || 'guest';
-  const key = (k: string) => `terex_b2b_${userId}_${k}`;
+  const k = (x: string) => `terex_b2b_${userId}_${x}`;
 
-  const [payments, setPayments] = useState<any[]>([]);
+  const [payments, setPayments]   = useState<any[]>([]);
   const [suppliers, setSuppliers] = useState<any[]>([]);
-  const [secAgo, setSecAgo] = useState(0);
+  const [secAgo, setSecAgo]       = useState(0);
 
   useEffect(() => {
     try {
-      setPayments(JSON.parse(localStorage.getItem(key('payments')) || '[]'));
-      setSuppliers(JSON.parse(localStorage.getItem(key('suppliers')) || '[]'));
+      setPayments(JSON.parse(localStorage.getItem(k('payments'))  || '[]'));
+      setSuppliers(JSON.parse(localStorage.getItem(k('suppliers'))|| '[]'));
     } catch {}
   }, [userId]);
 
   useEffect(() => {
-    const tick = setInterval(() => {
+    const t = setInterval(() => {
       if (lastUpdated) setSecAgo(Math.round((Date.now() - lastUpdated.getTime()) / 1000));
     }, 5000);
-    return () => clearInterval(tick);
+    return () => clearInterval(t);
   }, [lastUpdated]);
 
-  const completed = payments.filter(p => p.status === 'completed');
-  const totalUsdt = completed.reduce((s, p) => s + (p.amount || 0), 0);
-  const totalXof = totalUsdt * usdtToCfa;
-  const pendingCount = payments.filter(p => ['pending', 'processing'].includes(p.status)).length;
-  const recent = [...payments]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 6);
+  const done      = payments.filter(p => p.status === 'completed');
+  const usdtTotal = done.reduce((s, p) => s + (p.amount || 0), 0);
+  const pending   = payments.filter(p => ['pending','processing'].includes(p.status)).length;
+  const recent    = [...payments].sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5);
 
-  const volumeData = payments.length > 0
-    ? (() => {
-        const labels = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Auj'];
-        const days: Record<string, number> = {};
-        labels.forEach(l => { days[l] = 0; });
-        payments.forEach(p => {
-          const d = new Date(p.createdAt).getDay();
-          const label = labels[d === 0 ? 6 : d - 1] || 'Auj';
-          days[label] = (days[label] || 0) + (p.amount || 0);
-        });
-        return labels.map(jour => ({ jour, usdt: days[jour] || 0 }));
-      })()
-    : VOLUME_DEMO;
+  const chart = payments.length > 0 ? (() => {
+    const lbl = ['Lun','Mar','Mer','Jeu','Ven','Sam','Auj'];
+    const d: Record<string,number> = {}; lbl.forEach(l => { d[l] = 0; });
+    payments.forEach(p => {
+      const day = new Date(p.createdAt).getDay();
+      const l   = lbl[day === 0 ? 6 : day - 1] || 'Auj';
+      d[l] = (d[l] || 0) + (p.amount || 0);
+    });
+    return lbl.map(j => ({ j, v: d[j] || 0 }));
+  })() : DEMO_VOLUME;
 
-  const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const today     = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
   const firstName = (user?.name || '').split(' ')[0] || 'là';
+  const rateText  = rateLoading ? '…' : usdtToCfa.toLocaleString('fr-FR', { maximumFractionDigits: 0 });
+  const rateAge   = !rateLoading && lastUpdated ? (secAgo < 10 ? 'temps réel' : `il y a ${secAgo}s`) : '';
 
-  const stats = [
-    {
-      label: 'USDT envoyé',
-      value: totalUsdt > 0 ? totalUsdt.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) : '—',
-      unit: totalUsdt > 0 ? 'USDT' : '',
-      sub: 'Volume ce mois',
-      Icon: TrendingUp,
-    },
-    {
-      label: 'Équivalent XOF',
-      value: totalXof > 0 ? (totalXof / 1000000).toFixed(1) + 'M' : '—',
-      unit: totalXof > 0 ? 'XOF' : '',
-      sub: 'Fonds reçus',
-      Icon: Wallet,
-    },
-    {
-      label: 'En attente',
-      value: String(pendingCount || '—'),
-      unit: pendingCount > 0 ? 'tx' : '',
-      sub: 'Paiements en cours',
-      Icon: Clock,
-    },
-    {
-      label: 'Fournisseurs',
-      value: String(suppliers.length || '—'),
-      unit: '',
-      sub: 'Contacts actifs',
-      Icon: Globe,
-    },
-  ];
+  /* ─ shared card style ─ */
+  const card = {
+    background: CARD,
+    border: `1px solid ${C.bds}`,
+    borderRadius: 16,
+    overflow: 'hidden' as const,
+  };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14, fontFamily: FONT }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontFamily: FONT }}>
 
-      {/* 1. Hero — pipeline XOF → USDT */}
-      <FlowHero
-        usdtToCfa={usdtToCfa}
-        loading={rateLoading}
-        firstName={firstName}
-        today={today}
-        onNavigate={onNavigate}
-      />
-
-      {/* 2. Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4" style={{ gap: 10 }}>
-        {stats.map(stat => {
-          const { Icon } = stat;
-          return (
-            <div key={stat.label} style={{
-              background: CARD, border: `1px solid ${CARD_BORDER}`,
-              borderRadius: 14, padding: '16px 18px',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                <p style={{ fontSize: 9.5, fontWeight: 700, color: C.t3, letterSpacing: '0.1em', margin: 0, textTransform: 'uppercase' }}>
-                  {stat.label}
-                </p>
-                <div style={{ width: 26, height: 26, borderRadius: 7, background: C.tealT, border: `1px solid ${C.teal}22`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Icon style={{ width: 12, height: 12, color: C.teal }} />
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 5 }}>
-                <span style={{ fontSize: 24, fontWeight: 700, color: C.t1, lineHeight: 1, fontFamily: MONO, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>
-                  {stat.value}
-                </span>
-                {stat.unit && <span style={{ fontSize: 10, color: C.t3, fontFamily: FONT }}>{stat.unit}</span>}
-              </div>
-              <p style={{ fontSize: 11, color: C.t3, margin: '6px 0 0', fontFamily: FONT }}>{stat.sub}</p>
-            </div>
-          );
-        })}
+      {/* ── 1. Header ── */}
+      <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', flexWrap:'wrap', gap:12, paddingBottom: 4 }}>
+        <div>
+          <p style={{ fontSize: 11, color: C.t3, margin: 0, textTransform: 'capitalize' }}>{today}</p>
+          <h2 style={{ fontSize: 19, fontWeight: 700, color: C.t1, margin: '4px 0 0', letterSpacing: '-0.025em' }}>
+            Bonjour, {firstName}
+          </h2>
+        </div>
+        <div style={{ display:'flex', gap:8 }}>
+          <button onClick={() => onNavigate('deposit')} style={{
+            display:'flex', alignItems:'center', gap:6, padding:'8px 14px', borderRadius:8,
+            background:'transparent', border:`1px solid ${C.bd}`, color:C.t2,
+            fontSize:12, fontWeight:500, cursor:'pointer', fontFamily:FONT, transition:'all 0.15s',
+          }}
+            onMouseEnter={e=>{ e.currentTarget.style.borderColor=C.teal; e.currentTarget.style.color=C.t1; }}
+            onMouseLeave={e=>{ e.currentTarget.style.borderColor=C.bd;   e.currentTarget.style.color=C.t2; }}
+          >
+            <ArrowDownToLine style={{width:12,height:12}} /> Déposer
+          </button>
+          <button onClick={() => onNavigate('payment')} style={{
+            display:'flex', alignItems:'center', gap:6, padding:'8px 15px', borderRadius:8,
+            background:C.teal, border:`1px solid ${C.teal}`, color:'#fff',
+            fontSize:12, fontWeight:600, cursor:'pointer', fontFamily:FONT, transition:'background 0.15s',
+          }}
+            onMouseEnter={e=>{ e.currentTarget.style.background='#2d7870'; }}
+            onMouseLeave={e=>{ e.currentTarget.style.background=C.teal;    }}
+          >
+            <Send style={{width:12,height:12}} /> Envoyer un paiement
+          </button>
+        </div>
       </div>
 
-      {/* 3. Main 2-col */}
-      <div className="grid grid-cols-1 lg:grid-cols-[3fr,2fr]" style={{ gap: 12 }}>
+      {/* ── 2. Pipeline XOF → USDT ── */}
+      <div style={{ ...card }}>
+        <div style={{ padding: '20px 24px' }}>
+          <div style={{ display:'flex', alignItems:'stretch', gap:0 }}>
 
-        {/* LEFT — Transactions récentes */}
-        <div style={{ background: CARD, border: `1px solid ${CARD_BORDER}`, borderRadius: 14, overflow: 'hidden' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: `1px solid ${C.bds}` }}>
-            <h3 style={{ fontSize: 12, fontWeight: 600, color: C.t1, margin: 0, letterSpacing: '-0.01em' }}>Transactions récentes</h3>
-            <button
-              onClick={() => onNavigate('history')}
-              style={{ fontSize: 11, color: C.teal, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: FONT, opacity: 0.85 }}
-              onMouseEnter={e => { e.currentTarget.style.opacity = '1'; }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = '0.85'; }}
-            >
-              Tout voir →
-            </button>
+            {/* XOF */}
+            <div style={{ flex:1, padding:'16px 20px', borderRight:`1px solid ${C.bds}` }}>
+              <p style={{ fontSize:9, fontWeight:700, color:C.t3, letterSpacing:'0.12em', textTransform:'uppercase', margin:'0 0 12px' }}>
+                Vous déposez
+              </p>
+              <p style={{ fontSize:28, fontWeight:800, color:C.t1, margin:0, fontFamily:MONO, letterSpacing:'-0.04em', lineHeight:1 }}>
+                XOF
+              </p>
+              <p style={{ fontSize:11, color:C.t3, margin:'10px 0 0', lineHeight:1.7 }}>
+                Wave<br/>Orange Money<br/>Free Money<br/>Virement bancaire
+              </p>
+            </div>
+
+            {/* Taux */}
+            <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'0 28px', flexShrink:0, gap:10 }}>
+              <div style={{ display:'flex', alignItems:'center', gap:3 }}>
+                {[0,1,2,3].map(i => (
+                  <div key={i} style={{ width:10, height:1, background: C.teal, opacity: 0.3 + i * 0.2, borderRadius:1 }}/>
+                ))}
+                <ArrowRight style={{ width:13, height:13, color:C.teal }}/>
+              </div>
+              <div style={{ textAlign:'center' }}>
+                <p style={{ fontSize:9, color:C.t3, margin:0, letterSpacing:'0.1em', textTransform:'uppercase' }}>1 USDT</p>
+                <p style={{ fontSize:20, fontWeight:700, color:C.teal, margin:'4px 0 2px', fontFamily:MONO, letterSpacing:'-0.03em' }}>
+                  {rateText}
+                </p>
+                <p style={{ fontSize:9, color:C.t3, margin:0 }}>XOF{rateAge ? ` · ${rateAge}` : ''}</p>
+              </div>
+            </div>
+
+            {/* USDT */}
+            <div style={{ flex:1, padding:'16px 20px', borderLeft:`1px solid ${C.bds}` }}>
+              <p style={{ fontSize:9, fontWeight:700, color:C.teal, letterSpacing:'0.12em', textTransform:'uppercase', margin:'0 0 12px', opacity:0.7 }}>
+                Destinataire reçoit
+              </p>
+              <p style={{ fontSize:28, fontWeight:800, color:C.teal, margin:0, fontFamily:MONO, letterSpacing:'-0.04em', lineHeight:1 }}>
+                USDT
+              </p>
+              <p style={{ fontSize:11, color:C.t3, margin:'10px 0 0', lineHeight:1.7 }}>
+                TRC20<br/>BEP20<br/>ERC20<br/>Polygon
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* ── 3. Métriques ── */}
+      <div className="grid grid-cols-2 md:grid-cols-4" style={{ gap:10 }}>
+        {[
+          { label:'Volume envoyé',    value: usdtTotal > 0 ? usdtTotal.toLocaleString('fr-FR', {maximumFractionDigits:0}) : '—', unit: usdtTotal > 0 ? 'USDT' : '', sub:'Ce mois, complété' },
+          { label:'Taux en cours',    value: rateText, unit:'XOF', sub:'Par 1 USDT' },
+          { label:'En attente',       value: pending > 0 ? String(pending) : '—', unit: pending > 0 ? 'paiement' + (pending>1?'s':'') : '', sub:'À traiter' },
+          { label:'Fournisseurs',     value: suppliers.length > 0 ? String(suppliers.length) : '—', unit:'', sub:'Contacts enregistrés' },
+        ].map(s => (
+          <div key={s.label} style={{ ...card, padding:'16px 18px' }}>
+            <p style={{ fontSize:9.5, fontWeight:600, color:C.t3, letterSpacing:'0.09em', textTransform:'uppercase', margin:'0 0 10px' }}>
+              {s.label}
+            </p>
+            <div style={{ display:'flex', alignItems:'baseline', gap:5 }}>
+              <span style={{ fontSize:24, fontWeight:700, color:C.t1, fontFamily:MONO, letterSpacing:'-0.03em', fontVariantNumeric:'tabular-nums', lineHeight:1 }}>
+                {s.value}
+              </span>
+              {s.unit && <span style={{ fontSize:10, color:C.t3 }}>{s.unit}</span>}
+            </div>
+            <p style={{ fontSize:11, color:C.t3, margin:'6px 0 0' }}>{s.sub}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* ── 4. Corps — transactions + actions ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr,2fr]" style={{ gap:10 }}>
+
+        {/* Transactions */}
+        <div style={{ ...card }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 20px', borderBottom:`1px solid ${C.bds}` }}>
+            <span style={{ fontSize:12, fontWeight:600, color:C.t1 }}>Transactions récentes</span>
+            <button onClick={() => onNavigate('history')} style={{ fontSize:11, color:C.teal, background:'none', border:'none', cursor:'pointer', fontFamily:FONT, padding:0, opacity:.8 }}
+              onMouseEnter={e=>{ e.currentTarget.style.opacity='1'; }}
+              onMouseLeave={e=>{ e.currentTarget.style.opacity='.8'; }}
+            >Voir tout →</button>
           </div>
 
           {recent.length === 0 ? (
-            <div style={{ padding: '48px 20px', textAlign: 'center' }}>
-              <div style={{ width: 42, height: 42, borderRadius: 10, background: C.tealT, border: `1px solid ${C.teal}22`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
-                <Send style={{ width: 16, height: 16, color: C.teal }} />
+            <div style={{ padding:'48px 20px', textAlign:'center' }}>
+              <div style={{ width:40, height:40, borderRadius:10, background:C.tealD, display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 12px' }}>
+                <Send style={{ width:15, height:15, color:C.teal }}/>
               </div>
-              <p style={{ color: C.t3, fontSize: 13, margin: 0 }}>Aucune transaction pour l'instant</p>
-              <button
-                onClick={() => onNavigate('payment')}
-                style={{ color: C.teal, fontSize: 12, background: 'none', border: 'none', cursor: 'pointer', marginTop: 10, fontFamily: FONT, opacity: 0.8 }}
-                onMouseEnter={e => { e.currentTarget.style.opacity = '1'; }}
-                onMouseLeave={e => { e.currentTarget.style.opacity = '0.8'; }}
-              >
-                Créer votre premier paiement →
-              </button>
+              <p style={{ color:C.t3, fontSize:13, margin:'0 0 8px' }}>Aucune transaction</p>
+              <button onClick={() => onNavigate('payment')} style={{ color:C.teal, fontSize:12, background:'none', border:'none', cursor:'pointer', fontFamily:FONT, opacity:.8 }}
+                onMouseEnter={e=>{ e.currentTarget.style.opacity='1'; }}
+                onMouseLeave={e=>{ e.currentTarget.style.opacity='.8'; }}
+              >Créer votre premier paiement →</button>
             </div>
           ) : (
-            <div>
+            <>
               {recent.map((tx, i) => (
-                <div
-                  key={tx.id}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 12, padding: '11px 20px',
-                    borderBottom: i < recent.length - 1 ? `1px solid ${C.bds}` : 'none',
-                    transition: 'background 0.1s', cursor: 'default',
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.025)')}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                <div key={tx.id}
+                  style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 20px', borderBottom: i < recent.length-1 ? `1px solid ${C.bds}` : 'none', transition:'background .1s' }}
+                  onMouseEnter={e=>{ e.currentTarget.style.background='rgba(255,255,255,0.02)'; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background='transparent'; }}
                 >
-                  <InitialAvatar name={tx.supplierName || '?'} size={34} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 13, fontWeight: 500, color: C.t1, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <Avatar name={tx.supplierName || '?'} size={34}/>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <p style={{ fontSize:13, fontWeight:500, color:C.t1, margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
                       {tx.supplierName || 'Fournisseur'}
                     </p>
-                    <p style={{ fontSize: 11, color: C.t3, margin: '2px 0 0', fontFamily: FONT }}>
+                    <p style={{ fontSize:11, color:C.t3, margin:'2px 0 0' }}>
                       {new Date(tx.createdAt).toLocaleDateString('fr-FR')}
-                      {tx.network ? <span style={{ marginLeft: 6, background: C.l3, borderRadius: 4, padding: '1px 5px', fontSize: 10 }}>{tx.network}</span> : null}
+                      {tx.network && <span style={{ marginLeft:6, background:C.l3, borderRadius:4, padding:'1px 5px', fontSize:9.5 }}>{tx.network}</span>}
                     </p>
                   </div>
-                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                    <p style={{ fontSize: 13, fontWeight: 600, color: C.t1, margin: 0, fontFamily: MONO, fontVariantNumeric: 'tabular-nums' }}>
+                  <div style={{ textAlign:'right', flexShrink:0 }}>
+                    <p style={{ fontSize:13, fontWeight:600, color:C.t1, margin:0, fontFamily:MONO, fontVariantNumeric:'tabular-nums' }}>
                       {(tx.amount || 0).toLocaleString('fr-FR')}
-                      <span style={{ color: C.t3, fontWeight: 400, fontSize: 10, marginLeft: 4 }}>USDT</span>
+                      <span style={{ fontSize:10, color:C.t3, fontWeight:400, marginLeft:4 }}>USDT</span>
                     </p>
-                    {tx.xofAmount && (
-                      <p style={{ fontSize: 10, color: C.t3, margin: '1px 0 0', fontFamily: MONO }}>
-                        {(tx.xofAmount || tx.amount * usdtToCfa).toLocaleString('fr-FR', { maximumFractionDigits: 0 })} XOF
-                      </p>
-                    )}
-                    <div style={{ marginTop: 4 }}>
-                      <StatusPill status={tx.status} />
-                    </div>
+                    <p style={{ fontSize:10, color:C.t3, margin:'3px 0 0' }}>
+                      {STATUS[tx.status] || tx.status}
+                    </p>
                   </div>
                 </div>
               ))}
-            </div>
+            </>
           )}
         </div>
 
-        {/* RIGHT — Actions + taux */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {/* Actions + taux */}
+        <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
 
-          {/* Mini rate strip */}
-          <div style={{
-            background: CARD, border: `1px solid ${CARD_BORDER}`,
-            borderRadius: 14, padding: '12px 18px',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          }}>
-            <div>
-              <p style={{ fontSize: 9.5, fontWeight: 700, color: C.t3, letterSpacing: '0.1em', textTransform: 'uppercase', margin: 0, fontFamily: FONT }}>USDT / XOF</p>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 5, marginTop: 6 }}>
-                <span style={{ fontSize: 22, fontWeight: 700, color: rateLoading ? C.t3 : C.t1, fontFamily: MONO, letterSpacing: '-0.03em' }}>
-                  {rateLoading ? '—' : usdtToCfa.toLocaleString('fr-FR', { maximumFractionDigits: 0 })}
-                </span>
-                <span style={{ fontSize: 10, color: C.t3 }}>XOF</span>
-              </div>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: C.teal, marginLeft: 'auto', marginBottom: 4 }} />
-              <p style={{ fontSize: 10, color: C.t3, margin: 0, fontFamily: FONT }}>
-                {!rateLoading && lastUpdated
-                  ? secAgo < 10 ? 'Temps réel' : `il y a ${secAgo}s`
-                  : 'Chargement…'}
-              </p>
-            </div>
+          {/* Taux compact */}
+          <div style={{ ...card, padding:'16px 20px' }}>
+            <p style={{ fontSize:9.5, fontWeight:600, color:C.t3, letterSpacing:'0.09em', textTransform:'uppercase', margin:'0 0 8px' }}>USDT / XOF</p>
+            <p style={{ fontSize:26, fontWeight:700, color:C.t1, margin:0, fontFamily:MONO, letterSpacing:'-0.03em', lineHeight:1 }}>
+              {rateText}
+            </p>
+            <p style={{ fontSize:10, color:C.t3, margin:'6px 0 0' }}>
+              {rateAge || 'Chargement…'}
+            </p>
           </div>
 
-          {/* Actions rapides */}
-          <div style={{ background: CARD, border: `1px solid ${CARD_BORDER}`, borderRadius: 14, overflow: 'hidden', flex: 1 }}>
-            <div style={{ padding: '12px 18px', borderBottom: `1px solid ${C.bds}` }}>
-              <p style={{ fontSize: 9.5, fontWeight: 700, color: C.t3, letterSpacing: '0.1em', textTransform: 'uppercase', margin: 0, fontFamily: FONT }}>
-                Actions rapides
-              </p>
+          {/* Actions */}
+          <div style={{ ...card, flex:1 }}>
+            <div style={{ padding:'12px 18px', borderBottom:`1px solid ${C.bds}` }}>
+              <p style={{ fontSize:9.5, fontWeight:600, color:C.t3, letterSpacing:'0.09em', textTransform:'uppercase', margin:0 }}>Actions</p>
             </div>
             {[
-              { label: 'Envoyer un paiement',   Icon: Send,            accent: true,  action: 'payment'   },
-              { label: 'Déposer des fonds',      Icon: ArrowDownToLine, accent: false, action: 'deposit'   },
-              { label: 'Ajouter un fournisseur', Icon: Plus,            accent: false, action: 'suppliers' },
-              { label: 'Historique & Export',    Icon: Download,        accent: false, action: 'history'   },
-            ].map((item, i, arr) => {
-              const { Icon } = item;
+              { label:'Envoyer un paiement',    Icon:Send,            to:'payment',   primary:true  },
+              { label:'Déposer des fonds',       Icon:ArrowDownToLine, to:'deposit',   primary:false },
+              { label:'Ajouter un fournisseur',  Icon:Plus,            to:'suppliers', primary:false },
+              { label:'Historique',              Icon:Download,        to:'history',   primary:false },
+            ].map((a, i, arr) => {
+              const { Icon } = a;
               return (
-                <button
-                  key={item.label}
-                  onClick={() => onNavigate(item.action)}
+                <button key={a.label} onClick={() => onNavigate(a.to)}
                   style={{
-                    width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-                    padding: '10px 16px', background: 'transparent', border: 'none',
-                    cursor: 'pointer', textAlign: 'left',
-                    borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none',
-                    transition: 'background 0.1s', fontFamily: FONT,
+                    width:'100%', display:'flex', alignItems:'center', gap:10,
+                    padding:'10px 16px', background:'transparent', border:'none',
+                    borderBottom: i < arr.length-1 ? `1px solid ${C.bds}` : 'none',
+                    cursor:'pointer', fontFamily:FONT, transition:'background .1s', textAlign:'left',
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.03)')}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                  onMouseEnter={e=>{ e.currentTarget.style.background='rgba(255,255,255,0.025)'; }}
+                  onMouseLeave={e=>{ e.currentTarget.style.background='transparent'; }}
                 >
                   <div style={{
-                    width: 28, height: 28, borderRadius: 7, flexShrink: 0,
-                    background: item.accent ? C.teal : C.l3,
-                    border: `1px solid ${item.accent ? C.teal : C.bd}`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    width:28, height:28, borderRadius:7, flexShrink:0,
+                    background: a.primary ? C.teal : C.l3,
+                    border:`1px solid ${a.primary ? C.teal : C.bd}`,
+                    display:'flex', alignItems:'center', justifyContent:'center',
                   }}>
-                    <Icon style={{ width: 12, height: 12, color: item.accent ? '#fff' : C.t2 }} />
+                    <Icon style={{ width:12, height:12, color: a.primary ? '#fff' : C.t2 }}/>
                   </div>
-                  <span style={{ fontSize: 12, fontWeight: item.accent ? 500 : 400, color: item.accent ? C.t1 : C.t2 }}>
-                    {item.label}
+                  <span style={{ fontSize:12, color: a.primary ? C.t1 : C.t2, fontWeight: a.primary ? 500 : 400 }}>
+                    {a.label}
                   </span>
-                  <span style={{ marginLeft: 'auto', fontSize: 11, color: C.t4 }}>›</span>
+                  <span style={{ marginLeft:'auto', color:C.t3, fontSize:13 }}>›</span>
                 </button>
               );
             })}
@@ -502,40 +340,36 @@ export function BusinessOverview({ user, onNavigate }: Props) {
         </div>
       </div>
 
-      {/* 4. Volume chart */}
-      <div style={{ background: CARD, border: `1px solid ${CARD_BORDER}`, borderRadius: 14, overflow: 'hidden' }}>
-        <div style={{ padding: '14px 20px', borderBottom: `1px solid ${C.bds}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      {/* ── 5. Graphique ── */}
+      <div style={{ ...card }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 20px', borderBottom:`1px solid ${C.bds}` }}>
           <div>
-            <h3 style={{ fontSize: 12, fontWeight: 600, color: C.t1, margin: 0, letterSpacing: '-0.01em' }}>Volume hebdomadaire</h3>
-            <p style={{ fontSize: 10, color: C.t3, margin: '3px 0 0', fontFamily: FONT }}>USDT envoyé · 7 derniers jours</p>
+            <span style={{ fontSize:12, fontWeight:600, color:C.t1 }}>Volume hebdomadaire</span>
+            <p style={{ fontSize:10, color:C.t3, margin:'3px 0 0' }}>USDT envoyé · 7 jours</p>
           </div>
           {payments.length === 0 && (
-            <span style={{ fontSize: 9.5, color: C.t3, background: C.l3, border: `1px solid ${C.bd}`, borderRadius: 5, padding: '3px 8px', fontFamily: FONT, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            <span style={{ fontSize:9.5, color:C.t3, background:C.l3, border:`1px solid ${C.bd}`, borderRadius:5, padding:'3px 8px', letterSpacing:'0.06em', textTransform:'uppercase' }}>
               Aperçu
             </span>
           )}
         </div>
-        <div style={{ padding: '14px 14px 10px' }}>
+        <div style={{ padding:'14px 14px 10px' }}>
           <ResponsiveContainer width="100%" height={110}>
-            <AreaChart data={volumeData} margin={{ top: 4, right: 4, bottom: 0, left: -14 }}>
+            <AreaChart data={chart} margin={{ top:4, right:4, bottom:0, left:-14 }}>
               <defs>
-                <linearGradient id="volGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor={C.teal} stopOpacity={0.18} />
-                  <stop offset="95%" stopColor={C.teal} stopOpacity={0} />
+                <linearGradient id="vg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%"   stopColor={C.teal} stopOpacity={0.15}/>
+                  <stop offset="100%" stopColor={C.teal} stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.035)" vertical={false} />
-              <XAxis dataKey="jour" tick={{ fill: C.t3, fontSize: 9.5 }} axisLine={false} tickLine={false} />
-              <YAxis
-                tick={{ fill: C.t3, fontSize: 9.5 }} axisLine={false} tickLine={false}
-                tickFormatter={v => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)}
-              />
-              <Tooltip content={<ChartTooltip />} cursor={{ stroke: C.teal, strokeWidth: 1, strokeDasharray: '4 4' }} />
-              <Area
-                type="monotone" dataKey="usdt" stroke={C.teal} strokeWidth={1.5}
-                fill="url(#volGrad)" dot={false} isAnimationActive={false}
-                activeDot={{ r: 3, fill: C.teal, stroke: '#131313', strokeWidth: 2 }}
-              />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false}/>
+              <XAxis dataKey="j" tick={{ fill:C.t3, fontSize:9.5 }} axisLine={false} tickLine={false}/>
+              <YAxis tick={{ fill:C.t3, fontSize:9.5 }} axisLine={false} tickLine={false}
+                tickFormatter={v => v>=1000 ? `${(v/1000).toFixed(0)}k` : String(v)}/>
+              <Tooltip content={<Tip/>} cursor={{ stroke:C.teal, strokeWidth:1, strokeDasharray:'4 4' }}/>
+              <Area type="monotone" dataKey="v" stroke={C.teal} strokeWidth={1.5}
+                fill="url(#vg)" dot={false} isAnimationActive={false}
+                activeDot={{ r:3, fill:C.teal, stroke:'#141414', strokeWidth:2 }}/>
             </AreaChart>
           </ResponsiveContainer>
         </div>
