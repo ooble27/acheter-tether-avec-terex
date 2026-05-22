@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Check, ChevronDown, ChevronUp, Clock, Upload, X, Zap, AlertTriangle, Timer } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCryptoRates } from '@/hooks/useCryptoRates';
 import usdtLogo from '@/assets/usdt-logo.png';
 
 const C = {
@@ -222,6 +223,7 @@ export function BusinessPayments({ user, onBack }: {
 }) {
   const { session } = useAuth();
   const userId = user?.id || session?.user?.id || user?.email || 'guest';
+  const { usdtToCfa, loading: rateLoading } = useCryptoRates();
 
   const [step, setStep] = useState(1);
 
@@ -230,6 +232,7 @@ export function BusinessPayments({ user, onBack }: {
   const [note, setNote] = useState('');
   const [network, setNetwork] = useState('TRC20');
   const [rateLocked, setRateLocked] = useState(false);
+  const [lockedRateValue, setLockedRateValue] = useState(0);
   const [rateCountdown, setRateCountdown] = useState(15 * 60);
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [scheduleOpen, setScheduleOpen] = useState(false);
@@ -568,15 +571,22 @@ export function BusinessPayments({ user, onBack }: {
                 <img src={usdtLogo} alt="USDT" style={{ width: 28, height: 28, borderRadius: '50%' }} />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 10, color: C.t3, marginBottom: 2 }}>Taux actuel</div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: C.t1, fontFamily: MONO }}>1 USDT = 0.9245 EUR</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: rateLoading ? C.t3 : C.t1, fontFamily: MONO }}>
+                    1 USDT = {rateLoading ? '…' : usdtToCfa.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} XOF
+                  </div>
+                  {amountNum >= 100 && !rateLoading && (
+                    <div style={{ fontSize: 12, color: C.teal, marginTop: 3 }}>
+                      ≈ {(amountNum * usdtToCfa).toLocaleString('fr-FR', { maximumFractionDigits: 0 })} XOF
+                    </div>
+                  )}
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: C.teal, margin: '0 auto 2px' }} />
-                  <div style={{ fontSize: 9, color: C.t3 }}>Live</div>
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: rateLoading ? C.t3 : C.teal, margin: '0 auto 2px', boxShadow: rateLoading ? 'none' : `0 0 0 3px rgba(59,150,143,0.15)` }} />
+                  <div style={{ fontSize: 9, color: C.t3 }}>{rateLoading ? '…' : 'Live'}</div>
                 </div>
               </div>
               {!rateLocked ? (
-                <button onClick={() => { setRateLocked(true); setRateCountdown(15 * 60); }} style={{
+                <button onClick={() => { setRateLocked(true); setLockedRateValue(usdtToCfa); setRateCountdown(15 * 60); }} style={{
                   width: '100%', background: C.l2, border: `1px solid ${C.bd}`, borderRadius: 8,
                   padding: '10px 16px', color: C.t2, fontSize: 13, fontWeight: 500, cursor: 'pointer',
                   fontFamily: FONT, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center', transition: 'all 0.12s',
@@ -588,9 +598,16 @@ export function BusinessPayments({ user, onBack }: {
                   Figer le taux 15 minutes
                 </button>
               ) : (
-                <div style={{ padding: '10px 14px', background: C.tealT, border: `1px solid ${C.tealB}`, borderRadius: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Check style={{ width: 14, height: 14, color: C.teal }} />
-                  <span style={{ fontSize: 13, color: C.teal, fontFamily: MONO }}>Taux figé · {fmt(rateCountdown)} restantes</span>
+                <div style={{ padding: '10px 14px', background: C.tealT, border: `1px solid ${C.tealB}`, borderRadius: 8 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Check style={{ width: 14, height: 14, color: C.teal }} />
+                    <span style={{ fontSize: 13, color: C.teal, fontFamily: MONO }}>
+                      1 USDT = {lockedRateValue.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} XOF — figé
+                    </span>
+                  </div>
+                  <div style={{ fontSize: 11, color: C.t3, marginTop: 4, paddingLeft: 22 }}>
+                    Expire dans {fmt(rateCountdown)}
+                  </div>
                 </div>
               )}
             </Card>

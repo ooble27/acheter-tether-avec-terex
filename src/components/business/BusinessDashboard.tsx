@@ -5,7 +5,7 @@ import {
   Building2, LifeBuoy, LogOut,
   ArrowLeft, Menu, X,
   Wallet, CalendarClock, BarChart2, UserCog, ShieldCheck,
-  Search,
+  Search, Code2,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { BusinessOverview } from './BusinessOverview';
@@ -19,6 +19,7 @@ import { BusinessAnalytics } from './BusinessAnalytics';
 import { BusinessBatch } from './BusinessBatch';
 import { BusinessTeam } from './BusinessTeam';
 import { BusinessCompliance } from './BusinessCompliance';
+import { BusinessAPI } from './BusinessAPI';
 
 interface BusinessDashboardProps {
   user: { id?: string; email: string; name: string } | null;
@@ -51,6 +52,7 @@ function getNavSections(lang: 'fr' | 'en') {
         { id: 'analytics',  label: fr ? 'Analytique'          : 'Analytics',          icon: BarChart2 },
         { id: 'team',       label: fr ? 'Équipe & Accès'      : 'Team & Access',      icon: UserCog },
         { id: 'compliance', label: fr ? 'Conformité KYC'      : 'KYC Compliance',     icon: ShieldCheck },
+        { id: 'api',        label: fr ? 'API & Webhooks'       : 'API & Webhooks',     icon: Code2 },
       ],
     },
     {
@@ -171,6 +173,7 @@ export function BusinessDashboard({ user }: BusinessDashboardProps) {
       case 'analytics':   return <BusinessAnalytics user={user} />;
       case 'team':        return <BusinessTeam user={user} />;
       case 'compliance':  return <BusinessCompliance user={user} />;
+      case 'api':         return <BusinessAPI user={user} />;
       case 'profile':     return <BusinessProfile user={user} onLangChange={handleLangChange} />;
       case 'support':     return <BusinessSupport />;
       default:            return <BusinessOverview user={user} onNavigate={setActiveSection} />;
