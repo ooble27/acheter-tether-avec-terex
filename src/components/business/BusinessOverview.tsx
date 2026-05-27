@@ -16,15 +16,8 @@ const C = {
   teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
   t1: '#f0f0f0', t2: '#888888', t3: '#565656',
 };
-const FONT   = "'Inter', sans-serif";
-const MONO   = '"JetBrains Mono", Consolas, monospace';
-const HERO_BG = 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)';
-
-const DEMO_VOLUME = [
-  { j: 'Lun', v: 1200 }, { j: 'Mar', v: 3400 }, { j: 'Mer', v:  900 },
-  { j: 'Jeu', v: 5200 }, { j: 'Ven', v: 2100 }, { j: 'Sam', v: 4600 },
-  { j: 'Auj', v: 1800 },
-];
+const FONT = "'Inter', sans-serif";
+const MONO = '"JetBrains Mono", Consolas, monospace';
 
 const STATUS: Record<string, string> = {
   pending:    'En attente',
@@ -58,16 +51,16 @@ function ChartTip({ active, payload, label }: { active?: boolean; payload?: Arra
   );
 }
 
-const cardSt = {
+const cardSt: React.CSSProperties = {
   background: C.l1,
   border: `1px solid ${C.bds}`,
   borderRadius: 14,
-  overflow: 'hidden' as const,
+  overflow: 'hidden',
 };
 
 const sectionHead: React.CSSProperties = {
   color: C.t3, fontSize: 10, fontWeight: 600,
-  letterSpacing: '0.1em', textTransform: 'uppercase' as const, margin: 0,
+  letterSpacing: '0.1em', textTransform: 'uppercase', margin: 0,
 };
 
 export function BusinessOverview({ user, onNavigate }: Props) {
@@ -76,9 +69,9 @@ export function BusinessOverview({ user, onNavigate }: Props) {
   const userId = session?.user?.id || user?.email || 'guest';
   const k = (x: string) => `terex_b2b_${userId}_${x}`;
 
-  const [payments,   setPayments]   = useState<any[]>([]);
-  const [suppliers,  setSuppliers]  = useState<any[]>([]);
-  const [secAgo,     setSecAgo]     = useState(0);
+  const [payments,  setPayments]  = useState<any[]>([]);
+  const [suppliers, setSuppliers] = useState<any[]>([]);
+  const [secAgo,    setSecAgo]    = useState(0);
 
   useEffect(() => {
     try {
@@ -100,9 +93,10 @@ export function BusinessOverview({ user, onNavigate }: Props) {
   const pending   = payments.filter(p => ['pending','processing'].includes(p.status)).length;
   const recent    = [...payments]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 6);
+    .slice(0, 5);
 
-  const chart = payments.length > 0 ? (() => {
+  /* Chart — uniquement avec de vraies données */
+  const chartData = payments.length > 0 ? (() => {
     const lbl = ['Lun','Mar','Mer','Jeu','Ven','Sam','Auj'];
     const d: Record<string,number> = {}; lbl.forEach(l => { d[l] = 0; });
     payments.forEach(p => {
@@ -111,7 +105,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
       d[l] = (d[l] || 0) + (p.amount || 0);
     });
     return lbl.map(j => ({ j, v: d[j] || 0 }));
-  })() : DEMO_VOLUME;
+  })() : null;
 
   const today     = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
   const firstName = (user?.name || '').split(' ')[0] || 'là';
@@ -120,246 +114,243 @@ export function BusinessOverview({ user, onNavigate }: Props) {
 
   return (
     <div style={{ fontFamily: FONT, color: C.t1, paddingTop: 8 }}>
-
-      {/* ── Layout 2 colonnes : contenu gauche / héro droite ── */}
       <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr]" style={{ gap: 14, alignItems: 'start' }}>
 
-        {/* ══ COLONNE GAUCHE ══ */}
-        <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
+        {/* ══ COLONNE GAUCHE : héro + graphique ══ */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+
+          {/* Héro — identique au style Treasury */}
+          <div style={{
+            background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)',
+            border: `1px solid ${C.bds}`, borderRadius: 16,
+            padding: '30px 28px 26px',
+            boxShadow: '0 4px 32px rgba(0,0,0,0.45)',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+              <img src={usdtLogo} alt="USDT" style={{ width: 24, height: 24, borderRadius: '50%' }} />
+              <span style={{ ...sectionHead }}>Vue d'ensemble</span>
+            </div>
+
+            <p style={{ fontSize: 11, color: C.t3, margin: '0 0 2px', textTransform: 'capitalize' }}>{today}</p>
+            <p style={{ fontSize: 16, fontWeight: 600, color: C.t2, margin: '0 0 22px', letterSpacing: '-0.01em' }}>
+              Bonjour, {firstName}
+            </p>
+
+            <div style={{ marginBottom: 22 }}>
+              <p style={{ color: C.t3, fontSize: 10, margin: '0 0 8px', fontWeight: 500 }}>Volume envoyé ce mois</p>
+              <p style={{
+                color: C.t1, fontSize: 50, fontWeight: 700, fontFamily: MONO,
+                margin: 0, letterSpacing: '-0.04em', lineHeight: 1,
+              }}>
+                {usdtTotal > 0 ? usdtTotal.toLocaleString('fr-FR') : '—'}
+                <span style={{ color: C.t3, fontSize: 18, fontWeight: 400, marginLeft: 10, letterSpacing: 0 }}>USDT</span>
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', gap: 0, marginBottom: 28 }}>
+              <div style={{ paddingRight: 24 }}>
+                <p style={{ color: C.t3, fontSize: 10, margin: '0 0 3px', fontWeight: 500 }}>≈ en XOF</p>
+                <p style={{ color: C.t2, fontSize: 16, fontFamily: MONO, fontWeight: 600, margin: 0 }}>
+                  {xofTotal === null ? '—' : xofTotal > 0 ? xofTotal.toLocaleString('fr-FR') : '—'}
+                </p>
+              </div>
+              <div style={{ width: 1, background: C.bds, alignSelf: 'stretch', marginRight: 24 }} />
+              <div>
+                <p style={{ color: C.t3, fontSize: 10, margin: '0 0 3px', fontWeight: 500 }}>En attente</p>
+                <p style={{ color: C.t2, fontSize: 16, fontFamily: MONO, fontWeight: 600, margin: 0 }}>
+                  {pending > 0 ? pending : '—'}
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button onClick={() => onNavigate('deposit')} style={{
+                height: 36, paddingLeft: 16, paddingRight: 16,
+                background: 'transparent', border: `1px solid ${C.bd}`,
+                borderRadius: 9, color: C.t2, fontSize: 12, fontWeight: 500,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                fontFamily: FONT, whiteSpace: 'nowrap', transition: 'all 0.15s',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = C.tealB; e.currentTarget.style.color = C.teal; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = C.bd;    e.currentTarget.style.color = C.t2;  }}
+              >
+                <ArrowDownToLine style={{ width: 13, height: 13 }} /> Déposer
+              </button>
+              <button onClick={() => onNavigate('payment')} style={{
+                height: 36, paddingLeft: 18, paddingRight: 18,
+                background: C.teal, border: 'none', borderRadius: 9,
+                color: '#fff', fontSize: 12, fontWeight: 500,
+                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                fontFamily: FONT, whiteSpace: 'nowrap', transition: 'background 0.15s',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.background = C.tealH; }}
+                onMouseLeave={e => { e.currentTarget.style.background = C.teal;  }}
+              >
+                <Send style={{ width: 13, height: 13 }} /> Envoyer un paiement
+              </button>
+            </div>
+          </div>
+
+          {/* Graphique — seulement avec de vraies données */}
+          {chartData ? (
+            <div style={{ ...cardSt, padding: '18px 20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                <div>
+                  <h3 style={{ fontSize: 13, fontWeight: 600, color: C.t1, margin: 0 }}>Volume hebdomadaire</h3>
+                  <p style={{ fontSize: 10, color: C.t3, margin: '3px 0 0' }}>USDT envoyé · 7 derniers jours</p>
+                </div>
+              </div>
+              <ResponsiveContainer width="100%" height={130}>
+                <AreaChart data={chartData} margin={{ top: 4, right: 4, bottom: 0, left: -14 }}>
+                  <defs>
+                    <linearGradient id="ovG" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%"   stopColor={C.teal} stopOpacity={0.18} />
+                      <stop offset="100%" stopColor={C.teal} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
+                  <XAxis dataKey="j" tick={{ fill: C.t3, fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: C.t3, fontSize: 10 }} axisLine={false} tickLine={false}
+                    tickFormatter={v => v >= 1000 ? `${(v/1000).toFixed(0)}k` : String(v)} />
+                  <Tooltip content={<ChartTip />} cursor={{ stroke: C.teal, strokeWidth: 1, strokeDasharray: '4 4' }} />
+                  <Area type="monotone" dataKey="v" stroke={C.teal} strokeWidth={1.5}
+                    fill="url(#ovG)" dot={false} isAnimationActive={false}
+                    activeDot={{ r: 3, fill: C.teal, stroke: '#141414', strokeWidth: 2 }} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            /* État vide — pas de données réelles */
+            <div style={{ ...cardSt, padding: '32px 24px', textAlign: 'center' }}>
+              <div style={{ width: 40, height: 40, borderRadius: 10, background: C.tealT, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+                <Send style={{ width: 15, height: 15, color: C.teal }} />
+              </div>
+              <p style={{ color: C.t2, fontSize: 13, margin: '0 0 4px', fontWeight: 500 }}>Aucune transaction encore</p>
+              <p style={{ color: C.t3, fontSize: 11, margin: '0 0 16px' }}>Votre activité apparaîtra ici après votre premier paiement.</p>
+              <button onClick={() => onNavigate('payment')} style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                padding: '8px 16px', borderRadius: 8,
+                background: C.teal, border: 'none', color: '#fff',
+                fontSize: 12, fontWeight: 500, cursor: 'pointer', fontFamily: FONT,
+              }}>
+                <Send style={{ width: 12, height: 12 }} /> Créer un paiement
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* ══ COLONNE DROITE : taux + transactions + actions ══ */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+
+          {/* Taux live */}
+          <div style={{ ...cardSt, padding: '20px 22px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <span style={{ ...sectionHead }}>Taux en cours</span>
+              <span style={{ fontSize: 10, color: C.t3 }}>{rateAge}</span>
+            </div>
+            <p style={{ fontSize: 38, fontWeight: 700, color: C.t1, fontFamily: MONO, margin: 0, letterSpacing: '-0.03em', lineHeight: 1 }}>
+              {rateText}
+            </p>
+            <p style={{ fontSize: 11, color: C.t3, margin: '6px 0 0' }}>XOF par 1 USDT</p>
+          </div>
+
+          {/* Résumé chiffres */}
+          <div style={{ ...cardSt }}>
+            <div style={{ padding: '14px 20px', borderBottom: `1px solid ${C.bds}` }}>
+              <span style={{ ...sectionHead }}>Résumé</span>
+            </div>
+            {[
+              { label: 'Transactions totales', value: payments.length > 0 ? String(payments.length) : '—' },
+              { label: 'Complétées',           value: done.length > 0 ? String(done.length) : '—' },
+              { label: 'Fournisseurs',         value: suppliers.length > 0 ? String(suppliers.length) : '—' },
+            ].map((row, i, arr) => (
+              <div key={row.label} style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '11px 20px',
+                borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none',
+              }}>
+                <span style={{ fontSize: 12, color: C.t3 }}>{row.label}</span>
+                <span style={{ fontSize: 13, fontWeight: 600, color: C.t1, fontFamily: MONO }}>{row.value}</span>
+              </div>
+            ))}
+          </div>
 
           {/* Transactions récentes */}
           <div style={{ ...cardSt }}>
-            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 20px', borderBottom:`1px solid ${C.bds}` }}>
-              <h3 style={{ fontSize:13, fontWeight:600, color:C.t1, margin:0 }}>Transactions récentes</h3>
-              <button onClick={() => onNavigate('history')}
-                style={{ fontSize:12, color:C.teal, background:'none', border:'none', cursor:'pointer', padding:0, fontFamily:FONT }}
-                onMouseEnter={e=>{ e.currentTarget.style.opacity='.75'; }}
-                onMouseLeave={e=>{ e.currentTarget.style.opacity='1'; }}
-              >Voir tout →</button>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: `1px solid ${C.bds}` }}>
+              <span style={{ fontSize: 12, fontWeight: 600, color: C.t1 }}>Transactions récentes</span>
+              {recent.length > 0 && (
+                <button onClick={() => onNavigate('history')}
+                  style={{ fontSize: 11, color: C.teal, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: FONT }}
+                >Voir tout →</button>
+              )}
             </div>
 
             {recent.length === 0 ? (
-              <div style={{ padding:'48px 20px', textAlign:'center' }}>
-                <div style={{ width:42, height:42, borderRadius:10, background:C.tealT, display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 12px' }}>
-                  <Send style={{ width:15, height:15, color:C.teal }}/>
-                </div>
-                <p style={{ color:C.t3, fontSize:13, margin:'0 0 8px' }}>Aucune transaction</p>
-                <button onClick={() => onNavigate('payment')}
-                  style={{ color:C.teal, fontSize:12, background:'none', border:'none', cursor:'pointer', fontFamily:FONT }}
-                >Créer votre premier paiement →</button>
+              <div style={{ padding: '28px 20px', textAlign: 'center' }}>
+                <p style={{ color: C.t3, fontSize: 12, margin: 0 }}>Aucune transaction</p>
               </div>
             ) : (
               <>
                 {recent.map((tx, i) => (
                   <div key={tx.id}
-                    style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 20px', borderBottom:i < recent.length-1 ? `1px solid ${C.bds}` : 'none', transition:'background .1s' }}
-                    onMouseEnter={e=>{ e.currentTarget.style.background='rgba(255,255,255,0.02)'; }}
-                    onMouseLeave={e=>{ e.currentTarget.style.background='transparent'; }}
+                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 20px', borderBottom: i < recent.length - 1 ? `1px solid ${C.bds}` : 'none', transition: 'background .1s' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
                   >
-                    <Avatar name={tx.supplierName || '?'} />
-                    <div style={{ flex:1, minWidth:0 }}>
-                      <p style={{ fontSize:13, fontWeight:500, color:C.t1, margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                    <Avatar name={tx.supplierName || '?'} size={30} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: 12, fontWeight: 500, color: C.t1, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {tx.supplierName || 'Fournisseur'}
                       </p>
-                      <p style={{ fontSize:11, color:C.t3, margin:'2px 0 0' }}>
-                        {new Date(tx.createdAt).toLocaleDateString('fr-FR')}
-                        {tx.network && (
-                          <span style={{ marginLeft:6, background:C.l3, borderRadius:4, padding:'1px 5px', fontSize:9.5, fontFamily:MONO }}>
-                            {tx.network}
-                          </span>
-                        )}
-                      </p>
-                    </div>
-                    <div style={{ textAlign:'right', flexShrink:0 }}>
-                      <p style={{ fontSize:13, fontWeight:600, color:C.t1, margin:0, fontFamily:MONO, fontVariantNumeric:'tabular-nums' }}>
-                        {(tx.amount || 0).toLocaleString('fr-FR')}
-                        <span style={{ fontSize:10, color:C.t3, fontWeight:400, marginLeft:4 }}>USDT</span>
-                      </p>
-                      <p style={{ fontSize:11, color:C.t3, margin:'3px 0 0' }}>
+                      <p style={{ fontSize: 10, color: C.t3, margin: '1px 0 0' }}>
                         {STATUS[tx.status] || tx.status}
                       </p>
                     </div>
+                    <p style={{ fontSize: 12, fontWeight: 600, color: C.t1, margin: 0, fontFamily: MONO, flexShrink: 0 }}>
+                      {(tx.amount || 0).toLocaleString('fr-FR')}
+                      <span style={{ fontSize: 9.5, color: C.t3, fontWeight: 400, marginLeft: 3 }}>USDT</span>
+                    </p>
                   </div>
                 ))}
               </>
             )}
           </div>
 
-          {/* Graphique volume */}
-          <div style={{ ...cardSt, padding:'18px 20px' }}>
-            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
-              <div>
-                <h3 style={{ fontSize:13, fontWeight:600, color:C.t1, margin:0 }}>Volume hebdomadaire</h3>
-                <p style={{ fontSize:10, color:C.t3, margin:'3px 0 0' }}>USDT envoyé · 7 derniers jours</p>
-              </div>
-              {payments.length === 0 && (
-                <span style={{ fontSize:9.5, color:C.t3, background:C.l3, border:`1px solid ${C.bd}`, borderRadius:5, padding:'3px 8px', letterSpacing:'0.05em', textTransform:'uppercase' }}>
-                  Aperçu
-                </span>
-              )}
-            </div>
-            <ResponsiveContainer width="100%" height={120}>
-              <AreaChart data={chart} margin={{ top:4, right:4, bottom:0, left:-14 }}>
-                <defs>
-                  <linearGradient id="ovG" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%"   stopColor={C.teal} stopOpacity={0.18}/>
-                    <stop offset="100%" stopColor={C.teal} stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false}/>
-                <XAxis dataKey="j" tick={{ fill:C.t3, fontSize:10 }} axisLine={false} tickLine={false}/>
-                <YAxis tick={{ fill:C.t3, fontSize:10 }} axisLine={false} tickLine={false}
-                  tickFormatter={v => v >= 1000 ? `${(v/1000).toFixed(0)}k` : String(v)}/>
-                <Tooltip content={<ChartTip/>} cursor={{ stroke:C.teal, strokeWidth:1, strokeDasharray:'4 4' }}/>
-                <Area type="monotone" dataKey="v" stroke={C.teal} strokeWidth={1.5}
-                  fill="url(#ovG)" dot={false} isAnimationActive={false}
-                  activeDot={{ r:3, fill:C.teal, stroke:'#141414', strokeWidth:2 }}/>
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-
-        </div>
-
-        {/* ══ COLONNE DROITE ══ */}
-        <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
-
-          {/* Héro — même gradient que Trésorerie */}
-          <div style={{
-            background: HERO_BG,
-            border: `1px solid ${C.bds}`,
-            borderRadius: 16,
-            padding: '28px 26px 24px',
-            boxShadow: '0 4px 32px rgba(0,0,0,0.45)',
-          }}>
-            <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:20 }}>
-              <img src={usdtLogo} alt="USDT" style={{ width:24, height:24, borderRadius:'50%' }}/>
-              <span style={{ ...sectionHead }}>Vue d'ensemble</span>
-            </div>
-
-            <p style={{ fontSize:11, color:C.t3, margin:'0 0 4px', textTransform:'capitalize' }}>{today}</p>
-            <p style={{ fontSize:17, fontWeight:600, color:C.t1, margin:'0 0 22px', letterSpacing:'-0.02em' }}>
-              Bonjour, {firstName}
-            </p>
-
-            <div style={{ marginBottom:22 }}>
-              <p style={{ fontSize:10, color:C.t3, margin:'0 0 6px', fontWeight:500 }}>Volume envoyé ce mois</p>
-              <p style={{ fontSize:42, fontWeight:700, color:C.t1, fontFamily:MONO, margin:0, letterSpacing:'-0.04em', lineHeight:1 }}>
-                {usdtTotal > 0 ? usdtTotal.toLocaleString('fr-FR') : '—'}
-                <span style={{ fontSize:16, fontWeight:400, color:C.t3, marginLeft:8, letterSpacing:0 }}>USDT</span>
-              </p>
-            </div>
-
-            <div style={{ display:'flex', gap:0, marginBottom:26 }}>
-              <div style={{ paddingRight:20 }}>
-                <p style={{ color:C.t3, fontSize:10, margin:'0 0 3px', fontWeight:500 }}>≈ en XOF</p>
-                <p style={{ color:C.t2, fontSize:15, fontFamily:MONO, fontWeight:600, margin:0 }}>
-                  {xofTotal === null ? '—' : xofTotal.toLocaleString('fr-FR')}
-                </p>
-              </div>
-              <div style={{ width:1, background:C.bds, alignSelf:'stretch', marginRight:20 }}/>
-              <div>
-                <p style={{ color:C.t3, fontSize:10, margin:'0 0 3px', fontWeight:500 }}>Fournisseurs</p>
-                <p style={{ color:C.t2, fontSize:15, fontFamily:MONO, fontWeight:600, margin:0 }}>
-                  {suppliers.length || '—'}
-                </p>
-              </div>
-            </div>
-
-            <div style={{ display:'flex', gap:8 }}>
-              <button onClick={() => onNavigate('deposit')} style={{
-                height:36, paddingLeft:16, paddingRight:16,
-                background:'transparent', border:`1px solid ${C.bd}`,
-                borderRadius:9, color:C.t2, fontSize:12, fontWeight:500,
-                cursor:'pointer', display:'flex', alignItems:'center', gap:6,
-                fontFamily:FONT, transition:'all 0.15s',
-              }}
-                onMouseEnter={e=>{ e.currentTarget.style.borderColor=C.tealB; e.currentTarget.style.color=C.teal; }}
-                onMouseLeave={e=>{ e.currentTarget.style.borderColor=C.bd;    e.currentTarget.style.color=C.t2; }}
-              >
-                <ArrowDownToLine style={{ width:13, height:13 }}/> Déposer
-              </button>
-              <button onClick={() => onNavigate('payment')} style={{
-                height:36, paddingLeft:18, paddingRight:18,
-                background:C.teal, border:'none', borderRadius:9,
-                color:'#fff', fontSize:12, fontWeight:500,
-                cursor:'pointer', display:'flex', alignItems:'center', gap:6,
-                fontFamily:FONT, transition:'background 0.15s',
-              }}
-                onMouseEnter={e=>{ e.currentTarget.style.background=C.tealH; }}
-                onMouseLeave={e=>{ e.currentTarget.style.background=C.teal; }}
-              >
-                <Send style={{ width:13, height:13 }}/> Envoyer
-              </button>
-            </div>
-          </div>
-
-          {/* Taux live */}
-          <div style={{ ...cardSt, padding:'18px 20px' }}>
-            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
-              <p style={{ ...sectionHead }}>Taux en cours</p>
-              <span style={{ fontSize:10, color:C.t3 }}>{rateAge}</span>
-            </div>
-            <p style={{ fontSize:36, fontWeight:700, color:C.t1, fontFamily:MONO, margin:0, letterSpacing:'-0.03em', lineHeight:1 }}>
-              {rateText}
-            </p>
-            <p style={{ fontSize:11, color:C.t3, margin:'6px 0 0' }}>XOF par 1 USDT</p>
-          </div>
-
-          {/* Métriques rapides */}
-          <div style={{ ...cardSt }}>
-            <div style={{ padding:'14px 20px', borderBottom:`1px solid ${C.bds}` }}>
-              <p style={{ ...sectionHead }}>Résumé</p>
-            </div>
-            {[
-              { label:'En attente',         value: pending > 0 ? `${pending} paiement${pending>1?'s':''}` : '—' },
-              { label:'Transactions total',  value: payments.length > 0 ? String(payments.length) : '—' },
-              { label:'Taux de complétion',  value: payments.length > 0 ? `${Math.round((done.length/payments.length)*100)} %` : '—' },
-            ].map((row, i, arr) => (
-              <div key={row.label} style={{
-                display:'flex', alignItems:'center', justifyContent:'space-between',
-                padding:'11px 20px',
-                borderBottom: i < arr.length-1 ? `1px solid ${C.bds}` : 'none',
-              }}>
-                <span style={{ fontSize:12, color:C.t3 }}>{row.label}</span>
-                <span style={{ fontSize:13, fontWeight:600, color:C.t1, fontFamily:MONO }}>{row.value}</span>
-              </div>
-            ))}
-          </div>
-
           {/* Actions rapides */}
           <div style={{ ...cardSt }}>
-            <div style={{ padding:'14px 20px', borderBottom:`1px solid ${C.bds}` }}>
-              <p style={{ ...sectionHead }}>Actions rapides</p>
+            <div style={{ padding: '14px 20px', borderBottom: `1px solid ${C.bds}` }}>
+              <span style={{ ...sectionHead }}>Actions rapides</span>
             </div>
             {[
-              { label:'Envoyer un paiement',    Icon:Send,            to:'payment',   primary:true  },
-              { label:'Déposer des fonds',       Icon:ArrowDownToLine, to:'deposit',   primary:false },
-              { label:'Ajouter un fournisseur',  Icon:Plus,            to:'suppliers', primary:false },
-              { label:'Historique',              Icon:Download,        to:'history',   primary:false },
+              { label: 'Envoyer un paiement',   Icon: Send,            to: 'payment',   primary: true  },
+              { label: 'Déposer des fonds',      Icon: ArrowDownToLine, to: 'deposit',   primary: false },
+              { label: 'Ajouter un fournisseur', Icon: Plus,            to: 'suppliers', primary: false },
+              { label: 'Historique',             Icon: Download,        to: 'history',   primary: false },
             ].map((a, i, arr) => {
               const { Icon } = a;
               return (
                 <button key={a.label} onClick={() => onNavigate(a.to)} style={{
-                  width:'100%', display:'flex', alignItems:'center', gap:10,
-                  padding:'10px 16px', background:'transparent', border:'none',
-                  borderBottom: i < arr.length-1 ? `1px solid ${C.bds}` : 'none',
-                  cursor:'pointer', fontFamily:FONT, transition:'background .1s', textAlign:'left',
+                  width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+                  padding: '10px 16px', background: 'transparent', border: 'none',
+                  borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none',
+                  cursor: 'pointer', fontFamily: FONT, transition: 'background .1s', textAlign: 'left',
                 }}
-                  onMouseEnter={e=>{ e.currentTarget.style.background='rgba(255,255,255,0.025)'; }}
-                  onMouseLeave={e=>{ e.currentTarget.style.background='transparent'; }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.025)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
                 >
                   <div style={{
-                    width:28, height:28, borderRadius:7, flexShrink:0,
+                    width: 28, height: 28, borderRadius: 7, flexShrink: 0,
                     background: a.primary ? C.teal : C.l3,
-                    border:`1px solid ${a.primary ? C.teal : C.bd}`,
-                    display:'flex', alignItems:'center', justifyContent:'center',
+                    border: `1px solid ${a.primary ? C.teal : C.bd}`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
-                    <Icon style={{ width:12, height:12, color: a.primary ? '#fff' : C.t2 }}/>
+                    <Icon style={{ width: 12, height: 12, color: a.primary ? '#fff' : C.t2 }} />
                   </div>
-                  <span style={{ fontSize:12, color: a.primary ? C.t1 : C.t2, fontWeight: a.primary ? 500 : 400 }}>
+                  <span style={{ fontSize: 12, color: a.primary ? C.t1 : C.t2, fontWeight: a.primary ? 500 : 400 }}>
                     {a.label}
                   </span>
-                  <span style={{ marginLeft:'auto', color:C.t3, fontSize:14 }}>›</span>
+                  <span style={{ marginLeft: 'auto', color: C.t3, fontSize: 14 }}>›</span>
                 </button>
               );
             })}
