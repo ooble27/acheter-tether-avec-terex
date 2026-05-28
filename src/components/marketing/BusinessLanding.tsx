@@ -69,8 +69,10 @@ const GLOBAL_CSS = `
     .biz-nav-actions { display: none !important; }
     .biz-nav { padding: 0 16px !important; }
     /* Hero titre + sous-titre */
-    .biz-hero-title { font-size: 26px !important; letter-spacing: -0.04em !important; }
+    .biz-hero-title { font-size: 28px !important; letter-spacing: -0.04em !important; }
     .biz-hero-sub { display: none !important; }
+    /* Prévisualisation dashboard : cachée sur mobile, trop petite pour être utile */
+    .biz-hero-preview { display: none !important; }
     /* Boutons hero : colonne centrée, pas pleine largeur */
     .biz-hero-btns { flex-direction: column !important; align-items: center !important; gap: 8px !important; }
     /* Sections : vertical — texte puis preview pleine largeur */

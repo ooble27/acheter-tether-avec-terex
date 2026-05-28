@@ -34,7 +34,7 @@ function Avatar({ name, size = 34 }: { name: string; size?: number }) {
       width: size, height: size, borderRadius: 9,
       background: 'rgba(59,150,143,0.12)', color: C.teal,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: size * 0.36, fontWeight: 600, flexShrink: 0, fontFamily: FONT,
+      fontSize: size * 0.36, fontWeight: 600, flexShrink: 0,
     }}>{s}</div>
   );
 }
@@ -51,16 +51,12 @@ function ChartTip({ active, payload, label }: { active?: boolean; payload?: Arra
   );
 }
 
-const cardSt: React.CSSProperties = {
-  background: C.l1,
-  border: `1px solid ${C.bds}`,
-  borderRadius: 14,
-  overflow: 'hidden',
+const card: React.CSSProperties = {
+  background: C.l1, border: `1px solid ${C.bds}`, borderRadius: 14, overflow: 'hidden',
 };
 
-const sectionHead: React.CSSProperties = {
-  color: C.t3, fontSize: 10, fontWeight: 600,
-  letterSpacing: '0.1em', textTransform: 'uppercase', margin: 0,
+const sH: React.CSSProperties = {
+  color: C.t3, fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', margin: 0,
 };
 
 export function BusinessOverview({ user, onNavigate }: Props) {
@@ -94,20 +90,19 @@ export function BusinessOverview({ user, onNavigate }: Props) {
   const recent    = [...payments]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 5);
+  const hasData   = payments.length > 0;
 
-  /* Chart — uniquement avec de vraies données */
-  const chartData = payments.length > 0 ? (() => {
+  const chartData = hasData ? (() => {
     const lbl = ['Lun','Mar','Mer','Jeu','Ven','Sam','Auj'];
     const d: Record<string,number> = {}; lbl.forEach(l => { d[l] = 0; });
     payments.forEach(p => {
       const day = new Date(p.createdAt).getDay();
-      const l   = lbl[day === 0 ? 6 : day - 1] || 'Auj';
-      d[l] = (d[l] || 0) + (p.amount || 0);
+      d[lbl[day === 0 ? 6 : day - 1]] = (d[lbl[day === 0 ? 6 : day - 1]] || 0) + (p.amount || 0);
     });
     return lbl.map(j => ({ j, v: d[j] || 0 }));
   })() : null;
 
-  const today     = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  const today    = new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
   const firstName = (user?.name || '').split(' ')[0] || 'là';
   const rateText  = rateLoading ? '—' : usdtToCfa.toLocaleString('fr-FR', { maximumFractionDigits: 0 });
   const rateAge   = !rateLoading && lastUpdated ? (secAgo < 10 ? 'temps réel' : `il y a ${secAgo}s`) : '';
@@ -116,52 +111,63 @@ export function BusinessOverview({ user, onNavigate }: Props) {
     <div style={{ fontFamily: FONT, color: C.t1, paddingTop: 8 }}>
       <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr]" style={{ gap: 14, alignItems: 'start' }}>
 
-        {/* ══ COLONNE GAUCHE : héro + graphique ══ */}
+        {/* ══ GAUCHE : héro + graphique ══ */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-          {/* Héro — identique au style Treasury */}
+          {/* Héro — même style exact que Trésorerie */}
           <div style={{
             background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)',
             border: `1px solid ${C.bds}`, borderRadius: 16,
             padding: '30px 28px 26px',
             boxShadow: '0 4px 32px rgba(0,0,0,0.45)',
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-              <img src={usdtLogo} alt="USDT" style={{ width: 24, height: 24, borderRadius: '50%' }} />
-              <span style={{ ...sectionHead }}>Vue d'ensemble</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+              <img src={usdtLogo} alt="USDT" style={{ width: 26, height: 26, borderRadius: '50%' }} />
+              <span style={{ ...sH }}>Vue d'ensemble</span>
             </div>
 
-            <p style={{ fontSize: 11, color: C.t3, margin: '0 0 2px', textTransform: 'capitalize' }}>{today}</p>
-            <p style={{ fontSize: 16, fontWeight: 600, color: C.t2, margin: '0 0 22px', letterSpacing: '-0.01em' }}>
-              Bonjour, {firstName}
-            </p>
+            {hasData ? (
+              <>
+                <p style={{ fontSize: 12, color: C.t3, margin: '0 0 8px', textTransform: 'capitalize' }}>{today}</p>
+                <p style={{ fontSize: 15, fontWeight: 500, color: C.t2, margin: '0 0 20px' }}>Bonjour, {firstName}</p>
 
-            <div style={{ marginBottom: 22 }}>
-              <p style={{ color: C.t3, fontSize: 10, margin: '0 0 8px', fontWeight: 500 }}>Volume envoyé ce mois</p>
-              <p style={{
-                color: C.t1, fontSize: 50, fontWeight: 700, fontFamily: MONO,
-                margin: 0, letterSpacing: '-0.04em', lineHeight: 1,
-              }}>
-                {usdtTotal > 0 ? usdtTotal.toLocaleString('fr-FR') : '—'}
-                <span style={{ color: C.t3, fontSize: 18, fontWeight: 400, marginLeft: 10, letterSpacing: 0 }}>USDT</span>
-              </p>
-            </div>
+                <div style={{ marginBottom: 22 }}>
+                  <p style={{ color: C.t3, fontSize: 10, margin: '0 0 6px', fontWeight: 500 }}>Volume envoyé ce mois</p>
+                  <p style={{ color: C.t1, fontSize: 50, fontWeight: 700, fontFamily: MONO, margin: 0, letterSpacing: '-0.04em', lineHeight: 1 }}>
+                    {usdtTotal.toLocaleString('fr-FR')}
+                    <span style={{ color: C.t3, fontSize: 18, fontWeight: 400, marginLeft: 10, letterSpacing: 0 }}>USDT</span>
+                  </p>
+                </div>
 
-            <div style={{ display: 'flex', gap: 0, marginBottom: 28 }}>
-              <div style={{ paddingRight: 24 }}>
-                <p style={{ color: C.t3, fontSize: 10, margin: '0 0 3px', fontWeight: 500 }}>≈ en XOF</p>
-                <p style={{ color: C.t2, fontSize: 16, fontFamily: MONO, fontWeight: 600, margin: 0 }}>
-                  {xofTotal === null ? '—' : xofTotal > 0 ? xofTotal.toLocaleString('fr-FR') : '—'}
-                </p>
+                <div style={{ display: 'flex', gap: 0, marginBottom: 28 }}>
+                  <div style={{ paddingRight: 24 }}>
+                    <p style={{ color: C.t3, fontSize: 10, margin: '0 0 3px', fontWeight: 500 }}>≈ en XOF</p>
+                    <p style={{ color: C.t2, fontSize: 16, fontFamily: MONO, fontWeight: 600, margin: 0 }}>
+                      {xofTotal !== null ? xofTotal.toLocaleString('fr-FR') : '—'}
+                    </p>
+                  </div>
+                  <div style={{ width: 1, background: C.bds, alignSelf: 'stretch', marginRight: 24 }} />
+                  <div>
+                    <p style={{ color: C.t3, fontSize: 10, margin: '0 0 3px', fontWeight: 500 }}>En attente</p>
+                    <p style={{ color: C.t2, fontSize: 16, fontFamily: MONO, fontWeight: 600, margin: 0 }}>
+                      {pending > 0 ? pending : '0'}
+                    </p>
+                  </div>
+                </div>
+              </>
+            ) : (
+              /* État vide — onboarding propre */
+              <div style={{ marginBottom: 28 }}>
+                <p style={{ fontSize: 12, color: C.t3, margin: '0 0 4px', textTransform: 'capitalize' }}>{today}</p>
+                <p style={{ fontSize: 16, fontWeight: 600, color: C.t1, margin: '0 0 20px' }}>Bonjour, {firstName}</p>
+                <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${C.bds}`, borderRadius: 12, padding: '20px 22px', marginBottom: 4 }}>
+                  <p style={{ fontSize: 13, fontWeight: 500, color: C.t2, margin: '0 0 6px' }}>Votre activité apparaîtra ici</p>
+                  <p style={{ fontSize: 12, color: C.t3, margin: 0, lineHeight: 1.6 }}>
+                    Envoyez votre premier paiement USDT pour commencer à suivre votre volume mensuel.
+                  </p>
+                </div>
               </div>
-              <div style={{ width: 1, background: C.bds, alignSelf: 'stretch', marginRight: 24 }} />
-              <div>
-                <p style={{ color: C.t3, fontSize: 10, margin: '0 0 3px', fontWeight: 500 }}>En attente</p>
-                <p style={{ color: C.t2, fontSize: 16, fontFamily: MONO, fontWeight: 600, margin: 0 }}>
-                  {pending > 0 ? pending : '—'}
-                </p>
-              </div>
-            </div>
+            )}
 
             <div style={{ display: 'flex', gap: 8 }}>
               <button onClick={() => onNavigate('deposit')} style={{
@@ -193,7 +199,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
 
           {/* Graphique — seulement avec de vraies données */}
           {chartData ? (
-            <div style={{ ...cardSt, padding: '18px 20px' }}>
+            <div style={{ ...card, padding: '18px 20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                 <div>
                   <h3 style={{ fontSize: 13, fontWeight: 600, color: C.t1, margin: 0 }}>Volume hebdomadaire</h3>
@@ -220,32 +226,48 @@ export function BusinessOverview({ user, onNavigate }: Props) {
               </ResponsiveContainer>
             </div>
           ) : (
-            /* État vide — pas de données réelles */
-            <div style={{ ...cardSt, padding: '32px 24px', textAlign: 'center' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: C.tealT, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
-                <Send style={{ width: 15, height: 15, color: C.teal }} />
+            /* Premiers pas — visible uniquement sans données */
+            <div style={{ ...card }}>
+              <div style={{ padding: '14px 20px', borderBottom: `1px solid ${C.bds}` }}>
+                <span style={{ ...sH }}>Premiers pas</span>
               </div>
-              <p style={{ color: C.t2, fontSize: 13, margin: '0 0 4px', fontWeight: 500 }}>Aucune transaction encore</p>
-              <p style={{ color: C.t3, fontSize: 11, margin: '0 0 16px' }}>Votre activité apparaîtra ici après votre premier paiement.</p>
-              <button onClick={() => onNavigate('payment')} style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                padding: '8px 16px', borderRadius: 8,
-                background: C.teal, border: 'none', color: '#fff',
-                fontSize: 12, fontWeight: 500, cursor: 'pointer', fontFamily: FONT,
-              }}>
-                <Send style={{ width: 12, height: 12 }} /> Créer un paiement
-              </button>
+              {[
+                { done: true,  label: 'Compte créé' },
+                { done: false, label: 'Ajouter un fournisseur', to: 'suppliers' },
+                { done: false, label: 'Envoyer un premier paiement', to: 'payment' },
+              ].map((step, i, arr) => (
+                <div key={step.label} style={{
+                  display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px',
+                  borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none',
+                }}>
+                  <div style={{
+                    width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
+                    background: step.done ? C.teal : 'transparent',
+                    border: `1.5px solid ${step.done ? C.teal : C.bd}`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    {step.done && <div style={{ width: 7, height: 7, background: '#fff', borderRadius: '50%' }} />}
+                  </div>
+                  {step.to ? (
+                    <button onClick={() => onNavigate(step.to!)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontSize: 13, color: C.teal, fontFamily: FONT, textAlign: 'left' }}>
+                      {step.label}
+                    </button>
+                  ) : (
+                    <span style={{ fontSize: 13, color: C.t3 }}>{step.label}</span>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </div>
 
-        {/* ══ COLONNE DROITE : taux + transactions + actions ══ */}
+        {/* ══ DROITE : taux + stats + transactions + actions ══ */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
           {/* Taux live */}
-          <div style={{ ...cardSt, padding: '20px 22px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <span style={{ ...sectionHead }}>Taux en cours</span>
+          <div style={{ ...card, padding: '20px 22px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+              <span style={{ ...sH }}>Taux en cours</span>
               <span style={{ fontSize: 10, color: C.t3 }}>{rateAge}</span>
             </div>
             <p style={{ fontSize: 38, fontWeight: 700, color: C.t1, fontFamily: MONO, margin: 0, letterSpacing: '-0.03em', lineHeight: 1 }}>
@@ -254,20 +276,19 @@ export function BusinessOverview({ user, onNavigate }: Props) {
             <p style={{ fontSize: 11, color: C.t3, margin: '6px 0 0' }}>XOF par 1 USDT</p>
           </div>
 
-          {/* Résumé chiffres */}
-          <div style={{ ...cardSt }}>
+          {/* Résumé */}
+          <div style={{ ...card }}>
             <div style={{ padding: '14px 20px', borderBottom: `1px solid ${C.bds}` }}>
-              <span style={{ ...sectionHead }}>Résumé</span>
+              <span style={{ ...sH }}>Résumé</span>
             </div>
             {[
-              { label: 'Transactions totales', value: payments.length > 0 ? String(payments.length) : '—' },
-              { label: 'Complétées',           value: done.length > 0 ? String(done.length) : '—' },
-              { label: 'Fournisseurs',         value: suppliers.length > 0 ? String(suppliers.length) : '—' },
+              { label: 'Transactions',   value: payments.length > 0 ? String(payments.length) : '0' },
+              { label: 'Complétées',     value: done.length > 0 ? String(done.length) : '0' },
+              { label: 'Fournisseurs',   value: suppliers.length > 0 ? String(suppliers.length) : '0' },
             ].map((row, i, arr) => (
               <div key={row.label} style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                padding: '11px 20px',
-                borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none',
+                padding: '11px 20px', borderBottom: i < arr.length - 1 ? `1px solid ${C.bds}` : 'none',
               }}>
                 <span style={{ fontSize: 12, color: C.t3 }}>{row.label}</span>
                 <span style={{ fontSize: 13, fontWeight: 600, color: C.t1, fontFamily: MONO }}>{row.value}</span>
@@ -276,7 +297,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
           </div>
 
           {/* Transactions récentes */}
-          <div style={{ ...cardSt }}>
+          <div style={{ ...card }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: `1px solid ${C.bds}` }}>
               <span style={{ fontSize: 12, fontWeight: 600, color: C.t1 }}>Transactions récentes</span>
               {recent.length > 0 && (
@@ -285,49 +306,42 @@ export function BusinessOverview({ user, onNavigate }: Props) {
                 >Voir tout →</button>
               )}
             </div>
-
             {recent.length === 0 ? (
-              <div style={{ padding: '28px 20px', textAlign: 'center' }}>
-                <p style={{ color: C.t3, fontSize: 12, margin: 0 }}>Aucune transaction</p>
-              </div>
+              <p style={{ padding: '20px', fontSize: 12, color: C.t3, margin: 0, textAlign: 'center' }}>Aucune transaction</p>
             ) : (
-              <>
-                {recent.map((tx, i) => (
-                  <div key={tx.id}
-                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 20px', borderBottom: i < recent.length - 1 ? `1px solid ${C.bds}` : 'none', transition: 'background .1s' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
-                  >
-                    <Avatar name={tx.supplierName || '?'} size={30} />
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 12, fontWeight: 500, color: C.t1, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {tx.supplierName || 'Fournisseur'}
-                      </p>
-                      <p style={{ fontSize: 10, color: C.t3, margin: '1px 0 0' }}>
-                        {STATUS[tx.status] || tx.status}
-                      </p>
-                    </div>
-                    <p style={{ fontSize: 12, fontWeight: 600, color: C.t1, margin: 0, fontFamily: MONO, flexShrink: 0 }}>
-                      {(tx.amount || 0).toLocaleString('fr-FR')}
-                      <span style={{ fontSize: 9.5, color: C.t3, fontWeight: 400, marginLeft: 3 }}>USDT</span>
+              recent.map((tx, i) => (
+                <div key={tx.id}
+                  style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 20px', borderBottom: i < recent.length - 1 ? `1px solid ${C.bds}` : 'none', transition: 'background .1s' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+                >
+                  <Avatar name={tx.supplierName || '?'} size={30} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 12, fontWeight: 500, color: C.t1, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {tx.supplierName || 'Fournisseur'}
                     </p>
+                    <p style={{ fontSize: 10, color: C.t3, margin: '1px 0 0' }}>{STATUS[tx.status] || tx.status}</p>
                   </div>
-                ))}
-              </>
+                  <p style={{ fontSize: 12, fontWeight: 600, color: C.t1, margin: 0, fontFamily: MONO, flexShrink: 0 }}>
+                    {(tx.amount || 0).toLocaleString('fr-FR')}
+                    <span style={{ fontSize: 9.5, color: C.t3, fontWeight: 400, marginLeft: 3 }}>USDT</span>
+                  </p>
+                </div>
+              ))
             )}
           </div>
 
           {/* Actions rapides */}
-          <div style={{ ...cardSt }}>
+          <div style={{ ...card }}>
             <div style={{ padding: '14px 20px', borderBottom: `1px solid ${C.bds}` }}>
-              <span style={{ ...sectionHead }}>Actions rapides</span>
+              <span style={{ ...sH }}>Actions rapides</span>
             </div>
-            {[
+            {([
               { label: 'Envoyer un paiement',   Icon: Send,            to: 'payment',   primary: true  },
               { label: 'Déposer des fonds',      Icon: ArrowDownToLine, to: 'deposit',   primary: false },
               { label: 'Ajouter un fournisseur', Icon: Plus,            to: 'suppliers', primary: false },
               { label: 'Historique',             Icon: Download,        to: 'history',   primary: false },
-            ].map((a, i, arr) => {
+            ] as const).map((a, i, arr) => {
               const { Icon } = a;
               return (
                 <button key={a.label} onClick={() => onNavigate(a.to)} style={{
