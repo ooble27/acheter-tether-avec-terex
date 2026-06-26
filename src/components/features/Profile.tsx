@@ -386,7 +386,7 @@ export function Profile({ user, onLogout }: ProfileProps) {
       </div>
 
       {/* Menu groups */}
-      <div style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <div style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '560px', margin: '0 auto' }}>
         {menuGroups.map(group => (
           <div key={group.title}>
             <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>{group.title}</p>
