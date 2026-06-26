@@ -1,6 +1,6 @@
 
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import {
   CheckCircle,
   XCircle,
@@ -12,7 +12,6 @@ import {
 } from 'lucide-react';
 import { UnifiedOrder } from '@/hooks/useOrders';
 import type { Database } from '@/integrations/supabase/types';
-import { OrderDetailsDialog } from './OrderDetailsDialog';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { ClientStrip } from './ClientStrip';
 
@@ -103,11 +102,10 @@ interface TransferOrdersTableProps {
   orders: UnifiedOrder[];
   onStatusUpdate: (orderId: string, status: OrderStatus, paymentStatus?: string) => void;
   onMoveToTrash: (orderId: string) => void;
+  onViewDetails: (order: UnifiedOrder) => void;
 }
 
-export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: TransferOrdersTableProps) {
-  const [selectedOrder, setSelectedOrder] = useState<UnifiedOrder | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash, onViewDetails }: TransferOrdersTableProps) {
   const userIds = useMemo(() => orders.map((o) => o.user_id), [orders]);
   const clientInfos = useClientInfos(userIds);
 
@@ -152,13 +150,6 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
 
   return (
     <>
-      <OrderDetailsDialog
-        order={selectedOrder}
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        onStatusUpdate={onStatusUpdate}
-      />
-
       <div className="space-y-3">
         {orders.map((order) => {
           const receiveMethod = getReceiveMethodName(order);
@@ -239,7 +230,7 @@ export function TransferOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: T
                     </>
                   )}
                   <button
-                    onClick={() => { setSelectedOrder(order); setDialogOpen(true); }}
+                    onClick={() => onViewDetails(order)}
                     style={neutralBtnStyle}
                   >
                     <Eye className="w-4 h-4" /> Détails

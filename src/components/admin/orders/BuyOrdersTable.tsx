@@ -1,5 +1,5 @@
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import {
   CheckCircle,
   XCircle,
@@ -11,7 +11,6 @@ import {
 } from 'lucide-react';
 import { UnifiedOrder } from '@/hooks/useOrders';
 import type { Database } from '@/integrations/supabase/types';
-import { OrderDetailsDialog } from './OrderDetailsDialog';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { ClientStrip } from './ClientStrip';
 
@@ -98,9 +97,7 @@ const iconDangerBtnStyle: React.CSSProperties = {
   padding: '8px 10px',
 };
 
-export function BuyOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: BuyOrdersTableProps) {
-  const [selectedOrder, setSelectedOrder] = useState<UnifiedOrder | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+export function BuyOrdersTable({ orders, onStatusUpdate, onMoveToTrash, onViewDetails }: BuyOrdersTableProps) {
   const userIds = useMemo(() => orders.map((o) => o.user_id), [orders]);
   const clientInfos = useClientInfos(userIds);
 
@@ -125,13 +122,6 @@ export function BuyOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: BuyOrd
 
   return (
     <>
-      <OrderDetailsDialog
-        order={selectedOrder}
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        onStatusUpdate={onStatusUpdate}
-      />
-
       <div className="space-y-3">
         {orders.map((order) => (
           <div
@@ -207,7 +197,7 @@ export function BuyOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: BuyOrd
                   </>
                 )}
                 <button
-                  onClick={() => { setSelectedOrder(order); setDialogOpen(true); }}
+                  onClick={() => onViewDetails(order)}
                   style={neutralBtnStyle}
                 >
                   <Eye className="w-4 h-4" /> Détails
@@ -229,4 +219,5 @@ interface BuyOrdersTableProps {
   orders: UnifiedOrder[];
   onStatusUpdate: (orderId: string, status: OrderStatus, paymentStatus?: string) => void;
   onMoveToTrash: (orderId: string) => void;
+  onViewDetails: (order: UnifiedOrder) => void;
 }

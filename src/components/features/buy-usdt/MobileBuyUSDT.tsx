@@ -320,7 +320,7 @@ export function MobileBuyUSDT() {
                 const sel = network === net;
                 return (
                   <button key={net} onClick={() => setNetwork(net)}
-                    style={{ display: 'flex', alignItems: 'center', gap: '9px', padding: '9px 16px 9px 10px', borderRadius: '100px', border: `1px solid ${sel ? 'rgba(255,255,255,0.40)' : 'rgba(255,255,255,0.18)'}`, background: sel ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.04)', cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', transition: 'all 0.15s' }}>
+                    style={{ display: 'flex', alignItems: 'center', gap: '9px', padding: '9px 16px 9px 10px', borderRadius: '100px', border: `1px solid ${sel ? 'rgba(255,255,255,0.40)' : 'rgba(255,255,255,0.18)'}`, background: sel ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.08)', cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', transition: 'all 0.15s' }}>
                     <img src={logo} alt={net} style={{ width: '26px', height: '26px', borderRadius: '50%' }} />
                     <span style={{ color: sel ? '#fff' : 'rgba(255,255,255,0.55)', fontSize: '13px', fontWeight: sel ? 600 : 400 }}>{net}</span>
                     {sel && <Check size={12} color="rgba(255,255,255,0.8)" strokeWidth={2.5} />}

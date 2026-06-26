@@ -12,12 +12,13 @@ import {
   Download,
   AlertTriangle
 } from 'lucide-react';
-import { useOrders } from '@/hooks/useOrders';
+import { useOrders, UnifiedOrder } from '@/hooks/useOrders';
 import { useUserRole } from '@/hooks/useUserRole';
 import { BuyOrdersTable } from './BuyOrdersTable';
 import { SellOrdersTable } from './SellOrdersTable';
 import { TransferOrdersTable } from './TransferOrdersTable';
 import { TrashOrdersTable } from './TrashOrdersTable';
+import { OrderDetailsPage } from './OrderDetailsPage';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -74,6 +75,7 @@ export function OrdersDashboardNew() {
   const { isAdmin, isKYCReviewer } = useUserRole();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('buy');
+  const [detailOrder, setDetailOrder] = useState<UnifiedOrder | null>(null);
 
   if (!isAdmin() && !isKYCReviewer()) {
     return (
@@ -108,6 +110,16 @@ export function OrdersDashboardNew() {
           <span className="text-sm">Chargement des commandes…</span>
         </div>
       </div>
+    );
+  }
+
+  if (detailOrder) {
+    return (
+      <OrderDetailsPage
+        order={detailOrder}
+        onBack={() => setDetailOrder(null)}
+        onStatusUpdate={updateOrderStatus}
+      />
     );
   }
 
@@ -216,10 +228,10 @@ export function OrdersDashboardNew() {
 
       {/* Tab content */}
       <div>
-        {activeTab === 'buy' && <BuyOrdersTable orders={filterOrders(buyOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} />}
-        {activeTab === 'sell' && <SellOrdersTable orders={filterOrders(sellOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} />}
-        {activeTab === 'transfer' && <TransferOrdersTable orders={filterOrders(transferOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} />}
-        {activeTab === 'trash' && <TrashOrdersTable orders={filterOrders(trashedOrders)} onRestoreFromTrash={restoreFromTrash} onDeletePermanently={deletePermanently} />}
+        {activeTab === 'buy' && <BuyOrdersTable orders={filterOrders(buyOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} onViewDetails={setDetailOrder} />}
+        {activeTab === 'sell' && <SellOrdersTable orders={filterOrders(sellOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} onViewDetails={setDetailOrder} />}
+        {activeTab === 'transfer' && <TransferOrdersTable orders={filterOrders(transferOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} onViewDetails={setDetailOrder} />}
+        {activeTab === 'trash' && <TrashOrdersTable orders={filterOrders(trashedOrders)} onRestoreFromTrash={restoreFromTrash} onDeletePermanently={deletePermanently} onViewDetails={setDetailOrder} />}
       </div>
     </div>
   );

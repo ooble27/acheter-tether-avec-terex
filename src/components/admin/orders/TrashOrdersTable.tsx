@@ -47,9 +47,10 @@ interface TrashOrdersTableProps {
   orders: UnifiedOrder[];
   onRestoreFromTrash: (orderId: string) => void;
   onDeletePermanently: (orderId: string) => void;
+  onViewDetails: (order: UnifiedOrder) => void;
 }
 
-export function TrashOrdersTable({ orders, onRestoreFromTrash, onDeletePermanently }: TrashOrdersTableProps) {
+export function TrashOrdersTable({ orders, onRestoreFromTrash, onDeletePermanently, onViewDetails }: TrashOrdersTableProps) {
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
   const getOrderIcon = (type: string) => {
@@ -192,11 +193,19 @@ export function TrashOrdersTable({ orders, onRestoreFromTrash, onDeletePermanent
             {/* Actions — à droite sur desktop */}
             <div className="flex flex-wrap gap-2 lg:justify-end lg:flex-nowrap shrink-0">
               <button
+                onClick={() => onViewDetails(order)}
+                style={neutralBtnStyle}
+              >
+                <Eye className="w-4 h-4" />
+                Détails
+              </button>
+
+              <button
                 onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
                 style={neutralBtnStyle}
               >
                 <Eye className="w-4 h-4" />
-                {expandedOrder === order.id ? 'Masquer' : 'Détails'}
+                {expandedOrder === order.id ? 'Masquer' : 'Aperçu'}
               </button>
 
               <button
