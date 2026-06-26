@@ -37,7 +37,7 @@ const faqItems = [
   },
   {
     q: 'Quels sont les montants minimum et maximum ?',
-    a: 'Minimum 50 000 CFA pour l'achat (Mobile Money et carte). Minimum 50 USDT pour la vente. 10 CAD pour les virements. Les maximums dépendent de votre niveau de vérification.',
+    a: "Minimum 50 000 CFA pour l'achat (Mobile Money et carte). Minimum 50 USDT pour la vente. 10 CAD pour les virements. Les maximums dépendent de votre niveau de vérification.",
   },
   {
     q: 'La plateforme est-elle sécurisée ?',
