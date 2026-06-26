@@ -22,6 +22,31 @@ const quickActions = [
   { id: 'otc',      label: 'OTC',      icon: Handshake, sub: 'Gros volumes'  },
 ];
 
+function WavingIcon() {
+  return (
+    <>
+      <style>{`
+        @keyframes wave-hand {
+          0%   { transform: rotate(0deg); }
+          15%  { transform: rotate(18deg); }
+          30%  { transform: rotate(-8deg); }
+          45%  { transform: rotate(14deg); }
+          60%  { transform: rotate(-4deg); }
+          75%  { transform: rotate(10deg); }
+          100% { transform: rotate(0deg); }
+        }
+        .wave-hand {
+          display: inline-flex;
+          align-items: center;
+          animation: wave-hand 2.2s ease-in-out 0.3s 1;
+          transform-origin: 70% 80%;
+        }
+      `}</style>
+      <span className="wave-hand" style={{ fontSize: '26px', lineHeight: 1 }}>👋</span>
+    </>
+  );
+}
+
 function getGreeting() {
   const h = new Date().getHours();
   if (h < 6)  return 'Bonne nuit';
@@ -124,8 +149,9 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px' }}>
             <div>
               <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 2px' }}>{getGreeting()},</p>
-              <h1 style={{ color: '#fff', fontSize: '28px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px' }}>
-                {firstName} <span style={{ color: ACCENT_LIGHT }}>👋</span>
+              <h1 style={{ color: '#fff', fontSize: '28px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                {firstName}
+                <WavingIcon />
               </h1>
             </div>
 
@@ -135,7 +161,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
               <div>
                 <p style={{ color: '#6b7280', fontSize: '10px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 2px' }}>1 USDT</p>
                 <p style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: 0, letterSpacing: '-0.3px' }}>
-                  {rateDisplay} <span style={{ color: ACCENT_LIGHT, fontSize: '13px', fontWeight: 500 }}>CFA</span>
+                  {rateDisplay} <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px', fontWeight: 500 }}>CFA</span>
                 </p>
               </div>
             </div>

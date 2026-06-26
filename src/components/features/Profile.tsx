@@ -9,15 +9,17 @@ import { supabase } from '@/integrations/supabase/client';
 import {
   User, Mail, Phone, MapPin, Shield, CheckCircle, Clock, XCircle, AlertTriangle,
   LogOut, ChevronRight, ArrowLeft, Key, Lock, Trash2, Eye, EyeOff,
-  Globe, Bell, Activity, TrendingUp, Edit2, Save
+  Globe, Bell, Activity, TrendingUp, Edit2, Save, Gift, Share2, HelpCircle,
+  MessageCircle, Copy, ExternalLink
 } from 'lucide-react';
 
 interface ProfileProps {
   user: { email: string; name: string } | null;
   onLogout: () => void;
+  onNavigate?: (section: string) => void;
 }
 
-type Section = null | 'informations' | 'securite' | 'preferences' | 'activite';
+type Section = null | 'informations' | 'securite' | 'preferences' | 'activite' | 'parrainage' | 'partager' | 'contact' | 'faq';
 
 const BG     = '#141414';
 const CARD   = '#1e1e1e';
@@ -37,7 +39,7 @@ const labelStyle: React.CSSProperties = {
   textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px',
 };
 
-export function Profile({ user, onLogout }: ProfileProps) {
+export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   const [showKYC, setShowKYC] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [section, setSection] = useState<Section>(null);
@@ -366,6 +368,150 @@ export function Profile({ user, onLogout }: ProfileProps) {
     );
   }
 
+  // ── Parrainage ───────────────────────────────────────────────────────────
+
+  if (section === 'parrainage') {
+    const referralCode = user?.email?.split('@')[0]?.toUpperCase().slice(0, 8) + 'TX' || 'TEREXTX';
+    return (
+      <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
+        <SubHeader title="Parrainage" />
+        <div style={{ padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '480px', margin: '0 auto' }}>
+          {/* Hero */}
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '28px 24px', textAlign: 'center' }}>
+            <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+              <Gift size={28} color="rgba(255,255,255,0.7)" />
+            </div>
+            <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: '0 0 8px' }}>Invitez vos amis</h2>
+            <p style={{ color: '#6b7280', fontSize: '13px', margin: 0, lineHeight: 1.6 }}>Partagez votre code et recevez des avantages exclusifs pour chaque ami qui rejoint Terex.</p>
+          </div>
+
+          {/* Referral code */}
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '20px' }}>
+            <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 12px' }}>Votre code de parrainage</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.10)`, borderRadius: '14px', padding: '14px 18px' }}>
+                <span style={{ color: '#fff', fontSize: '20px', fontWeight: 700, letterSpacing: '2px' }}>{referralCode}</span>
+              </div>
+              <button
+                onClick={() => { navigator.clipboard?.writeText(referralCode); toast({ title: 'Code copié !' }); }}
+                style={{ width: '48px', height: '48px', borderRadius: '14px', background: BTN, border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
+                <Copy size={18} color="rgba(255,255,255,0.7)" />
+              </button>
+            </div>
+          </div>
+
+          {/* How it works */}
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
+            <div style={{ padding: '16px 20px', borderBottom: `1px solid ${BORDER}` }}>
+              <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Comment ça marche</p>
+            </div>
+            {[
+              { step: '1', text: 'Partagez votre code unique à vos contacts' },
+              { step: '2', text: 'Ils s\'inscrivent et effectuent leur premier achat' },
+              { step: '3', text: 'Vous recevez vos avantages automatiquement' },
+            ].map(({ step, text }, i, arr) => (
+              <div key={step} style={{ padding: '14px 20px', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none', display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '12px', fontWeight: 700 }}>{step}</span>
+                </div>
+                <p style={{ color: '#d1d5db', fontSize: '13px', margin: 0 }}>{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Partager ─────────────────────────────────────────────────────────────
+
+  if (section === 'partager') {
+    const shareUrl = 'https://terex.app';
+    const shareText = 'Achetez et vendez du USDT facilement en CFA avec Terex ! 🚀';
+    const handleShare = async () => {
+      if (navigator.share) {
+        try { await navigator.share({ title: 'Terex', text: shareText, url: shareUrl }); } catch {}
+      } else {
+        navigator.clipboard?.writeText(`${shareText} ${shareUrl}`);
+        toast({ title: 'Lien copié !' });
+      }
+    };
+    return (
+      <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
+        <SubHeader title="Partager l'App" />
+        <div style={{ padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '480px', margin: '0 auto' }}>
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '28px 24px', textAlign: 'center' }}>
+            <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+              <Share2 size={28} color="rgba(255,255,255,0.7)" />
+            </div>
+            <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: '0 0 8px' }}>Partagez Terex</h2>
+            <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 24px', lineHeight: 1.6 }}>Faites découvrir Terex à vos proches — la façon la plus simple d'acheter et vendre du USDT en CFA.</p>
+            <button onClick={handleShare}
+              style={{ background: '#fff', border: 'none', borderRadius: '14px', padding: '14px 28px', color: '#141414', fontSize: '15px', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+              <ExternalLink size={16} /> Partager maintenant
+            </button>
+          </div>
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{ flex: 1, background: 'rgba(255,255,255,0.03)', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: '10px', padding: '10px 14px' }}>
+              <p style={{ color: '#6b7280', fontSize: '12px', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{shareUrl}</p>
+            </div>
+            <button onClick={() => { navigator.clipboard?.writeText(shareUrl); toast({ title: 'Lien copié !' }); }}
+              style={{ width: '40px', height: '40px', borderRadius: '10px', background: BTN, border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
+              <Copy size={16} color="rgba(255,255,255,0.7)" />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Contact ───────────────────────────────────────────────────────────────
+
+  if (section === 'contact') {
+    return (
+      <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
+        <SubHeader title="Nous contacter" />
+        <div style={{ padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '480px', margin: '0 auto' }}>
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '28px 24px', textAlign: 'center' }}>
+            <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+              <MessageCircle size={28} color="rgba(255,255,255,0.7)" />
+            </div>
+            <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: '0 0 8px' }}>Support 24/7</h2>
+            <p style={{ color: '#6b7280', fontSize: '13px', margin: 0, lineHeight: 1.6 }}>Notre équipe est disponible pour vous aider à tout moment.</p>
+          </div>
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
+            {[
+              { label: 'WhatsApp', desc: 'Réponse immédiate', icon: MessageCircle, action: () => window.open('https://wa.me/message/terex', '_blank') },
+              { label: 'Email', desc: 'support@terex.app', icon: Mail, action: () => window.open('mailto:support@terex.app', '_blank') },
+              { label: 'Telegram', desc: '@TerexSupport', icon: ExternalLink, action: () => window.open('https://t.me/terexsupport', '_blank') },
+            ].map(({ label, desc, icon: Icon, action }, i, arr) => (
+              <button key={label} onClick={action}
+                style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon size={18} color="rgba(255,255,255,0.7)" />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <p style={{ color: '#fff', fontSize: '14px', fontWeight: 500, margin: '0 0 2px' }}>{label}</p>
+                  <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>{desc}</p>
+                </div>
+                <ChevronRight size={16} color="#4b5563" />
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── FAQ (redirect to dashboard faq section) ───────────────────────────────
+
+  if (section === 'faq') {
+    if (onNavigate) {
+      onNavigate('faq');
+      return null;
+    }
+  }
+
   // ── Main view ────────────────────────────────────────────────────────────
 
   const menuGroups = [
@@ -381,6 +527,15 @@ export function Profile({ user, onLogout }: ProfileProps) {
       items: [
         { id: 'securite', label: 'Sécurité', desc: 'KYC, mot de passe', icon: Shield },
         { id: 'preferences', label: 'Préférences', desc: 'Notifications, langue', icon: Bell },
+      ],
+    },
+    {
+      title: 'Plus',
+      items: [
+        { id: 'parrainage', label: 'Parrainage', desc: 'Invitez vos amis', icon: Gift },
+        { id: 'partager', label: 'Partager l\'App', desc: 'Partagez Terex', icon: Share2 },
+        { id: 'faq', label: 'FAQ', desc: 'Questions fréquentes', icon: HelpCircle },
+        { id: 'contact', label: 'Nous contacter', desc: 'Support 24/7', icon: MessageCircle },
       ],
     },
   ];

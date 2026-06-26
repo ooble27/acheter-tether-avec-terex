@@ -78,9 +78,9 @@ export function DesktopMenuPopover({
             variant="ghost"
             onClick={() => handleItemClick(item.id)}
             className={`w-full justify-start p-3 h-auto rounded-lg transition-all duration-200 ${
-              isActive 
-                ? 'bg-terex-accent/20 text-terex-accent' 
-                : 'text-gray-300 hover:bg-terex-gray/30 hover:text-white'
+              isActive
+                ? 'bg-[rgba(255,255,255,0.08)] text-white'
+                : 'text-gray-300 hover:bg-[rgba(255,255,255,0.06)] hover:text-white'
             }`}
           >
             <div className="flex items-center space-x-3 w-full">
