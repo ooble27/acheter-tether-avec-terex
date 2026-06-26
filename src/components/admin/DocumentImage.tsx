@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { Eye, FileText, Download } from 'lucide-react';
+import { Eye, FileText, Download, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -63,7 +63,7 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
 
   const handleDownload = () => {
     if (!downloadUrl) return;
-    
+
     try {
       const link = document.createElement('a');
       link.href = downloadUrl;
@@ -79,12 +79,24 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
 
   if (!url) {
     return (
-      <div className="bg-terex-card border border-terex-border rounded-lg p-4">
-        <div className="flex items-center space-x-3 text-gray-500">
-          <FileText className="h-8 w-8" />
-          <div>
-            <p className="text-sm font-medium text-white">{title}</p>
-            <p className="text-xs text-gray-400">Aucun document fourni</p>
+      <div
+        style={{
+          background: '#1e1e1e',
+          border: '1px solid rgba(255,255,255,0.07)',
+          borderRadius: 12,
+          padding: 16,
+        }}
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className="flex shrink-0 items-center justify-center rounded-xl"
+            style={{ background: 'rgba(255,255,255,0.06)', width: 44, height: 44 }}
+          >
+            <FileText className="h-5 w-5" style={{ color: 'rgba(255,255,255,0.5)' }} />
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-white truncate">{title}</p>
+            <p className="text-xs" style={{ color: '#6b7280' }}>Aucun document fourni</p>
           </div>
         </div>
       </div>
@@ -93,33 +105,91 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
 
   return (
     <>
-      <div className="bg-terex-card border border-terex-border rounded-lg overflow-hidden">
-        <div className="p-3 bg-terex-gray border-b border-terex-border">
-          <p className="text-white text-sm font-medium">{title}</p>
+      <div
+        style={{
+          background: '#1e1e1e',
+          border: '1px solid rgba(255,255,255,0.07)',
+          borderRadius: 12,
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          className="p-3"
+          style={{ background: 'rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.07)' }}
+        >
+          <p className="text-white text-sm font-medium truncate">{title}</p>
         </div>
         <div className="p-4 space-y-2">
+          {/* Aperçu / placeholder neutre */}
+          <div
+            className="flex items-center justify-center"
+            style={{
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.07)',
+              borderRadius: 12,
+              minHeight: 96,
+              overflow: 'hidden',
+            }}
+          >
+            {imageUrl && !error ? (
+              <button
+                type="button"
+                onClick={handleImageClick}
+                className="w-full"
+                style={{ background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
+              >
+                <img
+                  src={imageUrl}
+                  alt={alt}
+                  className="w-full object-cover"
+                  style={{ maxHeight: 140 }}
+                  onError={() => setError(true)}
+                />
+              </button>
+            ) : error ? (
+              <div className="flex flex-col items-center gap-1 p-3">
+                <AlertCircle className="h-6 w-6" style={{ color: 'rgba(255,255,255,0.5)' }} />
+                <p className="text-xs text-center" style={{ color: '#6b7280' }}>
+                  Erreur de chargement
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-1 p-3">
+                <FileText className="h-6 w-6" style={{ color: 'rgba(255,255,255,0.5)' }} />
+                <p className="text-xs" style={{ color: '#6b7280' }}>
+                  {loading ? 'Chargement...' : 'Aperçu'}
+                </p>
+              </div>
+            )}
+          </div>
+
           <Button
             onClick={handleImageClick}
             disabled={loading || error || !imageUrl}
-            className="w-full bg-terex-accent hover:bg-terex-accent/80 disabled:opacity-50 text-white"
+            className="w-full disabled:opacity-50"
+            style={{ background: '#fff', color: '#141414', fontWeight: 700, border: 'none' }}
           >
             <Eye className="h-4 w-4 mr-2" />
             {loading ? 'Chargement...' : error ? 'Erreur de chargement' : 'Voir le document'}
           </Button>
-          
+
           <Button
             onClick={handleDownload}
             disabled={!downloadUrl}
-            variant="outline"
-            className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
+            className="w-full"
+            style={{
+              background: '#2d2d2d',
+              border: '1px solid rgba(255,255,255,0.07)',
+              color: '#fff',
+            }}
           >
             <Download className="h-4 w-4 mr-2" />
             Télécharger
           </Button>
-          
+
           {error && (
             <div className="text-center">
-              <p className="text-red-400 text-xs">
+              <p className="text-xs" style={{ color: '#f87171' }}>
                 Erreur lors du chargement du document
               </p>
             </div>
@@ -128,7 +198,7 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
       </div>
 
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="max-w-4xl max-h-[90vh] bg-terex-card border-terex-border">
+        <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] text-white">
           <div className="flex flex-col space-y-4">
             <h3 className="text-white text-lg font-medium">{title}</h3>
             {imageUrl && !error && (
@@ -136,14 +206,19 @@ export function DocumentImage({ url, alt, title }: DocumentImageProps) {
                 <img
                   src={imageUrl}
                   alt={alt}
-                  className="max-w-full max-h-[70vh] object-contain rounded-lg"
+                  className="max-w-full max-h-[70vh] object-contain"
+                  style={{ border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12 }}
                   onError={() => setError(true)}
                 />
               </div>
             )}
             {error && (
-              <div className="text-center p-4 bg-red-500/10 rounded-lg">
-                <p className="text-red-400">Impossible de charger l'image</p>
+              <div
+                className="flex flex-col items-center gap-2 p-4"
+                style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 12 }}
+              >
+                <AlertCircle className="h-6 w-6" style={{ color: 'rgba(255,255,255,0.5)' }} />
+                <p style={{ color: '#9ca3af' }}>Impossible de charger l'image</p>
               </div>
             )}
           </div>

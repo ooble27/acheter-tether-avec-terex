@@ -139,14 +139,22 @@ export function InterviewScheduleDialog({ open, onOpenChange, application, onSch
     }
   };
 
+  const inputStyle: React.CSSProperties = {
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.07)',
+    borderRadius: 12,
+    color: '#fff',
+    outline: 'none',
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-terex-dark border-terex-gray">
+      <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] text-white">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-white">
             Programmer un entretien
           </DialogTitle>
-          <p className="text-gray-400 text-sm">
+          <p className="text-sm" style={{ color: '#9ca3af' }}>
             {application?.first_name} {application?.last_name} - {application?.position}
           </p>
         </DialogHeader>
@@ -160,15 +168,16 @@ export function InterviewScheduleDialog({ open, onOpenChange, application, onSch
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal bg-terex-darker border-terex-gray",
+                    "w-full justify-start text-left font-normal hover:bg-[rgba(255,255,255,0.06)]",
                     !date && "text-muted-foreground"
                   )}
+                  style={inputStyle}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {date ? format(date, 'PPP', { locale: fr }) : <span>Sélectionner une date</span>}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 bg-terex-dark border-terex-gray" align="start">
+              <PopoverContent className="w-auto p-0 bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] text-white" align="start">
                 <Calendar
                   mode="single"
                   selected={date}
@@ -185,13 +194,14 @@ export function InterviewScheduleDialog({ open, onOpenChange, application, onSch
           <div className="space-y-2">
             <Label htmlFor="time" className="text-white">Heure *</Label>
             <div className="relative">
-              <Clock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Clock className="absolute left-3 top-3 h-4 w-4" style={{ color: '#9ca3af' }} />
               <Input
                 id="time"
                 type="time"
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
-                className="pl-10 bg-terex-darker border-terex-gray text-white"
+                className="pl-10"
+                style={inputStyle}
               />
             </div>
           </div>
@@ -200,10 +210,10 @@ export function InterviewScheduleDialog({ open, onOpenChange, application, onSch
           <div className="space-y-2">
             <Label htmlFor="type" className="text-white">Type d'entretien *</Label>
             <Select value={interviewType} onValueChange={(value: 'in-person' | 'online') => setInterviewType(value)}>
-              <SelectTrigger className="bg-terex-darker border-terex-gray text-white">
+              <SelectTrigger className="text-white" style={inputStyle}>
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-terex-dark border-terex-gray">
+              <SelectContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] text-white">
                 <SelectItem value="online">
                   <div className="flex items-center">
                     <Video className="w-4 h-4 mr-2" />
@@ -225,13 +235,14 @@ export function InterviewScheduleDialog({ open, onOpenChange, application, onSch
             <div className="space-y-2">
               <Label htmlFor="location" className="text-white">Adresse du lieu *</Label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <MapPin className="absolute left-3 top-3 h-4 w-4" style={{ color: '#9ca3af' }} />
                 <Input
                   id="location"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="123 Rue Example, Dakar, Sénégal"
-                  className="pl-10 bg-terex-darker border-terex-gray text-white"
+                  className="pl-10"
+                  style={inputStyle}
                 />
               </div>
             </div>
@@ -239,14 +250,15 @@ export function InterviewScheduleDialog({ open, onOpenChange, application, onSch
             <div className="space-y-2">
               <Label htmlFor="meeting-link" className="text-white">Lien de la réunion *</Label>
               <div className="relative">
-                <Video className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Video className="absolute left-3 top-3 h-4 w-4" style={{ color: '#9ca3af' }} />
                 <Input
                   id="meeting-link"
                   type="url"
                   value={meetingLink}
                   onChange={(e) => setMeetingLink(e.target.value)}
                   placeholder="https://meet.google.com/..."
-                  className="pl-10 bg-terex-darker border-terex-gray text-white"
+                  className="pl-10"
+                  style={inputStyle}
                 />
               </div>
             </div>
@@ -260,23 +272,24 @@ export function InterviewScheduleDialog({ open, onOpenChange, application, onSch
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Informations complémentaires pour le candidat..."
-              className="bg-terex-darker border-terex-gray text-white min-h-[100px]"
+              className="min-h-[100px]"
+              style={inputStyle}
             />
           </div>
         </div>
 
-        <DialogFooter className="mt-6">
+        <DialogFooter className="mt-6 flex-col sm:flex-row gap-2">
           <Button
-            variant="outline"
             onClick={() => onOpenChange(false)}
-            className="border-terex-gray text-white hover:bg-terex-gray"
+            className="hover:bg-[rgba(255,255,255,0.06)]"
+            style={{ background: '#2d2d2d', border: '1px solid rgba(255,255,255,0.07)', color: '#fff' }}
           >
             Annuler
           </Button>
           <Button
             onClick={handleSchedule}
             disabled={loading}
-            className="bg-terex-accent hover:bg-terex-accent/90"
+            style={{ background: '#fff', color: '#141414', fontWeight: 700, border: 'none' }}
           >
             {loading ? 'Programmation...' : 'Programmer l\'entretien'}
           </Button>

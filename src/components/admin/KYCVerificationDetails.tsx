@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { ArrowLeft, CheckCircle, XCircle, Clock, User, FileText, Calendar, Eye, MapPin, Phone, CreditCard } from 'lucide-react';
@@ -13,6 +12,22 @@ interface KYCVerificationDetailsProps {
   onBack: () => void;
   onUpdate: () => void;
 }
+
+const CARD_STYLE = {
+  background: '#1e1e1e',
+  border: '1px solid rgba(255,255,255,0.07)',
+  borderRadius: 16,
+};
+
+const FIELD_STYLE = {
+  background: 'rgba(255,255,255,0.04)',
+  border: '1px solid rgba(255,255,255,0.07)',
+  borderRadius: 12,
+};
+
+const ICON_BG_STYLE = {
+  background: 'rgba(255,255,255,0.06)',
+};
 
 export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVerificationDetailsProps) {
   const { approveVerification, rejectVerification, setUnderReview } = useKYCAdmin();
@@ -26,7 +41,7 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
     setSubmitting(true);
     const result = await approveVerification(verification.id, approvalComment);
     setSubmitting(false);
-    
+
     if (result.success) {
       setShowApproveDialog(false);
       setApprovalComment('');
@@ -36,11 +51,11 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
 
   const handleReject = async () => {
     if (!rejectionReason.trim()) return;
-    
+
     setSubmitting(true);
     const result = await rejectVerification(verification.id, rejectionReason);
     setSubmitting(false);
-    
+
     if (result.success) {
       setShowRejectDialog(false);
       setRejectionReason('');
@@ -53,13 +68,18 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
     onUpdate();
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusBadgeStyle = (status: string): React.CSSProperties => {
     switch (status) {
-      case 'approved': return 'bg-green-500';
-      case 'rejected': return 'bg-red-500';
-      case 'under_review': return 'bg-orange-500';
-      case 'submitted': return 'bg-blue-500';
-      default: return 'bg-gray-500';
+      case 'approved':
+        return { background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.65)' };
+      case 'rejected':
+        return { background: 'rgba(248,113,113,0.10)', color: '#f87171' };
+      case 'under_review':
+        return { background: 'rgba(96,165,250,0.10)', color: '#60a5fa' };
+      case 'submitted':
+        return { background: 'rgba(96,165,250,0.10)', color: '#60a5fa' };
+      default:
+        return { background: 'rgba(251,191,36,0.10)', color: '#fbbf24' };
     }
   };
 
@@ -87,36 +107,59 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
 
   const canTakeAction = verification.status === 'submitted' || verification.status === 'under_review';
 
+  const statusBadge = (
+    <span
+      style={{
+        ...getStatusBadgeStyle(verification.status),
+        borderRadius: 999,
+        padding: '3px 10px',
+        fontSize: 11,
+        fontWeight: 600,
+        display: 'inline-block',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {getStatusText(verification.status)}
+    </span>
+  );
+
+  const fieldBlock = (Icon: typeof User, label: string, value: React.ReactNode, breakAll = false) => (
+    <div className="flex items-center gap-3 p-3" style={FIELD_STYLE}>
+      <Icon className="h-4 w-4 shrink-0" style={{ color: '#9ca3af' }} />
+      <div className="min-w-0">
+        <p style={{ color: '#6b7280', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</p>
+        <p className={`text-white font-medium ${breakAll ? 'break-all' : ''}`}>{value}</p>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-terex-dark p-4 pb-safe overflow-x-hidden">
+    <div className="min-h-screen p-4 pb-safe overflow-x-hidden" style={{ background: '#141414' }}>
       <div className="mx-auto max-w-6xl space-y-6">
         {/* En-tête */}
         <div className="flex flex-col space-y-4">
-          <Button 
-            variant="ghost" 
-            onClick={onBack} 
-            className="text-white hover:bg-terex-accent/20 self-start"
+          <Button
+            variant="ghost"
+            onClick={onBack}
+            className="text-white self-start hover:bg-[rgba(255,255,255,0.06)]"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Retour à la liste
           </Button>
-          
-          <Card className="bg-terex-card border-terex-border">
+
+          <Card style={CARD_STYLE}>
             <CardHeader>
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-                <div>
-                  <CardTitle className="text-2xl text-white">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="min-w-0">
+                  <CardTitle className="text-2xl text-white break-words">
                     {verification.first_name} {verification.last_name}
                   </CardTitle>
-                  <p className="text-gray-400 text-sm mt-1">
+                  <p className="text-sm mt-1" style={{ color: '#9ca3af' }}>
                     ID: {verification.user_id.slice(0, 12)}...
                   </p>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <div className={`w-3 h-3 rounded-full ${getStatusColor(verification.status)}`}></div>
-                  <Badge variant="secondary" className="text-sm">
-                    {getStatusText(verification.status)}
-                  </Badge>
+                <div className="flex items-center shrink-0">
+                  {statusBadge}
                 </div>
               </div>
             </CardHeader>
@@ -125,7 +168,7 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
 
         {/* Actions rapides */}
         {canTakeAction && (
-          <Card className="bg-terex-card border-terex-border">
+          <Card style={CARD_STYLE}>
             <CardHeader>
               <CardTitle className="text-white flex items-center">
                 <Clock className="h-5 w-5 mr-2" />
@@ -133,11 +176,12 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3">
                 {verification.status === 'submitted' && (
                   <Button
                     onClick={handleSetUnderReview}
-                    className="bg-orange-600 hover:bg-orange-700"
+                    className="flex-1 min-w-[160px]"
+                    style={{ background: '#2d2d2d', border: '1px solid rgba(255,255,255,0.07)', color: '#fff' }}
                   >
                     <Clock className="h-4 w-4 mr-2" />
                     Mettre en révision
@@ -145,14 +189,16 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
                 )}
                 <Button
                   onClick={() => setShowApproveDialog(true)}
-                  className="bg-green-600 hover:bg-green-700"
+                  className="flex-1 min-w-[160px]"
+                  style={{ background: '#fff', color: '#141414', fontWeight: 700, border: 'none' }}
                 >
                   <CheckCircle className="h-4 w-4 mr-2" />
                   Approuver
                 </Button>
                 <Button
                   onClick={() => setShowRejectDialog(true)}
-                  variant="destructive"
+                  className="flex-1 min-w-[160px] hover:bg-[rgba(248,113,113,0.16)]"
+                  style={{ background: 'rgba(248,113,113,0.10)', color: '#f87171', border: '1px solid rgba(248,113,113,0.20)' }}
                 >
                   <XCircle className="h-4 w-4 mr-2" />
                   Rejeter
@@ -165,7 +211,7 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
         {/* Grille des informations */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Informations personnelles */}
-          <Card className="bg-terex-card border-terex-border">
+          <Card style={CARD_STYLE}>
             <CardHeader>
               <CardTitle className="text-white flex items-center">
                 <User className="h-5 w-5 mr-2" />
@@ -174,51 +220,16 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 gap-4">
-                <div className="flex items-center space-x-3 p-3 bg-terex-dark rounded-lg">
-                  <User className="h-4 w-4 text-gray-400" />
-                  <div>
-                    <p className="text-xs text-gray-400">Nom complet</p>
-                    <p className="text-white font-medium">
-                      {verification.first_name} {verification.last_name}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center space-x-3 p-3 bg-terex-dark rounded-lg">
-                  <Calendar className="h-4 w-4 text-gray-400" />
-                  <div>
-                    <p className="text-xs text-gray-400">Date de naissance</p>
-                    <p className="text-white font-medium">
-                      {verification.date_of_birth || 'Non fournie'}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center space-x-3 p-3 bg-terex-dark rounded-lg">
-                  <MapPin className="h-4 w-4 text-gray-400" />
-                  <div>
-                    <p className="text-xs text-gray-400">Nationalité</p>
-                    <p className="text-white font-medium">
-                      {verification.nationality || 'Non fournie'}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center space-x-3 p-3 bg-terex-dark rounded-lg">
-                  <Phone className="h-4 w-4 text-gray-400" />
-                  <div>
-                    <p className="text-xs text-gray-400">Téléphone</p>
-                    <p className="text-white font-medium">
-                      {verification.phone_number || 'Non fourni'}
-                    </p>
-                  </div>
-                </div>
+                {fieldBlock(User, 'Nom complet', `${verification.first_name} ${verification.last_name}`)}
+                {fieldBlock(Calendar, 'Date de naissance', verification.date_of_birth || 'Non fournie')}
+                {fieldBlock(MapPin, 'Nationalité', verification.nationality || 'Non fournie')}
+                {fieldBlock(Phone, 'Téléphone', verification.phone_number || 'Non fourni')}
               </div>
             </CardContent>
           </Card>
 
           {/* Adresse */}
-          <Card className="bg-terex-card border-terex-border">
+          <Card style={CARD_STYLE}>
             <CardHeader>
               <CardTitle className="text-white flex items-center">
                 <MapPin className="h-5 w-5 mr-2" />
@@ -226,24 +237,24 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="p-4 bg-terex-dark rounded-lg">
+              <div className="p-4" style={FIELD_STYLE}>
                 {verification.address ? (
                   <div className="space-y-2">
                     <p className="text-white font-medium">{verification.address}</p>
-                    <p className="text-gray-400">
+                    <p style={{ color: '#9ca3af' }}>
                       {verification.city}, {verification.postal_code}
                     </p>
-                    <p className="text-gray-400">{verification.country}</p>
+                    <p style={{ color: '#9ca3af' }}>{verification.country}</p>
                   </div>
                 ) : (
-                  <p className="text-gray-400">Aucune adresse fournie</p>
+                  <p style={{ color: '#9ca3af' }}>Aucune adresse fournie</p>
                 )}
               </div>
             </CardContent>
           </Card>
 
           {/* Document d'identité */}
-          <Card className="bg-terex-card border-terex-border">
+          <Card style={CARD_STYLE}>
             <CardHeader>
               <CardTitle className="text-white flex items-center">
                 <CreditCard className="h-5 w-5 mr-2" />
@@ -251,33 +262,22 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center space-x-3 p-3 bg-terex-dark rounded-lg">
-                <FileText className="h-4 w-4 text-gray-400" />
-                <div>
-                  <p className="text-xs text-gray-400">Type de document</p>
-                  <p className="text-white font-medium">
-                    {verification.identity_document_type === 'passport' && 'Passeport'}
-                    {verification.identity_document_type === 'national_id' && 'Carte d\'identité'}
-                    {verification.identity_document_type === 'drivers_license' && 'Permis de conduire'}
-                    {!verification.identity_document_type && 'Non fourni'}
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-3 p-3 bg-terex-dark rounded-lg">
-                <CreditCard className="h-4 w-4 text-gray-400" />
-                <div>
-                  <p className="text-xs text-gray-400">Numéro de document</p>
-                  <p className="text-white font-medium break-all">
-                    {verification.identity_document_number || 'Non fourni'}
-                  </p>
-                </div>
-              </div>
+              {fieldBlock(
+                FileText,
+                'Type de document',
+                <>
+                  {verification.identity_document_type === 'passport' && 'Passeport'}
+                  {verification.identity_document_type === 'national_id' && 'Carte d\'identité'}
+                  {verification.identity_document_type === 'drivers_license' && 'Permis de conduire'}
+                  {!verification.identity_document_type && 'Non fourni'}
+                </>
+              )}
+              {fieldBlock(CreditCard, 'Numéro de document', verification.identity_document_number || 'Non fourni', true)}
             </CardContent>
           </Card>
 
           {/* Dates importantes */}
-          <Card className="bg-terex-card border-terex-border">
+          <Card style={CARD_STYLE}>
             <CardHeader>
               <CardTitle className="text-white flex items-center">
                 <Calendar className="h-5 w-5 mr-2" />
@@ -285,28 +285,28 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="p-3 bg-terex-dark rounded-lg">
-                <p className="text-xs text-gray-400">Créé le</p>
+              <div className="p-3" style={FIELD_STYLE}>
+                <p style={{ color: '#6b7280', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Créé le</p>
                 <p className="text-white">{formatDate(verification.created_at)}</p>
               </div>
-              
+
               {verification.submitted_at && (
-                <div className="p-3 bg-terex-dark rounded-lg">
-                  <p className="text-xs text-gray-400">Soumis le</p>
+                <div className="p-3" style={FIELD_STYLE}>
+                  <p style={{ color: '#6b7280', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Soumis le</p>
                   <p className="text-white">{formatDate(verification.submitted_at)}</p>
                 </div>
               )}
-              
+
               {verification.reviewed_at && (
-                <div className="p-3 bg-terex-dark rounded-lg">
-                  <p className="text-xs text-gray-400">Révisé le</p>
+                <div className="p-3" style={FIELD_STYLE}>
+                  <p style={{ color: '#6b7280', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Révisé le</p>
                   <p className="text-white">{formatDate(verification.reviewed_at)}</p>
                 </div>
               )}
-              
+
               {verification.rejection_reason && (
-                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-                  <p className="text-xs text-red-400 mb-1">Raison du rejet</p>
+                <div className="p-3" style={{ background: 'rgba(248,113,113,0.10)', border: '1px solid rgba(248,113,113,0.20)', borderRadius: 12 }}>
+                  <p className="mb-1" style={{ color: '#f87171', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Raison du rejet</p>
                   <p className="text-white text-sm">{verification.rejection_reason}</p>
                 </div>
               )}
@@ -315,7 +315,7 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
         </div>
 
         {/* Documents fournis */}
-        <Card className="bg-terex-card border-terex-border">
+        <Card style={CARD_STYLE}>
           <CardHeader>
             <CardTitle className="text-white flex items-center">
               <Eye className="h-5 w-5 mr-2" />
@@ -323,25 +323,25 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <DocumentImage
                 url={verification.identity_document_front_url}
                 alt="Document recto"
                 title="Document d'identité (recto)"
               />
-              
+
               <DocumentImage
                 url={verification.identity_document_back_url}
                 alt="Document verso"
                 title="Document d'identité (verso)"
               />
-              
+
               <DocumentImage
                 url={verification.selfie_url}
                 alt="Selfie"
                 title="Photo selfie"
               />
-              
+
               <DocumentImage
                 url={verification.proof_of_address_url}
                 alt="Justificatif de domicile"
@@ -354,29 +354,33 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
 
       {/* Dialogs d'action */}
       <Dialog open={showApproveDialog} onOpenChange={setShowApproveDialog}>
-        <DialogContent className="bg-terex-card border-terex-border">
+        <DialogContent className="w-[95vw] max-w-lg max-h-[90vh] overflow-y-auto bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] text-white">
           <DialogHeader>
             <DialogTitle className="text-white">Approuver la vérification</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-gray-400">
+            <p style={{ color: '#9ca3af' }}>
               Vous êtes sur le point d'approuver cette vérification d'identité.
             </p>
             <Textarea
               placeholder="Commentaire optionnel..."
               value={approvalComment}
               onChange={(e) => setApprovalComment(e.target.value)}
-              className="bg-terex-dark border-terex-border text-white"
+              className="text-white"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, outline: 'none' }}
             />
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowApproveDialog(false)}>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button
+              onClick={() => setShowApproveDialog(false)}
+              style={{ background: '#2d2d2d', border: '1px solid rgba(255,255,255,0.07)', color: '#fff' }}
+            >
               Annuler
             </Button>
             <Button
               onClick={handleApprove}
               disabled={submitting}
-              className="bg-green-600 hover:bg-green-700"
+              style={{ background: '#fff', color: '#141414', fontWeight: 700, border: 'none' }}
             >
               {submitting ? 'Traitement...' : 'Approuver'}
             </Button>
@@ -385,30 +389,35 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
       </Dialog>
 
       <Dialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
-        <DialogContent className="bg-terex-card border-terex-border">
+        <DialogContent className="w-[95vw] max-w-lg max-h-[90vh] overflow-y-auto bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] text-white">
           <DialogHeader>
             <DialogTitle className="text-white">Rejeter la vérification</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-gray-400">
+            <p style={{ color: '#9ca3af' }}>
               Veuillez indiquer la raison du rejet.
             </p>
             <Textarea
               placeholder="Raison du rejet (obligatoire)..."
               value={rejectionReason}
               onChange={(e) => setRejectionReason(e.target.value)}
-              className="bg-terex-dark border-terex-border text-white"
+              className="text-white"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, outline: 'none' }}
               required
             />
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowRejectDialog(false)}>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button
+              onClick={() => setShowRejectDialog(false)}
+              style={{ background: '#2d2d2d', border: '1px solid rgba(255,255,255,0.07)', color: '#fff' }}
+            >
               Annuler
             </Button>
             <Button
               onClick={handleReject}
               disabled={submitting || !rejectionReason.trim()}
-              variant="destructive"
+              className="hover:bg-[rgba(248,113,113,0.16)]"
+              style={{ background: 'rgba(248,113,113,0.10)', color: '#f87171', border: '1px solid rgba(248,113,113,0.20)' }}
             >
               {submitting ? 'Traitement...' : 'Rejeter'}
             </Button>
