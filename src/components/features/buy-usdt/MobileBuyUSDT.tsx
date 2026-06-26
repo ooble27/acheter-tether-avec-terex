@@ -303,7 +303,7 @@ export function MobileBuyUSDT() {
                 const sel = network === net;
                 return (
                   <button key={net} onClick={() => setNetwork(net)}
-                    style={{ width: '100%', padding: '14px 16px', borderRadius: '14px', border: `1px solid ${sel ? SEL_BORDER : BORDER}`, background: sel ? SEL_BG : 'rgba(255,255,255,0.02)', cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'space-between', transition: 'all 0.15s' }}>
+                    style={{ width: '100%', padding: '14px 16px', borderRadius: '14px', border: `1px solid ${sel ? SEL_BORDER : 'rgba(255,255,255,0.12)'}`, background: sel ? SEL_BG : 'rgba(255,255,255,0.06)', cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'space-between', transition: 'all 0.15s' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                       <img src={logo} alt={net} style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
                       <span style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>{net}</span>

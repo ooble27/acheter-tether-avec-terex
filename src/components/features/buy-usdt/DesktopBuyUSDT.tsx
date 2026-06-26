@@ -53,7 +53,7 @@ const labelStyle: React.CSSProperties = {
 
 function ContinueBtn({ onClick, disabled, children }: { onClick: () => void; disabled?: boolean; children?: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '16px 20px 28px' }}>
+    <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '20px 0 8px' }}>
       <button
         onClick={onClick}
         disabled={disabled}
@@ -76,7 +76,7 @@ function ContinueBtn({ onClick, disabled, children }: { onClick: () => void; dis
 
 function ConfirmBtn({ onClick, disabled, loading }: { onClick: () => void; disabled?: boolean; loading?: boolean }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '16px 20px 28px' }}>
+    <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '20px 0 8px' }}>
       <button
         onClick={onClick}
         disabled={disabled || loading}
@@ -254,8 +254,8 @@ export function DesktopBuyUSDT() {
 
         {/* Étape 1: Montant */}
         {step === 'amount' && (
-          <div style={CARD}>
-            <div style={{ padding: '28px 24px 0' }}>
+          <div>
+            <div>
               <div style={{ marginBottom: '20px' }}>
                 <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Acheter USDT</h2>
                 <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px' }}>Entrez le montant que vous souhaitez dépenser</p>
@@ -349,8 +349,8 @@ export function DesktopBuyUSDT() {
 
         {/* Étape 2: Réseau */}
         {step === 'network' && (
-          <div style={CARD}>
-            <div style={{ padding: '28px 24px 0' }}>
+          <div>
+            <div>
               {backBtn('amount')}
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Destination</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Choisissez où vous voulez recevoir vos USDT</p>
@@ -379,8 +379,8 @@ export function DesktopBuyUSDT() {
 
         {/* Étape 3: Adresse Wallet */}
         {step === 'address' && (
-          <div style={CARD}>
-            <div style={{ padding: '28px 24px 0' }}>
+          <div>
+            <div>
               {backBtn('network')}
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Adresse de réception</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Entrez votre adresse {network} pour recevoir les USDT</p>
@@ -428,8 +428,8 @@ export function DesktopBuyUSDT() {
 
         {/* Étape 4: Confirmation */}
         {step === 'confirm' && (
-          <div style={CARD}>
-            <div style={{ padding: '28px 24px 0' }}>
+          <div>
+            <div>
               {backBtn(isBinanceNetwork ? 'binance' : 'address')}
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Confirmer l'achat</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Vérifiez les détails de votre transaction</p>

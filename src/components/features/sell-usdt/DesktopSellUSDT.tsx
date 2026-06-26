@@ -59,7 +59,7 @@ const labelStyle: React.CSSProperties = {
 
 function ContinueBtn({ onClick, disabled, children }: { onClick: () => void; disabled?: boolean; children?: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '16px 20px 28px' }}>
+    <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '20px 0 8px' }}>
       <button
         onClick={onClick} disabled={disabled}
         style={{
@@ -78,7 +78,7 @@ function ContinueBtn({ onClick, disabled, children }: { onClick: () => void; dis
 
 function ConfirmBtn({ onClick, disabled, loading }: { onClick: () => void; disabled?: boolean; loading?: boolean }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '16px 20px 28px' }}>
+    <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '20px 0 8px' }}>
       <button
         onClick={onClick} disabled={disabled || loading}
         style={{
@@ -203,8 +203,8 @@ export function DesktopSellUSDT() {
 
         {/* Étape 1: Montant */}
         {step === 'amount' && (
-          <div style={CARD}>
-            <div style={{ padding: '28px 24px 0' }}>
+          <div>
+            <div>
               <div style={{ marginBottom: '20px' }}>
                 <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Vendre USDT</h2>
                 <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px' }}>Entrez le montant que vous souhaitez vendre</p>
@@ -261,8 +261,8 @@ export function DesktopSellUSDT() {
 
         {/* Étape 2: Réseau + Binance Pay */}
         {step === 'network' && (
-          <div style={CARD}>
-            <div style={{ padding: '28px 24px 0' }}>
+          <div>
+            <div>
               {backBtn('amount')}
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Mode d'envoi</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Choisissez comment envoyer vos USDT</p>
@@ -306,8 +306,8 @@ export function DesktopSellUSDT() {
 
         {/* Étape 3: Binance Pay info */}
         {step === 'binance' && (
-          <div style={CARD}>
-            <div style={{ padding: '28px 24px 0' }}>
+          <div>
+            <div>
               {backBtn('network')}
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" style={{ width: '24px', height: '24px', borderRadius: '6px' }} />
@@ -350,8 +350,8 @@ export function DesktopSellUSDT() {
 
         {/* Étape 4: Téléphone & Provider */}
         {step === 'phone' && (
-          <div style={CARD}>
-            <div style={{ padding: '28px 24px 0' }}>
+          <div>
+            <div>
               {backBtn(useBinancePay ? 'binance' : 'network')}
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Informations de paiement</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Entrez votre numéro Mobile Money</p>
@@ -392,8 +392,8 @@ export function DesktopSellUSDT() {
 
         {/* Étape 5: Confirmation */}
         {step === 'confirm' && (
-          <div style={CARD}>
-            <div style={{ padding: '28px 24px 0' }}>
+          <div>
+            <div>
               {backBtn('phone')}
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Confirmer la vente</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Vérifiez les détails de votre transaction</p>
@@ -416,8 +416,8 @@ export function DesktopSellUSDT() {
 
         {/* Étape 6: Instructions d'envoi */}
         {step === 'instructions' && (
-          <div style={CARD}>
-            <div style={{ padding: '28px 24px 0' }}>
+          <div>
+            <div>
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Envoyer vos USDT</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Suivez ces instructions pour compléter votre vente</p>
 

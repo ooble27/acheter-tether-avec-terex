@@ -1,12 +1,33 @@
 import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Save, Plus, Trash2, Edit3, Wallet } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Save, Plus, Trash2, Edit3, Wallet, Check } from 'lucide-react';
 import { useUserWallets } from '@/hooks/useUserWallets';
+
+const BORDER = 'rgba(255,255,255,0.09)';
+const SEL_BG = 'rgba(255,255,255,0.06)';
+const SEL_BORDER = 'rgba(255,255,255,0.20)';
+const BTN = '#2d2d2d';
+
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  background: 'rgba(255,255,255,0.04)',
+  border: `1px solid ${BORDER}`,
+  borderRadius: '12px',
+  padding: '12px 14px',
+  color: '#fff',
+  fontSize: '14px',
+  outline: 'none',
+  boxSizing: 'border-box',
+};
+
+const labelStyle: React.CSSProperties = {
+  display: 'block',
+  fontSize: '11px',
+  color: 'rgba(255,255,255,0.4)',
+  marginBottom: '6px',
+  letterSpacing: '0.04em',
+};
 
 interface BinanceEmailInputProps {
   email: string;
@@ -17,13 +38,8 @@ interface BinanceEmailInputProps {
   setBinanceId: (binanceId: string) => void;
 }
 
-export function BinanceEmailInput({ 
-  email, 
-  setEmail, 
-  username, 
-  setUsername, 
-  binanceId, 
-  setBinanceId 
+export function BinanceEmailInput({
+  email, setEmail, username, setUsername, binanceId, setBinanceId
 }: BinanceEmailInputProps) {
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [walletName, setWalletName] = useState('');
@@ -35,298 +51,142 @@ export function BinanceEmailInput({
   const [editWalletId, setEditWalletId] = useState('');
   const [showInputFields, setShowInputFields] = useState(false);
   const [editingMode, setEditingMode] = useState(false);
-  
-  const { 
-    binanceWallets, 
-    loading, 
-    saveWallet, 
-    deleteWallet,
-    updateWallet 
-  } = useUserWallets();
 
-  // Déterminer si on doit afficher les champs par défaut
+  const { binanceWallets, loading, saveWallet, deleteWallet, updateWallet } = useUserWallets();
+
   const shouldShowInputFields = binanceWallets.length === 0 || showInputFields;
 
   const handleSaveWallet = async () => {
     if (!email || !username || !binanceId || !walletName) return;
-
     try {
-      await saveWallet({
-        wallet_type: 'binance',
-        wallet_name: walletName,
-        email,
-        username,
-        wallet_id: binanceId,
-        address: null,
-        network: null,
-        is_default: binanceWallets.length === 0
-      });
-      
-      setWalletName('');
-      setShowSaveDialog(false);
-      setShowInputFields(false);
-      setEditingMode(false);
-    } catch (error) {
-      console.error('Error saving wallet:', error);
-    }
+      await saveWallet({ wallet_type: 'binance', wallet_name: walletName, email, username, wallet_id: binanceId, address: null, network: null, is_default: binanceWallets.length === 0 });
+      setWalletName(''); setShowSaveDialog(false); setShowInputFields(false); setEditingMode(false);
+    } catch (error) { console.error('Error saving wallet:', error); }
   };
 
   const handleSelectWallet = (walletId: string) => {
     const wallet = binanceWallets.find(w => w.id === walletId);
-    if (wallet) {
-      setEmail(wallet.email || '');
-      setUsername(wallet.username || '');
-      setBinanceId(wallet.wallet_id || '');
-      setSelectedWalletId(walletId);
-    }
+    if (wallet) { setEmail(wallet.email || ''); setUsername(wallet.username || ''); setBinanceId(wallet.wallet_id || ''); setSelectedWalletId(walletId); }
   };
 
   const handleDeleteWallet = async (walletId: string) => {
     try {
       await deleteWallet(walletId);
-      if (selectedWalletId === walletId) {
-        setSelectedWalletId('');
-        setEmail('');
-        setUsername('');
-        setBinanceId('');
-      }
-    } catch (error) {
-      console.error('Error deleting wallet:', error);
-    }
-  };
-
-  const handleStartEditWallet = (wallet: any) => {
-    setEditingWallet(wallet.id);
-    setEditWalletName(wallet.wallet_name);
-    setEditWalletEmail(wallet.email || '');
-    setEditWalletUsername(wallet.username || '');
-    setEditWalletId(wallet.wallet_id || '');
+      if (selectedWalletId === walletId) { setSelectedWalletId(''); setEmail(''); setUsername(''); setBinanceId(''); }
+    } catch (error) { console.error('Error deleting wallet:', error); }
   };
 
   const handleSaveEditWallet = async (walletId: string) => {
     if (!editWalletName.trim() || !editWalletEmail || !editWalletUsername || !editWalletId) return;
-    
     try {
-      await updateWallet(walletId, { 
-        wallet_name: editWalletName,
-        email: editWalletEmail,
-        username: editWalletUsername,
-        wallet_id: editWalletId
-      });
-      
-      // Mettre à jour les champs principaux si c'est le wallet sélectionné
-      if (selectedWalletId === walletId) {
-        setEmail(editWalletEmail);
-        setUsername(editWalletUsername);
-        setBinanceId(editWalletId);
-      }
-      
-      setEditingWallet(null);
-      setEditWalletName('');
-      setEditWalletEmail('');
-      setEditWalletUsername('');
-      setEditWalletId('');
-    } catch (error) {
-      console.error('Error updating wallet:', error);
-    }
+      await updateWallet(walletId, { wallet_name: editWalletName, email: editWalletEmail, username: editWalletUsername, wallet_id: editWalletId });
+      if (selectedWalletId === walletId) { setEmail(editWalletEmail); setUsername(editWalletUsername); setBinanceId(editWalletId); }
+      setEditingWallet(null); setEditWalletName(''); setEditWalletEmail(''); setEditWalletUsername(''); setEditWalletId('');
+    } catch (error) { console.error('Error updating wallet:', error); }
   };
 
-  const handleCancelEdit = () => {
-    setEditingWallet(null);
-    setEditWalletName('');
-    setEditWalletEmail('');
-    setEditWalletUsername('');
-    setEditWalletId('');
-  };
+  const handleNewWallet = () => { setEmail(''); setUsername(''); setBinanceId(''); setSelectedWalletId(''); setShowInputFields(true); setEditingMode(false); };
 
-  const handleNewWallet = () => {
-    setEmail('');
-    setUsername('');
-    setBinanceId('');
-    setSelectedWalletId('');
-    setShowInputFields(true);
-    setEditingMode(false);
-  };
-
-  const handleEditExistingWallet = (wallet: any) => {
-    setEmail(wallet.email || '');
-    setUsername(wallet.username || '');
-    setBinanceId(wallet.wallet_id || '');
-    setSelectedWalletId(wallet.id);
-    setShowInputFields(true);
-    setEditingMode(true);
-  };
+  const handleEditExistingWallet = (wallet: any) => { setEmail(wallet.email || ''); setUsername(wallet.username || ''); setBinanceId(wallet.wallet_id || ''); setSelectedWalletId(wallet.id); setShowInputFields(true); setEditingMode(true); };
 
   const handleCancelInputEdit = () => {
-    setShowInputFields(false);
-    setEditingMode(false);
+    setShowInputFields(false); setEditingMode(false);
     if (selectedWalletId) {
       const wallet = binanceWallets.find(w => w.id === selectedWalletId);
-      if (wallet) {
-        setEmail(wallet.email || '');
-        setUsername(wallet.username || '');
-        setBinanceId(wallet.wallet_id || '');
-      }
-    } else {
-      setEmail('');
-      setUsername('');
-      setBinanceId('');
-    }
+      if (wallet) { setEmail(wallet.email || ''); setUsername(wallet.username || ''); setBinanceId(wallet.wallet_id || ''); }
+    } else { setEmail(''); setUsername(''); setBinanceId(''); }
   };
 
-  const canSave = email && username && binanceId && !binanceWallets.some(w => 
-    w.email === email && w.username === username && w.wallet_id === binanceId && w.id !== selectedWalletId
-  );
+  const canSave = email && username && binanceId && !binanceWallets.some(w => w.email === email && w.username === username && w.wallet_id === binanceId && w.id !== selectedWalletId);
 
   return (
-    <div className="space-y-4">
-      <Label className="text-white text-sm font-medium flex items-center space-x-2">
-        <img 
-          src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" 
-          alt="Binance" 
-          className="w-4 h-4 rounded"
-        />
-        <span>Informations de votre compte Binance</span>
-      </Label>
-
-      {/* Section des wallets sauvegardés */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      {/* Section wallets sauvegardés */}
       {binanceWallets.length > 0 && (
-        <div className="bg-terex-gray/30 rounded-lg p-3 sm:p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <Label className="text-white text-sm font-medium flex items-center space-x-2">
-              <Wallet className="w-4 h-4" />
-              <span className="hidden sm:inline">Wallets Binance sauvegardés ({binanceWallets.length})</span>
-              <span className="sm:hidden">Wallets ({binanceWallets.length})</span>
-            </Label>
+        <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '14px 16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Wallet size={15} color="rgba(255,255,255,0.5)" />
+              <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', fontWeight: 500 }}>Wallets ({binanceWallets.length})</span>
+            </div>
             {!showInputFields && (
-              <Button
-                variant="outline"
-                size="sm"
+              <button
                 onClick={handleNewWallet}
-                className="text-terex-accent border-terex-accent hover:bg-terex-accent hover:text-white text-xs sm:text-sm px-2 sm:px-3"
+                style={{ display: 'flex', alignItems: 'center', gap: '4px', background: BTN, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '6px 12px', color: '#fff', fontSize: '12px', cursor: 'pointer' }}
               >
-                <Plus className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
-                <span className="hidden sm:inline">Nouveau</span>
-              </Button>
+                <Plus size={13} /> Nouveau
+              </button>
             )}
           </div>
-          
-          <div className="space-y-2">
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {binanceWallets.map((wallet) => (
-              <div key={wallet.id} className={`
-                flex flex-col p-2 sm:p-3 rounded-lg border transition-colors cursor-pointer overflow-hidden
-                ${selectedWalletId === wallet.id 
-                  ? 'border-terex-accent bg-terex-accent/10' 
-                  : 'border-terex-gray-light hover:border-terex-accent/50'
-                }
-              `}>
+              <div key={wallet.id}
+                style={{ borderRadius: '12px', border: `1px solid ${selectedWalletId === wallet.id ? SEL_BORDER : BORDER}`, background: selectedWalletId === wallet.id ? SEL_BG : 'rgba(255,255,255,0.02)', overflow: 'hidden' }}
+              >
                 {editingWallet === wallet.id ? (
-                  <div className="w-full space-y-2">
-                    <div className="space-y-2">
-                      <Input
-                        value={editWalletName}
-                        onChange={(e) => setEditWalletName(e.target.value)}
-                        className="bg-terex-darker border-terex-gray-light text-white h-8 text-sm"
-                        placeholder="Nom du wallet"
-                      />
-                      <Input
-                        value={editWalletEmail}
-                        onChange={(e) => setEditWalletEmail(e.target.value)}
-                        className="bg-terex-darker border-terex-gray-light text-white h-8 text-sm"
-                        placeholder="Email Binance"
-                      />
-                      <Input
-                        value={editWalletUsername}
-                        onChange={(e) => setEditWalletUsername(e.target.value)}
-                        className="bg-terex-darker border-terex-gray-light text-white h-8 text-sm"
-                        placeholder="Pseudo Binance"
-                      />
-                      <Input
-                        value={editWalletId}
-                        onChange={(e) => setEditWalletId(e.target.value)}
-                        className="bg-terex-darker border-terex-gray-light text-white h-8 text-sm"
-                        placeholder="ID Binance"
-                      />
-                    </div>
-                    <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-2">
-                      <Button
-                        size="sm"
-                        onClick={() => handleSaveEditWallet(wallet.id)}
-                        className="bg-terex-accent hover:bg-terex-accent/90 text-white h-7 text-xs"
-                      >
-                        <Save className="w-3 h-3 mr-1" />
-                        Sauvegarder
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleCancelEdit}
-                        className="text-gray-400 border-terex-gray-light hover:bg-terex-gray hover:text-white h-7 text-xs"
-                      >
+                  <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {[
+                      { val: editWalletName, set: setEditWalletName, ph: 'Nom du wallet' },
+                      { val: editWalletEmail, set: setEditWalletEmail, ph: 'Email Binance' },
+                      { val: editWalletUsername, set: setEditWalletUsername, ph: 'Pseudo Binance' },
+                      { val: editWalletId, set: setEditWalletId, ph: 'ID Binance' }
+                    ].map(f => (
+                      <input key={f.ph} value={f.val} onChange={(e) => f.set(e.target.value)} placeholder={f.ph}
+                        style={{ ...inputStyle, padding: '8px 12px', fontSize: '13px' }} />
+                    ))}
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                      <button onClick={() => handleSaveEditWallet(wallet.id)}
+                        style={{ display: 'flex', alignItems: 'center', gap: '6px', background: BTN, border: `1px solid ${BORDER}`, borderRadius: '8px', padding: '7px 14px', color: '#fff', fontSize: '12px', cursor: 'pointer' }}>
+                        <Save size={12} /> Sauvegarder
+                      </button>
+                      <button onClick={() => setEditingWallet(null)}
+                        style={{ background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: '8px', padding: '7px 14px', color: 'rgba(255,255,255,0.5)', fontSize: '12px', cursor: 'pointer' }}>
                         Annuler
-                      </Button>
+                      </button>
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-between">
-                    <div 
-                      className="flex-1 cursor-pointer min-w-0"
-                      onClick={() => handleSelectWallet(wallet.id)}
-                    >
-                      <div className="flex items-center space-x-2 mb-1">
-                        <span className="text-white font-medium text-sm truncate">{wallet.wallet_name}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', cursor: 'pointer' }}
+                    onClick={() => handleSelectWallet(wallet.id)}
+                  >
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                        <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{wallet.wallet_name}</span>
                         {wallet.is_default && (
-                          <span className="text-xs bg-terex-accent text-white px-1.5 py-0.5 rounded flex-shrink-0">
+                          <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.6)', padding: '2px 7px', borderRadius: '6px', letterSpacing: '0.03em' }}>
                             Défaut
                           </span>
                         )}
                       </div>
-                      <div className="text-gray-400 text-xs space-y-0.5">
-                        <div className="truncate">{wallet.email}</div>
-                        <div className="truncate">ID: {wallet.wallet_id}</div>
-                      </div>
+                      <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>{wallet.email}</div>
+                      <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: '11px' }}>ID: {wallet.wallet_id}</div>
                     </div>
-                    
-                    <div className="flex items-center space-x-1 flex-shrink-0 ml-2">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0, marginLeft: '8px' }}>
+                      {selectedWalletId === wallet.id && <Check size={14} color="rgba(255,255,255,0.7)" />}
                       {!showInputFields && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleStartEditWallet(wallet)}
-                          className="text-gray-400 hover:text-white h-7 w-7 p-0"
-                        >
-                          <Edit3 className="w-3 h-3" />
-                        </Button>
+                        <button onClick={(e) => { e.stopPropagation(); setEditingWallet(wallet.id); setEditWalletName(wallet.wallet_name); setEditWalletEmail(wallet.email || ''); setEditWalletUsername(wallet.username || ''); setEditWalletId(wallet.wallet_id || ''); }}
+                          style={{ padding: '5px', background: 'transparent', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)', display: 'flex' }}>
+                          <Edit3 size={13} />
+                        </button>
                       )}
-                      
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-7 w-7 p-0"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </Button>
+                          <button onClick={(e) => e.stopPropagation()}
+                            style={{ padding: '5px', background: 'transparent', border: 'none', cursor: 'pointer', color: '#f87171', display: 'flex' }}>
+                            <Trash2 size={13} />
+                          </button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="bg-terex-darker border-terex-gray">
+                        <AlertDialogContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.09)]">
                           <AlertDialogHeader>
-                            <AlertDialogTitle className="text-white">
-                              Supprimer le wallet Binance
-                            </AlertDialogTitle>
+                            <AlertDialogTitle className="text-white">Supprimer le wallet Binance</AlertDialogTitle>
                             <AlertDialogDescription className="text-gray-400">
-                              Êtes-vous sûr de vouloir supprimer "{wallet.wallet_name}" ? 
-                              Cette action est irréversible.
+                              Êtes-vous sûr de vouloir supprimer "{wallet.wallet_name}" ?
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel className="text-white border-terex-gray-light">
-                              Annuler
-                            </AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDeleteWallet(wallet.id)}
-                              className="bg-red-500 hover:bg-red-600 text-white"
-                            >
+                            <AlertDialogCancel className="text-white border-[rgba(255,255,255,0.12)]">Annuler</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDeleteWallet(wallet.id)} className="bg-red-500 hover:bg-red-600 text-white">
                               Supprimer
                             </AlertDialogAction>
                           </AlertDialogFooter>
@@ -341,132 +201,86 @@ export function BinanceEmailInput({
         </div>
       )}
 
-      {/* Champs de saisie - affichés conditionnellement */}
+      {/* Champs de saisie */}
       {shouldShowInputFields && (
-        <div className="space-y-3">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {binanceWallets.length > 0 && (
-            <div className="flex items-center justify-between mb-4">
-              <Label className="text-white text-sm font-medium">
-                {editingMode ? 'Modifier le compte Binance' : 'Nouveau compte Binance'}
-              </Label>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCancelInputEdit}
-                className="text-gray-400 border-terex-gray-light hover:bg-terex-gray hover:text-white text-xs"
-              >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>
+                {editingMode ? 'Modifier le compte' : 'Nouveau compte Binance'}
+              </span>
+              <button onClick={handleCancelInputEdit}
+                style={{ background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: '8px', padding: '5px 12px', color: 'rgba(255,255,255,0.5)', fontSize: '12px', cursor: 'pointer' }}>
                 Annuler
-              </Button>
+              </button>
             </div>
           )}
 
           <div>
-            <Label className="text-white text-xs">Email Binance</Label>
-            <Input
-              type="email"
-              placeholder="votre-email@exemple.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="bg-terex-gray border-terex-gray-light text-white h-12"
-            />
+            <label style={labelStyle}>EMAIL BINANCE</label>
+            <input type="email" placeholder="votre-email@exemple.com" value={email} onChange={(e) => setEmail(e.target.value)} style={inputStyle} />
           </div>
-
           <div>
-            <Label className="text-white text-xs">Pseudo Binance</Label>
-            <Input
-              type="text"
-              placeholder="VotrePseudo"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="bg-terex-gray border-terex-gray-light text-white h-12"
-            />
+            <label style={labelStyle}>PSEUDO BINANCE</label>
+            <input type="text" placeholder="VotrePseudo" value={username} onChange={(e) => setUsername(e.target.value)} style={inputStyle} />
           </div>
-
           <div>
-            <Label className="text-white text-xs">ID Binance</Label>
-            <Input
-              type="text"
-              placeholder="123456789"
-              value={binanceId}
-              onChange={(e) => setBinanceId(e.target.value)}
-              className="bg-terex-gray border-terex-gray-light text-white h-12"
-            />
+            <label style={labelStyle}>ID BINANCE</label>
+            <input type="text" placeholder="123456789" value={binanceId} onChange={(e) => setBinanceId(e.target.value)} style={inputStyle} />
           </div>
         </div>
       )}
 
-      {/* Bouton de sauvegarde - Plus visible */}
+      {/* Save prompt */}
       {canSave && shouldShowInputFields && (
-        <div className="bg-terex-accent/10 border border-terex-accent/30 rounded-lg p-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
-            <div>
-              <p className="text-white text-sm font-medium">
-                {editingMode ? 'Mettre à jour ce compte Binance' : 'Sauvegarder ce compte Binance'}
-              </p>
-              <p className="text-gray-400 text-xs">
-                Pour ne plus avoir à retaper ces informations
-              </p>
+        <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
+          <div>
+            <div style={{ color: '#fff', fontSize: '13px', fontWeight: 500, marginBottom: '2px' }}>
+              {editingMode ? 'Mettre à jour ce compte' : 'Sauvegarder ce compte'}
             </div>
-            <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
-              <DialogTrigger asChild>
-                <Button
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-white w-full sm:w-auto"
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  {editingMode ? 'Mettre à jour' : 'Enregistrer'}
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="bg-terex-darker border-terex-gray">
-                <DialogHeader>
-                  <DialogTitle className="text-white">
-                    {editingMode ? 'Mettre à jour le compte Binance' : 'Sauvegarder le compte Binance'}
-                  </DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div>
-                    <Label className="text-white text-sm">Donnez un nom à ce compte</Label>
-                    <Input
-                      placeholder="Ex: Mon compte principal, Compte trading, etc."
-                      value={walletName}
-                      onChange={(e) => setWalletName(e.target.value)}
-                      className="bg-terex-gray border-terex-gray-light text-white"
-                    />
-                    <p className="text-gray-400 text-xs mt-1">
-                      Choisissez un nom qui vous permettra de reconnaître facilement ce compte
-                    </p>
-                  </div>
-                  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                    <Button
-                      onClick={handleSaveWallet}
-                      disabled={!walletName || loading}
-                      className="flex-1 bg-terex-accent hover:bg-terex-accent/90 text-white"
-                    >
-                      <Save className="w-4 h-4 mr-2" />
-                      {loading ? 'Sauvegarde...' : editingMode ? 'Mettre à jour' : 'Sauvegarder'}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowSaveDialog(false)}
-                      className="text-white border-terex-gray-light"
-                    >
-                      Annuler
-                    </Button>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '11px' }}>Pour ne plus retaper ces infos</div>
           </div>
+          <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
+            <DialogTrigger asChild>
+              <button style={{ display: 'flex', alignItems: 'center', gap: '6px', background: BTN, border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '8px 14px', color: '#fff', fontSize: '12px', cursor: 'pointer', flexShrink: 0 }}>
+                <Save size={13} /> {editingMode ? 'Mettre à jour' : 'Enregistrer'}
+              </button>
+            </DialogTrigger>
+            <DialogContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.09)]">
+              <DialogHeader>
+                <DialogTitle className="text-white">{editingMode ? 'Mettre à jour le compte' : 'Sauvegarder le compte Binance'}</DialogTitle>
+              </DialogHeader>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', paddingTop: '4px' }}>
+                <div>
+                  <label style={{ ...labelStyle, color: 'rgba(255,255,255,0.5)' }}>NOM DU COMPTE</label>
+                  <input placeholder="Ex: Mon compte principal" value={walletName} onChange={(e) => setWalletName(e.target.value)}
+                    style={{ ...inputStyle, background: 'rgba(255,255,255,0.06)' }} />
+                  <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '11px', marginTop: '4px' }}>Un nom pour reconnaître ce compte facilement</p>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button onClick={handleSaveWallet} disabled={!walletName || loading}
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', background: !walletName || loading ? 'rgba(255,255,255,0.05)' : '#fff', border: 'none', borderRadius: '12px', padding: '11px', color: !walletName || loading ? '#6b7280' : '#141414', fontSize: '13px', fontWeight: 600, cursor: !walletName || loading ? 'not-allowed' : 'pointer' }}>
+                    <Save size={14} /> {loading ? 'Sauvegarde...' : editingMode ? 'Mettre à jour' : 'Sauvegarder'}
+                  </button>
+                  <button onClick={() => setShowSaveDialog(false)}
+                    style={{ background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '11px 16px', color: 'rgba(255,255,255,0.6)', fontSize: '13px', cursor: 'pointer' }}>
+                    Annuler
+                  </button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       )}
 
       {!shouldShowInputFields && binanceWallets.length > 0 && (
-        <p className="text-gray-400 text-xs">
-          Sélectionnez un compte Binance sauvegardé ou créez-en un nouveau
+        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '12px' }}>
+          Sélectionnez un compte Binance ou créez-en un nouveau
         </p>
       )}
 
       {shouldShowInputFields && (
-        <p className="text-gray-400 text-xs">
+        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '12px' }}>
           Entrez les informations de votre compte Binance pour recevoir vos USDT directement
         </p>
       )}
