@@ -208,7 +208,7 @@ export function MobileSellUSDT() {
 
         {/* ── Step 2: Network ─────────────────────────────────────────── */}
         <Drawer open={step === 'network'} onOpenChange={open => !open && setStep('amount')}>
-          <DrawerContent className="bg-[#141414] border-t border-[rgba(255,255,255,0.07)]">
+          <DrawerContent className="bg-[#1c1c1c] border-t border-[rgba(255,255,255,0.08)]">
             <DrawerHeader style={{ position: 'relative' }}>
               <button onClick={() => setStep('amount')} style={backBtn}><ArrowLeft size={18} color="#fff" /></button>
               <DrawerTitle style={{ color: '#fff', fontWeight: 700, letterSpacing: '-0.3px' }}>Mode d'envoi</DrawerTitle>
@@ -246,7 +246,7 @@ export function MobileSellUSDT() {
                       const sel = network === net;
                       return (
                         <button key={net} onClick={() => setNetwork(net)}
-                          style={{ display: 'flex', alignItems: 'center', gap: '9px', padding: '9px 16px 9px 10px', borderRadius: '100px', border: `1px solid ${sel ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.10)'}`, background: sel ? 'rgba(255,255,255,0.08)' : 'transparent', cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', transition: 'all 0.15s' }}>
+                          style={{ display: 'flex', alignItems: 'center', gap: '9px', padding: '9px 16px 9px 10px', borderRadius: '100px', border: `1px solid ${sel ? 'rgba(255,255,255,0.40)' : 'rgba(255,255,255,0.18)'}`, background: sel ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.04)', cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', transition: 'all 0.15s' }}>
                           <img src={logo} alt={net} style={{ width: '26px', height: '26px', borderRadius: '50%' }} />
                           <span style={{ color: sel ? '#fff' : 'rgba(255,255,255,0.55)', fontSize: '13px', fontWeight: sel ? 600 : 400 }}>{net}</span>
                           {sel && <Check size={12} color="rgba(255,255,255,0.8)" strokeWidth={2.5} />}
@@ -264,7 +264,7 @@ export function MobileSellUSDT() {
 
         {/* ── Step 2b: Binance Pay instructions ──────────────────────── */}
         <Drawer open={step === 'binance'} onOpenChange={open => !open && setStep('network')}>
-          <DrawerContent className="bg-[#141414] border-t border-[rgba(255,255,255,0.07)]">
+          <DrawerContent className="bg-[#1c1c1c] border-t border-[rgba(255,255,255,0.08)]">
             <DrawerHeader style={{ position: 'relative' }}>
               <button onClick={() => setStep('network')} style={backBtn}><ArrowLeft size={18} color="#fff" /></button>
               <DrawerTitle style={{ color: '#fff', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '44px', letterSpacing: '-0.3px' }}>
@@ -312,7 +312,7 @@ export function MobileSellUSDT() {
 
         {/* ── Step 3: Phone + Provider ─────────────────────────────── */}
         <Drawer open={step === 'phone'} onOpenChange={open => !open && (useBinancePay ? setStep('binance') : setStep('network'))}>
-          <DrawerContent className="bg-[#141414] border-t border-[rgba(255,255,255,0.07)]" onOpenAutoFocus={e => e.preventDefault()}>
+          <DrawerContent className="bg-[#1c1c1c] border-t border-[rgba(255,255,255,0.08)]" onOpenAutoFocus={e => e.preventDefault()}>
             <DrawerHeader style={{ position: 'relative' }}>
               <button onClick={() => useBinancePay ? setStep('binance') : setStep('network')} style={backBtn}><ArrowLeft size={18} color="#fff" /></button>
               <DrawerTitle style={{ color: '#fff', fontWeight: 700, letterSpacing: '-0.3px' }}>Informations de paiement</DrawerTitle>
@@ -358,7 +358,7 @@ export function MobileSellUSDT() {
 
         {/* ── Step 4: Confirm ─────────────────────────────────────────── */}
         <Drawer open={step === 'confirm'} onOpenChange={open => !open && setStep('phone')}>
-          <DrawerContent className="bg-[#141414] border-t border-[rgba(255,255,255,0.07)]">
+          <DrawerContent className="bg-[#1c1c1c] border-t border-[rgba(255,255,255,0.08)]">
             <DrawerHeader style={{ position: 'relative' }}>
               <button onClick={() => setStep('phone')} style={backBtn}><ArrowLeft size={18} color="#fff" /></button>
               <DrawerTitle style={{ color: '#fff', fontWeight: 700, letterSpacing: '-0.3px' }}>Confirmer la vente</DrawerTitle>
@@ -394,7 +394,7 @@ export function MobileSellUSDT() {
 
         {/* ── Step 5: Instructions ────────────────────────────────────── */}
         <Drawer open={step === 'instructions'} onOpenChange={open => !open && handleBackToDashboard()}>
-          <DrawerContent className="bg-[#141414] border-t border-[rgba(255,255,255,0.07)]">
+          <DrawerContent className="bg-[#1c1c1c] border-t border-[rgba(255,255,255,0.08)]">
             <DrawerHeader>
               <DrawerTitle style={{ color: '#fff', fontWeight: 700, letterSpacing: '-0.3px' }}>Envoyer vos USDT</DrawerTitle>
               <DrawerDescription style={{ color: '#6b7280', fontSize: '13px' }}>Suivez ces instructions pour compléter votre vente</DrawerDescription>

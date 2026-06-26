@@ -1,10 +1,8 @@
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useState } from 'react';
+import { Coins, HandCoins, Send, Clock, CheckCircle, XCircle, ChevronDown } from 'lucide-react';
 import { TransactionDetails } from './TransactionDetails';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ArrowUp, ArrowDown, Send, Clock, CheckCircle, XCircle } from 'lucide-react';
 
 interface Transaction {
   id: string;
@@ -27,278 +25,210 @@ interface TransactionHistoryProps {
   transactions: Transaction[];
 }
 
-// Logo USDT component
-const USDTLogo = ({ className }: { className?: string }) => (
-  <img 
-    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
-    alt="USDT"
-    className={className}
-  />
+const CARD = '#1e1e1e';
+const BORDER = 'rgba(255,255,255,0.07)';
+const ICON_BG = 'rgba(255,255,255,0.06)';
+
+const typeConfig = (type: string) => {
+  switch (type) {
+    case 'buy':      return { label: 'Achat USDT',  Icon: Coins,     color: 'rgba(255,255,255,0.85)' };
+    case 'sell':     return { label: 'Vente USDT',  Icon: HandCoins, color: 'rgba(255,255,255,0.85)' };
+    case 'transfer': return { label: 'Virement',    Icon: Send,      color: 'rgba(255,255,255,0.85)' };
+    default:         return { label: 'Transaction', Icon: Coins,     color: 'rgba(255,255,255,0.85)' };
+  }
+};
+
+const statusConfig = (status: string) => {
+  switch (status) {
+    case 'completed':
+    case 'confirmed':
+      return { label: 'Terminée', Icon: CheckCircle, bg: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.55)' };
+    case 'failed':
+      return { label: 'Échouée', Icon: XCircle, bg: 'rgba(248,113,113,0.08)', color: '#f87171' };
+    default:
+      return { label: 'En attente', Icon: Clock, bg: 'rgba(251,191,36,0.08)', color: '#fbbf24' };
+  }
+};
+
+const formatDate = (dateString: string) => {
+  try {
+    const d = new Date(dateString);
+    if (isNaN(d.getTime())) return '—';
+    return d.toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  } catch { return '—'; }
+};
+
+const USDTLogo = () => (
+  <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style={{ width: '14px', height: '14px' }} />
 );
 
 export function TransactionHistory({ transactions = [] }: TransactionHistoryProps) {
   const isMobile = useIsMobile();
+  const [expanded, setExpanded] = useState<string | null>(null);
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return (
-          <Badge variant="secondary" className="flex items-center space-x-1">
-            <Clock className="w-3 h-3" />
-            <span>En attente</span>
-          </Badge>
-        );
-      case 'confirmed':
-      case 'completed':
-        return (
-          <Badge variant="outline" className="flex items-center space-x-1 border-green-500 text-green-500">
-            <CheckCircle className="w-3 h-3" />
-            <span>Confirmée</span>
-          </Badge>
-        );
-      case 'failed':
-        return (
-          <Badge variant="outline" className="flex items-center space-x-1 border-red-500 text-red-500">
-            <XCircle className="w-3 h-3" />
-            <span>Échouée</span>
-          </Badge>
-        );
-      default:
-        return (
-          <Badge variant="secondary" className="flex items-center space-x-1">
-            <Clock className="w-3 h-3" />
-            <span>{status}</span>
-          </Badge>
-        );
-    }
-  };
-
-  const getTransactionIcon = (type: string) => {
-    switch (type) {
-      case 'buy':
-        return <ArrowDown className="w-4 h-4 text-terex-accent" />;
-      case 'sell':
-        return <ArrowUp className="w-4 h-4 text-red-600" />;
-      case 'transfer':
-        return <Send className="w-4 h-4 text-orange-600" />;
-      default:
-        return <ArrowDown className="w-4 h-4 text-terex-accent" />;
-    }
-  };
-
-  const getTransactionLabel = (type: string) => {
-    switch (type) {
-      case 'buy':
-        return 'Achat';
-      case 'sell':
-        return 'Vente';
-      case 'transfer':
-        return 'Transfert';
-      default:
-        return 'Achat';
-    }
-  };
-
-  const getTransactionLabelColor = (type: string) => {
-    switch (type) {
-      case 'buy':
-        return 'text-terex-accent';
-      case 'sell':
-        return 'text-red-600';
-      case 'transfer':
-        return 'text-orange-600';
-      default:
-        return 'text-terex-accent';
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) {
-        return 'Date invalide';
-      }
-      return date.toLocaleString('fr-FR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch (error) {
-      console.error('Erreur formatage date:', error);
-      return 'Date invalide';
-    }
-  };
-
-  // Handle empty transactions
   if (!transactions || transactions.length === 0) {
     return (
-      <Card className="bg-terex-darker border-terex-gray">
-        <CardHeader className={isMobile ? "p-4" : ""}>
-          <CardTitle className={`text-white font-light ${isMobile ? "text-lg" : ""}`}>Historique des transactions</CardTitle>
-          <CardDescription className={`text-gray-400 font-light ${isMobile ? "text-sm" : ""}`}>
-            Consultez toutes vos transactions passées
-          </CardDescription>
-        </CardHeader>
-        <CardContent className={isMobile ? "p-4 pt-0" : ""}>
-          <div className="text-center py-6">
-            <p className={`text-gray-400 font-light ${isMobile ? "text-sm" : ""}`}>Aucune transaction pour le moment</p>
+      <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
+        <div style={{ padding: '20px 24px 12px' }}>
+          <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 4px' }}>Historique des transactions</p>
+          <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Consultez toutes vos transactions passées</p>
+        </div>
+        <div style={{ padding: '48px 24px', textAlign: 'center' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: ICON_BG, margin: '0 auto 12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Coins size={20} color="#4b5563" />
           </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (isMobile) {
-    return (
-      <div className="space-y-3">
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-white text-lg font-light">Historique des transactions</CardTitle>
-            <CardDescription className="text-gray-400 text-sm font-light">
-              Consultez toutes vos transactions passées
-            </CardDescription>
-          </CardHeader>
-        </Card>
-
-        {transactions.map((transaction) => (
-          <Card key={transaction.id} className="bg-terex-darker border-terex-gray">
-            <CardContent className="p-3">
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    {getTransactionIcon(transaction.type)}
-                    <span className={`font-light text-sm ${getTransactionLabelColor(transaction.type)}`}>
-                      {getTransactionLabel(transaction.type)}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    {getStatusBadge(transaction.status)}
-                    <TransactionDetails transaction={transaction} />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400 text-xs">Montant envoyé:</span>
-                    <span className="text-white text-sm font-light">
-                      {transaction.amount} {transaction.currency}
-                    </span>
-                  </div>
-                  
-                  {transaction.type === 'buy' && transaction.usdtAmount && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-400 text-xs">USDT reçu:</span>
-                      <div className="flex items-center space-x-1">
-                        <USDTLogo className="w-3 h-3" />
-                        <span className="text-terex-accent text-sm font-light">{transaction.usdtAmount} USDT</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {(transaction.type === 'sell' || transaction.type === 'transfer') && transaction.fiatAmount && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-400 text-xs">Montant reçu:</span>
-                      <span className="text-white text-sm font-light">
-                        {transaction.fiatAmount} {transaction.receiveCurrency}
-                      </span>
-                    </div>
-                  )}
-
-                  {transaction.type === 'transfer' && transaction.recipient_name && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-400 text-xs">Destinataire:</span>
-                      <span className="text-white text-sm truncate max-w-[140px]">{transaction.recipient_name}</span>
-                    </div>
-                  )}
-
-                  {transaction.type !== 'transfer' && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-400 text-xs">Réseau:</span>
-                      <span className="text-white text-sm">{transaction.network}</span>
-                    </div>
-                  )}
-
-                  <div className="flex justify-between items-center pt-1 border-t border-terex-gray/30">
-                    <span className="text-gray-400 text-xs">Date:</span>
-                    <span className="text-white text-xs">{formatDate(transaction.date)}</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+          <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 4px', fontWeight: 500 }}>Aucune transaction</p>
+          <p style={{ color: '#374151', fontSize: '12px', margin: 0 }}>Vos opérations apparaîtront ici</p>
+        </div>
       </div>
     );
   }
 
-  return (
-    <Card className="bg-terex-darker border-terex-gray">
-      <CardHeader>
-        <CardTitle className="text-white font-light">Historique des transactions</CardTitle>
-        <CardDescription className="text-gray-400 font-light">
-          Consultez toutes vos transactions passées
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow className="border-terex-gray">
-              <TableHead className="text-gray-300 font-light">Type</TableHead>
-              <TableHead className="text-gray-300 font-light">Montant envoyé</TableHead>
-              <TableHead className="text-gray-300 font-light">Reçu</TableHead>
-              <TableHead className="text-gray-300 font-light">Détails</TableHead>
-              <TableHead className="text-gray-300 font-light">Statut</TableHead>
-              <TableHead className="text-gray-300 font-light">Date</TableHead>
-              <TableHead className="text-gray-300 font-light">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {transactions.map((transaction) => (
-              <TableRow key={transaction.id} className="border-terex-gray hover:bg-terex-gray/20">
-                <TableCell>
-                  <div className="flex items-center space-x-2">
-                    {getTransactionIcon(transaction.type)}
-                    <span className={`font-light ${getTransactionLabelColor(transaction.type)}`}>
-                      {getTransactionLabel(transaction.type)}
+  /* ── Mobile: card list ── */
+  if (isMobile) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px 20px' }}>
+          <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 3px' }}>Historique des transactions</p>
+          <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Consultez toutes vos transactions passées</p>
+        </div>
+
+        {transactions.map((tx) => {
+          const { label, Icon, color } = typeConfig(tx.type);
+          const st = statusConfig(tx.status);
+          const StatusIcon = st.Icon;
+          const isOpen = expanded === tx.id;
+
+          return (
+            <div key={tx.id} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', overflow: 'hidden' }}>
+              {/* Row header */}
+              <button
+                onClick={() => setExpanded(isOpen ? null : tx.id)}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '14px', padding: '14px 16px', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' }}
+              >
+                {/* Icon */}
+                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon size={17} color={color} strokeWidth={2} />
+                </div>
+
+                {/* Label + status */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
+                    <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{label}</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: 600, padding: '2px 7px', borderRadius: '999px', background: st.bg, color: st.color }}>
+                      <StatusIcon size={10} />
+                      {st.label}
                     </span>
                   </div>
-                </TableCell>
-                <TableCell>
-                  <span className="text-white">
-                    {transaction.amount} {transaction.currency}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  {transaction.type === 'buy' && transaction.usdtAmount ? (
-                    <div className="flex items-center space-x-1">
-                      <USDTLogo className="w-4 h-4" />
-                      <span className="text-terex-accent">{transaction.usdtAmount} USDT</span>
+                  <p style={{ color: '#4b5563', fontSize: '11px', margin: 0 }}>{formatDate(tx.date)}</p>
+                </div>
+
+                {/* Amount */}
+                <div style={{ textAlign: 'right', flexShrink: 0, marginRight: '4px' }}>
+                  {tx.type === 'buy' && tx.usdtAmount ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'flex-end' }}>
+                      <USDTLogo />
+                      <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{tx.usdtAmount}</span>
                     </div>
-                  ) : transaction.fiatAmount ? (
-                    <span className="text-white">{transaction.fiatAmount} {transaction.receiveCurrency}</span>
                   ) : (
-                    <span className="text-gray-400">-</span>
+                    <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{tx.amount} {tx.currency}</span>
                   )}
-                </TableCell>
-                <TableCell className="text-white text-sm">
-                  {transaction.type === 'transfer' && transaction.recipient_name ? 
-                    transaction.recipient_name : 
-                    transaction.type !== 'transfer' ? transaction.network : 
-                    'Transfert'
-                  }
-                </TableCell>
-                <TableCell>{getStatusBadge(transaction.status)}</TableCell>
-                <TableCell className="text-white text-sm">{formatDate(transaction.date)}</TableCell>
-                <TableCell>
-                  <TransactionDetails transaction={transaction} />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+                </div>
+
+                <ChevronDown size={15} color="#4b5563" style={{ flexShrink: 0, transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+              </button>
+
+              {/* Expanded details */}
+              {isOpen && (
+                <div style={{ borderTop: `1px solid ${BORDER}`, padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {[
+                    { label: 'Montant envoyé', value: `${tx.amount} ${tx.currency}` },
+                    tx.type === 'buy' && tx.usdtAmount ? { label: 'USDT reçu', value: `${tx.usdtAmount} USDT` } : null,
+                    (tx.type === 'sell' || tx.type === 'transfer') && tx.fiatAmount ? { label: 'Montant reçu', value: `${tx.fiatAmount} ${tx.receiveCurrency || ''}` } : null,
+                    tx.type !== 'transfer' ? { label: 'Réseau', value: tx.network } : null,
+                    tx.type === 'transfer' && tx.recipient_name ? { label: 'Destinataire', value: tx.recipient_name } : null,
+                  ].filter(Boolean).map((item: any) => (
+                    <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: '#6b7280', fontSize: '12px' }}>{item.label}</span>
+                      <span style={{ color: '#fff', fontSize: '12px', fontWeight: 500 }}>{item.value}</span>
+                    </div>
+                  ))}
+                  <div style={{ marginTop: '4px' }}>
+                    <TransactionDetails transaction={tx} />
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  /* ── Desktop: table ── */
+  return (
+    <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
+      <div style={{ padding: '20px 24px 16px' }}>
+        <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 3px' }}>Historique des transactions</p>
+        <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Consultez toutes vos transactions passées</p>
+      </div>
+
+      {/* Table header */}
+      <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr 1fr 120px 140px 160px 60px', padding: '8px 20px', borderTop: `1px solid ${BORDER}` }}>
+        {['Type', 'Montant envoyé', 'Reçu', 'Réseau', 'Statut', 'Date', ''].map(h => (
+          <span key={h} style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</span>
+        ))}
+      </div>
+
+      {/* Rows */}
+      {transactions.map((tx) => {
+        const { label, Icon, color } = typeConfig(tx.type);
+        const st = statusConfig(tx.status);
+        const StatusIcon = st.Icon;
+        return (
+          <div key={tx.id} style={{ display: 'grid', gridTemplateColumns: '180px 1fr 1fr 120px 140px 160px 60px', alignItems: 'center', padding: '14px 20px', borderTop: `1px solid ${BORDER}` }}>
+            {/* Type */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Icon size={15} color={color} strokeWidth={2} />
+              </div>
+              <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{label}</span>
+            </div>
+
+            {/* Sent */}
+            <span style={{ color: '#fff', fontSize: '13px' }}>{tx.amount} {tx.currency}</span>
+
+            {/* Received */}
+            {tx.type === 'buy' && tx.usdtAmount ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <USDTLogo />
+                <span style={{ color: '#fff', fontSize: '13px' }}>{tx.usdtAmount} USDT</span>
+              </div>
+            ) : tx.fiatAmount ? (
+              <span style={{ color: '#fff', fontSize: '13px' }}>{tx.fiatAmount} {tx.receiveCurrency}</span>
+            ) : (
+              <span style={{ color: '#4b5563', fontSize: '13px' }}>—</span>
+            )}
+
+            {/* Network / Recipient */}
+            <span style={{ color: '#9ca3af', fontSize: '13px' }}>
+              {tx.type === 'transfer' ? (tx.recipient_name || 'Transfert') : tx.network}
+            </span>
+
+            {/* Status */}
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 600, padding: '3px 9px', borderRadius: '999px', background: st.bg, color: st.color, width: 'fit-content' }}>
+              <StatusIcon size={11} />
+              {st.label}
+            </span>
+
+            {/* Date */}
+            <span style={{ color: '#6b7280', fontSize: '12px' }}>{formatDate(tx.date)}</span>
+
+            {/* Actions */}
+            <TransactionDetails transaction={tx} />
+          </div>
+        );
+      })}
+    </div>
   );
 }
