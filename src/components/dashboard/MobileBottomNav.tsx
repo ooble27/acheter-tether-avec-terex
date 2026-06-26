@@ -1,17 +1,21 @@
 import React from 'react';
-import { LayoutDashboard, TrendingDown, ArrowLeftRight } from 'lucide-react';
+import { Home, Wallet, TrendingUp, Send } from 'lucide-react';
 
 interface MobileBottomNavProps {
   activeSection: string;
   setActiveSection: (section: string) => void;
 }
 
+const TEAL = '#14b8a6';
+const INACTIVE = '#6b7280';
+const BG = '#17171b';
+
 export function MobileBottomNav({ activeSection, setActiveSection }: MobileBottomNavProps) {
   const navItems = [
-    { id: 'home', icon: LayoutDashboard, label: 'Accueil' },
-    { id: 'buy', label: 'Acheter', isUsdt: true },
-    { id: 'sell', icon: TrendingDown, label: 'Vendre' },
-    { id: 'transfer', icon: ArrowLeftRight, label: 'Virement' },
+    { id: 'home',     Icon: Home,        label: 'Accueil'  },
+    { id: 'buy',      Icon: Wallet,      label: 'Acheter'  },
+    { id: 'sell',     Icon: TrendingUp,  label: 'Vendre'   },
+    { id: 'transfer', Icon: Send,        label: 'Virement' },
   ];
 
   return (
@@ -22,115 +26,76 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
         left: 0,
         right: 0,
         zIndex: 50,
+        background: BG,
+        borderTop: '1px solid rgba(255,255,255,0.06)',
         paddingBottom: 'env(safe-area-inset-bottom)',
       }}
     >
       <div
         style={{
-          background: 'rgba(24, 24, 30, 0.97)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderTop: '1px solid rgba(255,255,255,0.07)',
-          padding: '8px 0 12px',
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          height: '60px',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-around',
-            alignItems: 'flex-end',
-          }}
-        >
-          {navItems.map((item) => {
-            const isActive = activeSection === item.id;
-            const Icon = item.icon;
-            const isBuy = item.id === 'buy';
+        {navItems.map(({ id, Icon, label }) => {
+          const isActive = activeSection === id;
+          const color = isActive ? TEAL : INACTIVE;
 
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveSection(item.id)}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: isBuy ? '6px' : '4px',
-                  padding: '0 12px',
-                  border: 'none',
-                  background: 'none',
-                  cursor: 'pointer',
-                  WebkitTapHighlightColor: 'transparent',
-                  position: 'relative',
-                  marginBottom: isBuy ? '2px' : '0',
-                }}
-              >
-                {isBuy ? (
-                  <div
-                    style={{
-                      width: '52px',
-                      height: '52px',
-                      borderRadius: '16px',
-                      background: isActive
-                        ? 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)'
-                        : 'linear-gradient(135deg, #1e2d2c 0%, #1a2827 100%)',
-                      border: isActive
-                        ? '1.5px solid rgba(20,184,166,0.4)'
-                        : '1.5px solid rgba(20,184,166,0.15)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      boxShadow: isActive
-                        ? '0 4px 20px rgba(20,184,166,0.35), 0 2px 8px rgba(0,0,0,0.3)'
-                        : '0 2px 12px rgba(0,0,0,0.3)',
-                      transition: 'all 0.2s ease',
-                      marginTop: '-8px',
-                    }}
-                  >
-                    <img
-                      src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
-                      alt="USDT"
-                      style={{ width: '28px', height: '28px', display: 'block' }}
-                    />
-                  </div>
-                ) : (
-                  <div
-                    style={{
-                      width: '44px',
-                      height: '44px',
-                      borderRadius: '14px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      background: isActive ? 'rgba(20,184,166,0.1)' : 'transparent',
-                      transition: 'background 0.2s',
-                    }}
-                  >
-                    <Icon
-                      style={{
-                        width: '22px',
-                        height: '22px',
-                        color: isActive ? '#14b8a6' : '#71717a',
-                        strokeWidth: isActive ? 2 : 1.5,
-                        transition: 'all 0.2s',
-                      }}
-                    />
-                  </div>
-                )}
+          return (
+            <button
+              key={id}
+              onClick={() => setActiveSection(id)}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '3px',
+                flex: 1,
+                height: '100%',
+                border: 'none',
+                background: 'none',
+                cursor: 'pointer',
+                WebkitTapHighlightColor: 'transparent',
+                outline: 'none',
+              }}
+            >
+              {isActive && (
                 <span
                   style={{
-                    fontSize: '10px',
-                    fontWeight: isActive ? 600 : 400,
-                    color: isActive ? '#14b8a6' : '#71717a',
-                    letterSpacing: '0.02em',
-                    transition: 'all 0.2s',
+                    position: 'absolute',
+                    top: 0,
+                    width: '24px',
+                    height: '2px',
+                    borderRadius: '0 0 2px 2px',
+                    background: TEAL,
+                    marginBottom: '2px',
                   }}
-                >
-                  {item.label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+                />
+              )}
+              <Icon
+                size={22}
+                color={color}
+                strokeWidth={isActive ? 2.2 : 1.6}
+                style={{ transition: 'color 0.15s, stroke-width 0.15s' }}
+              />
+              <span
+                style={{
+                  fontSize: '10px',
+                  fontWeight: isActive ? 600 : 400,
+                  color,
+                  letterSpacing: '0.015em',
+                  transition: 'color 0.15s',
+                  fontFamily: 'inherit',
+                }}
+              >
+                {label}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

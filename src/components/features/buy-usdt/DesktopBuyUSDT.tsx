@@ -274,7 +274,15 @@ export function DesktopBuyUSDT() {
                       if (inputCurrency === 'XOF') {
                         setRawAmount(enforceMaxLimit(e.target.value, currency));
                       } else {
-                        setRawAmount(e.target.value);
+                        const val = e.target.value;
+                        if (val && exchangeRate > 0 && limits) {
+                          const cfa = parseFloat(val) * exchangeRate;
+                          if (cfa > limits.max) {
+                            setRawAmount((limits.max / exchangeRate).toFixed(2));
+                            return;
+                          }
+                        }
+                        setRawAmount(val);
                       }
                     }}
                     className="bg-terex-gray/50 border-terex-gray text-white text-3xl font-light h-16 text-center px-20"
