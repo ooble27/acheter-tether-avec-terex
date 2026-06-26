@@ -66,6 +66,14 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
     });
   }, [profile, user]);
 
+  // Remonter en haut à chaque changement de sous-section (sinon la page
+  // s'ouvre à la position de scroll précédente — souvent tout en bas).
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }, [section]);
+
   if (showKYC) return <KYCPage onBack={() => setShowKYC(false)} />;
 
   const isKYCVerified = kycData?.status === 'approved';
@@ -105,7 +113,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   // ── Sub-section header ───────────────────────────────────────────────────
 
   const SubHeader = ({ title }: { title: string }) => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '20px 20px 16px', borderBottom: `1px solid ${BORDER}`, position: 'sticky', top: 0, zIndex: 10, background: BG }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: 'calc(env(safe-area-inset-top, 0px) + 18px) 20px 16px', borderBottom: `1px solid ${BORDER}`, position: 'sticky', top: 0, zIndex: 10, background: BG }}>
       <button onClick={() => { setSection(null); setIsEditing(false); }}
         style={{ width: '36px', height: '36px', borderRadius: '50%', background: ICON_BG, border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
         <ArrowLeft size={16} color="#fff" />
@@ -622,11 +630,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             <h1 style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.5px' }}>
               {formData.name || 'Utilisateur'}
             </h1>
-            <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 12px' }}>{user?.email}</p>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: kycStatus.bg, border: `1px solid ${kycStatus.border}`, borderRadius: '999px', padding: '5px 12px' }}>
-              <KYCIcon size={12} color={kycStatus.color} />
-              <span style={{ color: kycStatus.color, fontSize: '11px', fontWeight: 600 }}>KYC {kycStatus.text}</span>
-            </div>
+            <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>{user?.email}</p>
           </div>
         </div>
       </div>

@@ -6,29 +6,35 @@ interface SplashScreenProps {
   minDuration?: number;
 }
 
-// Petites pièces USDT qui s'envolent
-const COINS = [
-  { left: '12%', delay: 0.0,  size: 34, dur: 2.6 },
-  { left: '24%', delay: 0.5,  size: 26, dur: 3.0 },
-  { left: '38%', delay: 0.2,  size: 44, dur: 2.4 },
-  { left: '52%', delay: 0.8,  size: 30, dur: 2.8 },
-  { left: '66%', delay: 0.35, size: 38, dur: 2.5 },
-  { left: '78%', delay: 0.65, size: 24, dur: 3.1 },
-  { left: '88%', delay: 0.1,  size: 32, dur: 2.7 },
+// Nœuds d'un réseau abstrait — des objets qui se déplacent et se relient
+const NODES = [
+  { id: 0, x: 50, y: 50, r: 9,  delay: 0.0 },
+  { id: 1, x: 22, y: 28, r: 5,  delay: 0.2 },
+  { id: 2, x: 78, y: 26, r: 6,  delay: 0.35 },
+  { id: 3, x: 18, y: 72, r: 5,  delay: 0.5 },
+  { id: 4, x: 82, y: 70, r: 6,  delay: 0.65 },
+  { id: 5, x: 50, y: 14, r: 4,  delay: 0.8 },
+  { id: 6, x: 50, y: 86, r: 4,  delay: 0.95 },
+  { id: 7, x: 33, y: 50, r: 3.5, delay: 1.1 },
+  { id: 8, x: 67, y: 50, r: 3.5, delay: 1.2 },
 ];
 
-const USDT_LOGO = 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png';
+// Liens entre nœuds (du centre vers les satellites + quelques arcs)
+const LINKS = [
+  [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8],
+  [1, 5], [2, 5], [3, 6], [4, 6], [1, 7], [3, 7], [2, 8], [4, 8],
+];
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({
   onComplete,
-  minDuration = 3200,
+  minDuration = 3500,
 }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(false);
-      setTimeout(onComplete, 500);
+      setTimeout(onComplete, 600);
     }, minDuration);
     return () => clearTimeout(timer);
   }, [onComplete, minDuration]);
@@ -37,30 +43,35 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
     <div
       className="fixed inset-0 z-[200] flex items-center justify-center overflow-hidden"
       style={{
-        background: 'radial-gradient(circle at 50% 40%, #1c1c1c 0%, #0e0e0e 100%)',
-        transition: 'opacity 0.5s ease',
+        background: 'radial-gradient(circle at 50% 45%, #1d1d1d 0%, #0d0d0d 100%)',
+        transition: 'opacity 0.6s ease',
         opacity: isVisible ? 1 : 0,
       }}
     >
       <style>{`
-        @keyframes tx-coin-fly {
-          0%   { transform: translateY(110vh) scale(0.6) rotate(0deg); opacity: 0; }
-          12%  { opacity: 1; }
-          85%  { opacity: 1; }
-          100% { transform: translateY(-20vh) scale(1) rotate(360deg); opacity: 0; }
+        @keyframes tx-node-pop {
+          0%   { transform: scale(0); opacity: 0; }
+          60%  { transform: scale(1.25); opacity: 1; }
+          100% { transform: scale(1); opacity: 1; }
         }
-        @keyframes tx-ring {
-          0%   { transform: scale(0.4); opacity: 0.0; }
-          40%  { opacity: 0.55; }
-          100% { transform: scale(1.8); opacity: 0; }
+        @keyframes tx-float {
+          0%,100% { transform: translate(0,0); }
+          25%     { transform: translate(3px,-4px); }
+          50%     { transform: translate(-2px,3px); }
+          75%     { transform: translate(-3px,-2px); }
         }
-        @keyframes tx-core-pulse {
-          0%,100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(255,255,255,0.10); }
-          50%     { transform: scale(1.06); box-shadow: 0 0 40px 6px rgba(255,255,255,0.06); }
+        @keyframes tx-link-draw {
+          0%   { stroke-dashoffset: 100; opacity: 0; }
+          40%  { opacity: 0.5; }
+          100% { stroke-dashoffset: 0; opacity: 0.32; }
         }
-        @keyframes tx-spark {
-          0%   { transform: translate(0,0) scale(1); opacity: 1; }
-          100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+        @keyframes tx-pulse-core {
+          0%,100% { transform: scale(1);   filter: drop-shadow(0 0 6px rgba(255,255,255,0.25)); }
+          50%     { transform: scale(1.18); filter: drop-shadow(0 0 18px rgba(255,255,255,0.45)); }
+        }
+        @keyframes tx-orbit {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
         }
         @keyframes tx-dots {
           0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
@@ -72,109 +83,70 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         }
       `}</style>
 
-      {/* Pièces USDT qui s'envolent en arrière-plan */}
-      <div className="absolute inset-0 pointer-events-none">
-        {COINS.map((c, i) => (
-          <img
-            key={i}
-            src={USDT_LOGO}
-            alt=""
-            aria-hidden="true"
-            style={{
-              position: 'absolute',
-              left: c.left,
-              bottom: 0,
-              width: c.size,
-              height: c.size,
-              opacity: 0,
-              filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.5))',
-              animation: `tx-coin-fly ${c.dur}s ${c.delay}s ease-in-out infinite`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Centre : noyau pulsant avec anneaux qui se propagent */}
       <div className="relative z-10 flex flex-col items-center">
-        <div style={{ position: 'relative', width: 140, height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {/* Anneaux concentriques */}
-          {[0, 0.6, 1.2].map((d, i) => (
-            <span
-              key={i}
-              style={{
-                position: 'absolute',
-                width: 120,
-                height: 120,
-                borderRadius: '50%',
-                border: '1.5px solid rgba(255,255,255,0.18)',
-                animation: `tx-ring 2.4s ${d}s ease-out infinite`,
-              }}
-            />
-          ))}
-
-          {/* Étincelles qui jaillissent */}
-          {Array.from({ length: 8 }).map((_, i) => {
-            const angle = (i / 8) * Math.PI * 2;
-            const dx = `${Math.cos(angle) * 70}px`;
-            const dy = `${Math.sin(angle) * 70}px`;
-            return (
-              <span
-                key={`s${i}`}
+        <div style={{ position: 'relative', width: 220, height: 220 }}>
+          <svg viewBox="0 0 100 100" width="220" height="220" style={{ overflow: 'visible' }}>
+            {/* Liens */}
+            {LINKS.map(([a, b], i) => {
+              const na = NODES[a], nb = NODES[b];
+              return (
+                <line
+                  key={`l${i}`}
+                  x1={na.x} y1={na.y} x2={nb.x} y2={nb.y}
+                  stroke="rgba(255,255,255,0.5)"
+                  strokeWidth="0.5"
+                  strokeDasharray="100"
+                  style={{ animation: `tx-link-draw 1.4s ${0.3 + i * 0.06}s ease-out forwards` }}
+                />
+              );
+            })}
+            {/* Nœuds */}
+            {NODES.map((n) => (
+              <g
+                key={n.id}
                 style={{
-                  position: 'absolute',
-                  width: 4,
-                  height: 4,
-                  borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.8)',
-                  ['--dx' as any]: dx,
-                  ['--dy' as any]: dy,
-                  animation: `tx-spark 1.6s ${0.2 * i}s ease-out infinite`,
+                  transformOrigin: `${n.x}px ${n.y}px`,
+                  animation: n.id === 0
+                    ? 'tx-pulse-core 2s ease-in-out infinite'
+                    : `tx-node-pop 0.6s ${n.delay}s both, tx-float 4s ${n.delay}s ease-in-out infinite`,
                 }}
-              />
-            );
-          })}
+              >
+                <circle
+                  cx={n.x} cy={n.y} r={n.r}
+                  fill={n.id === 0 ? '#ffffff' : 'rgba(255,255,255,0.85)'}
+                />
+                {n.id === 0 && (
+                  <circle cx={n.x} cy={n.y} r={n.r + 4} fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="0.5" />
+                )}
+              </g>
+            ))}
+          </svg>
 
-          {/* Noyau central : pièce USDT */}
+          {/* Anneau en orbite autour du centre */}
           <div
             style={{
-              width: 78,
-              height: 78,
-              borderRadius: '50%',
-              background: '#1e1e1e',
-              border: '1px solid rgba(255,255,255,0.12)',
+              position: 'absolute',
+              inset: 0,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              animation: 'tx-core-pulse 1.8s ease-in-out infinite',
+              animation: 'tx-orbit 6s linear infinite',
             }}
           >
-            <img src={USDT_LOGO} alt="USDT" style={{ width: 48, height: 48 }} />
+            <div style={{ position: 'relative', width: 150, height: 150 }}>
+              <span style={{ position: 'absolute', top: -3, left: '50%', width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.9)', transform: 'translateX(-50%)' }} />
+              <span style={{ position: 'absolute', bottom: -3, left: '50%', width: 4, height: 4, borderRadius: '50%', background: 'rgba(255,255,255,0.6)', transform: 'translateX(-50%)' }} />
+            </div>
           </div>
         </div>
 
-        {/* Légende + points de chargement */}
-        <p
-          style={{
-            marginTop: 34,
-            color: 'rgba(255,255,255,0.55)',
-            fontSize: 13,
-            letterSpacing: '0.16em',
-            textTransform: 'uppercase',
-            fontWeight: 500,
-            animation: 'tx-fade-up 0.8s 0.3s both',
-          }}
-        >
-          Sécurisation des transactions
-        </p>
-        <div style={{ display: 'flex', gap: 6, marginTop: 14 }}>
+        {/* Points de chargement */}
+        <div style={{ display: 'flex', gap: 6, marginTop: 26, animation: 'tx-fade-up 0.8s 0.4s both' }}>
           {[0, 1, 2].map(i => (
             <span
               key={i}
               style={{
-                width: 6,
-                height: 6,
-                borderRadius: '50%',
-                background: '#fff',
+                width: 6, height: 6, borderRadius: '50%', background: '#fff',
                 animation: `tx-dots 1.4s ${i * 0.2}s ease-in-out infinite`,
               }}
             />

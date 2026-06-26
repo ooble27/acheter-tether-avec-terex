@@ -12,7 +12,7 @@ export const AppLoader: React.FC<AppLoaderProps> = ({ children, loading = false 
   // Add error boundary for hook usage
   let hookData;
   try {
-    hookData = useSplashScreen(3200);
+    hookData = useSplashScreen(3500);
   } catch (error) {
     console.error('Error in useSplashScreen:', error);
     // Fallback without splash screen
@@ -23,7 +23,7 @@ export const AppLoader: React.FC<AppLoaderProps> = ({ children, loading = false 
 
   // Afficher le splash screen au démarrage (toutes plateformes) ou si l'app charge
   if (showSplash || loading) {
-    return <SplashScreen onComplete={handleSplashComplete} minDuration={3200} />;
+    return <SplashScreen onComplete={handleSplashComplete} minDuration={3500} />;
   }
 
   // Afficher l'application normale
