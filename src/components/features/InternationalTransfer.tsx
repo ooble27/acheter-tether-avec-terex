@@ -293,14 +293,21 @@ export function InternationalTransfer() {
                   receiveMethod={receiveMethod}
                 />
 
-                <Button 
-                  size="lg"
-                  className="w-full gradient-button text-white font-semibold h-12 text-lg"
-                  disabled={!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName || (receiveMethod !== 'mobile' && !recipientPhone) || loading || (receiveMethod === 'mobile' && !provider)}
-                  onClick={handleFormSubmit}
-                >
-                  {loading ? 'Traitement...' : 'Continuer le transfert'}
-                </Button>
+                <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                  <button
+                    onClick={handleFormSubmit}
+                    disabled={!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName || (receiveMethod !== 'mobile' && !recipientPhone) || loading || (receiveMethod === 'mobile' && !provider)}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: '8px',
+                      background: (!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName) ? 'rgba(255,255,255,0.04)' : '#2d2d2d',
+                      borderRadius: '16px', border: '1px solid rgba(255,255,255,0.10)',
+                      padding: '13px 22px', color: (!sendAmount || !paymentMethod || !receiveMethod || !recipientCountry || !recipientFirstName || !recipientLastName) ? '#6b7280' : '#fff',
+                      fontSize: '14px', fontWeight: 600, cursor: 'pointer',
+                    }}
+                  >
+                    {loading ? 'Traitement...' : 'Continuer le transfert'}
+                  </button>
+                </div>
               </CardContent>
             </Card>
           </div>

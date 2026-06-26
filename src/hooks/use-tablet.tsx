@@ -6,7 +6,11 @@ const MIN_TABLET_WIDTH = 768;
 const MAX_TABLET_WIDTH = 1180;
 
 export function useIsTablet() {
-  const [isTablet, setIsTablet] = React.useState<boolean | undefined>(undefined);
+  const [isTablet, setIsTablet] = React.useState<boolean>(
+    typeof window !== 'undefined'
+      ? window.innerWidth >= MIN_TABLET_WIDTH && window.innerWidth <= MAX_TABLET_WIDTH
+      : false
+  );
 
   React.useEffect(() => {
     const checkIsTablet = () => {
