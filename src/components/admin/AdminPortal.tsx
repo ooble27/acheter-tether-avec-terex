@@ -47,16 +47,16 @@ export function AdminPortal() {
   const active = NAV.find(n => n.id === activeTab) ?? NAV[0];
 
   return (
-    <div style={{ minHeight: '100vh', background: BG, paddingBottom: '80px' }}>
+    <div style={{ minHeight: '100vh', background: BG, paddingBottom: '80px', width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
       {/* Top bar */}
-      <div style={{ padding: 'calc(env(safe-area-inset-top, 0px) + 18px) 20px 18px', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', gap: '14px', maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ padding: 'calc(env(safe-area-inset-top, 0px) + 18px) 16px 16px', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', gap: '12px', maxWidth: '1200px', margin: '0 auto' }}>
         <button onClick={() => navigate('/dashboard')}
           style={{ width: '38px', height: '38px', borderRadius: '50%', background: ICON_BG, border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
           <ArrowLeft size={17} color="#fff" />
         </button>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <h1 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: 0, letterSpacing: '-0.4px' }}>Administration</h1>
-          <p style={{ color: '#6b7280', fontSize: '12px', margin: '2px 0 0' }}>Pilotez la plateforme Terex</p>
+          <h1 style={{ color: '#fff', fontSize: '19px', fontWeight: 700, margin: 0, letterSpacing: '-0.4px' }}>Administration</h1>
+          <p style={{ color: '#6b7280', fontSize: '12px', margin: '2px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Pilotez la plateforme Terex</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, borderRadius: '999px', padding: '6px 12px', flexShrink: 0 }}>
           <Shield size={13} color="rgba(255,255,255,0.6)" />
@@ -64,9 +64,9 @@ export function AdminPortal() {
         </div>
       </div>
 
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
-        {/* Nav pills — scrollable horizontalement sur mobile */}
-        <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '6px', marginBottom: '22px', scrollbarWidth: 'none' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '16px', width: '100%', boxSizing: 'border-box' }}>
+        {/* Nav pills — défilables horizontalement, contenues (la page ne scrolle pas) */}
+        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '6px', marginBottom: '20px', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
           {NAV.map(({ id, label, icon: Icon }) => {
             const isOn = id === activeTab;
             return (

@@ -333,19 +333,12 @@ export function OrderDetailsDialog({
                         <div className="text-[11px] uppercase tracking-wider text-[#6b7280] mb-2.5 font-medium">
                           {section.title}
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-3">
                           {section.fields.map((field, j) => (
-                            <div
-                              key={j}
-                              className="rounded-xl px-3 py-2"
-                              style={{
-                                background: 'rgba(255,255,255,0.03)',
-                                border: field.highlight ? '1px solid rgba(255,255,255,0.18)' : '1px solid rgba(255,255,255,0.07)',
-                              }}
-                            >
+                            <div key={j}>
                               <div className="text-[11px] uppercase tracking-wider text-[#6b7280] mb-0.5">{field.label}</div>
                               <div className="flex items-center justify-between gap-2">
-                                <div className="text-sm font-medium break-all text-white">{field.value}</div>
+                                <div className={`text-sm break-all ${field.highlight ? 'text-white font-semibold' : 'text-white font-medium'}`}>{field.value}</div>
                                 {field.copyable && (
                                   <button onClick={() => copy(field.value, `${field.label} copié`)} className="flex-shrink-0 p-1 rounded transition text-[#9ca3af] hover:text-white">
                                     <Copy className="w-3 h-3" />
@@ -528,13 +521,7 @@ function Field({
   onCopy?: () => void;
 }) {
   return (
-    <div
-      className="rounded-xl px-3 py-2.5"
-      style={{
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.07)',
-      }}
-    >
+    <div>
       <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-[#6b7280] mb-1">
         {icon} {label}
       </div>
@@ -564,15 +551,9 @@ function Stat({
   mono?: boolean;
 }) {
   return (
-    <div
-      className="rounded-xl px-3 py-2.5"
-      style={{
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.07)',
-      }}
-    >
+    <div>
       <div className="text-[11px] uppercase tracking-wider text-[#6b7280] mb-1">{label}</div>
-      <div className={`text-base font-semibold break-all text-white ${mono ? 'font-mono text-sm' : ''}`}>
+      <div className={`text-lg font-semibold break-all text-white leading-tight ${mono ? 'font-mono text-sm' : ''}`}>
         {value}
       </div>
     </div>
@@ -581,13 +562,7 @@ function Stat({
 
 function TimelineRow({ label, date, icon }: { label: string; date: string; icon: React.ReactNode }) {
   return (
-    <div
-      className="flex items-center justify-between rounded-xl px-3 py-2.5"
-      style={{
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.07)',
-      }}
-    >
+    <div className="flex items-center justify-between py-1">
       <div className="flex items-center gap-2 text-sm text-[#9ca3af]">
         {icon}
         {label}

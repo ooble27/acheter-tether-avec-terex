@@ -4,7 +4,8 @@ import {
   Search,
   RefreshCw,
   ShoppingCart,
-  TrendingDown,
+  Coins,
+  HandCoins,
   Send,
   Trash2,
   Users,
@@ -111,8 +112,8 @@ export function OrdersDashboardNew() {
   }
 
   const ORDER_TABS = [
-    { id: 'buy',      label: 'Achats',     count: buyOrders.length,      Icon: ShoppingCart },
-    { id: 'sell',     label: 'Ventes',     count: sellOrders.length,     Icon: TrendingDown },
+    { id: 'buy',      label: 'Achats',     count: buyOrders.length,      Icon: Coins },
+    { id: 'sell',     label: 'Ventes',     count: sellOrders.length,     Icon: HandCoins },
     { id: 'transfer', label: 'Transferts', count: transferOrders.length, Icon: Send },
     { id: 'trash',    label: 'Corbeille',  count: trashedOrders.length,  Icon: Trash2, danger: true },
   ];
@@ -159,7 +160,7 @@ export function OrdersDashboardNew() {
       </div>
 
       {/* Stats Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '10px' }}>
         {[
           { label: 'Commandes actives', value: activeOrders.length,                                      Icon: ShoppingCart },
           { label: 'Clients actifs',    value: new Set(activeOrders.map(o => o.user_id)).size,           Icon: Users        },

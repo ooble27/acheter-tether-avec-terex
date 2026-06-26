@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -27,10 +26,30 @@ const NETWORK_LOGOS: Record<string, string> = {
   BINANCE: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png',
 };
 
-const backBtn: React.CSSProperties = {
-  position: 'absolute', left: '16px', top: '16px', padding: '8px',
-  background: 'rgba(255,255,255,0.06)', borderRadius: '10px', border: 'none', cursor: 'pointer',
+const circleBackBtn: React.CSSProperties = {
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
+  width: '38px', height: '38px', flexShrink: 0,
+  background: 'rgba(255,255,255,0.06)', borderRadius: '50%', border: 'none', cursor: 'pointer',
+  outline: 'none', WebkitTapHighlightColor: 'transparent',
 };
+
+const fullScreen: React.CSSProperties = {
+  minHeight: '100vh', overflowY: 'auto',
+  paddingTop: 'calc(env(safe-area-inset-top, 0px) + 16px)',
+  paddingBottom: '110px',
+};
+
+function StepHeader({ onBack, title, description }: { onBack: () => void; title: React.ReactNode; description: React.ReactNode }) {
+  return (
+    <div style={{ padding: '0 20px 16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <button onClick={onBack} style={circleBackBtn}><ArrowLeft size={18} color="#fff" /></button>
+        <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: 0, letterSpacing: '-0.3px', display: 'flex', alignItems: 'center', gap: '8px' }}>{title}</h2>
+      </div>
+      <p style={{ color: '#6b7280', fontSize: '13px', margin: '8px 0 0' }}>{description}</p>
+    </div>
+  );
+}
 
 function ContinueBtn({ onClick, disabled, children }: { onClick: () => void; disabled?: boolean; children?: React.ReactNode }) {
   return (
@@ -165,12 +184,12 @@ export function MobileBuyUSDT() {
   if (showKYCPage) return <KYCPage onBack={() => setShowKYCPage(false)} />;
 
   return (
-    <div style={{ minHeight: '100vh', background: '#141414', padding: '80px 20px 100px' }}>
+    <div style={{ minHeight: '100vh', background: '#141414' }}>
       <div style={{ maxWidth: '480px', margin: '0 auto' }}>
 
         {/* ── Step 1: Amount ─────────────────────────────────────────── */}
         {step === 'amount' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', padding: '80px 20px 100px' }}>
             <div>
               <h2 style={{ color: '#fff', fontSize: '26px', fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.4px' }}>Acheter USDT</h2>
               <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Entrez le montant que vous souhaitez dépenser</p>
@@ -288,15 +307,13 @@ export function MobileBuyUSDT() {
         )}
 
         {/* ── Step 2: Network ─────────────────────────────────────────── */}
-        <Drawer open={step === 'network'} onOpenChange={(open) => !open && setStep('amount')}>
-          <DrawerContent className="bg-[#1c1c1c] border-t border-[rgba(255,255,255,0.08)]">
-            <DrawerHeader style={{ position: 'relative' }}>
-              <button onClick={() => setStep('amount')} style={backBtn}><ArrowLeft size={18} color="#fff" /></button>
-              <DrawerTitle style={{ color: '#fff', fontWeight: 700, letterSpacing: '-0.3px' }}>Destination</DrawerTitle>
-              <DrawerDescription style={{ color: '#6b7280', fontSize: '13px' }}>
-                Choisissez où vous voulez recevoir vos USDT
-              </DrawerDescription>
-            </DrawerHeader>
+        {step === 'network' && (
+          <div style={fullScreen}>
+            <StepHeader
+              onBack={() => setStep('amount')}
+              title="Destination"
+              description="Choisissez où vous voulez recevoir vos USDT"
+            />
 
             <div style={{ padding: '4px 20px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
               {Object.entries(NETWORK_LOGOS).map(([net, logo]) => {
@@ -313,17 +330,17 @@ export function MobileBuyUSDT() {
             </div>
 
             <ContinueBtn onClick={handleContinueToAddress} />
-          </DrawerContent>
-        </Drawer>
+          </div>
+        )}
 
         {/* ── Step 3: Address ─────────────────────────────────────────── */}
-        <Drawer open={step === 'address'} onOpenChange={(open) => !open && setStep('network')}>
-          <DrawerContent className="bg-[#1c1c1c] border-t border-[rgba(255,255,255,0.08)]">
-            <DrawerHeader style={{ position: 'relative' }}>
-              <button onClick={() => setStep('network')} style={backBtn}><ArrowLeft size={18} color="#fff" /></button>
-              <DrawerTitle style={{ color: '#fff', fontWeight: 700, letterSpacing: '-0.3px' }}>Adresse de réception</DrawerTitle>
-              <DrawerDescription style={{ color: '#6b7280', fontSize: '13px' }}>Entrez votre adresse {network}</DrawerDescription>
-            </DrawerHeader>
+        {step === 'address' && (
+          <div style={fullScreen}>
+            <StepHeader
+              onBack={() => setStep('network')}
+              title="Adresse de réception"
+              description={`Entrez votre adresse ${network}`}
+            />
 
             <div style={{ padding: '4px 20px' }}>
               <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '14px', overflow: 'hidden' }}>
@@ -341,22 +358,22 @@ export function MobileBuyUSDT() {
             </div>
 
             <ContinueBtn onClick={handleContinueToConfirm} disabled={!walletAddress} />
-          </DrawerContent>
-        </Drawer>
+          </div>
+        )}
 
         {/* ── Step 3b: Binance ─────────────────────────────────────────── */}
-        <Drawer open={step === 'binance'} onOpenChange={(open) => !open && setStep('network')}>
-          <DrawerContent className="bg-[#1c1c1c] border-t border-[rgba(255,255,255,0.08)] max-h-[90vh]">
-            <DrawerHeader style={{ position: 'relative' }}>
-              <button onClick={() => setStep('network')} style={backBtn}><ArrowLeft size={18} color="#fff" /></button>
-              <DrawerTitle style={{ color: '#fff', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '44px', letterSpacing: '-0.3px' }}>
+        {step === 'binance' && (
+          <div style={fullScreen}>
+            <StepHeader
+              onBack={() => setStep('network')}
+              title={<>
                 <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" style={{ width: '24px', height: '24px', borderRadius: '6px' }} />
                 Compte Binance
-              </DrawerTitle>
-              <DrawerDescription style={{ color: '#6b7280', fontSize: '13px' }}>Vos USDT seront envoyés sur votre compte Binance</DrawerDescription>
-            </DrawerHeader>
+              </>}
+              description="Vos USDT seront envoyés sur votre compte Binance"
+            />
 
-            <div style={{ padding: '4px 20px', overflowY: 'auto', maxHeight: '55vh' }}>
+            <div style={{ padding: '4px 20px' }}>
               <BinanceEmailInput
                 email={binanceEmail} setEmail={setBinanceEmail}
                 username={binanceUsername} setUsername={setBinanceUsername}
@@ -365,17 +382,17 @@ export function MobileBuyUSDT() {
             </div>
 
             <ContinueBtn onClick={handleContinueToBinanceConfirm} disabled={!binanceEmail || !binanceUsername || !binanceId} />
-          </DrawerContent>
-        </Drawer>
+          </div>
+        )}
 
         {/* ── Step 4: Confirm ─────────────────────────────────────────── */}
-        <Drawer open={step === 'confirm'} onOpenChange={(open) => !open && (isBinanceNetwork ? setStep('binance') : setStep('address'))}>
-          <DrawerContent className="bg-[#1c1c1c] border-t border-[rgba(255,255,255,0.08)]">
-            <DrawerHeader style={{ position: 'relative' }}>
-              <button onClick={() => isBinanceNetwork ? setStep('binance') : setStep('address')} style={backBtn}><ArrowLeft size={18} color="#fff" /></button>
-              <DrawerTitle style={{ color: '#fff', fontWeight: 700, letterSpacing: '-0.3px' }}>Confirmer l'achat</DrawerTitle>
-              <DrawerDescription style={{ color: '#6b7280', fontSize: '13px' }}>Vérifiez les détails avant de payer</DrawerDescription>
-            </DrawerHeader>
+        {step === 'confirm' && (
+          <div style={fullScreen}>
+            <StepHeader
+              onBack={() => isBinanceNetwork ? setStep('binance') : setStep('address')}
+              title="Confirmer l'achat"
+              description="Vérifiez les détails avant de payer"
+            />
 
             <div style={{ padding: '4px 20px' }}>
               <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', overflow: 'hidden' }}>
@@ -402,8 +419,8 @@ export function MobileBuyUSDT() {
                 {loading ? 'Traitement…' : 'Confirmer et payer'}
               </button>
             </div>
-          </DrawerContent>
-        </Drawer>
+          </div>
+        )}
 
       </div>
     </div>
