@@ -74,7 +74,7 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
       {!loading && recentTransactions.length === 0 && (
         <div style={{ padding: '40px 20px', textAlign: 'center' }}>
           <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: 'rgba(255,255,255,0.04)', margin: '0 auto 12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ArrowDown size={20} color="#4b5563" />
+            <Coins size={20} color="#4b5563" />
           </div>
           <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 4px', fontWeight: 500 }}>Aucune transaction</p>
           <p style={{ color: '#374151', fontSize: '12px', margin: 0 }}>Vos opérations apparaîtront ici</p>
