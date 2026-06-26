@@ -218,7 +218,7 @@ export function MobileBuyUSDT() {
                       onClick={() => { setInputCurrency('XOF'); setRawAmount(''); }}
                       className={`px-3 py-1 text-xs font-light rounded-md transition-all ${inputCurrency === 'XOF' ? 'bg-terex-accent text-black' : 'text-gray-400 hover:text-white'}`}
                     >
-                      XOF
+                      CFA
                     </button>
                     <button
                       type="button"
@@ -228,18 +228,30 @@ export function MobileBuyUSDT() {
                       USDT
                     </button>
                   </div>
-                  {limits && inputCurrency === 'XOF' && (
+                  {limits && (
                     <div className="flex gap-2">
                       <button
                         type="button"
-                        onClick={() => setRawAmount(limits.min.toString())}
+                        onClick={() => {
+                          if (inputCurrency === 'USDT' && exchangeRate > 0) {
+                            setRawAmount((limits.min / exchangeRate).toFixed(2));
+                          } else {
+                            setRawAmount(limits.min.toString());
+                          }
+                        }}
                         className="text-xs text-terex-accent underline font-light hover:text-terex-accent/80 transition-colors"
                       >
                         Min
                       </button>
                       <button
                         type="button"
-                        onClick={() => setRawAmount(limits.max.toString())}
+                        onClick={() => {
+                          if (inputCurrency === 'USDT' && exchangeRate > 0) {
+                            setRawAmount((limits.max / exchangeRate).toFixed(2));
+                          } else {
+                            setRawAmount(limits.max.toString());
+                          }
+                        }}
                         className="text-xs text-terex-accent underline font-light hover:text-terex-accent/80 transition-colors"
                       >
                         Max
