@@ -58,7 +58,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
         <div style={{ padding: '24px 20px 8px' }}>
           <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 2px' }}>{getGreeting()},</p>
           <h1 style={{ color: '#fff', fontSize: '26px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px' }}>
-            {firstName} <span style={{ color: ACCENT_LIGHT }}>👋</span>
+            {firstName}
           </h1>
         </div>
 
@@ -70,7 +70,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
               <span style={{ color: '#fff', fontSize: '34px', fontWeight: 700, letterSpacing: '-1px', lineHeight: 1 }}>
                 {rateDisplay}
               </span>
-              <span style={{ color: ACCENT_LIGHT, fontSize: '14px', fontWeight: 600 }}>CFA</span>
+              <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '14px', fontWeight: 600 }}>CFA</span>
             </div>
             <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style={{ width: '40px', height: '40px', opacity: 0.85 }} />
           </div>
