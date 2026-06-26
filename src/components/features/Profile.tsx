@@ -126,7 +126,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   // ── Sub-section header ───────────────────────────────────────────────────
 
   const SubHeader = ({ title }: { title: string }) => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: 'calc(env(safe-area-inset-top, 0px) + 14px) 20px 14px', position: 'sticky', top: 0, zIndex: 20, background: BG }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: 'calc(env(safe-area-inset-top, 0px) + 14px) 20px 14px' }}>
       <button onClick={() => { setSection(null); setIsEditing(false); }}
         style={{ width: '36px', height: '36px', borderRadius: '50%', background: ICON_BG, border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
         <ArrowLeft size={16} color="#fff" />

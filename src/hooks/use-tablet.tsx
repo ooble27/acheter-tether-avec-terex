@@ -17,14 +17,19 @@ export function useIsTablet() {
       const width = window.innerWidth;
       setIsTablet(width >= MIN_TABLET_WIDTH && width <= MAX_TABLET_WIDTH);
     };
-    
-    // Vérifier au chargement
+
+    // Vérifier au chargement + après le premier rendu (stabilise iPad/PWA)
     checkIsTablet();
-    
-    // Écouter les changements de taille d'écran
+    const raf = requestAnimationFrame(checkIsTablet);
+
     window.addEventListener("resize", checkIsTablet);
-    
-    return () => window.removeEventListener("resize", checkIsTablet);
+    window.addEventListener("orientationchange", checkIsTablet);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", checkIsTablet);
+      window.removeEventListener("orientationchange", checkIsTablet);
+    };
   }, []);
 
   return !!isTablet;
