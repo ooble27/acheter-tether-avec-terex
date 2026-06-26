@@ -12,23 +12,18 @@ export const AppLoader: React.FC<AppLoaderProps> = ({ children, loading = false 
   // Add error boundary for hook usage
   let hookData;
   try {
-    hookData = useSplashScreen(1800);
+    hookData = useSplashScreen(3200);
   } catch (error) {
     console.error('Error in useSplashScreen:', error);
     // Fallback without splash screen
     return <>{children}</>;
   }
 
-  const { showSplash, handleSplashComplete, isAppReady } = hookData;
+  const { showSplash, handleSplashComplete } = hookData;
 
-  // Vérifier si on est en mode PWA
-  const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
-               (window.navigator as any).standalone ||
-               document.referrer.includes('android-app://');
-
-  // Afficher le splash screen uniquement en mode PWA ou si l'app charge
-  if ((isPWA && showSplash) || loading) {
-    return <SplashScreen onComplete={handleSplashComplete} minDuration={1800} />;
+  // Afficher le splash screen au démarrage (toutes plateformes) ou si l'app charge
+  if (showSplash || loading) {
+    return <SplashScreen onComplete={handleSplashComplete} minDuration={3200} />;
   }
 
   // Afficher l'application normale

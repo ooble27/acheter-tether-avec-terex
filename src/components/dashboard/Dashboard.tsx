@@ -187,9 +187,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   };
 
   return (
-    <>
-      <style>{`@keyframes txFadeIn { from { opacity: 0 } to { opacity: 1 } }`}</style>
-      <TransactionProvider>
+    <TransactionProvider>
       <SidebarProvider>
         <div className="min-h-screen flex flex-col w-full bg-terex-dark">
           {/* Bouton hamburger flottant (masqué en PWA mobile) */}
@@ -240,9 +238,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               />
             )}
             
-            <div key={activeSection} style={{ animation: 'txFadeIn 0.12s ease' }}>
-              {renderContent()}
-            </div>
+            {renderContent()}
           </main>
           
           {/* Navigation en bas */}
@@ -266,6 +262,5 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         </div>
       </SidebarProvider>
     </TransactionProvider>
-    </>
   );
 }

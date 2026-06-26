@@ -53,8 +53,8 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { toast } = useToast();
   const { user: authUser } = useAuth();
-  const { profile, updateProfile, loading } = useUserProfile();
-  const { kycData, loading: kycLoading } = useKYC();
+  const { profile, updateProfile } = useUserProfile();
+  const { kycData } = useKYC();
   const [formData, setFormData] = useState({ name: '', phone: '', country: '', language: 'fr' });
 
   useEffect(() => {
@@ -65,14 +65,6 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
       language: profile?.language || 'fr',
     });
   }, [profile, user]);
-
-  if (loading || kycLoading) {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: BG }}>
-        <span style={{ color: '#6b7280', fontSize: '14px' }}>Chargement...</span>
-      </div>
-    );
-  }
 
   if (showKYC) return <KYCPage onBack={() => setShowKYC(false)} />;
 
