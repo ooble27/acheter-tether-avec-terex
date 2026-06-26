@@ -363,22 +363,23 @@ export function Profile({ user, onLogout }: ProfileProps) {
   return (
     <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
 
-      {/* Hero */}
-      <div style={{ background: 'linear-gradient(160deg, #1e1e1e 0%, #252525 50%, #1a1a1a 100%)', padding: '40px 24px 28px', borderBottom: `1px solid ${BORDER}` }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          {/* Avatar */}
-          <div style={{ width: '72px', height: '72px', borderRadius: '50%', background: `linear-gradient(135deg, ${ACCENT}, #2d7a75)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '26px', fontWeight: 700, color: '#fff', letterSpacing: '-0.5px', border: '3px solid rgba(59,150,143,0.3)' }}>
+      {/* Hero — directement sur le fond, pas de rectangle */}
+      <div style={{ padding: '48px 24px 32px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', textAlign: 'center' }}>
+          {/* Avatar grand */}
+          <div style={{ width: '88px', height: '88px', borderRadius: '50%', background: `linear-gradient(135deg, ${ACCENT} 0%, #2d7a75 100%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', fontWeight: 700, color: '#fff', letterSpacing: '-1px', boxShadow: `0 0 0 6px rgba(59,150,143,0.12), 0 8px 32px rgba(59,150,143,0.2)` }}>
             {initials}
           </div>
-          {/* Name + email + KYC */}
-          <div style={{ flex: 1 }}>
-            <h1 style={{ color: '#fff', fontSize: '22px', fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.3px' }}>
+          {/* Nom */}
+          <div>
+            <h1 style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.5px' }}>
               {formData.name || 'Utilisateur'}
             </h1>
-            <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 10px' }}>{user?.email}</p>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: kycStatus.bg, border: `1px solid ${kycStatus.border}`, borderRadius: '999px', padding: '4px 10px' }}>
+            <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 12px' }}>{user?.email}</p>
+            {/* Badge KYC */}
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: kycStatus.bg, border: `1px solid ${kycStatus.border}`, borderRadius: '999px', padding: '5px 12px' }}>
               <KYCIcon size={12} color={kycStatus.color} />
-              <span style={{ color: kycStatus.color, fontSize: '11px', fontWeight: 600 }}>KYC {kycStatus.text}</span>
+              <span style={{ color: kycStatus.color, fontSize: '11px', fontWeight: 600, letterSpacing: '0.02em' }}>KYC {kycStatus.text}</span>
             </div>
           </div>
         </div>

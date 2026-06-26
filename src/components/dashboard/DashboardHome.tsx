@@ -1,13 +1,7 @@
-import { Card, CardContent } from '@/components/ui/card';
-import {
-  Globe,
-  ArrowUpRight,
-  Bitcoin,
-  Handshake,
-  TrendingUp,
-} from 'lucide-react';
+import { ArrowUpRight, Coins, Banknote, Send, Handshake, TrendingUp, ChevronRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
+import { useTerexRates } from '@/hooks/useTerexRates';
 import { useEffect } from 'react';
 
 interface DashboardHomeProps {
@@ -15,180 +9,190 @@ interface DashboardHomeProps {
   onNavigate?: (section: string) => void;
 }
 
-const TetherLogo = ({ className }: { className?: string }) => (
-  <img 
-    src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png"
-    alt="Tether Logo"
-    className={className}
-  />
-);
+const ACCENT = '#3B968F';
+const ACCENT_LIGHT = '#4BA89F';
+const CARD = '#1e1e1e';
+const BORDER = 'rgba(255,255,255,0.07)';
+
+const quickActions = [
+  {
+    id: 'buy',
+    label: 'Acheter',
+    icon: Coins,
+    bg: 'linear-gradient(135deg, #1a3330 0%, #1e3d39 100%)',
+    iconBg: 'rgba(59,150,143,0.2)',
+    iconColor: ACCENT_LIGHT,
+  },
+  {
+    id: 'sell',
+    label: 'Vendre',
+    icon: Banknote,
+    bg: 'linear-gradient(135deg, #1f1a2e 0%, #261f38 100%)',
+    iconBg: 'rgba(139,92,246,0.18)',
+    iconColor: '#a78bfa',
+  },
+  {
+    id: 'transfer',
+    label: 'Virement',
+    icon: Send,
+    bg: 'linear-gradient(135deg, #1a2535 0%, #1e2d40 100%)',
+    iconBg: 'rgba(96,165,250,0.18)',
+    iconColor: '#60a5fa',
+  },
+  {
+    id: 'otc',
+    label: 'OTC',
+    icon: Handshake,
+    bg: 'linear-gradient(135deg, #2a1f1a 0%, #35261e 100%)',
+    iconBg: 'rgba(251,146,60,0.18)',
+    iconColor: '#fb923c',
+  },
+];
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 6) return 'Bonne nuit';
+  if (h < 12) return 'Bonjour';
+  if (h < 18) return 'Bon après-midi';
+  return 'Bonsoir';
+}
 
 export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   const isMobile = useIsMobile();
+  const { terexRateCfa } = useTerexRates(30);
 
   const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
-               (window.navigator as any).standalone ||
-               document.referrer.includes('android-app://');
+    (window.navigator as any).standalone ||
+    document.referrer.includes('android-app://');
 
   useEffect(() => {
     if (isPWA && isMobile) {
       window.scrollTo(0, 0);
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-      const timer = setTimeout(() => {
-        window.scrollTo(0, 0);
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-      }, 100);
-      return () => clearTimeout(timer);
+      const t = setTimeout(() => window.scrollTo(0, 0), 100);
+      return () => clearTimeout(t);
     }
   }, [isPWA, isMobile]);
 
-  const handleServiceClick = (service: string) => {
-    if (onNavigate) onNavigate(service);
-  };
+  const firstName = user?.name?.split(' ')[0] || 'vous';
 
   if (isMobile) {
     return (
-      <div className="min-h-screen bg-terex-dark px-0 py-3 space-y-3 text-xs overflow-y-auto scrollbar-hide">
-        <div className="flex items-center space-x-3 mb-6 px-0">
-          <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
-            <img src="/bitcoin-logo.png" alt="Bitcoin" className="w-12 h-12 object-contain" />
+      <div style={{ minHeight: '100vh', background: '#141414', overflowY: 'auto', paddingBottom: '110px' }}>
+
+        {/* Greeting */}
+        <div style={{ padding: '24px 20px 8px' }}>
+          <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 2px' }}>{getGreeting()},</p>
+          <h1 style={{ color: '#fff', fontSize: '26px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px' }}>
+            {firstName} <span style={{ color: ACCENT_LIGHT }}>👋</span>
+          </h1>
+        </div>
+
+        {/* Rate banner */}
+        <div style={{ margin: '16px 20px', background: `linear-gradient(135deg, #1a3330 0%, #1e3d39 60%, #16302e 100%)`, borderRadius: '20px', padding: '20px', border: `1px solid rgba(59,150,143,0.2)`, boxShadow: '0 8px 32px rgba(59,150,143,0.1)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 6px' }}>Taux USDT / CFA</p>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                <span style={{ color: '#fff', fontSize: '32px', fontWeight: 700, letterSpacing: '-1px', lineHeight: 1 }}>
+                  {terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : '—'}
+                </span>
+                <span style={{ color: ACCENT_LIGHT, fontSize: '14px', fontWeight: 600 }}>CFA</span>
+              </div>
+              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '11px', margin: '6px 0 0' }}>pour 1 USDT</p>
+            </div>
+            <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style={{ width: '36px', height: '36px' }} />
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl md:text-3xl font-light text-white mb-1">
-              Bienvenue, <span className="text-terex-accent">{user?.name?.split(' ')[0]}</span>
-            </h1>
-            <p className="text-sm text-gray-400 font-light">Plateforme USDT</p>
+          <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 6px #4ade80' }} />
+            <span style={{ color: '#4ade80', fontSize: '11px', fontWeight: 500 }}>Taux en direct · Terex</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 mb-4 px-0">
-          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('buy')}>
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
-                  <TetherLogo className="w-5 h-5" />
+        {/* Quick actions */}
+        <div style={{ padding: '4px 20px 0' }}>
+          <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 12px' }}>Actions rapides</p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            {quickActions.map(({ id, label, icon: Icon, bg, iconBg, iconColor }) => (
+              <button
+                key={id}
+                onClick={() => onNavigate?.(id)}
+                style={{ background: bg, borderRadius: '18px', border: `1px solid rgba(255,255,255,0.06)`, padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: '12px', cursor: 'pointer', textAlign: 'left', transition: 'transform 0.15s ease', outline: 'none', WebkitTapHighlightColor: 'transparent' }}
+                onTouchStart={e => (e.currentTarget.style.transform = 'scale(0.97)')}
+                onTouchEnd={e => (e.currentTarget.style.transform = 'scale(1)')}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Icon size={20} color={iconColor} strokeWidth={1.8} />
+                  </div>
+                  <ArrowUpRight size={14} color="rgba(255,255,255,0.25)" />
                 </div>
-              </div>
-              <h3 className="text-white text-sm font-light mb-1">Acheter USDT</h3>
-              <p className="text-gray-400 text-xs">Achat rapide</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('sell')}>
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
-                  <TetherLogo className="w-5 h-5" />
+                <div>
+                  <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 2px' }}>{label}</p>
+                  <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '11px', margin: 0 }}>
+                    {id === 'buy' ? 'Achat rapide' : id === 'sell' ? 'Vente rapide' : id === 'transfer' ? 'International' : 'Gros volumes'}
+                  </p>
                 </div>
-              </div>
-              <h3 className="text-white text-sm font-light mb-1">Vendre USDT</h3>
-              <p className="text-gray-400 text-xs">Vente rapide</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('otc')}>
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                  <Handshake className="w-4 h-4 text-purple-400" />
-                </div>
-              </div>
-              <h3 className="text-white text-sm font-light mb-1">Trading OTC</h3>
-              <p className="text-gray-400 text-xs">Gros volumes</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('transfer')}>
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="w-8 h-8 bg-terex-accent/20 rounded-lg flex items-center justify-center">
-                  <Globe className="w-4 h-4 text-terex-accent" />
-                </div>
-              </div>
-              <h3 className="text-white text-sm font-light mb-1">Virement</h3>
-              <p className="text-gray-400 text-xs">International</p>
-            </CardContent>
-          </Card>
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="px-0">
+        {/* Recent transactions */}
+        <div style={{ padding: '24px 20px 0' }}>
           <RecentTransactions onNavigate={onNavigate} />
         </div>
       </div>
     );
   }
 
+  // Desktop
   return (
-    <div className="min-h-[calc(100vh-10rem)] flex items-start justify-center py-8 px-4">
-      <div className="w-full max-w-2xl space-y-6">
-        <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
-            <img src="/bitcoin-logo.png" alt="Bitcoin" className="w-12 h-12 object-contain" />
-          </div>
+    <div style={{ minHeight: 'calc(100vh - 10rem)', display: 'flex', justifyContent: 'center', padding: '40px 24px' }}>
+      <div style={{ width: '100%', maxWidth: '680px', display: 'flex', flexDirection: 'column', gap: '28px' }}>
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <h1 className="text-2xl font-light text-white">
-              Bienvenue, <span className="text-terex-accent">{user?.name?.split(' ')[0]}</span>
+            <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 2px' }}>{getGreeting()},</p>
+            <h1 style={{ color: '#fff', fontSize: '28px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px' }}>
+              {firstName} <span style={{ color: ACCENT_LIGHT }}>👋</span>
             </h1>
-            <p className="text-gray-400 text-sm">Plateforme USDT</p>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(59,150,143,0.08)', border: `1px solid rgba(59,150,143,0.18)`, borderRadius: '14px', padding: '10px 16px' }}>
+            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 8px #4ade80', flexShrink: 0 }} />
+            <div>
+              <p style={{ color: '#6b7280', fontSize: '10px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 2px' }}>1 USDT</p>
+              <p style={{ color: '#fff', fontSize: '16px', fontWeight: 700, margin: 0, letterSpacing: '-0.3px' }}>
+                {terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : '—'} <span style={{ color: ACCENT_LIGHT, fontSize: '12px', fontWeight: 500 }}>CFA</span>
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('buy')}>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
-                  <TetherLogo className="w-6 h-6" />
+        {/* Quick actions */}
+        <div>
+          <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 14px' }}>Actions rapides</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px' }}>
+            {quickActions.map(({ id, label, icon: Icon, bg, iconBg, iconColor }) => (
+              <button
+                key={id}
+                onClick={() => onNavigate?.(id)}
+                style={{ background: bg, borderRadius: '20px', border: `1px solid rgba(255,255,255,0.06)`, padding: '20px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', cursor: 'pointer', transition: 'transform 0.15s ease, box-shadow 0.15s ease', outline: 'none' }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.3)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+              >
+                <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Icon size={22} color={iconColor} strokeWidth={1.8} />
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-terex-accent" />
-              </div>
-              <h3 className="text-white font-light mb-1">Acheter USDT</h3>
-              <p className="text-gray-400 text-sm">Achat rapide</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('sell')}>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center">
-                  <TetherLogo className="w-6 h-6" />
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-terex-accent" />
-              </div>
-              <h3 className="text-white font-light mb-1">Vendre USDT</h3>
-              <p className="text-gray-400 text-sm">Vente rapide</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('otc')}>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                  <Handshake className="w-5 h-5 text-purple-400" />
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-terex-accent" />
-              </div>
-              <h3 className="text-white font-light mb-1">Trading OTC</h3>
-              <p className="text-gray-400 text-sm">Gros volumes</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors cursor-pointer" onClick={() => handleServiceClick('transfer')}>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 bg-terex-accent/20 rounded-lg flex items-center justify-center">
-                  <Globe className="w-5 h-5 text-terex-accent" />
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-terex-accent" />
-              </div>
-              <h3 className="text-white font-light mb-1">Virement</h3>
-              <p className="text-gray-400 text-sm">International</p>
-            </CardContent>
-          </Card>
+                <p style={{ color: '#fff', fontSize: '13px', fontWeight: 600, margin: 0, textAlign: 'center' }}>{label}</p>
+              </button>
+            ))}
+          </div>
         </div>
 
+        {/* Recent transactions */}
         <RecentTransactions onNavigate={onNavigate} />
       </div>
     </div>
