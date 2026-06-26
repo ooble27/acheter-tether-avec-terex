@@ -1,15 +1,13 @@
 
 
 import { useMemo, useState } from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { 
-  CheckCircle, 
-  XCircle, 
+import {
+  CheckCircle,
+  XCircle,
   TrendingUp,
   Eye,
   Copy,
-  TrendingDown,
+  HandCoins,
   Trash2
 } from 'lucide-react';
 import { UnifiedOrder } from '@/hooks/useOrders';
@@ -19,6 +17,87 @@ import { useClientInfos } from '@/hooks/useClientInfos';
 import { ClientStrip } from './ClientStrip';
 
 type OrderStatus = Database['public']['Enums']['order_status'];
+
+const CARD = '#1e1e1e';
+const BORDER = 'rgba(255,255,255,0.07)';
+const ICON_BG = 'rgba(255,255,255,0.06)';
+
+const statusBadgeStyles: Record<string, { bg: string; color: string; label: string }> = {
+  pending: { bg: 'rgba(251,191,36,0.10)', color: '#fbbf24', label: 'En attente' },
+  processing: { bg: 'rgba(96,165,250,0.10)', color: '#60a5fa', label: 'En traitement' },
+  completed: { bg: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.65)', label: 'Terminé' },
+  cancelled: { bg: 'rgba(248,113,113,0.10)', color: '#f87171', label: 'Annulé' },
+};
+
+function StatusBadge({ status }: { status: string }) {
+  const s = statusBadgeStyles[status] || {
+    bg: 'rgba(255,255,255,0.06)',
+    color: 'rgba(255,255,255,0.65)',
+    label: status,
+  };
+  return (
+    <span
+      style={{
+        background: s.bg,
+        color: s.color,
+        borderRadius: '999px',
+        padding: '3px 10px',
+        fontSize: '11px',
+        fontWeight: 600,
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {s.label}
+    </span>
+  );
+}
+
+const neutralBtnStyle: React.CSSProperties = {
+  background: '#2d2d2d',
+  border: '1px solid rgba(255,255,255,0.07)',
+  color: '#fff',
+  borderRadius: '10px',
+  padding: '8px 14px',
+  fontSize: '13px',
+  fontWeight: 600,
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '6px',
+  cursor: 'pointer',
+};
+
+const ctaBtnStyle: React.CSSProperties = {
+  background: '#fff',
+  color: '#141414',
+  border: 'none',
+  borderRadius: '10px',
+  padding: '8px 14px',
+  fontSize: '13px',
+  fontWeight: 700,
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '6px',
+  cursor: 'pointer',
+};
+
+const dangerBtnStyle: React.CSSProperties = {
+  background: '#2d2d2d',
+  border: '1px solid rgba(248,113,113,0.25)',
+  color: '#f87171',
+  borderRadius: '10px',
+  padding: '8px 14px',
+  fontSize: '13px',
+  fontWeight: 600,
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '6px',
+  cursor: 'pointer',
+};
+
+const iconDangerBtnStyle: React.CSSProperties = {
+  ...dangerBtnStyle,
+  padding: '8px 10px',
+};
 
 interface SellOrdersTableProps {
   orders: UnifiedOrder[];
@@ -32,31 +111,6 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
   const userIds = useMemo(() => orders.map((o) => o.user_id), [orders]);
   const clientInfos = useClientInfos(userIds);
 
-  const getStatusBadge = (status: string) => {
-    const statusStyles = {
-      pending: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
-      processing: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-      completed: 'bg-green-500/10 text-green-500 border-green-500/20',
-      cancelled: 'bg-red-500/10 text-red-500 border-red-500/20'
-    };
-
-    const statusLabels = {
-      pending: 'En attente',
-      processing: 'En traitement',
-      completed: 'Terminé',
-      cancelled: 'Annulé'
-    };
-
-    return (
-      <Badge 
-        variant="outline" 
-        className={statusStyles[status as keyof typeof statusStyles] || 'bg-gray-500/10 text-gray-500'}
-      >
-        {statusLabels[status as keyof typeof statusLabels] || status}
-      </Badge>
-    );
-  };
-
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
@@ -64,7 +118,7 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
   const getPaymentServiceInfo = (order: UnifiedOrder) => {
     // Extraire les informations du service de paiement depuis les notes ou payment_details
     let serviceInfo = { service: 'Mobile Money', phone: order.recipient_phone };
-    
+
     if (order.notes) {
       try {
         const parsedNotes = JSON.parse(order.notes);
@@ -84,7 +138,7 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
         }
       }
     }
-    
+
     // Utiliser payment_method comme fallback
     if (serviceInfo.service === 'Mobile Money') {
       switch (order.payment_method) {
@@ -98,7 +152,7 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
           serviceInfo.service = 'Mobile Money';
       }
     }
-    
+
     return serviceInfo;
   };
 
@@ -110,11 +164,14 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
   if (orders.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="w-16 h-16 mx-auto mb-4 bg-terex-gray/30 rounded-full flex items-center justify-center">
-          <TrendingDown className="w-8 h-8 text-gray-400" />
+        <div
+          className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
+          style={{ background: ICON_BG }}
+        >
+          <HandCoins className="w-8 h-8" style={{ color: 'rgba(255,255,255,0.85)' }} />
         </div>
-        <h3 className="text-lg font-medium text-white mb-2">Aucune vente USDT</h3>
-        <p className="text-gray-400">Il n'y a aucune commande de vente à afficher.</p>
+        <h3 className="text-lg font-medium mb-2" style={{ color: '#fff' }}>Aucune vente USDT</h3>
+        <p style={{ color: '#9ca3af' }}>Il n'y a aucune commande de vente à afficher.</p>
       </div>
     );
   }
@@ -127,40 +184,47 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
         onOpenChange={setDialogOpen}
         onStatusUpdate={onStatusUpdate}
       />
-      
+
       <div className="space-y-4">
         {orders.map((order) => {
-        const paymentInfo = getPaymentServiceInfo(order);
-        
-        return (
-          <div 
-            key={order.id} 
-            className="bg-terex-darker rounded-xl border border-terex-gray/50 overflow-hidden hover:border-terex-accent/30 transition-all duration-300"
-          >
-            {/* Order Header */}
-            <div className="p-6">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-                {/* Order Info */}
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center">
-                    <TrendingDown className="w-6 h-6 text-red-500" />
+          const paymentInfo = getPaymentServiceInfo(order);
+
+          return (
+            <div
+              key={order.id}
+              style={{
+                background: CARD,
+                border: `1px solid ${BORDER}`,
+                borderRadius: '16px',
+                overflow: 'hidden',
+              }}
+            >
+              <div className="p-4 sm:p-6">
+                {/* Top row */}
+                <div className="flex items-start gap-3 flex-wrap">
+                  <div
+                    className="flex items-center justify-center shrink-0"
+                    style={{ width: '46px', height: '46px', background: ICON_BG, borderRadius: '12px' }}
+                  >
+                    <HandCoins className="w-6 h-6" style={{ color: 'rgba(255,255,255,0.85)' }} />
                   </div>
-                  
-                  <div>
-                    <div className="flex items-center space-x-3">
-                      <h3 className="text-white font-medium">
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-medium" style={{ color: '#fff' }}>
                         #TEREX-{order.id.slice(-8)}
                       </h3>
                       <button
                         onClick={() => copyToClipboard(`TEREX-${order.id.slice(-8)}`)}
-                        className="text-gray-400 hover:text-terex-accent transition-colors"
+                        style={{ color: '#6b7280' }}
+                        className="transition-colors hover:opacity-80"
                       >
                         <Copy className="w-4 h-4" />
                       </button>
-                      {getStatusBadge(order.status)}
+                      <StatusBadge status={order.status} />
                     </div>
-                    
-                    <div className="flex items-center space-x-4 mt-1 text-sm text-gray-400">
+
+                    <div className="flex items-center gap-2 mt-1 text-sm flex-wrap" style={{ color: '#9ca3af' }}>
                       <span>{new Date(order.created_at).toLocaleDateString('fr-FR')}</span>
                       <span>•</span>
                       <span>Vente USDT</span>
@@ -170,91 +234,81 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
                   </div>
                 </div>
 
-                {/* Amount Info - Amélioration de l'alignement */}
-                <div className="text-right">
-                  <div className="flex flex-col items-end space-y-1">
-                    <div className="text-xl font-bold text-white">
-                      {order.usdt_amount} USDT
-                    </div>
-                    <div className="text-sm text-red-500 flex items-center">
-                      <span>→ {order.amount.toLocaleString()} {order.currency}</span>
-                    </div>
+                {/* Amount row */}
+                <div className="mt-4">
+                  <div className="text-xl font-bold" style={{ color: '#fff' }}>
+                    {order.usdt_amount} USDT
+                  </div>
+                  <div className="text-sm" style={{ color: '#9ca3af' }}>
+                    → {order.amount.toLocaleString()} {order.currency}
                   </div>
                 </div>
 
-                {/* Actions */}
-                <div className="flex items-center space-x-2 flex-wrap">
-                  <Button
-                    variant="outline"
-                    size="sm"
+                {/* Actions row */}
+                <div className="mt-4 flex flex-wrap" style={{ gap: '8px' }}>
+                  <button
                     onClick={() => {
                       setSelectedOrder(order);
                       setDialogOpen(true);
                     }}
-                    className="border-terex-gray text-white hover:bg-terex-gray"
+                    style={neutralBtnStyle}
                   >
-                    <Eye className="w-4 h-4 mr-2" />
+                    <Eye className="w-4 h-4" />
                     Détails
-                  </Button>
+                  </button>
 
-                  <Button
+                  <button
                     onClick={() => onMoveToTrash(order.id)}
-                    variant="outline"
-                    size="sm"
-                    className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                    style={iconDangerBtnStyle}
+                    aria-label="Supprimer"
                   >
                     <Trash2 className="w-4 h-4" />
-                  </Button>
+                  </button>
 
                   {order.status === 'pending' && (
                     <>
-                      <Button
+                      <button
                         onClick={() => handleStatusUpdate(order.id, 'processing' as OrderStatus)}
-                        size="sm"
-                        className="bg-terex-accent hover:bg-terex-accent/80 text-white"
+                        style={ctaBtnStyle}
                       >
-                        <TrendingUp className="w-4 h-4 mr-2" />
+                        <TrendingUp className="w-4 h-4" />
                         Traiter
-                      </Button>
-                      <Button
+                      </button>
+                      <button
                         onClick={() => handleStatusUpdate(order.id, 'cancelled' as OrderStatus)}
-                        size="sm"
-                        variant="destructive"
+                        style={dangerBtnStyle}
                       >
-                        <XCircle className="w-4 h-4 mr-2" />
+                        <XCircle className="w-4 h-4" />
                         Annuler
-                      </Button>
+                      </button>
                     </>
                   )}
 
                   {order.status === 'processing' && (
                     <>
-                      <Button
+                      <button
                         onClick={() => handleStatusUpdate(order.id, 'completed' as OrderStatus, 'paid')}
-                        size="sm"
-                        className="bg-green-600 hover:bg-green-700"
+                        style={ctaBtnStyle}
                       >
-                        <CheckCircle className="w-4 h-4 mr-2" />
+                        <CheckCircle className="w-4 h-4" />
                         Terminer
-                      </Button>
-                      <Button
+                      </button>
+                      <button
                         onClick={() => handleStatusUpdate(order.id, 'cancelled' as OrderStatus)}
-                        size="sm"
-                        variant="destructive"
+                        style={dangerBtnStyle}
                       >
-                        <XCircle className="w-4 h-4 mr-2" />
+                        <XCircle className="w-4 h-4" />
                         Annuler
-                      </Button>
+                      </button>
                     </>
                   )}
                 </div>
               </div>
+              <ClientStrip client={clientInfos[order.user_id]} />
             </div>
-            <ClientStrip client={clientInfos[order.user_id]} />
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
     </>
   );
 }

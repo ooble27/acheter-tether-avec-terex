@@ -1,5 +1,4 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
@@ -11,8 +10,8 @@ import {
   Calendar,
   Wallet,
   Hash,
-  TrendingUp,
-  TrendingDown,
+  Coins,
+  HandCoins,
   Send,
   Copy,
   CheckCircle,
@@ -22,7 +21,6 @@ import {
   MailCheck,
   ArrowRight,
   Globe,
-  CreditCard,
   FileText,
 } from 'lucide-react';
 import { format } from 'date-fns';
@@ -60,12 +58,12 @@ const STATUS_LABELS: Record<string, string> = {
   failed: 'Échoué',
 };
 
-const STATUS_STYLES: Record<string, string> = {
-  pending: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30',
-  processing: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
-  completed: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-  cancelled: 'bg-red-500/10 text-red-400 border-red-500/30',
-  failed: 'bg-red-500/10 text-red-400 border-red-500/30',
+const STATUS_PILL_STYLES: Record<string, React.CSSProperties> = {
+  pending: { background: 'rgba(251,191,36,0.10)', color: '#fbbf24' },
+  processing: { background: 'rgba(96,165,250,0.10)', color: '#60a5fa' },
+  completed: { background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.65)' },
+  cancelled: { background: 'rgba(248,113,113,0.10)', color: '#f87171' },
+  failed: { background: 'rgba(248,113,113,0.10)', color: '#f87171' },
 };
 
 export function OrderDetailsDialog({
@@ -114,13 +112,13 @@ export function OrderDetailsDialog({
   const orderTypeMeta = (() => {
     switch (order.type) {
       case 'buy':
-        return { Icon: TrendingUp, label: 'Achat USDT', accent: 'text-terex-accent', bg: 'bg-terex-accent/15' };
+        return { Icon: Coins, label: 'Achat USDT' };
       case 'sell':
-        return { Icon: TrendingDown, label: 'Vente USDT', accent: 'text-orange-400', bg: 'bg-orange-500/15' };
+        return { Icon: HandCoins, label: 'Vente USDT' };
       case 'transfer':
-        return { Icon: Send, label: 'Transfert international', accent: 'text-purple-400', bg: 'bg-purple-500/15' };
+        return { Icon: Send, label: 'Transfert international' };
       default:
-        return { Icon: Hash, label: 'Transaction', accent: 'text-gray-400', bg: 'bg-gray-500/15' };
+        return { Icon: Hash, label: 'Transaction' };
     }
   })();
 
@@ -130,9 +128,20 @@ export function OrderDetailsDialog({
   };
 
   const statusBadge = (status: string) => (
-    <Badge variant="outline" className={STATUS_STYLES[status] || 'bg-gray-500/10 text-gray-400'}>
+    <span
+      className="inline-flex items-center font-semibold"
+      style={{
+        borderRadius: 999,
+        padding: '3px 10px',
+        fontSize: 11,
+        ...(STATUS_PILL_STYLES[status] || {
+          background: 'rgba(255,255,255,0.06)',
+          color: 'rgba(255,255,255,0.65)',
+        }),
+      }}
+    >
       {STATUS_LABELS[status] || status}
-    </Badge>
+    </span>
   );
 
   const Icon = orderTypeMeta.Icon;
@@ -164,22 +173,31 @@ export function OrderDetailsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[92vh] overflow-y-auto bg-terex-darker border-terex-gray/40 p-0">
+      <DialogContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] text-white w-[calc(100vw-1.5rem)] max-w-lg max-h-[88vh] overflow-y-auto p-0">
         {/* HEADER */}
-        <div className="sticky top-0 z-10 bg-terex-darker/95 backdrop-blur border-b border-terex-gray/30 px-6 py-5">
+        <div
+          className="sticky top-0 z-10 px-5 py-4 backdrop-blur"
+          style={{
+            background: 'rgba(30,30,30,0.95)',
+            borderBottom: '1px solid rgba(255,255,255,0.07)',
+          }}
+        >
           <DialogHeader>
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className={`w-11 h-11 rounded-lg flex items-center justify-center ${orderTypeMeta.bg}`}>
-                  <Icon className={`w-5 h-5 ${orderTypeMeta.accent}`} />
+                <div
+                  className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: 'rgba(255,255,255,0.06)' }}
+                >
+                  <Icon className="w-5 h-5 text-white" />
                 </div>
-                <div>
-                  <DialogTitle className="text-lg font-semibold text-white tracking-tight">
+                <div className="min-w-0">
+                  <DialogTitle className="text-base sm:text-lg font-semibold text-white tracking-tight">
                     {orderTypeMeta.label}
                   </DialogTitle>
                   <button
                     onClick={() => copy(`TEREX-${order.id.slice(-8).toUpperCase()}`, 'Référence copiée')}
-                    className="flex items-center gap-1.5 mt-0.5 text-xs text-gray-400 hover:text-terex-accent transition"
+                    className="flex items-center gap-1.5 mt-0.5 text-xs text-[#9ca3af] hover:text-white transition"
                   >
                     <Hash className="w-3 h-3" />
                     TEREX-{order.id.slice(-8).toUpperCase()}
@@ -192,7 +210,7 @@ export function OrderDetailsDialog({
           </DialogHeader>
         </div>
 
-        <div className="px-6 py-5 space-y-5">
+        <div className="px-5 py-5 space-y-4">
           {/* CLIENT — toujours en premier, toujours visible */}
           <Card title="Client" icon={<User className="w-4 h-4" />}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -224,15 +242,20 @@ export function OrderDetailsDialog({
             <ActionCard
               title="Action à effectuer"
               subtitle="Envoyer l'USDT au wallet du client"
-              accent="terex"
             >
               <div className="grid grid-cols-2 gap-3 mb-3">
-                <Stat label="Montant USDT" value={`${order.usdt_amount} USDT`} accent />
+                <Stat label="Montant USDT" value={`${order.usdt_amount} USDT`} />
                 <Stat label="Réseau" value={order.network || 'TRC20'} />
               </div>
               {order.wallet_address && (
-                <div className="bg-terex-darker/60 border border-terex-accent/20 rounded-lg p-3">
-                  <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-1.5">
+                <div
+                  className="rounded-xl p-3"
+                  style={{
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                  }}
+                >
+                  <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-[#6b7280] mb-1.5">
                     <Wallet className="w-3 h-3" /> Adresse de réception
                   </div>
                   <div className="flex items-center gap-2">
@@ -241,19 +264,19 @@ export function OrderDetailsDialog({
                     </code>
                     <button
                       onClick={() => copy(order.wallet_address!, 'Adresse copiée')}
-                      className="flex-shrink-0 p-1.5 hover:bg-terex-accent/20 rounded transition"
+                      className="flex-shrink-0 p-1.5 rounded transition text-[#9ca3af] hover:text-white"
                     >
-                      <Copy className="w-3.5 h-3.5 text-terex-accent" />
+                      <Copy className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
               )}
-              <div className="mt-3 flex items-start gap-2 text-xs text-gray-400">
-                <AlertCircle className="w-3.5 h-3.5 text-terex-accent mt-0.5 flex-shrink-0" />
+              <div className="mt-3 flex items-start gap-2 text-xs text-[#9ca3af]">
+                <AlertCircle className="w-3.5 h-3.5 text-white mt-0.5 flex-shrink-0" />
                 <p>
                   Le client a payé <span className="text-white font-medium">{order.amount.toLocaleString()} {order.currency}</span> via{' '}
                   <span className="text-white font-medium">{PAYMENT_LABELS[order.payment_method || ''] || order.payment_method}</span> au taux de{' '}
-                  <span className="text-terex-accent font-medium">{order.exchange_rate} {order.currency}/USDT</span>.
+                  <span className="text-white font-medium">{order.exchange_rate} {order.currency}/USDT</span>.
                 </p>
               </div>
             </ActionCard>
@@ -263,20 +286,19 @@ export function OrderDetailsDialog({
             <ActionCard
               title="Action à effectuer"
               subtitle="Envoyer les fonds au client"
-              accent="orange"
             >
               <div className="grid grid-cols-2 gap-3">
-                <Stat label="Montant à envoyer" value={`${order.amount.toLocaleString()} ${order.currency}`} accent />
+                <Stat label="Montant à envoyer" value={`${order.amount.toLocaleString()} ${order.currency}`} />
                 <Stat
                   label="Méthode"
                   value={PAYMENT_LABELS[order.payment_method || ''] || order.payment_method || '—'}
                 />
               </div>
-              <div className="mt-3 flex items-start gap-2 text-xs text-gray-400">
-                <AlertCircle className="w-3.5 h-3.5 text-orange-400 mt-0.5 flex-shrink-0" />
+              <div className="mt-3 flex items-start gap-2 text-xs text-[#9ca3af]">
+                <AlertCircle className="w-3.5 h-3.5 text-white mt-0.5 flex-shrink-0" />
                 <p>
                   Le client envoie <span className="text-white font-medium">{order.usdt_amount} USDT</span> au taux de{' '}
-                  <span className="text-orange-400 font-medium">{order.exchange_rate} {order.currency}/USDT</span>.
+                  <span className="text-white font-medium">{order.exchange_rate} {order.currency}/USDT</span>.
                 </p>
               </div>
             </ActionCard>
@@ -286,7 +308,7 @@ export function OrderDetailsDialog({
           <Card title="Transaction" icon={<ArrowRight className="w-4 h-4" />}>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               <Stat label={`Montant ${order.currency}`} value={order.amount.toLocaleString()} />
-              <Stat label="USDT" value={String(order.usdt_amount || 0)} accent />
+              <Stat label="USDT" value={String(order.usdt_amount || 0)} />
               <Stat label="Taux" value={String(order.exchange_rate)} />
               {order.payment_method && (
                 <Stat
@@ -304,17 +326,25 @@ export function OrderDetailsDialog({
           {/* DESTINATION (achat) */}
           {order.type === 'buy' && order.wallet_address && (
             <Card title="Destination crypto" icon={<Wallet className="w-4 h-4" />}>
-              <div className="bg-terex-dark/60 border border-terex-gray/30 rounded-lg p-3">
-                <div className="text-xs text-gray-400 mb-1.5">Adresse wallet ({order.network || 'TRC20'})</div>
+              <div
+                className="rounded-xl p-3"
+                style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                }}
+              >
+                <div className="text-[11px] uppercase tracking-wider text-[#6b7280] mb-1.5">
+                  Adresse wallet ({order.network || 'TRC20'})
+                </div>
                 <div className="flex items-center gap-2">
                   <code className="flex-1 text-xs font-mono text-white break-all">
                     {order.wallet_address}
                   </code>
                   <button
                     onClick={() => copy(order.wallet_address!, 'Adresse copiée')}
-                    className="flex-shrink-0 p-1.5 hover:bg-terex-accent/20 rounded transition"
+                    className="flex-shrink-0 p-1.5 rounded transition text-[#9ca3af] hover:text-white"
                   >
-                    <Copy className="w-3.5 h-3.5 text-terex-accent" />
+                    <Copy className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
@@ -354,33 +384,35 @@ export function OrderDetailsDialog({
               <div className="space-y-4">
                 {parsedNotes.sections.map((section, i) => (
                   <div key={i}>
-                    {i > 0 && <Separator className="bg-terex-gray/30 mb-4" />}
-                    <div className="text-xs uppercase tracking-wider text-gray-500 mb-2.5 font-medium">
+                    {i > 0 && (
+                      <Separator className="mb-4" style={{ background: 'rgba(255,255,255,0.07)' }} />
+                    )}
+                    <div className="text-[11px] uppercase tracking-wider text-[#6b7280] mb-2.5 font-medium">
                       {section.title}
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       {section.fields.map((field, j) => (
                         <div
                           key={j}
-                          className={`bg-terex-dark/50 border border-terex-gray/20 rounded-md px-3 py-2 ${
-                            field.highlight ? 'ring-1 ring-terex-accent/30' : ''
-                          }`}
+                          className="rounded-xl px-3 py-2"
+                          style={{
+                            background: 'rgba(255,255,255,0.03)',
+                            border: field.highlight
+                              ? '1px solid rgba(255,255,255,0.18)'
+                              : '1px solid rgba(255,255,255,0.07)',
+                          }}
                         >
-                          <div className="text-[11px] text-gray-500 mb-0.5">{field.label}</div>
+                          <div className="text-[11px] uppercase tracking-wider text-[#6b7280] mb-0.5">{field.label}</div>
                           <div className="flex items-center justify-between gap-2">
-                            <div
-                              className={`text-sm font-medium break-all ${
-                                field.highlight ? 'text-terex-accent' : 'text-white'
-                              }`}
-                            >
+                            <div className="text-sm font-medium break-all text-white">
                               {field.value}
                             </div>
                             {field.copyable && (
                               <button
                                 onClick={() => copy(field.value, `${field.label} copié`)}
-                                className="flex-shrink-0 p-1 hover:bg-terex-gray/40 rounded transition"
+                                className="flex-shrink-0 p-1 rounded transition text-[#9ca3af] hover:text-white"
                               >
-                                <Copy className="w-3 h-3 text-gray-400" />
+                                <Copy className="w-3 h-3" />
                               </button>
                             )}
                           </div>
@@ -399,13 +431,13 @@ export function OrderDetailsDialog({
               <TimelineRow
                 label="Création"
                 date={order.created_at}
-                icon={<Clock className="w-3.5 h-3.5 text-gray-400" />}
+                icon={<Clock className="w-3.5 h-3.5 text-[#9ca3af]" />}
               />
               {order.processed_at && (
                 <TimelineRow
                   label="Traitement"
                   date={order.processed_at}
-                  icon={<CheckCircle className="w-3.5 h-3.5 text-emerald-400" />}
+                  icon={<CheckCircle className="w-3.5 h-3.5 text-white" />}
                 />
               )}
             </div>
@@ -413,17 +445,22 @@ export function OrderDetailsDialog({
 
           {/* CANCELLATION FORM */}
           {(order.status === 'cancelled' || showCancellationForm) && (
-            <Card title="Email d'annulation" icon={<MailCheck className="w-4 h-4 text-red-400" />}>
+            <Card title="Email d'annulation" icon={<MailCheck className="w-4 h-4 text-[#f87171]" />}>
               <Textarea
                 placeholder="Motif d'annulation (optionnel)…"
                 value={cancellationReason}
                 onChange={(e) => setCancellationReason(e.target.value)}
-                className="bg-terex-dark border-terex-gray/40 text-white placeholder:text-gray-500 min-h-[80px]"
+                className="bg-[#141414] border-[rgba(255,255,255,0.07)] text-white placeholder:text-[#6b7280] min-h-[80px]"
               />
               <Button
                 onClick={sendCancellationEmail}
                 disabled={sendingEmail}
-                className="w-full mt-3 bg-red-600 hover:bg-red-700"
+                className="w-full mt-3 border"
+                style={{
+                  background: 'rgba(248,113,113,0.10)',
+                  color: '#f87171',
+                  borderColor: 'rgba(248,113,113,0.30)',
+                }}
               >
                 <Mail className="w-4 h-4 mr-2" />
                 {sendingEmail ? 'Envoi…' : "Envoyer l'email d'annulation"}
@@ -433,13 +470,20 @@ export function OrderDetailsDialog({
         </div>
 
         {/* FOOTER ACTIONS */}
-        <div className="sticky bottom-0 bg-terex-darker/95 backdrop-blur border-t border-terex-gray/30 px-6 py-4">
+        <div
+          className="sticky bottom-0 px-5 py-4 backdrop-blur"
+          style={{
+            background: 'rgba(30,30,30,0.95)',
+            borderTop: '1px solid rgba(255,255,255,0.07)',
+          }}
+        >
           <div className="flex flex-wrap gap-2">
             {order.status === 'pending' && (
               <>
                 <Button
                   onClick={() => onStatusUpdate(order.id, 'processing')}
-                  className="flex-1 min-w-[140px] bg-terex-accent hover:bg-terex-accent/90"
+                  className="flex-1 min-w-[140px] hover:opacity-90"
+                  style={{ background: '#fff', color: '#141414', fontWeight: 700 }}
                 >
                   <Clock className="w-4 h-4 mr-2" /> Mettre en traitement
                 </Button>
@@ -448,8 +492,12 @@ export function OrderDetailsDialog({
                     onStatusUpdate(order.id, 'cancelled');
                     setShowCancellationForm(true);
                   }}
-                  variant="destructive"
-                  className="flex-1 min-w-[140px]"
+                  className="flex-1 min-w-[140px] border hover:opacity-90"
+                  style={{
+                    background: 'rgba(248,113,113,0.10)',
+                    color: '#f87171',
+                    borderColor: 'rgba(248,113,113,0.30)',
+                  }}
                 >
                   <XCircle className="w-4 h-4 mr-2" /> Annuler
                 </Button>
@@ -459,7 +507,8 @@ export function OrderDetailsDialog({
               <>
                 <Button
                   onClick={() => onStatusUpdate(order.id, 'completed', 'paid')}
-                  className="flex-1 min-w-[140px] bg-emerald-600 hover:bg-emerald-700"
+                  className="flex-1 min-w-[140px] hover:opacity-90"
+                  style={{ background: '#fff', color: '#141414', fontWeight: 700 }}
                 >
                   <CheckCircle className="w-4 h-4 mr-2" /> Marquer comme terminé
                 </Button>
@@ -468,15 +517,19 @@ export function OrderDetailsDialog({
                     onStatusUpdate(order.id, 'cancelled');
                     setShowCancellationForm(true);
                   }}
-                  variant="destructive"
-                  className="flex-1 min-w-[140px]"
+                  className="flex-1 min-w-[140px] border hover:opacity-90"
+                  style={{
+                    background: 'rgba(248,113,113,0.10)',
+                    color: '#f87171',
+                    borderColor: 'rgba(248,113,113,0.30)',
+                  }}
                 >
                   <XCircle className="w-4 h-4 mr-2" /> Annuler
                 </Button>
               </>
             )}
             {(order.status === 'completed' || order.status === 'cancelled') && (
-              <div className="flex-1 text-center text-sm text-gray-400 py-2">
+              <div className="flex-1 text-center text-sm text-[#9ca3af] py-2">
                 Cette commande est {order.status === 'completed' ? 'terminée' : 'annulée'}.
               </div>
             )}
@@ -499,9 +552,15 @@ function Card({
   children: React.ReactNode;
 }) {
   return (
-    <section className="bg-terex-dark/40 border border-terex-gray/30 rounded-xl p-4">
+    <section
+      className="rounded-2xl p-4"
+      style={{
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(255,255,255,0.07)',
+      }}
+    >
       <h3 className="flex items-center gap-2 text-sm font-semibold text-white mb-3">
-        {icon && <span className="text-terex-accent">{icon}</span>}
+        {icon && <span className="text-[#9ca3af]">{icon}</span>}
         {title}
       </h3>
       {children}
@@ -512,25 +571,24 @@ function Card({
 function ActionCard({
   title,
   subtitle,
-  accent,
   children,
 }: {
   title: string;
   subtitle: string;
-  accent: 'terex' | 'orange';
   children: React.ReactNode;
 }) {
-  const styles =
-    accent === 'terex'
-      ? 'border-terex-accent/40 bg-gradient-to-br from-terex-accent/10 to-transparent'
-      : 'border-orange-500/40 bg-gradient-to-br from-orange-500/10 to-transparent';
-  const iconColor = accent === 'terex' ? 'text-terex-accent' : 'text-orange-400';
   return (
-    <section className={`border rounded-xl p-5 ${styles}`}>
+    <section
+      className="rounded-2xl p-5"
+      style={{
+        background: '#1e1e1e',
+        border: '1px solid rgba(255,255,255,0.07)',
+      }}
+    >
       <div className="flex items-center gap-2 mb-3">
-        <Send className={`w-4 h-4 ${iconColor}`} />
+        <Send className="w-4 h-4 text-white" />
         <div>
-          <div className="text-xs uppercase tracking-wider text-gray-400 font-medium">{title}</div>
+          <div className="text-[11px] uppercase tracking-wider text-[#6b7280] font-medium">{title}</div>
           <div className="text-sm font-semibold text-white">{subtitle}</div>
         </div>
       </div>
@@ -553,8 +611,14 @@ function Field({
   onCopy?: () => void;
 }) {
   return (
-    <div className="bg-terex-dark/50 border border-terex-gray/20 rounded-lg px-3 py-2.5">
-      <div className="flex items-center gap-1.5 text-[11px] text-gray-500 mb-1">
+    <div
+      className="rounded-xl px-3 py-2.5"
+      style={{
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(255,255,255,0.07)',
+      }}
+    >
+      <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-[#6b7280] mb-1">
         {icon} {label}
       </div>
       <div className="flex items-center justify-between gap-2">
@@ -562,9 +626,9 @@ function Field({
         {onCopy && value !== '—' && (
           <button
             onClick={onCopy}
-            className="flex-shrink-0 p-1 hover:bg-terex-gray/40 rounded transition"
+            className="flex-shrink-0 p-1 rounded transition text-[#9ca3af] hover:text-white"
           >
-            <Copy className="w-3 h-3 text-gray-400" />
+            <Copy className="w-3 h-3" />
           </button>
         )}
       </div>
@@ -575,7 +639,6 @@ function Field({
 function Stat({
   label,
   value,
-  accent,
   mono,
 }: {
   label: string;
@@ -584,13 +647,15 @@ function Stat({
   mono?: boolean;
 }) {
   return (
-    <div className="bg-terex-dark/50 border border-terex-gray/20 rounded-lg px-3 py-2.5">
-      <div className="text-[11px] text-gray-500 mb-1">{label}</div>
-      <div
-        className={`text-base font-semibold break-all ${
-          accent ? 'text-terex-accent' : 'text-white'
-        } ${mono ? 'font-mono text-sm' : ''}`}
-      >
+    <div
+      className="rounded-xl px-3 py-2.5"
+      style={{
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(255,255,255,0.07)',
+      }}
+    >
+      <div className="text-[11px] uppercase tracking-wider text-[#6b7280] mb-1">{label}</div>
+      <div className={`text-base font-semibold break-all text-white ${mono ? 'font-mono text-sm' : ''}`}>
         {value}
       </div>
     </div>
@@ -599,8 +664,14 @@ function Stat({
 
 function TimelineRow({ label, date, icon }: { label: string; date: string; icon: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between bg-terex-dark/50 border border-terex-gray/20 rounded-lg px-3 py-2.5">
-      <div className="flex items-center gap-2 text-sm text-gray-400">
+    <div
+      className="flex items-center justify-between rounded-xl px-3 py-2.5"
+      style={{
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(255,255,255,0.07)',
+      }}
+    >
+      <div className="flex items-center gap-2 text-sm text-[#9ca3af]">
         {icon}
         {label}
       </div>

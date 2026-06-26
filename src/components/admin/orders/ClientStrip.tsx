@@ -15,25 +15,32 @@ export function ClientStrip({ client }: ClientStripProps) {
   const phone = client?.phone;
 
   return (
-    <div className="bg-terex-darker/60 border-t border-terex-gray/30 px-6 py-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs">
-      <div className="flex items-center gap-1.5 text-white">
-        <User className="w-3.5 h-3.5 text-terex-accent" />
+    <div
+      style={{
+        background: 'rgba(255,255,255,0.03)',
+        borderTop: '1px solid rgba(255,255,255,0.07)',
+        padding: '12px 20px',
+      }}
+      className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs"
+    >
+      <div className="flex items-center gap-1.5" style={{ color: '#fff' }}>
+        <User className="w-3.5 h-3.5" style={{ color: 'rgba(255,255,255,0.55)' }} />
         <span className="font-medium">{name}</span>
       </div>
       {email && (
-        <div className="flex items-center gap-1.5 text-gray-300">
-          <Mail className="w-3.5 h-3.5 text-gray-500" />
+        <div className="flex items-center gap-1.5" style={{ color: '#9ca3af' }}>
+          <Mail className="w-3.5 h-3.5" style={{ color: '#6b7280' }} />
           <span className="font-mono">{email}</span>
         </div>
       )}
       {phone && (
-        <div className="flex items-center gap-1.5 text-gray-300">
-          <Phone className="w-3.5 h-3.5 text-gray-500" />
+        <div className="flex items-center gap-1.5" style={{ color: '#9ca3af' }}>
+          <Phone className="w-3.5 h-3.5" style={{ color: '#6b7280' }} />
           <span className="font-mono">{phone}</span>
         </div>
       )}
       {!email && !phone && (
-        <span className="text-gray-500 italic">Aucun contact renseigné</span>
+        <span className="italic" style={{ color: '#6b7280' }}>Aucun contact renseigné</span>
       )}
     </div>
   );

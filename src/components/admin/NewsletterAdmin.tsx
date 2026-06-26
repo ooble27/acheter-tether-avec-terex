@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  Mail, 
-  Send, 
+import {
+  Mail,
+  Send,
   Eye,
   Loader2,
   Users,
@@ -20,6 +19,26 @@ import {
   Megaphone,
   RefreshCw
 } from 'lucide-react';
+
+const CARD = '#1e1e1e';
+const BORDER = 'rgba(255,255,255,0.07)';
+const INPUT_BG = 'rgba(255,255,255,0.04)';
+
+const cardStyle: React.CSSProperties = {
+  background: CARD,
+  border: `1px solid ${BORDER}`,
+  borderRadius: 16,
+  padding: 18,
+};
+
+const inputClass = 'text-white placeholder-[#6b7280]';
+const inputStyle: React.CSSProperties = {
+  background: INPUT_BG,
+  border: `1px solid ${BORDER}`,
+  borderRadius: 12,
+  color: '#fff',
+  outline: 'none',
+};
 
 interface NewsletterTemplate {
   id: string;
@@ -171,142 +190,145 @@ export function NewsletterAdmin() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-4">
       {/* Templates Section */}
-      <Card className="bg-terex-darker border-terex-gray">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-white flex items-center gap-2">
-            <FileText className="w-5 h-5 text-terex-accent" />
+      <div style={cardStyle}>
+        <div className="flex flex-row items-center justify-between mb-4">
+          <h3 className="text-white flex items-center gap-2 font-semibold">
+            <FileText className="w-5 h-5 text-[#9ca3af]" />
             Templates
-          </CardTitle>
+          </h3>
           <Button
             onClick={resetForm}
-            variant="outline"
             size="sm"
-            className="border-terex-gray text-gray-300 hover:bg-terex-gray"
+            className="text-white hover:opacity-90"
+            style={{ background: '#2d2d2d', border: `1px solid ${BORDER}` }}
           >
             <RefreshCw className="w-4 h-4 mr-2" />
             Réinitialiser
           </Button>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {NEWSLETTER_TEMPLATES.map((template) => (
-              <button
-                key={template.id}
-                onClick={() => applyTemplate(template)}
-                className={`p-4 rounded-xl border-2 transition-all text-left ${
-                  selectedTemplate === template.id
-                    ? 'border-terex-accent bg-terex-accent/10'
-                    : 'border-terex-gray bg-terex-gray/30 hover:border-terex-accent/50 hover:bg-terex-gray/50'
-                }`}
-              >
-                <div className={`mb-3 ${selectedTemplate === template.id ? 'text-terex-accent' : 'text-gray-400'}`}>
-                  {template.icon}
-                </div>
-                <h3 className="text-white font-semibold mb-1">{template.name}</h3>
-                <p className="text-gray-500 text-xs">{template.description}</p>
-              </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          {NEWSLETTER_TEMPLATES.map((template) => (
+            <button
+              key={template.id}
+              onClick={() => applyTemplate(template)}
+              className="p-4 rounded-xl transition-all text-left hover:opacity-90"
+              style={{
+                background: selectedTemplate === template.id ? 'rgba(255,255,255,0.08)' : INPUT_BG,
+                border: selectedTemplate === template.id
+                  ? '1px solid rgba(255,255,255,0.25)'
+                  : `1px solid ${BORDER}`,
+              }}
+            >
+              <div className={`mb-3 ${selectedTemplate === template.id ? 'text-white' : 'text-[#9ca3af]'}`}>
+                {template.icon}
+              </div>
+              <h3 className="text-white font-semibold mb-1">{template.name}</h3>
+              <p className="text-[#6b7280] text-xs">{template.description}</p>
+            </button>
+          ))}
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Form Section */}
-        <div className="space-y-6">
-          <Card className="bg-terex-darker border-terex-gray">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Mail className="w-5 h-5 text-terex-accent" />
-                Composer
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+        <div className="flex flex-col gap-4">
+          <div style={cardStyle}>
+            <h3 className="text-white flex items-center gap-2 font-semibold mb-4">
+              <Mail className="w-5 h-5 text-[#9ca3af]" />
+              Composer
+            </h3>
+            <div className="space-y-4">
               <div className="space-y-2">
-                <Label className="text-gray-300">Sujet</Label>
+                <Label className="text-[#9ca3af]">Sujet</Label>
                 <Input
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Sujet de l'email..."
-                  className="bg-terex-gray border-terex-gray text-white"
+                  className={inputClass}
+                  style={inputStyle}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-gray-300">Aperçu</Label>
+                <Label className="text-[#9ca3af]">Aperçu</Label>
                 <Input
                   value={previewText}
                   onChange={(e) => setPreviewText(e.target.value)}
                   placeholder="Texte d'aperçu..."
-                  className="bg-terex-gray border-terex-gray text-white"
+                  className={inputClass}
+                  style={inputStyle}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-gray-300">Titre</Label>
+                <Label className="text-[#9ca3af]">Titre</Label>
                 <Input
                   value={heroTitle}
                   onChange={(e) => setHeroTitle(e.target.value)}
                   placeholder="Titre principal..."
-                  className="bg-terex-gray border-terex-gray text-white"
+                  className={inputClass}
+                  style={inputStyle}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-gray-300">Message</Label>
+                <Label className="text-[#9ca3af]">Message</Label>
                 <Textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Contenu du message..."
-                  className="bg-terex-gray border-terex-gray text-white resize-none"
+                  className={`resize-none ${inputClass}`}
+                  style={inputStyle}
                   rows={5}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-gray-300">Bouton</Label>
+                  <Label className="text-[#9ca3af]">Bouton</Label>
                   <Input
                     value={ctaText}
                     onChange={(e) => setCtaText(e.target.value)}
-                    className="bg-terex-gray border-terex-gray text-white"
+                    className={inputClass}
+                    style={inputStyle}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-gray-300">URL</Label>
+                  <Label className="text-[#9ca3af]">URL</Label>
                   <Input
                     value={ctaUrl}
                     onChange={(e) => setCtaUrl(e.target.value)}
-                    className="bg-terex-gray border-terex-gray text-white"
+                    className={inputClass}
+                    style={inputStyle}
                   />
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Send Section */}
-          <Card className="bg-terex-darker border-terex-gray">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Send className="w-5 h-5 text-terex-accent" />
-                Envoyer
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          <div style={cardStyle}>
+            <h3 className="text-white flex items-center gap-2 font-semibold mb-4">
+              <Send className="w-5 h-5 text-[#9ca3af]" />
+              Envoyer
+            </h3>
+            <div className="space-y-4">
               <div className="flex gap-3">
                 <Input
                   type="email"
                   value={testEmail}
                   onChange={(e) => setTestEmail(e.target.value)}
                   placeholder="Email de test..."
-                  className="bg-terex-gray border-terex-gray text-white flex-1"
+                  className={`flex-1 ${inputClass}`}
+                  style={inputStyle}
                 />
                 <Button
                   onClick={() => sendNewsletter(true)}
                   disabled={isTesting || !testEmail}
-                  variant="outline"
-                  className="border-terex-accent text-terex-accent hover:bg-terex-accent/10"
+                  className="text-white hover:opacity-90"
+                  style={{ background: '#2d2d2d', border: `1px solid ${BORDER}` }}
                 >
                   {isTesting ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -322,7 +344,8 @@ export function NewsletterAdmin() {
               <Button
                 onClick={() => sendNewsletter(false)}
                 disabled={isSending}
-                className="w-full bg-terex-accent hover:bg-terex-accent/80 text-white"
+                className="w-full font-bold hover:opacity-90"
+                style={{ background: '#fff', color: '#141414' }}
               >
                 {isSending ? (
                   <>
@@ -336,60 +359,56 @@ export function NewsletterAdmin() {
                   </>
                 )}
               </Button>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
         {/* Preview Section */}
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Eye className="w-5 h-5 text-terex-accent" />
-              Aperçu
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="bg-[#111111] rounded-lg overflow-hidden border border-gray-800">
-              {/* Email Header */}
-              <div className="bg-[#1a1a1a] px-6 py-4 border-b border-gray-700 flex items-center justify-between">
-                <span className="text-terex-accent font-bold tracking-wider">TEREX</span>
-                <span className="text-gray-400 text-sm border border-gray-600 px-3 py-1 rounded">Se connecter</span>
-              </div>
-
-              {/* Email Content */}
-              <div className="bg-[#1a1a1a] p-6">
-                <h2 className="text-white text-xl font-bold mb-6">{heroTitle || 'Titre principal'}</h2>
-                <p className="text-white mb-4">Cher client,</p>
-                <p className="text-gray-400 leading-relaxed mb-6">
-                  {content || 'Contenu du message...'}
-                </p>
-
-                {/* CTA Button */}
-                <div className="text-center my-6">
-                  <span className="inline-block bg-terex-accent text-white px-8 py-3 rounded-md font-semibold">
-                    {ctaText || 'Bouton'}
-                  </span>
-                </div>
-
-                <p className="text-gray-500 text-sm mt-6">
-                  Si vous avez des questions, répondez à cet email pour contacter notre équipe de support client.
-                </p>
-              </div>
-
-              {/* Email Footer */}
-              <div className="bg-[#111111] p-6 text-center border-t border-gray-800">
-                <p className="text-terex-accent font-bold tracking-wider mb-4">TEREX</p>
-                <p className="text-gray-600 text-xs mb-4">
-                  Vous avez reçu cet email car vous êtes inscrit chez Terex.
-                </p>
-                <p className="text-gray-600 text-xs">
-                  <span className="underline">Politique de Confidentialité</span> | <span className="underline">Centre d'aide</span>
-                </p>
-                <p className="text-gray-700 text-xs mt-4">© 2025 Terex. Tous droits réservés.</p>
-              </div>
+        <div style={cardStyle}>
+          <h3 className="text-white flex items-center gap-2 font-semibold mb-4">
+            <Eye className="w-5 h-5 text-[#9ca3af]" />
+            Aperçu
+          </h3>
+          <div className="rounded-lg overflow-hidden" style={{ background: '#141414', border: `1px solid ${BORDER}` }}>
+            {/* Email Header */}
+            <div className="px-6 py-4 flex items-center justify-between" style={{ background: CARD, borderBottom: `1px solid ${BORDER}` }}>
+              <span className="text-white font-bold tracking-wider">TEREX</span>
+              <span className="text-[#9ca3af] text-sm px-3 py-1 rounded" style={{ border: `1px solid ${BORDER}` }}>Se connecter</span>
             </div>
-          </CardContent>
-        </Card>
+
+            {/* Email Content */}
+            <div className="p-6" style={{ background: CARD }}>
+              <h2 className="text-white text-xl font-bold mb-6">{heroTitle || 'Titre principal'}</h2>
+              <p className="text-white mb-4">Cher client,</p>
+              <p className="text-[#9ca3af] leading-relaxed mb-6">
+                {content || 'Contenu du message...'}
+              </p>
+
+              {/* CTA Button */}
+              <div className="text-center my-6">
+                <span className="inline-block px-8 py-3 rounded-md font-semibold" style={{ background: '#fff', color: '#141414' }}>
+                  {ctaText || 'Bouton'}
+                </span>
+              </div>
+
+              <p className="text-[#6b7280] text-sm mt-6">
+                Si vous avez des questions, répondez à cet email pour contacter notre équipe de support client.
+              </p>
+            </div>
+
+            {/* Email Footer */}
+            <div className="p-6 text-center" style={{ background: '#141414', borderTop: `1px solid ${BORDER}` }}>
+              <p className="text-white font-bold tracking-wider mb-4">TEREX</p>
+              <p className="text-[#6b7280] text-xs mb-4">
+                Vous avez reçu cet email car vous êtes inscrit chez Terex.
+              </p>
+              <p className="text-[#6b7280] text-xs">
+                <span className="underline">Politique de Confidentialité</span> | <span className="underline">Centre d'aide</span>
+              </p>
+              <p className="text-[#6b7280] text-xs mt-4">© 2025 Terex. Tous droits réservés.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
