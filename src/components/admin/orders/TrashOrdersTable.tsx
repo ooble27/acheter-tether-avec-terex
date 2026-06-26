@@ -55,13 +55,13 @@ export function TrashOrdersTable({ orders, onRestoreFromTrash, onDeletePermanent
   const getOrderIcon = (type: string) => {
     switch (type) {
       case 'buy':
-        return <Coins className="w-6 h-6" style={{ color: 'rgba(255,255,255,0.85)' }} />;
+        return <Coins className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.85)' }} />;
       case 'sell':
-        return <HandCoins className="w-6 h-6" style={{ color: 'rgba(255,255,255,0.85)' }} />;
+        return <HandCoins className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.85)' }} />;
       case 'transfer':
-        return <Send className="w-6 h-6" style={{ color: 'rgba(255,255,255,0.85)' }} />;
+        return <Send className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.85)' }} />;
       default:
-        return <Trash2 className="w-6 h-6" style={{ color: 'rgba(255,255,255,0.85)' }} />;
+        return <Trash2 className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.85)' }} />;
     }
   };
 
@@ -110,19 +110,18 @@ export function TrashOrdersTable({ orders, onRestoreFromTrash, onDeletePermanent
             opacity: 0.85,
           }}
         >
-          <div className="p-4 sm:p-6">
-            {/* Top row */}
-            <div className="flex items-start gap-3 flex-wrap">
+          <div className="p-3.5 sm:p-4 flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4">
+            {/* Icon + identity */}
+            <div className="flex items-center gap-3 min-w-0 lg:flex-1">
               <div
                 className="flex items-center justify-center shrink-0"
-                style={{ width: '46px', height: '46px', background: ICON_BG, borderRadius: '12px' }}
+                style={{ width: '44px', height: '44px', background: ICON_BG, borderRadius: '12px' }}
               >
                 {getOrderIcon(order.type)}
               </div>
-
-              <div className="min-w-0 flex-1">
+              <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="font-medium" style={{ color: '#fff' }}>
+                  <h3 className="font-semibold text-[15px]" style={{ color: '#fff' }}>
                     #TEREX-{order.id.slice(-8)}
                   </h3>
                   <button
@@ -130,7 +129,7 @@ export function TrashOrdersTable({ orders, onRestoreFromTrash, onDeletePermanent
                     style={{ color: '#6b7280' }}
                     className="transition-colors hover:opacity-80"
                   >
-                    <Copy className="w-4 h-4" />
+                    <Copy className="w-3.5 h-3.5" />
                   </button>
                   <span
                     style={{
@@ -146,8 +145,7 @@ export function TrashOrdersTable({ orders, onRestoreFromTrash, onDeletePermanent
                     Supprimé
                   </span>
                 </div>
-
-                <div className="flex items-center gap-2 mt-1 text-sm flex-wrap" style={{ color: '#9ca3af' }}>
+                <div className="flex items-center gap-2 mt-0.5 text-xs flex-wrap" style={{ color: '#6b7280' }}>
                   <span>{new Date(order.created_at).toLocaleDateString('fr-FR')}</span>
                   <span>•</span>
                   <span>{getOrderTypeLabel(order.type)}</span>
@@ -155,14 +153,14 @@ export function TrashOrdersTable({ orders, onRestoreFromTrash, onDeletePermanent
               </div>
             </div>
 
-            {/* Amount row */}
-            <div className="mt-4">
+            {/* Amount */}
+            <div className="lg:text-right lg:px-2 shrink-0">
               {order.type === 'buy' && (
                 <>
-                  <div className="text-2xl font-bold" style={{ color: '#fff' }}>
+                  <div className="text-lg font-bold leading-tight" style={{ color: '#fff' }}>
                     {order.amount.toLocaleString()} {order.currency}
                   </div>
-                  <div className="text-sm" style={{ color: '#9ca3af' }}>
+                  <div className="text-xs" style={{ color: '#9ca3af' }}>
                     → {order.usdt_amount} USDT
                   </div>
                 </>
@@ -170,10 +168,10 @@ export function TrashOrdersTable({ orders, onRestoreFromTrash, onDeletePermanent
 
               {order.type === 'sell' && (
                 <>
-                  <div className="text-2xl font-bold" style={{ color: '#fff' }}>
+                  <div className="text-lg font-bold leading-tight" style={{ color: '#fff' }}>
                     {order.usdt_amount} USDT
                   </div>
-                  <div className="text-sm" style={{ color: '#9ca3af' }}>
+                  <div className="text-xs" style={{ color: '#9ca3af' }}>
                     → {order.amount.toLocaleString()} {order.currency}
                   </div>
                 </>
@@ -181,18 +179,18 @@ export function TrashOrdersTable({ orders, onRestoreFromTrash, onDeletePermanent
 
               {order.type === 'transfer' && (
                 <>
-                  <div className="text-2xl font-bold" style={{ color: '#fff' }}>
+                  <div className="text-lg font-bold leading-tight" style={{ color: '#fff' }}>
                     {order.amount.toLocaleString()} {order.from_currency || order.currency}
                   </div>
-                  <div className="text-sm" style={{ color: '#9ca3af' }}>
+                  <div className="text-xs" style={{ color: '#9ca3af' }}>
                     → {order.total_amount?.toLocaleString()} {order.to_currency}
                   </div>
                 </>
               )}
             </div>
 
-            {/* Actions row */}
-            <div className="mt-4 flex flex-wrap" style={{ gap: '8px' }}>
+            {/* Actions — à droite sur desktop */}
+            <div className="flex flex-wrap gap-2 lg:justify-end lg:flex-nowrap shrink-0">
               <button
                 onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
                 style={neutralBtnStyle}

@@ -185,7 +185,7 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
         onStatusUpdate={onStatusUpdate}
       />
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {orders.map((order) => {
           const paymentInfo = getPaymentServiceInfo(order);
 
@@ -199,19 +199,18 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
                 overflow: 'hidden',
               }}
             >
-              <div className="p-4 sm:p-6">
-                {/* Top row */}
-                <div className="flex items-start gap-3 flex-wrap">
+              <div className="p-3.5 sm:p-4 flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4">
+                {/* Icon + identity */}
+                <div className="flex items-center gap-3 min-w-0 lg:flex-1">
                   <div
                     className="flex items-center justify-center shrink-0"
-                    style={{ width: '46px', height: '46px', background: ICON_BG, borderRadius: '12px' }}
+                    style={{ width: '44px', height: '44px', background: ICON_BG, borderRadius: '12px' }}
                   >
-                    <HandCoins className="w-6 h-6" style={{ color: 'rgba(255,255,255,0.85)' }} />
+                    <HandCoins className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.85)' }} />
                   </div>
-
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="font-medium" style={{ color: '#fff' }}>
+                      <h3 className="font-semibold text-[15px]" style={{ color: '#fff' }}>
                         #TEREX-{order.id.slice(-8)}
                       </h3>
                       <button
@@ -219,12 +218,11 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
                         style={{ color: '#6b7280' }}
                         className="transition-colors hover:opacity-80"
                       >
-                        <Copy className="w-4 h-4" />
+                        <Copy className="w-3.5 h-3.5" />
                       </button>
                       <StatusBadge status={order.status} />
                     </div>
-
-                    <div className="flex items-center gap-2 mt-1 text-sm flex-wrap" style={{ color: '#9ca3af' }}>
+                    <div className="flex items-center gap-2 mt-0.5 text-xs flex-wrap" style={{ color: '#6b7280' }}>
                       <span>{new Date(order.created_at).toLocaleDateString('fr-FR')}</span>
                       <span>•</span>
                       <span>Vente USDT</span>
@@ -234,74 +232,47 @@ export function SellOrdersTable({ orders, onStatusUpdate, onMoveToTrash }: SellO
                   </div>
                 </div>
 
-                {/* Amount row */}
-                <div className="mt-4">
-                  <div className="text-xl font-bold" style={{ color: '#fff' }}>
+                {/* Amount */}
+                <div className="lg:text-right lg:px-2 shrink-0">
+                  <div className="text-lg font-bold leading-tight" style={{ color: '#fff' }}>
                     {order.usdt_amount} USDT
                   </div>
-                  <div className="text-sm" style={{ color: '#9ca3af' }}>
+                  <div className="text-xs" style={{ color: '#9ca3af' }}>
                     → {order.amount.toLocaleString()} {order.currency}
                   </div>
                 </div>
 
-                {/* Actions row */}
-                <div className="mt-4 flex flex-wrap" style={{ gap: '8px' }}>
-                  <button
-                    onClick={() => {
-                      setSelectedOrder(order);
-                      setDialogOpen(true);
-                    }}
-                    style={neutralBtnStyle}
-                  >
-                    <Eye className="w-4 h-4" />
-                    Détails
-                  </button>
-
-                  <button
-                    onClick={() => onMoveToTrash(order.id)}
-                    style={iconDangerBtnStyle}
-                    aria-label="Supprimer"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-
+                {/* Actions — à droite sur desktop */}
+                <div className="flex flex-wrap gap-2 lg:justify-end lg:flex-nowrap shrink-0">
                   {order.status === 'pending' && (
                     <>
-                      <button
-                        onClick={() => handleStatusUpdate(order.id, 'processing' as OrderStatus)}
-                        style={ctaBtnStyle}
-                      >
-                        <TrendingUp className="w-4 h-4" />
-                        Traiter
+                      <button onClick={() => handleStatusUpdate(order.id, 'processing' as OrderStatus)} style={ctaBtnStyle}>
+                        <TrendingUp className="w-4 h-4" /> Traiter
                       </button>
-                      <button
-                        onClick={() => handleStatusUpdate(order.id, 'cancelled' as OrderStatus)}
-                        style={dangerBtnStyle}
-                      >
-                        <XCircle className="w-4 h-4" />
-                        Annuler
+                      <button onClick={() => handleStatusUpdate(order.id, 'cancelled' as OrderStatus)} style={dangerBtnStyle}>
+                        <XCircle className="w-4 h-4" /> Annuler
                       </button>
                     </>
                   )}
-
                   {order.status === 'processing' && (
                     <>
-                      <button
-                        onClick={() => handleStatusUpdate(order.id, 'completed' as OrderStatus, 'paid')}
-                        style={ctaBtnStyle}
-                      >
-                        <CheckCircle className="w-4 h-4" />
-                        Terminer
+                      <button onClick={() => handleStatusUpdate(order.id, 'completed' as OrderStatus, 'paid')} style={ctaBtnStyle}>
+                        <CheckCircle className="w-4 h-4" /> Terminer
                       </button>
-                      <button
-                        onClick={() => handleStatusUpdate(order.id, 'cancelled' as OrderStatus)}
-                        style={dangerBtnStyle}
-                      >
-                        <XCircle className="w-4 h-4" />
-                        Annuler
+                      <button onClick={() => handleStatusUpdate(order.id, 'cancelled' as OrderStatus)} style={dangerBtnStyle}>
+                        <XCircle className="w-4 h-4" /> Annuler
                       </button>
                     </>
                   )}
+                  <button
+                    onClick={() => { setSelectedOrder(order); setDialogOpen(true); }}
+                    style={neutralBtnStyle}
+                  >
+                    <Eye className="w-4 h-4" /> Détails
+                  </button>
+                  <button onClick={() => onMoveToTrash(order.id)} style={iconDangerBtnStyle} aria-label="Supprimer">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
               <ClientStrip client={clientInfos[order.user_id]} />
