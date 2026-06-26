@@ -1,22 +1,7 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Users, 
-  ShoppingCart, 
-  FileCheck, 
-  Settings,
-  BarChart3,
-  Shield,
-  UserCheck,
-  Menu,
-  ArrowLeft,
-  Calculator,
-  Mail,
-  Sparkles
+import {
+  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield,
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
@@ -26,6 +11,20 @@ import { NewsletterAdmin } from '@/components/admin/NewsletterAdmin';
 import { NeobankVision } from '@/components/admin/neobank/NeobankVision';
 import { useUserRole } from '@/hooks/useUserRole';
 
+const BG = '#141414';
+const CARD = '#1e1e1e';
+const BORDER = 'rgba(255,255,255,0.07)';
+const ICON_BG = 'rgba(255,255,255,0.06)';
+
+const NAV = [
+  { id: 'orders',       label: 'Commandes',    desc: 'Achats, ventes, virements', icon: ShoppingCart },
+  { id: 'accounting',   label: 'Comptabilité', desc: 'Revenus et marges',         icon: Calculator },
+  { id: 'kyc',          label: 'KYC',          desc: "Vérifications d'identité",   icon: FileCheck },
+  { id: 'applications', label: 'Candidatures', desc: 'Recrutement',               icon: UserCheck },
+  { id: 'newsletter',   label: 'Newsletter',   desc: 'Abonnés et envois',         icon: Mail },
+  { id: 'neobank',      label: 'Vision',       desc: 'Néobanque Terex',           icon: Sparkles },
+];
+
 export function AdminPortal() {
   const [activeTab, setActiveTab] = useState('orders');
   const { isAdmin, isKYCReviewer } = useUserRole();
@@ -33,107 +32,80 @@ export function AdminPortal() {
 
   if (!isAdmin() && !isKYCReviewer()) {
     return (
-      <div className="min-h-screen bg-terex-dark flex items-center justify-center">
-        <Card className="bg-terex-darker border-terex-gray p-8">
-          <div className="text-center">
-            <Shield className="w-16 h-16 mx-auto mb-4 text-red-500" />
-            <h2 className="text-xl font-bold text-white mb-2">Accès non autorisé</h2>
-            <p className="text-gray-400">Vous n'avez pas les permissions pour accéder à cette page.</p>
+      <div style={{ minHeight: '100vh', background: BG, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+        <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '36px 28px', textAlign: 'center', maxWidth: '360px' }}>
+          <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'rgba(239,68,68,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+            <Shield size={26} color="#ef4444" />
           </div>
-        </Card>
+          <h2 style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '0 0 6px' }}>Accès non autorisé</h2>
+          <p style={{ color: '#6b7280', fontSize: '13px', margin: 0, lineHeight: 1.6 }}>Vous n'avez pas les permissions pour accéder à cette page.</p>
+        </div>
       </div>
     );
   }
 
+  const active = NAV.find(n => n.id === activeTab) ?? NAV[0];
+
   return (
-    <div className="min-h-screen bg-terex-dark p-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Header avec bouton retour */}
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Portail Administrateur</h1>
-            <p className="text-gray-400">Gérez votre plateforme Terex</p>
-          </div>
-          <Button
-            variant="outline"
-            onClick={() => navigate('/dashboard')}
-            className="bg-terex-gray/50 border-terex-gray hover:bg-terex-gray text-white"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Retour au Dashboard
-          </Button>
+    <div style={{ minHeight: '100vh', background: BG, paddingBottom: '80px' }}>
+      {/* Top bar */}
+      <div style={{ padding: 'calc(env(safe-area-inset-top, 0px) + 18px) 20px 18px', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', gap: '14px', maxWidth: '1200px', margin: '0 auto' }}>
+        <button onClick={() => navigate('/dashboard')}
+          style={{ width: '38px', height: '38px', borderRadius: '50%', background: ICON_BG, border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
+          <ArrowLeft size={17} color="#fff" />
+        </button>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h1 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: 0, letterSpacing: '-0.4px' }}>Administration</h1>
+          <p style={{ color: '#6b7280', fontSize: '12px', margin: '2px 0 0' }}>Pilotez la plateforme Terex</p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, borderRadius: '999px', padding: '6px 12px', flexShrink: 0 }}>
+          <Shield size={13} color="rgba(255,255,255,0.6)" />
+          <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '11px', fontWeight: 600 }}>{isAdmin() ? 'Admin' : 'Reviewer'}</span>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+        {/* Nav pills — scrollable horizontalement sur mobile */}
+        <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '6px', marginBottom: '22px', scrollbarWidth: 'none' }}>
+          {NAV.map(({ id, label, icon: Icon }) => {
+            const isOn = id === activeTab;
+            return (
+              <button key={id} onClick={() => setActiveTab(id)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0,
+                  padding: '10px 16px', borderRadius: '12px', cursor: 'pointer',
+                  background: isOn ? '#ffffff' : CARD,
+                  border: `1px solid ${isOn ? '#ffffff' : BORDER}`,
+                  color: isOn ? '#141414' : '#9ca3af',
+                  fontSize: '13px', fontWeight: 600, transition: 'all 0.15s ease', whiteSpace: 'nowrap',
+                }}>
+                <Icon size={16} color={isOn ? '#141414' : 'rgba(255,255,255,0.6)'} strokeWidth={2} />
+                {label}
+              </button>
+            );
+          })}
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-terex-gray grid grid-cols-3 sm:grid-cols-6 w-full h-auto">
-            <TabsTrigger 
-              value="orders" 
-              className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              <span className="hidden sm:inline">Commandes</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="accounting" 
-              className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
-            >
-              <Calculator className="w-4 h-4" />
-              <span className="hidden sm:inline">Comptabilité</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="kyc" 
-              className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
-            >
-              <FileCheck className="w-4 h-4" />
-              <span className="hidden sm:inline">KYC</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="applications" 
-              className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
-            >
-              <UserCheck className="w-4 h-4" />
-              <span className="hidden sm:inline">Candidatures</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="newsletter" 
-              className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
-            >
-              <Mail className="w-4 h-4" />
-              <span className="hidden sm:inline">Newsletter</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="neobank" 
-              className="data-[state=active]:bg-terex-accent flex items-center space-x-2"
-            >
-              <Sparkles className="w-4 h-4" />
-              <span className="hidden sm:inline">Vision</span>
-            </TabsTrigger>
-          </TabsList>
+        {/* Section title */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <active.icon size={19} color="rgba(255,255,255,0.85)" strokeWidth={1.9} />
+          </div>
+          <div>
+            <h2 style={{ color: '#fff', fontSize: '17px', fontWeight: 600, margin: 0 }}>{active.label}</h2>
+            <p style={{ color: '#6b7280', fontSize: '12px', margin: '1px 0 0' }}>{active.desc}</p>
+          </div>
+        </div>
 
-          <TabsContent value="orders">
-            <OrdersDashboardNew />
-          </TabsContent>
-
-          <TabsContent value="accounting">
-            <AccountingAdmin />
-          </TabsContent>
-
-          <TabsContent value="kyc">
-            <KYCAdmin />
-          </TabsContent>
-
-          <TabsContent value="applications">
-            <JobApplicationsAdmin />
-          </TabsContent>
-
-          <TabsContent value="newsletter">
-            <NewsletterAdmin />
-          </TabsContent>
-
-          <TabsContent value="neobank">
-            <NeobankVision />
-          </TabsContent>
-        </Tabs>
+        {/* Section content */}
+        <div>
+          {activeTab === 'orders' && <OrdersDashboardNew />}
+          {activeTab === 'accounting' && <AccountingAdmin />}
+          {activeTab === 'kyc' && <KYCAdmin />}
+          {activeTab === 'applications' && <JobApplicationsAdmin />}
+          {activeTab === 'newsletter' && <NewsletterAdmin />}
+          {activeTab === 'neobank' && <NeobankVision />}
+        </div>
       </div>
     </div>
   );

@@ -1,11 +1,7 @@
 
 import { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { 
-  Search, 
+import {
+  Search,
   RefreshCw,
   ShoppingCart,
   TrendingDown,
@@ -80,13 +76,11 @@ export function OrdersDashboardNew() {
 
   if (!isAdmin() && !isKYCReviewer()) {
     return (
-      <div className="min-h-screen bg-terex-dark flex items-center justify-center">
-        <Card className="bg-terex-darker border-terex-gray p-8">
-          <div className="text-center">
-            <h2 className="text-xl font-bold text-white mb-2">Accès non autorisé</h2>
-            <p className="text-gray-400">Vous n'avez pas les permissions pour accéder à cette page.</p>
-          </div>
-        </Card>
+      <div className="flex items-center justify-center py-20">
+        <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '32px', textAlign: 'center' }}>
+          <h2 className="text-lg font-bold text-white mb-2">Accès non autorisé</h2>
+          <p className="text-gray-400 text-sm">Vous n'avez pas les permissions pour accéder à cette page.</p>
+        </div>
       </div>
     );
   }
@@ -107,164 +101,136 @@ export function OrdersDashboardNew() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-terex-dark flex items-center justify-center">
-        <div className="flex items-center space-x-3 text-white">
-          <RefreshCw className="w-6 h-6 animate-spin" />
-          <span className="text-lg">Chargement du dashboard...</span>
+      <div className="flex items-center justify-center py-20">
+        <div className="flex items-center gap-3 text-gray-400">
+          <RefreshCw className="w-5 h-5 animate-spin" />
+          <span className="text-sm">Chargement des commandes…</span>
         </div>
       </div>
     );
   }
 
+  const ORDER_TABS = [
+    { id: 'buy',      label: 'Achats',     count: buyOrders.length,      Icon: ShoppingCart },
+    { id: 'sell',     label: 'Ventes',     count: sellOrders.length,     Icon: TrendingDown },
+    { id: 'transfer', label: 'Transferts', count: transferOrders.length, Icon: Send },
+    { id: 'trash',    label: 'Corbeille',  count: trashedOrders.length,  Icon: Trash2, danger: true },
+  ];
+
   return (
-    <div className="min-h-screen bg-terex-dark p-3 sm:p-6 space-y-4 sm:space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2">
-        <div>
-          <p className="text-gray-500 text-xs font-medium uppercase tracking-widest mb-1">Administration</p>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Gestion des commandes</h1>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            onClick={() => exportOrdersCSV(orders)}
-            variant="outline"
-            size="sm"
-            className="border-terex-gray text-gray-300 hover:bg-terex-gray/40 text-xs"
-          >
-            <Download className="w-3.5 h-3.5 mr-1" />
-            CSV
-          </Button>
-          <Button
-            onClick={() => exportOrdersPDF(orders)}
-            variant="outline"
-            size="sm"
-            className="border-terex-gray text-gray-300 hover:bg-terex-gray/40 text-xs"
-          >
-            <Download className="w-3.5 h-3.5 mr-1" />
-            PDF
-          </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive" size="sm" className="text-xs">
-                <Trash2 className="w-3.5 h-3.5 mr-1" />
-                Tout supprimer
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="bg-terex-darker border-terex-gray">
-              <AlertDialogHeader>
-                <AlertDialogTitle className="text-white flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-red-500" />
-                  Supprimer toutes les commandes ?
-                </AlertDialogTitle>
-                <AlertDialogDescription className="text-gray-400">
-                  Cette action est <strong className="text-red-400">irréversible</strong>. Toutes les commandes (achats, ventes, transferts) seront supprimées définitivement.
-                  <br /><br />
-                  Pensez à exporter vos données en CSV ou PDF avant de continuer.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className="bg-terex-gray text-white border-terex-gray">Annuler</AlertDialogCancel>
-                <AlertDialogAction
-                  className="bg-red-600 hover:bg-red-700 text-white"
-                  onClick={async () => { await purgeAllOrders(); }}
-                >
-                  Supprimer tout
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+      {/* Toolbar */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'flex-end' }}>
+        <button onClick={() => exportOrdersCSV(orders)} style={toolBtn}>
+          <Download size={14} /> CSV
+        </button>
+        <button onClick={() => exportOrdersPDF(orders)} style={toolBtn}>
+          <Download size={14} /> PDF
+        </button>
+        <button onClick={refreshOrders} style={toolBtn}>
+          <RefreshCw size={14} /> Actualiser
+        </button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <button style={{ ...toolBtn, color: '#f87171', borderColor: 'rgba(248,113,113,0.25)' }}>
+              <Trash2 size={14} /> Tout supprimer
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)]">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-white flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-red-500" />
+                Supprimer toutes les commandes ?
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-gray-400">
+                Cette action est <strong className="text-red-400">irréversible</strong>. Toutes les commandes (achats, ventes, transferts) seront supprimées définitivement.
+                <br /><br />
+                Pensez à exporter vos données en CSV ou PDF avant de continuer.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-[#2d2d2d] text-white border-[rgba(255,255,255,0.07)] hover:bg-[#2d2d2d]">Annuler</AlertDialogCancel>
+              <AlertDialogAction className="bg-red-600 hover:bg-red-700 text-white" onClick={async () => { await purgeAllOrders(); }}>
+                Supprimer tout
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-3 gap-3">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
         {[
-          { label: 'Commandes actives', value: activeOrders.length,                                          Icon: ShoppingCart },
-          { label: 'Clients actifs',    value: new Set(activeOrders.map(o => o.user_id)).size,              Icon: Users        },
-          { label: 'En attente',        value: activeOrders.filter(o => o.status === 'pending').length,     Icon: RefreshCw    },
+          { label: 'Commandes actives', value: activeOrders.length,                                      Icon: ShoppingCart },
+          { label: 'Clients actifs',    value: new Set(activeOrders.map(o => o.user_id)).size,           Icon: Users        },
+          { label: 'En attente',        value: activeOrders.filter(o => o.status === 'pending').length,  Icon: RefreshCw    },
         ].map(({ label, value, Icon }) => (
-          <Card key={label} className="bg-terex-darker border-terex-gray/50">
-            <CardContent className="p-3 sm:p-5">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/5 rounded-xl flex-shrink-0">
-                  <Icon className="w-4 h-4 text-gray-400" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-gray-500 text-xs truncate mb-0.5">{label}</p>
-                  <p className="text-white text-xl font-bold">{value}</p>
-                </div>
+          <div key={label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ width: '38px', height: '38px', borderRadius: '11px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Icon className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.7)' }} />
               </div>
-            </CardContent>
-          </Card>
+              <div style={{ minWidth: 0 }}>
+                <p style={{ color: '#6b7280', fontSize: '11px', margin: '0 0 2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</p>
+                <p style={{ color: '#fff', fontSize: '22px', fontWeight: 700, margin: 0 }}>{value}</p>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
 
       {/* Search */}
-      <Card className="bg-terex-darker border-terex-gray/50">
-        <CardContent className="p-3 sm:p-6">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-terex-accent/60 w-4 h-4 sm:w-5 sm:h-5" />
-              <Input
-                placeholder="Rechercher par ID, adresse..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 sm:pl-12 bg-terex-gray/50 border-terex-gray/50 text-white placeholder-terex-accent/40 focus:border-terex-accent text-sm sm:text-base h-10 sm:h-auto"
-              />
-            </div>
-            <Button
-              onClick={refreshOrders}
-              variant="outline"
-              size="sm"
-              className="border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white text-xs sm:text-sm px-3 py-2 h-10 sm:h-auto"
-            >
-              <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-              Actualiser
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div style={{ position: 'relative' }}>
+        <Search size={17} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.35)' }} />
+        <input
+          placeholder="Rechercher par ID, adresse, destinataire…"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '13px 16px 13px 42px', color: '#fff', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
+        />
+      </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
-        <div className="bg-terex-darker rounded-lg p-1 sm:p-2 border border-terex-gray/50 overflow-x-auto">
-          <TabsList className="bg-transparent w-full grid grid-cols-4 gap-1 sm:gap-2 min-w-max">
-            <TabsTrigger value="buy" className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap">
-              <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
-              <span className="hidden sm:inline">Achats ({buyOrders.length})</span>
-              <span className="sm:hidden">Achats</span>
-            </TabsTrigger>
-            <TabsTrigger value="sell" className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap">
-              <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
-              <span className="hidden sm:inline">Ventes ({sellOrders.length})</span>
-              <span className="sm:hidden">Ventes</span>
-            </TabsTrigger>
-            <TabsTrigger value="transfer" className="data-[state=active]:bg-terex-accent data-[state=active]:text-white text-terex-accent/70 border border-transparent data-[state=active]:border-terex-accent/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap">
-              <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
-              <span className="hidden sm:inline">Transferts ({transferOrders.length})</span>
-              <span className="sm:hidden">Transferts</span>
-            </TabsTrigger>
-            <TabsTrigger value="trash" className="data-[state=active]:bg-red-600 data-[state=active]:text-white text-red-400 border border-transparent data-[state=active]:border-red-500/50 rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 whitespace-nowrap">
-              <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
-              <span className="hidden sm:inline">Corbeille ({trashedOrders.length})</span>
-              <span className="sm:hidden">Corbeille</span>
-            </TabsTrigger>
-          </TabsList>
-        </div>
+      {/* Tabs pills */}
+      <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px', scrollbarWidth: 'none' }}>
+        {ORDER_TABS.map(({ id, label, count, Icon, danger }) => {
+          const isOn = id === activeTab;
+          const onColor = danger ? '#ef4444' : '#ffffff';
+          return (
+            <button key={id} onClick={() => setActiveTab(id)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '7px', flexShrink: 0,
+                padding: '9px 14px', borderRadius: '11px', cursor: 'pointer', whiteSpace: 'nowrap',
+                background: isOn ? onColor : CARD,
+                border: `1px solid ${isOn ? onColor : BORDER}`,
+                color: isOn ? '#141414' : (danger ? '#f87171' : '#9ca3af'),
+                fontSize: '13px', fontWeight: 600, transition: 'all 0.15s ease',
+              }}>
+              <Icon size={15} />
+              {label}
+              <span style={{ fontSize: '11px', fontWeight: 700, padding: '1px 7px', borderRadius: '999px', background: isOn ? 'rgba(0,0,0,0.10)' : 'rgba(255,255,255,0.06)', color: isOn ? '#141414' : 'rgba(255,255,255,0.6)' }}>{count}</span>
+            </button>
+          );
+        })}
+      </div>
 
-        <TabsContent value="buy">
-          <BuyOrdersTable orders={filterOrders(buyOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} />
-        </TabsContent>
-        <TabsContent value="sell">
-          <SellOrdersTable orders={filterOrders(sellOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} />
-        </TabsContent>
-        <TabsContent value="transfer">
-          <TransferOrdersTable orders={filterOrders(transferOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} />
-        </TabsContent>
-        <TabsContent value="trash">
-          <TrashOrdersTable orders={filterOrders(trashedOrders)} onRestoreFromTrash={restoreFromTrash} onDeletePermanently={deletePermanently} />
-        </TabsContent>
-      </Tabs>
+      {/* Tab content */}
+      <div>
+        {activeTab === 'buy' && <BuyOrdersTable orders={filterOrders(buyOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} />}
+        {activeTab === 'sell' && <SellOrdersTable orders={filterOrders(sellOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} />}
+        {activeTab === 'transfer' && <TransferOrdersTable orders={filterOrders(transferOrders)} onStatusUpdate={updateOrderStatus} onMoveToTrash={moveToTrash} />}
+        {activeTab === 'trash' && <TrashOrdersTable orders={filterOrders(trashedOrders)} onRestoreFromTrash={restoreFromTrash} onDeletePermanently={deletePermanently} />}
+      </div>
     </div>
   );
 }
+
+const CARD = '#1e1e1e';
+const BORDER = 'rgba(255,255,255,0.07)';
+const ICON_BG = 'rgba(255,255,255,0.06)';
+
+const toolBtn: React.CSSProperties = {
+  display: 'flex', alignItems: 'center', gap: '6px',
+  padding: '8px 14px', borderRadius: '10px', cursor: 'pointer',
+  background: '#2d2d2d', border: '1px solid rgba(255,255,255,0.07)',
+  color: '#d1d5db', fontSize: '12.5px', fontWeight: 600,
+};

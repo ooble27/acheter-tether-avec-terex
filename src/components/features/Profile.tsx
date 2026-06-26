@@ -7,6 +7,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useUserRole } from '@/hooks/useUserRole';
+import { useNavigate } from 'react-router-dom';
 import { FAQ } from './FAQ';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -57,6 +59,8 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   const { profile, updateProfile } = useUserProfile();
   const { kycData } = useKYC();
   const isMobile = useIsMobile();
+  const { isAdmin, isKYCReviewer } = useUserRole();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: '', phone: '', country: '', language: 'fr' });
 
   // Le <main> du Dashboard applique un padding-top (pt-16 en PWA mobile, etc.).
@@ -670,6 +674,26 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             </div>
           </div>
         ))}
+
+        {/* Administration — visible uniquement pour les admins / reviewers */}
+        {isKYCReviewer() && (
+          <div>
+            <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>Administration</p>
+            <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
+              <button onClick={() => navigate('/admin')}
+                style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Shield size={18} color="rgba(255,255,255,0.7)" />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <p style={{ color: '#fff', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>Portail Administrateur</p>
+                  <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>{isAdmin() ? 'Commandes, KYC, comptabilité…' : 'Commandes et vérifications'}</p>
+                </div>
+                <ChevronRight size={16} color="#4b5563" />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Logout */}
         <div>
