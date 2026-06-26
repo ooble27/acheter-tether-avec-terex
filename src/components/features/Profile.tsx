@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { FAQ } from './FAQ';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -55,7 +56,19 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   const { user: authUser } = useAuth();
   const { profile, updateProfile } = useUserProfile();
   const { kycData } = useKYC();
+  const isMobile = useIsMobile();
   const [formData, setFormData] = useState({ name: '', phone: '', country: '', language: 'fr' });
+
+  // Le <main> du Dashboard applique un padding-top (pt-16 en PWA mobile, etc.).
+  // On annule ce décalage sur les sous-pages pour que l'en-tête « retour »
+  // soit collé tout en haut → sticky sans aucun mouvement au scroll.
+  const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as any).standalone ||
+    document.referrer.includes('android-app://');
+  const mainTopPad = !isMobile ? 24 : (isPWA ? 64 : 16);
+  const subPageStyle: React.CSSProperties = {
+    minHeight: '100vh', background: BG, paddingBottom: '100px', marginTop: `-${mainTopPad}px`,
+  };
 
   useEffect(() => {
     setFormData({
@@ -113,7 +126,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   // ── Sub-section header ───────────────────────────────────────────────────
 
   const SubHeader = ({ title }: { title: string }) => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '4px 20px 16px', position: 'sticky', top: 0, zIndex: 10, background: BG }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: 'calc(env(safe-area-inset-top, 0px) + 14px) 20px 14px', position: 'sticky', top: 0, zIndex: 20, background: BG }}>
       <button onClick={() => { setSection(null); setIsEditing(false); }}
         style={{ width: '36px', height: '36px', borderRadius: '50%', background: ICON_BG, border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
         <ArrowLeft size={16} color="#fff" />
@@ -136,7 +149,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
 
   if (section === 'informations') {
     return (
-      <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
+      <div style={subPageStyle}>
         <SubHeader title="Informations personnelles" />
         <div style={{ padding: '0 20px' }}>
           {!isEditing ? (
@@ -209,7 +222,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
 
   if (section === 'securite') {
     return (
-      <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
+      <div style={subPageStyle}>
         <SubHeader title="Sécurité" />
         <div style={{ padding: '20px' }}>
           {/* KYC status */}
@@ -318,7 +331,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
 
   if (section === 'activite') {
     return (
-      <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
+      <div style={subPageStyle}>
         <SubHeader title="Activité" />
         <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {[
@@ -345,7 +358,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
 
   if (section === 'preferences') {
     return (
-      <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
+      <div style={subPageStyle}>
         <SubHeader title="Préférences" />
         <div style={{ padding: '20px' }}>
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', overflow: 'hidden' }}>
@@ -377,7 +390,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
     const referralCode = authUser?.id ? `TEREX-${authUser.id.slice(0, 8).toUpperCase()}` : 'TEREX-XXXXXX';
     const referralLink = `https://terangaexchange.com/auth?ref=${referralCode}`;
     return (
-      <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
+      <div style={subPageStyle}>
         <SubHeader title="Parrainage" />
         <div style={{ padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '480px', margin: '0 auto' }}>
           {/* Hero */}
@@ -470,7 +483,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
       { label: 'Email',     bg: BTN,       textColor: '#fff', url: `mailto:?subject=${encodeURIComponent('Découvrez Terex')}&body=${encodedText}%20${encodedUrl}` },
     ];
     return (
-      <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
+      <div style={subPageStyle}>
         <SubHeader title="Partager l'App" />
         <div style={{ padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '480px', margin: '0 auto' }}>
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '24px', textAlign: 'center' }}>
@@ -551,7 +564,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
       { label: 'Facebook', desc: '/teraborange', IconEl: FBIcon, action: () => window.open('https://www.facebook.com/teraborange', '_blank') },
     ];
     return (
-      <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
+      <div style={subPageStyle}>
         <SubHeader title="Nous contacter" />
         <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '480px', margin: '0 auto' }}>
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '20px 24px', textAlign: 'center' }}>
@@ -582,7 +595,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
 
   if (section === 'faq') {
     return (
-      <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
+      <div style={subPageStyle}>
         <SubHeader title="FAQ" />
         <FAQ onNavigate={onNavigate} />
       </div>
@@ -618,7 +631,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
+    <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px', position: 'relative' }}>
 
       {/* Avatar hero */}
       <div style={{ padding: '48px 24px 32px' }}>
