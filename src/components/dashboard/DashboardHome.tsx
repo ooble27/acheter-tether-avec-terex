@@ -1,4 +1,4 @@
-import { ArrowUpRight, Coins, Banknote, Send, Handshake, TrendingUp, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, Coins, Banknote, Send, Handshake } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
 import { useTerexRates } from '@/hooks/useTerexRates';
@@ -13,40 +13,14 @@ const ACCENT = '#3B968F';
 const ACCENT_LIGHT = '#4BA89F';
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
+const ICON_BG = 'rgba(255,255,255,0.06)';
+const ICON_COLOR = 'rgba(255,255,255,0.85)';
 
 const quickActions = [
-  {
-    id: 'buy',
-    label: 'Acheter',
-    icon: Coins,
-    bg: 'linear-gradient(135deg, #1a3330 0%, #1e3d39 100%)',
-    iconBg: 'rgba(59,150,143,0.2)',
-    iconColor: ACCENT_LIGHT,
-  },
-  {
-    id: 'sell',
-    label: 'Vendre',
-    icon: Banknote,
-    bg: 'linear-gradient(135deg, #1f1a2e 0%, #261f38 100%)',
-    iconBg: 'rgba(139,92,246,0.18)',
-    iconColor: '#a78bfa',
-  },
-  {
-    id: 'transfer',
-    label: 'Virement',
-    icon: Send,
-    bg: 'linear-gradient(135deg, #1a2535 0%, #1e2d40 100%)',
-    iconBg: 'rgba(96,165,250,0.18)',
-    iconColor: '#60a5fa',
-  },
-  {
-    id: 'otc',
-    label: 'OTC',
-    icon: Handshake,
-    bg: 'linear-gradient(135deg, #2a1f1a 0%, #35261e 100%)',
-    iconBg: 'rgba(251,146,60,0.18)',
-    iconColor: '#fb923c',
-  },
+  { id: 'buy',      label: 'Acheter',  icon: Coins,    sub: 'Achat rapide'   },
+  { id: 'sell',     label: 'Vendre',   icon: Banknote, sub: 'Vente rapide'   },
+  { id: 'transfer', label: 'Virement', icon: Send,     sub: 'International'  },
+  { id: 'otc',      label: 'OTC',      icon: Handshake,sub: 'Gros volumes'   },
 ];
 
 function getGreeting() {
@@ -59,7 +33,7 @@ function getGreeting() {
 
 export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   const isMobile = useIsMobile();
-  const { terexRateCfa } = useTerexRates(30);
+  const { terexRateCfa } = useTerexRates(2);
 
   const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
     (window.navigator as any).standalone ||
@@ -114,25 +88,23 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
         <div style={{ padding: '4px 20px 0' }}>
           <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 12px' }}>Actions rapides</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            {quickActions.map(({ id, label, icon: Icon, bg, iconBg, iconColor }) => (
+            {quickActions.map(({ id, label, icon: Icon, sub }) => (
               <button
                 key={id}
                 onClick={() => onNavigate?.(id)}
-                style={{ background: bg, borderRadius: '18px', border: `1px solid rgba(255,255,255,0.06)`, padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: '12px', cursor: 'pointer', textAlign: 'left', transition: 'transform 0.15s ease', outline: 'none', WebkitTapHighlightColor: 'transparent' }}
+                style={{ background: CARD, borderRadius: '18px', border: `1px solid ${BORDER}`, padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: '12px', cursor: 'pointer', textAlign: 'left', transition: 'transform 0.15s ease', outline: 'none', WebkitTapHighlightColor: 'transparent' }}
                 onTouchStart={e => (e.currentTarget.style.transform = 'scale(0.97)')}
                 onTouchEnd={e => (e.currentTarget.style.transform = 'scale(1)')}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Icon size={20} color={iconColor} strokeWidth={1.8} />
+                  <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Icon size={20} color={ICON_COLOR} strokeWidth={1.8} />
                   </div>
-                  <ArrowUpRight size={14} color="rgba(255,255,255,0.25)" />
+                  <ArrowUpRight size={14} color="rgba(255,255,255,0.2)" />
                 </div>
                 <div>
                   <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 2px' }}>{label}</p>
-                  <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '11px', margin: 0 }}>
-                    {id === 'buy' ? 'Achat rapide' : id === 'sell' ? 'Vente rapide' : id === 'transfer' ? 'International' : 'Gros volumes'}
-                  </p>
+                  <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '11px', margin: 0 }}>{sub}</p>
                 </div>
               </button>
             ))}
@@ -175,16 +147,16 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
         <div>
           <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 14px' }}>Actions rapides</p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px' }}>
-            {quickActions.map(({ id, label, icon: Icon, bg, iconBg, iconColor }) => (
+            {quickActions.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
                 onClick={() => onNavigate?.(id)}
-                style={{ background: bg, borderRadius: '20px', border: `1px solid rgba(255,255,255,0.06)`, padding: '20px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', cursor: 'pointer', transition: 'transform 0.15s ease, box-shadow 0.15s ease', outline: 'none' }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.3)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                style={{ background: CARD, borderRadius: '20px', border: `1px solid ${BORDER}`, padding: '20px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', cursor: 'pointer', transition: 'transform 0.15s ease, background 0.15s ease', outline: 'none' }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.background = '#252525'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = CARD; }}
               >
-                <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Icon size={22} color={iconColor} strokeWidth={1.8} />
+                <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Icon size={22} color={ICON_COLOR} strokeWidth={1.8} />
                 </div>
                 <p style={{ color: '#fff', fontSize: '13px', fontWeight: 600, margin: 0, textAlign: 'center' }}>{label}</p>
               </button>
