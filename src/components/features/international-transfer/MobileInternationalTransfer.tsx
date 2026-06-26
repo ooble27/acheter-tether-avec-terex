@@ -1,17 +1,97 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useInternationalTransfers } from '@/hooks/useInternationalTransfers';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useCryptoRates } from '@/hooks/useCryptoRates';
 import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
-import { ArrowRight, ArrowLeft, Check, Send, User, CreditCard, Smartphone, Wallet, Building2, Globe } from 'lucide-react';
+import { ArrowLeft, Check, Send, Globe } from 'lucide-react';
 import { TransferPending } from './TransferPending';
 import { KYCPage } from '../KYCPage';
+
+const CARD: React.CSSProperties = {
+  background: '#1e1e1e',
+  border: '1px solid rgba(255,255,255,0.07)',
+  borderRadius: '20px',
+  overflow: 'hidden',
+};
+const BORDER = 'rgba(255,255,255,0.07)';
+const BTN = '#2d2d2d';
+const SEL_BG = 'rgba(255,255,255,0.06)';
+const SEL_BORDER = 'rgba(255,255,255,0.18)';
+
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  background: 'rgba(255,255,255,0.04)',
+  border: `1px solid ${BORDER}`,
+  borderRadius: '12px',
+  padding: '13px 16px',
+  color: '#fff',
+  fontSize: '15px',
+  outline: 'none',
+  boxSizing: 'border-box',
+};
+
+const labelStyle: React.CSSProperties = {
+  display: 'block',
+  fontSize: '12px',
+  color: 'rgba(255,255,255,0.45)',
+  marginBottom: '8px',
+  letterSpacing: '0.04em',
+};
+
+function ContinueBtn({ onClick, disabled, children }: { onClick: () => void; disabled?: boolean; children?: React.ReactNode }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '16px 20px 28px' }}>
+      <button
+        onClick={onClick}
+        disabled={disabled}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          background: disabled ? 'rgba(255,255,255,0.04)' : BTN,
+          borderRadius: '16px',
+          border: `1px solid rgba(255,255,255,${disabled ? '0.05' : '0.10'})`,
+          padding: '13px 22px',
+          color: disabled ? '#6b7280' : '#fff',
+          fontSize: '14px',
+          fontWeight: 600,
+          cursor: disabled ? 'not-allowed' : 'pointer',
+          transition: 'opacity 0.15s',
+        }}
+      >
+        {children ?? <><Send size={17} strokeWidth={2} /> Continuer</>}
+      </button>
+    </div>
+  );
+}
+
+function ConfirmBtn({ onClick, disabled, loading }: { onClick: () => void; disabled?: boolean; loading?: boolean }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '16px 20px 28px' }}>
+      <button
+        onClick={onClick}
+        disabled={disabled || loading}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          background: disabled || loading ? 'rgba(255,255,255,0.08)' : '#ffffff',
+          borderRadius: '16px',
+          border: 'none',
+          padding: '13px 22px',
+          color: disabled || loading ? '#6b7280' : '#141414',
+          fontSize: '14px',
+          fontWeight: 700,
+          cursor: disabled || loading ? 'not-allowed' : 'pointer',
+        }}
+      >
+        <Send size={17} strokeWidth={2} />
+        {loading ? 'Traitement...' : 'Confirmer le transfert'}
+      </button>
+    </div>
+  );
+}
 
 const PAYMENT_LOGOS = {
   interac: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Interac_logo.svg/2560px-Interac_logo.svg.png',
@@ -43,25 +123,17 @@ export function MobileInternationalTransfer() {
   const { usdtToCfa, usdtToCad } = useCryptoRates();
   const { isAuthorized, kycStatus } = useTransactionAuthorization();
 
-  // Calcul du taux CAD vers CFA via USD
   const cadToUsd = usdtToCad ? (1 / usdtToCad) : 0.74;
   const usdToCfa = usdtToCfa || 600;
   const exchangeRate = Math.round(cadToUsd * usdToCfa * 100) / 100;
 
-  // Calcul du montant à recevoir avec déduction automatique des frais
   const calculateReceiveAmount = () => {
     if (!sendAmount) return '0.00';
-    
     const baseAmount = parseFloat(sendAmount) * exchangeRate;
-    
     if (receiveMethod === 'mobile') {
-      if (provider === 'wave') {
-        return (baseAmount * 0.99).toFixed(2);
-      } else if (provider === 'orange') {
-        return (baseAmount * 0.992).toFixed(2);
-      }
+      if (provider === 'wave') return (baseAmount * 0.99).toFixed(2);
+      if (provider === 'orange') return (baseAmount * 0.992).toFixed(2);
     }
-    
     return baseAmount.toFixed(2);
   };
 
@@ -100,14 +172,11 @@ export function MobileInternationalTransfer() {
   };
 
   const handleConfirm = async () => {
-    // Vérifier KYC avant de créer la transaction
     if (!isAuthorized) {
       setShowKYCPage(true);
       return;
     }
-    
     setLoading(true);
-    
     const transferData = {
       amount: parseFloat(sendAmount),
       from_currency: 'CAD',
@@ -123,13 +192,11 @@ export function MobileInternationalTransfer() {
       recipient_email: recipientEmail,
       payment_method: paymentMethod,
       receive_method: receiveMethod,
-      provider: provider,
+      provider,
       status: 'pending'
     };
-
     const result = await createTransfer(transferData);
     setLoading(false);
-    
     if (result) {
       setCreatedTransfer(result);
       setShowPending(true);
@@ -153,367 +220,344 @@ export function MobileInternationalTransfer() {
     setCreatedTransfer(null);
   };
 
-  if (showKYCPage) {
-    return <KYCPage onBack={() => setShowKYCPage(false)} />;
+  if (showKYCPage) return <KYCPage onBack={() => setShowKYCPage(false)} />;
+  if (showPending && createdTransfer) {
+    return <TransferPending transfer={createdTransfer} onBack={handleBackToDashboard} />;
   }
 
   const countries = [
     { code: 'SN', name: 'Sénégal', flag: '🇸🇳' },
     { code: 'ML', name: 'Mali', flag: '🇲🇱' },
     { code: 'BF', name: 'Burkina Faso', flag: '🇧🇫' },
-    { code: 'CI', name: 'Côte d\'Ivoire', flag: '🇨🇮' },
+    { code: 'CI', name: "Côte d'Ivoire", flag: '🇨🇮' },
     { code: 'CM', name: 'Cameroun', flag: '🇨🇲' },
     { code: 'NE', name: 'Niger', flag: '🇳🇪' }
   ];
 
-  const progressPercent = 
-    step === 'amount' ? 25 :
-    step === 'recipient' ? 50 :
-    step === 'method' ? 75 : 100;
+  const stepNum = step === 'amount' ? 1 : step === 'recipient' ? 2 : step === 'method' ? 3 : 4;
+  const progressPercent = stepNum * 25;
+
+  const goBack = () => {
+    if (step === 'recipient') setStep('amount');
+    else if (step === 'method') setStep('recipient');
+    else if (step === 'confirm') setStep('method');
+  };
+
+  const row = (label: string, value: string) => (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${BORDER}` }}>
+      <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>{label}</span>
+      <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{value}</span>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-terex-dark">
+    <div style={{ minHeight: '100vh', background: '#141414', paddingBottom: '96px' }}>
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-terex-darker border-b border-terex-gray px-4 py-4">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-3">
-            <Send className="w-6 h-6 text-terex-accent" />
+      <div style={{ position: 'sticky', top: 0, zIndex: 10, background: '#141414', borderBottom: `1px solid ${BORDER}`, padding: '16px 20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+          {step !== 'amount' && (
+            <button
+              onClick={goBack}
+              style={{ padding: '8px', background: SEL_BG, borderRadius: '10px', border: 'none', cursor: 'pointer', color: '#fff', display: 'flex', alignItems: 'center' }}
+            >
+              <ArrowLeft size={18} />
+            </button>
+          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ width: '36px', height: '36px', background: SEL_BG, borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Send size={18} color="rgba(255,255,255,0.8)" />
+            </div>
             <div>
-              <h1 className="text-lg font-light text-white">Virement international</h1>
-              <p className="text-xs text-gray-400">
-                Étape {step === 'amount' ? '1' : step === 'recipient' ? '2' : step === 'method' ? '3' : '4'} sur 4
-              </p>
+              <div style={{ color: '#fff', fontSize: '16px', fontWeight: 500 }}>Virement international</div>
+              <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Étape {stepNum} sur 4</div>
             </div>
           </div>
-          {step !== 'amount' && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setStep(
-                step === 'recipient' ? 'amount' :
-                step === 'method' ? 'recipient' : 'method'
-              )}
-              className="text-terex-accent"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-          )}
         </div>
-        
         {/* Progress bar */}
-        <div className="w-full bg-terex-gray rounded-full h-1.5">
-          <div 
-            className="bg-terex-accent h-1.5 rounded-full transition-all duration-300"
-            style={{ width: `${progressPercent}%` }}
-          />
+        <div style={{ height: '2px', background: 'rgba(255,255,255,0.08)', borderRadius: '99px' }}>
+          <div style={{ height: '100%', width: `${progressPercent}%`, background: 'rgba(255,255,255,0.5)', borderRadius: '99px', transition: 'width 0.3s' }} />
         </div>
       </div>
 
-      {/* Content - Scrollable avec padding pour éviter le débordement */}
-      <div className="px-4 py-6 overflow-y-auto pb-24" style={{ maxHeight: 'calc(100vh - 100px)' }}>
+      <div style={{ padding: '20px 16px' }}>
         {/* Étape 1: Montant */}
         {step === 'amount' && (
-          <Card className="bg-terex-darker border-terex-gray">
-            <CardContent className="p-6 space-y-6">
-              <div className="text-center mb-4">
-                <Globe className="w-12 h-12 text-terex-accent mx-auto mb-3" />
-                <h2 className="text-xl font-light text-white mb-2">Montant à envoyer</h2>
-                <p className="text-sm text-gray-400">Combien souhaitez-vous envoyer ?</p>
+          <div style={CARD}>
+            <div style={{ padding: '24px 20px 0' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
+                <Globe size={20} color="rgba(255,255,255,0.6)" />
+                <span style={{ color: '#fff', fontSize: '15px', fontWeight: 500 }}>Montant à envoyer</span>
               </div>
 
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label className="text-gray-300 text-sm">Montant (CAD)</Label>
-                  <Input
-                    type="number"
-                    placeholder="Ex: 100"
-                    value={sendAmount}
-                    onChange={(e) => setSendAmount(e.target.value)}
-                    className="bg-terex-dark border-terex-gray text-white text-lg h-14"
-                  />
-                </div>
+              <div style={{ marginBottom: '16px' }}>
+                <label style={labelStyle}>Montant (CAD)</label>
+                <input
+                  type="number"
+                  placeholder="Ex: 100"
+                  value={sendAmount}
+                  onChange={(e) => setSendAmount(e.target.value)}
+                  style={{ ...inputStyle, fontSize: '20px', padding: '16px' }}
+                />
+              </div>
 
-                <div className="space-y-2">
-                  <Label className="text-gray-300 text-sm">Pays de destination</Label>
-                  <Select value={recipientCountry} onValueChange={setRecipientCountry}>
-                    <SelectTrigger className="bg-terex-dark border-terex-gray text-white h-14">
-                      <SelectValue placeholder="Sélectionner un pays" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-terex-darker border-terex-gray">
-                      {countries.map(country => (
-                        <SelectItem key={country.code} value={country.code} className="text-white">
-                          {country.flag} {country.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {sendAmount && (
-                  <div className="bg-terex-accent/10 border border-terex-accent/30 rounded-lg p-4 mt-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-400 text-sm">Le bénéficiaire recevra</span>
-                      <span className="text-2xl font-light text-terex-accent">{receiveAmount} CFA</span>
-                    </div>
-                    <div className="text-xs text-gray-400">
-                      Taux: 1 CAD = {exchangeRate} CFA
-                    </div>
-                  </div>
-                )}
-
-                <Button
-                  onClick={handleContinueToRecipient}
-                  className="w-full gradient-button text-white h-14 text-lg mt-6"
-                  disabled={!sendAmount || !recipientCountry}
+              <div style={{ marginBottom: '16px' }}>
+                <label style={labelStyle}>Pays de destination</label>
+                <select
+                  value={recipientCountry}
+                  onChange={(e) => setRecipientCountry(e.target.value)}
+                  style={{ ...inputStyle, appearance: 'none', WebkitAppearance: 'none' }}
                 >
-                  Continuer <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
+                  <option value="" disabled style={{ background: '#1e1e1e' }}>Sélectionner un pays</option>
+                  {countries.map(c => (
+                    <option key={c.code} value={c.code} style={{ background: '#1e1e1e' }}>{c.flag} {c.name}</option>
+                  ))}
+                </select>
               </div>
-            </CardContent>
-          </Card>
+
+              {sendAmount && (
+                <div style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '16px', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '12px' }}>Le bénéficiaire recevra</span>
+                    <span style={{ color: '#fff', fontSize: '20px', fontWeight: 500 }}>{receiveAmount} CFA</span>
+                  </div>
+                  <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: '11px' }}>Taux : 1 CAD = {exchangeRate} CFA</div>
+                </div>
+              )}
+            </div>
+
+            <ContinueBtn onClick={handleContinueToRecipient} disabled={!sendAmount || !recipientCountry} />
+          </div>
         )}
 
         {/* Étape 2: Bénéficiaire */}
         {step === 'recipient' && (
-          <Card className="bg-terex-darker border-terex-gray">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-white flex items-center gap-2 text-lg">
-                <User className="w-5 h-5" /> Informations du bénéficiaire
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label className="text-gray-300 text-sm">Prénom *</Label>
-                  <Input
+          <div style={CARD}>
+            <div style={{ padding: '24px 20px 0' }}>
+              <div style={{ color: '#fff', fontSize: '15px', fontWeight: 500, marginBottom: '20px' }}>Informations du bénéficiaire</div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+                <div>
+                  <label style={labelStyle}>Prénom *</label>
+                  <input
                     value={recipientFirstName}
                     onChange={(e) => setRecipientFirstName(e.target.value)}
-                    className="bg-terex-dark border-terex-gray text-white h-12"
+                    style={inputStyle}
+                    placeholder="Prénom"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-gray-300 text-sm">Nom *</Label>
-                  <Input
+                <div>
+                  <label style={labelStyle}>Nom *</label>
+                  <input
                     value={recipientLastName}
                     onChange={(e) => setRecipientLastName(e.target.value)}
-                    className="bg-terex-dark border-terex-gray text-white h-12"
+                    style={inputStyle}
+                    placeholder="Nom"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-gray-300 text-sm">Téléphone *</Label>
-                <Input
+              <div style={{ marginBottom: '16px' }}>
+                <label style={labelStyle}>Téléphone *</label>
+                <input
                   type="tel"
                   placeholder="+221 XX XXX XX XX"
                   value={recipientPhone}
                   onChange={(e) => setRecipientPhone(e.target.value)}
-                  className="bg-terex-dark border-terex-gray text-white h-12"
+                  style={inputStyle}
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-gray-300 text-sm">Email (optionnel)</Label>
-                <Input
+              <div style={{ marginBottom: '16px' }}>
+                <label style={labelStyle}>Email (optionnel)</label>
+                <input
                   type="email"
                   placeholder="email@exemple.com"
                   value={recipientEmail}
                   onChange={(e) => setRecipientEmail(e.target.value)}
-                  className="bg-terex-dark border-terex-gray text-white h-12"
+                  style={inputStyle}
                 />
               </div>
+            </div>
 
-              <Button
-                onClick={handleContinueToMethod}
-                className="w-full gradient-button text-white h-14 text-lg mt-4"
-                disabled={!recipientFirstName || !recipientLastName || !recipientPhone}
-              >
-                Continuer <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </CardContent>
-          </Card>
+            <ContinueBtn onClick={handleContinueToMethod} disabled={!recipientFirstName || !recipientLastName || !recipientPhone} />
+          </div>
         )}
 
         {/* Étape 3: Méthode */}
         {step === 'method' && (
-          <Card className="bg-terex-darker border-terex-gray">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-white flex items-center gap-2 text-lg">
-                <CreditCard className="w-5 h-5" /> Méthodes de paiement
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label className="text-gray-300 text-sm">Vous payez avec</Label>
-                <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                  <SelectTrigger className="bg-terex-dark border-terex-gray text-white h-14">
-                    <SelectValue placeholder="Choisir une méthode" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-terex-darker border-terex-gray">
-                    <SelectItem value="interac" className="text-white">
-                      <div className="flex items-center gap-3">
-                        <img src={PAYMENT_LOGOS.interac} alt="Interac" className="w-8 h-8 object-contain" />
-                        <span>Interac e-Transfer</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="bank" className="text-white">
-                      <div className="flex items-center gap-3">
-                        <Building2 className="w-5 h-5" />
-                        <span>Virement bancaire</span>
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+          <div style={CARD}>
+            <div style={{ padding: '24px 20px 0' }}>
+              <div style={{ color: '#fff', fontSize: '15px', fontWeight: 500, marginBottom: '20px' }}>Méthodes de paiement</div>
+
+              {/* Send method */}
+              <div style={{ marginBottom: '16px' }}>
+                <label style={labelStyle}>Vous payez avec</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {[
+                    { value: 'interac', label: 'Interac e-Transfer', logo: PAYMENT_LOGOS.interac },
+                    { value: 'bank', label: 'Virement bancaire', logo: null }
+                  ].map(m => (
+                    <button
+                      key={m.value}
+                      onClick={() => setPaymentMethod(m.value)}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '12px',
+                        background: paymentMethod === m.value ? SEL_BG : 'rgba(255,255,255,0.02)',
+                        border: `1px solid ${paymentMethod === m.value ? SEL_BORDER : BORDER}`,
+                        borderRadius: '12px', padding: '12px 14px',
+                        cursor: 'pointer', textAlign: 'left',
+                      }}
+                    >
+                      {m.logo ? (
+                        <img src={m.logo} alt={m.label} style={{ width: '32px', height: '20px', objectFit: 'contain' }} />
+                      ) : (
+                        <div style={{ width: '32px', height: '20px', background: SEL_BG, borderRadius: '6px' }} />
+                      )}
+                      <span style={{ color: '#fff', fontSize: '14px', flex: 1 }}>{m.label}</span>
+                      {paymentMethod === m.value && <Check size={15} color="rgba(255,255,255,0.8)" />}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-gray-300 text-sm">Le bénéficiaire reçoit via</Label>
-                <Select value={receiveMethod} onValueChange={setReceiveMethod}>
-                  <SelectTrigger className="bg-terex-dark border-terex-gray text-white h-14">
-                    <SelectValue placeholder="Choisir une méthode" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-terex-darker border-terex-gray">
-                    <SelectItem value="mobile" className="text-white">
-                      <div className="flex items-center gap-3">
-                        <Smartphone className="w-5 h-5" />
-                        <span>Mobile Money</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="bank" className="text-white">
-                      <div className="flex items-center gap-3">
-                        <Building2 className="w-5 h-5" />
-                        <span>Compte bancaire</span>
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+              {/* Receive method */}
+              <div style={{ marginBottom: '16px' }}>
+                <label style={labelStyle}>Le bénéficiaire reçoit via</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {[
+                    { value: 'mobile', label: 'Mobile Money' },
+                    { value: 'bank', label: 'Compte bancaire' }
+                  ].map(m => (
+                    <button
+                      key={m.value}
+                      onClick={() => setReceiveMethod(m.value)}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '12px',
+                        background: receiveMethod === m.value ? SEL_BG : 'rgba(255,255,255,0.02)',
+                        border: `1px solid ${receiveMethod === m.value ? SEL_BORDER : BORDER}`,
+                        borderRadius: '12px', padding: '12px 14px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <span style={{ color: '#fff', fontSize: '14px', flex: 1 }}>{m.label}</span>
+                      {receiveMethod === m.value && <Check size={15} color="rgba(255,255,255,0.8)" />}
+                    </button>
+                  ))}
+                </div>
               </div>
 
+              {/* Mobile Money provider */}
               {receiveMethod === 'mobile' && (
-                <div className="space-y-2">
-                  <Label className="text-gray-300 text-sm">Service Mobile Money</Label>
-                  <Select value={provider} onValueChange={setProvider}>
-                    <SelectTrigger className="bg-terex-dark border-terex-gray text-white h-14">
-                      <SelectValue placeholder="Sélectionner un service" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-terex-darker border-terex-gray">
-                      <SelectItem value="orange" className="text-white">
-                        <div className="flex items-center gap-3">
-                          <img src={PAYMENT_LOGOS.orange} alt="Orange Money" className="w-8 h-8 object-contain" />
-                          <span>Orange Money (0.8% frais)</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="wave" className="text-white">
-                        <div className="flex items-center gap-3">
-                          <img src={PAYMENT_LOGOS.wave} alt="Wave" className="w-8 h-8 object-contain rounded" />
-                          <span>Wave (1% frais)</span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="free" className="text-white">
-                        <div className="flex items-center gap-3">
-                          <Smartphone className="w-5 h-5 text-blue-400" />
-                          <span>Free Money</span>
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div style={{ marginBottom: '16px' }}>
+                  <label style={labelStyle}>Service Mobile Money</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+                    {[
+                      { value: 'orange', label: 'Orange', logo: PAYMENT_LOGOS.orange, fee: '0.8%' },
+                      { value: 'wave', label: 'Wave', logo: PAYMENT_LOGOS.wave, fee: '1%' },
+                      { value: 'free', label: 'Free', logo: null, fee: '' }
+                    ].map(p => (
+                      <button
+                        key={p.value}
+                        onClick={() => setProvider(p.value)}
+                        style={{
+                          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px',
+                          background: provider === p.value ? SEL_BG : 'rgba(255,255,255,0.02)',
+                          border: `1px solid ${provider === p.value ? SEL_BORDER : BORDER}`,
+                          borderRadius: '12px', padding: '12px 8px',
+                          cursor: 'pointer', position: 'relative',
+                        }}
+                      >
+                        {p.logo ? (
+                          <img src={p.logo} alt={p.label} style={{ width: '28px', height: '28px', objectFit: 'contain', borderRadius: '6px' }} />
+                        ) : (
+                          <div style={{ width: '28px', height: '28px', background: SEL_BG, borderRadius: '6px' }} />
+                        )}
+                        <span style={{ color: '#fff', fontSize: '12px', fontWeight: 500 }}>{p.label}</span>
+                        {p.fee && <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '10px' }}>{p.fee} frais</span>}
+                        {provider === p.value && (
+                          <div style={{ position: 'absolute', top: '6px', right: '6px' }}>
+                            <Check size={12} color="rgba(255,255,255,0.8)" />
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
 
+              {/* Bank details */}
               {receiveMethod === 'bank' && (
                 <>
-                  <div className="space-y-2">
-                    <Label className="text-gray-300 text-sm">Nom de la banque</Label>
-                    <Input
+                  <div style={{ marginBottom: '16px' }}>
+                    <label style={labelStyle}>Nom de la banque</label>
+                    <input
                       value={recipientBank}
                       onChange={(e) => setRecipientBank(e.target.value)}
                       placeholder="Ex: Ecobank"
-                      className="bg-terex-dark border-terex-gray text-white h-12"
+                      style={inputStyle}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-gray-300 text-sm">Numéro de compte</Label>
-                    <Input
+                  <div style={{ marginBottom: '16px' }}>
+                    <label style={labelStyle}>Numéro de compte</label>
+                    <input
                       value={recipientAccount}
                       onChange={(e) => setRecipientAccount(e.target.value)}
                       placeholder="Numéro de compte bancaire"
-                      className="bg-terex-dark border-terex-gray text-white h-12"
+                      style={inputStyle}
                     />
                   </div>
                 </>
               )}
+            </div>
 
-              <Button
-                onClick={handleContinueToConfirm}
-                className="w-full gradient-button text-white h-14 text-lg mt-4"
-                disabled={!paymentMethod || !receiveMethod || (receiveMethod === 'mobile' && !provider) || (receiveMethod === 'bank' && (!recipientAccount || !recipientBank))}
-              >
-                Continuer <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </CardContent>
-          </Card>
+            <ContinueBtn
+              onClick={handleContinueToConfirm}
+              disabled={
+                !paymentMethod || !receiveMethod ||
+                (receiveMethod === 'mobile' && !provider) ||
+                (receiveMethod === 'bank' && (!recipientAccount || !recipientBank))
+              }
+            />
+          </div>
         )}
 
         {/* Étape 4: Confirmation */}
         {step === 'confirm' && (
-          <Card className="bg-terex-darker border-terex-gray">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-white flex items-center gap-2 text-lg">
-                <Check className="w-5 h-5 text-green-400" /> Confirmation du transfert
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="bg-terex-dark rounded-lg p-4 space-y-3">
-                <h3 className="text-white font-light text-sm mb-3">Détails du transfert</h3>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Montant envoyé</span>
-                  <span className="text-white font-light">{sendAmount} CAD</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Montant reçu</span>
-                  <span className="text-terex-accent text-lg font-light">{receiveAmount} CFA</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Taux de change</span>
-                  <span className="text-white font-light">1 CAD = {exchangeRate} CFA</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Frais Terex</span>
-                  <span className="text-green-400 font-light">Gratuit 🎉</span>
+          <div style={CARD}>
+            <div style={{ padding: '24px 20px 0' }}>
+              <div style={{ color: '#fff', fontSize: '15px', fontWeight: 500, marginBottom: '20px' }}>Récapitulatif du transfert</div>
+
+              {/* Transfer details */}
+              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '4px 16px', marginBottom: '12px' }}>
+                <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: '11px', letterSpacing: '0.05em', padding: '10px 0 6px' }}>TRANSFERT</div>
+                {row('Montant envoyé', `${sendAmount} CAD`)}
+                {row('Montant reçu', `${receiveAmount} CFA`)}
+                {row('Taux de change', `1 CAD = ${exchangeRate} CFA`)}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0' }}>
+                  <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Frais Terex</span>
+                  <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', fontWeight: 500 }}>Gratuit 🎉</span>
                 </div>
               </div>
 
-              <div className="bg-terex-dark rounded-lg p-4 space-y-3">
-                <h3 className="text-white font-light text-sm mb-3">Bénéficiaire</h3>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Nom</span>
-                  <span className="text-white font-light">{recipientFirstName} {recipientLastName}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Téléphone</span>
-                  <span className="text-white font-light">{recipientPhone}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Pays</span>
-                  <span className="text-white font-light">{countries.find(c => c.code === recipientCountry)?.name}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Méthode de réception</span>
-                  <span className="text-white font-light">
-                    {receiveMethod === 'mobile' ? `${provider.charAt(0).toUpperCase() + provider.slice(1)} Money` : 'Virement bancaire'}
+              {/* Recipient details */}
+              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '4px 16px', marginBottom: '8px' }}>
+                <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: '11px', letterSpacing: '0.05em', padding: '10px 0 6px' }}>BÉNÉFICIAIRE</div>
+                {row('Nom', `${recipientFirstName} ${recipientLastName}`)}
+                {row('Téléphone', recipientPhone)}
+                {row('Pays', countries.find(c => c.code === recipientCountry)?.name ?? recipientCountry)}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0' }}>
+                  <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Méthode de réception</span>
+                  <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>
+                    {receiveMethod === 'mobile'
+                      ? `${provider.charAt(0).toUpperCase() + provider.slice(1)} Money`
+                      : 'Virement bancaire'}
                   </span>
                 </div>
               </div>
+            </div>
 
-              <Button
-                onClick={handleConfirm}
-                className="w-full gradient-button text-white h-14 text-lg mt-4"
-                disabled={loading}
-              >
-                {loading ? 'Traitement...' : 'Confirmer le transfert'} <Check className="ml-2 w-5 h-5" />
-              </Button>
-            </CardContent>
-          </Card>
+            <ConfirmBtn onClick={handleConfirm} loading={loading} />
+          </div>
         )}
       </div>
     </div>
