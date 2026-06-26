@@ -34,7 +34,7 @@ export function DesktopBottomNav({ activeSection, setActiveSection }: DesktopBot
           WebkitBackdropFilter: 'blur(24px)',
           borderRadius: '20px',
           border: '1px solid rgba(255,255,255,0.07)',
-          boxShadow: '0 12px 48px rgba(0,0,0,0.5)',
+          boxShadow: 'none',
           padding: '6px',
         }}
       >

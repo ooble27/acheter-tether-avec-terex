@@ -239,21 +239,21 @@ export function MobileSellUSDT() {
 
               {/* Blockchain networks */}
               {!useBinancePay && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '4px 0 0' }}>Réseau blockchain</p>
-                  {Object.entries(NETWORK_LOGOS).map(([net, logo]) => {
-                    const sel = network === net;
-                    return (
-                      <button key={net} onClick={() => setNetwork(net)}
-                        style={{ width: '100%', padding: '14px 16px', borderRadius: '14px', border: `1px solid ${sel ? SEL_BORDER : BORDER}`, background: sel ? SEL_BG : 'rgba(255,255,255,0.02)', cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'space-between', transition: 'all 0.15s' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                          <img src={logo} alt={net} style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
-                          <span style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>{net}</span>
-                        </div>
-                        {sel && <Check size={16} color="#fff" strokeWidth={2.5} />}
-                      </button>
-                    );
-                  })}
+                <div>
+                  <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '4px 0 10px' }}>Réseau blockchain</p>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                    {Object.entries(NETWORK_LOGOS).map(([net, logo]) => {
+                      const sel = network === net;
+                      return (
+                        <button key={net} onClick={() => setNetwork(net)}
+                          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px 8px 14px', borderRadius: '16px', border: `1px solid ${sel ? SEL_BORDER : 'rgba(255,255,255,0.12)'}`, background: sel ? SEL_BG : 'rgba(255,255,255,0.06)', cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', gap: '9px', position: 'relative', minHeight: '88px', transition: 'all 0.15s' }}>
+                          <img src={logo} alt={net} style={{ width: '38px', height: '38px', borderRadius: '50%' }} />
+                          <span style={{ color: '#fff', fontSize: '12px', fontWeight: 600, textAlign: 'center', lineHeight: 1.2 }}>{net}</span>
+                          {sel && <div style={{ position: 'absolute', top: '7px', right: '7px' }}><Check size={13} color="rgba(255,255,255,0.9)" strokeWidth={2.5} /></div>}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </div>

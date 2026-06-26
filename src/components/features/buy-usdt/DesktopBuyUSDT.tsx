@@ -355,21 +355,18 @@ export function DesktopBuyUSDT() {
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Destination</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Choisissez où vous voulez recevoir vos USDT</p>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {Object.entries(NETWORK_LOGOS).map(([net, logo]) => (
-                  <button key={net} onClick={() => setNetwork(net)}
-                    style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      padding: '12px 14px', borderRadius: '12px', border: `1px solid ${network === net ? SEL_BORDER : BORDER}`,
-                      background: network === net ? SEL_BG : 'rgba(255,255,255,0.02)', cursor: 'pointer',
-                    }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <img src={logo} alt={net} style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
-                      <span style={{ color: '#fff', fontSize: '14px', fontWeight: 400 }}>{net}</span>
-                    </div>
-                    {network === net && <Check size={16} color="rgba(255,255,255,0.8)" />}
-                  </button>
-                ))}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                {Object.entries(NETWORK_LOGOS).map(([net, logo]) => {
+                  const sel = network === net;
+                  return (
+                    <button key={net} onClick={() => setNetwork(net)}
+                      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px 8px 14px', borderRadius: '16px', border: `1px solid ${sel ? SEL_BORDER : 'rgba(255,255,255,0.12)'}`, background: sel ? SEL_BG : 'rgba(255,255,255,0.06)', cursor: 'pointer', outline: 'none', gap: '9px', position: 'relative', minHeight: '88px', transition: 'all 0.15s' }}>
+                      <img src={logo} alt={net} style={{ width: '38px', height: '38px', borderRadius: '50%' }} />
+                      <span style={{ color: '#fff', fontSize: '12px', fontWeight: 600, textAlign: 'center', lineHeight: 1.2 }}>{net}</span>
+                      {sel && <div style={{ position: 'absolute', top: '7px', right: '7px' }}><Check size={13} color="rgba(255,255,255,0.9)" strokeWidth={2.5} /></div>}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
