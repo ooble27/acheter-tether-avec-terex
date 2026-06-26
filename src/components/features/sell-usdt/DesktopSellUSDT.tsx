@@ -30,10 +30,13 @@ const NETWORK_LOGOS = {
   Aptos: 'https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png'
 };
 
+const MIN_SELL_USDT = 50;
+
 export function DesktopSellUSDT() {
   const [step, setStep] = useState<'amount' | 'network' | 'binance' | 'phone' | 'confirm' | 'instructions'>('amount');
   const [showKYCPage, setShowKYCPage] = useState(false);
-  const [usdtAmount, setUsdtAmount] = useState('');
+  const [inputCurrency, setInputCurrency] = useState<'USDT' | 'XOF'>('USDT');
+  const [rawAmount, setRawAmount] = useState('');
   const [paymentMethod] = useState<'mobile'>('mobile');
   const [currency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
@@ -48,11 +51,24 @@ export function DesktopSellUSDT() {
   const { terexBuyRateCfa } = useTerexRates(2);
   const { isAuthorized, kycStatus } = useTransactionAuthorization();
 
+  // Derived amounts based on input currency
+  const usdtAmount = inputCurrency === 'USDT'
+    ? rawAmount
+    : (rawAmount && terexBuyRateCfa > 0 ? (parseFloat(rawAmount) / terexBuyRateCfa).toFixed(2) : '');
   const fiatAmount = usdtAmount ? (parseFloat(usdtAmount) * terexBuyRateCfa).toFixed(2) : '0';
 
   const handleContinueToNetwork = () => {
-    if (!usdtAmount || parseFloat(usdtAmount) <= 0) {
+    const usdt = parseFloat(usdtAmount || '0');
+    if (!usdtAmount || usdt <= 0) {
       toast({ title: "Erreur", description: "Veuillez entrer un montant valide", variant: "destructive" });
+      return;
+    }
+    if (usdt < MIN_SELL_USDT) {
+      toast({
+        title: "Montant trop faible",
+        description: `Le montant minimum est ${MIN_SELL_USDT} USDT`,
+        variant: "destructive"
+      });
       return;
     }
     setStep('network');
@@ -141,26 +157,58 @@ export function DesktopSellUSDT() {
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label className="text-white text-sm font-light">Montant USDT</Label>
+                <div className="flex items-center justify-between">
+                  <Label className="text-white text-sm font-light">Montant</Label>
+                  {/* Currency toggle */}
+                  <div className="flex items-center bg-terex-gray rounded-lg p-0.5">
+                    <button
+                      type="button"
+                      onClick={() => { setInputCurrency('USDT'); setRawAmount(''); }}
+                      className={`px-3 py-1 text-xs font-light rounded-md transition-all ${inputCurrency === 'USDT' ? 'bg-terex-accent text-black' : 'text-gray-400 hover:text-white'}`}
+                    >
+                      USDT
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setInputCurrency('XOF'); setRawAmount(''); }}
+                      className={`px-3 py-1 text-xs font-light rounded-md transition-all ${inputCurrency === 'XOF' ? 'bg-terex-accent text-black' : 'text-gray-400 hover:text-white'}`}
+                    >
+                      XOF
+                    </button>
+                  </div>
+                </div>
                 <div className="relative">
                   <Input
                     type="number"
                     placeholder="0"
-                    value={usdtAmount}
-                    onChange={(e) => setUsdtAmount(e.target.value)}
+                    value={rawAmount}
+                    onChange={(e) => setRawAmount(e.target.value)}
                     className="bg-terex-gray/50 border-terex-gray text-white text-3xl font-light h-16 text-center px-20"
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                    <span className="text-gray-400 text-lg font-light">USDT</span>
-                    <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-5 h-5" />
+                    {inputCurrency === 'USDT' ? (
+                      <>
+                        <span className="text-gray-400 text-lg font-light">USDT</span>
+                        <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-5 h-5" />
+                      </>
+                    ) : (
+                      <span className="text-gray-400 text-lg font-light">XOF</span>
+                    )}
                   </span>
                 </div>
+                <p className="text-xs text-gray-500 font-light">Minimum: {MIN_SELL_USDT} USDT</p>
               </div>
 
               <div className="bg-terex-gray/30 rounded-lg p-4 space-y-2">
+                {inputCurrency === 'XOF' && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-400 text-sm font-light">Vous vendez</span>
+                    <span className="text-white font-light">{usdtAmount || '0'} USDT</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-gray-400 text-sm font-light">Vous recevez</span>
-                  <span className="text-white font-light">{fiatAmount} {currency}</span>
+                  <span className="text-white font-light">{inputCurrency === 'USDT' ? fiatAmount : rawAmount || '0'} {currency}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400 text-sm font-light">Taux</span>
@@ -169,7 +217,7 @@ export function DesktopSellUSDT() {
               </div>
             </div>
 
-            <Button 
+            <Button
               onClick={handleContinueToNetwork}
               className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
             >

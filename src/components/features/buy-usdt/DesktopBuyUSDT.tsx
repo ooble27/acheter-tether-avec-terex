@@ -26,7 +26,8 @@ const NETWORK_LOGOS = {
 export function DesktopBuyUSDT() {
   const [step, setStep] = useState<'amount' | 'network' | 'address' | 'binance' | 'confirm'>('amount');
   const [showKYCPage, setShowKYCPage] = useState(false);
-  const [fiatAmount, setFiatAmount] = useState('');
+  const [inputCurrency, setInputCurrency] = useState<'XOF' | 'USDT'>('XOF');
+  const [rawAmount, setRawAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'mobile'>('mobile');
   const [currency, setCurrency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
@@ -45,7 +46,12 @@ export function DesktopBuyUSDT() {
 
   const exchangeRate = currency === 'CFA' ? terexRateCfa : terexRateCad;
   const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
-  const numericAmount = parseFloat(fiatAmount) || 0;
+
+  // Derived fiat and usdt amounts based on input currency
+  const fiatAmount = inputCurrency === 'XOF'
+    ? rawAmount
+    : (rawAmount && exchangeRate > 0 ? (parseFloat(rawAmount) * exchangeRate).toFixed(0) : '');
+  const numericFiat = parseFloat(fiatAmount || '0') || 0;
 
   // Pre-fill from pending Hero buy order
   useEffect(() => {
@@ -54,7 +60,7 @@ export function DesktopBuyUSDT() {
       try {
         const data = JSON.parse(pending);
         if (data.timestamp && Date.now() - data.timestamp < 30 * 60 * 1000) {
-          if (data.amount) setFiatAmount(data.amount);
+          if (data.amount) { setRawAmount(data.amount); setInputCurrency('XOF'); }
           if (data.network) setNetwork(data.network);
           if (data.walletAddress) setWalletAddress(data.walletAddress);
           if (data.walletAddress) {
@@ -67,29 +73,30 @@ export function DesktopBuyUSDT() {
       localStorage.removeItem('pendingBuyOrder');
     }
   }, []);
-  const usdtAmount = fiatAmount && numericAmount >= (limits?.min || 0) 
-    ? (numericAmount / exchangeRate).toFixed(2) 
-    : '0';
+
+  const usdtAmount = inputCurrency === 'USDT'
+    ? rawAmount
+    : (fiatAmount && numericFiat >= (limits?.min || 0) ? (numericFiat / exchangeRate).toFixed(2) : '0');
 
   const isBinanceNetwork = network === 'BINANCE';
-  const limitMessage = getLimitMessage(fiatAmount, currency);
+  const limitMessage = getLimitMessage(fiatAmount || '0', currency);
 
   const handleContinueToNetwork = () => {
-    const numericAmount = parseFloat(fiatAmount);
-    if (!fiatAmount || numericAmount <= 0) {
+    const numericFiatVal = parseFloat(fiatAmount || '0');
+    if (!rawAmount || numericFiatVal <= 0) {
       toast({ title: "Erreur", description: "Veuillez entrer un montant valide", variant: "destructive" });
       return;
     }
-    
-    if (limits && numericAmount < limits.min) {
-      toast({ 
-        title: "Montant trop faible", 
-        description: `Le montant minimum est ${limits.min.toLocaleString()} ${currency}`, 
-        variant: "destructive" 
+
+    if (limits && numericFiatVal < limits.min) {
+      toast({
+        title: "Montant trop faible",
+        description: `Le montant minimum est ${limits.min.toLocaleString()} ${currency}`,
+        variant: "destructive"
       });
       return;
     }
-    
+
     setStep('network');
   };
 
@@ -199,42 +206,74 @@ export function DesktopBuyUSDT() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label className="text-white text-sm font-light">Montant</Label>
-                  {limits && (
-                    <div className="flex gap-3">
+                  <div className="flex items-center gap-3">
+                    {/* Currency toggle */}
+                    <div className="flex items-center bg-terex-gray rounded-lg p-0.5">
                       <button
                         type="button"
-                        onClick={() => setFiatAmount(limits.min.toString())}
-                        className="text-xs text-terex-accent underline font-light hover:text-terex-accent/80 transition-colors"
+                        onClick={() => { setInputCurrency('XOF'); setRawAmount(''); }}
+                        className={`px-3 py-1 text-xs font-light rounded-md transition-all ${inputCurrency === 'XOF' ? 'bg-terex-accent text-black' : 'text-gray-400 hover:text-white'}`}
                       >
-                        Min
+                        XOF
                       </button>
                       <button
                         type="button"
-                        onClick={() => setFiatAmount(limits.max.toString())}
-                        className="text-xs text-terex-accent underline font-light hover:text-terex-accent/80 transition-colors"
+                        onClick={() => { setInputCurrency('USDT'); setRawAmount(''); }}
+                        className={`px-3 py-1 text-xs font-light rounded-md transition-all ${inputCurrency === 'USDT' ? 'bg-terex-accent text-black' : 'text-gray-400 hover:text-white'}`}
                       >
-                        Max
+                        USDT
                       </button>
                     </div>
-                  )}
+                    {limits && inputCurrency === 'XOF' && (
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setRawAmount(limits.min.toString())}
+                          className="text-xs text-terex-accent underline font-light hover:text-terex-accent/80 transition-colors"
+                        >
+                          Min
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setRawAmount(limits.max.toString())}
+                          className="text-xs text-terex-accent underline font-light hover:text-terex-accent/80 transition-colors"
+                        >
+                          Max
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="relative">
                   <Input
                     type="number"
                     placeholder="0"
-                    value={fiatAmount}
-                    onChange={(e) => setFiatAmount(enforceMaxLimit(e.target.value, currency))}
+                    value={rawAmount}
+                    onChange={(e) => {
+                      if (inputCurrency === 'XOF') {
+                        setRawAmount(enforceMaxLimit(e.target.value, currency));
+                      } else {
+                        setRawAmount(e.target.value);
+                      }
+                    }}
                     className="bg-terex-gray/50 border-terex-gray text-white text-3xl font-light h-16 text-center px-20"
                   />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg font-light">
-                    {currency}
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                    {inputCurrency === 'USDT' ? (
+                      <>
+                        <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-5 h-5" />
+                        <span className="text-gray-400 text-lg font-light">USDT</span>
+                      </>
+                    ) : (
+                      <span className="text-gray-400 text-lg font-light">{currency}</span>
+                    )}
                   </span>
                 </div>
-                
-                {limitMessage.type && (
+
+                {inputCurrency === 'XOF' && limitMessage.type && (
                   <p className={`text-xs font-light ${
-                    limitMessage.type === 'error' 
-                      ? 'text-red-400' 
+                    limitMessage.type === 'error'
+                      ? 'text-red-400'
                       : limitMessage.type === 'max-reached'
                       ? 'text-terex-accent'
                       : 'text-yellow-400'
@@ -245,13 +284,19 @@ export function DesktopBuyUSDT() {
               </div>
 
               <div className="bg-terex-gray/30 rounded-lg p-4 space-y-2">
+                {inputCurrency === 'USDT' && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-400 text-sm font-light">Vous payez</span>
+                    <span className="text-white font-light">{fiatAmount || '0'} {currency}</span>
+                  </div>
+                )}
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400 text-sm font-light">Vous recevez</span>
                   <div className="flex items-center gap-2">
                     <span className="text-white font-light">{usdtAmount} USDT</span>
-                    <img 
-                      src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                      alt="USDT" 
+                    <img
+                      src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png"
+                      alt="USDT"
                       className="w-5 h-5"
                     />
                   </div>
@@ -263,7 +308,7 @@ export function DesktopBuyUSDT() {
               </div>
             </div>
 
-            <Button 
+            <Button
               onClick={handleContinueToNetwork}
               className="w-full h-12 bg-terex-accent hover:bg-terex-accent/90 text-black font-light"
             >
