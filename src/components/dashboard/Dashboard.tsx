@@ -106,15 +106,12 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
   const handleNavigate = (section: string) => {
     // Pages qui doivent ouvrir une nouvelle route
-    const externalPages = ['contact', 'feedback', 'referral', 'share-app', 'terms', 'b2b'];
+    const externalPages = ['contact', 'referral', 'share-app', 'terms', 'b2b'];
     
     if (externalPages.includes(section)) {
       switch (section) {
         case 'contact':
           navigate('/contact');
-          break;
-        case 'feedback':
-          navigate('/feedback');
           break;
         case 'referral':
           navigate('/referral');

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { User, History, HelpCircle, Phone, Star, Gift, Share2, FileText, Shield, UserCheck, LogOut, Settings, Briefcase } from 'lucide-react';
+import { User, History, HelpCircle, Phone, Gift, Share2, FileText, Shield, UserCheck, LogOut, Settings, Briefcase } from 'lucide-react';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,7 +42,6 @@ export function DesktopMenuPopover({
   const supportItems = [
     { id: 'faq', label: 'FAQ', icon: HelpCircle },
     { id: 'contact', label: 'Nous Contacter', icon: Phone },
-    { id: 'feedback', label: 'Avis & Suggestions', icon: Star },
   ];
 
   const moreItems = [

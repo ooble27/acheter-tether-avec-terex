@@ -19,7 +19,6 @@ import GuidePage from "./pages/GuidePage";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import SecurityPage from "./pages/SecurityPage";
-import FeedbackPage from "./pages/FeedbackPage";
 import ReferralPageMain from "./pages/ReferralPage";
 import SharePage from "./pages/SharePage";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -69,7 +68,6 @@ function App() {
                 <Route path="/terms" element={<TermsPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
                 <Route path="/security" element={<SecurityPage />} />
-                <Route path="/feedback" element={<FeedbackPage />} />
                 <Route path="/referral" element={<ReferralPageMain />} />
                 <Route path="/share" element={<SharePage />} />
                 <Route path="/blog" element={<BlogPage />} />

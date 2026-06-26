@@ -324,7 +324,6 @@ export function MobileMenu({
   const supportItems = [
     { id: 'faq', label: 'FAQ', icon: HelpCircle, description: 'Questions fréquentes' },
     { id: 'contact', label: 'Nous Contacter', icon: Phone, description: 'Support client 24/7' },
-    { id: 'feedback', label: 'Avis & Suggestions', icon: Star, description: 'Donnez votre avis' },
   ];
 
   const moreItems = [
