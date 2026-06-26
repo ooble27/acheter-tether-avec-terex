@@ -241,15 +241,15 @@ export function MobileSellUSDT() {
               {!useBinancePay && (
                 <div>
                   <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '4px 0 10px' }}>Réseau blockchain</p>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                     {Object.entries(NETWORK_LOGOS).map(([net, logo]) => {
                       const sel = network === net;
                       return (
                         <button key={net} onClick={() => setNetwork(net)}
-                          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px 8px 14px', borderRadius: '16px', border: `1px solid ${sel ? SEL_BORDER : 'rgba(255,255,255,0.12)'}`, background: sel ? SEL_BG : 'rgba(255,255,255,0.06)', cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', gap: '9px', position: 'relative', minHeight: '88px', transition: 'all 0.15s' }}>
-                          <img src={logo} alt={net} style={{ width: '38px', height: '38px', borderRadius: '50%' }} />
-                          <span style={{ color: '#fff', fontSize: '12px', fontWeight: 600, textAlign: 'center', lineHeight: 1.2 }}>{net}</span>
-                          {sel && <div style={{ position: 'absolute', top: '7px', right: '7px' }}><Check size={13} color="rgba(255,255,255,0.9)" strokeWidth={2.5} /></div>}
+                          style={{ display: 'flex', alignItems: 'center', gap: '9px', padding: '9px 16px 9px 10px', borderRadius: '100px', border: `1px solid ${sel ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.10)'}`, background: sel ? 'rgba(255,255,255,0.08)' : 'transparent', cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', transition: 'all 0.15s' }}>
+                          <img src={logo} alt={net} style={{ width: '26px', height: '26px', borderRadius: '50%' }} />
+                          <span style={{ color: sel ? '#fff' : 'rgba(255,255,255,0.55)', fontSize: '13px', fontWeight: sel ? 600 : 400 }}>{net}</span>
+                          {sel && <Check size={12} color="rgba(255,255,255,0.8)" strokeWidth={2.5} />}
                         </button>
                       );
                     })}
@@ -312,7 +312,7 @@ export function MobileSellUSDT() {
 
         {/* ── Step 3: Phone + Provider ─────────────────────────────── */}
         <Drawer open={step === 'phone'} onOpenChange={open => !open && (useBinancePay ? setStep('binance') : setStep('network'))}>
-          <DrawerContent className="bg-[#141414] border-t border-[rgba(255,255,255,0.07)]">
+          <DrawerContent className="bg-[#141414] border-t border-[rgba(255,255,255,0.07)]" onOpenAutoFocus={e => e.preventDefault()}>
             <DrawerHeader style={{ position: 'relative' }}>
               <button onClick={() => useBinancePay ? setStep('binance') : setStep('network')} style={backBtn}><ArrowLeft size={18} color="#fff" /></button>
               <DrawerTitle style={{ color: '#fff', fontWeight: 700, letterSpacing: '-0.3px' }}>Informations de paiement</DrawerTitle>

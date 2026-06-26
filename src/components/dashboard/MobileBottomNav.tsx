@@ -35,7 +35,7 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
           background: '#1e1e1e',
           borderRadius: '24px',
           padding: '8px',
-          boxShadow: '0 8px 40px rgba(0,0,0,0.55), 0 2px 12px rgba(0,0,0,0.3)',
+          boxShadow: 'none',
           border: '1px solid rgba(255,255,255,0.07)',
           width: '100%',
           maxWidth: '390px',

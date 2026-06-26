@@ -9,7 +9,7 @@ interface RecentTransactionsProps {
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
-const ACCENT = '#3B968F';
+const ACCENT = 'rgba(255,255,255,0.45)';
 
 const TetherLogo = () => (
   <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style={{ width: '12px', height: '12px' }} />
@@ -101,8 +101,8 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
                 <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{label}</span>
                 <span style={{
                   fontSize: '10px', fontWeight: 600, padding: '2px 7px', borderRadius: '999px',
-                  background: tx.status === 'completed' || tx.status === 'confirmed' ? 'rgba(74,222,128,0.1)' : 'rgba(251,191,36,0.1)',
-                  color: tx.status === 'completed' || tx.status === 'confirmed' ? '#4ade80' : '#fbbf24',
+                  background: tx.status === 'completed' || tx.status === 'confirmed' ? 'rgba(255,255,255,0.06)' : 'rgba(251,191,36,0.1)',
+                  color: tx.status === 'completed' || tx.status === 'confirmed' ? 'rgba(255,255,255,0.55)' : '#fbbf24',
                 }}>
                   {tx.status === 'completed' || tx.status === 'confirmed' ? 'Terminé' : 'En cours'}
                 </span>
