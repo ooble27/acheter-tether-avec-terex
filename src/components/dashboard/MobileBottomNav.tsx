@@ -1,5 +1,5 @@
 import React from 'react';
-import { House, Coins, Banknote, Send } from 'lucide-react';
+import { House, Coins, HandCoins, Send } from 'lucide-react';
 
 interface MobileBottomNavProps {
   activeSection: string;
@@ -7,10 +7,10 @@ interface MobileBottomNavProps {
 }
 
 const navItems = [
-  { id: 'home',     Icon: House,           label: 'Accueil'  },
-  { id: 'buy',      Icon: Coins,    label: 'Acheter'  },
-  { id: 'sell',     Icon: Banknote, label: 'Vendre'   },
-  { id: 'transfer', Icon: Send,     label: 'Virement' },
+  { id: 'home',     Icon: House,     label: 'Accueil'  },
+  { id: 'buy',      Icon: Coins,     label: 'Acheter'  },
+  { id: 'sell',     Icon: HandCoins, label: 'Vendre'   },
+  { id: 'transfer', Icon: Send,      label: 'Virement' },
 ];
 
 export function MobileBottomNav({ activeSection, setActiveSection }: MobileBottomNavProps) {

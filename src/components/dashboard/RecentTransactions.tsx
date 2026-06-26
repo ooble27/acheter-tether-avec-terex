@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useTransactions } from '@/hooks/useTransactions';
 import { useAuth } from '@/contexts/AuthContext';
-import { ArrowDown, ArrowUp, Send, Clock, CheckCircle, RotateCcw, ChevronRight } from 'lucide-react';
+import { Coins, HandCoins, Send, RotateCcw, ChevronRight } from 'lucide-react';
 
 interface RecentTransactionsProps {
   onNavigate?: (section: string) => void;
@@ -26,11 +26,13 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
   const recentTransactions = transactions.slice(0, 5);
 
   const typeConfig = (type: string) => {
+    const iconBg = 'rgba(255,255,255,0.06)';
+    const iconColor = 'rgba(255,255,255,0.85)';
     switch (type) {
-      case 'buy':      return { label: 'Achat USDT',  Icon: ArrowDown, iconColor: '#3B968F', iconBg: 'rgba(59,150,143,0.12)' };
-      case 'sell':     return { label: 'Vente USDT',  Icon: ArrowUp,   iconColor: '#fff',    iconBg: 'rgba(255,255,255,0.07)' };
-      case 'transfer': return { label: 'Virement',    Icon: Send,      iconColor: '#fff',    iconBg: 'rgba(255,255,255,0.07)' };
-      default:         return { label: 'Transaction', Icon: ArrowDown, iconColor: '#fff',    iconBg: 'rgba(255,255,255,0.07)' };
+      case 'buy':      return { label: 'Achat USDT',  Icon: Coins,     iconColor, iconBg };
+      case 'sell':     return { label: 'Vente USDT',  Icon: HandCoins, iconColor, iconBg };
+      case 'transfer': return { label: 'Virement',    Icon: Send,      iconColor, iconBg };
+      default:         return { label: 'Transaction', Icon: Coins,     iconColor, iconBg };
     }
   };
 

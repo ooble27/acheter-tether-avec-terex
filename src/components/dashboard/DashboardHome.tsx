@@ -1,4 +1,4 @@
-import { ArrowUpRight, Coins, Banknote, Send, Handshake } from 'lucide-react';
+import { ArrowUpRight, Coins, HandCoins, Send, Handshake } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
 import { useTerexRates } from '@/hooks/useTerexRates';
@@ -17,7 +17,7 @@ const ICON_COLOR = 'rgba(255,255,255,0.85)';
 
 const quickActions = [
   { id: 'buy',      label: 'Acheter',  icon: Coins,     sub: 'Achat rapide'  },
-  { id: 'sell',     label: 'Vendre',   icon: Banknote,  sub: 'Vente rapide'  },
+  { id: 'sell',     label: 'Vendre',   icon: HandCoins, sub: 'Vente rapide'  },
   { id: 'transfer', label: 'Virement', icon: Send,      sub: 'International' },
   { id: 'otc',      label: 'OTC',      icon: Handshake, sub: 'Gros volumes'  },
 ];

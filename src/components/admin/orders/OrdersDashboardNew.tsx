@@ -117,117 +117,86 @@ export function OrdersDashboardNew() {
   }
 
   return (
-    <div className="min-h-screen bg-terex-dark p-3 sm:p-6 space-y-4 sm:space-y-8">
+    <div className="min-h-screen bg-terex-dark p-3 sm:p-6 space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-terex-accent/20 to-terex-dark rounded-xl sm:rounded-2xl p-4 sm:p-8 border border-terex-gray/30">
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2 sm:mb-3">Gestion des Commandes</h1>
-            <p className="text-terex-accent/80 text-sm sm:text-lg">Gérez efficacement toutes vos transactions</p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Button
-              onClick={() => exportOrdersCSV(orders)}
-              variant="outline"
-              size="sm"
-              className="border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
-            >
-              <Download className="w-4 h-4 mr-1" />
-              CSV
-            </Button>
-            <Button
-              onClick={() => exportOrdersPDF(orders)}
-              variant="outline"
-              size="sm"
-              className="border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white"
-            >
-              <Download className="w-4 h-4 mr-1" />
-              PDF
-            </Button>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="destructive" size="sm">
-                  <Trash2 className="w-4 h-4 mr-1" />
-                  Tout supprimer
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent className="bg-terex-darker border-terex-gray">
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="text-white flex items-center gap-2">
-                    <AlertTriangle className="w-5 h-5 text-red-500" />
-                    Supprimer toutes les commandes ?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription className="text-gray-400">
-                    Cette action est <strong className="text-red-400">irréversible</strong>. Toutes les commandes (achats, ventes, transferts) seront supprimées définitivement.
-                    <br /><br />
-                    💡 Pensez à exporter vos données en CSV ou PDF avant de continuer.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel className="bg-terex-gray text-white border-terex-gray">Annuler</AlertDialogCancel>
-                  <AlertDialogAction
-                    className="bg-red-600 hover:bg-red-700 text-white"
-                    onClick={async () => {
-                      await purgeAllOrders();
-                    }}
-                  >
-                    Supprimer tout
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2">
+        <div>
+          <p className="text-gray-500 text-xs font-medium uppercase tracking-widest mb-1">Administration</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Gestion des commandes</h1>
         </div>
-        <div className="absolute top-0 right-0 w-32 sm:w-64 h-32 sm:h-64 bg-terex-accent/10 rounded-full -translate-y-16 sm:-translate-y-32 translate-x-16 sm:translate-x-32"></div>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            onClick={() => exportOrdersCSV(orders)}
+            variant="outline"
+            size="sm"
+            className="border-terex-gray text-gray-300 hover:bg-terex-gray/40 text-xs"
+          >
+            <Download className="w-3.5 h-3.5 mr-1" />
+            CSV
+          </Button>
+          <Button
+            onClick={() => exportOrdersPDF(orders)}
+            variant="outline"
+            size="sm"
+            className="border-terex-gray text-gray-300 hover:bg-terex-gray/40 text-xs"
+          >
+            <Download className="w-3.5 h-3.5 mr-1" />
+            PDF
+          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" size="sm" className="text-xs">
+                <Trash2 className="w-3.5 h-3.5 mr-1" />
+                Tout supprimer
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="bg-terex-darker border-terex-gray">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-white flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-red-500" />
+                  Supprimer toutes les commandes ?
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-gray-400">
+                  Cette action est <strong className="text-red-400">irréversible</strong>. Toutes les commandes (achats, ventes, transferts) seront supprimées définitivement.
+                  <br /><br />
+                  Pensez à exporter vos données en CSV ou PDF avant de continuer.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="bg-terex-gray text-white border-terex-gray">Annuler</AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                  onClick={async () => { await purgeAllOrders(); }}
+                >
+                  Supprimer tout
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
-        <Card className="bg-terex-darker border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-300">
-          <CardContent className="p-3 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-              <div className="min-w-0">
-                <p className="text-terex-accent/70 text-xs sm:text-sm font-medium truncate">Commandes Actives</p>
-                <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">{activeOrders.length}</p>
+      <div className="grid grid-cols-3 gap-3">
+        {[
+          { label: 'Commandes actives', value: activeOrders.length,                                          Icon: ShoppingCart },
+          { label: 'Clients actifs',    value: new Set(activeOrders.map(o => o.user_id)).size,              Icon: Users        },
+          { label: 'En attente',        value: activeOrders.filter(o => o.status === 'pending').length,     Icon: RefreshCw    },
+        ].map(({ label, value, Icon }) => (
+          <Card key={label} className="bg-terex-darker border-terex-gray/50">
+            <CardContent className="p-3 sm:p-5">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white/5 rounded-xl flex-shrink-0">
+                  <Icon className="w-4 h-4 text-gray-400" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-gray-500 text-xs truncate mb-0.5">{label}</p>
+                  <p className="text-white text-xl font-bold">{value}</p>
+                </div>
               </div>
-              <div className="p-2 sm:p-3 bg-terex-accent/20 rounded-full self-center">
-                <ShoppingCart className="w-4 h-4 sm:w-6 sm:h-6 text-terex-accent" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-300">
-          <CardContent className="p-3 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-              <div className="min-w-0">
-                <p className="text-terex-accent/70 text-xs sm:text-sm font-medium truncate">Clients Actifs</p>
-                <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">
-                  {new Set(activeOrders.map(order => order.user_id)).size}
-                </p>
-              </div>
-              <div className="p-2 sm:p-3 bg-terex-accent/20 rounded-full self-center">
-                <Users className="w-4 h-4 sm:w-6 sm:h-6 text-terex-accent" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-terex-gray/50 hover:border-terex-accent/50 transition-all duration-300 col-span-2 md:col-span-1">
-          <CardContent className="p-3 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-              <div className="min-w-0">
-                <p className="text-terex-accent/70 text-xs sm:text-sm font-medium truncate">En Attente</p>
-                <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">
-                  {activeOrders.filter(o => o.status === 'pending').length}
-                </p>
-              </div>
-              <div className="p-2 sm:p-3 bg-yellow-500/20 rounded-full self-center">
-                <RefreshCw className="w-4 h-4 sm:w-6 sm:h-6 text-yellow-500" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Search */}

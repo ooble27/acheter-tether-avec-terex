@@ -1,11 +1,13 @@
 
 import { useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { TransactionHistory } from '@/components/features/TransactionHistory';
 import { useTransactions } from '@/hooks/useTransactions';
-import { RefreshCw, Download } from 'lucide-react';
+import { RefreshCw, Download, Coins, HandCoins, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+
+const CARD = '#1e1e1e';
+const BORDER = 'rgba(255,255,255,0.07)';
+const ICON_BG = 'rgba(255,255,255,0.06)';
 
 export function TransactionHistoryPage() {
   const { transactions, loading, refetch } = useTransactions();
@@ -14,104 +16,66 @@ export function TransactionHistoryPage() {
   const handleRefresh = async () => {
     try {
       await refetch();
-      toast({
-        title: "Historique mis à jour",
-        description: "Vos transactions ont été actualisées avec succès."
-      });
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de mettre à jour l'historique.",
-        variant: "destructive"
-      });
+      toast({ title: 'Historique mis à jour', description: 'Vos transactions ont été actualisées.' });
+    } catch {
+      toast({ title: 'Erreur', description: "Impossible de mettre à jour l'historique.", variant: 'destructive' });
     }
   };
 
+  const total = transactions?.length || 0;
+  const completed = transactions?.filter(t => t.status === 'completed' || t.status === 'confirmed').length || 0;
+  const pending = transactions?.filter(t => t.status === 'pending').length || 0;
+
+  const stats = [
+    { label: 'Total',     value: total,     Icon: Coins    },
+    { label: 'Terminées', value: completed,  Icon: HandCoins },
+    { label: 'En cours',  value: pending,    Icon: Clock    },
+  ];
+
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* En-tête */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '32px 20px 120px' }}>
+
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '28px', gap: '16px', flexWrap: 'wrap' }}>
         <div>
-          <h1 className="text-2xl md:text-3xl font-light text-white mb-1">
-            Historique des transactions
-          </h1>
-          <p className="text-gray-400 font-light">
-            Consultez et gérez toutes vos transactions passées
-          </p>
+          <p style={{ color: '#6b7280', fontSize: '12px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 4px' }}>Compte</p>
+          <h1 style={{ color: '#fff', fontSize: '26px', fontWeight: 700, margin: 0, letterSpacing: '-0.4px' }}>Historique</h1>
         </div>
-        
-        <div className="flex items-center gap-3">
-          <Button
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button
             onClick={handleRefresh}
             disabled={loading}
-            variant="outline"
-            className="border-terex-gray text-gray-300 hover:bg-terex-gray"
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', background: CARD, border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '10px 16px', color: '#fff', fontSize: '13px', fontWeight: 500, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.6 : 1 }}
           >
-            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw size={14} style={{ animation: loading ? 'spin 1s linear infinite' : undefined }} />
             Actualiser
-          </Button>
-          
-          <Button
-            variant="outline"
-            className="border-terex-gray text-gray-300 hover:bg-terex-gray"
+          </button>
+          <button
             disabled
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', background: CARD, border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '10px 16px', color: '#4b5563', fontSize: '13px', fontWeight: 500, cursor: 'not-allowed' }}
           >
-            <Download className="w-4 h-4 mr-2" />
+            <Download size={14} />
             Exporter
-          </Button>
+          </button>
         </div>
       </div>
 
-      {/* Statistiques rapides */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm font-light">Total transactions</p>
-                <p className="text-2xl font-light text-white">{transactions?.length || 0}</p>
-              </div>
-              <div className="w-12 h-12 bg-terex-accent/20 rounded-lg flex items-center justify-center">
-                <RefreshCw className="w-6 h-6 text-terex-accent" />
-              </div>
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px' }}>
+        {stats.map(({ label, value, Icon }) => (
+          <div key={label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px 18px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Icon size={18} color="rgba(255,255,255,0.75)" strokeWidth={1.8} />
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm font-light">Transactions réussies</p>
-                <p className="text-2xl font-light text-green-400">
-                  {transactions?.filter(t => t.status === 'completed' || t.status === 'confirmed').length || 0}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                <RefreshCw className="w-6 h-6 text-green-400" />
-              </div>
+            <div>
+              <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 500, margin: '0 0 3px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</p>
+              <p style={{ color: '#fff', fontSize: '22px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px' }}>{value}</p>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-terex-darker border-terex-gray">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm font-light">En attente</p>
-                <p className="text-2xl font-light text-yellow-400">
-                  {transactions?.filter(t => t.status === 'pending').length || 0}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
-                <RefreshCw className="w-6 h-6 text-yellow-400" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+        ))}
       </div>
 
-      {/* Historique des transactions - Plus de message de chargement */}
+      {/* Transaction list */}
       <TransactionHistory transactions={transactions} />
     </div>
   );
