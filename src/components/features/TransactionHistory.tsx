@@ -31,8 +31,8 @@ const ICON_BG = 'rgba(255,255,255,0.06)';
 
 const typeConfig = (type: string) => {
   switch (type) {
-    case 'buy':      return { label: 'Achat USDT',  Icon: Coins,     color: 'rgba(255,255,255,0.85)' };
-    case 'sell':     return { label: 'Vente USDT',  Icon: HandCoins, color: 'rgba(255,255,255,0.85)' };
+    case 'buy':      return { label: 'Achat',       Icon: Coins,     color: 'rgba(255,255,255,0.85)' };
+    case 'sell':     return { label: 'Vente',       Icon: HandCoins, color: 'rgba(255,255,255,0.85)' };
     case 'transfer': return { label: 'Virement',    Icon: Send,      color: 'rgba(255,255,255,0.85)' };
     default:         return { label: 'Transaction', Icon: Coins,     color: 'rgba(255,255,255,0.85)' };
   }
@@ -84,11 +84,12 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
     );
   }
 
-  /* ── Mobile: card list ── */
+  /* ── Mobile: single box, all rows inside ── */
   if (isMobile) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px 20px' }}>
+      <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
+        {/* Header */}
+        <div style={{ padding: '16px 20px 12px' }}>
           <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 3px' }}>Historique des transactions</p>
           <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Consultez toutes vos transactions passées</p>
         </div>
@@ -100,20 +101,20 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
           const isOpen = expanded === tx.id;
 
           return (
-            <div key={tx.id} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', overflow: 'hidden' }}>
+            <div key={tx.id} style={{ borderTop: `1px solid ${BORDER}` }}>
               {/* Row header */}
               <button
                 onClick={() => setExpanded(isOpen ? null : tx.id)}
-                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '14px', padding: '14px 16px', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' }}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '13px 16px', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' }}
               >
                 {/* Icon */}
-                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon size={17} color={color} strokeWidth={2} />
+                <div style={{ width: '38px', height: '38px', borderRadius: '11px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon size={16} color={color} strokeWidth={2} />
                 </div>
 
                 {/* Label + status */}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: '3px' }}>
                     <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{label}</span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', fontWeight: 600, padding: '2px 7px', borderRadius: '999px', background: st.bg, color: st.color }}>
                       <StatusIcon size={10} />
@@ -125,26 +126,21 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
 
                 {/* Amount */}
                 <div style={{ textAlign: 'right', flexShrink: 0, marginRight: '4px' }}>
-                  {tx.type === 'buy' && tx.usdtAmount ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'flex-end' }}>
-                      <USDTLogo />
-                      <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{tx.usdtAmount}</span>
-                    </div>
-                  ) : (
-                    <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{tx.amount} {tx.currency}</span>
-                  )}
+                  <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>
+                    {tx.type === 'buy' && tx.usdtAmount ? `${tx.usdtAmount} USDT` : `${tx.amount} ${tx.currency}`}
+                  </span>
                 </div>
 
-                <ChevronDown size={15} color="#4b5563" style={{ flexShrink: 0, transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                <ChevronDown size={14} color="#4b5563" style={{ flexShrink: 0, transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
               </button>
 
               {/* Expanded details */}
               {isOpen && (
-                <div style={{ borderTop: `1px solid ${BORDER}`, padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ borderTop: `1px solid ${BORDER}`, padding: '10px 16px 14px', display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(255,255,255,0.02)' }}>
                   {[
                     { label: 'Montant envoyé', value: `${tx.amount} ${tx.currency}` },
-                    tx.type === 'buy' && tx.usdtAmount ? { label: 'USDT reçu', value: `${tx.usdtAmount} USDT` } : null,
-                    (tx.type === 'sell' || tx.type === 'transfer') && tx.fiatAmount ? { label: 'Montant reçu', value: `${tx.fiatAmount} ${tx.receiveCurrency || ''}` } : null,
+                    tx.type === 'buy' && tx.usdtAmount ? { label: 'Reçu', value: `${tx.usdtAmount} USDT` } : null,
+                    (tx.type === 'sell' || tx.type === 'transfer') && tx.fiatAmount ? { label: 'Reçu', value: `${tx.fiatAmount} ${tx.receiveCurrency || ''}` } : null,
                     tx.type !== 'transfer' ? { label: 'Réseau', value: tx.network } : null,
                     tx.type === 'transfer' && tx.recipient_name ? { label: 'Destinataire', value: tx.recipient_name } : null,
                   ].filter(Boolean).map((item: any) => (
@@ -153,7 +149,7 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
                       <span style={{ color: '#fff', fontSize: '12px', fontWeight: 500 }}>{item.value}</span>
                     </div>
                   ))}
-                  <div style={{ marginTop: '4px' }}>
+                  <div style={{ marginTop: '2px' }}>
                     <TransactionDetails transaction={tx} />
                   </div>
                 </div>
@@ -199,16 +195,14 @@ export function TransactionHistory({ transactions = [] }: TransactionHistoryProp
             <span style={{ color: '#fff', fontSize: '13px' }}>{tx.amount} {tx.currency}</span>
 
             {/* Received */}
-            {tx.type === 'buy' && tx.usdtAmount ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <USDTLogo />
-                <span style={{ color: '#fff', fontSize: '13px' }}>{tx.usdtAmount} USDT</span>
-              </div>
-            ) : tx.fiatAmount ? (
-              <span style={{ color: '#fff', fontSize: '13px' }}>{tx.fiatAmount} {tx.receiveCurrency}</span>
-            ) : (
-              <span style={{ color: '#4b5563', fontSize: '13px' }}>—</span>
-            )}
+            <span style={{ color: '#fff', fontSize: '13px' }}>
+              {tx.type === 'buy' && tx.usdtAmount
+                ? tx.usdtAmount
+                : tx.fiatAmount
+                  ? `${tx.fiatAmount}${tx.receiveCurrency ? ` ${tx.receiveCurrency}` : ''}`
+                  : <span style={{ color: '#4b5563' }}>—</span>
+              }
+            </span>
 
             {/* Network / Recipient */}
             <span style={{ color: '#9ca3af', fontSize: '13px' }}>
