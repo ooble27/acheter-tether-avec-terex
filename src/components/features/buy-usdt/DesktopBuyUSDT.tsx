@@ -97,6 +97,15 @@ export function DesktopBuyUSDT() {
       return;
     }
 
+    if (limits && numericFiatVal > limits.max) {
+      toast({
+        title: "Montant trop élevé",
+        description: `Le montant maximum est ${limits.max.toLocaleString()} ${currency}`,
+        variant: "destructive"
+      });
+      return;
+    }
+
     setStep('network');
   };
 
@@ -282,7 +291,7 @@ export function DesktopBuyUSDT() {
                   </span>
                 </div>
 
-                {inputCurrency === 'XOF' && limitMessage.type && (
+                {limitMessage.type && (
                   <p className={`text-xs font-light ${
                     limitMessage.type === 'error'
                       ? 'text-red-400'
