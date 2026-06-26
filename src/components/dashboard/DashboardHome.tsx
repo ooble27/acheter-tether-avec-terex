@@ -22,27 +22,48 @@ const quickActions = [
   { id: 'otc',      label: 'OTC',      icon: Handshake, sub: 'Gros volumes'  },
 ];
 
-function WavingIcon() {
+function PersonWaving() {
   return (
     <>
       <style>{`
-        @keyframes wave-hand {
-          0%   { transform: rotate(0deg); }
-          15%  { transform: rotate(18deg); }
-          30%  { transform: rotate(-8deg); }
-          45%  { transform: rotate(14deg); }
-          60%  { transform: rotate(-4deg); }
-          75%  { transform: rotate(10deg); }
-          100% { transform: rotate(0deg); }
-        }
-        .wave-hand {
-          display: inline-flex;
-          align-items: center;
-          animation: wave-hand 2.2s ease-in-out 0.3s 1;
-          transform-origin: 70% 80%;
+        @keyframes tx-wave {
+          0%,100% { transform: rotate(0deg); }
+          20%     { transform: rotate(-38deg); }
+          50%     { transform: rotate(18deg); }
+          80%     { transform: rotate(-32deg); }
         }
       `}</style>
-      <span className="wave-hand" style={{ fontSize: '26px', lineHeight: 1 }}>👋</span>
+      <svg
+        width="30" height="36"
+        viewBox="0 0 30 36"
+        fill="none"
+        aria-hidden="true"
+        style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}
+      >
+        {/* Head */}
+        <circle cx="15" cy="6.5" r="6" fill="rgba(255,255,255,0.92)" />
+        {/* Eyes */}
+        <circle cx="12.7" cy="5.5" r="0.85" fill="#111" />
+        <circle cx="17.3" cy="5.5" r="0.85" fill="#111" />
+        {/* Smile */}
+        <path d="M12.5 8.3 Q15 10.3 17.5 8.3" stroke="#111" strokeWidth="0.8" strokeLinecap="round" fill="none" />
+        {/* Torso */}
+        <rect x="10" y="13.5" width="10" height="9" rx="2.5" fill="rgba(255,255,255,0.82)" />
+        {/* Left arm */}
+        <line x1="10" y1="15.5" x2="4" y2="21" stroke="rgba(255,255,255,0.85)" strokeWidth="2.2" strokeLinecap="round" />
+        <circle cx="3.4" cy="21.6" r="1.4" fill="rgba(255,255,255,0.78)" />
+        {/* Right arm - waving */}
+        <g style={{ transformBox: 'fill-box' as any, transformOrigin: 'left bottom', animation: 'tx-wave 2.4s ease-in-out 0.5s 2' }}>
+          <line x1="20" y1="15.5" x2="26.5" y2="9.5" stroke="rgba(255,255,255,0.85)" strokeWidth="2.2" strokeLinecap="round" />
+          <circle cx="27" cy="9" r="1.4" fill="rgba(255,255,255,0.78)" />
+        </g>
+        {/* Left leg */}
+        <line x1="12.5" y1="22.5" x2="9.5" y2="32" stroke="rgba(255,255,255,0.82)" strokeWidth="2.2" strokeLinecap="round" />
+        <line x1="9.5" y1="32" x2="7" y2="34.5" stroke="rgba(255,255,255,0.6)" strokeWidth="1.8" strokeLinecap="round" />
+        {/* Right leg */}
+        <line x1="17.5" y1="22.5" x2="20.5" y2="32" stroke="rgba(255,255,255,0.82)" strokeWidth="2.2" strokeLinecap="round" />
+        <line x1="20.5" y1="32" x2="23" y2="34.5" stroke="rgba(255,255,255,0.6)" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
     </>
   );
 }
@@ -151,7 +172,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
               <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 2px' }}>{getGreeting()},</p>
               <h1 style={{ color: '#fff', fontSize: '28px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 {firstName}
-                <WavingIcon />
+                <PersonWaving />
               </h1>
             </div>
 

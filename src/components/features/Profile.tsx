@@ -5,6 +5,8 @@ import { KYCPage } from './KYCPage';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
+import { FAQ } from './FAQ';
 import { supabase } from '@/integrations/supabase/client';
 import {
   User, Mail, Phone, MapPin, Shield, CheckCircle, Clock, XCircle, AlertTriangle,
@@ -50,6 +52,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { toast } = useToast();
+  const { user: authUser } = useAuth();
   const { profile, updateProfile, loading } = useUserProfile();
   const { kycData, loading: kycLoading } = useKYC();
   const [formData, setFormData] = useState({ name: '', phone: '', country: '', language: 'fr' });
@@ -110,7 +113,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   // ── Sub-section header ───────────────────────────────────────────────────
 
   const SubHeader = ({ title }: { title: string }) => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '20px 20px 16px', borderBottom: `1px solid ${BORDER}` }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '20px 20px 16px', borderBottom: `1px solid ${BORDER}`, position: 'sticky', top: 0, zIndex: 10, background: BG }}>
       <button onClick={() => { setSection(null); setIsEditing(false); }}
         style={{ width: '36px', height: '36px', borderRadius: '50%', background: ICON_BG, border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
         <ArrowLeft size={16} color="#fff" />
@@ -371,7 +374,8 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   // ── Parrainage ───────────────────────────────────────────────────────────
 
   if (section === 'parrainage') {
-    const referralCode = user?.email?.split('@')[0]?.toUpperCase().slice(0, 8) + 'TX' || 'TEREXTX';
+    const referralCode = authUser?.id ? `TEREX-${authUser.id.slice(0, 8).toUpperCase()}` : 'TEREX-XXXXXX';
+    const referralLink = `https://terangaexchange.com/auth?ref=${referralCode}`;
     return (
       <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
         <SubHeader title="Parrainage" />
@@ -385,12 +389,26 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             <p style={{ color: '#6b7280', fontSize: '13px', margin: 0, lineHeight: 1.6 }}>Partagez votre code et recevez des avantages exclusifs pour chaque ami qui rejoint Terex.</p>
           </div>
 
+          {/* Rewards */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            {[
+              { label: 'Pour vous', value: '5% de bonus', desc: 'sur chaque transaction' },
+              { label: 'Pour votre filleul', value: '3% de bonus', desc: 'sur sa 1ère transaction' },
+            ].map(({ label, value, desc }) => (
+              <div key={label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px', textAlign: 'center' }}>
+                <p style={{ color: '#6b7280', fontSize: '11px', margin: '0 0 6px' }}>{label}</p>
+                <p style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '0 0 2px' }}>{value}</p>
+                <p style={{ color: '#4b5563', fontSize: '11px', margin: 0 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+
           {/* Referral code */}
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '20px' }}>
             <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 12px' }}>Votre code de parrainage</p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
               <div style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.10)`, borderRadius: '14px', padding: '14px 18px' }}>
-                <span style={{ color: '#fff', fontSize: '20px', fontWeight: 700, letterSpacing: '2px' }}>{referralCode}</span>
+                <span style={{ color: '#fff', fontSize: '18px', fontWeight: 700, letterSpacing: '2px' }}>{referralCode}</span>
               </div>
               <button
                 onClick={() => { navigator.clipboard?.writeText(referralCode); toast({ title: 'Code copié !' }); }}
@@ -398,7 +416,22 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                 <Copy size={18} color="rgba(255,255,255,0.7)" />
               </button>
             </div>
+            <p style={{ color: '#4b5563', fontSize: '11px', margin: 0 }}>Lien : {referralLink}</p>
           </div>
+
+          {/* Share button */}
+          <button
+            onClick={async () => {
+              if (navigator.share) {
+                try { await navigator.share({ title: 'Rejoignez Terex', text: `Utilisez mon code ${referralCode} pour rejoindre Terex !`, url: referralLink }); } catch {}
+              } else {
+                navigator.clipboard?.writeText(referralLink);
+                toast({ title: 'Lien copié !' });
+              }
+            }}
+            style={{ background: '#fff', border: 'none', borderRadius: '14px', padding: '15px', color: '#141414', fontSize: '15px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+            <Share2 size={16} /> Partager mon code
+          </button>
 
           {/* How it works */}
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
@@ -407,8 +440,8 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             </div>
             {[
               { step: '1', text: 'Partagez votre code unique à vos contacts' },
-              { step: '2', text: 'Ils s\'inscrivent et effectuent leur premier achat' },
-              { step: '3', text: 'Vous recevez vos avantages automatiquement' },
+              { step: '2', text: 'Ils s\'inscrivent avec votre code et effectuent leur premier achat' },
+              { step: '3', text: 'Vous recevez tous les deux vos bonus automatiquement' },
             ].map(({ step, text }, i, arr) => (
               <div key={step} style={{ padding: '14px 20px', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none', display: 'flex', alignItems: 'center', gap: '14px' }}>
                 <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -426,39 +459,54 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   // ── Partager ─────────────────────────────────────────────────────────────
 
   if (section === 'partager') {
-    const shareUrl = 'https://terex.app';
-    const shareText = 'Achetez et vendez du USDT facilement en CFA avec Terex ! 🚀';
-    const handleShare = async () => {
-      if (navigator.share) {
-        try { await navigator.share({ title: 'Terex', text: shareText, url: shareUrl }); } catch {}
-      } else {
-        navigator.clipboard?.writeText(`${shareText} ${shareUrl}`);
-        toast({ title: 'Lien copié !' });
-      }
-    };
+    const appUrl = 'https://terangaexchange.com';
+    const shareText = "Découvrez Terex — La plateforme pour acheter et vendre des USDT en Afrique de l'Ouest facilement et en toute sécurité !";
+    const encodedUrl = encodeURIComponent(appUrl);
+    const encodedText = encodeURIComponent(shareText);
+    const platforms = [
+      { label: 'WhatsApp',  bg: '#25D366', textColor: '#fff', url: `https://wa.me/?text=${encodedText}%20${encodedUrl}` },
+      { label: 'Facebook',  bg: '#1877F2', textColor: '#fff', url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}` },
+      { label: 'X (Twitter)', bg: '#000',  textColor: '#fff', url: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}` },
+      { label: 'Email',     bg: BTN,       textColor: '#fff', url: `mailto:?subject=${encodeURIComponent('Découvrez Terex')}&body=${encodedText}%20${encodedUrl}` },
+    ];
     return (
       <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
         <SubHeader title="Partager l'App" />
         <div style={{ padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '480px', margin: '0 auto' }}>
-          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '28px 24px', textAlign: 'center' }}>
-            <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '24px', textAlign: 'center' }}>
+            <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
               <Share2 size={28} color="rgba(255,255,255,0.7)" />
             </div>
-            <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: '0 0 8px' }}>Partagez Terex</h2>
-            <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 24px', lineHeight: 1.6 }}>Faites découvrir Terex à vos proches — la façon la plus simple d'acheter et vendre du USDT en CFA.</p>
-            <button onClick={handleShare}
-              style={{ background: '#fff', border: 'none', borderRadius: '14px', padding: '14px 28px', color: '#141414', fontSize: '15px', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-              <ExternalLink size={16} /> Partager maintenant
-            </button>
-          </div>
-          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ flex: 1, background: 'rgba(255,255,255,0.03)', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: '10px', padding: '10px 14px' }}>
-              <p style={{ color: '#6b7280', fontSize: '12px', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{shareUrl}</p>
+            <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: '0 0 6px' }}>Partagez Terex</h2>
+            <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 20px', lineHeight: 1.6 }}>Faites découvrir la façon la plus simple d'acheter et vendre du USDT en CFA.</p>
+            {/* Native share + copy link */}
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+              <button onClick={async () => {
+                if (navigator.share) {
+                  try { await navigator.share({ title: 'Terex', text: shareText, url: appUrl }); } catch {}
+                } else { navigator.clipboard?.writeText(appUrl); toast({ title: 'Lien copié !' }); }
+              }} style={{ background: '#fff', border: 'none', borderRadius: '12px', padding: '11px 20px', color: '#141414', fontSize: '14px', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <ExternalLink size={14} /> Partager
+              </button>
+              <button onClick={() => { navigator.clipboard?.writeText(appUrl); toast({ title: 'Lien copié !' }); }}
+                style={{ background: BTN, border: `1px solid rgba(255,255,255,0.10)`, borderRadius: '12px', padding: '11px 20px', color: '#fff', fontSize: '14px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                <Copy size={14} /> Copier
+              </button>
             </div>
-            <button onClick={() => { navigator.clipboard?.writeText(shareUrl); toast({ title: 'Lien copié !' }); }}
-              style={{ width: '40px', height: '40px', borderRadius: '10px', background: BTN, border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
-              <Copy size={16} color="rgba(255,255,255,0.7)" />
-            </button>
+          </div>
+          {/* Social buttons */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+            {platforms.map(({ label, bg, textColor, url }) => (
+              <button key={label} onClick={() => window.open(url, '_blank', 'noopener,noreferrer')}
+                style={{ background: bg, border: 'none', borderRadius: '14px', padding: '13px 16px', color: textColor, fontSize: '14px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {label}
+              </button>
+            ))}
+          </div>
+          {/* App URL */}
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '12px 16px' }}>
+            <p style={{ color: '#4b5563', fontSize: '11px', margin: '0 0 2px' }}>Lien direct</p>
+            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', margin: 0 }}>{appUrl}</p>
           </div>
         </div>
       </div>
@@ -468,33 +516,60 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   // ── Contact ───────────────────────────────────────────────────────────────
 
   if (section === 'contact') {
+    const WAIcon = () => (
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.7)">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+    );
+    const TGIcon = () => (
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.7)">
+        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+      </svg>
+    );
+    const IGIcon = () => (
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.7)">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+      </svg>
+    );
+    const FBIcon = () => (
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.7)">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+      </svg>
+    );
+    const XIcon = () => (
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="rgba(255,255,255,0.7)">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+    );
+    const contacts = [
+      { label: 'WhatsApp', desc: '+1 (418) 261-9091', IconEl: WAIcon, action: () => window.open('https://wa.me/+14182619091', '_blank') },
+      { label: 'Téléphone', desc: '+1 (418) 261-9091', IconEl: () => <Phone size={18} color="rgba(255,255,255,0.7)" />, action: () => window.open('tel:+14182619091') },
+      { label: 'Email', desc: 'terangaexchange@gmail.com', IconEl: () => <Mail size={18} color="rgba(255,255,255,0.7)" />, action: () => window.open('mailto:terangaexchange@gmail.com', '_blank') },
+      { label: 'Telegram', desc: '@teraborange', IconEl: TGIcon, action: () => window.open('https://t.me/teraborange', '_blank') },
+      { label: 'Instagram', desc: '@teraborange', IconEl: IGIcon, action: () => window.open('https://www.instagram.com/teraborange', '_blank') },
+      { label: 'X (Twitter)', desc: '@teraborange', IconEl: XIcon, action: () => window.open('https://x.com/teraborange', '_blank') },
+      { label: 'Facebook', desc: '/teraborange', IconEl: FBIcon, action: () => window.open('https://www.facebook.com/teraborange', '_blank') },
+    ];
     return (
       <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
         <SubHeader title="Nous contacter" />
-        <div style={{ padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '480px', margin: '0 auto' }}>
-          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '28px 24px', textAlign: 'center' }}>
-            <div style={{ width: '64px', height: '64px', borderRadius: '18px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-              <MessageCircle size={28} color="rgba(255,255,255,0.7)" />
-            </div>
-            <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: '0 0 8px' }}>Support 24/7</h2>
-            <p style={{ color: '#6b7280', fontSize: '13px', margin: 0, lineHeight: 1.6 }}>Notre équipe est disponible pour vous aider à tout moment.</p>
+        <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '480px', margin: '0 auto' }}>
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '20px 24px', textAlign: 'center' }}>
+            <h2 style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '0 0 4px' }}>Support 24/7</h2>
+            <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Notre équipe est disponible à tout moment.</p>
           </div>
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
-            {[
-              { label: 'WhatsApp', desc: 'Réponse immédiate', icon: MessageCircle, action: () => window.open('https://wa.me/message/terex', '_blank') },
-              { label: 'Email', desc: 'support@terex.app', icon: Mail, action: () => window.open('mailto:support@terex.app', '_blank') },
-              { label: 'Telegram', desc: '@TerexSupport', icon: ExternalLink, action: () => window.open('https://t.me/terexsupport', '_blank') },
-            ].map(({ label, desc, icon: Icon, action }, i, arr) => (
+            {contacts.map(({ label, desc, IconEl, action }, i, arr) => (
               <button key={label} onClick={action}
-                style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon size={18} color="rgba(255,255,255,0.7)" />
+                style={{ width: '100%', padding: '14px 20px', background: 'none', border: 'none', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '14px', textAlign: 'left' }}>
+                <div style={{ width: '38px', height: '38px', borderRadius: '11px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <IconEl />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <p style={{ color: '#fff', fontSize: '14px', fontWeight: 500, margin: '0 0 2px' }}>{label}</p>
+                  <p style={{ color: '#fff', fontSize: '14px', fontWeight: 500, margin: '0 0 1px' }}>{label}</p>
                   <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>{desc}</p>
                 </div>
-                <ChevronRight size={16} color="#4b5563" />
+                <ChevronRight size={15} color="#4b5563" />
               </button>
             ))}
           </div>
@@ -503,13 +578,15 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
     );
   }
 
-  // ── FAQ (redirect to dashboard faq section) ───────────────────────────────
+  // ── FAQ inline ────────────────────────────────────────────────────────────
 
   if (section === 'faq') {
-    if (onNavigate) {
-      onNavigate('faq');
-      return null;
-    }
+    return (
+      <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px' }}>
+        <SubHeader title="FAQ" />
+        <FAQ onNavigate={onNavigate} />
+      </div>
+    );
   }
 
   // ── Main view ────────────────────────────────────────────────────────────
