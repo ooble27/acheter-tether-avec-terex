@@ -1,5 +1,5 @@
 import React from 'react';
-import { House, ShoppingBag, BarChart3, Landmark } from 'lucide-react';
+import { House, ArrowDownCircle, ArrowUpCircle, ArrowRightLeft } from 'lucide-react';
 
 interface MobileBottomNavProps {
   activeSection: string;
@@ -7,10 +7,10 @@ interface MobileBottomNavProps {
 }
 
 const navItems = [
-  { id: 'home',     Icon: House,       label: 'Accueil'  },
-  { id: 'buy',      Icon: ShoppingBag, label: 'Acheter'  },
-  { id: 'sell',     Icon: BarChart3,   label: 'Vendre'   },
-  { id: 'transfer', Icon: Landmark,    label: 'Virement' },
+  { id: 'home',     Icon: House,           label: 'Accueil'  },
+  { id: 'buy',      Icon: ArrowDownCircle, label: 'Acheter'  },
+  { id: 'sell',     Icon: ArrowUpCircle,   label: 'Vendre'   },
+  { id: 'transfer', Icon: ArrowRightLeft,  label: 'Virement' },
 ];
 
 export function MobileBottomNav({ activeSection, setActiveSection }: MobileBottomNavProps) {
