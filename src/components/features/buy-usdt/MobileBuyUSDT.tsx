@@ -256,7 +256,8 @@ export function MobileBuyUSDT() {
                         type="button"
                         onClick={() => {
                           if (inputCurrency === 'USDT' && exchangeRate > 0) {
-                            setRawAmount((limits.max / exchangeRate).toFixed(2));
+                            const maxUsdt = Math.floor((limits.max / exchangeRate) * 100) / 100;
+                            setRawAmount(maxUsdt.toFixed(2));
                           } else {
                             setRawAmount(limits.max.toString());
                           }
@@ -280,11 +281,16 @@ export function MobileBuyUSDT() {
                     } else {
                       const val = e.target.value;
                       if (val && exchangeRate > 0 && limits) {
-                        const cfa = parseFloat(val) * exchangeRate;
+                        const numVal = parseFloat(val);
+                        const cfa = numVal * exchangeRate;
                         if (cfa > limits.max) {
-                          setRawAmount((limits.max / exchangeRate).toFixed(2));
+                          const maxUsdt = Math.floor((limits.max / exchangeRate) * 100) / 100;
+                          setRawAmount(maxUsdt.toFixed(2));
                           return;
                         }
+                        // Normalize to prevent trailing zeros accumulating
+                        setRawAmount(String(numVal));
+                        return;
                       }
                       setRawAmount(val);
                     }
