@@ -1,46 +1,40 @@
 import React from 'react';
-import { House, Wallet, ArrowLeftRight, Send } from 'lucide-react';
+import { House, Wallet, TrendingUp, ArrowRightLeft } from 'lucide-react';
 
 interface DesktopBottomNavProps {
   activeSection: string;
   setActiveSection: (section: string) => void;
 }
 
-// Couleurs officielles Terex
-const ACCENT = '#3B968F';
-const ACCENT_LIGHT = '#4BA89F';
-const INACTIVE = '#71717a';
+const navItems = [
+  { id: 'home',     Icon: House,          label: 'Accueil'  },
+  { id: 'buy',      Icon: Wallet,         label: 'Acheter'  },
+  { id: 'sell',     Icon: TrendingUp,     label: 'Vendre'   },
+  { id: 'transfer', Icon: ArrowRightLeft, label: 'Virement' },
+];
 
 export function DesktopBottomNav({ activeSection, setActiveSection }: DesktopBottomNavProps) {
-  const navItems = [
-    { id: 'home',     Icon: House,          label: 'Accueil'  },
-    { id: 'buy',      Icon: Wallet,         label: 'Acheter'  },
-    { id: 'sell',     Icon: ArrowLeftRight, label: 'Vendre'   },
-    { id: 'transfer', Icon: Send,           label: 'Virement' },
-  ];
-
   return (
     <div
       style={{
         position: 'fixed',
-        bottom: '24px',
+        bottom: '28px',
         left: '50%',
         transform: 'translateX(-50%)',
         zIndex: 50,
       }}
     >
+      {/* Pill container */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           gap: '4px',
-          background: 'rgba(26, 26, 26, 0.92)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
-          borderRadius: '20px',
-          border: '1px solid rgba(255,255,255,0.07)',
-          boxShadow: '0 12px 40px rgba(0,0,0,0.45)',
+          background: '#1e1e1e',
+          borderRadius: '9999px',
           padding: '6px',
+          boxShadow: '0 12px 48px rgba(0,0,0,0.55), 0 4px 16px rgba(0,0,0,0.3)',
+          border: '1px solid rgba(255,255,255,0.06)',
         }}
       >
         {navItems.map(({ id, Icon, label }) => {
@@ -53,36 +47,44 @@ export function DesktopBottomNav({ activeSection, setActiveSection }: DesktopBot
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '9px',
-                padding: '10px 18px',
+                justifyContent: 'center',
+                gap: isActive ? '9px' : '0px',
+                padding: isActive ? '12px 24px' : '12px 18px',
+                background: isActive ? '#2d2d2d' : 'transparent',
+                borderRadius: '9999px',
                 border: 'none',
-                background: isActive ? 'rgba(59,150,143,0.15)' : 'transparent',
-                borderRadius: '14px',
                 cursor: 'pointer',
-                transition: 'background 0.2s ease',
+                transition: 'background 0.25s ease, padding 0.25s ease',
                 outline: 'none',
               }}
               onMouseEnter={(e) => {
-                if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                if (!isActive) {
+                  (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)';
+                }
               }}
               onMouseLeave={(e) => {
-                if (!isActive) e.currentTarget.style.background = 'transparent';
+                if (!isActive) {
+                  (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+                }
               }}
             >
               <Icon
-                size={19}
-                color={isActive ? ACCENT_LIGHT : INACTIVE}
-                strokeWidth={isActive ? 2.3 : 1.8}
-                style={{ transition: 'color 0.2s ease' }}
+                size={20}
+                color={isActive ? '#4BA89F' : '#6b7280'}
+                strokeWidth={isActive ? 2.2 : 1.7}
+                style={{ flexShrink: 0, transition: 'color 0.2s ease' }}
               />
               <span
                 style={{
-                  fontSize: '13px',
-                  fontWeight: isActive ? 600 : 450,
-                  color: isActive ? ACCENT_LIGHT : INACTIVE,
-                  letterSpacing: '0.01em',
+                  color: '#4BA89F',
+                  fontSize: '14px',
+                  fontWeight: 600,
                   whiteSpace: 'nowrap',
-                  transition: 'color 0.2s ease',
+                  maxWidth: isActive ? '100px' : '0px',
+                  opacity: isActive ? 1 : 0,
+                  overflow: 'hidden',
+                  transition: 'max-width 0.28s ease, opacity 0.2s ease',
+                  letterSpacing: '0.01em',
                 }}
               >
                 {label}
