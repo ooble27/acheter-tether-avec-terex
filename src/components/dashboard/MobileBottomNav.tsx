@@ -1,21 +1,23 @@
 import React from 'react';
-import { Home, Wallet, TrendingUp, Send } from 'lucide-react';
+import { House, Wallet, ArrowLeftRight, Send } from 'lucide-react';
 
 interface MobileBottomNavProps {
   activeSection: string;
   setActiveSection: (section: string) => void;
 }
 
-const TEAL = '#14b8a6';
-const INACTIVE = '#6b7280';
-const BG = '#17171b';
+// Couleurs officielles Terex
+const ACCENT = '#3B968F';
+const ACCENT_LIGHT = '#4BA89F';
+const INACTIVE = '#71717a';
+const BG = '#1A1A1A';
 
 export function MobileBottomNav({ activeSection, setActiveSection }: MobileBottomNavProps) {
   const navItems = [
-    { id: 'home',     Icon: Home,        label: 'Accueil'  },
-    { id: 'buy',      Icon: Wallet,      label: 'Acheter'  },
-    { id: 'sell',     Icon: TrendingUp,  label: 'Vendre'   },
-    { id: 'transfer', Icon: Send,        label: 'Virement' },
+    { id: 'home',     Icon: House,          label: 'Accueil'  },
+    { id: 'buy',      Icon: Wallet,         label: 'Acheter'  },
+    { id: 'sell',     Icon: ArrowLeftRight, label: 'Vendre'   },
+    { id: 'transfer', Icon: Send,           label: 'Virement' },
   ];
 
   return (
@@ -27,7 +29,8 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
         right: 0,
         zIndex: 50,
         background: BG,
-        borderTop: '1px solid rgba(255,255,255,0.06)',
+        borderTop: '1px solid rgba(255,255,255,0.05)',
+        boxShadow: '0 -8px 24px rgba(0,0,0,0.25)',
         paddingBottom: 'env(safe-area-inset-bottom)',
       }}
     >
@@ -36,12 +39,12 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
           display: 'flex',
           justifyContent: 'space-around',
           alignItems: 'center',
-          height: '60px',
+          height: '64px',
+          padding: '0 8px',
         }}
       >
         {navItems.map(({ id, Icon, label }) => {
           const isActive = activeSection === id;
-          const color = isActive ? TEAL : INACTIVE;
 
           return (
             <button
@@ -52,7 +55,7 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '3px',
+                gap: '5px',
                 flex: 1,
                 height: '100%',
                 border: 'none',
@@ -62,33 +65,32 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
                 outline: 'none',
               }}
             >
-              {isActive && (
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    width: '24px',
-                    height: '2px',
-                    borderRadius: '0 0 2px 2px',
-                    background: TEAL,
-                    marginBottom: '2px',
-                  }}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '52px',
+                  height: '30px',
+                  borderRadius: '999px',
+                  background: isActive ? 'rgba(59,150,143,0.15)' : 'transparent',
+                  transition: 'background 0.25s ease',
+                }}
+              >
+                <Icon
+                  size={21}
+                  color={isActive ? ACCENT_LIGHT : INACTIVE}
+                  strokeWidth={isActive ? 2.3 : 1.8}
+                  style={{ transition: 'color 0.2s ease' }}
                 />
-              )}
-              <Icon
-                size={22}
-                color={color}
-                strokeWidth={isActive ? 2.2 : 1.6}
-                style={{ transition: 'color 0.15s, stroke-width 0.15s' }}
-              />
+              </div>
               <span
                 style={{
-                  fontSize: '10px',
-                  fontWeight: isActive ? 600 : 400,
-                  color,
-                  letterSpacing: '0.015em',
-                  transition: 'color 0.15s',
-                  fontFamily: 'inherit',
+                  fontSize: '10.5px',
+                  fontWeight: isActive ? 600 : 450,
+                  color: isActive ? ACCENT_LIGHT : INACTIVE,
+                  letterSpacing: '0.01em',
+                  transition: 'color 0.2s ease',
                 }}
               >
                 {label}
