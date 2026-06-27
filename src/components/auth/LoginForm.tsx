@@ -38,7 +38,7 @@ export function LoginForm() {
       toast({
         title: "Connexion réussie",
         description: "Vous êtes maintenant connecté à Terex.",
-        className: "bg-terex-accent text-white border-terex-accent",
+        
       });
     } catch (error: any) {
       const msg = error?.message || '';
@@ -70,7 +70,7 @@ export function LoginForm() {
           toast({ title: "Email déjà utilisé", description: "Cet email est déjà enregistré.", variant: "destructive" });
           setActiveTab('login');
         } else {
-          toast({ title: "Inscription réussie !", description: "Vérifiez votre email pour activer votre compte.", className: "bg-terex-accent text-white border-terex-accent" });
+          toast({ title: "Inscription réussie !", description: "Vérifiez votre email pour activer votre compte.",  });
         }
       }
     } catch (error: any) {
@@ -85,7 +85,7 @@ export function LoginForm() {
   };
 
   const inputClass =
-    "h-10 bg-[#1a1a1a] border border-[#2e2e2e] text-white placeholder:text-[#3a3a3a] rounded-md focus:border-terex-accent focus:ring-1 focus:ring-terex-accent/30 transition-colors text-sm px-3";
+    "h-10 bg-[#1a1a1a] border border-[#2e2e2e] text-white placeholder:text-[#3a3a3a] rounded-md focus:border-[rgba(255,255,255,0.25)] focus:ring-1 focus:ring-[rgba(255,255,255,0.10)] transition-colors text-sm px-3";
 
   return (
     <div className="min-h-screen w-full flex">
@@ -96,7 +96,7 @@ export function LoginForm() {
         {/* Logo tablette uniquement (masqué sur mobile et desktop) */}
         <div className="hidden md:flex lg:hidden items-center gap-3 p-6 border-b" style={{ borderColor: '#1f1f1f' }}>
           <img src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" alt="Terex" className="w-8 h-8" />
-          <span className="text-lg font-black" style={{ color: '#3b968f' }}>TEREX</span>
+          <span className="text-lg font-black" style={{ color: '#fff' }}>TEREX</span>
         </div>
 
         {/* Formulaire centré */}
@@ -107,8 +107,8 @@ export function LoginForm() {
             <div className="hidden lg:flex items-center gap-3 mb-10">
               <img src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" alt="Terex" className="w-9 h-9" />
               <div>
-                <span className="text-xl font-black" style={{ color: '#3b968f' }}>TEREX</span>
-                <p className="text-[10px] uppercase tracking-widest" style={{ color: 'rgba(59,150,143,0.6)' }}>Teranga Exchange</p>
+                <span className="text-xl font-black" style={{ color: '#fff' }}>TEREX</span>
+                <p className="text-[10px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.4)' }}>Teranga Exchange</p>
               </div>
             </div>
 
@@ -120,8 +120,8 @@ export function LoginForm() {
                   onClick={() => setActiveTab(tab)}
                   className="flex-1 py-2 text-sm font-medium rounded-md transition-all duration-200"
                   style={{
-                    background: activeTab === tab ? '#3b968f' : 'transparent',
-                    color: activeTab === tab ? '#fff' : '#6b6b6b',
+                    background: activeTab === tab ? '#ffffff' : 'transparent',
+                    color: activeTab === tab ? '#141414' : '#6b6b6b',
                   }}
                 >
                   {tab === 'login' ? 'Se connecter' : "S'inscrire"}
@@ -178,7 +178,7 @@ export function LoginForm() {
                   type="submit"
                   disabled={isLoading}
                   className="w-full h-10 font-medium rounded-md text-sm transition-all"
-                  style={{ background: '#3b968f', color: '#fff', border: 'none' }}
+                  style={{ background: '#ffffff', color: '#141414', border: 'none' }}
                 >
                   {isLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Connexion…</> : 'Se connecter'}
                 </Button>
@@ -186,7 +186,7 @@ export function LoginForm() {
                 <p className="text-center text-xs text-gray-500">
                   Pas encore de compte ?{' '}
                   <button type="button" onClick={() => setActiveTab('register')}
-                    className="underline" style={{ color: '#3b968f' }}>
+                    className="underline" style={{ color: '#fff' }}>
                     Créer un compte
                   </button>
                 </p>
@@ -263,7 +263,7 @@ export function LoginForm() {
                           return (
                             <div key={key} className="flex items-center gap-1.5">
                               {ok
-                                ? <Check className="w-3 h-3 shrink-0" style={{ color: '#3b968f' }} />
+                                ? <Check className="w-3 h-3 shrink-0" style={{ color: '#fff' }} />
                                 : <X className="w-3 h-3 shrink-0 text-gray-600" />}
                               <span className={`text-xs ${ok ? 'text-gray-300' : 'text-gray-600'}`}>{label}</span>
                             </div>
@@ -291,9 +291,9 @@ export function LoginForm() {
 
                 <p className="text-xs text-gray-600 leading-relaxed">
                   En continuant, vous acceptez nos{' '}
-                  <a href="/terms" style={{ color: '#3b968f' }} className="hover:underline">Conditions d'utilisation</a>
+                  <a href="/terms" style={{ color: '#fff' }} className="hover:underline">Conditions d'utilisation</a>
                   {' '}et notre{' '}
-                  <a href="/privacy" style={{ color: '#3b968f' }} className="hover:underline">Politique de confidentialité</a>.
+                  <a href="/privacy" style={{ color: '#fff' }} className="hover:underline">Politique de confidentialité</a>.
                 </p>
 
                 <Button
@@ -301,8 +301,8 @@ export function LoginForm() {
                   disabled={isLoading || !isPasswordValid}
                   className="w-full h-10 font-medium rounded-md text-sm transition-all"
                   style={{
-                    background: '#3b968f',
-                    color: '#fff',
+                    background: '#ffffff',
+                    color: '#141414',
                     border: 'none',
                     opacity: !isPasswordValid && !isLoading ? 0.45 : 1,
                   }}
@@ -313,7 +313,7 @@ export function LoginForm() {
                 <p className="text-center text-xs text-gray-500">
                   Déjà un compte ?{' '}
                   <button type="button" onClick={() => setActiveTab('login')}
-                    className="underline" style={{ color: '#3b968f' }}>
+                    className="underline" style={{ color: '#fff' }}>
                     Se connecter
                   </button>
                 </p>
