@@ -7,7 +7,7 @@ import type {
 } from "@/components/ui/toast"
 
 const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 3000 // Réduit de 1000000 à 3000ms (3 secondes)
+const TOAST_REMOVE_DELAY = 800 // Purge après fermeture (l'auto-fermeture est gérée par Radix duration=2000ms)
 
 type ToasterToast = ToastProps & {
   id: string
