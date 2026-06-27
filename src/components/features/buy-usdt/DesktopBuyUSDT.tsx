@@ -224,7 +224,7 @@ export function DesktopBuyUSDT() {
       if (nabooResult?.success && nabooResult.checkoutUrl) {
         window.location.href = nabooResult.checkoutUrl;
       } else {
-        toast({ title: "Erreur", description: "Impossible de créer le paiement", variant: "destructive" });
+        toast({ title: "Paiement impossible", description: (nabooResult as any)?.error || "Impossible de créer le paiement", variant: "destructive" });
       }
     }
     setLoading(false);

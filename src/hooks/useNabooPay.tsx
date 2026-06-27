@@ -31,12 +31,24 @@ export function useNabooPay() {
       });
 
       if (error) {
-        console.error('Error creating NabooPay transaction:', error);
-        toast.error('Erreur lors de la création du paiement');
-        throw error;
+        // Tenter de lire le corps de la réponse de la fonction edge pour
+        // récupérer le vrai message d'erreur (ex: clé NabooPay manquante,
+        // rejet de l'API NabooPay…) au lieu d'un message générique.
+        let detail = error.message;
+        try {
+          const ctx = (error as any)?.context;
+          if (ctx && typeof ctx.json === 'function') {
+            const body = await ctx.json();
+            if (body?.error) detail = body.error;
+          }
+        } catch (_) { /* ignore */ }
+
+        console.error('Error creating NabooPay transaction:', detail);
+        toast.error(`Paiement impossible : ${detail}`);
+        return { success: false, error: detail };
       }
 
-      if (data.success) {
+      if (data?.success) {
         setCheckoutUrl(data.checkoutUrl);
         return {
           success: true,
@@ -44,13 +56,14 @@ export function useNabooPay() {
           naboopayOrderId: data.naboopayOrderId
         };
       } else {
-        toast.error(data.error || 'Erreur lors de la création du paiement');
-        return { success: false };
+        const detail = data?.error || 'Erreur inconnue';
+        toast.error(`Paiement impossible : ${detail}`);
+        return { success: false, error: detail };
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error in createTransaction:', error);
-      toast.error('Erreur lors de la création du paiement');
-      return { success: false };
+      toast.error(`Paiement impossible : ${error?.message || 'Erreur réseau'}`);
+      return { success: false, error: error?.message };
     } finally {
       setLoading(false);
     }
