@@ -177,8 +177,7 @@ export const useKYCAdmin = () => {
 
       toast({
         title: "Vérification approuvée",
-        description: "La vérification d'identité a été approuvée avec succès et l'utilisateur a été notifié par email",
-        className: "bg-green-600 text-white border-green-600"
+        description: "La vérification d'identité a été approuvée avec succès et l'utilisateur a été notifié par email"
       });
 
       await fetchVerifications();

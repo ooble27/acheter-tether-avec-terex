@@ -93,7 +93,6 @@ export const useJobApplications = () => {
       toast({
         title: "Candidature envoyée !",
         description: "Votre candidature a été envoyée avec succès. Nous vous contacterons bientôt.",
-        className: "bg-green-600 text-white border-green-600",
       });
 
       return { success: true };

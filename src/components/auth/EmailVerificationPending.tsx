@@ -32,7 +32,6 @@ export function EmailVerificationPending({ user }: EmailVerificationPendingProps
       toast({
         title: "Email envoyé !",
         description: "Un nouvel email de vérification a été envoyé",
-        className: "bg-green-600 text-white border-green-600",
       });
     }
     

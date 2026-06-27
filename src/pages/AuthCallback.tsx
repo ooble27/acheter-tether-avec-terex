@@ -89,7 +89,6 @@ const AuthCallback = () => {
             toast({
               title: "✅ Connexion réussie !",
               description: "Vous êtes maintenant connecté à Terex.",
-              className: "bg-green-600 text-white border-green-600",
             });
 
             // Attendre un peu puis donner des instructions PWA
@@ -139,7 +138,6 @@ const AuthCallback = () => {
           toast({
             title: "✅ Email confirmé !",
             description: "Votre compte a été activé avec succès.",
-            className: "bg-green-600 text-white border-green-600",
           });
           
           setTimeout(() => {
@@ -170,7 +168,6 @@ const AuthCallback = () => {
           toast({
             title: "✅ Connexion réussie !",
             description: "Vous êtes maintenant connecté.",
-            className: "bg-green-600 text-white border-green-600",
           });
           
           setTimeout(() => {
@@ -201,7 +198,6 @@ const AuthCallback = () => {
           toast({
             title: "✅ Connexion réussie !",
             description: "Bienvenue sur Terex.",
-            className: "bg-green-600 text-white border-green-600",
           });
           
           setTimeout(() => {

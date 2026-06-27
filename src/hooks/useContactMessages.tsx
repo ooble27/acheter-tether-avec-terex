@@ -78,7 +78,6 @@ export const useContactMessages = () => {
       toast({
         title: "Message envoyé",
         description: "Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.",
-        className: "bg-green-600 text-white border-green-600",
       });
 
       return { error: null };

@@ -113,7 +113,6 @@ export const useJobApplicationsAdmin = () => {
       toast({
         title: "Succès",
         description: "Statut de la candidature mis à jour.",
-        className: "bg-green-600 text-white border-green-600",
       });
 
     } catch (error) {
@@ -151,7 +150,6 @@ export const useJobApplicationsAdmin = () => {
       toast({
         title: "Succès",
         description: "CV téléchargé avec succès.",
-        className: "bg-green-600 text-white border-green-600",
       });
     } catch (error) {
       console.error('Error downloading CV:', error);

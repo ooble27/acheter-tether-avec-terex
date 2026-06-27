@@ -157,7 +157,6 @@ export const useUserProfile = () => {
       toast({
         title: "Email mis à jour",
         description: "Un email de confirmation a été envoyé à votre nouvelle adresse",
-        className: "bg-green-600 text-white border-green-600",
       });
 
       return { error: null };

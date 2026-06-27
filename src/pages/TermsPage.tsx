@@ -44,7 +44,7 @@ const TermsPage = () => {
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
     if (!error) {
-      toast({ title: "Déconnexion réussie", description: "À bientôt", className: "bg-green-600 text-white border-green-600" });
+      toast({ title: "Déconnexion réussie", description: "À bientôt" });
       window.location.reload();
     }
   };

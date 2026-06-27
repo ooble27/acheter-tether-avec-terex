@@ -43,7 +43,6 @@ export default function SharePage() {
     toast({
       title: "Lien copié !",
       description: "Le lien a été copié dans le presse-papier",
-      className: "bg-green-600 text-white",
     });
   };
 

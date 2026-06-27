@@ -29,7 +29,6 @@ export const useFastAuth = () => {
       toast({
         title: "Email envoyé !",
         description: "Vérifiez votre boîte mail pour vous connecter.",
-        className: "bg-green-600 text-white border-green-600",
       });
 
       return { success: true, fastAuth: false };

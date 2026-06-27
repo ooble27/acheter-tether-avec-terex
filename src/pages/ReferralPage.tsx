@@ -23,7 +23,6 @@ export default function ReferralPage() {
     toast({
       title: "Code copié !",
       description: "Votre code de parrainage a été copié",
-      className: "bg-green-600 text-white",
     });
     setTimeout(() => setCopied(false), 2000);
   };
@@ -33,7 +32,6 @@ export default function ReferralPage() {
     toast({
       title: "Lien copié !",
       description: "Votre lien de parrainage a été copié",
-      className: "bg-green-600 text-white",
     });
   };
 

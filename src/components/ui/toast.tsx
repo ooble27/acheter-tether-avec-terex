@@ -15,8 +15,8 @@ const ToastViewport = React.forwardRef<
   <ToastPrimitives.Viewport
     ref={ref}
     className={cn(
-      // Centré horizontalement, en haut, largeur juste suffisante (pas pleine largeur)
-      "fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex max-h-screen flex-col items-center gap-2 p-0 w-auto max-w-[90vw] sm:max-w-[420px]",
+      // Mobile : centré au milieu de l'écran. Desktop (sm+) : en haut centré.
+      "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 sm:top-4 sm:translate-y-0 z-[100] flex max-h-screen flex-col items-center gap-2 p-0 w-auto max-w-[90vw] sm:max-w-[420px]",
       className
     )}
     {...props}
@@ -31,7 +31,7 @@ const toastVariants = cva(
       variant: {
         default: "border border-[rgba(255,255,255,0.10)] bg-[#1e1e1e] text-white",
         destructive:
-          "destructive group border-[rgba(248,113,113,0.3)] bg-[#1e1e1e] text-white",
+          "border border-[rgba(255,255,255,0.10)] bg-[#1e1e1e] text-white",
       },
     },
     defaultVariants: {
@@ -62,7 +62,7 @@ const ToastAction = React.forwardRef<
   <ToastPrimitives.Action
     ref={ref}
     className={cn(
-      "inline-flex h-7 shrink-0 items-center justify-center rounded-md border bg-transparent px-2 text-xs font-medium transition-colors hover:bg-secondary focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive", // Réduit de h-8 à h-7 et px-3 à px-2
+      "inline-flex h-7 shrink-0 items-center justify-center rounded-md border bg-transparent px-2 text-xs font-medium transition-colors hover:bg-secondary focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none disabled:opacity-50",
       className
     )}
     {...props}
@@ -77,7 +77,7 @@ const ToastClose = React.forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={cn(
-      "absolute right-1 top-1 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-1 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600", // Réduit right-2 top-2 à right-1 top-1
+      "absolute right-1 top-1 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-1 group-hover:opacity-100",
       className
     )}
     toast-close=""

@@ -77,7 +77,6 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
       toast({
         title: "Profil mis à jour",
         description: "Vos informations ont été sauvegardées avec succès.",
-        className: "bg-green-600 text-white border-green-600",
       });
       
       console.log('Profile saved successfully');

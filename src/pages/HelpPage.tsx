@@ -65,7 +65,7 @@ const HelpPage = () => {
     if (error) {
       toast({ title: "Erreur", description: "Impossible de se déconnecter", variant: "destructive" });
     } else {
-      toast({ title: "Déconnexion réussie", description: "Vous avez été déconnecté avec succès", className: "bg-green-600 text-white border-green-600" });
+      toast({ title: "Déconnexion réussie", description: "Vous avez été déconnecté avec succès" });
       window.location.reload();
     }
   };

@@ -94,7 +94,6 @@ export const useNotificationSettings = () => {
       toast({
         title: "Paramètres sauvegardés",
         description: "Vos préférences de notification ont été mises à jour",
-        className: "bg-green-600 text-white border-green-600",
       });
     } catch (error) {
       console.error('Erreur updateSettings:', error);

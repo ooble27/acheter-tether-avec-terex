@@ -144,7 +144,6 @@ export const usePushNotifications = () => {
       toast({
         title: "Notifications activées",
         description: "Vous recevrez maintenant des notifications push. Une notification de test a été envoyée.",
-        className: "bg-green-600 text-white border-green-600",
       });
 
       return pushSubscription;

@@ -82,7 +82,6 @@ export function KYCForm({ onComplete }: KYCFormProps) {
         toast({
           title: "Document téléchargé",
           description: "Le document a été téléchargé avec succès",
-          className: "bg-green-600 text-white border-green-600",
         });
       }
     } catch (error) {
@@ -136,7 +135,6 @@ export function KYCForm({ onComplete }: KYCFormProps) {
         toast({
           title: "✅ KYC soumis",
           description: "Votre dossier est en cours de traitement",
-          className: "bg-green-600 text-white border-green-600",
         });
         
         // Redirection automatique après soumission réussie

@@ -50,7 +50,6 @@ export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomePr
       toast({
         title: "Déconnexion réussie",
         description: "Vous avez été déconnecté avec succès",
-        className: "bg-green-600 text-white border-green-600",
       });
       window.location.reload();
     }

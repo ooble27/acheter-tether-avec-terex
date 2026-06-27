@@ -140,7 +140,6 @@ export const useKYC = () => {
       toast({
         title: "KYC soumis",
         description: "Votre dossier de vérification a été soumis avec succès",
-        className: "bg-green-600 text-white border-green-600",
       });
 
       return { success: true };
