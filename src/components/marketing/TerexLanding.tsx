@@ -45,13 +45,6 @@ const STEPS = [
   { n: '3', title: 'Recevez en 5 minutes', desc: 'Vos USDT ou votre argent arrivent immédiatement après confirmation.' },
 ];
 
-const STATS: [string, string][] = [
-  ['2 000+', 'Utilisateurs'],
-  ['6', 'Réseaux supportés'],
-  ['< 5 min', 'Délai moyen'],
-  ['24/7', 'Support'],
-];
-
 const PAYMENTS = [
   { name: 'Wave',          logo: waveLogo },
   { name: 'Orange Money',  logo: orangeLogo },
@@ -76,6 +69,15 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
   return (
     <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
       <style>{`
+        @keyframes tx-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .tx-fade { animation: tx-up 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+        .tx-cta { transition: transform 0.15s ease, box-shadow 0.2s ease; }
+        .tx-cta:hover { transform: translateY(-1px); }
+        @keyframes tx-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .tx-marquee { display: flex; gap: 56px; width: max-content; animation: tx-marquee 28s linear infinite; }
+        .tx-mask { -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+        .tx-tile { transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease; }
+        .tx-tile:hover { transform: translateY(-2px); }
         @media (max-width: 1100px) { .tx-vline { display: none !important; } }
         @media (max-width: 860px) {
           .tx-hero-title { font-size: 38px !important; }
@@ -100,9 +102,9 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
       {/* NAV */}
       <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(20,20,20,0.85)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${BORDER}` }}>
         <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '0 32px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 9 }}>
-            <img src={LOGO} alt="Terex" style={{ width: 28, height: 28, borderRadius: 8, objectFit: 'cover' }} />
-            <span style={{ color: '#fff', fontSize: 16, fontWeight: 700, letterSpacing: '-0.02em' }}>Terex</span>
+          <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <img src={LOGO} alt="Terex" style={{ width: 36, height: 36, borderRadius: 10, objectFit: 'cover' }} />
+            <span style={{ color: '#fff', fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Terex</span>
           </button>
           <div className="tx-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
             {[['Fonctionnalités', 'features'], ['Réseaux', 'networks'], ['Comment ça marche', 'how'], ['FAQ', 'faq']].map(([label, id]) => (
@@ -123,33 +125,22 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
       <header className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 32px 64px', position: 'relative', zIndex: 1 }}>
         <div className="tx-two" style={{ display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: 56, alignItems: 'center' }}>
           {/* Texte */}
-          <div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, borderRadius: 999, padding: '6px 12px', background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, marginBottom: 24 }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fff' }} />
-              <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.7)' }}>Teranga Exchange</span>
-            </div>
-            <h1 className="tx-hero-title" style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.03em', margin: '0 0 18px' }}>
+          <div className="tx-fade">
+            <img src={LOGO} alt="Terex" style={{ width: 84, height: 84, borderRadius: 22, objectFit: 'cover', marginBottom: 26, display: 'block' }} />
+            <h1 className="tx-hero-title" style={{ fontSize: 58, fontWeight: 800, lineHeight: 1.04, letterSpacing: '-0.035em', margin: '0 0 18px' }}>
               Achetez et vendez<br />des USDT en CFA
             </h1>
-            <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, margin: '0 0 30px', maxWidth: 440 }}>
+            <p style={{ fontSize: 17.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, margin: '0 0 32px', maxWidth: 440 }}>
               Achat et vente de USDT en quelques minutes. Rapide, sécurisé et au meilleur taux CFA.
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <button onClick={goPrimary} style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 50, padding: '0 26px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <button onClick={goPrimary} className="tx-cta" style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 50, padding: '0 26px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                 {user ? 'Mon tableau de bord' : 'Commencer gratuitement'} <ArrowRight size={16} />
               </button>
               <button onClick={() => document.getElementById('how')?.scrollIntoView({ behavior: 'smooth' })}
                 style={{ background: '#2d2d2d', color: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, height: 50, padding: '0 24px', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
                 Comment ça marche
               </button>
-            </div>
-            <div style={{ display: 'flex', gap: 22, flexWrap: 'wrap', marginTop: 26 }}>
-              {[[Shield, 'Sécurisé · KYC'], [Zap, 'En moins de 5 min'], [Wallet, 'Multi-réseaux']].map(([Ic, t]: any, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                  <Ic size={15} color="rgba(255,255,255,0.45)" />
-                  <span style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>{t}</span>
-                </div>
-              ))}
             </div>
           </div>
 
@@ -244,15 +235,42 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
         </div>
       </section>
 
-      {/* STATS */}
-      <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1 }}>
-        <div className="tx-pad tx-feat" style={{ maxWidth: 1120, margin: '0 auto', padding: 0, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
-          {STATS.map(([val, label], i) => (
-            <div key={label} style={{ padding: '40px 28px', textAlign: 'center', borderRight: i < STATS.length - 1 ? `1px solid ${BORDER}` : 'none' }}>
-              <div style={{ fontSize: 34, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 6px' }}>{val}</div>
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>{label}</div>
+      {/* MARQUEE — réseaux & actifs (premium, animé) */}
+      <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1, overflow: 'hidden' }}>
+        <div style={{ maxWidth: 1120, margin: '0 auto', padding: '40px 0' }}>
+          <p style={{ textAlign: 'center', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.35)', margin: '0 0 28px' }}>Compatible avec les principaux réseaux blockchain</p>
+          <div className="tx-mask" style={{ overflow: 'hidden' }}>
+            <div className="tx-marquee">
+              {[...NETWORKS, ...NETWORKS].map(({ name, logo }, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0, opacity: 0.75 }}>
+                  <img src={logo} alt={name} style={{ width: 32, height: 32, borderRadius: '50%' }} />
+                  <span style={{ fontSize: 17, fontWeight: 600, color: 'rgba(255,255,255,0.85)', whiteSpace: 'nowrap' }}>{name}</span>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SÉCURITÉ — bande premium */}
+      <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1, overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(60% 120% at 50% 0%, rgba(255,255,255,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div className="tx-pad" style={{ maxWidth: 900, margin: '0 auto', padding: '96px 32px', textAlign: 'center', position: 'relative' }}>
+          <div style={{ width: 56, height: 56, borderRadius: 16, background: ICON_BG, border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 22px' }}>
+            <Shield size={26} color="rgba(255,255,255,0.9)" strokeWidth={1.7} />
+          </div>
+          <h2 style={{ fontSize: 38, fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.1, margin: '0 0 16px' }}>Une sécurité de niveau bancaire</h2>
+          <p style={{ fontSize: 16.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.65, margin: '0 auto', maxWidth: 540 }}>
+            Chiffrement de bout en bout, vérification d'identité (KYC) et conformité réglementaire. Vos fonds et vos données sont protégés à chaque transaction.
+          </p>
+          <div style={{ display: 'flex', gap: 28, justifyContent: 'center', flexWrap: 'wrap', marginTop: 32 }}>
+            {['Chiffrement 256-bit', 'KYC vérifié', 'Conformité réglementaire'].map(t => (
+              <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.4)' }} />
+                <span style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.65)', fontWeight: 500 }}>{t}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
