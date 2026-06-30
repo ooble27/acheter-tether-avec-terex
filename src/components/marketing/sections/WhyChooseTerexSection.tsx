@@ -1,85 +1,96 @@
 import { AnimatedSection, AnimatedItem } from '@/hooks/useScrollAnimation';
 
+const advantages = [
+  {
+    stat: '2%',
+    statLabel: 'commission unique',
+    title: 'Frais transparents',
+    description:
+      "Pas de frais cachés, pas de surprises. Un taux fixe de 2% sur chaque transaction, parmi les plus bas du marché.",
+  },
+  {
+    stat: '<5',
+    statLabel: 'minutes',
+    title: 'Exécution instantanée',
+    description:
+      'De la confirmation à la réception, vos transactions sont complétées en quelques minutes, 24h/24.',
+  },
+  {
+    stat: '6',
+    statLabel: 'pays couverts',
+    title: "Couverture Afrique de l'Ouest",
+    description:
+      "Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger et Guinée. Mobile Money & virements bancaires.",
+  },
+];
+
 export function WhyChooseTerexSection() {
   return (
-    <section className="py-24 sm:py-32 relative">
+    <section className="py-20 sm:py-28" style={{ backgroundColor: '#141414' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Big statement headline */}
-        <AnimatedSection className="mb-20 sm:mb-28">
-          <span className="text-terex-accent text-xs tracking-[0.25em] uppercase mb-6 block">Nos avantages</span>
-          <h2 className="text-3xl sm:text-4xl lg:text-[3.5rem] font-light text-foreground leading-[1.12] max-w-4xl">
-            Nous réduisons vos frais à{' '}
-            <span className="relative inline-block">
-              <span className="text-terex-accent">2%</span>
-              <span className="absolute -bottom-1 left-0 right-0 h-px bg-terex-accent/50" />
-            </span>
-            , livrons en{' '}
-            <span className="text-terex-accent">5 min</span>
-            , et couvrons{' '}
-            <span className="text-terex-accent">6 pays</span>
-            {' '}en Afrique de l'Ouest.
+        <AnimatedSection className="mb-14 sm:mb-20">
+          <span
+            className="block text-xs tracking-[0.25em] uppercase mb-5"
+            style={{ color: 'rgba(255,255,255,0.45)' }}
+          >
+            Nos avantages
+          </span>
+          <h2
+            className="font-bold tracking-tight text-white max-w-3xl"
+            style={{ fontSize: 'clamp(1.9rem, 4vw, 2.6rem)', lineHeight: 1.12 }}
+          >
+            Des frais réduits à 2%, une livraison en 5 minutes, et une couverture
+            de 6 pays en Afrique de l'Ouest.
           </h2>
+          <p
+            className="text-base sm:text-lg max-w-2xl mt-5"
+            style={{ color: 'rgba(255,255,255,0.55)' }}
+          >
+            Tout ce qu'il faut pour transférer de la valeur rapidement, à moindre
+            coût et en toute confiance.
+          </p>
         </AnimatedSection>
 
-        {/* Visual showcase panels — Claude.com inspired */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {/* Panel 1 — Commission */}
-          <AnimatedItem index={0}>
-            <div className="group relative rounded-2xl bg-terex-darker/60 backdrop-blur-sm border border-terex-gray/20 overflow-hidden hover:border-terex-accent/30 transition-all duration-500">
-              {/* Visual header zone */}
-              <div className="h-32 sm:h-56 flex items-center justify-center relative overflow-hidden">
-                <div className="relative text-center">
-                  <div className="text-7xl sm:text-8xl font-extralight text-terex-accent leading-none mb-1">2%</div>
-                  <div className="text-muted-foreground text-sm">commission unique</div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {advantages.map((item, index) => (
+            <AnimatedItem index={index} key={item.title}>
+              <div
+                className="group rounded-2xl h-full p-8 transition-colors duration-300"
+                style={{
+                  backgroundColor: '#1e1e1e',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)')
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)')
+                }
+              >
+                <div className="mb-8">
+                  <div className="text-6xl sm:text-7xl font-extralight text-white leading-none mb-2">
+                    {item.stat}
+                  </div>
+                  <div
+                    className="text-sm"
+                    style={{ color: 'rgba(255,255,255,0.45)' }}
+                  >
+                    {item.statLabel}
+                  </div>
                 </div>
-              </div>
-              {/* Content */}
-              <div className="p-6 pt-0">
-                <h3 className="text-foreground text-lg font-medium mb-2">Frais transparents</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  Pas de frais cachés, pas de surprises. Un taux fixe de 2% sur chaque transaction, parmi les plus bas du marché.
+                <h3 className="text-white text-lg font-medium mb-3">
+                  {item.title}
+                </h3>
+                <p
+                  className="text-sm leading-relaxed"
+                  style={{ color: 'rgba(255,255,255,0.55)' }}
+                >
+                  {item.description}
                 </p>
               </div>
-            </div>
-          </AnimatedItem>
-
-          {/* Panel 2 — Speed */}
-          <AnimatedItem index={1}>
-            <div className="group relative rounded-2xl bg-terex-darker/60 backdrop-blur-sm border border-terex-gray/20 overflow-hidden hover:border-terex-accent/30 transition-all duration-500">
-              <div className="h-32 sm:h-56 flex items-center justify-center relative overflow-hidden">
-                <div className="relative text-center">
-                  <div className="text-7xl sm:text-8xl font-extralight text-terex-accent leading-none mb-1">&lt;5</div>
-                  <div className="text-muted-foreground text-sm">minutes</div>
-                </div>
-              </div>
-              <div className="p-6 pt-0">
-                <h3 className="text-foreground text-lg font-medium mb-2">Exécution instantanée</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  De la confirmation à la réception, vos transactions sont complétées en quelques minutes, 24h/24.
-                </p>
-              </div>
-            </div>
-          </AnimatedItem>
-
-          {/* Panel 3 — Coverage */}
-          <AnimatedItem index={2}>
-            <div className="group relative rounded-2xl bg-terex-darker/60 backdrop-blur-sm border border-terex-gray/20 overflow-hidden hover:border-terex-accent/30 transition-all duration-500">
-              <div className="h-32 sm:h-56 flex items-center justify-center relative overflow-hidden">
-                <div className="relative text-center">
-                  <div className="text-7xl sm:text-8xl font-extralight text-terex-accent leading-none mb-1">6</div>
-                  <div className="text-muted-foreground text-sm">pays couverts</div>
-                </div>
-              </div>
-              <div className="p-6 pt-0">
-                <h3 className="text-foreground text-lg font-medium mb-2">Couverture Afrique de l'Ouest</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Niger et Guinée. Mobile Money & virements bancaires.
-                </p>
-              </div>
-            </div>
-          </AnimatedItem>
+            </AnimatedItem>
+          ))}
         </div>
-
       </div>
     </section>
   );

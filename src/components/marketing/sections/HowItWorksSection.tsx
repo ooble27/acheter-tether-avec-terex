@@ -28,34 +28,60 @@ const steps = [
 
 export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionProps) {
   return (
-    <section id="how-it-works" className="py-24 sm:py-32 relative">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <AnimatedSection className="mb-16 sm:mb-20">
-          <div className="max-w-3xl">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-foreground leading-tight">
-              Comment ça <span className="text-terex-accent">marche</span> ?
-            </h2>
-          </div>
+    <section id="how-it-works" className="py-20 sm:py-28" style={{ backgroundColor: '#141414' }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <AnimatedSection className="text-center mb-16 sm:mb-20">
+          <span
+            className="block text-xs font-medium uppercase tracking-widest mb-4"
+            style={{ color: 'rgba(255,255,255,0.45)' }}
+          >
+            Processus
+          </span>
+          <h2
+            className="font-bold text-white tracking-tight"
+            style={{ fontSize: 'clamp(1.9rem, 4vw, 2.6rem)' }}
+          >
+            Comment ça marche ?
+          </h2>
+          <p
+            className="max-w-2xl mx-auto mt-4 text-base sm:text-lg"
+            style={{ color: 'rgba(255,255,255,0.55)' }}
+          >
+            Trois étapes simples, de l'inscription à la réception.
+          </p>
         </AnimatedSection>
 
-        {/* Steps - Ooble-inspired layout */}
-        <div className="space-y-0 divide-y divide-terex-gray/30">
+        {/* Steps */}
+        <div className="grid gap-6 md:grid-cols-3">
           {steps.map((step, index) => (
             <AnimatedItem key={step.number} index={index}>
-              <div className="grid grid-cols-[60px_1fr] sm:grid-cols-[100px_1fr_1fr] gap-4 sm:gap-8 py-12 sm:py-16 items-center">
-                {/* Big number */}
-                <span className="text-5xl sm:text-8xl font-extralight text-terex-gray/60 select-none">
+              <div
+                className="h-full rounded-2xl p-8 transition-colors duration-300"
+                style={{ backgroundColor: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)';
+                }}
+              >
+                {/* Step number badge */}
+                <div
+                  className="flex items-center justify-center w-12 h-12 rounded-xl mb-6 text-lg font-bold text-white"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}
+                >
                   {step.number}
-                </span>
+                </div>
 
-                {/* Title */}
-                <h3 className="text-xl sm:text-3xl font-light text-foreground leading-snug">
-                  <span className="border-b-2 border-terex-accent pb-0.5">{step.title}</span>{' '}
-                  <span className="text-muted-foreground">{step.titleHighlight}</span>
+                <h3 className="text-xl font-semibold text-white mb-3">
+                  {step.title}{' '}
+                  <span style={{ color: 'rgba(255,255,255,0.55)' }}>{step.titleHighlight}</span>
                 </h3>
 
-                {/* Description - below on mobile, right on desktop */}
-                <p className="col-span-2 sm:col-span-1 text-sm sm:text-base text-muted-foreground font-light leading-relaxed sm:text-right">
+                <p
+                  className="text-sm sm:text-base leading-relaxed"
+                  style={{ color: 'rgba(255,255,255,0.55)' }}
+                >
                   {step.description}
                 </p>
               </div>
@@ -63,14 +89,11 @@ export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionPr
           ))}
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-terex-gray/30" />
-
-        <AnimatedSection className="text-center mt-14" delay={250}>
+        <AnimatedSection className="text-center mt-16" delay={250}>
           <Button
             onClick={onBlockchainInfoClick}
-            variant="outline"
-            className="rounded-full border-terex-gray/40 text-foreground hover:bg-terex-gray/20 px-8 py-5 text-sm"
+            className="rounded-full px-8 py-5 text-sm hover:opacity-90"
+            style={{ backgroundColor: '#ffffff', color: '#141414', fontWeight: 700 }}
           >
             En savoir plus sur la blockchain
           </Button>

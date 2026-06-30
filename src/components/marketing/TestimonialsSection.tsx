@@ -1,6 +1,6 @@
 
 import { Card, CardContent } from '@/components/ui/card';
-import { Star, Quote, User } from 'lucide-react';
+import { Star } from 'lucide-react';
 
 const testimonials = [
   {
@@ -58,21 +58,50 @@ const row2 = testimonials.slice(3, 6);
 
 function TestimonialCard({ testimonial }: { testimonial: typeof testimonials[0] }) {
   const initials = testimonial.name.split(' ').map(n => n[0]).join('').slice(0, 2);
-  
+
   return (
-    <Card className="bg-white/5 border-terex-gray/20 w-[280px] sm:w-[300px] flex-shrink-0 rounded-2xl">
-      <CardContent className="p-5">
-        <p className="text-gray-300 text-sm leading-relaxed font-light mb-5">
+    <Card
+      className="w-[300px] sm:w-[340px] flex-shrink-0 rounded-2xl transition-colors duration-300"
+      style={{
+        backgroundColor: "#1e1e1e",
+        border: "1px solid rgba(255,255,255,0.07)",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = "rgba(255,255,255,0.16)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)";
+      }}
+    >
+      <CardContent className="p-6">
+        <div className="flex items-center gap-1 mb-5">
+          {Array.from({ length: testimonial.rating }).map((_, i) => (
+            <Star key={i} className="w-4 h-4 text-white" fill="currentColor" />
+          ))}
+        </div>
+
+        <p
+          className="text-sm leading-relaxed mb-6"
+          style={{ color: "rgba(255,255,255,0.75)" }}
+        >
           "{testimonial.text}"
         </p>
-        
+
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-terex-dark rounded-full flex items-center justify-center flex-shrink-0">
+          <div
+            className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+            style={{
+              backgroundColor: "#2d2d2d",
+              border: "1px solid rgba(255,255,255,0.10)",
+            }}
+          >
             <span className="text-white text-xs font-medium">{initials}</span>
           </div>
           <div>
             <h4 className="text-white font-medium text-sm">{testimonial.name}</h4>
-            <p className="text-gray-400 text-xs">{testimonial.transaction}</p>
+            <p className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>
+              {testimonial.transaction}
+            </p>
           </div>
         </div>
       </CardContent>
@@ -86,22 +115,34 @@ export function TestimonialsSection() {
   const row2Extended = [...row2, ...row2, ...row2, ...row2];
 
   return (
-    <section className="py-20 bg-terex-dark overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
-            Ils nous font <span className="text-terex-accent">confiance</span>
+    <section className="py-20 sm:py-28 overflow-hidden" style={{ backgroundColor: "#141414" }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-14 sm:mb-16">
+          <p
+            className="text-xs sm:text-sm font-medium uppercase tracking-widest mb-4"
+            style={{ color: "rgba(255,255,255,0.45)" }}
+          >
+            Témoignages
+          </p>
+          <h2
+            className="font-bold text-white tracking-tight mb-5"
+            style={{ fontSize: "clamp(1.9rem, 4vw, 2.6rem)" }}
+          >
+            Ils nous font confiance
           </h2>
-          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto font-light">
+          <p
+            className="text-base sm:text-lg max-w-2xl mx-auto"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
             Découvrez ce que nos utilisateurs disent de leur expérience avec Terex
           </p>
         </div>
       </div>
-      
+
       {/* Row 1 - Scrolling Left */}
-      <div className="relative mb-4 sm:mb-6">
-        <div 
-          className="flex gap-3 sm:gap-4 md:gap-5 animate-scroll-left"
+      <div className="relative mb-5 sm:mb-6">
+        <div
+          className="flex gap-4 sm:gap-5 animate-scroll-left"
           style={{
             width: 'max-content',
           }}
@@ -111,11 +152,11 @@ export function TestimonialsSection() {
           ))}
         </div>
       </div>
-      
+
       {/* Row 2 - Scrolling Right */}
       <div className="relative">
-        <div 
-          className="flex gap-3 sm:gap-4 md:gap-5 animate-scroll-right"
+        <div
+          className="flex gap-4 sm:gap-5 animate-scroll-right"
           style={{
             width: 'max-content',
           }}
@@ -125,8 +166,8 @@ export function TestimonialsSection() {
           ))}
         </div>
       </div>
-      
-      
+
+
       <style>{`
         @keyframes scroll-left {
           0% {
@@ -136,7 +177,7 @@ export function TestimonialsSection() {
             transform: translateX(-50%);
           }
         }
-        
+
         @keyframes scroll-right {
           0% {
             transform: translateX(-50%);
@@ -145,15 +186,15 @@ export function TestimonialsSection() {
             transform: translateX(0);
           }
         }
-        
+
         .animate-scroll-left {
           animation: scroll-left 50s linear infinite;
         }
-        
+
         .animate-scroll-right {
           animation: scroll-right 50s linear infinite;
         }
-        
+
         .animate-scroll-left:hover,
         .animate-scroll-right:hover {
           animation-play-state: paused;

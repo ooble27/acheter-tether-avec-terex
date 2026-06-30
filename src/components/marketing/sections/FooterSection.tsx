@@ -1,7 +1,12 @@
 
-import { Separator } from '@/components/ui/separator';
-import { Mail, Phone, MapPin, Twitter, Facebook, Linkedin, Instagram, Youtube, ShoppingCart, ArrowLeftRight, Globe, Code, TrendingUp, Building2, BookOpen, Briefcase, LifeBuoy, MessageCircle, BookMarked, HelpCircle, FileText, Shield } from 'lucide-react';
+import { Twitter, Facebook, Linkedin, Instagram, Youtube } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+
+const SURFACE = '#1e1e1e';
+const BORDER = 'rgba(255,255,255,0.07)';
+const MUTED = 'rgba(255,255,255,0.55)';
+const MUTED_SOFT = 'rgba(255,255,255,0.45)';
+const ICON_MUTED = 'rgba(255,255,255,0.5)';
 
 export function FooterSection() {
   const navigate = useNavigate();
@@ -53,22 +58,22 @@ export function FooterSection() {
   ];
 
   return (
-    <footer className="bg-white/[0.03] border-t border-white/[0.06]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <footer style={{ backgroundColor: '#141414', borderTop: `1px solid ${BORDER}` }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-10">
-          
+
           {/* Brand */}
           <div className="col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <img 
-                src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
-                alt="Terex Logo" 
+              <img
+                src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
+                alt="Terex Logo"
                 className="w-9 h-9 rounded-lg"
               />
-              <span className="text-foreground text-lg font-medium tracking-tight">Terex</span>
+              <span className="text-lg font-semibold tracking-tight" style={{ color: '#fff' }}>TEREX</span>
             </div>
-            
-            <p className="text-muted-foreground text-sm leading-relaxed mb-6 max-w-xs">
+
+            <p className="text-sm leading-relaxed mb-6 max-w-xs" style={{ color: MUTED }}>
               La plateforme leader d'échange crypto-fiat en Afrique de l'Ouest.
             </p>
 
@@ -81,7 +86,10 @@ export function FooterSection() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="w-8 h-8 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                  className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors"
+                  style={{ backgroundColor: SURFACE, border: `1px solid ${BORDER}`, color: ICON_MUTED }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = ICON_MUTED)}
                 >
                   <social.icon className="w-4 h-4" />
                 </a>
@@ -93,13 +101,16 @@ export function FooterSection() {
           {/* Link columns */}
           {footerSections.map((section) => (
             <div key={section.title}>
-              <h4 className="text-foreground text-sm font-semibold mb-4">{section.title}</h4>
+              <h4 className="text-sm font-semibold mb-4" style={{ color: '#fff' }}>{section.title}</h4>
               <ul className="space-y-2.5">
                 {section.links.map((link) => (
                   <li key={link.label}>
                     <button
                       onClick={() => navigate(link.href)}
-                      className="text-muted-foreground hover:text-foreground transition-colors text-sm"
+                      className="text-sm transition-colors"
+                      style={{ color: MUTED }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = MUTED)}
                     >
                       {link.label}
                     </button>
@@ -112,24 +123,42 @@ export function FooterSection() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-white/[0.06]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-muted-foreground text-xs">
+      <div style={{ borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-xs" style={{ color: MUTED_SOFT }}>
             &copy; 2026 Terex — Teranga Exchange Inc.
           </p>
           <div className="flex items-center gap-5">
-            <button onClick={() => navigate('/privacy')} className="text-muted-foreground hover:text-foreground text-xs transition-colors">
+            <button
+              onClick={() => navigate('/privacy')}
+              className="text-xs transition-colors"
+              style={{ color: MUTED_SOFT }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = MUTED_SOFT)}
+            >
               Confidentialité
             </button>
-            <button onClick={() => navigate('/terms')} className="text-muted-foreground hover:text-foreground text-xs transition-colors">
+            <button
+              onClick={() => navigate('/terms')}
+              className="text-xs transition-colors"
+              style={{ color: MUTED_SOFT }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = MUTED_SOFT)}
+            >
               Conditions
             </button>
-            <button onClick={() => navigate('/security')} className="text-muted-foreground hover:text-foreground text-xs transition-colors">
+            <button
+              onClick={() => navigate('/security')}
+              className="text-xs transition-colors"
+              style={{ color: MUTED_SOFT }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = MUTED_SOFT)}
+            >
               Sécurité
             </button>
           </div>
         </div>
       </div>
     </footer>
-  );  
+  );
 }
