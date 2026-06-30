@@ -80,8 +80,8 @@ export default {
 				terex: {
 					dark: '#141414',
 					darker: '#1e1e1e',
-					accent: '#3B968F',
-					'accent-light': '#4BA89F',
+					accent: '#ffffff',
+					'accent-light': '#e5e5e5',
 					gray: '#2A2A2A',
 					'gray-light': '#3A3A3A',
 				}

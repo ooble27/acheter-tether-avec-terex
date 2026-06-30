@@ -7,7 +7,7 @@ import usdtLogo from '@/assets/usdt-logo.png';
 const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030', l4: '#383838',
   bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
-  teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
   t1: '#f0f0f0', t2: '#999999', t3: '#686868',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.16)',
 };
@@ -139,7 +139,7 @@ function NetworkCard({ net, active, onClick }: { net: typeof NETWORKS[0]; active
       style={{
         display: 'flex', alignItems: 'center', gap: 12, padding: '13px 16px',
         borderRadius: 10, border: `1px solid ${active ? C.teal : hov ? C.bdh : C.bds}`,
-        background: active ? 'rgba(59,150,143,0.06)' : hov ? C.l2 : 'transparent',
+        background: active ? 'rgba(255, 255, 255,0.06)' : hov ? C.l2 : 'transparent',
         cursor: 'pointer', textAlign: 'left', width: '100%',
         transition: 'all 0.12s', fontFamily: FONT,
         boxShadow: active ? `0 0 0 1px ${C.teal}` : 'none',
@@ -199,7 +199,7 @@ function Avatar({ name, size = 36 }: { name: string; size?: number }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: '50%',
-      background: 'rgba(59,150,143,0.18)', color: C.teal,
+      background: 'rgba(255, 255, 255,0.18)', color: C.teal,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       fontSize: size * 0.38, fontWeight: 700, flexShrink: 0, fontFamily: FONT,
     }}>{(name || '?').charAt(0).toUpperCase()}</div>
@@ -581,7 +581,7 @@ export function BusinessPayments({ user, onBack }: {
                   )}
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: rateLoading ? C.t3 : C.teal, margin: '0 auto 2px', boxShadow: rateLoading ? 'none' : `0 0 0 3px rgba(59,150,143,0.15)` }} />
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: rateLoading ? C.t3 : C.teal, margin: '0 auto 2px', boxShadow: rateLoading ? 'none' : `0 0 0 3px rgba(255, 255, 255,0.15)` }} />
                   <div style={{ fontSize: 9, color: C.t3 }}>{rateLoading ? '…' : 'Live'}</div>
                 </div>
               </div>
@@ -646,7 +646,7 @@ export function BusinessPayments({ user, onBack }: {
                       <div key={s.id} onClick={() => setSelectedSupplier(s.id)} style={{
                         display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
                         borderRadius: 10, border: `1px solid ${isSelected ? C.teal : C.bds}`,
-                        background: isSelected ? 'rgba(59,150,143,0.06)' : C.l2,
+                        background: isSelected ? 'rgba(255, 255, 255,0.06)' : C.l2,
                         cursor: 'pointer', transition: 'all 0.12s',
                         boxShadow: isSelected ? `0 0 0 1px ${C.teal}` : 'none',
                       }}>
@@ -764,7 +764,7 @@ export function BusinessPayments({ user, onBack }: {
                   <div key={i} style={{
                     display: 'flex', padding: '12px 18px',
                     borderBottom: i < step3Rows.length - 1 ? `1px solid ${C.bds}` : 'none',
-                    background: (r as any).bold ? 'rgba(59,150,143,0.05)' : i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)',
+                    background: (r as any).bold ? 'rgba(255, 255, 255,0.05)' : i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)',
                   }}>
                     <div style={{ width: 170, fontSize: 12, color: C.t3, flexShrink: 0 }}>{r.label}</div>
                     <div style={{ flex: 1, fontSize: 13, fontFamily: (r as any).mono ? MONO : FONT, color: (r as any).bold ? C.teal : C.t1, fontWeight: (r as any).bold ? 700 : 400, display: 'flex', alignItems: 'center', gap: 7 }}>
@@ -831,14 +831,14 @@ export function BusinessPayments({ user, onBack }: {
         <Card style={{ padding: '56px 40px', textAlign: 'center' }}>
           <div style={{ marginBottom: 32 }}>
             <svg width="120" height="100" viewBox="0 0 120 100" fill="none" style={{ margin: '0 auto', display: 'block' }}>
-              <circle cx="60" cy="50" r="38" stroke="rgba(59,150,143,0.15)" strokeWidth="2"/>
+              <circle cx="60" cy="50" r="38" stroke="rgba(255, 255, 255,0.15)" strokeWidth="2"/>
               <circle cx="60" cy="50" r="38" stroke={C.teal} strokeWidth="2" strokeDasharray="60 180" strokeLinecap="round" transform="rotate(-90 60 50)"/>
-              <circle cx="60" cy="50" r="26" fill="rgba(59,150,143,0.08)" stroke={C.tealB} strokeWidth="1.5"/>
+              <circle cx="60" cy="50" r="26" fill="rgba(255, 255, 255,0.08)" stroke={C.tealB} strokeWidth="1.5"/>
               <path d="M47 50 L56 59 L74 42" stroke={C.teal} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-              <circle cx="18" cy="20" r="7" fill="rgba(59,150,143,0.1)" stroke={C.tealB} strokeWidth="1"/>
-              <circle cx="102" cy="20" r="5" fill="rgba(59,150,143,0.07)" stroke={C.tealB} strokeWidth="1"/>
-              <circle cx="14" cy="72" r="4" fill="rgba(59,150,143,0.07)" stroke={C.tealB} strokeWidth="1"/>
-              <circle cx="106" cy="72" r="6" fill="rgba(59,150,143,0.1)" stroke={C.tealB} strokeWidth="1"/>
+              <circle cx="18" cy="20" r="7" fill="rgba(255, 255, 255,0.1)" stroke={C.tealB} strokeWidth="1"/>
+              <circle cx="102" cy="20" r="5" fill="rgba(255, 255, 255,0.07)" stroke={C.tealB} strokeWidth="1"/>
+              <circle cx="14" cy="72" r="4" fill="rgba(255, 255, 255,0.07)" stroke={C.tealB} strokeWidth="1"/>
+              <circle cx="106" cy="72" r="6" fill="rgba(255, 255, 255,0.1)" stroke={C.tealB} strokeWidth="1"/>
               <path d="M24 25 L34 34" stroke={C.tealB} strokeWidth="1" strokeDasharray="2 2"/>
               <path d="M97 25 L86 34" stroke={C.tealB} strokeWidth="1" strokeDasharray="2 2"/>
             </svg>

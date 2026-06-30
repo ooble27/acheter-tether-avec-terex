@@ -538,7 +538,7 @@ export function KYCForm({ onComplete }: KYCFormProps) {
         <Button 
           type="submit"
           disabled={submitting}
-          className="bg-terex-accent hover:bg-terex-accent/90 text-white font-medium px-12 md:px-16 py-4 md:py-5 text-lg md:text-xl h-auto rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 w-full md:w-auto max-w-md"
+          className="bg-terex-accent hover:bg-terex-accent/90 text-[#141414] font-medium px-12 md:px-16 py-4 md:py-5 text-lg md:text-xl h-auto rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 w-full md:w-auto max-w-md"
         >
           {submitting ? (
             <>

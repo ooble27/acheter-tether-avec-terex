@@ -131,7 +131,7 @@ export function AdminLogin() {
 
               <Button
                 type="submit"
-                className="w-full bg-terex-accent hover:bg-terex-accent/90 text-white"
+                className="w-full bg-terex-accent hover:bg-terex-accent/90 text-[#141414]"
                 disabled={isLoading}
               >
                 {isLoading ? (

@@ -71,7 +71,7 @@ export function USDTSentConfirmation({ orderData, onBackToHome }: USDTSentConfir
               
               <div className="space-y-3">
                 <div className="flex items-start space-x-3 text-left">
-                  <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center text-white text-sm font-bold mt-0.5 flex-shrink-0">
+                  <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center text-[#141414] text-sm font-bold mt-0.5 flex-shrink-0">
                     1
                   </div>
                   <div className="flex-1">

@@ -12,7 +12,7 @@ import {
 const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
   bd: '#383838', bds: '#2a2a2a',
-  teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.22)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.22)',
   t1: '#f0f0f0', t2: '#999999', t3: '#686868',
   red: '#ef4444', redT: 'rgba(239,68,68,0.08)', redB: 'rgba(239,68,68,0.22)',
 };
@@ -145,7 +145,7 @@ function Inp({ value, onChange, placeholder, type = 'text', disabled, mono }: {
     <input value={value} onChange={e => onChange(e.target.value)} type={type}
       placeholder={placeholder} disabled={disabled}
       onFocus={() => setF(true)} onBlur={() => setF(false)}
-      style={{ width: '100%', background: disabled ? '#1e1e1e' : C.l2, border: `1px solid ${f ? 'rgba(59,150,143,0.4)' : C.bd}`, borderRadius: 9, padding: '10px 14px', color: disabled ? C.t3 : C.t1, fontSize: 13, outline: 'none', fontFamily: mono ? MONO : FONT, boxSizing: 'border-box', opacity: disabled ? 0.55 : 1, transition: 'border-color 0.15s' }} />
+      style={{ width: '100%', background: disabled ? '#1e1e1e' : C.l2, border: `1px solid ${f ? 'rgba(255, 255, 255,0.4)' : C.bd}`, borderRadius: 9, padding: '10px 14px', color: disabled ? C.t3 : C.t1, fontSize: 13, outline: 'none', fontFamily: mono ? MONO : FONT, boxSizing: 'border-box', opacity: disabled ? 0.55 : 1, transition: 'border-color 0.15s' }} />
   );
 }
 
@@ -156,7 +156,7 @@ function Textarea({ value, onChange, placeholder, rows = 4 }: {
   return (
     <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={rows}
       onFocus={() => setF(true)} onBlur={() => setF(false)}
-      style={{ width: '100%', background: C.l2, border: `1px solid ${f ? 'rgba(59,150,143,0.4)' : C.bd}`, borderRadius: 9, padding: '10px 14px', color: C.t1, fontSize: 13, outline: 'none', fontFamily: FONT, boxSizing: 'border-box', resize: 'none', lineHeight: 1.65, transition: 'border-color 0.15s' }} />
+      style={{ width: '100%', background: C.l2, border: `1px solid ${f ? 'rgba(255, 255, 255,0.4)' : C.bd}`, borderRadius: 9, padding: '10px 14px', color: C.t1, fontSize: 13, outline: 'none', fontFamily: FONT, boxSizing: 'border-box', resize: 'none', lineHeight: 1.65, transition: 'border-color 0.15s' }} />
   );
 }
 
@@ -322,7 +322,7 @@ function ProfileMain({ form, setPage, flash, lang }: {
   return (
     <div style={{ fontFamily: FONT, color: C.t1 }}>
       {flash && (
-        <div style={{ marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', background: 'rgba(59,150,143,0.07)', border: `1px solid rgba(59,150,143,0.2)`, borderRadius: 10, fontSize: 13, color: C.t2 }}>
+        <div style={{ marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', background: 'rgba(255, 255, 255,0.07)', border: `1px solid rgba(255, 255, 255,0.2)`, borderRadius: 10, fontSize: 13, color: C.t2 }}>
           <Check size={13} color={C.teal} /> {T.saved}
         </div>
       )}
@@ -813,7 +813,7 @@ function SecurityPage({ onBack, lang }: { onBack: () => void; lang: Lang }) {
             </div>
           </div>
           {pwdOk ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px', background: 'rgba(59,150,143,0.07)', borderRadius: 9, border: `1px solid rgba(59,150,143,0.2)` }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px', background: 'rgba(255, 255, 255,0.07)', borderRadius: 9, border: `1px solid rgba(255, 255, 255,0.2)` }}>
               <Check size={13} color={C.teal} />
               <span style={{ fontSize: 13, color: C.t2 }}>{fr ? 'Mot de passe mis à jour' : 'Password updated'}</span>
             </div>

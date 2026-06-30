@@ -62,7 +62,7 @@ function InitialAvatar({ name, size = 28 }: { name: string; size?: number }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: 7,
-      background: 'rgba(59,150,143,0.22)', color: '#3B968F',
+      background: 'rgba(255, 255, 255,0.22)', color: '#ffffff',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       fontSize: size * 0.38, fontWeight: 600, flexShrink: 0, fontFamily: FONT,
     }}>
@@ -95,7 +95,7 @@ export function BusinessAppSidebar({ activeSection, onNavigate, user, onLogout }
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
             width: 30, height: 30, borderRadius: 7, flexShrink: 0,
-            background: 'linear-gradient(135deg, #3B968F, #2d7870)',
+            background: 'linear-gradient(135deg, #ffffff, #2d7870)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
             <span style={{ color: '#fff', fontSize: 11, fontWeight: 800, letterSpacing: '-0.02em' }}>TB</span>
@@ -104,7 +104,7 @@ export function BusinessAppSidebar({ activeSection, onNavigate, user, onLogout }
             <p style={{ color: 'hsl(var(--sidebar-foreground))', fontSize: 11, fontWeight: 700, letterSpacing: '0.10em', margin: 0 }}>
               TEREX BUSINESS
             </p>
-            <p style={{ color: '#3B968F', fontSize: 9, letterSpacing: '0.12em', margin: '3px 0 0' }}>
+            <p style={{ color: '#ffffff', fontSize: 9, letterSpacing: '0.12em', margin: '3px 0 0' }}>
               PORTAIL B2B PRO
             </p>
           </div>

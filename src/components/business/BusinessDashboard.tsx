@@ -71,7 +71,7 @@ function getNavSections(lang: 'fr' | 'en') {
 const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
   bds: '#252525', bd: '#383838',
-  teal: '#3B968F',
+  teal: '#ffffff',
   t1: '#f0f0f0', t2: '#a0a0a0', t3: '#606060',
 };
 const FONT = "'Inter', sans-serif";
@@ -84,7 +84,7 @@ function InitialAvatar({ name, size = 28 }: { name: string; size?: number }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: 7,
-      background: 'rgba(59,150,143,0.22)', color: C.teal,
+      background: 'rgba(255, 255, 255,0.22)', color: C.teal,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       fontSize: size * 0.38, fontWeight: 600, flexShrink: 0, fontFamily: FONT,
     }}>

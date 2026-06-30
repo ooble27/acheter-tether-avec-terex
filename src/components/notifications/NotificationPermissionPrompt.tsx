@@ -118,7 +118,7 @@ export function NotificationPermissionPrompt() {
           <div className="flex space-x-2">
             <Button
               onClick={handleActivateNotifications}
-              className="flex-1 bg-terex-accent hover:bg-terex-accent/80 text-white text-xs h-8"
+              className="flex-1 bg-terex-accent hover:bg-terex-accent/80 text-[#141414] text-xs h-8"
             >
               <Bell className="w-3 h-3 mr-1" />
               Activer

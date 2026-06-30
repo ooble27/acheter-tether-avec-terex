@@ -136,7 +136,7 @@ export function SecuritySettingsCard({ onStartKYC, kycData, isKYCVerified }: Sec
                 <Button
                   onClick={onStartKYC}
                   size="sm"
-                  className="bg-terex-accent hover:bg-terex-accent/80 text-white"
+                  className="bg-terex-accent hover:bg-terex-accent/80 text-[#141414]"
                 >
                   {kycStatus.buttonText}
                 </Button>

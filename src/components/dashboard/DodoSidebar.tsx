@@ -58,7 +58,7 @@ export function DodoSidebar({ activeSection, onSectionChange, onLogout }: DodoSi
           {it.custom ? <Icon className="w-4 h-4" /> : <Icon className="w-4 h-4" strokeWidth={1.8} />}
         </span>
         <span className="truncate">{it.label}</span>
-        {active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#3B968F]" />}
+        {active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#ffffff]" />}
       </button>
     );
   };
@@ -121,8 +121,8 @@ export function DodoSidebar({ activeSection, onSectionChange, onLogout }: DodoSi
           onClick={() => onSectionChange('profile')}
           className="w-full flex items-center gap-2.5 p-2.5 rounded-lg border border-[#262626] hover:border-[#404040] transition-colors"
         >
-          <div className="w-7 h-7 rounded-full bg-[#3B968F]/20 flex items-center justify-center shrink-0">
-            <span className="text-[#3B968F] text-[11px] font-medium">AD</span>
+          <div className="w-7 h-7 rounded-full bg-[#ffffff]/20 flex items-center justify-center shrink-0">
+            <span className="text-[#ffffff] text-[11px] font-medium">AD</span>
           </div>
           <div className="flex-1 text-left min-w-0">
             <p className="text-[12px] font-medium text-white truncate">Mon compte</p>

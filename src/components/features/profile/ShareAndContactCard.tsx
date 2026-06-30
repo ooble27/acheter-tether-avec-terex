@@ -60,7 +60,7 @@ export function ShareAndContactCard() {
           <Button
             onClick={handleShare}
             variant="outline"
-            className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-white text-sm px-2"
+            className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-[#141414] text-sm px-2"
           >
             <Share2 className="w-4 h-4 mr-2 flex-shrink-0" />
             <span className="truncate">Partager Terex</span>

@@ -73,7 +73,7 @@ function StatusBadge({ status }: { status: PaymentRequest['status'] }) {
   const map = {
     pending:    { label: 'En attente',   className: 'bg-amber-500/15 text-amber-400 border-amber-500/20' },
     processing: { label: 'En cours',     className: 'bg-blue-500/15 text-blue-400 border-blue-500/20' },
-    completed:  { label: 'Complété',     className: 'bg-[#3B968F]/15 text-[#3B968F] border-[#3B968F]/20' },
+    completed:  { label: 'Complété',     className: 'bg-[#ffffff]/15 text-[#ffffff] border-[#ffffff]/20' },
     failed:     { label: 'Échoué',       className: 'bg-red-500/15 text-red-400 border-red-500/20' },
   };
   const { label, className } = map[status];
@@ -81,7 +81,7 @@ function StatusBadge({ status }: { status: PaymentRequest['status'] }) {
 }
 
 function StatusIcon({ status }: { status: PaymentRequest['status'] }) {
-  if (status === 'completed')  return <CheckCircle className="w-4 h-4 text-[#3B968F]" />;
+  if (status === 'completed')  return <CheckCircle className="w-4 h-4 text-[#ffffff]" />;
   if (status === 'processing') return <RefreshCw className="w-4 h-4 text-blue-400 animate-spin" />;
   if (status === 'failed')     return <XCircle className="w-4 h-4 text-red-400" />;
   return <Clock className="w-4 h-4 text-amber-400" />;
@@ -134,7 +134,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
     setProfile(newProfile);
     saveData(uid, 'profile', newProfile);
     setPSaving(false);
-    toast({ title: 'Profil Business sauvegardé', description: 'Votre profil entreprise a été mis à jour.', className: 'bg-[#3B968F] text-white border-[#3B968F]' });
+    toast({ title: 'Profil Business sauvegardé', description: 'Votre profil entreprise a été mis à jour.', className: 'bg-[#ffffff] text-white border-[#ffffff]' });
   };
 
   const handleNewPayment = async () => {
@@ -162,7 +162,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
     setPayForm({ amount: '', currency: 'USDT', walletAddress: '', network: 'TRC20', reference: '', note: '', supplierName: '' });
     setPaySaving(false);
     setActiveTab('payments');
-    toast({ title: 'Demande envoyée !', description: `${newPay.id} — en attente de traitement.`, className: 'bg-[#3B968F] text-white border-[#3B968F]' });
+    toast({ title: 'Demande envoyée !', description: `${newPay.id} — en attente de traitement.`, className: 'bg-[#ffffff] text-white border-[#ffffff]' });
   };
 
   const handleAddSupplier = async () => {
@@ -179,7 +179,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
     setSupForm({ name: '', walletAddress: '', network: 'TRC20', country: '' });
     setShowSupForm(false);
     setSupSaving(false);
-    toast({ title: 'Fournisseur ajouté', className: 'bg-[#3B968F] text-white border-[#3B968F]' });
+    toast({ title: 'Fournisseur ajouté', className: 'bg-[#ffffff] text-white border-[#ffffff]' });
   };
 
   const handleDeletePayment = (id: string) => {
@@ -204,8 +204,8 @@ export function B2BPage({ onBack }: B2BPageProps) {
     setActiveTab('new-payment');
   };
 
-  const inputCls = "h-10 bg-[#1a1a1a] border border-[#2e2e2e] text-white placeholder:text-[#3a3a3a] rounded-md focus:border-[#3B968F] focus:ring-1 focus:ring-[#3B968F]/30 transition-colors text-sm";
-  const selectCls = "h-10 bg-[#1a1a1a] border border-[#2e2e2e] text-white rounded-md focus:border-[#3B968F] text-sm px-3 w-full cursor-pointer";
+  const inputCls = "h-10 bg-[#1a1a1a] border border-[#2e2e2e] text-white placeholder:text-[#3a3a3a] rounded-md focus:border-[#ffffff] focus:ring-1 focus:ring-[#ffffff]/30 transition-colors text-sm";
+  const selectCls = "h-10 bg-[#1a1a1a] border border-[#2e2e2e] text-white rounded-md focus:border-[#ffffff] text-sm px-3 w-full cursor-pointer";
 
   const tabs: { id: Tab; label: string; icon: any }[] = [
     { id: 'profile',     label: 'Profil',      icon: Building2 },
@@ -226,7 +226,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-semibold text-white">Compte Business</h1>
-            <Badge className="bg-[#3B968F]/15 text-[#3B968F] border border-[#3B968F]/20 text-[10px] font-semibold px-2 py-0.5">
+            <Badge className="bg-[#ffffff]/15 text-[#ffffff] border border-[#ffffff]/20 text-[10px] font-semibold px-2 py-0.5">
               B2B
             </Badge>
           </div>
@@ -259,7 +259,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
               onClick={() => setActiveTab(tab.id)}
               className="flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-lg text-[11px] font-medium transition-all"
               style={{
-                background: active ? '#3B968F' : 'transparent',
+                background: active ? '#ffffff' : 'transparent',
                 color: active ? '#fff' : '#6b6b6b',
               }}
             >
@@ -274,7 +274,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
         <Card className="bg-[#141414] border-[#2e2e2e]">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-white flex items-center gap-2">
-              <Building2 className="w-4 h-4 text-[#3B968F]" />
+              <Building2 className="w-4 h-4 text-[#ffffff]" />
               Informations de l'entreprise
             </CardTitle>
           </CardHeader>
@@ -328,8 +328,8 @@ export function B2BPage({ onBack }: B2BPageProps) {
               <Input type="email" placeholder="contact@monentreprise.com" value={pForm.email} onChange={e => setPForm(f => ({ ...f, email: e.target.value }))} className={inputCls} />
             </div>
             <Separator className="bg-[#2e2e2e]" />
-            <div className="bg-[#3B968F]/10 border border-[#3B968F]/20 rounded-lg p-3">
-              <p className="text-xs text-[#3B968F] font-medium mb-1">Tarifs Business Terex</p>
+            <div className="bg-[#ffffff]/10 border border-[#ffffff]/20 rounded-lg p-3">
+              <p className="text-xs text-[#ffffff] font-medium mb-1">Tarifs Business Terex</p>
               <div className="space-y-1">
                 {[
                   ['0 – 500 000 FCFA / mois', '2.5%'],
@@ -344,7 +344,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
                 ))}
               </div>
             </div>
-            <Button onClick={handleSaveProfile} disabled={pSaving} className="w-full h-10 bg-[#3B968F] hover:bg-[#3B968F]/90 text-white border-0 text-sm font-medium">
+            <Button onClick={handleSaveProfile} disabled={pSaving} className="w-full h-10 bg-[#ffffff] hover:bg-[#ffffff]/90 text-white border-0 text-sm font-medium">
               {pSaving ? 'Sauvegarde…' : profile ? 'Mettre à jour' : 'Créer mon profil Business'}
             </Button>
           </CardContent>
@@ -355,7 +355,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
         <Card className="bg-[#141414] border-[#2e2e2e]">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-white flex items-center gap-2">
-              <Send className="w-4 h-4 text-[#3B968F]" />
+              <Send className="w-4 h-4 text-[#ffffff]" />
               Nouvelle demande de paiement
             </CardTitle>
           </CardHeader>
@@ -368,7 +368,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
                     <button
                       key={s.id}
                       onClick={() => useSupplierAddress(s)}
-                      className="text-xs px-3 py-1.5 rounded-lg bg-[#1a1a1a] border border-[#2e2e2e] text-gray-300 hover:border-[#3B968F]/50 hover:text-white transition-all"
+                      className="text-xs px-3 py-1.5 rounded-lg bg-[#1a1a1a] border border-[#2e2e2e] text-gray-300 hover:border-[#ffffff]/50 hover:text-white transition-all"
                     >
                       {s.name}
                     </button>
@@ -434,7 +434,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
                 </div>
               </div>
             )}
-            <Button onClick={handleNewPayment} disabled={paySaving} className="w-full h-10 bg-[#3B968F] hover:bg-[#3B968F]/90 text-white border-0 text-sm font-medium">
+            <Button onClick={handleNewPayment} disabled={paySaving} className="w-full h-10 bg-[#ffffff] hover:bg-[#ffffff]/90 text-white border-0 text-sm font-medium">
               {paySaving ? 'Envoi en cours…' : 'Soumettre la demande'}
             </Button>
             <p className="text-[11px] text-gray-600 text-center">
@@ -448,7 +448,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-400">{payments.length} demande{payments.length !== 1 ? 's' : ''}</p>
-            <Button onClick={() => setActiveTab('new-payment')} size="sm" className="h-8 px-3 bg-[#3B968F] hover:bg-[#3B968F]/90 text-white border-0 text-xs">
+            <Button onClick={() => setActiveTab('new-payment')} size="sm" className="h-8 px-3 bg-[#ffffff] hover:bg-[#ffffff]/90 text-white border-0 text-xs">
               <Plus className="w-3.5 h-3.5 mr-1" /> Nouvelle
             </Button>
           </div>
@@ -459,14 +459,14 @@ export function B2BPage({ onBack }: B2BPageProps) {
                   <History className="w-6 h-6 text-gray-600" />
                 </div>
                 <p className="text-sm text-gray-500">Aucune demande de paiement</p>
-                <Button onClick={() => setActiveTab('new-payment')} size="sm" className="h-8 px-4 bg-[#3B968F] hover:bg-[#3B968F]/90 text-white border-0 text-xs">
+                <Button onClick={() => setActiveTab('new-payment')} size="sm" className="h-8 px-4 bg-[#ffffff] hover:bg-[#ffffff]/90 text-white border-0 text-xs">
                   Créer ma première demande
                 </Button>
               </CardContent>
             </Card>
           ) : (
             payments.map(pay => (
-              <Card key={pay.id} className="bg-[#141414] border-[#2e2e2e] hover:border-[#3B968F]/20 transition-colors">
+              <Card key={pay.id} className="bg-[#141414] border-[#2e2e2e] hover:border-[#ffffff]/20 transition-colors">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
@@ -513,12 +513,12 @@ export function B2BPage({ onBack }: B2BPageProps) {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-400">{suppliers.length} fournisseur{suppliers.length !== 1 ? 's' : ''}</p>
-            <Button onClick={() => setShowSupForm(s => !s)} size="sm" className="h-8 px-3 bg-[#3B968F] hover:bg-[#3B968F]/90 text-white border-0 text-xs">
+            <Button onClick={() => setShowSupForm(s => !s)} size="sm" className="h-8 px-3 bg-[#ffffff] hover:bg-[#ffffff]/90 text-white border-0 text-xs">
               <Plus className="w-3.5 h-3.5 mr-1" /> Ajouter
             </Button>
           </div>
           {showSupForm && (
-            <Card className="bg-[#141414] border-[#3B968F]/30">
+            <Card className="bg-[#141414] border-[#ffffff]/30">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium text-white">Nouveau fournisseur</CardTitle>
               </CardHeader>
@@ -546,7 +546,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
                   </select>
                 </div>
                 <div className="flex gap-2">
-                  <Button onClick={handleAddSupplier} disabled={supSaving} className="flex-1 h-9 bg-[#3B968F] hover:bg-[#3B968F]/90 text-white border-0 text-sm">
+                  <Button onClick={handleAddSupplier} disabled={supSaving} className="flex-1 h-9 bg-[#ffffff] hover:bg-[#ffffff]/90 text-white border-0 text-sm">
                     {supSaving ? 'Ajout…' : 'Sauvegarder'}
                   </Button>
                   <Button onClick={() => setShowSupForm(false)} variant="outline" className="h-9 border-[#2e2e2e] bg-transparent text-gray-400 hover:text-white text-sm">
@@ -564,18 +564,18 @@ export function B2BPage({ onBack }: B2BPageProps) {
                 </div>
                 <p className="text-sm text-gray-500">Aucun fournisseur enregistré</p>
                 <p className="text-xs text-gray-600 text-center max-w-xs">Sauvegardez les adresses wallets de vos fournisseurs pour les réutiliser facilement.</p>
-                <Button onClick={() => setShowSupForm(true)} size="sm" className="h-8 px-4 bg-[#3B968F] hover:bg-[#3B968F]/90 text-white border-0 text-xs">
+                <Button onClick={() => setShowSupForm(true)} size="sm" className="h-8 px-4 bg-[#ffffff] hover:bg-[#ffffff]/90 text-white border-0 text-xs">
                   Ajouter un fournisseur
                 </Button>
               </CardContent>
             </Card>
           ) : (
             suppliers.map(sup => (
-              <Card key={sup.id} className="bg-[#141414] border-[#2e2e2e] hover:border-[#3B968F]/20 transition-colors">
+              <Card key={sup.id} className="bg-[#141414] border-[#2e2e2e] hover:border-[#ffffff]/20 transition-colors">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-[#3B968F]/10 flex items-center justify-center shrink-0">
-                      <Globe className="w-4 h-4 text-[#3B968F]" />
+                    <div className="w-9 h-9 rounded-lg bg-[#ffffff]/10 flex items-center justify-center shrink-0">
+                      <Globe className="w-4 h-4 text-[#ffffff]" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
@@ -587,7 +587,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
                     </div>
                   </div>
                   <div className="mt-3 pt-3 border-t border-[#2e2e2e] flex gap-2">
-                    <Button onClick={() => useSupplierAddress(sup)} size="sm" className="flex-1 h-8 bg-[#3B968F]/10 hover:bg-[#3B968F]/20 text-[#3B968F] border border-[#3B968F]/20 text-xs">
+                    <Button onClick={() => useSupplierAddress(sup)} size="sm" className="flex-1 h-8 bg-[#ffffff]/10 hover:bg-[#ffffff]/20 text-[#ffffff] border border-[#ffffff]/20 text-xs">
                       Utiliser pour un paiement
                     </Button>
                     <button onClick={() => copyToClipboard(sup.walletAddress)} className="px-2.5 h-8 rounded-md border border-[#2e2e2e] hover:bg-[#2e2e2e] text-gray-500 hover:text-gray-300 transition-colors">

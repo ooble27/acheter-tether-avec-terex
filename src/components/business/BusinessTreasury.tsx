@@ -13,7 +13,7 @@ import { useCryptoRates } from '@/hooks/useCryptoRates';
 const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030', l4: '#383838',
   bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
-  teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
   t1: '#f0f0f0', t2: '#888888', t3: '#565656',
 };
 const FONT = "'Inter', sans-serif";

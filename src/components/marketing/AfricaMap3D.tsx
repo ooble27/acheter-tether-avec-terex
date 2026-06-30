@@ -17,9 +17,9 @@ export function AfricaMap3D() {
             {/* Gradient définitions */}
             <defs>
               <linearGradient id="africaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#3B968F" stopOpacity="0.8"/>
-                <stop offset="50%" stopColor="#4BA89F" stopOpacity="0.6"/>
-                <stop offset="100%" stopColor="#5BC1B8" stopOpacity="0.4"/>
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8"/>
+                <stop offset="50%" stopColor="#e5e5e5" stopOpacity="0.6"/>
+                <stop offset="100%" stopColor="#cfcfcf" stopOpacity="0.4"/>
               </linearGradient>
               <filter id="glow">
                 <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
@@ -79,7 +79,7 @@ export function AfricaMap3D() {
                  C150 175, 140 170, 130 175
                  L120 180 Z"
               fill="url(#africaGradient)"
-              stroke="#3B968F"
+              stroke="#ffffff"
               strokeWidth="2"
               filter="url(#glow)"
               className="africa-continent"
@@ -101,7 +101,7 @@ export function AfricaMap3D() {
                  C150 65, 160 60, 170 65
                  L180 70
                  C185 75, 182 78, 180 80 Z"
-              fill="rgba(59, 150, 143, 0.2)"
+              fill="rgba(255, 255, 255, 0.2)"
               className="sahara-region"
             />
           </svg>

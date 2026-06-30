@@ -132,7 +132,7 @@ export function PersonalInfoCard({ user }: PersonalInfoCardProps) {
               onClick={() => setIsEditing(true)}
               variant="outline"
               size="sm"
-              className="border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-white transition-all duration-200 text-xs md:text-sm px-2 md:px-3 py-1 md:py-2 h-7 md:h-9"
+              className="border-terex-accent/50 text-terex-accent hover:bg-terex-accent hover:text-[#141414] transition-all duration-200 text-xs md:text-sm px-2 md:px-3 py-1 md:py-2 h-7 md:h-9"
             >
               <Edit3 className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
               <span className="hidden sm:inline">Modifier</span>

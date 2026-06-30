@@ -16,7 +16,7 @@ import { BusinessOverview } from '@/components/business/BusinessOverview';
 const C = {
   bg: '#111111', l1: '#181818', l2: '#202020', l3: '#272727',
   bds: '#222222', bd: '#333333',
-  teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.22)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.22)',
   t1: '#f0f0f0', t2: '#888888', t3: '#555555',
 };
 const FONT = "'Inter', sans-serif";

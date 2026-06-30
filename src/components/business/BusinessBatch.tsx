@@ -4,7 +4,7 @@ import { Check, ChevronLeft, ChevronRight, Plus, X, Upload, Pencil } from 'lucid
 const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
   bd: '#383838', bds: '#2a2a2a',
-  teal: '#3B968F', tealH: '#2d7870', tealT: 'rgba(59,150,143,0.10)', tealB: 'rgba(59,150,143,0.25)',
+  teal: '#ffffff', tealH: '#2d7870', tealT: 'rgba(255, 255, 255,0.10)', tealB: 'rgba(255, 255, 255,0.25)',
   t1: '#f0f0f0', t2: '#999999', t3: '#686868',
   red: '#ef4444',
 };

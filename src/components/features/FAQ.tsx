@@ -7,7 +7,7 @@ interface FAQProps {
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
-const ACCENT = '#3B968F';
+const ACCENT = '#ffffff';
 const ICON_BG = 'rgba(255,255,255,0.06)';
 
 const faqItems = [

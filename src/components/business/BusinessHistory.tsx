@@ -7,7 +7,7 @@ interface Props { user: { email: string; name: string } | null; }
 const C = {
   bg: '#1a1a1a', l1: '#212121', l2: '#282828', l3: '#303030',
   bd: '#383838', bds: '#2a2a2a', bdh: '#484848',
-  teal: '#3B968F', tealT: 'rgba(59,150,143,0.08)', tealB: 'rgba(59,150,143,0.20)',
+  teal: '#ffffff', tealT: 'rgba(255, 255, 255,0.08)', tealB: 'rgba(255, 255, 255,0.20)',
   t1: '#f0f0f0', t2: '#888888', t3: '#686868', t4: '#333333',
   red: '#ef4444',
 };
@@ -161,7 +161,7 @@ function TransactionDrawer({ tx, onClose }: { tx: any; onClose: () => void }) {
             </button>
           )}
           <button style={{ flex: 1, height: 36, borderRadius: 8, fontSize: 12, fontWeight: 500, background: C.tealT, border: `1px solid ${C.tealB}`, color: C.teal, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, fontFamily: FONT }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(59,150,143,0.14)'; }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255, 255, 255,0.14)'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = C.tealT; }}>
             <ExternalLink style={{ width: 13, height: 13 }} /> Blockchain
           </button>

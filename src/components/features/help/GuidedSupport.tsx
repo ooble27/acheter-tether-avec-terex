@@ -182,7 +182,7 @@ export const GuidedSupport = ({ onBack }: GuidedSupportProps) => {
                   <Button
                     key={index}
                     variant="outline"
-                    className="w-full justify-start text-left h-auto py-4 px-6 border-terex-accent/30 text-gray-300 hover:bg-terex-accent/10 hover:text-white hover:border-terex-accent/50"
+                    className="w-full justify-start text-left h-auto py-4 px-6 border-terex-accent/30 text-gray-300 hover:bg-terex-accent/10 hover:text-[#141414] hover:border-terex-accent/50"
                     onClick={() => handleSelectAnswer(answer.text, answer.nextQuestionId, answer.solution)}
                   >
                     {answer.text}

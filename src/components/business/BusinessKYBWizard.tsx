@@ -10,9 +10,9 @@ function StepBar({ current, total }: { current: number; total: number }) {
           <div
             className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 transition-colors ${
               i + 1 < current
-                ? 'bg-[#3B968F] text-black'
+                ? 'bg-[#ffffff] text-black'
                 : i + 1 === current
-                ? 'bg-[#3B968F] text-black ring-2 ring-[#3B968F] ring-offset-2 ring-offset-[#111111]'
+                ? 'bg-[#ffffff] text-black ring-2 ring-[#ffffff] ring-offset-2 ring-offset-[#111111]'
                 : 'bg-[#222] text-[#555]'
             }`}
           >
@@ -25,7 +25,7 @@ function StepBar({ current, total }: { current: number; total: number }) {
             )}
           </div>
           {i < total - 1 && (
-            <div className={`h-0.5 flex-1 transition-colors ${i + 1 < current ? 'bg-[#3B968F]' : 'bg-[#222]'}`} />
+            <div className={`h-0.5 flex-1 transition-colors ${i + 1 < current ? 'bg-[#ffffff]' : 'bg-[#222]'}`} />
           )}
         </div>
       ))}
@@ -44,10 +44,10 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 const inputClass =
-  'bg-[#181818] border border-[#333] rounded-lg px-3 py-2 text-white text-sm w-full focus:outline-none focus:border-[#3B968F] transition-colors placeholder-[#444]';
+  'bg-[#181818] border border-[#333] rounded-lg px-3 py-2 text-white text-sm w-full focus:outline-none focus:border-[#ffffff] transition-colors placeholder-[#444]';
 
 const selectClass =
-  'bg-[#181818] border border-[#333] rounded-lg px-3 py-2 text-white text-sm w-full focus:outline-none focus:border-[#3B968F] transition-colors appearance-none cursor-pointer';
+  'bg-[#181818] border border-[#333] rounded-lg px-3 py-2 text-white text-sm w-full focus:outline-none focus:border-[#ffffff] transition-colors appearance-none cursor-pointer';
 
 // ─── File Upload Field ─────────────────────────────────────────────────────────
 function FileUploadField({
@@ -72,10 +72,10 @@ function FileUploadField({
         onClick={() => !uploading && ref.current?.click()}
         className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${
           uploaded
-            ? 'border-[#3B968F] bg-[#3B968F]/5'
+            ? 'border-[#ffffff] bg-[#ffffff]/5'
             : uploading
-            ? 'border-[#3B968F]/50 bg-[#181818]'
-            : 'border-[#333] bg-[#181818] hover:border-[#3B968F]'
+            ? 'border-[#ffffff]/50 bg-[#181818]'
+            : 'border-[#333] bg-[#181818] hover:border-[#ffffff]'
         }`}
       >
         <input
@@ -90,17 +90,17 @@ function FileUploadField({
         />
         {uploading ? (
           <div className="flex flex-col items-center gap-2">
-            <div className="w-6 h-6 border-2 border-[#3B968F] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-[#ffffff] border-t-transparent rounded-full animate-spin" />
             <p className="text-[#888] text-xs">Téléchargement…</p>
           </div>
         ) : uploaded ? (
           <div className="flex flex-col items-center gap-1.5">
-            <div className="w-8 h-8 rounded-full bg-[#3B968F]/20 flex items-center justify-center">
-              <svg className="w-4 h-4 text-[#3B968F]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <div className="w-8 h-8 rounded-full bg-[#ffffff]/20 flex items-center justify-center">
+              <svg className="w-4 h-4 text-[#ffffff]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <p className="text-[#3B968F] text-xs font-medium">Document chargé</p>
+            <p className="text-[#ffffff] text-xs font-medium">Document chargé</p>
             <p className="text-[#555] text-xs">Cliquer pour remplacer</p>
           </div>
         ) : (
@@ -300,7 +300,7 @@ function Step3({
 function Step4({ draft }: { draft: BusinessKYBData }) {
   const docStatus = (url: string) =>
     url ? (
-      <span className="text-[#3B968F] text-xs font-medium">✓ Fourni</span>
+      <span className="text-[#ffffff] text-xs font-medium">✓ Fourni</span>
     ) : (
       <span className="text-[#888] text-xs">Non fourni</span>
     );
@@ -313,7 +313,7 @@ function Step4({ draft }: { draft: BusinessKYBData }) {
 
       {/* Company info */}
       <div className="bg-[#1a1a1a] border border-[#222] rounded-xl p-4 space-y-3">
-        <p className="text-xs font-semibold text-[#3B968F] uppercase tracking-wider">Entreprise</p>
+        <p className="text-xs font-semibold text-[#ffffff] uppercase tracking-wider">Entreprise</p>
         <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
           <div><span className="text-[#666]">Raison sociale</span><p className="text-white truncate">{draft.company_name || '—'}</p></div>
           <div><span className="text-[#666]">Forme juridique</span><p className="text-white">{draft.legal_form || '—'}</p></div>
@@ -326,7 +326,7 @@ function Step4({ draft }: { draft: BusinessKYBData }) {
 
       {/* Rep info */}
       <div className="bg-[#1a1a1a] border border-[#222] rounded-xl p-4 space-y-3">
-        <p className="text-xs font-semibold text-[#3B968F] uppercase tracking-wider">Représentant légal</p>
+        <p className="text-xs font-semibold text-[#ffffff] uppercase tracking-wider">Représentant légal</p>
         <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
           <div><span className="text-[#666]">Nom</span><p className="text-white">{draft.rep_name || '—'}</p></div>
           <div><span className="text-[#666]">Fonction</span><p className="text-white">{draft.rep_role || '—'}</p></div>
@@ -337,7 +337,7 @@ function Step4({ draft }: { draft: BusinessKYBData }) {
 
       {/* Documents */}
       <div className="bg-[#1a1a1a] border border-[#222] rounded-xl p-4 space-y-3">
-        <p className="text-xs font-semibold text-[#3B968F] uppercase tracking-wider">Documents</p>
+        <p className="text-xs font-semibold text-[#ffffff] uppercase tracking-wider">Documents</p>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between items-center"><span className="text-[#666]">RCCM</span>{docStatus(draft.rccm_document_url)}</div>
           <div className="flex justify-between items-center"><span className="text-[#666]">NINEA</span>{docStatus(draft.ninea_document_url)}</div>
@@ -367,8 +367,8 @@ function PendingScreen({ companyName, onComplete }: { companyName: string; onCom
       <div className="w-full max-w-md text-center space-y-6">
         {/* Icon */}
         <div className="flex justify-center">
-          <div className="w-20 h-20 rounded-full bg-[#3B968F]/15 border border-[#3B968F]/30 flex items-center justify-center">
-            <svg className="w-10 h-10 text-[#3B968F]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <div className="w-20 h-20 rounded-full bg-[#ffffff]/15 border border-[#ffffff]/30 flex items-center justify-center">
+            <svg className="w-10 h-10 text-[#ffffff]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z" />
             </svg>
           </div>
@@ -392,11 +392,11 @@ function PendingScreen({ companyName, onComplete }: { companyName: string; onCom
 
         {/* Checklist */}
         <div className="bg-[#181818] border border-[#222] rounded-xl p-4 text-left space-y-2">
-          <p className="text-xs font-semibold text-[#3B968F] uppercase tracking-wider mb-3">Ce qui sera vérifié</p>
+          <p className="text-xs font-semibold text-[#ffffff] uppercase tracking-wider mb-3">Ce qui sera vérifié</p>
           {checks.map(item => (
             <div key={item} className="flex items-center gap-3">
-              <div className="w-5 h-5 rounded-full bg-[#3B968F]/20 flex items-center justify-center flex-shrink-0">
-                <svg className="w-3 h-3 text-[#3B968F]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <div className="w-5 h-5 rounded-full bg-[#ffffff]/20 flex items-center justify-center flex-shrink-0">
+                <svg className="w-3 h-3 text-[#ffffff]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
@@ -407,7 +407,7 @@ function PendingScreen({ companyName, onComplete }: { companyName: string; onCom
 
         <button
           onClick={onComplete}
-          className="bg-[#3B968F] hover:bg-[#2d7870] text-black font-bold px-6 py-2.5 rounded-xl text-sm transition-colors w-full"
+          className="bg-[#ffffff] hover:bg-[#2d7870] text-black font-bold px-6 py-2.5 rounded-xl text-sm transition-colors w-full"
         >
           Retour à l'accueil
         </button>
@@ -479,7 +479,7 @@ export function BusinessKYBWizard({ userId, onComplete }: { userId: string; onCo
     return (
       <div className="min-h-screen bg-[#111111] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-[#3B968F] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-[#ffffff] flex items-center justify-center">
             <span className="text-black font-black text-xs">TB</span>
           </div>
           <p className="text-[#666] text-sm">Chargement…</p>
@@ -503,7 +503,7 @@ export function BusinessKYBWizard({ userId, onComplete }: { userId: string; onCo
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-[#3B968F] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[#ffffff] flex items-center justify-center">
               <span className="text-black font-black text-xs">TB</span>
             </div>
             <span className="text-white font-bold text-base">Terex Business</span>
@@ -543,7 +543,7 @@ export function BusinessKYBWizard({ userId, onComplete }: { userId: string; onCo
               <button
                 onClick={handleNext}
                 disabled={saving || Object.values(uploading).some(Boolean)}
-                className="bg-[#3B968F] hover:bg-[#2d7870] text-black font-bold px-6 py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 flex items-center gap-2"
+                className="bg-[#ffffff] hover:bg-[#2d7870] text-black font-bold px-6 py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 flex items-center gap-2"
               >
                 {saving && (
                   <div className="w-3.5 h-3.5 border-2 border-black/40 border-t-black rounded-full animate-spin" />
@@ -554,7 +554,7 @@ export function BusinessKYBWizard({ userId, onComplete }: { userId: string; onCo
               <button
                 onClick={handleSubmit}
                 disabled={submitting || saving || Object.values(uploading).some(Boolean)}
-                className="bg-[#3B968F] hover:bg-[#2d7870] text-black font-bold px-6 py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 flex items-center gap-2"
+                className="bg-[#ffffff] hover:bg-[#2d7870] text-black font-bold px-6 py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 flex items-center gap-2"
               >
                 {(submitting || saving) && (
                   <div className="w-3.5 h-3.5 border-2 border-black/40 border-t-black rounded-full animate-spin" />

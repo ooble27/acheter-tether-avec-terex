@@ -246,9 +246,9 @@ const AppSidebarContent = ({
                     <SidebarMenuButton onClick={() => {
                   setActiveSection('b2b');
                   onItemClick?.();
-                }} className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${activeSection === 'b2b' ? 'bg-gradient-to-r from-[#3B968F] to-[#2d7870] text-white shadow-lg shadow-[#3B968F]/25' : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'}`}>
+                }} className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${activeSection === 'b2b' ? 'bg-gradient-to-r from-[#ffffff] to-[#2d7870] text-white shadow-lg shadow-[#ffffff]/25' : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'}`}>
                       <div className="flex items-center space-x-4 w-full">
-                        <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${activeSection === 'b2b' ? 'bg-white/20' : 'bg-terex-gray/30 group-hover:bg-[#3B968F]/20'}`}>
+                        <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${activeSection === 'b2b' ? 'bg-white/20' : 'bg-terex-gray/30 group-hover:bg-[#ffffff]/20'}`}>
                           <Briefcase className="h-6 w-6" />
                         </div>
                         <div className="flex-1 text-left min-w-0">

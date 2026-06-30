@@ -9,7 +9,7 @@ interface DashboardHomeProps {
   onNavigate?: (section: string) => void;
 }
 
-const ACCENT_LIGHT = '#4BA89F';
+const ACCENT_LIGHT = '#e5e5e5';
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const ICON_BG = 'rgba(255,255,255,0.06)';

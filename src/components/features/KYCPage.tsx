@@ -118,7 +118,7 @@ export function KYCPage({ onBack }: KYCPageProps) {
           {canSubmit && (
             <Button
               onClick={() => setShowForm(true)}
-              className="bg-terex-accent hover:bg-terex-accent/90 text-white"
+              className="bg-terex-accent hover:bg-terex-accent/90 text-[#141414]"
             >
               {kycData?.status === 'rejected' ? 'Soumettre à nouveau' : 'Commencer la vérification'}
             </Button>

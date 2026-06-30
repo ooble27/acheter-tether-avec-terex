@@ -227,7 +227,7 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
                   <Button
                     onClick={handleBinanceRedirect}
                     size="lg"
-                    className="w-full bg-terex-accent hover:bg-terex-accent/80 text-white font-semibold h-12 text-lg"
+                    className="w-full bg-terex-accent hover:bg-terex-accent/80 text-[#141414] font-semibold h-12 text-lg"
                   >
                     {!imageError ? (
                       <img 
