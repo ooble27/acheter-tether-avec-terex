@@ -1,148 +1,154 @@
-import { Button } from '@/components/ui/button';
-import { Shield, Globe, ArrowRight } from 'lucide-react';
+import { ArrowRight, Shield, Globe, Zap, Coins, HandCoins, Send } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { DeviceMockups } from './DeviceMockups';
 import { HeroBuyForm } from './HeroBuyForm';
 import { AnimatedSection } from '@/hooks/useScrollAnimation';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface HeroSectionProps {
   user?: { email: string; name: string } | null;
   onShowDashboard?: () => void;
 }
 
+const TETHER = 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png';
+
+// Petits badges crypto flottants — illustration neutre
+const COINS = [
+  { sym: '₿',  label: 'BTC',  top: '6%',  left: '4%',  size: 46, delay: 0,   dur: 6 },
+  { sym: 'Ξ',  label: 'ETH',  top: '62%', left: '2%',  size: 38, delay: 1.2, dur: 7 },
+  { sym: '$',  label: 'USDC', top: '12%', left: '88%', size: 40, delay: 0.6, dur: 6.5 },
+  { sym: '₮',  label: 'USDT', top: '70%', left: '90%', size: 44, delay: 1.8, dur: 7.5 },
+];
+
 export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
-
   const handleGetStarted = () => navigate('/auth');
   const handleDashboard = () => onShowDashboard?.();
+  const handleHowItWorks = () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
 
-  const handleHowItWorks = () => {
-    const element = document.getElementById('how-it-works');
-    if (element) element.scrollIntoView({ behavior: 'smooth' });
-  };
+  const trust = [
+    { Icon: Shield, text: 'Sécurisé · KYC' },
+    { Icon: Zap, text: 'En moins de 5 min' },
+    { Icon: Globe, text: '6 pays d\'Afrique' },
+  ];
 
   return (
-    <div className="bg-terex-dark min-h-[90vh] lg:min-h-screen overflow-x-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20 overflow-hidden">
-        
-        {/* ===== MOBILE ONLY — Attio-style minimal ===== */}
-        {isMobile && (
-          <div className="flex flex-col items-center text-center pt-12 pb-8">
-            <AnimatedSection className="w-full mb-8" delay={100}>
-              <h1 className="text-[2.25rem] leading-[1.12] font-bold text-foreground tracking-[-0.02em] mb-4">
-                Achetez et vendez<br />
-                des{' '}
-                <span className="inline-flex items-center gap-1.5">
-                  USDT
-                  <img 
-                    src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" 
-                    alt="USDT" 
-                    className="w-7 h-7 inline-block"
-                  />
-                </span>
-              </h1>
-              <p className="text-[15px] text-muted-foreground/70 font-normal tracking-[-0.01em] max-w-[280px] mx-auto leading-relaxed">
-                Échange de stablecoins simple et sécurisé.
-              </p>
-            </AnimatedSection>
+    <div className="relative overflow-hidden" style={{ background: '#141414' }}>
+      <style>{`
+        @keyframes hero-float {
+          0%,100% { transform: translateY(0) rotate(0deg); }
+          50%     { transform: translateY(-16px) rotate(4deg); }
+        }
+      `}</style>
 
-            <AnimatedSection className="w-full flex justify-center" delay={250}>
-              <HeroBuyForm />
-            </AnimatedSection>
+      {/* Halo doux derrière le contenu */}
+      <div className="pointer-events-none absolute inset-0" style={{
+        background: 'radial-gradient(60% 50% at 50% 0%, rgba(255,255,255,0.05) 0%, transparent 70%)',
+      }} />
+
+      {/* Badges crypto flottants (desktop) */}
+      <div className="pointer-events-none absolute inset-0 hidden lg:block">
+        {COINS.map((c) => (
+          <div key={c.label} style={{ position: 'absolute', top: c.top, left: c.left, animation: `hero-float ${c.dur}s ${c.delay}s ease-in-out infinite` }}>
+            <div style={{
+              width: c.size, height: c.size, borderRadius: '50%',
+              background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.10)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'rgba(255,255,255,0.75)', fontSize: c.size * 0.42, fontWeight: 700,
+              boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+            }}>{c.sym}</div>
           </div>
-        )}
+        ))}
+      </div>
 
-        {/* ===== TABLET & DESKTOP — Side by side layout ===== */}
-        {!isMobile && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 lg:gap-16 items-center min-h-[500px] lg:min-h-[600px]">
-            <AnimatedSection className="text-left" delay={100}>
-              <DeviceMockups />
-              <p className="text-base lg:text-lg xl:text-xl text-muted-foreground mb-8 lg:mb-10 max-w-2xl leading-relaxed font-light">
-                Achetez et vendez des USDT facilement, 
-                effectuez des transferts d'argent vers l'Afrique instantanément. Rapide, sécurisé et sans commission.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 lg:gap-4">
-                {user ? (
-                  <Button onClick={handleDashboard} size="lg" className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-6 lg:px-8 py-4 h-12 lg:h-14 min-w-[140px] lg:min-w-[220px] rounded-xl text-base lg:text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group">
-                    Dashboard
-                    <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
-                  </Button>
-                ) : (
-                  <Button onClick={handleGetStarted} size="lg" className="bg-gradient-to-r from-terex-accent to-terex-accent/80 hover:from-terex-accent/90 hover:to-terex-accent/70 text-black font-semibold px-6 lg:px-8 py-4 h-12 lg:h-14 min-w-[140px] lg:min-w-[220px] rounded-xl text-base lg:text-lg shadow-lg shadow-terex-accent/25 transition-all duration-300 hover:shadow-terex-accent/40 hover:scale-[1.02] group">
-                    Commencer
-                    <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
-                  </Button>
-                )}
-                <Button onClick={handleHowItWorks} variant="outline" size="lg" className="border-terex-gray/50 text-foreground hover:bg-terex-gray/20 px-6 lg:px-8 py-4 h-12 lg:h-14 min-w-[180px] lg:min-w-[220px] rounded-xl text-base lg:text-lg backdrop-blur-sm transition-all duration-300 hover:border-terex-accent/40">
-                  Comment ça marche
-                </Button>
-              </div>
-            </AnimatedSection>
-            
-            <AnimatedSection className="flex justify-center" delay={300} direction="right">
-              <HeroBuyForm />
-            </AnimatedSection>
-          </div>
-        )}
-        
-        {/* Floating cards — Desktop & Tablet only */}
-        {!isMobile && (
-          <AnimatedSection className="mt-20 lg:mt-32" delay={400}>
-            <div className="relative max-w-4xl mx-auto">
-              <svg className="absolute inset-0 w-full h-full pointer-events-none hidden lg:block" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
-                <line x1="200" y1="100" x2="400" y2="100" stroke="hsl(var(--terex-accent))" strokeWidth="1" strokeDasharray="6 4" opacity="0.3" />
-                <line x1="400" y1="100" x2="600" y2="100" stroke="hsl(var(--terex-accent))" strokeWidth="1" strokeDasharray="6 4" opacity="0.3" />
-                <circle cx="200" cy="100" r="4" fill="hsl(var(--terex-accent))" opacity="0.5" />
-                <circle cx="400" cy="100" r="4" fill="hsl(var(--terex-accent))" opacity="0.5" />
-                <circle cx="600" cy="100" r="4" fill="hsl(var(--terex-accent))" opacity="0.5" />
-              </svg>
+      <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-10 pb-16 lg:pt-16 lg:pb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-              <div className="relative grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="relative bg-terex-darker/80 backdrop-blur-md rounded-2xl border border-terex-gray/25 p-5 lg:p-6 shadow-xl hover:border-terex-accent/30 transition-all duration-500 hover:-translate-y-1">
-                  <div className="flex items-center gap-3 mb-4">
-                    <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" className="w-7 h-7 lg:w-8 lg:h-8" />
-                    <span className="text-foreground font-medium text-sm lg:text-base">Échange USDT</span>
-                  </div>
-                  <div className="space-y-2 text-xs lg:text-sm">
-                    <div className="flex items-center gap-2 text-muted-foreground"><div className="w-1.5 h-1.5 rounded-full bg-terex-accent" /><span>Achat instantané</span></div>
-                    <div className="flex items-center gap-2 text-muted-foreground"><div className="w-1.5 h-1.5 rounded-full bg-terex-accent" /><span>Vente rapide</span></div>
-                    <div className="flex items-center gap-2 text-muted-foreground"><div className="w-1.5 h-1.5 rounded-full bg-terex-accent" /><span>Meilleur taux CFA</span></div>
-                  </div>
-                  <div className="mt-4 text-[10px] lg:text-xs text-muted-foreground/60">+ 3 réseaux supportés</div>
+          {/* ── Texte ── */}
+          <AnimatedSection className="text-center lg:text-left" delay={100}>
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mb-6"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full rounded-full opacity-60 animate-ping" style={{ background: '#fff' }} />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: '#fff' }} />
+              </span>
+              <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>Teranga Exchange · USDT en CFA</span>
+            </div>
+
+            <h1 className="font-bold tracking-[-0.02em] text-white" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.6rem)', lineHeight: 1.08 }}>
+              Achetez et vendez<br className="hidden sm:block" /> des{' '}
+              <span className="inline-flex items-center gap-2 align-middle">USDT
+                <img src={TETHER} alt="USDT" style={{ width: '0.9em', height: '0.9em', display: 'inline-block', opacity: 0.9 }} />
+              </span><br className="hidden sm:block" /> en toute simplicité
+            </h1>
+
+            <p className="mt-5 text-base lg:text-lg max-w-xl mx-auto lg:mx-0" style={{ color: 'rgba(255,255,255,0.55)', lineHeight: 1.6 }}>
+              Échangez vos stablecoins et envoyez de l'argent vers l'Afrique en quelques minutes. Rapide, sécurisé, au meilleur taux CFA.
+            </p>
+
+            {/* CTAs */}
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+              <button onClick={user ? handleDashboard : handleGetStarted}
+                className="group inline-flex items-center justify-center gap-2 rounded-xl px-7 h-12 text-[15px] font-bold transition-transform hover:scale-[1.02]"
+                style={{ background: '#ffffff', color: '#141414' }}>
+                {user ? 'Tableau de bord' : 'Commencer'}
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+              </button>
+              <button onClick={handleHowItWorks}
+                className="inline-flex items-center justify-center rounded-xl px-7 h-12 text-[15px] font-semibold transition-colors"
+                style={{ background: '#2d2d2d', border: '1px solid rgba(255,255,255,0.08)', color: '#fff' }}>
+                Comment ça marche
+              </button>
+            </div>
+
+            {/* Trust row */}
+            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 justify-center lg:justify-start">
+              {trust.map(({ Icon, text }) => (
+                <div key={text} className="flex items-center gap-2">
+                  <Icon className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.5)' }} />
+                  <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.55)' }}>{text}</span>
                 </div>
-
-                <div className="relative bg-terex-darker/80 backdrop-blur-md rounded-2xl border border-terex-accent/25 p-5 lg:p-6 shadow-xl lg:-translate-y-3 hover:border-terex-accent/40 transition-all duration-500 hover:-translate-y-4">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Globe className="w-6 h-6 lg:w-7 lg:h-7 text-terex-accent" />
-                    <span className="text-foreground font-medium text-sm lg:text-base">Transferts</span>
-                    <span className="ml-auto text-[9px] lg:text-[10px] px-2 py-0.5 rounded-full border border-terex-accent/30 text-terex-accent">Live</span>
-                  </div>
-                  <div className="space-y-2 text-xs lg:text-sm">
-                    <div className="flex items-center gap-2 text-muted-foreground"><div className="w-1.5 h-1.5 rounded-full bg-terex-accent" /><span>6 pays d'Afrique</span></div>
-                    <div className="flex items-center gap-2 text-muted-foreground"><div className="w-1.5 h-1.5 rounded-full bg-terex-accent" /><span>Mobile Money</span></div>
-                    <div className="flex items-center gap-2 text-muted-foreground"><div className="w-1.5 h-1.5 rounded-full bg-terex-accent" /><span>En moins de 5 min</span></div>
-                  </div>
-                  <div className="mt-4 text-[10px] lg:text-xs text-muted-foreground/60">+ Suivi en temps réel</div>
-                </div>
-
-                <div className="relative bg-terex-darker/80 backdrop-blur-md rounded-2xl border border-terex-gray/25 p-5 lg:p-6 shadow-xl hover:border-terex-accent/30 transition-all duration-500 hover:-translate-y-1">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Shield className="w-6 h-6 lg:w-7 lg:h-7 text-terex-accent" />
-                    <span className="text-foreground font-medium text-sm lg:text-base">Sécurité</span>
-                  </div>
-                  <div className="space-y-2 text-xs lg:text-sm">
-                    <div className="flex items-center gap-2 text-muted-foreground"><div className="w-1.5 h-1.5 rounded-full bg-terex-accent" /><span>Chiffrement 256-bit</span></div>
-                    <div className="flex items-center gap-2 text-muted-foreground"><div className="w-1.5 h-1.5 rounded-full bg-terex-accent" /><span>Non-custodial</span></div>
-                    <div className="flex items-center gap-2 text-muted-foreground"><div className="w-1.5 h-1.5 rounded-full bg-terex-accent" /><span>KYC vérifié</span></div>
-                  </div>
-                  <div className="mt-4 text-[10px] lg:text-xs text-muted-foreground/60">+ Conformité réglementaire</div>
-                </div>
-              </div>
+              ))}
             </div>
           </AnimatedSection>
-        )}
+
+          {/* ── Formulaire ── */}
+          <AnimatedSection className="flex justify-center lg:justify-end" delay={250} direction="right">
+            <HeroBuyForm />
+          </AnimatedSection>
+        </div>
+
+        {/* ── Cartes fonctionnalités ── */}
+        <AnimatedSection className="mt-16 lg:mt-24" delay={350}>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              { Icon: Coins,     title: 'Achat USDT',  items: ['Achat instantané', 'Meilleur taux CFA', '5 réseaux supportés'] },
+              { Icon: Send,      title: 'Transferts',  items: ['6 pays d\'Afrique', 'Mobile Money', 'En moins de 5 min'], highlight: true },
+              { Icon: HandCoins, title: 'Vente rapide', items: ['Wave & Orange Money', 'Paiement immédiat', 'Sans commission'] },
+            ].map(({ Icon, title, items, highlight }) => (
+              <div key={title} style={{
+                background: '#1e1e1e',
+                border: `1px solid ${highlight ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.07)'}`,
+                borderRadius: '20px', padding: '22px',
+              }}>
+                <div className="flex items-center gap-3 mb-4">
+                  <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Icon className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.85)' }} />
+                  </div>
+                  <span className="font-semibold text-white text-[15px]">{title}</span>
+                  {highlight && <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.6)' }}>Live</span>}
+                </div>
+                <div className="space-y-2">
+                  {items.map((it) => (
+                    <div key={it} className="flex items-center gap-2.5">
+                      <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.4)' }} />
+                      <span className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>{it}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </AnimatedSection>
       </div>
     </div>
   );
