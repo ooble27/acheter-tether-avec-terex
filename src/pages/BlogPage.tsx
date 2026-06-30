@@ -5,7 +5,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
-import { ChevronRight, GraduationCap, FileText, Menu, Search, Clock, ArrowRight } from "lucide-react";
+import { useTerexRates } from "@/hooks/useTerexRates";
+import { ChevronRight, GraduationCap, FileText, Menu, Search, Clock, ArrowRight, TrendingUp } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
@@ -192,10 +193,10 @@ const existingSlugs = new Set([
 // ── Category color map ────────────────────────────────────────────────
 
 const categoryColors: Record<string, string> = {
-  "Guides": "bg-white/10 text-white/60",
-  "Sécurité": "bg-amber-500/20 text-amber-400",
-  "Technologie": "bg-blue-500/20 text-blue-400",
-  "Finance": "bg-purple-500/20 text-purple-400",
+  "Guides": "bg-white/[0.08] text-white/65 border border-white/[0.08]",
+  "Sécurité": "bg-white/[0.08] text-white/65 border border-white/[0.08]",
+  "Technologie": "bg-white/[0.08] text-white/65 border border-white/[0.08]",
+  "Finance": "bg-white/[0.08] text-white/65 border border-white/[0.08]",
 };
 
 // ── Component ───────────────────────────────────────────────────────────
@@ -207,6 +208,8 @@ export default function BlogPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const { terexRateCfa, loading: rateLoading } = useTerexRates(2);
+  const rateDisplay = !rateLoading && terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : null;
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);
 
@@ -310,14 +313,27 @@ export default function BlogPage() {
         <main className="flex-1 min-w-0 py-10 lg:py-14 lg:pl-6">
 
           {/* Page header */}
-          <div className="mb-8 md:mb-10">
-            <p className="text-white/60 text-[11px] font-medium tracking-[0.2em] uppercase mb-3">Terex Blog</p>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-light text-foreground leading-[1.1] mb-3">
+          <style>{`
+            @keyframes bp-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+            .bp-fade { animation: bp-up 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+          `}</style>
+          <div className="bp-fade mb-8 md:mb-10">
+            <p className="text-white/40 text-[11px] font-semibold tracking-[0.1em] uppercase mb-3">Terex Blog</p>
+            <h1 className="font-extrabold text-white leading-[1.08] tracking-[-0.03em] mb-3" style={{ fontSize: 'clamp(2.2rem,6vw,3.6rem)' }}>
               Guides &amp; Analyses
             </h1>
-            <p className="text-muted-foreground text-sm md:text-base max-w-xl leading-relaxed">
+            <p className="text-white/55 text-sm md:text-base max-w-xl leading-relaxed mb-5">
               Guides, analyses et actualités crypto pour l'Afrique
             </p>
+            <div className="inline-flex items-center gap-2.5 rounded-xl border border-white/[0.07] bg-[#1e1e1e] px-3.5 py-2">
+              <TrendingUp className="w-3.5 h-3.5 text-white/55" strokeWidth={1.8} />
+              <span className="text-white/40 text-[11px] font-medium uppercase tracking-[0.08em]">Taux USDT / CFA</span>
+              {rateDisplay ? (
+                <span className="text-white text-[13px] font-semibold tabular-nums">{rateDisplay} CFA</span>
+              ) : (
+                <span className="inline-block w-16 h-3.5 rounded-md bg-white/[0.08] animate-pulse" />
+              )}
+            </div>
           </div>
 
           {/* Featured hero */}
@@ -326,7 +342,7 @@ export default function BlogPage() {
               to={existingSlugs.has(heroArticle.slug) ? `/blog/${heroArticle.slug}` : `/blog`}
               className="group block mb-8"
             >
-              <div className="relative rounded-2xl overflow-hidden border border-white/[0.08] group-hover:border-white/20 transition-all">
+              <div className="relative rounded-2xl overflow-hidden border border-white/[0.08] group-hover:border-white/[0.16] group-hover:-translate-y-0.5 transition-all duration-200">
                 <div className="relative aspect-[21/9] overflow-hidden">
                   <img
                     src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80"
@@ -365,7 +381,7 @@ export default function BlogPage() {
                   to={existingSlugs.has(article.slug) ? `/blog/${article.slug}` : `/blog`}
                   className="group block"
                 >
-                  <div className="rounded-2xl overflow-hidden border border-white/[0.08] group-hover:border-white/20 transition-all h-full">
+                  <div className="rounded-2xl overflow-hidden border border-white/[0.08] bg-[#1e1e1e] group-hover:border-white/[0.16] group-hover:-translate-y-0.5 transition-all duration-200 h-full">
                     <div className="relative aspect-[16/9] overflow-hidden">
                       <img
                         src={articleImages[article.slug] || `https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80`}
@@ -435,7 +451,7 @@ export default function BlogPage() {
               const imgSrc = articleImages[course.slug] || `https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80`;
               return (
                 <Link key={i} to={linkTo} className="group block">
-                  <article className="rounded-2xl overflow-hidden border border-white/[0.08] bg-white/[0.01] group-hover:border-white/20 transition-all h-full flex flex-col">
+                  <article className="rounded-2xl overflow-hidden border border-white/[0.07] bg-[#1e1e1e] group-hover:border-white/[0.16] group-hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col">
                     <div className="relative aspect-video overflow-hidden">
                       <img
                         src={imgSrc}
