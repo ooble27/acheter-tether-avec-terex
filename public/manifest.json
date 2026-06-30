@@ -1,31 +1,31 @@
 
 {
-  "name": "Terex - Échange de devises & Transferts Afrique",
+  "name": "Terex - Achat et vente de USDT",
   "short_name": "Terex",
-  "description": "Effectuez vos transactions et transferts d'argent vers l'Afrique facilement",
+  "description": "Achetez et vendez vos USDT facilement, au meilleur taux",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0D1117",
-  "theme_color": "#5EEAD4",
+  "background_color": "#141414",
+  "theme_color": "#141414",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "fr",
   "categories": ["finance", "business"],
   "icons": [
     {
-      "src": "/lovable-uploads/1f66c012-9a51-41ac-9f7c-7095d2d632a6.png",
+      "src": "/terex-logo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/lovable-uploads/1f66c012-9a51-41ac-9f7c-7095d2d632a6.png",
+      "src": "/terex-logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/lovable-uploads/1f66c012-9a51-41ac-9f7c-7095d2d632a6.png",
+      "src": "/terex-logo.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "apple-touch-icon"
@@ -33,7 +33,7 @@
   ],
   "screenshots": [
     {
-      "src": "/lovable-uploads/1f66c012-9a51-41ac-9f7c-7095d2d632a6.png",
+      "src": "/terex-logo.png",
       "sizes": "540x720",
       "type": "image/png",
       "form_factor": "narrow"
@@ -47,19 +47,19 @@
       "url": "/auth?tab=buy",
       "icons": [
         {
-          "src": "/lovable-uploads/1f66c012-9a51-41ac-9f7c-7095d2d632a6.png",
+          "src": "/terex-logo.png",
           "sizes": "96x96"
         }
       ]
     },
     {
-      "name": "Transfert Afrique",
-      "short_name": "Transfert",
-      "description": "Transférer de l'argent vers l'Afrique",
+      "name": "Acheter USDT",
+      "short_name": "Acheter",
+      "description": "Acheter des USDT au meilleur taux",
       "url": "/auth?tab=sell",
       "icons": [
         {
-          "src": "/lovable-uploads/1f66c012-9a51-41ac-9f7c-7095d2d632a6.png",
+          "src": "/terex-logo.png",
           "sizes": "96x96"
         }
       ]

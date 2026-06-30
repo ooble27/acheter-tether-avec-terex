@@ -9,7 +9,7 @@ interface PublicHomeProps {
 
 export function PublicHome({ user, onShowDashboard }: PublicHomeProps) {
   return (
-    <div className="min-h-screen relative overflow-x-hidden" style={{ background: '#111111' }}>
+    <div className="min-h-screen relative overflow-x-hidden" style={{ background: '#141414' }}>
       <PWAInstallPrompt />
       <TerexLanding user={user} onShowDashboard={onShowDashboard} />
     </div>

@@ -1,16 +1,19 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ArrowRight, ArrowUpRight, Coins, HandCoins, Send, Handshake,
-  Shield, Zap, Globe, Repeat, Wallet, Clock, ChevronDown,
+  ArrowRight, ArrowUpRight, Coins, HandCoins, Handshake,
+  Shield, Zap, Repeat, Wallet, Clock, ChevronDown,
 } from 'lucide-react';
 import { FooterSection } from './sections/FooterSection';
+import { useTerexRates } from '@/hooks/useTerexRates';
+import waveLogo from '@/assets/wave-logo.png';
+import orangeLogo from '@/assets/orange-money-logo.png';
 
 const BG = '#141414';
-const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const ICON_BG = 'rgba(255,255,255,0.06)';
 const TETHER = 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png';
+const LOGO = '/terex-logo.png';
 
 const NETWORKS = [
   { name: 'Tron',     sub: 'TRC20',    logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png' },
@@ -24,23 +27,34 @@ const NETWORKS = [
 const ACTIONS = [
   { Icon: Coins,     label: 'Acheter',  sub: 'Achat rapide' },
   { Icon: HandCoins, label: 'Vendre',   sub: 'Vente rapide' },
-  { Icon: Send,      label: 'Virement', sub: 'International' },
   { Icon: Handshake, label: 'OTC',      sub: 'Gros volumes' },
 ];
 
 const FEATURES = [
-  { Icon: Zap,    title: 'Transactions instantanées', desc: 'Achats, ventes et virements traités en moins de 5 minutes après confirmation.' },
-  { Icon: Wallet, title: 'Multi-réseaux',             desc: 'Recevez vos USDT sur TRC20, BEP20, ERC20, Polygon, Solana ou Aptos.' },
-  { Icon: Globe,  title: "Virements vers l'Afrique",  desc: 'Envoyez de l\'argent vers 6 pays via Wave et Orange Money, sans intermédiaire bancaire.' },
-  { Icon: Repeat, title: 'Meilleur taux CFA',         desc: 'Un taux USDT/CFA transparent et compétitif, mis à jour en temps réel.' },
-  { Icon: Shield, title: 'Sécurité & KYC',            desc: 'Chiffrement, vérification d\'identité et conformité pour protéger vos fonds.' },
-  { Icon: Clock,  title: 'Support 24/7',              desc: 'Une équipe disponible à tout moment par WhatsApp, téléphone ou email.' },
+  { Icon: Zap,        title: 'Transactions instantanées', desc: 'Achats et ventes traités en moins de 5 minutes après confirmation du paiement.' },
+  { Icon: Wallet,     title: 'Multi-réseaux',             desc: 'Recevez vos USDT sur TRC20, BEP20, ERC20, Polygon, Solana ou Aptos.' },
+  { Icon: Handshake,  title: 'OTC · Gros volumes',        desc: 'Un accompagnement dédié et des taux préférentiels pour vos transactions importantes.' },
+  { Icon: Repeat,     title: 'Meilleur taux CFA',         desc: 'Un taux USDT/CFA transparent et compétitif, mis à jour en temps réel.' },
+  { Icon: Shield,     title: 'Sécurité & KYC',            desc: 'Chiffrement, vérification d\'identité et conformité pour protéger vos fonds.' },
+  { Icon: Clock,      title: 'Support 24/7',              desc: 'Une équipe disponible à tout moment par WhatsApp, téléphone ou email.' },
 ];
 
 const STEPS = [
   { n: '1', title: 'Créez votre compte', desc: 'Inscription en quelques secondes, vérification rapide de votre identité.' },
-  { n: '2', title: 'Choisissez votre opération', desc: 'Achat, vente ou virement — entrez le montant et votre réseau.' },
+  { n: '2', title: 'Choisissez votre opération', desc: 'Achat ou vente — entrez le montant et sélectionnez votre réseau.' },
   { n: '3', title: 'Recevez en 5 minutes', desc: 'Vos USDT ou votre argent arrivent immédiatement après confirmation.' },
+];
+
+const STATS: [string, string][] = [
+  ['2 000+', 'Utilisateurs'],
+  ['6', 'Réseaux supportés'],
+  ['< 5 min', 'Délai moyen'],
+  ['24/7', 'Support'],
+];
+
+const PAYMENTS = [
+  { name: 'Wave',          logo: waveLogo },
+  { name: 'Orange Money',  logo: orangeLogo },
 ];
 
 const FAQ = [
@@ -56,6 +70,8 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
   const goAuth = () => navigate('/auth');
   const goPrimary = () => (user ? onShowDashboard?.() : navigate('/auth'));
   const [faqOpen, setFaqOpen] = useState<number | null>(0);
+  const { terexRateCfa, loading: rateLoading } = useTerexRates(2);
+  const rateDisplay = !rateLoading && terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : null;
 
   return (
     <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
@@ -84,8 +100,8 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
       {/* NAV */}
       <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(20,20,20,0.85)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${BORDER}` }}>
         <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '0 32px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <img src={TETHER} alt="Terex" style={{ width: 24, height: 24, opacity: 0.9 }} />
+          <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 9 }}>
+            <img src={LOGO} alt="Terex" style={{ width: 28, height: 28, borderRadius: 8, objectFit: 'cover' }} />
             <span style={{ color: '#fff', fontSize: 16, fontWeight: 700, letterSpacing: '-0.02em' }}>Terex</span>
           </button>
           <div className="tx-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
@@ -116,7 +132,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
               Achetez et vendez<br />des USDT en CFA
             </h1>
             <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, margin: '0 0 30px', maxWidth: 440 }}>
-              Achat, vente et virements vers l'Afrique en quelques minutes. Rapide, sécurisé et au meilleur taux.
+              Achat et vente de USDT en quelques minutes. Rapide, sécurisé et au meilleur taux CFA.
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               <button onClick={goPrimary} style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 50, padding: '0 26px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
@@ -128,7 +144,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
               </button>
             </div>
             <div style={{ display: 'flex', gap: 22, flexWrap: 'wrap', marginTop: 26 }}>
-              {[[Shield, 'Sécurisé · KYC'], [Zap, 'En moins de 5 min'], [Globe, "6 pays d'Afrique"]].map(([Ic, t]: any, i) => (
+              {[[Shield, 'Sécurisé · KYC'], [Zap, 'En moins de 5 min'], [Wallet, 'Multi-réseaux']].map(([Ic, t]: any, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                   <Ic size={15} color="rgba(255,255,255,0.45)" />
                   <span style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>{t}</span>
@@ -137,20 +153,26 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
             </div>
           </div>
 
-          {/* App directement sur le fond — taux + actions (aucune ombre, aucun cadre) */}
+          {/* App directement sur le fond — taux (temps réel) + actions (aucune ombre, aucun cadre) */}
           <div>
-            <p style={{ color: '#6b7280', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px' }}>Taux USDT / CFA</p>
+            <p style={{ color: '#6b7280', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px' }}>Taux USDT / CFA · en direct</p>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 26 }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                <span style={{ fontSize: 52, fontWeight: 700, letterSpacing: '-1.5px', lineHeight: 1 }}>660</span>
-                <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 16, fontWeight: 600 }}>CFA</span>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, minHeight: 52 }}>
+                {rateDisplay ? (
+                  <>
+                    <span style={{ fontSize: 52, fontWeight: 700, letterSpacing: '-1.5px', lineHeight: 1 }}>{rateDisplay}</span>
+                    <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 16, fontWeight: 600 }}>CFA</span>
+                  </>
+                ) : (
+                  <span style={{ display: 'inline-block', width: 140, height: 40, borderRadius: 10, background: 'rgba(255,255,255,0.06)' }} />
+                )}
               </div>
               <img src={TETHER} alt="USDT" style={{ width: 48, height: 48, opacity: 0.9 }} />
             </div>
             <div className="tx-actions" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               {ACTIONS.map(({ Icon, label, sub }) => (
                 <button key={label} onClick={goAuth}
-                  style={{ background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: 18, padding: '18px 16px', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s, background 0.15s' }}
+                  style={{ background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: 18, padding: '18px 16px', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s, background 0.15s', gridColumn: label === 'OTC' ? '1 / -1' : undefined }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)'; e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.background = 'transparent'; }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
@@ -171,7 +193,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
       {/* FEATURES */}
       <section id="features" style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1 }}>
         <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 32px' }}>
-          <SectionHead eyebrow="Fonctionnalités" title="Tout ce qu'il vous faut pour vos USDT" sub="Une plateforme simple pour acheter, vendre et envoyer de l'argent." />
+          <SectionHead eyebrow="Fonctionnalités" title="Tout ce qu'il vous faut pour vos USDT" sub="Une plateforme simple pour acheter et vendre vos USDT." />
           <div className="tx-feat" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderLeft: `1px solid ${BORDER}`, borderTop: `1px solid ${BORDER}` }}>
             {FEATURES.map(({ Icon, title, desc }) => (
               <div key={title} style={{ padding: '30px 28px', borderRight: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
@@ -199,6 +221,38 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* PAIEMENTS */}
+      <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1 }}>
+        <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 32px' }}>
+          <SectionHead eyebrow="Paiements" title="Payez avec Mobile Money" sub="Wave et Orange Money pour acheter ou recevoir vos fonds." />
+          <div className="tx-two" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+            {PAYMENTS.map(({ name, logo }) => (
+              <div key={name} style={{ border: `1px solid ${BORDER}`, borderRadius: 18, padding: '22px 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
+                <div style={{ width: 52, height: 52, borderRadius: 14, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <img src={logo} alt={name} style={{ width: 38, height: 38, objectFit: 'contain' }} />
+                </div>
+                <div>
+                  <p style={{ fontSize: 16, fontWeight: 600, margin: '0 0 2px' }}>{name}</p>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', margin: 0 }}>Dépôt et retrait instantanés</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* STATS */}
+      <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1 }}>
+        <div className="tx-pad tx-feat" style={{ maxWidth: 1120, margin: '0 auto', padding: 0, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
+          {STATS.map(([val, label], i) => (
+            <div key={label} style={{ padding: '40px 28px', textAlign: 'center', borderRight: i < STATS.length - 1 ? `1px solid ${BORDER}` : 'none' }}>
+              <div style={{ fontSize: 34, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 6px' }}>{val}</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>{label}</div>
+            </div>
+          ))}
         </div>
       </section>
 
