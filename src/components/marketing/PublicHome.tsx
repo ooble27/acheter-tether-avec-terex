@@ -1,21 +1,5 @@
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { PWAInstallPrompt } from '../PWAInstallPrompt';
-import { HeroSection } from './HeroSection';
-import { TestimonialsSection } from './TestimonialsSection';
-import { StatsSection } from './StatsSection';
-import { HeaderSection } from './sections/HeaderSection';
-import { CurrencyConverterSection } from './sections/CurrencyConverterSection';
-import { WhyChooseTerexSection } from './sections/WhyChooseTerexSection';
-import { HowItWorksSection } from './sections/HowItWorksSection';
-import { PaymentMethodsSection } from './sections/PaymentMethodsSection';
-import { CTASection } from './sections/CTASection';
-import { FooterSection } from './sections/FooterSection';
-import { NetworksSection } from './sections/NetworksSection';
-import { DashboardPreviewSection } from './sections/DashboardPreviewSection';
-import { FounderSection } from './sections/FounderSection';
+import { TerexLanding } from './TerexLanding';
 
 interface PublicHomeProps {
   onGetStarted: () => void;
@@ -23,72 +7,11 @@ interface PublicHomeProps {
   onShowDashboard?: () => void;
 }
 
-export function PublicHome({ onGetStarted, user, onShowDashboard }: PublicHomeProps) {
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  const isMobile = useIsMobile();
-
-  const handleGetStarted = () => {
-    navigate('/auth');
-  };
-
-  const handleBlockchainInfo = () => {
-    navigate('/blockchain');
-  };
-
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de se déconnecter",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Déconnexion réussie",
-        description: "Vous avez été déconnecté avec succès",
-      });
-      window.location.reload();
-    }
-  };
-
+export function PublicHome({ user, onShowDashboard }: PublicHomeProps) {
   return (
-    <div className="min-h-screen relative overflow-x-hidden" style={{ background: '#141414' }}>
+    <div className="min-h-screen relative overflow-x-hidden" style={{ background: '#111111' }}>
       <PWAInstallPrompt />
-
-      <HeaderSection
-        user={user}
-        onShowDashboard={onShowDashboard}
-        onLogout={handleLogout}
-      />
-
-      {/* Spacer for fixed navbar */}
-      <div className="h-16" />
-
-      <HeroSection user={user} onShowDashboard={onShowDashboard} />
-
-      <CurrencyConverterSection />
-
-      <WhyChooseTerexSection />
-
-      <DashboardPreviewSection />
-
-      <NetworksSection />
-
-      <HowItWorksSection onBlockchainInfoClick={handleBlockchainInfo} />
-
-      <StatsSection />
-
-      <PaymentMethodsSection />
-
-      <TestimonialsSection />
-
-      <FounderSection />
-
-      <CTASection user={user} onGetStarted={handleGetStarted} />
-
-      <FooterSection />
+      <TerexLanding user={user} onShowDashboard={onShowDashboard} />
     </div>
   );
 }
