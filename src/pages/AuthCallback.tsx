@@ -232,7 +232,7 @@ const AuthCallback = () => {
   return (
     <div className="min-h-screen bg-terex-dark flex items-center justify-center">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-terex-accent mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
         <div className="text-white text-lg">Connexion en cours...</div>
         <div className="text-gray-400 text-sm mt-2">Vérification du lien de connexion...</div>
         <div className="text-gray-400 text-xs mt-4 max-w-xs mx-auto">

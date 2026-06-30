@@ -192,7 +192,7 @@ const existingSlugs = new Set([
 // ── Category color map ────────────────────────────────────────────────
 
 const categoryColors: Record<string, string> = {
-  "Guides": "bg-[#3B968F]/20 text-[#3B968F]",
+  "Guides": "bg-white/10 text-white/60",
   "Sécurité": "bg-amber-500/20 text-amber-400",
   "Technologie": "bg-blue-500/20 text-blue-400",
   "Finance": "bg-purple-500/20 text-purple-400",
@@ -316,7 +316,7 @@ export default function BlogPage() {
 
           {/* Page header */}
           <div className="mb-8 md:mb-10">
-            <p className="text-[#3B968F] text-[11px] font-medium tracking-[0.2em] uppercase mb-3">Terex Blog</p>
+            <p className="text-white/60 text-[11px] font-medium tracking-[0.2em] uppercase mb-3">Terex Blog</p>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-light text-foreground leading-[1.1] mb-3">
               Guides &amp; Analyses
             </h1>
@@ -342,7 +342,7 @@ export default function BlogPage() {
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[#3B968F] text-white uppercase tracking-wider">À la Une</span>
+                    <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white text-[#141414] uppercase tracking-wider">À la Une</span>
                     <span className={`text-[10px] font-medium px-2.5 py-1 rounded-full ${categoryColors[heroArticle.category] || "bg-white/10 text-white/60"}`}>{heroArticle.category}</span>
                   </div>
                   <h2 className="text-2xl md:text-4xl font-light text-white mb-2 leading-snug max-w-2xl">
@@ -354,7 +354,7 @@ export default function BlogPage() {
                   <div className="flex items-center gap-4 text-white/40 text-xs">
                     <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{heroArticle.duration} de lecture</span>
                     <span>{heroArticle.lessons} articles</span>
-                    <span className="flex items-center gap-1 text-[#3B968F] group-hover:gap-2 transition-all font-medium">Lire <ArrowRight className="w-3.5 h-3.5" /></span>
+                    <span className="flex items-center gap-1 text-white group-hover:gap-2 transition-all font-medium">Lire <ArrowRight className="w-3.5 h-3.5" /></span>
                   </div>
                 </div>
               </div>
@@ -453,7 +453,7 @@ export default function BlogPage() {
                           {course.category}
                         </span>
                         {!hasPage && (
-                          <span className="text-[10px] font-medium px-2.5 py-1 rounded-full backdrop-blur-sm bg-[#3B968F]/20 text-[#3B968F]">
+                          <span className="text-[10px] font-medium px-2.5 py-1 rounded-full backdrop-blur-sm bg-white/10 text-white/60">
                             Bientôt
                           </span>
                         )}
@@ -474,7 +474,7 @@ export default function BlogPage() {
                           </span>
                           <span>{course.lessons} articles</span>
                         </div>
-                        <ArrowRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-[#3B968F] group-hover:translate-x-0.5 transition-all" />
+                        <ArrowRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
                       </div>
                     </div>
                   </article>

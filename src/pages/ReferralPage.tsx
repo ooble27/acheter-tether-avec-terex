@@ -71,22 +71,22 @@ export default function ReferralPage() {
         </div>
 
         {/* Code de parrainage */}
-        <Card className="bg-gradient-to-br from-terex-accent/10 to-terex-darker border-terex-accent/20">
+        <Card className="bg-[#1e1e1e] border-white/[0.07]">
           <CardHeader>
             <CardTitle className="text-white font-light flex items-center gap-2">
-              <Gift className="w-5 h-5 text-terex-accent" />
+              <Gift className="w-5 h-5 text-white" />
               Votre code de parrainage
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="bg-terex-darker rounded-lg p-6 text-center">
               <p className="text-gray-400 text-sm mb-2 font-light">Votre code unique</p>
-              <div className="text-3xl font-light text-terex-accent mb-4 tracking-wider">
+              <div className="text-3xl font-light text-white mb-4 tracking-wider">
                 {referralCode}
               </div>
               <Button
                 onClick={handleCopyCode}
-                className="bg-terex-accent hover:bg-terex-accent/90 text-black"
+                className="bg-white hover:bg-white/90 text-[#141414] font-semibold"
               >
                 {copied ? <CheckCircle className="w-4 h-4 mr-2" /> : <Copy className="w-4 h-4 mr-2" />}
                 {copied ? 'Copié !' : 'Copier le code'}
@@ -114,7 +114,7 @@ export default function ReferralPage() {
             <Button
               onClick={handleShare}
               variant="outline"
-              className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-black"
+              className="w-full border-white/15 text-white hover:bg-white hover:text-[#141414]"
             >
               <Share2 className="w-4 h-4 mr-2" />
               Partager mon code
@@ -126,18 +126,18 @@ export default function ReferralPage() {
         <Card className="bg-terex-darker border-terex-gray">
           <CardHeader>
             <CardTitle className="text-white font-light flex items-center gap-2">
-              <Award className="w-5 h-5 text-terex-accent" />
+              <Award className="w-5 h-5 text-white" />
               Vos avantages
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-terex-dark rounded-lg p-4 text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Users className="w-6 h-6 text-white" />
                 </div>
                 <p className="text-white font-light mb-1">Pour vous</p>
-                <p className="text-terex-accent text-lg font-light">5% de bonus</p>
+                <p className="text-white text-lg font-light">5% de bonus</p>
                 <p className="text-gray-400 text-xs font-light">Sur chaque transaction</p>
               </div>
 
@@ -146,7 +146,7 @@ export default function ReferralPage() {
                   <Gift className="w-6 h-6 text-white" />
                 </div>
                 <p className="text-white font-light mb-1">Pour votre filleul</p>
-                <p className="text-terex-accent text-lg font-light">3% de bonus</p>
+                <p className="text-white text-lg font-light">3% de bonus</p>
                 <p className="text-gray-400 text-xs font-light">Sur sa première transaction</p>
               </div>
 
@@ -155,7 +155,7 @@ export default function ReferralPage() {
                   <TrendingUp className="w-6 h-6 text-white" />
                 </div>
                 <p className="text-white font-light mb-1">Illimité</p>
-                <p className="text-terex-accent text-lg font-light">Sans limite</p>
+                <p className="text-white text-lg font-light">Sans limite</p>
                 <p className="text-gray-400 text-xs font-light">Parrainez autant que vous voulez</p>
               </div>
             </div>
@@ -170,7 +170,7 @@ export default function ReferralPage() {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0 text-black font-light">
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center flex-shrink-0 text-[#141414] font-light">
                   1
                 </div>
                 <div>
@@ -182,7 +182,7 @@ export default function ReferralPage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0 text-black font-light">
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center flex-shrink-0 text-[#141414] font-light">
                   2
                 </div>
                 <div>
@@ -194,7 +194,7 @@ export default function ReferralPage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0 text-black font-light">
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center flex-shrink-0 text-[#141414] font-light">
                   3
                 </div>
                 <div>
@@ -221,7 +221,7 @@ export default function ReferralPage() {
               </div>
               <div className="bg-terex-dark rounded-lg p-4">
                 <p className="text-gray-400 text-sm font-light mb-2">Bonus gagnés</p>
-                <p className="text-3xl font-light text-terex-accent">0 CFA</p>
+                <p className="text-3xl font-light text-white">0 CFA</p>
               </div>
             </div>
           </CardContent>

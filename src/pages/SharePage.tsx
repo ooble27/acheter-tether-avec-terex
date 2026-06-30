@@ -98,7 +98,7 @@ export default function SharePage() {
         <Card className="bg-terex-darker border-terex-gray">
           <CardHeader>
             <CardTitle className="text-white font-light flex items-center gap-2">
-              <Share2 className="w-5 h-5 text-terex-accent" />
+              <Share2 className="w-5 h-5 text-white" />
               Partage rapide
             </CardTitle>
           </CardHeader>
@@ -106,7 +106,7 @@ export default function SharePage() {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               <Button
                 onClick={() => handleSocialShare('whatsapp')}
-                className="bg-green-600 hover:bg-green-700 text-white justify-start"
+                className="bg-white/10 hover:bg-white/15 text-white justify-start"
               >
                 <MessageCircle className="w-4 h-4 mr-2" />
                 WhatsApp
@@ -146,7 +146,7 @@ export default function SharePage() {
 
               <Button
                 onClick={handleCopyLink}
-                className="bg-terex-accent hover:bg-terex-accent/90 text-black justify-start"
+                className="bg-white hover:bg-white/90 text-[#141414] font-semibold justify-start"
               >
                 <Link2 className="w-4 h-4 mr-2" />
                 Copier lien
@@ -157,7 +157,7 @@ export default function SharePage() {
               <Button
                 onClick={() => handleShare()}
                 variant="outline"
-                className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-black"
+                className="w-full border-white/15 text-white hover:bg-white hover:text-[#141414]"
               >
                 <Share2 className="w-4 h-4 mr-2" />
                 Plus d'options de partage
@@ -176,7 +176,7 @@ export default function SharePage() {
               <p className="text-gray-300 font-light text-sm">
                 {shareMessage}
               </p>
-              <p className="text-terex-accent text-sm mt-2 font-light">
+              <p className="text-white/60 text-sm mt-2 font-light">
                 {appUrl}
               </p>
             </div>
@@ -191,8 +191,8 @@ export default function SharePage() {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0">
-                  <Share2 className="w-4 h-4 text-black" />
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center flex-shrink-0">
+                  <Share2 className="w-4 h-4 text-[#141414]" />
                 </div>
                 <div>
                   <p className="text-white font-light">Aidez vos proches</p>
@@ -203,8 +203,8 @@ export default function SharePage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0">
-                  <MessageCircle className="w-4 h-4 text-black" />
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center flex-shrink-0">
+                  <MessageCircle className="w-4 h-4 text-[#141414]" />
                 </div>
                 <div>
                   <p className="text-white font-light">Faites grandir la communauté</p>
@@ -215,8 +215,8 @@ export default function SharePage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0">
-                  <QrCode className="w-4 h-4 text-black" />
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center flex-shrink-0">
+                  <QrCode className="w-4 h-4 text-[#141414]" />
                 </div>
                 <div>
                   <p className="text-white font-light">Simplifiez les transactions</p>
@@ -230,11 +230,11 @@ export default function SharePage() {
         </Card>
 
         {/* Stats */}
-        <Card className="bg-gradient-to-br from-terex-accent/10 to-terex-darker border-terex-accent/20">
+        <Card className="bg-[#1e1e1e] border-white/[0.07]">
           <CardContent className="p-6 text-center">
             <div className="space-y-2">
               <p className="text-gray-400 text-sm font-light">Rejoignez</p>
-              <p className="text-4xl font-light text-terex-accent">10,000+</p>
+              <p className="text-4xl font-light text-white">10,000+</p>
               <p className="text-white font-light">Utilisateurs satisfaits</p>
             </div>
           </CardContent>
