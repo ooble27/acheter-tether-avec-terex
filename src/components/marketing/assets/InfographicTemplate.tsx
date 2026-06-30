@@ -15,7 +15,7 @@ export function InfographicTemplate() {
         <div className="bg-white p-6 rounded-xl">
           <div className="text-center mb-6">
             <img 
-              src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+              src="/terex-logo.png" 
               alt="Terex Logo" 
               className="w-16 h-16 mx-auto rounded-xl mb-3"
             />
@@ -86,7 +86,7 @@ export function InfographicTemplate() {
         <div className="bg-gradient-to-br from-terex-accent to-terex-accent/80 p-6 rounded-xl text-black">
           <div className="text-center mb-6">
             <img 
-              src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+              src="/terex-logo.png" 
               alt="Terex Logo" 
               className="w-16 h-16 mx-auto rounded-xl mb-3"
             />

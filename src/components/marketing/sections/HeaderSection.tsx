@@ -123,7 +123,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
         {!useHamburgerMenu ? (
           <div className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? 'h-14' : 'h-16'}`}>
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-              <img src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" alt="Terex Logo" className="w-8 h-8 rounded-lg" />
+              <img src="/terex-logo.png" alt="Terex Logo" className="w-8 h-8 rounded-lg" />
               <span className="ml-2 text-lg font-semibold tracking-tight" style={{ color: '#fff' }}>TEREX</span>
             </div>
             <nav className="flex items-center space-x-8">
@@ -194,7 +194,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
           <div ref={menuRef} className="relative">
             <div className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? 'h-14' : 'h-16'}`}>
               <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                <img src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" alt="Terex Logo" className="w-8 h-8 rounded-lg" />
+                <img src="/terex-logo.png" alt="Terex Logo" className="w-8 h-8 rounded-lg" />
                 <span className="ml-2 text-lg font-semibold tracking-tight" style={{ color: '#fff' }}>TEREX</span>
               </div>
               <button

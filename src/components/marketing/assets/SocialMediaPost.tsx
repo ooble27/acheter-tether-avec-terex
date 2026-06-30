@@ -15,7 +15,7 @@ export function SocialMediaPost() {
         <div className="bg-gradient-to-br from-terex-accent to-terex-accent/80 p-6 rounded-xl text-black">
           <div className="flex items-center space-x-3 mb-4">
             <img 
-              src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+              src="/terex-logo.png" 
               alt="Terex Logo" 
               className="w-12 h-12 rounded-lg"
             />
@@ -59,7 +59,7 @@ export function SocialMediaPost() {
         <div className="bg-gradient-to-br from-green-600 to-green-800 p-6 rounded-xl text-white">
           <div className="flex items-center space-x-3 mb-4">
             <img 
-              src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+              src="/terex-logo.png" 
               alt="Terex Logo" 
               className="w-12 h-12 rounded-lg"
             />

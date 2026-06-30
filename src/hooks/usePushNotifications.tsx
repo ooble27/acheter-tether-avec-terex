@@ -181,8 +181,8 @@ export const usePushNotifications = () => {
           notification: {
             title: 'Test Terex 🎉',
             body: 'Vos notifications push fonctionnent correctement !',
-            icon: '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
-            badge: '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
+            icon: '/terex-logo.png',
+            badge: '/terex-logo.png',
             url: '/?test=notification',
             data: { type: 'test', timestamp: Date.now() }
           }

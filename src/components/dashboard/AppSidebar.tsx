@@ -107,7 +107,7 @@ const AppSidebarContent = ({
         <div className="flex items-center space-x-3">
           <div className="relative flex items-center gap-3 p-3 bg-gradient-to-br from-terex-accent/10 to-terex-accent/5 rounded-xl border border-terex-accent/20">
             <div className="relative">
-              <img src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" alt="Terex Logo" className="w-10 h-10 rounded-lg shadow-lg" />
+              <img src="/terex-logo.png" alt="Terex Logo" className="w-10 h-10 rounded-lg shadow-lg" />
               <div className="absolute -inset-1 bg-gradient-to-r from-terex-accent/20 to-transparent rounded-lg blur opacity-40"></div>
             </div>
             <div className="flex flex-col">

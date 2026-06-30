@@ -34,7 +34,7 @@ const BlockchainPage = () => {
           <div className="text-center mb-12">
             <div className="flex justify-center items-center space-x-4 mb-8">
               <img 
-                src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+                src="/terex-logo.png" 
                 alt="Terex Logo" 
                 className="w-16 h-16 rounded-xl shadow-2xl"
               />

@@ -66,7 +66,7 @@ export function FooterSection() {
           <div className="col-span-2">
             <div className="flex items-center gap-3 mb-4">
               <img
-                src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
+                src="/terex-logo.png"
                 alt="Terex Logo"
                 className="w-9 h-9 rounded-lg"
               />

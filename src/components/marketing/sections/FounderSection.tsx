@@ -81,7 +81,7 @@ export function FounderSection() {
               {/* Logo/Brand badge */}
               <div className="flex items-center gap-2 mb-6">
                 <img
-                  src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
+                  src="/terex-logo.png"
                   alt="Terex"
                   className="w-8 h-8 rounded-lg"
                 />

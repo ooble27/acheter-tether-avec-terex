@@ -32,7 +32,7 @@ export function YouTubeThumbnail() {
                 <Play className="w-8 h-8 text-white ml-1" />
               </div>
               <img 
-                src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+                src="/terex-logo.png" 
                 alt="Terex Logo" 
                 className="w-12 h-12 rounded-lg"
               />

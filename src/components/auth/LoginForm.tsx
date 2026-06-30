@@ -95,7 +95,7 @@ export function LoginForm() {
 
         {/* Logo tablette uniquement (masqué sur mobile et desktop) */}
         <div className="hidden md:flex lg:hidden items-center gap-3 p-6 border-b" style={{ borderColor: '#1f1f1f' }}>
-          <img src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" alt="Terex" className="w-8 h-8" />
+          <img src="/terex-logo.png" alt="Terex" className="w-8 h-8" />
           <span className="text-lg font-black" style={{ color: '#fff' }}>TEREX</span>
         </div>
 
@@ -105,7 +105,7 @@ export function LoginForm() {
 
             {/* Logo desktop */}
             <div className="hidden lg:flex items-center gap-3 mb-10">
-              <img src="/lovable-uploads/1201a99e-a9d2-4269-8a38-081a3f9ca624.png" alt="Terex" className="w-9 h-9" />
+              <img src="/terex-logo.png" alt="Terex" className="w-9 h-9" />
               <div>
                 <span className="text-xl font-black" style={{ color: '#fff' }}>TEREX</span>
                 <p className="text-[10px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.4)' }}>Teranga Exchange</p>

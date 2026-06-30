@@ -16,7 +16,7 @@ import {
   Building2,
 } from 'lucide-react';
 
-const TEREX_LOGO = '/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png';
+const TEREX_LOGO = '/terex-logo.png';
 
 /* Neutral dark design tokens */
 const CARD = '#1e1e1e';

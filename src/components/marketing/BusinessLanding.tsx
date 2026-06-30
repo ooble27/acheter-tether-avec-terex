@@ -354,7 +354,7 @@ export function BusinessLanding() {
       <nav className="biz-nav" style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(17,17,17,0.94)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${C.bds}`, padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <img src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" alt="Terex" style={{ width: 28, height: 28, borderRadius: 7, objectFit: 'cover' }} />
+            <img src="/terex-logo.png" alt="Terex" style={{ width: 28, height: 28, borderRadius: 7, objectFit: 'cover' }} />
             <span style={{ color: C.t1, fontSize: 15, fontWeight: 700 }}>Terex</span>
           </button>
           <div style={{ width: 1, height: 14, background: C.bds, margin: '0 4px' }} />
@@ -575,7 +575,7 @@ export function BusinessLanding() {
       {/* ── FOOTER ───────────────────────────────────────────────── */}
       <div className="biz-outer-pad" style={{ borderTop: `1px solid ${C.bds}`, padding: '20px 48px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' as const, gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <img src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" alt="Terex" style={{ width: 18, height: 18, borderRadius: 4, objectFit: 'cover' }} />
+          <img src="/terex-logo.png" alt="Terex" style={{ width: 18, height: 18, borderRadius: 4, objectFit: 'cover' }} />
           <span style={{ fontSize: 12, color: C.t3, fontFamily: FONT }}>© 2026 Terex Exchange. Tous droits réservés.</span>
         </div>
         <div style={{ display: 'flex', gap: 24 }}>

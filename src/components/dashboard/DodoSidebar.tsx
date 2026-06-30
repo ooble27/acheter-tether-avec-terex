@@ -69,7 +69,7 @@ export function DodoSidebar({ activeSection, onSectionChange, onLogout }: DodoSi
       <div className="flex items-center justify-between px-4 py-4 border-b border-[#262626]">
         <button onClick={() => onSectionChange('home')} className="flex items-center gap-2 group">
           <img
-            src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png"
+            src="/terex-logo.png"
             alt="Terex"
             className="w-7 h-7 rounded-md"
           />

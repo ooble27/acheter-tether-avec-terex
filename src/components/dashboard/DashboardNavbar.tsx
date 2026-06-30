@@ -62,7 +62,7 @@ export function DashboardNavbar({ onMenuClick, activeSection, setActiveSection, 
                   <div className="relative flex items-center gap-2">
                     <div className="relative">
                       <img 
-                        src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" 
+                        src="/terex-logo.png" 
                         alt="Terex Logo" 
                         className="w-8 h-8 rounded-lg shadow-lg"
                       />
