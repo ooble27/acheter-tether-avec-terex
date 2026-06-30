@@ -65,7 +65,7 @@ const TermsPage = () => {
       {/* Hero */}
       <section className="pt-12 pb-6 md:pt-20 md:pb-10 border-b border-white/[0.06]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <p className="text-[#3B968F] text-[11px] font-semibold uppercase tracking-[0.25em] mb-4">/ CONDITIONS D'UTILISATION</p>
+          <p className="text-white/60 text-[11px] font-semibold uppercase tracking-[0.25em] mb-4">/ CONDITIONS D'UTILISATION</p>
           <h1 className="text-3xl md:text-5xl font-light text-foreground mb-4 leading-tight">Conditions Générales<br className="hidden md:block" /> d'Utilisation</h1>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground text-xs">
             <span className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.08]">Version 3.0</span>
@@ -76,8 +76,8 @@ const TermsPage = () => {
       </section>
 
       {/* Info bar */}
-      <div className="bg-[#3B968F]/10 border-b border-[#3B968F]/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 text-xs text-[#3B968F]/90 flex flex-wrap gap-2 items-center">
+      <div className="bg-white/[0.03] border-b border-white/[0.07]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 text-xs text-white/60 flex flex-wrap gap-2 items-center">
           <span className="font-semibold">Important :</span>
           <span>En utilisant les services Terex, vous acceptez l'intégralité des présentes Conditions Générales d'Utilisation. Veuillez les lire attentivement avant toute utilisation de la plateforme.</span>
         </div>
@@ -442,7 +442,7 @@ const TermsPage = () => {
                   <span className="text-foreground/60 font-medium">Adresse</span>
                   <span>Plateau, Avenue Léopold Sédar Senghor, Dakar, République du Sénégal</span>
                   <span className="text-foreground/60 font-medium">E-mail</span>
-                  <a href="mailto:terangaexchange@gmail.com" className="text-[#3B968F] hover:underline">terangaexchange@gmail.com</a>
+                  <a href="mailto:terangaexchange@gmail.com" className="text-white hover:underline">terangaexchange@gmail.com</a>
                   <span className="text-foreground/60 font-medium">Version</span>
                   <span>3.0 — janvier 2025</span>
                 </div>

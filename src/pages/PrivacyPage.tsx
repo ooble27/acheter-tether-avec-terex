@@ -73,8 +73,8 @@ const PrivacyPage = () => {
       </section>
 
       {/* Info bar */}
-      <div className="bg-[#3B968F]/10 border-b border-[#3B968F]/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 text-xs text-[#3B968F]/90 flex flex-wrap gap-2 items-center">
+      <div className="bg-white/[0.03] border-b border-white/[0.07]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 text-xs text-white/60 flex flex-wrap gap-2 items-center">
           <span className="font-semibold">Protection de vos données :</span>
           <span>Terex s'engage à protéger vos données personnelles conformément à la loi sénégalaise n° 2008-12 du 25 janvier 2008 et aux principes du RGPD de l'Union Européenne.</span>
         </div>
@@ -404,9 +404,9 @@ const PrivacyPage = () => {
                   <span className="text-foreground/60 font-medium">Adresse</span>
                   <span>Plateau, Avenue Léopold Sédar Senghor, Dakar, République du Sénégal</span>
                   <span className="text-foreground/60 font-medium">E-mail général</span>
-                  <a href="mailto:terangaexchange@gmail.com" className="text-[#3B968F] hover:underline">terangaexchange@gmail.com</a>
+                  <a href="mailto:terangaexchange@gmail.com" className="text-white hover:underline">terangaexchange@gmail.com</a>
                   <span className="text-foreground/60 font-medium">E-mail DPO</span>
-                  <a href="mailto:dpo@terex.sn" className="text-[#3B968F] hover:underline">dpo@terex.sn</a>
+                  <a href="mailto:dpo@terex.sn" className="text-white hover:underline">dpo@terex.sn</a>
                   <span className="text-foreground/60 font-medium">Mise à jour</span>
                   <span>mars 2025</span>
                 </div>
