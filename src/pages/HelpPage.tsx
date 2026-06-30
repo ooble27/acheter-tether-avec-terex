@@ -1,7 +1,4 @@
-
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Phone, Mail, HelpCircle, ShoppingCart, TrendingDown, Send, User, Search, CheckCircle, ArrowLeft } from 'lucide-react';
+import { Phone, Mail, ShoppingCart, TrendingDown, Send, User, Search, CheckCircle, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -9,63 +6,69 @@ import { HeaderSection } from '@/components/marketing/sections/HeaderSection';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { supportFlows, getSupportFlowById, getQuestionById } from '@/data/supportFlows';
-import { Input } from '@/components/ui/input';
+import { useTerexRates } from '@/hooks/useTerexRates';
+import { getSupportFlowById, getQuestionById } from '@/data/supportFlows';
 
-const iconMap = {
-  ShoppingCart,
-  TrendingDown,
-  Send,
-  User
-};
+const BG = '#141414';
+const CARD = '#1e1e1e';
+const BORDER = 'rgba(255,255,255,0.07)';
+const ICON_BG = 'rgba(255,255,255,0.06)';
+const MUTED = 'rgba(255,255,255,0.55)';
+const MUTED2 = 'rgba(255,255,255,0.4)';
+
+const iconMap = { ShoppingCart, TrendingDown, Send, User };
 
 const categoryCards = [
-  {
-    flowId: "buy-usdt",
-    title: "Acheter USDT",
-    description: "Tout ce qu'il faut savoir pour acheter du USDT facilement et en toute sécurité.",
-    icon: "ShoppingCart",
-  },
-  {
-    flowId: "sell-usdt",
-    title: "Vendre USDT",
-    description: "Guides détaillés pour vendre vos USDT et recevoir vos fonds rapidement.",
-    icon: "TrendingDown",
-  },
-  {
-    flowId: "transfer",
-    title: "Transferts Internationaux",
-    description: "Envoyez de l'argent partout en Afrique avec les meilleurs taux.",
-    icon: "Send",
-  },
-  {
-    flowId: "account",
-    title: "Compte & Sécurité",
-    description: "Gérez votre compte, votre vérification KYC et vos paramètres de sécurité.",
-    icon: "User",
-  },
+  { flowId: 'buy-usdt', title: 'Acheter USDT', description: "Tout ce qu'il faut savoir pour acheter du USDT facilement et en toute sécurité.", icon: 'ShoppingCart' },
+  { flowId: 'sell-usdt', title: 'Vendre USDT', description: 'Guides détaillés pour vendre vos USDT et recevoir vos fonds rapidement.', icon: 'TrendingDown' },
+  { flowId: 'transfer', title: 'Transferts Internationaux', description: "Envoyez de l'argent partout en Afrique avec les meilleurs taux.", icon: 'Send' },
+  { flowId: 'account', title: 'Compte & Sécurité', description: 'Gérez votre compte, votre vérification KYC et vos paramètres de sécurité.', icon: 'User' },
 ];
+
+const sharedStyles = `
+  @keyframes tx-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .tx-fade { animation: tx-up 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+  .tx-tile { transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease; }
+  .tx-tile:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.16) !important; }
+  .tx-input:focus { border-color: rgba(255,255,255,0.22) !important; background: rgba(255,255,255,0.06) !important; }
+  .tx-input::placeholder { color: rgba(255,255,255,0.3); }
+  .tx-cta { transition: transform 0.15s ease; }
+  .tx-cta:hover { transform: translateY(-1px); }
+  .tx-ans { transition: border-color 0.18s ease, background 0.18s ease; }
+  .tx-ans:hover { border-color: rgba(255,255,255,0.18) !important; background: rgba(255,255,255,0.04) !important; }
+  @media (max-width: 1100px) { .tx-vline { display: none !important; } }
+  @media (max-width: 760px) { .tx-grid { grid-template-columns: 1fr !important; } }
+  @media (max-width: 560px) { .tx-pad { padding-left: 20px !important; padding-right: 20px !important; } }
+`;
+
+const VLines = () => (
+  <>
+    <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
+    <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
+  </>
+);
 
 const HelpPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { terexRateCfa, loading: rateLoading } = useTerexRates(2);
+  const rateDisplay = !rateLoading && terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : null;
+
   const [selectedFlowId, setSelectedFlowId] = useState<string | null>(null);
   const [currentQuestionId, setCurrentQuestionId] = useState<string | null>(null);
   const [conversationPath, setConversationPath] = useState<Array<{ question: string; answer: string }>>([]);
   const [solution, setSolution] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      toast({ title: "Erreur", description: "Impossible de se déconnecter", variant: "destructive" });
+      toast({ title: 'Erreur', description: 'Impossible de se déconnecter', variant: 'destructive' });
     } else {
-      toast({ title: "Déconnexion réussie", description: "Vous avez été déconnecté avec succès" });
+      toast({ title: 'Déconnexion réussie', description: 'Vous avez été déconnecté avec succès' });
       window.location.reload();
     }
   };
@@ -107,157 +110,161 @@ const HelpPage = () => {
   const currentQuestion = selectedFlow && currentQuestionId ? getQuestionById(selectedFlow, currentQuestionId) : null;
 
   const filteredCategories = searchQuery
-    ? categoryCards.filter(c =>
-        c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.description.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    ? categoryCards.filter(c => c.title.toLowerCase().includes(searchQuery.toLowerCase()) || c.description.toLowerCase().includes(searchQuery.toLowerCase()))
     : categoryCards;
 
-  // Main help center view
+  const header = (
+    <HeaderSection
+      user={user ? { email: user.email || '', name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur' } : null}
+      onShowDashboard={handleShowDashboard}
+      onLogout={handleLogout}
+    />
+  );
+
+  // ---- Main help center view ----
   if (!selectedFlowId) {
     return (
-      <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
-        <HeaderSection
-          user={user ? {
-            email: user.email || '',
-            name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
-          } : null}
-          onShowDashboard={handleShowDashboard}
-          onLogout={handleLogout}
-        />
+      <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
+        <style>{sharedStyles}</style>
+        <VLines />
+        {header}
+        <div style={{ height: 72 }} />
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 md:pt-36 pb-8">
-          {/* Title */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-white mb-2">
-            Centre d'Aide
+        {/* HERO */}
+        <header className="tx-pad tx-fade" style={{ maxWidth: 1120, margin: '0 auto', padding: '56px 32px 0', position: 'relative', zIndex: 1 }}>
+          <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED2, margin: '0 0 12px' }}>Centre d'aide</p>
+          <h1 style={{ fontSize: 'clamp(1.9rem,4vw,2.6rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.08, margin: '0 0 14px' }}>
+            Comment pouvons-nous vous aider ?
           </h1>
-          <p className="text-white/50 text-base sm:text-lg mb-8 sm:mb-10 max-w-2xl">
+          <p style={{ fontSize: 16, color: MUTED, lineHeight: 1.6, margin: '0 0 28px', maxWidth: 520 }}>
             Guides, FAQ et support pour l'achat, la vente et les transferts de USDT sur Terex.
           </p>
-
-          {/* Search */}
-          <div className="relative mb-10 sm:mb-14 max-w-2xl">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-            <Input
+          <div style={{ position: 'relative', maxWidth: 560 }}>
+            <Search size={16} style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.35)' }} />
+            <input
+              className="tx-input"
               placeholder="Poser une question ou rechercher..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-11 h-12 bg-white/[0.04] border-white/[0.08] text-white placeholder:text-white/30 rounded-lg focus:border-white/20 focus:ring-0"
+              onChange={e => setSearchQuery(e.target.value)}
+              style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 12, color: '#fff', fontSize: 14, padding: '0 14px 0 42px', height: 48, outline: 'none', boxSizing: 'border-box' }}
             />
           </div>
+        </header>
 
-          {/* Category Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-16">
-            {filteredCategories.map((category) => {
-              const IconComponent = iconMap[category.icon as keyof typeof iconMap];
-              return (
-                <Card
-                  key={category.flowId}
-                  className="bg-terex-gray/80 border-white/10 hover:border-white/20 hover:bg-terex-gray transition-all duration-300 cursor-pointer group overflow-hidden rounded-xl"
-                  onClick={() => handleSelectFlow(category.flowId)}
-                >
-                  {/* Preview mockup area */}
-                  <div className="relative h-36 sm:h-44 bg-terex-darker/50 border-b border-white/10 flex items-center justify-center p-4 overflow-hidden">
-                    {/* Simulated UI preview */}
-                    <div className="w-full max-w-[200px] bg-terex-dark rounded-lg border border-white/10 p-3 shadow-lg">
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                          <IconComponent className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.7)' }} />
-                        </div>
-                        <div className="flex-1">
-                          <div className="h-2 w-16 bg-white/20 rounded" />
-                          <div className="h-1.5 w-10 bg-white/10 rounded mt-1" />
-                        </div>
+        {/* CATEGORY GRID */}
+        <section className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '44px 32px 0', position: 'relative', zIndex: 1 }}>
+          <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED2, margin: '0 0 18px' }}>Collections</p>
+          {filteredCategories.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '40px 0' }}>
+              <Search size={28} color="rgba(255,255,255,0.2)" style={{ marginBottom: 12 }} />
+              <p style={{ fontSize: 15, fontWeight: 600, margin: '0 0 4px' }}>Aucun résultat</p>
+              <p style={{ fontSize: 13.5, color: MUTED, margin: 0 }}>Essayez d'autres mots-clés</p>
+            </div>
+          ) : (
+            <div className="tx-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              {filteredCategories.map(category => {
+                const IconComponent = iconMap[category.icon as keyof typeof iconMap];
+                return (
+                  <button key={category.flowId} onClick={() => handleSelectFlow(category.flowId)}
+                    className="tx-tile" style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 18, padding: '26px 24px', cursor: 'pointer', textAlign: 'left' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
+                      <div style={{ width: 46, height: 46, borderRadius: 13, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <IconComponent size={21} color="rgba(255,255,255,0.9)" strokeWidth={1.8} />
                       </div>
-                      <div className="space-y-2">
-                        <div className="h-2 w-full bg-white/10 rounded" />
-                        <div className="h-2 w-3/4 bg-white/10 rounded" />
-                        <div className="h-6 w-full bg-white/15 rounded mt-3" />
-                      </div>
+                      <ArrowRight size={16} color="rgba(255,255,255,0.25)" />
                     </div>
-                  </div>
+                    <h3 style={{ fontSize: 16.5, fontWeight: 700, letterSpacing: '-0.01em', margin: '0 0 6px' }}>{category.title}</h3>
+                    <p style={{ fontSize: 13.5, color: MUTED, lineHeight: 1.6, margin: 0 }}>{category.description}</p>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </section>
 
-                  <CardContent className="p-5 sm:p-6">
-                    <h3 className="text-white font-semibold text-lg mb-1.5">{category.title}</h3>
-                    <p className="text-white/50 text-sm leading-relaxed">{category.description}</p>
-                  </CardContent>
-                </Card>
-              );
-            })}
+        {/* LIVE RATE STRIP */}
+        <section className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '32px 32px 0', position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '18px 22px' }}>
+            <div>
+              <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: MUTED2, margin: '0 0 6px' }}>Taux USDT / CFA · en direct</p>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 7, minHeight: 30 }}>
+                {rateDisplay ? (
+                  <>
+                    <span style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-1px', lineHeight: 1 }}>{rateDisplay}</span>
+                    <span style={{ color: MUTED2, fontSize: 13, fontWeight: 600 }}>CFA</span>
+                  </>
+                ) : (
+                  <span style={{ display: 'inline-block', width: 100, height: 26, borderRadius: 8, background: 'rgba(255,255,255,0.06)' }} />
+                )}
+              </div>
+            </div>
+            <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#fff', opacity: 0.85, boxShadow: '0 0 0 4px rgba(255,255,255,0.08)' }} />
           </div>
+        </section>
 
-          {/* Contact */}
-          <div className="text-center py-10 border-t border-white/[0.06]">
-            <h2 className="text-xl sm:text-2xl font-light text-white mb-3">Besoin d'aide supplémentaire ?</h2>
-            <p className="text-white/40 text-sm mb-6">Notre équipe de support est disponible 24/7</p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button
-                onClick={() => navigate('/contact')}
-                className="bg-white/[0.08] hover:bg-white/[0.12] text-white border border-white/[0.1] font-normal"
-              >
-                <Mail className="w-4 h-4 mr-2" />
-                Nous Contacter
-              </Button>
-              <Button
-                variant="ghost"
-                className="text-white/60 hover:text-white hover:bg-white/[0.06]"
-                onClick={() => window.open('https://wa.me/14182619091', '_blank')}
-              >
-                <Phone className="w-4 h-4 mr-2" />
-                WhatsApp
-              </Button>
+        {/* CONTACT CTA */}
+        <section className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '48px 32px 88px', position: 'relative', zIndex: 1 }}>
+          <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 44, textAlign: 'center' }}>
+            <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 8px' }}>Besoin d'aide supplémentaire ?</h2>
+            <p style={{ fontSize: 14, color: MUTED, margin: '0 0 24px' }}>Notre équipe de support est disponible 24/7.</p>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button onClick={() => navigate('/contact')} className="tx-cta" style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 48, padding: '0 22px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                <Mail size={16} /> Nous contacter
+              </button>
+              <button onClick={() => window.open('https://wa.me/14182619091', '_blank')} style={{ background: '#2d2d2d', color: '#fff', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 12, height: 48, padding: '0 22px', fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                <Phone size={16} /> WhatsApp
+              </button>
             </div>
           </div>
-        </div>
+        </section>
 
         <FooterSection />
       </div>
     );
   }
 
-  // Conversation view
+  // ---- Conversation view ----
   return (
-    <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
-      <HeaderSection
-        user={user ? {
-          email: user.email || '',
-          name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur'
-        } : null}
-        onShowDashboard={handleShowDashboard}
-        onLogout={handleLogout}
-      />
+    <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
+      <style>{sharedStyles}</style>
+      <VLines />
+      {header}
+      <div style={{ height: 72 }} />
 
-      <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-16">
-        <button
-          onClick={handleReset}
-          className="flex items-center gap-2 text-white/60 hover:text-white text-sm mb-8 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Retour aux catégories
+      <div className="tx-pad" style={{ maxWidth: 760, margin: '0 auto', padding: '48px 32px 88px', position: 'relative', zIndex: 1 }}>
+        <button onClick={handleReset}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', color: MUTED, fontSize: 13.5, cursor: 'pointer', marginBottom: 28, padding: 0 }}
+          onMouseEnter={e => (e.currentTarget.style.color = '#fff')} onMouseLeave={e => (e.currentTarget.style.color = MUTED)}>
+          <ArrowLeft size={15} /> Retour aux catégories
         </button>
 
         {selectedFlow && (
-          <div className="mb-8">
-            <div className="flex items-center gap-3 mb-2">
-              {(() => {
-                const IconComponent = iconMap[selectedFlow.icon as keyof typeof iconMap];
-                return <IconComponent className="w-5 h-5 text-white/50 flex-shrink-0" />;
-              })()}
-              <h2 className="text-2xl sm:text-3xl font-light text-white">{selectedFlow.title}</h2>
+          <div className="tx-fade" style={{ marginBottom: 28 }}>
+            <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED2, margin: '0 0 12px' }}>Assistant</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              <div style={{ width: 46, height: 46, borderRadius: 13, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                {(() => {
+                  const IconComponent = iconMap[selectedFlow.icon as keyof typeof iconMap];
+                  return <IconComponent size={21} color="rgba(255,255,255,0.9)" strokeWidth={1.8} />;
+                })()}
+              </div>
+              <div>
+                <h2 style={{ fontSize: 'clamp(1.4rem,3vw,1.8rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1, margin: '0 0 4px' }}>{selectedFlow.title}</h2>
+                <p style={{ fontSize: 13.5, color: MUTED, margin: 0 }}>{selectedFlow.description}</p>
+              </div>
             </div>
-            <p className="text-white/40 text-sm">{selectedFlow.description}</p>
           </div>
         )}
 
         {/* Conversation history */}
         {conversationPath.length > 0 && (
-          <div className="space-y-3 mb-8">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 16 }}>
             {conversationPath.map((item, index) => (
-              <div key={index} className="bg-terex-gray/80 border border-white/10 rounded-lg p-4 sm:p-5">
-                <p className="text-white font-medium mb-2 text-sm">{item.question}</p>
-                <div className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: 'rgba(255,255,255,0.7)' }} />
-                  <p className="text-white/70 text-sm">{item.answer}</p>
+              <div key={index} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '18px 20px' }}>
+                <p style={{ fontSize: 14, fontWeight: 600, margin: '0 0 10px' }}>{item.question}</p>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                  <CheckCircle size={16} color="rgba(255,255,255,0.7)" style={{ flexShrink: 0, marginTop: 2 }} />
+                  <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, margin: 0 }}>{item.answer}</p>
                 </div>
               </div>
             ))}
@@ -266,16 +273,14 @@ const HelpPage = () => {
 
         {/* Current question */}
         {currentQuestion && !solution && (
-          <div className="bg-terex-gray/80 border border-white/10 rounded-lg p-5 sm:p-6">
-            <h3 className="text-white font-medium text-lg mb-4">{currentQuestion.question}</h3>
-            <div className="space-y-2">
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 18, padding: '24px' }}>
+            <h3 style={{ fontSize: 16.5, fontWeight: 700, letterSpacing: '-0.01em', margin: '0 0 18px' }}>{currentQuestion.question}</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {currentQuestion.answers.map((answer, index) => (
-                <button
-                  key={index}
-                  className="w-full text-left py-3 px-4 rounded-lg border border-white/10 bg-terex-darker/60 text-white/70 hover:bg-terex-darker hover:text-white hover:border-white/20 transition-all text-sm"
-                  onClick={() => handleSelectAnswer(answer.text, answer.nextQuestionId, answer.solution)}
-                >
+                <button key={index} onClick={() => handleSelectAnswer(answer.text, answer.nextQuestionId, answer.solution)}
+                  className="tx-ans" style={{ width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '14px 16px', color: 'rgba(255,255,255,0.85)', fontSize: 14, cursor: 'pointer' }}>
                   {answer.text}
+                  <ArrowRight size={15} color="rgba(255,255,255,0.3)" style={{ flexShrink: 0 }} />
                 </button>
               ))}
             </div>
@@ -284,31 +289,24 @@ const HelpPage = () => {
 
         {/* Solution */}
         {solution && (
-          <div className="bg-terex-gray/80 border border-white/10 rounded-lg p-5 sm:p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center">
-                <CheckCircle className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.7)' }} />
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 18, padding: '24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <CheckCircle size={20} color="rgba(255,255,255,0.9)" />
               </div>
-              <h3 className="text-white font-medium text-lg">Solution</h3>
+              <h3 style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.01em', margin: 0 }}>Solution</h3>
             </div>
-            <p className="text-white/70 whitespace-pre-line leading-relaxed text-sm mb-6">{solution}</p>
+            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.7, margin: '0 0 24px', whiteSpace: 'pre-line' }}>{solution}</p>
 
-            <div className="pt-5 border-t border-white/10">
-              <p className="text-white/50 mb-4 text-sm">Cette solution a-t-elle résolu votre problème ?</p>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Button
-                  onClick={handleReset}
-                  className="bg-white hover:bg-white/90 text-[#141414] font-semibold text-sm"
-                >
+            <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: 22 }}>
+              <p style={{ fontSize: 13.5, color: MUTED, margin: '0 0 16px' }}>Cette solution a-t-elle résolu votre problème ?</p>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <button onClick={handleReset} className="tx-cta" style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 46, padding: '0 22px', fontSize: 14.5, fontWeight: 700, cursor: 'pointer' }}>
                   Oui, merci !
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="text-white/60 hover:text-white hover:bg-white/[0.08] text-sm"
-                  onClick={() => window.open('https://wa.me/14182619091', '_blank')}
-                >
+                </button>
+                <button onClick={() => window.open('https://wa.me/14182619091', '_blank')} style={{ background: '#2d2d2d', color: '#fff', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 12, height: 46, padding: '0 22px', fontSize: 14.5, fontWeight: 600, cursor: 'pointer' }}>
                   Non, contacter le support
-                </Button>
+                </button>
               </div>
             </div>
           </div>
