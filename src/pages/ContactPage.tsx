@@ -1,4 +1,4 @@
-import { Phone, Mail, Send, ArrowRight, ShieldCheck, Clock, Users } from 'lucide-react';
+import { Phone, Mail, Send, ShieldCheck, Clock, Users, CheckCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -96,10 +96,10 @@ const ContactPage = () => {
   };
 
   const channels = [
-    { Icon: WhatsAppIcon, label: 'WhatsApp', value: 'Réponse en moins de 5 min', href: 'https://wa.me/+14182619091', external: true },
-    { Icon: () => <Phone size={19} strokeWidth={1.8} />, label: 'Téléphone', value: '+1 (418) 261-9091', href: 'tel:+14182619091', external: false },
-    { Icon: () => <Mail size={19} strokeWidth={1.8} />, label: 'Email', value: 'terangaexchange@gmail.com', href: 'mailto:terangaexchange@gmail.com', external: false },
-    { Icon: TelegramIcon, label: 'Telegram', value: '@teraborange', href: 'https://t.me/teraborange', external: true },
+    { Icon: WhatsAppIcon, label: 'WhatsApp', value: '+1 (418) 261-9091', meta: '~2 min', online: true, href: 'https://wa.me/+14182619091', external: true },
+    { Icon: () => <Phone size={18} strokeWidth={1.8} />, label: 'Téléphone', value: '+1 (418) 261-9091', meta: '9h–20h', online: true, href: 'tel:+14182619091', external: false },
+    { Icon: () => <Mail size={18} strokeWidth={1.8} />, label: 'Email', value: 'terangaexchange@gmail.com', meta: '~2 h', online: true, href: 'mailto:terangaexchange@gmail.com', external: false },
+    { Icon: TelegramIcon, label: 'Telegram', value: '@teraborange', meta: '~10 min', online: false, href: 'https://t.me/teraborange', external: true },
   ];
 
   const trust = [
@@ -111,14 +111,21 @@ const ContactPage = () => {
   return (
     <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
       <style>{`
-        @keyframes tx-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        .tx-fade { animation: tx-up 0.7s cubic-bezier(0.22,1,0.36,1) both; }
-        .tx-tile { transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease; }
-        .tx-tile:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.16) !important; }
+        @keyframes tx-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+        .tx-fade { animation: tx-up 0.8s cubic-bezier(0.22,1,0.36,1) both; }
+        .tx-fade-2 { animation: tx-up 0.8s cubic-bezier(0.22,1,0.36,1) 0.12s both; }
+        .tx-tile { transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease; }
+        .tx-tile:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.16) !important; }
         .tx-input:focus { border-color: rgba(255,255,255,0.22) !important; background: rgba(255,255,255,0.06) !important; }
         .tx-input::placeholder { color: rgba(255,255,255,0.3); }
         .tx-cta { transition: transform 0.15s ease; }
         .tx-cta:hover { transform: translateY(-1px); }
+        @keyframes tx-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.85); } }
+        .tx-live-dot { animation: tx-pulse 1.6s ease-in-out infinite; }
+        @keyframes tx-ring { 0% { transform: scale(0.6); opacity: 0.5; } 100% { transform: scale(2.2); opacity: 0; } }
+        .tx-ring { animation: tx-ring 2.6s ease-out infinite; }
+        @keyframes tx-grow { from { width: 0; } }
+        .tx-bar { animation: tx-grow 1.1s cubic-bezier(0.22,1,0.36,1) 0.3s both; }
         @media (max-width: 1100px) { .tx-vline { display: none !important; } }
         @media (max-width: 900px) { .tx-two { grid-template-columns: 1fr !important; } }
         @media (max-width: 560px) {
@@ -200,24 +207,75 @@ const ContactPage = () => {
             </form>
           </div>
 
-          {/* Right: Channels + trust */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-            <div>
-              <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED2, margin: '0 0 14px' }}>Canaux directs</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {channels.map(({ Icon, label, value, href, external }) => (
-                  <a key={label} href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className="tx-tile" style={{ display: 'flex', alignItems: 'center', gap: 14, background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: '16px 18px', textDecoration: 'none', color: '#fff' }}>
-                    <div style={{ width: 44, height: 44, borderRadius: 13, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'rgba(255,255,255,0.9)' }}>
-                      <Icon />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 14.5, fontWeight: 600, margin: '0 0 2px' }}>{label}</p>
-                      <p style={{ fontSize: 12.5, color: MUTED, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value}</p>
-                    </div>
-                    <ArrowRight size={16} color="rgba(255,255,255,0.25)" />
-                  </a>
-                ))}
+          {/* Right: crafted live support panel */}
+          <div className="tx-fade-2" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+            {/* Panneau "temps de réponse" — style live-feed */}
+            <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 20, overflow: 'hidden' }}>
+              {/* En-tête live */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 22px', borderBottom: `1px solid ${BORDER}` }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                  <span style={{ position: 'relative', width: 8, height: 8 }}>
+                    <span className="tx-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#3ddc84' }} />
+                  </span>
+                  <span style={{ fontSize: 12.5, fontWeight: 600, color: 'rgba(255,255,255,0.75)' }}>Support en ligne</span>
+                </div>
+                <span style={{ fontSize: 11.5, color: MUTED2 }}>3 agents actifs</span>
+              </div>
+
+              {/* Métrique vedette : temps de réponse moyen */}
+              <div style={{ padding: '24px 22px 22px', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: 18, right: 22, width: 64, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span className="tx-ring" style={{ position: 'absolute', width: 30, height: 30, borderRadius: '50%', border: `1px solid rgba(61,220,132,0.5)` }} />
+                  <span className="tx-ring" style={{ position: 'absolute', width: 30, height: 30, borderRadius: '50%', border: `1px solid rgba(61,220,132,0.5)`, animationDelay: '1.3s' }} />
+                  <span style={{ width: 30, height: 30, borderRadius: 10, background: '#1e1e1e', border: `1px solid rgba(255,255,255,0.12)`, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
+                    <Clock size={15} color="#fff" />
+                  </span>
+                </div>
+                <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED2, margin: '0 0 10px' }}>Temps de réponse moyen</p>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '0 0 16px' }}>
+                  <span style={{ fontSize: 38, fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1 }}>&lt; 5</span>
+                  <span style={{ fontSize: 15, fontWeight: 600, color: MUTED }}>min</span>
+                </div>
+                {/* Barre de charge */}
+                <div style={{ height: 6, borderRadius: 999, background: 'rgba(255,255,255,0.06)', overflow: 'hidden', marginBottom: 8 }}>
+                  <div className="tx-bar" style={{ height: '100%', width: '88%', borderRadius: 999, background: 'linear-gradient(90deg, rgba(61,220,132,0.7), #3ddc84)' }} />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11.5, color: MUTED2 }}>
+                  <span>Disponibilité</span>
+                  <span style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>24/7</span>
+                </div>
+              </div>
+
+              {/* Pile de canaux — mini inbox */}
+              <div style={{ borderTop: `1px solid ${BORDER}`, padding: '14px 12px 12px' }}>
+                <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED2, margin: '4px 10px 10px' }}>Canaux directs</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  {channels.map(({ Icon, label, value, meta, online, href, external }) => (
+                    <a key={label} href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      className="tx-ans" style={{ display: 'flex', alignItems: 'center', gap: 12, borderRadius: 13, padding: '11px 12px', textDecoration: 'none', color: '#fff', border: `1px solid transparent`, transition: 'background 0.18s ease, border-color 0.18s ease' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}>
+                      <div style={{ position: 'relative', flexShrink: 0 }}>
+                        <div style={{ width: 40, height: 40, borderRadius: 12, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.9)' }}>
+                          <Icon />
+                        </div>
+                        <span style={{ position: 'absolute', bottom: -2, right: -2, width: 12, height: 12, borderRadius: '50%', background: '#141414', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <span style={{ width: 7, height: 7, borderRadius: '50%', background: online ? '#3ddc84' : 'rgba(255,255,255,0.3)' }} />
+                        </span>
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontSize: 14, fontWeight: 600, margin: '0 0 2px' }}>{label}</p>
+                        <p style={{ fontSize: 12, color: MUTED, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value}</p>
+                      </div>
+                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 600, color: online ? 'rgba(255,255,255,0.7)' : MUTED2 }}>
+                          <CheckCheck size={12} /> {meta}
+                        </span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -237,7 +295,9 @@ const ContactPage = () => {
                     )}
                   </div>
                 </div>
-                <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#fff', opacity: 0.85, boxShadow: '0 0 0 4px rgba(255,255,255,0.08)' }} />
+                <span style={{ position: 'relative', width: 9, height: 9 }}>
+                  <span className="tx-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#fff', boxShadow: '0 0 0 4px rgba(255,255,255,0.08)' }} />
+                </span>
               </div>
             </div>
 
