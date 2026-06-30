@@ -1,451 +1,267 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ArrowRight, Zap, Globe, Shield, Layers, TrendingUp, Repeat,
-  ChevronDown, ChevronUp,
+  ArrowRight, ArrowUpRight, Coins, HandCoins, Send, Handshake,
+  Shield, Zap, Globe, Repeat, Wallet, Clock, ChevronDown,
 } from 'lucide-react';
-import { DashboardHome } from '@/components/dashboard/DashboardHome';
-import { BuyUSDT } from '@/components/features/BuyUSDT';
-import { SellUSDT } from '@/components/features/SellUSDT';
-import { TransactionHistoryPage } from '@/components/features/TransactionHistoryPage';
 import { FooterSection } from './sections/FooterSection';
 
-// ── Palette neutre — AUCUN vert ───────────────────────────────────────
-const C = {
-  bg: '#141414', l1: '#1a1a1a', l2: '#1e1e1e', l3: '#242424',
-  bds: 'rgba(255,255,255,0.07)', bd: 'rgba(255,255,255,0.12)',
-  t1: '#ffffff', t2: 'rgba(255,255,255,0.56)', t3: 'rgba(255,255,255,0.4)',
-};
-const FONT = "'Inter', sans-serif";
-const MONO = '"JetBrains Mono", Consolas, monospace';
-const DEMO = { email: 'demo@terex.sn', name: 'Awa Diop', id: 'demo' };
-
-// CSS : animations tuées + responsive mobile
-const GLOBAL_CSS = `
-  .biz-no-anim { contain: layout size; }
-  .biz-no-anim * {
-    animation-duration: 0.001ms !important;
-    animation-delay: 0ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-  .biz-no-anim .recharts-responsive-container { overflow: hidden !important; }
-  .biz-no-anim .recharts-wrapper { overflow: hidden !important; }
-  .biz-no-anim .recharts-cartesian-grid { display: none !important; }
-
-  .biz-root { overflow-x: hidden; }
-
-  @media (max-width: 1100px) {
-    .biz-vline { display: none !important; }
-  }
-
-  @media (max-width: 900px) {
-    .biz-hero-preview {
-      padding: 0 !important;
-      overflow: hidden !important;
-    }
-    .biz-section-row { gap: 24px !important; padding: 48px 24px !important; }
-    .biz-section-row-rev { gap: 24px !important; padding: 48px 24px !important; }
-    .biz-preview { max-width: 300px !important; }
-    .biz-features { grid-template-columns: 1fr 1fr !important; }
-    .biz-networks-grid { grid-template-columns: 1fr 1fr !important; }
-    .biz-faq-row { flex-direction: column !important; gap: 16px !important; }
-    .biz-outer-pad { padding-left: 24px !important; padding-right: 24px !important; }
-  }
-
-  @media (max-width: 600px) {
-    .biz-nav-actions { display: none !important; }
-    .biz-nav { padding: 0 16px !important; }
-    .biz-hero-title { font-size: 28px !important; letter-spacing: -0.04em !important; }
-    .biz-hero-sub { display: none !important; }
-    .biz-hero-preview { display: none !important; }
-    .biz-hero-btns { flex-direction: column !important; align-items: center !important; gap: 8px !important; }
-    .biz-section-row { flex-direction: column !important; gap: 16px !important; padding: 32px 16px !important; }
-    .biz-section-row-rev { flex-direction: column !important; gap: 16px !important; padding: 32px 16px !important; }
-    .biz-section-row h2, .biz-section-row-rev h2 { font-size: 20px !important; margin-bottom: 8px !important; }
-    .biz-section-row p, .biz-section-row-rev p { font-size: 13px !important; }
-    .biz-section-row .biz-stats, .biz-section-row-rev .biz-stats { display: none !important; }
-    .biz-preview { width: 100% !important; max-width: 100% !important; flex-shrink: 1 !important; }
-    .biz-features { grid-template-columns: 1fr !important; }
-    .biz-networks-grid { grid-template-columns: 1fr 1fr !important; }
-    .biz-outer-pad { padding-left: 16px !important; padding-right: 16px !important; }
-    .biz-faq-row { padding: 0 !important; gap: 12px !important; }
-    .biz-faq-head { flex: none !important; }
-    .biz-faq-head h2 { font-size: 22px !important; margin-bottom: 8px !important; }
-    .biz-faq-head p { font-size: 12px !important; }
-  }
-`;
-
-// ── Preview constants ─────────────────────────────────────────────────
-const SCALE   = 0.74;            // moins réduit qu'avant (0.58) → app plus grande
-const FRAME_W = 560;
-const INNER_W = Math.round(FRAME_W / SCALE);
-const BAR_H   = 36;              // barre fenêtre du mockup
-
-const HERO_SCALE   = 0.8;
-const HERO_VW      = 1064;
-const HERO_VH      = 560;
-const HERO_INNER_W = Math.round(HERO_VW / HERO_SCALE);
-const HERO_INNER_H = Math.round(HERO_VH / HERO_SCALE);
-
-// Barre de fenêtre (3 points + pseudo URL) — réutilisée hero + sections
-function WindowBar() {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 6, height: BAR_H, padding: '0 14px', borderBottom: `1px solid ${C.bds}`, background: C.l2, flexShrink: 0 }}>
-      {['rgba(255,255,255,0.18)', 'rgba(255,255,255,0.12)', 'rgba(255,255,255,0.08)'].map((c, i) => (
-        <span key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: c }} />
-      ))}
-      <div style={{ marginLeft: 10, height: 16, flex: 1, maxWidth: 200, borderRadius: 5, background: 'rgba(255,255,255,0.04)' }} />
-    </div>
-  );
-}
-
-// ── Aperçu encadré (mockup navigateur) — agrandi, à plat ──────────────
-function InlinePreview({ children, height = 520 }: { children: React.ReactNode; height?: number }) {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const [s, setS] = useState(() => {
-    if (typeof window !== 'undefined' && window.innerWidth <= 600) {
-      return Math.min(1, (window.innerWidth - 48) / FRAME_W);
-    }
-    return 1;
-  });
-
-  useEffect(() => {
-    const el = wrapRef.current;
-    if (!el) return;
-    const measure = () => {
-      const w = el.offsetWidth;
-      setS(prev => { const n = w >= FRAME_W ? 1 : w / FRAME_W; return Math.abs(prev - n) > 0.005 ? n : prev; });
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  const innerH = Math.round(height / SCALE);
-  const visH   = Math.round((height + BAR_H) * s);
-
-  return (
-    <div ref={wrapRef} className="biz-preview" style={{ position: 'relative', width: FRAME_W, maxWidth: '100%', flexShrink: 0 }}>
-      <div style={{ height: visH, overflow: 'hidden' }}>
-        <div style={{ transformOrigin: 'top left', transform: s < 1 ? `scale(${s})` : undefined, width: FRAME_W,
-          borderRadius: 16, overflow: 'hidden', border: `1px solid ${C.bds}`, boxShadow: '0 30px 80px rgba(0,0,0,0.5)' }}>
-          <WindowBar />
-          <div style={{ position: 'relative', height, overflow: 'hidden', background: C.bg }}>
-            <div className="biz-no-anim" style={{ width: INNER_W, transform: `scale(${SCALE})`, transformOrigin: 'top left', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
-              {children}
-            </div>
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 64, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Boutons ───────────────────────────────────────────────────────────
-function PrimaryBtn({ children, onClick, large }: { children: React.ReactNode; onClick?: () => void; large?: boolean }) {
-  const [hov, setHov] = useState(false);
-  return (
-    <button onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{
-      height: large ? 50 : 40, paddingLeft: large ? 28 : 20, paddingRight: large ? 28 : 20,
-      background: hov ? '#e9e9e9' : '#ffffff', border: 'none', borderRadius: 12,
-      color: '#111111', fontSize: large ? 15 : 13, fontWeight: 700,
-      cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8,
-      fontFamily: FONT, transition: 'background 0.15s', whiteSpace: 'nowrap',
-      letterSpacing: '-0.01em',
-    }}>{children}</button>
-  );
-}
-function OutlineBtn({ children, onClick, large }: { children: React.ReactNode; onClick?: () => void; large?: boolean }) {
-  const [hov, setHov] = useState(false);
-  return (
-    <button onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} style={{
-      height: large ? 50 : 40, paddingLeft: large ? 26 : 18, paddingRight: large ? 26 : 18,
-      background: hov ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.03)',
-      border: `1px solid ${hov ? C.bd : C.bds}`, borderRadius: 12,
-      color: hov ? C.t1 : C.t2, fontSize: large ? 15 : 13, fontWeight: 500,
-      cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8,
-      fontFamily: FONT, transition: 'all 0.15s', whiteSpace: 'nowrap',
-    }}>{children}</button>
-  );
-}
-
-const FEATURES = [
-  { icon: Zap,        title: 'Achat instantané',        desc: 'Achetez des USDT en quelques secondes depuis votre solde CFA, avec confirmation immédiate.' },
-  { icon: TrendingUp, title: 'Vente rapide',            desc: 'Vendez vos USDT et recevez le paiement directement sur Wave ou Orange Money.' },
-  { icon: Globe,      title: "Virements vers l'Afrique", desc: 'Envoyez de l\'argent vers vos proches partout en Afrique, rapidement et au meilleur taux.' },
-  { icon: Layers,     title: 'Multi-réseaux',           desc: 'TRC20, BEP20, ERC20, Polygon et Arbitrum — choisissez le réseau qui vous convient.' },
-  { icon: Repeat,     title: 'Meilleur taux CFA',       desc: 'Profitez d\'un taux USDT/CFA actualisé en temps réel et toujours compétitif.' },
-  { icon: Shield,     title: 'Sécurité & KYC',          desc: 'Vos transactions sont protégées par une vérification d\'identité et un chiffrement de bout en bout.' },
-];
-
-function Tag({ label }: { label: string }) {
-  return (
-    <div style={{ display: 'inline-block', background: C.l2, border: `1px solid ${C.bd}`, padding: '5px 14px', borderRadius: 100, marginBottom: 20 }}>
-      <span style={{ fontSize: 12, fontWeight: 500, color: C.t2, fontFamily: FONT }}>{label}</span>
-    </div>
-  );
-}
-function SectionStats({ items }: { items: [string, string][] }) {
-  return (
-    <div className="biz-stats" style={{ display: 'flex', gap: 32, paddingTop: 24, borderTop: `1px solid ${C.bds}`, flexWrap: 'wrap' }}>
-      {items.map(([val, label]) => (
-        <div key={val + label}>
-          <div style={{ fontSize: 18, fontWeight: 800, color: C.t1, fontFamily: MONO, letterSpacing: '-0.02em' }}>{val}</div>
-          <div style={{ fontSize: 12, color: C.t3, fontFamily: FONT, marginTop: 4 }}>{label}</div>
-        </div>
-      ))}
-    </div>
-  );
-}
+const BG = '#141414';
+const CARD = '#1e1e1e';
+const BORDER = 'rgba(255,255,255,0.07)';
+const ICON_BG = 'rgba(255,255,255,0.06)';
+const TETHER = 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png';
 
 const NETWORKS = [
-  { name: 'TRC20',    chain: 'Tron' },
-  { name: 'BEP20',    chain: 'BNB Smart Chain' },
-  { name: 'ERC20',    chain: 'Ethereum' },
-  { name: 'Polygon',  chain: 'Polygon PoS' },
-  { name: 'Arbitrum', chain: 'Arbitrum One' },
+  { name: 'Tron',     sub: 'TRC20',    logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png' },
+  { name: 'BNB Chain', sub: 'BEP20',   logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png' },
+  { name: 'Ethereum', sub: 'ERC20',    logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png' },
+  { name: 'Polygon',  sub: 'MATIC',    logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png' },
+  { name: 'Solana',   sub: 'SPL',      logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png' },
+  { name: 'Aptos',    sub: 'APT',      logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png' },
 ];
 
-const FAQ_ITEMS = [
-  { q: 'Comment acheter des USDT sur Terex ?', a: "Connectez-vous, entrez le montant en CFA que vous souhaitez convertir, choisissez votre réseau (TRC20, BEP20, ERC20, Polygon ou Arbitrum) et indiquez votre adresse wallet. Vos USDT sont envoyés en quelques minutes." },
-  { q: 'Quels réseaux blockchain sont supportés ?', a: 'Terex prend en charge cinq réseaux : TRC20 (Tron), BEP20 (BNB Smart Chain), ERC20 (Ethereum), Polygon et Arbitrum. Vous choisissez le réseau au moment de l\'achat ou de la vente selon vos préférences et vos frais.' },
-  { q: 'Quels sont les délais de traitement ?', a: 'La réception de vos USDT prend généralement moins de 5 minutes après confirmation du paiement. Pour les ventes, le paiement vers Wave ou Orange Money est immédiat dès la confirmation de réception des fonds.' },
-  { q: 'Quels sont les frais ?', a: 'Terex applique un taux USDT/CFA transparent et actualisé en temps réel. Le taux affiché au moment de la transaction est celui qui vous est appliqué, sans frais cachés.' },
-  { q: 'Comment vendre mes USDT ?', a: 'Sélectionnez « Vendre », indiquez le montant d\'USDT à céder et le réseau d\'envoi, puis choisissez votre méthode de réception (Wave ou Orange Money). Une fois vos USDT reçus, le paiement en CFA est envoyé immédiatement.' },
-  { q: 'Mes fonds et mes données sont-ils en sécurité ?', a: 'Oui. Terex applique une vérification d\'identité (KYC), chiffre vos données de bout en bout et sécurise chaque transaction sur la blockchain. Vos informations ne sont jamais partagées sans votre consentement.' },
+const ACTIONS = [
+  { Icon: Coins,     label: 'Acheter',  sub: 'Achat rapide' },
+  { Icon: HandCoins, label: 'Vendre',   sub: 'Vente rapide' },
+  { Icon: Send,      label: 'Virement', sub: 'International' },
+  { Icon: Handshake, label: 'OTC',      sub: 'Gros volumes' },
 ];
 
-function FaqItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div style={{ borderBottom: `1px solid ${C.bds}` }}>
-      <button onClick={() => setOpen(o => !o)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: '18px 0', textAlign: 'left', fontFamily: FONT }}>
-        <span style={{ fontSize: 15, fontWeight: 500, color: open ? C.t1 : C.t2, transition: 'color 0.15s', lineHeight: 1.4 }}>{q}</span>
-        {open ? <ChevronUp style={{ width: 16, height: 16, color: C.t3, flexShrink: 0 }} /> : <ChevronDown style={{ width: 16, height: 16, color: C.t3, flexShrink: 0 }} />}
-      </button>
-      {open && <p style={{ fontSize: 14, color: C.t3, lineHeight: 1.75, margin: '0 0 18px', paddingRight: 32, fontFamily: FONT }}>{a}</p>}
-    </div>
-  );
-}
+const FEATURES = [
+  { Icon: Zap,    title: 'Transactions instantanées', desc: 'Achats, ventes et virements traités en moins de 5 minutes après confirmation.' },
+  { Icon: Wallet, title: 'Multi-réseaux',             desc: 'Recevez vos USDT sur TRC20, BEP20, ERC20, Polygon, Solana ou Aptos.' },
+  { Icon: Globe,  title: "Virements vers l'Afrique",  desc: 'Envoyez de l\'argent vers 6 pays via Wave et Orange Money, sans intermédiaire bancaire.' },
+  { Icon: Repeat, title: 'Meilleur taux CFA',         desc: 'Un taux USDT/CFA transparent et compétitif, mis à jour en temps réel.' },
+  { Icon: Shield, title: 'Sécurité & KYC',            desc: 'Chiffrement, vérification d\'identité et conformité pour protéger vos fonds.' },
+  { Icon: Clock,  title: 'Support 24/7',              desc: 'Une équipe disponible à tout moment par WhatsApp, téléphone ou email.' },
+];
 
-// ════════════════════════════════════════════════════════════════════
+const STEPS = [
+  { n: '1', title: 'Créez votre compte', desc: 'Inscription en quelques secondes, vérification rapide de votre identité.' },
+  { n: '2', title: 'Choisissez votre opération', desc: 'Achat, vente ou virement — entrez le montant et votre réseau.' },
+  { n: '3', title: 'Recevez en 5 minutes', desc: 'Vos USDT ou votre argent arrivent immédiatement après confirmation.' },
+];
+
+const FAQ = [
+  { q: 'Comment acheter des USDT ?', a: "Entrez le montant en CFA, choisissez votre réseau et votre adresse wallet, puis payez via Mobile Money. Vos USDT arrivent en moins de 5 minutes." },
+  { q: 'Quels réseaux sont supportés ?', a: 'TRC20 (Tron), BEP20 (BNB Chain), ERC20 (Ethereum), Polygon, Solana et Aptos.' },
+  { q: 'Comment vendre mes USDT ?', a: "Indiquez le montant, votre réseau d'envoi et vos coordonnées Wave ou Orange Money. Vous recevez votre argent immédiatement." },
+  { q: 'Quels sont les frais ?', a: 'Des frais transparents et compétitifs, sans coûts cachés. Le taux affiché est celui appliqué.' },
+  { q: 'La plateforme est-elle sécurisée ?', a: 'Oui — chiffrement, KYC et conformité bancaire protègent vos fonds et vos données.' },
+];
+
 export function TerexLanding({ user, onShowDashboard }: { user?: { email: string; name: string } | null; onShowDashboard?: () => void }) {
   const navigate = useNavigate();
-
   const goAuth = () => navigate('/auth');
-  const goPrimary = () => { if (user && onShowDashboard) onShowDashboard(); else navigate('/auth'); };
-
-  const heroPreviewRef = useRef<HTMLDivElement>(null);
-  const [heroScale, setHeroScale] = useState(1);
-  useEffect(() => {
-    const el = heroPreviewRef.current;
-    if (!el) return;
-    const measure = () => {
-      const w = el.offsetWidth;
-      setHeroScale(prev => { const s = w >= HERO_VW ? 1 : w / HERO_VW; return Math.abs(prev - s) > 0.005 ? s : prev; });
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
+  const goPrimary = () => (user ? onShowDashboard?.() : navigate('/auth'));
+  const [faqOpen, setFaqOpen] = useState<number | null>(0);
 
   return (
-    <div className="biz-root" style={{ background: C.bg, minHeight: '100vh', fontFamily: FONT, color: C.t1, position: 'relative' }}>
-      <style>{GLOBAL_CSS}</style>
+    <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
+      <style>{`
+        @media (max-width: 1100px) { .tx-vline { display: none !important; } }
+        @media (max-width: 860px) {
+          .tx-hero-title { font-size: 38px !important; }
+          .tx-two { grid-template-columns: 1fr !important; }
+          .tx-feat { grid-template-columns: 1fr 1fr !important; }
+          .tx-nets { grid-template-columns: repeat(3,1fr) !important; }
+          .tx-pad { padding-left: 20px !important; padding-right: 20px !important; }
+        }
+        @media (max-width: 560px) {
+          .tx-hero-title { font-size: 30px !important; }
+          .tx-nav-links { display: none !important; }
+          .tx-feat { grid-template-columns: 1fr !important; }
+          .tx-nets { grid-template-columns: 1fr 1fr !important; }
+          .tx-actions { grid-template-columns: 1fr 1fr !important; }
+        }
+      `}</style>
 
-      {/* ── VERTICAL LINES ── */}
-      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 1 }} />
-      <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 1 }} />
+      {/* Lignes verticales guides */}
+      <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
 
-      {/* ── NAV ── */}
-      <nav className="biz-nav" style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(20,20,20,0.92)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${C.bds}`, padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <img src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" alt="Terex" style={{ width: 28, height: 28, borderRadius: 7, objectFit: 'cover' }} />
-            <span style={{ color: C.t1, fontSize: 15, fontWeight: 700 }}>Terex</span>
+      {/* NAV */}
+      <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(20,20,20,0.85)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${BORDER}` }}>
+        <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '0 32px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <img src={TETHER} alt="Terex" style={{ width: 24, height: 24, opacity: 0.9 }} />
+            <span style={{ color: '#fff', fontSize: 16, fontWeight: 700, letterSpacing: '-0.02em' }}>Terex</span>
           </button>
-        </div>
-        <div className="biz-nav-actions" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          {user ? (
-            <PrimaryBtn onClick={goPrimary}>Mon tableau de bord <ArrowRight style={{ width: 14, height: 14 }} /></PrimaryBtn>
-          ) : (
-            <>
-              <span><OutlineBtn onClick={goAuth}>Se connecter</OutlineBtn></span>
-              <PrimaryBtn onClick={goAuth}>Commencer <ArrowRight style={{ width: 14, height: 14 }} /></PrimaryBtn>
-            </>
-          )}
+          <div className="tx-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+            {[['Fonctionnalités', 'features'], ['Réseaux', 'networks'], ['Comment ça marche', 'how'], ['FAQ', 'faq']].map(([label, id]) => (
+              <button key={id} onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.55)', fontSize: 14, fontWeight: 500 }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#fff')} onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}>
+                {label}
+              </button>
+            ))}
+          </div>
+          <button onClick={goPrimary} style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 10, height: 38, padding: '0 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            {user ? 'Tableau de bord' : 'Commencer'} <ArrowRight size={14} />
+          </button>
         </div>
       </nav>
 
-      {/* ── HERO ── */}
-      <div style={{ background: C.bg, paddingTop: 96, overflow: 'hidden', position: 'relative' }}>
-        <div className="biz-outer-pad" style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px', textAlign: 'center', marginBottom: 52 }}>
-          <h1 className="biz-hero-title" style={{ fontSize: 64, fontWeight: 900, color: C.t1, margin: '0 0 20px', letterSpacing: '-0.05em', lineHeight: 1.04, fontFamily: FONT }}>
-            Achetez et vendez des USDT<br />en toute simplicité
-          </h1>
-          <p className="biz-hero-sub" style={{ fontSize: 18, color: C.t2, margin: '0 auto 40px', maxWidth: 540, lineHeight: 1.65, fontFamily: FONT }}>
-            Achat et vente de stablecoins et virements vers l'Afrique :<br />rapide, sécurisé et au meilleur taux CFA.
-          </p>
-          <div className="biz-hero-btns" style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-            <PrimaryBtn large onClick={goPrimary}>
-              {user ? 'Mon tableau de bord' : 'Créer un compte'} <ArrowRight style={{ width: 15, height: 15 }} />
-            </PrimaryBtn>
-            <OutlineBtn large onClick={goAuth}>Se connecter</OutlineBtn>
+      {/* HERO */}
+      <header className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 32px 64px', position: 'relative', zIndex: 1 }}>
+        <div className="tx-two" style={{ display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: 56, alignItems: 'center' }}>
+          {/* Texte */}
+          <div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, borderRadius: 999, padding: '6px 12px', background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, marginBottom: 24 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fff' }} />
+              <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.7)' }}>Teranga Exchange</span>
+            </div>
+            <h1 className="tx-hero-title" style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.03em', margin: '0 0 18px' }}>
+              Achetez et vendez<br />des USDT en CFA
+            </h1>
+            <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, margin: '0 0 30px', maxWidth: 440 }}>
+              Achat, vente et virements vers l'Afrique en quelques minutes. Rapide, sécurisé et au meilleur taux.
+            </p>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <button onClick={goPrimary} style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 50, padding: '0 26px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                {user ? 'Mon tableau de bord' : 'Commencer gratuitement'} <ArrowRight size={16} />
+              </button>
+              <button onClick={() => document.getElementById('how')?.scrollIntoView({ behavior: 'smooth' })}
+                style={{ background: '#2d2d2d', color: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, height: 50, padding: '0 24px', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
+                Comment ça marche
+              </button>
+            </div>
+            <div style={{ display: 'flex', gap: 22, flexWrap: 'wrap', marginTop: 26 }}>
+              {[[Shield, 'Sécurisé · KYC'], [Zap, 'En moins de 5 min'], [Globe, "6 pays d'Afrique"]].map(([Ic, t]: any, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                  <Ic size={15} color="rgba(255,255,255,0.45)" />
+                  <span style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>{t}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Hero preview — DashboardHome en mockup encadré, à plat */}
-        <div
-          ref={heroPreviewRef}
-          className="biz-hero-preview"
-          style={{
-            maxWidth: 1160, margin: '0 auto', padding: '0 48px',
-            position: 'relative', zIndex: 2,
-            overflow: 'hidden',
-            height: Math.round((HERO_VH + BAR_H) * heroScale),
-          }}
-        >
-          <div style={{
-            transformOrigin: 'top left',
-            transform: heroScale < 1 ? `scale(${heroScale})` : undefined,
-            width: HERO_VW,
-            borderRadius: '16px 16px 0 0', overflow: 'hidden',
-            border: `1px solid ${C.bds}`, borderBottom: 'none',
-            boxShadow: '0 30px 90px rgba(0,0,0,0.6)',
-          }}>
-            <WindowBar />
-            <div className="biz-no-anim" style={{ height: HERO_VH, overflow: 'hidden', background: C.bg }}>
-              <div style={{ transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left', width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
-                <DashboardHome user={DEMO} onNavigate={() => {}} />
+          {/* App directement sur le fond — taux + actions (aucune ombre, aucun cadre) */}
+          <div>
+            <p style={{ color: '#6b7280', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px' }}>Taux USDT / CFA</p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 26 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                <span style={{ fontSize: 52, fontWeight: 700, letterSpacing: '-1.5px', lineHeight: 1 }}>660</span>
+                <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 16, fontWeight: 600 }}>CFA</span>
               </div>
+              <img src={TETHER} alt="USDT" style={{ width: 48, height: 48, opacity: 0.9 }} />
+            </div>
+            <div className="tx-actions" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              {ACTIONS.map(({ Icon, label, sub }) => (
+                <button key={label} onClick={goAuth}
+                  style={{ background: 'transparent', border: `1px solid ${BORDER}`, borderRadius: 18, padding: '18px 16px', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s, background 0.15s' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)'; e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.background = 'transparent'; }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                    <div style={{ width: 42, height: 42, borderRadius: 13, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Icon size={20} color="rgba(255,255,255,0.85)" strokeWidth={1.8} />
+                    </div>
+                    <ArrowUpRight size={15} color="rgba(255,255,255,0.2)" />
+                  </div>
+                  <p style={{ fontSize: 15, fontWeight: 600, margin: '0 0 2px' }}>{label}</p>
+                  <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12, margin: 0 }}>{sub}</p>
+                </button>
+              ))}
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* ── FEATURES 3-COL ── */}
-      <div id="features" style={{ borderTop: `1px solid ${C.bds}`, borderBottom: `1px solid ${C.bds}` }}>
-        <div className="biz-outer-pad" style={{ maxWidth: 1160, margin: '0 auto', padding: '72px 48px' }}>
-          <div style={{ textAlign: 'center', marginBottom: 52 }}>
-            <h2 style={{ fontSize: 32, fontWeight: 800, color: C.t1, margin: '0 0 10px', letterSpacing: '-0.03em', fontFamily: FONT }}>Tout ce qu'il vous faut pour vos USDT</h2>
-            <p style={{ fontSize: 15, color: C.t2, margin: 0, fontFamily: FONT }}>Acheter, vendre et envoyer de l'argent, en quelques clics</p>
+      {/* FEATURES */}
+      <section id="features" style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1 }}>
+        <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 32px' }}>
+          <SectionHead eyebrow="Fonctionnalités" title="Tout ce qu'il vous faut pour vos USDT" sub="Une plateforme simple pour acheter, vendre et envoyer de l'argent." />
+          <div className="tx-feat" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderLeft: `1px solid ${BORDER}`, borderTop: `1px solid ${BORDER}` }}>
+            {FEATURES.map(({ Icon, title, desc }) => (
+              <div key={title} style={{ padding: '30px 28px', borderRight: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
+                <div style={{ width: 42, height: 42, borderRadius: 12, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                  <Icon size={20} color="rgba(255,255,255,0.85)" strokeWidth={1.8} />
+                </div>
+                <h3 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 8px' }}>{title}</h3>
+                <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65, margin: 0 }}>{desc}</p>
+              </div>
+            ))}
           </div>
-          <div className="biz-features" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
-            {FEATURES.map((f, i) => {
-              const Icon = f.icon;
+        </div>
+      </section>
+
+      {/* NETWORKS */}
+      <section id="networks" style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1 }}>
+        <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 32px' }}>
+          <SectionHead eyebrow="Réseaux" title="6 réseaux blockchain supportés" sub="Recevez vos USDT sur le réseau de votre choix." />
+          <div className="tx-nets" style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 12 }}>
+            {NETWORKS.map(({ name, sub, logo }) => (
+              <div key={name} style={{ border: `1px solid ${BORDER}`, borderRadius: 16, padding: '20px 14px', textAlign: 'center' }}>
+                <img src={logo} alt={name} style={{ width: 40, height: 40, borderRadius: '50%', margin: '0 auto 12px', display: 'block' }} />
+                <p style={{ fontSize: 13.5, fontWeight: 600, margin: '0 0 2px' }}>{name}</p>
+                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', margin: 0, fontWeight: 600, letterSpacing: '0.04em' }}>{sub}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section id="how" style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1 }}>
+        <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 32px' }}>
+          <SectionHead eyebrow="Comment ça marche" title="Démarrez en 3 étapes" sub="De l'inscription à la réception, tout est pensé pour aller vite." />
+          <div className="tx-feat" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+            {STEPS.map(({ n, title, desc }) => (
+              <div key={n}>
+                <div style={{ width: 40, height: 40, borderRadius: 12, background: ICON_BG, border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16, fontSize: 15, fontWeight: 700 }}>{n}</div>
+                <h3 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 8px' }}>{title}</h3>
+                <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65, margin: 0 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1 }}>
+        <div className="tx-pad" style={{ maxWidth: 760, margin: '0 auto', padding: '72px 32px' }}>
+          <SectionHead eyebrow="FAQ" title="Questions fréquentes" sub="" center />
+          <div>
+            {FAQ.map((item, i) => {
+              const open = faqOpen === i;
               return (
-                <div key={i} style={{ padding: '32px 34px', borderRight: (i + 1) % 3 !== 0 ? `1px solid ${C.bds}` : 'none', borderBottom: i < 3 ? `1px solid ${C.bds}` : 'none' }}>
-                  <Icon style={{ width: 20, height: 20, color: C.t3, marginBottom: 18 }} />
-                  <h3 style={{ fontSize: 15, fontWeight: 700, color: C.t1, margin: '0 0 8px', fontFamily: FONT, letterSpacing: '-0.012em' }}>{f.title}</h3>
-                  <p style={{ fontSize: 13, color: C.t3, lineHeight: 1.65, margin: 0, fontFamily: FONT }}>{f.desc}</p>
+                <div key={i} style={{ borderBottom: `1px solid ${BORDER}` }}>
+                  <button onClick={() => setFaqOpen(open ? null : i)}
+                    style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '20px 0', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
+                    <span style={{ fontSize: 15, fontWeight: 500, color: open ? '#fff' : 'rgba(255,255,255,0.8)' }}>{item.q}</span>
+                    <ChevronDown size={17} color="rgba(255,255,255,0.4)" style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                  </button>
+                  {open && <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, margin: '0 0 20px' }}>{item.a}</p>}
                 </div>
               );
             })}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ── SECTIONS ALTERNÉES ── */}
-      <div className="biz-outer-pad" style={{ maxWidth: 1160, margin: '0 auto', padding: '0 48px' }}>
-
-        {/* Acheter */}
-        <div className="biz-section-row" style={{ display: 'flex', alignItems: 'center', gap: 80, padding: '88px 0', borderBottom: `1px solid ${C.bds}` }}>
-          <div style={{ flex: '1 1 0', minWidth: 0 }}>
-            <Tag label="Acheter" />
-            <h2 style={{ fontSize: 30, fontWeight: 800, color: C.t1, margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.2, fontFamily: FONT }}>Achetez des USDT<br />en quelques secondes</h2>
-            <p style={{ fontSize: 14, color: C.t2, lineHeight: 1.8, margin: '0 0 28px', fontFamily: FONT }}>Entrez le montant en CFA, choisissez votre réseau et votre adresse wallet. La conversion se fait instantanément au meilleur taux.</p>
-            <SectionStats items={[['< 5 min', 'Réception'], ['5 réseaux', 'Supportés'], ['Meilleur taux', 'CFA']]} />
-          </div>
-          <InlinePreview height={520}><BuyUSDT /></InlinePreview>
+      {/* CTA */}
+      <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1 }}>
+        <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '88px 32px', textAlign: 'center' }}>
+          <h2 style={{ fontSize: 38, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 14px' }}>Prêt à commencer ?</h2>
+          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.55)', margin: '0 0 28px' }}>Créez votre compte et échangez vos premiers USDT en quelques minutes.</p>
+          <button onClick={goPrimary} style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 52, padding: '0 32px', fontSize: 16, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            {user ? 'Mon tableau de bord' : 'Commencer gratuitement'} <ArrowRight size={17} />
+          </button>
         </div>
+      </section>
 
-        {/* Vendre */}
-        <div className="biz-section-row-rev" style={{ display: 'flex', alignItems: 'center', gap: 80, padding: '88px 0', borderBottom: `1px solid ${C.bds}`, flexDirection: 'row-reverse' }}>
-          <div style={{ flex: '1 1 0', minWidth: 0 }}>
-            <Tag label="Vendre" />
-            <h2 style={{ fontSize: 30, fontWeight: 800, color: C.t1, margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.2, fontFamily: FONT }}>Vendez vos USDT<br />et soyez payé aussitôt</h2>
-            <p style={{ fontSize: 14, color: C.t2, lineHeight: 1.8, margin: '0 0 28px', fontFamily: FONT }}>Indiquez le montant à céder et recevez votre paiement directement sur Wave ou Orange Money, dès la confirmation de réception.</p>
-            <SectionStats items={[['Wave & Orange', 'Mobile Money'], ['Paiement', 'Immédiat'], ['0 %', 'Commission']]} />
-          </div>
-          <InlinePreview height={520}><SellUSDT /></InlinePreview>
-        </div>
-
-        {/* Historique */}
-        <div className="biz-section-row" style={{ display: 'flex', alignItems: 'center', gap: 80, padding: '88px 0', borderBottom: `1px solid ${C.bds}` }}>
-          <div style={{ flex: '1 1 0', minWidth: 0 }}>
-            <Tag label="Historique" />
-            <h2 style={{ fontSize: 30, fontWeight: 800, color: C.t1, margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.2, fontFamily: FONT }}>Suivez toutes vos<br />transactions</h2>
-            <p style={{ fontSize: 14, color: C.t2, lineHeight: 1.8, margin: '0 0 28px', fontFamily: FONT }}>Retrouvez l'ensemble de vos achats, ventes et virements au même endroit, avec tous les détails et un suivi en temps réel.</p>
-            <SectionStats items={[['Suivi', 'Temps réel'], ['Tous types', 'Achat/Vente/Virement'], ['Détails', 'Complets']]} />
-          </div>
-          <InlinePreview height={520}><TransactionHistoryPage /></InlinePreview>
-        </div>
-
-        {/* Tableau de bord */}
-        <div className="biz-section-row-rev" style={{ display: 'flex', alignItems: 'center', gap: 80, padding: '88px 0', flexDirection: 'row-reverse' }}>
-          <div style={{ flex: '1 1 0', minWidth: 0 }}>
-            <Tag label="Tableau de bord" />
-            <h2 style={{ fontSize: 30, fontWeight: 800, color: C.t1, margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.2, fontFamily: FONT }}>Tout votre univers USDT<br />en un coup d'œil</h2>
-            <p style={{ fontSize: 14, color: C.t2, lineHeight: 1.8, margin: '0 0 28px', fontFamily: FONT }}>Taux live, actions rapides et activité récente : votre tableau de bord vous donne accès à l'essentiel en un seul clic.</p>
-            <SectionStats items={[['Taux live', 'USDT/CFA'], ['Actions rapides', '1 clic'], ['Activité', 'Récente']]} />
-          </div>
-          <InlinePreview height={520}><DashboardHome user={DEMO} onNavigate={() => {}} /></InlinePreview>
-        </div>
-      </div>
-
-      {/* ── NETWORKS ── */}
-      <div style={{ borderTop: `1px solid ${C.bds}`, borderBottom: `1px solid ${C.bds}` }}>
-        <div className="biz-outer-pad" style={{ maxWidth: 1160, margin: '0 auto', padding: '80px 48px' }}>
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <h2 style={{ fontSize: 34, fontWeight: 800, color: C.t1, margin: '0 0 12px', letterSpacing: '-0.035em', fontFamily: FONT }}>Cinq réseaux, un seul Terex</h2>
-            <p style={{ fontSize: 15, color: C.t2, margin: 0, fontFamily: FONT }}>Choisissez le réseau qui correspond à vos besoins et à vos frais</p>
-          </div>
-          <div className="biz-networks-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', border: `1px solid ${C.bds}`, borderRadius: 16, overflow: 'hidden' }}>
-            {NETWORKS.map((n, i) => (
-              <div key={n.name} style={{ padding: '34px 24px', textAlign: 'center', borderRight: i < NETWORKS.length - 1 ? `1px solid ${C.bds}` : 'none' }}>
-                <div style={{ fontSize: 17, fontWeight: 800, color: C.t1, fontFamily: MONO, letterSpacing: '-0.02em', marginBottom: 8 }}>{n.name}</div>
-                <div style={{ fontSize: 12, color: C.t3, fontFamily: FONT }}>{n.chain}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── FAQ ── */}
-      <div style={{ borderBottom: `1px solid ${C.bds}` }}>
-        <div className="biz-outer-pad" style={{ maxWidth: 1160, margin: '0 auto', padding: '80px 48px' }}>
-          <div className="biz-faq-row" style={{ display: 'flex', alignItems: 'flex-start', gap: 80 }}>
-            <div className="biz-faq-head" style={{ flex: '0 0 280px' }}>
-              <h2 style={{ fontSize: 32, fontWeight: 800, color: C.t1, margin: '0 0 14px', letterSpacing: '-0.035em', fontFamily: FONT }}>Questions<br />fréquentes</h2>
-              <p style={{ fontSize: 14, color: C.t2, lineHeight: 1.7, margin: 0, fontFamily: FONT }}>Tout ce que vous devez savoir avant de commencer</p>
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              {FAQ_ITEMS.map((item, i) => <FaqItem key={i} q={item.q} a={item.a} />)}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── CTA BAND ── */}
-      <div style={{ borderBottom: `1px solid ${C.bds}` }}>
-        <div className="biz-outer-pad" style={{ maxWidth: 1160, margin: '0 auto', padding: '88px 48px', textAlign: 'center' }}>
-          <h2 style={{ fontSize: 36, fontWeight: 900, color: C.t1, margin: '0 0 16px', letterSpacing: '-0.04em', lineHeight: 1.1, fontFamily: FONT }}>Prêt à commencer ?</h2>
-          <p style={{ fontSize: 16, color: C.t2, margin: '0 auto 32px', maxWidth: 460, lineHeight: 1.6, fontFamily: FONT }}>Créez votre compte en quelques minutes et achetez vos premiers USDT au meilleur taux CFA.</p>
-          <div className="biz-hero-btns" style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-            <PrimaryBtn large onClick={goPrimary}>
-              {user ? 'Mon tableau de bord' : 'Créer un compte'} <ArrowRight style={{ width: 15, height: 15 }} />
-            </PrimaryBtn>
-            <OutlineBtn large onClick={goAuth}>Se connecter</OutlineBtn>
-          </div>
-        </div>
-      </div>
-
-      {/* ── FOOTER ── */}
       <FooterSection />
+    </div>
+  );
+}
+
+function SectionHead({ eyebrow, title, sub, center }: { eyebrow: string; title: string; sub?: string; center?: boolean }) {
+  return (
+    <div style={{ marginBottom: 36, textAlign: center ? 'center' : 'left' }}>
+      <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.4)', margin: '0 0 10px' }}>{eyebrow}</p>
+      <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', margin: 0, lineHeight: 1.1 }}>{title}</h2>
+      {sub && <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.5)', margin: '12px 0 0', maxWidth: center ? 'none' : 520 }}>{sub}</p>}
     </div>
   );
 }
