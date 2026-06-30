@@ -39,6 +39,15 @@ const FEATURES = [
   { Icon: Clock,      title: 'Support 24/7',              desc: 'Une équipe disponible à tout moment par WhatsApp, téléphone ou email.' },
 ];
 
+const WHY = [
+  { Icon: Zap,        title: 'Transactions instantanées', desc: 'Achats et ventes confirmés en moins de 5 minutes, à toute heure.' },
+  { Icon: Repeat,     title: 'Liquidité élevée',          desc: 'Achetez ou vendez de gros montants sans friction, au meilleur taux.' },
+  { Icon: Coins,      title: 'Prix compétitifs',          desc: 'Un taux USDT/CFA transparent, sans frais cachés.' },
+  { Icon: Shield,     title: 'KYC rapide',                desc: 'Vérification d\'identité simple et rapide pour démarrer en minutes.' },
+  { Icon: Wallet,     title: 'Interface intuitive',       desc: 'Une expérience claire et fluide, pensée pour aller à l\'essentiel.' },
+  { Icon: Clock,      title: 'Support réactif',           desc: 'Une équipe disponible 24/7 par WhatsApp, téléphone ou email.' },
+];
+
 const STEPS = [
   { n: '1', title: 'Créez votre compte', desc: 'Inscription en quelques secondes, vérification rapide de votre identité.' },
   { n: '2', title: 'Choisissez votre opération', desc: 'Achat ou vente — entrez le montant et sélectionnez votre réseau.' },
@@ -126,7 +135,6 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
         <div className="tx-two" style={{ display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: 56, alignItems: 'center' }}>
           {/* Texte */}
           <div className="tx-fade">
-            <img src={LOGO} alt="Terex" style={{ width: 84, height: 84, borderRadius: 22, objectFit: 'cover', marginBottom: 26, display: 'block' }} />
             <h1 className="tx-hero-title" style={{ fontSize: 58, fontWeight: 800, lineHeight: 1.04, letterSpacing: '-0.035em', margin: '0 0 18px' }}>
               Achetez et vendez<br />des USDT en CFA
             </h1>
@@ -235,41 +243,53 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
         </div>
       </section>
 
-      {/* MARQUEE — réseaux & actifs (premium, animé) */}
-      <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1, overflow: 'hidden' }}>
-        <div style={{ maxWidth: 1120, margin: '0 auto', padding: '40px 0' }}>
-          <p style={{ textAlign: 'center', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.35)', margin: '0 0 28px' }}>Compatible avec les principaux réseaux blockchain</p>
-          <div className="tx-mask" style={{ overflow: 'hidden' }}>
-            <div className="tx-marquee">
-              {[...NETWORKS, ...NETWORKS].map(({ name, logo }, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0, opacity: 0.75 }}>
-                  <img src={logo} alt={name} style={{ width: 32, height: 32, borderRadius: '50%' }} />
-                  <span style={{ fontSize: 17, fontWeight: 600, color: 'rgba(255,255,255,0.85)', whiteSpace: 'nowrap' }}>{name}</span>
+      {/* POURQUOI TEREX — valeur */}
+      <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1 }}>
+        <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 32px' }}>
+          <SectionHead eyebrow="Pourquoi Terex" title="L'échange de USDT, simplifié" sub="Une plateforme pensée pour la rapidité, la liquidité et la simplicité." />
+          <div className="tx-feat" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+            {WHY.map(({ Icon, title, desc }) => (
+              <div key={title} className="tx-tile" style={{ border: `1px solid ${BORDER}`, borderRadius: 20, padding: '26px 24px' }}>
+                <div style={{ width: 44, height: 44, borderRadius: 13, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
+                  <Icon size={21} color="rgba(255,255,255,0.9)" strokeWidth={1.8} />
                 </div>
-              ))}
-            </div>
+                <h3 style={{ fontSize: 16.5, fontWeight: 600, margin: '0 0 8px' }}>{title}</h3>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65, margin: 0 }}>{desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* SÉCURITÉ — bande premium */}
+      {/* OTC — gros volumes */}
       <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1, overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(60% 120% at 50% 0%, rgba(255,255,255,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div className="tx-pad" style={{ maxWidth: 900, margin: '0 auto', padding: '96px 32px', textAlign: 'center', position: 'relative' }}>
-          <div style={{ width: 56, height: 56, borderRadius: 16, background: ICON_BG, border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 22px' }}>
-            <Shield size={26} color="rgba(255,255,255,0.9)" strokeWidth={1.7} />
-          </div>
-          <h2 style={{ fontSize: 38, fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.1, margin: '0 0 16px' }}>Une sécurité de niveau bancaire</h2>
-          <p style={{ fontSize: 16.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.65, margin: '0 auto', maxWidth: 540 }}>
-            Chiffrement de bout en bout, vérification d'identité (KYC) et conformité réglementaire. Vos fonds et vos données sont protégés à chaque transaction.
-          </p>
-          <div style={{ display: 'flex', gap: 28, justifyContent: 'center', flexWrap: 'wrap', marginTop: 32 }}>
-            {['Chiffrement 256-bit', 'KYC vérifié', 'Conformité réglementaire'].map(t => (
-              <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.4)' }} />
-                <span style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.65)', fontWeight: 500 }}>{t}</span>
-              </div>
-            ))}
+        <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 32px' }}>
+          <div className="tx-two" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center' }}>
+            <div>
+              <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.4)', margin: '0 0 12px' }}>OTC · Gros volumes</p>
+              <h2 style={{ fontSize: 34, fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.12, margin: '0 0 16px' }}>Des transactions importantes ?<br />Un service dédié.</h2>
+              <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.55)', lineHeight: 1.65, margin: '0 0 26px', maxWidth: 440 }}>
+                Pour les montants élevés, bénéficiez d'un accompagnement personnalisé, de taux préférentiels et d'un règlement rapide et sécurisé.
+              </p>
+              <button onClick={goAuth} className="tx-cta" style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 48, padding: '0 24px', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                Demander un devis OTC <ArrowRight size={16} />
+              </button>
+            </div>
+            <div className="tx-feat" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              {[
+                { Icon: Handshake, t: 'Accompagnement dédié' },
+                { Icon: Repeat,    t: 'Taux préférentiels' },
+                { Icon: Zap,       t: 'Règlement rapide' },
+                { Icon: Shield,    t: 'Sécurité renforcée' },
+              ].map(({ Icon, t }) => (
+                <div key={t} className="tx-tile" style={{ border: `1px solid ${BORDER}`, borderRadius: 16, padding: '20px 18px' }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 12, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+                    <Icon size={19} color="rgba(255,255,255,0.9)" strokeWidth={1.8} />
+                  </div>
+                  <p style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>{t}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
