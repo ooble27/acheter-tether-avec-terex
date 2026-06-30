@@ -198,7 +198,7 @@ const FAQPage = () => {
               <div className="border-t border-dashed border-white/10 mt-12 mb-8" />
               <div className="text-center py-6">
                 <p className="text-foreground text-sm mb-2">Vous ne trouvez pas votre réponse ?</p>
-                <Button onClick={() => navigate('/support')} className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium h-10 text-sm px-5">
+                <Button onClick={() => navigate('/support')} className="bg-white hover:bg-white/90 text-[#141414] font-semibold h-10 text-sm px-5">
                   <MessageCircle className="w-4 h-4 mr-2" /> Contacter le support
                 </Button>
               </div>

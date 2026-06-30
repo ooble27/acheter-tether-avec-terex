@@ -64,7 +64,7 @@ const SecurityPage = () => {
           <div className="grid grid-cols-3 gap-3">
             {[{ v: "256-bit", l: "Chiffrement" }, { v: "95%", l: "Fonds hors ligne" }, { v: "24/7", l: "Surveillance" }].map((s, i) => (
               <div key={i} className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] text-center">
-                <p className="text-terex-accent text-lg md:text-xl font-semibold">{s.v}</p>
+                <p className="text-white text-lg md:text-xl font-semibold">{s.v}</p>
                 <p className="text-muted-foreground text-xs">{s.l}</p>
               </div>
             ))}
@@ -124,7 +124,7 @@ const SecurityPage = () => {
               <div className="space-y-2">
                 {tips.account.map((t, i) => (
                   <div key={i} className="flex items-center gap-2 text-muted-foreground text-xs">
-                    <div className="w-1 h-1 bg-terex-accent rounded-full flex-shrink-0" />
+                    <div className="w-1 h-1 bg-white/40 rounded-full flex-shrink-0" />
                     {t}
                   </div>
                 ))}
@@ -135,7 +135,7 @@ const SecurityPage = () => {
               <div className="space-y-2">
                 {tips.fraud.map((t, i) => (
                   <div key={i} className="flex items-center gap-2 text-muted-foreground text-xs">
-                    <div className="w-1 h-1 bg-terex-accent rounded-full flex-shrink-0" />
+                    <div className="w-1 h-1 bg-white/40 rounded-full flex-shrink-0" />
                     {t}
                   </div>
                 ))}

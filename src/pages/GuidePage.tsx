@@ -151,7 +151,7 @@ const GuidePage = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button 
                   onClick={() => setShowDetailedGuide(true)}
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11"
+                  className="bg-white hover:bg-white/90 text-[#141414] font-semibold px-6 h-11"
                 >
                   Guide complet illustré
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -170,7 +170,7 @@ const GuidePage = () => {
                 />
               </div>
               {/* Decorative glow */}
-              <div className="absolute -inset-4 bg-terex-accent/5 rounded-2xl -z-10 blur-xl" />
+              <div className="absolute -inset-4 bg-white/5 rounded-2xl -z-10 blur-xl" />
             </div>
           </div>
         </div>
@@ -201,7 +201,7 @@ const GuidePage = () => {
               >
                 {/* Header */}
                 <div className="flex items-start justify-between mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-terex-accent/10 flex items-center justify-center text-terex-accent">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center" style={{ color: 'rgba(255,255,255,0.7)' }}>
                     {guide.icon}
                   </div>
                   <div className="flex items-center gap-2">
@@ -210,9 +210,9 @@ const GuidePage = () => {
                       {guide.duration}
                     </span>
                     <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                      guide.difficulty === 'Débutant' ? 'bg-green-500/10 text-green-400' :
-                      guide.difficulty === 'Intermédiaire' ? 'bg-terex-accent/10 text-terex-accent' :
-                      'bg-orange-500/10 text-orange-400'
+                      guide.difficulty === 'Débutant' ? 'bg-white/10 text-white/70' :
+                      guide.difficulty === 'Intermédiaire' ? 'bg-white/10 text-white/70' :
+                      'bg-white/10 text-white/70'
                     }`}>
                       {guide.difficulty}
                     </span>
@@ -234,7 +234,7 @@ const GuidePage = () => {
                 </div>
 
                 {/* CTA */}
-                <div className="flex items-center gap-1.5 text-terex-accent text-xs font-medium group-hover:gap-2.5 transition-all">
+                <div className="flex items-center gap-1.5 text-white/70 text-xs font-medium group-hover:gap-2.5 transition-all">
                   <Play className="w-3 h-3" />
                   Regarder la vidéo
                 </div>
@@ -260,7 +260,7 @@ const GuidePage = () => {
           </p>
           <Button 
             onClick={() => navigate('/auth')}
-            className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium px-6 h-11"
+            className="bg-white hover:bg-white/90 text-[#141414] font-semibold px-6 h-11"
           >
             Créer mon compte
             <ArrowRight className="w-4 h-4 ml-2" />

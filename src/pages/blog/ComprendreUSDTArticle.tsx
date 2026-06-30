@@ -57,7 +57,7 @@ export default function ComprendreUSDTArticle() {
         <li>Envoyer de l'USDT partout dans le monde en quelques minutes</li>
       </ul>
 
-      <div className="bg-terex-darker border border-terex-accent/20 rounded-lg p-6 my-8">
+      <div className="bg-[#1e1e1e] border border-white/[0.07] rounded-lg p-6 my-8">
         <h3 className="text-white mb-3">💡 Conseil Terex</h3>
         <p className="text-gray-300 mb-0">
           Pour vos premiers pas avec l'USDT, commencez avec de petits montants. Testez l'envoi et la réception 

@@ -169,7 +169,7 @@ const CareersPage = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-3 mb-1.5">
                         <h3 className="text-foreground font-medium text-base md:text-lg">{pos.title}</h3>
-                        <span className="text-[10px] font-medium px-2.5 py-0.5 bg-terex-accent/10 text-terex-accent rounded-full">{pos.type}</span>
+                        <span className="text-[10px] font-medium px-2.5 py-0.5 bg-white/[0.07] text-white/60 rounded-full">{pos.type}</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
                         <MapPin className="w-3.5 h-3.5" />
@@ -190,7 +190,7 @@ const CareersPage = () => {
                           <div className="space-y-2">
                             {pos.responsibilities.map((r, ri) => (
                               <div key={ri} className="flex items-start gap-2.5 text-muted-foreground text-sm">
-                                <div className="w-1.5 h-1.5 bg-terex-accent rounded-full flex-shrink-0 mt-1.5" />
+                                <div className="w-1.5 h-1.5 bg-white/40 rounded-full flex-shrink-0 mt-1.5" />
                                 {r}
                               </div>
                             ))}

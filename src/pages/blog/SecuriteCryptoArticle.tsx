@@ -100,8 +100,8 @@ export default function SecuriteCryptoArticle() {
         profiter des avantages des cryptomonnaies en minimisant les risques.
       </p>
 
-      <div className="bg-terex-accent/10 border border-terex-accent/20 rounded-lg p-6 my-8">
-        <p className="text-terex-accent font-medium mb-2">
+      <div className="bg-[#1e1e1e] border border-white/[0.07] rounded-lg p-6 my-8">
+        <p className="text-white font-medium mb-2">
           💡 Rappel important
         </p>
         <p className="text-gray-300 mb-0">

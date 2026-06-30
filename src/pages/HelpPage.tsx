@@ -166,8 +166,8 @@ const HelpPage = () => {
                     {/* Simulated UI preview */}
                     <div className="w-full max-w-[200px] bg-terex-dark rounded-lg border border-white/10 p-3 shadow-lg">
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-terex-accent/20 flex items-center justify-center">
-                          <IconComponent className="w-4 h-4 text-terex-accent" />
+                        <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+                          <IconComponent className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.7)' }} />
                         </div>
                         <div className="flex-1">
                           <div className="h-2 w-16 bg-white/20 rounded" />
@@ -177,7 +177,7 @@ const HelpPage = () => {
                       <div className="space-y-2">
                         <div className="h-2 w-full bg-white/10 rounded" />
                         <div className="h-2 w-3/4 bg-white/10 rounded" />
-                        <div className="h-6 w-full bg-terex-accent/30 rounded mt-3" />
+                        <div className="h-6 w-full bg-white/15 rounded mt-3" />
                       </div>
                     </div>
                   </div>
@@ -266,7 +266,7 @@ const HelpPage = () => {
               <div key={index} className="bg-terex-gray/80 border border-white/10 rounded-lg p-4 sm:p-5">
                 <p className="text-white font-medium mb-2 text-sm">{item.question}</p>
                 <div className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-terex-accent flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: 'rgba(255,255,255,0.7)' }} />
                   <p className="text-white/70 text-sm">{item.answer}</p>
                 </div>
               </div>
@@ -296,8 +296,8 @@ const HelpPage = () => {
         {solution && (
           <div className="bg-terex-gray/80 border border-white/10 rounded-lg p-5 sm:p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-full bg-terex-accent/20 flex items-center justify-center">
-                <CheckCircle className="w-5 h-5 text-terex-accent" />
+              <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center">
+                <CheckCircle className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.7)' }} />
               </div>
               <h3 className="text-white font-medium text-lg">Solution</h3>
             </div>
@@ -308,7 +308,7 @@ const HelpPage = () => {
               <div className="flex flex-col sm:flex-row gap-2">
                 <Button
                   onClick={handleReset}
-                  className="bg-terex-accent hover:bg-terex-accent/90 text-black font-medium text-sm"
+                  className="bg-white hover:bg-white/90 text-[#141414] font-semibold text-sm"
                 >
                   Oui, merci !
                 </Button>

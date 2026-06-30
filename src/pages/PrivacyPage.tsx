@@ -62,7 +62,7 @@ const PrivacyPage = () => {
       {/* Hero */}
       <section className="pt-12 pb-6 md:pt-20 md:pb-10 border-b border-white/[0.06]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <p className="text-[#3B968F] text-[11px] font-semibold uppercase tracking-[0.25em] mb-4">/ CONFIDENTIALITÉ</p>
+          <p className="text-white/60 text-[11px] font-semibold uppercase tracking-[0.25em] mb-4">/ CONFIDENTIALITÉ</p>
           <h1 className="text-3xl md:text-5xl font-light text-foreground mb-4 leading-tight">Politique de<br className="hidden md:block" /> Confidentialité</h1>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground text-xs">
             <span className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.08]">RGPD &amp; Loi sénégalaise 2008-12</span>

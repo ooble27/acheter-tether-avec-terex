@@ -10,7 +10,7 @@ export default function AcheterUSDTArticle() {
 
       <h2 className="text-white">Étape 1 : Créez votre compte Terex</h2>
       <p className="text-gray-300">
-        Rendez-vous sur <a href="/" className="text-terex-accent hover:underline">terangaexchange.com</a> et cliquez sur "Se Connecter". 
+        Rendez-vous sur <a href="/" className="text-white hover:underline">terangaexchange.com</a> et cliquez sur "Se Connecter". 
         Vous recevrez un lien de connexion magique par email - pas besoin de mot de passe !
       </p>
       <p className="text-gray-300">
@@ -37,7 +37,7 @@ export default function AcheterUSDTArticle() {
         Le montant en USDT que vous recevrez s'affiche automatiquement selon le taux de change actuel.
       </p>
 
-      <div className="bg-terex-darker border border-terex-accent/20 rounded-lg p-6 my-8">
+      <div className="bg-[#1e1e1e] border border-white/[0.07] rounded-lg p-6 my-8">
         <h3 className="text-white mb-3">💰 Exemple de calcul</h3>
         <p className="text-gray-300 mb-2">
           Vous voulez acheter pour 100 000 FCFA d'USDT.
@@ -95,7 +95,7 @@ export default function AcheterUSDTArticle() {
         <li>Les USDT arrivent dans votre wallet en quelques minutes</li>
       </ol>
 
-      <div className="bg-terex-darker border border-terex-accent/20 rounded-lg p-6 my-8">
+      <div className="bg-[#1e1e1e] border border-white/[0.07] rounded-lg p-6 my-8">
         <h3 className="text-white mb-3">⚡ Astuce Rapide</h3>
         <p className="text-gray-300 mb-0">
           Vous n'avez pas encore de wallet USDT ? Pas de problème ! Terex peut créer une adresse wallet pour vous 
@@ -130,14 +130,14 @@ export default function AcheterUSDTArticle() {
         Oui, tant que vous n'avez pas effectué le paiement. Une fois le paiement reçu, la transaction ne peut plus être annulée.
       </p>
 
-      <div className="bg-terex-accent/10 border border-terex-accent rounded-lg p-6 my-8">
+      <div className="bg-[#1e1e1e] border border-white/[0.07] rounded-lg p-6 my-8">
         <h3 className="text-white mb-3">🚀 Prêt à commencer ?</h3>
         <p className="text-gray-300 mb-4">
           Créez votre compte Terex maintenant et achetez vos premiers USDT en moins de 15 minutes.
         </p>
         <a 
           href="/auth" 
-          className="inline-block bg-terex-accent text-black px-6 py-3 rounded-lg font-medium hover:bg-terex-accent/90 transition-colors"
+          className="inline-block bg-white text-[#141414] px-6 py-3 rounded-lg font-semibold hover:bg-white/90 transition-colors"
         >
           Créer mon compte
         </a>

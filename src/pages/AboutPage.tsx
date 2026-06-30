@@ -94,7 +94,7 @@ const AboutPage = () => {
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="grid md:grid-cols-2 gap-6 md:gap-8">
             <div className="p-8 md:p-10 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
-              <p className="text-terex-accent text-xs uppercase tracking-[0.15em] mb-4 font-medium">01 — Mission</p>
+              <p className="text-white text-xs uppercase tracking-[0.15em] mb-4 font-medium">01 — Mission</p>
               <h2 className="text-foreground text-2xl md:text-3xl font-light mb-4 leading-tight">
                 Rendre la crypto accessible à tous
               </h2>
@@ -103,7 +103,7 @@ const AboutPage = () => {
               </p>
             </div>
             <div className="p-8 md:p-10 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
-              <p className="text-terex-accent text-xs uppercase tracking-[0.15em] mb-4 font-medium">02 — Vision 2030</p>
+              <p className="text-white text-xs uppercase tracking-[0.15em] mb-4 font-medium">02 — Vision 2030</p>
               <h2 className="text-foreground text-2xl md:text-3xl font-light mb-4 leading-tight">
                 La référence en Afrique de l'Ouest
               </h2>
@@ -113,7 +113,7 @@ const AboutPage = () => {
               <div className="space-y-2">
                 {["Zone UEMOA complète", "1M+ utilisateurs actifs", "100M+ FCFA de volume"].map((goal, i) => (
                   <div key={i} className="flex items-center gap-3 text-foreground/70 text-sm">
-                    <div className="w-1.5 h-1.5 bg-terex-accent rounded-full" />
+                    <div className="w-1.5 h-1.5 bg-white/40 rounded-full" />
                     {goal}
                   </div>
                 ))}
@@ -182,7 +182,7 @@ const AboutPage = () => {
               const Icon = v.icon;
               return (
                 <div key={i} className="p-6 md:p-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] group hover:border-white/[0.15] transition-all">
-                  <Icon className="w-6 h-6 text-muted-foreground mb-4 group-hover:text-terex-accent transition-colors" />
+                  <Icon className="w-6 h-6 text-muted-foreground mb-4 group-hover:text-white transition-colors" />
                   <p className="text-foreground text-base font-medium mb-1">{v.title}</p>
                   <p className="text-muted-foreground text-xs">{v.desc}</p>
                 </div>
@@ -206,7 +206,7 @@ const AboutPage = () => {
                   <User className="w-7 h-7 text-muted-foreground" />
                 </div>
                 <h3 className="text-foreground font-medium text-lg mb-0.5">{member.name}</h3>
-                <p className="text-terex-accent text-xs font-medium mb-3">{member.role}</p>
+                <p className="text-white/60 text-xs font-medium mb-3">{member.role}</p>
                 <p className="text-muted-foreground text-sm leading-relaxed">{member.bio}</p>
               </div>
             ))}
