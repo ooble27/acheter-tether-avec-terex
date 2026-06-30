@@ -12,9 +12,9 @@ import { FooterSection } from './sections/FooterSection';
 
 // ── Palette neutre — AUCUN vert ───────────────────────────────────────
 const C = {
-  bg: '#111111', l1: '#181818', l2: '#202020', l3: '#272727',
-  bds: '#222222', bd: '#333333',
-  t1: '#f0f0f0', t2: '#888888', t3: '#555555',
+  bg: '#141414', l1: '#1a1a1a', l2: '#1e1e1e', l3: '#242424',
+  bds: 'rgba(255,255,255,0.07)', bd: 'rgba(255,255,255,0.12)',
+  t1: '#ffffff', t2: 'rgba(255,255,255,0.56)', t3: 'rgba(255,255,255,0.4)',
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
@@ -247,7 +247,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
       <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 1 }} />
 
       {/* ── NAV ── */}
-      <nav className="biz-nav" style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(17,17,17,0.94)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${C.bds}`, padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <nav className="biz-nav" style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(20,20,20,0.92)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${C.bds}`, padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
             <img src="/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png" alt="Terex" style={{ width: 28, height: 28, borderRadius: 7, objectFit: 'cover' }} />
@@ -304,7 +304,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
               borderBottom: 'none',
               boxShadow: '0 20px 80px rgba(0,0,0,0.6)',
             }}>
-              <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden', background: '#1a1a1a' }}>
+              <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden', background: '#141414' }}>
                 <div style={{ transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left', width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
                   <div style={{ padding: '20px 28px' }}>
                     <DashboardHome user={DEMO} onNavigate={() => {}} />
