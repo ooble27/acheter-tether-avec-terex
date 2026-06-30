@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Play, Clock, ArrowRight, ArrowLeft, BookOpen, Shield, Send, Wallet } from 'lucide-react';
+import { Play, Clock, ArrowRight, BookOpen, Shield, Send, Wallet, ArrowRightLeft, Coins, HandCoins } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -9,7 +9,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { UserGuide } from '@/components/features/UserGuide';
 import { VideoGuide } from '@/components/features/VideoGuide';
-import dashboardPreview from '@/assets/dashboard-preview.jpeg';
 
 interface Guide {
   title: string;
@@ -129,22 +128,22 @@ const GuidePage = () => {
       />
 
       {/* Hero */}
-      <section className="relative pt-28 sm:pt-36 pb-8 md:pb-12">
+      <section className="relative pt-28 sm:pt-36 pb-12 md:pb-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-12 items-center">
             {/* Left: Text */}
-            <div>
-              <p className="text-white/30 text-xs uppercase tracking-[0.2em] mb-4">/ GUIDE</p>
-              <h1 className="text-3xl md:text-5xl font-light text-white mb-4">
+            <div className="animate-fade-in">
+              <p className="text-white/40 text-xs uppercase tracking-[0.2em] mb-4">Guide</p>
+              <h1 className="text-[clamp(1.9rem,5vw,2.6rem)] font-bold text-white tracking-tight leading-[1.1] mb-4">
                 Maîtrisez Terex<br />étape par étape
               </h1>
-              <p className="text-white/50 text-sm md:text-base max-w-md mb-6">
-                Des guides détaillés avec de vraies captures d'écran pour toutes vos opérations.
+              <p className="text-white/55 text-sm md:text-base max-w-md mb-7">
+                Des guides détaillés et illustrés pour toutes vos opérations.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button 
+                <Button
                   onClick={() => setShowDetailedGuide(true)}
-                  className="bg-white hover:bg-white/90 text-[#141414] font-semibold px-6 h-11"
+                  className="bg-white hover:bg-white/90 text-[#141414] font-bold rounded-xl px-6 h-11"
                 >
                   Guide complet illustré
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -152,18 +151,59 @@ const GuidePage = () => {
               </div>
             </div>
 
-            {/* Right: Screenshot preview */}
-            <div className="relative">
-              <div className="rounded-xl overflow-hidden border border-white/10 shadow-2xl shadow-black/40">
-                <img 
-                  src={dashboardPreview} 
-                  alt="Aperçu du tableau de bord Terex" 
-                  className="w-full"
-                  loading="lazy"
-                />
+            {/* Right: Inline neutral app mockup */}
+            <div className="animate-fade-in">
+              <div
+                className="rounded-2xl p-5"
+                style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)' }}
+              >
+                {/* Rate card */}
+                <div
+                  className="rounded-xl p-4 flex items-center justify-between mb-3"
+                  style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.07)' }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center text-white"
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.07)' }}
+                    >
+                      <ArrowRightLeft className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-white/40 text-[10px] uppercase tracking-wider">Taux USDT / CFA</p>
+                      <p className="text-white font-semibold text-lg">660 CFA</p>
+                    </div>
+                  </div>
+                  <span
+                    className="text-[10px] px-2 py-1 rounded-full text-white/60"
+                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.07)' }}
+                  >
+                    Live
+                  </span>
+                </div>
+                {/* Quick actions */}
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { label: 'Acheter', icon: Coins },
+                    { label: 'Vendre', icon: HandCoins },
+                    { label: 'Virement', icon: Send },
+                  ].map((a) => (
+                    <div
+                      key={a.label}
+                      className="rounded-xl p-3 flex flex-col items-center gap-2"
+                      style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.07)' }}
+                    >
+                      <div
+                        className="w-9 h-9 rounded-xl flex items-center justify-center text-white"
+                        style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.07)' }}
+                      >
+                        <a.icon className="w-4 h-4" />
+                      </div>
+                      <span className="text-white/70 text-xs">{a.label}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              {/* Decorative glow */}
-              <div className="absolute -inset-4 bg-white/5 rounded-2xl -z-10 blur-xl" />
             </div>
           </div>
         </div>
@@ -171,63 +211,73 @@ const GuidePage = () => {
 
       {/* Separator */}
       <div className="max-w-5xl mx-auto px-4">
-        <div className="border-t border-dashed border-white/10" />
+        <div className="border-t" style={{ borderColor: 'rgba(255,255,255,0.07)' }} />
       </div>
 
       {/* Video Guides Grid */}
-      <section className="py-10 md:py-16">
+      <section className="py-16 md:py-24">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between mb-6">
-            <p className="text-white/30 text-xs uppercase tracking-[0.15em]">Guides vidéo</p>
-            <div className="flex items-center gap-1.5 text-white/20 text-xs">
-              <Play className="w-3 h-3" />
-              4 vidéos disponibles
-            </div>
+          <div className="mb-10">
+            <p className="text-white/40 text-xs uppercase tracking-[0.2em] mb-3">Guides vidéo</p>
+            <h2 className="text-[clamp(1.6rem,4vw,2.2rem)] font-bold text-white tracking-tight mb-2">
+              Apprenez en regardant
+            </h2>
+            <p className="text-white/55 text-sm max-w-md">
+              Quatre guides vidéo pour couvrir chaque opération essentielle.
+            </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 gap-4">
             {guides.map((guide, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedGuide(guide)}
-                className="group relative p-5 md:p-6 rounded-xl border border-white/[0.08] hover:border-white/[0.15] bg-terex-gray/50 hover:bg-terex-gray/70 transition-all text-left"
+                className="group relative p-6 rounded-2xl transition-all text-left hover:-translate-y-0.5"
+                style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)' }}
               >
                 {/* Header */}
-                <div className="flex items-start justify-between mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                <div className="flex items-start justify-between mb-4">
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center text-white"
+                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.07)' }}
+                  >
                     {guide.icon}
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-white/30 text-[11px] flex items-center gap-1">
+                    <span className="text-white/40 text-[11px] flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       {guide.duration}
                     </span>
-                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                      guide.difficulty === 'Débutant' ? 'bg-white/10 text-white/70' :
-                      guide.difficulty === 'Intermédiaire' ? 'bg-white/10 text-white/70' :
-                      'bg-white/10 text-white/70'
-                    }`}>
+                    <span
+                      className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white/60"
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.07)' }}
+                    >
                       {guide.difficulty}
                     </span>
                   </div>
                 </div>
 
                 {/* Title & description */}
-                <h3 className="text-white font-medium text-sm md:text-base mb-1">{guide.title}</h3>
+                <h3 className="text-white font-semibold text-base mb-1 tracking-tight">{guide.title}</h3>
                 <p className="text-white/40 text-xs leading-relaxed mb-4">{guide.description}</p>
 
                 {/* Steps */}
-                <div className="space-y-1.5 mb-4">
+                <div className="space-y-2 mb-5">
                   {guide.steps.map((step, si) => (
-                    <div key={si} className="flex items-center gap-2">
-                      <span className="text-white/20 text-[10px] font-mono w-4">{String(si + 1).padStart(2, '0')}</span>
-                      <span className="text-white/50 text-xs">{step}</span>
+                    <div key={si} className="flex items-center gap-2.5">
+                      <span
+                        className="w-5 h-5 rounded-md flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0"
+                        style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.07)' }}
+                      >
+                        {si + 1}
+                      </span>
+                      <span className="text-white/55 text-xs">{step}</span>
                     </div>
                   ))}
                 </div>
 
                 {/* CTA */}
-                <div className="flex items-center gap-1.5 text-white/70 text-xs font-medium group-hover:gap-2.5 transition-all">
+                <div className="flex items-center gap-1.5 text-white text-xs font-medium group-hover:gap-2.5 transition-all">
                   <Play className="w-3 h-3" />
                   Regarder la vidéo
                 </div>
@@ -239,21 +289,22 @@ const GuidePage = () => {
 
       {/* Separator */}
       <div className="max-w-5xl mx-auto px-4">
-        <div className="border-t border-dashed border-white/10" />
+        <div className="border-t" style={{ borderColor: 'rgba(255,255,255,0.07)' }} />
       </div>
 
       {/* CTA */}
-      <section className="py-10 md:py-20">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-xl md:text-2xl font-light text-white mb-3">
+      <section className="py-16 md:py-24">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
+          <p className="text-white/40 text-xs uppercase tracking-[0.2em] mb-3">Commencer</p>
+          <h2 className="text-[clamp(1.6rem,4vw,2.2rem)] font-bold text-white tracking-tight mb-3">
             Prêt à commencer ?
           </h2>
-          <p className="text-white/40 text-sm mb-6 max-w-md mx-auto">
-            Créez votre compte et suivez nos guides
+          <p className="text-white/55 text-sm mb-7 max-w-md mx-auto">
+            Créez votre compte et suivez nos guides en quelques minutes.
           </p>
-          <Button 
+          <Button
             onClick={() => navigate('/auth')}
-            className="bg-white hover:bg-white/90 text-[#141414] font-semibold px-6 h-11"
+            className="bg-white hover:bg-white/90 text-[#141414] font-bold rounded-xl px-6 h-11"
           >
             Créer mon compte
             <ArrowRight className="w-4 h-4 ml-2" />
