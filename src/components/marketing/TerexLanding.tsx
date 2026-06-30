@@ -77,22 +77,35 @@ const GLOBAL_CSS = `
 `;
 
 // ── Preview constants ─────────────────────────────────────────────────
-const SCALE   = 0.58;
-const FRAME_W = 640;
+const SCALE   = 0.74;            // moins réduit qu'avant (0.58) → app plus grande
+const FRAME_W = 560;
 const INNER_W = Math.round(FRAME_W / SCALE);
+const BAR_H   = 36;              // barre fenêtre du mockup
 
-const HERO_SCALE   = 0.65;
+const HERO_SCALE   = 0.8;
 const HERO_VW      = 1064;
-const HERO_VH      = 460;
+const HERO_VH      = 560;
 const HERO_INNER_W = Math.round(HERO_VW / HERO_SCALE);
 const HERO_INNER_H = Math.round(HERO_VH / HERO_SCALE);
 
-// ── Rendu direct sans cadre — scale auto sur mobile ──────────────────
-function InlinePreview({ children, height = 420 }: { children: React.ReactNode; height?: number }) {
+// Barre de fenêtre (3 points + pseudo URL) — réutilisée hero + sections
+function WindowBar() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, height: BAR_H, padding: '0 14px', borderBottom: `1px solid ${C.bds}`, background: C.l2, flexShrink: 0 }}>
+      {['rgba(255,255,255,0.18)', 'rgba(255,255,255,0.12)', 'rgba(255,255,255,0.08)'].map((c, i) => (
+        <span key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: c }} />
+      ))}
+      <div style={{ marginLeft: 10, height: 16, flex: 1, maxWidth: 200, borderRadius: 5, background: 'rgba(255,255,255,0.04)' }} />
+    </div>
+  );
+}
+
+// ── Aperçu encadré (mockup navigateur) — agrandi, à plat ──────────────
+function InlinePreview({ children, height = 520 }: { children: React.ReactNode; height?: number }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [s, setS] = useState(() => {
     if (typeof window !== 'undefined' && window.innerWidth <= 600) {
-      return Math.min(1, (window.innerWidth - 64) / FRAME_W);
+      return Math.min(1, (window.innerWidth - 48) / FRAME_W);
     }
     return 1;
   });
@@ -111,18 +124,20 @@ function InlinePreview({ children, height = 420 }: { children: React.ReactNode; 
   }, []);
 
   const innerH = Math.round(height / SCALE);
-  const visH   = Math.round(height * s);
+  const visH   = Math.round((height + BAR_H) * s);
 
   return (
     <div ref={wrapRef} className="biz-preview" style={{ position: 'relative', width: FRAME_W, maxWidth: '100%', flexShrink: 0 }}>
-      <div style={{ height: visH, overflow: 'hidden', position: 'relative' }}>
-        <div style={{ position: 'absolute', top: 0, left: 0, transformOrigin: 'top left', transform: s < 1 ? `scale(${s})` : undefined, width: FRAME_W }}>
-          <div className="biz-no-anim" style={{ width: FRAME_W, height, overflow: 'hidden' }}>
-            <div style={{ transform: `scale(${SCALE})`, transformOrigin: 'top left', width: INNER_W, height: innerH, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
-              <div style={{ padding: '12px 16px' }}>{children}</div>
+      <div style={{ height: visH, overflow: 'hidden' }}>
+        <div style={{ transformOrigin: 'top left', transform: s < 1 ? `scale(${s})` : undefined, width: FRAME_W,
+          borderRadius: 16, overflow: 'hidden', border: `1px solid ${C.bds}`, boxShadow: '0 30px 80px rgba(0,0,0,0.5)' }}>
+          <WindowBar />
+          <div style={{ position: 'relative', height, overflow: 'hidden', background: C.bg }}>
+            <div className="biz-no-anim" style={{ width: INNER_W, transform: `scale(${SCALE})`, transformOrigin: 'top left', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
+              {children}
             </div>
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 64, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
           </div>
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 72, background: `linear-gradient(transparent, ${C.bg})`, pointerEvents: 'none' }} />
         </div>
       </div>
     </div>
@@ -283,33 +298,29 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
           </div>
         </div>
 
-        {/* Hero preview — DashboardHome */}
+        {/* Hero preview — DashboardHome en mockup encadré, à plat */}
         <div
           ref={heroPreviewRef}
           className="biz-hero-preview"
           style={{
             maxWidth: 1160, margin: '0 auto', padding: '0 48px',
             position: 'relative', zIndex: 2,
-            overflow: heroScale < 1 ? 'hidden' : undefined,
-            height: heroScale < 1 ? Math.round(HERO_VH * heroScale) : undefined,
+            overflow: 'hidden',
+            height: Math.round((HERO_VH + BAR_H) * heroScale),
           }}
         >
-          <div className="biz-hero-3d-wrap" style={{ perspective: heroScale < 1 ? 'none' : '900px', perspectiveOrigin: '50% 20%' }}>
-            <div className="biz-hero-3d-inner" style={{
-              transform: heroScale < 1 ? `scale(${heroScale})` : 'rotateX(20deg) scale(0.97)',
-              transformOrigin: heroScale < 1 ? 'top left' : 'center top',
-              borderRadius: '16px 16px 0 0',
-              overflow: 'hidden',
-              border: '1px solid rgba(255,255,255,0.10)',
-              borderBottom: 'none',
-              boxShadow: '0 20px 80px rgba(0,0,0,0.6)',
-            }}>
-              <div className="biz-no-anim" style={{ width: HERO_VW, height: HERO_VH, overflow: 'hidden', background: '#141414' }}>
-                <div style={{ transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left', width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
-                  <div style={{ padding: '20px 28px' }}>
-                    <DashboardHome user={DEMO} onNavigate={() => {}} />
-                  </div>
-                </div>
+          <div style={{
+            transformOrigin: 'top left',
+            transform: heroScale < 1 ? `scale(${heroScale})` : undefined,
+            width: HERO_VW,
+            borderRadius: '16px 16px 0 0', overflow: 'hidden',
+            border: `1px solid ${C.bds}`, borderBottom: 'none',
+            boxShadow: '0 30px 90px rgba(0,0,0,0.6)',
+          }}>
+            <WindowBar />
+            <div className="biz-no-anim" style={{ height: HERO_VH, overflow: 'hidden', background: C.bg }}>
+              <div style={{ transform: `scale(${HERO_SCALE})`, transformOrigin: 'top left', width: HERO_INNER_W, height: HERO_INNER_H, overflow: 'hidden', pointerEvents: 'none', userSelect: 'none', willChange: 'transform' }}>
+                <DashboardHome user={DEMO} onNavigate={() => {}} />
               </div>
             </div>
           </div>
@@ -349,7 +360,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
             <p style={{ fontSize: 14, color: C.t2, lineHeight: 1.8, margin: '0 0 28px', fontFamily: FONT }}>Entrez le montant en CFA, choisissez votre réseau et votre adresse wallet. La conversion se fait instantanément au meilleur taux.</p>
             <SectionStats items={[['< 5 min', 'Réception'], ['5 réseaux', 'Supportés'], ['Meilleur taux', 'CFA']]} />
           </div>
-          <InlinePreview height={430}><BuyUSDT /></InlinePreview>
+          <InlinePreview height={520}><BuyUSDT /></InlinePreview>
         </div>
 
         {/* Vendre */}
@@ -360,7 +371,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
             <p style={{ fontSize: 14, color: C.t2, lineHeight: 1.8, margin: '0 0 28px', fontFamily: FONT }}>Indiquez le montant à céder et recevez votre paiement directement sur Wave ou Orange Money, dès la confirmation de réception.</p>
             <SectionStats items={[['Wave & Orange', 'Mobile Money'], ['Paiement', 'Immédiat'], ['0 %', 'Commission']]} />
           </div>
-          <InlinePreview height={430}><SellUSDT /></InlinePreview>
+          <InlinePreview height={520}><SellUSDT /></InlinePreview>
         </div>
 
         {/* Historique */}
@@ -371,7 +382,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
             <p style={{ fontSize: 14, color: C.t2, lineHeight: 1.8, margin: '0 0 28px', fontFamily: FONT }}>Retrouvez l'ensemble de vos achats, ventes et virements au même endroit, avec tous les détails et un suivi en temps réel.</p>
             <SectionStats items={[['Suivi', 'Temps réel'], ['Tous types', 'Achat/Vente/Virement'], ['Détails', 'Complets']]} />
           </div>
-          <InlinePreview height={430}><TransactionHistoryPage /></InlinePreview>
+          <InlinePreview height={520}><TransactionHistoryPage /></InlinePreview>
         </div>
 
         {/* Tableau de bord */}
@@ -382,7 +393,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
             <p style={{ fontSize: 14, color: C.t2, lineHeight: 1.8, margin: '0 0 28px', fontFamily: FONT }}>Taux live, actions rapides et activité récente : votre tableau de bord vous donne accès à l'essentiel en un seul clic.</p>
             <SectionStats items={[['Taux live', 'USDT/CFA'], ['Actions rapides', '1 clic'], ['Activité', 'Récente']]} />
           </div>
-          <InlinePreview height={430}><DashboardHome user={DEMO} onNavigate={() => {}} /></InlinePreview>
+          <InlinePreview height={520}><DashboardHome user={DEMO} onNavigate={() => {}} /></InlinePreview>
         </div>
       </div>
 
