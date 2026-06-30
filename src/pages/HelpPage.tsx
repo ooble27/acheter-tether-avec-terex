@@ -117,11 +117,6 @@ const HelpPage = () => {
   if (!selectedFlowId) {
     return (
       <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
-        <div className="fixed inset-0 opacity-[0.06] pointer-events-none" style={{
-          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px)`,
-          backgroundSize: '40px 40px'
-        }} />
         <HeaderSection
           user={user ? {
             email: user.email || '',
@@ -223,11 +218,6 @@ const HelpPage = () => {
   // Conversation view
   return (
     <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
-      <div className="fixed inset-0 opacity-[0.06] pointer-events-none" style={{
-        backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
-                          linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px)`,
-        backgroundSize: '40px 40px'
-      }} />
       <HeaderSection
         user={user ? {
           email: user.email || '',
