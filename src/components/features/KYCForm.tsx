@@ -325,7 +325,7 @@ export function KYCForm({ onComplete }: KYCFormProps) {
                   htmlFor="front-doc"
                   className={`flex items-center justify-center w-full h-40 md:h-48 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 ${
                     formData.identity_document_front_url 
-                      ? 'border-green-500 bg-green-500/10 hover:bg-green-500/20' 
+                      ? 'border-white/15 bg-white/10 hover:bg-white/20' 
                       : 'border-terex-gray hover:border-terex-accent bg-terex-gray/30 hover:bg-terex-gray/50'
                   }`}
                 >
@@ -335,7 +335,7 @@ export function KYCForm({ onComplete }: KYCFormProps) {
                       <p className="text-sm md:text-base">Téléchargement...</p>
                     </div>
                   ) : formData.identity_document_front_url ? (
-                    <div className="text-green-400 text-center">
+                    <div className="text-white text-center">
                       <FileText className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4" />
                       <p className="text-sm md:text-base font-medium">Document téléchargé</p>
                     </div>
@@ -367,7 +367,7 @@ export function KYCForm({ onComplete }: KYCFormProps) {
                   htmlFor="back-doc"
                   className={`flex items-center justify-center w-full h-40 md:h-48 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 ${
                     formData.identity_document_back_url 
-                      ? 'border-green-500 bg-green-500/10 hover:bg-green-500/20' 
+                      ? 'border-white/15 bg-white/10 hover:bg-white/20' 
                       : 'border-terex-gray hover:border-terex-accent bg-terex-gray/30 hover:bg-terex-gray/50'
                   }`}
                 >
@@ -377,7 +377,7 @@ export function KYCForm({ onComplete }: KYCFormProps) {
                       <p className="text-sm md:text-base">Téléchargement...</p>
                     </div>
                   ) : formData.identity_document_back_url ? (
-                    <div className="text-green-400 text-center">
+                    <div className="text-white text-center">
                       <FileText className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4" />
                       <p className="text-sm md:text-base font-medium">Document téléchargé</p>
                     </div>
@@ -452,7 +452,7 @@ export function KYCForm({ onComplete }: KYCFormProps) {
               htmlFor="selfie"
               className={`flex items-center justify-center w-full h-48 md:h-56 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 ${
                 formData.selfie_url 
-                  ? 'border-green-500 bg-green-500/10 hover:bg-green-500/20' 
+                  ? 'border-white/15 bg-white/10 hover:bg-white/20' 
                   : 'border-terex-gray hover:border-terex-accent bg-terex-gray/30 hover:bg-terex-gray/50'
               }`}
             >
@@ -462,10 +462,10 @@ export function KYCForm({ onComplete }: KYCFormProps) {
                   <p className="text-base md:text-lg">Téléchargement...</p>
                 </div>
               ) : formData.selfie_url ? (
-                <div className="text-green-400 text-center">
+                <div className="text-white text-center">
                   <Camera className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-5" />
                   <p className="text-base md:text-xl font-medium">Photo téléchargée avec succès</p>
-                  <p className="text-sm md:text-base text-green-300 mt-2">Vous pouvez remplacer la photo si nécessaire</p>
+                  <p className="text-sm md:text-base text-white mt-2">Vous pouvez remplacer la photo si nécessaire</p>
                 </div>
               ) : (
                 <div className="text-gray-400 text-center px-4">
@@ -507,7 +507,7 @@ export function KYCForm({ onComplete }: KYCFormProps) {
               htmlFor="proof-address"
               className={`flex items-center justify-center w-full h-40 md:h-48 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 ${
                 formData.proof_of_address_url 
-                  ? 'border-green-500 bg-green-500/10 hover:bg-green-500/20' 
+                  ? 'border-white/15 bg-white/10 hover:bg-white/20' 
                   : 'border-terex-gray hover:border-terex-accent bg-terex-gray/30 hover:bg-terex-gray/50'
               }`}
             >
@@ -517,7 +517,7 @@ export function KYCForm({ onComplete }: KYCFormProps) {
                   <p className="text-sm md:text-base">Téléchargement...</p>
                 </div>
               ) : formData.proof_of_address_url ? (
-                <div className="text-green-400 text-center">
+                <div className="text-white text-center">
                   <FileText className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4" />
                   <p className="text-sm md:text-base font-medium">Justificatif téléchargé</p>
                 </div>

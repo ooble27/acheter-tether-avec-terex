@@ -34,8 +34,8 @@ export function TradingVolume() {
           <div>
             <CardTitle className="text-white">Volume de Trading</CardTitle>
             <div className="flex items-center space-x-2 mt-1">
-              <TrendingUp className="w-3 h-3 text-green-400" />
-              <span className="text-green-400 text-sm">+12.5% aujourd'hui</span>
+              <TrendingUp className="w-3 h-3 text-white" />
+              <span className="text-white text-sm">+12.5% aujourd'hui</span>
             </div>
           </div>
         </div>
@@ -66,12 +66,12 @@ export function TradingVolume() {
               </div>
             </div>
             
-            <div className="p-4 bg-terex-dark/50 rounded-xl border border-green-500/20">
+            <div className="p-4 bg-terex-dark/50 rounded-xl border border-white/20">
               <div className="flex items-center space-x-2 mb-2">
-                <div className="w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
+                <div className="w-4 h-4 bg-white/10 rounded-full animate-pulse"></div>
                 <span className="text-gray-400 text-sm">Transactions</span>
               </div>
-              <div className="text-xl font-bold text-green-400">
+              <div className="text-xl font-bold text-white">
                 {transactions.toLocaleString()}
               </div>
             </div>

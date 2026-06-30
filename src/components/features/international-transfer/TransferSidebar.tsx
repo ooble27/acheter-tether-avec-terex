@@ -102,21 +102,21 @@ export function TransferSidebar({
         </CardHeader>
         <CardContent className="space-y-3 p-4 pt-0">
           <div className="flex items-start space-x-3">
-            <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+            <div className="w-2 h-2 bg-white/10 rounded-full mt-2"></div>
             <div>
               <p className="text-white text-sm font-medium">Chiffrement 256-bit</p>
               <p className="text-gray-400 text-xs">Vos données sont protégées</p>
             </div>
           </div>
           <div className="flex items-start space-x-3">
-            <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+            <div className="w-2 h-2 bg-white/10 rounded-full mt-2"></div>
             <div>
               <p className="text-white text-sm font-medium">Régulé au Sénégal</p>
               <p className="text-gray-400 text-xs">Conforme aux normes locales</p>
             </div>
           </div>
           <div className="flex items-start space-x-3">
-            <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+            <div className="w-2 h-2 bg-white/10 rounded-full mt-2"></div>
             <div>
               <p className="text-white text-sm font-medium">Suivi en temps réel</p>
               <p className="text-gray-400 text-xs">Suivez votre transfert à tout moment</p>
@@ -136,7 +136,7 @@ export function TransferSidebar({
         <CardContent className="space-y-3 p-4 pt-0">
           <div className="flex items-center justify-between">
             <span className="text-gray-400 text-sm">Tous les pays</span>
-            <Badge variant="outline" className="text-green-500 border-green-500 text-xs">
+            <Badge variant="outline" className="text-white border-white/15 text-xs">
               3-5 minutes
             </Badge>
           </div>

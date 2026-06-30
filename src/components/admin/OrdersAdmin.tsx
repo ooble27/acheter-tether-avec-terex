@@ -39,7 +39,7 @@ export function OrdersAdmin() {
       case 'processing':
         return <Badge variant="outline" className="text-blue-500 border-blue-500">En traitement</Badge>;
       case 'completed':
-        return <Badge variant="outline" className="text-green-500 border-green-500">Terminé</Badge>;
+        return <Badge variant="outline" className="text-white border-white/15">Terminé</Badge>;
       case 'cancelled':
         return <Badge variant="outline" className="text-red-500 border-red-500">Annulé</Badge>;
       default:
@@ -52,7 +52,7 @@ export function OrdersAdmin() {
       case 'pending':
         return <Badge variant="outline" className="text-yellow-500 border-yellow-500">En attente</Badge>;
       case 'paid':
-        return <Badge variant="outline" className="text-green-500 border-green-500">Payé</Badge>;
+        return <Badge variant="outline" className="text-white border-white/15">Payé</Badge>;
       case 'failed':
         return <Badge variant="outline" className="text-red-500 border-red-500">Échec</Badge>;
       default:
@@ -130,7 +130,7 @@ export function OrdersAdmin() {
           <Card className="bg-terex-darker border-terex-gray">
             <CardContent className="p-3 sm:p-4">
               <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
-                <Users className="w-6 h-6 sm:w-8 sm:h-8 text-green-500 mx-auto sm:mx-0" />
+                <Users className="w-6 h-6 sm:w-8 sm:h-8 text-white mx-auto sm:mx-0" />
                 <div className="text-center sm:text-left">
                   <p className="text-gray-400 text-xs sm:text-sm">USDT vendus</p>
                   <p className="text-white text-lg sm:text-2xl font-bold">{totalUSDT.toFixed(2)}</p>
@@ -210,7 +210,7 @@ function OrdersList({ orders, onStatusUpdate, showActions }: OrdersListProps) {
       case 'processing':
         return <Badge variant="outline" className="text-blue-500 border-blue-500 text-xs">En traitement</Badge>;
       case 'completed':
-        return <Badge variant="outline" className="text-green-500 border-green-500 text-xs">Terminé</Badge>;
+        return <Badge variant="outline" className="text-white border-white/15 text-xs">Terminé</Badge>;
       case 'cancelled':
         return <Badge variant="outline" className="text-red-500 border-red-500 text-xs">Annulé</Badge>;
       default:
@@ -223,7 +223,7 @@ function OrdersList({ orders, onStatusUpdate, showActions }: OrdersListProps) {
       case 'pending':
         return <Badge variant="outline" className="text-yellow-500 border-yellow-500 text-xs">En attente</Badge>;
       case 'paid':
-        return <Badge variant="outline" className="text-green-500 border-green-500 text-xs">Payé</Badge>;
+        return <Badge variant="outline" className="text-white border-white/15 text-xs">Payé</Badge>;
       case 'failed':
         return <Badge variant="outline" className="text-red-500 border-red-500 text-xs">Échec</Badge>;
       default:
@@ -287,7 +287,7 @@ function OrdersList({ orders, onStatusUpdate, showActions }: OrdersListProps) {
                         <Button
                           size="sm"
                           onClick={() => onStatusUpdate(order.id, 'completed' as OrderStatus, 'paid')}
-                          className="bg-green-600 hover:bg-green-700 text-xs sm:text-sm"
+                          className="bg-white/10 hover:bg-white/10 text-xs sm:text-sm"
                         >
                           <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                           Approuver

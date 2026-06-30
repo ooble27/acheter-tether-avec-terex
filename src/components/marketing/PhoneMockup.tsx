@@ -54,7 +54,7 @@ export function PhoneMockup() {
                 <Card className="bg-terex-darker border-terex-gray hover:border-terex-accent/50 transition-colors">
                   <CardContent className="p-2">
                     <div className="flex items-center justify-between mb-1">
-                      <div className="w-6 h-6 bg-green-500/20 rounded-lg flex items-center justify-center">
+                      <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
                         <TetherLogo className="w-4 h-4" variant="green" />
                       </div>
                     </div>
@@ -124,7 +124,7 @@ export function PhoneMockup() {
                     </div>
                     <div className="flex items-center justify-between p-1.5 bg-terex-dark/50 rounded-lg">
                       <div className="flex items-center space-x-2">
-                        <div className="w-5 h-5 bg-green-500/20 rounded flex items-center justify-center flex-shrink-0">
+                        <div className="w-5 h-5 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
                           <TetherLogo className="w-3 h-3" variant="green" />
                         </div>
                         <div>

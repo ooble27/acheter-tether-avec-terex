@@ -33,7 +33,7 @@ export function TransferPending({ transferData, onBackToDashboard }: TransferPen
               <CardContent className="space-y-4">
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
                       <CheckCircle className="w-4 h-4 text-white" />
                     </div>
                     <div>

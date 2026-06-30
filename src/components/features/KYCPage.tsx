@@ -38,8 +38,8 @@ export function KYCPage({ onBack }: KYCPageProps) {
           icon: CheckCircle,
           title: 'Vérification approuvée',
           description: 'Votre identité a été vérifiée avec succès. Vous pouvez maintenant effectuer toutes les transactions.',
-          color: 'text-green-500',
-          bgColor: 'bg-green-500/10'
+          color: 'text-white',
+          bgColor: 'bg-white/10'
         };
       case 'rejected':
         return {

@@ -341,11 +341,11 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Frais moyens (Terex)</span>
-                    <span className="text-green-400">3-6%</span>
+                    <span className="text-white">3-6%</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Temps moyen (Terex)</span>
-                    <span className="text-green-400">5-15 minutes</span>
+                    <span className="text-white">5-15 minutes</span>
                   </div>
                 </div>
               </div>
@@ -356,19 +356,19 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                 </p>
                 <ul className="space-y-2">
                   <li className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
                     <span>Soutien familial plus efficace pour les diasporas</span>
                   </li>
                   <li className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
                     <span>Accès à l'économie digitale pour les populations non-bancarisées</span>
                   </li>
                   <li className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
                     <span>Financement rapide pour petites entreprises et entrepreneurs</span>
                   </li>
                   <li className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
                     <span>Réduction de la dépendance aux intermédiaires financiers</span>
                   </li>
                 </ul>
@@ -414,7 +414,7 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-full bg-green-400 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
                       <span className="text-black font-bold">JD</span>
                     </div>
                     <div>
@@ -431,7 +431,7 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                     <h6 className="text-white font-medium">Développement blockchain</h6>
                     <p className="text-sm">Équipe de 4 développeurs spécialisés</p>
                     <div className="w-full h-1 bg-terex-darker rounded-full overflow-hidden mt-1">
-                      <div className="bg-gradient-to-r from-terex-accent to-green-500 h-full" style={{ width: '90%' }}></div>
+                      <div className="bg-gradient-to-r from-terex-accent to-white/10 h-full" style={{ width: '90%' }}></div>
                     </div>
                   </div>
                   <div>
@@ -645,37 +645,37 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
               </div>
             </div>
             
-            <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 mt-2">
+            <div className="bg-white/10 border border-white/20 rounded-lg p-4 mt-2">
               <div className="flex items-start space-x-3">
-                <BarChart className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                <BarChart className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
                 <div>
-                  <h5 className="text-green-200 font-medium">Notre impact par région (2024)</h5>
+                  <h5 className="text-white font-medium">Notre impact par région (2024)</h5>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
                     <div>
                       <div className="flex justify-between items-center">
-                        <span className="text-green-100">🇸🇳 Sénégal</span>
-                        <span className="text-green-100 font-medium">42%</span>
+                        <span className="text-white">🇸🇳 Sénégal</span>
+                        <span className="text-white font-medium">42%</span>
                       </div>
                       <div className="w-full h-2 bg-terex-darker rounded-full overflow-hidden mt-1">
-                        <div className="bg-green-400 h-full" style={{ width: '42%' }}></div>
+                        <div className="bg-white/10 h-full" style={{ width: '42%' }}></div>
                       </div>
                     </div>
                     <div>
                       <div className="flex justify-between items-center">
-                        <span className="text-green-100">🇨🇮 Côte d'Ivoire</span>
-                        <span className="text-green-100 font-medium">28%</span>
+                        <span className="text-white">🇨🇮 Côte d'Ivoire</span>
+                        <span className="text-white font-medium">28%</span>
                       </div>
                       <div className="w-full h-2 bg-terex-darker rounded-full overflow-hidden mt-1">
-                        <div className="bg-green-400 h-full" style={{ width: '28%' }}></div>
+                        <div className="bg-white/10 h-full" style={{ width: '28%' }}></div>
                       </div>
                     </div>
                     <div>
                       <div className="flex justify-between items-center">
-                        <span className="text-green-100">🇲🇱 Mali</span>
-                        <span className="text-green-100 font-medium">15%</span>
+                        <span className="text-white">🇲🇱 Mali</span>
+                        <span className="text-white font-medium">15%</span>
                       </div>
                       <div className="w-full h-2 bg-terex-darker rounded-full overflow-hidden mt-1">
-                        <div className="bg-green-400 h-full" style={{ width: '15%' }}></div>
+                        <div className="bg-white/10 h-full" style={{ width: '15%' }}></div>
                       </div>
                     </div>
                   </div>
@@ -754,25 +754,25 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-terex-gray p-4 rounded-lg">
-                <div className="bg-green-500/20 p-2 rounded w-10 h-10 flex items-center justify-center mb-3">
-                  <Rocket className="w-6 h-6 text-green-400" />
+                <div className="bg-white/20 p-2 rounded w-10 h-10 flex items-center justify-center mb-3">
+                  <Rocket className="w-6 h-6 text-white" />
                 </div>
-                <h4 className="text-green-400 font-medium text-lg mb-3">Innovation pragmatique</h4>
+                <h4 className="text-white font-medium text-lg mb-3">Innovation pragmatique</h4>
                 <p>
                   Nous cultivons une innovation ancrée dans les besoins réels de nos utilisateurs. Notre technologie 
                   blockchain avancée est rendue accessible et compréhensible pour tous, sans jargon technique inutile.
                 </p>
                 <div className="mt-3 space-y-2">
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-white/10 rounded-full"></div>
                     <p className="text-sm">Développement guidé par les retours utilisateurs</p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-white/10 rounded-full"></div>
                     <p className="text-sm">Tests sur le terrain avec les communautés locales</p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-white/10 rounded-full"></div>
                     <p className="text-sm">Simplicité et facilité d'utilisation prioritaires</p>
                   </div>
                 </div>
@@ -841,8 +841,8 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                   </div>
                   <div className="bg-terex-gray p-4 rounded-lg">
                     <div className="flex items-center space-x-3">
-                      <div className="bg-green-500/20 p-2 rounded w-10 h-10 flex items-center justify-center">
-                        <CheckCircle className="w-6 h-6 text-green-400" />
+                      <div className="bg-white/20 p-2 rounded w-10 h-10 flex items-center justify-center">
+                        <CheckCircle className="w-6 h-6 text-white" />
                       </div>
                       <div>
                         <h6 className="text-white font-medium">Certification Excellence Client</h6>
@@ -927,19 +927,19 @@ export function AboutTerex({ onBack }: AboutTerexProps) {
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-start space-x-2">
-                    <CheckCircle className="w-4 h-4 text-green-400 mt-1 flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-white mt-1 flex-shrink-0" />
                     <p className="text-sm">Expansion à 12 pays africains</p>
                   </div>
                   <div className="flex items-start space-x-2">
-                    <CheckCircle className="w-4 h-4 text-green-400 mt-1 flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-white mt-1 flex-shrink-0" />
                     <p className="text-sm">Lancement de la carte de débit Terex</p>
                   </div>
                   <div className="flex items-start space-x-2">
-                    <CheckCircle className="w-4 h-4 text-green-400 mt-1 flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-white mt-1 flex-shrink-0" />
                     <p className="text-sm">Intégration de crypto-monnaies supplémentaires</p>
                   </div>
                   <div className="flex items-start space-x-2">
-                    <CheckCircle className="w-4 h-4 text-green-400 mt-1 flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-white mt-1 flex-shrink-0" />
                     <p className="text-sm">100,000 utilisateurs actifs mensuels</p>
                   </div>
                 </div>

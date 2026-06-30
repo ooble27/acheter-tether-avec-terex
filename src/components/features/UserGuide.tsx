@@ -47,12 +47,12 @@ const InfoBox = ({ icon: Icon, color, title, children }: { icon: any; color: str
   const colors: Record<string, string> = {
     blue: 'bg-blue-500/10 border-blue-500/20 text-blue-200',
     red: 'bg-red-500/10 border-red-500/20 text-red-200',
-    green: 'bg-green-500/10 border-green-500/20 text-green-200',
+    green: 'bg-white/10 border-white/20 text-white',
   };
   const iconColors: Record<string, string> = {
     blue: 'text-blue-400',
     red: 'text-red-400',
-    green: 'text-green-400',
+    green: 'text-white',
   };
   return (
     <div className={`${colors[color]} border rounded-lg p-4 mt-3`}>
@@ -332,8 +332,8 @@ export function UserGuide({ onBack }: UserGuideProps) {
             <div className="bg-blue-500/10 border border-blue-500/20 p-2.5 rounded-lg text-center">
               <p className="text-blue-400 text-xs font-medium">En cours</p>
             </div>
-            <div className="bg-green-500/10 border border-green-500/20 p-2.5 rounded-lg text-center">
-              <p className="text-green-400 text-xs font-medium">Complétée</p>
+            <div className="bg-white/10 border border-white/20 p-2.5 rounded-lg text-center">
+              <p className="text-white text-xs font-medium">Complétée</p>
             </div>
             <div className="bg-red-500/10 border border-red-500/20 p-2.5 rounded-lg text-center">
               <p className="text-red-400 text-xs font-medium">Échouée</p>

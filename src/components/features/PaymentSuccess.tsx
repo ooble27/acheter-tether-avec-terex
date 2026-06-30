@@ -48,8 +48,8 @@ export function PaymentSuccess({ orderData, orderId, txHash, onBackToHome, onBuy
     <div className="min-h-screen bg-terex-dark px-0 py-2 md:p-4">
       <div className="max-w-4xl mx-auto px-0">
         <div className="mb-6 text-center px-3 md:px-0">
-          <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="w-8 h-8 text-green-500" />
+          <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CheckCircle className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
             Achat réussi !
@@ -84,7 +84,7 @@ export function PaymentSuccess({ orderData, orderId, txHash, onBackToHome, onBuy
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">Statut</span>
-                <Badge className="bg-green-500 text-white border-0">Complété</Badge>
+                <Badge className="bg-white/10 text-white border-0">Complété</Badge>
               </div>
               {txHash && (
                 <div>
@@ -126,8 +126,8 @@ export function PaymentSuccess({ orderData, orderId, txHash, onBackToHome, onBuy
                 </Badge>
               </div>
               <div className="border-t border-terex-gray pt-3 mt-3">
-                <div className="text-center px-4 py-2 bg-green-500/10 rounded-lg">
-                  <p className="text-green-500 text-sm">
+                <div className="text-center px-4 py-2 bg-white/10 rounded-lg">
+                  <p className="text-white text-sm">
                     Un email de confirmation a été envoyé à votre adresse
                   </p>
                 </div>

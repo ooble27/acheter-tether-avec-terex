@@ -58,7 +58,7 @@ export function NotificationPermissionPrompt() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-2">
-                <Bell className="w-5 h-5 text-green-400" />
+                <Bell className="w-5 h-5 text-white" />
                 <h3 className="text-white font-medium text-sm">Notifications actives</h3>
               </div>
               <Button

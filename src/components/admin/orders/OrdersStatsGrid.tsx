@@ -45,8 +45,8 @@ export function OrdersStatsGrid({
       title: 'Terminées',
       value: completedCount,
       icon: CheckCircle,
-      color: 'text-green-500',
-      bgColor: 'bg-green-500/10',
+      color: 'text-white',
+      bgColor: 'bg-white/10',
       change: '+24%'
     },
     {
@@ -69,8 +69,8 @@ export function OrdersStatsGrid({
       title: 'Taux de réussite',
       value: totalOrders > 0 ? `${Math.round((completedCount / totalOrders) * 100)}%` : '0%',
       icon: Users,
-      color: 'text-emerald-500',
-      bgColor: 'bg-emerald-500/10',
+      color: 'text-white',
+      bgColor: 'bg-white/10',
       change: '+3%'
     }
   ];
@@ -84,7 +84,7 @@ export function OrdersStatsGrid({
               <div className={`p-2 rounded-lg ${stat.bgColor}`}>
                 <stat.icon className={`w-6 h-6 ${stat.color}`} />
               </div>
-              <span className="text-xs text-green-400 font-medium">{stat.change}</span>
+              <span className="text-xs text-white font-medium">{stat.change}</span>
             </div>
             
             <div className="mt-4">

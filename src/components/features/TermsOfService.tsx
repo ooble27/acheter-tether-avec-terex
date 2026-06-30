@@ -73,7 +73,7 @@ export function TermsOfService({ onBack }: TermsOfServiceProps) {
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-terex-gray p-4 rounded-lg">
-                  <h5 className="text-green-400 font-medium mb-2">✅ Exigences minimales</h5>
+                  <h5 className="text-white font-medium mb-2">✅ Exigences minimales</h5>
                   <ul className="text-sm space-y-1">
                     <li>• Âge minimum: 18 ans révolus (majorité légale)</li>
                     <li>• Capacité juridique pleine pour contracter</li>
@@ -293,7 +293,7 @@ export function TermsOfService({ onBack }: TermsOfServiceProps) {
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div className="bg-terex-darker p-3 rounded">
-                  <h6 className="text-green-400 font-medium text-sm">Achat d'USDT</h6>
+                  <h6 className="text-white font-medium text-sm">Achat d'USDT</h6>
                   <ul className="text-xs mt-1 space-y-1">
                     <li>• Spread: 1.5-3% inclus dans le taux</li>
                     <li>• Frais blockchain inclus</li>
@@ -349,7 +349,7 @@ export function TermsOfService({ onBack }: TermsOfServiceProps) {
                 <div>
                   <h6 className="text-white font-medium text-sm">Pour les transactions en CAD (Canada)</h6>
                   <div className="bg-terex-darker p-3 rounded mt-2">
-                    <p className="text-green-400 font-medium">Interac e-Transfer</p>
+                    <p className="text-white font-medium">Interac e-Transfer</p>
                     <ul className="text-xs mt-1 space-y-1">
                       <li>• Email de réception fourni par Terex</li>
                       <li>• Question/réponse sécurisée</li>
@@ -479,7 +479,7 @@ export function TermsOfService({ onBack }: TermsOfServiceProps) {
                 </ul>
               </div>
               <div className="bg-terex-gray p-4 rounded-lg">
-                <h5 className="text-green-400 font-medium mb-3">🛡️ Protection et sécurité</h5>
+                <h5 className="text-white font-medium mb-3">🛡️ Protection et sécurité</h5>
                 <ul className="text-sm space-y-2">
                   <li>• <span className="text-white font-medium">Chiffrement:</span> Encryption AES-256 pour toutes les données stockées</li>
                   <li>• <span className="text-white font-medium">Communication:</span> Protocole SSL/TLS pour transmissions</li>
@@ -517,11 +517,11 @@ export function TermsOfService({ onBack }: TermsOfServiceProps) {
                       <p className="text-sm">Aucun partage avec des partenaires marketing</p>
                     </div>
                     <div className="flex items-start space-x-2">
-                      <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-white mt-0.5 flex-shrink-0" />
                       <p className="text-sm">Conservation uniquement pour la durée nécessaire</p>
                     </div>
                     <div className="flex items-start space-x-2">
-                      <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-white mt-0.5 flex-shrink-0" />
                       <p className="text-sm">Droit d'accès et de rectification à tout moment</p>
                     </div>
                   </div>
@@ -665,11 +665,11 @@ export function TermsOfService({ onBack }: TermsOfServiceProps) {
                 </p>
                 <div className="space-y-3">
                   <div className="flex items-start space-x-2">
-                    <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-white mt-0.5 flex-shrink-0" />
                     <p className="text-sm">Accéder à la plateforme pour votre usage personnel uniquement</p>
                   </div>
                   <div className="flex items-start space-x-2">
-                    <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 text-white mt-0.5 flex-shrink-0" />
                     <p className="text-sm">Utiliser les services conformément à nos conditions</p>
                   </div>
                   <div className="flex items-start space-x-2">

@@ -199,7 +199,7 @@ export function TransferForm({
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Frais Terex</span>
-              <span className="text-green-500 font-medium">GRATUIT</span>
+              <span className="text-white font-medium">GRATUIT</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Délai</span>

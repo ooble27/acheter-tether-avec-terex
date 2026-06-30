@@ -39,7 +39,7 @@ export function BlockchainMetrics() {
           <div>
             <CardTitle className="text-white">Métriques Blockchain</CardTitle>
             <div className="flex items-center space-x-2 mt-1">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <div className="w-2 h-2 bg-white/10 rounded-full animate-pulse"></div>
               <span className="text-gray-400 text-sm">Réseau actif</span>
             </div>
           </div>
@@ -58,12 +58,12 @@ export function BlockchainMetrics() {
             </div>
           </div>
           
-          <div className="p-4 bg-terex-dark/50 rounded-xl border border-green-500/20 hover:border-green-500/40 transition-colors">
+          <div className="p-4 bg-terex-dark/50 rounded-xl border border-white/20 hover:border-white/40 transition-colors">
             <div className="flex items-center space-x-2 mb-2">
-              <TrendingUp className="w-4 h-4 text-green-400" />
+              <TrendingUp className="w-4 h-4 text-white" />
               <span className="text-gray-400 text-sm">Hash Rate (TH/s)</span>
             </div>
-            <div className="text-2xl font-bold text-green-400">
+            <div className="text-2xl font-bold text-white">
               {hashRate.toFixed(1)}
             </div>
           </div>

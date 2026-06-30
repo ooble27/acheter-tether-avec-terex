@@ -97,19 +97,19 @@ export function PWAInstallInstructions({ trigger }: PWAInstallInstructionsProps)
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
                 <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center text-xs font-bold text-white">1</div>
+                  <div className="w-6 h-6 bg-white/10 rounded-full flex items-center justify-center text-xs font-bold text-white">1</div>
                   <p className="text-gray-300">
                     Appuyez sur le menu <span className="font-mono">⋮</span> en haut à droite de Chrome
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center text-xs font-bold text-white">2</div>
+                  <div className="w-6 h-6 bg-white/10 rounded-full flex items-center justify-center text-xs font-bold text-white">2</div>
                   <p className="text-gray-300">
                     Sélectionnez "Ajouter à l'écran d'accueil"
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center text-xs font-bold text-white">3</div>
+                  <div className="w-6 h-6 bg-white/10 rounded-full flex items-center justify-center text-xs font-bold text-white">3</div>
                   <p className="text-gray-300">
                     Confirmez en appuyant sur "Ajouter"
                   </p>

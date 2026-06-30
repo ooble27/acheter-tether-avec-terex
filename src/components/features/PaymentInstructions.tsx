@@ -312,13 +312,13 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
               </CardContent>
             </Card>
 
-            <Card className="bg-green-500/10 border-green-500/30 mx-0">
+            <Card className="bg-white/10 border-white/30 mx-0">
               <CardContent className="p-4">
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-white mt-0.5" />
                   <div className="space-y-1">
-                    <p className="text-green-200 font-medium text-sm">Traitement automatique</p>
-                    <p className="text-green-100 text-xs">
+                    <p className="text-white font-medium text-sm">Traitement automatique</p>
+                    <p className="text-white text-xs">
                       Vos USDT seront envoyés automatiquement après confirmation du paiement
                     </p>
                   </div>

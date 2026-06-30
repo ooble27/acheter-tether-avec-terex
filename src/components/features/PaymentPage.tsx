@@ -387,7 +387,7 @@ export function PaymentPage({ orderData, onBack, onPaymentComplete }: PaymentPag
                 {/* Sécurité */}
                 <div className="flex items-center justify-center space-x-6 pt-4 border-t border-terex-gray">
                   <div className="flex items-center space-x-2">
-                    <Shield className="w-4 h-4 text-green-500" />
+                    <Shield className="w-4 h-4 text-white" />
                     <span className="text-xs text-gray-400">Paiement sécurisé</span>
                   </div>
                   <div className="flex items-center space-x-2">

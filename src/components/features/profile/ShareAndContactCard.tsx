@@ -106,8 +106,8 @@ export function ShareAndContactCard() {
         </div>
 
         {/* Support disponible */}
-        <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-xl">
-          <p className="text-green-400 text-sm text-center">
+        <div className="p-3 bg-white/10 border border-white/20 rounded-xl">
+          <p className="text-white text-sm text-center">
             💬 Support disponible 24h/7j
           </p>
         </div>

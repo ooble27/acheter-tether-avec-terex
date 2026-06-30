@@ -85,7 +85,7 @@ function DashboardSlide({ deviceType }: { deviceType: 'desktop' | 'mobile' }) {
             <Card className="bg-terex-darker/60 border-terex-accent/30">
               <CardContent className="p-4">
                 <div className="flex items-center space-x-2">
-                  <ArrowUpDown className="w-5 h-5 text-green-400" />
+                  <ArrowUpDown className="w-5 h-5 text-white" />
                   <div>
                     <p className="text-sm text-gray-400">Transactions</p>
                     <p className="text-xl font-bold text-white">24</p>
@@ -100,7 +100,7 @@ function DashboardSlide({ deviceType }: { deviceType: 'desktop' | 'mobile' }) {
                   <Shield className="w-5 h-5 text-blue-400" />
                   <div>
                     <p className="text-sm text-gray-400">Statut KYC</p>
-                    <p className="text-sm font-medium text-green-400">Vérifié</p>
+                    <p className="text-sm font-medium text-white">Vérifié</p>
                   </div>
                 </div>
               </CardContent>
@@ -220,14 +220,14 @@ function SellUSDTSlide({ deviceType }: { deviceType: 'desktop' | 'mobile' }) {
   return (
     <div className={`p-${isDesktop ? '8' : '4'} bg-terex-dark text-white h-full`}>
       <div className="flex items-center space-x-3 mb-6">
-        <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
-          <ArrowUpDown className="w-4 h-4 text-green-400" />
+        <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+          <ArrowUpDown className="w-4 h-4 text-white" />
         </div>
         <h1 className={`${isDesktop ? 'text-2xl' : 'text-lg'} font-bold`}>Vendre USDT</h1>
       </div>
 
       <div className="space-y-6">
-        <Card className="bg-terex-darker/60 border-green-500/30">
+        <Card className="bg-terex-darker/60 border-white/30">
           <CardContent className="p-6">
             <h3 className="font-semibold mb-4">Montant à vendre</h3>
             <div className="space-y-4">
@@ -245,25 +245,25 @@ function SellUSDTSlide({ deviceType }: { deviceType: 'desktop' | 'mobile' }) {
               
               <div className="flex items-center justify-between p-4 bg-terex-dark rounded-lg">
                 <span className="text-gray-400">Vous recevez</span>
-                <span className="text-green-400 font-bold text-lg">≈ 750.00 CAD</span>
+                <span className="text-white font-bold text-lg">≈ 750.00 CAD</span>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-terex-darker/60 border-green-500/30">
+        <Card className="bg-terex-darker/60 border-white/30">
           <CardContent className="p-6">
             <h3 className="font-semibold mb-4">Réseau blockchain</h3>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
-                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+              <div className="flex items-center space-x-3 p-3 bg-white/10 border border-white/30 rounded-lg">
+                <div className="w-6 h-6 bg-white/10 rounded-full flex items-center justify-center">
                   <span className="text-xs font-bold text-white">T</span>
                 </div>
                 <div className="flex-1">
                   <p className="font-medium text-white">TRON (TRC20)</p>
                   <p className="text-sm text-gray-400">Frais faibles</p>
                 </div>
-                <CheckCircle className="w-5 h-5 text-green-400" />
+                <CheckCircle className="w-5 h-5 text-white" />
               </div>
               
               <div className="flex items-center space-x-3 p-3 border border-gray-600 rounded-lg opacity-50">
@@ -279,7 +279,7 @@ function SellUSDTSlide({ deviceType }: { deviceType: 'desktop' | 'mobile' }) {
           </CardContent>
         </Card>
 
-        <Button className="w-full bg-green-500 text-white font-bold py-3 hover:bg-green-500/90">
+        <Button className="w-full bg-white/10 text-white font-bold py-3 hover:bg-white/90">
           Continuer la vente
         </Button>
       </div>
@@ -305,7 +305,7 @@ function TransferSlide({ deviceType }: { deviceType: 'desktop' | 'mobile' }) {
             <h3 className="font-semibold mb-4">Destination</h3>
             <div className="space-y-4">
               <div className="flex items-center space-x-3 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
                   <span className="text-xs font-bold text-white">🇨🇲</span>
                 </div>
                 <div className="flex-1">
@@ -379,8 +379,8 @@ function ProfileSlide({ deviceType }: { deviceType: 'desktop' | 'mobile' }) {
                 <h3 className="font-bold text-white">Marie Dubois</h3>
                 <p className="text-sm text-gray-400">marie.dubois@email.com</p>
                 <div className="flex items-center space-x-2 mt-1">
-                  <CheckCircle className="w-4 h-4 text-green-400" />
-                  <span className="text-sm text-green-400 font-medium">Compte vérifié</span>
+                  <CheckCircle className="w-4 h-4 text-white" />
+                  <span className="text-sm text-white font-medium">Compte vérifié</span>
                 </div>
               </div>
             </div>
@@ -391,38 +391,38 @@ function ProfileSlide({ deviceType }: { deviceType: 'desktop' | 'mobile' }) {
           <CardContent className="p-6">
             <h3 className="font-semibold mb-4">Statut de vérification</h3>
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-white/10 border border-white/30 rounded-lg">
                 <div className="flex items-center space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-400" />
+                  <CheckCircle className="w-5 h-5 text-white" />
                   <span className="text-white">Identité vérifiée</span>
                 </div>
-                <span className="text-green-400 text-sm font-medium">Approuvé</span>
+                <span className="text-white text-sm font-medium">Approuvé</span>
               </div>
               
-              <div className="flex items-center justify-between p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-white/10 border border-white/30 rounded-lg">
                 <div className="flex items-center space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-400" />
+                  <CheckCircle className="w-5 h-5 text-white" />
                   <span className="text-white">Adresse vérifiée</span>
                 </div>
-                <span className="text-green-400 text-sm font-medium">Approuvé</span>
+                <span className="text-white text-sm font-medium">Approuvé</span>
               </div>
               
-              <div className="flex items-center justify-between p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-white/10 border border-white/30 rounded-lg">
                 <div className="flex items-center space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-400" />
+                  <CheckCircle className="w-5 h-5 text-white" />
                   <span className="text-white">Selfie vérifié</span>
                 </div>
-                <span className="text-green-400 text-sm font-medium">Approuvé</span>
+                <span className="text-white text-sm font-medium">Approuvé</span>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
+        <div className="bg-white/10 border border-white/30 rounded-lg p-4">
           <div className="flex items-center space-x-3">
-            <Shield className="w-6 h-6 text-green-400" />
+            <Shield className="w-6 h-6 text-white" />
             <div>
-              <p className="font-medium text-green-400">Niveau 2 - Vérifié</p>
+              <p className="font-medium text-white">Niveau 2 - Vérifié</p>
               <p className="text-sm text-gray-400">Limite quotidienne : 10,000 CAD</p>
             </div>
           </div>

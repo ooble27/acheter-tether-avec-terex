@@ -92,7 +92,7 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
                 {steps.map((stepItem, index) => (
                   <div key={stepItem.id} className="flex items-start space-x-4">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1 ${
-                      stepItem.status === 'completed' ? 'bg-green-500' : 
+                      stepItem.status === 'completed' ? 'bg-white/10' : 
                       stepItem.status === 'current' ? 'bg-terex-accent animate-pulse' : 
                       'bg-gray-700'
                     }`}>
@@ -100,7 +100,7 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
                     </div>
                     <div className="space-y-1">
                       <h4 className={`font-medium ${
-                        stepItem.status === 'completed' ? 'text-green-500' : 
+                        stepItem.status === 'completed' ? 'text-white' : 
                         stepItem.status === 'current' ? 'text-terex-accent' : 
                         'text-gray-400'
                       }`}>
@@ -178,7 +178,7 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
                 <div className="flex justify-between border-t border-terex-gray pt-3 mt-3">
                   <span className="text-white">Statut</span>
                   <Badge variant="outline" className={`${
-                    step >= 3 ? 'bg-green-500/10 text-green-500 border-green-500/30' : 
+                    step >= 3 ? 'bg-white/10 text-white border-white/30' : 
                     'bg-yellow-500/10 text-yellow-500 border-yellow-500/30'
                   }`}>
                     {step >= 3 ? 'Transfert en cours' : 'Paiement confirmé'}

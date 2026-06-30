@@ -139,13 +139,13 @@ export function TradingSidebar({
         <CardContent className="space-y-3 p-3 sm:p-4 pt-0 w-full overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="text-gray-400 text-xs sm:text-sm">Mobile Money</span>
-            <Badge variant="outline" className="text-green-500 border-green-500 text-xs whitespace-nowrap">
+            <Badge variant="outline" className="text-white border-white/15 text-xs whitespace-nowrap">
               5-10 min
             </Badge>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-gray-400 text-xs sm:text-sm">Interac</span>
-            <Badge variant="outline" className="text-green-500 border-green-500 text-xs whitespace-nowrap">
+            <Badge variant="outline" className="text-white border-white/15 text-xs whitespace-nowrap">
               Instantané
             </Badge>
           </div>
@@ -162,21 +162,21 @@ export function TradingSidebar({
         </CardHeader>
         <CardContent className="space-y-3 p-3 sm:p-4 pt-0 w-full overflow-hidden">
           <div className="flex items-start space-x-3">
-            <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+            <div className="w-2 h-2 bg-white/10 rounded-full mt-2 flex-shrink-0"></div>
             <div className="min-w-0 flex-1">
               <p className="text-white text-xs sm:text-sm font-medium">Cryptage SSL 256-bit</p>
               <p className="text-gray-400 text-xs">Vos données sont protégées</p>
             </div>
           </div>
           <div className="flex items-start space-x-3">
-            <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+            <div className="w-2 h-2 bg-white/10 rounded-full mt-2 flex-shrink-0"></div>
             <div className="min-w-0 flex-1">
               <p className="text-white text-xs sm:text-sm font-medium">Fonds sécurisés</p>
               <p className="text-gray-400 text-xs">Protection des transactions</p>
             </div>
           </div>
           <div className="flex items-start space-x-3">
-            <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+            <div className="w-2 h-2 bg-white/10 rounded-full mt-2 flex-shrink-0"></div>
             <div className="min-w-0 flex-1">
               <p className="text-white text-xs sm:text-sm font-medium">Support 24/7</p>
               <p className="text-gray-400 text-xs">Aide disponible en permanence</p>

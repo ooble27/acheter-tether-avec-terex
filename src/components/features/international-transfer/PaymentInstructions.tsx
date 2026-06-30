@@ -137,12 +137,12 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
 
   const renderCardInstructions = () => (
     <div className="space-y-4 md:space-y-6">
-      <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3 md:p-4">
+      <div className="bg-white/10 border border-white/20 rounded-lg p-3 md:p-4">
         <div className="flex items-start space-x-2 md:space-x-3">
-          <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-green-500 mt-0.5 flex-shrink-0" />
+          <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-white mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="text-green-200 font-medium mb-1 md:mb-2 text-sm md:text-base">Paiement par carte bancaire</h3>
-            <p className="text-green-100 text-xs md:text-sm">
+            <h3 className="text-white font-medium mb-1 md:mb-2 text-sm md:text-base">Paiement par carte bancaire</h3>
+            <p className="text-white text-xs md:text-sm">
               Cliquez ci-dessous pour payer {transferData.amount} CAD de manière sécurisée
             </p>
           </div>
@@ -294,7 +294,7 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
                   <Button
                     onClick={onPaymentSent}
                     size="lg"
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold h-12 md:h-14 text-base md:text-lg"
+                    className="w-full bg-white/10 hover:bg-white/10 text-white font-semibold h-12 md:h-14 text-base md:text-lg"
                   >
                     <CheckCircle className="w-5 h-5 mr-2" />
                     J'ai effectué le paiement

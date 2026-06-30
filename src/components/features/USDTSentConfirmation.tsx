@@ -32,8 +32,8 @@ export function USDTSentConfirmation({ orderData, onBackToHome }: USDTSentConfir
         <Card className="bg-terex-darker border-terex-gray text-center w-full mx-0 md:mx-0">
           <CardHeader className="pb-6 p-3 md:p-6">
             <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center">
-                <CheckCircle className="w-8 h-8 text-green-500" />
+              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                <CheckCircle className="w-8 h-8 text-white" />
               </div>
             </div>
             <CardTitle className="text-white text-xl md:text-2xl">

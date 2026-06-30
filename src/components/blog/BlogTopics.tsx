@@ -48,7 +48,7 @@ const topics = [
     title: "La blockchain expliquée simplement",
     description: "Comprenez comment fonctionne la blockchain et pourquoi elle transforme l'économie mondiale.",
     image: blockchainImage,
-    color: "from-teal-400/20 to-green-500/5"
+    color: "from-white/10 to-white/10"
   },
   {
     id: 6,

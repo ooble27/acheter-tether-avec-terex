@@ -60,9 +60,9 @@ export function SecuritySettingsCard({ onStartKYC, kycData, isKYCVerified }: Sec
         icon: CheckCircle,
         title: 'Vérification KYC approuvée',
         description: 'Votre identité a été vérifiée avec succès. Vous pouvez effectuer toutes les transactions.',
-        bgColor: 'bg-green-500/10',
-        borderColor: 'border-green-500/20',
-        iconColor: 'text-green-400',
+        bgColor: 'bg-white/10',
+        borderColor: 'border-white/20',
+        iconColor: 'text-white',
         showButton: false
       };
     }
@@ -149,10 +149,10 @@ export function SecuritySettingsCard({ onStartKYC, kycData, isKYCVerified }: Sec
         <div className="space-y-3">
           <div className="flex items-center justify-between p-3 bg-terex-darker/50 rounded-lg border border-terex-gray/20">
             <div className="flex items-center space-x-3">
-              <Lock className="w-4 h-4 text-green-400" />
+              <Lock className="w-4 h-4 text-white" />
               <span className="text-white text-sm">Authentification par email</span>
             </div>
-            <CheckCircle className="w-4 h-4 text-green-400" />
+            <CheckCircle className="w-4 h-4 text-white" />
           </div>
           
           <div className="flex items-center justify-between p-3 bg-terex-darker/50 rounded-lg border border-terex-gray/20">
@@ -160,7 +160,7 @@ export function SecuritySettingsCard({ onStartKYC, kycData, isKYCVerified }: Sec
               <Eye className="w-4 h-4 text-blue-400" />
               <span className="text-white text-sm">Surveillance des transactions</span>
             </div>
-            <CheckCircle className="w-4 h-4 text-green-400" />
+            <CheckCircle className="w-4 h-4 text-white" />
           </div>
         </div>
 

@@ -14,7 +14,7 @@ export function ProfileStatsCard() {
       <CardContent className="p-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div className="text-center p-4 bg-terex-gray/30 rounded-xl hover:bg-terex-gray/50 transition-colors">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-white/10 to-white/10 rounded-xl flex items-center justify-center mx-auto mb-3">
               <DollarSign className="w-6 h-6 text-white" />
             </div>
             <p className="text-2xl font-bold text-white mb-1">0</p>

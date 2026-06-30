@@ -113,9 +113,9 @@ export function USDTLivePrice() {
                 </p>
               </div>
               
-              <div className="text-center p-4 bg-gradient-to-br from-green-500/20 to-green-500/5 rounded-xl border border-green-500/30">
+              <div className="text-center p-4 bg-gradient-to-br from-white/10 to-white/10 rounded-xl border border-white/30">
                 <p className="text-gray-400 text-sm mb-1">CAD</p>
-                <p className="text-green-400 font-bold text-xl">
+                <p className="text-white font-bold text-xl">
                   ${usdtData.cad_price.toFixed(4)} CAD
                 </p>
               </div>

@@ -29,7 +29,7 @@ export function OrdersTable({ orders, onStatusUpdate }: OrdersTableProps) {
     const statusStyles = {
       pending: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
       processing: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-      completed: 'bg-green-500/10 text-green-500 border-green-500/20',
+      completed: 'bg-white/10 text-white border-white/20',
       cancelled: 'bg-red-500/10 text-red-500 border-red-500/20'
     };
 
@@ -55,7 +55,7 @@ export function OrdersTable({ orders, onStatusUpdate }: OrdersTableProps) {
     
     const statusStyles = {
       pending: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
-      paid: 'bg-green-500/10 text-green-500 border-green-500/20',
+      paid: 'bg-white/10 text-white border-white/20',
       failed: 'bg-red-500/10 text-red-500 border-red-500/20'
     };
 
@@ -178,7 +178,7 @@ export function OrdersTable({ orders, onStatusUpdate }: OrdersTableProps) {
                     <Button
                       onClick={() => onStatusUpdate(order.id, 'completed' as OrderStatus, 'paid')}
                       size="sm"
-                      className="bg-green-600 hover:bg-green-700"
+                      className="bg-white/10 hover:bg-white/10"
                     >
                       <CheckCircle className="w-4 h-4 mr-2" />
                       Terminer

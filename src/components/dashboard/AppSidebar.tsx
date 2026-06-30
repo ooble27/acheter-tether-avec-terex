@@ -228,9 +228,9 @@ const AppSidebarContent = ({
                     <SidebarMenuButton onClick={() => {
                   setActiveSection('job-applications');
                   onItemClick?.();
-                }} className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${activeSection === 'job-applications' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/25' : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'}`}>
+                }} className={`group relative w-full p-4 h-auto rounded-xl transition-all duration-200 ${activeSection === 'job-applications' ? 'bg-gradient-to-r from-white/10 to-white/10 text-white shadow-lg shadow-emerald-500/25' : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white hover:shadow-md'}`}>
                       <div className="flex items-center space-x-4 w-full">
-                        <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${activeSection === 'job-applications' ? 'bg-white/20' : 'bg-terex-gray/30 group-hover:bg-emerald-500/20'}`}>
+                        <div className={`flex-shrink-0 p-2 rounded-lg transition-colors ${activeSection === 'job-applications' ? 'bg-white/20' : 'bg-terex-gray/30 group-hover:bg-white/20'}`}>
                           <UserCheck className="h-6 w-6" />
                         </div>
                         <div className="flex-1 text-left min-w-0">

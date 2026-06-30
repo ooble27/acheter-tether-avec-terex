@@ -87,7 +87,7 @@ export function CryptoPrices() {
               <div className="text-right">
                 <p className="text-white font-bold text-sm">${crypto.current_price.toLocaleString()}</p>
                 <div className={`flex items-center text-xs ${
-                  crypto.price_change_percentage_24h >= 0 ? 'text-green-400' : 'text-red-400'
+                  crypto.price_change_percentage_24h >= 0 ? 'text-white' : 'text-red-400'
                 }`}>
                   {crypto.price_change_percentage_24h >= 0 ? 
                     <TrendingUp className="w-3 h-3 mr-1" /> : 

@@ -50,7 +50,7 @@ export function TransactionDetails({ transaction }: TransactionDetailsProps) {
       case 'confirmed':
       case 'completed':
         return (
-          <Badge variant="outline" className="flex items-center space-x-1 border-green-500 text-green-500">
+          <Badge variant="outline" className="flex items-center space-x-1 border-white/15 text-white">
             <CheckCircle className="w-3 h-3" />
             <span>Confirmée</span>
           </Badge>

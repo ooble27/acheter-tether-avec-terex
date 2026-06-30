@@ -47,8 +47,8 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
               Nous nous engageons à la transparence totale concernant nos pratiques de sécurité.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-              <div className="bg-terex-darker p-4 rounded-lg border border-green-500/20">
-                <h4 className="text-green-400 font-medium">🛡️ Conformité Réglementaire</h4>
+              <div className="bg-terex-darker p-4 rounded-lg border border-white/20">
+                <h4 className="text-white font-medium">🛡️ Conformité Réglementaire</h4>
                 <p className="text-sm mt-2">Standards KYC/AML internationaux respectés</p>
               </div>
               <div className="bg-terex-darker p-4 rounded-lg border border-blue-500/20">
@@ -74,11 +74,11 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
             <h4 className="text-white font-medium">Architecture de sécurité multicouche:</h4>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
                 <div>
                   <h5 className="text-white font-medium">Chiffrement SSL/TLS 1.3</h5>
                   <p className="text-sm mb-2">Toutes les communications sont protégées par le protocole TLS 1.3 avec chiffrement AES-256</p>
-                  <div className="bg-terex-gray p-3 rounded border-l-4 border-green-500">
+                  <div className="bg-terex-gray p-3 rounded border-l-4 border-white/15">
                     <ul className="text-xs space-y-1">
                       <li>• Perfect Forward Secrecy (PFS) activé</li>
                       <li>• Certificats EV (Extended Validation) pour l'authentification</li>
@@ -90,7 +90,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
               </div>
 
               <div className="flex items-start space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
                 <div>
                   <h5 className="text-white font-medium">Chiffrement des données sensibles</h5>
                   <p className="text-sm mb-2">Vos informations personnelles et financières sont chiffrées avec les standards les plus avancés</p>
@@ -118,7 +118,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
               </div>
 
               <div className="flex items-start space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
                 <div>
                   <h5 className="text-white font-medium">Protection contre les cyberattaques</h5>
                   <p className="text-sm mb-2">Systèmes de détection et prévention des menaces en temps réel</p>
@@ -153,7 +153,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
             <h4 className="text-white font-medium">Architecture de l'infrastructure:</h4>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
                 <div>
                   <h5 className="text-white font-medium">Centres de données certifiés</h5>
                   <p className="text-sm mb-2">Hébergement dans des centres de données de niveau Tier 3+ avec certifications internationales</p>
@@ -168,7 +168,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
                       </ul>
                     </div>
                     <div className="bg-terex-gray p-3 rounded">
-                      <h6 className="text-green-400 font-medium text-sm">🔒 Sécurité physique</h6>
+                      <h6 className="text-white font-medium text-sm">🔒 Sécurité physique</h6>
                       <ul className="text-xs mt-1 space-y-1">
                         <li>• Accès biométrique multicouche</li>
                         <li>• Surveillance vidéo 24/7/365</li>
@@ -181,7 +181,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
               </div>
 
               <div className="flex items-start space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
                 <div>
                   <h5 className="text-white font-medium">Séparation et isolation des fonds</h5>
                   <p className="text-sm mb-2">Gestion stricte et séparée des fonds clients conformément aux réglementations financières</p>
@@ -212,7 +212,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
               </div>
 
               <div className="flex items-start space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
                 <div>
                   <h5 className="text-white font-medium">Redondance et continuité de service</h5>
                   <p className="text-sm mb-2">Architecture hautement disponible avec basculement automatique</p>
@@ -262,7 +262,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
             <h4 className="text-white font-medium">Systèmes de monitoring avancés:</h4>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
                 <div>
                   <h5 className="text-white font-medium">Intelligence artificielle anti-fraude</h5>
                   <p className="text-sm mb-2">Algorithmes d'apprentissage automatique pour détecter les comportements suspects en temps réel</p>
@@ -290,7 +290,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
               </div>
 
               <div className="flex items-start space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
                 <div>
                   <h5 className="text-white font-medium">Conformité KYC/AML renforcée</h5>
                   <p className="text-sm mb-2">Procédures de vérification d'identité conformes aux standards internationaux FATF et directives européennes</p>
@@ -327,13 +327,13 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
               </div>
 
               <div className="flex items-start space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
                 <div>
                   <h5 className="text-white font-medium">Traçabilité et audit complètement</h5>
                   <p className="text-sm mb-2">Enregistrement détaillé et horodaté de toutes les activités pour la conformité réglementaire</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div className="bg-terex-gray p-3 rounded">
-                      <h6 className="text-green-400 font-medium text-sm">📋 Logs d'audit</h6>
+                      <h6 className="text-white font-medium text-sm">📋 Logs d'audit</h6>
                       <ul className="text-xs mt-1 space-y-1">
                         <li>• Toutes les actions utilisateur</li>
                         <li>• Modifications de données</li>
@@ -427,7 +427,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
               <div className="bg-terex-gray p-4 rounded-lg">
                 <h5 className="text-terex-accent font-medium mb-3">👥 Security Operations Center (SOC)</h5>
                 <ul className="text-sm space-y-2">
-                  <li>• <span className="text-green-400">🟢 Surveillance 24/7/365</span> - Équipe dédiée en permanence</li>
+                  <li>• <span className="text-white">🟢 Surveillance 24/7/365</span> - Équipe dédiée en permanence</li>
                   <li>• <span className="text-blue-400">🔵 Analystes experts</span> - Spécialistes cybersécurité certifiés</li>
                   <li>• <span className="text-purple-400">🟣 Temps de réponse</span> - Incidents traités sous 15 minutes</li>
                   <li>• <span className="text-orange-400">🟠 Escalade automatique</span> - Alertes critiques immédiates</li>
@@ -438,7 +438,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
                 <ul className="text-sm space-y-2">
                   <li>• <span className="text-red-400">🔴 Isolation automatique</span> - Comptes suspects gelés</li>
                   <li>• <span className="text-yellow-400">🟡 Investigation forensique</span> - Analyse approfondie des incidents</li>
-                  <li>• <span className="text-green-400">🟢 Communication proactive</span> - Notification clients affectés</li>
+                  <li>• <span className="text-white">🟢 Communication proactive</span> - Notification clients affectés</li>
                   <li>• <span className="text-blue-400">🔵 Amélioration continue</span> - Lessons learned intégrées</li>
                 </ul>
               </div>
@@ -469,11 +469,11 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
                   <p className="text-yellow-200 text-xs">{'< 30 minutes'}</p>
                 </div>
                 <div className="text-center">
-                  <div className="bg-green-500/20 rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-2">
-                    <span className="text-green-300 font-bold">4</span>
+                  <div className="bg-white/20 rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-2">
+                    <span className="text-white font-bold">4</span>
                   </div>
-                  <p className="text-green-100 text-sm font-medium">Récupération</p>
-                  <p className="text-green-200 text-xs">{'< 2 heures'}</p>
+                  <p className="text-white text-sm font-medium">Récupération</p>
+                  <p className="text-white text-xs">{'< 2 heures'}</p>
                 </div>
               </div>
             </div>
@@ -492,7 +492,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-3">
-                <h5 className="text-green-400 font-medium">✅ Bonnes pratiques recommandées</h5>
+                <h5 className="text-white font-medium">✅ Bonnes pratiques recommandées</h5>
                 <div className="space-y-2">
                   <p><span className="text-terex-accent">🔒 Mot de passe unique:</span> Utilisez un gestionnaire de mots de passe</p>
                   <p><span className="text-terex-accent">🔐 2FA activé:</span> Authentification à deux facteurs obligatoire</p>
@@ -630,7 +630,7 @@ export function SecurityPolicy({ onBack }: SecurityPolicyProps) {
                 </ul>
               </div>
               <div className="bg-terex-gray p-4 rounded-lg">
-                <h5 className="text-green-400 font-medium mb-3">🏆 Certifications obtenues</h5>
+                <h5 className="text-white font-medium mb-3">🏆 Certifications obtenues</h5>
                 <ul className="text-sm space-y-2">
                   <li>• <span className="text-terex-accent">ISO 27001:</span> Management de la sécurité</li>
                   <li>• <span className="text-terex-accent">SOC 2 Type II:</span> Contrôles organisationnels</li>
