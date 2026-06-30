@@ -1,7 +1,7 @@
 
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck, Phone, Star, Gift, Share2, FileText, Briefcase } from 'lucide-react';
+import { Menu, Home, HelpCircle, User, Globe, TrendingDown, Shield, ShoppingCart, LogOut, History, ExternalLink, UserCheck, Phone, Star, Gift, Share2, FileText, Briefcase, ChevronRight, X } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -340,124 +340,100 @@ export function MobileMenu({
   ];
 
   const renderMenuSection = (title: string, items: any[]) => (
-    <>
-      <div className="pt-4 pb-2">
-        <div className="flex items-center space-x-2 px-4">
-          <div className="h-px bg-terex-gray/40 flex-1"></div>
-          <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">{title}</span>
-          <div className="h-px bg-terex-gray/40 flex-1"></div>
-        </div>
+    <div className="mb-1">
+      <div className="px-3 pt-5 pb-2">
+        <span className="text-[11px] font-semibold text-white/35 uppercase tracking-[0.12em]">{title}</span>
       </div>
-      
+
       {items.map((item) => {
         const IconComponent = item.icon;
         const isActive = activeSection === item.id;
-        
+
         return (
-          <Button
+          <button
             key={item.id}
-            variant="ghost"
             onClick={() => handleItemClick(item.id)}
-            className={`w-full justify-start p-4 h-auto rounded-xl transition-all duration-200 ${
-              isActive 
-                ? 'bg-gradient-to-r from-terex-accent to-terex-accent/80 text-white shadow-lg shadow-terex-accent/25' 
-                : 'text-gray-300 hover:bg-terex-gray/50 hover:text-white'
+            className={`w-full flex items-center gap-3.5 p-3 rounded-2xl transition-all duration-200 active:scale-[0.98] ${
+              isActive
+                ? 'bg-white/[0.08] border border-white/10'
+                : 'border border-transparent hover:bg-white/[0.04]'
             }`}
           >
-            <div className="flex items-center space-x-4 w-full">
-              <div className={`p-2 rounded-lg ${isActive ? 'bg-white/20' : 'bg-terex-gray/30'}`}>
-                <IconComponent className="h-5 w-5" />
-              </div>
-              <div className="flex-1 text-left">
-                <div className="font-medium text-sm">{item.label}</div>
-                <div className="text-xs opacity-75">{item.description}</div>
-              </div>
+            <div className={`flex items-center justify-center w-10 h-10 rounded-xl transition-colors ${isActive ? 'bg-white/[0.12]' : 'bg-white/[0.05]'}`}>
+              <IconComponent className="h-[18px] w-[18px] text-white/85" strokeWidth={1.9} />
             </div>
-          </Button>
+            <div className="flex-1 text-left min-w-0">
+              <div className="font-medium text-[14px] text-white">{item.label}</div>
+              <div className="text-[11.5px] text-white/40 truncate">{item.description}</div>
+            </div>
+            <ChevronRight className="h-4 w-4 text-white/25 flex-shrink-0" />
+          </button>
         );
       })}
-    </>
+    </div>
   );
 
-  // Sur mobile, afficher en plein écran. Sur desktop, afficher en popover
+  // Mobile : panneau latéral premium (glassmorphism)
   if (isMobile) {
+    if (!isOpen) return null;
     return (
-      <>
-        {/* Full Screen Menu pour Mobile */}
-        {isOpen && (
-          <div className="fixed inset-0 z-[100] bg-terex-dark animate-in fade-in duration-200">
-            <div className="flex flex-col h-full animate-in slide-in-from-right duration-300">
-              {/* Header with Back Button */}
-              <div className="flex items-center justify-start p-4 bg-terex-dark border-b border-terex-gray/30">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsOpen(false)}
-                  className="rounded-full hover:bg-terex-gray/30 text-white"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="m15 18-6-6 6-6"/>
-                  </svg>
-                </Button>
-              </div>
+      <div className="fixed inset-0 z-[100]">
+        {/* Backdrop flouté */}
+        <div
+          onClick={() => setIsOpen(false)}
+          className="absolute inset-0 bg-black/55 backdrop-blur-sm animate-in fade-in duration-300"
+        />
 
-              {/* Content */}
-              <div className="flex-1 overflow-y-auto bg-terex-dark">
-                <div className="p-4 space-y-2">
-                  {/* Section Profil */}
-                  {renderMenuSection('Profil', profileItems)}
-
-                  {/* Section Support */}
-                  {renderMenuSection('Support', supportItems)}
-
-                  {/* Section Plus */}
-                  {renderMenuSection('Plus', moreItems)}
-
-                  {/* Section Administration */}
-                  {isKYCReviewer() && renderMenuSection('Administration', adminItems)}
-
-                  {/* Bouton de déconnexion */}
-                  <div className="pt-4 pb-2">
-                    <div className="flex items-center space-x-2 px-4">
-                      <div className="h-px bg-terex-gray/40 flex-1"></div>
-                      <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Compte</span>
-                      <div className="h-px bg-terex-gray/40 flex-1"></div>
-                    </div>
-                  </div>
-
-                  <Button
-                    variant="ghost"
-                    onClick={handleLogout}
-                    className="w-full justify-start p-4 h-auto rounded-xl transition-all duration-200 text-red-400 hover:bg-red-600/20 hover:text-red-300"
-                  >
-                    <div className="flex items-center space-x-4 w-full">
-                      <div className="p-2 rounded-lg bg-red-600/20">
-                        <LogOut className="h-5 w-5" />
-                      </div>
-                      <div className="flex-1 text-left">
-                        <div className="font-medium text-sm">Déconnexion</div>
-                        <div className="text-xs opacity-75">Quitter votre session</div>
-                      </div>
-                    </div>
-                  </Button>
-                  
-                  <div className="pb-4"></div>
-                </div>
-              </div>
+        {/* Panneau */}
+        <div
+          className="absolute top-0 right-0 h-full w-[86%] max-w-[380px] flex flex-col animate-in slide-in-from-right duration-300 ease-out"
+          style={{
+            background: 'rgba(22,22,22,0.82)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            borderLeft: '1px solid rgba(255,255,255,0.08)',
+            boxShadow: '-30px 0 80px rgba(0,0,0,0.5)',
+          }}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between px-5" style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 18px)', paddingBottom: 16, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+            <div className="flex items-center gap-2.5">
+              <img src="/terex-logo.png" alt="Terex" className="w-8 h-8 rounded-lg object-cover" />
+              <span className="text-white font-bold text-[16px] tracking-tight">Terex</span>
             </div>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] hover:bg-white/[0.1] transition-colors active:scale-95"
+            >
+              <X className="h-[18px] w-[18px] text-white/80" />
+            </button>
           </div>
-        )}
-      </>
+
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto px-3 pb-6" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}>
+            {renderMenuSection('Profil', profileItems)}
+            {renderMenuSection('Support', supportItems)}
+            {renderMenuSection('Plus', moreItems)}
+            {isKYCReviewer() && renderMenuSection('Administration', adminItems)}
+
+            <div className="px-3 pt-5 pb-2">
+              <span className="text-[11px] font-semibold text-white/35 uppercase tracking-[0.12em]">Compte</span>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3.5 p-3 rounded-2xl border border-transparent hover:bg-red-500/[0.08] transition-all duration-200 active:scale-[0.98]"
+            >
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-red-500/[0.1]">
+                <LogOut className="h-[18px] w-[18px] text-red-400" strokeWidth={1.9} />
+              </div>
+              <div className="flex-1 text-left">
+                <div className="font-medium text-[14px] text-red-400">Déconnexion</div>
+                <div className="text-[11.5px] text-white/40">Quitter votre session</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
     );
   }
 
