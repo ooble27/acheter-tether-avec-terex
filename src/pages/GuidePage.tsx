@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { UserGuide } from '@/components/features/UserGuide';
 import { VideoGuide } from '@/components/features/VideoGuide';
+import { useTerexRates } from '@/hooks/useTerexRates';
 
 interface Guide {
   title: string;
@@ -27,6 +28,8 @@ const GuidePage = () => {
   const { toast } = useToast();
   const [showDetailedGuide, setShowDetailedGuide] = useState(false);
   const [selectedGuide, setSelectedGuide] = useState<Guide | null>(null);
+  const { terexRateCfa } = useTerexRates(2);
+  const rateDisplay = terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : '—';
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -171,7 +174,7 @@ const GuidePage = () => {
                     </div>
                     <div>
                       <p className="text-white/40 text-[10px] uppercase tracking-wider">Taux USDT / CFA</p>
-                      <p className="text-white font-semibold text-lg">660 CFA</p>
+                      <p className="text-white font-semibold text-lg">{rateDisplay} CFA</p>
                     </div>
                   </div>
                   <span

@@ -43,7 +43,7 @@ const sharedStyles = `
   .tx-chip { transition: border-color 0.2s ease, background 0.2s ease; }
   .tx-chip:hover { border-color: rgba(255,255,255,0.22) !important; background: rgba(255,255,255,0.05) !important; }
   @keyframes tx-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.85); } }
-  .tx-live-dot { animation: tx-pulse 1.6s ease-in-out infinite; }
+  .tx-live-dot { display: none !important; }
   @keyframes tx-typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
   .tx-dot1 { animation: tx-typing 1.3s ease-in-out infinite; }
   .tx-dot2 { animation: tx-typing 1.3s ease-in-out 0.2s infinite; }
@@ -196,17 +196,10 @@ const HelpPage = () => {
             <div className="tx-chat tx-fade" style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 22, padding: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
               {/* En-tête conversation */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '18px 20px', borderBottom: `1px solid ${BORDER}` }}>
-                <div style={{ position: 'relative', flexShrink: 0 }}>
-                  <div style={{ width: 42, height: 42, borderRadius: 13, background: '#1e1e1e', border: `1px solid rgba(255,255,255,0.1)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700 }}>TX</div>
-                  <span style={{ position: 'absolute', bottom: -2, right: -2, width: 13, height: 13, borderRadius: '50%', background: '#1a1a1a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span className="tx-live-dot" style={{ width: 8, height: 8, borderRadius: '50%', background: 'rgba(255,255,255,0.55)' }} />
-                  </span>
-                </div>
+                <div style={{ width: 42, height: 42, borderRadius: 13, background: '#1e1e1e', border: `1px solid rgba(255,255,255,0.1)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, flexShrink: 0 }}>TX</div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontSize: 14.5, fontWeight: 700, margin: 0 }}>Support Terex</p>
-                  <p style={{ fontSize: 12, color: MUTED2, margin: 0, display: 'flex', alignItems: 'center', gap: 5 }}>
-                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.55)' }} /> En ligne · répond en ~5 min
-                  </p>
+                  <p style={{ fontSize: 12, color: MUTED2, margin: 0 }}>Répond en moins de 5 minutes</p>
                 </div>
                 <MessageCircle size={18} color="rgba(255,255,255,0.3)" />
               </div>

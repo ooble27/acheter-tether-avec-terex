@@ -129,7 +129,7 @@ const FAQPage = () => {
         .tx-acc { transition: border-color 0.25s ease, background 0.25s ease; }
         .tx-acc:hover { border-color: rgba(255,255,255,0.13) !important; }
         @keyframes tx-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.82); } }
-        .tx-live-dot { animation: tx-pulse 1.6s ease-in-out infinite; }
+        .tx-live-dot { display: none !important; }
         @keyframes tx-typing { 0%,60%,100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
         .tx-dot1 { animation: tx-typing 1.3s ease-in-out infinite; }
         .tx-dot2 { animation: tx-typing 1.3s ease-in-out 0.18s infinite; }
@@ -196,7 +196,7 @@ const FAQPage = () => {
                       <span style={{ position: 'relative', width: 6, height: 6 }}>
                         <span className="tx-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#fff' }} />
                       </span>
-                      <span style={{ fontSize: 11, color: MUTED2 }}>En ligne · 24/7</span>
+                      
                     </div>
                   </div>
                 </div>

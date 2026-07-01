@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   ChevronRight,
 } from 'lucide-react';
+import { useTerexRates } from '@/hooks/useTerexRates';
 
 interface UserGuideProps {
   onBack: () => void;
@@ -62,7 +63,10 @@ const IconTile = ({ icon: Icon }: { icon: any }) => (
 );
 
 /* Rate card mockup */
-const RateCardMock = () => (
+const RateCardMock = () => {
+  const { terexRateCfa } = useTerexRates(2);
+  const rate = terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : '—';
+  return (
   <MockFrame caption="Taux en temps réel sur votre tableau de bord">
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -71,7 +75,7 @@ const RateCardMock = () => (
           <p className="text-white/40 text-[11px] uppercase tracking-wider">
             Taux USDT / CFA
           </p>
-          <p className="text-white font-semibold text-lg">660 CFA</p>
+          <p className="text-white font-semibold text-lg">{rate} CFA</p>
         </div>
       </div>
       <span
@@ -82,7 +86,8 @@ const RateCardMock = () => (
       </span>
     </div>
   </MockFrame>
-);
+  );
+};
 
 /* Quick-action tiles mockup */
 const QuickActionsMock = () => (

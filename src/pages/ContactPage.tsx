@@ -96,10 +96,9 @@ const ContactPage = () => {
   };
 
   const channels = [
-    { Icon: WhatsAppIcon, label: 'WhatsApp', value: '+1 (418) 261-9091', meta: '~2 min', online: true, href: 'https://wa.me/+14182619091', external: true },
-    { Icon: () => <Phone size={18} strokeWidth={1.8} />, label: 'Téléphone', value: '+1 (418) 261-9091', meta: '9h–20h', online: true, href: 'tel:+14182619091', external: false },
-    { Icon: () => <Mail size={18} strokeWidth={1.8} />, label: 'Email', value: 'terangaexchange@gmail.com', meta: '~2 h', online: true, href: 'mailto:terangaexchange@gmail.com', external: false },
-    { Icon: TelegramIcon, label: 'Telegram', value: '@teraborange', meta: '~10 min', online: false, href: 'https://t.me/teraborange', external: true },
+    { Icon: WhatsAppIcon, label: 'WhatsApp', value: '+1 (418) 261-9091', href: 'https://wa.me/+14182619091', external: true },
+    { Icon: () => <Phone size={18} strokeWidth={1.8} />, label: 'Téléphone', value: '+1 (418) 261-9091', href: 'tel:+14182619091', external: false },
+    { Icon: () => <Mail size={18} strokeWidth={1.8} />, label: 'Email', value: 'terangaexchange@gmail.com', href: 'mailto:terangaexchange@gmail.com', external: false },
   ];
 
   const trust = [
@@ -121,7 +120,7 @@ const ContactPage = () => {
         .tx-cta { transition: transform 0.15s ease; }
         .tx-cta:hover { transform: translateY(-1px); }
         @keyframes tx-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.85); } }
-        .tx-live-dot { animation: tx-pulse 1.6s ease-in-out infinite; }
+        .tx-live-dot { display: none !important; }
         @keyframes tx-ring { 0% { transform: scale(0.6); opacity: 0.5; } 100% { transform: scale(2.2); opacity: 0; } }
         .tx-ring { animation: tx-ring 2.6s ease-out infinite; }
         @keyframes tx-grow { from { width: 0; } }

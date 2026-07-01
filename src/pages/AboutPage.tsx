@@ -25,11 +25,10 @@ const FEED = [
 ];
 
 const MILESTONES = [
-  { year: '2024',    title: 'Fondation de Terex', desc: 'Lancement officiel à Dakar, premiers échanges USDT/CFA.' },
-  { year: 'Q2 2024', title: 'Partenariats Mobile Money', desc: 'Intégration de Wave et Orange Money.' },
-  { year: 'Q3 2024', title: 'Lancement du MVP', desc: 'Version bêta au Sénégal, premiers utilisateurs.' },
-  { year: 'Q4 2024', title: 'Expansion UEMOA', desc: 'Burkina Faso, Côte d\'Ivoire et Mali.' },
-  { year: '2025',    title: 'Croissance régionale', desc: 'Déploiement sur toute la zone UEMOA.' },
+  { year: 'Le constat', title: 'Un besoin réel', desc: 'Acheter et vendre des USDT en CFA restait trop complexe. Nous avons voulu le rendre simple.' },
+  { year: 'La plateforme', title: 'Une expérience épurée', desc: 'Une interface claire pour acheter, vendre et suivre ses transactions en quelques minutes.' },
+  { year: 'La communauté', title: 'Construit avec ses utilisateurs', desc: 'Chaque fonctionnalité naît des retours de nos utilisateurs.' },
+  { year: "L'ambition", title: "Au service de l'Afrique de l'Ouest", desc: 'Rendre les stablecoins accessibles, simplement et en toute confiance.' },
 ];
 
 const TEAM = [
