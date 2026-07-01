@@ -199,13 +199,13 @@ const HelpPage = () => {
                 <div style={{ position: 'relative', flexShrink: 0 }}>
                   <div style={{ width: 42, height: 42, borderRadius: 13, background: '#1e1e1e', border: `1px solid rgba(255,255,255,0.1)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700 }}>TX</div>
                   <span style={{ position: 'absolute', bottom: -2, right: -2, width: 13, height: 13, borderRadius: '50%', background: '#141414', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span className="tx-live-dot" style={{ width: 8, height: 8, borderRadius: '50%', background: '#3ddc84' }} />
+                    <span className="tx-live-dot" style={{ width: 8, height: 8, borderRadius: '50%', background: 'rgba(255,255,255,0.55)' }} />
                   </span>
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontSize: 14.5, fontWeight: 700, margin: 0 }}>Support Terex</p>
                   <p style={{ fontSize: 12, color: MUTED2, margin: 0, display: 'flex', alignItems: 'center', gap: 5 }}>
-                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#3ddc84' }} /> En ligne · répond en ~5 min
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.55)' }} /> En ligne · répond en ~5 min
                   </p>
                 </div>
                 <MessageCircle size={18} color="rgba(255,255,255,0.3)" />

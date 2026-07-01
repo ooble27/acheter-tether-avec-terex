@@ -336,74 +336,72 @@ export default function BlogPage() {
             </div>
           </div>
 
-          {/* Featured hero */}
+          {/* Featured — asymmetric magazine layout: large lead + stacked secondary list */}
           {showFeatured && heroArticle && (
-            <Link
-              to={existingSlugs.has(heroArticle.slug) ? `/blog/${heroArticle.slug}` : `/blog`}
-              className="group block mb-8"
-            >
-              <div className="relative rounded-2xl overflow-hidden border border-white/[0.08] group-hover:border-white/[0.16] group-hover:-translate-y-0.5 transition-all duration-200">
-                <div className="relative aspect-[21/9] overflow-hidden">
-                  <img
-                    src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80"
-                    alt={heroArticle.title}
-                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/60 to-transparent" />
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white text-[#141414] uppercase tracking-wider">À la Une</span>
-                    <span className={`text-[10px] font-medium px-2.5 py-1 rounded-full ${categoryColors[heroArticle.category] || "bg-white/10 text-white/60"}`}>{heroArticle.category}</span>
+            <div className="grid grid-cols-1 lg:grid-cols-[1.55fr_1fr] gap-5 mb-10">
+              {/* Lead story — large */}
+              <Link
+                to={existingSlugs.has(heroArticle.slug) ? `/blog/${heroArticle.slug}` : `/blog`}
+                className="group block"
+              >
+                <div className="relative h-full min-h-[340px] rounded-2xl overflow-hidden border border-white/[0.08] group-hover:border-white/[0.16] group-hover:-translate-y-0.5 transition-all duration-200">
+                  <div className="absolute inset-0 overflow-hidden">
+                    <img
+                      src={articleImages[heroArticle.slug] || "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80"}
+                      alt={heroArticle.title}
+                      className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/55 to-[#141414]/10" />
                   </div>
-                  <h2 className="text-2xl md:text-4xl font-light text-white mb-2 leading-snug max-w-2xl">
-                    {heroArticle.title}
-                  </h2>
-                  <p className="text-white/60 text-sm md:text-base max-w-xl leading-relaxed mb-4 line-clamp-2">
-                    {heroArticle.description}
-                  </p>
-                  <div className="flex items-center gap-4 text-white/40 text-xs">
-                    <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{heroArticle.duration} de lecture</span>
-                    <span>{heroArticle.lessons} articles</span>
-                    <span className="flex items-center gap-1 text-white group-hover:gap-2 transition-all font-medium">Lire <ArrowRight className="w-3.5 h-3.5" /></span>
+                  <div className="relative h-full flex flex-col justify-end p-6 md:p-9">
+                    <div className="flex items-center gap-3 mb-3.5">
+                      <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white text-[#141414] uppercase tracking-wider">À la Une</span>
+                      <span className={`text-[10px] font-medium px-2.5 py-1 rounded-full ${categoryColors[heroArticle.category] || "bg-white/10 text-white/60"}`}>{heroArticle.category}</span>
+                    </div>
+                    <h2 className="text-2xl md:text-[2.1rem] font-bold tracking-[-0.025em] text-white mb-2.5 leading-[1.1] max-w-xl">
+                      {heroArticle.title}
+                    </h2>
+                    <p className="text-white/60 text-sm md:text-[15px] max-w-lg leading-relaxed mb-4 line-clamp-2">
+                      {heroArticle.description}
+                    </p>
+                    <div className="flex items-center gap-4 text-white/40 text-xs">
+                      <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{heroArticle.duration} de lecture</span>
+                      <span>{heroArticle.lessons} articles</span>
+                      <span className="flex items-center gap-1 text-white group-hover:gap-2 transition-all font-medium ml-auto">Lire <ArrowRight className="w-3.5 h-3.5" /></span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          )}
+              </Link>
 
-          {/* Secondary featured — 2-column */}
-          {showFeatured && secondaryFeatured.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
-              {secondaryFeatured.map((article, i) => (
-                <Link
-                  key={i}
-                  to={existingSlugs.has(article.slug) ? `/blog/${article.slug}` : `/blog`}
-                  className="group block"
-                >
-                  <div className="rounded-2xl overflow-hidden border border-white/[0.08] bg-[#1e1e1e] group-hover:border-white/[0.16] group-hover:-translate-y-0.5 transition-all duration-200 h-full">
-                    <div className="relative aspect-[16/9] overflow-hidden">
-                      <img
-                        src={articleImages[article.slug] || `https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80`}
-                        alt={article.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#141414]/80 via-transparent to-transparent" />
-                      <div className="absolute top-3 left-3">
-                        <span className={`text-[10px] font-medium px-2.5 py-1 rounded-full ${categoryColors[article.category] || "bg-white/10 text-white/60"}`}>{article.category}</span>
+              {/* Secondary — compact editorial list */}
+              {secondaryFeatured.length > 0 && (
+                <div className="flex flex-col gap-4">
+                  <p className="text-white/40 text-[11px] font-semibold tracking-[0.12em] uppercase">À lire aussi</p>
+                  {secondaryFeatured.map((article, i) => (
+                    <Link
+                      key={i}
+                      to={existingSlugs.has(article.slug) ? `/blog/${article.slug}` : `/blog`}
+                      className="group flex gap-4 items-center rounded-2xl border border-white/[0.07] bg-[#1a1a1a] p-3 hover:border-white/[0.16] hover:-translate-y-0.5 transition-all duration-200 flex-1"
+                    >
+                      <div className="relative w-[40%] max-w-[150px] flex-shrink-0 aspect-[4/3] rounded-xl overflow-hidden">
+                        <img
+                          src={articleImages[article.slug] || `https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80`}
+                          alt={article.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
                       </div>
-                    </div>
-                    <div className="p-5">
-                      <h3 className="text-foreground text-lg font-normal mb-2 group-hover:text-white transition-colors leading-snug">{article.title}</h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed mb-3 line-clamp-2">{article.description}</p>
-                      <div className="flex items-center gap-3 text-muted-foreground/50 text-xs">
-                        <span className="flex items-center gap-1.5"><Clock className="w-3 h-3" />{article.duration}</span>
-                        <span>{article.lessons} articles</span>
+                      <div className="min-w-0 flex-1 pr-2">
+                        <span className={`inline-block text-[9.5px] font-medium px-2 py-0.5 rounded-full mb-2 ${categoryColors[article.category] || "bg-white/10 text-white/60"}`}>{article.category}</span>
+                        <h3 className="text-foreground text-[15px] font-medium mb-1.5 leading-snug line-clamp-2 group-hover:text-white transition-colors">{article.title}</h3>
+                        <div className="flex items-center gap-3 text-muted-foreground/50 text-[11px]">
+                          <span className="flex items-center gap-1.5"><Clock className="w-3 h-3" />{article.duration}</span>
+                          <span>{article.lessons} articles</span>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
