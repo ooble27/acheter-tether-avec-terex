@@ -115,7 +115,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
     <header
       className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md transition-all duration-300"
       style={{
-        backgroundColor: 'rgba(20,20,20,0.8)',
+        backgroundColor: 'rgba(26,26,26,0.8)',
         borderBottom: `1px solid ${BORDER}`,
       }}
     >
