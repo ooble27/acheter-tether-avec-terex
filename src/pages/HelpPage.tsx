@@ -1,4 +1,4 @@
-import { Phone, Mail, ShoppingCart, TrendingDown, Send, User, Search, CheckCircle, ArrowLeft, ArrowRight, Sparkles, LifeBuoy, BookOpen, MessageCircle } from 'lucide-react';
+import { Phone, Mail, Coins, HandCoins, Send, User, Search, CheckCircle, ArrowLeft, ArrowRight, Sparkles, LifeBuoy, BookOpen, MessageCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -17,11 +17,11 @@ const ICON_BG = 'rgba(255,255,255,0.06)';
 const MUTED = 'rgba(255,255,255,0.55)';
 const MUTED2 = 'rgba(255,255,255,0.4)';
 
-const iconMap = { ShoppingCart, TrendingDown, Send, User };
+const iconMap = { Coins, HandCoins, Send, User };
 
 const categoryCards = [
-  { flowId: 'buy-usdt', title: 'Acheter USDT', description: "Tout ce qu'il faut savoir pour acheter du USDT facilement et en toute sécurité.", icon: 'ShoppingCart', articles: 8 },
-  { flowId: 'sell-usdt', title: 'Vendre USDT', description: 'Guides détaillés pour vendre vos USDT et recevoir vos fonds rapidement.', icon: 'TrendingDown', articles: 6 },
+  { flowId: 'buy-usdt', title: 'Acheter USDT', description: "Tout ce qu'il faut savoir pour acheter du USDT facilement et en toute sécurité.", icon: 'Coins', articles: 8 },
+  { flowId: 'sell-usdt', title: 'Vendre USDT', description: 'Guides détaillés pour vendre vos USDT et recevoir vos fonds rapidement.', icon: 'HandCoins', articles: 6 },
   { flowId: 'transfer', title: 'Transferts Internationaux', description: "Envoyez de l'argent partout en Afrique avec les meilleurs taux.", icon: 'Send', articles: 5 },
   { flowId: 'account', title: 'Compte & Sécurité', description: 'Gérez votre compte, votre vérification KYC et vos paramètres de sécurité.', icon: 'User', articles: 7 },
 ];

@@ -1,4 +1,4 @@
-import { Search, MessageCircle, User, ShoppingCart, Shield, Coins, HelpCircle, Globe, ChevronDown, Send, Sparkles } from 'lucide-react';
+import { Search, MessageCircle, User, HandCoins, Shield, Coins, HelpCircle, Globe, ChevronDown, Send, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FooterSection } from '@/components/marketing/sections/FooterSection';
@@ -31,8 +31,8 @@ const FAQPage = () => {
 
   const faqCategories = [
     { id: 'demarrage', title: 'Démarrage et Compte', icon: User, description: 'Création de compte, vérification KYC' },
-    { id: 'achat', title: "Achat d'USDT", icon: ShoppingCart, description: 'Comment acheter des cryptomonnaies' },
-    { id: 'vente', title: "Vente d'USDT", icon: Coins, description: 'Vendre vos cryptomonnaies' },
+    { id: 'achat', title: "Achat d'USDT", icon: Coins, description: 'Comment acheter des cryptomonnaies' },
+    { id: 'vente', title: "Vente d'USDT", icon: HandCoins, description: 'Vendre vos cryptomonnaies' },
     { id: 'transferts', title: 'Transferts Internationaux', icon: Globe, description: "Envoyer de l'argent" },
     { id: 'securite', title: 'Sécurité et Conformité', icon: Shield, description: 'Protection des données et fonds' },
     { id: 'support', title: 'Support et Assistance', icon: HelpCircle, description: 'Contacter notre équipe' },
