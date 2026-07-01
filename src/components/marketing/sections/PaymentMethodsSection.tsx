@@ -14,7 +14,7 @@ const paymentMethods = [
 
 export function PaymentMethodsSection() {
   return (
-    <section className="py-20 sm:py-28" style={{ backgroundColor: "#141414" }}>
+    <section className="py-20 sm:py-28" style={{ backgroundColor: "#1a1a1a" }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14 sm:mb-16">
           <p

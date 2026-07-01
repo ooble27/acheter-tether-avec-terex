@@ -122,9 +122,9 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {!useHamburgerMenu ? (
           <div className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? 'h-14' : 'h-16'}`}>
-            <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-              <img src="/terex-logo.png" alt="Terex Logo" className="w-8 h-8 rounded-lg" />
-              <span className="ml-2 text-lg font-semibold tracking-tight" style={{ color: '#fff' }}>TEREX</span>
+            <div className="flex items-center gap-1.5 cursor-pointer" onClick={() => navigate('/')}>
+              <img src="/terex-logo.png" alt="Terex Logo" className="w-11 h-11 object-contain" />
+              <span className="text-xl font-bold tracking-tight" style={{ color: '#fff', letterSpacing: '-0.03em' }}>Terex</span>
             </div>
             <nav className="flex items-center space-x-8">
               {navigationItems.map((item) => (
@@ -193,9 +193,9 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
         ) : (
           <div ref={menuRef} className="relative">
             <div className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? 'h-14' : 'h-16'}`}>
-              <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                <img src="/terex-logo.png" alt="Terex Logo" className="w-8 h-8 rounded-lg" />
-                <span className="ml-2 text-lg font-semibold tracking-tight" style={{ color: '#fff' }}>TEREX</span>
+              <div className="flex items-center gap-1.5 cursor-pointer" onClick={() => navigate('/')}>
+                <img src="/terex-logo.png" alt="Terex Logo" className="w-11 h-11 object-contain" />
+                <span className="text-xl font-bold tracking-tight" style={{ color: '#fff', letterSpacing: '-0.03em' }}>Terex</span>
               </div>
               <button
                 onClick={() => setMenuOpen(!menuOpen)}

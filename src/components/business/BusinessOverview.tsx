@@ -116,7 +116,7 @@ export function BusinessOverview({ user, onNavigate }: Props) {
 
           {/* Héro — même style exact que Trésorerie */}
           <div style={{
-            background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)',
+            background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)',
             border: `1px solid ${C.bds}`, borderRadius: 16,
             padding: '30px 28px 26px',
             boxShadow: '0 4px 32px rgba(0,0,0,0.45)',

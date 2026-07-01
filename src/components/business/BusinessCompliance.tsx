@@ -469,7 +469,7 @@ function CompliancePolicyPage({ onBack }: { onBack: () => void }) {
       </div>
 
       {/* Hero */}
-      <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '32px 32px 28px', marginBottom: 20 }}>
+      <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '32px 32px 28px', marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
           <ShieldCheck size={16} color={C.t3} />
           <span style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.10em' }}>Terex Exchange</span>
@@ -581,7 +581,7 @@ export function BusinessCompliance({ user: _user }: { user: { email: string; nam
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
           {/* Héro */}
-          <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '28px 28px 24px' }}>
+          <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '28px 28px 24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 22 }}>
               <ShieldCheck size={15} color={C.t3} />
               <span style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.10em' }}>Conformité KYC</span>

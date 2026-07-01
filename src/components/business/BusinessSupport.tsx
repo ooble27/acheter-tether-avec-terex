@@ -17,7 +17,7 @@ const C = {
 };
 const FONT = "'Inter', sans-serif";
 const MONO = '"JetBrains Mono", Consolas, monospace';
-const HERO_BG = 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)';
+const HERO_BG = 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)';
 
 type SubPage = 'main' | 'guide' | 'docs' | 'api' | 'compliance';
 

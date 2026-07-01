@@ -127,7 +127,7 @@ export function BusinessDeposit({ user, onBack }: {
 
       {/* Hero header */}
       <div style={{
-        background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)',
+        background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)',
         border: `1px solid ${C.bds}`, borderRadius: 14,
         padding: '20px 24px', marginBottom: 28,
         boxShadow: '0 1px 3px rgba(0,0,0,0.4)',

@@ -58,19 +58,19 @@ export function FooterSection() {
   ];
 
   return (
-    <footer style={{ backgroundColor: '#141414', borderTop: `1px solid ${BORDER}` }}>
+    <footer style={{ backgroundColor: '#1a1a1a', borderTop: `1px solid ${BORDER}` }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-10">
 
           {/* Brand */}
           <div className="col-span-2">
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-1.5 mb-4">
               <img
                 src="/terex-logo.png"
                 alt="Terex Logo"
-                className="w-9 h-9 rounded-lg"
+                className="w-12 h-12 object-contain"
               />
-              <span className="text-lg font-semibold tracking-tight" style={{ color: '#fff' }}>TEREX</span>
+              <span className="text-xl font-bold tracking-tight" style={{ color: '#fff', letterSpacing: '-0.03em' }}>Terex</span>
             </div>
 
             <p className="text-sm leading-relaxed mb-6 max-w-xs" style={{ color: MUTED }}>

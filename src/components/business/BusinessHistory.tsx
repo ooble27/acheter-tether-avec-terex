@@ -263,7 +263,7 @@ export function BusinessHistory({ user }: Props) {
       {selectedTx && <TransactionDrawer tx={selectedTx} onClose={() => setSelectedTx(null)} />}
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #141414 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '26px 28px' }}>
+      <div style={{ background: 'linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a1a1a 100%)', border: `1px solid ${C.bds}`, borderRadius: 16, padding: '26px 28px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
           <div>
             <h2 style={{ color: C.t1, fontSize: 21, fontWeight: 700, letterSpacing: '-0.03em', margin: 0 }}>Historique & Reçus</h2>

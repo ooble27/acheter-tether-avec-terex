@@ -13,7 +13,7 @@ export function DashboardPreviewSection() {
   const [activeView, setActiveView] = useState<'desktop' | 'mobile'>('desktop');
 
   return (
-    <section className="py-20 md:py-28" style={{ backgroundColor: '#141414' }}>
+    <section className="py-20 md:py-28" style={{ backgroundColor: '#1a1a1a' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">

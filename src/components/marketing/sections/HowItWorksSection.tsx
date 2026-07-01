@@ -28,7 +28,7 @@ const steps = [
 
 export function HowItWorksSection({ onBlockchainInfoClick }: HowItWorksSectionProps) {
   return (
-    <section id="how-it-works" className="py-20 sm:py-28" style={{ backgroundColor: '#141414' }}>
+    <section id="how-it-works" className="py-20 sm:py-28" style={{ backgroundColor: '#1a1a1a' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="text-center mb-16 sm:mb-20">
           <span

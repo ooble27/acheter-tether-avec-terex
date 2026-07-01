@@ -15,7 +15,7 @@ export function CTASection({ user, onGetStarted }: CTASectionProps) {
   if (isMobile) return null;
 
   return (
-    <section className="py-24 sm:py-28" style={{ backgroundColor: '#141414' }}>
+    <section className="py-24 sm:py-28" style={{ backgroundColor: '#1a1a1a' }}>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className="rounded-3xl px-8 py-16 sm:px-16 sm:py-20 text-center"

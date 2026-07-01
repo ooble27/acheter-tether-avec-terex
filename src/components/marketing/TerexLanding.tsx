@@ -111,9 +111,9 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
       {/* NAV */}
       <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(20,20,20,0.85)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${BORDER}` }}>
         <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '0 32px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <img src={LOGO} alt="Terex" style={{ width: 36, height: 36, borderRadius: 10, objectFit: 'cover' }} />
-            <span style={{ color: '#fff', fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>Terex</span>
+          <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <img src={LOGO} alt="Terex" style={{ width: 44, height: 44, objectFit: 'contain' }} />
+            <span style={{ color: '#fff', fontSize: 20, fontWeight: 700, letterSpacing: '-0.03em' }}>Terex</span>
           </button>
           <div className="tx-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
             {[['Fonctionnalités', 'features'], ['Réseaux', 'networks'], ['Comment ça marche', 'how'], ['FAQ', 'faq']].map(([label, id]) => (

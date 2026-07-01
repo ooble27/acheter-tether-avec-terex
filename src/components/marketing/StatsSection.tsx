@@ -9,7 +9,7 @@ const stats = [
 
 export function StatsSection() {
   return (
-    <section className="py-20 sm:py-28" style={{ backgroundColor: '#141414' }}>
+    <section className="py-20 sm:py-28" style={{ backgroundColor: '#1a1a1a' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection>
           <h2
