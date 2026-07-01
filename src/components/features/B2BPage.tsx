@@ -271,7 +271,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
       </div>
 
       {activeTab === 'profile' && (
-        <Card className="bg-[#141414] border-[#2e2e2e]">
+        <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-white flex items-center gap-2">
               <Building2 className="w-4 h-4 text-[#ffffff]" />
@@ -352,7 +352,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
       )}
 
       {activeTab === 'new-payment' && (
-        <Card className="bg-[#141414] border-[#2e2e2e]">
+        <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-white flex items-center gap-2">
               <Send className="w-4 h-4 text-[#ffffff]" />
@@ -453,7 +453,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
             </Button>
           </div>
           {payments.length === 0 ? (
-            <Card className="bg-[#141414] border-[#2e2e2e]">
+            <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
               <CardContent className="py-12 flex flex-col items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-[#1a1a1a] flex items-center justify-center">
                   <History className="w-6 h-6 text-gray-600" />
@@ -466,7 +466,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
             </Card>
           ) : (
             payments.map(pay => (
-              <Card key={pay.id} className="bg-[#141414] border-[#2e2e2e] hover:border-[#ffffff]/20 transition-colors">
+              <Card key={pay.id} className="bg-[#1a1a1a] border-[#2e2e2e] hover:border-[#ffffff]/20 transition-colors">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
@@ -518,7 +518,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
             </Button>
           </div>
           {showSupForm && (
-            <Card className="bg-[#141414] border-[#ffffff]/30">
+            <Card className="bg-[#1a1a1a] border-[#ffffff]/30">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium text-white">Nouveau fournisseur</CardTitle>
               </CardHeader>
@@ -557,7 +557,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
             </Card>
           )}
           {suppliers.length === 0 && !showSupForm ? (
-            <Card className="bg-[#141414] border-[#2e2e2e]">
+            <Card className="bg-[#1a1a1a] border-[#2e2e2e]">
               <CardContent className="py-12 flex flex-col items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-[#1a1a1a] flex items-center justify-center">
                   <BookUser className="w-6 h-6 text-gray-600" />
@@ -571,7 +571,7 @@ export function B2BPage({ onBack }: B2BPageProps) {
             </Card>
           ) : (
             suppliers.map(sup => (
-              <Card key={sup.id} className="bg-[#141414] border-[#2e2e2e] hover:border-[#ffffff]/20 transition-colors">
+              <Card key={sup.id} className="bg-[#1a1a1a] border-[#2e2e2e] hover:border-[#ffffff]/20 transition-colors">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-lg bg-[#ffffff]/10 flex items-center justify-center shrink-0">

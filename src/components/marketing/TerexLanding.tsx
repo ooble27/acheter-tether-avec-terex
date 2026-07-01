@@ -9,7 +9,7 @@ import { useTerexRates } from '@/hooks/useTerexRates';
 import waveLogo from '@/assets/wave-logo.png';
 import orangeLogo from '@/assets/orange-money-logo.png';
 
-const BG = '#141414';
+const BG = '#1a1a1a';
 const BORDER = 'rgba(255,255,255,0.07)';
 const ICON_BG = 'rgba(255,255,255,0.06)';
 const TETHER = 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png';

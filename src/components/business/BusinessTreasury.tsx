@@ -54,7 +54,7 @@ function QRModal({ wallet, onClose }: { wallet: typeof WALLETS[0]; onClose: () =
       background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(8px)',
     }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{
-        background: '#141414', border: `1px solid ${C.bd}`, borderRadius: 18,
+        background: '#1a1a1a', border: `1px solid ${C.bd}`, borderRadius: 18,
         padding: 28, width: 360, maxWidth: '90vw', position: 'relative',
         fontFamily: FONT, boxShadow: '0 28px 70px rgba(0,0,0,0.6)',
       }}>
@@ -132,7 +132,7 @@ function AlertModal({ onAdd, onClose }: {
       background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(8px)',
     }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{
-        background: '#141414', border: `1px solid ${C.bd}`, borderRadius: 18,
+        background: '#1a1a1a', border: `1px solid ${C.bd}`, borderRadius: 18,
         padding: 28, width: 380, maxWidth: '90vw', fontFamily: FONT,
         boxShadow: '0 28px 70px rgba(0,0,0,0.6)', position: 'relative',
       }}>

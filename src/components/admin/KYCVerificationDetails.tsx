@@ -134,7 +134,7 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
   );
 
   return (
-    <div className="min-h-screen p-4 pb-safe overflow-x-hidden" style={{ background: '#141414' }}>
+    <div className="min-h-screen p-4 pb-safe overflow-x-hidden" style={{ background: '#1a1a1a' }}>
       <div className="mx-auto max-w-6xl space-y-6">
         {/* En-tête */}
         <div className="flex flex-col space-y-4">

@@ -78,7 +78,7 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				terex: {
-					dark: '#141414',
+					dark: '#1a1a1a',
 					darker: '#1e1e1e',
 					accent: '#ffffff',
 					'accent-light': '#e5e5e5',

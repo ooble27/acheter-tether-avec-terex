@@ -86,10 +86,10 @@ function TransactionDrawer({ tx, onClose }: { tx: any; onClose: () => void }) {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', justifyContent: 'flex-end' }}>
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)' }} onClick={onClose} />
-      <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 440, background: '#141414', borderLeft: `1px solid ${C.bds}`, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 440, background: '#1a1a1a', borderLeft: `1px solid ${C.bds}`, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
 
         {/* Drawer header */}
-        <div style={{ padding: '20px 24px', borderBottom: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, position: 'sticky', top: 0, background: '#141414', zIndex: 2 }}>
+        <div style={{ padding: '20px 24px', borderBottom: `1px solid ${C.bds}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, position: 'sticky', top: 0, background: '#1a1a1a', zIndex: 2 }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 600, color: C.t1, fontFamily: FONT }}>{tx.supplierName}</div>
             <div style={{ fontSize: 11, color: C.t3, fontFamily: MONO, marginTop: 2 }}>{tx.reference}</div>

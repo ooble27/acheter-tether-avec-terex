@@ -251,9 +251,9 @@ export function MobileInternationalTransfer() {
   );
 
   return (
-    <div style={{ minHeight: '100vh', background: '#141414', paddingBottom: '96px' }}>
+    <div style={{ minHeight: '100vh', background: '#1a1a1a', paddingBottom: '96px' }}>
       {/* Header */}
-      <div style={{ position: 'sticky', top: 0, zIndex: 10, background: '#141414', borderBottom: `1px solid ${BORDER}`, padding: '16px 20px' }}>
+      <div style={{ position: 'sticky', top: 0, zIndex: 10, background: '#1a1a1a', borderBottom: `1px solid ${BORDER}`, padding: '16px 20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
           {step !== 'amount' && (
             <button

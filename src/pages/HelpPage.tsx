@@ -9,8 +9,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { getSupportFlowById, getQuestionById } from '@/data/supportFlows';
 
-const BG = '#141414';
-const CARD = '#1a1a1a';
+const BG = '#1a1a1a';
+const CARD = '#1e1e1e';
 const CARD2 = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const ICON_BG = 'rgba(255,255,255,0.06)';
@@ -198,7 +198,7 @@ const HelpPage = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '18px 20px', borderBottom: `1px solid ${BORDER}` }}>
                 <div style={{ position: 'relative', flexShrink: 0 }}>
                   <div style={{ width: 42, height: 42, borderRadius: 13, background: '#1e1e1e', border: `1px solid rgba(255,255,255,0.1)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700 }}>TX</div>
-                  <span style={{ position: 'absolute', bottom: -2, right: -2, width: 13, height: 13, borderRadius: '50%', background: '#141414', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ position: 'absolute', bottom: -2, right: -2, width: 13, height: 13, borderRadius: '50%', background: '#1a1a1a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <span className="tx-live-dot" style={{ width: 8, height: 8, borderRadius: '50%', background: 'rgba(255,255,255,0.55)' }} />
                   </span>
                 </div>

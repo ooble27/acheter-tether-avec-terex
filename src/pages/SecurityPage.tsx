@@ -36,7 +36,7 @@ const SecurityPage = () => {
   };
 
   return (
-    <div className="min-h-screen relative overflow-x-hidden" style={{ background: '#141414', color: '#fff' }}>
+    <div className="min-h-screen relative overflow-x-hidden" style={{ background: '#1a1a1a', color: '#fff' }}>
       <style>{`
         @keyframes sec-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         .sec-fade { animation: sec-up 0.7s cubic-bezier(0.22,1,0.36,1) both; }

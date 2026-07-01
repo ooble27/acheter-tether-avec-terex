@@ -400,10 +400,10 @@ function PhoneAccountMockup() {
   return (
     <div
       className="relative mx-auto w-[260px] h-[540px] rounded-[44px] overflow-hidden"
-      style={{ border: '10px solid #1a1a1a', background: '#141414', boxShadow: '0 40px 80px -20px rgba(0,0,0,0.6)' }}
+      style={{ border: '10px solid #1a1a1a', background: '#1a1a1a', boxShadow: '0 40px 80px -20px rgba(0,0,0,0.6)' }}
     >
-      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-6 rounded-full z-10" style={{ background: '#141414' }} />
-      <div className="h-full p-4 pt-10 text-white flex flex-col" style={{ background: '#141414' }}>
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-6 rounded-full z-10" style={{ background: '#1a1a1a' }} />
+      <div className="h-full p-4 pt-10 text-white flex flex-col" style={{ background: '#1a1a1a' }}>
         <div className="flex items-center justify-between text-xs mb-4" style={{ color: MUTED }}>
           <span>9:41</span>
           <img src={TEREX_LOGO} alt="Terex" className="w-5 h-5 rounded" />
@@ -448,7 +448,7 @@ function PhoneAccountMockup() {
 
 function ConvertMockup() {
   return (
-    <div className="rounded-3xl p-6 max-w-sm mx-auto w-full" style={{ background: '#141414', border: `1px solid ${BORDER}` }}>
+    <div className="rounded-3xl p-6 max-w-sm mx-auto w-full" style={{ background: '#1a1a1a', border: `1px solid ${BORDER}` }}>
       <div className="flex items-center gap-2 mb-4">
         <img src={TEREX_LOGO} alt="Terex" className="w-6 h-6 rounded" />
         <span className="text-white text-sm font-light">Convertir</span>
@@ -503,7 +503,7 @@ function ConvertMockup() {
 
 function SepaMockup() {
   return (
-    <div className="rounded-3xl p-6 max-w-sm mx-auto w-full space-y-4" style={{ background: '#141414', border: `1px solid ${BORDER}` }}>
+    <div className="rounded-3xl p-6 max-w-sm mx-auto w-full space-y-4" style={{ background: '#1a1a1a', border: `1px solid ${BORDER}` }}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <img src={TEREX_LOGO} alt="Terex" className="w-6 h-6 rounded" />

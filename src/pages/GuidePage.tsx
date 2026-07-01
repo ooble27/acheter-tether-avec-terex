@@ -160,7 +160,7 @@ const GuidePage = () => {
                 {/* Rate card */}
                 <div
                   className="rounded-xl p-4 flex items-center justify-between mb-3"
-                  style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.07)' }}
+                  style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.07)' }}
                 >
                   <div className="flex items-center gap-3">
                     <div
@@ -191,7 +191,7 @@ const GuidePage = () => {
                     <div
                       key={a.label}
                       className="rounded-xl p-3 flex flex-col items-center gap-2"
-                      style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.07)' }}
+                      style={{ background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.07)' }}
                     >
                       <div
                         className="w-9 h-9 rounded-xl flex items-center justify-center text-white"

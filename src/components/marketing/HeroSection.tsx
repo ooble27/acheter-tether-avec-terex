@@ -16,7 +16,7 @@ export function HeroSection({ user, onShowDashboard }: HeroSectionProps) {
   const handleHowItWorks = () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <section className="relative" style={{ background: '#141414' }}>
+    <section className="relative" style={{ background: '#1a1a1a' }}>
       {/* Halo doux, centré, très subtil */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[520px]" style={{
         background: 'radial-gradient(50% 60% at 50% 0%, rgba(255,255,255,0.045) 0%, transparent 75%)',
@@ -112,7 +112,7 @@ function ProductPreview() {
           <span key={i} style={{ width: 10, height: 10, borderRadius: '50%', background: c }} />
         ))}
       </div>
-      <div style={{ background: '#141414', borderRadius: '16px', padding: '22px', border: '1px solid rgba(255,255,255,0.05)' }}>
+      <div style={{ background: '#1a1a1a', borderRadius: '16px', padding: '22px', border: '1px solid rgba(255,255,255,0.05)' }}>
         {/* Rate card */}
         <div style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '18px', padding: '18px', marginBottom: '14px' }}>
           <p style={{ color: '#6b7280', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px' }}>Taux USDT / CFA</p>

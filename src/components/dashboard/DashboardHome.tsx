@@ -98,7 +98,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   // ── Mobile ──────────────────────────────────────────────────────────────
   if (isMobile) {
     return (
-      <div style={{ minHeight: '100vh', background: '#141414', overflowY: 'auto', paddingBottom: '110px' }}>
+      <div style={{ minHeight: '100vh', background: '#1a1a1a', overflowY: 'auto', paddingBottom: '110px' }}>
 
         {/* Greeting */}
         <div style={{ padding: '24px 20px 8px' }}>

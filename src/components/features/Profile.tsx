@@ -26,7 +26,7 @@ interface ProfileProps {
 
 type Section = null | 'informations' | 'securite' | 'preferences' | 'activite' | 'parrainage' | 'partager' | 'contact' | 'faq';
 
-const BG     = '#141414';
+const BG     = '#1a1a1a';
 const CARD   = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const BTN    = '#2d2d2d';

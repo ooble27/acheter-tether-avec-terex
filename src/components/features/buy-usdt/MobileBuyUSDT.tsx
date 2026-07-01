@@ -184,7 +184,7 @@ export function MobileBuyUSDT() {
   if (showKYCPage) return <KYCPage onBack={() => setShowKYCPage(false)} />;
 
   return (
-    <div style={{ minHeight: '100vh', background: '#141414' }}>
+    <div style={{ minHeight: '100vh', background: '#1a1a1a' }}>
       <div style={{ maxWidth: '480px', margin: '0 auto' }}>
 
         {/* ── Step 1: Amount ─────────────────────────────────────────── */}

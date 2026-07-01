@@ -9,7 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useContactMessages } from '@/hooks/useContactMessages';
 import { useTerexRates } from '@/hooks/useTerexRates';
 
-const BG = '#141414';
+const BG = '#1a1a1a';
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const ICON_BG = 'rgba(255,255,255,0.06)';

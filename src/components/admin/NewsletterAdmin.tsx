@@ -369,7 +369,7 @@ export function NewsletterAdmin() {
             <Eye className="w-5 h-5 text-[#9ca3af]" />
             Aperçu
           </h3>
-          <div className="rounded-lg overflow-hidden" style={{ background: '#141414', border: `1px solid ${BORDER}` }}>
+          <div className="rounded-lg overflow-hidden" style={{ background: '#1a1a1a', border: `1px solid ${BORDER}` }}>
             {/* Email Header */}
             <div className="px-6 py-4 flex items-center justify-between" style={{ background: CARD, borderBottom: `1px solid ${BORDER}` }}>
               <span className="text-white font-bold tracking-wider">TEREX</span>
@@ -397,7 +397,7 @@ export function NewsletterAdmin() {
             </div>
 
             {/* Email Footer */}
-            <div className="p-6 text-center" style={{ background: '#141414', borderTop: `1px solid ${BORDER}` }}>
+            <div className="p-6 text-center" style={{ background: '#1a1a1a', borderTop: `1px solid ${BORDER}` }}>
               <p className="text-white font-bold tracking-wider mb-4">TEREX</p>
               <p className="text-[#6b7280] text-xs mb-4">
                 Vous avez reçu cet email car vous êtes inscrit chez Terex.

@@ -10,7 +10,7 @@ interface HighVolumeRequestProps {
   currency?: string;
 }
 
-const BG = '#141414';
+const BG = '#1a1a1a';
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const MIN_AMOUNT = 2000001;

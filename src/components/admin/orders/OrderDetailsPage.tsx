@@ -177,7 +177,7 @@ export function OrderDetailsPage({
     : `→ ${order.usdt_amount} USDT`;
 
   return (
-    <div style={{ background: '#141414', minHeight: '100vh' }} className="text-white w-full overflow-x-hidden">
+    <div style={{ background: '#1a1a1a', minHeight: '100vh' }} className="text-white w-full overflow-x-hidden">
       {/* HEADER */}
       <div
         className="px-4 sm:px-6 pb-4"
@@ -376,7 +376,7 @@ export function OrderDetailsPage({
                   placeholder="Motif d'annulation (optionnel)…"
                   value={cancellationReason}
                   onChange={(e) => setCancellationReason(e.target.value)}
-                  className="bg-[#141414] border-[rgba(255,255,255,0.07)] text-white placeholder:text-[#6b7280] min-h-[80px]"
+                  className="bg-[#1a1a1a] border-[rgba(255,255,255,0.07)] text-white placeholder:text-[#6b7280] min-h-[80px]"
                 />
                 <Button
                   onClick={sendCancellationEmail}
@@ -396,7 +396,7 @@ export function OrderDetailsPage({
       {/* STICKY FOOTER ACTIONS */}
       <div
         className="px-4 sm:px-6 py-4 sticky bottom-0"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.07)', background: '#141414' }}
+        style={{ borderTop: '1px solid rgba(255,255,255,0.07)', background: '#1a1a1a' }}
       >
         <div className="max-w-5xl mx-auto flex flex-wrap gap-2 sm:justify-end">
           {order.status === 'pending' && (
