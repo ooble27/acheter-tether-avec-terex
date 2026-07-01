@@ -28,6 +28,7 @@ import AdminPage from "./pages/AdminPage";
 import { Toaster } from "@/components/ui/toaster"
 import BlockchainPage from "./pages/BlockchainPage";
 import BlogPage from "./pages/BlogPage";
+import OTCPage from "./pages/OTCPage";
 import ComprendreUSDTArticle from "./pages/blog/ComprendreUSDTArticle";
 import AcheterUSDTArticle from "./pages/blog/AcheterUSDTArticle";
 import SecuriteCryptoArticle from "./pages/blog/SecuriteCryptoArticle";
@@ -59,6 +60,7 @@ function App() {
                 <Route path="/blockchain" element={<BlockchainPage />} />
                 <Route path="/marketing" element={<MarketingPage />} />
                 <Route path="/about" element={<AboutPage />} />
+                <Route path="/otc" element={<OTCPage />} />
                 <Route path="/careers" element={<CareersPage />} />
                 <Route path="/support" element={<SupportPage />} />
                 <Route path="/contact" element={<ContactPage />} />
