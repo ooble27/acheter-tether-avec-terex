@@ -5,7 +5,7 @@
   "description": "Achetez et vendez vos USDT facilement, au meilleur taux",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#141414",
+  "background_color": "#1a1a1a",
   "theme_color": "#141414",
   "orientation": "portrait-primary",
   "scope": "/",
@@ -13,19 +13,31 @@
   "categories": ["finance", "business"],
   "icons": [
     {
-      "src": "/terex-logo.png",
+      "src": "/terex-icon.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/terex-logo.png",
+      "src": "/terex-icon.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/terex-logo.png",
+      "src": "/terex-icon-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/terex-icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/terex-icon.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "apple-touch-icon"
@@ -33,7 +45,7 @@
   ],
   "screenshots": [
     {
-      "src": "/terex-logo.png",
+      "src": "/terex-icon.png",
       "sizes": "540x720",
       "type": "image/png",
       "form_factor": "narrow"
@@ -47,7 +59,7 @@
       "url": "/auth?tab=buy",
       "icons": [
         {
-          "src": "/terex-logo.png",
+          "src": "/terex-icon.png",
           "sizes": "96x96"
         }
       ]
@@ -59,7 +71,7 @@
       "url": "/auth?tab=sell",
       "icons": [
         {
-          "src": "/terex-logo.png",
+          "src": "/terex-icon.png",
           "sizes": "96x96"
         }
       ]
