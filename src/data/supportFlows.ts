@@ -24,7 +24,7 @@ export const supportFlows: SupportFlow[] = [
     id: "buy-usdt",
     title: "Acheter USDT",
     description: "Problèmes lors de l'achat de USDT",
-    icon: "ShoppingCart",
+    icon: "Coins",
     startQuestionId: "buy-status",
     questions: [
       {
@@ -263,7 +263,7 @@ export const supportFlows: SupportFlow[] = [
     id: "sell-usdt",
     title: "Vendre USDT",
     description: "Problèmes lors de la vente de USDT",
-    icon: "TrendingDown",
+    icon: "HandCoins",
     startQuestionId: "sell-status",
     questions: [
       {

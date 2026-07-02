@@ -253,7 +253,7 @@ const HelpPage = () => {
               ) : (
                 <div className="tx-grid" style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gridAutoRows: '1fr', gap: 14 }}>
                   {filteredCategories.map((category, i) => {
-                    const IconComponent = iconMap[category.icon as keyof typeof iconMap];
+                    const IconComponent = iconMap[category.icon as keyof typeof iconMap] ?? Coins;
                     const feature = i === 0; // première tuile mise en avant
                     return (
                       <button key={category.flowId} onClick={() => handleSelectFlow(category.flowId)}
@@ -351,7 +351,7 @@ const HelpPage = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
               <div style={{ width: 46, height: 46, borderRadius: 13, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 {(() => {
-                  const IconComponent = iconMap[selectedFlow.icon as keyof typeof iconMap];
+                  const IconComponent = iconMap[selectedFlow.icon as keyof typeof iconMap] ?? Coins;
                   return <IconComponent size={21} color="rgba(255,255,255,0.9)" strokeWidth={1.8} />;
                 })()}
               </div>
