@@ -1,215 +1,88 @@
 import { FooterSection } from "@/components/marketing/sections/FooterSection";
 import { HeaderSection } from "@/components/marketing/sections/HeaderSection";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
-import { useTerexRates } from "@/hooks/useTerexRates";
-import { ChevronRight, GraduationCap, FileText, Menu, Search, Clock, ArrowRight, TrendingUp } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
-import { Link } from "react-router-dom";
-import { Input } from "@/components/ui/input";
+import { Search, Clock, ArrowRight } from "lucide-react";
 
-// ── Article images map ─────────────────────────────────────────────────
+const BG = '#1a1a1a';
+const CARD = '#1e1e1e';
+const BORDER = 'rgba(255,255,255,0.07)';
+const MUTED = 'rgba(255,255,255,0.55)';
+const MUTED2 = 'rgba(255,255,255,0.4)';
 
+// ── Article images (only real articles with routes) ────────────────────
 const articleImages: Record<string, string> = {
-  "comprendre-usdt-stablecoin": "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80",
-  "acheter-usdt-terex-guide": "https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&w=800&q=80",
-  "securite-crypto": "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?auto=format&fit=crop&w=800&q=80",
-  "blockchain-simple": "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=800&q=80",
-  "mobile-money-crypto": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=800&q=80",
-  "transferts-internationaux": "https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&w=800&q=80",
-  "wallets-guide": "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&w=800&q=80",
-  "stablecoins-guide": "https://images.unsplash.com/photo-1591994843349-f415893b3a6b?auto=format&fit=crop&w=800&q=80",
-  "web3-defi": "https://images.unsplash.com/photo-1622630998477-20aa696ecb05?auto=format&fit=crop&w=800&q=80",
-  "reseaux-tokens": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
-  "eviter-arnaques": "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=800&q=80",
-  "marches-crypto": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80",
-  "kyc-verification": "https://images.unsplash.com/photo-1633265486064-086b219458ec?auto=format&fit=crop&w=800&q=80",
-  "smart-contracts": "https://images.unsplash.com/photo-1642132652859-3ef5a1048fd1?auto=format&fit=crop&w=800&q=80",
-  "epargne-crypto": "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=800&q=80",
-  "proteger-wallet": "https://images.unsplash.com/photo-1618044619888-009e412ff12a?auto=format&fit=crop&w=800&q=80",
-  "vendre-usdt": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
-  "fiscalite-crypto": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80",
-  "afrique-crypto": "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80",
+  "comprendre-usdt-stablecoin": "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80",
+  "acheter-usdt-terex-guide": "https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&w=1200&q=80",
+  "mobile-money-crypto": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=1200&q=80",
+  "transferts-internationaux": "https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&w=1200&q=80",
+  "securite-crypto": "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?auto=format&fit=crop&w=1200&q=80",
+  "blockchain-simple": "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=1200&q=80",
 };
 
-// ── Sidebar categories ──────────────────────────────────────────────────
+// ── The 6 real articles (each has a /blog/{slug} route) ─────────────────
+type Article = { slug: string; title: string; excerpt: string; category: string; readTime: string };
 
-const sidebarCategories = [
+const ARTICLES: Article[] = [
   {
-    section: "GUIDES",
-    items: [
-      { label: "Comprendre l'USDT", slug: "comprendre-usdt-stablecoin" },
-      { label: "Acheter de l'USDT", slug: "acheter-usdt-terex-guide" },
-      { label: "Vendre de l'USDT", slug: "vendre-usdt" },
-      { label: "Mobile Money & Crypto", slug: "mobile-money-crypto" },
-      { label: "KYC & Vérification", slug: "kyc-verification" },
-    ]
+    slug: "comprendre-usdt-stablecoin",
+    title: "Comprendre l'USDT, le stablecoin",
+    excerpt: "Qu'est-ce qu'un stablecoin et pourquoi l'USDT est la porte d'entrée la plus simple vers la crypto.",
+    category: "Guides",
+    readTime: "6 min",
   },
   {
-    section: "SÉCURITÉ",
-    items: [
-      { label: "Sécurité crypto", slug: "securite-crypto" },
-      { label: "Protéger son wallet", slug: "proteger-wallet" },
-      { label: "Éviter les arnaques", slug: "eviter-arnaques" },
-    ]
-  },
-  {
-    section: "TECHNOLOGIE",
-    items: [
-      { label: "Blockchain expliquée", slug: "blockchain-simple" },
-      { label: "Réseaux & Tokens", slug: "reseaux-tokens" },
-      { label: "Smart contracts", slug: "smart-contracts" },
-      { label: "Web3 & DeFi", slug: "web3-defi" },
-    ]
-  },
-  {
-    section: "FINANCE",
-    items: [
-      { label: "Stablecoins", slug: "stablecoins-guide" },
-      { label: "Marchés crypto", slug: "marches-crypto" },
-      { label: "Épargne en crypto", slug: "epargne-crypto" },
-      { label: "Fiscalité crypto", slug: "fiscalite-crypto" },
-    ]
-  },
-  {
-    section: "RESSOURCES",
-    items: [
-      { label: "FAQ", slug: "/faq", external: true },
-      { label: "Guide Terex", slug: "/guide", external: true },
-      { label: "Support", slug: "/support", external: true },
-      { label: "Sécurité", slug: "/security", external: true },
-    ]
-  }
-];
-
-// ── Academy courses ─────────────────────────────────────────────────────
-
-const academyCourses = [
-  {
-    title: "Comprendre l'USDT",
-    description: "Le stablecoin le plus utilisé au monde. Découvrez pourquoi l'USDT est idéale pour les paiements et comment elle maintient sa valeur.",
-    lessons: 4, duration: "15 min", slug: "comprendre-usdt-stablecoin", illustration: "circles", category: "Guides",
-  },
-  {
+    slug: "acheter-usdt-terex-guide",
     title: "Acheter de l'USDT sur Terex",
-    description: "Guide complet pour acheter vos premiers USDT. Paiement par Orange Money, Wave ou carte bancaire. Simple, rapide et sécurisé.",
-    lessons: 3, duration: "12 min", slug: "acheter-usdt-terex-guide", illustration: "rectangles", category: "Guides",
+    excerpt: "Le guide pas à pas pour acheter vos premiers USDT en CFA, en quelques minutes.",
+    category: "Guides",
+    readTime: "5 min",
   },
   {
-    title: "Sécurité des transactions crypto",
-    description: "Les meilleures pratiques pour protéger vos actifs numériques et effectuer des transactions en toute sérénité sur la blockchain.",
-    lessons: 5, duration: "20 min", slug: "securite-crypto", illustration: "shield", category: "Sécurité",
+    slug: "mobile-money-crypto",
+    title: "Mobile Money & Crypto",
+    excerpt: "Comment Wave et Orange Money rendent l'achat de crypto accessible à tous.",
+    category: "Guides",
+    readTime: "5 min",
   },
   {
-    title: "La blockchain expliquée simplement",
-    description: "Comprenez comment fonctionne la blockchain, les blocs, le minage et pourquoi elle transforme la finance mondiale.",
-    lessons: 6, duration: "25 min", slug: "blockchain-simple", illustration: "blocks", category: "Technologie",
+    slug: "transferts-internationaux",
+    title: "Transferts internationaux",
+    excerpt: "Envoyer de l'argent vers l'Afrique de l'Ouest, plus vite et moins cher avec l'USDT.",
+    category: "Usages",
+    readTime: "7 min",
   },
   {
-    title: "Mobile Money & Crypto en Afrique",
-    description: "L'union du Mobile Money et des cryptomonnaies crée de nouvelles opportunités pour l'inclusion financière sur le continent.",
-    lessons: 3, duration: "14 min", slug: "mobile-money-crypto", illustration: "phone", category: "Guides",
+    slug: "securite-crypto",
+    title: "Sécurité crypto",
+    excerpt: "Les bonnes pratiques pour protéger vos fonds et vos données.",
+    category: "Sécurité",
+    readTime: "6 min",
   },
   {
-    title: "Wallets crypto : le guide complet",
-    description: "Hot wallet, cold wallet, custodial ou non-custodial. Apprenez à choisir et sécuriser le portefeuille qui vous convient.",
-    lessons: 5, duration: "22 min", slug: "wallets-guide", illustration: "wallet", category: "Guides",
-  },
-  {
-    title: "Stablecoins : USDT, USDC et au-delà",
-    description: "Comprendre les différents stablecoins, leurs mécanismes de stabilité et lequel choisir pour vos opérations quotidiennes.",
-    lessons: 4, duration: "18 min", slug: "stablecoins-guide", illustration: "coins", category: "Finance",
-  },
-  {
-    title: "Web3 & Finance décentralisée",
-    description: "Le Web3 et la DeFi redéfinissent la finance. Découvrez les protocoles, le yield farming et les opportunités émergentes.",
-    lessons: 7, duration: "30 min", slug: "web3-defi", illustration: "layers", category: "Technologie",
-  },
-  {
-    title: "Réseaux blockchain : TRC20, ERC20, BEP20",
-    description: "Chaque réseau a ses avantages. Apprenez à choisir le bon réseau pour envoyer vos USDT avec des frais minimaux.",
-    lessons: 3, duration: "10 min", slug: "reseaux-tokens", illustration: "arrows", category: "Technologie",
-  },
-  {
-    title: "Éviter les arnaques crypto",
-    description: "Phishing, faux projets, rug pulls… Identifiez les signaux d'alerte et protégez-vous contre les escroqueries les plus courantes.",
-    lessons: 4, duration: "16 min", slug: "eviter-arnaques", illustration: "lock", category: "Sécurité",
-  },
-  {
-    title: "Marchés crypto : lire les tendances",
-    description: "Analyse technique de base, indicateurs clés et comment interpréter les mouvements du marché pour prendre de meilleures décisions.",
-    lessons: 5, duration: "24 min", slug: "marches-crypto", illustration: "chart", category: "Finance",
-  },
-  {
-    title: "KYC & Vérification d'identité",
-    description: "Pourquoi le KYC est essentiel, comment vérifier votre identité sur Terex et les avantages d'un compte vérifié.",
-    lessons: 2, duration: "8 min", slug: "kyc-verification", illustration: "shield", category: "Guides",
-  },
-  {
-    title: "Smart contracts expliqués",
-    description: "Les contrats intelligents automatisent les transactions sans intermédiaire. Découvrez leur fonctionnement et leurs applications concrètes.",
-    lessons: 4, duration: "19 min", slug: "smart-contracts", illustration: "blocks", category: "Technologie",
-  },
-  {
-    title: "Épargner en crypto",
-    description: "Staking, lending, comptes d'épargne crypto. Explorez les moyens de faire fructifier vos actifs numériques en toute sécurité.",
-    lessons: 3, duration: "15 min", slug: "epargne-crypto", illustration: "coins", category: "Finance",
-  },
-  {
-    title: "Protéger son wallet",
-    description: "Phrases de récupération, authentification 2FA, bonnes pratiques de stockage. Le guide ultime pour sécuriser vos fonds.",
-    lessons: 4, duration: "17 min", slug: "proteger-wallet", illustration: "lock", category: "Sécurité",
-  },
-  {
-    title: "Vendre de l'USDT sur Terex",
-    description: "Comment convertir vos USDT en francs CFA via Orange Money ou Wave. Processus simple avec réception instantanée.",
-    lessons: 3, duration: "10 min", slug: "vendre-usdt", illustration: "arrows", category: "Guides",
-  },
-  {
-    title: "Fiscalité crypto en Afrique",
-    description: "Ce que vous devez savoir sur la réglementation et la fiscalité des cryptomonnaies dans les pays africains francophones.",
-    lessons: 3, duration: "13 min", slug: "fiscalite-crypto", illustration: "globe", category: "Finance",
-  },
-  {
-    title: "L'Afrique et la révolution crypto",
-    description: "Comment l'Afrique adopte les cryptomonnaies plus rapidement que tout autre continent et ce que cela signifie pour l'avenir.",
-    lessons: 4, duration: "20 min", slug: "afrique-crypto", illustration: "globe", category: "Finance",
+    slug: "blockchain-simple",
+    title: "La blockchain, simplement",
+    excerpt: "Comprendre la blockchain et les réseaux (TRC20, BEP20, ERC20…) sans jargon.",
+    category: "Tech",
+    readTime: "8 min",
   },
 ];
 
-// Existing article slugs that have dedicated pages
-const existingSlugs = new Set([
-  "comprendre-usdt-stablecoin",
-  "acheter-usdt-terex-guide",
-  "securite-crypto",
-  "transferts-internationaux",
-  "blockchain-simple",
-  "mobile-money-crypto",
-]);
-
-// ── Category color map ────────────────────────────────────────────────
-
-const categoryColors: Record<string, string> = {
-  "Guides": "bg-white/[0.08] text-white/65 border border-white/[0.08]",
-  "Sécurité": "bg-white/[0.08] text-white/65 border border-white/[0.08]",
-  "Technologie": "bg-white/[0.08] text-white/65 border border-white/[0.08]",
-  "Finance": "bg-white/[0.08] text-white/65 border border-white/[0.08]",
-};
-
-// ── Component ───────────────────────────────────────────────────────────
+const RESOURCES = [
+  { label: "FAQ", to: "/faq" },
+  { label: "Guide Terex", to: "/guide" },
+  { label: "Support", to: "/support" },
+  { label: "Sécurité", to: "/security" },
+];
 
 export default function BlogPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const { terexRateCfa, loading: rateLoading } = useTerexRates(2);
-  const rateDisplay = !rateLoading && terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : null;
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);
 
@@ -221,284 +94,147 @@ export default function BlogPage() {
     }
   };
 
-  const filteredCourses = academyCourses.filter(c => {
-    const matchesSearch = !searchQuery ||
-      c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = !activeCategory || c.category === activeCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const q = searchQuery.trim().toLowerCase();
+  const matches = (a: Article) =>
+    !q || a.title.toLowerCase().includes(q) || a.excerpt.toLowerCase().includes(q) || a.category.toLowerCase().includes(q);
 
-  const categories = [...new Set(academyCourses.map(c => c.category))];
+  const filtered = ARTICLES.filter(matches);
 
-  // Featured = first 3 articles that have pages (when no filter/search active)
-  const featuredArticles = academyCourses.filter(c => existingSlugs.has(c.slug)).slice(0, 3);
-  const remainingArticles = filteredCourses.filter(c => {
-    if (searchQuery || activeCategory) return true;
-    return !featuredArticles.includes(c);
-  });
-
-  const showFeatured = !searchQuery && !activeCategory;
-  const heroArticle = featuredArticles[0];
-  const secondaryFeatured = featuredArticles.slice(1, 3);
-
-  const SidebarContent = () => (
-    <>
-      {/* Search */}
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30" strokeWidth={1.5} />
-        <Input
-          placeholder="Rechercher..."
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          className="bg-white/[0.03] border-white/[0.08] text-foreground h-9 rounded-lg pl-9 text-sm placeholder:text-white/25 focus:border-white/20"
-        />
-      </div>
-
-      {sidebarCategories.map((cat, ci) => (
-        <div key={ci} className="mb-6">
-          <div className="flex items-center gap-2 mb-2.5">
-            <div className="w-5 h-5 rounded-md bg-white/[0.06] border border-white/[0.08] flex items-center justify-center">
-              {ci < 4 ? <GraduationCap className="w-3 h-3 text-muted-foreground" strokeWidth={1.5} /> : <FileText className="w-3 h-3 text-muted-foreground" strokeWidth={1.5} />}
-            </div>
-            <p className="text-muted-foreground text-[10px] font-medium tracking-[0.15em]">{cat.section}</p>
-          </div>
-          <div className="space-y-0.5 pl-1">
-            {cat.items.map((item, ii) => (
-              <Link
-                key={ii}
-                to={item.external ? item.slug : `/blog/${item.slug}`}
-                onClick={() => setSidebarOpen(false)}
-                className="flex items-center gap-2 py-1.5 text-[13px] text-muted-foreground hover:text-foreground transition-colors group"
-              >
-                <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-                <span className="-ml-5 group-hover:ml-0 transition-all">{item.label}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      ))}
-    </>
-  );
+  // Featured = article #2 "Acheter de l'USDT sur Terex" (only when not searching)
+  const featured = !q ? ARTICLES[1] : null;
+  const gridArticles = featured ? filtered.filter(a => a.slug !== featured.slug) : filtered;
 
   return (
-    <div className="min-h-screen bg-terex-dark relative overflow-x-hidden">
+    <div style={{ background: BG, minHeight: '100vh', color: '#fff', position: 'relative', overflowX: 'hidden' }}>
+      <style>{`
+        @keyframes bp-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+        .bp-fade { animation: bp-up 0.8s cubic-bezier(0.22,1,0.36,1) both; }
+        .bp-fade-2 { animation: bp-up 0.8s cubic-bezier(0.22,1,0.36,1) 0.12s both; }
+        .bp-tile { transition: border-color 0.25s ease, transform 0.25s ease; }
+        .bp-tile:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.16) !important; }
+        .bp-tile:hover .bp-img { transform: scale(1.04); }
+        .bp-img { transition: transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+        .bp-arrow { transition: gap 0.2s ease, transform 0.2s ease; }
+        .bp-tile:hover .bp-arrow { transform: translateX(3px); }
+        @media (max-width: 1100px) { .bp-vline { display: none !important; } }
+        @media (max-width: 920px) {
+          .bp-feat { grid-template-columns: 1fr !important; }
+          .bp-feat-img { min-height: 240px !important; }
+          .bp-grid { grid-template-columns: 1fr 1fr !important; }
+          .bp-pad { padding-left: 20px !important; padding-right: 20px !important; }
+        }
+        @media (max-width: 620px) {
+          .bp-grid { grid-template-columns: 1fr !important; }
+          .bp-hero-title { font-size: 34px !important; }
+        }
+      `}</style>
+
       <HeaderSection
         user={user ? { email: user.email || '', name: user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Utilisateur' } : null}
         onShowDashboard={() => navigate('/')}
         onLogout={handleLogout}
       />
-      <div className="h-16 md:h-20" />
+      <div style={{ height: 64 }} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex relative">
-        {/* Desktop sidebar */}
-        <aside className="hidden lg:block w-[240px] flex-shrink-0 pr-6 py-12">
-          <SidebarContent />
-        </aside>
+      <div className="bp-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
+      <div className="bp-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
 
-        {/* Mobile sidebar */}
-        <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-          <SheetTrigger asChild>
-            <button className="lg:hidden fixed bottom-20 left-4 z-50 w-11 h-11 rounded-full bg-foreground text-background flex items-center justify-center shadow-lg">
-              <Menu className="w-5 h-5" />
-            </button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-[280px] bg-terex-dark border-r border-white/[0.08] p-6 pt-12 overflow-y-auto z-[60]">
-            <SheetTitle className="sr-only">Navigation Blog</SheetTitle>
-            <SidebarContent />
-          </SheetContent>
-        </Sheet>
-
-        {/* Main content */}
-        <main className="flex-1 min-w-0 py-10 lg:py-14 lg:pl-6">
-
-          {/* Page header */}
-          <style>{`
-            @keyframes bp-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-            .bp-fade { animation: bp-up 0.7s cubic-bezier(0.22,1,0.36,1) both; }
-          `}</style>
-          <div className="bp-fade mb-8 md:mb-10">
-            <p className="text-white/40 text-[11px] font-semibold tracking-[0.1em] uppercase mb-3">Terex Blog</p>
-            <h1 className="font-extrabold text-white leading-[1.08] tracking-[-0.03em] mb-3" style={{ fontSize: 'clamp(2.2rem,6vw,3.6rem)' }}>
-              Guides &amp; Analyses
-            </h1>
-            <p className="text-white/55 text-sm md:text-base max-w-xl leading-relaxed mb-5">
-              Guides, analyses et actualités crypto pour l'Afrique
-            </p>
-            <div className="inline-flex items-center gap-2.5 rounded-xl border border-white/[0.07] bg-[#1e1e1e] px-3.5 py-2">
-              <TrendingUp className="w-3.5 h-3.5 text-white/55" strokeWidth={1.8} />
-              <span className="text-white/40 text-[11px] font-medium uppercase tracking-[0.08em]">Taux USDT / CFA</span>
-              {rateDisplay ? (
-                <span className="text-white text-[13px] font-semibold tabular-nums">{rateDisplay} CFA</span>
-              ) : (
-                <span className="inline-block w-16 h-3.5 rounded-md bg-white/[0.08] animate-pulse" />
-              )}
-            </div>
+      {/* HERO */}
+      <header className="bp-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '80px 32px 56px', position: 'relative', zIndex: 1 }}>
+        <div className="bp-fade" style={{ maxWidth: 760 }}>
+          <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.12em', color: MUTED2, margin: '0 0 18px' }}>Blog · Terex</p>
+          <h1 className="bp-hero-title" style={{ fontSize: 'clamp(2.3rem,5.5vw,3.6rem)', fontWeight: 800, lineHeight: 1.04, letterSpacing: '-0.03em', margin: '0 0 20px' }}>
+            Apprendre la crypto,<br />simplement.
+          </h1>
+          <p style={{ fontSize: 18, color: MUTED, lineHeight: 1.6, margin: '0 0 30px', maxWidth: 520 }}>
+            Guides, usages et bonnes pratiques pour acheter, envoyer et protéger vos USDT en Afrique de l'Ouest.
+          </p>
+          <div style={{ position: 'relative', maxWidth: 380 }}>
+            <Search size={16} strokeWidth={1.8} style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: MUTED2 }} />
+            <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Rechercher un article…"
+              style={{ width: '100%', height: 48, borderRadius: 12, background: CARD, border: `1px solid ${BORDER}`, color: '#fff', fontSize: 14, padding: '0 16px 0 44px', outline: 'none' }}
+            />
           </div>
+        </div>
+      </header>
 
-          {/* Featured — asymmetric magazine layout: large lead + stacked secondary list */}
-          {showFeatured && heroArticle && (
-            <div className="grid grid-cols-1 lg:grid-cols-[1.55fr_1fr] gap-5 mb-10">
-              {/* Lead story — large */}
-              <Link
-                to={existingSlugs.has(heroArticle.slug) ? `/blog/${heroArticle.slug}` : `/blog`}
-                className="group block"
-              >
-                <div className="relative h-full min-h-[340px] rounded-2xl overflow-hidden border border-white/[0.08] group-hover:border-white/[0.16] group-hover:-translate-y-0.5 transition-all duration-200">
-                  <div className="absolute inset-0 overflow-hidden">
-                    <img
-                      src={articleImages[heroArticle.slug] || "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80"}
-                      alt={heroArticle.title}
-                      className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/55 to-[#141414]/10" />
-                  </div>
-                  <div className="relative h-full flex flex-col justify-end p-6 md:p-9">
-                    <div className="flex items-center gap-3 mb-3.5">
-                      <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white text-[#141414] uppercase tracking-wider">À la Une</span>
-                      <span className={`text-[10px] font-medium px-2.5 py-1 rounded-full ${categoryColors[heroArticle.category] || "bg-white/10 text-white/60"}`}>{heroArticle.category}</span>
-                    </div>
-                    <h2 className="text-2xl md:text-[2.1rem] font-bold tracking-[-0.025em] text-white mb-2.5 leading-[1.1] max-w-xl">
-                      {heroArticle.title}
-                    </h2>
-                    <p className="text-white/60 text-sm md:text-[15px] max-w-lg leading-relaxed mb-4 line-clamp-2">
-                      {heroArticle.description}
-                    </p>
-                    <div className="flex items-center gap-4 text-white/40 text-xs">
-                      <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{heroArticle.duration} de lecture</span>
-                      <span>{heroArticle.lessons} articles</span>
-                      <span className="flex items-center gap-1 text-white group-hover:gap-2 transition-all font-medium ml-auto">Lire <ArrowRight className="w-3.5 h-3.5" /></span>
-                    </div>
+      {/* FEATURED — asymmetric */}
+      {featured && (
+        <section className="bp-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '0 32px 20px', position: 'relative', zIndex: 1 }}>
+          <Link to={`/blog/${featured.slug}`} className="bp-tile bp-fade-2" style={{ display: 'block', textDecoration: 'none', color: 'inherit', border: `1px solid ${BORDER}`, borderRadius: 22, overflow: 'hidden', background: CARD }}>
+            <div className="bp-feat" style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr' }}>
+              <div className="bp-feat-img" style={{ position: 'relative', overflow: 'hidden', minHeight: 380 }}>
+                <img className="bp-img" src={articleImages[featured.slug]} alt={featured.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+              <div style={{ padding: 'clamp(28px, 4vw, 48px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+                  <span style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', padding: '5px 11px', borderRadius: 999, background: '#fff', color: '#141414' }}>À la une</span>
+                  <span style={{ fontSize: 11, fontWeight: 500, padding: '5px 12px', borderRadius: 999, background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, color: 'rgba(255,255,255,0.7)' }}>{featured.category}</span>
+                </div>
+                <h2 style={{ fontSize: 'clamp(1.7rem,3vw,2.3rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1, margin: '0 0 14px' }}>{featured.title}</h2>
+                <p style={{ fontSize: 16, color: MUTED, lineHeight: 1.6, margin: '0 0 26px', maxWidth: 440 }}>{featured.excerpt}</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, fontWeight: 700, color: '#fff' }} className="bp-arrow">Lire l'article <ArrowRight size={16} /></span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: MUTED2 }}><Clock size={13} /> {featured.readTime} de lecture</span>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </section>
+      )}
+
+      {/* ARTICLE GRID */}
+      <section className="bp-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '40px 32px 80px', position: 'relative', zIndex: 1 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 34 }}>
+          <span style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.14em', color: MUTED2 }}>
+            {q ? 'Résultats' : 'Tous les articles'}
+          </span>
+          <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
+        </div>
+
+        {gridArticles.length > 0 ? (
+          <div className="bp-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
+            {gridArticles.map((a) => (
+              <Link key={a.slug} to={`/blog/${a.slug}`} className="bp-tile" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', background: CARD, border: `1px solid ${BORDER}`, borderRadius: 18, overflow: 'hidden' }}>
+                <div style={{ position: 'relative', aspectRatio: '16 / 10', overflow: 'hidden' }}>
+                  <img className="bp-img" src={articleImages[a.slug]} alt={a.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
+                <div style={{ padding: '22px 22px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                  <span style={{ alignSelf: 'flex-start', fontSize: 10.5, fontWeight: 500, padding: '4px 11px', borderRadius: 999, background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, color: 'rgba(255,255,255,0.65)', marginBottom: 14 }}>{a.category}</span>
+                  <h3 style={{ fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.25, margin: '0 0 8px' }}>{a.title}</h3>
+                  <p style={{ fontSize: 13.5, color: MUTED, lineHeight: 1.6, margin: '0 0 20px', flex: 1 }}>{a.excerpt}</p>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 14, borderTop: `1px solid ${BORDER}` }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: MUTED2 }}><Clock size={12} /> {a.readTime}</span>
+                    <ArrowRight size={16} className="bp-arrow" color="rgba(255,255,255,0.7)" />
                   </div>
                 </div>
               </Link>
-
-              {/* Secondary — compact editorial list */}
-              {secondaryFeatured.length > 0 && (
-                <div className="flex flex-col gap-4">
-                  <p className="text-white/40 text-[11px] font-semibold tracking-[0.12em] uppercase">À lire aussi</p>
-                  {secondaryFeatured.map((article, i) => (
-                    <Link
-                      key={i}
-                      to={existingSlugs.has(article.slug) ? `/blog/${article.slug}` : `/blog`}
-                      className="group flex gap-4 items-center rounded-2xl border border-white/[0.07] bg-[#1a1a1a] p-3 hover:border-white/[0.16] hover:-translate-y-0.5 transition-all duration-200 flex-1"
-                    >
-                      <div className="relative w-[40%] max-w-[150px] flex-shrink-0 aspect-[4/3] rounded-xl overflow-hidden">
-                        <img
-                          src={articleImages[article.slug] || `https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80`}
-                          alt={article.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      </div>
-                      <div className="min-w-0 flex-1 pr-2">
-                        <span className={`inline-block text-[9.5px] font-medium px-2 py-0.5 rounded-full mb-2 ${categoryColors[article.category] || "bg-white/10 text-white/60"}`}>{article.category}</span>
-                        <h3 className="text-foreground text-[15px] font-medium mb-1.5 leading-snug line-clamp-2 group-hover:text-white transition-colors">{article.title}</h3>
-                        <div className="flex items-center gap-3 text-muted-foreground/50 text-[11px]">
-                          <span className="flex items-center gap-1.5"><Clock className="w-3 h-3" />{article.duration}</span>
-                          <span>{article.lessons} articles</span>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Section divider */}
-          {showFeatured && (
-            <div className="flex items-center gap-4 mb-8">
-              <div className="h-px flex-1 bg-white/[0.06]" />
-              <span className="text-muted-foreground text-[11px] font-medium tracking-[0.15em] uppercase">Tous les articles</span>
-              <div className="h-px flex-1 bg-white/[0.06]" />
-            </div>
-          )}
-
-          {/* Category filters */}
-          <div className="flex flex-wrap gap-2 mb-8">
-            <button
-              onClick={() => setActiveCategory(null)}
-              className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
-                !activeCategory
-                  ? 'bg-foreground text-background'
-                  : 'bg-white/[0.04] text-muted-foreground border border-white/[0.08] hover:border-white/[0.15]'
-              }`}
-            >
-              Tout
-            </button>
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
-                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
-                  activeCategory === cat
-                    ? 'bg-foreground text-background'
-                    : 'bg-white/[0.04] text-muted-foreground border border-white/[0.08] hover:border-white/[0.15]'
-                }`}
-              >
-                {cat}
-              </button>
             ))}
           </div>
-
-          {/* Article grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
-            {remainingArticles.map((course, i) => {
-              const hasPage = existingSlugs.has(course.slug);
-              const linkTo = hasPage ? `/blog/${course.slug}` : `/blog`;
-              const imgSrc = articleImages[course.slug] || `https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80`;
-              return (
-                <Link key={i} to={linkTo} className="group block">
-                  <article className="rounded-2xl overflow-hidden border border-white/[0.07] bg-[#1e1e1e] group-hover:border-white/[0.16] group-hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col">
-                    <div className="relative aspect-video overflow-hidden">
-                      <img
-                        src={imgSrc}
-                        alt={course.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#141414]/60 via-transparent to-transparent" />
-                      <div className="absolute top-3 left-3 flex gap-2">
-                        <span className={`text-[10px] font-medium px-2.5 py-1 rounded-full backdrop-blur-sm ${categoryColors[course.category] || "bg-white/10 text-white/70"}`}>
-                          {course.category}
-                        </span>
-                        {!hasPage && (
-                          <span className="text-[10px] font-medium px-2.5 py-1 rounded-full backdrop-blur-sm bg-white/10 text-white/60">
-                            Bientôt
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="p-5 flex flex-col flex-1">
-                      <h3 className="text-foreground text-base md:text-lg font-normal mb-2 group-hover:text-white transition-colors leading-snug line-clamp-2">
-                        {course.title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-2 flex-1">
-                        {course.description}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3 text-muted-foreground/50 text-xs">
-                          <span className="flex items-center gap-1.5">
-                            <Clock className="w-3 h-3" />
-                            {course.duration}
-                          </span>
-                          <span>{course.lessons} articles</span>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-                      </div>
-                    </div>
-                  </article>
-                </Link>
-              );
-            })}
+        ) : (
+          <div style={{ textAlign: 'center', padding: '80px 0' }}>
+            <p style={{ fontSize: 14, color: MUTED }}>Aucun résultat pour « {searchQuery} »</p>
           </div>
+        )}
+      </section>
 
-          {filteredCourses.length === 0 && (
-            <div className="text-center py-20">
-              <p className="text-muted-foreground text-sm">Aucun résultat pour "{searchQuery}"</p>
-            </div>
-          )}
-        </main>
-      </div>
+      {/* RESSOURCES — footer-style row (real routes only) */}
+      <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1 }}>
+        <div className="bp-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '48px 32px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
+          <div>
+            <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.12em', color: MUTED2, margin: '0 0 8px' }}>Ressources</p>
+            <p style={{ fontSize: 16, fontWeight: 600, letterSpacing: '-0.01em', margin: 0 }}>Besoin d'aide pour aller plus loin ?</p>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+            {RESOURCES.map((r) => (
+              <Link key={r.to} to={r.to} className="bp-tile" style={{ textDecoration: 'none', color: 'rgba(255,255,255,0.8)', border: `1px solid ${BORDER}`, borderRadius: 999, padding: '10px 18px', fontSize: 13.5, fontWeight: 500 }}>{r.label}</Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <FooterSection />
     </div>
