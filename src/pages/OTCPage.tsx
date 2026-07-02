@@ -17,19 +17,19 @@ const MUTED2 = 'rgba(255,255,255,0.4)';
 const TETHER = 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png';
 const WHATSAPP = 'https://wa.me/+14182619091';
 
-// Paliers d'avantage (indicatifs)
-const TIERS = [
-  { label: '10K – 50K',   name: 'Volume',        adv: 0.42, note: 'Taux standard optimisé' },
-  { label: '50K – 200K',  name: 'Préférentiel',  adv: 0.72, note: 'Conditions négociées' },
-  { label: '200K +',      name: 'Sur mesure',    adv: 1.0,  note: 'Meilleur taux & règlement dédié' },
+// Paliers OTC — plus le volume est grand, plus la marge est faible (meilleur taux)
+const OTC_TIERS = [
+  { min: 0,       margin: 2.0, name: 'Standard',     label: '< 50K',      adv: 0.4 },
+  { min: 50000,   margin: 1.2, name: 'Préférentiel', label: '50K – 200K', adv: 0.72 },
+  { min: 200000,  margin: 0.6, name: 'Sur mesure',   label: '200K +',     adv: 1.0 },
 ];
 
 const OTCPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { terexRateCfa, loading: rateLoading } = useTerexRates(2);
-  const rate = !rateLoading && terexRateCfa ? terexRateCfa : null;
+  const { marketRateCfa, loading: rateLoading } = useTerexRates(2);
+  const market = !rateLoading && marketRateCfa ? marketRateCfa : null;
 
   const [side, setSide] = useState<'buy' | 'sell'>('sell'); // sell = donne USDT, reçoit CFA
   const [give, setGive] = useState<string>('50000');
@@ -44,11 +44,19 @@ const OTCPage = () => {
   const giveNum = parseFloat(give.replace(/\s/g, '')) || 0;
   const giveUnit = side === 'buy' ? 'CFA' : 'USDT';
   const recvUnit = side === 'buy' ? 'USDT' : 'CFA';
-  const recvNum = rate ? (side === 'buy' ? giveNum / rate : giveNum * rate) : null;
+
+  // Volume estimé en USDT → détermine le palier (marge dégressive)
+  const volumeUSDT = market ? (side === 'buy' ? giveNum / market : giveNum) : giveNum;
+  const tier = [...OTC_TIERS].reverse().find(t => volumeUSDT >= t.min) || OTC_TIERS[0];
+  // Taux effectif : marge plus faible = meilleur taux pour le client
+  const effRate = market ? (side === 'buy' ? market * (1 + tier.margin / 100) : market * (1 - tier.margin / 100)) : null;
+
+  const recvNum = effRate ? (side === 'buy' ? giveNum / effRate : giveNum * effRate) : null;
   const recvDisplay = recvNum != null
     ? (side === 'buy' ? recvNum.toLocaleString('fr-FR', { maximumFractionDigits: 2 }) : Math.round(recvNum).toLocaleString('fr-FR'))
     : null;
-  const rateDisplay = rate ? rate.toLocaleString('fr-FR') : null;
+  const rateDisplay = effRate ? Math.round(effRate).toLocaleString('fr-FR') : null;
+  const marginDisplay = tier.margin.toLocaleString('fr-FR');
 
   const switchSide = (s: 'buy' | 'sell') => { setSide(s); setGive(s === 'buy' ? '5000000' : '50000'); };
 
@@ -148,11 +156,14 @@ const OTCPage = () => {
               </div>
             </div>
 
-            {/* Taux live */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 4px 4px' }}>
-              <span style={{ fontSize: 12, color: MUTED2 }}>Taux indicatif · actualisé</span>
-              <span style={{ fontSize: 12.5, fontWeight: 600, color: 'rgba(255,255,255,0.8)' }}>
-                {rateDisplay ? `1 USDT = ${rateDisplay} CFA` : <span style={{ display: 'inline-block', width: 90, height: 12, borderRadius: 4, background: ICON_BG }} />}
+            {/* Palier de volume appliqué */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 2px 4px' }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.8)' }}>
+                <span style={{ padding: '3px 9px', borderRadius: 999, background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, fontSize: 11 }}>{tier.name}</span>
+                marge {marginDisplay}%
+              </span>
+              <span style={{ fontSize: 12, color: MUTED2 }}>
+                {rateDisplay ? `≈ ${rateDisplay} CFA / USDT` : <span style={{ display: 'inline-block', width: 84, height: 12, borderRadius: 4, background: ICON_BG }} />}
               </span>
             </div>
 
@@ -175,22 +186,31 @@ const OTCPage = () => {
           </div>
 
           <div className="otc-tiers" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0, border: `1px solid ${BORDER}`, borderRadius: 20, overflow: 'hidden' }}>
-            {TIERS.map((t, i) => (
-              <div key={t.label} style={{ padding: '28px 26px', borderRight: i < TIERS.length - 1 ? `1px solid ${BORDER}` : 'none', background: i === 2 ? 'rgba(255,255,255,0.02)' : 'transparent' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-                  <span style={{ fontSize: 12.5, fontWeight: 700, color: '#fff' }}>{t.name}</span>
-                  <span style={{ fontSize: 11, color: MUTED2, fontFamily: 'monospace' }}>{t.label} USDT</span>
+            {OTC_TIERS.map((t, i) => {
+              const active = tier.name === t.name;
+              return (
+                <div key={t.name} style={{ padding: '28px 26px', borderRight: i < OTC_TIERS.length - 1 ? `1px solid ${BORDER}` : 'none', background: active ? 'rgba(255,255,255,0.04)' : 'transparent', transition: 'background 0.2s ease' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12.5, fontWeight: 700, color: '#fff' }}>
+                      {t.name}
+                      {active && <span style={{ fontSize: 9.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#141414', background: '#fff', borderRadius: 999, padding: '2px 7px' }}>Votre palier</span>}
+                    </span>
+                    <span style={{ fontSize: 11, color: MUTED2, fontFamily: 'monospace' }}>{t.label} USDT</span>
+                  </div>
+                  {/* barre : marge plus faible = barre plus longue */}
+                  <div style={{ height: 8, borderRadius: 999, background: 'rgba(255,255,255,0.06)', overflow: 'hidden', marginBottom: 14 }}>
+                    <div className="otc-barfill" style={{ ['--w' as any]: t.adv, height: '100%', borderRadius: 999, background: active ? '#fff' : 'rgba(255,255,255,0.5)' }} />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                    <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em' }}>{t.margin.toLocaleString('fr-FR')}%</span>
+                    <span style={{ fontSize: 12.5, color: MUTED }}>de marge</span>
+                  </div>
                 </div>
-                {/* barre d'avantage */}
-                <div style={{ height: 8, borderRadius: 999, background: 'rgba(255,255,255,0.06)', overflow: 'hidden', marginBottom: 14 }}>
-                  <div className="otc-barfill" style={{ ['--w' as any]: t.adv, height: '100%', borderRadius: 999, background: i === 2 ? '#fff' : 'rgba(255,255,255,0.55)' }} />
-                </div>
-                <p style={{ fontSize: 13.5, color: MUTED, lineHeight: 1.55, margin: 0 }}>{t.note}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <p style={{ fontSize: 12, color: MUTED2, margin: '14px 4px 0', display: 'flex', alignItems: 'center', gap: 7 }}>
-            <TrendingUp size={13} color="rgba(255,255,255,0.5)" /> Représentation indicative — votre taux exact est confirmé sur devis.
+            <TrendingUp size={13} color="rgba(255,255,255,0.5)" /> Le palier s'applique automatiquement selon le volume saisi ci-dessus. Taux exact confirmé sur devis.
           </p>
         </div>
       </section>
@@ -223,8 +243,7 @@ const OTCPage = () => {
       </section>
 
       {/* CTA */}
-      <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1, overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(50% 130% at 50% 0%, rgba(255,255,255,0.045) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1 }}>
         <div className="otc-pad" style={{ maxWidth: 820, margin: '0 auto', padding: '96px 32px', textAlign: 'center', position: 'relative' }}>
           <img src={TETHER} alt="USDT" style={{ width: 48, height: 48, opacity: 0.9, margin: '0 auto 22px', display: 'block' }} />
           <h2 style={{ fontSize: 'clamp(2rem,4vw,2.6rem)', fontWeight: 800, letterSpacing: '-0.035em', margin: '0 0 14px' }}>Parlez à notre desk OTC.</h2>
