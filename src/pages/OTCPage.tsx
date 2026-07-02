@@ -19,9 +19,10 @@ const WHATSAPP = 'https://wa.me/+14182619091';
 
 // Paliers OTC — plus le volume est grand, plus la marge est faible (meilleur taux)
 const OTC_TIERS = [
-  { min: 0,       margin: 2.0, name: 'Standard',     label: '< 50K',      adv: 0.4 },
-  { min: 50000,   margin: 1.2, name: 'Préférentiel', label: '50K – 200K', adv: 0.72 },
-  { min: 200000,  margin: 0.6, name: 'Sur mesure',   label: '200K +',     adv: 1.0 },
+  { min: 0,        margin: 2.0, name: 'Standard',     label: '< 50K',       adv: 0.34 },
+  { min: 50000,    margin: 1.7, name: 'Préférentiel', label: '50K – 200K',  adv: 0.58 },
+  { min: 200000,   margin: 1.0, name: 'Avancé',       label: '200K – 1M',   adv: 0.85 },
+  { min: 1000000,  margin: 1.0, name: 'Sur mesure',   label: '1M +',        adv: 1.0 },
 ];
 
 const OTCPage = () => {
@@ -185,7 +186,7 @@ const OTCPage = () => {
             <p style={{ fontSize: 16, color: MUTED, lineHeight: 1.6, margin: 0 }}>Nos conditions s'améliorent avec la taille de votre transaction. Voici comment se structure votre avantage.</p>
           </div>
 
-          <div className="otc-tiers" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0, border: `1px solid ${BORDER}`, borderRadius: 20, overflow: 'hidden' }}>
+          <div className="otc-tiers" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0, border: `1px solid ${BORDER}`, borderRadius: 20, overflow: 'hidden' }}>
             {OTC_TIERS.map((t, i) => {
               const active = tier.name === t.name;
               return (
