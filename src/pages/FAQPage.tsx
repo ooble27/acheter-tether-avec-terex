@@ -311,7 +311,6 @@ const FAQPage = () => {
 
               {/* Still need help? — crafted contact prompt */}
               <div className="tx-tile" style={{ marginTop: 28, background: 'linear-gradient(135deg, #1e1e1e 0%, #1a1a1a 100%)', border: `1px solid ${BORDER}`, borderRadius: 20, padding: '26px 26px', display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(60% 120% at 90% 0%, rgba(255,255,255,0.04) 0%, transparent 60%)', pointerEvents: 'none' }} />
                 {/* Mock chat bubble cluster */}
                 <div style={{ position: 'relative', flexShrink: 0 }}>
                   <div style={{ width: 56, height: 56, borderRadius: 18, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 6px 20px rgba(0,0,0,0.35)' }}>

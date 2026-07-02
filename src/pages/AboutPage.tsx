@@ -259,7 +259,6 @@ const AboutPage = () => {
 
       {/* CTA */}
       <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1, overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(50% 130% at 50% 0%, rgba(255,255,255,0.045) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div className="ab-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '96px 32px', textAlign: 'center', position: 'relative' }}>
           <h2 style={{ fontSize: 'clamp(2rem,4vw,2.6rem)', fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 14px' }}>Prêt à rejoindre Terex ?</h2>
           <p style={{ fontSize: 16, color: MUTED, margin: '0 0 30px' }}>Échangez vos USDT en FCFA dès aujourd'hui, simplement et en toute sécurité.</p>

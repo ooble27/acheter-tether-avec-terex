@@ -314,7 +314,6 @@ const CareersPage = () => {
 
       {/* CTA */}
       <section style={{ borderTop: `1px solid ${BORDER}`, position: 'relative', zIndex: 1, overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(50% 130% at 50% 0%, rgba(255,255,255,0.045) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div className="cr-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '92px 32px', textAlign: 'center', position: 'relative' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '7px 14px', borderRadius: 999, border: `1px solid ${BORDER}`, marginBottom: 22, fontSize: 12.5, color: MUTED }}>
             <Users size={14} /> Plus de 10 talents nous ont déjà rejoints

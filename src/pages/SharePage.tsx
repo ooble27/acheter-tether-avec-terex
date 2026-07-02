@@ -181,7 +181,7 @@ export default function SharePage() {
               {/* Aperçu enrichi (style social card) */}
               <div style={{ borderRadius: 16, overflow: 'hidden', border: `1px solid ${BORDER}` }}>
                 {/* Bandeau visuel */}
-                <div style={{ position: 'relative', height: 150, background: 'radial-gradient(120% 140% at 80% 0%, rgba(255,255,255,0.08) 0%, transparent 55%), #1e1e1e', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                <div style={{ position: 'relative', height: 150, background: '#1e1e1e', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                   <div style={{ position: 'absolute', top: 14, left: 14, display: 'flex', alignItems: 'center', gap: 7 }}>
                     <span style={{ position: 'relative', width: 7, height: 7 }}>
                       <span className="sp-live-dot" style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'rgba(255,255,255,0.55)' }} />

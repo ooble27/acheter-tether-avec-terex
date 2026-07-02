@@ -21,7 +21,7 @@ const WHATSAPP = 'https://wa.me/+14182619091';
 const OTC_TIERS = [
   { min: 0,        margin: 2.0, name: 'Standard',     label: '< 50K',       adv: 0.34 },
   { min: 50000,    margin: 1.7, name: 'Préférentiel', label: '50K – 200K',  adv: 0.58 },
-  { min: 200000,   margin: 1.0, name: 'Avancé',       label: '200K – 1M',   adv: 0.85 },
+  { min: 200000,   margin: 1.4, name: 'Avancé',       label: '200K – 1M',   adv: 0.78 },
   { min: 1000000,  margin: 1.0, name: 'Sur mesure',   label: '1M +',        adv: 1.0 },
 ];
 
