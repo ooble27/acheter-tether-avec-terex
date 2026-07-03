@@ -1,5 +1,4 @@
 import { BlogArticle } from "@/components/blog/BlogArticle";
-import blogTransfertsImage from "@/assets/blog-transferts.png";
 
 export default function TransfertsInternationauxArticle() {
   const content = (
@@ -216,7 +215,7 @@ export default function TransfertsInternationauxArticle() {
       date="12 janvier 2025"
       readTime="10 min"
       category="Transferts"
-      image={blogTransfertsImage}
+      coverSlug="transferts-internationaux"
       content={content}
     />
   );

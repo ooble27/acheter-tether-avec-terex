@@ -1,5 +1,4 @@
 import { BlogArticle } from "@/components/blog/BlogArticle";
-import blogAcheterImage from "@/assets/blog-acheter-usdt.png";
 
 export default function AcheterUSDTArticle() {
   const content = (
@@ -151,7 +150,7 @@ export default function AcheterUSDTArticle() {
       date="12 Oct 2025"
       readTime="7 min"
       category="Guide"
-      image={blogAcheterImage}
+      coverSlug="acheter-usdt-terex-guide"
       content={content}
     />
   );

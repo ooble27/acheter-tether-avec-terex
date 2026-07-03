@@ -6,22 +6,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import { Search, Clock, ArrowRight } from "lucide-react";
+import { ArticleCover } from "@/components/blog/articleCovers";
 
 const BG = '#1a1a1a';
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const MUTED = 'rgba(255,255,255,0.55)';
 const MUTED2 = 'rgba(255,255,255,0.4)';
-
-// ── Article images (only real articles with routes) ────────────────────
-const articleImages: Record<string, string> = {
-  "comprendre-usdt-stablecoin": "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80",
-  "acheter-usdt-terex-guide": "https://images.unsplash.com/photo-1605792657660-596af9009e82?auto=format&fit=crop&w=1200&q=80",
-  "mobile-money-crypto": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=1200&q=80",
-  "transferts-internationaux": "https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&w=1200&q=80",
-  "securite-crypto": "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?auto=format&fit=crop&w=1200&q=80",
-  "blockchain-simple": "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=1200&q=80",
-};
 
 // ── The 6 real articles (each has a /blog/{slug} route) ─────────────────
 type Article = { slug: string; title: string; excerpt: string; category: string; readTime: string };
@@ -167,7 +158,7 @@ export default function BlogPage() {
           <Link to={`/blog/${featured.slug}`} className="bp-tile bp-fade-2" style={{ display: 'block', textDecoration: 'none', color: 'inherit', border: `1px solid ${BORDER}`, borderRadius: 22, overflow: 'hidden', background: CARD }}>
             <div className="bp-feat" style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr' }}>
               <div className="bp-feat-img" style={{ position: 'relative', overflow: 'hidden', minHeight: 380 }}>
-                <img className="bp-img" src={articleImages[featured.slug]} alt={featured.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                <ArticleCover slug={featured.slug} size="lg" className="bp-img" />
               </div>
               <div style={{ padding: 'clamp(28px, 4vw, 48px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
@@ -200,7 +191,7 @@ export default function BlogPage() {
             {gridArticles.map((a) => (
               <Link key={a.slug} to={`/blog/${a.slug}`} className="bp-tile" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', background: CARD, border: `1px solid ${BORDER}`, borderRadius: 18, overflow: 'hidden' }}>
                 <div style={{ position: 'relative', aspectRatio: '16 / 10', overflow: 'hidden' }}>
-                  <img className="bp-img" src={articleImages[a.slug]} alt={a.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <ArticleCover slug={a.slug} size="sm" className="bp-img" />
                 </div>
                 <div style={{ padding: '22px 22px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                   <span style={{ alignSelf: 'flex-start', fontSize: 10.5, fontWeight: 500, padding: '4px 11px', borderRadius: 999, background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, color: 'rgba(255,255,255,0.65)', marginBottom: 14 }}>{a.category}</span>

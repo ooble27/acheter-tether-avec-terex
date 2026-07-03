@@ -1,5 +1,4 @@
 import { BlogArticle } from "@/components/blog/BlogArticle";
-import blogUsdtImage from "@/assets/blog-usdt-stablecoin.png";
 
 export default function ComprendreUSDTArticle() {
   const content = (
@@ -80,7 +79,7 @@ export default function ComprendreUSDTArticle() {
       date="15 Oct 2025"
       readTime="5 min"
       category="Crypto"
-      image={blogUsdtImage}
+      coverSlug="comprendre-usdt-stablecoin"
       content={content}
     />
   );

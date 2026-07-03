@@ -1,5 +1,4 @@
 import { BlogArticle } from "@/components/blog/BlogArticle";
-import blogBlockchainImage from "@/assets/blog-blockchain.png";
 
 export default function BlockchainSimpleArticle() {
   const content = (
@@ -258,7 +257,7 @@ export default function BlockchainSimpleArticle() {
       date="10 janvier 2025"
       readTime="12 min"
       category="Technologie"
-      image={blogBlockchainImage}
+      coverSlug="blockchain-simple"
       content={content}
     />
   );

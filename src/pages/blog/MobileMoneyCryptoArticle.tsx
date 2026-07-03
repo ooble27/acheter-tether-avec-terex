@@ -1,5 +1,4 @@
 import { BlogArticle } from "@/components/blog/BlogArticle";
-import blogMobileMoneyImage from "@/assets/blog-mobile-money.png";
 
 export default function MobileMoneyCryptoArticle() {
   const content = (
@@ -250,7 +249,7 @@ export default function MobileMoneyCryptoArticle() {
       date="8 janvier 2025"
       readTime="11 min"
       category="Finance mobile"
-      image={blogMobileMoneyImage}
+      coverSlug="mobile-money-crypto"
       content={content}
     />
   );

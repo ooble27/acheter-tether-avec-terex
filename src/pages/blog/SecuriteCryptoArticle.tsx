@@ -1,5 +1,4 @@
 import { BlogArticle } from "@/components/blog/BlogArticle";
-import blogSecuriteImage from "@/assets/blog-securite.png";
 
 export default function SecuriteCryptoArticle() {
   const content = (
@@ -118,7 +117,7 @@ export default function SecuriteCryptoArticle() {
       date="15 janvier 2025"
       readTime="8 min"
       category="Sécurité"
-      image={blogSecuriteImage}
+      coverSlug="securite-crypto"
       content={content}
     />
   );

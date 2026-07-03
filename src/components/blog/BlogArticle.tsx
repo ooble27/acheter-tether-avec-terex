@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { ArticleCover } from "@/components/blog/articleCovers";
 
 const BG = "#1a1a1a";
 const CARD = "#1e1e1e";
@@ -18,7 +19,8 @@ interface BlogArticleProps {
   date: string;
   readTime: string;
   category: string;
-  image: string;
+  image?: string;
+  coverSlug?: string;
   content: React.ReactNode;
   author?: string;
   authorRole?: string;
@@ -81,6 +83,7 @@ export function BlogArticle({
   readTime,
   category,
   image,
+  coverSlug,
   content,
   author = "L'équipe Terex",
   authorRole = "Rédaction",
@@ -175,8 +178,12 @@ export function BlogArticle({
 
       {/* HERO IMAGE */}
       <div className="ba-pad ba-fade-2" style={{ maxWidth: 900, margin: "40px auto 0", padding: "0 32px", position: "relative", zIndex: 1 }}>
-        <div style={{ borderRadius: 22, overflow: "hidden", border: `1px solid ${BORDER}`, aspectRatio: "16 / 9", background: CARD }}>
-          <img src={image} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+        <div style={{ position: "relative", borderRadius: 22, overflow: "hidden", border: `1px solid ${BORDER}`, aspectRatio: "16 / 9", background: CARD }}>
+          {coverSlug ? (
+            <ArticleCover slug={coverSlug} size="lg" />
+          ) : image ? (
+            <img src={image} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          ) : null}
         </div>
       </div>
 
