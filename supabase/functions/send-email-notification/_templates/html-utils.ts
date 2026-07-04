@@ -27,11 +27,11 @@ const BASE = `https://terangaexchange.com`;
 // ─── CSS — always dark, both light+dark system prefs, Gmail dark mode overrides ────────────
 const CSS = `
 /* Surfaces toujours sombres, texte toujours clair — cohérent quel que soit le client */
-:root{color-scheme:only dark !important;}
-html,body{margin:0;padding:0;background-color:#141414 !important;color:#f5f5f5 !important;-webkit-text-size-adjust:100%;color-scheme:only dark !important;}
+:root{color-scheme:dark !important;supported-color-schemes:dark !important;}
+html,body{margin:0;padding:0;background-color:#141414 !important;color:#f5f5f5 !important;-webkit-text-size-adjust:100%;color-scheme:dark !important;}
 /* light system → on garde le thème sombre */
 @media (prefers-color-scheme:light){
-  html,body,.ebg{background-color:#141414 !important;color-scheme:only dark !important;}
+  html,body,.ebg{background-color:#141414 !important;color-scheme:dark !important;}
   .ecard{background-color:#1a1a1a !important;}
   .efooter,.ebar{background-color:#161616 !important;}
   .einfo{background-color:#1e1e1e !important;border-color:#2c2c2c !important;}
@@ -44,7 +44,7 @@ html,body{margin:0;padding:0;background-color:#141414 !important;color:#f5f5f5 !
 }
 /* dark system → surfaces sombres forcées, texte clair (jamais de texte sombre sur carte sombre) */
 @media (prefers-color-scheme:dark){
-  html,body,.ebg{background-color:#141414 !important;color-scheme:only dark !important;}
+  html,body,.ebg{background-color:#141414 !important;color-scheme:dark !important;}
   .ecard{background-color:#1a1a1a !important;}
   .efooter,.ebar{background-color:#161616 !important;}
   .einfo{background-color:#1e1e1e !important;border-color:#2c2c2c !important;}
@@ -68,6 +68,7 @@ html,body{margin:0;padding:0;background-color:#141414 !important;color:#f5f5f5 !
 [data-ogsc] .edim,[data-ogsb] .edim{color:#6e6e6e !important;}
 [data-ogsc] .egreen,[data-ogsb] .egreen{color:#ffffff !important;}
 [data-ogsc] .ered,[data-ogsb] .ered{color:#f87171 !important;}
+[data-ogsc] .einfo,[data-ogsb] .einfo{border-color:#2c2c2c !important;}
 /* Mobile */
 @media only screen and (max-width:620px){
   .w600{width:100% !important;max-width:100% !important;}
@@ -376,16 +377,16 @@ export function wrapEmail(preview: string, rows: string, _topRightOrNote?: strin
   const topRight = _topRightOrNote && _topRightOrNote.includes('<') ? _topRightOrNote : undefined;
   const note = footerNote ?? (_topRightOrNote && !_topRightOrNote.includes('<') ? _topRightOrNote : undefined);
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" bgcolor="${C.pageBg}" style="background-color:${C.pageBg};color-scheme:only dark;">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" bgcolor="${C.pageBg}" style="background-color:${C.pageBg};color-scheme:dark;">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="color-scheme" content="only dark"/>
+<meta name="color-scheme" content="dark"/>
 <meta name="supported-color-schemes" content="dark"/>
 <title>${preview}</title>
 <style type="text/css">${CSS}</style>
 </head>
-<body class="ebg" bgcolor="${C.pageBg}" style="margin:0;padding:0;background-color:${C.pageBg};color-scheme:only dark;">
+<body class="ebg" bgcolor="${C.pageBg}" style="margin:0;padding:0;background-color:${C.pageBg};color-scheme:dark;">
 <!--[if mso]><table role="presentation" width="100%"><tr><td><![endif]-->
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="${C.pageBg}" class="ebg" style="background-color:${C.pageBg};">
 <tr><td align="center" style="padding:24px 12px;">
