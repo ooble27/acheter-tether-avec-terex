@@ -1,70 +1,73 @@
 // HTML email utilities — pure table-based, always-dark, works in Gmail / Apple Mail / Outlook
 
 export const C = {
-  green:      '#3B968F',
-  pageBg:     '#0d0d0d',
-  cardBg:     '#161616',
-  footerBg:   '#0a0a0a',
-  infoBg:     '#0d0d0d',
-  rowBg:      '#1e1e1e',
-  border:     '#2a2a2a',
-  borderSoft: '#1d1d1d',
-  text:       '#efefef',
-  textMuted:  '#b8b8b8',
-  textDim:    '#8a8a8a',
+  // Accent neutre — blanc (aligné au design system du site, aucun vert)
+  green:      '#ffffff',   // (clé conservée pour compat) = accent d'emphase blanc
+  accent:     '#ffffff',
+  accentText: '#141414',   // texte sur bouton blanc
+  pageBg:     '#141414',
+  cardBg:     '#1a1a1a',
+  footerBg:   '#161616',
+  infoBg:     '#1e1e1e',
+  rowBg:      '#242424',
+  border:     '#2c2c2c',
+  borderSoft: '#202020',
+  text:       '#f5f5f5',
+  textMuted:  '#a1a1a1',
+  textDim:    '#6e6e6e',
   red:        '#f87171',
   amber:      '#fbbf24',
 };
 
 const F  = `-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif`;
 const FM = `ui-monospace,SFMono-Regular,Menlo,'Courier New',monospace`;
-const LOGO = `https://terangaexchange.com/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png`;
+const LOGO = `https://terangaexchange.com/terex-icon.png`;
 const BASE = `https://terangaexchange.com`;
 
 // ─── CSS — always dark, both light+dark system prefs, Gmail dark mode overrides ────────────
 const CSS = `
-/* force dark everywhere — color-scheme:only dark tells ALL clients not to transform */
+/* Surfaces toujours sombres, texte toujours clair — cohérent quel que soit le client */
 :root{color-scheme:only dark !important;}
-html,body{margin:0;padding:0;background-color:#0d0d0d !important;color:#efefef !important;-webkit-text-size-adjust:100%;color-scheme:only dark !important;}
-/* light system → keep dark */
+html,body{margin:0;padding:0;background-color:#141414 !important;color:#f5f5f5 !important;-webkit-text-size-adjust:100%;color-scheme:only dark !important;}
+/* light system → on garde le thème sombre */
 @media (prefers-color-scheme:light){
-  html,body,.ebg{background-color:#0d0d0d !important;color-scheme:only dark !important;}
-  .ecard{background-color:#161616 !important;}
-  .efooter,.ebar{background-color:#0a0a0a !important;}
-  .einfo{background-color:#0d0d0d !important;border-color:#2a2a2a !important;}
-  .erow{background-color:#1e1e1e !important;}
-  .etxt{color:#efefef !important;}
-  .emuted{color:#7a7a7a !important;}
-  .edim{color:#3d3d3d !important;}
-  .egreen{color:#3B968F !important;}
+  html,body,.ebg{background-color:#141414 !important;color-scheme:only dark !important;}
+  .ecard{background-color:#1a1a1a !important;}
+  .efooter,.ebar{background-color:#161616 !important;}
+  .einfo{background-color:#1e1e1e !important;border-color:#2c2c2c !important;}
+  .erow{background-color:#242424 !important;}
+  .etxt{color:#f5f5f5 !important;}
+  .emuted{color:#a1a1a1 !important;}
+  .edim{color:#6e6e6e !important;}
+  .egreen{color:#ffffff !important;}
   .ered{color:#f87171 !important;}
 }
-/* dark system → Gmail inverse le fond en blanc : on force le texte en sombre pour rester lisible */
+/* dark system → surfaces sombres forcées, texte clair (jamais de texte sombre sur carte sombre) */
 @media (prefers-color-scheme:dark){
-  html,body,.ebg{background-color:#0d0d0d !important;color-scheme:only dark !important;}
-  .ecard{background-color:#161616 !important;}
-  .efooter,.ebar{background-color:#0a0a0a !important;}
-  .einfo{background-color:#0d0d0d !important;border-color:#2a2a2a !important;}
-  .erow{background-color:#1e1e1e !important;}
-  .etxt{color:#111111 !important;}
-  .emuted{color:#222222 !important;}
-  .edim{color:#444444 !important;}
-  .egreen{color:#1f6b67 !important;}
-  .ered{color:#b91c1c !important;}
+  html,body,.ebg{background-color:#141414 !important;color-scheme:only dark !important;}
+  .ecard{background-color:#1a1a1a !important;}
+  .efooter,.ebar{background-color:#161616 !important;}
+  .einfo{background-color:#1e1e1e !important;border-color:#2c2c2c !important;}
+  .erow{background-color:#242424 !important;}
+  .etxt{color:#f5f5f5 !important;}
+  .emuted{color:#a1a1a1 !important;}
+  .edim{color:#6e6e6e !important;}
+  .egreen{color:#ffffff !important;}
+  .ered{color:#f87171 !important;}
 }
-/* Gmail Android [data-ogsc] — texte sombre forcé sur fond blanc imposé par Gmail */
-[data-ogsc] body,[data-ogsb] body{background-color:#0d0d0d !important;}
+/* Gmail Android [data-ogsc] — on re-force surfaces sombres + texte clair après l'inversion Gmail */
+[data-ogsc] body,[data-ogsb] body{background-color:#141414 !important;}
 [data-ogsc] table,[data-ogsb] table{background-color:transparent !important;}
-[data-ogsc] .ecard,[data-ogsb] .ecard{background-color:#161616 !important;}
-[data-ogsc] .ebar,[data-ogsb] .ebar{background-color:#0a0a0a !important;}
-[data-ogsc] .efooter,[data-ogsb] .efooter{background-color:#0a0a0a !important;}
-[data-ogsc] .einfo,[data-ogsb] .einfo{background-color:#0d0d0d !important;}
-[data-ogsc] .erow,[data-ogsb] .erow{background-color:#1e1e1e !important;}
-[data-ogsc] .etxt,[data-ogsb] .etxt{color:#111111 !important;}
-[data-ogsc] .emuted,[data-ogsb] .emuted{color:#222222 !important;}
-[data-ogsc] .edim,[data-ogsb] .edim{color:#444444 !important;}
-[data-ogsc] .egreen,[data-ogsb] .egreen{color:#1f6b67 !important;}
-[data-ogsc] .ered,[data-ogsb] .ered{color:#b91c1c !important;}
+[data-ogsc] .ecard,[data-ogsb] .ecard{background-color:#1a1a1a !important;}
+[data-ogsc] .ebar,[data-ogsb] .ebar{background-color:#161616 !important;}
+[data-ogsc] .efooter,[data-ogsb] .efooter{background-color:#161616 !important;}
+[data-ogsc] .einfo,[data-ogsb] .einfo{background-color:#1e1e1e !important;}
+[data-ogsc] .erow,[data-ogsb] .erow{background-color:#242424 !important;}
+[data-ogsc] .etxt,[data-ogsb] .etxt{color:#f5f5f5 !important;}
+[data-ogsc] .emuted,[data-ogsb] .emuted{color:#a1a1a1 !important;}
+[data-ogsc] .edim,[data-ogsb] .edim{color:#6e6e6e !important;}
+[data-ogsc] .egreen,[data-ogsb] .egreen{color:#ffffff !important;}
+[data-ogsc] .ered,[data-ogsb] .ered{color:#f87171 !important;}
 /* Mobile */
 @media only screen and (max-width:620px){
   .w600{width:100% !important;max-width:100% !important;}
@@ -223,7 +226,7 @@ export function noticeBox(text: string, tone: 'neutral' | 'warning' | 'danger' |
     neutral: { bg: C.rowBg,   border: C.border,              color: C.textMuted },
     warning: { bg: '#1f1a08', border: '#3a2f0f',             color: '#f4d77a'   },
     danger:  { bg: '#1f0d0e', border: '#3a1517',             color: '#fca5a5'   },
-    success: { bg: '#0b1f1e', border: 'rgba(59,150,143,0.3)',color: C.text      },
+    success: { bg: C.rowBg,  border: 'rgba(255,255,255,0.14)',color: C.text     },
   }[tone];
   return `
 <tr bgcolor="${C.cardBg}">
@@ -244,8 +247,8 @@ export function ctaButton(text: string, href: string): string {
   <td bgcolor="${C.cardBg}" align="center" style="background-color:${C.cardBg};padding:4px 28px 36px;">
     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
       <tr>
-        <td align="center" bgcolor="${C.green}" style="background-color:${C.green};border-radius:9px;">
-          <a href="${href}" style="display:inline-block;background-color:${C.green};color:#ffffff;font-family:${F};font-size:14px;font-weight:700;padding:15px 40px;border-radius:9px;text-decoration:none;letter-spacing:0.3px;">${text}</a>
+        <td align="center" bgcolor="${C.accent}" style="background-color:${C.accent};border-radius:9px;">
+          <a href="${href}" style="display:inline-block;background-color:${C.accent};color:${C.accentText};font-family:${F};font-size:14px;font-weight:700;padding:15px 40px;border-radius:9px;text-decoration:none;letter-spacing:0.3px;">${text}</a>
         </td>
       </tr>
     </table>
@@ -276,7 +279,7 @@ export function divider(): string {
 // ─── Status badge (inline) ────────────────────────────────────────────────────
 export function statusBadge(text: string, tone: 'success' | 'warning' | 'danger' | 'neutral' = 'success'): string {
   const m = {
-    success: { c: C.green,    bg: 'rgba(59,150,143,0.12)', b: 'rgba(59,150,143,0.3)' },
+    success: { c: C.text,     bg: 'rgba(255,255,255,0.08)', b: 'rgba(255,255,255,0.18)' },
     warning: { c: C.amber,    bg: '#1f1a08',               b: '#3a2f0f'              },
     danger:  { c: C.red,      bg: '#1f0d0e',               b: '#3a1517'              },
     neutral: { c: C.textMuted,bg: C.rowBg,                 b: C.border               },
@@ -304,7 +307,7 @@ export function steps(items: Array<{ text: string; done?: boolean }>): string {
   const rows = items.map((s, i) => `
     <tr>
       <td style="width:34px;padding:11px 0;vertical-align:top;">
-        <div style="width:24px;height:24px;border-radius:50%;background:${s.done ? C.green : C.rowBg};border:${s.done ? 'none' : `1px solid ${C.border}`};color:${s.done ? '#fff' : C.textDim};font-size:10px;font-weight:700;text-align:center;line-height:24px;font-family:${F};">${i + 1}</div>
+        <div style="width:24px;height:24px;border-radius:50%;background:${s.done ? C.accent : C.rowBg};border:${s.done ? 'none' : `1px solid ${C.border}`};color:${s.done ? C.accentText : C.textDim};font-size:10px;font-weight:700;text-align:center;line-height:24px;font-family:${F};">${i + 1}</div>
       </td>
       <td style="padding:11px 0;vertical-align:top;${i < items.length - 1 ? `border-bottom:1px solid ${C.borderSoft};` : ''}">
         <p class="${s.done ? 'etxt' : 'edim'}" style="font-family:${F};font-size:13px;line-height:1.55;color:${s.done ? C.text : C.textDim};margin:0;">${s.text}</p>

@@ -50,7 +50,7 @@ export function jobApplicationAdminHtml({ firstName, lastName, email, phone, pos
 <tr>
   <td style="padding:0 24px 28px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
-      style="background-color:rgba(59,150,143,0.06);border:1px solid rgba(59,150,143,0.2);border-radius:10px;border-collapse:separate;border-spacing:0;">
+      style="background-color:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:10px;border-collapse:separate;border-spacing:0;">
       <tr>
         <td style="padding:14px 16px;font-family:${F};font-size:12px;color:${C.textMuted};line-height:1.6;">
           <strong style="color:${C.green};">Répondre directement :</strong>

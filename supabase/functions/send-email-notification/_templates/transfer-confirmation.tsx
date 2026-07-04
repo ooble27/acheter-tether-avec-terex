@@ -16,7 +16,7 @@ export function transferConfirmationHtml({ transferData, clientName }: TransferC
     transferData.provider === 'orange' || transferData.provider === 'orange_money' ? 'Orange Money' :
     'Mobile Money';
 
-  const reference = `#TX-TEREX-${(transferData.id || '').slice(-5).toUpperCase()}`;
+  const reference = `TX-TEREX-${(transferData.id || '').slice(-5).toUpperCase()}`;
   const recipName = transferData.recipient_name || 'Destinataire';
   const initials = recipName
     .split(' ')

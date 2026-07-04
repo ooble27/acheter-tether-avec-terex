@@ -96,7 +96,7 @@ const handler = async (req: Request): Promise<Response> => {
         const orderTypeText = enrichedData.type === 'buy' ? 'Achat USDT' :
                             enrichedData.type === 'sell' ? 'Vente USDT' : 'Transfert International';
         const clientLabel = enrichedData.client_name ? ` · ${enrichedData.client_name}` : '';
-        subject = `🔔 Nouvelle commande ${orderTypeText} — ${Number(enrichedData.amount || 0).toLocaleString('fr-FR')} ${enrichedData.currency || 'CFA'}${clientLabel}`;
+        subject = `Nouvelle commande ${orderTypeText} — ${Number(enrichedData.amount || 0).toLocaleString('fr-FR')} ${enrichedData.currency || 'CFA'}${clientLabel}`;
         emailContent = await renderAsync(
           React.createElement(AdminNotificationEmail, {
             notificationType: 'new_order',
@@ -106,7 +106,7 @@ const handler = async (req: Request): Promise<Response> => {
         break;
 
       case 'kyc_submission':
-        subject = `🆔 Nouvelle vérification KYC — ${data.firstName} ${data.lastName}`;
+        subject = `Nouvelle vérification KYC — ${data.firstName} ${data.lastName}`;
         emailContent = await renderAsync(
           React.createElement(AdminNotificationEmail, {
             notificationType: 'kyc_submission',
@@ -116,7 +116,7 @@ const handler = async (req: Request): Promise<Response> => {
         break;
 
       case 'high_volume_request':
-        subject = `💎 Demande de gros volume — ${data.clientInfo?.firstName} ${data.clientInfo?.lastName} · ${Number(data.clientInfo?.amount || 0).toLocaleString('fr-FR')} CFA`;
+        subject = `Demande de gros volume — ${data.clientInfo?.firstName} ${data.clientInfo?.lastName} · ${Number(data.clientInfo?.amount || 0).toLocaleString('fr-FR')} CFA`;
         emailContent = await renderAsync(
           React.createElement(AdminNotificationEmail, {
             notificationType: 'high_volume_request',
@@ -126,7 +126,7 @@ const handler = async (req: Request): Promise<Response> => {
         break;
 
       case 'status_update':
-        subject = `📊 Mise à jour commande #${data.orderId.slice(-8)} → ${data.newStatus}`;
+        subject = `Mise à jour commande ${data.orderId.slice(-8)} · ${data.newStatus}`;
         emailContent = await renderAsync(
           React.createElement(AdminNotificationEmail, {
             notificationType: 'status_update',

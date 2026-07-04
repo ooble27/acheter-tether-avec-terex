@@ -22,7 +22,7 @@ export function securityAlertHtml({
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td style="padding-right:10px;">
-          <a href="${secureLink}" style="display:inline-block;background-color:${C.green};color:#ffffff;font-family:${F};font-size:13px;font-weight:600;padding:13px 28px;border-radius:8px;text-decoration:none;">Sécuriser mon compte</a>
+          <a href="${secureLink}" style="display:inline-block;background-color:${C.accent};color:${C.accentText};font-family:${F};font-size:13px;font-weight:600;padding:13px 28px;border-radius:8px;text-decoration:none;">Sécuriser mon compte</a>
         </td>
         <td>
           <a href="https://terangaexchange.com/dashboard" class="emuted" style="display:inline-block;background-color:${C.rowBg};color:${C.textMuted};font-family:${F};font-size:13px;font-weight:500;padding:13px 28px;border-radius:8px;text-decoration:none;border:1px solid ${C.border};">C'est moi</a>

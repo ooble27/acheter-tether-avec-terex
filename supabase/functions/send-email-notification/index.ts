@@ -150,7 +150,7 @@ const handler = async (req: Request): Promise<Response> => {
 
         // Notification admin pour nouvelle commande
         try {
-          const adminOrderRef = `#TEREX-${(orderData.id || '').slice(-8).toUpperCase()}`;
+          const adminOrderRef = `TEREX-${(orderData.id || '').slice(-8).toUpperCase()}`;
           const adminTypeLabel = transactionType === 'buy' ? 'Achat USDT' : transactionType === 'sell' ? 'Vente USDT' : 'Commande';
           await resend.emails.send({
             from: "Terex Admin <noreply@terangaexchange.com>",

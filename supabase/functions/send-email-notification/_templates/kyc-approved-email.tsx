@@ -13,7 +13,7 @@ export function kycApprovedHtml({ magicLink, userFirstName, userLastName }: KYCA
     ? `Félicitations ${userFirstName}, votre vérification KYC a été approuvée. Votre compte Terex est maintenant pleinement actif.`
     : 'Votre vérification KYC a été approuvée. Votre compte Terex est maintenant pleinement actif.';
 
-  const C = { green: '#3B968F', text: '#fafafa', textDim: '#3f3f46', border: '#1f1f23', infoBg: '#0e0e0e' };
+  const C = { green: '#ffffff', text: '#fafafa', textDim: '#3f3f46', border: '#1f1f23', infoBg: '#0e0e0e' };
   const F = `-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif`;
 
   const perks = `

@@ -13,6 +13,8 @@ import {
 } from 'npm:@react-email/components@0.0.22'
 import * as React from 'npm:react@18.3.1'
 
+const LOGO = 'https://terangaexchange.com/terex-icon.png'
+
 interface NewsletterEmailProps {
   userName?: string;
   subject: string;
@@ -42,7 +44,16 @@ export const NewsletterEmail = ({
           <table width="100%" cellPadding="0" cellSpacing="0">
             <tr>
               <td>
-                <Text style={logoText}>TEREX</Text>
+                <table cellPadding="0" cellSpacing="0" role="presentation">
+                  <tr>
+                    <td style={{ paddingRight: '10px', verticalAlign: 'middle' }}>
+                      <img src={LOGO} width="24" height="24" alt="Terex" style={{ display: 'block', borderRadius: '5px', border: '0' }} />
+                    </td>
+                    <td style={{ verticalAlign: 'middle' }}>
+                      <Text style={logoText}>TEREX</Text>
+                    </td>
+                  </tr>
+                </table>
               </td>
               <td style={{ textAlign: 'right' }}>
                 <Link href={ctaUrl} style={headerLink}>
@@ -104,7 +115,7 @@ export default NewsletterEmail
 
 // Styles - Clean and simple
 const main = {
-  backgroundColor: '#111111',
+  backgroundColor: '#141414',
   fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
 }
 
@@ -117,13 +128,13 @@ const container = {
 const header = {
   backgroundColor: '#1a1a1a',
   padding: '20px 30px',
-  borderBottom: '1px solid #333',
+  borderBottom: '1px solid #2c2c2c',
 }
 
 const logoText = {
   fontSize: '24px',
   fontWeight: 'bold',
-  color: '#0FA958',
+  color: '#ffffff',
   margin: '0',
   letterSpacing: '2px',
 }
@@ -132,7 +143,7 @@ const headerLink = {
   color: '#ffffff',
   fontSize: '14px',
   textDecoration: 'none',
-  border: '1px solid #444',
+  border: '1px solid #2c2c2c',
   padding: '8px 16px',
   borderRadius: '4px',
 }
@@ -169,9 +180,9 @@ const ctaSection = {
 }
 
 const ctaButton = {
-  backgroundColor: '#0FA958',
+  backgroundColor: '#ffffff',
   borderRadius: '6px',
-  color: '#ffffff',
+  color: '#141414',
   fontSize: '16px',
   fontWeight: '600',
   padding: '16px 32px',
@@ -187,12 +198,12 @@ const supportText = {
 }
 
 const divider = {
-  borderColor: '#333',
+  borderColor: '#2c2c2c',
   margin: '0',
 }
 
 const footer = {
-  backgroundColor: '#111111',
+  backgroundColor: '#141414',
   padding: '30px',
   textAlign: 'center' as const,
 }
@@ -200,7 +211,7 @@ const footer = {
 const footerLogo = {
   fontSize: '20px',
   fontWeight: 'bold',
-  color: '#0FA958',
+  color: '#ffffff',
   margin: '0 0 20px 0',
   letterSpacing: '2px',
 }

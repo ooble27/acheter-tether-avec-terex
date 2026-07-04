@@ -24,16 +24,16 @@ body, html {
 /* Override light mode — keep email always dark */
 @media (prefers-color-scheme: light) {
   body, html { background-color: #141414 !important; }
-  .t-bg    { background-color: #141414 !important; }
-  .t-card  { background-color: #141414 !important; border-color: #1f1f23 !important; }
-  .t-bar   { background-color: #0e0e0e !important; border-color: #1f1f23 !important; }
-  .t-row   { background-color: #1a1a1a !important; }
-  .t-foot  { background-color: #0e0e0e !important; }
-  .t-infocard { background-color: #0e0e0e !important; border-color: #1f1f23 !important; }
-  .t-text  { color: #fafafa !important; }
-  .t-muted { color: #71717a !important; }
-  .t-dim   { color: #3f3f46 !important; }
-  .t-green { color: #3B968F !important; }
+  .t-bg    { background-color: #1a1a1a !important; }
+  .t-card  { background-color: #1a1a1a !important; border-color: #2c2c2c !important; }
+  .t-bar   { background-color: #161616 !important; border-color: #2c2c2c !important; }
+  .t-row   { background-color: #242424 !important; }
+  .t-foot  { background-color: #161616 !important; }
+  .t-infocard { background-color: #1e1e1e !important; border-color: #2c2c2c !important; }
+  .t-text  { color: #f5f5f5 !important; }
+  .t-muted { color: #a1a1a1 !important; }
+  .t-dim   { color: #6e6e6e !important; }
+  .t-green { color: #ffffff !important; }
 }
 /* ── Mobile responsive ── */
 @media only screen and (max-width: 620px) {
@@ -46,7 +46,7 @@ body, html {
   .t-btn-wrap { padding-left: 16px !important; padding-right: 16px !important; }
   .t-h1   { font-size: 20px !important; }
   .t-otp  { font-size: 28px !important; letter-spacing: 6px !important; }
-  .t-stat-col { display: block !important; width: 100% !important; border-right: none !important; border-bottom: 1px solid #1f1f23 !important; }
+  .t-stat-col { display: block !important; width: 100% !important; border-right: none !important; border-bottom: 1px solid #2c2c2c !important; }
   .t-stat-last { border-bottom: none !important; }
   .t-inforow td { padding: 10px 14px !important; }
   .t-topbar { padding: 14px 16px !important; }
@@ -56,27 +56,28 @@ body, html {
 `;
 
 
-// Palette Terex — moodboard dark premium (zinc + Tether green)
+// Palette Terex — dark neutre premium (aligné au design system du site, aucun vert)
 export const TEREX = {
-  green: '#3B968F',
-  greenDark: '#2d726c',
-  greenBg: '#0b1f1e',
-  pageBg: '#050507',
-  bg: '#0e0e0e',
-  surface: '#141414',
-  surface2: '#1a1a1a',
-  border: '#1f1f23',
-  borderSoft: '#111111',
-  text: '#fafafa',
-  textMuted: '#71717a',
-  textDim: '#3f3f46',
+  green: '#ffffff',      // (clé conservée pour compat) = accent d'emphase blanc
+  greenDark: '#e5e5e5',
+  greenBg: '#242424',    // fond « success » neutre
+  accentText: '#141414', // texte sur accent blanc
+  pageBg: '#141414',
+  bg: '#161616',
+  surface: '#1a1a1a',
+  surface2: '#1e1e1e',
+  border: '#2c2c2c',
+  borderSoft: '#202020',
+  text: '#f5f5f5',
+  textMuted: '#a1a1a1',
+  textDim: '#6e6e6e',
   white: '#ffffff',
   red: '#f87171',
   amber: '#fbbf24',
   blue: '#60a5fa',
 };
 
-const LOGO_URL = 'https://terangaexchange.com/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png';
+const LOGO_URL = 'https://terangaexchange.com/terex-icon.png';
 
 interface BaseEmailProps {
   preview: string;
@@ -229,7 +230,7 @@ export const NoticeBox: React.FC<{ children: React.ReactNode; tone?: 'neutral' |
   const toneStyle: React.CSSProperties = (() => {
     switch (tone) {
       case 'success':
-        return { background: TEREX.greenBg, borderColor: 'rgba(59,150,143,0.25)', color: TEREX.text };
+        return { background: TEREX.greenBg, borderColor: 'rgba(255,255,255,0.14)', color: TEREX.text };
       case 'warning':
         return { background: '#1f1a08', borderColor: '#3a2f0f', color: '#f4d77a' };
       case 'danger':
@@ -336,7 +337,7 @@ const infoLabel: React.CSSProperties = {
 const primaryBtn: React.CSSProperties = {
   display: 'inline-block',
   background: TEREX.green,
-  color: '#ffffff',
+  color: TEREX.accentText,
   fontSize: '13px',
   fontWeight: 600,
   padding: '13px 32px',
@@ -449,7 +450,7 @@ export const StatusPill: React.FC<{ label: string; tone?: 'success' | 'warning' 
   tone = 'success',
 }) => {
   const map = {
-    success: { color: TEREX.green, bg: TEREX.greenBg, border: 'rgba(38,161,123,0.25)' },
+    success: { color: TEREX.green, bg: TEREX.greenBg, border: 'rgba(255,255,255,0.18)' },
     warning: { color: TEREX.amber, bg: '#1f1a08', border: '#3a2f0f' },
     danger: { color: TEREX.red, bg: '#1f0d0e', border: '#3a1517' },
     neutral: { color: TEREX.textMuted, bg: TEREX.surface2, border: TEREX.border },

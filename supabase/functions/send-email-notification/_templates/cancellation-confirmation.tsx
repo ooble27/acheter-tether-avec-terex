@@ -9,7 +9,7 @@ interface CancellationConfirmationProps {
 export function cancellationConfirmationHtml({ orderData, transactionType, clientName }: CancellationConfirmationProps): string {
   const typeLabel = transactionType === 'buy' ? 'achat' : transactionType === 'sell' ? 'vente' : 'transfert';
   const typeLabelCap = typeLabel.charAt(0).toUpperCase() + typeLabel.slice(1);
-  const reference = `#TEREX-${(orderData.id || '').slice(-8).toUpperCase() || 'N/A'}`;
+  const reference = `TEREX-${(orderData.id || '').slice(-8).toUpperCase() || 'N/A'}`;
   const dateStr = new Date(orderData.updated_at || orderData.cancelled_at || Date.now())
     .toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' });
   const amount = Number(orderData.amount || 0).toLocaleString('fr-FR');

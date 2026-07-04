@@ -31,8 +31,8 @@ function keyBlock(label: string, value: string, sub?: string, color = C.green): 
 
 /* Étape numérotée avec design soigné */
 function step(num: number, emoji: string, title: string, content: string, done = false): string {
-  const numBg   = done ? C.green            : num === 1 ? C.amber : C.green;
-  const numText = done ? '#fff'             : '#fff';
+  const numBg   = done ? C.accent           : num === 1 ? C.amber : C.accent;
+  const numText = '#141414';
   return `
 <tr>
   <td style="padding:0 20px 14px;">
@@ -51,7 +51,7 @@ function step(num: number, emoji: string, title: string, content: string, done =
               </td>
               <td style="padding-left:12px;vertical-align:middle;">
                 <p style="font-family:${F};font-size:14px;font-weight:700;color:${C.text};
-                   margin:0;line-height:1.2;">${emoji}&nbsp; ${title}</p>
+                   margin:0;line-height:1.2;">${emoji ? `${emoji}&nbsp; ` : ''}${title}</p>
               </td>
             </tr>
           </table>
@@ -74,8 +74,8 @@ export function adminNewOrderHtml({ orderData, transactionType, clientName, clie
   const isSell = transactionType === 'sell';
 
   const typeLabel = isBuy ? 'Achat USDT' : isSell ? 'Vente USDT' : 'Virement';
-  const typeBadge = isBuy ? '🟢 ACHAT' : isSell ? '🔴 VENTE' : '🔵 VIREMENT';
-  const reference = `#TEREX-${(orderData.id || '').slice(-8).toUpperCase() || 'N/A'}`;
+  const typeBadge = isBuy ? 'ACHAT' : isSell ? 'VENTE' : 'VIREMENT';
+  const reference = `TEREX-${(orderData.id || '').slice(-8).toUpperCase() || 'N/A'}`;
   const dateStr   = new Date(orderData.created_at || Date.now()).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' });
   const amount    = Number(orderData.amount || 0).toLocaleString('fr-FR');
   const usdt      = Number(orderData.usdt_amount || 0).toLocaleString('fr-FR');
@@ -95,15 +95,15 @@ export function adminNewOrderHtml({ orderData, transactionType, clientName, clie
   /* ── HEADER PREMIUM ─────────────────────────────────────────────────────── */
   const header = `
 <tr>
-  <td style="background:linear-gradient(150deg,#0b1a19 0%,#060e0d 100%);padding:0;">
+  <td style="background:linear-gradient(150deg,#1a1a1a 0%,#141414 100%);padding:0;">
     <!-- bande colorée top -->
     <div style="height:4px;background:linear-gradient(90deg,${C.green},${C.green}88,transparent);"></div>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td style="padding:28px 24px 24px;">
           <!-- badge type -->
-          <div style="display:inline-block;background:${isBuy ? 'rgba(59,150,143,0.15)' : isSell ? 'rgba(248,113,113,0.12)' : 'rgba(96,165,250,0.12)'};
-            border:1px solid ${isBuy ? 'rgba(59,150,143,0.35)' : isSell ? 'rgba(248,113,113,0.3)' : 'rgba(96,165,250,0.3)'};
+          <div style="display:inline-block;background:${isBuy ? 'rgba(255,255,255,0.08)' : isSell ? 'rgba(248,113,113,0.12)' : 'rgba(96,165,250,0.12)'};
+            border:1px solid ${isBuy ? 'rgba(255,255,255,0.18)' : isSell ? 'rgba(248,113,113,0.3)' : 'rgba(96,165,250,0.3)'};
             border-radius:100px;padding:5px 14px;margin-bottom:16px;">
             <span style="font-family:${F};font-size:11px;font-weight:700;letter-spacing:0.08em;
               color:${isBuy ? C.green : isSell ? '#f87171' : '#60a5fa'};">${typeBadge}</span>
@@ -183,15 +183,15 @@ export function adminNewOrderHtml({ orderData, transactionType, clientName, clie
 
   if (isBuy) {
     steps =
-      step(1, '🔍', 'Vérifier le paiement reçu',
+      step(1, '', 'Vérifier le paiement reçu',
         keyBlock(`${providerName} · Numéro`, phone, undefined, C.amber) +
         keyBlock('Montant à confirmer', `${amount} ${currency}`, `Taux : ${rate} ${currency}/USDT`, C.amber)
       ) +
-      step(2, '📤', 'Envoyer les USDT au client',
+      step(2, '', 'Envoyer les USDT au client',
         keyBlock('Montant à envoyer', `${usdt} USDT`, `Réseau : ${network}`, C.green) +
         (wallet ? keyBlock('Adresse de destination', wallet, 'Copiez cette adresse exactement — réseau ' + network, C.green) : '')
       ) +
-      step(3, '✅', 'Finaliser dans le dashboard',
+      step(3, '', 'Finaliser dans le dashboard',
         `<p style="font-family:${F};font-size:13px;color:${C.textMuted};margin:0;line-height:1.65;">
           Marquez <strong style="font-family:${FM};color:${C.text};font-size:12px;">${reference}</strong>
           comme <strong style="color:${C.green};">Finalisée</strong>.
@@ -200,14 +200,14 @@ export function adminNewOrderHtml({ orderData, transactionType, clientName, clie
       );
   } else if (isSell) {
     steps =
-      step(1, '🔍', 'Vérifier la réception des USDT',
+      step(1, '', 'Vérifier la réception des USDT',
         keyBlock('USDT à recevoir', `${usdt} USDT`, `Réseau : ${network}`, C.amber)
       ) +
-      step(2, '💸', 'Verser les fonds au client',
+      step(2, '', 'Verser les fonds au client',
         keyBlock(`${providerName} · Numéro à créditer`, phone, undefined, C.green) +
         keyBlock('Montant à verser', `${amount} ${currency}`, `Taux : ${rate} ${currency}/USDT`, C.green)
       ) +
-      step(3, '✅', 'Finaliser dans le dashboard',
+      step(3, '', 'Finaliser dans le dashboard',
         `<p style="font-family:${F};font-size:13px;color:${C.textMuted};margin:0;line-height:1.65;">
           Marquez <strong style="font-family:${FM};color:${C.text};font-size:12px;">${reference}</strong>
           comme <strong style="color:${C.green};">Finalisée</strong>.
@@ -216,16 +216,16 @@ export function adminNewOrderHtml({ orderData, transactionType, clientName, clie
       );
   } else {
     steps =
-      step(1, '🔍', 'Vérifier la demande',
+      step(1, '', 'Vérifier la demande',
         keyBlock('Montant', `${amount} ${currency}`, '', C.amber) +
         keyBlock('Destinataire', orderData.recipient_name || 'N/A', '', C.amber)
       ) +
-      step(2, '📤', 'Effectuer le virement',
+      step(2, '', 'Effectuer le virement',
         `<p style="font-family:${F};font-size:13px;color:${C.textMuted};margin:0;line-height:1.65;">
           Procédez au virement selon les informations renseignées par le client dans le dashboard.
         </p>`
       ) +
-      step(3, '✅', 'Confirmer et finaliser',
+      step(3, '', 'Confirmer et finaliser',
         `<p style="font-family:${F};font-size:13px;color:${C.textMuted};margin:0;line-height:1.65;">
           Marquez <strong style="font-family:${FM};color:${C.text};font-size:12px;">${reference}</strong>
           comme <strong style="color:${C.green};">Finalisée</strong>.

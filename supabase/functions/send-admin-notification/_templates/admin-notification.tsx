@@ -23,18 +23,18 @@ interface AdminNotificationEmailProps {
 
 // Palette dark premium (alignée sur les emails clients)
 const T = {
-  green: '#3B968F',
-  greenSoft: '#1F2D2C',
-  bg: '#0F1411',
-  surface: '#161D1B',
-  surfaceAlt: '#1B2422',
-  border: '#243029',
-  borderSoft: '#1F2926',
-  text: '#F1F5F4',
-  textSoft: '#B8C2BF',
-  textMuted: '#7C8783',
+  green: '#ffffff',
+  greenSoft: '#1e1e1e',
+  bg: '#141414',
+  surface: '#1a1a1a',
+  surfaceAlt: '#1e1e1e',
+  border: '#2c2c2c',
+  borderSoft: '#202020',
+  text: '#f5f5f5',
+  textSoft: '#c8c8c8',
+  textMuted: '#8a8a8a',
   white: '#ffffff',
-  buy: '#3B968F',
+  buy: '#ffffff',
   sell: '#E8A93C',
   transfer: '#5BA8F2',
   kyc: '#E8C547',
@@ -42,7 +42,7 @@ const T = {
   status: '#7DD3FC',
 };
 
-const LOGO_URL = 'https://terangaexchange.com/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png';
+const LOGO_URL = 'https://terangaexchange.com/terex-icon.png';
 
 export const AdminNotificationEmail = ({ notificationType, data }: AdminNotificationEmailProps) => {
   // Configuration par type de notification
@@ -96,7 +96,7 @@ export const AdminNotificationEmail = ({ notificationType, data }: AdminNotifica
           };
 
       transactionSection = [
-        { label: 'Référence', value: `#TEREX-${(data.id || data.orderId || '').toString().slice(-8) || 'N/A'}`, mono: true },
+        { label: 'Référence', value: `TEREX-${(data.id || data.orderId || '').toString().slice(-8) || 'N/A'}`, mono: true },
         { label: 'Type', value: isBuy ? 'Achat USDT' : isSell ? 'Vente USDT' : 'Transfert international' },
         { label: 'Montant', value: formatMoney(data.amount, data.currency), accent: true },
         { label: 'USDT', value: `${data.usdtAmount || data.usdt_amount || (isTransfer ? '—' : 'N/A')} ${isTransfer ? '' : 'USDT'}`.trim() },
@@ -190,10 +190,10 @@ export const AdminNotificationEmail = ({ notificationType, data }: AdminNotifica
       badgeColor = T.status;
       title = 'Statut de commande mis à jour';
       subtitle = `La commande a été mise à jour de "${formatStatus(data.oldStatus)}" vers "${formatStatus(data.newStatus)}".`;
-      preview = `Commande #${data.orderId?.slice(-8)} → ${data.newStatus}`;
+      preview = `Commande ${data.orderId?.slice(-8)} · ${data.newStatus}`;
 
       transactionSection = [
-        { label: 'Référence', value: `#TEREX-${data.orderId?.slice(-8) || 'N/A'}`, mono: true },
+        { label: 'Référence', value: `TEREX-${data.orderId?.slice(-8) || 'N/A'}`, mono: true },
         { label: 'Ancien statut', value: formatStatus(data.oldStatus) },
         { label: 'Nouveau statut', value: formatStatus(data.newStatus) },
         { label: 'Mis à jour le', value: formatDate(new Date().toISOString()) },
@@ -534,7 +534,7 @@ const urgentText = { color: '#F5DC8B', fontSize: '13px', margin: '0', lineHeight
 
 const ctaButton = {
   display: 'inline-block' as const,
-  color: '#0F1411',
+  color: '#141414',
   fontSize: '14px',
   fontWeight: '700' as const,
   textDecoration: 'none' as const,

@@ -8,7 +8,7 @@ interface OrderConfirmationProps {
 
 export function orderConfirmationHtml({ orderData, transactionType, clientName }: OrderConfirmationProps): string {
   const isBuy = transactionType === 'buy';
-  const reference = `#TEREX-${(orderData.id || '').slice(-8).toUpperCase() || 'N/A'}`;
+  const reference = `TEREX-${(orderData.id || '').slice(-8).toUpperCase() || 'N/A'}`;
   const dateStr = new Date(orderData.created_at || Date.now()).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' });
 
   let clientInfo: any = null;

@@ -15,7 +15,7 @@ const STATUS_META: Record<string, { label: string; tone: 'success' | 'warning' |
 
 export function statusUpdateHtml({ orderData, transactionType, clientName }: StatusUpdateProps): string {
   const meta = STATUS_META[orderData.status] || { label: orderData.status || 'Mise à jour', tone: 'neutral' as const };
-  const reference = `#TEREX-${(orderData.id || '').slice(-8).toUpperCase() || 'N/A'}`;
+  const reference = `TEREX-${(orderData.id || '').slice(-8).toUpperCase() || 'N/A'}`;
   const isTransfer = transactionType === 'transfer';
   const objectName = isTransfer ? 'transfert international'
     : transactionType === 'buy' ? 'achat USDT'
