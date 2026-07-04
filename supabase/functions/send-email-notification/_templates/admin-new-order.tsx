@@ -32,7 +32,7 @@ function keyBlock(label: string, value: string, sub?: string, color = C.green): 
 /* Étape numérotée avec design soigné */
 function step(num: number, emoji: string, title: string, content: string, done = false): string {
   const numBg   = done ? C.accent           : num === 1 ? C.amber : C.accent;
-  const numText = '#141414';
+  const numText = '#191919';
   return `
 <tr>
   <td style="padding:0 20px 14px;">
@@ -110,7 +110,7 @@ export function adminNewOrderHtml({ orderData, transactionType, clientName, clie
           </div>
           <!-- ref + titre -->
           <p style="font-family:${FM};font-size:12px;color:${C.textDim};margin:0 0 8px 0;">${reference}</p>
-          <p style="font-family:${F};font-size:28px;font-weight:900;color:#fff;margin:0 0 6px 0;line-height:1.1;">
+          <p style="font-family:${F};font-size:28px;font-weight:900;color:#f5f5f5;margin:0 0 6px 0;line-height:1.1;">
             Nouvelle commande
           </p>
           <p style="font-family:${F};font-size:13px;color:${C.textMuted};margin:0;">
@@ -141,7 +141,7 @@ export function adminNewOrderHtml({ orderData, transactionType, clientName, clie
         <td style="padding:20px;width:50%;border-right:1px solid ${C.border};vertical-align:middle;">
           <p style="font-family:${F};font-size:9px;font-weight:700;letter-spacing:0.12em;
              text-transform:uppercase;color:${C.textDim};margin:0 0 8px 0;">${payLabel}</p>
-          <p style="font-family:${FM};font-size:22px;font-weight:900;color:#fff;margin:0;line-height:1;">${payVal}</p>
+          <p style="font-family:${FM};font-size:22px;font-weight:900;color:#f5f5f5;margin:0;line-height:1;">${payVal}</p>
           <p style="font-family:${F};font-size:11px;color:${C.textMuted};margin:6px 0 0 0;">${paySub}</p>
         </td>
         <!-- droite -->

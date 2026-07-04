@@ -1,10 +1,13 @@
 // HTML email utilities — pure table-based, always-dark, works in Gmail / Apple Mail / Outlook
 
 export const C = {
-  // Accent neutre — blanc (aligné au design system du site, aucun vert)
-  green:      '#ffffff',   // (clé conservée pour compat) = accent d'emphase blanc
-  accent:     '#ffffff',
-  accentText: '#141414',   // texte sur bouton blanc
+  // Accent neutre. IMPORTANT : jamais de #ffffff / #000 purs — Gmail (mode sombre)
+  // inverse les valeurs PURES de façon incohérente (texte blanc → noir invisible).
+  // Des valeurs « presque blanches / presque noires » s'inversent proprement AVEC
+  // leur fond → l'email reste lisible que Gmail l'affiche sombre ou l'inverse.
+  green:      '#f5f5f5',   // (clé conservée pour compat) = accent d'emphase clair
+  accent:     '#f4f4f4',   // fond bouton (quasi-blanc, s'inverse proprement)
+  accentText: '#191919',   // texte sur bouton (quasi-noir, s'inverse proprement)
   pageBg:     '#141414',
   cardBg:     '#1a1a1a',
   footerBg:   '#161616',
@@ -39,7 +42,7 @@ html,body{margin:0;padding:0;background-color:#141414 !important;color:#f5f5f5 !
   .etxt{color:#f5f5f5 !important;}
   .emuted{color:#a1a1a1 !important;}
   .edim{color:#6e6e6e !important;}
-  .egreen{color:#ffffff !important;}
+  .egreen{color:#f5f5f5 !important;}
   .ered{color:#f87171 !important;}
 }
 /* dark system → surfaces sombres forcées, texte clair (jamais de texte sombre sur carte sombre) */
@@ -52,7 +55,7 @@ html,body{margin:0;padding:0;background-color:#141414 !important;color:#f5f5f5 !
   .etxt{color:#f5f5f5 !important;}
   .emuted{color:#a1a1a1 !important;}
   .edim{color:#6e6e6e !important;}
-  .egreen{color:#ffffff !important;}
+  .egreen{color:#f5f5f5 !important;}
   .ered{color:#f87171 !important;}
 }
 /* Gmail Android [data-ogsc] — on re-force surfaces sombres + texte clair après l'inversion Gmail */
@@ -66,7 +69,7 @@ html,body{margin:0;padding:0;background-color:#141414 !important;color:#f5f5f5 !
 [data-ogsc] .etxt,[data-ogsb] .etxt{color:#f5f5f5 !important;}
 [data-ogsc] .emuted,[data-ogsb] .emuted{color:#a1a1a1 !important;}
 [data-ogsc] .edim,[data-ogsb] .edim{color:#6e6e6e !important;}
-[data-ogsc] .egreen,[data-ogsb] .egreen{color:#ffffff !important;}
+[data-ogsc] .egreen,[data-ogsb] .egreen{color:#f5f5f5 !important;}
 [data-ogsc] .ered,[data-ogsb] .ered{color:#f87171 !important;}
 [data-ogsc] .einfo,[data-ogsb] .einfo{border-color:#2c2c2c !important;}
 /* Mobile */
