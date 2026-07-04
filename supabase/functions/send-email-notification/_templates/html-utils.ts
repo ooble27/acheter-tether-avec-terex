@@ -82,17 +82,25 @@ html,body{margin:0;padding:0;background-color:#141414 !important;color:#f5f5f5 !
 }
 `;
 
-// ─── Header ─── clean TEREX only, no right text ───────────────────────────────
-export function header(): string {
+
+// ─── Header ─── logo tile + wordmark + statut optionnel à droite ──────────────
+export function header(right?: string): string {
   return `
 <tr bgcolor="${C.cardBg}">
   <td class="ecard" bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:20px 28px;border-bottom:1px solid ${C.borderSoft};">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr bgcolor="${C.cardBg}">
-        <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};vertical-align:middle;">
-          <img src="${LOGO}" width="24" height="24" alt="" style="display:inline-block;vertical-align:middle;border-radius:5px;margin-right:10px;border:0;">
-          <span class="egreen" style="font-family:${F};font-size:13px;font-weight:800;letter-spacing:5px;color:${C.green};vertical-align:middle;text-transform:uppercase;">TEREX</span>
+      <tr>
+        <td style="vertical-align:middle;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td style="vertical-align:middle;padding-right:11px;">
+              <img src="${LOGO}" width="40" height="40" alt="Terex" style="display:block;width:40px;height:40px;border-radius:11px;border:1px solid ${C.border};">
+            </td>
+            <td style="vertical-align:middle;">
+              <span class="etxt" style="font-family:${F};font-size:18px;font-weight:700;letter-spacing:-0.02em;color:${C.text};">Terex</span>
+            </td>
+          </tr></table>
         </td>
+        ${right ? `<td class="mhide" style="vertical-align:middle;text-align:right;">${right}</td>` : ''}
       </tr>
     </table>
   </td>
@@ -104,19 +112,19 @@ export function footer(note = "Vous avez reçu cet email suite à une activité 
   const yr = new Date().getFullYear();
   return `
 <tr bgcolor="${C.footerBg}">
-  <td class="efooter" bgcolor="${C.footerBg}" style="background-color:${C.footerBg};padding:28px;border-top:1px solid ${C.borderSoft};">
+  <td class="efooter" bgcolor="${C.footerBg}" style="background-color:${C.footerBg};padding:28px 32px;border-top:1px solid ${C.borderSoft};">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr bgcolor="${C.footerBg}">
         <td bgcolor="${C.footerBg}" style="background-color:${C.footerBg};">
-          <p class="egreen" style="font-family:${F};font-size:11px;font-weight:800;letter-spacing:4px;color:${C.green};margin:0 0 12px 0;text-transform:uppercase;">TEREX</p>
-          <p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};line-height:1.8;margin:0 0 4px 0;">${note}</p>
-          <p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};line-height:1.8;margin:0 0 14px 0;">© ${yr} Teranga Exchange — Tous droits réservés.</p>
-          <p style="font-family:${F};font-size:11px;margin:0;">
-            <a href="${BASE}/privacy" class="edim" style="color:${C.textDim};text-decoration:none;">Confidentialité</a>
+          <p class="etxt" style="font-family:${F};font-size:15px;font-weight:700;letter-spacing:-0.02em;color:${C.text};margin:0 0 10px 0;">Terex</p>
+          <p class="edim" style="font-family:${F};font-size:11.5px;color:${C.textDim};line-height:1.7;margin:0 0 4px 0;">${note}</p>
+          <p class="edim" style="font-family:${F};font-size:11.5px;color:${C.textDim};line-height:1.7;margin:0 0 16px 0;">© ${yr} Teranga Exchange — Tous droits réservés.</p>
+          <p style="font-family:${F};font-size:11.5px;margin:0;">
+            <a href="${BASE}/privacy" class="emuted" style="color:${C.textMuted};text-decoration:none;">Confidentialité</a>
             <span class="edim" style="color:${C.textDim};"> · </span>
-            <a href="${BASE}/help" class="edim" style="color:${C.textDim};text-decoration:none;">Aide</a>
+            <a href="${BASE}/help" class="emuted" style="color:${C.textMuted};text-decoration:none;">Centre d'aide</a>
             <span class="edim" style="color:${C.textDim};"> · </span>
-            <a href="${BASE}" class="edim" style="color:${C.textDim};text-decoration:none;">terangaexchange.com</a>
+            <a href="${BASE}" class="emuted" style="color:${C.textMuted};text-decoration:none;">terangaexchange.com</a>
           </p>
         </td>
       </tr>
@@ -134,71 +142,76 @@ export function hero(opts: {
   subtitle?: string;
   iconHtml?: string;
 }): string {
+  const centered = !!opts.iconHtml;
+  const align = centered ? 'center' : 'left';
   return `
 <tr bgcolor="${C.cardBg}">
-  <td class="ecard mpad" bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:40px 28px 32px;">
-    ${opts.iconHtml ? `<div style="margin-bottom:22px;">${opts.iconHtml}</div>` : ''}
-    ${opts.eyebrow ? `<p class="egreen" style="font-family:${F};font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:${C.green};margin:0 0 16px 0;">${opts.eyebrow}</p>` : ''}
-    ${opts.reference ? `<p class="edim" style="font-family:${FM};font-size:10px;color:${C.textDim};letter-spacing:1px;text-transform:uppercase;margin:0 0 14px 0;">${opts.reference}</p>` : ''}
-    <h1 class="mh1 etxt" style="font-family:${F};font-size:26px;font-weight:700;color:${C.text};line-height:1.3;margin:0 0 10px 0;">${opts.title}</h1>
-    ${opts.date ? `<p class="edim" style="font-family:${F};font-size:12px;color:${C.textDim};margin:0 0 10px 0;">${opts.date}</p>` : ''}
-    ${opts.subtitle ? `<p class="emuted" style="font-family:${F};font-size:13px;color:${C.textMuted};line-height:1.75;margin:10px 0 0 0;">${opts.subtitle}</p>` : ''}
+  <td class="ecard mpad" bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:${centered ? '44px 32px 26px' : '40px 32px 28px'};text-align:${align};">
+    ${opts.iconHtml ? `<table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 22px;"><tr><td>${opts.iconHtml}</td></tr></table>` : ''}
+    ${opts.eyebrow ? `<p class="edim" style="font-family:${F};font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${C.textDim};margin:0 0 16px 0;">${opts.eyebrow}</p>` : ''}
+    <h1 class="mh1 etxt" style="font-family:${F};font-size:27px;font-weight:700;letter-spacing:-0.02em;color:${C.text};line-height:1.25;margin:0 0 12px 0;">${opts.title}</h1>
+    ${opts.subtitle ? `<p class="emuted" style="font-family:${F};font-size:15px;color:${C.textMuted};line-height:1.65;margin:0;">${opts.subtitle}</p>` : ''}
+    ${opts.date ? `<p class="edim" style="font-family:${F};font-size:12px;color:${C.textDim};margin:12px 0 0 0;">${opts.date}</p>` : ''}
+    ${opts.reference ? `<p class="edim" style="font-family:${FM};font-size:10.5px;color:${C.textDim};letter-spacing:0.5px;margin:${opts.date ? '6px' : '12px'} 0 0 0;">${opts.reference}</p>` : ''}
   </td>
 </tr>`;
 }
 
-// ─── Summary bar (3 cols) ──────────────────────────────────────────────────────
+// ─── Summary bar — carte arrondie, colonnes ────────────────────────────────────
 export function summaryBar(cols: Array<{ label: string; value: string; sub?: string; green?: boolean }>): string {
   const w = Math.floor(100 / cols.length);
   const cells = cols.map((c, i) => `
-    <td class="scol${i === cols.length - 1 ? ' scol-last' : ''} ebar" bgcolor="${C.footerBg}"
-      style="background-color:${C.footerBg};padding:18px 20px;vertical-align:top;width:${w}%;${i < cols.length - 1 ? `border-right:1px solid ${C.border};` : ''}">
-      <p class="edim" style="font-family:${F};font-size:9px;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};margin:0 0 7px 0;">${c.label}</p>
-      <p class="${c.green ? 'egreen' : 'etxt'}" style="font-family:${F};font-size:18px;font-weight:700;color:${c.green ? C.green : C.text};margin:0;line-height:1.2;">${c.value}</p>
-      ${c.sub ? `<p class="edim" style="font-family:${F};font-size:10px;color:${C.textDim};margin:4px 0 0 0;">${c.sub}</p>` : ''}
+    <td class="scol${i === cols.length - 1 ? ' scol-last' : ''}" style="padding:20px 22px;vertical-align:top;width:${w}%;${i < cols.length - 1 ? `border-right:1px solid ${C.border};` : ''}">
+      <p class="edim" style="font-family:${F};font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:${C.textDim};margin:0 0 8px 0;">${c.label}</p>
+      <p class="${c.green ? 'egreen' : 'etxt'}" style="font-family:${F};font-size:21px;font-weight:700;letter-spacing:-0.02em;color:${c.green ? C.white : C.text};margin:0;line-height:1.15;">${c.value}</p>
+      ${c.sub ? `<p class="edim" style="font-family:${F};font-size:10.5px;color:${C.textDim};margin:6px 0 0 0;">${c.sub}</p>` : ''}
     </td>`).join('');
   return `
-<tr>
-  <td class="ebar" bgcolor="${C.footerBg}" style="background-color:${C.footerBg};border-top:1px solid ${C.border};border-bottom:1px solid ${C.border};padding:0;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+<tr bgcolor="${C.cardBg}">
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:16px;overflow:hidden;border-collapse:separate;border-spacing:0;">
       <tr>${cells}</tr>
     </table>
   </td>
 </tr>`;
 }
 
-// ─── Flow bar (transaction arrow: from → to) ──────────────────────────────────
+// ─── Flow bar — de → vers, dans une carte arrondie ────────────────────────────
 export function flowBar(
   from: { label: string; amount: string; sub?: string },
   to:   { label: string; amount: string; sub?: string },
   rate?: string
 ): string {
   return `
-<tr>
-  <td class="ebar" bgcolor="${C.footerBg}" style="background-color:${C.footerBg};border-top:1px solid ${C.border};border-bottom:1px solid ${C.border};padding:0;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+<tr bgcolor="${C.cardBg}">
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:16px;overflow:hidden;border-collapse:separate;border-spacing:0;">
       <tr>
-        <td class="scol ebar" bgcolor="${C.footerBg}" style="background-color:${C.footerBg};padding:22px 20px;vertical-align:middle;width:44%;border-right:1px solid ${C.border};">
-          <p class="edim" style="font-family:${F};font-size:9px;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};margin:0 0 7px 0;">${from.label}</p>
-          <p class="etxt" style="font-family:${F};font-size:20px;font-weight:700;color:${C.text};margin:0;line-height:1.2;">${from.amount}</p>
-          ${from.sub ? `<p class="edim" style="font-family:${F};font-size:10px;color:${C.textDim};margin:5px 0 0 0;">${from.sub}</p>` : ''}
+        <td class="scol" style="padding:22px 22px;vertical-align:middle;width:43%;">
+          <p class="edim" style="font-family:${F};font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:${C.textDim};margin:0 0 8px 0;">${from.label}</p>
+          <p class="etxt" style="font-family:${F};font-size:21px;font-weight:700;letter-spacing:-0.02em;color:${C.text};margin:0;line-height:1.15;">${from.amount}</p>
+          ${from.sub ? `<p class="edim" style="font-family:${F};font-size:10.5px;color:${C.textDim};margin:6px 0 0 0;">${from.sub}</p>` : ''}
         </td>
-        <td class="mhide" style="padding:22px 12px;text-align:center;vertical-align:middle;width:12%;">
-          <p class="egreen" style="font-family:${F};font-size:22px;font-weight:700;color:${C.green};margin:0;line-height:1;">→</p>
-          ${rate ? `<p class="edim" style="font-family:${F};font-size:9px;color:${C.textDim};margin:5px 0 0 0;white-space:nowrap;">${rate}</p>` : ''}
+        <td class="mhide" style="padding:22px 8px;text-align:center;vertical-align:middle;width:44px;">
+          <span class="emuted" style="font-family:${F};font-size:20px;color:${C.textMuted};line-height:1;">&rarr;</span>
         </td>
-        <td class="scol scol-last ebar" bgcolor="${C.footerBg}" style="background-color:${C.footerBg};padding:22px 20px;vertical-align:middle;width:44%;text-align:right;">
-          <p class="edim" style="font-family:${F};font-size:9px;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};margin:0 0 7px 0;text-align:right;">${to.label}</p>
-          <p class="egreen" style="font-family:${F};font-size:20px;font-weight:700;color:${C.green};margin:0;line-height:1.2;text-align:right;">${to.amount}</p>
-          ${to.sub ? `<p class="edim" style="font-family:${F};font-size:10px;color:${C.textDim};margin:5px 0 0 0;text-align:right;">${to.sub}</p>` : ''}
+        <td class="scol scol-last" style="padding:22px 22px;vertical-align:middle;width:43%;text-align:right;">
+          <p class="edim" style="font-family:${F};font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:${C.textDim};margin:0 0 8px 0;text-align:right;">${to.label}</p>
+          <p class="egreen" style="font-family:${F};font-size:21px;font-weight:700;letter-spacing:-0.02em;color:${C.white};margin:0;line-height:1.15;text-align:right;">${to.amount}</p>
+          ${to.sub ? `<p class="edim" style="font-family:${F};font-size:10.5px;color:${C.textDim};margin:6px 0 0 0;text-align:right;">${to.sub}</p>` : ''}
         </td>
       </tr>
+      ${rate ? `<tr><td colspan="3" style="border-top:1px solid ${C.border};padding:12px 22px;">
+        <table role="presentation" width="100%"><tr>
+          <td class="emuted" style="font-family:${F};font-size:12px;color:${C.textMuted};">Taux appliqué</td>
+          <td class="etxt" style="font-family:${F};font-size:12px;font-weight:600;color:${C.text};text-align:right;">${rate}</td>
+        </tr></table>
+      </td></tr>` : ''}
     </table>
   </td>
 </tr>`;
 }
 
-// ─── Info table ───────────────────────────────────────────────────────────────
 // ─── Info table ───────────────────────────────────────────────────────────────
 export function infoTable(
   rows: Array<{ label: string; value: string; mono?: boolean; green?: boolean; big?: boolean; last?: boolean }>,
@@ -206,14 +219,14 @@ export function infoTable(
 ): string {
   const rowsHtml = rows.map(r => `
     <tr class="irow" bgcolor="${C.infoBg}">
-      <td bgcolor="${C.infoBg}" class="emuted" style="background-color:${C.infoBg};padding:13px 18px;font-family:${F};font-size:12px;color:${C.textMuted};${r.last ? '' : `border-bottom:1px solid ${C.borderSoft};`}vertical-align:middle;width:44%;">${r.label}</td>
-      <td bgcolor="${C.infoBg}" class="${r.green ? 'egreen' : 'etxt'}" style="background-color:${C.infoBg};padding:13px 18px;font-family:${r.mono ? FM : F};font-size:${r.big ? '15px' : r.mono ? '11px' : '12px'};font-weight:${r.big ? 700 : 500};color:${r.green ? C.green : C.text};${r.last ? '' : `border-bottom:1px solid ${C.borderSoft};`}text-align:right;word-break:break-word;vertical-align:middle;">${r.value}</td>
+      <td bgcolor="${C.infoBg}" class="emuted" style="background-color:${C.infoBg};padding:14px 18px;font-family:${F};font-size:12.5px;color:${C.textMuted};${r.last ? '' : `border-bottom:1px solid ${C.border};`}vertical-align:middle;width:42%;">${r.label}</td>
+      <td bgcolor="${C.infoBg}" class="${r.green ? 'egreen' : 'etxt'}" style="background-color:${C.infoBg};padding:14px 18px;font-family:${r.mono ? FM : F};font-size:${r.big ? '15px' : r.mono ? '11.5px' : '12.5px'};font-weight:${r.big ? 700 : 500};color:${r.green ? C.white : C.text};${r.last ? '' : `border-bottom:1px solid ${C.border};`}text-align:right;word-break:break-word;vertical-align:middle;">${r.value}</td>
     </tr>`).join('');
   return `
 <tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 28px 24px;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:12px;overflow:hidden;border-collapse:separate;border-spacing:0;">
-      ${title ? `<tr><td colspan="2" class="edim" style="padding:11px 18px;font-family:${F};font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${C.textDim};border-bottom:1px solid ${C.borderSoft};">${title}</td></tr>` : ''}
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:14px;overflow:hidden;border-collapse:separate;border-spacing:0;">
+      ${title ? `<tr><td colspan="2" class="edim" style="padding:12px 18px;font-family:${F};font-size:9.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};border-bottom:1px solid ${C.border};">${title}</td></tr>` : ''}
       ${rowsHtml}
     </table>
   </td>
@@ -223,32 +236,32 @@ export function infoTable(
 // ─── Notice box ───────────────────────────────────────────────────────────────
 export function noticeBox(text: string, tone: 'neutral' | 'warning' | 'danger' | 'success' = 'neutral'): string {
   const s = {
-    neutral: { bg: C.rowBg,   border: C.border,              color: C.textMuted },
-    warning: { bg: '#1f1a08', border: '#3a2f0f',             color: '#f4d77a'   },
-    danger:  { bg: '#1f0d0e', border: '#3a1517',             color: '#fca5a5'   },
-    success: { bg: C.rowBg,  border: 'rgba(255,255,255,0.14)',color: C.text     },
+    neutral: { bg: C.infoBg, border: C.border,               color: C.textMuted },
+    warning: { bg: '#211a08', border: '#3a2f0f',             color: '#f4d77a'   },
+    danger:  { bg: '#210d0e', border: '#3a1517',             color: '#fca5a5'   },
+    success: { bg: C.infoBg, border: 'rgba(255,255,255,0.16)',color: C.text     },
   }[tone];
   return `
 <tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 28px 24px;">
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
-        <td style="padding:14px 18px;background-color:${s.bg};border:1px solid ${s.border};border-radius:10px;font-family:${F};font-size:12px;color:${s.color};line-height:1.75;">${text}</td>
+        <td style="padding:15px 18px;background-color:${s.bg};border:1px solid ${s.border};border-radius:12px;font-family:${F};font-size:12.5px;color:${s.color};line-height:1.7;">${text}</td>
       </tr>
     </table>
   </td>
 </tr>`;
 }
 
-// ─── CTA Button ───────────────────────────────────────────────────────────────
+// ─── CTA Button — pleine largeur ──────────────────────────────────────────────
 export function ctaButton(text: string, href: string): string {
   return `
 <tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" align="center" style="background-color:${C.cardBg};padding:4px 28px 36px;">
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:4px 32px 14px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
-        <td align="center" bgcolor="${C.accent}" style="background-color:${C.accent};border-radius:9px;">
-          <a href="${href}" style="display:inline-block;background-color:${C.accent};color:${C.accentText};font-family:${F};font-size:14px;font-weight:700;padding:15px 40px;border-radius:9px;text-decoration:none;letter-spacing:0.3px;">${text}</a>
+        <td align="center" bgcolor="${C.accent}" style="background-color:${C.accent};border-radius:12px;">
+          <a href="${href}" style="display:block;background-color:${C.accent};color:${C.accentText};font-family:${F};font-size:14.5px;font-weight:700;padding:15px 24px;border-radius:12px;text-decoration:none;letter-spacing:0.2px;text-align:center;">${text}&nbsp;&nbsp;&rarr;</a>
         </td>
       </tr>
     </table>
@@ -260,8 +273,8 @@ export function ctaButton(text: string, href: string): string {
 export function sectionLabel(text: string): string {
   return `
 <tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 28px 12px;">
-    <p class="edim" style="font-family:${F};font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${C.textDim};margin:0;">${text}</p>
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 12px;">
+    <p class="edim" style="font-family:${F};font-size:9.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};margin:0;">${text}</p>
   </td>
 </tr>`;
 }
@@ -273,49 +286,49 @@ export function spacer(h = 24): string {
 
 // ─── Divider ──────────────────────────────────────────────────────────────────
 export function divider(): string {
-  return `<tr><td style="height:1px;background-color:${C.borderSoft};font-size:1px;line-height:1px;">&nbsp;</td></tr>`;
+  return `<tr bgcolor="${C.cardBg}"><td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px;"><div style="height:1px;background-color:${C.border};font-size:1px;line-height:1px;">&nbsp;</div></td></tr>`;
 }
 
 // ─── Status badge (inline) ────────────────────────────────────────────────────
 export function statusBadge(text: string, tone: 'success' | 'warning' | 'danger' | 'neutral' = 'success'): string {
   const m = {
     success: { c: C.text,     bg: 'rgba(255,255,255,0.08)', b: 'rgba(255,255,255,0.18)' },
-    warning: { c: C.amber,    bg: '#1f1a08',               b: '#3a2f0f'              },
-    danger:  { c: C.red,      bg: '#1f0d0e',               b: '#3a1517'              },
+    warning: { c: C.amber,    bg: '#211a08',               b: '#3a2f0f'              },
+    danger:  { c: C.red,      bg: '#210d0e',               b: '#3a1517'              },
     neutral: { c: C.textMuted,bg: C.rowBg,                 b: C.border               },
   }[tone];
-  return `<span style="font-family:${F};font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:${m.c};background:${m.bg};padding:4px 10px;border-radius:20px;border:1px solid ${m.b};">${text}</span>`;
+  return `<span style="font-family:${F};font-size:10px;font-weight:700;letter-spacing:0.5px;color:${m.c};background:${m.bg};padding:6px 12px;border-radius:999px;border:1px solid ${m.b};">${text}</span>`;
 }
 
-// ─── Dot badge ────────────────────────────────────────────────────────────────
+// ─── Dot badge — pastille avec point coloré ───────────────────────────────────
 export function dotBadge(text: string, color: string): string {
-  return `<span style="font-family:${F};font-size:10px;font-weight:700;color:${color};"><span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:${color};margin-right:5px;vertical-align:middle;"></span>${text}</span>`;
+  return `<span style="font-family:${F};font-size:11px;font-weight:600;color:${C.textMuted};background:rgba(255,255,255,0.05);border:1px solid ${C.border};border-radius:999px;padding:6px 12px;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${color};margin-right:6px;vertical-align:middle;"></span>${text}</span>`;
 }
 
 // ─── Check ring ───────────────────────────────────────────────────────────────
 export function checkRing(): string {
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="width:52px;height:52px;border-radius:50%;border:2px solid ${C.green};text-align:center;vertical-align:middle;font-size:22px;color:${C.green};line-height:52px;font-weight:700;">✓</td></tr></table>`;
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px;height:60px;border-radius:50%;border:1.5px solid ${C.white};text-align:center;vertical-align:middle;font-size:26px;color:${C.white};line-height:58px;font-weight:400;">&#10003;</td></tr></table>`;
 }
 
 // ─── Alert ring ───────────────────────────────────────────────────────────────
 export function alertRing(sym = '!', color = C.red): string {
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="width:52px;height:52px;border-radius:50%;border:2px solid ${color};text-align:center;vertical-align:middle;font-size:22px;color:${color};line-height:52px;font-weight:700;">${sym}</td></tr></table>`;
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px;height:60px;border-radius:50%;border:1.5px solid ${color};text-align:center;vertical-align:middle;font-size:24px;color:${color};line-height:58px;font-weight:700;">${sym}</td></tr></table>`;
 }
 
-// ─── Steps list ───────────────────────────────────────────────────────────────
+// ─── Steps list — timeline ────────────────────────────────────────────────────
 export function steps(items: Array<{ text: string; done?: boolean }>): string {
   const rows = items.map((s, i) => `
     <tr>
-      <td style="width:34px;padding:11px 0;vertical-align:top;">
-        <div style="width:24px;height:24px;border-radius:50%;background:${s.done ? C.accent : C.rowBg};border:${s.done ? 'none' : `1px solid ${C.border}`};color:${s.done ? C.accentText : C.textDim};font-size:10px;font-weight:700;text-align:center;line-height:24px;font-family:${F};">${i + 1}</div>
+      <td style="width:30px;padding:0 0 ${i < items.length - 1 ? '18px' : '0'} 0;vertical-align:top;">
+        <div style="width:22px;height:22px;border-radius:50%;background:${s.done ? C.accent : C.rowBg};border:${s.done ? 'none' : `1px solid ${C.border}`};color:${s.done ? C.accentText : C.textMuted};font-size:${s.done ? '11px' : '10px'};font-weight:${s.done ? 800 : 700};text-align:center;line-height:22px;font-family:${F};">${s.done ? '&#10003;' : i + 1}</div>
       </td>
-      <td style="padding:11px 0;vertical-align:top;${i < items.length - 1 ? `border-bottom:1px solid ${C.borderSoft};` : ''}">
-        <p class="${s.done ? 'etxt' : 'edim'}" style="font-family:${F};font-size:13px;line-height:1.55;color:${s.done ? C.text : C.textDim};margin:0;">${s.text}</p>
+      <td style="padding:0 0 ${i < items.length - 1 ? '18px' : '0'} 8px;vertical-align:top;">
+        <p class="${s.done ? 'etxt' : 'emuted'}" style="font-family:${F};font-size:13.5px;line-height:1.4;color:${s.done ? C.text : C.textSoft};margin:0;padding-top:2px;">${s.text}</p>
       </td>
     </tr>`).join('');
   return `
 <tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 28px 28px;">
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:6px 32px 28px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       ${rows}
     </table>
@@ -327,13 +340,13 @@ export function steps(items: Array<{ text: string; done?: boolean }>): string {
 export function otpCard(code: string): string {
   return `
 <tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 28px 24px;">
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
-        <td class="einfo" align="center" bgcolor="${C.infoBg}" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:12px;padding:32px 24px;">
-          <p class="edim" style="font-family:${F};font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:${C.textDim};margin:0 0 10px 0;">Code de vérification</p>
-          <p class="etxt" style="font-family:${FM};font-size:40px;font-weight:500;letter-spacing:12px;color:${C.text};margin:10px 0;line-height:1;">${code}</p>
-          <p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};margin:10px 0 0 0;">Expire dans <span style="color:${C.red};">10 minutes</span></p>
+        <td class="einfo" align="center" bgcolor="${C.infoBg}" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:16px;padding:34px 24px;">
+          <p class="edim" style="font-family:${F};font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:${C.textDim};margin:0 0 12px 0;">Code de vérification</p>
+          <p class="etxt" style="font-family:${FM};font-size:42px;font-weight:600;letter-spacing:12px;color:${C.text};margin:8px 0;line-height:1;">${code}</p>
+          <p class="edim" style="font-family:${F};font-size:11.5px;color:${C.textDim};margin:12px 0 0 0;">Expire dans <span style="color:${C.red};">10 minutes</span></p>
         </td>
       </tr>
     </table>
@@ -346,11 +359,11 @@ export function linkBox(url: string): string {
   const display = url.length > 55 ? url.slice(0, 55) + '...' : url;
   return `
 <tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 28px 24px;">
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
-        <td class="einfo" bgcolor="${C.infoBg}" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:9px;padding:13px 16px;">
-          <a href="${url}" class="emuted" style="font-family:${FM};font-size:10px;color:${C.textMuted};text-decoration:none;word-break:break-all;">${display}</a>
+        <td class="einfo" bgcolor="${C.infoBg}" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:10px;padding:14px 16px;">
+          <a href="${url}" class="emuted" style="font-family:${FM};font-size:10.5px;color:${C.textMuted};text-decoration:none;word-break:break-all;">${display}</a>
         </td>
       </tr>
     </table>
@@ -358,9 +371,9 @@ export function linkBox(url: string): string {
 </tr>`;
 }
 
-// ─── Main wrapper — topRight param kept for backward compat but not rendered ──
+// ─── Main wrapper — le statut (3e arg HTML) s'affiche à droite de l'en-tête ────
 export function wrapEmail(preview: string, rows: string, _topRightOrNote?: string, footerNote?: string): string {
-  // If only 3 args and 3rd doesn't look like a badge/HTML, treat it as footerNote
+  const topRight = _topRightOrNote && _topRightOrNote.includes('<') ? _topRightOrNote : undefined;
   const note = footerNote ?? (_topRightOrNote && !_topRightOrNote.includes('<') ? _topRightOrNote : undefined);
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" bgcolor="${C.pageBg}" style="background-color:${C.pageBg};color-scheme:only dark;">
@@ -375,9 +388,9 @@ export function wrapEmail(preview: string, rows: string, _topRightOrNote?: strin
 <body class="ebg" bgcolor="${C.pageBg}" style="margin:0;padding:0;background-color:${C.pageBg};color-scheme:only dark;">
 <!--[if mso]><table role="presentation" width="100%"><tr><td><![endif]-->
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="${C.pageBg}" class="ebg" style="background-color:${C.pageBg};">
-<tr><td align="center" style="padding:0;">
-<table class="w600" role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" bgcolor="${C.cardBg}" class="ecard" style="max-width:600px;width:100%;background-color:${C.cardBg};">
-${header()}
+<tr><td align="center" style="padding:24px 12px;">
+<table class="w600" role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" bgcolor="${C.cardBg}" style="max-width:600px;width:100%;background-color:${C.cardBg};border:1px solid ${C.border};border-radius:20px;overflow:hidden;">
+${header(topRight)}
 ${rows}
 ${footer(note)}
 </table>
