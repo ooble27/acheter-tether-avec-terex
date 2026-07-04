@@ -1,12 +1,7 @@
 
-const CACHE_NAME = 'terex-v2'; // Incrémenté pour forcer la mise à jour
+const CACHE_NAME = 'terex-v3'; // Incrémenté pour forcer la mise à jour (favicon + preview de partage)
 const urlsToCache = [
-  '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
-  '/lovable-uploads/2deedbc3-65e1-4e12-85a2-301f882eaafb.png',
-  '/lovable-uploads/3e8bdd84-3bdf-49ba-98b7-08e541f8323a.png',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
+  '/'
 ];
 
 // Installation du service worker
