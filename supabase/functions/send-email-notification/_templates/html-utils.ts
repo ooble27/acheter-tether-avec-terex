@@ -177,32 +177,38 @@ export function summaryBar(cols: Array<{ label: string; value: string; sub?: str
 </tr>`;
 }
 
-// ─── Flow bar — de → vers, dans une carte arrondie ────────────────────────────
+// ─── Flow bar — itinéraire « de → vers » relié par points (style reçu Lyft) ────
 export function flowBar(
   from: { label: string; amount: string; sub?: string },
   to:   { label: string; amount: string; sub?: string },
   rate?: string
 ): string {
+  const endpoint = (
+    p: { label: string; amount: string; sub?: string },
+    filled: boolean
+  ) => `
+        <tr>
+          <td width="30" style="vertical-align:middle;padding:0;">
+            <div style="width:13px;height:13px;border-radius:50%;background:${filled ? C.white : C.infoBg};border:2px solid ${filled ? C.white : C.textMuted};margin:0 auto;"></div>
+          </td>
+          <td style="vertical-align:middle;padding:0;">
+            <p class="edim" style="font-family:${F};font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:${C.textDim};margin:0 0 3px 0;">${p.label}</p>
+            <p class="${filled ? 'egreen' : 'etxt'}" style="font-family:${F};font-size:18px;font-weight:700;letter-spacing:-0.01em;color:${filled ? C.white : C.text};margin:0;line-height:1.15;">${p.amount}</p>
+          </td>
+          ${p.sub ? `<td style="vertical-align:middle;text-align:right;padding:0;"><p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};margin:0;">${p.sub}</p></td>` : '<td></td>'}
+        </tr>`;
   return `
 <tr bgcolor="${C.cardBg}">
   <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:16px;overflow:hidden;border-collapse:separate;border-spacing:0;">
-      <tr>
-        <td class="scol" style="padding:22px 22px;vertical-align:middle;width:43%;">
-          <p class="edim" style="font-family:${F};font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:${C.textDim};margin:0 0 8px 0;">${from.label}</p>
-          <p class="etxt" style="font-family:${F};font-size:21px;font-weight:700;letter-spacing:-0.02em;color:${C.text};margin:0;line-height:1.15;">${from.amount}</p>
-          ${from.sub ? `<p class="edim" style="font-family:${F};font-size:10.5px;color:${C.textDim};margin:6px 0 0 0;">${from.sub}</p>` : ''}
-        </td>
-        <td class="mhide" style="padding:22px 8px;text-align:center;vertical-align:middle;width:44px;">
-          <span class="emuted" style="font-family:${F};font-size:20px;color:${C.textMuted};line-height:1;">&rarr;</span>
-        </td>
-        <td class="scol scol-last" style="padding:22px 22px;vertical-align:middle;width:43%;text-align:right;">
-          <p class="edim" style="font-family:${F};font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:${C.textDim};margin:0 0 8px 0;text-align:right;">${to.label}</p>
-          <p class="egreen" style="font-family:${F};font-size:21px;font-weight:700;letter-spacing:-0.02em;color:${C.white};margin:0;line-height:1.15;text-align:right;">${to.amount}</p>
-          ${to.sub ? `<p class="edim" style="font-family:${F};font-size:10.5px;color:${C.textDim};margin:6px 0 0 0;text-align:right;">${to.sub}</p>` : ''}
-        </td>
-      </tr>
-      ${rate ? `<tr><td colspan="3" style="border-top:1px solid ${C.border};padding:12px 22px;">
+      <tr><td style="padding:22px 20px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+          ${endpoint(from, false)}
+          <tr><td width="30" style="padding:2px 0;text-align:center;"><div style="width:2px;height:22px;background:${C.border};margin:0 auto;"></div></td><td colspan="2"></td></tr>
+          ${endpoint(to, true)}
+        </table>
+      </td></tr>
+      ${rate ? `<tr><td style="border-top:1px solid ${C.border};padding:13px 22px;">
         <table role="presentation" width="100%"><tr>
           <td class="emuted" style="font-family:${F};font-size:12px;color:${C.textMuted};">Taux appliqué</td>
           <td class="etxt" style="font-family:${F};font-size:12px;font-weight:600;color:${C.text};text-align:right;">${rate}</td>
@@ -213,21 +219,27 @@ export function flowBar(
 </tr>`;
 }
 
-// ─── Info table ───────────────────────────────────────────────────────────────
+// ─── Info table — style « ticket » : lignes à filets fins, total en gras ──────
 export function infoTable(
   rows: Array<{ label: string; value: string; mono?: boolean; green?: boolean; big?: boolean; last?: boolean }>,
   title?: string
 ): string {
-  const rowsHtml = rows.map(r => `
-    <tr class="irow" bgcolor="${C.infoBg}">
-      <td bgcolor="${C.infoBg}" class="emuted" style="background-color:${C.infoBg};padding:14px 18px;font-family:${F};font-size:12.5px;color:${C.textMuted};${r.last ? '' : `border-bottom:1px solid ${C.border};`}vertical-align:middle;width:42%;">${r.label}</td>
-      <td bgcolor="${C.infoBg}" class="${r.green ? 'egreen' : 'etxt'}" style="background-color:${C.infoBg};padding:14px 18px;font-family:${r.mono ? FM : F};font-size:${r.big ? '15px' : r.mono ? '11.5px' : '12.5px'};font-weight:${r.big ? 700 : 500};color:${r.green ? C.white : C.text};${r.last ? '' : `border-bottom:1px solid ${C.border};`}text-align:right;word-break:break-word;vertical-align:middle;">${r.value}</td>
-    </tr>`).join('');
+  const rowsHtml = rows.map((r, i) => {
+    const isLast = r.last ?? (i === rows.length - 1);
+    // Une ligne « big » = total : filet de séparation au-dessus + gras.
+    const totalTop = r.big ? `border-top:1px solid ${C.border};padding-top:15px;` : '';
+    const under = isLast || r.big ? '' : `border-bottom:1px solid ${C.borderSoft};`;
+    return `
+    <tr class="irow">
+      <td class="emuted" style="padding:12px 0;${totalTop}${under}font-family:${F};font-size:${r.big ? '15px' : '13px'};font-weight:${r.big ? 700 : 400};color:${r.big ? C.text : C.textMuted};vertical-align:middle;width:44%;">${r.label}</td>
+      <td class="${r.green || r.big ? 'egreen' : 'etxt'}" style="padding:12px 0;${totalTop}${under}font-family:${r.mono ? FM : F};font-size:${r.big ? '15px' : r.mono ? '11.5px' : '13px'};font-weight:${r.big ? 700 : 500};color:${r.green || r.big ? C.white : C.text};text-align:right;word-break:break-word;vertical-align:middle;">${r.value}</td>
+    </tr>`;
+  }).join('');
   return `
 <tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:14px;overflow:hidden;border-collapse:separate;border-spacing:0;">
-      ${title ? `<tr><td colspan="2" class="edim" style="padding:12px 18px;font-family:${F};font-size:9.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};border-bottom:1px solid ${C.border};">${title}</td></tr>` : ''}
+  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 26px;">
+    ${title ? `<p class="edim" style="font-family:${F};font-size:9.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};margin:0 0 6px 2px;">${title}</p>` : ''}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       ${rowsHtml}
     </table>
   </td>

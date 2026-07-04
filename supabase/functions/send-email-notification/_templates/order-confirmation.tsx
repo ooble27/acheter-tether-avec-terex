@@ -1,4 +1,4 @@
-import { C, wrapEmail, hero, summaryBar, infoTable, sectionLabel, steps, ctaButton, spacer, dotBadge } from './html-utils.ts';
+import { C, wrapEmail, hero, flowBar, infoTable, sectionLabel, steps, ctaButton, dotBadge } from './html-utils.ts';
 
 interface OrderConfirmationProps {
   orderData: any;
@@ -53,12 +53,11 @@ export function orderConfirmationHtml({ orderData, transactionType, clientName }
 
   const rows =
     hero({ reference: `Référence · ${reference}`, title: isBuy ? "Votre demande d'achat a été reçue" : 'Votre demande de vente a été reçue', date: dateStr, subtitle: greeting }) +
-    summaryBar([
-      { label: isBuy ? 'Vous payez'    : 'Vous envoyez',  value: isBuy ? `${amount} ${currency}` : `${usdt} USDT`,    sub: isBuy ? providerName : network },
-      { label: isBuy ? 'Vous recevez'  : 'Vous recevez',  value: isBuy ? `${usdt} USDT`          : `${amount} ${currency}`, sub: isBuy ? network : providerName, green: true },
-      { label: 'Taux appliqué',                            value: String(orderData.exchange_rate || 0), sub: `${currency} / USDT` },
-    ]) +
-    spacer(28) +
+    flowBar(
+      { label: isBuy ? 'Vous payez' : 'Vous envoyez', amount: isBuy ? `${amount} ${currency}` : `${usdt} USDT`, sub: isBuy ? providerName : network },
+      { label: 'Vous recevez', amount: isBuy ? `${usdt} USDT` : `${amount} ${currency}`, sub: isBuy ? network : providerName },
+      `${Number(orderData.exchange_rate || 0).toLocaleString('fr-FR')} ${currency} / USDT`,
+    ) +
     sectionLabel('Détails de la transaction') +
     infoTable(detailRows) +
     sectionLabel('Prochaines étapes') +
