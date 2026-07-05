@@ -39,7 +39,7 @@ export function cancellationConfirmationHtml({ orderData, transactionType, clien
     hero({ iconHtml: alertRing('✕', C.red), title: 'Commande annulée', date: dateStr, subtitle }) +
     spacer(20) +
     infoTable(detailRows, 'Détails de la commande annulée') +
-    noticeBox(notice, 'warning') +
+    noticeBox(notice, 'neutral') +
     ctaButton('Passer une nouvelle commande', 'https://terangaexchange.com/dashboard');
 
   return wrapEmail(

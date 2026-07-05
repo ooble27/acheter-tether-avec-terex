@@ -6,6 +6,7 @@ export const C = {
   // Des valeurs « presque blanches / presque noires » s'inversent proprement AVEC
   // leur fond → l'email reste lisible que Gmail l'affiche sombre ou l'inverse.
   green:      '#f5f5f5',   // (clé conservée pour compat) = accent d'emphase clair
+  white:      '#f5f5f5',   // « blanc » d'emphase (montants, points, icônes) — jamais #fff pur
   accent:     '#f4f4f4',   // fond bouton (quasi-blanc, s'inverse proprement)
   accentText: '#191919',   // texte sur bouton (quasi-noir, s'inverse proprement)
   pageBg:     '#141414',
@@ -32,6 +33,8 @@ const CSS = `
 /* Surfaces toujours sombres, texte toujours clair — cohérent quel que soit le client */
 :root{color-scheme:dark !important;supported-color-schemes:dark !important;}
 html,body{margin:0;padding:0;background-color:#141414 !important;color:#f5f5f5 !important;-webkit-text-size-adjust:100%;color-scheme:dark !important;}
+/* Couleurs de base des classes (toujours définies, pas seulement dans les media queries) */
+.etxt{color:#f5f5f5;} .emuted{color:#a1a1a1;} .edim{color:#6e6e6e;} .egreen{color:#f5f5f5;} .ered{color:#f87171;}
 /* light system → on garde le thème sombre */
 @media (prefers-color-scheme:light){
   html,body,.ebg{background-color:#141414 !important;color-scheme:dark !important;}
@@ -321,9 +324,15 @@ export function dotBadge(text: string, color: string): string {
   return `<span style="font-family:${F};font-size:11px;font-weight:600;color:${C.textMuted};background:rgba(255,255,255,0.05);border:1px solid ${C.border};border-radius:999px;padding:6px 12px;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${color};margin-right:6px;vertical-align:middle;"></span>${text}</span>`;
 }
 
-// ─── Check ring ───────────────────────────────────────────────────────────────
+// ─── Check ring — badge succès raffiné (halo + disque doux + coche) ───────────
 export function checkRing(): string {
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px;height:60px;border-radius:50%;border:1.5px solid ${C.white};text-align:center;vertical-align:middle;font-size:26px;color:${C.white};line-height:58px;font-weight:400;">&#10003;</td></tr></table>`;
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+    <td style="width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.04);text-align:center;vertical-align:middle;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center"><tr>
+        <td style="width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.22);text-align:center;vertical-align:middle;font-size:26px;color:${C.white};line-height:54px;font-weight:400;">&#10003;</td>
+      </tr></table>
+    </td>
+  </tr></table>`;
 }
 
 // ─── Alert ring ───────────────────────────────────────────────────────────────

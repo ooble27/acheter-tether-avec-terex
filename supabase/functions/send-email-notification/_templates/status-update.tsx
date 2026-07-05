@@ -7,7 +7,7 @@ interface StatusUpdateProps {
 }
 
 const STATUS_META: Record<string, { label: string; tone: 'success' | 'warning' | 'danger' | 'neutral' }> = {
-  processing: { label: 'En cours de traitement', tone: 'warning' },
+  processing: { label: 'En cours de traitement', tone: 'neutral' },
   completed:  { label: 'Terminée avec succès',   tone: 'success' },
   cancelled:  { label: 'Annulée',                tone: 'danger'  },
   failed:     { label: 'Échec',                  tone: 'danger'  },
@@ -46,7 +46,7 @@ export function statusUpdateHtml({ orderData, transactionType, clientName }: Sta
 
   let notice = '';
   if (orderData.status === 'processing') {
-    notice = noticeBox(`Notre équipe traite activement votre ${isTransfer ? 'transfert' : 'commande'}. Vous recevrez une nouvelle notification dès la finalisation.`, 'warning');
+    notice = noticeBox(`Notre équipe traite activement votre ${isTransfer ? 'transfert' : 'commande'}. Vous recevrez une nouvelle notification dès la finalisation.`, 'neutral');
   } else if (orderData.status === 'completed') {
     notice = noticeBox(isTransfer ? 'Les fonds ont été crédités au destinataire avec succès.' : 'Votre transaction a été traitée avec succès.', 'success');
   } else if (orderData.status === 'cancelled') {
@@ -58,7 +58,7 @@ export function statusUpdateHtml({ orderData, transactionType, clientName }: Sta
 
   const topRight = meta.tone === 'success' ? statusBadge(meta.label, 'success')
     : meta.tone === 'danger' ? statusBadge(meta.label, 'danger')
-    : dotBadge(meta.label, C.amber);
+    : dotBadge(meta.label, C.textMuted);
 
   const rows =
     hero({ reference: `Référence · ${reference}`, title: `Mise à jour de votre ${isTransfer ? 'transfert' : 'commande'}`, date: new Date(orderData.updated_at || Date.now()).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' }), subtitle }) +

@@ -67,7 +67,7 @@ export function orderConfirmationHtml({ orderData, transactionType, clientName }
   return wrapEmail(
     `${reference} — ${usdt} USDT`,
     rows,
-    dotBadge('En cours de traitement', C.amber),
+    dotBadge('En cours de traitement', C.textMuted),
     'Vous avez reçu cet email suite à votre commande sur Terex.'
   );
 }

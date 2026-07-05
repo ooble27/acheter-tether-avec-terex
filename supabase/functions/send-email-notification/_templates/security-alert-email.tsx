@@ -40,7 +40,7 @@ export function securityAlertHtml({
       { label: 'Appareil',    value: device },
       { label: 'Localisation',value: location, last: true },
     ], 'Détails de la connexion') +
-    noticeBox("Si c'est bien vous, ignorez cet email. Sinon, cliquez sur \"Sécuriser mon compte\" pour changer votre mot de passe et révoquer l'accès.", 'warning') +
+    noticeBox("Si c'est bien vous, ignorez cet email. Sinon, cliquez sur \"Sécuriser mon compte\" pour changer votre mot de passe et révoquer l'accès.", 'neutral') +
     dualButtons;
 
   return wrapEmail(

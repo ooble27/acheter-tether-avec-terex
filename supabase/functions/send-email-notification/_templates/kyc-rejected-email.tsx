@@ -56,7 +56,7 @@ export function kycRejectedHtml({
     reasonsBlock +
     sectionLabel('Comment corriger') +
     steps(STEPS.map(t => ({ text: t }))) +
-    noticeBox('Vous avez 7 jours pour soumettre à nouveau votre dossier. Passé ce délai, votre compte sera suspendu temporairement jusqu\'à validation de votre identité.', 'warning') +
+    noticeBox('Vous avez 7 jours pour soumettre à nouveau votre dossier. Passé ce délai, votre compte sera suspendu temporairement jusqu\'à validation de votre identité.', 'neutral') +
     ctaButton('Soumettre à nouveau', resubmitLink);
 
   return wrapEmail(

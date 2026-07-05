@@ -15,10 +15,10 @@ export function jobApplicationStatusHtml({ firstName, position, status, adminNot
     statusLabel: string; statusColor: string; notice: string; cta: string;
   }> = {
     reviewing: {
-      icon: dotBadge('En cours d\'examen', C.amber),
+      icon: dotBadge('En cours d\'examen', C.textMuted),
       title: 'Votre candidature est en cours d\'examen',
       subtitle: `Bonjour ${firstName}, notre équipe RH examine actuellement votre dossier pour le poste de <strong style="color:#fafafa;">${position}</strong>.`,
-      statusLabel: 'En cours d\'examen', statusColor: C.amber,
+      statusLabel: 'En cours d\'examen', statusColor: C.textMuted,
       notice: 'Nous faisons de notre mieux pour vous répondre rapidement. Merci de votre patience.',
       cta: 'https://terangaexchange.com/careers',
     },
@@ -47,10 +47,10 @@ export function jobApplicationStatusHtml({ firstName, position, status, adminNot
       cta: 'https://terangaexchange.com/careers',
     },
     pending: {
-      icon: dotBadge('En attente', C.amber),
+      icon: dotBadge('En attente', C.textMuted),
       title: 'Candidature en attente d\'examen',
       subtitle: `Bonjour ${firstName}, votre candidature pour le poste de <strong style="color:#fafafa;">${position}</strong> est en file d\'attente d\'examen.`,
-      statusLabel: 'En attente', statusColor: C.amber,
+      statusLabel: 'En attente', statusColor: C.textMuted,
       notice: 'Notre équipe traitera votre dossier dans les meilleurs délais.',
       cta: 'https://terangaexchange.com/careers',
     },
@@ -86,7 +86,7 @@ export function jobApplicationStatusHtml({ firstName, position, status, adminNot
       { label: 'Candidat', value: firstName, last: true },
     ], 'Mise à jour de votre candidature') +
     adminNotesBlock +
-    noticeBox(cfg.notice, status === 'rejected' ? 'warning' : undefined) +
+    noticeBox(cfg.notice, status === 'rejected' ? 'neutral' : undefined) +
     ctaButton(
       status === 'accepted' ? 'Accéder à Terex' : status === 'rejected' ? 'Voir d\'autres offres' : 'Suivre ma candidature',
       cfg.cta
