@@ -32,39 +32,26 @@ export function useClientInfos(userIds: string[]): Record<string, ClientInfo> {
     let cancelled = false;
     (async () => {
       try {
-        const { data: profiles } = await supabase
-          .from('profiles')
-          .select('id, full_name, phone')
-          .in('id', missing);
+        // Passe par une edge function admin (service role) : l'API auth.admin
+        // n'est PAS accessible depuis le navigateur, d'où les clients « sans nom ».
+        const { data, error } = await supabase.functions.invoke('get-client-infos', {
+          body: { userIds: missing },
+        });
+        if (error) throw error;
 
-        const profileMap = new Map<string, { full_name?: string; phone?: string }>();
-        for (const p of profiles || []) {
-          profileMap.set(p.id, { full_name: p.full_name || undefined, phone: p.phone || undefined });
-        }
-
-        // Récupérer les emails un par un via auth.admin (pas d'API batch côté client)
         const next: Record<string, ClientInfo> = {};
-        await Promise.all(
-          missing.map(async (uid) => {
-            try {
-              const { data } = await supabase.auth.admin.getUserById(uid);
-              const profile = profileMap.get(uid) || {};
-              const info: ClientInfo = {
-                user_id: uid,
-                full_name: profile.full_name,
-                phone: profile.phone,
-                email: data?.user?.email || undefined,
-              };
-              cache.set(uid, info);
-              next[uid] = info;
-            } catch (e) {
-              const profile = profileMap.get(uid) || {};
-              const info: ClientInfo = { user_id: uid, ...profile };
-              cache.set(uid, info);
-              next[uid] = info;
-            }
-          })
-        );
+        for (const info of (data?.infos as ClientInfo[]) || []) {
+          cache.set(info.user_id, info);
+          next[info.user_id] = info;
+        }
+        // Marquer aussi les user_ids sans retour pour éviter de re-fetch en boucle.
+        for (const uid of missing) {
+          if (!next[uid]) {
+            const empty: ClientInfo = { user_id: uid };
+            cache.set(uid, empty);
+            next[uid] = empty;
+          }
+        }
 
         if (!cancelled) {
           setInfos((prev) => ({ ...prev, ...next }));

@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.naboopay-webhook]
 verify_jwt = false
+
+[functions.get-client-infos]
+verify_jwt = true
