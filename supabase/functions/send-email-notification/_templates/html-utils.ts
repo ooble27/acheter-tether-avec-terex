@@ -196,7 +196,7 @@ export function flowBar(
           </td>
           <td style="vertical-align:middle;padding:0;">
             <p class="edim" style="font-family:${F};font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:${C.textDim};margin:0 0 3px 0;">${p.label}</p>
-            <p class="${filled ? 'egreen' : 'etxt'}" style="font-family:${F};font-size:18px;font-weight:700;letter-spacing:-0.01em;color:${filled ? C.white : C.text};margin:0;line-height:1.15;">${p.amount}</p>
+            <p class="etxt" style="font-family:${F};font-size:18px;font-weight:700;letter-spacing:-0.01em;color:${C.text};margin:0;line-height:1.15;">${p.amount}</p>
           </td>
           ${p.sub ? `<td style="vertical-align:middle;text-align:right;padding:0;"><p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};margin:0;">${p.sub}</p></td>` : '<td></td>'}
         </tr>`;
@@ -336,10 +336,10 @@ export function steps(items: Array<{ text: string; done?: boolean }>): string {
   const rows = items.map((s, i) => `
     <tr>
       <td style="width:30px;padding:0 0 ${i < items.length - 1 ? '18px' : '0'} 0;vertical-align:top;">
-        <div style="width:22px;height:22px;border-radius:50%;background:${s.done ? C.accent : C.rowBg};border:${s.done ? 'none' : `1px solid ${C.border}`};color:${s.done ? C.accentText : C.textMuted};font-size:${s.done ? '11px' : '10px'};font-weight:${s.done ? 800 : 700};text-align:center;line-height:22px;font-family:${F};">${s.done ? '&#10003;' : i + 1}</div>
+        <div style="width:22px;height:22px;border-radius:50%;background:${s.done ? C.accent : C.rowBg};border:${s.done ? 'none' : `1px solid ${C.border}`};color:${s.done ? C.accentText : C.text};font-size:${s.done ? '11px' : '10px'};font-weight:${s.done ? 800 : 700};text-align:center;line-height:22px;font-family:${F};">${s.done ? '&#10003;' : i + 1}</div>
       </td>
       <td style="padding:0 0 ${i < items.length - 1 ? '18px' : '0'} 8px;vertical-align:top;">
-        <p class="${s.done ? 'etxt' : 'emuted'}" style="font-family:${F};font-size:13.5px;line-height:1.4;color:${s.done ? C.text : C.textSoft};margin:0;padding-top:2px;">${s.text}</p>
+        <p class="etxt" style="font-family:${F};font-size:13.5px;line-height:1.4;color:${C.text};margin:0;padding-top:2px;">${s.text}</p>
       </td>
     </tr>`).join('');
   return `
