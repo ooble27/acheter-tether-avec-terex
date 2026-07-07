@@ -46,6 +46,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     
     let mounted = true;
 
+    // Filet de sécurité : ne JAMAIS rester bloqué sur « Chargement… » (surtout en PWA,
+    // où supabase.auth.getSession() peut se figer sur le verrou navigator.locks).
+    // Passé ce délai, on débloque l'UI ; onAuthStateChange mettra à jour la session dès qu'elle arrive.
+    const safetyTimer = setTimeout(() => {
+      if (mounted) {
+        console.warn('AuthProvider: délai de sécurité atteint — déblocage du chargement');
+        setLoading(false);
+      }
+    }, 4000);
+
     const getInitialSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -102,6 +112,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     return () => {
       mounted = false;
+      clearTimeout(safetyTimer);
       subscription.unsubscribe();
     }
   }, [])

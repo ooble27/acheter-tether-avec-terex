@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'terex-v3'; // Incrémenté pour forcer la mise à jour (favicon + preview de partage)
+const CACHE_NAME = 'terex-v4'; // Incrémenté : le SW n'intercepte plus l'auth Supabase (fix PWA bloquée sur « Chargement… »)
 const urlsToCache = [
   '/'
 ];
@@ -56,29 +56,16 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   
-  // Pour les requêtes vers l'API ou les ressources dynamiques, toujours essayer le réseau d'abord
-  if (url.pathname.includes('/api/') || 
-      url.pathname.includes('/auth/') || 
-      url.pathname.includes('supabase') ||
-      event.request.method !== 'GET') {
-    
-    event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          // Si la réponse est OK, la retourner directement
-          if (response.ok) {
-            return response;
-          }
-          throw new Error('Network response was not ok');
-        })
-        .catch(() => {
-          // En cas d'erreur réseau, essayer le cache
-          return caches.match(event.request);
-        })
-    );
+  // NE JAMAIS intercepter : autre origine (Supabase / API externes), requêtes non-GET,
+  // ou endpoints d'auth/api. On laisse le navigateur gérer nativement — sinon le
+  // Service Worker peut bloquer le rafraîchissement de session et figer la PWA sur « Chargement… ».
+  if (url.origin !== self.location.origin ||
+      event.request.method !== 'GET' ||
+      url.pathname.includes('/auth/') ||
+      url.pathname.includes('/api/')) {
     return;
   }
-  
+
   // Pour les autres ressources (HTML, CSS, JS, images), utiliser Network First avec cache
   event.respondWith(
     fetch(event.request)
