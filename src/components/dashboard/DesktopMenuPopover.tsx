@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { User, History, HelpCircle, Phone, Gift, Share2, FileText, Shield, UserCheck, LogOut, Settings, Briefcase } from 'lucide-react';
+import { LogOut, Settings } from 'lucide-react';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useNavigate } from 'react-router-dom';
+import { PROFILE_MENU } from './profileMenuItems';
 
 interface DesktopMenuPopoverProps {
   activeSection: string;
@@ -34,33 +35,16 @@ export function DesktopMenuPopover({
     onLogout();
   };
 
-  const profileItems = [
-    { id: 'profile', label: 'Mon Profil', icon: User },
-    { id: 'history', label: 'Historique', icon: History },
-  ];
-
-  const supportItems = [
-    { id: 'faq', label: 'FAQ', icon: HelpCircle },
-    { id: 'contact', label: 'Nous Contacter', icon: Phone },
-  ];
-
-  const moreItems = [
-    { id: 'referral', label: 'Parrainage', icon: Gift },
-    { id: 'share-app', label: 'Partager l\'App', icon: Share2 },
-    { id: 'terms', label: 'Conditions d\'Utilisation', icon: FileText },
-  ];
+  // Pages issues de la source de vérité partagée (identiques au menu mobile/PWA)
+  const profileItems = PROFILE_MENU.profile;
+  const supportItems = PROFILE_MENU.support;
+  const moreItems = PROFILE_MENU.more;
+  const adminItems = PROFILE_MENU.admin;
 
   const handleAdminPortal = () => {
     onOpenChange(false);
     navigate('/admin');
   };
-
-  const adminItems = [
-    { id: 'kyc-admin', label: 'Administration KYC', icon: Shield },
-    { id: 'orders-admin', label: 'Gestion Commandes', icon: Shield },
-    { id: 'job-applications', label: 'Candidatures', icon: UserCheck },
-    { id: 'b2b', label: 'Portail Business', icon: Briefcase },
-  ];
 
   const renderMenuSection = (title: string, items: any[]) => (
     <>

@@ -5,7 +5,6 @@ import { MobileMenu } from '@/components/dashboard/AppSidebar';
 import { DesktopMenuPopover } from '@/components/dashboard/DesktopMenuPopover';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
 import { DesktopBottomNav } from '@/components/dashboard/DesktopBottomNav';
-import { MobileProfileMenu } from '@/components/dashboard/MobileProfileMenu';
 import { BuyUSDT } from '@/components/features/BuyUSDT';
 import { SellUSDT } from '@/components/features/SellUSDT';
 import { InternationalTransfer } from '@/components/features/InternationalTransfer';
@@ -189,13 +188,15 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     <TransactionProvider>
       <SidebarProvider>
         <div className="min-h-screen flex flex-col w-full bg-terex-dark">
-          {/* Bouton hamburger flottant (masqué en PWA mobile) */}
-          {isMobile && !isPWA ? (
+          {/* Bouton menu flottant — IDENTIQUE sur mobile navigateur ET PWA
+              (ouvre le même menu plein écran avec les mêmes pages). */}
+          {isMobile ? (
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setMenuOpen(true)}
-              className="fixed top-4 right-4 z-50 text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
+              className="fixed right-4 z-50 text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
+              style={{ top: 'calc(env(safe-area-inset-top, 0px) + 16px)' }}
             >
               <Menu className="h-5 w-5" />
             </Button>
@@ -227,16 +228,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             onClose={() => setMenuOpen(false)}
           />
 
-          <main className={`flex-1 ${isMobile ? (isPWA ? 'p-4 pt-16 pb-20' : 'p-4 pt-4 pb-20') : 'p-6 pt-6 pb-24'} relative`}>
-            {/* Menu profil mobile pour PWA */}
-            {isMobile && isPWA && (
-              <MobileProfileMenu
-                activeSection={activeSection}
-                setActiveSection={handleNavigate}
-                onLogout={handleLogout}
-              />
-            )}
-            
+          <main className={`flex-1 ${isMobile ? 'p-4 pt-16 pb-20' : 'p-6 pt-6 pb-24'} relative`}>
             {renderContent()}
           </main>
           

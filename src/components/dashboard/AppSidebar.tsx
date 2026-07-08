@@ -6,6 +6,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsTablet } from '@/hooks/use-tablet';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useState } from 'react';
+import { PROFILE_MENU } from './profileMenuItems';
 
 interface AppSidebarProps {
   activeSection: string;
@@ -316,28 +317,11 @@ export function MobileMenu({
     onLogout();
   };
 
-  const profileItems = [
-    { id: 'profile', label: 'Mon Profil', icon: User, description: 'Informations personnelles' },
-    { id: 'history', label: 'Historique', icon: History, description: 'Mes transactions' },
-  ];
-
-  const supportItems = [
-    { id: 'faq', label: 'FAQ', icon: HelpCircle, description: 'Questions fréquentes' },
-    { id: 'contact', label: 'Nous Contacter', icon: Phone, description: 'Support client 24/7' },
-  ];
-
-  const moreItems = [
-    { id: 'referral', label: 'Parrainage', icon: Gift, description: 'Invitez vos amis' },
-    { id: 'share-app', label: 'Partager l\'App', icon: Share2, description: 'Partager Terex' },
-    { id: 'terms', label: 'Conditions d\'Utilisation', icon: FileText, description: 'CGU et politique' },
-  ];
-
-  const adminItems = [
-    { id: 'kyc-admin', label: 'Administration KYC', icon: Shield, description: 'Vérifications d\'identité' },
-    { id: 'orders-admin', label: 'Gestion Commandes', icon: Shield, description: 'Ordres et transactions' },
-    { id: 'job-applications', label: 'Candidatures', icon: UserCheck, description: 'Gestion des candidatures' },
-    { id: 'b2b', label: 'Portail Business', icon: Briefcase, description: 'Gestion comptes B2B' },
-  ];
+  // Pages issues de la source de vérité partagée (identiques au menu bureau)
+  const profileItems = PROFILE_MENU.profile;
+  const supportItems = PROFILE_MENU.support;
+  const moreItems = PROFILE_MENU.more;
+  const adminItems = PROFILE_MENU.admin;
 
   const renderMenuSection = (title: string, items: any[]) => (
     <div className="mb-1">
