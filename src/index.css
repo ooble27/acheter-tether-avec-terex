@@ -58,10 +58,10 @@
     font-weight: 300 !important; /* font-light global */
     letter-spacing: -0.01em;
     min-height: 100vh;
-    height: 100%;
-    /* Masquer toutes les barres de scroll */
-    overflow: overlay;
-    scrollbar-width: none; /* Firefox */
+    /* Scroll NATUREL du document (pas de height:100% + overflow qui créent un
+       conteneur interne : ça empêchait Safari de rétracter ses barres, d'où le
+       contenu « coincé » sous des bandes en haut/bas). */
+    scrollbar-width: none; /* Firefox — masque la barre de défilement */
     -ms-overflow-style: none; /* Internet Explorer et Edge */
   }
 
@@ -72,8 +72,7 @@
 
   #root {
     min-height: 100vh;
-    height: 100%;
-    background-color: #1a1a1a !important;
+    background-color: #1a1a1a;
   }
 
   /* Forcer font-light sur tous les titres */
