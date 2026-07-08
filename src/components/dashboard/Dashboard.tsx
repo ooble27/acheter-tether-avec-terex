@@ -21,7 +21,6 @@ import { SecurityPolicy } from '@/components/features/SecurityPolicy';
 import { TermsOfService } from '@/components/features/TermsOfService';
 import { AboutTerex } from '@/components/features/AboutTerex';
 import { TransactionHistoryPage } from '@/components/features/TransactionHistoryPage';
-import { NotificationPermissionPrompt } from '@/components/notifications/NotificationPermissionPrompt';
 import { PWAUpdatePrompt } from '@/components/PWAUpdatePrompt';
 import { TransactionProvider } from '@/contexts/TransactionContext';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -254,9 +253,9 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             />
           )}
           
-          {/* Prompt de permission pour les notifications push */}
-          <NotificationPermissionPrompt />
-          
+          {/* Notifications push désactivées pour l'instant (pas d'app native) —
+              à réactiver quand l'application sera créée. */}
+
           {/* Prompt de mise à jour PWA */}
           <PWAUpdatePrompt />
         </div>
