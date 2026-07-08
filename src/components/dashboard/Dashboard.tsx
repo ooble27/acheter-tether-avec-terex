@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { MobileMenu } from '@/components/dashboard/AppSidebar';
-import { DesktopMenuPopover } from '@/components/dashboard/DesktopMenuPopover';
 import { MobileBottomNav } from '@/components/dashboard/MobileBottomNav';
 import { DesktopBottomNav } from '@/components/dashboard/DesktopBottomNav';
 import { BuyUSDT } from '@/components/features/BuyUSDT';
@@ -27,7 +25,7 @@ import { useIsTablet } from '@/hooks/use-tablet';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Button } from '@/components/ui/button';
-import { LogOut, Menu } from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
 import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
 import { B2BPage } from '@/components/features/B2BPage';
 
@@ -38,8 +36,6 @@ interface DashboardProps {
 
 export function Dashboard({ user, onLogout }: DashboardProps) {
   const [activeSection, setActiveSection] = useState('home');
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useIsMobile();
@@ -188,45 +184,21 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     <TransactionProvider>
       <SidebarProvider>
         <div className="min-h-screen flex flex-col w-full bg-terex-dark">
-          {/* Bouton menu flottant — IDENTIQUE sur mobile navigateur ET PWA
-              (ouvre le même menu plein écran avec les mêmes pages). */}
-          {isMobile ? (
+          {/* Bouton profil flottant — IDENTIQUE partout (site bureau, mobile, PWA) :
+              va DIRECTEMENT à la page Profil (qui contient tout le menu). Pas de
+              menu déroulant ni de hamburger. Masqué lorsqu'on est déjà sur le profil. */}
+          {activeSection !== 'profile' && (
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setMenuOpen(true)}
-              className="fixed right-4 z-50 text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
+              onClick={() => handleNavigate('profile')}
+              aria-label="Mon profil"
+              className="fixed right-4 z-50 text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50 w-11 h-11"
               style={{ top: 'calc(env(safe-area-inset-top, 0px) + 16px)' }}
             >
-              <Menu className="h-5 w-5" />
+              <User className="h-5 w-5" />
             </Button>
-          ) : !isMobile ? (
-            <DesktopMenuPopover
-              activeSection={activeSection}
-              setActiveSection={handleNavigate}
-              onLogout={handleLogout}
-              isOpen={desktopMenuOpen}
-              onOpenChange={setDesktopMenuOpen}
-              trigger={
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="fixed top-4 right-4 z-50 text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50"
-                >
-                  <Menu className="h-5 w-5" />
-                </Button>
-              }
-            />
-          ) : null}
-          
-          {/* Menu hamburger mobile plein écran */}
-          <MobileMenu 
-            activeSection={activeSection}
-            setActiveSection={handleNavigate}
-            onLogout={handleLogout}
-            isOpen={menuOpen}
-            onClose={() => setMenuOpen(false)}
-          />
+          )}
 
           <main className={`flex-1 ${isMobile ? 'p-4 pt-16 pb-20' : 'p-6 pt-6 pb-24'} relative`}>
             {renderContent()}

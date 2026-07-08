@@ -62,6 +62,27 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   const { isAdmin, isKYCReviewer } = useUserRole();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: '', phone: '', country: '', language: 'fr' });
+  const [stats, setStats] = useState<{ count: number; volume: number; currency: string }>({ count: 0, volume: 0, currency: 'CFA' });
+
+  // Vraies données d'activité : nombre de transactions + volume (commandes complétées)
+  useEffect(() => {
+    (async () => {
+      if (!authUser?.id) return;
+      const { data } = await supabase
+        .from('orders')
+        .select('amount, currency, status')
+        .eq('user_id', authUser.id);
+      const rows = data || [];
+      const volume = rows
+        .filter((o: any) => o.status === 'completed')
+        .reduce((s: number, o: any) => s + Number(o.amount || 0), 0);
+      setStats({ count: rows.length, volume, currency: (rows[0] as any)?.currency || 'CFA' });
+    })();
+  }, [authUser?.id]);
+
+  const memberSince = authUser?.created_at
+    ? new Date(authUser.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+    : 'Nouveau membre';
 
   // Le <main> du Dashboard applique un padding-top (pt-16 en PWA mobile, etc.).
   // On annule ce décalage sur les sous-pages pour que l'en-tête « retour »
@@ -339,9 +360,9 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
         <SubHeader title="Activité" />
         <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {[
-            { label: 'Transactions totales', value: '0', icon: Activity },
-            { label: 'Volume total', value: '0 CFA', icon: TrendingUp },
-            { label: 'Membre depuis', value: 'Nouveau membre', icon: Clock },
+            { label: 'Transactions totales', value: String(stats.count), icon: Activity },
+            { label: 'Volume total', value: `${stats.volume.toLocaleString('fr-FR')} ${stats.currency}`, icon: TrendingUp },
+            { label: 'Membre depuis', value: memberSince, icon: Clock },
           ].map(({ label, value, icon: Icon }) => (
             <div key={label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
               <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -613,8 +634,16 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   return (
     <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px', position: 'relative' }}>
 
+      {/* En-tête — bouton retour (sortir du profil) */}
+      <div style={{ display: 'flex', alignItems: 'center', padding: '4px 20px 0' }}>
+        <button onClick={() => onNavigate?.('home')} aria-label="Retour"
+          style={{ width: '38px', height: '38px', borderRadius: '50%', background: ICON_BG, border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+          <ArrowLeft size={17} color="#fff" />
+        </button>
+      </div>
+
       {/* Avatar hero */}
-      <div style={{ padding: '48px 24px 32px' }}>
+      <div style={{ padding: '20px 24px 32px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', textAlign: 'center' }}>
           <div style={{ width: '88px', height: '88px', borderRadius: '50%', background: '#2d2d2d', border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '30px', fontWeight: 700, color: '#fff', letterSpacing: '-1px' }}>
             {initials}
