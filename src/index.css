@@ -92,47 +92,11 @@
   }
 }
 
-/* Règles spécifiques pour Safari mobile pour éviter le flash de couleur verte */
-@supports (-webkit-appearance: none) {
-  @media screen and (max-width: 768px) {
-    html {
-      background-color: #1a1a1a !important;
-    }
-    
-    body {
-      background-color: #1a1a1a !important;
-    }
-    
-    #root {
-      background-color: #1a1a1a !important;
-    }
-    
-    /* Forcer le fond noir sur tous les éléments racine */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #1a1a1a;
-      z-index: -1000;
-    }
-  }
-}
-
-/* Protection supplémentaire pour iOS Safari */
-@supports (-webkit-touch-callout: none) {
-  html, body, #root {
-    background-color: #1a1a1a !important;
-    background: #1a1a1a !important;
-  }
-  
-  /* Éviter tout flash de couleur au chargement */
-  body {
-    opacity: 1 !important;
-    background: #1a1a1a !important;
-  }
+/* Fond de base uniforme — aucune couche superposée (ni overlay fixe, ni !important
+   qui recouvrait le contenu en haut/bas). Le fond de la plateforme s'affiche
+   directement, bord à bord. */
+html, body {
+  background-color: #1a1a1a;
 }
 
 /* Classe pour masquer la barre de défilement (renforcée) */
