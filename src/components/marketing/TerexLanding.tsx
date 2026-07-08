@@ -109,7 +109,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
       <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
 
       {/* NAV */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(26,26,26,0.8)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${BORDER}` }}>
+      <nav style={{ position: 'relative', zIndex: 50, background: BG, borderBottom: `1px solid ${BORDER}` }}>
         <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '0 32px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
             <img src={LOGO} alt="Terex" style={{ width: 44, height: 44, objectFit: 'contain' }} />
