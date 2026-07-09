@@ -26,19 +26,23 @@ export function cancellationConfirmationHtml({ orderData, transactionType, clien
     { label: 'Montant',   value: `${amount} ${currency}` },
     { label: 'USDT',      value: `${usdt} USDT` },
     { label: 'Statut',    value: 'Annulé', last: true },
-    ...(orderData.cancellation_reason
-      ? [{ label: 'Motif', value: orderData.cancellation_reason, last: true }]
-      : []),
   ];
 
   const notice = transactionType === 'buy'
     ? "Si vous avez déjà effectué un paiement Mobile Money, notre équipe procédera au remboursement dans les 24 à 48 heures. Contactez notre support si vous n'avez pas reçu votre remboursement sous 48h."
     : "Si vous avez déjà envoyé des USDT, notre équipe procédera au remboursement dans les 24 à 48 heures. Contactez notre support si nécessaire.";
 
+  // Le motif s'affiche en pleine largeur SOUS le tableau (pas coincé dans une
+  // colonne du formulaire — illisible sur mobile).
+  const motifBlock = orderData.cancellation_reason
+    ? noticeBox(`<strong style="color:${C.text};">Motif de l'annulation</strong><br/>${orderData.cancellation_reason}`, 'neutral')
+    : '';
+
   const rows =
     hero({ iconHtml: alertRing('✕', C.red), title: 'Commande annulée', date: dateStr, subtitle }) +
     spacer(20) +
     infoTable(detailRows, 'Détails de la commande annulée') +
+    motifBlock +
     noticeBox(notice, 'neutral') +
     ctaButton('Passer une nouvelle commande', 'https://terangaexchange.com/dashboard');
 

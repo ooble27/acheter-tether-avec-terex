@@ -22,9 +22,16 @@ export function TransactionHistoryPage() {
     }
   };
 
+  // Rafraîchit silencieusement à chaque ouverture de l'historique pour que
+  // les statuts (annulée, terminée…) soient toujours à jour.
+  useEffect(() => {
+    refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const total = transactions?.length || 0;
   const completed = transactions?.filter(t => t.status === 'completed' || t.status === 'confirmed').length || 0;
-  const pending = transactions?.filter(t => t.status === 'pending').length || 0;
+  const pending = transactions?.filter(t => t.status === 'pending' || t.status === 'processing').length || 0;
 
   const stats = [
     { label: 'Total',     value: total,     Icon: Coins    },

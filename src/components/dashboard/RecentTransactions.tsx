@@ -99,13 +99,18 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
                 <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{label}</span>
-                <span style={{
-                  fontSize: '10px', fontWeight: 600, padding: '2px 7px', borderRadius: '999px',
-                  background: tx.status === 'completed' || tx.status === 'confirmed' ? 'rgba(255,255,255,0.06)' : 'rgba(251,191,36,0.1)',
-                  color: tx.status === 'completed' || tx.status === 'confirmed' ? 'rgba(255,255,255,0.55)' : '#fbbf24',
-                }}>
-                  {tx.status === 'completed' || tx.status === 'confirmed' ? 'Terminé' : 'En cours'}
-                </span>
+                {(() => {
+                  const done = tx.status === 'completed' || tx.status === 'confirmed';
+                  const ko = tx.status === 'cancelled' || tx.status === 'failed';
+                  const bg = done ? 'rgba(255,255,255,0.06)' : ko ? 'rgba(248,113,113,0.08)' : 'rgba(251,191,36,0.1)';
+                  const color = done ? 'rgba(255,255,255,0.55)' : ko ? '#f87171' : '#fbbf24';
+                  const text = done ? 'Terminé' : tx.status === 'cancelled' ? 'Annulé' : tx.status === 'failed' ? 'Échoué' : 'En cours';
+                  return (
+                    <span style={{ fontSize: '10px', fontWeight: 600, padding: '2px 7px', borderRadius: '999px', background: bg, color }}>
+                      {text}
+                    </span>
+                  );
+                })()}
               </div>
               <p style={{ color: '#4b5563', fontSize: '11px', margin: 0 }}>{formatDate(tx.date)}</p>
             </div>

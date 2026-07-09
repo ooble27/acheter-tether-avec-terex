@@ -43,6 +43,10 @@ const statusConfig = (status: string) => {
     case 'completed':
     case 'confirmed':
       return { label: 'Terminée', Icon: CheckCircle, bg: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.55)' };
+    case 'processing':
+      return { label: 'En traitement', Icon: Clock, bg: 'rgba(251,191,36,0.08)', color: '#fbbf24' };
+    case 'cancelled':
+      return { label: 'Annulée', Icon: XCircle, bg: 'rgba(248,113,113,0.08)', color: '#f87171' };
     case 'failed':
       return { label: 'Échouée', Icon: XCircle, bg: 'rgba(248,113,113,0.08)', color: '#f87171' };
     default:

@@ -13,7 +13,7 @@ interface Transaction {
   receiveCurrency?: string;
   network: string;
   address?: string;
-  status: 'pending' | 'confirmed' | 'completed' | 'failed';
+  status: 'pending' | 'processing' | 'confirmed' | 'completed' | 'cancelled' | 'failed';
   date: string;
   recipient_name?: string;
   recipient_phone?: string;
@@ -67,17 +67,20 @@ export const useTransactions = () => {
     const userCache = userCaches[userId];
     const isCacheValid = userCache && (now - userCache.timestamp) < CACHE_DURATION;
     
-    // Si on a un cache valide pour cet utilisateur et pas de force refresh
-    if (isCacheValid && userCache.transactions.length > 0 && !forceRefresh) {
-      console.log('useTransactions: Using cache for user', userId);
+    // Cache = affichage instantané SEULEMENT — on continue TOUJOURS avec un
+    // fetch frais derrière (stale-while-revalidate). Sinon les changements de
+    // statut (annulée, terminée…) mettaient jusqu'à 5 min à apparaître.
+    const paintedFromCache = isCacheValid && userCache.transactions.length > 0 && !forceRefresh;
+    if (paintedFromCache) {
+      console.log('useTransactions: Cache affiché, rafraîchissement en arrière-plan', userId);
       setTransactions(userCache.transactions);
       setHasLoaded(true);
       setLoading(false);
-      return;
+      // pas de return : le fetch ci-dessous actualise les statuts
     }
 
     try {
-      setLoading(true);
+      if (!paintedFromCache) setLoading(true);
       console.log('useTransactions: Fetching from database for user', userId);
 
       // Historique client : limité aux 3 derniers mois
