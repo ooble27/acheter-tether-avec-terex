@@ -137,18 +137,18 @@ export function adminNewOrderHtml({ orderData, transactionType, clientName, clie
       style="border-collapse:separate;border-spacing:0;border-radius:16px;overflow:hidden;
              border:1px solid ${C.border};background:${C.rowBg};">
       <tr>
-        <!-- gauche -->
-        <td style="padding:20px;width:50%;border-right:1px solid ${C.border};vertical-align:middle;">
+        <!-- gauche (classe scol : passe en pleine largeur sur mobile) -->
+        <td class="scol" style="padding:20px;width:50%;border-right:1px solid ${C.border};vertical-align:middle;">
           <p style="font-family:${F};font-size:9px;font-weight:700;letter-spacing:0.12em;
              text-transform:uppercase;color:${C.textDim};margin:0 0 8px 0;">${payLabel}</p>
-          <p style="font-family:${FM};font-size:22px;font-weight:900;color:#f5f5f5;margin:0;line-height:1;">${payVal}</p>
+          <p style="font-family:${FM};font-size:21px;font-weight:900;color:#f5f5f5;margin:0;line-height:1.15;white-space:nowrap;">${payVal}</p>
           <p style="font-family:${F};font-size:11px;color:${C.textMuted};margin:6px 0 0 0;">${paySub}</p>
         </td>
         <!-- droite -->
-        <td style="padding:20px;width:50%;vertical-align:middle;">
+        <td class="scol scol-last" style="padding:20px;width:50%;vertical-align:middle;">
           <p style="font-family:${F};font-size:9px;font-weight:700;letter-spacing:0.12em;
              text-transform:uppercase;color:${C.textDim};margin:0 0 8px 0;">${recvLabel}</p>
-          <p style="font-family:${FM};font-size:22px;font-weight:900;color:${C.green};margin:0;line-height:1;">${recvVal}</p>
+          <p style="font-family:${FM};font-size:21px;font-weight:900;color:${C.green};margin:0;line-height:1.15;white-space:nowrap;">${recvVal}</p>
           <p style="font-family:${F};font-size:11px;color:${C.textMuted};margin:6px 0 0 0;">${recvSub}</p>
         </td>
       </tr>

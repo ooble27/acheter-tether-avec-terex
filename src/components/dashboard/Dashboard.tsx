@@ -193,7 +193,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               size="icon"
               onClick={() => handleNavigate('profile')}
               aria-label="Mon profil"
-              className="fixed right-4 z-50 text-white hover:bg-terex-gray/80 rounded-xl border border-terex-gray/50 w-11 h-11"
+              className="fixed right-4 z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12"
               style={{ top: 'calc(env(safe-area-inset-top, 0px) + 16px)' }}
             >
               <User className="h-5 w-5" />

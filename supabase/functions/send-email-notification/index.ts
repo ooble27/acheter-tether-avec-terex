@@ -103,34 +103,49 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('Adresse email manquante');
     }
 
-    // Récupérer le prénom du client pour la salutation des templates
+    // Récupérer le VRAI nom du client (comme dans le dashboard) + son téléphone.
+    // Jamais de repli sur le début de l'email (« pape.diouf69 » n'est pas un nom).
     let clientName: string | undefined = undefined;
+    let clientPhone: string | undefined = undefined;
     try {
       const targetUid = userId || (orderData?.user_id ?? null);
       if (targetUid) {
         const { data: profile } = await supabase
           .from('profiles')
-          .select('full_name, first_name, last_name')
+          .select('full_name, first_name, last_name, phone')
           .eq('id', targetUid)
           .maybeSingle();
         if (profile) {
-          clientName = (profile as any).first_name
-            || ((profile as any).full_name ? String((profile as any).full_name).split(' ')[0] : undefined)
+          const p: any = profile;
+          clientName = p.full_name
+            || [p.first_name, p.last_name].filter(Boolean).join(' ')
             || undefined;
+          clientPhone = p.phone || undefined;
         }
-        if (!clientName) {
+        if (!clientName || !clientPhone) {
           const { data: authU } = await supabase.auth.admin.getUserById(targetUid);
           const meta: any = authU?.user?.user_metadata || {};
-          clientName = meta.first_name || meta.firstName
-            || (meta.full_name ? String(meta.full_name).split(' ')[0] : undefined)
-            || (authU?.user?.email ? authU.user.email.split('@')[0] : undefined);
+          if (!clientName) {
+            clientName = meta.full_name || meta.name
+              || [meta.first_name || meta.firstName, meta.last_name || meta.lastName].filter(Boolean).join(' ')
+              || undefined;
+          }
+          if (!clientPhone) {
+            clientPhone = meta.phone || meta.phone_number || undefined;
+          }
         }
       }
       if (!clientName && orderData?.recipient_name) {
-        clientName = String(orderData.recipient_name).split(' ')[0];
+        clientName = String(orderData.recipient_name);
       }
     } catch (e) {
       console.warn('Impossible de récupérer le nom du client:', e);
+    }
+
+    // Téléphone de secours pour l'email admin (évite les « N/A » quand la
+    // commande n'a pas de numéro : on prend celui du profil du client).
+    if (orderData && clientPhone && !orderData.phone_number) {
+      orderData.phone_number = clientPhone;
     }
 
     // Générer le contenu de l'email en fonction du type
