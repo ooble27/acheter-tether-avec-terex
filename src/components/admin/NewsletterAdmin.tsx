@@ -1,23 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import {
-  Mail,
-  Send,
-  Eye,
-  Loader2,
-  Users,
-  TestTube,
-  FileText,
-  Gift,
-  Bell,
-  PartyPopper,
-  Megaphone,
-  RefreshCw
+  Mail, Send, Eye, Loader2, Users, TestTube, FileText, Gift, Bell,
+  Megaphone, RefreshCw, History, UserCheck, UserX, Moon, CheckCircle2, AlertCircle,
 } from 'lucide-react';
 
 const CARD = '#1e1e1e';
@@ -25,391 +19,411 @@ const BORDER = 'rgba(255,255,255,0.07)';
 const INPUT_BG = 'rgba(255,255,255,0.04)';
 
 const cardStyle: React.CSSProperties = {
-  background: CARD,
-  border: `1px solid ${BORDER}`,
-  borderRadius: 16,
-  padding: 18,
+  background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: 18,
 };
-
 const inputClass = 'text-white placeholder-[#6b7280]';
 const inputStyle: React.CSSProperties = {
-  background: INPUT_BG,
-  border: `1px solid ${BORDER}`,
-  borderRadius: 12,
-  color: '#fff',
-  outline: 'none',
+  background: INPUT_BG, border: `1px solid ${BORDER}`, borderRadius: 12, color: '#fff', outline: 'none',
 };
 
-interface NewsletterTemplate {
-  id: string;
-  name: string;
-  icon: React.ReactNode;
-  description: string;
-  subject: string;
-  previewText: string;
-  heroTitle: string;
-  content: string;
-  ctaText: string;
-  ctaUrl: string;
+type Segment = 'all' | 'active_clients' | 'never_ordered' | 'inactive_30d';
+
+const SEGMENTS: { id: Segment; label: string; desc: string; Icon: any }[] = [
+  { id: 'all', label: 'Tous les clients', desc: 'Tous les comptes confirmés', Icon: Users },
+  { id: 'active_clients', label: 'Clients actifs', desc: 'Ont déjà passé une commande', Icon: UserCheck },
+  { id: 'never_ordered', label: 'Jamais commandé', desc: 'Inscrits sans commande', Icon: UserX },
+  { id: 'inactive_30d', label: 'Inactifs 30 j', desc: 'Aucune commande depuis 30 jours', Icon: Moon },
+];
+
+interface CampaignTemplate {
+  id: string; name: string; icon: React.ReactNode; description: string;
+  subject: string; previewText: string; heroTitle: string; content: string;
+  highlightLabel?: string; highlightValue?: string; highlightSub?: string;
+  ctaText: string; ctaUrl: string;
 }
 
-const NEWSLETTER_TEMPLATES: NewsletterTemplate[] = [
+const TEMPLATES: CampaignTemplate[] = [
   {
-    id: 'welcome',
-    name: 'Bienvenue',
-    icon: <PartyPopper className="w-5 h-5" />,
-    description: 'Nouveaux utilisateurs',
-    subject: 'Bienvenue chez Terex !',
-    previewText: 'Commencez votre aventure avec Terex',
-    heroTitle: 'Bienvenue chez Terex !',
-    content: 'Nous sommes ravis de vous accueillir sur la plateforme la plus simple pour vos transferts internationaux. Complétez votre vérification KYC pour débloquer toutes les fonctionnalités et commencer à envoyer de l\'argent en quelques minutes.',
-    ctaText: 'Accéder à mon compte',
-    ctaUrl: 'https://acheter-tether-avec-terex.lovable.app/dashboard',
+    id: 'rate', name: 'Taux du jour', icon: <Gift className="w-5 h-5" />, description: 'Promo sur le taux',
+    subject: 'Taux exceptionnel sur Terex aujourd\'hui',
+    previewText: 'Profitez de notre meilleur taux USDT/CFA',
+    heroTitle: 'Un taux à ne pas manquer',
+    content: 'Bonne nouvelle : notre taux USDT/CFA est particulièrement avantageux en ce moment.\nAchetez ou vendez vos USDT en quelques minutes, avec Wave ou Orange Money, et recevez vos fonds rapidement.',
+    highlightLabel: 'Taux du jour', highlightValue: '585 CFA / USDT', highlightSub: 'Achat & vente · mis à jour en temps réel',
+    ctaText: 'Profiter du taux', ctaUrl: 'https://terangaexchange.com/dashboard',
   },
   {
-    id: 'promotions',
-    name: 'Promotions',
-    icon: <Gift className="w-5 h-5" />,
-    description: 'Offres et réductions',
-    subject: 'Offre exclusive sur Terex',
-    previewText: 'Profitez de tarifs exceptionnels',
-    heroTitle: 'Offre Spéciale !',
-    content: 'Pour vous remercier de votre fidélité, nous vous offrons 50% de réduction sur les frais de transfert jusqu\'à la fin du mois. Invitez un ami et recevez tous les deux un bonus sur votre prochaine transaction.',
-    ctaText: 'Profiter de l\'offre',
-    ctaUrl: 'https://acheter-tether-avec-terex.lovable.app/dashboard',
+    id: 'reactivation', name: 'Réactivation', icon: <Bell className="w-5 h-5" />, description: 'Clients inactifs',
+    subject: 'On ne vous a pas vu depuis un moment 👀'.replace(' 👀', ''),
+    previewText: 'Votre compte Terex vous attend',
+    heroTitle: 'Ça fait un moment !',
+    content: 'Votre compte Terex est toujours actif et prêt à l\'emploi.\nAcheter ou vendre des USDT prend moins de 3 minutes : choisissez votre montant, payez avec Wave ou Orange Money, et c\'est réglé.\nNotre équipe support répond en moins de 5 minutes si vous avez la moindre question.',
+    ctaText: 'Reprendre mes transactions', ctaUrl: 'https://terangaexchange.com/dashboard',
   },
   {
-    id: 'updates',
-    name: 'Mises à jour',
-    icon: <Bell className="w-5 h-5" />,
-    description: 'Nouvelles fonctionnalités',
-    subject: 'Nouveautés Terex',
-    previewText: 'Découvrez les dernières améliorations',
-    heroTitle: 'Nouveautés Terex',
-    content: 'Nous avons amélioré notre plateforme pour vous offrir une meilleure expérience. Vos transferts sont maintenant traités plus rapidement, avec une interface repensée et des mesures de sécurité renforcées.',
-    ctaText: 'Découvrir',
-    ctaUrl: 'https://acheter-tether-avec-terex.lovable.app/dashboard',
+    id: 'updates', name: 'Nouveautés', icon: <Megaphone className="w-5 h-5" />, description: 'Nouvelles fonctionnalités',
+    subject: 'Du nouveau sur Terex',
+    previewText: 'Découvrez les dernières améliorations de la plateforme',
+    heroTitle: 'Terex s\'améliore pour vous',
+    content: 'Nous avons travaillé dur ces dernières semaines pour améliorer votre expérience.\nTransactions plus rapides, interface repensée, suivi de commande amélioré : tout est pensé pour que vos échanges USDT/CFA soient les plus simples d\'Afrique de l\'Ouest.',
+    ctaText: 'Découvrir les nouveautés', ctaUrl: 'https://terangaexchange.com/dashboard',
   },
   {
-    id: 'announcement',
-    name: 'Annonce',
-    icon: <Megaphone className="w-5 h-5" />,
-    description: 'Annonce importante',
-    subject: 'Annonce importante Terex',
-    previewText: 'Une nouvelle à vous partager',
-    heroTitle: 'Annonce Importante',
-    content: 'Nous avons une nouvelle passionnante à vous annoncer. Terex est maintenant disponible dans de nouveaux pays avec de nouvelles devises supportées et des partenariats pour des taux encore plus avantageux.',
-    ctaText: 'En savoir plus',
-    ctaUrl: 'https://acheter-tether-avec-terex.lovable.app/about',
+    id: 'welcome', name: 'Bienvenue', icon: <FileText className="w-5 h-5" />, description: 'Nouveaux inscrits',
+    subject: 'Bienvenue chez Terex',
+    previewText: 'Vos premiers USDT en moins de 3 minutes',
+    heroTitle: 'Bienvenue chez Terex',
+    content: 'Merci de nous avoir rejoints ! Terex est la façon la plus simple d\'acheter et vendre des USDT en CFA.\nPour commencer : créez votre première commande, payez avec Wave ou Orange Money, et recevez vos USDT directement sur votre portefeuille.',
+    ctaText: 'Faire ma première transaction', ctaUrl: 'https://terangaexchange.com/dashboard',
   },
 ];
 
+interface CampaignRecord {
+  id: string; subject: string; segment: string; recipients_count: number;
+  success_count: number; error_count: number; status: string; created_at: string;
+}
+
+const segmentLabel = (id: string) => SEGMENTS.find(s => s.id === id)?.label || id;
+
 export function NewsletterAdmin() {
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  const [subject, setSubject] = useState('Nouveautés Terex');
-  const [previewText, setPreviewText] = useState('Découvrez les dernières nouveautés');
-  const [heroTitle, setHeroTitle] = useState('Nouveautés Terex');
-  const [content, setContent] = useState('Nous avons amélioré notre plateforme pour vous offrir une meilleure expérience.');
+  const [subject, setSubject] = useState('');
+  const [previewText, setPreviewText] = useState('');
+  const [heroTitle, setHeroTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [highlightLabel, setHighlightLabel] = useState('');
+  const [highlightValue, setHighlightValue] = useState('');
+  const [highlightSub, setHighlightSub] = useState('');
   const [ctaText, setCtaText] = useState('Accéder à mon compte');
-  const [ctaUrl, setCtaUrl] = useState('https://acheter-tether-avec-terex.lovable.app');
+  const [ctaUrl, setCtaUrl] = useState('https://terangaexchange.com/dashboard');
+  const [segment, setSegment] = useState<Segment>('all');
+  const [segmentCount, setSegmentCount] = useState<number | null>(null);
+  const [countLoading, setCountLoading] = useState(false);
   const [testEmail, setTestEmail] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
+  const [previewHtml, setPreviewHtml] = useState<string>('');
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [history, setHistory] = useState<CampaignRecord[]>([]);
 
-  const applyTemplate = (template: NewsletterTemplate) => {
-    setSelectedTemplate(template.id);
-    setSubject(template.subject);
-    setPreviewText(template.previewText);
-    setHeroTitle(template.heroTitle);
-    setContent(template.content);
-    setCtaText(template.ctaText);
-    setCtaUrl(template.ctaUrl);
-    toast.success(`Template "${template.name}" appliqué`);
+  const payload = () => ({
+    subject, previewText, heroTitle, content,
+    highlightLabel: highlightLabel || undefined,
+    highlightValue: highlightValue || undefined,
+    highlightSub: highlightSub || undefined,
+    ctaText, ctaUrl, segment,
+  });
+
+  // Compteur de destinataires du segment sélectionné
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setCountLoading(true);
+      setSegmentCount(null);
+      try {
+        const { data, error } = await supabase.functions.invoke('send-newsletter', {
+          body: { mode: 'count', segment, subject: '-' },
+        });
+        if (!cancelled && !error && data?.success) setSegmentCount(data.count);
+      } catch { /* silencieux */ }
+      if (!cancelled) setCountLoading(false);
+    })();
+    return () => { cancelled = true; };
+  }, [segment]);
+
+  // Historique des campagnes
+  const loadHistory = async () => {
+    const { data } = await (supabase as any)
+      .from('email_campaigns')
+      .select('id, subject, segment, recipients_count, success_count, error_count, status, created_at')
+      .order('created_at', { ascending: false })
+      .limit(10);
+    setHistory((data as CampaignRecord[]) || []);
+  };
+  useEffect(() => { loadHistory(); }, []);
+
+  const applyTemplate = (t: CampaignTemplate) => {
+    setSelectedTemplate(t.id);
+    setSubject(t.subject); setPreviewText(t.previewText); setHeroTitle(t.heroTitle);
+    setContent(t.content);
+    setHighlightLabel(t.highlightLabel || ''); setHighlightValue(t.highlightValue || ''); setHighlightSub(t.highlightSub || '');
+    setCtaText(t.ctaText); setCtaUrl(t.ctaUrl);
+    toast.success(`Modèle « ${t.name} » appliqué`);
   };
 
   const resetForm = () => {
     setSelectedTemplate(null);
-    setSubject('Nouveautés Terex');
-    setPreviewText('Découvrez les dernières nouveautés');
-    setHeroTitle('Nouveautés Terex');
-    setContent('');
-    setCtaText('Accéder à mon compte');
-    setCtaUrl('https://acheter-tether-avec-terex.lovable.app');
-    toast.success('Formulaire réinitialisé');
+    setSubject(''); setPreviewText(''); setHeroTitle(''); setContent('');
+    setHighlightLabel(''); setHighlightValue(''); setHighlightSub('');
+    setCtaText('Accéder à mon compte'); setCtaUrl('https://terangaexchange.com/dashboard');
+    setPreviewHtml('');
   };
 
-  const sendNewsletter = async (isTest: boolean) => {
-    if (isTest && !testEmail) {
-      toast.error('Veuillez entrer un email de test');
-      return;
-    }
-
-    if (!content.trim()) {
-      toast.error('Veuillez entrer le contenu du message');
-      return;
-    }
-
-    if (isTest) {
-      setIsTesting(true);
-    } else {
-      setIsSending(true);
-    }
-
+  const refreshPreview = async () => {
+    if (!subject && !heroTitle && !content) { toast.error('Composez d\'abord votre email'); return; }
+    setPreviewLoading(true);
     try {
-      const payload: Record<string, unknown> = {
-        subject,
-        previewText,
-        heroTitle,
-        content,
-        ctaText,
-        ctaUrl,
-      };
-
-      if (isTest) {
-        payload.testEmail = testEmail;
-      }
-
       const { data, error } = await supabase.functions.invoke('send-newsletter', {
-        body: payload,
+        body: { ...payload(), mode: 'preview' },
       });
-
       if (error) throw error;
+      setPreviewHtml(data?.html || '');
+    } catch (e: any) {
+      toast.error(e.message || 'Aperçu impossible');
+    } finally {
+      setPreviewLoading(false);
+    }
+  };
 
-      if (isTest) {
-        toast.success(`Email de test envoyé à ${testEmail}`);
-      } else {
-        toast.success(`Newsletter envoyée à ${data?.totalSent || 0} destinataires`);
-      }
-    } catch (error: any) {
-      console.error('Error sending newsletter:', error);
-      toast.error(error.message || 'Erreur lors de l\'envoi');
+  const sendTest = async () => {
+    if (!testEmail) { toast.error('Entrez un email de test'); return; }
+    if (!subject.trim() || !content.trim()) { toast.error('Sujet et message requis'); return; }
+    setIsTesting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('send-newsletter', {
+        body: { ...payload(), mode: 'test', testEmail },
+      });
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.error || 'Échec du test');
+      toast.success(`Test envoyé à ${testEmail}`);
+    } catch (e: any) {
+      toast.error(e.message || 'Erreur lors du test');
+    } finally {
+      setIsTesting(false);
+    }
+  };
+
+  const sendCampaign = async () => {
+    setConfirmOpen(false);
+    setIsSending(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('send-newsletter', {
+        body: { ...payload(), mode: 'send' },
+      });
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.error || 'Échec de l\'envoi');
+      toast.success(data.message || `Campagne envoyée à ${data.totalSent} destinataires`);
+      loadHistory();
+    } catch (e: any) {
+      toast.error(e.message || 'Erreur lors de l\'envoi');
     } finally {
       setIsSending(false);
-      setIsTesting(false);
     }
   };
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Templates Section */}
+
+      {/* Modèles */}
       <div style={cardStyle}>
         <div className="flex flex-row items-center justify-between mb-4">
           <h3 className="text-white flex items-center gap-2 font-semibold">
-            <FileText className="w-5 h-5 text-[#9ca3af]" />
-            Templates
+            <FileText className="w-5 h-5 text-[#9ca3af]" /> Modèles
           </h3>
-          <Button
-            onClick={resetForm}
-            size="sm"
-            className="text-white hover:opacity-90"
-            style={{ background: '#2d2d2d', border: `1px solid ${BORDER}` }}
-          >
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Réinitialiser
+          <Button onClick={resetForm} size="sm" className="text-white hover:opacity-90"
+            style={{ background: '#2d2d2d', border: `1px solid ${BORDER}` }}>
+            <RefreshCw className="w-4 h-4 mr-2" /> Réinitialiser
           </Button>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-          {NEWSLETTER_TEMPLATES.map((template) => (
-            <button
-              key={template.id}
-              onClick={() => applyTemplate(template)}
+          {TEMPLATES.map((t) => (
+            <button key={t.id} onClick={() => applyTemplate(t)}
               className="p-4 rounded-xl transition-all text-left hover:opacity-90"
               style={{
-                background: selectedTemplate === template.id ? 'rgba(255,255,255,0.08)' : INPUT_BG,
-                border: selectedTemplate === template.id
-                  ? '1px solid rgba(255,255,255,0.25)'
-                  : `1px solid ${BORDER}`,
-              }}
-            >
-              <div className={`mb-3 ${selectedTemplate === template.id ? 'text-white' : 'text-[#9ca3af]'}`}>
-                {template.icon}
-              </div>
-              <h3 className="text-white font-semibold mb-1">{template.name}</h3>
-              <p className="text-[#6b7280] text-xs">{template.description}</p>
+                background: selectedTemplate === t.id ? 'rgba(255,255,255,0.08)' : INPUT_BG,
+                border: selectedTemplate === t.id ? '1px solid rgba(255,255,255,0.25)' : `1px solid ${BORDER}`,
+              }}>
+              <div className={`mb-3 ${selectedTemplate === t.id ? 'text-white' : 'text-[#9ca3af]'}`}>{t.icon}</div>
+              <h3 className="text-white font-semibold mb-1">{t.name}</h3>
+              <p className="text-[#6b7280] text-xs">{t.description}</p>
             </button>
           ))}
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Form Section */}
+        {/* Colonne gauche : composer + audience + envoi */}
         <div className="flex flex-col gap-4">
+
+          {/* Composer */}
           <div style={cardStyle}>
             <h3 className="text-white flex items-center gap-2 font-semibold mb-4">
-              <Mail className="w-5 h-5 text-[#9ca3af]" />
-              Composer
+              <Mail className="w-5 h-5 text-[#9ca3af]" /> Composer
             </h3>
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label className="text-[#9ca3af]">Sujet</Label>
-                <Input
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  placeholder="Sujet de l'email..."
-                  className={inputClass}
-                  style={inputStyle}
-                />
+                <Input value={subject} onChange={(e) => setSubject(e.target.value)}
+                  placeholder="Sujet de l'email..." className={inputClass} style={inputStyle} />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[#9ca3af]">Texte d'aperçu (sous le sujet, dans la boîte mail)</Label>
+                <Input value={previewText} onChange={(e) => setPreviewText(e.target.value)}
+                  placeholder="Aperçu affiché dans la boîte de réception..." className={inputClass} style={inputStyle} />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[#9ca3af]">Titre principal</Label>
+                <Input value={heroTitle} onChange={(e) => setHeroTitle(e.target.value)}
+                  placeholder="Grand titre de l'email..." className={inputClass} style={inputStyle} />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[#9ca3af]">Message (un paragraphe par ligne)</Label>
+                <Textarea value={content} onChange={(e) => setContent(e.target.value)}
+                  placeholder={'Premier paragraphe...\nDeuxième paragraphe...'}
+                  className={`resize-none ${inputClass}`} style={inputStyle} rows={6} />
               </div>
 
+              {/* Bloc mis en avant (optionnel) */}
               <div className="space-y-2">
-                <Label className="text-[#9ca3af]">Aperçu</Label>
-                <Input
-                  value={previewText}
-                  onChange={(e) => setPreviewText(e.target.value)}
-                  placeholder="Texte d'aperçu..."
-                  className={inputClass}
-                  style={inputStyle}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-[#9ca3af]">Titre</Label>
-                <Input
-                  value={heroTitle}
-                  onChange={(e) => setHeroTitle(e.target.value)}
-                  placeholder="Titre principal..."
-                  className={inputClass}
-                  style={inputStyle}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-[#9ca3af]">Message</Label>
-                <Textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="Contenu du message..."
-                  className={`resize-none ${inputClass}`}
-                  style={inputStyle}
-                  rows={5}
-                />
+                <Label className="text-[#9ca3af]">Bloc mis en avant (optionnel — ex. taux, code promo)</Label>
+                <div className="grid grid-cols-3 gap-3">
+                  <Input value={highlightLabel} onChange={(e) => setHighlightLabel(e.target.value)}
+                    placeholder="Libellé" className={inputClass} style={inputStyle} />
+                  <Input value={highlightValue} onChange={(e) => setHighlightValue(e.target.value)}
+                    placeholder="Valeur (ex. 585 CFA)" className={inputClass} style={inputStyle} />
+                  <Input value={highlightSub} onChange={(e) => setHighlightSub(e.target.value)}
+                    placeholder="Sous-texte" className={inputClass} style={inputStyle} />
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-[#9ca3af]">Bouton</Label>
-                  <Input
-                    value={ctaText}
-                    onChange={(e) => setCtaText(e.target.value)}
-                    className={inputClass}
-                    style={inputStyle}
-                  />
+                  <Input value={ctaText} onChange={(e) => setCtaText(e.target.value)} className={inputClass} style={inputStyle} />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[#9ca3af]">URL</Label>
-                  <Input
-                    value={ctaUrl}
-                    onChange={(e) => setCtaUrl(e.target.value)}
-                    className={inputClass}
-                    style={inputStyle}
-                  />
+                  <Input value={ctaUrl} onChange={(e) => setCtaUrl(e.target.value)} className={inputClass} style={inputStyle} />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Send Section */}
+          {/* Audience */}
           <div style={cardStyle}>
             <h3 className="text-white flex items-center gap-2 font-semibold mb-4">
-              <Send className="w-5 h-5 text-[#9ca3af]" />
-              Envoyer
+              <Users className="w-5 h-5 text-[#9ca3af]" /> Audience
+            </h3>
+            <div className="grid grid-cols-2 gap-3">
+              {SEGMENTS.map(({ id, label, desc, Icon }) => (
+                <button key={id} onClick={() => setSegment(id)}
+                  className="p-3 rounded-xl text-left transition-all hover:opacity-90"
+                  style={{
+                    background: segment === id ? 'rgba(255,255,255,0.08)' : INPUT_BG,
+                    border: segment === id ? '1px solid rgba(255,255,255,0.25)' : `1px solid ${BORDER}`,
+                  }}>
+                  <Icon className={`w-4 h-4 mb-2 ${segment === id ? 'text-white' : 'text-[#9ca3af]'}`} />
+                  <p className="text-white text-sm font-semibold">{label}</p>
+                  <p className="text-[#6b7280] text-xs">{desc}</p>
+                </button>
+              ))}
+            </div>
+            <div className="mt-3 flex items-center gap-2 text-sm" style={{ color: '#9ca3af' }}>
+              {countLoading
+                ? <><Loader2 className="w-4 h-4 animate-spin" /> Calcul des destinataires…</>
+                : segmentCount !== null
+                  ? <><CheckCircle2 className="w-4 h-4" /> <span className="text-white font-semibold">{segmentCount}</span> destinataire(s) — désabonnés exclus automatiquement</>
+                  : <><AlertCircle className="w-4 h-4" /> Nombre indisponible</>}
+            </div>
+          </div>
+
+          {/* Envoi */}
+          <div style={cardStyle}>
+            <h3 className="text-white flex items-center gap-2 font-semibold mb-4">
+              <Send className="w-5 h-5 text-[#9ca3af]" /> Envoyer
             </h3>
             <div className="space-y-4">
               <div className="flex gap-3">
-                <Input
-                  type="email"
-                  value={testEmail}
-                  onChange={(e) => setTestEmail(e.target.value)}
-                  placeholder="Email de test..."
-                  className={`flex-1 ${inputClass}`}
-                  style={inputStyle}
-                />
-                <Button
-                  onClick={() => sendNewsletter(true)}
-                  disabled={isTesting || !testEmail}
-                  className="text-white hover:opacity-90"
-                  style={{ background: '#2d2d2d', border: `1px solid ${BORDER}` }}
-                >
-                  {isTesting ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <>
-                      <TestTube className="w-4 h-4 mr-2" />
-                      Tester
-                    </>
-                  )}
+                <Input type="email" value={testEmail} onChange={(e) => setTestEmail(e.target.value)}
+                  placeholder="Votre email pour le test..." className={`flex-1 ${inputClass}`} style={inputStyle} />
+                <Button onClick={sendTest} disabled={isTesting || !testEmail}
+                  className="text-white hover:opacity-90" style={{ background: '#2d2d2d', border: `1px solid ${BORDER}` }}>
+                  {isTesting ? <Loader2 className="w-4 h-4 animate-spin" /> : <><TestTube className="w-4 h-4 mr-2" /> Tester</>}
                 </Button>
               </div>
-
-              <Button
-                onClick={() => sendNewsletter(false)}
-                disabled={isSending}
-                className="w-full font-bold hover:opacity-90"
-                style={{ background: '#fff', color: '#141414' }}
-              >
-                {isSending ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Envoi en cours...
-                  </>
-                ) : (
-                  <>
-                    <Users className="w-4 h-4 mr-2" />
-                    Envoyer à tous les utilisateurs
-                  </>
-                )}
+              <Button onClick={() => setConfirmOpen(true)} disabled={isSending || !subject.trim() || !content.trim()}
+                className="w-full font-bold hover:opacity-90" style={{ background: '#fff', color: '#141414' }}>
+                {isSending
+                  ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Envoi en cours…</>
+                  : <><Users className="w-4 h-4 mr-2" /> Envoyer à « {segmentLabel(segment)} »{segmentCount !== null ? ` (${segmentCount})` : ''}</>}
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Preview Section */}
-        <div style={cardStyle}>
-          <h3 className="text-white flex items-center gap-2 font-semibold mb-4">
-            <Eye className="w-5 h-5 text-[#9ca3af]" />
-            Aperçu
-          </h3>
-          <div className="rounded-lg overflow-hidden" style={{ background: '#1a1a1a', border: `1px solid ${BORDER}` }}>
-            {/* Email Header */}
-            <div className="px-6 py-4 flex items-center justify-between" style={{ background: CARD, borderBottom: `1px solid ${BORDER}` }}>
-              <span className="text-white font-bold tracking-wider">TEREX</span>
-              <span className="text-[#9ca3af] text-sm px-3 py-1 rounded" style={{ border: `1px solid ${BORDER}` }}>Se connecter</span>
+        {/* Colonne droite : aperçu réel + historique */}
+        <div className="flex flex-col gap-4">
+          <div style={cardStyle}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-white flex items-center gap-2 font-semibold">
+                <Eye className="w-5 h-5 text-[#9ca3af]" /> Aperçu réel
+              </h3>
+              <Button onClick={refreshPreview} size="sm" disabled={previewLoading}
+                className="text-white hover:opacity-90" style={{ background: '#2d2d2d', border: `1px solid ${BORDER}` }}>
+                {previewLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><RefreshCw className="w-4 h-4 mr-2" /> Actualiser</>}
+              </Button>
             </div>
-
-            {/* Email Content */}
-            <div className="p-6" style={{ background: CARD }}>
-              <h2 className="text-white text-xl font-bold mb-6">{heroTitle || 'Titre principal'}</h2>
-              <p className="text-white mb-4">Cher client,</p>
-              <p className="text-[#9ca3af] leading-relaxed mb-6">
-                {content || 'Contenu du message...'}
-              </p>
-
-              {/* CTA Button */}
-              <div className="text-center my-6">
-                <span className="inline-block px-8 py-3 rounded-md font-semibold" style={{ background: '#fff', color: '#141414' }}>
-                  {ctaText || 'Bouton'}
-                </span>
+            {previewHtml ? (
+              <iframe title="Aperçu email" srcDoc={previewHtml} sandbox=""
+                className="w-full rounded-lg" style={{ height: 560, border: `1px solid ${BORDER}`, background: '#141414' }} />
+            ) : (
+              <div className="flex flex-col items-center justify-center text-center rounded-lg"
+                style={{ height: 240, border: `1px dashed ${BORDER}` }}>
+                <Eye className="w-6 h-6 mb-2" style={{ color: '#4b5563' }} />
+                <p className="text-[#6b7280] text-sm">Cliquez sur « Actualiser » pour voir le rendu<br />exact de l'email (celui que recevra le client).</p>
               </div>
+            )}
+          </div>
 
-              <p className="text-[#6b7280] text-sm mt-6">
-                Si vous avez des questions, répondez à cet email pour contacter notre équipe de support client.
-              </p>
-            </div>
-
-            {/* Email Footer */}
-            <div className="p-6 text-center" style={{ background: '#1a1a1a', borderTop: `1px solid ${BORDER}` }}>
-              <p className="text-white font-bold tracking-wider mb-4">TEREX</p>
-              <p className="text-[#6b7280] text-xs mb-4">
-                Vous avez reçu cet email car vous êtes inscrit chez Terex.
-              </p>
-              <p className="text-[#6b7280] text-xs">
-                <span className="underline">Politique de Confidentialité</span> | <span className="underline">Centre d'aide</span>
-              </p>
-              <p className="text-[#6b7280] text-xs mt-4">© 2025 Terex. Tous droits réservés.</p>
-            </div>
+          {/* Historique */}
+          <div style={cardStyle}>
+            <h3 className="text-white flex items-center gap-2 font-semibold mb-4">
+              <History className="w-5 h-5 text-[#9ca3af]" /> Dernières campagnes
+            </h3>
+            {history.length === 0 ? (
+              <p className="text-[#6b7280] text-sm">Aucune campagne envoyée pour le moment.</p>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {history.map(c => (
+                  <div key={c.id} className="p-3 rounded-xl" style={{ background: INPUT_BG, border: `1px solid ${BORDER}` }}>
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-white text-sm font-medium truncate">{c.subject}</p>
+                      <span className="text-xs whitespace-nowrap" style={{ color: c.error_count > 0 ? '#fbbf24' : '#9ca3af' }}>
+                        {c.success_count}/{c.recipients_count} envoyés
+                      </span>
+                    </div>
+                    <p className="text-[#6b7280] text-xs mt-1">
+                      {segmentLabel(c.segment)} · {new Date(c.created_at).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' })}
+                      {c.error_count > 0 ? ` · ${c.error_count} erreur(s)` : ''}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Confirmation d'envoi de masse */}
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)]">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">Confirmer l'envoi de la campagne</AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-400">
+              « {subject} » sera envoyé à <strong className="text-white">{segmentCount ?? '…'} destinataire(s)</strong> du
+              segment « {segmentLabel(segment)} ». Cette action est immédiate et irréversible.
+              Pensez à faire un envoi test d'abord.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-[#2d2d2d] border-[rgba(255,255,255,0.07)] text-white hover:bg-[#2d2d2d]">Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={sendCampaign} className="bg-white text-[#141414] hover:bg-white/90">
+              Envoyer maintenant
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

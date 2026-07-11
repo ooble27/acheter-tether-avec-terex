@@ -1,6 +1,9 @@
 project_id = "mwwjrrduavfcwjiyniuy"
 
 [functions.send-newsletter]
+verify_jwt = true
+
+[functions.marketing-unsubscribe]
 verify_jwt = false
 
 [functions.send-admin-notification]
