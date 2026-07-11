@@ -1,30 +1,8 @@
-import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Separator } from '@/components/ui/separator';
 import { UnifiedOrder } from '@/hooks/useOrders';
 import {
-  User,
-  Mail,
-  Phone,
-  Calendar,
-  Wallet,
-  Hash,
-  Coins,
-  HandCoins,
-  Send,
-  Copy,
-  CheckCircle,
-  XCircle,
-  Clock,
-  AlertCircle,
-  MailCheck,
-  ArrowRight,
-  ArrowLeft,
-  Globe,
-  FileText,
-  Hand,
-  History,
-  Lock,
+  User, Mail, Phone, Wallet, Hash, Coins, HandCoins, Send, Copy, CheckCircle,
+  XCircle, Clock, ArrowLeft, Globe, FileText, Hand, History, Lock, ArrowRight,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -34,6 +12,7 @@ import type { Database } from '@/integrations/supabase/types';
 import { useToast } from '@/hooks/use-toast';
 import { parseOrderNotes } from '@/lib/orderNotesParser';
 import { useOrderOps, useOrderEvents, EVENT_LABELS } from '@/hooks/useOrderOps';
+import { DetailSection, Field, StatusText, Avatar, drillStyles } from '@/components/admin/AdminDrill';
 
 type OrderStatus = Database['public']['Enums']['order_status'];
 
@@ -43,67 +22,47 @@ interface OrderDetailsPageProps {
   onStatusUpdate: (orderId: string, status: OrderStatus, paymentStatus?: string) => void;
 }
 
+const BORDER = 'rgba(255,255,255,0.07)';
+const RED = '#e07a7a';
+
 const PAYMENT_LABELS: Record<string, string> = {
-  card: 'Carte bancaire',
-  mobile: 'Mobile Money',
-  wave: 'Wave',
-  orange_money: 'Orange Money',
-  bank: 'Virement bancaire',
-  bank_transfer: 'Virement bancaire',
-  interac: 'Interac',
+  card: 'Carte bancaire', mobile: 'Mobile Money', wave: 'Wave', orange_money: 'Orange Money',
+  bank: 'Virement bancaire', bank_transfer: 'Virement bancaire', interac: 'Interac',
 };
 
-const STATUS_LABELS: Record<string, string> = {
-  pending: 'En attente',
-  processing: 'En traitement',
-  completed: 'Terminé',
-  cancelled: 'Annulé',
-  failed: 'Échoué',
+const TYPE_META: Record<string, { label: string; Icon: any }> = {
+  buy: { label: 'Achat USDT', Icon: Coins },
+  sell: { label: 'Vente USDT', Icon: HandCoins },
+  transfer: { label: 'Transfert international', Icon: Send },
 };
 
-// Statuts monochromes (design système Terex) — aucun jaune ni bleu.
-// Le rouge est réservé aux états négatifs.
-const STATUS_TEXT_COLOR: Record<string, string> = {
-  pending: '#9ca3af',
-  processing: '#f2f2f2',
-  completed: 'rgba(255,255,255,0.45)',
-  cancelled: '#e07a7a',
-  failed: '#e07a7a',
-};
-
-export function OrderDetailsPage({
-  order,
-  onBack,
-  onStatusUpdate,
-}: OrderDetailsPageProps) {
-  const [userEmail, setUserEmail] = useState<string>('');
-  const [userName, setUserName] = useState<string>('');
-  const [userPhone, setUserPhone] = useState<string>('');
+export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetailsPageProps) {
+  const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userPhone, setUserPhone] = useState('');
   const [cancellationReason, setCancellationReason] = useState('');
   const [showCancellationForm, setShowCancellationForm] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
   const { toast } = useToast();
 
-  // — Multi-employés : prise en charge + journal d'activité —
   const { claimOrder, releaseOrder, logOrderEvent, currentUserId } = useOrderOps();
   const { events, reload: reloadEvents } = useOrderEvents(order?.id);
   const [assignedTo, setAssignedTo] = useState<string | null>(order?.assigned_to ?? null);
-  const [assignedName, setAssignedName] = useState<string>('');
+  const [assignedName, setAssignedName] = useState('');
 
-  // État de prise en charge TOUJOURS lu frais depuis la base (la prop peut être périmée)
+  // État de prise en charge lu frais depuis la base (la prop peut être périmée)
   useEffect(() => {
     if (!order) return;
     let cancelled = false;
     (async () => {
       const table = order.type === 'transfer' ? 'international_transfers' : 'orders';
-      const { data } = await (supabase as any)
-        .from(table).select('assigned_to').eq('id', order.id).maybeSingle();
+      const { data } = await (supabase as any).from(table).select('assigned_to').eq('id', order.id).maybeSingle();
       if (cancelled) return;
       const uid = (data as any)?.assigned_to ?? null;
       setAssignedTo(uid);
       if (uid && uid !== currentUserId) {
         const { data: p } = await supabase.from('profiles').select('full_name').eq('id', uid).maybeSingle();
-        if (!cancelled) setAssignedName((p as any)?.full_name || 'un membre de l\'équipe');
+        if (!cancelled) setAssignedName((p as any)?.full_name || "un membre de l'équipe");
       }
     })();
     return () => { cancelled = true; };
@@ -112,99 +71,59 @@ export function OrderDetailsPage({
   const isActive = order ? (order.status === 'pending' || order.status === 'processing') : false;
   const iOwnIt = assignedTo !== null && assignedTo === currentUserId;
   const ownedByOther = assignedTo !== null && assignedTo !== currentUserId;
-  const canAct = !isActive || iOwnIt; // les actions exigent la prise en charge quand la commande est active
+  const canAct = !isActive || iOwnIt;
 
   const handleClaim = async () => {
     if (!order) return;
     if (await claimOrder(order.id, order.type)) { setAssignedTo(currentUserId || null); reloadEvents(); }
-    else { // déjà prise : rafraîchir l'état réel
+    else {
       const t2 = order.type === 'transfer' ? 'international_transfers' : 'orders';
       const { data } = await (supabase as any).from(t2).select('assigned_to').eq('id', order.id).maybeSingle();
       setAssignedTo((data as any)?.assigned_to ?? null);
     }
   };
-
   const handleRelease = async () => {
     if (!order) return;
     if (await releaseOrder(order.id, order.type)) { setAssignedTo(null); reloadEvents(); }
   };
-
   const doStatusUpdate = (status: OrderStatus, paymentStatus?: string) => {
     if (!order) return;
     onStatusUpdate(order.id, status, paymentStatus);
     logOrderEvent(order.id, `status_${status}`).then(reloadEvents);
   };
 
-  // Infos client (nom, email, téléphone) via la fonction admin get-client-infos.
-  // L'ancienne version appelait auth.admin depuis le navigateur → interdit,
-  // échec silencieux → la carte Client restait vide (ID seulement).
+  // Infos client via la fonction admin get-client-infos
   useEffect(() => {
     if (!order) return;
     let cancelled = false;
     (async () => {
       try {
-        const { data, error } = await supabase.functions.invoke('get-client-infos', {
-          body: { userIds: [order.user_id] },
-        });
+        const { data, error } = await supabase.functions.invoke('get-client-infos', { body: { userIds: [order.user_id] } });
         if (cancelled || error) return;
         const info = (data?.infos || [])[0];
-        if (info) {
-          setUserName(info.full_name || '');
-          setUserEmail(info.email || '');
-          setUserPhone(info.phone || '');
-        }
-      } catch (e) {
-        console.error('Error fetching user info:', e);
-      }
+        if (info) { setUserName(info.full_name || ''); setUserEmail(info.email || ''); setUserPhone(info.phone || ''); }
+      } catch (e) { console.error('Error fetching user info:', e); }
     })();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [order?.user_id]);
 
   if (!order) return null;
 
+  const meta = TYPE_META[order.type] || { label: 'Transaction', Icon: Hash };
   const parsedNotes = parseOrderNotes(order.notes);
-
-  const orderTypeMeta = (() => {
-    switch (order.type) {
-      case 'buy':
-        return { Icon: Coins, label: 'Achat USDT' };
-      case 'sell':
-        return { Icon: HandCoins, label: 'Vente USDT' };
-      case 'transfer':
-        return { Icon: Send, label: 'Transfert international' };
-      default:
-        return { Icon: Hash, label: 'Transaction' };
-    }
-  })();
-
+  const ref = `TEREX-${order.id.slice(-8).toUpperCase()}`;
   const copy = (value: string, label = 'Copié') => {
     navigator.clipboard.writeText(value);
     toast({ title: label, description: value.length > 40 ? `${value.slice(0, 40)}…` : value });
   };
-
-  const statusBadge = (status: string) => (
-    <span
-      className="inline-flex items-center font-semibold"
-      style={{ fontSize: 12.5, color: STATUS_TEXT_COLOR[status] || 'rgba(255,255,255,0.6)' }}
-    >
-      {STATUS_LABELS[status] || status}
-    </span>
-  );
-
-  const Icon = orderTypeMeta.Icon;
 
   const sendCancellationEmail = async () => {
     setSendingEmail(true);
     try {
       const { error } = await supabase.functions.invoke('send-email-notification', {
         body: {
-          userId: order.user_id,
-          orderId: order.id,
-          emailAddress: null,
-          emailType: 'cancellation_confirmation',
-          transactionType: order.type,
+          userId: order.user_id, orderId: order.id, emailAddress: null,
+          emailType: 'cancellation_confirmation', transactionType: order.type,
           orderData: { ...order, cancellation_reason: cancellationReason, status: 'cancelled' },
         },
       });
@@ -221,361 +140,258 @@ export function OrderDetailsPage({
     }
   };
 
-  const formattedAmount = order.type === 'sell'
-    ? `${order.usdt_amount} USDT`
-    : `${order.amount.toLocaleString()} ${order.currency}`;
-  const formattedSub = order.type === 'sell'
-    ? `→ ${order.amount.toLocaleString()} ${order.currency}`
-    : `→ ${order.usdt_amount} USDT`;
+  const clientName = userName || 'Client';
+  const amountLine = `${Number(order.amount).toLocaleString('fr-FR')} ${order.currency}`;
+  const usdtLine = `${Number(order.usdt_amount || 0).toLocaleString('fr-FR')} USDT`;
+  const openActive = order.status !== 'completed' && order.status !== 'cancelled' && order.status !== 'failed';
 
   return (
     <div style={{ background: '#1a1a1a', minHeight: '100vh' }} className="text-white w-full overflow-x-hidden">
-      {/* HEADER */}
-      <div
-        className="px-4 sm:px-6 pb-4"
-        style={{
-          paddingTop: 'calc(env(safe-area-inset-top, 0px) + 16px)',
-          borderBottom: '1px solid rgba(255,255,255,0.07)',
-        }}
-      >
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div className="flex items-center gap-3 min-w-0">
-              <button
-                onClick={onBack}
-                aria-label="Retour"
-                className="rounded-full flex items-center justify-center flex-shrink-0 transition hover:opacity-80"
-                style={{
-                  width: 38,
-                  height: 38,
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                }}
-              >
-                <ArrowLeft className="w-4.5 h-4.5 text-white" />
+      <style>{drillStyles}</style>
+
+      {/* ── EN-TÊTE ─────────────────────────────────────────────── */}
+      <div className="px-4 sm:px-6 pb-4" style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 16px)', borderBottom: `1px solid ${BORDER}` }}>
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3">
+            <button onClick={onBack} aria-label="Retour"
+              style={{ width: 38, height: 38, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <ArrowLeft size={16} color="#fff" />
+            </button>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2" style={{ minWidth: 0 }}>
+                <meta.Icon size={15} color="rgba(255,255,255,0.6)" />
+                <span style={{ color: '#9ca3af', fontSize: 12.5, fontWeight: 600 }}>{meta.label}</span>
+                <span style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(255,255,255,0.25)' }} />
+                <StatusText status={order.status} size={12.5} />
+              </div>
+              <button onClick={() => copy(ref, 'Référence copiée')}
+                className="flex items-center gap-1.5 mt-0.5 hover:text-white transition"
+                style={{ color: '#6b7280', fontSize: 11.5, fontFamily: 'ui-monospace,Menlo,monospace', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+                {ref} <Copy size={11} />
               </button>
-              <div
-                className="w-11 h-11 rounded-2xl hidden sm:flex items-center justify-center flex-shrink-0"
-                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
-              >
-                <Icon className="w-5 h-5 text-white" />
-              </div>
-              <div className="min-w-0">
-                <h1 className="text-lg font-semibold text-white tracking-tight leading-tight">
-                  {orderTypeMeta.label}
-                </h1>
-                <button
-                  onClick={() => copy(`TEREX-${order.id.slice(-8).toUpperCase()}`, 'Référence copiée')}
-                  className="flex items-center gap-1.5 mt-1 text-xs text-[#9ca3af] hover:text-white transition font-mono"
-                >
-                  <Hash className="w-3 h-3" />
-                  TEREX-{order.id.slice(-8).toUpperCase()}
-                  <Copy className="w-3 h-3" />
-                </button>
-              </div>
-            </div>
-            <div className="flex flex-col items-end gap-1.5">
-              {statusBadge(order.status)}
-              <div className="text-right">
-                <div className="text-lg sm:text-2xl font-bold text-white leading-none tracking-tight">{formattedAmount}</div>
-                <div className="text-xs text-[#9ca3af] mt-1">{formattedSub}</div>
-              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* BANDEAU PRISE EN CHARGE — anti-double-traitement */}
-      {isActive && (
-        <div className="px-4 sm:px-6 pt-4">
-          <div className="max-w-5xl mx-auto">
-            {ownedByOther ? (
-              <div className="flex items-center gap-3 rounded-xl p-3.5"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.14)' }}>
-                <Lock className="w-4 h-4 flex-shrink-0" style={{ color: '#9ca3af' }} />
-                <p className="text-sm m-0" style={{ color: '#d1d5db' }}>
-                  <strong className="text-white">{assignedName}</strong> traite déjà cette commande — ne la traitez pas en double.
+      <div className="px-4 sm:px-6 py-5">
+        <div className="max-w-4xl mx-auto" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+
+          {/* ── RÉSUMÉ CLIENT + FLUX DE MONTANTS ─────────────────── */}
+          <div style={{ background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: 18, padding: 18 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+              <Avatar name={clientName} size={40} />
+              <div style={{ minWidth: 0 }}>
+                <p style={{ color: '#fff', fontSize: 15, fontWeight: 700, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{clientName}</p>
+                <p style={{ color: '#6b7280', fontSize: 12, margin: '1px 0 0' }}>
+                  {format(new Date(order.created_at), "d MMM yyyy 'à' HH:mm", { locale: fr })}
                 </p>
               </div>
+            </div>
+            {/* Flux : ce que le client donne → ce qu'il reçoit */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+              <div style={{ flex: '1 1 130px', minWidth: 0 }}>
+                <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 4px' }}>{order.type === 'sell' ? 'Le client envoie' : 'Le client paie'}</p>
+                <p style={{ color: '#fff', fontSize: 18, fontWeight: 700, margin: 0, letterSpacing: '-0.01em' }}>{order.type === 'sell' ? usdtLine : amountLine}</p>
+              </div>
+              <ArrowRight size={16} color="rgba(255,255,255,0.3)" style={{ flexShrink: 0 }} />
+              <div style={{ flex: '1 1 130px', minWidth: 0, textAlign: 'right' }}>
+                <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 4px' }}>Le client reçoit</p>
+                <p style={{ color: '#fff', fontSize: 18, fontWeight: 700, margin: 0, letterSpacing: '-0.01em' }}>{order.type === 'sell' ? amountLine : usdtLine}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ── BANDEAU PRISE EN CHARGE ──────────────────────────── */}
+          {isActive && (
+            ownedByOther ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, borderRadius: 14, padding: 14, background: 'rgba(255,255,255,0.03)', border: `1px solid rgba(255,255,255,0.14)` }}>
+                <Lock size={15} color="#9ca3af" style={{ flexShrink: 0 }} />
+                <p style={{ color: '#d1d5db', fontSize: 13, margin: 0 }}><strong style={{ color: '#fff' }}>{assignedName}</strong> traite déjà cette commande — ne la traitez pas en double.</p>
+              </div>
             ) : iOwnIt ? (
-              <div className="flex items-center justify-between gap-3 rounded-xl p-3.5 flex-wrap"
-                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.15)' }}>
-                <div className="flex items-center gap-3">
-                  <Hand className="w-4 h-4 flex-shrink-0 text-white" />
-                  <p className="text-sm text-white m-0">Vous traitez cette commande — elle est verrouillée pour le reste de l'équipe.</p>
-                </div>
-                <Button onClick={handleRelease} size="sm"
-                  style={{ background: '#2d2d2d', color: '#9ca3af', border: '1px solid rgba(255,255,255,0.07)' }}>
-                  Libérer
-                </Button>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, borderRadius: 14, padding: '12px 14px', background: 'rgba(255,255,255,0.05)', border: `1px solid rgba(255,255,255,0.15)`, flexWrap: 'wrap' }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10, color: '#fff', fontSize: 13 }}><Hand size={15} /> Vous traitez cette commande — verrouillée pour l'équipe.</span>
+                <button onClick={handleRelease} style={{ background: '#2d2d2d', color: '#9ca3af', border: `1px solid ${BORDER}`, borderRadius: 9, padding: '7px 12px', fontSize: 12.5, fontWeight: 600, cursor: 'pointer' }}>Libérer</button>
               </div>
             ) : (
-              <div className="flex items-center justify-between gap-3 rounded-xl p-3.5 flex-wrap"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px dashed rgba(255,255,255,0.15)' }}>
-                <div className="flex items-center gap-3">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#9ca3af' }} />
-                  <p className="text-sm m-0" style={{ color: '#9ca3af' }}>Commande libre — prenez-la en charge avant de la traiter.</p>
-                </div>
-                <Button onClick={handleClaim} size="sm" className="hover:opacity-90"
-                  style={{ background: '#fff', color: '#141414', fontWeight: 700 }}>
-                  <Hand className="w-4 h-4 mr-2" /> Prendre en charge
-                </Button>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, borderRadius: 14, padding: '12px 14px', background: 'rgba(255,255,255,0.03)', border: `1px dashed rgba(255,255,255,0.16)`, flexWrap: 'wrap' }}>
+                <span style={{ color: '#9ca3af', fontSize: 13 }}>Commande libre — prenez-la en charge avant de la traiter.</span>
+                <button onClick={handleClaim} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#fff', color: '#141414', border: 'none', borderRadius: 9, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}><Hand size={14} /> Prendre en charge</button>
+              </div>
+            )
+          )}
+
+          {/* ── ACTION À FAIRE ───────────────────────────────────── */}
+          {order.type === 'buy' && openActive && (
+            <DetailSection title="À faire — envoyer les USDT" icon={Send} style={{ background: '#1e1e1e' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 12, marginBottom: order.wallet_address ? 14 : 0 }}>
+                <Field label="Montant à envoyer" value={usdtLine} />
+                <Field label="Réseau" value={order.network || 'TRC20'} />
+              </div>
+              {order.wallet_address && <AddressBlock label="Adresse de réception" value={order.wallet_address} onCopy={() => copy(order.wallet_address!, 'Adresse copiée')} />}
+              <p style={{ color: '#6b7280', fontSize: 12, margin: '14px 0 0', lineHeight: 1.6 }}>
+                Le client a payé <span style={{ color: '#fff', fontWeight: 500 }}>{amountLine}</span> via <span style={{ color: '#fff', fontWeight: 500 }}>{PAYMENT_LABELS[order.payment_method || ''] || order.payment_method || '—'}</span> au taux de <span style={{ color: '#fff', fontWeight: 500 }}>{order.exchange_rate} {order.currency}/USDT</span>.
+              </p>
+            </DetailSection>
+          )}
+
+          {order.type === 'sell' && openActive && (
+            <DetailSection title="À faire — envoyer les fonds" icon={Send} style={{ background: '#1e1e1e' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 12 }}>
+                <Field label="Montant à envoyer" value={amountLine} />
+                <Field label="Méthode" value={PAYMENT_LABELS[order.payment_method || ''] || order.payment_method || '—'} />
+              </div>
+              <p style={{ color: '#6b7280', fontSize: 12, margin: '14px 0 0', lineHeight: 1.6 }}>
+                Le client envoie <span style={{ color: '#fff', fontWeight: 500 }}>{usdtLine}</span> au taux de <span style={{ color: '#fff', fontWeight: 500 }}>{order.exchange_rate} {order.currency}/USDT</span>.
+              </p>
+            </DetailSection>
+          )}
+
+          {/* ── INFOS EN GRILLE ──────────────────────────────────── */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12, alignItems: 'start' }}>
+            {/* Client */}
+            <DetailSection title="Client" icon={User}>
+              <div style={{ display: 'grid', gap: 12 }}>
+                <Field label="Nom complet" value={userName || '—'} />
+                <Field label="Email" value={userEmail || '—'} copyable={!!userEmail} onCopy={() => copy(userEmail, 'Email copié')} />
+                <Field label="Téléphone" value={userPhone || '—'} copyable={!!userPhone} onCopy={() => copy(userPhone, 'Téléphone copié')} />
+                <Field label="ID utilisateur" value={`${order.user_id.slice(0, 8)}…${order.user_id.slice(-4)}`} mono copyable onCopy={() => copy(order.user_id, 'ID copié')} />
+              </div>
+            </DetailSection>
+
+            {/* Transaction */}
+            <DetailSection title="Transaction" icon={ArrowRight}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: 12 }}>
+                <Field label={`Montant ${order.currency}`} value={Number(order.amount).toLocaleString('fr-FR')} />
+                <Field label="USDT" value={String(order.usdt_amount || 0)} />
+                <Field label="Taux" value={String(order.exchange_rate)} />
+                {order.payment_method && <Field label="Méthode" value={PAYMENT_LABELS[order.payment_method] || order.payment_method} />}
+                {order.network && <Field label="Réseau" value={order.network} />}
+                {order.payment_reference && <Field label="Réf. paiement" value={order.payment_reference} mono />}
+              </div>
+            </DetailSection>
+
+            {/* Destination crypto (achat) */}
+            {order.type === 'buy' && order.wallet_address && (
+              <div style={{ gridColumn: '1 / -1' }}>
+                <DetailSection title="Destination crypto" icon={Wallet}>
+                  <AddressBlock label={`Adresse wallet (${order.network || 'TRC20'})`} value={order.wallet_address} onCopy={() => copy(order.wallet_address!, 'Adresse copiée')} />
+                </DetailSection>
               </div>
             )}
+
+            {/* Bénéficiaire (transfert) */}
+            {order.type === 'transfer' && (
+              <DetailSection title="Bénéficiaire" icon={Globe}>
+                <div style={{ display: 'grid', gap: 12 }}>
+                  {order.recipient_name && <Field label="Nom" value={order.recipient_name} />}
+                  {order.recipient_country && <Field label="Pays" value={order.recipient_country} />}
+                  {order.recipient_phone && <Field label="Téléphone" value={order.recipient_phone} copyable onCopy={() => copy(order.recipient_phone!, 'Téléphone copié')} />}
+                  {order.recipient_email && <Field label="Email" value={order.recipient_email} />}
+                  {order.fees !== undefined && order.fees > 0 && <Field label="Frais" value={`${order.fees} ${order.currency}`} />}
+                  {order.total_amount !== undefined && <Field label="Montant à recevoir" value={`${order.total_amount} ${order.to_currency || ''}`} />}
+                </div>
+              </DetailSection>
+            )}
           </div>
-        </div>
-      )}
 
-      {/* BODY — 2 colonnes sur desktop */}
-      <div className="px-4 sm:px-6 py-5">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
-
-          {/* ACTION REQUISE — pleine largeur, prioritaire */}
-          {order.type === 'buy' && order.status !== 'completed' && order.status !== 'cancelled' && (
-            <div className="lg:col-span-2">
-              <ActionCard title="Action à effectuer" subtitle="Envoyer l'USDT au wallet du client">
-                <div className="grid grid-cols-2 gap-3 mb-3">
-                  <Stat label="Montant USDT" value={`${order.usdt_amount} USDT`} />
-                  <Stat label="Réseau" value={order.network || 'TRC20'} />
-                </div>
-                {order.wallet_address && (
-                  <AddressBlock label="Adresse de réception" value={order.wallet_address} onCopy={() => copy(order.wallet_address!, 'Adresse copiée')} />
-                )}
-                <div className="mt-3 flex items-start gap-2 text-xs text-[#9ca3af]">
-                  <AlertCircle className="w-3.5 h-3.5 text-white mt-0.5 flex-shrink-0" />
-                  <p>
-                    Le client a payé <span className="text-white font-medium">{order.amount.toLocaleString()} {order.currency}</span> via{' '}
-                    <span className="text-white font-medium">{PAYMENT_LABELS[order.payment_method || ''] || order.payment_method}</span> au taux de{' '}
-                    <span className="text-white font-medium">{order.exchange_rate} {order.currency}/USDT</span>.
-                  </p>
-                </div>
-              </ActionCard>
-            </div>
-          )}
-
-          {order.type === 'sell' && order.status !== 'completed' && order.status !== 'cancelled' && (
-            <div className="lg:col-span-2">
-              <ActionCard title="Action à effectuer" subtitle="Envoyer les fonds au client">
-                <div className="grid grid-cols-2 gap-3">
-                  <Stat label="Montant à envoyer" value={`${order.amount.toLocaleString()} ${order.currency}`} />
-                  <Stat label="Méthode" value={PAYMENT_LABELS[order.payment_method || ''] || order.payment_method || '—'} />
-                </div>
-                <div className="mt-3 flex items-start gap-2 text-xs text-[#9ca3af]">
-                  <AlertCircle className="w-3.5 h-3.5 text-white mt-0.5 flex-shrink-0" />
-                  <p>
-                    Le client envoie <span className="text-white font-medium">{order.usdt_amount} USDT</span> au taux de{' '}
-                    <span className="text-white font-medium">{order.exchange_rate} {order.currency}/USDT</span>.
-                  </p>
-                </div>
-              </ActionCard>
-            </div>
-          )}
-
-          {/* CLIENT */}
-          <Card title="Client" icon={<User className="w-4 h-4" />}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Field icon={<User className="w-3.5 h-3.5" />} label="Nom complet" value={userName || '—'} />
-              <Field icon={<Mail className="w-3.5 h-3.5" />} label="Email" value={userEmail || '—'} onCopy={userEmail ? () => copy(userEmail, 'Email copié') : undefined} />
-              <Field icon={<Phone className="w-3.5 h-3.5" />} label="Téléphone" value={userPhone || '—'} onCopy={userPhone ? () => copy(userPhone, 'Téléphone copié') : undefined} />
-              <Field icon={<Hash className="w-3.5 h-3.5" />} label="ID utilisateur" value={`${order.user_id.slice(0, 8)}…${order.user_id.slice(-4)}`} mono onCopy={() => copy(order.user_id, 'ID copié')} />
-            </div>
-          </Card>
-
-          {/* TRANSACTION */}
-          <Card title="Transaction" icon={<ArrowRight className="w-4 h-4" />}>
-            <div className="grid grid-cols-2 gap-3">
-              <Stat label={`Montant ${order.currency}`} value={order.amount.toLocaleString()} />
-              <Stat label="USDT" value={String(order.usdt_amount || 0)} />
-              <Stat label="Taux" value={String(order.exchange_rate)} />
-              {order.payment_method && (
-                <Stat label="Méthode de paiement" value={PAYMENT_LABELS[order.payment_method] || order.payment_method} />
-              )}
-              {order.network && <Stat label="Réseau blockchain" value={order.network} />}
-              {order.payment_reference && <Stat label="Référence paiement" value={order.payment_reference} mono />}
-            </div>
-          </Card>
-
-          {/* DESTINATION (achat) */}
-          {order.type === 'buy' && order.wallet_address && (
-            <div className="lg:col-span-2">
-              <Card title="Destination crypto" icon={<Wallet className="w-4 h-4" />}>
-                <AddressBlock label={`Adresse wallet (${order.network || 'TRC20'})`} value={order.wallet_address} onCopy={() => copy(order.wallet_address!, 'Adresse copiée')} />
-              </Card>
-            </div>
-          )}
-
-          {/* TRANSFERT INTERNATIONAL */}
-          {order.type === 'transfer' && (
-            <Card title="Bénéficiaire du transfert" icon={<Globe className="w-4 h-4" />}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {order.recipient_name && <Field label="Nom" value={order.recipient_name} />}
-                {order.recipient_country && <Field label="Pays" value={order.recipient_country} />}
-                {order.recipient_phone && <Field label="Téléphone" value={order.recipient_phone} onCopy={() => copy(order.recipient_phone!, 'Téléphone copié')} />}
-                {order.recipient_email && <Field label="Email" value={order.recipient_email} />}
-                {order.fees !== undefined && order.fees > 0 && <Field label="Frais" value={`${order.fees} ${order.currency}`} />}
-                {order.total_amount !== undefined && <Field label="Montant à recevoir" value={`${order.total_amount} ${order.to_currency || ''}`} />}
-              </div>
-            </Card>
-          )}
-
-          {/* HISTORIQUE */}
-          <Card title="Historique" icon={<Calendar className="w-4 h-4" />}>
-            <div className="space-y-2">
-              <TimelineRow label="Création" date={order.created_at} icon={<Clock className="w-3.5 h-3.5 text-[#9ca3af]" />} />
-              {order.processed_at && (
-                <TimelineRow label="Traitement" date={order.processed_at} icon={<CheckCircle className="w-3.5 h-3.5 text-white" />} />
-              )}
-            </div>
-          </Card>
-
-          {/* NOTES PARSÉES — pleine largeur */}
+          {/* ── DÉTAILS PARSÉS ───────────────────────────────────── */}
           {parsedNotes.sections.length > 0 && (
-            <div className="lg:col-span-2">
-              <Card title="Détails de la commande" icon={<FileText className="w-4 h-4" />}>
-                <div className="space-y-4">
-                  {parsedNotes.sections.map((section, i) => (
-                    <div key={i}>
-                      {i > 0 && <Separator className="mb-4" style={{ background: 'rgba(255,255,255,0.07)' }} />}
-                      <div className="text-[11px] uppercase tracking-wider text-[#6b7280] mb-2.5 font-medium">
-                        {section.title}
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-3">
-                        {section.fields.map((field, j) => (
-                          <div key={j}>
-                            <div className="text-[11px] uppercase tracking-wider text-[#6b7280] mb-0.5">{field.label}</div>
-                            <div className="flex items-center justify-between gap-2">
-                              <div className={`text-sm break-all ${field.highlight ? 'text-white font-semibold' : 'text-white font-medium'}`}>{field.value}</div>
-                              {field.copyable && (
-                                <button onClick={() => copy(field.value, `${field.label} copié`)} className="flex-shrink-0 p-1 rounded transition text-[#9ca3af] hover:text-white">
-                                  <Copy className="w-3 h-3" />
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+            <DetailSection title="Détails de la commande" icon={FileText}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {parsedNotes.sections.map((section, i) => (
+                  <div key={i}>
+                    {i > 0 && <div style={{ height: 1, background: BORDER, margin: '0 0 16px' }} />}
+                    <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 10px' }}>{section.title}</p>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px 18px' }}>
+                      {section.fields.map((field, j) => (
+                        <Field key={j} label={field.label} value={field.value} copyable={field.copyable} onCopy={() => copy(field.value, `${field.label} copié`)} />
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </Card>
-            </div>
+                  </div>
+                ))}
+              </div>
+            </DetailSection>
           )}
 
-          {/* CANCELLATION FORM — pleine largeur */}
+          {/* ── EMAIL D'ANNULATION ───────────────────────────────── */}
           {(order.status === 'cancelled' || showCancellationForm) && (
-            <div className="lg:col-span-2">
-              <Card title="Email d'annulation" icon={<MailCheck className="w-4 h-4" style={{ color: '#c98686' }} />}>
-                <Textarea
-                  placeholder="Motif d'annulation (optionnel)…"
-                  value={cancellationReason}
-                  onChange={(e) => setCancellationReason(e.target.value)}
-                  className="bg-[#1a1a1a] border-[rgba(255,255,255,0.07)] text-white placeholder:text-[#6b7280] min-h-[80px]"
-                />
-                <Button
-                  onClick={sendCancellationEmail}
-                  disabled={sendingEmail}
-                  className="w-full mt-3 border hover:opacity-90"
-                  style={{ background: '#2d2d2d', color: '#fff', borderColor: 'rgba(255,255,255,0.10)' }}
-                >
-                  <Mail className="w-4 h-4 mr-2" />
-                  {sendingEmail ? 'Envoi…' : "Envoyer l'email d'annulation"}
-                </Button>
-              </Card>
-            </div>
+            <DetailSection title="Email d'annulation" icon={Mail}>
+              <Textarea placeholder="Motif d'annulation (optionnel)…" value={cancellationReason} onChange={(e) => setCancellationReason(e.target.value)}
+                className="bg-[#1a1a1a] border-[rgba(255,255,255,0.07)] text-white placeholder:text-[#6b7280] min-h-[80px]" />
+              <button onClick={sendCancellationEmail} disabled={sendingEmail}
+                style={{ marginTop: 12, width: '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#2d2d2d', color: '#fff', border: `1px solid ${BORDER}`, borderRadius: 11, padding: '10px 14px', fontSize: 13.5, fontWeight: 600, cursor: 'pointer', opacity: sendingEmail ? 0.6 : 1 }}>
+                <Mail size={15} /> {sendingEmail ? 'Envoi…' : "Envoyer l'email d'annulation"}
+              </button>
+            </DetailSection>
           )}
-          {/* JOURNAL D'ACTIVITÉ — qui a fait quoi, quand (append-only) */}
-          <div className="lg:col-span-2 rounded-2xl p-4"
-            style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)' }}>
-            <div className="flex items-center gap-2 mb-3">
-              <History className="w-4 h-4" style={{ color: '#9ca3af' }} />
-              <p className="text-sm font-semibold text-white m-0">Journal d'activité</p>
-              <span className="text-xs" style={{ color: '#6b7280' }}>{events.length} événement(s)</span>
-            </div>
+
+          {/* ── JOURNAL ──────────────────────────────────────────── */}
+          <DetailSection title={`Journal d'activité`} icon={History}
+            right={<span style={{ color: '#6b7280', fontSize: 12 }}>{events.length} événement(s)</span>}>
             {events.length === 0 ? (
-              <p className="text-sm m-0" style={{ color: '#6b7280' }}>
-                Aucun événement pour l'instant — les prises en charge et changements de statut apparaîtront ici.
-              </p>
+              <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>Aucun événement — les prises en charge et changements de statut apparaîtront ici.</p>
             ) : (
-              <div className="flex flex-col">
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {events.map((ev, i) => (
-                  <div key={ev.id} className="flex gap-3">
-                    {/* rail */}
-                    <div className="flex flex-col items-center">
-                      <div className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
-                        style={{ background: ev.action.includes('cancel') ? '#c98686' : ev.action === 'status_completed' ? '#fff' : 'rgba(255,255,255,0.45)' }} />
-                      {i < events.length - 1 && <div className="w-px flex-1 my-1" style={{ background: 'rgba(255,255,255,0.08)' }} />}
+                  <div key={ev.id} style={{ display: 'flex', gap: 12 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <span style={{ width: 8, height: 8, borderRadius: '50%', marginTop: 5, flexShrink: 0, background: ev.action.includes('cancel') ? RED : ev.action === 'status_completed' ? '#fff' : 'rgba(255,255,255,0.45)' }} />
+                      {i < events.length - 1 && <span style={{ width: 1, flex: 1, margin: '4px 0', background: 'rgba(255,255,255,0.08)' }} />}
                     </div>
-                    <div className="pb-3 min-w-0">
-                      <p className="text-sm text-white m-0">
+                    <div style={{ paddingBottom: 14, minWidth: 0 }}>
+                      <p style={{ color: '#fff', fontSize: 13, margin: 0 }}>
                         {EVENT_LABELS[ev.action] || ev.action}
                         {ev.actor_name && <span style={{ color: '#9ca3af' }}> — {ev.actor_name}</span>}
                       </p>
-                      {ev.details && <p className="text-xs m-0 mt-0.5 break-words" style={{ color: '#6b7280' }}>{ev.details}</p>}
-                      <p className="text-[11px] m-0 mt-0.5" style={{ color: '#4b5563' }}>
-                        {format(new Date(ev.created_at), "d MMM yyyy 'à' HH:mm", { locale: fr })}
-                      </p>
+                      {ev.details && <p style={{ color: '#6b7280', fontSize: 12, margin: '2px 0 0', wordBreak: 'break-word' }}>{ev.details}</p>}
+                      <p style={{ color: '#4b5563', fontSize: 11, margin: '2px 0 0' }}>{format(new Date(ev.created_at), "d MMM yyyy 'à' HH:mm", { locale: fr })}</p>
                     </div>
                   </div>
                 ))}
               </div>
             )}
-          </div>
+          </DetailSection>
         </div>
       </div>
 
-      {/* STICKY FOOTER ACTIONS */}
-      <div
-        className="px-4 sm:px-6 py-4 sticky bottom-0"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.07)', background: '#1a1a1a' }}
-      >
-        <div className="max-w-5xl mx-auto flex flex-wrap gap-2 sm:justify-end">
+      {/* ── ACTIONS (barre collante) ─────────────────────────────── */}
+      <div className="px-4 sm:px-6 py-4 sticky bottom-0" style={{ borderTop: `1px solid ${BORDER}`, background: '#1a1a1a' }}>
+        <div className="max-w-4xl mx-auto flex flex-wrap gap-2 sm:justify-end">
           {isActive && !canAct && (
             <div className="flex-1 flex items-center justify-center sm:justify-end gap-2 text-sm py-2" style={{ color: '#9ca3af' }}>
-              <Lock className="w-4 h-4" />
-              {ownedByOther
-                ? <>Actions verrouillées — commande traitée par <strong className="text-white">{assignedName}</strong></>
-                : <>Prenez la commande en charge (bandeau ci-dessus) pour débloquer les actions</>}
+              <Lock size={15} />
+              {ownedByOther ? <>Verrouillée — traitée par <strong className="text-white">{assignedName}</strong></> : <>Prenez la commande en charge pour débloquer les actions</>}
             </div>
           )}
           {order.status === 'pending' && canAct && (
             <>
-              <Button
-                onClick={() => doStatusUpdate('processing')}
-                className="flex-1 sm:flex-none sm:min-w-[180px] hover:opacity-90"
-                style={{ background: '#fff', color: '#141414', fontWeight: 700 }}
-              >
-                <Clock className="w-4 h-4 mr-2" /> Mettre en traitement
-              </Button>
-              <Button
-                onClick={() => { doStatusUpdate('cancelled'); setShowCancellationForm(true); }}
-                className="flex-1 sm:flex-none sm:min-w-[140px] border hover:opacity-90"
-                style={{ background: 'transparent', color: '#c98686', borderColor: 'rgba(255,255,255,0.12)' }}
-              >
-                <XCircle className="w-4 h-4 mr-2" /> Annuler
-              </Button>
+              <button onClick={() => doStatusUpdate('processing')}
+                style={{ flex: '1 1 auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#fff', color: '#141414', border: 'none', borderRadius: 11, padding: '11px 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', minWidth: 170 }}>
+                <Clock size={16} /> Mettre en traitement
+              </button>
+              <button onClick={() => { doStatusUpdate('cancelled'); setShowCancellationForm(true); }}
+                style={{ flex: '1 1 auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: 'transparent', color: RED, border: `1px solid rgba(255,255,255,0.12)`, borderRadius: 11, padding: '11px 18px', fontSize: 14, fontWeight: 600, cursor: 'pointer', minWidth: 130 }}>
+                <XCircle size={16} /> Annuler
+              </button>
             </>
           )}
           {order.status === 'processing' && canAct && (
             <>
-              <Button
-                onClick={() => doStatusUpdate('completed', 'paid')}
-                className="flex-1 sm:flex-none sm:min-w-[180px] hover:opacity-90"
-                style={{ background: '#fff', color: '#141414', fontWeight: 700 }}
-              >
-                <CheckCircle className="w-4 h-4 mr-2" /> Marquer comme terminé
-              </Button>
-              <Button
-                onClick={() => { doStatusUpdate('cancelled'); setShowCancellationForm(true); }}
-                className="flex-1 sm:flex-none sm:min-w-[140px] border hover:opacity-90"
-                style={{ background: 'transparent', color: '#c98686', borderColor: 'rgba(255,255,255,0.12)' }}
-              >
-                <XCircle className="w-4 h-4 mr-2" /> Annuler
-              </Button>
+              <button onClick={() => doStatusUpdate('completed', 'paid')}
+                style={{ flex: '1 1 auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#fff', color: '#141414', border: 'none', borderRadius: 11, padding: '11px 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', minWidth: 170 }}>
+                <CheckCircle size={16} /> Marquer comme terminé
+              </button>
+              <button onClick={() => { doStatusUpdate('cancelled'); setShowCancellationForm(true); }}
+                style={{ flex: '1 1 auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: 'transparent', color: RED, border: `1px solid rgba(255,255,255,0.12)`, borderRadius: 11, padding: '11px 18px', fontSize: 14, fontWeight: 600, cursor: 'pointer', minWidth: 130 }}>
+                <XCircle size={16} /> Annuler
+              </button>
             </>
           )}
-          {(order.status === 'completed' || order.status === 'cancelled') && (
-            <div className="flex-1 text-center sm:text-right text-sm text-[#9ca3af] py-2">
-              Cette commande est {order.status === 'completed' ? 'terminée' : 'annulée'}.
+          {(order.status === 'completed' || order.status === 'cancelled' || order.status === 'failed') && (
+            <div className="flex-1 text-center sm:text-right text-sm py-2" style={{ color: '#9ca3af' }}>
+              Cette commande est <StatusText status={order.status} size={13} />.
             </div>
           )}
         </div>
@@ -586,139 +402,15 @@ export function OrderDetailsPage({
 
 function AddressBlock({ label, value, onCopy }: { label: string; value: string; onCopy: () => void }) {
   return (
-    <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-      <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-[#6b7280] mb-1.5">
-        <Wallet className="w-3 h-3" /> {label}
+    <div style={{ borderRadius: 12, padding: 12, background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
+        <Wallet size={12} /> {label}
       </div>
-      <div className="flex items-center gap-2">
-        <code className="flex-1 text-xs font-mono text-white break-all">{value}</code>
-        <button onClick={onCopy} className="flex-shrink-0 p-1.5 rounded transition text-[#9ca3af] hover:text-white">
-          <Copy className="w-3.5 h-3.5" />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <code style={{ flex: 1, fontSize: 12.5, fontFamily: 'ui-monospace,Menlo,monospace', color: '#fff', wordBreak: 'break-all' }}>{value}</code>
+        <button onClick={onCopy} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 4, display: 'flex' }}>
+          <Copy size={14} />
         </button>
-      </div>
-    </div>
-  );
-}
-
-/* — Sub-components — */
-
-function Card({
-  title,
-  icon,
-  children,
-}: {
-  title: string;
-  icon?: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <section
-      className="rounded-2xl p-4"
-      style={{
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.07)',
-      }}
-    >
-      <h3 className="flex items-center gap-2 text-sm font-semibold text-white mb-3">
-        {icon && <span className="text-[#9ca3af]">{icon}</span>}
-        {title}
-      </h3>
-      {children}
-    </section>
-  );
-}
-
-function ActionCard({
-  title,
-  subtitle,
-  children,
-}: {
-  title: string;
-  subtitle: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section
-      className="rounded-2xl p-5"
-      style={{
-        background: '#1e1e1e',
-        border: '1px solid rgba(255,255,255,0.07)',
-      }}
-    >
-      <div className="flex items-center gap-2 mb-3">
-        <Send className="w-4 h-4 text-white" />
-        <div>
-          <div className="text-[11px] uppercase tracking-wider text-[#6b7280] font-medium">{title}</div>
-          <div className="text-sm font-semibold text-white">{subtitle}</div>
-        </div>
-      </div>
-      {children}
-    </section>
-  );
-}
-
-function Field({
-  label,
-  value,
-  icon,
-  mono,
-  onCopy,
-}: {
-  label: string;
-  value: string;
-  icon?: React.ReactNode;
-  mono?: boolean;
-  onCopy?: () => void;
-}) {
-  return (
-    <div>
-      <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-[#6b7280] mb-1">
-        {icon} {label}
-      </div>
-      <div className="flex items-center justify-between gap-2">
-        <div className={`text-sm text-white break-all ${mono ? 'font-mono' : 'font-medium'}`}>{value}</div>
-        {onCopy && value !== '—' && (
-          <button
-            onClick={onCopy}
-            className="flex-shrink-0 p-1 rounded transition text-[#9ca3af] hover:text-white"
-          >
-            <Copy className="w-3 h-3" />
-          </button>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function Stat({
-  label,
-  value,
-  mono,
-}: {
-  label: string;
-  value: string;
-  accent?: boolean;
-  mono?: boolean;
-}) {
-  return (
-    <div>
-      <div className="text-[11px] uppercase tracking-wider text-[#6b7280] mb-1">{label}</div>
-      <div className={`text-lg font-semibold break-all text-white leading-tight ${mono ? 'font-mono text-sm' : ''}`}>
-        {value}
-      </div>
-    </div>
-  );
-}
-
-function TimelineRow({ label, date, icon }: { label: string; date: string; icon: React.ReactNode }) {
-  return (
-    <div className="flex items-center justify-between py-1">
-      <div className="flex items-center gap-2 text-sm text-[#9ca3af]">
-        {icon}
-        {label}
-      </div>
-      <div className="text-sm text-white font-medium">
-        {format(new Date(date), 'dd MMM yyyy à HH:mm', { locale: fr })}
       </div>
     </div>
   );
