@@ -58,12 +58,12 @@ serve(async (req) => {
 
     // ── Liste des membres ────────────────────────────────────────────────────
     if (action === 'list') {
-      const { data: rows, error } = await admin
+      const { data: allRows, error } = await admin
         .from('user_roles')
         .select('id, user_id, role, created_at')
-        .neq('role', 'user')
         .order('created_at', { ascending: true });
       if (error) throw error;
+      const rows = (allRows || []).filter((r: any) => r.role !== 'user');
 
       const userIds = Array.from(new Set((rows || []).map((r: any) => r.user_id)));
       const { data: profiles } = await admin
@@ -111,7 +111,16 @@ serve(async (req) => {
 
       const { error: insErr } = await admin
         .from('user_roles').insert({ user_id: target.id, role });
-      if (insErr) throw insErr;
+      if (insErr) {
+        // Rôle absent de l'enum → la migration « script 1 » n'a pas été exécutée
+        if (String(insErr.message || '').includes('invalid input value for enum')) {
+          return json({
+            success: false,
+            error: `Le rôle « ${role} » n'existe pas encore dans la base. Faites exécuter le script SQL n°1 (nouveaux rôles) par Lovable, puis réessayez.`,
+          }, 400);
+        }
+        throw insErr;
+      }
 
       console.log(`Équipe: rôle ${role} attribué à ${target.email} par ${caller.userId}`);
       return json({ success: true, message: `Rôle attribué à ${target.email}` });
@@ -138,7 +147,7 @@ serve(async (req) => {
 
     return json({ success: false, error: 'Action inconnue' }, 400);
   } catch (e: any) {
-    console.error('manage-team error:', e);
+    console.error('manage-team error:', e?.message, e?.stack || e);
     return json({ success: false, error: e?.message || String(e) }, 500);
   }
 });

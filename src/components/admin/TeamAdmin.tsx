@@ -24,6 +24,16 @@ const ROLES: { id: string; label: string; desc: string; Icon: any }[] = [
 
 const roleMeta = (id: string) => ROLES.find(r => r.id === id) || { id, label: id, desc: '', Icon: Shield };
 
+// Supabase masque la vraie erreur derrière « non-2xx status code » —
+// on lit le corps de la réponse pour afficher la raison réelle.
+async function realError(e: any): Promise<string> {
+  try {
+    const body = await e?.context?.json?.();
+    if (body?.error) return body.error;
+  } catch { /* corps illisible */ }
+  return e?.message || 'Erreur inconnue';
+}
+
 interface Member {
   roleRowId: string;
   userId: string;
@@ -46,7 +56,7 @@ export function TeamAdmin() {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('manage-team', { body: { action: 'list' } });
-      if (error) throw error;
+      if (error) throw new Error(await realError(error));
       if (!data?.success) throw new Error(data?.error || 'Chargement impossible');
       setMembers(data.members || []);
     } catch (e: any) {
@@ -62,7 +72,7 @@ export function TeamAdmin() {
     setAdding(true);
     try {
       const { data, error } = await supabase.functions.invoke('manage-team', { body: { action: 'add', email, role } });
-      if (error) throw error;
+      if (error) throw new Error(await realError(error));
       if (!data?.success) throw new Error(data?.error || 'Ajout impossible');
       toast({ title: 'Membre ajouté', description: data.message });
       setEmail('');
@@ -80,7 +90,7 @@ export function TeamAdmin() {
       const { data, error } = await supabase.functions.invoke('manage-team', {
         body: { action: 'remove', userId: toRemove.userId, role: toRemove.role },
       });
-      if (error) throw error;
+      if (error) throw new Error(await realError(error));
       if (!data?.success) throw new Error(data?.error || 'Retrait impossible');
       toast({ title: 'Rôle retiré', description: `${toRemove.email} n'a plus le rôle ${roleMeta(toRemove.role).label}.` });
       load();
