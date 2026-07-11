@@ -3,12 +3,10 @@ import { useOrders, UnifiedOrder } from '@/hooks/useOrders';
 import { useOrderOps } from '@/hooks/useOrderOps';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { OrderDetailsPage } from './OrderDetailsPage';
-import { Coins, HandCoins, Send, Clock, Hand, User, RefreshCw, Inbox, CheckCircle2, Users } from 'lucide-react';
-import { HubTile, TileGrid, SwitchPill, StatStrip, SectionLabel, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
+import { Coins, HandCoins, Send, Clock, Hand, User, RefreshCw, Inbox, CheckCircle2 } from 'lucide-react';
+import { PageHeader, Tabs, DotStatus, Avatar, StatStrip, drillStyles } from '@/components/admin/AdminDrill';
 
-const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
-const ICON_BG = 'rgba(255,255,255,0.06)';
 
 const TYPE_META: Record<string, { label: string; Icon: any }> = {
   buy: { label: 'Achat', Icon: Coins },
@@ -24,16 +22,16 @@ function ageOf(iso: string): { text: string; urgent: boolean } {
   return { text: `il y a ${Math.floor(h / 24)} j`, urgent: true };
 }
 
-const STATUS_PILL: Record<string, { label: string; color: string; bg: string }> = {
-  pending: { label: 'En attente', color: '#fbbf24', bg: 'rgba(251,191,36,0.08)' },
-  processing: { label: 'En traitement', color: '#60a5fa', bg: 'rgba(96,165,250,0.08)' },
+const STATUS_DOT: Record<string, string> = {
+  pending: '#fbbf24',
+  processing: '#60a5fa',
 };
 
 export function OpsQueue() {
   const { orders, loading, updateOrderStatus, refreshOrders } = useOrders();
   const { claimOrder, releaseOrder, currentUserId } = useOrderOps();
   const [detailOrder, setDetailOrder] = useState<UnifiedOrder | null>(null);
-  const [view, setView] = useState<null | 'mine' | 'queue' | 'others'>(null);
+  const [tab, setTab] = useState<'queue' | 'mine' | 'others'>('queue');
 
   // Rafraîchissement automatique — les prises en charge des collègues
   // apparaissent sans recharger la page.
@@ -81,142 +79,150 @@ export function OpsQueue() {
     );
   }
 
-  const OrderCard = ({ o, zone }: { o: UnifiedOrder; zone: 'mine' | 'queue' | 'others' }) => {
+  const TABS = {
+    queue:  { items: unassigned, empty: "File vide — toutes les commandes actives sont prises en charge." },
+    mine:   { items: mine,       empty: "Aucune commande en charge — prenez-en une dans la file d'attente." },
+    others: { items: others,     empty: "Aucune commande traitée par un autre membre." },
+  } as const;
+  const list = TABS[tab].items;
+
+  // ── Ligne de table ──────────────────────────────────────────────────────────
+  const OrderRow = ({ o }: { o: UnifiedOrder }) => {
     const t = TYPE_META[o.type] || TYPE_META.buy;
     const age = ageOf(o.created_at);
-    const pill = STATUS_PILL[o.status] || STATUS_PILL.pending;
-    const ref = `TEREX-${o.id.slice(-8).toUpperCase()}`;
     const client = nameOf(o.user_id) || 'Client';
     const owner = nameOf(o.assigned_to);
 
     return (
-      <div style={{ background: CARD, border: `1px solid ${zone === 'mine' ? 'rgba(255,255,255,0.18)' : BORDER}`, borderRadius: 16, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-        <div style={{ width: 40, height: 40, borderRadius: 12, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <t.Icon size={18} color="rgba(255,255,255,0.75)" />
-        </div>
-
-        <div style={{ flex: 1, minWidth: 180 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-            <span style={{ color: '#fff', fontSize: 14, fontWeight: 600 }}>{t.label}</span>
-            <span style={{ fontFamily: 'ui-monospace,Menlo,monospace', fontSize: 11, color: '#6b7280' }}>{ref}</span>
-            <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 999, background: pill.bg, color: pill.color }}>{pill.label}</span>
+      <div className="crm-row cols-orders">
+        {/* Client */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+          <Avatar name={client} />
+          <div style={{ minWidth: 0 }}>
+            <p style={{ color: '#fff', fontSize: 13, fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{client}</p>
+            <p style={{ color: '#6b7280', fontSize: 11, margin: '1px 0 0', fontFamily: 'ui-monospace,Menlo,monospace', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              TEREX-{o.id.slice(-8).toUpperCase()}
+            </p>
+            <span className="only-m" style={{ marginTop: 3, display: 'inline-flex', gap: 6, alignItems: 'center', fontSize: 11.5, color: age.urgent ? '#f87171' : '#6b7280' }}>
+              <Clock size={11} /> {age.text}
+            </span>
           </div>
-          <p style={{ color: '#9ca3af', fontSize: 12.5, margin: '3px 0 0' }}>
-            {Number(o.amount).toLocaleString('fr-FR')} {o.currency} → {Number(o.usdt_amount || 0).toLocaleString('fr-FR')} USDT
-            <span style={{ color: '#4b5563' }}> · </span>{client}
-          </p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: age.urgent ? '#f87171' : '#6b7280', flexShrink: 0 }}>
-          <Clock size={13} /> {age.text}
+        {/* Type */}
+        <div className="only-d" style={{ display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
+          <t.Icon size={13} color="rgba(255,255,255,0.45)" />
+          <span style={{ color: '#9ca3af', fontSize: 12.5, whiteSpace: 'nowrap' }}>{t.label}</span>
         </div>
 
-        {/* Propriétaire / action */}
-        {zone === 'others' && (
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: '#fbbf24', background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.2)', borderRadius: 999, padding: '5px 12px', flexShrink: 0 }}>
-            <User size={12} /> {owner || 'Un collègue'}
-          </span>
-        )}
-        {zone === 'queue' && (
-          <button onClick={async () => { if (await claimOrder(o.id, o.type)) refreshOrders?.(); }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#fff', color: '#141414', border: 'none', borderRadius: 10, padding: '9px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}>
-            <Hand size={14} /> Prendre en charge
-          </button>
-        )}
-        {zone === 'mine' && (
-          <button onClick={async () => { if (await releaseOrder(o.id, o.type)) refreshOrders?.(); }}
-            style={{ background: '#2d2d2d', color: '#9ca3af', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 12px', fontSize: 12, fontWeight: 600, cursor: 'pointer', flexShrink: 0 }}>
-            Libérer
-          </button>
-        )}
-        <button onClick={() => setDetailOrder(o)}
-          style={{ background: zone === 'mine' ? '#fff' : '#2d2d2d', color: zone === 'mine' ? '#141414' : '#fff', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}>
-          {zone === 'mine' ? 'Traiter' : 'Ouvrir'}
-        </button>
+        {/* Montant */}
+        <div style={{ minWidth: 0, textAlign: 'right' }}>
+          <p style={{ color: '#fff', fontSize: 13, fontWeight: 700, margin: 0, whiteSpace: 'nowrap' }}>{Number(o.amount).toLocaleString('fr-FR')} {o.currency}</p>
+          <p style={{ color: '#6b7280', fontSize: 11, margin: '1px 0 0', whiteSpace: 'nowrap' }}>{Number(o.usdt_amount || 0).toLocaleString('fr-FR')} USDT</p>
+        </div>
+
+        {/* Âge / statut (desktop) */}
+        <div className="only-d" style={{ minWidth: 0 }}>
+          {tab === 'others' && owner ? (
+            <DotStatus color="#fbbf24" label={owner} />
+          ) : (
+            <span style={{ display: 'inline-flex', gap: 6, alignItems: 'center', fontSize: 12, color: age.urgent ? '#f87171' : '#6b7280', whiteSpace: 'nowrap' }}>
+              <Clock size={12} /> {age.text}
+            </span>
+          )}
+        </div>
+
+        {/* Colonne date (desktop) — état de la commande */}
+        <div className="only-d" style={{ minWidth: 0 }}>
+          <DotStatus color={STATUS_DOT[o.status] || '#6b7280'} label={o.status === 'processing' ? 'En traitement' : 'En attente'} />
+        </div>
+
+        {/* Actions */}
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center', justifyContent: 'flex-end' }}>
+          {tab === 'queue' && (
+            <button onClick={async () => { if (await claimOrder(o.id, o.type)) refreshOrders?.(); }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff', color: '#141414', border: 'none', borderRadius: 9, padding: '7px 12px', fontSize: 12.5, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+              <Hand size={13} /> Prendre
+            </button>
+          )}
+          {tab === 'mine' && (
+            <>
+              <button className="only-d" onClick={async () => { if (await releaseOrder(o.id, o.type)) refreshOrders?.(); }}
+                style={{ background: '#2d2d2d', color: '#9ca3af', border: `1px solid ${BORDER}`, borderRadius: 9, padding: '7px 11px', fontSize: 12, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                Libérer
+              </button>
+              <button onClick={() => setDetailOrder(o)}
+                style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 9, padding: '7px 12px', fontSize: 12.5, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                Traiter
+              </button>
+            </>
+          )}
+          {tab === 'others' && (
+            <button onClick={() => setDetailOrder(o)}
+              style={{ background: '#2d2d2d', color: '#fff', border: `1px solid ${BORDER}`, borderRadius: 9, padding: '7px 12px', fontSize: 12.5, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+              Ouvrir
+            </button>
+          )}
+        </div>
       </div>
     );
   };
 
-  // ── SOUS-PAGE d'une zone (navigation par pages, pas de scroll infini) ───────
-  const VIEWS: Record<'mine' | 'queue' | 'others', { title: string; sub: string; items: UnifiedOrder[]; emptyText: string }> = {
-    mine:   { title: 'Mes commandes', sub: 'Les commandes que je traite en ce moment', items: mine, emptyText: 'Aucune commande en charge — prenez-en une dans la file d\'attente.' },
-    queue:  { title: "File d'attente", sub: 'Commandes libres, de la plus ancienne à la plus récente', items: unassigned, emptyText: 'File vide — toutes les commandes actives sont prises en charge. 🎉' },
-    others: { title: "En cours par l'équipe", sub: 'Verrouillées — un collègue les traite', items: others, emptyText: 'Aucune commande traitée par un autre membre.' },
-  };
-
-  if (view) {
-    const v = VIEWS[view];
-    return (
-      <>
-        <style>{drillStyles}</style>
-        <DrillPage title={v.title} sub={`${v.items.length} commande(s) · ${v.sub}`} onBack={() => setView(null)}
-          right={
-            <button onClick={() => refreshOrders?.()} disabled={loading}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#2d2d2d', color: '#fff', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 14px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
-              <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Actualiser
-            </button>
-          }>
-          {/* Changer d'espace sans revenir en arrière */}
-          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 2, scrollbarWidth: 'none' }}>
-            <SwitchPill icon={Hand} label="Mes commandes" count={mine.length} selected={view === 'mine'} onClick={() => setView('mine')} />
-            <SwitchPill icon={Inbox} label="File d'attente" count={unassigned.length} selected={view === 'queue'} onClick={() => setView('queue')} />
-            <SwitchPill icon={Users} label="Par l'équipe" count={others.length} selected={view === 'others'} onClick={() => setView('others')} />
-          </div>
-          {v.items.length === 0 ? (
-            <div style={{ border: `1px dashed ${BORDER}`, borderRadius: 14, padding: '28px 18px', display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center' }}>
-              <CheckCircle2 size={16} color="#4b5563" />
-              <span style={{ color: '#6b7280', fontSize: 13 }}>{v.emptyText}</span>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {v.items.map(o => <OrderCard key={o.id} o={o} zone={view} />)}
-            </div>
-          )}
-        </DrillPage>
-      </>
-    );
-  }
-
-  // ── HUB — vue d'ensemble + entrées vers les sous-pages ──────────────────────
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       <style>{drillStyles}</style>
 
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-        <p style={{ color: '#6b7280', fontSize: 12.5, margin: 0 }}>
-          Prenez une commande en charge avant de la traiter — elle se verrouille pour le reste de l'équipe.
-        </p>
-        <button onClick={() => refreshOrders?.()} disabled={loading}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#2d2d2d', color: '#fff', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 14px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
-          <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Actualiser
-        </button>
-      </div>
+      <PageHeader
+        title="File de traitement"
+        sub="Prenez une commande en charge avant de la traiter — elle se verrouille pour l'équipe."
+        right={
+          <button className="ghost-btn" onClick={() => refreshOrders?.()} disabled={loading}>
+            <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Actualiser
+          </button>
+        }
+      />
 
-      {/* KPIs — une seule bande de chiffres, l'état des opérations en un coup d'œil */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <SectionLabel>Aujourd'hui</SectionLabel>
-        <StatStrip items={[
-          { label: 'À traiter', value: unassigned.length, tone: unassigned.length > 0 ? 'warn' : 'default' },
-          { label: 'Terminées aujourd\'hui', value: completedToday },
-          ...(oldest ? [{ label: 'Plus ancienne en file', value: oldest.text, tone: (oldest.urgent ? 'urgent' : 'default') as 'urgent' | 'default' }] : []),
-        ]} />
-      </div>
+      {/* Métriques — sans boîtes */}
+      <StatStrip items={[
+        { label: 'À traiter', value: unassigned.length, tone: unassigned.length > 0 ? 'warn' : 'default' },
+        { label: 'Mes commandes', value: mine.length },
+        { label: "Terminées aujourd'hui", value: completedToday },
+        ...(oldest ? [{ label: 'Plus ancienne en file', value: oldest.text, tone: (oldest.urgent ? 'urgent' : 'default') as 'urgent' | 'default' }] : []),
+      ]} />
 
-      {/* Espaces — grille de tuiles, on RENTRE dans chaque espace de travail */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <SectionLabel>Espaces de travail</SectionLabel>
-        <TileGrid>
-          <HubTile icon={Hand} label="Mes commandes" count={mine.length}
-            caption={mine.length > 0 ? 'en cours de traitement' : 'aucune en charge'} delay={0.05}
-            onClick={() => setView('mine')} />
-          <HubTile icon={Inbox} label="File d'attente" count={unassigned.length}
-            caption={unassigned.length > 0 ? `${unassigned.length} à prendre en charge` : 'file vide'}
-            urgent={unassigned.length > 0} delay={0.1}
-            onClick={() => setView('queue')} />
-          <HubTile icon={Users} label="Par l'équipe" count={others.length}
-            caption="verrouillées par un collègue" delay={0.15}
-            onClick={() => setView('others')} />
-        </TileGrid>
+      {/* Onglets */}
+      <Tabs
+        tabs={[
+          { id: 'queue', label: "File d'attente", count: unassigned.length },
+          { id: 'mine', label: 'Mes commandes', count: mine.length },
+          { id: 'others', label: "Par l'équipe", count: others.length },
+        ]}
+        active={tab}
+        onChange={(id) => setTab(id as typeof tab)}
+      />
+
+      {/* Table */}
+      <div className="crm-table crm-fade">
+        <div className="crm-thead cols-orders">
+          <span className="crm-th">Client</span>
+          <span className="crm-th">Type</span>
+          <span className="crm-th" style={{ textAlign: 'right' }}>Montant</span>
+          <span className="crm-th">{tab === 'others' ? 'Traitée par' : 'Ancienneté'}</span>
+          <span className="crm-th">État</span>
+          <span className="crm-th" />
+        </div>
+        {list.length === 0 ? (
+          <div style={{ padding: '40px 20px', textAlign: 'center' }}>
+            {tab === 'queue'
+              ? <CheckCircle2 size={24} color="#4b5563" style={{ margin: '0 auto 10px' }} />
+              : tab === 'mine'
+                ? <Inbox size={24} color="#4b5563" style={{ margin: '0 auto 10px' }} />
+                : <User size={24} color="#4b5563" style={{ margin: '0 auto 10px' }} />}
+            <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>{TABS[tab].empty}</p>
+          </div>
+        ) : (
+          list.map(o => <OrderRow key={o.id} o={o} />)
+        )}
       </div>
     </div>
   );

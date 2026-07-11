@@ -1,73 +1,143 @@
-import { ArrowLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 
 /**
- * Langage visuel du back-office — sobre, dense, comme une vraie application :
- * - StatStrip  : UNE carte de chiffres, colonnes séparées par des filets fins
- *                (style tableau de bord bancaire) — jamais de grosses boîtes vides.
- * - HubTile    : tuile d'accès à un espace de travail (icône, grand chiffre,
- *                libellé) — en grille, comme l'écran d'accueil d'une app.
- * - SwitchPill : pilule de SÉLECTION uniquement (filtres, changement d'espace).
- * - SectionLabel : petit intitulé de section discret.
- * - DrillPage  : sous-page avec bouton retour, titre et actions.
+ * Langage visuel du back-office — style CRM moderne (référence : Attio) :
+ * - PageHeader : en-tête de page (titre, sous-titre, actions à droite).
+ * - Tabs       : onglets soulignés avec compteurs — la navigation d'une vue.
+ * - table CRM  : classes .crm-table / .crm-thead / .crm-row — données denses,
+ *                colonnes, filets fins, survol discret.
+ * - DotStatus  : statut « puce colorée + libellé », sans fond.
+ * - Avatar     : initiale dans un rond.
+ * - StatStrip  : rangée de métriques SANS boîtes — chiffre fort, libellé discret.
+ * - SwitchPill : pilule réservée aux sélecteurs (filtres).
+ * - DrillPage  : sous-page avec bouton retour (détails, formulaires).
  */
 
-const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const ICON_BG = 'rgba(255,255,255,0.06)';
 
 export const drillStyles = `
   @keyframes drill-in { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: translateX(0); } }
-  @keyframes hub-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes crm-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   .drill-page { animation: drill-in 0.28s cubic-bezier(0.22,1,0.36,1) both; }
-  .hub-tile { animation: hub-in 0.35s cubic-bezier(0.22,1,0.36,1) both; transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease; }
-  .hub-tile:hover { border-color: rgba(255,255,255,0.22) !important; background: #232323 !important; transform: translateY(-2px); }
-  .hub-tile:active { transform: scale(0.98); }
-  .hub-tile:hover .tile-chev { opacity: 1; transform: translateX(0); }
-  .tile-chev { opacity: 0.45; transform: translateX(-2px); transition: opacity 0.18s ease, transform 0.18s ease; }
-  .stat-strip { animation: hub-in 0.35s cubic-bezier(0.22,1,0.36,1) both; }
-  .drill-row { transition: background 0.15s ease, border-color 0.15s ease; }
-  .drill-row:hover { background: rgba(255,255,255,0.03); }
+  .crm-fade { animation: crm-in 0.3s cubic-bezier(0.22,1,0.36,1) both; }
+
+  .crm-table { border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; overflow: hidden; background: #1c1c1c; }
+  .crm-thead { display: grid; align-items: center; padding: 0 16px; height: 38px; background: rgba(255,255,255,0.025); border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .crm-th { color: #6b7280; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .crm-row { display: grid; align-items: center; padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.12s ease; }
+  .crm-row:last-child { border-bottom: none; }
+  .crm-row.clickable { cursor: pointer; }
+  .crm-row.clickable:hover { background: rgba(255,255,255,0.03); }
+
+  .cols-orders { grid-template-columns: minmax(160px, 2.1fr) minmax(90px, 1fr) minmax(120px, 1.4fr) minmax(110px, 1.1fr) minmax(86px, 0.9fr) 72px; gap: 12px; }
+  .cols-team { grid-template-columns: minmax(180px, 2.2fr) minmax(130px, 1.2fr) minmax(90px, 0.9fr) 44px; gap: 12px; }
+  .only-m { display: none !important; }
+  @media (max-width: 760px) {
+    .crm-thead { display: none; }
+    .cols-orders { grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px; }
+    .cols-team { grid-template-columns: minmax(0, 1fr) auto 40px; gap: 10px; }
+    .only-d { display: none !important; }
+    .only-m { display: flex !important; }
+  }
+
+  .ghost-btn { display: inline-flex; align-items: center; gap: 6px; background: transparent; border: 1px solid rgba(255,255,255,0.10); color: #9ca3af; border-radius: 10px; padding: 7px 12px; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .ghost-btn:hover { color: #fff; border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.04); }
+  .crm-tab { transition: color 0.15s ease; }
 `;
 
-export function SectionLabel({ children }: { children: React.ReactNode }) {
+interface PageHeaderProps {
+  title: string;
+  sub?: React.ReactNode;
+  right?: React.ReactNode;
+}
+
+export function PageHeader({ title, sub, right }: PageHeaderProps) {
   return (
-    <p style={{ color: '#4b5563', fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.09em', margin: '0 0 0 2px' }}>
-      {children}
-    </p>
+    <div className="crm-fade" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+      <div style={{ minWidth: 160 }}>
+        <h2 style={{ color: '#fff', fontSize: 18, fontWeight: 700, margin: 0, letterSpacing: '-0.01em' }}>{title}</h2>
+        {sub && <div style={{ color: '#6b7280', fontSize: 12.5, margin: '3px 0 0' }}>{sub}</div>}
+      </div>
+      {right && <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>{right}</div>}
+    </div>
+  );
+}
+
+export interface TabDef {
+  id: string;
+  label: string;
+  count?: number;
+  danger?: boolean;
+}
+
+export function Tabs({ tabs, active, onChange }: { tabs: TabDef[]; active: string; onChange: (id: string) => void }) {
+  return (
+    <div className="crm-fade" style={{ display: 'flex', gap: 2, borderBottom: `1px solid ${BORDER}`, overflowX: 'auto', scrollbarWidth: 'none' }}>
+      {tabs.map(t => {
+        const sel = active === t.id;
+        const fg = sel ? (t.danger ? '#f87171' : '#fff') : '#6b7280';
+        return (
+          <button key={t.id} className="crm-tab" onClick={() => onChange(t.id)}
+            style={{
+              background: 'none', border: 'none',
+              borderBottom: sel ? `2px solid ${t.danger ? '#f87171' : '#fff'}` : '2px solid transparent',
+              padding: '9px 10px 11px', marginBottom: -1,
+              color: fg, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap',
+              display: 'inline-flex', gap: 7, alignItems: 'center',
+              WebkitTapHighlightColor: 'transparent',
+            }}>
+            {t.label}
+            {t.count !== undefined && (
+              <span style={{ fontSize: 11, fontWeight: 600, color: sel ? '#9ca3af' : '#4b5563', background: 'rgba(255,255,255,0.06)', borderRadius: 999, padding: '1px 7px' }}>
+                {t.count}
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Statut façon CRM : petite puce colorée + libellé, sans fond. */
+export function DotStatus({ color, label }: { color: string; label: string }) {
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12, fontWeight: 500, color: '#9ca3af', whiteSpace: 'nowrap' }}>
+      <span style={{ width: 6, height: 6, borderRadius: '50%', background: color, flexShrink: 0 }} />
+      {label}
+    </span>
+  );
+}
+
+export function Avatar({ name, size = 28 }: { name?: string | null; size?: number }) {
+  return (
+    <span style={{
+      width: size, height: size, borderRadius: '50%', background: '#2d2d2d', border: '1px solid rgba(255,255,255,0.10)',
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+      color: '#d1d5db', fontSize: size * 0.42, fontWeight: 700, flexShrink: 0, textTransform: 'uppercase',
+    }}>
+      {(name || '?').trim().slice(0, 1)}
+    </span>
   );
 }
 
 export interface StatItem {
   label: string;
   value: string | number;
-  /** 'urgent' teinte la valeur en rouge, 'warn' en ambre */
   tone?: 'default' | 'urgent' | 'warn';
 }
 
-/**
- * Bande de chiffres — une seule carte, des colonnes fines séparées par des
- * filets. Dense sur desktop (une ligne), passe à la ligne sur mobile.
- */
+/** Métriques sans boîtes — chiffre fort, libellé discret, rangée aérée. */
 export function StatStrip({ items, delay = 0 }: { items: StatItem[]; delay?: number }) {
   return (
-    <div className="stat-strip"
-      style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(auto-fit, minmax(${items.length > 4 ? 120 : 140}px, 1fr))`,
-        gap: 1, background: BORDER,
-        border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden',
-        animationDelay: `${delay}s`,
-      }}>
+    <div className="crm-fade" style={{ display: 'flex', flexWrap: 'wrap', gap: '14px 40px', padding: '2px 2px', animationDelay: `${delay}s` }}>
       {items.map(it => {
         const color = it.tone === 'urgent' ? '#f87171' : it.tone === 'warn' ? '#fbbf24' : '#fff';
         return (
-          <div key={it.label} style={{ background: CARD, padding: '13px 16px', minWidth: 0 }}>
-            <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', margin: '0 0 5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {it.label}
-            </p>
-            <p style={{ color, fontSize: 19, fontWeight: 700, margin: 0, lineHeight: 1.1, letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {it.value}
-            </p>
+          <div key={it.label} style={{ minWidth: 0 }}>
+            <p style={{ color: '#6b7280', fontSize: 11.5, fontWeight: 500, margin: '0 0 3px', whiteSpace: 'nowrap' }}>{it.label}</p>
+            <p style={{ color, fontSize: 19, fontWeight: 700, margin: 0, lineHeight: 1.1, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>{it.value}</p>
           </div>
         );
       })}
@@ -75,62 +145,11 @@ export function StatStrip({ items, delay = 0 }: { items: StatItem[]; delay?: num
   );
 }
 
-interface HubTileProps {
-  icon: any;
-  label: string;
-  count?: number | string;
-  /** petite ligne sous le libellé — ex. « 4 à traiter » (ambre si urgent) */
-  caption?: string;
-  urgent?: boolean;
-  danger?: boolean;
-  delay?: number;
-  onClick: () => void;
-}
-
-/**
- * Tuile d'espace de travail — grille compacte façon écran d'accueil d'app :
- * icône en haut, grand chiffre, libellé, chevron discret qui glisse au survol.
- */
-export function HubTile({ icon: Icon, label, count, caption, urgent, danger, delay = 0, onClick }: HubTileProps) {
+export function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <button className="hub-tile" onClick={onClick}
-      style={{
-        display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 14,
-        textAlign: 'left', position: 'relative', minHeight: 118,
-        background: CARD, border: `1px solid ${danger ? 'rgba(239,68,68,0.18)' : BORDER}`,
-        borderRadius: 18, padding: '15px 16px', cursor: 'pointer', outline: 'none',
-        animationDelay: `${delay}s`,
-        WebkitTapHighlightColor: 'transparent',
-      }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-        <span style={{ width: 38, height: 38, borderRadius: 12, background: danger ? 'rgba(239,68,68,0.10)' : ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Icon size={17} color={danger ? '#f87171' : 'rgba(255,255,255,0.85)'} strokeWidth={1.9} />
-        </span>
-        <ChevronRight className="tile-chev" size={15} color="rgba(255,255,255,0.5)" />
-      </div>
-      <div style={{ minWidth: 0, width: '100%' }}>
-        {count !== undefined && (
-          <p style={{ color: danger ? '#f87171' : '#fff', fontSize: 23, fontWeight: 700, margin: '0 0 2px', lineHeight: 1, letterSpacing: '-0.02em' }}>{count}</p>
-        )}
-        <p style={{ color: danger ? '#f87171' : count !== undefined ? '#9ca3af' : '#fff', fontSize: 13, fontWeight: 600, margin: 0, lineHeight: 1.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {label}
-        </p>
-        {caption && (
-          <p style={{ color: urgent ? '#fbbf24' : '#4b5563', fontSize: 11, fontWeight: urgent ? 700 : 500, margin: '3px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            {caption}
-          </p>
-        )}
-      </div>
-    </button>
-  );
-}
-
-/** Grille des tuiles — 2 par ligne sur mobile, davantage sur grand écran. */
-export function TileGrid({ children }: { children: React.ReactNode }) {
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 10 }}>
+    <p style={{ color: '#4b5563', fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.09em', margin: '0 0 0 2px' }}>
       {children}
-    </div>
+    </p>
   );
 }
 

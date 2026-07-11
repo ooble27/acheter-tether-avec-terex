@@ -6,7 +6,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Users, UserPlus, Trash2, RefreshCw, Loader2, Shield, Inbox, FileCheck, Mail, UserCheck, Headphones, CheckCircle2 } from 'lucide-react';
-import { HubTile, TileGrid, StatStrip, SectionLabel, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
+import { PageHeader, StatStrip, Avatar, DotStatus, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -157,55 +157,62 @@ export function TeamAdmin() {
     </>
   );
 
+  const ROLE_DOT: Record<string, string> = {
+    admin: '#f5f5f5', operator: '#60a5fa', kyc_reviewer: '#a78bfa',
+    marketing: '#34d399', hr: '#fbbf24', support: '#f472b6',
+  };
+
   const membersSection = (
-    <>
-      {/* Membres actuels */}
-      <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: `1px solid ${BORDER}` }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <Users size={16} color="rgba(255,255,255,0.7)" />
-            <p style={{ color: '#fff', fontSize: 14, fontWeight: 700, margin: 0 }}>Membres de l'équipe</p>
-            <span style={{ color: '#6b7280', fontSize: 12 }}>{members.length} rôle(s) attribué(s)</span>
-          </div>
-          <button onClick={load} disabled={loading}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#2d2d2d', color: '#fff', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '8px 12px', fontSize: 12.5, fontWeight: 600, cursor: 'pointer' }}>
-            <RefreshCw size={12} className={loading ? 'animate-spin' : ''} /> Actualiser
-          </button>
-        </div>
-
-        {loading ? (
-          <p style={{ color: '#6b7280', fontSize: 13, padding: '20px 18px', margin: 0 }}>Chargement…</p>
-        ) : members.length === 0 ? (
-          <p style={{ color: '#6b7280', fontSize: 13, padding: '20px 18px', margin: 0 }}>Aucun membre pour le moment.</p>
-        ) : (
-          members.map((m, i) => {
-            const meta = roleMeta(m.role);
-            return (
-              <div key={m.roleRowId} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 18px', borderBottom: i < members.length - 1 ? `1px solid ${BORDER}` : 'none', flexWrap: 'wrap' }}>
-                <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#2d2d2d', border: `1px solid rgba(255,255,255,0.1)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 13, fontWeight: 700, flexShrink: 0 }}>
-                  {(m.name || m.email || '?').slice(0, 1).toUpperCase()}
-                </div>
-                <div style={{ flex: 1, minWidth: 160 }}>
-                  <p style={{ color: '#fff', fontSize: 14, fontWeight: 600, margin: 0 }}>{m.name || 'Sans nom'}</p>
-                  <p style={{ color: '#6b7280', fontSize: 12, margin: 0 }}>{m.email}</p>
-                </div>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11.5, fontWeight: 600, color: m.role === 'admin' ? '#fff' : '#9ca3af', background: m.role === 'admin' ? 'rgba(255,255,255,0.1)' : ICON_BG, border: `1px solid ${BORDER}`, borderRadius: 999, padding: '5px 12px', flexShrink: 0 }}>
-                  <meta.Icon size={12} /> {meta.label}
-                </span>
-                <span style={{ color: '#4b5563', fontSize: 11, flexShrink: 0 }}>
-                  depuis {new Date(m.since).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' })}
-                </span>
-                <button onClick={() => setToRemove(m)} aria-label="Retirer le rôle"
-                  style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
-                  <Trash2 size={14} color="#ef4444" />
-                </button>
-              </div>
-            );
-          })
-        )}
+    <div className="crm-table crm-fade">
+      <div className="crm-thead cols-team">
+        <span className="crm-th">Membre</span>
+        <span className="crm-th">Rôle</span>
+        <span className="crm-th">Depuis</span>
+        <span className="crm-th" />
       </div>
-
-    </>
+      {loading ? (
+        <p style={{ color: '#6b7280', fontSize: 13, padding: '20px 18px', margin: 0 }}>Chargement…</p>
+      ) : members.length === 0 ? (
+        <div style={{ padding: '40px 20px', textAlign: 'center' }}>
+          <Users size={24} color="#4b5563" style={{ margin: '0 auto 10px' }} />
+          <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>Aucun membre pour le moment.</p>
+        </div>
+      ) : (
+        members.map((m) => {
+          const meta = roleMeta(m.role);
+          return (
+            <div key={m.roleRowId} className="crm-row cols-team">
+              {/* Membre */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                <Avatar name={m.name || m.email} size={32} />
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{m.name || 'Sans nom'}</p>
+                  <p style={{ color: '#6b7280', fontSize: 12, margin: '1px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{m.email}</p>
+                  <span className="only-m" style={{ marginTop: 4 }}>
+                    <DotStatus color={ROLE_DOT[m.role] || '#9ca3af'} label={meta.label} />
+                  </span>
+                </div>
+              </div>
+              {/* Rôle (desktop) */}
+              <div className="only-d" style={{ minWidth: 0 }}>
+                <DotStatus color={ROLE_DOT[m.role] || '#9ca3af'} label={meta.label} />
+              </div>
+              {/* Depuis (desktop) */}
+              <div className="only-d" style={{ minWidth: 0 }}>
+                <span style={{ color: '#6b7280', fontSize: 12, whiteSpace: 'nowrap' }}>
+                  {new Date(m.since).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' })}
+                </span>
+              </div>
+              {/* Retirer */}
+              <button onClick={() => setToRemove(m)} aria-label="Retirer le rôle"
+                style={{ width: 32, height: 32, borderRadius: 9, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, justifySelf: 'end' }}>
+                <Trash2 size={13} color="#ef4444" />
+              </button>
+            </div>
+          );
+        })
+      )}
+    </div>
   );
 
   const confirmDialog = (
@@ -228,7 +235,7 @@ export function TeamAdmin() {
     </>
   );
 
-  // ── Navigation par pages : hub → sous-pages ────────────────────────────────
+  // ── Sous-page : ajouter un membre ───────────────────────────────────────────
   if (view === 'add') {
     return (
       <>
@@ -240,43 +247,37 @@ export function TeamAdmin() {
     );
   }
 
-  if (view === 'members') {
-    return (
-      <>
-        <style>{drillStyles}</style>
-        <DrillPage title="Membres de l'équipe" sub={`${members.length} rôle(s) attribué(s)`} onBack={() => setView(null)}>
-          {membersSection}
-          {confirmDialog}
-        </DrillPage>
-      </>
-    );
-  }
-
-  // Effectif par rôle — pour l'aperçu compact du hub
+  // Effectif par rôle
   const roleCounts = ROLES
     .map(r => ({ ...r, n: members.filter(m => m.role === r.id).length }))
     .filter(r => r.n > 0);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       <style>{drillStyles}</style>
 
+      <PageHeader
+        title="Équipe"
+        sub={`${members.length} rôle(s) attribué(s)`}
+        right={
+          <>
+            <button className="ghost-btn" onClick={load} disabled={loading}>
+              <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Actualiser
+            </button>
+            <button onClick={() => setView('add')}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#fff', color: '#141414', border: 'none', borderRadius: 10, padding: '8px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+              <UserPlus size={14} /> Ajouter un membre
+            </button>
+          </>
+        }
+      />
+
       {roleCounts.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <SectionLabel>Effectif</SectionLabel>
-          <StatStrip items={roleCounts.map(r => ({ label: r.label, value: r.n }))} />
-        </div>
+        <StatStrip items={roleCounts.map(r => ({ label: r.label, value: r.n }))} />
       )}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <SectionLabel>Gestion</SectionLabel>
-        <TileGrid>
-          <HubTile icon={UserPlus} label="Ajouter un membre" caption="attribuer un rôle à un compte" delay={0.05}
-            onClick={() => setView('add')} />
-          <HubTile icon={Users} label="Membres de l'équipe" count={members.length} caption="voir et retirer les accès" delay={0.1}
-            onClick={() => setView('members')} />
-        </TileGrid>
-      </div>
+      {membersSection}
+      {confirmDialog}
     </div>
   );
 }
