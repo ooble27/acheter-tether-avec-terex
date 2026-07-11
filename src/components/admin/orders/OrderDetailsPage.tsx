@@ -29,7 +29,7 @@ const RED = '#e07a7a';
 // Toujours afficher le vrai prestataire (Wave, Orange Money…), jamais un
 // générique « Mobile Money ».
 const PAYMENT_LABELS: Record<string, string> = {
-  card: 'Carte bancaire', wave: 'Wave', orange_money: 'Orange Money', om: 'Orange Money',
+  card: 'Carte bancaire', wave: 'Wave', orange: 'Orange Money', orange_money: 'Orange Money', om: 'Orange Money',
   bank: 'Virement bancaire', bank_transfer: 'Virement bancaire', interac: 'Interac',
 };
 const prettyMethod = (pm?: string | null) =>
@@ -183,7 +183,19 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
   const amountLine = `${Number(order.amount).toLocaleString('fr-FR')} ${order.currency}`;
   const usdtLine = `${Number(order.usdt_amount || 0).toLocaleString('fr-FR')} USDT`;
   const openActive = order.status !== 'completed' && order.status !== 'cancelled' && order.status !== 'failed';
-  const method = prettyMethod(order.payment_method);
+
+  // Numéro + prestataire de PAYOUT saisis DANS la commande (jamais le téléphone du compte) :
+  // le client peut vouloir recevoir sur un autre numéro Wave/Orange que celui de son compte.
+  let payoutNumber = '';
+  let payoutProvider = '';
+  if (parsedNotes.isJson) {
+    try {
+      const n = JSON.parse(parsedNotes.raw);
+      payoutNumber = n.phoneNumber || '';
+      payoutProvider = n.provider ? prettyMethod(n.provider) : '';
+    } catch { /* notes illisibles */ }
+  }
+  const method = payoutProvider || prettyMethod(order.payment_method);
 
   // Onglets (pastilles) — on ne défile plus : on choisit une section.
   const TABS: { id: string; label: string }[] = [
@@ -283,7 +295,7 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
                     <p style={{ color: '#fff', fontSize: 14, fontWeight: 600, margin: 0 }}>{order.network || 'TRC20'}</p>
                   ) : (
                     <>
-                      <p style={{ color: '#fff', fontSize: 15, fontWeight: 700, margin: 0 }}>{userPhone || '—'}</p>
+                      <p style={{ color: '#fff', fontSize: 15, fontWeight: 700, margin: 0 }}>{payoutNumber || '—'}</p>
                       {method !== '—' && <p style={{ color: '#6b7280', fontSize: 12, margin: '2px 0 0' }}>{method}</p>}
                     </>
                   )}
