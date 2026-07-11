@@ -93,8 +93,9 @@ export function OrderDetailsPage({
     if (!order) return;
     let cancelled = false;
     (async () => {
+      const table = order.type === 'transfer' ? 'international_transfers' : 'orders';
       const { data } = await (supabase as any)
-        .from('orders').select('assigned_to').eq('id', order.id).maybeSingle();
+        .from(table).select('assigned_to').eq('id', order.id).maybeSingle();
       if (cancelled) return;
       const uid = (data as any)?.assigned_to ?? null;
       setAssignedTo(uid);
@@ -113,16 +114,17 @@ export function OrderDetailsPage({
 
   const handleClaim = async () => {
     if (!order) return;
-    if (await claimOrder(order.id)) { setAssignedTo(currentUserId || null); reloadEvents(); }
+    if (await claimOrder(order.id, order.type)) { setAssignedTo(currentUserId || null); reloadEvents(); }
     else { // déjà prise : rafraîchir l'état réel
-      const { data } = await (supabase as any).from('orders').select('assigned_to').eq('id', order.id).maybeSingle();
+      const t2 = order.type === 'transfer' ? 'international_transfers' : 'orders';
+      const { data } = await (supabase as any).from(t2).select('assigned_to').eq('id', order.id).maybeSingle();
       setAssignedTo((data as any)?.assigned_to ?? null);
     }
   };
 
   const handleRelease = async () => {
     if (!order) return;
-    if (await releaseOrder(order.id)) { setAssignedTo(null); reloadEvents(); }
+    if (await releaseOrder(order.id, order.type)) { setAssignedTo(null); reloadEvents(); }
   };
 
   const doStatusUpdate = (status: OrderStatus, paymentStatus?: string) => {

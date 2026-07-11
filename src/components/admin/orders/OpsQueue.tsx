@@ -52,6 +52,14 @@ export function OpsQueue() {
   const unassigned = active.filter(o => !o.assigned_to);
   const others = active.filter(o => o.assigned_to && o.assigned_to !== currentUserId);
 
+  // KPIs du jour
+  const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
+  const completedToday = (orders || []).filter(o =>
+    !o.is_deleted && o.status === 'completed' &&
+    new Date(o.processed_at || o.updated_at).getTime() >= todayStart.getTime()
+  ).length;
+  const oldest = unassigned[0] ? ageOf(unassigned[0].created_at) : null;
+
   // Noms : clients + opérateurs (même fonction admin get-client-infos)
   const nameIds = useMemo(() => {
     const ids = new Set<string>();
@@ -108,13 +116,13 @@ export function OpsQueue() {
           </span>
         )}
         {zone === 'queue' && (
-          <button onClick={async () => { if (await claimOrder(o.id)) refreshOrders?.(); }}
+          <button onClick={async () => { if (await claimOrder(o.id, o.type)) refreshOrders?.(); }}
             style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#fff', color: '#141414', border: 'none', borderRadius: 10, padding: '9px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}>
             <Hand size={14} /> Prendre en charge
           </button>
         )}
         {zone === 'mine' && (
-          <button onClick={async () => { if (await releaseOrder(o.id)) refreshOrders?.(); }}
+          <button onClick={async () => { if (await releaseOrder(o.id, o.type)) refreshOrders?.(); }}
             style={{ background: '#2d2d2d', color: '#9ca3af', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 12px', fontSize: 12, fontWeight: 600, cursor: 'pointer', flexShrink: 0 }}>
             Libérer
           </button>
@@ -162,6 +170,27 @@ export function OpsQueue() {
           style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#2d2d2d', color: '#fff', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 14px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
           <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Actualiser
         </button>
+      </div>
+
+      {/* KPIs — l'état des opérations en un coup d'œil */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10 }}>
+        {[
+          { label: 'À traiter', value: unassigned.length, accent: unassigned.length > 0 },
+          { label: 'Mes commandes', value: mine.length, accent: false },
+          { label: "Par l'équipe", value: others.length, accent: false },
+          { label: "Terminées aujourd'hui", value: completedToday, accent: false },
+        ].map(k => (
+          <div key={k.label} style={{ background: CARD, border: `1px solid ${k.accent ? 'rgba(251,191,36,0.3)' : BORDER}`, borderRadius: 14, padding: '14px 16px' }}>
+            <p style={{ color: '#6b7280', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 6px' }}>{k.label}</p>
+            <p style={{ color: k.accent ? '#fbbf24' : '#fff', fontSize: 24, fontWeight: 700, margin: 0, lineHeight: 1 }}>{k.value}</p>
+          </div>
+        ))}
+        {oldest && (
+          <div style={{ background: CARD, border: `1px solid ${oldest.urgent ? 'rgba(248,113,113,0.3)' : BORDER}`, borderRadius: 14, padding: '14px 16px' }}>
+            <p style={{ color: '#6b7280', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 6px' }}>Plus ancienne en file</p>
+            <p style={{ color: oldest.urgent ? '#f87171' : '#fff', fontSize: 16, fontWeight: 700, margin: 0, lineHeight: 1.2 }}>{oldest.text}</p>
+          </div>
+        )}
       </div>
 
       <Section title="Mes commandes" sub="je les traite" items={mine} zone="mine"

@@ -66,11 +66,13 @@ export function useOrderOps() {
     }
   }, [user]);
 
-  /** Prise en charge atomique. Retourne false si déjà prise par quelqu'un d'autre. */
-  const claimOrder = useCallback(async (orderId: string): Promise<boolean> => {
+  /** Prise en charge atomique. Retourne false si déjà prise par quelqu'un d'autre.
+   *  `orderType` détermine la table (les virements sont dans international_transfers). */
+  const claimOrder = useCallback(async (orderId: string, orderType?: string): Promise<boolean> => {
     if (!user) return false;
+    const table = orderType === 'transfer' ? 'international_transfers' : 'orders';
     const { data, error } = await (supabase as any)
-      .from('orders')
+      .from(table)
       .update({ assigned_to: user.id, assigned_at: new Date().toISOString() })
       .eq('id', orderId)
       .is('assigned_to', null) // ← garantie anti-course : ne prend que si LIBRE
@@ -89,10 +91,11 @@ export function useOrderOps() {
   }, [user, toast, logOrderEvent]);
 
   /** Remet la commande dans la file d'attente (seulement si c'est la mienne). */
-  const releaseOrder = useCallback(async (orderId: string): Promise<boolean> => {
+  const releaseOrder = useCallback(async (orderId: string, orderType?: string): Promise<boolean> => {
     if (!user) return false;
+    const table = orderType === 'transfer' ? 'international_transfers' : 'orders';
     const { data, error } = await (supabase as any)
-      .from('orders')
+      .from(table)
       .update({ assigned_to: null, assigned_at: null })
       .eq('id', orderId)
       .eq('assigned_to', user.id)

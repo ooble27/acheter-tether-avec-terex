@@ -119,6 +119,8 @@ export function useOrders() {
         payment_status: order.payment_status,
         is_deleted: order.is_deleted ?? false,
         deleted_at: order.deleted_at ?? undefined,
+        assigned_to: (order as any).assigned_to ?? null,
+        assigned_at: (order as any).assigned_at ?? null,
       })) || [];
 
       // Transform transfers to unified format
@@ -147,6 +149,8 @@ export function useOrders() {
         processed_at: transfer.processed_at,
         processed_by: transfer.processed_by,
         is_deleted: false,
+        assigned_to: (transfer as any).assigned_to ?? null,
+        assigned_at: (transfer as any).assigned_at ?? null,
       })) || [];
 
       // Combine all orders
