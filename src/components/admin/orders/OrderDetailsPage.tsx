@@ -22,6 +22,9 @@ import {
   ArrowLeft,
   Globe,
   FileText,
+  Hand,
+  History,
+  Lock,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -30,6 +33,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 import { useToast } from '@/hooks/use-toast';
 import { parseOrderNotes } from '@/lib/orderNotesParser';
+import { useOrderOps, useOrderEvents, EVENT_LABELS } from '@/hooks/useOrderOps';
 
 type OrderStatus = Database['public']['Enums']['order_status'];
 
@@ -77,6 +81,55 @@ export function OrderDetailsPage({
   const [showCancellationForm, setShowCancellationForm] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
   const { toast } = useToast();
+
+  // — Multi-employés : prise en charge + journal d'activité —
+  const { claimOrder, releaseOrder, logOrderEvent, currentUserId } = useOrderOps();
+  const { events, reload: reloadEvents } = useOrderEvents(order?.id);
+  const [assignedTo, setAssignedTo] = useState<string | null>(order?.assigned_to ?? null);
+  const [assignedName, setAssignedName] = useState<string>('');
+
+  // État de prise en charge TOUJOURS lu frais depuis la base (la prop peut être périmée)
+  useEffect(() => {
+    if (!order) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from('orders').select('assigned_to').eq('id', order.id).maybeSingle();
+      if (cancelled) return;
+      const uid = (data as any)?.assigned_to ?? null;
+      setAssignedTo(uid);
+      if (uid && uid !== currentUserId) {
+        const { data: p } = await supabase.from('profiles').select('full_name').eq('id', uid).maybeSingle();
+        if (!cancelled) setAssignedName((p as any)?.full_name || 'un membre de l\'équipe');
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [order?.id, currentUserId]);
+
+  const isActive = order ? (order.status === 'pending' || order.status === 'processing') : false;
+  const iOwnIt = assignedTo !== null && assignedTo === currentUserId;
+  const ownedByOther = assignedTo !== null && assignedTo !== currentUserId;
+  const canAct = !isActive || iOwnIt; // les actions exigent la prise en charge quand la commande est active
+
+  const handleClaim = async () => {
+    if (!order) return;
+    if (await claimOrder(order.id)) { setAssignedTo(currentUserId || null); reloadEvents(); }
+    else { // déjà prise : rafraîchir l'état réel
+      const { data } = await (supabase as any).from('orders').select('assigned_to').eq('id', order.id).maybeSingle();
+      setAssignedTo((data as any)?.assigned_to ?? null);
+    }
+  };
+
+  const handleRelease = async () => {
+    if (!order) return;
+    if (await releaseOrder(order.id)) { setAssignedTo(null); reloadEvents(); }
+  };
+
+  const doStatusUpdate = (status: OrderStatus, paymentStatus?: string) => {
+    if (!order) return;
+    onStatusUpdate(order.id, status, paymentStatus);
+    logOrderEvent(order.id, `status_${status}`).then(reloadEvents);
+  };
 
   useEffect(() => {
     if (!order) return;
@@ -159,6 +212,7 @@ export function OrderDetailsPage({
       });
       if (error) throw error;
       toast({ title: 'Email envoyé', description: 'Le client a reçu la confirmation' });
+      logOrderEvent(order.id, 'cancellation_email_sent', cancellationReason).then(reloadEvents);
       setShowCancellationForm(false);
       setCancellationReason('');
     } catch (err) {
@@ -232,6 +286,47 @@ export function OrderDetailsPage({
           </div>
         </div>
       </div>
+
+      {/* BANDEAU PRISE EN CHARGE — anti-double-traitement */}
+      {isActive && (
+        <div className="px-4 sm:px-6 pt-4">
+          <div className="max-w-5xl mx-auto">
+            {ownedByOther ? (
+              <div className="flex items-center gap-3 rounded-xl p-3.5"
+                style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.25)' }}>
+                <Lock className="w-4 h-4 flex-shrink-0" style={{ color: '#fbbf24' }} />
+                <p className="text-sm m-0" style={{ color: '#fbbf24' }}>
+                  <strong>{assignedName}</strong> traite déjà cette commande — ne la traitez pas en double.
+                </p>
+              </div>
+            ) : iOwnIt ? (
+              <div className="flex items-center justify-between gap-3 rounded-xl p-3.5 flex-wrap"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.15)' }}>
+                <div className="flex items-center gap-3">
+                  <Hand className="w-4 h-4 flex-shrink-0 text-white" />
+                  <p className="text-sm text-white m-0">Vous traitez cette commande — elle est verrouillée pour le reste de l'équipe.</p>
+                </div>
+                <Button onClick={handleRelease} size="sm"
+                  style={{ background: '#2d2d2d', color: '#9ca3af', border: '1px solid rgba(255,255,255,0.07)' }}>
+                  Libérer
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between gap-3 rounded-xl p-3.5 flex-wrap"
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px dashed rgba(255,255,255,0.15)' }}>
+                <div className="flex items-center gap-3">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#9ca3af' }} />
+                  <p className="text-sm m-0" style={{ color: '#9ca3af' }}>Commande libre — prenez-la en charge avant de la traiter.</p>
+                </div>
+                <Button onClick={handleClaim} size="sm" className="hover:opacity-90"
+                  style={{ background: '#fff', color: '#141414', fontWeight: 700 }}>
+                  <Hand className="w-4 h-4 mr-2" /> Prendre en charge
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* BODY — 2 colonnes sur desktop */}
       <div className="px-4 sm:px-6 py-5">
@@ -390,6 +485,43 @@ export function OrderDetailsPage({
               </Card>
             </div>
           )}
+          {/* JOURNAL D'ACTIVITÉ — qui a fait quoi, quand (append-only) */}
+          <div className="lg:col-span-2 rounded-2xl p-4"
+            style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)' }}>
+            <div className="flex items-center gap-2 mb-3">
+              <History className="w-4 h-4" style={{ color: '#9ca3af' }} />
+              <p className="text-sm font-semibold text-white m-0">Journal d'activité</p>
+              <span className="text-xs" style={{ color: '#6b7280' }}>{events.length} événement(s)</span>
+            </div>
+            {events.length === 0 ? (
+              <p className="text-sm m-0" style={{ color: '#6b7280' }}>
+                Aucun événement pour l'instant — les prises en charge et changements de statut apparaîtront ici.
+              </p>
+            ) : (
+              <div className="flex flex-col">
+                {events.map((ev, i) => (
+                  <div key={ev.id} className="flex gap-3">
+                    {/* rail */}
+                    <div className="flex flex-col items-center">
+                      <div className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                        style={{ background: ev.action.includes('cancel') ? '#f87171' : ev.action === 'status_completed' ? '#fff' : 'rgba(255,255,255,0.45)' }} />
+                      {i < events.length - 1 && <div className="w-px flex-1 my-1" style={{ background: 'rgba(255,255,255,0.08)' }} />}
+                    </div>
+                    <div className="pb-3 min-w-0">
+                      <p className="text-sm text-white m-0">
+                        {EVENT_LABELS[ev.action] || ev.action}
+                        {ev.actor_name && <span style={{ color: '#9ca3af' }}> — {ev.actor_name}</span>}
+                      </p>
+                      {ev.details && <p className="text-xs m-0 mt-0.5 break-words" style={{ color: '#6b7280' }}>{ev.details}</p>}
+                      <p className="text-[11px] m-0 mt-0.5" style={{ color: '#4b5563' }}>
+                        {format(new Date(ev.created_at), "d MMM yyyy 'à' HH:mm", { locale: fr })}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -399,17 +531,25 @@ export function OrderDetailsPage({
         style={{ borderTop: '1px solid rgba(255,255,255,0.07)', background: '#1a1a1a' }}
       >
         <div className="max-w-5xl mx-auto flex flex-wrap gap-2 sm:justify-end">
-          {order.status === 'pending' && (
+          {isActive && !canAct && (
+            <div className="flex-1 flex items-center justify-center sm:justify-end gap-2 text-sm py-2" style={{ color: '#9ca3af' }}>
+              <Lock className="w-4 h-4" />
+              {ownedByOther
+                ? <>Actions verrouillées — commande traitée par <strong className="text-white">{assignedName}</strong></>
+                : <>Prenez la commande en charge (bandeau ci-dessus) pour débloquer les actions</>}
+            </div>
+          )}
+          {order.status === 'pending' && canAct && (
             <>
               <Button
-                onClick={() => onStatusUpdate(order.id, 'processing')}
+                onClick={() => doStatusUpdate('processing')}
                 className="flex-1 sm:flex-none sm:min-w-[180px] hover:opacity-90"
                 style={{ background: '#fff', color: '#141414', fontWeight: 700 }}
               >
                 <Clock className="w-4 h-4 mr-2" /> Mettre en traitement
               </Button>
               <Button
-                onClick={() => { onStatusUpdate(order.id, 'cancelled'); setShowCancellationForm(true); }}
+                onClick={() => { doStatusUpdate('cancelled'); setShowCancellationForm(true); }}
                 className="flex-1 sm:flex-none sm:min-w-[140px] border hover:opacity-90"
                 style={{ background: 'rgba(248,113,113,0.10)', color: '#f87171', borderColor: 'rgba(248,113,113,0.30)' }}
               >
@@ -417,17 +557,17 @@ export function OrderDetailsPage({
               </Button>
             </>
           )}
-          {order.status === 'processing' && (
+          {order.status === 'processing' && canAct && (
             <>
               <Button
-                onClick={() => onStatusUpdate(order.id, 'completed', 'paid')}
+                onClick={() => doStatusUpdate('completed', 'paid')}
                 className="flex-1 sm:flex-none sm:min-w-[180px] hover:opacity-90"
                 style={{ background: '#fff', color: '#141414', fontWeight: 700 }}
               >
                 <CheckCircle className="w-4 h-4 mr-2" /> Marquer comme terminé
               </Button>
               <Button
-                onClick={() => { onStatusUpdate(order.id, 'cancelled'); setShowCancellationForm(true); }}
+                onClick={() => { doStatusUpdate('cancelled'); setShowCancellationForm(true); }}
                 className="flex-1 sm:flex-none sm:min-w-[140px] border hover:opacity-90"
                 style={{ background: 'rgba(248,113,113,0.10)', color: '#f87171', borderColor: 'rgba(248,113,113,0.30)' }}
               >

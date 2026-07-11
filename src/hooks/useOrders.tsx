@@ -28,6 +28,9 @@ export interface UnifiedOrder {
   payment_status?: string;
   is_deleted?: boolean;
   deleted_at?: string;
+  // Prise en charge par un opérateur (multi-employés, anti-double-traitement)
+  assigned_to?: string | null;
+  assigned_at?: string | null;
   
   // Propriétés spécifiques aux transferts
   from_currency?: string;

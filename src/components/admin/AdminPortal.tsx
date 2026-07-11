@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield,
+  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox,
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
+import { OpsQueue } from '@/components/admin/orders/OpsQueue';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
 import { AccountingAdmin } from '@/components/admin/AccountingAdmin';
@@ -17,6 +18,7 @@ const BORDER = 'rgba(255,255,255,0.07)';
 const ICON_BG = 'rgba(255,255,255,0.06)';
 
 const NAV = [
+  { id: 'queue',        label: "File d'attente", desc: 'Commandes à traiter — prise en charge', icon: Inbox },
   { id: 'orders',       label: 'Commandes',    desc: 'Achats, ventes, virements', icon: ShoppingCart },
   { id: 'accounting',   label: 'Comptabilité', desc: 'Revenus et marges',         icon: Calculator },
   { id: 'kyc',          label: 'KYC',          desc: "Vérifications d'identité",   icon: FileCheck },
@@ -26,7 +28,7 @@ const NAV = [
 ];
 
 export function AdminPortal() {
-  const [activeTab, setActiveTab] = useState('orders');
+  const [activeTab, setActiveTab] = useState('queue');
   const { isAdmin, isKYCReviewer } = useUserRole();
   const navigate = useNavigate();
 
@@ -99,6 +101,7 @@ export function AdminPortal() {
 
         {/* Section content */}
         <div>
+          {activeTab === 'queue' && <OpsQueue />}
           {activeTab === 'orders' && <OrdersDashboardNew />}
           {activeTab === 'accounting' && <AccountingAdmin />}
           {activeTab === 'kyc' && <KYCAdmin />}
