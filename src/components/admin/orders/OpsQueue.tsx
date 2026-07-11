@@ -4,7 +4,7 @@ import { useOrderOps } from '@/hooks/useOrderOps';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { OrderDetailsPage } from './OrderDetailsPage';
 import { Coins, HandCoins, Send, Clock, Hand, User, RefreshCw, Inbox, CheckCircle2, Users } from 'lucide-react';
-import { HubCard, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
+import { HubPill, SwitchPill, StatPill, SectionLabel, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -156,6 +156,12 @@ export function OpsQueue() {
               <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Actualiser
             </button>
           }>
+          {/* Changer d'espace sans revenir en arrière */}
+          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 2, scrollbarWidth: 'none' }}>
+            <SwitchPill icon={Hand} label="Mes commandes" count={mine.length} selected={view === 'mine'} onClick={() => setView('mine')} />
+            <SwitchPill icon={Inbox} label="File d'attente" count={unassigned.length} selected={view === 'queue'} onClick={() => setView('queue')} />
+            <SwitchPill icon={Users} label="Par l'équipe" count={others.length} selected={view === 'others'} onClick={() => setView('others')} />
+          </div>
           {v.items.length === 0 ? (
             <div style={{ border: `1px dashed ${BORDER}`, borderRadius: 14, padding: '28px 18px', display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center' }}>
               <CheckCircle2 size={16} color="#4b5563" />
@@ -186,36 +192,29 @@ export function OpsQueue() {
         </button>
       </div>
 
-      {/* KPIs — l'état des opérations en un coup d'œil */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10 }}>
-        {[
-          { label: 'À traiter', value: String(unassigned.length) },
-          { label: "Terminées aujourd'hui", value: String(completedToday) },
-        ].map(k => (
-          <div key={k.label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '14px 16px' }}>
-            <p style={{ color: '#6b7280', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 6px' }}>{k.label}</p>
-            <p style={{ color: '#fff', fontSize: 24, fontWeight: 700, margin: 0, lineHeight: 1 }}>{k.value}</p>
-          </div>
-        ))}
-        {oldest && (
-          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '14px 16px' }}>
-            <p style={{ color: '#6b7280', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 6px' }}>Plus ancienne en file</p>
-            <p style={{ color: oldest.urgent ? '#f87171' : '#fff', fontSize: 16, fontWeight: 700, margin: 0, lineHeight: 1.2 }}>{oldest.text}</p>
-          </div>
-        )}
+      {/* KPIs — chiffres compacts, l'état des opérations en un coup d'œil */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <SectionLabel>Aujourd'hui</SectionLabel>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          <StatPill icon={Inbox} value={unassigned.length} label="à traiter" tone={unassigned.length > 0 ? 'warn' : 'default'} delay={0} />
+          <StatPill icon={CheckCircle2} value={completedToday} label="terminées aujourd'hui" delay={0.04} />
+          {oldest && (
+            <StatPill icon={Clock} value={oldest.text} label="plus ancienne en file" tone={oldest.urgent ? 'urgent' : 'default'} delay={0.08} />
+          )}
+        </div>
       </div>
 
-      {/* Entrées — on RENTRE dans chaque espace de travail */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        <HubCard icon={Hand} title="Mes commandes" desc="Les commandes que je traite en ce moment"
-          count={mine.length} countLabel="en cours" accent={mine.length > 0} delay={0}
-          onClick={() => setView('mine')} />
-        <HubCard icon={Inbox} title="File d'attente" desc="Commandes libres à prendre en charge — la plus ancienne d'abord"
-          count={unassigned.length} countLabel="à traiter" delay={0.05}
-          onClick={() => setView('queue')} />
-        <HubCard icon={Users} title="En cours par l'équipe" desc="Traitées par vos collègues — verrouillées"
-          count={others.length} countLabel="en cours" delay={0.1}
-          onClick={() => setView('others')} />
+      {/* Espaces — on RENTRE dans chaque espace de travail */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <SectionLabel>Espaces de travail</SectionLabel>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          <HubPill icon={Hand} label="Mes commandes" count={mine.length} accent={mine.length > 0} delay={0.1}
+            onClick={() => setView('mine')} />
+          <HubPill icon={Inbox} label="File d'attente" count={unassigned.length} urgent={unassigned.length} delay={0.15}
+            onClick={() => setView('queue')} />
+          <HubPill icon={Users} label="En cours par l'équipe" count={others.length} delay={0.2}
+            onClick={() => setView('others')} />
+        </div>
       </div>
     </div>
   );

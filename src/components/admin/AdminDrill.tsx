@@ -1,65 +1,147 @@
-import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
 
 /**
- * Navigation « par pages » du back-office :
- * - HubCard  : grande carte cliquable sur la page d'accueil d'une section
- *              (icône, titre, description, compteur, chevron) → on ENTRE
- *              dans une sous-page au lieu de tout empiler sur un seul écran.
- * - DrillPage: sous-page avec en-tête (bouton retour, titre, sous-titre,
- *              actions à droite) et animation d'entrée.
+ * Langage visuel du back-office — pilules compactes et arrondies,
+ * le même design que le sélecteur de réseau et le choix des rôles :
+ * - HubPill      : pilule de NAVIGATION (icône ronde, libellé, compteur,
+ *                  chevron) → on entre dans une sous-page.
+ * - SwitchPill   : pilule de SÉLECTION (état sélectionné avec coche) →
+ *                  changer d'espace sans revenir en arrière.
+ * - StatPill     : pilule de CHIFFRE (KPI compact, dimensionné à son
+ *                  contenu — jamais de grand rectangle vide).
+ * - SectionLabel : petit intitulé de section en majuscules.
+ * - DrillPage    : sous-page avec bouton retour, titre et actions.
  */
 
-const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const ICON_BG = 'rgba(255,255,255,0.06)';
 
 export const drillStyles = `
   @keyframes drill-in { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: translateX(0); } }
-  @keyframes hub-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes hub-in { from { opacity: 0; transform: translateY(8px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
   .drill-page { animation: drill-in 0.28s cubic-bezier(0.22,1,0.36,1) both; }
-  .hub-card { animation: hub-in 0.35s cubic-bezier(0.22,1,0.36,1) both; transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease; }
-  .hub-card:hover { border-color: rgba(255,255,255,0.18) !important; background: #232323 !important; transform: translateY(-2px); }
-  .hub-card:active { transform: scale(0.99); }
+  .hub-pill { animation: hub-in 0.32s cubic-bezier(0.22,1,0.36,1) both; transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease; }
+  .hub-pill:hover { border-color: rgba(255,255,255,0.40) !important; background: rgba(255,255,255,0.13) !important; transform: translateY(-1px); }
+  .hub-pill:active { transform: scale(0.97); }
+  .stat-pill { animation: hub-in 0.32s cubic-bezier(0.22,1,0.36,1) both; }
   .drill-row { transition: background 0.15s ease, border-color 0.15s ease; }
   .drill-row:hover { background: rgba(255,255,255,0.03); }
 `;
 
-interface HubCardProps {
+export function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p style={{ color: '#4b5563', fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.09em', margin: '0 0 0 4px' }}>
+      {children}
+    </p>
+  );
+}
+
+interface HubPillProps {
   icon: any;
-  title: string;
-  desc: string;
+  label: string;
   count?: number | string;
-  countLabel?: string;
+  /** petit badge d'urgence (ambre) — ex. « 3 à traiter » */
+  urgent?: number;
+  urgentLabel?: string;
   danger?: boolean;
   accent?: boolean;
   delay?: number;
   onClick: () => void;
 }
 
-export function HubCard({ icon: Icon, title, desc, count, countLabel, danger, accent, delay = 0, onClick }: HubCardProps) {
+/** Pilule de navigation — on clique, on ENTRE dans l'espace. */
+export function HubPill({ icon: Icon, label, count, urgent, urgentLabel = 'à traiter', danger, accent, delay = 0, onClick }: HubPillProps) {
   return (
-    <button className="hub-card" onClick={onClick}
+    <button className="hub-pill" onClick={onClick}
       style={{
-        width: '100%', display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left',
-        background: CARD, border: `1px solid ${accent ? 'rgba(255,255,255,0.16)' : BORDER}`,
-        borderRadius: 18, padding: '18px 18px', cursor: 'pointer',
+        display: 'inline-flex', alignItems: 'center', gap: 10,
+        padding: '9px 14px 9px 9px', borderRadius: 100, cursor: 'pointer', outline: 'none',
+        border: `1px solid ${danger ? 'rgba(239,68,68,0.25)' : accent ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.16)'}`,
+        background: accent ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)',
+        animationDelay: `${delay}s`,
+        WebkitTapHighlightColor: 'transparent',
+      }}>
+      <span style={{ width: 30, height: 30, borderRadius: '50%', background: danger ? 'rgba(239,68,68,0.10)' : ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <Icon size={14} color={danger ? '#f87171' : 'rgba(255,255,255,0.85)'} strokeWidth={1.9} />
+      </span>
+      <span style={{ color: danger ? '#f87171' : '#fff', fontSize: 13.5, fontWeight: 600, whiteSpace: 'nowrap' }}>{label}</span>
+      {count !== undefined && (
+        <span style={{ fontSize: 11.5, fontWeight: 700, padding: '2px 9px', borderRadius: 999, background: 'rgba(255,255,255,0.10)', color: danger ? '#f87171' : 'rgba(255,255,255,0.75)', flexShrink: 0 }}>
+          {count}
+        </span>
+      )}
+      {!!urgent && (
+        <span style={{ fontSize: 10.5, fontWeight: 700, padding: '2px 9px', borderRadius: 999, background: 'rgba(251,191,36,0.10)', color: '#fbbf24', whiteSpace: 'nowrap', flexShrink: 0 }}>
+          {urgent} {urgentLabel}
+        </span>
+      )}
+      <ChevronRight size={14} color="rgba(255,255,255,0.30)" style={{ flexShrink: 0 }} />
+    </button>
+  );
+}
+
+interface SwitchPillProps {
+  icon?: any;
+  label: string;
+  count?: number | string;
+  selected: boolean;
+  danger?: boolean;
+  onClick: () => void;
+}
+
+/** Pilule de sélection — même design que le choix du réseau / des rôles. */
+export function SwitchPill({ icon: Icon, label, count, selected, danger, onClick }: SwitchPillProps) {
+  const fg = danger && selected ? '#f87171' : selected ? '#fff' : 'rgba(255,255,255,0.55)';
+  return (
+    <button onClick={onClick}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 8, flexShrink: 0, whiteSpace: 'nowrap',
+        padding: Icon ? '7px 14px 7px 8px' : '8px 14px', borderRadius: 100, cursor: 'pointer', outline: 'none',
+        transition: 'all 0.15s',
+        border: `1px solid ${selected ? 'rgba(255,255,255,0.40)' : 'rgba(255,255,255,0.16)'}`,
+        background: selected ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.07)',
+        WebkitTapHighlightColor: 'transparent',
+      }}>
+      {Icon && (
+        <span style={{ width: 26, height: 26, borderRadius: '50%', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Icon size={13} color={fg} />
+        </span>
+      )}
+      <span style={{ color: fg, fontSize: 13, fontWeight: selected ? 600 : 400 }}>{label}</span>
+      {count !== undefined && <span style={{ fontSize: 10.5, color: fg, opacity: 0.7 }}>{count}</span>}
+      {selected && <CheckCircle2 size={13} color="rgba(255,255,255,0.8)" />}
+    </button>
+  );
+}
+
+interface StatPillProps {
+  icon: any;
+  value: string | number;
+  label: string;
+  /** 'urgent' teinte la valeur en rouge, 'warn' en ambre */
+  tone?: 'default' | 'urgent' | 'warn';
+  delay?: number;
+}
+
+/** KPI compact — dimensionné à son contenu, dense même sur grand écran. */
+export function StatPill({ icon: Icon, value, label, tone = 'default', delay = 0 }: StatPillProps) {
+  const valueColor = tone === 'urgent' ? '#f87171' : tone === 'warn' ? '#fbbf24' : '#fff';
+  return (
+    <div className="stat-pill"
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 10,
+        padding: '7px 16px 7px 8px', borderRadius: 100,
+        border: `1px solid rgba(255,255,255,0.10)`, background: 'rgba(255,255,255,0.045)',
         animationDelay: `${delay}s`,
       }}>
-      <div style={{ width: 46, height: 46, borderRadius: 14, background: danger ? 'rgba(239,68,68,0.10)' : ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-        <Icon size={20} color={danger ? '#f87171' : 'rgba(255,255,255,0.8)'} strokeWidth={1.9} />
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ color: danger ? '#f87171' : '#fff', fontSize: 15, fontWeight: 700, margin: 0, letterSpacing: '-0.01em' }}>{title}</p>
-        <p style={{ color: '#6b7280', fontSize: 12.5, margin: '3px 0 0', lineHeight: 1.5 }}>{desc}</p>
-      </div>
-      {count !== undefined && (
-        <div style={{ textAlign: 'right', flexShrink: 0 }}>
-          <p style={{ color: danger ? '#f87171' : '#fff', fontSize: 20, fontWeight: 700, margin: 0, lineHeight: 1 }}>{count}</p>
-          {countLabel && <p style={{ color: '#4b5563', fontSize: 10.5, margin: '3px 0 0' }}>{countLabel}</p>}
-        </div>
-      )}
-      <ChevronRight size={17} color="rgba(255,255,255,0.25)" style={{ flexShrink: 0 }} />
-    </button>
+      <span style={{ width: 28, height: 28, borderRadius: '50%', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <Icon size={13} color="rgba(255,255,255,0.65)" strokeWidth={1.9} />
+      </span>
+      <span style={{ display: 'flex', flexDirection: 'column' }}>
+        <span style={{ color: valueColor, fontSize: 15, fontWeight: 700, lineHeight: 1.15, whiteSpace: 'nowrap' }}>{value}</span>
+        <span style={{ color: '#6b7280', fontSize: 10.5, lineHeight: 1.2, whiteSpace: 'nowrap' }}>{label}</span>
+      </span>
+    </div>
   );
 }
 

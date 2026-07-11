@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Users, Clock, CheckCircle, XCircle, AlertCircle, Search, Eye } from 'lucide-react';
 import { useKYCAdmin } from '@/hooks/useKYCAdmin';
 import { KYCVerificationDetails } from './KYCVerificationDetails';
+import { StatPill, SectionLabel, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -148,38 +149,15 @@ export function KYCAdmin() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16, width: '100%', minWidth: 0 }}>
-      {/* Statistiques */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-          gap: 12,
-        }}
-      >
-        {statCards.map(({ label, value, Icon }) => (
-          <div key={label} style={cardStyle}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-              <div style={{ minWidth: 0 }}>
-                <p style={{ color: '#9ca3af', fontSize: 13, margin: 0 }}>{label}</p>
-                <p style={{ color: '#fff', fontSize: 24, fontWeight: 700, margin: '4px 0 0' }}>{value}</p>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 40,
-                  height: 40,
-                  borderRadius: 10,
-                  background: ICON_BG,
-                  flexShrink: 0,
-                }}
-              >
-                <Icon className="h-5 w-5" style={{ color: '#9ca3af' }} />
-              </div>
-            </div>
-          </div>
-        ))}
+      {/* Statistiques — chiffres compacts */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <style>{drillStyles}</style>
+        <SectionLabel>Vérifications</SectionLabel>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          {statCards.map(({ label, value, Icon }, i) => (
+            <StatPill key={label} icon={Icon} value={value} label={label.toLowerCase()} delay={i * 0.04} />
+          ))}
+        </div>
       </div>
 
       {/* Filtres et recherche */}

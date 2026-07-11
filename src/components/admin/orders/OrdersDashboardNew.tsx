@@ -7,7 +7,7 @@ import { useOrders, UnifiedOrder } from '@/hooks/useOrders';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { OrderDetailsPage } from './OrderDetailsPage';
-import { HubCard, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
+import { HubPill, SwitchPill, StatPill, SectionLabel, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
@@ -229,6 +229,15 @@ export function OrdersDashboardNew() {
             </button>
           }>
 
+          {/* Changer d'espace sans revenir en arrière */}
+          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 2, scrollbarWidth: 'none' }}>
+            {(['buy', 'sell', 'transfer', 'trash'] as Zone[]).map(z => (
+              <SwitchPill key={z} icon={ZONES[z].Icon} label={ZONES[z].label} count={zoneOrders[z].length}
+                selected={zone === z} danger={ZONES[z].danger}
+                onClick={() => { if (z !== zone) { setZone(z); setStatusFilter('all'); } }} />
+            ))}
+          </div>
+
           {/* Recherche */}
           <div style={{ position: 'relative' }}>
             <Search size={16} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.35)' }} />
@@ -288,46 +297,37 @@ export function OrdersDashboardNew() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
       <style>{drillStyles}</style>
 
-      {/* Vue d'ensemble */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 10 }}>
-        {[
-          { label: 'Commandes actives', value: activeOrders.length, Icon: ShoppingCart },
-          { label: 'Clients', value: new Set(activeOrders.map(o => o.user_id)).size, Icon: Users },
-          { label: 'En attente', value: pendingCount, Icon: Clock },
-        ].map(({ label, value, Icon }) => (
-          <div key={label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, padding: 14 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 34, height: 34, borderRadius: 10, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Icon size={15} style={{ color: 'rgba(255,255,255,0.7)' }} />
-              </div>
-              <div style={{ minWidth: 0 }}>
-                <p style={{ color: '#6b7280', fontSize: 10.5, margin: '0 0 2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</p>
-                <p style={{ color: '#fff', fontSize: 20, fontWeight: 700, margin: 0 }}>{value}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+      {/* Vue d'ensemble — chiffres compacts, dimensionnés à leur contenu */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <SectionLabel>Aperçu</SectionLabel>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          <StatPill icon={ShoppingCart} value={activeOrders.length} label="commandes actives" delay={0} />
+          <StatPill icon={Users} value={new Set(activeOrders.map(o => o.user_id)).size} label="clients" delay={0.04} />
+          <StatPill icon={Clock} value={pendingCount} label="en attente" tone={pendingCount > 0 ? 'warn' : 'default'} delay={0.08} />
+        </div>
       </div>
 
-      {/* Entrées — on RENTRE dans chaque catégorie */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {(['buy', 'sell', 'transfer', 'trash'] as Zone[]).map((z, i) => {
-          const meta = ZONES[z];
-          const list = zoneOrders[z];
-          const waiting = z === 'trash' ? undefined : list.filter(o => o.status === 'pending' || o.status === 'processing').length;
-          return (
-            <HubCard key={z}
-              icon={meta.Icon}
-              title={meta.label}
-              desc={z === 'trash' ? meta.desc : `${meta.desc}${waiting ? ` — ${waiting} à traiter` : ''}`}
-              count={list.length}
-              countLabel="au total"
-              danger={meta.danger}
-              delay={i * 0.05}
-              onClick={() => setZone(z)}
-            />
-          );
-        })}
+      {/* Espaces — on RENTRE dans chaque catégorie */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <SectionLabel>Espaces de travail</SectionLabel>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          {(['buy', 'sell', 'transfer', 'trash'] as Zone[]).map((z, i) => {
+            const meta = ZONES[z];
+            const list = zoneOrders[z];
+            const waiting = z === 'trash' ? 0 : list.filter(o => o.status === 'pending' || o.status === 'processing').length;
+            return (
+              <HubPill key={z}
+                icon={meta.Icon}
+                label={meta.label}
+                count={list.length}
+                urgent={waiting}
+                danger={meta.danger}
+                delay={0.1 + i * 0.05}
+                onClick={() => setZone(z)}
+              />
+            );
+          })}
+        </div>
       </div>
 
       {/* Outils */}

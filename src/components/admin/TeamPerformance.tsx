@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Trophy, RefreshCw, Users, CheckCircle2, Coins, TrendingUp } from 'lucide-react';
+import { StatPill, SectionLabel, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -160,24 +161,16 @@ export function TeamPerformance() {
         </button>
       </div>
 
-      {/* Totaux de la période */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 10 }}>
-        {[
-          { label: 'Commandes terminées', value: fmt(totals.completed), Icon: CheckCircle2 },
-          { label: 'Volume traité', value: `${fmt(totals.volumeCfa)} CFA`, Icon: TrendingUp },
-          { label: 'USDT échangés', value: `${fmt(Math.round(totals.volumeUsdt))} USDT`, Icon: Coins },
-          { label: 'Membres actifs', value: fmt(totals.members), Icon: Users },
-        ].map(({ label, value, Icon }) => (
-          <div key={label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-              <div style={{ width: 30, height: 30, borderRadius: 9, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Icon size={15} color="rgba(255,255,255,0.7)" />
-              </div>
-              <p style={{ color: '#6b7280', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>{label}</p>
-            </div>
-            <p style={{ color: '#fff', fontSize: 22, fontWeight: 700, margin: 0, lineHeight: 1.1 }}>{value}</p>
-          </div>
-        ))}
+      {/* Totaux de la période — chiffres compacts */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <style>{drillStyles}</style>
+        <SectionLabel>Totaux de la période</SectionLabel>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          <StatPill icon={CheckCircle2} value={fmt(totals.completed)} label="commandes terminées" delay={0} />
+          <StatPill icon={TrendingUp} value={`${fmt(totals.volumeCfa)} CFA`} label="volume traité" delay={0.04} />
+          <StatPill icon={Coins} value={`${fmt(Math.round(totals.volumeUsdt))} USDT`} label="USDT échangés" delay={0.08} />
+          <StatPill icon={Users} value={fmt(totals.members)} label="membres actifs" delay={0.12} />
+        </div>
       </div>
 
       {/* Classement par opérateur */}

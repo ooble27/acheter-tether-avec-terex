@@ -7,6 +7,7 @@ import {
   HandCoins, Send, BarChart3,
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { StatPill, SectionLabel, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -131,24 +132,16 @@ export function AccountingAdmin() {
         </button>
       </div>
 
-      {/* KPIs réels */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10 }}>
-        {[
-          { label: 'Volume traité', value: `${fmt(kpis.volume)} CFA`, Icon: TrendingUp },
-          { label: 'Revenus estimés', value: `${fmt(kpis.revenue)} CFA`, Icon: Wallet },
-          { label: 'Commandes terminées', value: fmt(kpis.count), Icon: CheckCircle2 },
-          { label: 'USDT échangés', value: fmt(kpis.usdt), Icon: Coins },
-        ].map(({ label, value, Icon }) => (
-          <div key={label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, padding: 16 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-              <div style={{ width: 30, height: 30, borderRadius: 9, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Icon size={15} color="rgba(255,255,255,0.7)" />
-              </div>
-              <p style={{ color: '#6b7280', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>{label}</p>
-            </div>
-            <p style={{ color: '#fff', fontSize: 20, fontWeight: 700, margin: 0, lineHeight: 1.1 }}>{value}</p>
-          </div>
-        ))}
+      {/* KPIs réels — chiffres compacts, dimensionnés à leur contenu */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <style>{drillStyles}</style>
+        <SectionLabel>Chiffres de la période</SectionLabel>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          <StatPill icon={TrendingUp} value={`${fmt(kpis.volume)} CFA`} label="volume traité" delay={0} />
+          <StatPill icon={Wallet} value={`${fmt(kpis.revenue)} CFA`} label="revenus estimés" delay={0.04} />
+          <StatPill icon={CheckCircle2} value={fmt(kpis.count)} label="commandes terminées" delay={0.08} />
+          <StatPill icon={Coins} value={fmt(kpis.usdt)} label="USDT échangés" delay={0.12} />
+        </div>
       </div>
 
       {/* Répartition par activité */}

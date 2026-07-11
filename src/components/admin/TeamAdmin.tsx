@@ -6,7 +6,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Users, UserPlus, Trash2, RefreshCw, Loader2, Shield, Inbox, FileCheck, Mail, UserCheck, Headphones, CheckCircle2 } from 'lucide-react';
-import { HubCard, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
+import { HubPill, StatPill, SectionLabel, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -252,16 +252,33 @@ export function TeamAdmin() {
     );
   }
 
+  // Effectif par rôle — pour l'aperçu compact du hub
+  const roleCounts = ROLES
+    .map(r => ({ ...r, n: members.filter(m => m.role === r.id).length }))
+    .filter(r => r.n > 0);
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
       <style>{drillStyles}</style>
-      <HubCard icon={UserPlus} title="Ajouter un membre" delay={0}
-        desc="Attribuer un rôle (opérateur, KYC, marketing, RH…) à un compte existant"
-        onClick={() => setView('add')} />
-      <HubCard icon={Users} title="Membres de l'équipe" delay={0.05}
-        desc="Voir qui a accès au back-office, retirer un rôle"
-        count={members.length} countLabel="rôle(s)"
-        onClick={() => setView('members')} />
+
+      {roleCounts.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <SectionLabel>Effectif</SectionLabel>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {roleCounts.map((r, i) => (
+              <StatPill key={r.id} icon={r.Icon} value={r.n} label={r.label} delay={i * 0.04} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <SectionLabel>Gestion</SectionLabel>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          <HubPill icon={UserPlus} label="Ajouter un membre" delay={0.1} onClick={() => setView('add')} />
+          <HubPill icon={Users} label="Membres de l'équipe" count={members.length} delay={0.15} onClick={() => setView('members')} />
+        </div>
+      </div>
     </div>
   );
 }
