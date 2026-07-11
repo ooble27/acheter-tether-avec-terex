@@ -1,8 +1,8 @@
 import { Textarea } from '@/components/ui/textarea';
 import { UnifiedOrder } from '@/hooks/useOrders';
 import {
-  User, Mail, Phone, Wallet, Hash, Coins, HandCoins, Send, Copy, CheckCircle,
-  XCircle, Clock, ArrowLeft, Globe, FileText, Hand, History, Lock, ArrowRight,
+  Coins, HandCoins, Send, Copy, CheckCircle, XCircle, Clock, ArrowLeft,
+  Hand, History, Lock, ArrowRight, Hash, Mail,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -12,7 +12,7 @@ import type { Database } from '@/integrations/supabase/types';
 import { useToast } from '@/hooks/use-toast';
 import { parseOrderNotes } from '@/lib/orderNotesParser';
 import { useOrderOps, useOrderEvents, EVENT_LABELS } from '@/hooks/useOrderOps';
-import { DetailSection, Field, StatusText, Avatar, drillStyles } from '@/components/admin/AdminDrill';
+import { StatusText, Avatar, drillStyles } from '@/components/admin/AdminDrill';
 
 type OrderStatus = Database['public']['Enums']['order_status'];
 
@@ -22,6 +22,7 @@ interface OrderDetailsPageProps {
   onStatusUpdate: (orderId: string, status: OrderStatus, paymentStatus?: string) => void;
 }
 
+const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const RED = '#e07a7a';
 
@@ -35,6 +36,41 @@ const TYPE_META: Record<string, { label: string; Icon: any }> = {
   sell: { label: 'Vente USDT', Icon: HandCoins },
   transfer: { label: 'Transfert international', Icon: Send },
 };
+
+// ── Ligne label/valeur (design des pages Acheter/Vendre) ──────────────────────
+function Row({ label, value, mono, copyable, onCopy, stacked, last }: {
+  label: string; value: React.ReactNode; mono?: boolean; copyable?: boolean; onCopy?: () => void; stacked?: boolean; last?: boolean;
+}) {
+  const border = last ? 'none' : `1px solid ${BORDER}`;
+  if (stacked) {
+    return (
+      <div style={{ padding: '13px 16px', borderBottom: border }}>
+        <p style={{ color: '#6b7280', fontSize: 12, margin: '0 0 6px' }}>{label}</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ flex: 1, color: '#fff', fontSize: mono ? 12 : 13.5, fontWeight: 500, fontFamily: mono ? 'ui-monospace,Menlo,monospace' : undefined, wordBreak: 'break-all', minWidth: 0 }}>{value}</span>
+          {copyable && onCopy && <button onClick={onCopy} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 2, display: 'flex' }}><Copy size={13} /></button>}
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '13px 16px', borderBottom: border }}>
+      <span style={{ color: '#6b7280', fontSize: 13, flexShrink: 0 }}>{label}</span>
+      <span style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0, justifyContent: 'flex-end' }}>
+        <span style={{ color: '#fff', fontSize: mono ? 12 : 13.5, fontWeight: 500, textAlign: 'right', wordBreak: 'break-all', fontFamily: mono ? 'ui-monospace,Menlo,monospace' : undefined }}>{value}</span>
+        {copyable && onCopy && <button onClick={onCopy} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 2, display: 'flex' }}><Copy size={13} /></button>}
+      </span>
+    </div>
+  );
+}
+
+function GroupLabel({ children, first }: { children: React.ReactNode; first?: boolean }) {
+  return (
+    <div style={{ padding: '11px 16px 7px', borderTop: first ? 'none' : `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}`, background: 'rgba(255,255,255,0.018)' }}>
+      <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', margin: 0 }}>{children}</p>
+    </div>
+  );
+}
 
 export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetailsPageProps) {
   const [userEmail, setUserEmail] = useState('');
@@ -50,7 +86,6 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
   const [assignedTo, setAssignedTo] = useState<string | null>(order?.assigned_to ?? null);
   const [assignedName, setAssignedName] = useState('');
 
-  // État de prise en charge lu frais depuis la base (la prop peut être périmée)
   useEffect(() => {
     if (!order) return;
     let cancelled = false;
@@ -92,7 +127,6 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
     logOrderEvent(order.id, `status_${status}`).then(reloadEvents);
   };
 
-  // Infos client via la fonction admin get-client-infos
   useEffect(() => {
     if (!order) return;
     let cancelled = false;
@@ -144,51 +178,44 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
   const amountLine = `${Number(order.amount).toLocaleString('fr-FR')} ${order.currency}`;
   const usdtLine = `${Number(order.usdt_amount || 0).toLocaleString('fr-FR')} USDT`;
   const openActive = order.status !== 'completed' && order.status !== 'cancelled' && order.status !== 'failed';
+  const method = PAYMENT_LABELS[order.payment_method || ''] || order.payment_method || '—';
 
   return (
     <div style={{ background: '#1a1a1a', minHeight: '100vh' }} className="text-white w-full overflow-x-hidden">
       <style>{drillStyles}</style>
 
-      {/* ── EN-TÊTE ─────────────────────────────────────────────── */}
+      {/* EN-TÊTE */}
       <div className="px-4 sm:px-6 pb-4" style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 16px)', borderBottom: `1px solid ${BORDER}` }}>
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-3">
-            <button onClick={onBack} aria-label="Retour"
-              style={{ width: 38, height: 38, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <ArrowLeft size={16} color="#fff" />
-            </button>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2" style={{ minWidth: 0 }}>
-                <meta.Icon size={15} color="rgba(255,255,255,0.6)" />
-                <span style={{ color: '#9ca3af', fontSize: 12.5, fontWeight: 600 }}>{meta.label}</span>
-                <span style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(255,255,255,0.25)' }} />
-                <StatusText status={order.status} size={12.5} />
-              </div>
-              <button onClick={() => copy(ref, 'Référence copiée')}
-                className="flex items-center gap-1.5 mt-0.5 hover:text-white transition"
-                style={{ color: '#6b7280', fontSize: 11.5, fontFamily: 'ui-monospace,Menlo,monospace', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-                {ref} <Copy size={11} />
-              </button>
+        <div className="max-w-3xl mx-auto flex items-center gap-3">
+          <button onClick={onBack} aria-label="Retour" style={{ width: 38, height: 38, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <ArrowLeft size={16} color="#fff" />
+          </button>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2" style={{ minWidth: 0 }}>
+              <meta.Icon size={15} color="rgba(255,255,255,0.6)" />
+              <span style={{ color: '#9ca3af', fontSize: 12.5, fontWeight: 600 }}>{meta.label}</span>
+              <span style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(255,255,255,0.25)' }} />
+              <StatusText status={order.status} size={12.5} />
             </div>
+            <button onClick={() => copy(ref, 'Référence copiée')} className="flex items-center gap-1.5 mt-0.5 hover:text-white transition" style={{ color: '#6b7280', fontSize: 11.5, fontFamily: 'ui-monospace,Menlo,monospace', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+              {ref} <Copy size={11} />
+            </button>
           </div>
         </div>
       </div>
 
       <div className="px-4 sm:px-6 py-5">
-        <div className="max-w-4xl mx-auto" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div className="max-w-3xl mx-auto" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
 
-          {/* ── RÉSUMÉ CLIENT + FLUX DE MONTANTS ─────────────────── */}
-          <div style={{ background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: 18, padding: 18 }}>
+          {/* RÉSUMÉ CLIENT + FLUX */}
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 18, padding: 18 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
               <Avatar name={clientName} size={40} />
               <div style={{ minWidth: 0 }}>
                 <p style={{ color: '#fff', fontSize: 15, fontWeight: 700, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{clientName}</p>
-                <p style={{ color: '#6b7280', fontSize: 12, margin: '1px 0 0' }}>
-                  {format(new Date(order.created_at), "d MMM yyyy 'à' HH:mm", { locale: fr })}
-                </p>
+                <p style={{ color: '#6b7280', fontSize: 12, margin: '1px 0 0' }}>{format(new Date(order.created_at), "d MMM yyyy 'à' HH:mm", { locale: fr })}</p>
               </div>
             </div>
-            {/* Flux : ce que le client donne → ce qu'il reçoit */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
               <div style={{ flex: '1 1 130px', minWidth: 0 }}>
                 <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 4px' }}>{order.type === 'sell' ? 'Le client envoie' : 'Le client paie'}</p>
@@ -202,7 +229,7 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
             </div>
           </div>
 
-          {/* ── BANDEAU PRISE EN CHARGE ──────────────────────────── */}
+          {/* BANDEAU PRISE EN CHARGE */}
           {isActive && (
             ownedByOther ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, borderRadius: 14, padding: 14, background: 'rgba(255,255,255,0.03)', border: `1px solid rgba(255,255,255,0.14)` }}>
@@ -222,114 +249,110 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
             )
           )}
 
-          {/* ── ACTION À FAIRE ───────────────────────────────────── */}
-          {order.type === 'buy' && openActive && (
-            <DetailSection title="À faire — envoyer les USDT" icon={Send} style={{ background: '#1e1e1e' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 12, marginBottom: order.wallet_address ? 14 : 0 }}>
-                <Field label="Montant à envoyer" value={usdtLine} />
-                <Field label="Réseau" value={order.network || 'TRC20'} />
+          {/* À FAIRE — instruction claire pour l'opérateur */}
+          {openActive && (order.type === 'buy' || order.type === 'sell') && (
+            <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 16px', borderBottom: `1px solid ${BORDER}` }}>
+                <Send size={15} color="#fff" />
+                <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 700, margin: 0 }}>À faire — {order.type === 'buy' ? 'envoyer les USDT' : 'envoyer les fonds'}</p>
               </div>
-              {order.wallet_address && <AddressBlock label="Adresse de réception" value={order.wallet_address} onCopy={() => copy(order.wallet_address!, 'Adresse copiée')} />}
-              <p style={{ color: '#6b7280', fontSize: 12, margin: '14px 0 0', lineHeight: 1.6 }}>
-                Le client a payé <span style={{ color: '#fff', fontWeight: 500 }}>{amountLine}</span> via <span style={{ color: '#fff', fontWeight: 500 }}>{PAYMENT_LABELS[order.payment_method || ''] || order.payment_method || '—'}</span> au taux de <span style={{ color: '#fff', fontWeight: 500 }}>{order.exchange_rate} {order.currency}/USDT</span>.
-              </p>
-            </DetailSection>
+              <div style={{ padding: '16px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', borderBottom: (order.type === 'buy' && order.wallet_address) ? `1px solid ${BORDER}` : 'none' }}>
+                <div>
+                  <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 4px' }}>Montant à envoyer</p>
+                  <p style={{ color: '#fff', fontSize: 22, fontWeight: 700, margin: 0, letterSpacing: '-0.01em' }}>{order.type === 'buy' ? usdtLine : amountLine}</p>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 4px' }}>{order.type === 'buy' ? 'Réseau' : 'Méthode'}</p>
+                  <p style={{ color: '#fff', fontSize: 14, fontWeight: 600, margin: 0 }}>{order.type === 'buy' ? (order.network || 'TRC20') : method}</p>
+                </div>
+              </div>
+              {order.type === 'buy' && order.wallet_address && (
+                <Row label="Adresse de réception" value={order.wallet_address} mono copyable onCopy={() => copy(order.wallet_address!, 'Adresse copiée')} stacked last />
+              )}
+              <div style={{ padding: '12px 16px', background: 'rgba(255,255,255,0.02)', borderTop: `1px solid ${BORDER}` }}>
+                <p style={{ color: '#6b7280', fontSize: 12, margin: 0, lineHeight: 1.6 }}>
+                  {order.type === 'buy'
+                    ? <>Le client a payé <span style={{ color: '#fff' }}>{amountLine}</span> via <span style={{ color: '#fff' }}>{method}</span> au taux de <span style={{ color: '#fff' }}>{order.exchange_rate} {order.currency}/USDT</span>.</>
+                    : <>Le client envoie <span style={{ color: '#fff' }}>{usdtLine}</span> au taux de <span style={{ color: '#fff' }}>{order.exchange_rate} {order.currency}/USDT</span>.</>}
+                </p>
+              </div>
+            </div>
           )}
 
-          {order.type === 'sell' && openActive && (
-            <DetailSection title="À faire — envoyer les fonds" icon={Send} style={{ background: '#1e1e1e' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 12 }}>
-                <Field label="Montant à envoyer" value={amountLine} />
-                <Field label="Méthode" value={PAYMENT_LABELS[order.payment_method || ''] || order.payment_method || '—'} />
-              </div>
-              <p style={{ color: '#6b7280', fontSize: 12, margin: '14px 0 0', lineHeight: 1.6 }}>
-                Le client envoie <span style={{ color: '#fff', fontWeight: 500 }}>{usdtLine}</span> au taux de <span style={{ color: '#fff', fontWeight: 500 }}>{order.exchange_rate} {order.currency}/USDT</span>.
-              </p>
-            </DetailSection>
-          )}
+          {/* CARTE D'INFOS UNIQUE — lignes label/valeur, groupées (style Acheter/Vendre) */}
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden' }}>
+            <GroupLabel first>Client</GroupLabel>
+            <Row label="Nom complet" value={userName || '—'} />
+            <Row label="Email" value={userEmail || '—'} copyable={!!userEmail} onCopy={() => copy(userEmail, 'Email copié')} />
+            <Row label="Téléphone" value={userPhone || '—'} copyable={!!userPhone} onCopy={() => copy(userPhone, 'Téléphone copié')} />
+            <Row label="ID utilisateur" value={`${order.user_id.slice(0, 8)}…${order.user_id.slice(-4)}`} mono copyable onCopy={() => copy(order.user_id, 'ID copié')} last />
 
-          {/* ── INFOS EN GRILLE ──────────────────────────────────── */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12, alignItems: 'start' }}>
-            {/* Client */}
-            <DetailSection title="Client" icon={User}>
-              <div style={{ display: 'grid', gap: 12 }}>
-                <Field label="Nom complet" value={userName || '—'} />
-                <Field label="Email" value={userEmail || '—'} copyable={!!userEmail} onCopy={() => copy(userEmail, 'Email copié')} />
-                <Field label="Téléphone" value={userPhone || '—'} copyable={!!userPhone} onCopy={() => copy(userPhone, 'Téléphone copié')} />
-                <Field label="ID utilisateur" value={`${order.user_id.slice(0, 8)}…${order.user_id.slice(-4)}`} mono copyable onCopy={() => copy(order.user_id, 'ID copié')} />
-              </div>
-            </DetailSection>
-
-            {/* Transaction */}
-            <DetailSection title="Transaction" icon={ArrowRight}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: 12 }}>
-                <Field label={`Montant ${order.currency}`} value={Number(order.amount).toLocaleString('fr-FR')} />
-                <Field label="USDT" value={String(order.usdt_amount || 0)} />
-                <Field label="Taux" value={String(order.exchange_rate)} />
-                {order.payment_method && <Field label="Méthode" value={PAYMENT_LABELS[order.payment_method] || order.payment_method} />}
-                {order.network && <Field label="Réseau" value={order.network} />}
-                {order.payment_reference && <Field label="Réf. paiement" value={order.payment_reference} mono />}
-              </div>
-            </DetailSection>
+            <GroupLabel>Transaction</GroupLabel>
+            <Row label={`Montant ${order.currency}`} value={Number(order.amount).toLocaleString('fr-FR')} />
+            <Row label="USDT" value={String(order.usdt_amount || 0)} />
+            <Row label="Taux" value={`${order.exchange_rate} ${order.currency}/USDT`} />
+            {order.payment_method && <Row label="Méthode" value={method} />}
+            {order.network && <Row label="Réseau" value={order.network} />}
+            <Row label="Créée le" value={format(new Date(order.created_at), "d MMM yyyy 'à' HH:mm", { locale: fr })} last={!order.payment_reference} />
+            {order.payment_reference && <Row label="Réf. paiement" value={order.payment_reference} mono last />}
 
             {/* Destination crypto (achat) */}
             {order.type === 'buy' && order.wallet_address && (
-              <div style={{ gridColumn: '1 / -1' }}>
-                <DetailSection title="Destination crypto" icon={Wallet}>
-                  <AddressBlock label={`Adresse wallet (${order.network || 'TRC20'})`} value={order.wallet_address} onCopy={() => copy(order.wallet_address!, 'Adresse copiée')} />
-                </DetailSection>
-              </div>
+              <>
+                <GroupLabel>Destination crypto</GroupLabel>
+                <Row label={`Adresse wallet (${order.network || 'TRC20'})`} value={order.wallet_address} mono copyable onCopy={() => copy(order.wallet_address!, 'Adresse copiée')} stacked last />
+              </>
             )}
 
             {/* Bénéficiaire (transfert) */}
             {order.type === 'transfer' && (
-              <DetailSection title="Bénéficiaire" icon={Globe}>
-                <div style={{ display: 'grid', gap: 12 }}>
-                  {order.recipient_name && <Field label="Nom" value={order.recipient_name} />}
-                  {order.recipient_country && <Field label="Pays" value={order.recipient_country} />}
-                  {order.recipient_phone && <Field label="Téléphone" value={order.recipient_phone} copyable onCopy={() => copy(order.recipient_phone!, 'Téléphone copié')} />}
-                  {order.recipient_email && <Field label="Email" value={order.recipient_email} />}
-                  {order.fees !== undefined && order.fees > 0 && <Field label="Frais" value={`${order.fees} ${order.currency}`} />}
-                  {order.total_amount !== undefined && <Field label="Montant à recevoir" value={`${order.total_amount} ${order.to_currency || ''}`} />}
-                </div>
-              </DetailSection>
+              <>
+                <GroupLabel>Bénéficiaire</GroupLabel>
+                {order.recipient_name && <Row label="Nom" value={order.recipient_name} />}
+                {order.recipient_country && <Row label="Pays" value={order.recipient_country} />}
+                {order.recipient_phone && <Row label="Téléphone" value={order.recipient_phone} copyable onCopy={() => copy(order.recipient_phone!, 'Téléphone copié')} />}
+                {order.recipient_email && <Row label="Email" value={order.recipient_email} />}
+                {order.fees !== undefined && order.fees > 0 && <Row label="Frais" value={`${order.fees} ${order.currency}`} />}
+                {order.total_amount !== undefined && <Row label="Montant à recevoir" value={`${order.total_amount} ${order.to_currency || ''}`} last />}
+              </>
             )}
-          </div>
 
-          {/* ── DÉTAILS PARSÉS ───────────────────────────────────── */}
-          {parsedNotes.sections.length > 0 && (
-            <DetailSection title="Détails de la commande" icon={FileText}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {parsedNotes.sections.map((section, i) => (
-                  <div key={i}>
-                    {i > 0 && <div style={{ height: 1, background: BORDER, margin: '0 0 16px' }} />}
-                    <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 10px' }}>{section.title}</p>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px 18px' }}>
-                      {section.fields.map((field, j) => (
-                        <Field key={j} label={field.label} value={field.value} copyable={field.copyable} onCopy={() => copy(field.value, `${field.label} copié`)} />
-                      ))}
-                    </div>
-                  </div>
+            {/* Détails parsés */}
+            {parsedNotes.sections.map((section, si) => (
+              <div key={si}>
+                <GroupLabel>{section.title}</GroupLabel>
+                {section.fields.map((field, fi) => (
+                  <Row key={fi} label={field.label} value={field.value}
+                    mono={field.copyable} copyable={field.copyable} onCopy={() => copy(field.value, `${field.label} copié`)}
+                    last={si === parsedNotes.sections.length - 1 && fi === section.fields.length - 1} />
                 ))}
               </div>
-            </DetailSection>
-          )}
+            ))}
+          </div>
 
-          {/* ── EMAIL D'ANNULATION ───────────────────────────────── */}
+          {/* EMAIL D'ANNULATION */}
           {(order.status === 'cancelled' || showCancellationForm) && (
-            <DetailSection title="Email d'annulation" icon={Mail}>
+            <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                <Mail size={15} color="#9ca3af" />
+                <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 700, margin: 0 }}>Email d'annulation</p>
+              </div>
               <Textarea placeholder="Motif d'annulation (optionnel)…" value={cancellationReason} onChange={(e) => setCancellationReason(e.target.value)}
                 className="bg-[#1a1a1a] border-[rgba(255,255,255,0.07)] text-white placeholder:text-[#6b7280] min-h-[80px]" />
               <button onClick={sendCancellationEmail} disabled={sendingEmail}
                 style={{ marginTop: 12, width: '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#2d2d2d', color: '#fff', border: `1px solid ${BORDER}`, borderRadius: 11, padding: '10px 14px', fontSize: 13.5, fontWeight: 600, cursor: 'pointer', opacity: sendingEmail ? 0.6 : 1 }}>
                 <Mail size={15} /> {sendingEmail ? 'Envoi…' : "Envoyer l'email d'annulation"}
               </button>
-            </DetailSection>
+            </div>
           )}
 
-          {/* ── JOURNAL ──────────────────────────────────────────── */}
-          <DetailSection title={`Journal d'activité`} icon={History}
-            right={<span style={{ color: '#6b7280', fontSize: 12 }}>{events.length} événement(s)</span>}>
+          {/* JOURNAL */}
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+              <History size={15} color="#9ca3af" />
+              <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 700, margin: 0 }}>Journal d'activité</p>
+              <span style={{ color: '#6b7280', fontSize: 12, marginLeft: 'auto' }}>{events.length} événement(s)</span>
+            </div>
             {events.length === 0 ? (
               <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>Aucun événement — les prises en charge et changements de statut apparaîtront ici.</p>
             ) : (
@@ -352,13 +375,13 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
                 ))}
               </div>
             )}
-          </DetailSection>
+          </div>
         </div>
       </div>
 
-      {/* ── ACTIONS (barre collante) ─────────────────────────────── */}
+      {/* ACTIONS (barre collante) */}
       <div className="px-4 sm:px-6 py-4 sticky bottom-0" style={{ borderTop: `1px solid ${BORDER}`, background: '#1a1a1a' }}>
-        <div className="max-w-4xl mx-auto flex flex-wrap gap-2 sm:justify-end">
+        <div className="max-w-3xl mx-auto flex flex-wrap gap-2 sm:justify-end">
           {isActive && !canAct && (
             <div className="flex-1 flex items-center justify-center sm:justify-end gap-2 text-sm py-2" style={{ color: '#9ca3af' }}>
               <Lock size={15} />
@@ -367,24 +390,20 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
           )}
           {order.status === 'pending' && canAct && (
             <>
-              <button onClick={() => doStatusUpdate('processing')}
-                style={{ flex: '1 1 auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#fff', color: '#141414', border: 'none', borderRadius: 11, padding: '11px 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', minWidth: 170 }}>
+              <button onClick={() => doStatusUpdate('processing')} style={{ flex: '1 1 auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#fff', color: '#141414', border: 'none', borderRadius: 11, padding: '11px 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', minWidth: 170 }}>
                 <Clock size={16} /> Mettre en traitement
               </button>
-              <button onClick={() => { doStatusUpdate('cancelled'); setShowCancellationForm(true); }}
-                style={{ flex: '1 1 auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: 'transparent', color: RED, border: `1px solid rgba(255,255,255,0.12)`, borderRadius: 11, padding: '11px 18px', fontSize: 14, fontWeight: 600, cursor: 'pointer', minWidth: 130 }}>
+              <button onClick={() => { doStatusUpdate('cancelled'); setShowCancellationForm(true); }} style={{ flex: '1 1 auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: 'transparent', color: RED, border: `1px solid rgba(255,255,255,0.12)`, borderRadius: 11, padding: '11px 18px', fontSize: 14, fontWeight: 600, cursor: 'pointer', minWidth: 130 }}>
                 <XCircle size={16} /> Annuler
               </button>
             </>
           )}
           {order.status === 'processing' && canAct && (
             <>
-              <button onClick={() => doStatusUpdate('completed', 'paid')}
-                style={{ flex: '1 1 auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#fff', color: '#141414', border: 'none', borderRadius: 11, padding: '11px 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', minWidth: 170 }}>
+              <button onClick={() => doStatusUpdate('completed', 'paid')} style={{ flex: '1 1 auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#fff', color: '#141414', border: 'none', borderRadius: 11, padding: '11px 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', minWidth: 170 }}>
                 <CheckCircle size={16} /> Marquer comme terminé
               </button>
-              <button onClick={() => { doStatusUpdate('cancelled'); setShowCancellationForm(true); }}
-                style={{ flex: '1 1 auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: 'transparent', color: RED, border: `1px solid rgba(255,255,255,0.12)`, borderRadius: 11, padding: '11px 18px', fontSize: 14, fontWeight: 600, cursor: 'pointer', minWidth: 130 }}>
+              <button onClick={() => { doStatusUpdate('cancelled'); setShowCancellationForm(true); }} style={{ flex: '1 1 auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: 'transparent', color: RED, border: `1px solid rgba(255,255,255,0.12)`, borderRadius: 11, padding: '11px 18px', fontSize: 14, fontWeight: 600, cursor: 'pointer', minWidth: 130 }}>
                 <XCircle size={16} /> Annuler
               </button>
             </>
@@ -395,22 +414,6 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
             </div>
           )}
         </div>
-      </div>
-    </div>
-  );
-}
-
-function AddressBlock({ label, value, onCopy }: { label: string; value: string; onCopy: () => void }) {
-  return (
-    <div style={{ borderRadius: 12, padding: 12, background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
-        <Wallet size={12} /> {label}
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <code style={{ flex: 1, fontSize: 12.5, fontFamily: 'ui-monospace,Menlo,monospace', color: '#fff', wordBreak: 'break-all' }}>{value}</code>
-        <button onClick={onCopy} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 4, display: 'flex' }}>
-          <Copy size={14} />
-        </button>
       </div>
     </div>
   );
