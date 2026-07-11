@@ -54,24 +54,31 @@ export const drillStyles = `
 `;
 
 /**
- * Statuts — texte teinté discret, SANS pastille de fond ni point coloré.
- * Tons volontairement doux (« juste assez ») pour ne pas saturer l'écran.
+ * Palette de statut — MONOCHROME (design système Terex). Aucun jaune, aucun
+ * bleu : la hiérarchie se lit par la luminosité (actif = clair, terminé =
+ * estompé). Le rouge est réservé aux états négatifs (annulée / rejetée) et,
+ * ailleurs dans l'app, à l'ancienneté des commandes à prendre.
  */
+export const RED = '#e07a7a';          // rouge propre, ni sombre ni criard
+const ACTIVE = '#f2f2f2';              // en cours — ressort
+const WAIT = '#9ca3af';                // en attente — neutre
+const DONE = 'rgba(255,255,255,0.40)'; // terminé — estompé
+
 export const STATUS_TONES: Record<string, { label: string; color: string }> = {
-  pending:      { label: 'En attente',    color: '#cca24f' },
-  processing:   { label: 'En traitement', color: '#6f9bcf' },
-  completed:    { label: 'Terminée',      color: 'rgba(255,255,255,0.55)' },
-  cancelled:    { label: 'Annulée',       color: '#c98686' },
-  failed:       { label: 'Échouée',       color: '#c98686' },
+  pending:      { label: 'En attente',    color: WAIT },
+  processing:   { label: 'En traitement', color: ACTIVE },
+  completed:    { label: 'Terminée',      color: DONE },
+  cancelled:    { label: 'Annulée',       color: RED },
+  failed:       { label: 'Échouée',       color: RED },
   // KYC
-  submitted:    { label: 'Soumis',        color: '#6f9bcf' },
-  under_review: { label: 'En révision',   color: '#6f9bcf' },
-  approved:     { label: 'Approuvé',      color: 'rgba(255,255,255,0.55)' },
-  rejected:     { label: 'Rejeté',        color: '#c98686' },
+  submitted:    { label: 'Soumis',        color: ACTIVE },
+  under_review: { label: 'En révision',   color: WAIT },
+  approved:     { label: 'Approuvé',      color: DONE },
+  rejected:     { label: 'Rejeté',        color: RED },
   // Candidatures
-  reviewing:    { label: 'En examen',     color: '#6f9bcf' },
-  interview:    { label: 'Entretien',     color: '#6f9bcf' },
-  accepted:     { label: 'Acceptée',      color: 'rgba(255,255,255,0.55)' },
+  reviewing:    { label: 'En examen',     color: WAIT },
+  interview:    { label: 'Entretien',     color: ACTIVE },
+  accepted:     { label: 'Acceptée',      color: DONE },
 };
 
 export function StatusText({ status, label, size = 12.5 }: { status: string; label?: string; size?: number }) {
@@ -164,7 +171,8 @@ export function StatStrip({ items, delay = 0 }: { items: StatItem[]; delay?: num
   return (
     <div className="crm-fade" style={{ display: 'flex', flexWrap: 'wrap', gap: '14px 40px', padding: '2px 2px', animationDelay: `${delay}s` }}>
       {items.map(it => {
-        const color = it.tone === 'urgent' ? '#c98686' : it.tone === 'warn' ? '#cca24f' : '#fff';
+        // Seul l'état « urgent » (ancienneté) se teinte, en rouge ; le reste est blanc neutre.
+        const color = it.tone === 'urgent' ? RED : '#fff';
         return (
           <div key={it.label} style={{ minWidth: 0 }}>
             <p style={{ color: '#6b7280', fontSize: 11.5, fontWeight: 500, margin: '0 0 3px', whiteSpace: 'nowrap' }}>{it.label}</p>

@@ -93,7 +93,7 @@ export function KYCAdmin() {
       />
 
       <StatStrip items={[
-        { label: 'À traiter', value: stats.submitted, tone: stats.submitted > 0 ? 'warn' : 'default' },
+        { label: 'À traiter', value: stats.submitted },
         { label: 'En attente', value: stats.pending },
         { label: 'En révision', value: stats.under_review },
         { label: 'Approuvés', value: stats.approved },

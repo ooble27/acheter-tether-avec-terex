@@ -156,7 +156,8 @@ export function OrdersDashboardNew() {
           <Avatar name={client} />
           <div style={{ minWidth: 0 }}>
             <p style={{ color: '#fff', fontSize: 13, fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{client}</p>
-            <p style={{ color: '#6b7280', fontSize: 11, margin: '1px 0 0', fontFamily: 'ui-monospace,Menlo,monospace', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {/* Référence : desktop/tablette seulement — on l'allège sur mobile */}
+            <p className="only-d" style={{ color: '#6b7280', fontSize: 11, margin: '1px 0 0', fontFamily: 'ui-monospace,Menlo,monospace', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               TEREX-{o.id.slice(-8).toUpperCase()}
             </p>
             {/* Statut visible sur mobile, sous la référence */}

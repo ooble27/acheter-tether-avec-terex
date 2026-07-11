@@ -68,18 +68,20 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
     onUpdate();
   };
 
+  // Monochrome (design système Terex) : aucun jaune ni bleu.
+  // Actif = clair, terminé = estompé, négatif = rouge.
   const getStatusBadgeStyle = (status: string): React.CSSProperties => {
     switch (status) {
       case 'approved':
-        return { background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.65)' };
+        return { color: 'rgba(255,255,255,0.45)' };
       case 'rejected':
-        return { background: 'rgba(248,113,113,0.10)', color: '#f87171' };
+        return { color: '#e07a7a' };
       case 'under_review':
-        return { background: 'rgba(96,165,250,0.10)', color: '#60a5fa' };
+        return { color: '#9ca3af' };
       case 'submitted':
-        return { background: 'rgba(96,165,250,0.10)', color: '#60a5fa' };
+        return { color: '#f2f2f2' };
       default:
-        return { background: 'rgba(251,191,36,0.10)', color: '#fbbf24' };
+        return { color: '#9ca3af' };
     }
   };
 
@@ -111,9 +113,7 @@ export function KYCVerificationDetails({ verification, onBack, onUpdate }: KYCVe
     <span
       style={{
         ...getStatusBadgeStyle(verification.status),
-        borderRadius: 999,
-        padding: '3px 10px',
-        fontSize: 11,
+        fontSize: 12.5,
         fontWeight: 600,
         display: 'inline-block',
         whiteSpace: 'nowrap',

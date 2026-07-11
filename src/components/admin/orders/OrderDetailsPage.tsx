@@ -61,13 +61,14 @@ const STATUS_LABELS: Record<string, string> = {
   failed: 'Échoué',
 };
 
-// Statuts en texte teinté discret (mêmes tons doux que les tables du CRM).
+// Statuts monochromes (design système Terex) — aucun jaune ni bleu.
+// Le rouge est réservé aux états négatifs.
 const STATUS_TEXT_COLOR: Record<string, string> = {
-  pending: '#cca24f',
-  processing: '#6f9bcf',
-  completed: 'rgba(255,255,255,0.6)',
-  cancelled: '#c98686',
-  failed: '#c98686',
+  pending: '#9ca3af',
+  processing: '#f2f2f2',
+  completed: 'rgba(255,255,255,0.45)',
+  cancelled: '#e07a7a',
+  failed: '#e07a7a',
 };
 
 export function OrderDetailsPage({
@@ -290,10 +291,10 @@ export function OrderDetailsPage({
           <div className="max-w-5xl mx-auto">
             {ownedByOther ? (
               <div className="flex items-center gap-3 rounded-xl p-3.5"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(204,162,79,0.30)' }}>
-                <Lock className="w-4 h-4 flex-shrink-0" style={{ color: '#cca24f' }} />
-                <p className="text-sm m-0" style={{ color: '#cca24f' }}>
-                  <strong>{assignedName}</strong> traite déjà cette commande — ne la traitez pas en double.
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.14)' }}>
+                <Lock className="w-4 h-4 flex-shrink-0" style={{ color: '#9ca3af' }} />
+                <p className="text-sm m-0" style={{ color: '#d1d5db' }}>
+                  <strong className="text-white">{assignedName}</strong> traite déjà cette commande — ne la traitez pas en double.
                 </p>
               </div>
             ) : iOwnIt ? (

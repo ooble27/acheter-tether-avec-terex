@@ -4,11 +4,11 @@ import { useOrderOps } from '@/hooks/useOrderOps';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { OrderDetailsPage } from './OrderDetailsPage';
 import { Coins, HandCoins, Send, Clock, Hand, User, RefreshCw, Inbox, CheckCircle2 } from 'lucide-react';
-import { PageHeader, Tabs, StatusText, Avatar, StatStrip, drillStyles } from '@/components/admin/AdminDrill';
+import { PageHeader, Tabs, StatusText, Avatar, StatStrip, RED, drillStyles } from '@/components/admin/AdminDrill';
 
 const BORDER = 'rgba(255,255,255,0.07)';
-// Ancienneté « pressante » : ambre doux plutôt que rouge, pour ne pas saturer.
-const URGENT_AGE = '#cca24f';
+// Ancienneté « pressante » : rouge (seule couleur d'accent conservée).
+const URGENT_AGE = RED;
 
 const TYPE_META: Record<string, { label: string; Icon: any }> = {
   buy: { label: 'Achat', Icon: Coins },
@@ -97,9 +97,11 @@ export function OpsQueue() {
           <Avatar name={client} />
           <div style={{ minWidth: 0 }}>
             <p style={{ color: '#fff', fontSize: 13, fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{client}</p>
-            <p style={{ color: '#6b7280', fontSize: 11, margin: '1px 0 0', fontFamily: 'ui-monospace,Menlo,monospace', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {/* Référence : desktop/tablette seulement — on l'allège sur mobile */}
+            <p className="only-d" style={{ color: '#6b7280', fontSize: 11, margin: '1px 0 0', fontFamily: 'ui-monospace,Menlo,monospace', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               TEREX-{o.id.slice(-8).toUpperCase()}
             </p>
+            {/* Mobile : uniquement l'ancienneté (rouge si pressante) */}
             <span className="only-m" style={{ marginTop: 3, display: 'inline-flex', gap: 6, alignItems: 'center', fontSize: 11.5, color: age.urgent ? URGENT_AGE : '#6b7280' }}>
               <Clock size={11} /> {age.text}
             </span>
@@ -183,7 +185,7 @@ export function OpsQueue() {
 
       {/* Métriques — sans boîtes */}
       <StatStrip items={[
-        { label: 'À traiter', value: unassigned.length, tone: unassigned.length > 0 ? 'warn' : 'default' },
+        { label: 'À traiter', value: unassigned.length },
         { label: 'Mes commandes', value: mine.length },
         { label: "Terminées aujourd'hui", value: completedToday },
         ...(oldest ? [{ label: 'Plus ancienne en file', value: oldest.text, tone: (oldest.urgent ? 'urgent' : 'default') as 'urgent' | 'default' }] : []),
