@@ -59,7 +59,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   const { profile, updateProfile } = useUserProfile();
   const { kycData } = useKYC();
   const isMobile = useIsMobile();
-  const { isAdmin, isKYCReviewer } = useUserRole();
+  const { isAdmin, isKYCReviewer, isStaff } = useUserRole();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: '', phone: '', country: '', language: 'fr' });
   const [stats, setStats] = useState<{ count: number; volume: number; currency: string }>({ count: 0, volume: 0, currency: 'CFA' });
@@ -681,7 +681,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
         ))}
 
         {/* Administration — visible uniquement pour les admins / reviewers */}
-        {isKYCReviewer() && (
+        {isStaff() && (
           <div>
             <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>Administration</p>
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>

@@ -158,8 +158,9 @@ async function requireAdmin(req: Request): Promise<{ ok: boolean; userId?: strin
   const { data: { user }, error } = await supabase.auth.getUser(token);
   if (error || !user) return { ok: false };
   const { data: roles } = await supabase.from('user_roles').select('role').eq('user_id', user.id);
-  const isAdmin = (roles || []).some((r: any) => r.role === 'admin');
-  return { ok: isAdmin, userId: user.id };
+  // Campagnes : administrateur complet OU équipe marketing
+  const ok = (roles || []).some((r: any) => r.role === 'admin' || r.role === 'marketing');
+  return { ok, userId: user.id };
 }
 
 // ── Rendu ─────────────────────────────────────────────────────────────────────

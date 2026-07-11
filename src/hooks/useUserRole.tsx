@@ -42,12 +42,21 @@ export const useUserRole = () => {
   const hasRole = (role: string) => roles.includes(role);
   const isAdmin = () => hasRole('admin');
   const isKYCReviewer = () => hasRole('kyc_reviewer') || hasRole('admin');
+  const isOperator = () => hasRole('operator') || hasRole('admin');
+  const isMarketing = () => hasRole('marketing') || hasRole('admin');
+  const isHR = () => hasRole('hr') || hasRole('admin');
+  /** Membre du staff = possède au moins un rôle métier (≠ simple client). */
+  const isStaff = () => roles.some(r => r !== 'user');
 
   return {
     roles,
     loading,
     hasRole,
     isAdmin,
-    isKYCReviewer
+    isKYCReviewer,
+    isOperator,
+    isMarketing,
+    isHR,
+    isStaff
   };
 };

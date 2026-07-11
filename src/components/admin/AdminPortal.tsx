@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy,
+  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users,
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { OpsQueue } from '@/components/admin/orders/OpsQueue';
 import { TeamPerformance } from '@/components/admin/TeamPerformance';
+import { TeamAdmin } from '@/components/admin/TeamAdmin';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
 import { AccountingAdmin } from '@/components/admin/AccountingAdmin';
@@ -18,27 +19,33 @@ const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const ICON_BG = 'rgba(255,255,255,0.06)';
 
-interface NavItem { id: string; label: string; desc: string; icon: any; adminOnly?: boolean }
+interface NavItem { id: string; label: string; desc: string; icon: any; roles: string[] }
 
-// Ordre pensé opérations d'abord ; les sections sensibles (finance, campagnes,
-// performance de l'équipe) sont réservées à l'administrateur complet.
+// Accès PAR MÉTIER : chaque onglet liste les rôles qui le voient.
+// L'admin complet (owner) voit tout ; un opérateur ne voit que les opérations ;
+// le marketing ne voit que les campagnes ; la RH que les candidatures, etc.
 const NAV: NavItem[] = [
-  { id: 'queue',        label: "File d'attente", desc: 'Commandes à traiter — prise en charge', icon: Inbox },
-  { id: 'orders',       label: 'Commandes',      desc: 'Toutes les commandes et archives',      icon: ShoppingCart },
-  { id: 'kyc',          label: 'KYC',            desc: "Vérifications d'identité",              icon: FileCheck },
-  { id: 'performance',  label: 'Performance',    desc: "Activité et volumes par membre de l'équipe", icon: Trophy, adminOnly: true },
-  { id: 'accounting',   label: 'Comptabilité',   desc: 'Revenus et marges',                     icon: Calculator, adminOnly: true },
-  { id: 'newsletter',   label: 'Campagnes',      desc: 'Emails marketing aux clients',          icon: Mail, adminOnly: true },
-  { id: 'applications', label: 'Candidatures',   desc: 'Recrutement',                           icon: UserCheck, adminOnly: true },
-  { id: 'neobank',      label: 'Vision',         desc: 'Néobanque Terex',                       icon: Sparkles, adminOnly: true },
+  { id: 'queue',        label: "File d'attente", desc: 'Commandes à traiter — prise en charge', icon: Inbox,        roles: ['admin', 'operator'] },
+  { id: 'orders',       label: 'Commandes',      desc: 'Toutes les commandes et archives',      icon: ShoppingCart, roles: ['admin', 'operator'] },
+  { id: 'kyc',          label: 'KYC',            desc: "Vérifications d'identité",              icon: FileCheck,    roles: ['admin', 'kyc_reviewer'] },
+  { id: 'performance',  label: 'Performance',    desc: "Activité et volumes par membre de l'équipe", icon: Trophy,  roles: ['admin'] },
+  { id: 'accounting',   label: 'Comptabilité',   desc: 'Revenus et marges',                     icon: Calculator,   roles: ['admin'] },
+  { id: 'newsletter',   label: 'Campagnes',      desc: 'Emails marketing aux clients',          icon: Mail,         roles: ['admin', 'marketing'] },
+  { id: 'applications', label: 'Candidatures',   desc: 'Recrutement',                           icon: UserCheck,    roles: ['admin', 'hr'] },
+  { id: 'team',         label: 'Équipe',         desc: "Membres et rôles du back-office",       icon: Users,        roles: ['admin'] },
+  { id: 'neobank',      label: 'Vision',         desc: 'Néobanque Terex',                       icon: Sparkles,     roles: ['admin'] },
 ];
 
 export function AdminPortal() {
-  const [activeTab, setActiveTab] = useState('queue');
-  const { isAdmin, isKYCReviewer } = useUserRole();
+  const { isAdmin, isStaff, roles } = useUserRole();
   const navigate = useNavigate();
 
-  if (!isAdmin() && !isKYCReviewer()) {
+  // Onglets visibles selon MES rôles
+  const visibleNav = NAV.filter(n => n.roles.some(r => roles.includes(r)));
+  const [activeTab, setActiveTab] = useState<string>('');
+  const currentTab = visibleNav.some(n => n.id === activeTab) ? activeTab : (visibleNav[0]?.id ?? '');
+
+  if (!isStaff()) {
     return (
       <div style={{ minHeight: '100vh', background: BG, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
         <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '36px 28px', textAlign: 'center', maxWidth: '360px' }}>
@@ -52,9 +59,7 @@ export function AdminPortal() {
     );
   }
 
-  // Les sections sensibles n'apparaissent que pour l'administrateur complet.
-  const visibleNav = NAV.filter(n => !n.adminOnly || isAdmin());
-  const active = visibleNav.find(n => n.id === activeTab) ?? visibleNav[0];
+  const active = visibleNav.find(n => n.id === currentTab) ?? visibleNav[0];
 
   return (
     <div style={{ minHeight: '100vh', background: BG, paddingBottom: '80px', width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
@@ -70,7 +75,7 @@ export function AdminPortal() {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, borderRadius: '999px', padding: '6px 12px', flexShrink: 0 }}>
           <Shield size={13} color="rgba(255,255,255,0.6)" />
-          <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '11px', fontWeight: 600 }}>{isAdmin() ? 'Admin' : 'Reviewer'}</span>
+          <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '11px', fontWeight: 600 }}>{isAdmin() ? 'Admin' : roles.includes('operator') ? 'Opérateur' : roles.includes('marketing') ? 'Marketing' : roles.includes('hr') ? 'RH' : roles.includes('kyc_reviewer') ? 'KYC' : 'Staff'}</span>
         </div>
       </div>
 
@@ -78,7 +83,7 @@ export function AdminPortal() {
         {/* Nav pills — défilables horizontalement */}
         <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '6px', marginBottom: '20px', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
           {visibleNav.map(({ id, label, icon: Icon }) => {
-            const isOn = id === activeTab;
+            const isOn = id === currentTab;
             return (
               <button key={id} onClick={() => setActiveTab(id)}
                 style={{
@@ -107,16 +112,17 @@ export function AdminPortal() {
           </div>
         </div>
 
-        {/* Section content */}
+        {/* Section content — sécurisé : seul un onglet autorisé peut être actif */}
         <div>
-          {activeTab === 'queue' && <OpsQueue />}
-          {activeTab === 'orders' && <OrdersDashboardNew />}
-          {activeTab === 'kyc' && <KYCAdmin />}
-          {activeTab === 'performance' && isAdmin() && <TeamPerformance />}
-          {activeTab === 'accounting' && isAdmin() && <AccountingAdmin />}
-          {activeTab === 'newsletter' && isAdmin() && <NewsletterAdmin />}
-          {activeTab === 'applications' && isAdmin() && <JobApplicationsAdmin />}
-          {activeTab === 'neobank' && isAdmin() && <NeobankVision />}
+          {currentTab === 'queue' && <OpsQueue />}
+          {currentTab === 'orders' && <OrdersDashboardNew />}
+          {currentTab === 'kyc' && <KYCAdmin />}
+          {currentTab === 'performance' && <TeamPerformance />}
+          {currentTab === 'accounting' && <AccountingAdmin />}
+          {currentTab === 'newsletter' && <NewsletterAdmin />}
+          {currentTab === 'applications' && <JobApplicationsAdmin />}
+          {currentTab === 'team' && <TeamAdmin />}
+          {currentTab === 'neobank' && <NeobankVision />}
         </div>
       </div>
     </div>

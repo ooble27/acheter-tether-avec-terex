@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Shield, AlertTriangle } from 'lucide-react';
 
 export function AdminRoute() {
-  const { isAdmin, isKYCReviewer, loading } = useUserRole();
+  const { isStaff, loading } = useUserRole();
 
   if (loading) {
     return (
@@ -15,7 +15,7 @@ export function AdminRoute() {
     );
   }
 
-  if (!isAdmin() && !isKYCReviewer()) {
+  if (!isStaff()) {
     return (
       <div className="min-h-screen bg-terex-dark flex items-center justify-center p-4">
         <Card className="bg-terex-darker border-terex-gray max-w-md w-full">
