@@ -106,14 +106,14 @@ export function marketingEmailHtml(p: MarketingEmailProps): string {
     </tr></table>
   </td></tr>
 
-  <!-- Visuel animé (GIF — seule animation fiable dans les emails) -->
-  <tr><td style="padding:0;line-height:0;">
-    <img src="https://terangaexchange.com/email/usdt-hero.gif" width="600" alt="USDT — Terex"
-      style="display:block;width:100%;height:auto;border:0;">
+  <!-- Logo USDT — simple et propre -->
+  <tr><td style="padding:38px 40px 0;text-align:center;">
+    <img src="https://terangaexchange.com/email/usdt.png" width="72" height="72" alt="USDT"
+      style="display:inline-block;width:72px;height:72px;border:0;">
   </td></tr>
 
   <!-- Titre -->
-  <tr><td class="mpad" style="padding:40px 40px 10px;">
+  <tr><td class="mpad" style="padding:22px 40px 10px;text-align:center;">
     <h1 class="mh1 etxt" style="font-family:${F};font-size:28px;font-weight:800;letter-spacing:-0.02em;color:${C.text};line-height:1.25;margin:0;">${escapeHtml(p.heroTitle)}</h1>
   </td></tr>
 
