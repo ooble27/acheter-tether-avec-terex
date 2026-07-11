@@ -40,6 +40,39 @@ interface CampaignRequest {
   ctaText?: string;
   ctaUrl?: string;
   testEmail?: string;
+  /** Remplit automatiquement le bloc « Taux du jour » avec le taux en direct au moment de l'envoi. */
+  autoRate?: boolean;
+}
+
+// Les réponses des clients arrivent sur la boîte support (l'expéditeur noreply@ n'est pas relevé).
+const REPLY_TO = 'terangaexchange@gmail.com';
+
+// Taux en direct (même logique que le site : CoinGecko USDT/USD × USD/XOF, marge d'achat 2 %)
+async function fetchLiveRate(): Promise<{ achat: number; vente: number } | null> {
+  try {
+    const [cg, fx] = await Promise.all([
+      fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=usd').then(r => r.json()),
+      fetch('https://api.exchangerate-api.com/v4/latest/USD').then(r => r.json()),
+    ]);
+    const usdtUsd = Number(cg?.tether?.usd || 1);
+    const usdXof = Number(fx?.rates?.XOF);
+    if (!usdXof || !isFinite(usdXof)) return null;
+    const market = usdtUsd * usdXof;
+    return { achat: Math.round(market * 1.02), vente: Math.round(market - 10) };
+  } catch (e) {
+    console.error('fetchLiveRate:', e);
+    return null;
+  }
+}
+
+// Applique le taux en direct au bloc mis en avant si demandé (une seule fois par campagne).
+async function applyAutoRate(body: CampaignRequest): Promise<void> {
+  if (!body.autoRate) return;
+  const rate = await fetchLiveRate();
+  if (!rate) return; // en cas d'échec API, on garde le highlight saisi manuellement (s'il existe)
+  body.highlightLabel = body.highlightLabel || 'Taux du jour';
+  body.highlightValue = `${rate.achat.toLocaleString('fr-FR')} CFA / USDT`;
+  body.highlightSub = body.highlightSub || `Achat · Vente : ${rate.vente.toLocaleString('fr-FR')} CFA — taux au moment de l'envoi`;
 }
 
 interface Recipient { email: string; name: string }
@@ -175,6 +208,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // — Aperçu HTML (iframe de l'admin)
     if (mode === 'preview') {
+      await applyAutoRate(body);
       const html = await renderFor(body, { email: 'apercu@terangaexchange.com', name: 'Aïssatou Diallo' });
       return new Response(JSON.stringify({ success: true, html }), {
         headers: { "Content-Type": "application/json", ...corsHeaders },
@@ -186,9 +220,11 @@ const handler = async (req: Request): Promise<Response> => {
     // — Envoi test (à soi-même)
     if (mode === 'test') {
       if (!body.testEmail) throw new Error('Email de test manquant');
+      await applyAutoRate(body);
       const html = await renderFor(body, { email: body.testEmail, name: '' });
       const { error } = await resend.emails.send({
         from: "Terex <noreply@terangaexchange.com>",
+        reply_to: REPLY_TO,
         to: [body.testEmail],
         subject: `[TEST] ${body.subject}`,
         html,
@@ -200,6 +236,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // — Envoi réel au segment
+    await applyAutoRate(body); // taux résolu UNE fois pour toute la campagne
     const recipients = await resolveRecipients(segment);
     if (recipients.length === 0) {
       return new Response(JSON.stringify({ success: false, error: 'Aucun destinataire dans ce segment' }), {
@@ -219,6 +256,7 @@ const handler = async (req: Request): Promise<Response> => {
           const html = await renderFor(body, r);
           const { error } = await resend.emails.send({
             from: "Terex <noreply@terangaexchange.com>",
+            reply_to: REPLY_TO,
             to: [r.email],
             subject: body.subject,
             html,

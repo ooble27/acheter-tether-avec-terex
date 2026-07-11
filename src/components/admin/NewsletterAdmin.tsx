@@ -94,6 +94,7 @@ export function NewsletterAdmin() {
   const [highlightLabel, setHighlightLabel] = useState('');
   const [highlightValue, setHighlightValue] = useState('');
   const [highlightSub, setHighlightSub] = useState('');
+  const [autoRate, setAutoRate] = useState(false);
   const [ctaText, setCtaText] = useState('Accéder à mon compte');
   const [ctaUrl, setCtaUrl] = useState('https://terangaexchange.com/dashboard');
   const [segment, setSegment] = useState<Segment>('all');
@@ -108,10 +109,11 @@ export function NewsletterAdmin() {
   const [history, setHistory] = useState<CampaignRecord[]>([]);
 
   const payload = () => ({
-    subject, previewText, heroTitle, content,
-    highlightLabel: highlightLabel || undefined,
-    highlightValue: highlightValue || undefined,
-    highlightSub: highlightSub || undefined,
+    subject: subject.trim(), previewText: previewText.trim(), heroTitle: heroTitle.trim(), content,
+    highlightLabel: highlightLabel.trim() || undefined,
+    highlightValue: highlightValue.trim() || undefined,
+    highlightSub: highlightSub.trim() || undefined,
+    autoRate,
     ctaText, ctaUrl, segment,
   });
 
@@ -148,6 +150,7 @@ export function NewsletterAdmin() {
     setSubject(t.subject); setPreviewText(t.previewText); setHeroTitle(t.heroTitle);
     setContent(t.content);
     setHighlightLabel(t.highlightLabel || ''); setHighlightValue(t.highlightValue || ''); setHighlightSub(t.highlightSub || '');
+    setAutoRate(t.id === 'rate'); // le modèle « Taux du jour » utilise le taux en direct
     setCtaText(t.ctaText); setCtaUrl(t.ctaUrl);
     toast.success(`Modèle « ${t.name} » appliqué`);
   };
@@ -156,6 +159,7 @@ export function NewsletterAdmin() {
     setSelectedTemplate(null);
     setSubject(''); setPreviewText(''); setHeroTitle(''); setContent('');
     setHighlightLabel(''); setHighlightValue(''); setHighlightSub('');
+    setAutoRate(false);
     setCtaText('Accéder à mon compte'); setCtaUrl('https://terangaexchange.com/dashboard');
     setPreviewHtml('');
   };
@@ -277,14 +281,31 @@ export function NewsletterAdmin() {
               {/* Bloc mis en avant (optionnel) */}
               <div className="space-y-2">
                 <Label className="text-[#9ca3af]">Bloc mis en avant (optionnel — ex. taux, code promo)</Label>
-                <div className="grid grid-cols-3 gap-3">
-                  <Input value={highlightLabel} onChange={(e) => setHighlightLabel(e.target.value)}
-                    placeholder="Libellé" className={inputClass} style={inputStyle} />
-                  <Input value={highlightValue} onChange={(e) => setHighlightValue(e.target.value)}
-                    placeholder="Valeur (ex. 585 CFA)" className={inputClass} style={inputStyle} />
-                  <Input value={highlightSub} onChange={(e) => setHighlightSub(e.target.value)}
-                    placeholder="Sous-texte" className={inputClass} style={inputStyle} />
-                </div>
+                <button type="button" onClick={() => setAutoRate(!autoRate)}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all hover:opacity-90"
+                  style={{
+                    background: autoRate ? 'rgba(255,255,255,0.08)' : INPUT_BG,
+                    border: autoRate ? '1px solid rgba(255,255,255,0.25)' : `1px solid ${BORDER}`,
+                  }}>
+                  <div className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0"
+                    style={{ background: autoRate ? '#fff' : 'rgba(255,255,255,0.06)', border: `1px solid ${BORDER}` }}>
+                    {autoRate && <CheckCircle2 className="w-4 h-4" style={{ color: '#141414' }} />}
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-medium">Taux du jour automatique</p>
+                    <p className="text-[#6b7280] text-xs">Le taux USDT/CFA en direct est inséré au moment de l'envoi — rien à saisir.</p>
+                  </div>
+                </button>
+                {!autoRate && (
+                  <div className="grid grid-cols-3 gap-3">
+                    <Input value={highlightLabel} onChange={(e) => setHighlightLabel(e.target.value)}
+                      placeholder="Libellé" className={inputClass} style={inputStyle} />
+                    <Input value={highlightValue} onChange={(e) => setHighlightValue(e.target.value)}
+                      placeholder="Valeur (ex. 585 CFA)" className={inputClass} style={inputStyle} />
+                    <Input value={highlightSub} onChange={(e) => setHighlightSub(e.target.value)}
+                      placeholder="Sous-texte" className={inputClass} style={inputStyle} />
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">

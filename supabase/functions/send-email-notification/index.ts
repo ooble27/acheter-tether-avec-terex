@@ -410,6 +410,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Envoyer l'email avec Resend
     const emailResponse = await resend.emails.send({
       from: "Terex <noreply@terangaexchange.com>",
+      reply_to: "terangaexchange@gmail.com",
       to: [finalEmailAddress],
       subject: subject,
       html: htmlContent,

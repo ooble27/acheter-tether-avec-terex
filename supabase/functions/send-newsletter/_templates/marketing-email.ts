@@ -69,10 +69,10 @@ export function marketingEmailHtml(p: MarketingEmailProps): string {
       <tr><td class="mpad" style="padding:6px 40px 26px;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo"
           style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:16px;border-collapse:separate;border-spacing:0;">
-          <tr><td style="padding:24px;text-align:center;">
-            <p class="edim" style="font-family:${F};font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${C.dim};margin:0 0 10px 0;">${escapeHtml(p.highlight.label)}</p>
-            <p class="etxt" style="font-family:${F};font-size:34px;font-weight:800;letter-spacing:-0.02em;color:${C.text};margin:0;line-height:1;">${escapeHtml(p.highlight.value)}</p>
-            ${p.highlight.sub ? `<p class="edim" style="font-family:${F};font-size:12px;color:${C.dim};margin:10px 0 0 0;">${escapeHtml(p.highlight.sub)}</p>` : ''}
+          <tr><td style="padding:34px 24px;text-align:center;">
+            <p class="emuted" style="font-family:${F};font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:${C.muted};margin:0 0 14px 0;">${escapeHtml(p.highlight.label)}</p>
+            <p class="etxt" style="font-family:${F};font-size:46px;font-weight:800;letter-spacing:-0.03em;color:${C.text};margin:0;line-height:1;">${escapeHtml(p.highlight.value)}</p>
+            ${p.highlight.sub ? `<p class="emuted" style="font-family:${F};font-size:13px;color:${C.muted};margin:14px 0 0 0;">${escapeHtml(p.highlight.sub)}</p>` : ''}
           </td></tr>
         </table>
       </td></tr>` : '';
@@ -101,9 +101,15 @@ export function marketingEmailHtml(p: MarketingEmailProps): string {
         <img src="${LOGO}" width="40" height="40" alt="Terex" style="display:block;width:40px;height:40px;border-radius:11px;border:1px solid ${C.border};">
       </td>
       <td style="vertical-align:middle;">
-        <span class="etxt" style="font-family:${F};font-size:18px;font-weight:700;letter-spacing:-0.02em;color:${C.text};">Terex</span>
+        <span class="emuted" style="font-family:${F};font-size:14px;font-weight:600;letter-spacing:0.02em;color:${C.muted};">Terex</span>
       </td>
     </tr></table>
+  </td></tr>
+
+  <!-- Visuel animé (GIF — seule animation fiable dans les emails) -->
+  <tr><td style="padding:0;line-height:0;">
+    <img src="https://terangaexchange.com/email/usdt-hero.gif" width="600" alt="USDT — Terex"
+      style="display:block;width:100%;height:auto;border:0;">
   </td></tr>
 
   <!-- Titre -->
