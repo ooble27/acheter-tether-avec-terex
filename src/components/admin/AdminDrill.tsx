@@ -30,21 +30,62 @@ export const drillStyles = `
   .crm-row.clickable { cursor: pointer; }
   .crm-row.clickable:hover { background: rgba(255,255,255,0.03); }
 
-  .cols-orders { grid-template-columns: minmax(160px, 2.1fr) minmax(90px, 1fr) minmax(120px, 1.4fr) minmax(110px, 1.1fr) minmax(86px, 0.9fr) 72px; gap: 12px; }
-  .cols-team { grid-template-columns: minmax(180px, 2.2fr) minmax(130px, 1.2fr) minmax(90px, 0.9fr) 44px; gap: 12px; }
+  .cols-orders { grid-template-columns: minmax(150px, 2fr) minmax(84px, 0.9fr) minmax(120px, 1.3fr) minmax(128px, 1.2fr) minmax(84px, 0.8fr) 74px; column-gap: 22px; }
+  .cols-team { grid-template-columns: minmax(180px, 2.2fr) minmax(130px, 1.2fr) minmax(90px, 0.9fr) 44px; column-gap: 18px; }
   .only-m { display: none !important; }
   @media (max-width: 760px) {
     .crm-thead { display: none; }
-    .cols-orders { grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px; }
-    .cols-team { grid-template-columns: minmax(0, 1fr) auto 40px; gap: 10px; }
+    .cols-orders { grid-template-columns: minmax(0, 1fr) auto auto; column-gap: 12px; }
+    .cols-team { grid-template-columns: minmax(0, 1fr) auto 40px; column-gap: 10px; }
     .only-d { display: none !important; }
     .only-m { display: flex !important; }
   }
 
   .ghost-btn { display: inline-flex; align-items: center; gap: 6px; background: transparent; border: 1px solid rgba(255,255,255,0.10); color: #9ca3af; border-radius: 10px; padding: 7px 12px; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
   .ghost-btn:hover { color: #fff; border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.04); }
+  .ghost-btn:disabled { opacity: 0.55; cursor: default; }
   .crm-tab { transition: color 0.15s ease; }
+
+  /* Filtres — format « pastille » sobre, même famille que les boutons CSV/PDF */
+  .filter-chip { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; padding: 7px 13px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.10); background: transparent; color: #9ca3af; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .filter-chip:hover { color: #fff; border-color: rgba(255,255,255,0.20); }
+  .filter-chip.sel { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.24); color: #fff; }
+  .filter-chip .chip-c { font-size: 11px; opacity: 0.6; }
 `;
+
+/**
+ * Statuts — texte teinté discret, SANS pastille de fond ni point coloré.
+ * Tons volontairement doux (« juste assez ») pour ne pas saturer l'écran.
+ */
+export const STATUS_TONES: Record<string, { label: string; color: string }> = {
+  pending:      { label: 'En attente',    color: '#cca24f' },
+  processing:   { label: 'En traitement', color: '#6f9bcf' },
+  completed:    { label: 'Terminée',      color: 'rgba(255,255,255,0.55)' },
+  cancelled:    { label: 'Annulée',       color: '#c98686' },
+  failed:       { label: 'Échouée',       color: '#c98686' },
+  // KYC
+  submitted:    { label: 'Soumis',        color: '#6f9bcf' },
+  under_review: { label: 'En révision',   color: '#6f9bcf' },
+  approved:     { label: 'Approuvé',      color: 'rgba(255,255,255,0.55)' },
+  rejected:     { label: 'Rejeté',        color: '#c98686' },
+  // Candidatures
+  reviewing:    { label: 'En examen',     color: '#6f9bcf' },
+  interview:    { label: 'Entretien',     color: '#6f9bcf' },
+  accepted:     { label: 'Acceptée',      color: 'rgba(255,255,255,0.55)' },
+};
+
+export function StatusText({ status, label, size = 12.5 }: { status: string; label?: string; size?: number }) {
+  const t = STATUS_TONES[status] || { label: status, color: 'rgba(255,255,255,0.55)' };
+  return <span style={{ color: t.color, fontSize: size, fontWeight: 600, whiteSpace: 'nowrap' }}>{label || t.label}</span>;
+}
+
+export function FilterChip({ label, count, selected, onClick }: { label: string; count?: number | string; selected: boolean; onClick: () => void }) {
+  return (
+    <button className={`filter-chip${selected ? ' sel' : ''}`} onClick={onClick}>
+      {label}{count !== undefined && <span className="chip-c">{count}</span>}
+    </button>
+  );
+}
 
 interface PageHeaderProps {
   title: string;
@@ -100,16 +141,6 @@ export function Tabs({ tabs, active, onChange }: { tabs: TabDef[]; active: strin
   );
 }
 
-/** Statut façon CRM : petite puce colorée + libellé, sans fond. */
-export function DotStatus({ color, label }: { color: string; label: string }) {
-  return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12, fontWeight: 500, color: '#9ca3af', whiteSpace: 'nowrap' }}>
-      <span style={{ width: 6, height: 6, borderRadius: '50%', background: color, flexShrink: 0 }} />
-      {label}
-    </span>
-  );
-}
-
 export function Avatar({ name, size = 28 }: { name?: string | null; size?: number }) {
   return (
     <span style={{
@@ -133,7 +164,7 @@ export function StatStrip({ items, delay = 0 }: { items: StatItem[]; delay?: num
   return (
     <div className="crm-fade" style={{ display: 'flex', flexWrap: 'wrap', gap: '14px 40px', padding: '2px 2px', animationDelay: `${delay}s` }}>
       {items.map(it => {
-        const color = it.tone === 'urgent' ? '#f87171' : it.tone === 'warn' ? '#fbbf24' : '#fff';
+        const color = it.tone === 'urgent' ? '#c98686' : it.tone === 'warn' ? '#cca24f' : '#fff';
         return (
           <div key={it.label} style={{ minWidth: 0 }}>
             <p style={{ color: '#6b7280', fontSize: 11.5, fontWeight: 500, margin: '0 0 3px', whiteSpace: 'nowrap' }}>{it.label}</p>

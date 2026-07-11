@@ -5,8 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Users,
   Download,
@@ -18,30 +16,35 @@ import {
   Briefcase,
   ExternalLink,
   Clock,
-  DollarSign
+  DollarSign,
+  ChevronRight,
 } from 'lucide-react';
 import { useJobApplicationsAdmin } from '@/hooks/useJobApplicationsAdmin';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { InterviewScheduleDialog } from './InterviewScheduleDialog';
+import { PageHeader, StatusText, Avatar, FilterChip, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const INPUT_BG = 'rgba(255,255,255,0.04)';
 
-const statusConfig: Record<string, { label: string; bg: string; color: string }> = {
-  pending: { label: 'En attente', bg: 'rgba(251,191,36,0.12)', color: '#fbbf24' },
-  reviewing: { label: "En cours d'examen", bg: 'rgba(96,165,250,0.12)', color: '#60a5fa' },
-  interview: { label: 'Entretien programmé', bg: 'rgba(96,165,250,0.12)', color: '#60a5fa' },
-  accepted: { label: 'Acceptée', bg: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.65)' },
-  rejected: { label: 'Rejetée', bg: 'rgba(248,113,113,0.10)', color: '#f87171' }
+const STATUS_LABEL: Record<string, string> = {
+  pending: 'En attente',
+  reviewing: "En examen",
+  interview: 'Entretien',
+  accepted: 'Acceptée',
+  rejected: 'Rejetée',
 };
 
-const cardStyle: React.CSSProperties = {
-  background: CARD,
-  border: `1px solid ${BORDER}`,
-  borderRadius: 16,
-};
+const FILTERS = [
+  { id: 'all', label: 'Toutes' },
+  { id: 'pending', label: 'En attente' },
+  { id: 'reviewing', label: 'En examen' },
+  { id: 'interview', label: 'Entretien' },
+  { id: 'accepted', label: 'Acceptées' },
+  { id: 'rejected', label: 'Rejetées' },
+];
 
 const innerCardStyle: React.CSSProperties = {
   background: INPUT_BG,
@@ -63,25 +66,9 @@ export function JobApplicationsAdmin() {
     return app.status === filter;
   });
 
-  const getStatusBadge = (status: string) => {
-    const config = statusConfig[status] || statusConfig.pending;
-    return (
-      <span
-        style={{
-          display: 'inline-block',
-          borderRadius: 999,
-          padding: '3px 10px',
-          fontSize: 11,
-          fontWeight: 600,
-          background: config.bg,
-          color: config.color,
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {config.label}
-      </span>
-    );
-  };
+  const getStatusBadge = (status: string) => (
+    <StatusText status={status} label={STATUS_LABEL[status] || status} />
+  );
 
   const handleStatusUpdate = async () => {
     if (selectedApplication && newStatus) {
@@ -116,91 +103,71 @@ export function JobApplicationsAdmin() {
         }}
       />
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, width: '100%', minWidth: 0 }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-          <div>
-            <h2 style={{ color: '#fff', fontSize: 20, fontWeight: 700, margin: 0 }}>Gestion des Candidatures</h2>
-            <p style={{ color: '#9ca3af', margin: '4px 0 0' }}>{applications.length} candidature(s) au total</p>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Users className="w-5 h-5" style={{ color: '#9ca3af' }} />
-            <span style={{ color: '#fff', fontWeight: 500 }}>{filteredApplications.length} candidature(s) affichée(s)</span>
-          </div>
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14, width: '100%', minWidth: 0 }}>
+        <style>{drillStyles}</style>
+
+        <PageHeader
+          title="Candidatures"
+          sub={`${applications.length} candidature(s) · ${filteredApplications.length} affichée(s)`}
+        />
 
         {/* Filtres */}
-        <div style={{ ...cardStyle, padding: 16 }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
-            <span style={{ color: '#fff', fontWeight: 500 }}>Filtrer par statut :</span>
-            <Tabs value={filter} onValueChange={setFilter} className="w-full">
-              <TabsList style={{ background: '#2d2d2d', flexWrap: 'wrap', height: 'auto' }}>
-                <TabsTrigger value="all">Toutes</TabsTrigger>
-                <TabsTrigger value="pending">En attente</TabsTrigger>
-                <TabsTrigger value="reviewing">En examen</TabsTrigger>
-                <TabsTrigger value="interview">Entretien</TabsTrigger>
-                <TabsTrigger value="accepted">Acceptées</TabsTrigger>
-                <TabsTrigger value="rejected">Rejetées</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
+        <div style={{ display: 'flex', gap: 7, overflowX: 'auto', scrollbarWidth: 'none' }}>
+          {FILTERS.map(f => {
+            const count = f.id === 'all' ? applications.length : applications.filter(a => a.status === f.id).length;
+            return (
+              <FilterChip key={f.id} label={f.label} count={count} selected={filter === f.id}
+                onClick={() => setFilter(f.id)} />
+            );
+          })}
         </div>
 
         {/* Table des candidatures */}
-        <div style={{ ...cardStyle, overflow: 'hidden' }}>
-          <div style={{ overflowX: 'auto', width: '100%' }}>
-            <Table>
-              <TableHeader>
-                <TableRow style={{ borderColor: BORDER }}>
-                  <TableHead style={{ color: '#9ca3af' }}>Candidat</TableHead>
-                  <TableHead style={{ color: '#9ca3af' }}>Poste</TableHead>
-                  <TableHead style={{ color: '#9ca3af' }}>Statut</TableHead>
-                  <TableHead style={{ color: '#9ca3af' }}>Date</TableHead>
-                  <TableHead style={{ color: '#9ca3af' }}>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredApplications.map((application) => (
-                  <TableRow key={application.id} style={{ borderColor: BORDER }}>
-                    <TableCell>
-                      <div>
-                        <div style={{ color: '#fff', fontWeight: 500 }}>
-                          {application.first_name} {application.last_name}
-                        </div>
-                        <div style={{ color: '#9ca3af', fontSize: 13 }}>{application.email}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div style={{ color: '#fff' }}>{application.position}</div>
-                    </TableCell>
-                    <TableCell>
-                      {getStatusBadge(application.status)}
-                    </TableCell>
-                    <TableCell>
-                      <div style={{ color: '#9ca3af' }}>
-                        {format(new Date(application.created_at), 'dd/MM/yyyy', { locale: fr })}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => {
-                                setSelectedApplication(application);
-                                setAdminNotes(application.admin_notes || '');
-                              }}
-                              style={{ color: '#fff' }}
-                            >
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent
-                            className="max-w-4xl max-h-[80vh] overflow-y-auto"
-                            style={{ background: CARD, border: `1px solid ${BORDER}` }}
-                          >
-                            <DialogHeader>
+        <div className="crm-table crm-fade">
+          <div className="crm-thead cols-team">
+            <span className="crm-th">Candidat</span>
+            <span className="crm-th">Poste · Statut</span>
+            <span className="crm-th">Date</span>
+            <span className="crm-th" />
+          </div>
+          {filteredApplications.map((application) => (
+            <Dialog key={application.id}>
+              <DialogTrigger asChild>
+                <div className="crm-row cols-team clickable"
+                  onClick={() => { setSelectedApplication(application); setAdminNotes(application.admin_notes || ''); }}>
+                  {/* Candidat */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                    <Avatar name={`${application.first_name} ${application.last_name}`} size={32} />
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {application.first_name} {application.last_name}
+                      </p>
+                      <p style={{ color: '#6b7280', fontSize: 12, margin: '1px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{application.email}</p>
+                      <span className="only-m" style={{ marginTop: 4, display: 'inline-flex', gap: 8, alignItems: 'center' }}>
+                        <span style={{ color: '#9ca3af', fontSize: 12 }}>{application.position}</span>
+                        {getStatusBadge(application.status)}
+                      </span>
+                    </div>
+                  </div>
+                  {/* Poste · statut (desktop) */}
+                  <div className="only-d" style={{ minWidth: 0 }}>
+                    <p style={{ color: '#e5e7eb', fontSize: 12.5, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{application.position}</p>
+                    <span style={{ display: 'inline-flex', marginTop: 2 }}>{getStatusBadge(application.status)}</span>
+                  </div>
+                  {/* Date (desktop) */}
+                  <div className="only-d" style={{ minWidth: 0 }}>
+                    <span style={{ color: '#6b7280', fontSize: 12, whiteSpace: 'nowrap' }}>
+                      {format(new Date(application.created_at), 'd MMM yyyy', { locale: fr })}
+                    </span>
+                  </div>
+                  <ChevronRight size={15} color="rgba(255,255,255,0.25)" style={{ justifySelf: 'end' }} />
+                </div>
+              </DialogTrigger>
+              <DialogContent
+                className="max-w-4xl max-h-[80vh] overflow-y-auto"
+                style={{ background: CARD, border: `1px solid ${BORDER}` }}
+              >
+                <DialogHeader>
                               <DialogTitle style={{ color: '#fff' }}>
                                 Candidature - {selectedApplication?.first_name} {selectedApplication?.last_name}
                               </DialogTitle>
@@ -378,31 +345,14 @@ export function JobApplicationsAdmin() {
                                 </Card>
                               </div>
                             )}
-                          </DialogContent>
-                        </Dialog>
-
-                        {application.cv_url && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDownloadCV(application.cv_url, application.first_name, application.last_name)}
-                            style={{ color: '#fff' }}
-                          >
-                            <Download className="w-4 h-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+              </DialogContent>
+            </Dialog>
+          ))}
 
           {filteredApplications.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '32px 0' }}>
-              <Users className="w-12 h-12 mx-auto mb-4" style={{ color: '#6b7280' }} />
-              <p style={{ color: '#9ca3af', margin: 0 }}>Aucune candidature trouvée</p>
+            <div style={{ padding: '40px 20px', textAlign: 'center' }}>
+              <Users size={24} color="#4b5563" style={{ margin: '0 auto 10px' }} />
+              <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>Aucune candidature trouvée.</p>
             </div>
           )}
         </div>

@@ -13,6 +13,7 @@ import {
   Mail, Send, Eye, Loader2, Users, TestTube, FileText, Gift, Bell,
   Megaphone, RefreshCw, History, UserCheck, UserX, Moon, CheckCircle2, AlertCircle,
 } from 'lucide-react';
+import { PageHeader, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -218,6 +219,8 @@ export function NewsletterAdmin() {
 
   return (
     <div className="flex flex-col gap-4">
+      <style>{drillStyles}</style>
+      <PageHeader title="Campagnes" sub="Composez, testez et envoyez vos emails marketing" />
 
       {/* Modèles */}
       <div style={cardStyle}>
@@ -410,7 +413,7 @@ export function NewsletterAdmin() {
                   <div key={c.id} className="p-3 rounded-xl" style={{ background: INPUT_BG, border: `1px solid ${BORDER}` }}>
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-white text-sm font-medium truncate">{c.subject}</p>
-                      <span className="text-xs whitespace-nowrap" style={{ color: c.error_count > 0 ? '#fbbf24' : '#9ca3af' }}>
+                      <span className="text-xs whitespace-nowrap" style={{ color: c.error_count > 0 ? '#cca24f' : '#9ca3af' }}>
                         {c.success_count}/{c.recipients_count} envoyés
                       </span>
                     </div>

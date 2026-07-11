@@ -7,7 +7,7 @@ import { useOrders, UnifiedOrder } from '@/hooks/useOrders';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { OrderDetailsPage } from './OrderDetailsPage';
-import { PageHeader, Tabs, DotStatus, Avatar, SwitchPill, drillStyles } from '@/components/admin/AdminDrill';
+import { PageHeader, Tabs, StatusText, Avatar, FilterChip, drillStyles } from '@/components/admin/AdminDrill';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
@@ -60,14 +60,6 @@ const ZONES: Record<Zone, { label: string; single: string; Icon: any; danger?: b
   sell:     { label: 'Ventes',    single: 'Vente',    Icon: HandCoins },
   transfer: { label: 'Virements', single: 'Virement', Icon: Send },
   trash:    { label: 'Corbeille', single: 'Commande', Icon: Trash2, danger: true },
-};
-
-const STATUS_META: Record<string, { label: string; dot: string }> = {
-  pending:    { label: 'En attente',    dot: '#fbbf24' },
-  processing: { label: 'En traitement', dot: '#60a5fa' },
-  completed:  { label: 'Terminée',      dot: 'rgba(255,255,255,0.55)' },
-  cancelled:  { label: 'Annulée',       dot: '#f87171' },
-  failed:     { label: 'Échouée',       dot: '#f87171' },
 };
 
 const STATUS_FILTERS = [
@@ -155,7 +147,6 @@ export function OrdersDashboardNew() {
   // ── Ligne de table — colonnes sur desktop, condensée sur mobile ─────────────
   const OrderRow = ({ o }: { o: UnifiedOrder }) => {
     const zm = ZONES[(o.type as Zone)] || ZONES.buy;
-    const st = STATUS_META[o.status] || STATUS_META.pending;
     const client = infos[o.user_id]?.full_name || (o.type === 'transfer' ? o.recipient_name : '') || 'Client';
     const d = new Date(o.created_at);
     return (
@@ -170,7 +161,7 @@ export function OrdersDashboardNew() {
             </p>
             {/* Statut visible sur mobile, sous la référence */}
             <span className="only-m" style={{ marginTop: 3 }}>
-              <DotStatus color={st.dot} label={st.label} />
+              <StatusText status={o.status} size={11.5} />
             </span>
           </div>
         </div>
@@ -191,7 +182,7 @@ export function OrdersDashboardNew() {
 
         {/* Statut (desktop) */}
         <div className="only-d" style={{ minWidth: 0 }}>
-          <DotStatus color={st.dot} label={st.label} />
+          <StatusText status={o.status} />
         </div>
 
         {/* Date */}
@@ -212,8 +203,8 @@ export function OrdersDashboardNew() {
               <RotateCcw size={13} color="rgba(255,255,255,0.7)" />
             </button>
             <button title="Supprimer définitivement" onClick={() => deletePermanently(o.id)}
-              style={{ width: 30, height: 30, borderRadius: 9, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-              <Trash2 size={13} color="#ef4444" />
+              style={{ width: 30, height: 30, borderRadius: 9, background: 'transparent', border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+              <Trash2 size={13} color="#c98686" />
             </button>
           </div>
         ) : (
@@ -247,7 +238,7 @@ export function OrdersDashboardNew() {
             {isTrash && isAdmin() && (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <button className="ghost-btn" style={{ color: '#f87171', borderColor: 'rgba(248,113,113,0.25)' }}>
+                  <button className="ghost-btn" style={{ color: '#c98686' }}>
                     <Trash2 size={13} /> Tout supprimer
                   </button>
                 </AlertDialogTrigger>
@@ -301,7 +292,7 @@ export function OrdersDashboardNew() {
             {STATUS_FILTERS.map(f => {
               const count = f.id === 'all' ? base.length : base.filter(o => o.status === f.id).length;
               return (
-                <SwitchPill key={f.id} label={f.label} count={count} selected={statusFilter === f.id}
+                <FilterChip key={f.id} label={f.label} count={count} selected={statusFilter === f.id}
                   onClick={() => setStatusFilter(f.id)} />
               );
             })}

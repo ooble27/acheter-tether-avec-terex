@@ -5,8 +5,8 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Users, UserPlus, Trash2, RefreshCw, Loader2, Shield, Inbox, FileCheck, Mail, UserCheck, Headphones, CheckCircle2 } from 'lucide-react';
-import { PageHeader, StatStrip, Avatar, DotStatus, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
+import { Users, UserPlus, Trash2, RefreshCw, Loader2, Shield, Inbox, FileCheck, Mail, UserCheck, Headphones } from 'lucide-react';
+import { PageHeader, StatStrip, Avatar, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -115,7 +115,8 @@ export function TeamAdmin() {
           La personne crée d'abord son compte Terex normalement (inscription classique), puis vous lui attribuez son rôle ici avec son email.
         </p>
 
-        {/* Choix du rôle — pilules compactes (même design que le choix du réseau) */}
+        {/* Choix du rôle — pilules de sélection à taille FIXE (aucun décalage au clic :
+            pas d'icône de validation ajoutée, graisse de police constante). */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
           {ROLES.map(({ id, label, Icon }) => {
             const sel = role === id;
@@ -123,7 +124,7 @@ export function TeamAdmin() {
               <button key={id} onClick={() => setRole(id)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 9, padding: '9px 16px 9px 10px',
-                  borderRadius: 100, cursor: 'pointer', outline: 'none', transition: 'all 0.15s',
+                  borderRadius: 100, cursor: 'pointer', outline: 'none', transition: 'background 0.15s, border-color 0.15s, color 0.15s',
                   border: `1px solid ${sel ? 'rgba(255,255,255,0.40)' : 'rgba(255,255,255,0.18)'}`,
                   background: sel ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.08)',
                   WebkitTapHighlightColor: 'transparent',
@@ -131,8 +132,7 @@ export function TeamAdmin() {
                 <span style={{ width: 26, height: 26, borderRadius: '50%', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Icon size={13} color={sel ? '#fff' : 'rgba(255,255,255,0.55)'} />
                 </span>
-                <span style={{ color: sel ? '#fff' : 'rgba(255,255,255,0.55)', fontSize: 13, fontWeight: sel ? 600 : 400 }}>{label}</span>
-                {sel && <CheckCircle2 size={13} color="rgba(255,255,255,0.8)" />}
+                <span style={{ color: sel ? '#fff' : 'rgba(255,255,255,0.55)', fontSize: 13, fontWeight: 500 }}>{label}</span>
               </button>
             );
           })}
@@ -147,9 +147,9 @@ export function TeamAdmin() {
             type="email"
             style={{ flex: 1, minWidth: 220, background: INPUT_BG, border: `1px solid ${BORDER}`, borderRadius: 12, padding: '11px 14px', color: '#fff', fontSize: 14, outline: 'none' }} />
           <button onClick={addMember} disabled={adding || !email}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#fff', color: '#141414', border: 'none', borderRadius: 12, padding: '11px 18px', fontSize: 13.5, fontWeight: 700, cursor: 'pointer', opacity: adding || !email ? 0.6 : 1 }}>
+            style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#fff', color: '#141414', border: 'none', borderRadius: 12, padding: '11px 18px', fontSize: 13.5, fontWeight: 700, cursor: 'pointer', opacity: adding || !email ? 0.6 : 1, whiteSpace: 'nowrap' }}>
             {adding ? <Loader2 size={15} className="animate-spin" /> : <UserPlus size={15} />}
-            Attribuer le rôle {roleMeta(role).label}
+            Attribuer le rôle
           </button>
         </div>
       </div>
@@ -157,9 +157,17 @@ export function TeamAdmin() {
     </>
   );
 
-  const ROLE_DOT: Record<string, string> = {
-    admin: '#f5f5f5', operator: '#60a5fa', kyc_reviewer: '#a78bfa',
-    marketing: '#34d399', hr: '#fbbf24', support: '#f472b6',
+  // Rôle affiché en texte neutre (design système monochrome) — l'admin
+  // ressort en blanc, les autres rôles en gris ; aucune couleur vive.
+  const RoleTag = ({ roleId }: { roleId: string }) => {
+    const meta = roleMeta(roleId);
+    const isAdminRole = roleId === 'admin';
+    return (
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, whiteSpace: 'nowrap' }}>
+        <meta.Icon size={13} color={isAdminRole ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.45)'} />
+        <span style={{ color: isAdminRole ? '#fff' : '#9ca3af', fontSize: 12.5, fontWeight: 600 }}>{meta.label}</span>
+      </span>
+    );
   };
 
   const membersSection = (
@@ -178,39 +186,36 @@ export function TeamAdmin() {
           <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>Aucun membre pour le moment.</p>
         </div>
       ) : (
-        members.map((m) => {
-          const meta = roleMeta(m.role);
-          return (
-            <div key={m.roleRowId} className="crm-row cols-team">
-              {/* Membre */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-                <Avatar name={m.name || m.email} size={32} />
-                <div style={{ minWidth: 0 }}>
-                  <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{m.name || 'Sans nom'}</p>
-                  <p style={{ color: '#6b7280', fontSize: 12, margin: '1px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{m.email}</p>
-                  <span className="only-m" style={{ marginTop: 4 }}>
-                    <DotStatus color={ROLE_DOT[m.role] || '#9ca3af'} label={meta.label} />
-                  </span>
-                </div>
-              </div>
-              {/* Rôle (desktop) */}
-              <div className="only-d" style={{ minWidth: 0 }}>
-                <DotStatus color={ROLE_DOT[m.role] || '#9ca3af'} label={meta.label} />
-              </div>
-              {/* Depuis (desktop) */}
-              <div className="only-d" style={{ minWidth: 0 }}>
-                <span style={{ color: '#6b7280', fontSize: 12, whiteSpace: 'nowrap' }}>
-                  {new Date(m.since).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' })}
+        members.map((m) => (
+          <div key={m.roleRowId} className="crm-row cols-team">
+            {/* Membre */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+              <Avatar name={m.name || m.email} size={32} />
+              <div style={{ minWidth: 0 }}>
+                <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{m.name || 'Sans nom'}</p>
+                <p style={{ color: '#6b7280', fontSize: 12, margin: '1px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{m.email}</p>
+                <span className="only-m" style={{ marginTop: 4, display: 'inline-flex' }}>
+                  <RoleTag roleId={m.role} />
                 </span>
               </div>
-              {/* Retirer */}
-              <button onClick={() => setToRemove(m)} aria-label="Retirer le rôle"
-                style={{ width: 32, height: 32, borderRadius: 9, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, justifySelf: 'end' }}>
-                <Trash2 size={13} color="#ef4444" />
-              </button>
             </div>
-          );
-        })
+            {/* Rôle (desktop) */}
+            <div className="only-d" style={{ minWidth: 0 }}>
+              <RoleTag roleId={m.role} />
+            </div>
+            {/* Depuis (desktop) */}
+            <div className="only-d" style={{ minWidth: 0 }}>
+              <span style={{ color: '#6b7280', fontSize: 12, whiteSpace: 'nowrap' }}>
+                {new Date(m.since).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' })}
+              </span>
+            </div>
+            {/* Retirer */}
+            <button onClick={() => setToRemove(m)} aria-label="Retirer le rôle"
+              style={{ width: 32, height: 32, borderRadius: 9, background: 'transparent', border: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, justifySelf: 'end' }}>
+              <Trash2 size={13} color="#c98686" />
+            </button>
+          </div>
+        ))
       )}
     </div>
   );

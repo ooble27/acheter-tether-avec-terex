@@ -61,12 +61,13 @@ const STATUS_LABELS: Record<string, string> = {
   failed: 'Échoué',
 };
 
-const STATUS_PILL_STYLES: Record<string, React.CSSProperties> = {
-  pending: { background: 'rgba(251,191,36,0.10)', color: '#fbbf24' },
-  processing: { background: 'rgba(96,165,250,0.10)', color: '#60a5fa' },
-  completed: { background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.65)' },
-  cancelled: { background: 'rgba(248,113,113,0.10)', color: '#f87171' },
-  failed: { background: 'rgba(248,113,113,0.10)', color: '#f87171' },
+// Statuts en texte teinté discret (mêmes tons doux que les tables du CRM).
+const STATUS_TEXT_COLOR: Record<string, string> = {
+  pending: '#cca24f',
+  processing: '#6f9bcf',
+  completed: 'rgba(255,255,255,0.6)',
+  cancelled: '#c98686',
+  failed: '#c98686',
 };
 
 export function OrderDetailsPage({
@@ -185,15 +186,7 @@ export function OrderDetailsPage({
   const statusBadge = (status: string) => (
     <span
       className="inline-flex items-center font-semibold"
-      style={{
-        borderRadius: 999,
-        padding: '3px 10px',
-        fontSize: 11,
-        ...(STATUS_PILL_STYLES[status] || {
-          background: 'rgba(255,255,255,0.06)',
-          color: 'rgba(255,255,255,0.65)',
-        }),
-      }}
+      style={{ fontSize: 12.5, color: STATUS_TEXT_COLOR[status] || 'rgba(255,255,255,0.6)' }}
     >
       {STATUS_LABELS[status] || status}
     </span>
@@ -297,9 +290,9 @@ export function OrderDetailsPage({
           <div className="max-w-5xl mx-auto">
             {ownedByOther ? (
               <div className="flex items-center gap-3 rounded-xl p-3.5"
-                style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.25)' }}>
-                <Lock className="w-4 h-4 flex-shrink-0" style={{ color: '#fbbf24' }} />
-                <p className="text-sm m-0" style={{ color: '#fbbf24' }}>
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(204,162,79,0.30)' }}>
+                <Lock className="w-4 h-4 flex-shrink-0" style={{ color: '#cca24f' }} />
+                <p className="text-sm m-0" style={{ color: '#cca24f' }}>
                   <strong>{assignedName}</strong> traite déjà cette commande — ne la traitez pas en double.
                 </p>
               </div>
@@ -470,7 +463,7 @@ export function OrderDetailsPage({
           {/* CANCELLATION FORM — pleine largeur */}
           {(order.status === 'cancelled' || showCancellationForm) && (
             <div className="lg:col-span-2">
-              <Card title="Email d'annulation" icon={<MailCheck className="w-4 h-4 text-[#f87171]" />}>
+              <Card title="Email d'annulation" icon={<MailCheck className="w-4 h-4" style={{ color: '#c98686' }} />}>
                 <Textarea
                   placeholder="Motif d'annulation (optionnel)…"
                   value={cancellationReason}
@@ -480,8 +473,8 @@ export function OrderDetailsPage({
                 <Button
                   onClick={sendCancellationEmail}
                   disabled={sendingEmail}
-                  className="w-full mt-3 border"
-                  style={{ background: 'rgba(248,113,113,0.10)', color: '#f87171', borderColor: 'rgba(248,113,113,0.30)' }}
+                  className="w-full mt-3 border hover:opacity-90"
+                  style={{ background: '#2d2d2d', color: '#fff', borderColor: 'rgba(255,255,255,0.10)' }}
                 >
                   <Mail className="w-4 h-4 mr-2" />
                   {sendingEmail ? 'Envoi…' : "Envoyer l'email d'annulation"}
@@ -508,7 +501,7 @@ export function OrderDetailsPage({
                     {/* rail */}
                     <div className="flex flex-col items-center">
                       <div className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
-                        style={{ background: ev.action.includes('cancel') ? '#f87171' : ev.action === 'status_completed' ? '#fff' : 'rgba(255,255,255,0.45)' }} />
+                        style={{ background: ev.action.includes('cancel') ? '#c98686' : ev.action === 'status_completed' ? '#fff' : 'rgba(255,255,255,0.45)' }} />
                       {i < events.length - 1 && <div className="w-px flex-1 my-1" style={{ background: 'rgba(255,255,255,0.08)' }} />}
                     </div>
                     <div className="pb-3 min-w-0">
@@ -555,7 +548,7 @@ export function OrderDetailsPage({
               <Button
                 onClick={() => { doStatusUpdate('cancelled'); setShowCancellationForm(true); }}
                 className="flex-1 sm:flex-none sm:min-w-[140px] border hover:opacity-90"
-                style={{ background: 'rgba(248,113,113,0.10)', color: '#f87171', borderColor: 'rgba(248,113,113,0.30)' }}
+                style={{ background: 'transparent', color: '#c98686', borderColor: 'rgba(255,255,255,0.12)' }}
               >
                 <XCircle className="w-4 h-4 mr-2" /> Annuler
               </Button>
@@ -573,7 +566,7 @@ export function OrderDetailsPage({
               <Button
                 onClick={() => { doStatusUpdate('cancelled'); setShowCancellationForm(true); }}
                 className="flex-1 sm:flex-none sm:min-w-[140px] border hover:opacity-90"
-                style={{ background: 'rgba(248,113,113,0.10)', color: '#f87171', borderColor: 'rgba(248,113,113,0.30)' }}
+                style={{ background: 'transparent', color: '#c98686', borderColor: 'rgba(255,255,255,0.12)' }}
               >
                 <XCircle className="w-4 h-4 mr-2" /> Annuler
               </Button>

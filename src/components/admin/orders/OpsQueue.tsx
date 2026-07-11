@@ -4,9 +4,11 @@ import { useOrderOps } from '@/hooks/useOrderOps';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { OrderDetailsPage } from './OrderDetailsPage';
 import { Coins, HandCoins, Send, Clock, Hand, User, RefreshCw, Inbox, CheckCircle2 } from 'lucide-react';
-import { PageHeader, Tabs, DotStatus, Avatar, StatStrip, drillStyles } from '@/components/admin/AdminDrill';
+import { PageHeader, Tabs, StatusText, Avatar, StatStrip, drillStyles } from '@/components/admin/AdminDrill';
 
 const BORDER = 'rgba(255,255,255,0.07)';
+// Ancienneté « pressante » : ambre doux plutôt que rouge, pour ne pas saturer.
+const URGENT_AGE = '#cca24f';
 
 const TYPE_META: Record<string, { label: string; Icon: any }> = {
   buy: { label: 'Achat', Icon: Coins },
@@ -21,11 +23,6 @@ function ageOf(iso: string): { text: string; urgent: boolean } {
   if (h < 24) return { text: `il y a ${h} h ${mins % 60} min`, urgent: true };
   return { text: `il y a ${Math.floor(h / 24)} j`, urgent: true };
 }
-
-const STATUS_DOT: Record<string, string> = {
-  pending: '#fbbf24',
-  processing: '#60a5fa',
-};
 
 export function OpsQueue() {
   const { orders, loading, updateOrderStatus, refreshOrders } = useOrders();
@@ -103,7 +100,7 @@ export function OpsQueue() {
             <p style={{ color: '#6b7280', fontSize: 11, margin: '1px 0 0', fontFamily: 'ui-monospace,Menlo,monospace', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               TEREX-{o.id.slice(-8).toUpperCase()}
             </p>
-            <span className="only-m" style={{ marginTop: 3, display: 'inline-flex', gap: 6, alignItems: 'center', fontSize: 11.5, color: age.urgent ? '#f87171' : '#6b7280' }}>
+            <span className="only-m" style={{ marginTop: 3, display: 'inline-flex', gap: 6, alignItems: 'center', fontSize: 11.5, color: age.urgent ? URGENT_AGE : '#6b7280' }}>
               <Clock size={11} /> {age.text}
             </span>
           </div>
@@ -121,20 +118,22 @@ export function OpsQueue() {
           <p style={{ color: '#6b7280', fontSize: 11, margin: '1px 0 0', whiteSpace: 'nowrap' }}>{Number(o.usdt_amount || 0).toLocaleString('fr-FR')} USDT</p>
         </div>
 
-        {/* Âge / statut (desktop) */}
+        {/* Âge / propriétaire (desktop) */}
         <div className="only-d" style={{ minWidth: 0 }}>
           {tab === 'others' && owner ? (
-            <DotStatus color="#fbbf24" label={owner} />
+            <span style={{ display: 'inline-flex', gap: 6, alignItems: 'center', fontSize: 12, color: '#9ca3af', whiteSpace: 'nowrap' }}>
+              <User size={12} color="rgba(255,255,255,0.4)" /> {owner}
+            </span>
           ) : (
-            <span style={{ display: 'inline-flex', gap: 6, alignItems: 'center', fontSize: 12, color: age.urgent ? '#f87171' : '#6b7280', whiteSpace: 'nowrap' }}>
+            <span style={{ display: 'inline-flex', gap: 6, alignItems: 'center', fontSize: 12, color: age.urgent ? URGENT_AGE : '#6b7280', whiteSpace: 'nowrap' }}>
               <Clock size={12} /> {age.text}
             </span>
           )}
         </div>
 
-        {/* Colonne date (desktop) — état de la commande */}
+        {/* État de la commande (desktop) */}
         <div className="only-d" style={{ minWidth: 0 }}>
-          <DotStatus color={STATUS_DOT[o.status] || '#6b7280'} label={o.status === 'processing' ? 'En traitement' : 'En attente'} />
+          <StatusText status={o.status} />
         </div>
 
         {/* Actions */}
