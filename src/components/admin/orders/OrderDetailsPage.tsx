@@ -192,7 +192,6 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
     { id: 'paiement', label: 'Paiement' },
     ...(order.type === 'buy' && order.wallet_address ? [{ id: 'destination', label: 'Destination' }] : []),
     ...(order.type === 'transfer' ? [{ id: 'beneficiaire', label: 'Bénéficiaire' }] : []),
-    ...(parsedNotes.sections.length > 0 ? [{ id: 'details', label: 'Détails' }] : []),
     { id: 'historique', label: 'Historique' },
   ];
   const activeSection = TABS.some(t => t.id === section) ? section : 'client';
@@ -279,8 +278,15 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
                   <p style={{ color: '#fff', fontSize: 22, fontWeight: 700, margin: 0, letterSpacing: '-0.01em' }}>{order.type === 'buy' ? usdtLine : amountLine}</p>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 4px' }}>{order.type === 'buy' ? 'Réseau' : 'Méthode'}</p>
-                  <p style={{ color: '#fff', fontSize: 14, fontWeight: 600, margin: 0 }}>{order.type === 'buy' ? (order.network || 'TRC20') : method}</p>
+                  <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 4px' }}>{order.type === 'buy' ? 'Réseau' : 'Numéro du client'}</p>
+                  {order.type === 'buy' ? (
+                    <p style={{ color: '#fff', fontSize: 14, fontWeight: 600, margin: 0 }}>{order.network || 'TRC20'}</p>
+                  ) : (
+                    <>
+                      <p style={{ color: '#fff', fontSize: 15, fontWeight: 700, margin: 0 }}>{userPhone || '—'}</p>
+                      {method !== '—' && <p style={{ color: '#6b7280', fontSize: 12, margin: '2px 0 0' }}>{method}</p>}
+                    </>
+                  )}
                 </div>
               </div>
               {order.type === 'buy' && order.wallet_address && (
@@ -334,8 +340,19 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
             )}
             {activeSection === 'paiement' && (
               <>
-                <Row label="Méthode" value={method} last={!order.payment_reference} />
-                {order.payment_reference && <Row label="Référence" value={order.payment_reference} mono last />}
+                <Row label="Méthode" value={method} last={parsedNotes.sections.length === 0 && !order.payment_reference} />
+                {order.payment_reference && <Row label="Référence" value={order.payment_reference} mono last={parsedNotes.sections.length === 0} />}
+                {/* Les détails saisis par le client (type de service, numéro mobile…) vivent ici */}
+                {parsedNotes.sections.map((ns, si) => (
+                  <div key={si}>
+                    <GroupLabel>{ns.title}</GroupLabel>
+                    {ns.fields.map((field, fi) => (
+                      <Row key={fi} label={field.label} value={field.value}
+                        mono={field.copyable} copyable={field.copyable} onCopy={() => copy(field.value, `${field.label} copié`)}
+                        last={si === parsedNotes.sections.length - 1 && fi === ns.fields.length - 1} />
+                    ))}
+                  </div>
+                ))}
               </>
             )}
             {activeSection === 'destination' && order.wallet_address && (
@@ -354,17 +371,6 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
                 {order.total_amount !== undefined && <Row label="Montant à recevoir" value={`${order.total_amount} ${order.to_currency || ''}`} last />}
               </>
             )}
-            {activeSection === 'details' && parsedNotes.sections.map((ns, si) => (
-              <div key={si}>
-                {si > 0 && <GroupLabel>{ns.title}</GroupLabel>}
-                {si === 0 && ns.title && <GroupLabel first>{ns.title}</GroupLabel>}
-                {ns.fields.map((field, fi) => (
-                  <Row key={fi} label={field.label} value={field.value}
-                    mono={field.copyable} copyable={field.copyable} onCopy={() => copy(field.value, `${field.label} copié`)}
-                    last={si === parsedNotes.sections.length - 1 && fi === ns.fields.length - 1} />
-                ))}
-              </div>
-            ))}
             {activeSection === 'historique' && (
               <div style={{ padding: 16 }}>
                 {events.length === 0 ? (
