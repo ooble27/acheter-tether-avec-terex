@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Users, Search, ChevronRight, RefreshCw } from 'lucide-react';
 import { useKYCAdmin } from '@/hooks/useKYCAdmin';
 import { KYCVerificationDetails } from './KYCVerificationDetails';
-import { PageHeader, StatStrip, StatusText, Avatar, FilterChip, drillStyles } from '@/components/admin/AdminDrill';
+import { PageHeader, StatusText, Avatar, FilterChip, drillStyles } from '@/components/admin/AdminDrill';
 
 const BORDER = 'rgba(255,255,255,0.07)';
 
@@ -92,15 +92,7 @@ export function KYCAdmin() {
         }
       />
 
-      <StatStrip items={[
-        { label: 'À traiter', value: stats.submitted },
-        { label: 'En attente', value: stats.pending },
-        { label: 'En révision', value: stats.under_review },
-        { label: 'Approuvés', value: stats.approved },
-        { label: 'Rejetés', value: stats.rejected },
-      ]} />
-
-      {/* Recherche + filtres */}
+      {/* Recherche + filtres (les compteurs des filtres remplacent la bande de KPI) */}
       <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
         <div style={{ position: 'relative', flex: '1 1 220px', minWidth: 200 }}>
           <Search size={14} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.35)' }} />

@@ -4,11 +4,9 @@ import { useOrderOps } from '@/hooks/useOrderOps';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { OrderDetailsPage } from './OrderDetailsPage';
 import { Coins, HandCoins, Send, Clock, Hand, User, RefreshCw, Inbox, CheckCircle2 } from 'lucide-react';
-import { PageHeader, Tabs, StatusText, Avatar, StatStrip, RED, drillStyles } from '@/components/admin/AdminDrill';
+import { PageHeader, Tabs, StatusText, Avatar, drillStyles } from '@/components/admin/AdminDrill';
 
 const BORDER = 'rgba(255,255,255,0.07)';
-// Ancienneté « pressante » : rouge (seule couleur d'accent conservée).
-const URGENT_AGE = RED;
 
 const TYPE_META: Record<string, { label: string; Icon: any }> = {
   buy: { label: 'Achat', Icon: Coins },
@@ -16,12 +14,13 @@ const TYPE_META: Record<string, { label: string; Icon: any }> = {
   transfer: { label: 'Virement', Icon: Send },
 };
 
-function ageOf(iso: string): { text: string; urgent: boolean } {
+// Ancienneté COURTE : « 16 min », « 3 h », « 16 j » (sans « il y a »).
+function ageOf(iso: string): string {
   const mins = Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 60000));
-  if (mins < 60) return { text: `il y a ${mins} min`, urgent: mins >= 30 };
+  if (mins < 60) return `${mins} min`;
   const h = Math.floor(mins / 60);
-  if (h < 24) return { text: `il y a ${h} h ${mins % 60} min`, urgent: true };
-  return { text: `il y a ${Math.floor(h / 24)} j`, urgent: true };
+  if (h < 24) return `${h} h`;
+  return `${Math.floor(h / 24)} j`;
 }
 
 export function OpsQueue() {
@@ -48,14 +47,6 @@ export function OpsQueue() {
   const mine = active.filter(o => o.assigned_to && o.assigned_to === currentUserId);
   const unassigned = active.filter(o => !o.assigned_to);
   const others = active.filter(o => o.assigned_to && o.assigned_to !== currentUserId);
-
-  // KPIs du jour
-  const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
-  const completedToday = (orders || []).filter(o =>
-    !o.is_deleted && o.status === 'completed' &&
-    new Date(o.processed_at || o.updated_at).getTime() >= todayStart.getTime()
-  ).length;
-  const oldest = unassigned[0] ? ageOf(unassigned[0].created_at) : null;
 
   // Noms : clients + opérateurs (même fonction admin get-client-infos)
   const nameIds = useMemo(() => {
@@ -92,32 +83,33 @@ export function OpsQueue() {
 
     return (
       <div className="crm-row cols-orders">
-        {/* Client */}
+        {/* Client — nom seul (mobile : rien d'autre) */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
           <Avatar name={client} />
           <div style={{ minWidth: 0 }}>
             <p style={{ color: '#fff', fontSize: 13, fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{client}</p>
-            {/* Référence : desktop/tablette seulement — on l'allège sur mobile */}
+            {/* Référence : desktop/tablette seulement */}
             <p className="only-d" style={{ color: '#6b7280', fontSize: 11, margin: '1px 0 0', fontFamily: 'ui-monospace,Menlo,monospace', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               TEREX-{o.id.slice(-8).toUpperCase()}
             </p>
-            {/* Mobile : uniquement l'ancienneté (rouge si pressante) */}
-            <span className="only-m" style={{ marginTop: 3, display: 'inline-flex', gap: 6, alignItems: 'center', fontSize: 11.5, color: age.urgent ? URGENT_AGE : '#6b7280' }}>
-              <Clock size={11} /> {age.text}
-            </span>
           </div>
         </div>
 
-        {/* Type */}
+        {/* Type (desktop) */}
         <div className="only-d" style={{ display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
           <t.Icon size={13} color="rgba(255,255,255,0.45)" />
           <span style={{ color: '#9ca3af', fontSize: 12.5, whiteSpace: 'nowrap' }}>{t.label}</span>
         </div>
 
-        {/* Montant */}
+        {/* Montant (desktop) / Ancienneté (mobile) — même emplacement */}
         <div style={{ minWidth: 0, textAlign: 'right' }}>
-          <p style={{ color: '#fff', fontSize: 13, fontWeight: 700, margin: 0, whiteSpace: 'nowrap' }}>{Number(o.amount).toLocaleString('fr-FR')} {o.currency}</p>
-          <p style={{ color: '#6b7280', fontSize: 11, margin: '1px 0 0', whiteSpace: 'nowrap' }}>{Number(o.usdt_amount || 0).toLocaleString('fr-FR')} USDT</p>
+          <div className="only-d">
+            <p style={{ color: '#fff', fontSize: 13, fontWeight: 700, margin: 0, whiteSpace: 'nowrap' }}>{Number(o.amount).toLocaleString('fr-FR')} {o.currency}</p>
+            <p style={{ color: '#6b7280', fontSize: 11, margin: '1px 0 0', whiteSpace: 'nowrap' }}>{Number(o.usdt_amount || 0).toLocaleString('fr-FR')} USDT</p>
+          </div>
+          <span className="only-m" style={{ display: 'inline-flex', gap: 5, alignItems: 'center', justifyContent: 'flex-end', fontSize: 12.5, color: '#9ca3af', whiteSpace: 'nowrap' }}>
+            <Clock size={12} color="rgba(255,255,255,0.4)" /> {age}
+          </span>
         </div>
 
         {/* Âge / propriétaire (desktop) */}
@@ -127,8 +119,8 @@ export function OpsQueue() {
               <User size={12} color="rgba(255,255,255,0.4)" /> {owner}
             </span>
           ) : (
-            <span style={{ display: 'inline-flex', gap: 6, alignItems: 'center', fontSize: 12, color: age.urgent ? URGENT_AGE : '#6b7280', whiteSpace: 'nowrap' }}>
-              <Clock size={12} /> {age.text}
+            <span style={{ display: 'inline-flex', gap: 6, alignItems: 'center', fontSize: 12, color: '#6b7280', whiteSpace: 'nowrap' }}>
+              <Clock size={12} /> {age}
             </span>
           )}
         </div>
@@ -183,15 +175,7 @@ export function OpsQueue() {
         }
       />
 
-      {/* Métriques — sans boîtes */}
-      <StatStrip items={[
-        { label: 'À traiter', value: unassigned.length },
-        { label: 'Mes commandes', value: mine.length },
-        { label: "Terminées aujourd'hui", value: completedToday },
-        ...(oldest ? [{ label: 'Plus ancienne en file', value: oldest.text, tone: (oldest.urgent ? 'urgent' : 'default') as 'urgent' | 'default' }] : []),
-      ]} />
-
-      {/* Onglets */}
+      {/* Onglets — les compteurs suffisent, pas de bande de KPI redondante */}
       <Tabs
         tabs={[
           { id: 'queue', label: "File d'attente", count: unassigned.length },

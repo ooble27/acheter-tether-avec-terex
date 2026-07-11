@@ -26,6 +26,21 @@ export function useClientInfos(userIds: string[]): Record<string, ClientInfo> {
 
   useEffect(() => {
     const unique = Array.from(new Set(userIds.filter(Boolean)));
+    if (unique.length === 0) return;
+
+    // Toujours refléter le cache courant dans l'état local. Corrige le nom qui
+    // redevenait « Client » au retour depuis le détail : au remontage, les ids
+    // peuvent déjà être en cache mais absents de l'état ; sans cette synchro,
+    // l'effet retournait tôt (rien à charger) et laissait l'état vide.
+    const fromCache: Record<string, ClientInfo> = {};
+    for (const id of unique) {
+      const c = cache.get(id);
+      if (c) fromCache[id] = c;
+    }
+    if (Object.keys(fromCache).length) {
+      setInfos((prev) => ({ ...prev, ...fromCache }));
+    }
+
     const missing = unique.filter((id) => !cache.has(id));
     if (missing.length === 0) return;
 
