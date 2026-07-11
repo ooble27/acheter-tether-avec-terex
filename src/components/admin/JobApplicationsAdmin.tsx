@@ -1,37 +1,25 @@
-
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import {
-  Users,
-  Download,
-  Eye,
-  Calendar,
-  Mail,
-  Phone,
-  MapPin,
-  Briefcase,
-  ExternalLink,
-  Clock,
-  DollarSign,
-  ChevronRight,
+  Users, Download, Calendar, Mail, Briefcase,
+  ExternalLink, ChevronRight, User, FileText, CalendarClock,
 } from 'lucide-react';
 import { useJobApplicationsAdmin } from '@/hooks/useJobApplicationsAdmin';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { InterviewScheduleDialog } from './InterviewScheduleDialog';
-import { PageHeader, StatusText, Avatar, FilterChip, drillStyles } from '@/components/admin/AdminDrill';
+import {
+  PageHeader, DrillPage, DetailSection, Field, StatusText, Avatar, FilterChip, drillStyles,
+} from '@/components/admin/AdminDrill';
 
-const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const INPUT_BG = 'rgba(255,255,255,0.04)';
 
 const STATUS_LABEL: Record<string, string> = {
   pending: 'En attente',
-  reviewing: "En examen",
+  reviewing: 'En examen',
   interview: 'Entretien',
   accepted: 'Acceptée',
   rejected: 'Rejetée',
@@ -46,317 +34,200 @@ const FILTERS = [
   { id: 'rejected', label: 'Rejetées' },
 ];
 
-const innerCardStyle: React.CSSProperties = {
-  background: INPUT_BG,
+const linkStyle: React.CSSProperties = {
+  display: 'inline-flex', alignItems: 'center', gap: 8, color: '#fff', fontSize: 13.5, fontWeight: 600,
+  textDecoration: 'none', padding: '9px 12px', borderRadius: 10, background: 'rgba(255,255,255,0.05)',
   border: `1px solid ${BORDER}`,
-  borderRadius: 12,
 };
 
 export function JobApplicationsAdmin() {
   const { applications, loading, updating, updateApplicationStatus, downloadCV } = useJobApplicationsAdmin();
-  const [selectedApplication, setSelectedApplication] = useState<any>(null);
+  const [selected, setSelected] = useState<any>(null);
   const [newStatus, setNewStatus] = useState('');
   const [adminNotes, setAdminNotes] = useState('');
   const [filter, setFilter] = useState('all');
   const [interviewDialogOpen, setInterviewDialogOpen] = useState(false);
   const [applicationForInterview, setApplicationForInterview] = useState<any>(null);
 
-  const filteredApplications = applications.filter(app => {
-    if (filter === 'all') return true;
-    return app.status === filter;
-  });
+  const filtered = applications.filter(app => filter === 'all' || app.status === filter);
 
-  const getStatusBadge = (status: string) => (
-    <StatusText status={status} label={STATUS_LABEL[status] || status} />
-  );
+  const open = (app: any) => { setSelected(app); setAdminNotes(app.admin_notes || ''); setNewStatus(''); };
 
   const handleStatusUpdate = async () => {
-    if (selectedApplication && newStatus) {
-      await updateApplicationStatus(selectedApplication.id, newStatus, adminNotes);
-      setSelectedApplication({ ...selectedApplication, status: newStatus, admin_notes: adminNotes });
+    if (selected && newStatus) {
+      await updateApplicationStatus(selected.id, newStatus, adminNotes);
+      setSelected({ ...selected, status: newStatus, admin_notes: adminNotes });
       setNewStatus('');
-      setAdminNotes('');
     }
-  };
-
-  const handleDownloadCV = (cvUrl: string, firstName: string, lastName: string) => {
-    downloadCV(cvUrl, `${firstName}_${lastName}`);
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div style={{ color: '#fff' }}>Chargement des candidatures...</div>
+        <div style={{ color: '#9ca3af', fontSize: 14 }}>Chargement des candidatures…</div>
       </div>
     );
   }
 
-  return (
-    <>
-      <InterviewScheduleDialog
-        open={interviewDialogOpen}
-        onOpenChange={setInterviewDialogOpen}
-        application={applicationForInterview}
-        onScheduled={() => {
-          setInterviewDialogOpen(false);
-          window.location.reload();
-        }}
-      />
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 14, width: '100%', minWidth: 0 }}>
+  // ── PAGE DE DÉTAIL (plein écran, plus de popup) ──────────────────────────────
+  if (selected) {
+    const a = selected;
+    const name = `${a.first_name} ${a.last_name}`;
+    return (
+      <>
         <style>{drillStyles}</style>
-
-        <PageHeader
-          title="Candidatures"
-          sub={`${applications.length} candidature(s) · ${filteredApplications.length} affichée(s)`}
+        <InterviewScheduleDialog
+          open={interviewDialogOpen}
+          onOpenChange={setInterviewDialogOpen}
+          application={applicationForInterview}
+          onScheduled={() => { setInterviewDialogOpen(false); window.location.reload(); }}
         />
+        <DrillPage
+          title={name}
+          sub={a.position}
+          onBack={() => setSelected(null)}
+          right={<StatusText status={a.status} label={STATUS_LABEL[a.status] || a.status} />}
+        >
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 12, alignItems: 'start' }}>
 
-        {/* Filtres */}
-        <div style={{ display: 'flex', gap: 7, overflowX: 'auto', scrollbarWidth: 'none' }}>
-          {FILTERS.map(f => {
-            const count = f.id === 'all' ? applications.length : applications.filter(a => a.status === f.id).length;
-            return (
-              <FilterChip key={f.id} label={f.label} count={count} selected={filter === f.id}
-                onClick={() => setFilter(f.id)} />
-            );
-          })}
-        </div>
+            {/* Coordonnées */}
+            <DetailSection title="Coordonnées" icon={User}>
+              <div style={{ display: 'grid', gap: 12 }}>
+                <Field label="Email" value={a.email} copyable onCopy={() => navigator.clipboard.writeText(a.email)} />
+                {a.phone && <Field label="Téléphone" value={a.phone} copyable onCopy={() => navigator.clipboard.writeText(a.phone)} />}
+                {a.location && <Field label="Localisation" value={a.location} />}
+                {a.experience_years && <Field label="Expérience" value={`${a.experience_years} année(s)`} />}
+              </div>
+            </DetailSection>
 
-        {/* Table des candidatures */}
-        <div className="crm-table crm-fade">
-          <div className="crm-thead cols-team">
-            <span className="crm-th">Candidat</span>
-            <span className="crm-th">Poste · Statut</span>
-            <span className="crm-th">Date</span>
-            <span className="crm-th" />
-          </div>
-          {filteredApplications.map((application) => (
-            <Dialog key={application.id}>
-              <DialogTrigger asChild>
-                <div className="crm-row cols-team clickable"
-                  onClick={() => { setSelectedApplication(application); setAdminNotes(application.admin_notes || ''); }}>
-                  {/* Candidat */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-                    <Avatar name={`${application.first_name} ${application.last_name}`} size={32} />
-                    <div style={{ minWidth: 0 }}>
-                      <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {application.first_name} {application.last_name}
-                      </p>
-                      <p style={{ color: '#6b7280', fontSize: 12, margin: '1px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{application.email}</p>
-                      <span className="only-m" style={{ marginTop: 4, display: 'inline-flex', gap: 8, alignItems: 'center' }}>
-                        <span style={{ color: '#9ca3af', fontSize: 12 }}>{application.position}</span>
-                        {getStatusBadge(application.status)}
-                      </span>
+            {/* Candidature */}
+            <DetailSection title="Candidature" icon={Briefcase}>
+              <div style={{ display: 'grid', gap: 12 }}>
+                <Field label="Poste" value={a.position} />
+                {a.availability && <Field label="Disponibilité" value={a.availability} />}
+                {a.salary_expectation && <Field label="Prétentions salariales" value={a.salary_expectation} />}
+                <Field label="Candidature reçue" value={format(new Date(a.created_at), "d MMM yyyy 'à' HH:mm", { locale: fr })} />
+              </div>
+            </DetailSection>
+
+            {/* Documents & liens */}
+            <DetailSection title="Documents & liens" icon={FileText}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {a.cv_url ? (
+                  <button onClick={() => downloadCV(a.cv_url, `${a.first_name}_${a.last_name}`)}
+                    style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#fff', color: '#141414', border: 'none', borderRadius: 10, padding: '10px 14px', fontSize: 13.5, fontWeight: 700, cursor: 'pointer' }}>
+                    <Download size={15} /> Télécharger le CV
+                  </button>
+                ) : <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>Aucun CV fourni.</p>}
+                {a.linkedin_profile && <a href={a.linkedin_profile} target="_blank" rel="noopener noreferrer" style={linkStyle}><ExternalLink size={14} /> Profil LinkedIn</a>}
+                {a.portfolio_url && <a href={a.portfolio_url} target="_blank" rel="noopener noreferrer" style={linkStyle}><ExternalLink size={14} /> Portfolio</a>}
+              </div>
+            </DetailSection>
+
+            {/* Lettre de motivation — pleine largeur */}
+            {a.cover_letter && (
+              <div style={{ gridColumn: '1 / -1' }}>
+                <DetailSection title="Lettre de motivation" icon={Mail}>
+                  <p style={{ color: '#d1d5db', fontSize: 13.5, whiteSpace: 'pre-wrap', lineHeight: 1.7, margin: 0 }}>{a.cover_letter}</p>
+                </DetailSection>
+              </div>
+            )}
+
+            {/* Décision — pleine largeur */}
+            <div style={{ gridColumn: '1 / -1' }}>
+              <DetailSection title="Décision" icon={CalendarClock}
+                right={
+                  <button onClick={() => { setApplicationForInterview(a); setInterviewDialogOpen(true); }}
+                    className="ghost-btn"><Calendar size={13} /> Planifier un entretien</button>
+                }>
+                <div style={{ display: 'grid', gap: 14 }}>
+                  <div>
+                    <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 8px' }}>Changer le statut</p>
+                    <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                      <Select value={newStatus} onValueChange={setNewStatus}>
+                        <SelectTrigger className="text-white" style={{ flex: '1 1 200px', background: INPUT_BG, border: `1px solid ${BORDER}`, borderRadius: 11 }}>
+                          <SelectValue placeholder="Choisir un statut…" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pending">En attente</SelectItem>
+                          <SelectItem value="reviewing">En examen</SelectItem>
+                          <SelectItem value="interview">Entretien programmé</SelectItem>
+                          <SelectItem value="accepted">Acceptée</SelectItem>
+                          <SelectItem value="rejected">Rejetée</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button onClick={handleStatusUpdate} disabled={updating || !newStatus}
+                        style={{ background: '#fff', color: '#141414', fontWeight: 700, border: 'none' }}>
+                        {updating ? 'Mise à jour…' : 'Enregistrer'}
+                      </Button>
                     </div>
                   </div>
-                  {/* Poste · statut (desktop) */}
-                  <div className="only-d" style={{ minWidth: 0 }}>
-                    <p style={{ color: '#e5e7eb', fontSize: 12.5, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{application.position}</p>
-                    <span style={{ display: 'inline-flex', marginTop: 2 }}>{getStatusBadge(application.status)}</span>
+                  <div>
+                    <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 8px' }}>Notes internes</p>
+                    <Textarea value={adminNotes} onChange={(e) => setAdminNotes(e.target.value)} rows={4}
+                      className="text-white" placeholder="Notes réservées à l'équipe…"
+                      style={{ background: INPUT_BG, border: `1px solid ${BORDER}`, borderRadius: 12 }} />
                   </div>
-                  {/* Date (desktop) */}
-                  <div className="only-d" style={{ minWidth: 0 }}>
-                    <span style={{ color: '#6b7280', fontSize: 12, whiteSpace: 'nowrap' }}>
-                      {format(new Date(application.created_at), 'd MMM yyyy', { locale: fr })}
-                    </span>
-                  </div>
-                  <ChevronRight size={15} color="rgba(255,255,255,0.25)" style={{ justifySelf: 'end' }} />
                 </div>
-              </DialogTrigger>
-              <DialogContent
-                className="max-w-4xl max-h-[80vh] overflow-y-auto"
-                style={{ background: CARD, border: `1px solid ${BORDER}` }}
-              >
-                <DialogHeader>
-                              <DialogTitle style={{ color: '#fff' }}>
-                                Candidature - {selectedApplication?.first_name} {selectedApplication?.last_name}
-                              </DialogTitle>
-                            </DialogHeader>
-                            {selectedApplication && (
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {/* Informations personnelles */}
-                                <Card style={innerCardStyle}>
-                                  <CardHeader>
-                                    <CardTitle style={{ color: '#fff', fontSize: 18 }}>Informations personnelles</CardTitle>
-                                  </CardHeader>
-                                  <CardContent className="space-y-3">
-                                    <div className="flex items-center space-x-2">
-                                      <Mail className="w-4 h-4" style={{ color: '#9ca3af' }} />
-                                      <span style={{ color: '#9ca3af' }}>{selectedApplication.email}</span>
-                                    </div>
-                                    {selectedApplication.phone && (
-                                      <div className="flex items-center space-x-2">
-                                        <Phone className="w-4 h-4" style={{ color: '#9ca3af' }} />
-                                        <span style={{ color: '#9ca3af' }}>{selectedApplication.phone}</span>
-                                      </div>
-                                    )}
-                                    {selectedApplication.location && (
-                                      <div className="flex items-center space-x-2">
-                                        <MapPin className="w-4 h-4" style={{ color: '#9ca3af' }} />
-                                        <span style={{ color: '#9ca3af' }}>{selectedApplication.location}</span>
-                                      </div>
-                                    )}
-                                    {selectedApplication.experience_years && (
-                                      <div className="flex items-center space-x-2">
-                                        <Briefcase className="w-4 h-4" style={{ color: '#9ca3af' }} />
-                                        <span style={{ color: '#9ca3af' }}>{selectedApplication.experience_years} années d'expérience</span>
-                                      </div>
-                                    )}
-                                  </CardContent>
-                                </Card>
-
-                                {/* Détails candidature */}
-                                <Card style={innerCardStyle}>
-                                  <CardHeader>
-                                    <CardTitle style={{ color: '#fff', fontSize: 18 }}>Détails candidature</CardTitle>
-                                  </CardHeader>
-                                  <CardContent className="space-y-3">
-                                    <div>
-                                      <span style={{ color: '#fff', fontWeight: 500 }}>Poste : </span>
-                                      <span style={{ color: '#9ca3af' }}>{selectedApplication.position}</span>
-                                    </div>
-                                    {selectedApplication.availability && (
-                                      <div className="flex items-center space-x-2">
-                                        <Clock className="w-4 h-4" style={{ color: '#9ca3af' }} />
-                                        <span style={{ color: '#9ca3af' }}>{selectedApplication.availability}</span>
-                                      </div>
-                                    )}
-                                    {selectedApplication.salary_expectation && (
-                                      <div className="flex items-center space-x-2">
-                                        <DollarSign className="w-4 h-4" style={{ color: '#9ca3af' }} />
-                                        <span style={{ color: '#9ca3af' }}>{selectedApplication.salary_expectation}</span>
-                                      </div>
-                                    )}
-                                    <div className="flex items-center space-x-2">
-                                      <Calendar className="w-4 h-4" style={{ color: '#9ca3af' }} />
-                                      <span style={{ color: '#9ca3af' }}>Candidature du {format(new Date(selectedApplication.created_at), 'dd/MM/yyyy à HH:mm', { locale: fr })}</span>
-                                    </div>
-                                  </CardContent>
-                                </Card>
-
-                                {/* Liens */}
-                                <Card style={innerCardStyle}>
-                                  <CardHeader>
-                                    <CardTitle style={{ color: '#fff', fontSize: 18 }}>Documents et liens</CardTitle>
-                                  </CardHeader>
-                                  <CardContent className="space-y-3">
-                                    {selectedApplication.cv_url && (
-                                      <Button
-                                        onClick={() => handleDownloadCV(selectedApplication.cv_url, selectedApplication.first_name, selectedApplication.last_name)}
-                                        className="w-full"
-                                        style={{ background: '#fff', color: '#141414', fontWeight: 700 }}
-                                      >
-                                        <Download className="w-4 h-4 mr-2" />
-                                        Télécharger le CV
-                                      </Button>
-                                    )}
-                                    {selectedApplication.linkedin_profile && (
-                                      <a
-                                        href={selectedApplication.linkedin_profile}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center space-x-2"
-                                        style={{ color: '#fff' }}
-                                      >
-                                        <ExternalLink className="w-4 h-4" />
-                                        <span>Profil LinkedIn</span>
-                                      </a>
-                                    )}
-                                    {selectedApplication.portfolio_url && (
-                                      <a
-                                        href={selectedApplication.portfolio_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center space-x-2"
-                                        style={{ color: '#fff' }}
-                                      >
-                                        <ExternalLink className="w-4 h-4" />
-                                        <span>Portfolio</span>
-                                      </a>
-                                    )}
-                                  </CardContent>
-                                </Card>
-
-                                {/* Lettre de motivation */}
-                                {selectedApplication.cover_letter && (
-                                  <Card style={innerCardStyle} className="md:col-span-2">
-                                    <CardHeader>
-                                      <CardTitle style={{ color: '#fff', fontSize: 18 }}>Lettre de motivation</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                      <p style={{ color: '#9ca3af', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
-                                        {selectedApplication.cover_letter}
-                                      </p>
-                                    </CardContent>
-                                  </Card>
-                                )}
-
-                                {/* Gestion du statut */}
-                                <Card style={innerCardStyle} className="md:col-span-2">
-                                  <CardHeader>
-                                    <CardTitle style={{ color: '#fff', fontSize: 18 }}>Gestion de la candidature</CardTitle>
-                                  </CardHeader>
-                                  <CardContent className="space-y-4">
-                                    <div>
-                                      <label style={{ color: '#fff', fontWeight: 500, marginBottom: 8, display: 'block' }}>Statut actuel :</label>
-                                      {getStatusBadge(selectedApplication.status)}
-                                    </div>
-
-                                    <div>
-                                      <label style={{ color: '#fff', fontWeight: 500, marginBottom: 8, display: 'block' }}>Nouveau statut :</label>
-                                      <Select value={newStatus} onValueChange={setNewStatus}>
-                                        <SelectTrigger
-                                          className="text-white"
-                                          style={{ background: INPUT_BG, border: `1px solid ${BORDER}`, borderRadius: 12 }}
-                                        >
-                                          <SelectValue placeholder="Choisir un statut" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                          <SelectItem value="pending">En attente</SelectItem>
-                                          <SelectItem value="reviewing">En cours d'examen</SelectItem>
-                                          <SelectItem value="interview">Entretien programmé</SelectItem>
-                                          <SelectItem value="accepted">Acceptée</SelectItem>
-                                          <SelectItem value="rejected">Rejetée</SelectItem>
-                                        </SelectContent>
-                                      </Select>
-                                    </div>
-
-                                    <div>
-                                      <label style={{ color: '#fff', fontWeight: 500, marginBottom: 8, display: 'block' }}>Notes administratives :</label>
-                                      <Textarea
-                                        value={adminNotes}
-                                        onChange={(e) => setAdminNotes(e.target.value)}
-                                        className="text-white"
-                                        style={{ background: INPUT_BG, border: `1px solid ${BORDER}`, borderRadius: 12 }}
-                                        placeholder="Ajouter des notes internes..."
-                                        rows={4}
-                                      />
-                                    </div>
-
-                                    <Button
-                                      onClick={handleStatusUpdate}
-                                      disabled={updating || !newStatus}
-                                      className="w-full"
-                                      style={{ background: '#fff', color: '#141414', fontWeight: 700 }}
-                                    >
-                                      {updating ? 'Mise à jour...' : 'Mettre à jour'}
-                                    </Button>
-                                  </CardContent>
-                                </Card>
-                              </div>
-                            )}
-              </DialogContent>
-            </Dialog>
-          ))}
-
-          {filteredApplications.length === 0 && (
-            <div style={{ padding: '40px 20px', textAlign: 'center' }}>
-              <Users size={24} color="#4b5563" style={{ margin: '0 auto 10px' }} />
-              <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>Aucune candidature trouvée.</p>
+              </DetailSection>
             </div>
-          )}
-        </div>
+          </div>
+        </DrillPage>
+      </>
+    );
+  }
+
+  // ── LISTE ────────────────────────────────────────────────────────────────────
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14, width: '100%', minWidth: 0 }}>
+      <style>{drillStyles}</style>
+
+      <PageHeader title="Candidatures" sub={`${applications.length} candidature(s) · ${filtered.length} affichée(s)`} />
+
+      <div style={{ display: 'flex', gap: 7, overflowX: 'auto', scrollbarWidth: 'none' }}>
+        {FILTERS.map(f => {
+          const count = f.id === 'all' ? applications.length : applications.filter(a => a.status === f.id).length;
+          return <FilterChip key={f.id} label={f.label} count={count} selected={filter === f.id} onClick={() => setFilter(f.id)} />;
+        })}
       </div>
-    </>
+
+      <div className="crm-table crm-fade">
+        <div className="crm-thead cols-team">
+          <span className="crm-th">Candidat</span>
+          <span className="crm-th">Poste · Statut</span>
+          <span className="crm-th">Date</span>
+          <span className="crm-th" />
+        </div>
+        {filtered.map((a) => (
+          <div key={a.id} className="crm-row cols-team clickable" onClick={() => open(a)}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+              <Avatar name={`${a.first_name} ${a.last_name}`} size={32} />
+              <div style={{ minWidth: 0 }}>
+                <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.first_name} {a.last_name}</p>
+                <p style={{ color: '#6b7280', fontSize: 12, margin: '1px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.email}</p>
+                <span className="only-m" style={{ marginTop: 4, display: 'inline-flex', gap: 8, alignItems: 'center' }}>
+                  <span style={{ color: '#9ca3af', fontSize: 12 }}>{a.position}</span>
+                  <StatusText status={a.status} label={STATUS_LABEL[a.status]} size={11.5} />
+                </span>
+              </div>
+            </div>
+            <div className="only-d" style={{ minWidth: 0 }}>
+              <p style={{ color: '#e5e7eb', fontSize: 12.5, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.position}</p>
+              <span style={{ display: 'inline-flex', marginTop: 2 }}><StatusText status={a.status} label={STATUS_LABEL[a.status]} /></span>
+            </div>
+            <div className="only-d" style={{ minWidth: 0 }}>
+              <span style={{ color: '#6b7280', fontSize: 12, whiteSpace: 'nowrap' }}>{format(new Date(a.created_at), 'd MMM yyyy', { locale: fr })}</span>
+            </div>
+            <ChevronRight size={15} color="rgba(255,255,255,0.25)" style={{ justifySelf: 'end' }} />
+          </div>
+        ))}
+        {filtered.length === 0 && (
+          <div style={{ padding: '40px 20px', textAlign: 'center' }}>
+            <Users size={24} color="#4b5563" style={{ margin: '0 auto 10px' }} />
+            <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>Aucune candidature trouvée.</p>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

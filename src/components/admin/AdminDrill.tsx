@@ -1,4 +1,4 @@
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Copy } from 'lucide-react';
 
 /**
  * Langage visuel du back-office — style CRM moderne (référence : Attio) :
@@ -223,6 +223,41 @@ export function SwitchPill({ icon: Icon, label, count, selected, danger, onClick
       {count !== undefined && <span style={{ fontSize: 10.5, color: fg, opacity: 0.7 }}>{count}</span>}
       {selected && <CheckCircle2 size={13} color="rgba(255,255,255,0.8)" />}
     </button>
+  );
+}
+
+/** Section de page de détail — carte arrondie sobre avec titre + icône. */
+export function DetailSection({ title, icon: Icon, right, children, style }: { title?: string; icon?: any; right?: React.ReactNode; children: React.ReactNode; style?: React.CSSProperties }) {
+  return (
+    <section style={{ background: 'rgba(255,255,255,0.025)', border: `1px solid ${BORDER}`, borderRadius: 16, padding: 16, ...style }}>
+      {title && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+            {Icon && <Icon size={15} color="#9ca3af" strokeWidth={1.9} />}
+            <h3 style={{ color: '#fff', fontSize: 13.5, fontWeight: 700, margin: 0, letterSpacing: '-0.01em' }}>{title}</h3>
+          </div>
+          {right}
+        </div>
+      )}
+      {children}
+    </section>
+  );
+}
+
+/** Champ label/valeur — libellé discret en majuscules, valeur nette. */
+export function Field({ label, value, mono, copyable, onCopy }: { label: string; value: React.ReactNode; mono?: boolean; copyable?: boolean; onCopy?: () => void }) {
+  return (
+    <div style={{ minWidth: 0 }}>
+      <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 3px' }}>{label}</p>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+        <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 500, margin: 0, fontFamily: mono ? 'ui-monospace,Menlo,monospace' : undefined, wordBreak: 'break-word', minWidth: 0 }}>{value}</p>
+        {copyable && onCopy && (
+          <button onClick={onCopy} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280', padding: 2, flexShrink: 0, display: 'flex' }}>
+            <Copy size={13} />
+          </button>
+        )}
+      </div>
+    </div>
   );
 }
 

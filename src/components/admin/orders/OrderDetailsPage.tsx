@@ -255,10 +255,10 @@ export function OrderDetailsPage({
                 <ArrowLeft className="w-4.5 h-4.5 text-white" />
               </button>
               <div
-                className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+                className="w-11 h-11 rounded-2xl hidden sm:flex items-center justify-center flex-shrink-0"
                 style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
               >
-                <Icon className="w-6 h-6 text-white" />
+                <Icon className="w-5 h-5 text-white" />
               </div>
               <div className="min-w-0">
                 <h1 className="text-lg font-semibold text-white tracking-tight leading-tight">
@@ -274,10 +274,10 @@ export function OrderDetailsPage({
                 </button>
               </div>
             </div>
-            <div className="flex flex-col items-end gap-2">
+            <div className="flex flex-col items-end gap-1.5">
               {statusBadge(order.status)}
               <div className="text-right">
-                <div className="text-xl sm:text-2xl font-bold text-white leading-none tracking-tight">{formattedAmount}</div>
+                <div className="text-lg sm:text-2xl font-bold text-white leading-none tracking-tight">{formattedAmount}</div>
                 <div className="text-xs text-[#9ca3af] mt-1">{formattedSub}</div>
               </div>
             </div>

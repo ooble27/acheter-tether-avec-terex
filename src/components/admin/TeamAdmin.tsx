@@ -6,7 +6,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Users, UserPlus, Trash2, RefreshCw, Loader2, Shield, Inbox, FileCheck, Mail, UserCheck, Headphones } from 'lucide-react';
-import { PageHeader, StatStrip, Avatar, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
+import { PageHeader, Avatar, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -252,11 +252,6 @@ export function TeamAdmin() {
     );
   }
 
-  // Effectif par rôle
-  const roleCounts = ROLES
-    .map(r => ({ ...r, n: members.filter(m => m.role === r.id).length }))
-    .filter(r => r.n > 0);
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       <style>{drillStyles}</style>
@@ -276,10 +271,6 @@ export function TeamAdmin() {
           </>
         }
       />
-
-      {roleCounts.length > 0 && (
-        <StatStrip items={roleCounts.map(r => ({ label: r.label, value: r.n }))} />
-      )}
 
       {membersSection}
       {confirmDialog}

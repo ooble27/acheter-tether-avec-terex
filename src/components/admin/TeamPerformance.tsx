@@ -194,46 +194,40 @@ export function TeamPerformance() {
           <div>
             {stats.map((s, i) => {
               const share = totals.completed > 0 ? Math.round((s.completed / totals.completed) * 100) : 0;
+              const metric = (value: string, label: string, dim = false) => (
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ color: dim ? '#9ca3af' : '#fff', fontSize: 14, fontWeight: 700, margin: 0, whiteSpace: 'nowrap' }}>{value}</p>
+                  <p style={{ color: '#6b7280', fontSize: 10.5, margin: '1px 0 0' }}>{label}</p>
+                </div>
+              );
               return (
-                <div key={s.actorId} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px', borderBottom: i < stats.length - 1 ? `1px solid ${BORDER}` : 'none', flexWrap: 'wrap' }}>
-                  {/* Rang + avatar */}
-                  <span style={{ width: 22, color: i === 0 ? '#fff' : '#6b7280', fontSize: 13, fontWeight: 700, flexShrink: 0 }}>#{i + 1}</span>
-                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#2d2d2d', border: `1px solid rgba(255,255,255,0.1)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 13, fontWeight: 700, flexShrink: 0 }}>
-                    {(s.name || 'O').slice(0, 1).toUpperCase()}
-                  </div>
-
-                  {/* Nom + part avec barre de progression */}
-                  <div style={{ flex: 1, minWidth: 160 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <p style={{ color: '#fff', fontSize: 14, fontWeight: 600, margin: 0 }}>{s.name}</p>
-                      {i === 0 && stats.length > 1 && <Trophy size={13} color="rgba(255,255,255,0.6)" />}
+                <div key={s.actorId} style={{ padding: '14px 16px', borderBottom: i < stats.length - 1 ? `1px solid ${BORDER}` : 'none' }}>
+                  {/* Ligne identité : rang + avatar + nom + part */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <span style={{ width: 20, textAlign: 'center', color: i === 0 ? '#fff' : '#6b7280', fontSize: 13, fontWeight: 700, flexShrink: 0 }}>{i + 1}</span>
+                    <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#2d2d2d', border: `1px solid rgba(255,255,255,0.1)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 13, fontWeight: 700, flexShrink: 0 }}>
+                      {(s.name || 'O').slice(0, 1).toUpperCase()}
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
-                      <div style={{ flex: 1, maxWidth: 220, height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
-                        <div style={{ width: `${share}%`, height: '100%', background: 'rgba(255,255,255,0.55)', borderRadius: 2 }} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                        <p style={{ color: '#fff', fontSize: 14, fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.name}</p>
+                        {i === 0 && stats.length > 1 && <Trophy size={13} color="rgba(255,255,255,0.6)" style={{ flexShrink: 0 }} />}
                       </div>
-                      <span style={{ color: '#6b7280', fontSize: 11 }}>{share}%</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 5 }}>
+                        <div style={{ flex: 1, maxWidth: 240, height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
+                          <div style={{ width: `${share}%`, height: '100%', background: 'rgba(255,255,255,0.55)', borderRadius: 2 }} />
+                        </div>
+                        <span style={{ color: '#6b7280', fontSize: 11, flexShrink: 0 }}>{share}%</span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Chiffres */}
-                  <div style={{ display: 'flex', gap: 22, flexShrink: 0, flexWrap: 'wrap' }}>
-                    <div style={{ textAlign: 'right' }}>
-                      <p style={{ color: '#fff', fontSize: 15, fontWeight: 700, margin: 0 }}>{fmt(s.completed)}</p>
-                      <p style={{ color: '#6b7280', fontSize: 10.5, margin: 0 }}>terminées</p>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <p style={{ color: '#fff', fontSize: 15, fontWeight: 700, margin: 0 }}>{fmt(s.volumeCfa)} CFA</p>
-                      <p style={{ color: '#6b7280', fontSize: 10.5, margin: 0 }}>volume</p>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <p style={{ color: '#fff', fontSize: 15, fontWeight: 700, margin: 0 }}>{fmt(Math.round(s.volumeUsdt))}</p>
-                      <p style={{ color: '#6b7280', fontSize: 10.5, margin: 0 }}>USDT</p>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <p style={{ color: '#9ca3af', fontSize: 15, fontWeight: 700, margin: 0 }}>{fmt(s.claims)}</p>
-                      <p style={{ color: '#6b7280', fontSize: 10.5, margin: 0 }}>prises en charge</p>
-                    </div>
+                  {/* Chiffres : grille régulière (2 col mobile, 4 col desktop), alignée sous le nom */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(96px, 1fr))', gap: '10px 16px', marginTop: 12, paddingLeft: 46 }}>
+                    {metric(fmt(s.completed), 'terminées')}
+                    {metric(`${fmt(s.volumeCfa)}`, 'volume CFA')}
+                    {metric(fmt(Math.round(s.volumeUsdt)), 'USDT')}
+                    {metric(fmt(s.claims), 'prises en charge', true)}
                   </div>
                 </div>
               );
