@@ -3,7 +3,7 @@ import { useOrders, UnifiedOrder } from '@/hooks/useOrders';
 import { useOrderOps } from '@/hooks/useOrderOps';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { OrderDetailsPage } from './OrderDetailsPage';
-import { Coins, HandCoins, Send, Clock, Hand, User, RefreshCw, Inbox, CheckCircle2, UserCheck, Users } from 'lucide-react';
+import { Coins, HandCoins, Send, Clock, Hand, User, RefreshCw, Inbox, CheckCircle2, Users } from 'lucide-react';
 import { HubCard, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
