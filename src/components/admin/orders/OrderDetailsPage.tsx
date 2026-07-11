@@ -2,7 +2,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { UnifiedOrder } from '@/hooks/useOrders';
 import {
   Coins, HandCoins, Send, Copy, CheckCircle, XCircle, Clock, ArrowLeft,
-  Hand, History, Lock, ArrowRight, Hash, Mail,
+  Hand, Lock, ArrowRight, Hash, Mail,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -26,10 +26,14 @@ const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const RED = '#e07a7a';
 
+// Toujours afficher le vrai prestataire (Wave, Orange Money…), jamais un
+// générique « Mobile Money ».
 const PAYMENT_LABELS: Record<string, string> = {
-  card: 'Carte bancaire', mobile: 'Mobile Money', wave: 'Wave', orange_money: 'Orange Money',
+  card: 'Carte bancaire', wave: 'Wave', orange_money: 'Orange Money', om: 'Orange Money',
   bank: 'Virement bancaire', bank_transfer: 'Virement bancaire', interac: 'Interac',
 };
+const prettyMethod = (pm?: string | null) =>
+  (pm && PAYMENT_LABELS[pm]) || (pm ? pm.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : '—');
 
 const TYPE_META: Record<string, { label: string; Icon: any }> = {
   buy: { label: 'Achat USDT', Icon: Coins },
@@ -79,6 +83,7 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
   const [cancellationReason, setCancellationReason] = useState('');
   const [showCancellationForm, setShowCancellationForm] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
+  const [section, setSection] = useState('client');
   const { toast } = useToast();
 
   const { claimOrder, releaseOrder, logOrderEvent, currentUserId } = useOrderOps();
@@ -178,7 +183,19 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
   const amountLine = `${Number(order.amount).toLocaleString('fr-FR')} ${order.currency}`;
   const usdtLine = `${Number(order.usdt_amount || 0).toLocaleString('fr-FR')} USDT`;
   const openActive = order.status !== 'completed' && order.status !== 'cancelled' && order.status !== 'failed';
-  const method = PAYMENT_LABELS[order.payment_method || ''] || order.payment_method || '—';
+  const method = prettyMethod(order.payment_method);
+
+  // Onglets (pastilles) — on ne défile plus : on choisit une section.
+  const TABS: { id: string; label: string }[] = [
+    { id: 'client', label: 'Client' },
+    { id: 'transaction', label: 'Transaction' },
+    { id: 'paiement', label: 'Paiement' },
+    ...(order.type === 'buy' && order.wallet_address ? [{ id: 'destination', label: 'Destination' }] : []),
+    ...(order.type === 'transfer' ? [{ id: 'beneficiaire', label: 'Bénéficiaire' }] : []),
+    ...(parsedNotes.sections.length > 0 ? [{ id: 'details', label: 'Détails' }] : []),
+    { id: 'historique', label: 'Historique' },
+  ];
+  const activeSection = TABS.some(t => t.id === section) ? section : 'client';
 
   return (
     <div style={{ background: '#1a1a1a', minHeight: '100vh' }} className="text-white w-full overflow-x-hidden">
@@ -279,35 +296,57 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
             </div>
           )}
 
-          {/* CARTE D'INFOS UNIQUE — lignes label/valeur, groupées (style Acheter/Vendre) */}
+          {/* PASTILLES — on choisit une section au lieu de tout dérouler */}
+          <div style={{ display: 'flex', gap: 7, overflowX: 'auto', scrollbarWidth: 'none', paddingBottom: 2 }}>
+            {TABS.map(t => {
+              const sel = activeSection === t.id;
+              return (
+                <button key={t.id} onClick={() => setSection(t.id)}
+                  style={{
+                    flexShrink: 0, whiteSpace: 'nowrap', padding: '8px 15px', borderRadius: 100, cursor: 'pointer',
+                    fontSize: 13, fontWeight: sel ? 600 : 500, transition: 'all 0.15s',
+                    border: `1px solid ${sel ? 'rgba(255,255,255,0.40)' : 'rgba(255,255,255,0.14)'}`,
+                    background: sel ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.05)',
+                    color: sel ? '#fff' : 'rgba(255,255,255,0.55)', outline: 'none', WebkitTapHighlightColor: 'transparent',
+                  }}>
+                  {t.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* CONTENU DE LA SECTION ACTIVE */}
           <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden' }}>
-            <GroupLabel first>Client</GroupLabel>
-            <Row label="Nom complet" value={userName || '—'} />
-            <Row label="Email" value={userEmail || '—'} copyable={!!userEmail} onCopy={() => copy(userEmail, 'Email copié')} />
-            <Row label="Téléphone" value={userPhone || '—'} copyable={!!userPhone} onCopy={() => copy(userPhone, 'Téléphone copié')} />
-            <Row label="ID utilisateur" value={`${order.user_id.slice(0, 8)}…${order.user_id.slice(-4)}`} mono copyable onCopy={() => copy(order.user_id, 'ID copié')} last />
-
-            <GroupLabel>Transaction</GroupLabel>
-            <Row label={`Montant ${order.currency}`} value={Number(order.amount).toLocaleString('fr-FR')} />
-            <Row label="USDT" value={String(order.usdt_amount || 0)} />
-            <Row label="Taux" value={`${order.exchange_rate} ${order.currency}/USDT`} />
-            {order.payment_method && <Row label="Méthode" value={method} />}
-            {order.network && <Row label="Réseau" value={order.network} />}
-            <Row label="Créée le" value={format(new Date(order.created_at), "d MMM yyyy 'à' HH:mm", { locale: fr })} last={!order.payment_reference} />
-            {order.payment_reference && <Row label="Réf. paiement" value={order.payment_reference} mono last />}
-
-            {/* Destination crypto (achat) */}
-            {order.type === 'buy' && order.wallet_address && (
+            {activeSection === 'client' && (
               <>
-                <GroupLabel>Destination crypto</GroupLabel>
-                <Row label={`Adresse wallet (${order.network || 'TRC20'})`} value={order.wallet_address} mono copyable onCopy={() => copy(order.wallet_address!, 'Adresse copiée')} stacked last />
+                <Row label="Nom complet" value={userName || '—'} />
+                <Row label="Email" value={userEmail || '—'} copyable={!!userEmail} onCopy={() => copy(userEmail, 'Email copié')} />
+                <Row label="Téléphone" value={userPhone || '—'} copyable={!!userPhone} onCopy={() => copy(userPhone, 'Téléphone copié')} />
+                <Row label="ID utilisateur" value={`${order.user_id.slice(0, 8)}…${order.user_id.slice(-4)}`} mono copyable onCopy={() => copy(order.user_id, 'ID copié')} last />
               </>
             )}
-
-            {/* Bénéficiaire (transfert) */}
-            {order.type === 'transfer' && (
+            {activeSection === 'transaction' && (
               <>
-                <GroupLabel>Bénéficiaire</GroupLabel>
+                <Row label={`Montant ${order.currency}`} value={Number(order.amount).toLocaleString('fr-FR')} />
+                <Row label="USDT" value={String(order.usdt_amount || 0)} />
+                <Row label="Taux" value={`${order.exchange_rate} ${order.currency}/USDT`} />
+                <Row label="Créée le" value={format(new Date(order.created_at), "d MMM yyyy 'à' HH:mm", { locale: fr })} last />
+              </>
+            )}
+            {activeSection === 'paiement' && (
+              <>
+                <Row label="Méthode" value={method} last={!order.payment_reference} />
+                {order.payment_reference && <Row label="Référence" value={order.payment_reference} mono last />}
+              </>
+            )}
+            {activeSection === 'destination' && order.wallet_address && (
+              <>
+                <Row label="Réseau" value={order.network || 'TRC20'} />
+                <Row label="Adresse wallet" value={order.wallet_address} mono copyable onCopy={() => copy(order.wallet_address!, 'Adresse copiée')} stacked last />
+              </>
+            )}
+            {activeSection === 'beneficiaire' && (
+              <>
                 {order.recipient_name && <Row label="Nom" value={order.recipient_name} />}
                 {order.recipient_country && <Row label="Pays" value={order.recipient_country} />}
                 {order.recipient_phone && <Row label="Téléphone" value={order.recipient_phone} copyable onCopy={() => copy(order.recipient_phone!, 'Téléphone copié')} />}
@@ -316,18 +355,43 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
                 {order.total_amount !== undefined && <Row label="Montant à recevoir" value={`${order.total_amount} ${order.to_currency || ''}`} last />}
               </>
             )}
-
-            {/* Détails parsés */}
-            {parsedNotes.sections.map((section, si) => (
+            {activeSection === 'details' && parsedNotes.sections.map((ns, si) => (
               <div key={si}>
-                <GroupLabel>{section.title}</GroupLabel>
-                {section.fields.map((field, fi) => (
+                {si > 0 && <GroupLabel>{ns.title}</GroupLabel>}
+                {si === 0 && ns.title && <GroupLabel first>{ns.title}</GroupLabel>}
+                {ns.fields.map((field, fi) => (
                   <Row key={fi} label={field.label} value={field.value}
                     mono={field.copyable} copyable={field.copyable} onCopy={() => copy(field.value, `${field.label} copié`)}
-                    last={si === parsedNotes.sections.length - 1 && fi === section.fields.length - 1} />
+                    last={si === parsedNotes.sections.length - 1 && fi === ns.fields.length - 1} />
                 ))}
               </div>
             ))}
+            {activeSection === 'historique' && (
+              <div style={{ padding: 16 }}>
+                {events.length === 0 ? (
+                  <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>Aucun événement — les prises en charge et changements de statut apparaîtront ici.</p>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {events.map((ev, i) => (
+                      <div key={ev.id} style={{ display: 'flex', gap: 12 }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                          <span style={{ width: 8, height: 8, borderRadius: '50%', marginTop: 5, flexShrink: 0, background: ev.action.includes('cancel') ? RED : ev.action === 'status_completed' ? '#fff' : 'rgba(255,255,255,0.45)' }} />
+                          {i < events.length - 1 && <span style={{ width: 1, flex: 1, margin: '4px 0', background: 'rgba(255,255,255,0.08)' }} />}
+                        </div>
+                        <div style={{ paddingBottom: 14, minWidth: 0 }}>
+                          <p style={{ color: '#fff', fontSize: 13, margin: 0 }}>
+                            {EVENT_LABELS[ev.action] || ev.action}
+                            {ev.actor_name && <span style={{ color: '#9ca3af' }}> — {ev.actor_name}</span>}
+                          </p>
+                          {ev.details && <p style={{ color: '#6b7280', fontSize: 12, margin: '2px 0 0', wordBreak: 'break-word' }}>{ev.details}</p>}
+                          <p style={{ color: '#4b5563', fontSize: 11, margin: '2px 0 0' }}>{format(new Date(ev.created_at), "d MMM yyyy 'à' HH:mm", { locale: fr })}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* EMAIL D'ANNULATION */}
@@ -345,37 +409,6 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
               </button>
             </div>
           )}
-
-          {/* JOURNAL */}
-          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: 16 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-              <History size={15} color="#9ca3af" />
-              <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 700, margin: 0 }}>Journal d'activité</p>
-              <span style={{ color: '#6b7280', fontSize: 12, marginLeft: 'auto' }}>{events.length} événement(s)</span>
-            </div>
-            {events.length === 0 ? (
-              <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>Aucun événement — les prises en charge et changements de statut apparaîtront ici.</p>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {events.map((ev, i) => (
-                  <div key={ev.id} style={{ display: 'flex', gap: 12 }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                      <span style={{ width: 8, height: 8, borderRadius: '50%', marginTop: 5, flexShrink: 0, background: ev.action.includes('cancel') ? RED : ev.action === 'status_completed' ? '#fff' : 'rgba(255,255,255,0.45)' }} />
-                      {i < events.length - 1 && <span style={{ width: 1, flex: 1, margin: '4px 0', background: 'rgba(255,255,255,0.08)' }} />}
-                    </div>
-                    <div style={{ paddingBottom: 14, minWidth: 0 }}>
-                      <p style={{ color: '#fff', fontSize: 13, margin: 0 }}>
-                        {EVENT_LABELS[ev.action] || ev.action}
-                        {ev.actor_name && <span style={{ color: '#9ca3af' }}> — {ev.actor_name}</span>}
-                      </p>
-                      {ev.details && <p style={{ color: '#6b7280', fontSize: 12, margin: '2px 0 0', wordBreak: 'break-word' }}>{ev.details}</p>}
-                      <p style={{ color: '#4b5563', fontSize: 11, margin: '2px 0 0' }}>{format(new Date(ev.created_at), "d MMM yyyy 'à' HH:mm", { locale: fr })}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
         </div>
       </div>
 
