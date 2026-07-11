@@ -172,21 +172,21 @@ export function OpsQueue() {
         </button>
       </div>
 
-      {/* KPIs — l'état des opérations en un coup d'œil */}
+      {/* KPIs — l'état des opérations en un coup d'œil (cartes neutres, sobres) */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10 }}>
         {[
-          { label: 'À traiter', value: unassigned.length, accent: unassigned.length > 0 },
-          { label: 'Mes commandes', value: mine.length, accent: false },
-          { label: "Par l'équipe", value: others.length, accent: false },
-          { label: "Terminées aujourd'hui", value: completedToday, accent: false },
+          { label: 'À traiter', value: String(unassigned.length) },
+          { label: 'Mes commandes', value: String(mine.length) },
+          { label: "Par l'équipe", value: String(others.length) },
+          { label: "Terminées aujourd'hui", value: String(completedToday) },
         ].map(k => (
-          <div key={k.label} style={{ background: CARD, border: `1px solid ${k.accent ? 'rgba(251,191,36,0.3)' : BORDER}`, borderRadius: 14, padding: '14px 16px' }}>
+          <div key={k.label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '14px 16px' }}>
             <p style={{ color: '#6b7280', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 6px' }}>{k.label}</p>
-            <p style={{ color: k.accent ? '#fbbf24' : '#fff', fontSize: 24, fontWeight: 700, margin: 0, lineHeight: 1 }}>{k.value}</p>
+            <p style={{ color: '#fff', fontSize: 24, fontWeight: 700, margin: 0, lineHeight: 1 }}>{k.value}</p>
           </div>
         ))}
         {oldest && (
-          <div style={{ background: CARD, border: `1px solid ${oldest.urgent ? 'rgba(248,113,113,0.3)' : BORDER}`, borderRadius: 14, padding: '14px 16px' }}>
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '14px 16px' }}>
             <p style={{ color: '#6b7280', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 6px' }}>Plus ancienne en file</p>
             <p style={{ color: oldest.urgent ? '#f87171' : '#fff', fontSize: 16, fontWeight: 700, margin: 0, lineHeight: 1.2 }}>{oldest.text}</p>
           </div>
