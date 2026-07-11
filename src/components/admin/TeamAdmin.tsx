@@ -6,7 +6,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Users, UserPlus, Trash2, RefreshCw, Loader2, Shield, Inbox, FileCheck, Mail, UserCheck, Headphones, CheckCircle2 } from 'lucide-react';
-import { HubPill, StatPill, SectionLabel, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
+import { HubTile, TileGrid, StatStrip, SectionLabel, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -264,20 +264,18 @@ export function TeamAdmin() {
       {roleCounts.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <SectionLabel>Effectif</SectionLabel>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {roleCounts.map((r, i) => (
-              <StatPill key={r.id} icon={r.Icon} value={r.n} label={r.label} delay={i * 0.04} />
-            ))}
-          </div>
+          <StatStrip items={roleCounts.map(r => ({ label: r.label, value: r.n }))} />
         </div>
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <SectionLabel>Gestion</SectionLabel>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          <HubPill icon={UserPlus} label="Ajouter un membre" delay={0.1} onClick={() => setView('add')} />
-          <HubPill icon={Users} label="Membres de l'équipe" count={members.length} delay={0.15} onClick={() => setView('members')} />
-        </div>
+        <TileGrid>
+          <HubTile icon={UserPlus} label="Ajouter un membre" caption="attribuer un rôle à un compte" delay={0.05}
+            onClick={() => setView('add')} />
+          <HubTile icon={Users} label="Membres de l'équipe" count={members.length} caption="voir et retirer les accès" delay={0.1}
+            onClick={() => setView('members')} />
+        </TileGrid>
       </div>
     </div>
   );

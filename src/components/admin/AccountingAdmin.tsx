@@ -7,7 +7,7 @@ import {
   HandCoins, Send, BarChart3,
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { StatPill, SectionLabel, drillStyles } from '@/components/admin/AdminDrill';
+import { StatStrip, SectionLabel, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -132,16 +132,16 @@ export function AccountingAdmin() {
         </button>
       </div>
 
-      {/* KPIs réels — chiffres compacts, dimensionnés à leur contenu */}
+      {/* KPIs réels — une seule bande de chiffres, dense */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <style>{drillStyles}</style>
         <SectionLabel>Chiffres de la période</SectionLabel>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          <StatPill icon={TrendingUp} value={`${fmt(kpis.volume)} CFA`} label="volume traité" delay={0} />
-          <StatPill icon={Wallet} value={`${fmt(kpis.revenue)} CFA`} label="revenus estimés" delay={0.04} />
-          <StatPill icon={CheckCircle2} value={fmt(kpis.count)} label="commandes terminées" delay={0.08} />
-          <StatPill icon={Coins} value={fmt(kpis.usdt)} label="USDT échangés" delay={0.12} />
-        </div>
+        <StatStrip items={[
+          { label: 'Volume traité', value: `${fmt(kpis.volume)} CFA` },
+          { label: 'Revenus estimés', value: `${fmt(kpis.revenue)} CFA` },
+          { label: 'Commandes terminées', value: fmt(kpis.count) },
+          { label: 'USDT échangés', value: fmt(kpis.usdt) },
+        ]} />
       </div>
 
       {/* Répartition par activité */}

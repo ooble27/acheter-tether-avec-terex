@@ -1,82 +1,136 @@
 import { ArrowLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
 
 /**
- * Langage visuel du back-office — pilules compactes et arrondies,
- * le même design que le sélecteur de réseau et le choix des rôles :
- * - HubPill      : pilule de NAVIGATION (icône ronde, libellé, compteur,
- *                  chevron) → on entre dans une sous-page.
- * - SwitchPill   : pilule de SÉLECTION (état sélectionné avec coche) →
- *                  changer d'espace sans revenir en arrière.
- * - StatPill     : pilule de CHIFFRE (KPI compact, dimensionné à son
- *                  contenu — jamais de grand rectangle vide).
- * - SectionLabel : petit intitulé de section en majuscules.
- * - DrillPage    : sous-page avec bouton retour, titre et actions.
+ * Langage visuel du back-office — sobre, dense, comme une vraie application :
+ * - StatStrip  : UNE carte de chiffres, colonnes séparées par des filets fins
+ *                (style tableau de bord bancaire) — jamais de grosses boîtes vides.
+ * - HubTile    : tuile d'accès à un espace de travail (icône, grand chiffre,
+ *                libellé) — en grille, comme l'écran d'accueil d'une app.
+ * - SwitchPill : pilule de SÉLECTION uniquement (filtres, changement d'espace).
+ * - SectionLabel : petit intitulé de section discret.
+ * - DrillPage  : sous-page avec bouton retour, titre et actions.
  */
 
+const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 const ICON_BG = 'rgba(255,255,255,0.06)';
 
 export const drillStyles = `
   @keyframes drill-in { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: translateX(0); } }
-  @keyframes hub-in { from { opacity: 0; transform: translateY(8px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes hub-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   .drill-page { animation: drill-in 0.28s cubic-bezier(0.22,1,0.36,1) both; }
-  .hub-pill { animation: hub-in 0.32s cubic-bezier(0.22,1,0.36,1) both; transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease; }
-  .hub-pill:hover { border-color: rgba(255,255,255,0.40) !important; background: rgba(255,255,255,0.13) !important; transform: translateY(-1px); }
-  .hub-pill:active { transform: scale(0.97); }
-  .stat-pill { animation: hub-in 0.32s cubic-bezier(0.22,1,0.36,1) both; }
+  .hub-tile { animation: hub-in 0.35s cubic-bezier(0.22,1,0.36,1) both; transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease; }
+  .hub-tile:hover { border-color: rgba(255,255,255,0.22) !important; background: #232323 !important; transform: translateY(-2px); }
+  .hub-tile:active { transform: scale(0.98); }
+  .hub-tile:hover .tile-chev { opacity: 1; transform: translateX(0); }
+  .tile-chev { opacity: 0.45; transform: translateX(-2px); transition: opacity 0.18s ease, transform 0.18s ease; }
+  .stat-strip { animation: hub-in 0.35s cubic-bezier(0.22,1,0.36,1) both; }
   .drill-row { transition: background 0.15s ease, border-color 0.15s ease; }
   .drill-row:hover { background: rgba(255,255,255,0.03); }
 `;
 
 export function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p style={{ color: '#4b5563', fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.09em', margin: '0 0 0 4px' }}>
+    <p style={{ color: '#4b5563', fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.09em', margin: '0 0 0 2px' }}>
       {children}
     </p>
   );
 }
 
-interface HubPillProps {
+export interface StatItem {
+  label: string;
+  value: string | number;
+  /** 'urgent' teinte la valeur en rouge, 'warn' en ambre */
+  tone?: 'default' | 'urgent' | 'warn';
+}
+
+/**
+ * Bande de chiffres — une seule carte, des colonnes fines séparées par des
+ * filets. Dense sur desktop (une ligne), passe à la ligne sur mobile.
+ */
+export function StatStrip({ items, delay = 0 }: { items: StatItem[]; delay?: number }) {
+  return (
+    <div className="stat-strip"
+      style={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(auto-fit, minmax(${items.length > 4 ? 120 : 140}px, 1fr))`,
+        gap: 1, background: BORDER,
+        border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden',
+        animationDelay: `${delay}s`,
+      }}>
+      {items.map(it => {
+        const color = it.tone === 'urgent' ? '#f87171' : it.tone === 'warn' ? '#fbbf24' : '#fff';
+        return (
+          <div key={it.label} style={{ background: CARD, padding: '13px 16px', minWidth: 0 }}>
+            <p style={{ color: '#6b7280', fontSize: 10.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', margin: '0 0 5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {it.label}
+            </p>
+            <p style={{ color, fontSize: 19, fontWeight: 700, margin: 0, lineHeight: 1.1, letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {it.value}
+            </p>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+interface HubTileProps {
   icon: any;
   label: string;
   count?: number | string;
-  /** petit badge d'urgence (ambre) — ex. « 3 à traiter » */
-  urgent?: number;
-  urgentLabel?: string;
+  /** petite ligne sous le libellé — ex. « 4 à traiter » (ambre si urgent) */
+  caption?: string;
+  urgent?: boolean;
   danger?: boolean;
-  accent?: boolean;
   delay?: number;
   onClick: () => void;
 }
 
-/** Pilule de navigation — on clique, on ENTRE dans l'espace. */
-export function HubPill({ icon: Icon, label, count, urgent, urgentLabel = 'à traiter', danger, accent, delay = 0, onClick }: HubPillProps) {
+/**
+ * Tuile d'espace de travail — grille compacte façon écran d'accueil d'app :
+ * icône en haut, grand chiffre, libellé, chevron discret qui glisse au survol.
+ */
+export function HubTile({ icon: Icon, label, count, caption, urgent, danger, delay = 0, onClick }: HubTileProps) {
   return (
-    <button className="hub-pill" onClick={onClick}
+    <button className="hub-tile" onClick={onClick}
       style={{
-        display: 'inline-flex', alignItems: 'center', gap: 10,
-        padding: '9px 14px 9px 9px', borderRadius: 100, cursor: 'pointer', outline: 'none',
-        border: `1px solid ${danger ? 'rgba(239,68,68,0.25)' : accent ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.16)'}`,
-        background: accent ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)',
+        display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 14,
+        textAlign: 'left', position: 'relative', minHeight: 118,
+        background: CARD, border: `1px solid ${danger ? 'rgba(239,68,68,0.18)' : BORDER}`,
+        borderRadius: 18, padding: '15px 16px', cursor: 'pointer', outline: 'none',
         animationDelay: `${delay}s`,
         WebkitTapHighlightColor: 'transparent',
       }}>
-      <span style={{ width: 30, height: 30, borderRadius: '50%', background: danger ? 'rgba(239,68,68,0.10)' : ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-        <Icon size={14} color={danger ? '#f87171' : 'rgba(255,255,255,0.85)'} strokeWidth={1.9} />
-      </span>
-      <span style={{ color: danger ? '#f87171' : '#fff', fontSize: 13.5, fontWeight: 600, whiteSpace: 'nowrap' }}>{label}</span>
-      {count !== undefined && (
-        <span style={{ fontSize: 11.5, fontWeight: 700, padding: '2px 9px', borderRadius: 999, background: 'rgba(255,255,255,0.10)', color: danger ? '#f87171' : 'rgba(255,255,255,0.75)', flexShrink: 0 }}>
-          {count}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+        <span style={{ width: 38, height: 38, borderRadius: 12, background: danger ? 'rgba(239,68,68,0.10)' : ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Icon size={17} color={danger ? '#f87171' : 'rgba(255,255,255,0.85)'} strokeWidth={1.9} />
         </span>
-      )}
-      {!!urgent && (
-        <span style={{ fontSize: 10.5, fontWeight: 700, padding: '2px 9px', borderRadius: 999, background: 'rgba(251,191,36,0.10)', color: '#fbbf24', whiteSpace: 'nowrap', flexShrink: 0 }}>
-          {urgent} {urgentLabel}
-        </span>
-      )}
-      <ChevronRight size={14} color="rgba(255,255,255,0.30)" style={{ flexShrink: 0 }} />
+        <ChevronRight className="tile-chev" size={15} color="rgba(255,255,255,0.5)" />
+      </div>
+      <div style={{ minWidth: 0, width: '100%' }}>
+        {count !== undefined && (
+          <p style={{ color: danger ? '#f87171' : '#fff', fontSize: 23, fontWeight: 700, margin: '0 0 2px', lineHeight: 1, letterSpacing: '-0.02em' }}>{count}</p>
+        )}
+        <p style={{ color: danger ? '#f87171' : count !== undefined ? '#9ca3af' : '#fff', fontSize: 13, fontWeight: 600, margin: 0, lineHeight: 1.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {label}
+        </p>
+        {caption && (
+          <p style={{ color: urgent ? '#fbbf24' : '#4b5563', fontSize: 11, fontWeight: urgent ? 700 : 500, margin: '3px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {caption}
+          </p>
+        )}
+      </div>
     </button>
+  );
+}
+
+/** Grille des tuiles — 2 par ligne sur mobile, davantage sur grand écran. */
+export function TileGrid({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 10 }}>
+      {children}
+    </div>
   );
 }
 
@@ -89,7 +143,7 @@ interface SwitchPillProps {
   onClick: () => void;
 }
 
-/** Pilule de sélection — même design que le choix du réseau / des rôles. */
+/** Pilule de sélection — réservée aux sélecteurs (même design que le choix du réseau / des rôles). */
 export function SwitchPill({ icon: Icon, label, count, selected, danger, onClick }: SwitchPillProps) {
   const fg = danger && selected ? '#f87171' : selected ? '#fff' : 'rgba(255,255,255,0.55)';
   return (
@@ -111,37 +165,6 @@ export function SwitchPill({ icon: Icon, label, count, selected, danger, onClick
       {count !== undefined && <span style={{ fontSize: 10.5, color: fg, opacity: 0.7 }}>{count}</span>}
       {selected && <CheckCircle2 size={13} color="rgba(255,255,255,0.8)" />}
     </button>
-  );
-}
-
-interface StatPillProps {
-  icon: any;
-  value: string | number;
-  label: string;
-  /** 'urgent' teinte la valeur en rouge, 'warn' en ambre */
-  tone?: 'default' | 'urgent' | 'warn';
-  delay?: number;
-}
-
-/** KPI compact — dimensionné à son contenu, dense même sur grand écran. */
-export function StatPill({ icon: Icon, value, label, tone = 'default', delay = 0 }: StatPillProps) {
-  const valueColor = tone === 'urgent' ? '#f87171' : tone === 'warn' ? '#fbbf24' : '#fff';
-  return (
-    <div className="stat-pill"
-      style={{
-        display: 'inline-flex', alignItems: 'center', gap: 10,
-        padding: '7px 16px 7px 8px', borderRadius: 100,
-        border: `1px solid rgba(255,255,255,0.10)`, background: 'rgba(255,255,255,0.045)',
-        animationDelay: `${delay}s`,
-      }}>
-      <span style={{ width: 28, height: 28, borderRadius: '50%', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-        <Icon size={13} color="rgba(255,255,255,0.65)" strokeWidth={1.9} />
-      </span>
-      <span style={{ display: 'flex', flexDirection: 'column' }}>
-        <span style={{ color: valueColor, fontSize: 15, fontWeight: 700, lineHeight: 1.15, whiteSpace: 'nowrap' }}>{value}</span>
-        <span style={{ color: '#6b7280', fontSize: 10.5, lineHeight: 1.2, whiteSpace: 'nowrap' }}>{label}</span>
-      </span>
-    </div>
   );
 }
 

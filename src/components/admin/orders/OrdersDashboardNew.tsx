@@ -1,13 +1,13 @@
 import { useMemo, useState } from 'react';
 import {
-  Search, RefreshCw, ShoppingCart, Coins, HandCoins, Send, Trash2, Users,
+  Search, RefreshCw, Coins, HandCoins, Send, Trash2,
   Download, AlertTriangle, Clock, ChevronRight, RotateCcw, Inbox,
 } from 'lucide-react';
 import { useOrders, UnifiedOrder } from '@/hooks/useOrders';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { OrderDetailsPage } from './OrderDetailsPage';
-import { HubPill, SwitchPill, StatPill, SectionLabel, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
+import { HubTile, TileGrid, SwitchPill, StatStrip, SectionLabel, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
@@ -297,37 +297,38 @@ export function OrdersDashboardNew() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
       <style>{drillStyles}</style>
 
-      {/* Vue d'ensemble — chiffres compacts, dimensionnés à leur contenu */}
+      {/* Vue d'ensemble — une seule bande de chiffres, dense */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <SectionLabel>Aperçu</SectionLabel>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          <StatPill icon={ShoppingCart} value={activeOrders.length} label="commandes actives" delay={0} />
-          <StatPill icon={Users} value={new Set(activeOrders.map(o => o.user_id)).size} label="clients" delay={0.04} />
-          <StatPill icon={Clock} value={pendingCount} label="en attente" tone={pendingCount > 0 ? 'warn' : 'default'} delay={0.08} />
-        </div>
+        <StatStrip items={[
+          { label: 'Commandes actives', value: activeOrders.length },
+          { label: 'Clients', value: new Set(activeOrders.map(o => o.user_id)).size },
+          { label: 'En attente', value: pendingCount, tone: pendingCount > 0 ? 'warn' : 'default' },
+        ]} />
       </div>
 
-      {/* Espaces — on RENTRE dans chaque catégorie */}
+      {/* Espaces — grille de tuiles, on RENTRE dans chaque catégorie */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <SectionLabel>Espaces de travail</SectionLabel>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+        <TileGrid>
           {(['buy', 'sell', 'transfer', 'trash'] as Zone[]).map((z, i) => {
             const meta = ZONES[z];
             const list = zoneOrders[z];
             const waiting = z === 'trash' ? 0 : list.filter(o => o.status === 'pending' || o.status === 'processing').length;
             return (
-              <HubPill key={z}
+              <HubTile key={z}
                 icon={meta.Icon}
                 label={meta.label}
                 count={list.length}
-                urgent={waiting}
+                caption={z === 'trash' ? 'restaurables' : waiting > 0 ? `${waiting} à traiter` : 'à jour'}
+                urgent={waiting > 0}
                 danger={meta.danger}
-                delay={0.1 + i * 0.05}
+                delay={0.05 + i * 0.05}
                 onClick={() => setZone(z)}
               />
             );
           })}
-        </div>
+        </TileGrid>
       </div>
 
       {/* Outils */}

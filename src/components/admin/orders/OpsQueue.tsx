@@ -4,7 +4,7 @@ import { useOrderOps } from '@/hooks/useOrderOps';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { OrderDetailsPage } from './OrderDetailsPage';
 import { Coins, HandCoins, Send, Clock, Hand, User, RefreshCw, Inbox, CheckCircle2, Users } from 'lucide-react';
-import { HubPill, SwitchPill, StatPill, SectionLabel, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
+import { HubTile, TileGrid, SwitchPill, StatStrip, SectionLabel, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -192,29 +192,31 @@ export function OpsQueue() {
         </button>
       </div>
 
-      {/* KPIs — chiffres compacts, l'état des opérations en un coup d'œil */}
+      {/* KPIs — une seule bande de chiffres, l'état des opérations en un coup d'œil */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <SectionLabel>Aujourd'hui</SectionLabel>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          <StatPill icon={Inbox} value={unassigned.length} label="à traiter" tone={unassigned.length > 0 ? 'warn' : 'default'} delay={0} />
-          <StatPill icon={CheckCircle2} value={completedToday} label="terminées aujourd'hui" delay={0.04} />
-          {oldest && (
-            <StatPill icon={Clock} value={oldest.text} label="plus ancienne en file" tone={oldest.urgent ? 'urgent' : 'default'} delay={0.08} />
-          )}
-        </div>
+        <StatStrip items={[
+          { label: 'À traiter', value: unassigned.length, tone: unassigned.length > 0 ? 'warn' : 'default' },
+          { label: 'Terminées aujourd\'hui', value: completedToday },
+          ...(oldest ? [{ label: 'Plus ancienne en file', value: oldest.text, tone: (oldest.urgent ? 'urgent' : 'default') as 'urgent' | 'default' }] : []),
+        ]} />
       </div>
 
-      {/* Espaces — on RENTRE dans chaque espace de travail */}
+      {/* Espaces — grille de tuiles, on RENTRE dans chaque espace de travail */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <SectionLabel>Espaces de travail</SectionLabel>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          <HubPill icon={Hand} label="Mes commandes" count={mine.length} accent={mine.length > 0} delay={0.1}
+        <TileGrid>
+          <HubTile icon={Hand} label="Mes commandes" count={mine.length}
+            caption={mine.length > 0 ? 'en cours de traitement' : 'aucune en charge'} delay={0.05}
             onClick={() => setView('mine')} />
-          <HubPill icon={Inbox} label="File d'attente" count={unassigned.length} urgent={unassigned.length} delay={0.15}
+          <HubTile icon={Inbox} label="File d'attente" count={unassigned.length}
+            caption={unassigned.length > 0 ? `${unassigned.length} à prendre en charge` : 'file vide'}
+            urgent={unassigned.length > 0} delay={0.1}
             onClick={() => setView('queue')} />
-          <HubPill icon={Users} label="En cours par l'équipe" count={others.length} delay={0.2}
+          <HubTile icon={Users} label="Par l'équipe" count={others.length}
+            caption="verrouillées par un collègue" delay={0.15}
             onClick={() => setView('others')} />
-        </div>
+        </TileGrid>
       </div>
     </div>
   );

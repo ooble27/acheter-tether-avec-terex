@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Trophy, RefreshCw, Users, CheckCircle2, Coins, TrendingUp } from 'lucide-react';
-import { StatPill, SectionLabel, drillStyles } from '@/components/admin/AdminDrill';
+import { StatStrip, SectionLabel, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -161,16 +161,16 @@ export function TeamPerformance() {
         </button>
       </div>
 
-      {/* Totaux de la période — chiffres compacts */}
+      {/* Totaux de la période — une seule bande de chiffres */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <style>{drillStyles}</style>
         <SectionLabel>Totaux de la période</SectionLabel>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          <StatPill icon={CheckCircle2} value={fmt(totals.completed)} label="commandes terminées" delay={0} />
-          <StatPill icon={TrendingUp} value={`${fmt(totals.volumeCfa)} CFA`} label="volume traité" delay={0.04} />
-          <StatPill icon={Coins} value={`${fmt(Math.round(totals.volumeUsdt))} USDT`} label="USDT échangés" delay={0.08} />
-          <StatPill icon={Users} value={fmt(totals.members)} label="membres actifs" delay={0.12} />
-        </div>
+        <StatStrip items={[
+          { label: 'Commandes terminées', value: fmt(totals.completed) },
+          { label: 'Volume traité', value: `${fmt(totals.volumeCfa)} CFA` },
+          { label: 'USDT échangés', value: `${fmt(Math.round(totals.volumeUsdt))} USDT` },
+          { label: 'Membres actifs', value: fmt(totals.members) },
+        ]} />
       </div>
 
       {/* Classement par opérateur */}
