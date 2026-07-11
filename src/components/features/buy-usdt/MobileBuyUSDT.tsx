@@ -6,6 +6,8 @@ import { useTerexRates } from '@/hooks/useTerexRates';
 import { useNabooPay } from '@/hooks/useNabooPay';
 import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
 import { ArrowLeft, Coins, Check } from 'lucide-react';
+import { useUserWallets } from '@/hooks/useUserWallets';
+import { SavedChips, SaveToggle } from '../SavedPicker';
 import { BinanceEmailInput } from './BinanceEmailInput';
 import { PURCHASE_LIMITS, getLimitMessage, enforceMaxLimit } from './LimitsValidator';
 import { KYCPage } from '../KYCPage';
@@ -85,8 +87,13 @@ export function MobileBuyUSDT() {
   const [binanceUsername, setBinanceUsername] = useState('');
   const [binanceId, setBinanceId] = useState('');
   const [loading, setLoading] = useState(false);
+  const [saveAddress, setSaveAddress] = useState(false);
 
   const { createOrder } = useOrders();
+  const { wallets, saveWallet, deleteWallet } = useUserWallets();
+  const savedWallets = wallets
+    .filter(w => w.wallet_type === 'personal' && w.address && (w.network || 'TRC20') === network)
+    .map(w => ({ id: w.id, primary: w.address as string, secondary: w.network || 'TRC20' }));
   const { user } = useAuth();
   const { toast } = useToast();
   const { createTransaction } = useNabooPay();
@@ -146,6 +153,12 @@ export function MobileBuyUSDT() {
 
   const handleContinueToConfirm = () => {
     if (!walletAddress) { toast({ title: 'Erreur', description: 'Veuillez entrer une adresse valide', variant: 'destructive' }); return; }
+    if (saveAddress && !savedWallets.some(w => w.primary === walletAddress.trim())) {
+      saveWallet({
+        wallet_type: 'personal', wallet_name: `${network} · ${walletAddress.trim().slice(0, 6)}…`,
+        address: walletAddress.trim(), network, email: null, username: null, wallet_id: null, is_default: false,
+      } as any).catch(() => {});
+    }
     setStep('confirm');
   };
 
@@ -342,7 +355,12 @@ export function MobileBuyUSDT() {
               description={`Entrez votre adresse ${network}`}
             />
 
-            <div style={{ padding: '4px 20px' }}>
+            <div style={{ padding: '4px 20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {savedWallets.length > 0 && (
+                <SavedChips label={`Mes adresses ${network} enregistrées`} items={savedWallets} activeValue={walletAddress}
+                  onPick={(it) => setWalletAddress(it.primary)} onDelete={deleteWallet} />
+              )}
+
               <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '14px', overflow: 'hidden' }}>
                 <div style={{ display: 'flex', alignItems: 'center', padding: '10px 16px', borderBottom: `1px solid ${BORDER}`, gap: '10px' }}>
                   <img src={NETWORK_LOGOS[network]} alt={network} style={{ width: '26px', height: '26px', borderRadius: '50%' }} />
@@ -355,6 +373,10 @@ export function MobileBuyUSDT() {
                   style={{ width: '100%', background: 'transparent', border: 'none', padding: '16px', color: '#fff', fontSize: '13px', outline: 'none', fontFamily: 'monospace', lineHeight: 1.6, boxSizing: 'border-box' }}
                 />
               </div>
+
+              {walletAddress.trim() && !savedWallets.some(w => w.primary === walletAddress.trim()) && (
+                <SaveToggle checked={saveAddress} onToggle={() => setSaveAddress(v => !v)} label={`Enregistrer cette adresse ${network}`} />
+              )}
             </div>
 
             <ContinueBtn onClick={handleContinueToConfirm} disabled={!walletAddress} />
