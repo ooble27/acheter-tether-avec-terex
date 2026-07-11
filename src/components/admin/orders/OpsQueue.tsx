@@ -3,7 +3,8 @@ import { useOrders, UnifiedOrder } from '@/hooks/useOrders';
 import { useOrderOps } from '@/hooks/useOrderOps';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { OrderDetailsPage } from './OrderDetailsPage';
-import { Coins, HandCoins, Send, Clock, Hand, User, RefreshCw, Inbox, CheckCircle2 } from 'lucide-react';
+import { Coins, HandCoins, Send, Clock, Hand, User, RefreshCw, Inbox, CheckCircle2, UserCheck, Users } from 'lucide-react';
+import { HubCard, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -32,6 +33,7 @@ export function OpsQueue() {
   const { orders, loading, updateOrderStatus, refreshOrders } = useOrders();
   const { claimOrder, releaseOrder, currentUserId } = useOrderOps();
   const [detailOrder, setDetailOrder] = useState<UnifiedOrder | null>(null);
+  const [view, setView] = useState<null | 'mine' | 'queue' | 'others'>(null);
 
   // Rafraîchissement automatique — les prises en charge des collègues
   // apparaissent sans recharger la page.
@@ -135,49 +137,59 @@ export function OpsQueue() {
     );
   };
 
-  const Section = ({ title, sub, items, zone, emptyText }: { title: string; sub?: string; items: UnifiedOrder[]; zone: 'mine' | 'queue' | 'others'; emptyText: string }) => (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, margin: '0 0 10px 2px' }}>
-        <p style={{ color: '#fff', fontSize: 14, fontWeight: 700, margin: 0 }}>{title}</p>
-        <span style={{ fontSize: 12, color: '#6b7280' }}>{items.length}{sub ? ` · ${sub}` : ''}</span>
-      </div>
-      {items.length === 0 ? (
-        <div style={{ border: `1px dashed ${BORDER}`, borderRadius: 14, padding: '18px 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <CheckCircle2 size={16} color="#4b5563" />
-          <span style={{ color: '#6b7280', fontSize: 13 }}>{emptyText}</span>
-        </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {items.map(o => <OrderCard key={o.id} o={o} zone={zone} />)}
-        </div>
-      )}
-    </div>
-  );
+  // ── SOUS-PAGE d'une zone (navigation par pages, pas de scroll infini) ───────
+  const VIEWS: Record<'mine' | 'queue' | 'others', { title: string; sub: string; items: UnifiedOrder[]; emptyText: string }> = {
+    mine:   { title: 'Mes commandes', sub: 'Les commandes que je traite en ce moment', items: mine, emptyText: 'Aucune commande en charge — prenez-en une dans la file d\'attente.' },
+    queue:  { title: "File d'attente", sub: 'Commandes libres, de la plus ancienne à la plus récente', items: unassigned, emptyText: 'File vide — toutes les commandes actives sont prises en charge. 🎉' },
+    others: { title: "En cours par l'équipe", sub: 'Verrouillées — un collègue les traite', items: others, emptyText: 'Aucune commande traitée par un autre membre.' },
+  };
 
+  if (view) {
+    const v = VIEWS[view];
+    return (
+      <>
+        <style>{drillStyles}</style>
+        <DrillPage title={v.title} sub={`${v.items.length} commande(s) · ${v.sub}`} onBack={() => setView(null)}
+          right={
+            <button onClick={() => refreshOrders?.()} disabled={loading}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#2d2d2d', color: '#fff', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 14px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+              <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Actualiser
+            </button>
+          }>
+          {v.items.length === 0 ? (
+            <div style={{ border: `1px dashed ${BORDER}`, borderRadius: 14, padding: '28px 18px', display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center' }}>
+              <CheckCircle2 size={16} color="#4b5563" />
+              <span style={{ color: '#6b7280', fontSize: 13 }}>{v.emptyText}</span>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {v.items.map(o => <OrderCard key={o.id} o={o} zone={view} />)}
+            </div>
+          )}
+        </DrillPage>
+      </>
+    );
+  }
+
+  // ── HUB — vue d'ensemble + entrées vers les sous-pages ──────────────────────
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+      <style>{drillStyles}</style>
+
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 12, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Inbox size={18} color="rgba(255,255,255,0.75)" />
-          </div>
-          <div>
-            <p style={{ color: '#fff', fontSize: 15, fontWeight: 700, margin: 0 }}>File d'attente des opérations</p>
-            <p style={{ color: '#6b7280', fontSize: 12.5, margin: 0 }}>Prenez une commande en charge avant de la traiter — elle se verrouille pour le reste de l'équipe.</p>
-          </div>
-        </div>
+        <p style={{ color: '#6b7280', fontSize: 12.5, margin: 0 }}>
+          Prenez une commande en charge avant de la traiter — elle se verrouille pour le reste de l'équipe.
+        </p>
         <button onClick={() => refreshOrders?.()} disabled={loading}
           style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#2d2d2d', color: '#fff', border: `1px solid ${BORDER}`, borderRadius: 10, padding: '9px 14px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
           <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Actualiser
         </button>
       </div>
 
-      {/* KPIs — l'état des opérations en un coup d'œil (cartes neutres, sobres) */}
+      {/* KPIs — l'état des opérations en un coup d'œil */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10 }}>
         {[
           { label: 'À traiter', value: String(unassigned.length) },
-          { label: 'Mes commandes', value: String(mine.length) },
-          { label: "Par l'équipe", value: String(others.length) },
           { label: "Terminées aujourd'hui", value: String(completedToday) },
         ].map(k => (
           <div key={k.label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14, padding: '14px 16px' }}>
@@ -193,12 +205,18 @@ export function OpsQueue() {
         )}
       </div>
 
-      <Section title="Mes commandes" sub="je les traite" items={mine} zone="mine"
-        emptyText="Aucune commande en charge — prenez-en une dans la file d'attente." />
-      <Section title="File d'attente" sub="libres, du plus ancien au plus récent" items={unassigned} zone="queue"
-        emptyText="File vide — toutes les commandes actives sont prises en charge. 🎉" />
-      <Section title="En cours par l'équipe" items={others} zone="others"
-        emptyText="Aucune commande traitée par un autre membre." />
+      {/* Entrées — on RENTRE dans chaque espace de travail */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <HubCard icon={Hand} title="Mes commandes" desc="Les commandes que je traite en ce moment"
+          count={mine.length} countLabel="en cours" accent={mine.length > 0} delay={0}
+          onClick={() => setView('mine')} />
+        <HubCard icon={Inbox} title="File d'attente" desc="Commandes libres à prendre en charge — la plus ancienne d'abord"
+          count={unassigned.length} countLabel="à traiter" delay={0.05}
+          onClick={() => setView('queue')} />
+        <HubCard icon={Users} title="En cours par l'équipe" desc="Traitées par vos collègues — verrouillées"
+          count={others.length} countLabel="en cours" delay={0.1}
+          onClick={() => setView('others')} />
+      </div>
     </div>
   );
 }

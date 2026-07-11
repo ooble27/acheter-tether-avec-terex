@@ -6,6 +6,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Users, UserPlus, Trash2, RefreshCw, Loader2, Shield, Inbox, FileCheck, Mail, UserCheck, Headphones, CheckCircle2 } from 'lucide-react';
+import { HubCard, DrillPage, drillStyles } from '@/components/admin/AdminDrill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -51,6 +52,7 @@ export function TeamAdmin() {
   const [role, setRole] = useState('operator');
   const [adding, setAdding] = useState(false);
   const [toRemove, setToRemove] = useState<Member | null>(null);
+  const [view, setView] = useState<null | 'add' | 'members'>(null);
 
   const load = async () => {
     setLoading(true);
@@ -101,9 +103,8 @@ export function TeamAdmin() {
     }
   };
 
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-
+  const addSection = (
+    <>
       {/* Ajouter un membre */}
       <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: 18 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
@@ -153,6 +154,11 @@ export function TeamAdmin() {
         </div>
       </div>
 
+    </>
+  );
+
+  const membersSection = (
+    <>
       {/* Membres actuels */}
       <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: `1px solid ${BORDER}` }}>
@@ -199,6 +205,11 @@ export function TeamAdmin() {
         )}
       </div>
 
+    </>
+  );
+
+  const confirmDialog = (
+    <>
       {/* Confirmation de retrait */}
       <AlertDialog open={!!toRemove} onOpenChange={(o) => { if (!o) setToRemove(null); }}>
         <AlertDialogContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)]">
@@ -214,6 +225,43 @@ export function TeamAdmin() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+    </>
+  );
+
+  // ── Navigation par pages : hub → sous-pages ────────────────────────────────
+  if (view === 'add') {
+    return (
+      <>
+        <style>{drillStyles}</style>
+        <DrillPage title="Ajouter un membre" sub="Attribuer un rôle à un compte Terex existant" onBack={() => setView(null)}>
+          {addSection}
+        </DrillPage>
+      </>
+    );
+  }
+
+  if (view === 'members') {
+    return (
+      <>
+        <style>{drillStyles}</style>
+        <DrillPage title="Membres de l'équipe" sub={`${members.length} rôle(s) attribué(s)`} onBack={() => setView(null)}>
+          {membersSection}
+          {confirmDialog}
+        </DrillPage>
+      </>
+    );
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <style>{drillStyles}</style>
+      <HubCard icon={UserPlus} title="Ajouter un membre" delay={0}
+        desc="Attribuer un rôle (opérateur, KYC, marketing, RH…) à un compte existant"
+        onClick={() => setView('add')} />
+      <HubCard icon={Users} title="Membres de l'équipe" delay={0.05}
+        desc="Voir qui a accès au back-office, retirer un rôle"
+        count={members.length} countLabel="rôle(s)"
+        onClick={() => setView('members')} />
     </div>
   );
 }
