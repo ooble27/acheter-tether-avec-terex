@@ -133,21 +133,23 @@ export function OrderDetailsPage({
     logOrderEvent(order.id, `status_${status}`).then(reloadEvents);
   };
 
+  // Infos client (nom, email, téléphone) via la fonction admin get-client-infos.
+  // L'ancienne version appelait auth.admin depuis le navigateur → interdit,
+  // échec silencieux → la carte Client restait vide (ID seulement).
   useEffect(() => {
     if (!order) return;
     let cancelled = false;
     (async () => {
       try {
-        const { data } = await supabase.auth.admin.getUserById(order.user_id);
-        if (!cancelled && data?.user?.email) setUserEmail(data.user.email);
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('full_name, phone')
-          .eq('id', order.user_id)
-          .single();
-        if (!cancelled) {
-          setUserName(profile?.full_name || '');
-          setUserPhone(profile?.phone || '');
+        const { data, error } = await supabase.functions.invoke('get-client-infos', {
+          body: { userIds: [order.user_id] },
+        });
+        if (cancelled || error) return;
+        const info = (data?.infos || [])[0];
+        if (info) {
+          setUserName(info.full_name || '');
+          setUserEmail(info.email || '');
+          setUserPhone(info.phone || '');
         }
       } catch (e) {
         console.error('Error fetching user info:', e);
@@ -156,7 +158,7 @@ export function OrderDetailsPage({
     return () => {
       cancelled = true;
     };
-  }, [order]);
+  }, [order?.user_id]);
 
   if (!order) return null;
 

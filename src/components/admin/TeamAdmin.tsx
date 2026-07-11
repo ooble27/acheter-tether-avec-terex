@@ -5,7 +5,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Users, UserPlus, Trash2, RefreshCw, Loader2, Shield, Inbox, FileCheck, Mail, UserCheck, Headphones } from 'lucide-react';
+import { Users, UserPlus, Trash2, RefreshCw, Loader2, Shield, Inbox, FileCheck, Mail, UserCheck, Headphones, CheckCircle2 } from 'lucide-react';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -114,26 +114,32 @@ export function TeamAdmin() {
           La personne crée d'abord son compte Terex normalement (inscription classique), puis vous lui attribuez son rôle ici avec son email.
         </p>
 
-        {/* Choix du rôle */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 8, marginBottom: 14 }}>
-          {ROLES.map(({ id, label, desc, Icon }) => (
-            <button key={id} onClick={() => setRole(id)}
-              style={{
-                display: 'flex', gap: 10, alignItems: 'flex-start', textAlign: 'left', padding: '12px',
-                borderRadius: 12, cursor: 'pointer',
-                background: role === id ? 'rgba(255,255,255,0.08)' : INPUT_BG,
-                border: `1px solid ${role === id ? 'rgba(255,255,255,0.25)' : BORDER}`,
-              }}>
-              <div style={{ width: 30, height: 30, borderRadius: 9, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Icon size={14} color={role === id ? '#fff' : 'rgba(255,255,255,0.55)'} />
-              </div>
-              <div>
-                <p style={{ color: '#fff', fontSize: 13, fontWeight: 600, margin: '0 0 2px' }}>{label}</p>
-                <p style={{ color: '#6b7280', fontSize: 11, margin: 0, lineHeight: 1.45 }}>{desc}</p>
-              </div>
-            </button>
-          ))}
+        {/* Choix du rôle — pilules compactes (même design que le choix du réseau) */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
+          {ROLES.map(({ id, label, Icon }) => {
+            const sel = role === id;
+            return (
+              <button key={id} onClick={() => setRole(id)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 9, padding: '9px 16px 9px 10px',
+                  borderRadius: 100, cursor: 'pointer', outline: 'none', transition: 'all 0.15s',
+                  border: `1px solid ${sel ? 'rgba(255,255,255,0.40)' : 'rgba(255,255,255,0.18)'}`,
+                  background: sel ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.08)',
+                  WebkitTapHighlightColor: 'transparent',
+                }}>
+                <span style={{ width: 26, height: 26, borderRadius: '50%', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon size={13} color={sel ? '#fff' : 'rgba(255,255,255,0.55)'} />
+                </span>
+                <span style={{ color: sel ? '#fff' : 'rgba(255,255,255,0.55)', fontSize: 13, fontWeight: sel ? 600 : 400 }}>{label}</span>
+                {sel && <CheckCircle2 size={13} color="rgba(255,255,255,0.8)" />}
+              </button>
+            );
+          })}
         </div>
+        {/* Description du rôle sélectionné */}
+        <p style={{ color: '#6b7280', fontSize: 12, margin: '0 0 14px 4px' }}>
+          {roleMeta(role).label} — {roleMeta(role).desc}
+        </p>
 
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           <input value={email} onChange={e => setEmail(e.target.value)} placeholder="email du compte existant…"
