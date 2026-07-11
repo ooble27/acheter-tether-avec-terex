@@ -296,18 +296,17 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
             </div>
           )}
 
-          {/* PASTILLES — on choisit une section au lieu de tout dérouler */}
-          <div style={{ display: 'flex', gap: 7, overflowX: 'auto', scrollbarWidth: 'none', paddingBottom: 2 }}>
+          {/* SÉLECTEUR SEGMENTÉ — même composant que la landing Business */}
+          <div style={{ display: 'flex', gap: 4, background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, borderRadius: 12, padding: 4, overflowX: 'auto', scrollbarWidth: 'none' }}>
             {TABS.map(t => {
               const sel = activeSection === t.id;
               return (
                 <button key={t.id} onClick={() => setSection(t.id)}
                   style={{
-                    flexShrink: 0, whiteSpace: 'nowrap', padding: '8px 15px', borderRadius: 100, cursor: 'pointer',
-                    fontSize: 13, fontWeight: sel ? 600 : 500, transition: 'all 0.15s',
-                    border: `1px solid ${sel ? 'rgba(255,255,255,0.40)' : 'rgba(255,255,255,0.14)'}`,
-                    background: sel ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.05)',
-                    color: sel ? '#fff' : 'rgba(255,255,255,0.55)', outline: 'none', WebkitTapHighlightColor: 'transparent',
+                    flexShrink: 0, whiteSpace: 'nowrap', padding: '8px 18px', borderRadius: 9, cursor: 'pointer',
+                    fontSize: 13, fontWeight: sel ? 600 : 400, transition: 'all 0.15s', border: 'none',
+                    background: sel ? '#2d2d2d' : 'transparent',
+                    color: sel ? '#fff' : '#9ca3af', outline: 'none', WebkitTapHighlightColor: 'transparent',
                   }}>
                   {t.label}
                 </button>

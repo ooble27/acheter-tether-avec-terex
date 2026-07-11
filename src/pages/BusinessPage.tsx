@@ -7,7 +7,7 @@ const BusinessPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#111111] flex items-center justify-center">
+      <div className="min-h-screen bg-[#1a1a1a] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-[#ffffff] flex items-center justify-center">
             <span className="text-black font-black text-xs">TB</span>
