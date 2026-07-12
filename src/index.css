@@ -98,6 +98,13 @@ html, body {
   background-color: #1a1a1a;
 }
 
+/* Déclarer le site comme sombre : les navigateurs Android (Chrome, Samsung
+   Internet) n'appliquent alors PAS leur « force dark », qui transformait notre
+   gris #1a1a1a en noir pur sur certains téléphones. Rendu identique partout. */
+:root {
+  color-scheme: dark;
+}
+
 /* Classe pour masquer la barre de défilement (renforcée) */
 @layer utilities {
   .scrollbar-hide {
