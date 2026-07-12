@@ -24,7 +24,7 @@ function ageOf(iso: string): string {
 }
 
 export function OpsQueue() {
-  const { orders, loading, updateOrderStatus, refreshOrders } = useOrders();
+  const { orders, loading, updateOrderStatus, refreshOrders, moveToTrash } = useOrders();
   const { claimOrder, releaseOrder, currentUserId } = useOrderOps();
   const [detailOrder, setDetailOrder] = useState<UnifiedOrder | null>(null);
   const [tab, setTab] = useState<'queue' | 'mine' | 'others'>('queue');
@@ -63,6 +63,7 @@ export function OpsQueue() {
         order={orders.find(o => o.id === detailOrder.id) || detailOrder}
         onBack={() => { setDetailOrder(null); refreshOrders?.(); }}
         onStatusUpdate={updateOrderStatus}
+        onArchive={(id) => moveToTrash(id)}
       />
     );
   }

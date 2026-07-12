@@ -123,6 +123,7 @@ export function OrdersDashboardNew() {
         order={orders.find(o => o.id === detailOrder.id) || detailOrder}
         onBack={() => { setDetailOrder(null); refreshOrders?.(); }}
         onStatusUpdate={updateOrderStatus}
+        onArchive={(id) => moveToTrash(id)}
       />
     );
   }

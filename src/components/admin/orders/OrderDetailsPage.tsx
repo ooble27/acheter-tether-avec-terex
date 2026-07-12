@@ -2,7 +2,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { UnifiedOrder } from '@/hooks/useOrders';
 import {
   Coins, HandCoins, Send, Copy, CheckCircle, XCircle, Clock, ArrowLeft,
-  Hand, Lock, ArrowRight, Hash, Mail,
+  Hand, Lock, ArrowRight, Hash, Mail, Trash2,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -21,6 +21,8 @@ interface OrderDetailsPageProps {
   order: UnifiedOrder | null;
   onBack: () => void;
   onStatusUpdate: (orderId: string, status: OrderStatus, paymentStatus?: string) => void;
+  /** Archive silencieuse : retire la commande de la file SANS email (tests, spam, ventes jamais payées). */
+  onArchive?: (orderId: string) => void;
 }
 
 const CARD = '#1e1e1e';
@@ -77,7 +79,7 @@ function GroupLabel({ children, first }: { children: React.ReactNode; first?: bo
   );
 }
 
-export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetailsPageProps) {
+export function OrderDetailsPage({ order, onBack, onStatusUpdate, onArchive }: OrderDetailsPageProps) {
   const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('');
   const [userPhone, setUserPhone] = useState('');
@@ -470,6 +472,13 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
                 <XCircle size={16} /> Annuler
               </button>
             </>
+          )}
+          {/* Archive silencieuse — retirer de la file sans email (tests / ventes jamais payées) */}
+          {isActive && canAct && onArchive && (
+            <button onClick={() => { onArchive(order.id); onBack(); }}
+              style={{ flex: '1 1 auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: 'transparent', color: '#9ca3af', border: `1px solid ${BORDER}`, borderRadius: 11, padding: '11px 18px', fontSize: 13.5, fontWeight: 600, cursor: 'pointer', minWidth: 150 }}>
+              <Trash2 size={15} /> Retirer de la file
+            </button>
           )}
           {(order.status === 'completed' || order.status === 'cancelled' || order.status === 'failed') && (
             <div className="flex-1 text-center sm:text-right text-sm py-2" style={{ color: '#9ca3af' }}>
