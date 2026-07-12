@@ -71,7 +71,7 @@ const STATUS_FILTERS = [
 ];
 
 export function OrdersDashboardNew() {
-  const { orders, loading, updateOrderStatus, refreshOrders, moveToTrash, restoreFromTrash, deletePermanently, purgeAllOrders } = useOrders();
+  const { orders, loading, updateOrderStatus, refreshOrders, moveToTrash, restoreFromTrash, deletePermanently, emptyTrash } = useOrders();
   const { isAdmin, isOperator } = useUserRole();
   const [zone, setZone] = useState<Zone>('buy');
   const [searchTerm, setSearchTerm] = useState('');
@@ -237,29 +237,29 @@ export function OrdersDashboardNew() {
             <button className="ghost-btn" onClick={() => refreshOrders?.()}>
               <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Actualiser
             </button>
-            {isTrash && isAdmin() && (
+            {isTrash && isAdmin() && zoneOrders.trash.length > 0 && (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <button className="ghost-btn" style={{ color: '#c98686' }}>
-                    <Trash2 size={13} /> Tout supprimer
+                    <Trash2 size={13} /> Vider la corbeille
                   </button>
                 </AlertDialogTrigger>
                 <AlertDialogContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)]">
                   <AlertDialogHeader>
                     <AlertDialogTitle className="text-white flex items-center gap-2">
                       <AlertTriangle className="w-5 h-5 text-red-500" />
-                      Supprimer toutes les commandes ?
+                      Vider la corbeille ?
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-gray-400">
-                      Cette action est <strong className="text-red-400">irréversible</strong>. Toutes les commandes (achats, ventes, transferts) seront supprimées définitivement.
+                      Les <strong className="text-white">{zoneOrders.trash.length} commande(s) dans la corbeille</strong> seront supprimées <strong className="text-red-400">définitivement</strong> (irréversible).
                       <br /><br />
-                      Pensez à exporter vos données en CSV ou PDF avant de continuer.
+                      Cela ne touche PAS vos commandes actives ni votre historique terminé — uniquement ce qui est déjà dans la corbeille.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel className="bg-[#2d2d2d] text-white border-[rgba(255,255,255,0.07)] hover:bg-[#2d2d2d]">Annuler</AlertDialogCancel>
-                    <AlertDialogAction className="bg-red-600 hover:bg-red-700 text-white" onClick={async () => { await purgeAllOrders(); }}>
-                      Supprimer tout
+                    <AlertDialogAction className="bg-red-600 hover:bg-red-700 text-white" onClick={async () => { await emptyTrash(); }}>
+                      Vider définitivement
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>

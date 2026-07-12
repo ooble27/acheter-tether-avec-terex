@@ -484,6 +484,24 @@ export function useOrders() {
     fetchOrders();
   };
 
+  // Vider la Corbeille : suppression DÉFINITIVE des seules commandes déjà
+  // mises à la corbeille (is_deleted). Ne touche JAMAIS aux commandes actives
+  // ni à l'historique terminé — contrairement à l'ancien « tout masquer ».
+  const emptyTrash = async () => {
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .delete()
+        .eq('is_deleted', true);
+      if (error) throw error;
+      setOrders(prev => prev.filter(o => !o.is_deleted));
+      toast({ title: 'Corbeille vidée', description: 'Les commandes de la corbeille ont été supprimées définitivement.' });
+    } catch (error: any) {
+      console.error('Error emptying trash:', error);
+      toast({ title: 'Erreur', description: error?.message || 'Impossible de vider la corbeille', variant: 'destructive' });
+    }
+  };
+
   return {
     orders,
     loading,
@@ -493,6 +511,7 @@ export function useOrders() {
     moveToTrash,
     restoreFromTrash,
     deletePermanently,
+    emptyTrash,
     purgeAllOrders
   };
 }
