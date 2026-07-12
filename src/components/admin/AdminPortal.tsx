@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users,
+  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock,
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { OpsQueue } from '@/components/admin/orders/OpsQueue';
 import { TeamPerformance } from '@/components/admin/TeamPerformance';
 import { TeamAdmin } from '@/components/admin/TeamAdmin';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
+import { StaffPunch } from '@/components/admin/StaffPunch';
+import { StaffAttendance } from '@/components/admin/StaffAttendance';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
 import { AccountingAdmin } from '@/components/admin/AccountingAdmin';
 import { NewsletterAdmin } from '@/components/admin/NewsletterAdmin';
@@ -29,6 +31,7 @@ const NAV: NavItem[] = [
   { id: 'orders',       label: 'Commandes',      desc: 'Toutes les commandes et archives',      icon: ShoppingCart, roles: ['admin', 'operator'] },
   { id: 'kyc',          label: 'KYC',            desc: "Vérifications d'identité",              icon: FileCheck,    roles: ['admin', 'kyc_reviewer'] },
   { id: 'performance',  label: 'Performance',    desc: "Activité et volumes par membre de l'équipe", icon: Trophy,  roles: ['admin'] },
+  { id: 'attendance',   label: 'Présences',      desc: 'Pointage horaire de l\'équipe — pour la paie', icon: Clock,  roles: ['admin'] },
   { id: 'accounting',   label: 'Comptabilité',   desc: 'Revenus et marges',                     icon: Calculator,   roles: ['admin'] },
   { id: 'newsletter',   label: 'Campagnes',      desc: 'Emails marketing aux clients',          icon: Mail,         roles: ['admin', 'marketing'] },
   { id: 'applications', label: 'Candidatures',   desc: 'Recrutement',                           icon: UserCheck,    roles: ['admin', 'hr'] },
@@ -73,6 +76,7 @@ export function AdminPortal() {
           <h1 style={{ color: '#fff', fontSize: '19px', fontWeight: 700, margin: 0, letterSpacing: '-0.4px' }}>Administration</h1>
           <p style={{ color: '#6b7280', fontSize: '12px', margin: '2px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Pilotez la plateforme Terex</p>
         </div>
+        <StaffPunch />
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, borderRadius: '999px', padding: '6px 12px', flexShrink: 0 }}>
           <Shield size={13} color="rgba(255,255,255,0.6)" />
           <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '11px', fontWeight: 600 }}>{isAdmin() ? 'Admin' : roles.includes('operator') ? 'Opérateur' : roles.includes('marketing') ? 'Marketing' : roles.includes('hr') ? 'RH' : roles.includes('kyc_reviewer') ? 'KYC' : 'Staff'}</span>
@@ -118,6 +122,7 @@ export function AdminPortal() {
           {currentTab === 'orders' && <OrdersDashboardNew />}
           {currentTab === 'kyc' && <KYCAdmin />}
           {currentTab === 'performance' && <TeamPerformance />}
+          {currentTab === 'attendance' && <StaffAttendance />}
           {currentTab === 'accounting' && <AccountingAdmin />}
           {currentTab === 'newsletter' && <NewsletterAdmin />}
           {currentTab === 'applications' && <JobApplicationsAdmin />}
