@@ -35,11 +35,7 @@ export function LoginForm() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      toast({
-        title: "Connexion réussie",
-        description: "Vous êtes maintenant connecté à Terex.",
-        
-      });
+      // Pas de toast de succès : l'utilisateur est redirigé, c'est suffisant.
     } catch (error: any) {
       const msg = error?.message || '';
       if (msg.includes('Invalid login credentials') || msg.includes('Email not confirmed')) {

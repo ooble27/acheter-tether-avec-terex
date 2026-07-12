@@ -6,8 +6,6 @@ import { useTerexRates } from '@/hooks/useTerexRates';
 import { useNabooPay } from '@/hooks/useNabooPay';
 import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
 import { ArrowLeft, Check, Coins } from 'lucide-react';
-import { useUserWallets } from '@/hooks/useUserWallets';
-import { SavedChips, SaveToggle } from '../SavedPicker';
 import { BinanceEmailInput } from './BinanceEmailInput';
 import { PURCHASE_LIMITS, getLimitMessage, enforceMaxLimit } from './LimitsValidator';
 import { KYCPage } from '../KYCPage';
@@ -112,13 +110,8 @@ export function DesktopBuyUSDT() {
   const [binanceUsername, setBinanceUsername] = useState('');
   const [binanceId, setBinanceId] = useState('');
   const [loading, setLoading] = useState(false);
-  const [saveAddress, setSaveAddress] = useState(false);
 
   const { createOrder } = useOrders();
-  const { wallets, saveWallet, deleteWallet } = useUserWallets();
-  const savedWallets = wallets
-    .filter(w => w.wallet_type === 'personal' && w.address && (w.network || 'TRC20') === network)
-    .map(w => ({ id: w.id, primary: w.address as string, secondary: w.network || 'TRC20' }));
   const { user } = useAuth();
   const { toast } = useToast();
   const { createTransaction } = useNabooPay();
@@ -190,12 +183,6 @@ export function DesktopBuyUSDT() {
     if (!walletAddress) {
       toast({ title: "Erreur", description: "Veuillez entrer une adresse valide", variant: "destructive" });
       return;
-    }
-    if (saveAddress && !savedWallets.some(w => w.primary === walletAddress.trim())) {
-      saveWallet({
-        wallet_type: 'personal', wallet_name: `${network} · ${walletAddress.trim().slice(0, 6)}…`,
-        address: walletAddress.trim(), network, email: null, username: null, wallet_id: null, is_default: false,
-      } as any).catch(() => {});
     }
     setStep('confirm');
   };
@@ -395,13 +382,6 @@ export function DesktopBuyUSDT() {
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Adresse de réception</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Entrez votre adresse {network} pour recevoir les USDT</p>
 
-              {savedWallets.length > 0 && (
-                <div style={{ marginBottom: '16px' }}>
-                  <SavedChips label={`Mes adresses ${network} enregistrées`} items={savedWallets} activeValue={walletAddress}
-                    onPick={(it) => setWalletAddress(it.primary)} onDelete={deleteWallet} />
-                </div>
-              )}
-
               <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', overflow: 'hidden' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 14px', borderBottom: `1px solid ${BORDER}` }}>
                   <img src={NETWORK_LOGOS[network as keyof typeof NETWORK_LOGOS]} alt={network} style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
@@ -415,12 +395,6 @@ export function DesktopBuyUSDT() {
                   style={{ width: '100%', background: 'transparent', border: 'none', padding: '14px', color: '#fff', fontSize: '13px', fontFamily: 'monospace', outline: 'none', resize: 'none', boxSizing: 'border-box' }}
                 />
               </div>
-
-              {walletAddress.trim() && !savedWallets.some(w => w.primary === walletAddress.trim()) && (
-                <div style={{ marginTop: '12px' }}>
-                  <SaveToggle checked={saveAddress} onToggle={() => setSaveAddress(v => !v)} label={`Enregistrer cette adresse ${network}`} />
-                </div>
-              )}
             </div>
 
             <ContinueBtn onClick={handleContinueToConfirm} disabled={!walletAddress} />

@@ -6,8 +6,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
 import { ArrowLeft, HandCoins, Check, Copy } from 'lucide-react';
-import { useUserWallets } from '@/hooks/useUserWallets';
-import { SavedChips, SaveToggle } from '../SavedPicker';
 import { KYCPage } from '../KYCPage';
 
 const CARD = '#1e1e1e';
@@ -93,13 +91,8 @@ export function MobileSellUSDT() {
   const [provider, setProvider] = useState<'wave' | 'orange'>('wave');
   const [useBinancePay, setUseBinancePay] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [saveNumber, setSaveNumber] = useState(false);
 
   const { createOrder } = useOrders();
-  const { wallets, saveWallet, deleteWallet } = useUserWallets();
-  const savedNumbers = wallets
-    .filter(w => w.wallet_type === 'mobile' && w.address)
-    .map(w => ({ id: w.id, primary: w.address as string, secondary: w.network === 'orange' ? 'Orange Money' : 'Wave', provider: (w.network || 'wave') as 'wave' | 'orange' }));
   const { user } = useAuth();
   const { toast } = useToast();
   const { terexBuyRateCfa } = useTerexRates(2);
@@ -123,13 +116,6 @@ export function MobileSellUSDT() {
 
   const handleContinueToConfirm = () => {
     if (!phoneNumber) { toast({ title: 'Erreur', description: 'Veuillez entrer un numéro de téléphone', variant: 'destructive' }); return; }
-    // Enregistrer le numéro pour le réutiliser plus tard (s'il n'existe pas déjà)
-    if (saveNumber && !savedNumbers.some(n => n.primary === phoneNumber.trim())) {
-      saveWallet({
-        wallet_type: 'mobile', wallet_name: phoneNumber.trim(), address: phoneNumber.trim(),
-        network: provider, email: null, username: null, wallet_id: null, is_default: false,
-      } as any).catch(() => {});
-    }
     setStep('confirm');
   };
 
@@ -371,12 +357,6 @@ export function MobileSellUSDT() {
                 </div>
               </div>
 
-              {savedNumbers.length > 0 && (
-                <SavedChips label="Mes numéros enregistrés" items={savedNumbers} activeValue={phoneNumber}
-                  onPick={(it) => { setPhoneNumber(it.primary); const n = savedNumbers.find(s => s.id === it.id); if (n) setProvider(n.provider); }}
-                  onDelete={deleteWallet} />
-              )}
-
               <div>
                 <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px' }}>Numéro de téléphone</p>
                 <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '14px', overflow: 'hidden' }}>
@@ -387,10 +367,6 @@ export function MobileSellUSDT() {
                   />
                 </div>
               </div>
-
-              {phoneNumber.trim() && !savedNumbers.some(n => n.primary === phoneNumber.trim()) && (
-                <SaveToggle checked={saveNumber} onToggle={() => setSaveNumber(v => !v)} label="Enregistrer ce numéro" />
-              )}
             </div>
 
             <ContinueBtn onClick={handleContinueToConfirm} disabled={!phoneNumber} />
