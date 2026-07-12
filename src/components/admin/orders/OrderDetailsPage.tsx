@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { parseOrderNotes } from '@/lib/orderNotesParser';
 import { useOrderOps, useOrderEvents, EVENT_LABELS } from '@/hooks/useOrderOps';
 import { StatusText, Avatar, drillStyles } from '@/components/admin/AdminDrill';
+import { ClientProfile } from '@/components/admin/ClientProfile';
 
 type OrderStatus = Database['public']['Enums']['order_status'];
 
@@ -84,6 +85,7 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
   const [showCancellationForm, setShowCancellationForm] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [section, setSection] = useState('client');
+  const [showClient, setShowClient] = useState(false);
   const { toast } = useToast();
 
   const { claimOrder, releaseOrder, logOrderEvent, currentUserId } = useOrderOps();
@@ -147,6 +149,12 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
   }, [order?.user_id]);
 
   if (!order) return null;
+
+  if (showClient) {
+    return <div style={{ background: '#1a1a1a', minHeight: '100vh' }} className="px-4 sm:px-6 py-5">
+      <div className="max-w-3xl mx-auto"><ClientProfile userId={order.user_id} onBack={() => setShowClient(false)} /></div>
+    </div>;
+  }
 
   const meta = TYPE_META[order.type] || { label: 'Transaction', Icon: Hash };
   const parsedNotes = parseOrderNotes(order.notes);
@@ -339,7 +347,12 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate }: OrderDetails
                 <Row label="Nom complet" value={userName || '—'} />
                 <Row label="Email" value={userEmail || '—'} copyable={!!userEmail} onCopy={() => copy(userEmail, 'Email copié')} />
                 <Row label="Téléphone" value={userPhone || '—'} copyable={!!userPhone} onCopy={() => copy(userPhone, 'Téléphone copié')} />
-                <Row label="ID utilisateur" value={`${order.user_id.slice(0, 8)}…${order.user_id.slice(-4)}`} mono copyable onCopy={() => copy(order.user_id, 'ID copié')} last />
+                <Row label="ID utilisateur" value={`${order.user_id.slice(0, 8)}…${order.user_id.slice(-4)}`} mono copyable onCopy={() => copy(order.user_id, 'ID copié')} />
+                <button onClick={() => setShowClient(true)}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', background: 'transparent', border: 'none', borderTop: `1px solid ${BORDER}`, padding: '13px 16px', cursor: 'pointer', color: '#fff', fontSize: 13, fontWeight: 600 }}>
+                  Voir la fiche complète du client
+                  <ArrowRight size={15} color="rgba(255,255,255,0.4)" />
+                </button>
               </>
             )}
             {activeSection === 'transaction' && (
