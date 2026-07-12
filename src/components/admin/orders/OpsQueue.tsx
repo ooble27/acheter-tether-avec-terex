@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useOrders, UnifiedOrder } from '@/hooks/useOrders';
 import { useOrderOps } from '@/hooks/useOrderOps';
 import { useClientInfos } from '@/hooks/useClientInfos';
+import { useNewOrderAlert } from '@/hooks/useNewOrderAlert';
 import { OrderDetailsPage } from './OrderDetailsPage';
 import { Coins, HandCoins, Send, Clock, Hand, User, RefreshCw, Inbox, CheckCircle2 } from 'lucide-react';
 import { PageHeader, Tabs, StatusText, Avatar, drillStyles } from '@/components/admin/AdminDrill';
@@ -47,6 +48,11 @@ export function OpsQueue() {
   const mine = active.filter(o => o.assigned_to && o.assigned_to === currentUserId);
   const unassigned = active.filter(o => !o.assigned_to);
   const others = active.filter(o => o.assigned_to && o.assigned_to !== currentUserId);
+
+  // Alerte temps réel : bip + toast + badge quand une nouvelle commande arrive en file.
+  const { unseen, clearUnseen } = useNewOrderAlert(unassigned.map(o => o.id));
+  // Si l'opérateur regarde déjà la file, rien à signaler.
+  useEffect(() => { if (tab === 'queue' && unseen > 0) clearUnseen(); }, [tab, unseen, clearUnseen]);
 
   // Noms : clients + opérateurs (même fonction admin get-client-infos)
   const nameIds = useMemo(() => {
@@ -175,6 +181,18 @@ export function OpsQueue() {
         }
       />
 
+      {/* Alerte : nouvelles commandes arrivées en direct */}
+      {unseen > 0 && tab !== 'queue' && (
+        <button onClick={() => { setTab('queue'); clearUnseen(); }}
+          style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(255,255,255,0.05)', border: `1px solid rgba(255,255,255,0.18)`, borderRadius: 12, padding: '11px 14px', cursor: 'pointer', width: '100%', textAlign: 'left' }}>
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#4ade80', flexShrink: 0 }} />
+          <span style={{ color: '#fff', fontSize: 13.5, fontWeight: 600, flex: 1 }}>
+            {unseen === 1 ? 'Nouvelle commande à traiter' : `${unseen} nouvelles commandes à traiter`}
+          </span>
+          <span style={{ color: '#9ca3af', fontSize: 12.5, fontWeight: 600 }}>Voir la file →</span>
+        </button>
+      )}
+
       {/* Onglets — les compteurs suffisent, pas de bande de KPI redondante */}
       <Tabs
         tabs={[
@@ -183,7 +201,7 @@ export function OpsQueue() {
           { id: 'others', label: "Par l'équipe", count: others.length },
         ]}
         active={tab}
-        onChange={(id) => setTab(id as typeof tab)}
+        onChange={(id) => { setTab(id as typeof tab); if (id === 'queue') clearUnseen(); }}
       />
 
       {/* Table */}

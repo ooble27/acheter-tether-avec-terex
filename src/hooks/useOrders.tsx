@@ -171,6 +171,20 @@ export function useOrders() {
 
   useEffect(() => {
     fetchOrders();
+
+    // Temps réel : dès qu'une commande ou un virement change (création,
+    // prise en charge, statut…), on recharge — les écrans se mettent à jour
+    // en direct. Best-effort : si le Realtime n'est pas activé sur la base,
+    // le sondage de 15 s des écrans admin prend le relais (aucune erreur).
+    let t: any = null;
+    const bump = () => { clearTimeout(t); t = setTimeout(() => fetchOrders(), 400); };
+    const channel = supabase
+      .channel('orders-live')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, bump)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'international_transfers' }, bump)
+      .subscribe();
+
+    return () => { clearTimeout(t); supabase.removeChannel(channel); };
   }, []);
 
   const createOrder = async (orderData: Omit<UnifiedOrder, 'id' | 'created_at' | 'updated_at'>) => {

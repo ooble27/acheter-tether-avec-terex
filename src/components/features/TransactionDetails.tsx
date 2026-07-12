@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Eye, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Eye, Clock, CheckCircle, XCircle, Download } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Transaction {
@@ -35,8 +35,78 @@ const USDTLogo = ({ className }: { className?: string }) => (
   />
 );
 
+const typeLabel = (t: string) => (t === 'buy' ? 'Achat USDT' : t === 'sell' ? 'Vente USDT' : 'Transfert international');
+const isDone = (s: string) => s === 'completed' || s === 'confirmed';
+
 export function TransactionDetails({ transaction }: TransactionDetailsProps) {
   const isMobile = useIsMobile();
+
+  // Reçu PDF — un justificatif propre et téléchargeable pour le client.
+  const downloadReceipt = async () => {
+    const { default: jsPDF } = await import('jspdf');
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const W = doc.internal.pageSize.getWidth();
+    const M = 48;
+
+    // Bandeau d'en-tête
+    doc.setFillColor(26, 26, 26);
+    doc.rect(0, 0, W, 110, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(22);
+    doc.text('TEREX', M, 58);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
+    doc.setTextColor(190, 190, 190);
+    doc.text('Reçu de transaction', M, 78);
+    doc.setFontSize(9);
+    doc.text('terangaexchange.com', W - M, 78, { align: 'right' });
+
+    // Référence + date
+    let y = 150;
+    doc.setTextColor(120, 120, 120); doc.setFontSize(9);
+    doc.text('RÉFÉRENCE', M, y);
+    doc.text('DATE', W - M, y, { align: 'right' });
+    doc.setTextColor(20, 20, 20); doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+    doc.text(`TEREX-${transaction.id.slice(-8).toUpperCase()}`, M, y + 18);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
+    doc.text(formatDate(transaction.date), W - M, y + 18, { align: 'right' });
+
+    // Montant principal
+    y += 62;
+    doc.setDrawColor(230, 230, 230); doc.line(M, y, W - M, y);
+    y += 30;
+    doc.setTextColor(120, 120, 120); doc.setFontSize(9);
+    doc.text(typeLabel(transaction.type).toUpperCase(), M, y);
+    doc.setTextColor(20, 20, 20); doc.setFont('helvetica', 'bold'); doc.setFontSize(24);
+    const mainAmount = `${transaction.amount} ${transaction.currency}`;
+    doc.text(mainAmount, M, y + 30);
+
+    // Lignes de détail
+    const rows: [string, string][] = [];
+    if (transaction.type === 'buy' && transaction.usdtAmount) rows.push(['USDT reçu', `${transaction.usdtAmount} USDT`]);
+    if ((transaction.type === 'sell' || transaction.type === 'transfer') && transaction.fiatAmount) rows.push(['Montant reçu', `${transaction.fiatAmount} ${transaction.receiveCurrency || ''}`]);
+    if (transaction.payment_method) rows.push(['Méthode de paiement', transaction.payment_method]);
+    if (transaction.type !== 'transfer' && transaction.network) rows.push(['Réseau', transaction.network]);
+    if (transaction.recipient_name) rows.push(['Destinataire', transaction.recipient_name]);
+    rows.push(['Statut', isDone(transaction.status) ? 'Terminée' : transaction.status]);
+
+    y += 66;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
+    rows.forEach(([k, v]) => {
+      doc.setDrawColor(238, 238, 238); doc.line(M, y, W - M, y);
+      y += 24;
+      doc.setTextColor(120, 120, 120); doc.text(k, M, y);
+      doc.setTextColor(20, 20, 20); doc.text(String(v), W - M, y, { align: 'right' });
+      y += 12;
+    });
+    doc.setDrawColor(238, 238, 238); doc.line(M, y, W - M, y);
+
+    // Pied de page
+    doc.setTextColor(150, 150, 150); doc.setFontSize(9);
+    doc.text("Ce reçu confirme votre transaction sur Terex (Teranga Exchange).", M, 780);
+    doc.text("Pour toute question : terangaexchange@gmail.com", M, 794);
+
+    doc.save(`terex-recu-${transaction.id.slice(-8).toUpperCase()}.pdf`);
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -183,6 +253,16 @@ export function TransactionDetails({ transaction }: TransactionDetailsProps) {
         <span className="text-gray-400">Date:</span>
         <span className="text-white text-sm">{formatDate(transaction.date)}</span>
       </div>
+
+      {isDone(transaction.status) && (
+        <button
+          onClick={downloadReceipt}
+          className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl py-3 font-semibold"
+          style={{ background: '#fff', color: '#141414' }}
+        >
+          <Download className="w-4 h-4" /> Télécharger le reçu (PDF)
+        </button>
+      )}
     </div>
   );
 
