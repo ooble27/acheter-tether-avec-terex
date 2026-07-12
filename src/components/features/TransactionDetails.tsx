@@ -21,6 +21,21 @@ interface Transaction {
   recipient_name?: string;
   recipient_phone?: string;
   payment_method?: string;
+  exchangeRate?: string;
+  provider?: string;
+}
+
+// Toujours le vrai prestataire (Wave / Orange Money), jamais un générique « mobile ».
+const PROVIDER_LABELS: Record<string, string> = {
+  wave: 'Wave', orange: 'Orange Money', orange_money: 'Orange Money', om: 'Orange Money',
+  card: 'Carte bancaire', bank: 'Virement bancaire', bank_transfer: 'Virement bancaire', interac: 'Interac',
+};
+function methodLabel(t: Transaction): string | undefined {
+  const key = t.provider || t.payment_method;
+  if (!key) return undefined;
+  if (PROVIDER_LABELS[key]) return PROVIDER_LABELS[key];
+  if (key === 'mobile' || key === 'mobile_money') return undefined; // générique inutile → on masque
+  return key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
 
 interface TransactionDetailsProps {
@@ -41,69 +56,97 @@ const isDone = (s: string) => s === 'completed' || s === 'confirmed';
 export function TransactionDetails({ transaction }: TransactionDetailsProps) {
   const isMobile = useIsMobile();
 
-  // Reçu PDF — un justificatif propre et téléchargeable pour le client.
+  // Charge une image (logo) en dataURL pour l'intégrer au PDF.
+  const toDataURL = (url: string): Promise<string | null> =>
+    fetch(url).then(r => r.blob()).then(b => new Promise<string>((res) => {
+      const fr = new FileReader(); fr.onloadend = () => res(fr.result as string); fr.readAsDataURL(b);
+    })).catch(() => null);
+
+  // Reçu PDF — justificatif complet, propre et à l'image de Terex.
   const downloadReceipt = async () => {
     const { default: jsPDF } = await import('jspdf');
     const doc = new jsPDF({ unit: 'pt', format: 'a4' });
     const W = doc.internal.pageSize.getWidth();
     const M = 48;
+    const contentW = W - M * 2;
 
-    // Bandeau d'en-tête
+    // ── En-tête : bandeau sombre + logo + wordmark ──
     doc.setFillColor(26, 26, 26);
-    doc.rect(0, 0, W, 110, 'F');
+    doc.rect(0, 0, W, 130, 'F');
+    const logo = await toDataURL('/terex-icon.png?v=11');
+    let textX = M;
+    if (logo) { try { doc.addImage(logo, 'PNG', M, 40, 44, 44); textX = M + 58; } catch { /* ignore */ } }
     doc.setTextColor(255, 255, 255);
     doc.setFont('helvetica', 'bold'); doc.setFontSize(22);
-    doc.text('TEREX', M, 58);
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
+    doc.text('Terex', textX, 64);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5);
     doc.setTextColor(190, 190, 190);
-    doc.text('Reçu de transaction', M, 78);
-    doc.setFontSize(9);
-    doc.text('terangaexchange.com', W - M, 78, { align: 'right' });
+    doc.text('Reçu de transaction', textX, 82);
+    doc.setFontSize(9); doc.setTextColor(160, 160, 160);
+    doc.text('Teranga Exchange · terangaexchange.com', W - M, 64, { align: 'right' });
+    doc.text('USDT / CFA', W - M, 80, { align: 'right' });
 
-    // Référence + date
-    let y = 150;
-    doc.setTextColor(120, 120, 120); doc.setFontSize(9);
-    doc.text('RÉFÉRENCE', M, y);
-    doc.text('DATE', W - M, y, { align: 'right' });
-    doc.setTextColor(20, 20, 20); doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
-    doc.text(`TEREX-${transaction.id.slice(-8).toUpperCase()}`, M, y + 18);
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
-    doc.text(formatDate(transaction.date), W - M, y + 18, { align: 'right' });
+    // ── Bloc résumé : le flux (payé → reçu) ──
+    let y = 170;
+    const isBuy = transaction.type === 'buy';
+    const isTransfer = transaction.type === 'transfer';
+    const paidLabel = isBuy ? 'Vous avez payé' : isTransfer ? 'Vous avez envoyé' : 'Vous avez vendu';
+    const paidVal = isBuy ? `${transaction.amount} ${transaction.currency}`
+      : isTransfer ? `${transaction.amount} ${transaction.currency}`
+      : `${transaction.usdtAmount || transaction.amount} USDT`;
+    const recvLabel = isBuy ? 'Vous avez reçu' : 'Le bénéficiaire reçoit';
+    const recvVal = isBuy ? `${transaction.usdtAmount || ''} USDT`
+      : `${transaction.fiatAmount || transaction.amount} ${transaction.receiveCurrency || transaction.currency}`;
 
-    // Montant principal
-    y += 62;
-    doc.setDrawColor(230, 230, 230); doc.line(M, y, W - M, y);
-    y += 30;
-    doc.setTextColor(120, 120, 120); doc.setFontSize(9);
-    doc.text(typeLabel(transaction.type).toUpperCase(), M, y);
-    doc.setTextColor(20, 20, 20); doc.setFont('helvetica', 'bold'); doc.setFontSize(24);
-    const mainAmount = `${transaction.amount} ${transaction.currency}`;
-    doc.text(mainAmount, M, y + 30);
+    doc.setDrawColor(235, 235, 235); doc.setLineWidth(1);
+    doc.roundedRect(M, y, contentW, 78, 10, 10, 'S');
+    const half = contentW / 2;
+    doc.setFontSize(9); doc.setTextColor(140, 140, 140);
+    doc.text(paidLabel.toUpperCase(), M + 18, y + 28);
+    doc.text(recvLabel.toUpperCase(), M + half + 18, y + 28);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(16); doc.setTextColor(20, 20, 20);
+    doc.text(paidVal, M + 18, y + 54);
+    doc.text(recvVal, M + half + 18, y + 54);
+    doc.setTextColor(180, 180, 180); doc.setFont('helvetica', 'normal'); doc.setFontSize(14);
+    doc.text('→', M + half - 6, y + 50, { align: 'center' });
 
-    // Lignes de détail
+    // ── Détails ──
+    y += 78 + 34;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(120, 120, 120);
+    doc.text('DÉTAILS', M, y);
+    y += 8;
+
     const rows: [string, string][] = [];
-    if (transaction.type === 'buy' && transaction.usdtAmount) rows.push(['USDT reçu', `${transaction.usdtAmount} USDT`]);
-    if ((transaction.type === 'sell' || transaction.type === 'transfer') && transaction.fiatAmount) rows.push(['Montant reçu', `${transaction.fiatAmount} ${transaction.receiveCurrency || ''}`]);
-    if (transaction.payment_method) rows.push(['Méthode de paiement', transaction.payment_method]);
-    if (transaction.type !== 'transfer' && transaction.network) rows.push(['Réseau', transaction.network]);
+    rows.push(['Référence', `TEREX-${transaction.id.slice(-8).toUpperCase()}`]);
+    rows.push(['Date', formatDate(transaction.date)]);
+    rows.push(['Type', typeLabel(transaction.type)]);
+    if (transaction.exchangeRate) rows.push(['Taux appliqué', `${transaction.exchangeRate} ${transaction.currency}/USDT`]);
+    const ml = methodLabel(transaction);
+    if (ml) rows.push(['Méthode de paiement', ml]);
+    if (!isTransfer && transaction.network) rows.push(['Réseau', transaction.network]);
+    if (isBuy && transaction.address) rows.push(['Adresse de réception', transaction.address]);
     if (transaction.recipient_name) rows.push(['Destinataire', transaction.recipient_name]);
+    if (transaction.recipient_phone) rows.push(['Téléphone', transaction.recipient_phone]);
     rows.push(['Statut', isDone(transaction.status) ? 'Terminée' : transaction.status]);
 
-    y += 66;
     doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
     rows.forEach(([k, v]) => {
-      doc.setDrawColor(238, 238, 238); doc.line(M, y, W - M, y);
-      y += 24;
-      doc.setTextColor(120, 120, 120); doc.text(k, M, y);
-      doc.setTextColor(20, 20, 20); doc.text(String(v), W - M, y, { align: 'right' });
-      y += 12;
+      y += 6; doc.setDrawColor(240, 240, 240); doc.line(M, y, W - M, y); y += 22;
+      doc.setTextColor(130, 130, 130); doc.text(k, M, y);
+      doc.setTextColor(20, 20, 20);
+      // Valeurs longues (adresse) : police plus petite, ancrée à droite, tronquée si besoin.
+      const long = String(v).length > 34;
+      if (long) { doc.setFontSize(9); doc.text(String(v), W - M, y, { align: 'right' }); doc.setFontSize(11); }
+      else doc.text(String(v), W - M, y, { align: 'right' });
     });
-    doc.setDrawColor(238, 238, 238); doc.line(M, y, W - M, y);
+    y += 6; doc.setDrawColor(240, 240, 240); doc.line(M, y, W - M, y);
 
-    // Pied de page
+    // ── Pied de page ──
+    doc.setDrawColor(235, 235, 235); doc.line(M, 760, W - M, 760);
     doc.setTextColor(150, 150, 150); doc.setFontSize(9);
-    doc.text("Ce reçu confirme votre transaction sur Terex (Teranga Exchange).", M, 780);
-    doc.text("Pour toute question : terangaexchange@gmail.com", M, 794);
+    doc.text('Merci d\'utiliser Terex. Ce reçu confirme votre transaction sur Teranga Exchange.', M, 782);
+    doc.text('Support : terangaexchange@gmail.com', M, 796);
+    doc.text('terangaexchange.com', W - M, 796, { align: 'right' });
 
     doc.save(`terex-recu-${transaction.id.slice(-8).toUpperCase()}.pdf`);
   };
@@ -221,10 +264,10 @@ export function TransactionDetails({ transaction }: TransactionDetailsProps) {
         </div>
       )}
 
-      {transaction.payment_method && (
+      {methodLabel(transaction) && (
         <div className="flex justify-between items-center">
           <span className="text-gray-400">Méthode de paiement:</span>
-          <span className="text-white">{transaction.payment_method}</span>
+          <span className="text-white">{methodLabel(transaction)}</span>
         </div>
       )}
 

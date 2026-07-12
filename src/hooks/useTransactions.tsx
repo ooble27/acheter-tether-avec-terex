@@ -18,6 +18,14 @@ interface Transaction {
   recipient_name?: string;
   recipient_phone?: string;
   payment_method?: string;
+  exchangeRate?: string;
+  provider?: string; // vrai prestataire (wave / orange) saisi dans la commande
+}
+
+// Extrait le prestataire réel (Wave / Orange Money) depuis les notes JSON de la commande.
+function providerFromNotes(notes?: string | null): string | undefined {
+  if (!notes) return undefined;
+  try { const n = JSON.parse(notes); return n.provider || undefined; } catch { return undefined; }
 }
 
 // Cache par utilisateur pour éviter les mélanges entre comptes
@@ -127,7 +135,9 @@ export const useTransactions = () => {
             address: order.wallet_address,
             status: order.status as any,
             date: order.created_at,
-            payment_method: order.payment_method
+            payment_method: order.payment_method,
+            exchangeRate: order.exchange_rate?.toString(),
+            provider: providerFromNotes((order as any).notes),
           });
         });
       }
