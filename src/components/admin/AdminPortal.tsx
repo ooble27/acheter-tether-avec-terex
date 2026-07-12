@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock,
+  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock, BookOpen,
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { OpsQueue } from '@/components/admin/orders/OpsQueue';
@@ -10,6 +10,7 @@ import { TeamAdmin } from '@/components/admin/TeamAdmin';
 import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { StaffPunch } from '@/components/admin/StaffPunch';
 import { StaffAttendance } from '@/components/admin/StaffAttendance';
+import { KnowledgeBase } from '@/components/admin/KnowledgeBase';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
 import { AccountingAdmin } from '@/components/admin/AccountingAdmin';
 import { NewsletterAdmin } from '@/components/admin/NewsletterAdmin';
@@ -37,6 +38,7 @@ const NAV: NavItem[] = [
   { id: 'applications', label: 'Candidatures',   desc: 'Recrutement',                           icon: UserCheck,    roles: ['admin', 'hr'] },
   { id: 'team',         label: 'Équipe',         desc: "Membres et rôles du back-office",       icon: Users,        roles: ['admin'] },
   { id: 'neobank',      label: 'Vision',         desc: 'Néobanque Terex',                       icon: Sparkles,     roles: ['admin'] },
+  { id: 'kb',           label: 'Guide',          desc: "Base de connaissances de l'équipe",     icon: BookOpen,     roles: ['admin', 'operator', 'kyc_reviewer', 'marketing', 'hr', 'support'] },
 ];
 
 export function AdminPortal() {
@@ -128,6 +130,7 @@ export function AdminPortal() {
           {currentTab === 'applications' && <JobApplicationsAdmin />}
           {currentTab === 'team' && <TeamAdmin />}
           {currentTab === 'neobank' && <NeobankVision />}
+          {currentTab === 'kb' && <KnowledgeBase />}
         </div>
       </div>
     </div>
