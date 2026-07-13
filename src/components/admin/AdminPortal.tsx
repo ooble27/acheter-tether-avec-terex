@@ -88,7 +88,6 @@ export function AdminPortal() {
           <h1 style={{ color: '#fff', fontSize: '19px', fontWeight: 700, margin: 0, letterSpacing: '-0.4px' }}>Administration</h1>
           <p style={{ color: '#6b7280', fontSize: '12px', margin: '2px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Pilotez la plateforme Terex</p>
         </div>
-        <StaffPunch />
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, borderRadius: '999px', padding: '6px 12px', flexShrink: 0 }}>
           <Shield size={13} color="rgba(255,255,255,0.6)" />
           <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '11px', fontWeight: 600 }}>{isAdmin() ? 'Admin' : roles.includes('operator') ? 'Opérateur' : roles.includes('marketing') ? 'Marketing' : roles.includes('hr') ? 'RH' : roles.includes('kyc_reviewer') ? 'KYC' : 'Staff'}</span>
@@ -96,6 +95,9 @@ export function AdminPortal() {
       </div>
 
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '16px', width: '100%', boxSizing: 'border-box' }}>
+        {/* Pointage — barre dédiée, pleine largeur (ne surcharge plus l'en-tête mobile) */}
+        <StaffPunch />
+
         {/* Nav pills — défilables horizontalement */}
         <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '6px', marginBottom: '20px', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
           {visibleNav.map(({ id, label, icon: Icon }) => {

@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'terex-v4'; // Incrémenté : le SW n'intercepte plus l'auth Supabase (fix PWA bloquée sur « Chargement… »)
+const CACHE_NAME = 'terex-v5'; // v5 : purge du cache (nouvelle page carrière, pointage déplacé). Force le rafraîchissement des bundles côté clients.
 const urlsToCache = [
   '/'
 ];

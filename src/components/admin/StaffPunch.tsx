@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { LogIn, LogOut } from 'lucide-react';
 import { useStaffShifts } from '@/hooks/useStaffShifts';
 
+const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 
 function durationSince(iso: string): string {
@@ -11,8 +12,9 @@ function durationSince(iso: string): string {
 }
 
 /**
- * Bouton de pointage (arrivée / sortie) affiché dans la barre du back-office.
- * Masqué tant que la table `staff_shifts` n'est pas déployée.
+ * Barre de pointage (arrivée / sortie) — affichée sur sa PROPRE ligne, pleine
+ * largeur, sous l'en-tête du back-office. Ne surcharge plus la barre du haut
+ * sur mobile. Masquée tant que la table `staff_shifts` n'est pas déployée.
  */
 export function StaffPunch() {
   const { available, current, busy, clockIn, clockOut } = useStaffShifts();
@@ -27,25 +29,37 @@ export function StaffPunch() {
 
   if (!available) return null;
 
-  if (current) {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.05)', border: `1px solid ${BORDER}`, borderRadius: 999, padding: '6px 12px' }}>
-          <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 0 3px rgba(74,222,128,0.15)' }} />
-          <span style={{ color: '#fff', fontSize: 11.5, fontWeight: 600 }}>En service · {durationSince(current.clock_in)}</span>
-        </span>
-        <button onClick={clockOut} disabled={busy}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', color: '#e07a7a', border: `1px solid rgba(255,255,255,0.12)`, borderRadius: 999, padding: '6px 12px', fontSize: 11.5, fontWeight: 600, cursor: 'pointer', flexShrink: 0 }}>
-          <LogOut size={13} /> Sortie
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <button onClick={() => clockIn()} disabled={busy}
-      style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#fff', color: '#141414', border: 'none', borderRadius: 999, padding: '7px 14px', fontSize: 12, fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}>
-      <LogIn size={14} /> Pointer l'arrivée
-    </button>
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+      background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14,
+      padding: '10px 14px', marginBottom: 16,
+    }}>
+      {current ? (
+        <>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 0 3px rgba(74,222,128,0.15)', flexShrink: 0 }} />
+            <span style={{ color: '#fff', fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              En service · {durationSince(current.clock_in)}
+            </span>
+          </span>
+          <button onClick={clockOut} disabled={busy}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', color: '#e07a7a', border: `1px solid rgba(224,122,122,0.3)`, borderRadius: 10, padding: '8px 14px', fontSize: 12.5, fontWeight: 600, cursor: 'pointer', flexShrink: 0 }}>
+            <LogOut size={14} /> Pointer la sortie
+          </button>
+        </>
+      ) : (
+        <>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#9ca3af', fontSize: 13, minWidth: 0 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#6b7280', flexShrink: 0 }} />
+            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Hors service</span>
+          </span>
+          <button onClick={() => clockIn()} disabled={busy}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#fff', color: '#141414', border: 'none', borderRadius: 10, padding: '8px 16px', fontSize: 12.5, fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}>
+            <LogIn size={14} /> Pointer l'arrivée
+          </button>
+        </>
+      )}
+    </div>
   );
 }
