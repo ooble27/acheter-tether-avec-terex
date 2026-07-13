@@ -43,13 +43,21 @@ const NAV: NavItem[] = [
 ];
 
 export function AdminPortal() {
-  const { isAdmin, isStaff, roles } = useUserRole();
+  const { isAdmin, isStaff, roles, loading: rolesLoading } = useUserRole();
   const navigate = useNavigate();
 
   // Onglets visibles selon MES rôles
   const visibleNav = NAV.filter(n => n.roles.some(r => roles.includes(r)));
   const [activeTab, setActiveTab] = useState<string>('');
   const currentTab = visibleNav.some(n => n.id === activeTab) ? activeTab : (visibleNav[0]?.id ?? '');
+
+  // Tant que les rôles se chargent, on n'affiche RIEN (fond neutre) — surtout
+  // pas « Accès non autorisé », qui provoquait le flash rouge avant l'arrivée
+  // des permissions. Le message n'apparaît que si, une fois chargé, l'utilisateur
+  // n'est réellement pas membre du staff.
+  if (rolesLoading) {
+    return <div style={{ minHeight: '100vh', background: BG }} />;
+  }
 
   if (!isStaff()) {
     return (

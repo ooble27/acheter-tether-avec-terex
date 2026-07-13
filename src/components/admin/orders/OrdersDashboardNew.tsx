@@ -73,7 +73,7 @@ const STATUS_FILTERS = [
 
 export function OrdersDashboardNew() {
   const { orders, loading, updateOrderStatus, refreshOrders, moveToTrash, restoreFromTrash, deletePermanently, emptyTrash } = useOrdersData();
-  const { isAdmin, isOperator } = useUserRole();
+  const { isAdmin, isOperator, loading: rolesLoading } = useUserRole();
   const [zone, setZone] = useState<Zone>('buy');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -96,7 +96,9 @@ export function OrdersDashboardNew() {
   }, [zone, orders]);
   const infos = useClientInfos(visibleIds);
 
-  if (!isAdmin() && !isOperator()) {
+  // Ne jamais afficher « Accès non autorisé » pendant le chargement des rôles
+  // (cause du flash au passage d'onglet). On attend d'être sûr.
+  if (!rolesLoading && !isAdmin() && !isOperator()) {
     return (
       <div className="flex items-center justify-center py-20">
         <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '32px', textAlign: 'center' }}>
