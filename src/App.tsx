@@ -11,6 +11,7 @@ import DashboardPage from "./pages/DashboardPage";
 import NotFound from "./pages/NotFound";
 import AboutPage from "./pages/AboutPage";
 import CareersPage from "./pages/CareersPage";
+import JobApplicationPage from "./pages/JobApplicationPage";
 import SupportPage from "./pages/SupportPage";
 import ContactPage from "./pages/ContactPage";
 import FAQPage from "./pages/FAQPage";
@@ -62,6 +63,7 @@ function App() {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/otc" element={<OTCPage />} />
                 <Route path="/careers" element={<CareersPage />} />
+                <Route path="/careers/postuler" element={<JobApplicationPage />} />
                 <Route path="/support" element={<SupportPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/faq" element={<FAQPage />} />

@@ -6,8 +6,6 @@ import { HeaderSection } from '@/components/marketing/sections/HeaderSection';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { JobApplicationForm } from '@/components/features/JobApplicationForm';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const BG = '#1a1a1a';
 const CARD = '#1e1e1e';
@@ -75,8 +73,6 @@ const CareersPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
-  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
-  const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [expandedPositions, setExpandedPositions] = useState<Set<number>>(new Set());
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);
@@ -86,7 +82,8 @@ const CareersPage = () => {
     if (!error) { toast({ title: 'Déconnexion réussie', description: 'À bientôt' }); window.location.reload(); }
   };
 
-  const handleApply = (position: string) => { setSelectedPosition(position); setShowApplicationForm(true); };
+  // Ouvre la page dédiée de candidature (plus de popup) — le poste voyage dans l'URL.
+  const handleApply = (position: string) => navigate(`/careers/postuler?poste=${encodeURIComponent(position)}`);
   const toggleExpanded = (index: number) => {
     const n = new Set(expandedPositions);
     n.has(index) ? n.delete(index) : n.add(index);
@@ -112,8 +109,11 @@ const CareersPage = () => {
         @media (max-width: 920px) {
           .cr-hero { grid-template-columns: 1fr !important; }
           .cr-hero-visual { display: none !important; }
-          .cr-bento { grid-template-columns: 1fr 1fr !important; }
+          /* Sur mobile/tablette : hauteurs naturelles — plus de tuiles étirées
+             avec un grand vide (les rangées ne sont plus forcées à 1fr). */
+          .cr-bento { grid-template-columns: 1fr 1fr !important; grid-auto-rows: auto !important; }
           .cr-bento-feat { grid-column: 1 / -1 !important; grid-row: auto !important; }
+          .cr-bento > div { grid-column: auto !important; }
         }
         @media (max-width: 860px) {
           .cr-hero-title { font-size: 40px !important; }
@@ -330,18 +330,6 @@ const CareersPage = () => {
           </div>
         </div>
       </section>
-
-      {/* Application Dialog */}
-      <Dialog open={showApplicationForm} onOpenChange={setShowApplicationForm}>
-        <DialogContent className="max-w-3xl lg:max-w-4xl bg-terex-dark border-white/[0.08] max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">Postuler : {selectedPosition}</DialogTitle>
-          </DialogHeader>
-          {selectedPosition && (
-            <JobApplicationForm position={selectedPosition} onClose={() => setShowApplicationForm(false)} />
-          )}
-        </DialogContent>
-      </Dialog>
 
       <FooterSection />
     </div>

@@ -11,9 +11,11 @@ import { Send, User, Mail, Phone, MapPin, Briefcase, FileText, Linkedin, Globe, 
 interface JobApplicationFormProps {
   position: string;
   onClose?: () => void;
+  /** Appelé après un envoi réussi (page dédiée : affiche l'écran de confirmation). */
+  onSubmitted?: () => void;
 }
 
-export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProps) => {
+export const JobApplicationForm = ({ position, onClose, onSubmitted }: JobApplicationFormProps) => {
   const { submitApplication, isSubmitting } = useJobApplications();
   const { user } = useAuth();
   
@@ -39,7 +41,10 @@ export const JobApplicationForm = ({ position, onClose }: JobApplicationFormProp
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await submitApplication(formData);
-    if (result.success && onClose) onClose();
+    if (result.success) {
+      if (onSubmitted) onSubmitted();
+      else if (onClose) onClose();
+    }
   };
 
   return (
