@@ -63,15 +63,26 @@ const mapPaymentMethodToDatabase = (paymentMethod?: string): DatabasePaymentMeth
   }
 };
 
+// Cache module-level : les commandes déjà chargées restent disponibles quand on
+// change d'onglet admin (File d'attente ↔ Commandes). Chaque écran s'affiche
+// AVEC les données en cache (aucun spinner « Chargement… » qui clignote), puis
+// se rafraîchit en arrière-plan. Corrige les flashs entre les pages du back-office.
+let ordersCache: UnifiedOrder[] = [];
+
 export function useOrders() {
-  const [orders, setOrders] = useState<UnifiedOrder[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState<UnifiedOrder[]>(ordersCache);
+  // On ne montre le plein écran de chargement que s'il n'y a VRAIMENT rien en cache.
+  const [loading, setLoading] = useState(ordersCache.length === 0);
   const { toast } = useToast();
   const { sendEmailNotification } = useEmailNotifications();
 
+  // Garder le cache synchronisé avec le dernier état connu.
+  useEffect(() => { ordersCache = orders; }, [orders]);
+
   const fetchOrders = async () => {
     try {
-      setLoading(true);
+      // Rafraîchissement discret quand on a déjà des données (pas de spinner).
+      if (ordersCache.length === 0) setLoading(true);
       
       // Fetch regular orders
       const { data: ordersData, error: ordersError } = await supabase
@@ -178,8 +189,11 @@ export function useOrders() {
     // le sondage de 15 s des écrans admin prend le relais (aucune erreur).
     let t: any = null;
     const bump = () => { clearTimeout(t); t = setTimeout(() => fetchOrders(), 400); };
+    // Nom de canal unique par instance : évite les collisions quand on change
+    // d'onglet (l'ancien composant se démonte pendant que le nouveau s'abonne).
+    const channelName = `orders-live-${Math.random().toString(36).slice(2)}`;
     const channel = supabase
-      .channel('orders-live')
+      .channel(channelName)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, bump)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'international_transfers' }, bump)
       .subscribe();

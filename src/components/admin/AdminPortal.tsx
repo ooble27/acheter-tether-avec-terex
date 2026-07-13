@@ -118,8 +118,9 @@ export function AdminPortal() {
           </div>
         </div>
 
-        {/* Section content — sécurisé : seul un onglet autorisé peut être actif */}
-        <div>
+        {/* Section content — sécurisé : seul un onglet autorisé peut être actif.
+            key = fondu doux au changement d'onglet (transitions fluides, sans flash). */}
+        <div key={currentTab} className="section-fade">
           {currentTab === 'queue' && <OpsQueue />}
           {currentTab === 'orders' && <OrdersDashboardNew />}
           {currentTab === 'kyc' && <KYCAdmin />}
