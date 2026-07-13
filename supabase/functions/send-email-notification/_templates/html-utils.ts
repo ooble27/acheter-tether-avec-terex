@@ -115,24 +115,58 @@ export function header(right?: string): string {
 }
 
 // ─── Footer ───────────────────────────────────────────────────────────────────
+// Emplacement des réseaux sociaux : quand les liens seront fournis, remplir
+// SOCIALS ci-dessous (label + url). Vide pour l'instant → la rangée n'apparaît pas.
+const SOCIALS: { label: string; url: string }[] = [
+  // { label: 'Facebook',  url: 'https://facebook.com/...' },
+  // { label: 'Instagram', url: 'https://instagram.com/...' },
+  // { label: 'X',         url: 'https://x.com/...' },
+  // { label: 'LinkedIn',  url: 'https://linkedin.com/company/...' },
+];
+
 export function footer(note = "Vous avez reçu cet email suite à une activité sur votre compte Terex."): string {
   const yr = new Date().getFullYear();
+
+  const socialsRow = SOCIALS.length === 0 ? '' : `
+          <p style="font-family:${F};font-size:12px;margin:0 0 18px 0;text-align:center;">
+            ${SOCIALS.map(s => `<a href="${s.url}" class="emuted" style="color:${C.textMuted};text-decoration:none;">${s.label}</a>`).join(`<span class="edim" style="color:${C.textDim};"> · </span>`)}
+          </p>`;
+
   return `
 <tr bgcolor="${C.footerBg}">
-  <td class="efooter" bgcolor="${C.footerBg}" style="background-color:${C.footerBg};padding:28px 32px;border-top:1px solid ${C.borderSoft};">
+  <td class="efooter" bgcolor="${C.footerBg}" style="background-color:${C.footerBg};padding:32px 32px 30px;border-top:1px solid ${C.borderSoft};text-align:center;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr bgcolor="${C.footerBg}">
-        <td bgcolor="${C.footerBg}" style="background-color:${C.footerBg};">
-          <p class="etxt" style="font-family:${F};font-size:15px;font-weight:700;letter-spacing:-0.02em;color:${C.text};margin:0 0 10px 0;">Terex</p>
-          <p class="edim" style="font-family:${F};font-size:11.5px;color:${C.textDim};line-height:1.7;margin:0 0 4px 0;">${note}</p>
-          <p class="edim" style="font-family:${F};font-size:11.5px;color:${C.textDim};line-height:1.7;margin:0 0 16px 0;">© ${yr} Teranga Exchange — Tous droits réservés.</p>
-          <p style="font-family:${F};font-size:11.5px;margin:0;">
+        <td align="center" bgcolor="${C.footerBg}" style="background-color:${C.footerBg};text-align:center;">
+
+          <!-- Signature -->
+          <img src="${LOGO}" width="46" height="46" alt="Terex" style="display:inline-block;width:46px;height:46px;border-radius:12px;border:1px solid ${C.border};margin:0 0 14px 0;">
+          <p class="emuted" style="font-family:${F};font-size:13px;color:${C.textMuted};margin:0 0 3px 0;">Bien cordialement,</p>
+          <p class="etxt" style="font-family:${F};font-size:15px;font-weight:700;letter-spacing:-0.01em;color:${C.text};margin:0 0 22px 0;">L'équipe Terex</p>
+
+          <!-- Séparateur -->
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-top:1px solid ${C.borderSoft};font-size:0;line-height:0;height:1px;">&nbsp;</td></tr></table>
+
+          <!-- (Réseaux sociaux — à activer plus tard) -->
+          <div style="height:22px;line-height:22px;font-size:0;">&nbsp;</div>
+          ${socialsRow}
+
+          <!-- Liens -->
+          <p style="font-family:${F};font-size:12px;margin:0 0 16px 0;text-align:center;">
+            <a href="mailto:terangaexchange@gmail.com" class="emuted" style="color:${C.textMuted};text-decoration:none;">Nous contacter</a>
+            <span class="edim" style="color:${C.textDim};"> · </span>
             <a href="${BASE}/privacy" class="emuted" style="color:${C.textMuted};text-decoration:none;">Confidentialité</a>
             <span class="edim" style="color:${C.textDim};"> · </span>
             <a href="${BASE}/help" class="emuted" style="color:${C.textMuted};text-decoration:none;">Centre d'aide</a>
             <span class="edim" style="color:${C.textDim};"> · </span>
             <a href="${BASE}" class="emuted" style="color:${C.textMuted};text-decoration:none;">terangaexchange.com</a>
           </p>
+
+          <!-- Identité + mentions -->
+          <p class="edim" style="font-family:${F};font-size:11.5px;color:${C.textDim};line-height:1.7;margin:0 0 3px 0;">Terex — Teranga Exchange · Achat & vente d'USDT en CFA</p>
+          <p class="edim" style="font-family:${F};font-size:11.5px;color:${C.textDim};line-height:1.7;margin:0 0 3px 0;">${note}</p>
+          <p class="edim" style="font-family:${F};font-size:11.5px;color:${C.textDim};line-height:1.7;margin:0;">© ${yr} Teranga Exchange — Tous droits réservés.</p>
+
         </td>
       </tr>
     </table>
