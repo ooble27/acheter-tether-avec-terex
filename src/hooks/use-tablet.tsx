@@ -1,36 +1,35 @@
-
 import * as React from "react";
 
-// Considérer les appareils entre 768px et 1180px comme des tablettes
-const MIN_TABLET_WIDTH = 768;
-const MAX_TABLET_WIDTH = 1180;
+// Tablette : entre 768px et 1180px de large.
+const QUERY = "(min-width: 768px) and (max-width: 1180px)";
+
+/**
+ * Comme useIsMobile : on s'appuie sur `matchMedia` (viewport de MISE EN PAGE)
+ * et non sur `window.innerWidth` (viewport VISUEL), qui suivait le zoom pincé
+ * sur iPad/PWA et provoquait des flashs de mise en page au chargement.
+ */
+function query(): MediaQueryList | null {
+  if (typeof window === 'undefined' || !window.matchMedia) return null;
+  return window.matchMedia(QUERY);
+}
 
 export function useIsTablet() {
-  const [isTablet, setIsTablet] = React.useState<boolean>(
-    typeof window !== 'undefined'
-      ? window.innerWidth >= MIN_TABLET_WIDTH && window.innerWidth <= MAX_TABLET_WIDTH
-      : false
-  );
+  const [isTablet, setIsTablet] = React.useState<boolean>(() => query()?.matches ?? false);
 
   React.useEffect(() => {
-    const checkIsTablet = () => {
-      const width = window.innerWidth;
-      setIsTablet(width >= MIN_TABLET_WIDTH && width <= MAX_TABLET_WIDTH);
-    };
-
-    // Vérifier au chargement + après le premier rendu (stabilise iPad/PWA)
-    checkIsTablet();
-    const raf = requestAnimationFrame(checkIsTablet);
-
-    window.addEventListener("resize", checkIsTablet);
-    window.addEventListener("orientationchange", checkIsTablet);
-
+    const mql = query();
+    if (!mql) return;
+    const onChange = () => setIsTablet(mql.matches);
+    onChange();
+    if (mql.addEventListener) mql.addEventListener('change', onChange);
+    else mql.addListener(onChange);
+    window.addEventListener('orientationchange', onChange);
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", checkIsTablet);
-      window.removeEventListener("orientationchange", checkIsTablet);
+      if (mql.removeEventListener) mql.removeEventListener('change', onChange);
+      else mql.removeListener(onChange);
+      window.removeEventListener('orientationchange', onChange);
     };
   }, []);
 
-  return !!isTablet;
+  return isTablet;
 }

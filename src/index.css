@@ -105,6 +105,17 @@ html, body {
   color-scheme: dark;
 }
 
+/* Fondu doux au changement de section du tableau de bord — évite l'impression
+   de « flash » quand une page apparaît d'un coup. Opacité seule : aucun
+   décalage de mise en page. */
+@keyframes section-fade {
+  from { opacity: 0.35; }
+  to   { opacity: 1; }
+}
+.section-fade {
+  animation: section-fade 0.16s ease-out both;
+}
+
 /* Classe pour masquer la barre de défilement (renforcée) */
 @layer utilities {
   .scrollbar-hide {

@@ -35,9 +35,13 @@ interface DashboardProps {
 }
 
 export function Dashboard({ user, onLogout }: DashboardProps) {
-  const [activeSection, setActiveSection] = useState('home');
   const navigate = useNavigate();
   const location = useLocation();
+  // Section initiale calculée DÈS le premier rendu (pas dans un effet) : sinon
+  // on voyait « Accueil » clignoter avant la page demandée (ex. Acheter).
+  const [activeSection, setActiveSection] = useState<string>(() =>
+    (location.state as { action?: string } | null)?.action === 'buy' ? 'buy' : 'home'
+  );
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const { signOut } = useAuth();
@@ -48,28 +52,22 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                (window.navigator as any).standalone ||
                document.referrer.includes('android-app://');
 
-  // Auto-navigate to buy section if redirected from Hero form
+  // Nettoyer l'état de navigation une fois la section initiale prise en compte
+  // (évite de re-déclencher « buy » au retour arrière). Sans re-render de section.
   useEffect(() => {
-    const state = location.state as { action?: string } | null;
-    if (state?.action === 'buy') {
-      setActiveSection('buy');
-      // Clear the navigation state to prevent re-triggering
+    if ((location.state as { action?: string } | null)?.action) {
       window.history.replaceState({}, document.title);
     }
-  }, [location.state]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Effet pour remonter en haut à chaque changement de section
+  // Remonter en haut à chaque changement de section — INSTANTANÉ (le scroll
+  // « smooth » donnait une impression de saccade pendant le changement de page).
   useEffect(() => {
-    // Pour le PWA mobile, scroll immédiatement et de façon synchrone
-    if (isPWA && isMobile) {
-      window.scrollTo(0, 0);
-      // Force aussi le scroll du body au cas où
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [activeSection, isPWA, isMobile]);
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }, [activeSection]);
 
   // Effet spécial pour s'assurer que la page home scroll bien en haut
   useEffect(() => {
@@ -201,7 +199,10 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
           )}
 
           <main className={`flex-1 ${isMobile ? 'p-4 pt-16 pb-20' : 'p-6 pt-6 pb-24'} relative`}>
-            {renderContent()}
+            {/* key = fondu doux à chaque changement de section (transitions fluides) */}
+            <div key={activeSection} className="section-fade">
+              {renderContent()}
+            </div>
           </main>
           
           {/* Navigation en bas */}
