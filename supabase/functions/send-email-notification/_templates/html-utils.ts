@@ -26,6 +26,7 @@ export const C = {
 const F  = `-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif`;
 const FM = `ui-monospace,SFMono-Regular,Menlo,'Courier New',monospace`;
 const LOGO = `https://terangaexchange.com/terex-icon.png`;
+const TEAM = `https://terangaexchange.com/email/terex-team.jpg`; // illustration signature
 const BASE = `https://terangaexchange.com`;
 
 // ─── CSS — always dark, both light+dark system prefs, Gmail dark mode overrides ────────────
@@ -139,8 +140,12 @@ export function footer(note = "Vous avez reçu cet email suite à une activité 
       <tr bgcolor="${C.footerBg}">
         <td align="center" bgcolor="${C.footerBg}" style="background-color:${C.footerBg};text-align:center;">
 
-          <!-- Signature -->
-          <img src="${LOGO}" width="46" height="46" alt="Terex" style="display:inline-block;width:46px;height:46px;border-radius:12px;border:1px solid ${C.border};margin:0 0 14px 0;">
+          <!-- Signature — illustration de l'équipe dans un cadre arrondi -->
+          <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 14px;">
+            <tr><td style="background-color:${C.cardBg};border:1px solid ${C.border};border-radius:20px;padding:6px;">
+              <img src="${TEAM}" width="92" height="92" alt="L'équipe Terex" style="display:block;width:92px;height:92px;border-radius:15px;">
+            </td></tr>
+          </table>
           <p class="emuted" style="font-family:${F};font-size:13px;color:${C.textMuted};margin:0 0 3px 0;">Bien cordialement,</p>
           <p class="etxt" style="font-family:${F};font-size:15px;font-weight:700;letter-spacing:-0.01em;color:${C.text};margin:0 0 22px 0;">L'équipe Terex</p>
 
