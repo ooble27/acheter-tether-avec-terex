@@ -11,6 +11,7 @@ import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { StaffPunch } from '@/components/admin/StaffPunch';
 import { StaffAttendance } from '@/components/admin/StaffAttendance';
 import { KnowledgeBase } from '@/components/admin/KnowledgeBase';
+import { OrdersDataProvider } from '@/components/admin/OrdersDataProvider';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
 import { AccountingAdmin } from '@/components/admin/AccountingAdmin';
 import { NewsletterAdmin } from '@/components/admin/NewsletterAdmin';
@@ -67,6 +68,7 @@ export function AdminPortal() {
   const active = visibleNav.find(n => n.id === currentTab) ?? visibleNav[0];
 
   return (
+    <OrdersDataProvider>
     <div style={{ minHeight: '100vh', background: BG, paddingBottom: '80px', width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
       {/* Top bar */}
       <div style={{ padding: 'calc(env(safe-area-inset-top, 0px) + 18px) 16px 16px', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', gap: '12px', maxWidth: '1200px', margin: '0 auto' }}>
@@ -119,8 +121,8 @@ export function AdminPortal() {
         </div>
 
         {/* Section content — sécurisé : seul un onglet autorisé peut être actif.
-            key = fondu doux au changement d'onglet (transitions fluides, sans flash). */}
-        <div key={currentTab} className="section-fade">
+            Données partagées (OrdersDataProvider) → changement d'onglet instantané. */}
+        <div>
           {currentTab === 'queue' && <OpsQueue />}
           {currentTab === 'orders' && <OrdersDashboardNew />}
           {currentTab === 'kyc' && <KYCAdmin />}
@@ -135,5 +137,6 @@ export function AdminPortal() {
         </div>
       </div>
     </div>
+    </OrdersDataProvider>
   );
 }

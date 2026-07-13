@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { useOrders, UnifiedOrder } from '@/hooks/useOrders';
+import { UnifiedOrder } from '@/hooks/useOrders';
+import { useOrdersData } from '@/components/admin/OrdersDataProvider';
 import { format, subMonths, startOfMonth } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import {
@@ -53,7 +54,7 @@ const TYPE_META: Record<string, { label: string; Icon: any }> = {
  * vient de la base, impossible à falsifier ou à oublier.
  */
 export function AccountingAdmin() {
-  const { orders, loading, refreshOrders } = useOrders();
+  const { orders, loading, refreshOrders } = useOrdersData();
   const [period, setPeriod] = useState<Period>('month');
 
   const completed = useMemo(

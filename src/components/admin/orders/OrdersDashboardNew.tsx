@@ -3,7 +3,8 @@ import {
   Search, RefreshCw, Coins, HandCoins, Send, Trash2,
   Download, AlertTriangle, ChevronRight, RotateCcw, Inbox,
 } from 'lucide-react';
-import { useOrders, UnifiedOrder } from '@/hooks/useOrders';
+import { UnifiedOrder } from '@/hooks/useOrders';
+import { useOrdersData } from '@/components/admin/OrdersDataProvider';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { OrderDetailsPage } from './OrderDetailsPage';
@@ -71,7 +72,7 @@ const STATUS_FILTERS = [
 ];
 
 export function OrdersDashboardNew() {
-  const { orders, loading, updateOrderStatus, refreshOrders, moveToTrash, restoreFromTrash, deletePermanently, emptyTrash } = useOrders();
+  const { orders, loading, updateOrderStatus, refreshOrders, moveToTrash, restoreFromTrash, deletePermanently, emptyTrash } = useOrdersData();
   const { isAdmin, isOperator } = useUserRole();
   const [zone, setZone] = useState<Zone>('buy');
   const [searchTerm, setSearchTerm] = useState('');

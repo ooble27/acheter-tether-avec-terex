@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useOrders, UnifiedOrder } from '@/hooks/useOrders';
+import { UnifiedOrder } from '@/hooks/useOrders';
+import { useOrdersData } from '@/components/admin/OrdersDataProvider';
 import { useOrderOps } from '@/hooks/useOrderOps';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { OrderDetailsPage } from './OrderDetailsPage';
@@ -24,7 +25,7 @@ function ageOf(iso: string): string {
 }
 
 export function OpsQueue() {
-  const { orders, loading, updateOrderStatus, refreshOrders, moveToTrash } = useOrders();
+  const { orders, loading, updateOrderStatus, refreshOrders, moveToTrash } = useOrdersData();
   const { claimOrder, releaseOrder, currentUserId } = useOrderOps();
   const [detailOrder, setDetailOrder] = useState<UnifiedOrder | null>(null);
   const [tab, setTab] = useState<'queue' | 'mine' | 'others'>('queue');

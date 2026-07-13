@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useOrders, UnifiedOrder } from '@/hooks/useOrders';
+import { UnifiedOrder } from '@/hooks/useOrders';
+import { useOrdersData } from '@/components/admin/OrdersDataProvider';
 import { useClientInfos } from '@/hooks/useClientInfos';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -36,7 +37,7 @@ interface ClientProfileProps {
 }
 
 export function ClientProfile({ userId, onBack, onOpenOrder }: ClientProfileProps) {
-  const { orders } = useOrders();
+  const { orders } = useOrdersData();
   const infos = useClientInfos([userId]);
   const info = infos[userId];
   const [kycStatus, setKycStatus] = useState<string | null>(null);
