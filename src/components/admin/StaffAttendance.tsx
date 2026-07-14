@@ -1,27 +1,29 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useClientInfos } from '@/hooks/useClientInfos';
-import { format } from 'date-fns';
+import { format, startOfWeek, endOfWeek } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { RefreshCw, Clock, Info } from 'lucide-react';
+import { RefreshCw, Clock, Info, Download } from 'lucide-react';
 import { PageHeader, StatStrip, Avatar, drillStyles } from '@/components/admin/AdminDrill';
 import type { Shift } from '@/hooks/useStaffShifts';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 
-type Period = 'today' | '7d' | '30d';
+type Period = 'today' | '7d' | '30d' | '90d';
 const PERIODS: { id: Period; label: string }[] = [
   { id: 'today', label: "Aujourd'hui" },
   { id: '7d', label: '7 jours' },
   { id: '30d', label: '30 jours' },
+  { id: '90d', label: '3 mois' },
 ];
 
 function periodStart(p: Period): number {
   const d = new Date();
   if (p === 'today') { d.setHours(0, 0, 0, 0); return d.getTime(); }
   if (p === '7d') return Date.now() - 7 * 864e5;
-  return Date.now() - 30 * 864e5;
+  if (p === '30d') return Date.now() - 30 * 864e5;
+  return Date.now() - 90 * 864e5;
 }
 
 function minutesOf(s: Shift): number {
@@ -31,6 +33,21 @@ function minutesOf(s: Shift): number {
 function fmtMins(m: number): string {
   const h = Math.floor(m / 60);
   return h > 0 ? `${h} h ${m % 60} min` : `${m} min`;
+}
+// Heures DÉCIMALES pour la paie : 90 min → « 1,50 h » (taux horaire × heures).
+function decimalHours(m: number): string {
+  return (m / 60).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+// Semaine calendaire lundi → dimanche (norme paie).
+function weekInfo(iso: string): { key: string; label: string; start: number } {
+  const d = new Date(iso);
+  const ws = startOfWeek(d, { weekStartsOn: 1 });
+  const we = endOfWeek(d, { weekStartsOn: 1 });
+  return {
+    key: format(ws, 'yyyy-MM-dd'),
+    label: `Semaine du ${format(ws, 'd MMM', { locale: fr })} au ${format(we, 'd MMM', { locale: fr })}`,
+    start: ws.getTime(),
+  };
 }
 
 /**
@@ -67,22 +84,72 @@ export function StaffAttendance() {
   const nameOf = (s: Shift) => infos[s.user_id]?.full_name || s.actor_name || 'Membre';
 
   const online = shifts.filter(s => !s.clock_out);
-  const byUser = useMemo(() => {
-    const map = new Map<string, { userId: string; name: string; minutes: number; count: number; shifts: Shift[] }>();
+
+  type Week = { key: string; label: string; start: number; minutes: number; count: number; shifts: Shift[] };
+  type UserAgg = { userId: string; name: string; minutes: number; count: number; shifts: Shift[]; weeks: Week[] };
+
+  const byUser = useMemo<UserAgg[]>(() => {
+    const map = new Map<string, UserAgg & { weekMap: Map<string, Week> }>();
     for (const s of shifts) {
       const key = s.user_id;
-      const cur = map.get(key) || { userId: key, name: nameOf(s), minutes: 0, count: 0, shifts: [] };
-      cur.minutes += minutesOf(s);
+      const cur = map.get(key) || { userId: key, name: nameOf(s), minutes: 0, count: 0, shifts: [], weeks: [], weekMap: new Map<string, Week>() };
+      const m = minutesOf(s);
+      cur.minutes += m;
       cur.count += 1;
       cur.name = nameOf(s);
       cur.shifts.push(s);
+      // Ventilation par semaine calendaire.
+      const wi = weekInfo(s.clock_in);
+      const w = cur.weekMap.get(wi.key) || { key: wi.key, label: wi.label, start: wi.start, minutes: 0, count: 0, shifts: [] };
+      w.minutes += m;
+      w.count += 1;
+      w.shifts.push(s);
+      cur.weekMap.set(wi.key, w);
       map.set(key, cur);
     }
-    return Array.from(map.values()).sort((a, b) => b.minutes - a.minutes);
+    return Array.from(map.values())
+      .map(u => ({ userId: u.userId, name: u.name, minutes: u.minutes, count: u.count, shifts: u.shifts, weeks: Array.from(u.weekMap.values()).sort((a, b) => b.start - a.start) }))
+      .sort((a, b) => b.minutes - a.minutes);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shifts, infos]);
 
   const totalMinutes = byUser.reduce((s, u) => s + u.minutes, 0);
+
+  // Total de la semaine EN COURS (lundi → aujourd'hui) — repère paie.
+  const thisWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 }).getTime();
+  const thisWeekMinutes = useMemo(
+    () => shifts.filter(s => weekInfo(s.clock_in).start === thisWeekStart).reduce((sum, s) => sum + minutesOf(s), 0),
+    [shifts, thisWeekStart]
+  );
+
+  // Export CSV pour la paie : une ligne par membre × semaine, heures en décimal.
+  const exportCsv = () => {
+    const header = ['Membre', 'Semaine (début)', 'Semaine (fin)', 'Heures (décimal)', 'Heures (h min)', 'Pointages'];
+    const lines = [header];
+    for (const u of byUser) {
+      for (const w of u.weeks) {
+        const ws = new Date(w.start);
+        const we = endOfWeek(ws, { weekStartsOn: 1 });
+        lines.push([
+          u.name,
+          format(ws, 'yyyy-MM-dd'),
+          format(we, 'yyyy-MM-dd'),
+          decimalHours(w.minutes),
+          fmtMins(w.minutes),
+          String(w.count),
+        ]);
+      }
+    }
+    const csv = lines.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(';')).join('\r\n');
+    // BOM ﻿ : accents corrects à l'ouverture dans Excel.
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `presences-paie-${period}-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   if (available === false) {
     return (
@@ -108,9 +175,14 @@ export function StaffAttendance() {
       <style>{drillStyles}</style>
       <PageHeader title="Présences" sub="Heures pointées par membre — base de calcul de la paie"
         right={
-          <button className="ghost-btn" onClick={load} disabled={loading}>
-            <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Actualiser
-          </button>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button className="ghost-btn" onClick={exportCsv} disabled={loading || shifts.length === 0}>
+              <Download size={13} /> Exporter (paie)
+            </button>
+            <button className="ghost-btn" onClick={load} disabled={loading}>
+              <RefreshCw size={13} className={loading ? 'animate-spin' : ''} /> Actualiser
+            </button>
+          </div>
         }
       />
 
@@ -128,10 +200,10 @@ export function StaffAttendance() {
       </div>
 
       <StatStrip items={[
-        { label: 'En service', value: online.length, tone: online.length > 0 ? 'default' : 'default' },
+        { label: 'En service', value: online.length },
+        { label: 'Cette semaine', value: `${decimalHours(thisWeekMinutes)} h` },
+        { label: 'Total pointé', value: `${decimalHours(totalMinutes)} h` },
         { label: 'Membres actifs', value: byUser.length },
-        { label: 'Total pointé', value: fmtMins(totalMinutes) },
-        { label: 'Pointages', value: shifts.length },
       ]} />
 
       {/* En service maintenant */}
@@ -156,10 +228,11 @@ export function StaffAttendance() {
         </div>
       )}
 
-      {/* Heures par membre */}
+      {/* Heures par membre — avec ventilation hebdomadaire pour la paie */}
       <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden' }}>
-        <div style={{ padding: '13px 16px', borderBottom: `1px solid ${BORDER}` }}>
+        <div style={{ padding: '13px 16px', borderBottom: `1px solid ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 700, margin: 0 }}>Heures par membre</p>
+          <span style={{ color: '#6b7280', fontSize: 11.5 }}>Toucher un membre pour le détail par semaine</span>
         </div>
         {loading ? (
           <p style={{ color: '#6b7280', fontSize: 13, padding: '20px 16px', margin: 0 }}>Chargement…</p>
@@ -172,18 +245,33 @@ export function StaffAttendance() {
                 <Avatar name={u.name} size={34} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ color: '#fff', fontSize: 14, fontWeight: 600, margin: 0 }}>{u.name}</p>
-                  <p style={{ color: '#6b7280', fontSize: 12, margin: '1px 0 0' }}>{u.count} pointage(s)</p>
+                  <p style={{ color: '#6b7280', fontSize: 12, margin: '1px 0 0' }}>{u.count} pointage(s) · {u.weeks.length} semaine(s)</p>
                 </div>
-                <span style={{ color: '#fff', fontSize: 15, fontWeight: 700 }}>{fmtMins(u.minutes)}</span>
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ color: '#fff', fontSize: 15, fontWeight: 700, margin: 0 }}>{decimalHours(u.minutes)} h</p>
+                  <p style={{ color: '#6b7280', fontSize: 11.5, margin: '1px 0 0' }}>{fmtMins(u.minutes)}</p>
+                </div>
               </summary>
-              <div style={{ padding: '0 16px 10px 62px' }}>
-                {u.shifts.map(s => (
-                  <div key={s.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, padding: '8px 0', borderTop: `1px solid ${BORDER}` }}>
-                    <span style={{ color: '#9ca3af', fontSize: 12.5 }}>
-                      {format(new Date(s.clock_in), 'EEE d MMM', { locale: fr })}
-                      <span style={{ color: '#6b7280' }}> · {format(new Date(s.clock_in), 'HH:mm')} → {s.clock_out ? format(new Date(s.clock_out), 'HH:mm') : '…'}</span>
-                    </span>
-                    <span style={{ color: s.clock_out ? '#fff' : '#4ade80', fontSize: 12.5, fontWeight: 600, whiteSpace: 'nowrap' }}>{fmtMins(minutesOf(s))}</span>
+              <div style={{ padding: '0 16px 12px' }}>
+                {u.weeks.map(w => (
+                  <div key={w.key} style={{ marginTop: 10 }}>
+                    {/* Bandeau semaine + sous-total */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, padding: '7px 12px', background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: 9 }}>
+                      <span style={{ color: '#d1d5db', fontSize: 12.5, fontWeight: 600 }}>{w.label}</span>
+                      <span style={{ color: '#fff', fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap' }}>{decimalHours(w.minutes)} h <span style={{ color: '#6b7280', fontWeight: 500 }}>· {fmtMins(w.minutes)}</span></span>
+                    </div>
+                    {/* Pointages de la semaine */}
+                    <div style={{ padding: '0 4px 0 12px' }}>
+                      {w.shifts.map(s => (
+                        <div key={s.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, padding: '8px 0', borderBottom: `1px solid ${BORDER}` }}>
+                          <span style={{ color: '#9ca3af', fontSize: 12.5 }}>
+                            {format(new Date(s.clock_in), 'EEE d MMM', { locale: fr })}
+                            <span style={{ color: '#6b7280' }}> · {format(new Date(s.clock_in), 'HH:mm')} → {s.clock_out ? format(new Date(s.clock_out), 'HH:mm') : '…'}</span>
+                          </span>
+                          <span style={{ color: s.clock_out ? '#fff' : '#4ade80', fontSize: 12.5, fontWeight: 600, whiteSpace: 'nowrap' }}>{fmtMins(minutesOf(s))}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -192,8 +280,10 @@ export function StaffAttendance() {
         )}
       </div>
 
-      <p style={{ color: '#4b5563', fontSize: 11.5, margin: 0 }}>
-        Les heures proviennent des pointages arrivée/sortie de chaque membre. Un pointage encore ouvert compte jusqu'à maintenant.
+      <p style={{ color: '#4b5563', fontSize: 11.5, margin: 0, lineHeight: 1.6 }}>
+        Heures calculées automatiquement depuis les pointages arrivée/sortie. Semaines lundi → dimanche.
+        Les heures décimales (ex. 1,50 h = 1 h 30) se multiplient directement par le taux horaire.
+        « Exporter (paie) » télécharge un fichier CSV (membre × semaine) prêt pour ton tableur. Un pointage encore ouvert compte jusqu'à maintenant.
       </p>
     </div>
   );
