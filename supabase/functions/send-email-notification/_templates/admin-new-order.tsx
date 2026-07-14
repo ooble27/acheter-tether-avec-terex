@@ -15,23 +15,23 @@ function networkDisplay(network: string): string {
   return network || 'N/A';
 }
 
-/* Bloc valeur clé — grand, impossible à rater */
-function keyBlock(label: string, value: string, sub?: string, color = C.green): string {
+/* Bloc valeur clé — carte neutre élégante (fini les fonds ambre/rouge ternes) */
+function keyBlock(label: string, value: string, sub?: string, _color = C.green): string {
   return `
-<div style="margin-bottom:12px;">
+<div style="margin-bottom:10px;">
   <p style="font-family:${F};font-size:10px;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;
      color:${C.textDim};margin:0 0 7px 0;">${label}</p>
-  <div style="background:${color}12;border:1.5px solid ${color}30;border-radius:14px;padding:16px 20px;">
-    <p style="font-family:${FM};font-size:21px;font-weight:800;color:${color};
+  <div style="background:${C.infoBg};border:1px solid ${C.border};border-radius:14px;padding:15px 18px;">
+    <p style="font-family:${FM};font-size:20px;font-weight:800;color:${C.text};
        margin:0;line-height:1.15;word-break:break-all;letter-spacing:-0.02em;">${value}</p>
     ${sub ? `<p style="font-family:${F};font-size:11px;color:${C.textMuted};margin:6px 0 0 0;">${sub}</p>` : ''}
   </div>
 </div>`;
 }
 
-/* Étape numérotée avec design soigné */
+/* Étape numérotée avec design soigné — pastilles numéro neutres */
 function step(num: number, emoji: string, title: string, content: string, done = false): string {
-  const numBg   = done ? C.accent           : num === 1 ? C.amber : C.accent;
+  const numBg   = C.accent;
   const numText = '#191919';
   return `
 <tr>
@@ -101,12 +101,12 @@ export function adminNewOrderHtml({ orderData, transactionType, clientName, clie
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td style="padding:28px 24px 24px;">
-          <!-- badge type -->
-          <div style="display:inline-block;background:${isBuy ? 'rgba(255,255,255,0.08)' : isSell ? 'rgba(248,113,113,0.12)' : 'rgba(96,165,250,0.12)'};
-            border:1px solid ${isBuy ? 'rgba(255,255,255,0.18)' : isSell ? 'rgba(248,113,113,0.3)' : 'rgba(96,165,250,0.3)'};
+          <!-- badge type — neutre et sobre (le libellé distingue déjà) -->
+          <div style="display:inline-block;background:rgba(255,255,255,0.07);
+            border:1px solid rgba(255,255,255,0.16);
             border-radius:100px;padding:5px 14px;margin-bottom:16px;">
             <span style="font-family:${F};font-size:11px;font-weight:700;letter-spacing:0.08em;
-              color:${isBuy ? C.green : isSell ? '#f87171' : '#60a5fa'};">${typeBadge}</span>
+              color:${C.text};">${typeBadge}</span>
           </div>
           <!-- ref + titre -->
           <p style="font-family:${FM};font-size:12px;color:${C.textDim};margin:0 0 8px 0;">${reference}</p>
@@ -246,7 +246,7 @@ export function adminNewOrderHtml({ orderData, transactionType, clientName, clie
   return wrapEmail(
     `[${typeLabel}] ${reference} — Action requise`,
     rows,
-    dotBadge('Action requise', C.amber),
+    dotBadge('Action requise', C.textMuted),
     `Commande reçue le ${dateStr}`
   );
 }

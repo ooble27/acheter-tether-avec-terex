@@ -149,28 +149,28 @@ export function footer(note = "Vous avez reçu cet email suite à une activité 
           <p class="emuted" style="font-family:${F};font-size:13px;color:${C.textMuted};margin:0 0 3px 0;">Bien cordialement,</p>
           <p class="etxt" style="font-family:${F};font-size:15px;font-weight:700;letter-spacing:-0.01em;color:${C.text};margin:0 0 22px 0;">L'équipe Terex</p>
 
-          <!-- Séparateur -->
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-top:1px solid ${C.borderSoft};font-size:0;line-height:0;height:1px;">&nbsp;</td></tr></table>
+          <!-- Séparateur court, centré — plus délicat qu'un filet pleine largeur -->
+          <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:6px auto 24px;"><tr><td style="width:44px;border-top:1px solid ${C.border};font-size:0;line-height:0;height:1px;">&nbsp;</td></tr></table>
 
           <!-- (Réseaux sociaux — à activer plus tard) -->
-          <div style="height:22px;line-height:22px;font-size:0;">&nbsp;</div>
           ${socialsRow}
 
-          <!-- Liens -->
-          <p style="font-family:${F};font-size:12px;margin:0 0 16px 0;text-align:center;">
+          <!-- Liens — aérés -->
+          <p style="font-family:${F};font-size:12px;line-height:1.9;margin:0 0 20px 0;text-align:center;">
             <a href="mailto:terangaexchange@gmail.com" class="emuted" style="color:${C.textMuted};text-decoration:none;">Nous contacter</a>
-            <span class="edim" style="color:${C.textDim};"> · </span>
+            <span class="edim" style="color:${C.textDim};">&nbsp;&nbsp;·&nbsp;&nbsp;</span>
             <a href="${BASE}/privacy" class="emuted" style="color:${C.textMuted};text-decoration:none;">Confidentialité</a>
-            <span class="edim" style="color:${C.textDim};"> · </span>
+            <span class="edim" style="color:${C.textDim};">&nbsp;&nbsp;·&nbsp;&nbsp;</span>
             <a href="${BASE}/help" class="emuted" style="color:${C.textMuted};text-decoration:none;">Centre d'aide</a>
-            <span class="edim" style="color:${C.textDim};"> · </span>
+            <span class="edim" style="color:${C.textDim};">&nbsp;&nbsp;·&nbsp;&nbsp;</span>
             <a href="${BASE}" class="emuted" style="color:${C.textMuted};text-decoration:none;">terangaexchange.com</a>
           </p>
 
-          <!-- Identité + mentions -->
-          <p class="edim" style="font-family:${F};font-size:11.5px;color:${C.textDim};line-height:1.7;margin:0 0 3px 0;">Terex — Teranga Exchange · Achat & vente d'USDT en CFA</p>
-          <p class="edim" style="font-family:${F};font-size:11.5px;color:${C.textDim};line-height:1.7;margin:0 0 3px 0;">${note}</p>
-          <p class="edim" style="font-family:${F};font-size:11.5px;color:${C.textDim};line-height:1.7;margin:0;">© ${yr} Teranga Exchange — Tous droits réservés.</p>
+          <!-- Identité + mentions — soignées, discrètes -->
+          <p class="emuted" style="font-family:${F};font-size:12px;font-weight:600;color:${C.textMuted};letter-spacing:0.2px;margin:0 0 7px 0;">Terex&nbsp;·&nbsp;Teranga Exchange</p>
+          <p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};line-height:1.75;margin:0 0 2px 0;">Achat &amp; vente d'USDT en francs CFA</p>
+          <p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};line-height:1.75;margin:0 0 10px 0;max-width:400px;display:inline-block;">${note}</p>
+          <p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};line-height:1.75;margin:0;">© ${yr} Teranga Exchange — Tous droits réservés.</p>
 
         </td>
       </tr>
@@ -264,28 +264,37 @@ export function flowBar(
 </tr>`;
 }
 
-// ─── Info table — style « ticket » : lignes à filets fins, total en gras ──────
+// ─── Info table — carte « récapitulatif » : conteneur arrondi, lignes aérées ──
 export function infoTable(
   rows: Array<{ label: string; value: string; mono?: boolean; green?: boolean; big?: boolean; last?: boolean }>,
   title?: string
 ): string {
   const rowsHtml = rows.map((r, i) => {
     const isLast = r.last ?? (i === rows.length - 1);
-    // Une ligne « big » = total : filet de séparation au-dessus + gras.
-    const totalTop = r.big ? `border-top:1px solid ${C.border};padding-top:15px;` : '';
+    // Ligne « big » = total : filet de séparation net au-dessus + emphase.
+    const totalTop = r.big ? `border-top:1px solid ${C.border};` : '';
     const under = isLast || r.big ? '' : `border-bottom:1px solid ${C.borderSoft};`;
+    const pad = r.big ? '16px 20px 4px' : '13px 20px';
+    // Valeurs mono (référence, portefeuille) : rendu code discret, cassables.
+    const valFont = r.mono ? FM : F;
+    const valSize = r.big ? '16px' : r.mono ? '12px' : '13.5px';
+    const valColor = r.green || r.big ? C.white : C.text;
     return `
     <tr class="irow">
-      <td class="emuted" style="padding:12px 0;${totalTop}${under}font-family:${F};font-size:${r.big ? '15px' : '13px'};font-weight:${r.big ? 700 : 400};color:${r.big ? C.text : C.textMuted};vertical-align:middle;width:44%;">${r.label}</td>
-      <td class="${r.green || r.big ? 'egreen' : 'etxt'}" style="padding:12px 0;${totalTop}${under}font-family:${r.mono ? FM : F};font-size:${r.big ? '15px' : r.mono ? '11.5px' : '13px'};font-weight:${r.big ? 700 : 500};color:${r.green || r.big ? C.white : C.text};text-align:right;word-break:break-word;vertical-align:middle;">${r.value}</td>
+      <td class="emuted" style="padding:${pad};${totalTop}${under}font-family:${F};font-size:${r.big ? '14px' : '12.5px'};font-weight:${r.big ? 700 : 400};color:${r.big ? C.text : C.textMuted};vertical-align:middle;width:42%;">${r.label}</td>
+      <td class="${r.green || r.big ? 'egreen' : 'etxt'}" style="padding:${pad};${totalTop}${under}font-family:${valFont};font-size:${valSize};font-weight:${r.big ? 700 : 600};color:${valColor};text-align:right;word-break:break-word;vertical-align:middle;letter-spacing:${r.mono ? '0.2px' : '-0.01em'};">${r.value}</td>
     </tr>`;
   }).join('');
   return `
 <tr bgcolor="${C.cardBg}">
   <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 26px;">
-    ${title ? `<p class="edim" style="font-family:${F};font-size:9.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};margin:0 0 6px 2px;">${title}</p>` : ''}
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-      ${rowsHtml}
+    ${title ? `<p class="edim" style="font-family:${F};font-size:9.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};margin:0 0 10px 2px;">${title}</p>` : ''}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:16px;overflow:hidden;border-collapse:separate;border-spacing:0;">
+      <tr><td style="padding:4px 4px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+          ${rowsHtml}
+        </table>
+      </td></tr>
     </table>
   </td>
 </tr>`;
@@ -293,33 +302,35 @@ export function infoTable(
 
 // ─── Notice box ───────────────────────────────────────────────────────────────
 export function noticeBox(text: string, tone: 'neutral' | 'warning' | 'danger' | 'success' = 'neutral'): string {
+  // Style raffiné : fond neutre sombre + fin liseré coloré à gauche (accent),
+  // au lieu de fonds marron/rouge ternes. Le texte reste clair et lisible.
   const s = {
-    neutral: { bg: C.infoBg, border: C.border,               color: C.textMuted },
-    warning: { bg: '#211a08', border: '#3a2f0f',             color: '#f4d77a'   },
-    danger:  { bg: '#210d0e', border: '#3a1517',             color: '#fca5a5'   },
-    success: { bg: C.infoBg, border: 'rgba(255,255,255,0.16)',color: C.text     },
+    neutral: { accent: C.textDim, color: C.textMuted },
+    warning: { accent: '#c9a227', color: '#e6c766'   },
+    danger:  { accent: '#c56b6b', color: '#e5a3a3'   },
+    success: { accent: C.textMuted, color: C.text    },
   }[tone];
   return `
 <tr bgcolor="${C.cardBg}">
   <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-left:3px solid ${s.accent};border-radius:12px;">
       <tr>
-        <td style="padding:15px 18px;background-color:${s.bg};border:1px solid ${s.border};border-radius:12px;font-family:${F};font-size:12.5px;color:${s.color};line-height:1.7;">${text}</td>
+        <td style="padding:15px 18px;font-family:${F};font-size:12.5px;color:${s.color};line-height:1.7;">${text}</td>
       </tr>
     </table>
   </td>
 </tr>`;
 }
 
-// ─── CTA Button — pleine largeur ──────────────────────────────────────────────
+// ─── CTA Button — pastille compacte, centrée (auto-largeur, pas pleine largeur) ─
 export function ctaButton(text: string, href: string): string {
   return `
 <tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:4px 32px 14px;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+  <td align="center" bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:10px 32px 22px;text-align:center;">
+    <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
       <tr>
-        <td align="center" bgcolor="${C.accent}" style="background-color:${C.accent};border-radius:12px;">
-          <a href="${href}" style="display:block;background-color:${C.accent};color:${C.accentText};font-family:${F};font-size:14.5px;font-weight:700;padding:15px 24px;border-radius:12px;text-decoration:none;letter-spacing:0.2px;text-align:center;">${text}&nbsp;&nbsp;&rarr;</a>
+        <td align="center" bgcolor="${C.accent}" style="background-color:${C.accent};border-radius:999px;">
+          <a href="${href}" style="display:inline-block;background-color:${C.accent};color:${C.accentText};font-family:${F};font-size:14px;font-weight:700;padding:13px 30px;border-radius:999px;text-decoration:none;letter-spacing:0.1px;white-space:nowrap;">${text}&nbsp; &rarr;</a>
         </td>
       </tr>
     </table>
