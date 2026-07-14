@@ -302,35 +302,30 @@ export function infoTable(
 
 // ─── Notice box ───────────────────────────────────────────────────────────────
 export function noticeBox(text: string, tone: 'neutral' | 'warning' | 'danger' | 'success' = 'neutral'): string {
-  // Style raffiné : fond neutre sombre + fin liseré coloré à gauche (accent),
-  // au lieu de fonds marron/rouge ternes. Le texte reste clair et lisible.
-  const s = {
-    neutral: { accent: C.textDim, color: C.textMuted },
-    warning: { accent: '#c9a227', color: '#e6c766'   },
-    danger:  { accent: '#c56b6b', color: '#e5a3a3'   },
-    success: { accent: C.textMuted, color: C.text    },
-  }[tone];
+  // Box neutre simple : fond neutre, bordure fine, texte clair. Pas de liseré
+  // coloré sur le côté — c'est le style sobre que tu préfères.
+  const color = tone === 'success' ? C.text : C.textMuted;
   return `
 <tr bgcolor="${C.cardBg}">
   <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-left:3px solid ${s.accent};border-radius:12px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:12px;">
       <tr>
-        <td style="padding:15px 18px;font-family:${F};font-size:12.5px;color:${s.color};line-height:1.7;">${text}</td>
+        <td style="padding:15px 18px;font-family:${F};font-size:12.5px;color:${color};line-height:1.7;">${text}</td>
       </tr>
     </table>
   </td>
 </tr>`;
 }
 
-// ─── CTA Button — pastille compacte, centrée (auto-largeur, pas pleine largeur) ─
+// ─── CTA Button — style bouton Terex : blanc, arrondi 12px, compact, centré ────
 export function ctaButton(text: string, href: string): string {
   return `
 <tr bgcolor="${C.cardBg}">
   <td align="center" bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:10px 32px 22px;text-align:center;">
     <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
       <tr>
-        <td align="center" bgcolor="${C.accent}" style="background-color:${C.accent};border-radius:999px;">
-          <a href="${href}" style="display:inline-block;background-color:${C.accent};color:${C.accentText};font-family:${F};font-size:14px;font-weight:700;padding:13px 30px;border-radius:999px;text-decoration:none;letter-spacing:0.1px;white-space:nowrap;">${text}&nbsp; &rarr;</a>
+        <td align="center" bgcolor="${C.accent}" style="background-color:${C.accent};border-radius:12px;">
+          <a href="${href}" style="display:inline-block;background-color:${C.accent};color:${C.accentText};font-family:${F};font-size:13.5px;font-weight:700;padding:12px 26px;border-radius:12px;text-decoration:none;letter-spacing:0.1px;white-space:nowrap;">${text}</a>
         </td>
       </tr>
     </table>
