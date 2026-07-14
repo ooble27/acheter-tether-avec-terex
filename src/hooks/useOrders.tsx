@@ -69,6 +69,88 @@ const mapPaymentMethodToDatabase = (paymentMethod?: string): DatabasePaymentMeth
 // se rafraîchit en arrière-plan. Corrige les flashs entre les pages du back-office.
 let ordersCache: UnifiedOrder[] = [];
 
+// ── Transformations (une seule source de vérité) ────────────────────────────
+// Utilisées À LA FOIS par le chargement initial ET par le temps réel incrémental,
+// pour qu'une ligne reçue en direct ait exactement la même forme qu'au fetch.
+function transformOrder(order: any): UnifiedOrder {
+  return {
+    id: order.id,
+    user_id: order.user_id,
+    type: order.type as 'buy' | 'sell',
+    status: order.status,
+    amount: Number(order.amount),
+    currency: order.currency,
+    usdt_amount: Number(order.usdt_amount),
+    exchange_rate: Number(order.exchange_rate),
+    payment_method: order.payment_method as any,
+    payment_reference: order.payment_reference,
+    wallet_address: order.wallet_address,
+    network: order.network,
+    notes: order.notes,
+    created_at: order.created_at,
+    updated_at: order.updated_at,
+    processed_at: order.processed_at,
+    processed_by: order.processed_by,
+    payment_status: order.payment_status,
+    is_deleted: order.is_deleted ?? false,
+    deleted_at: order.deleted_at ?? undefined,
+    assigned_to: order.assigned_to ?? null,
+    assigned_at: order.assigned_at ?? null,
+  };
+}
+
+function transformTransfer(transfer: any): UnifiedOrder {
+  return {
+    id: transfer.id,
+    user_id: transfer.user_id,
+    type: 'transfer' as const,
+    status: transfer.status as OrderStatus,
+    amount: Number(transfer.amount),
+    currency: transfer.from_currency,
+    from_currency: transfer.from_currency,
+    to_currency: transfer.to_currency,
+    exchange_rate: Number(transfer.exchange_rate),
+    payment_method: transfer.payment_method as any,
+    payment_reference: transfer.reference_number,
+    recipient_name: transfer.recipient_name,
+    recipient_phone: transfer.recipient_phone,
+    recipient_country: transfer.recipient_country,
+    recipient_address: transfer.recipient_bank || transfer.recipient_account,
+    recipient_email: transfer.recipient_email,
+    total_amount: Number(transfer.total_amount),
+    fees: Number(transfer.fees),
+    notes: `Service: ${transfer.receive_method || 'Mobile Money'}, Téléphone: ${transfer.recipient_phone}, Montant: ${transfer.total_amount} ${transfer.to_currency}`,
+    created_at: transfer.created_at,
+    updated_at: transfer.updated_at,
+    processed_at: transfer.processed_at,
+    processed_by: transfer.processed_by,
+    is_deleted: false,
+    assigned_to: transfer.assigned_to ?? null,
+    assigned_at: transfer.assigned_at ?? null,
+  };
+}
+
+// Pagination complète : Supabase plafonne à 1000 lignes par requête. On boucle
+// par tranches jusqu'à tout récupérer — plus aucune commande « invisible » au
+// delà de 1000. (À terme, les vues passeront en pagination serveur ; ceci
+// garantit déjà la complétude sans rien casser dans l'UI actuelle.)
+const PAGE_SIZE = 1000;
+async function fetchAllRows(table: 'orders' | 'international_transfers'): Promise<any[]> {
+  const rows: any[] = [];
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await supabase
+      .from(table)
+      .select('*')
+      .neq('admin_hidden', true)
+      .order('created_at', { ascending: false })
+      .range(from, from + PAGE_SIZE - 1);
+    if (error) throw error;
+    rows.push(...(data || []));
+    if (!data || data.length < PAGE_SIZE) break;
+  }
+  return rows;
+}
+
 export function useOrders() {
   const [orders, setOrders] = useState<UnifiedOrder[]>(ordersCache);
   // On ne montre le plein écran de chargement que s'il n'y a VRAIMENT rien en cache.
@@ -83,91 +165,17 @@ export function useOrders() {
     try {
       // Rafraîchissement discret quand on a déjà des données (pas de spinner).
       if (ordersCache.length === 0) setLoading(true);
-      
-      // Fetch regular orders
-      const { data: ordersData, error: ordersError } = await supabase
-        .from('orders')
-        .select('*')
-        .neq('admin_hidden', true)
-        .order('created_at', { ascending: false });
 
-      if (ordersError) {
-        console.error('Error fetching orders:', ordersError);
-        throw ordersError;
-      }
+      const [ordersData, transfersData] = await Promise.all([
+        fetchAllRows('orders'),
+        fetchAllRows('international_transfers'),
+      ]);
 
-      // Fetch international transfers
-      const { data: transfersData, error: transfersError } = await supabase
-        .from('international_transfers')
-        .select('*')
-        .neq('admin_hidden', true)
-        .order('created_at', { ascending: false });
-
-      if (transfersError) {
-        console.error('Error fetching transfers:', transfersError);
-        throw transfersError;
-      }
-
-      // Transform orders to unified format
-      const transformedOrders: UnifiedOrder[] = ordersData?.map(order => ({
-        id: order.id,
-        user_id: order.user_id,
-        type: order.type as 'buy' | 'sell',
-        status: order.status,
-        amount: Number(order.amount),
-        currency: order.currency,
-        usdt_amount: Number(order.usdt_amount),
-        exchange_rate: Number(order.exchange_rate),
-        payment_method: order.payment_method as any,
-        payment_reference: order.payment_reference,
-        wallet_address: order.wallet_address,
-        network: order.network,
-        notes: order.notes,
-        created_at: order.created_at,
-        updated_at: order.updated_at,
-        processed_at: order.processed_at,
-        processed_by: order.processed_by,
-        payment_status: order.payment_status,
-        is_deleted: order.is_deleted ?? false,
-        deleted_at: order.deleted_at ?? undefined,
-        assigned_to: (order as any).assigned_to ?? null,
-        assigned_at: (order as any).assigned_at ?? null,
-      })) || [];
-
-      // Transform transfers to unified format
-      const transformedTransfers: UnifiedOrder[] = transfersData?.map(transfer => ({
-        id: transfer.id,
-        user_id: transfer.user_id,
-        type: 'transfer' as const,
-        status: transfer.status as OrderStatus,
-        amount: Number(transfer.amount),
-        currency: transfer.from_currency,
-        from_currency: transfer.from_currency,
-        to_currency: transfer.to_currency,
-        exchange_rate: Number(transfer.exchange_rate),
-        payment_method: transfer.payment_method as any,
-        payment_reference: transfer.reference_number,
-        recipient_name: transfer.recipient_name,
-        recipient_phone: transfer.recipient_phone,
-        recipient_country: transfer.recipient_country,
-        recipient_address: transfer.recipient_bank || transfer.recipient_account,
-        recipient_email: transfer.recipient_email,
-        total_amount: Number(transfer.total_amount),
-        fees: Number(transfer.fees),
-        notes: `Service: ${transfer.receive_method || 'Mobile Money'}, Téléphone: ${transfer.recipient_phone}, Montant: ${transfer.total_amount} ${transfer.to_currency}`,
-        created_at: transfer.created_at,
-        updated_at: transfer.updated_at,
-        processed_at: transfer.processed_at,
-        processed_by: transfer.processed_by,
-        is_deleted: false,
-        assigned_to: (transfer as any).assigned_to ?? null,
-        assigned_at: (transfer as any).assigned_at ?? null,
-      })) || [];
-
-      // Combine all orders
-      const allOrders = [...transformedOrders, ...transformedTransfers];
+      const allOrders = [
+        ...ordersData.map(transformOrder),
+        ...transfersData.map(transformTransfer),
+      ];
       setOrders(allOrders);
-
     } catch (error) {
       console.error('Error in fetchOrders:', error);
       toast({
@@ -181,24 +189,59 @@ export function useOrders() {
   };
 
   useEffect(() => {
-    fetchOrders();
+    // Applique UNE ligne reçue en temps réel, sans recharger toute la table.
+    // C'est ce qui évite l'effondrement lors d'un « rush » de commandes :
+    // 500 commandes = 500 petites mises à jour ciblées, pas 500 rechargements complets.
+    const applyRow = (row: UnifiedOrder | null, deletedId?: string) => {
+      setOrders(prev => {
+        if (deletedId) return prev.filter(o => o.id !== deletedId);
+        if (!row) return prev;
+        const idx = prev.findIndex(o => o.id === row.id);
+        if (idx === -1) return [row, ...prev];
+        const next = prev.slice();
+        next[idx] = row;
+        return next;
+      });
+    };
 
-    // Temps réel : dès qu'une commande ou un virement change (création,
-    // prise en charge, statut…), on recharge — les écrans se mettent à jour
-    // en direct. Best-effort : si le Realtime n'est pas activé sur la base,
-    // le sondage de 15 s des écrans admin prend le relais (aucune erreur).
-    let t: any = null;
-    const bump = () => { clearTimeout(t); t = setTimeout(() => fetchOrders(), 400); };
+    const onOrders = (payload: any) => {
+      if (payload.eventType === 'DELETE') return applyRow(null, payload.old?.id);
+      const raw = payload.new;
+      // Masquée côté admin → on la retire de la liste au lieu de l'afficher.
+      if (raw?.admin_hidden) return applyRow(null, raw.id);
+      applyRow(transformOrder(raw));
+    };
+    const onTransfers = (payload: any) => {
+      if (payload.eventType === 'DELETE') return applyRow(null, payload.old?.id);
+      const raw = payload.new;
+      if (raw?.admin_hidden) return applyRow(null, raw.id);
+      applyRow(transformTransfer(raw));
+    };
+
     // Nom de canal unique par instance : évite les collisions quand on change
     // d'onglet (l'ancien composant se démonte pendant que le nouveau s'abonne).
     const channelName = `orders-live-${Math.random().toString(36).slice(2)}`;
+    let subscribedOnce = false;
     const channel = supabase
       .channel(channelName)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, bump)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'international_transfers' }, bump)
-      .subscribe();
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, onOrders)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'international_transfers' }, onTransfers)
+      .subscribe((status) => {
+        // Chargement initial à la 1re souscription, puis RE-synchronisation
+        // complète à chaque reconnexion (réseau coupé/repris) pour rattraper
+        // les événements manqués pendant la coupure.
+        if (status === 'SUBSCRIBED') {
+          fetchOrders();
+          subscribedOnce = true;
+        }
+      });
 
-    return () => { clearTimeout(t); supabase.removeChannel(channel); };
+    // Filet de sécurité : si le Realtime n'est pas activé sur la base, la
+    // callback SUBSCRIBED peut ne jamais faire de fetch utile → on charge quand même.
+    if (!subscribedOnce) fetchOrders();
+
+    return () => { supabase.removeChannel(channel); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const createOrder = async (orderData: Omit<UnifiedOrder, 'id' | 'created_at' | 'updated_at'>) => {

@@ -55,6 +55,42 @@ admin) et l'onglet **Présences** s'activent tout seuls. Rien d'autre à faire.
 
 ---
 
-_C'est la seule action en attente côté base de données. Tout le reste
-(anti-flash, reçus PDF, base de connaissances, signature email, etc.) est
-déjà en ligne._
+## 2. Index de performance (scalabilité) — recommandé
+
+**Pourquoi :** sans index, la base parcourt toute la table à chaque requête.
+Ça va bien à quelques milliers de commandes, mais ça ralentit fortement à
+100 000+. Ces index gardent le back-office rapide quel que soit le volume.
+
+**Ce que tu dois faire :** exécuter la migration
+`supabase/migrations/20260714000000_orders_scale_indexes.sql` (contenu
+ci-dessous). **Idempotente**, sans danger, relançable.
+
+```sql
+-- Table orders
+create index if not exists orders_visible_created_idx
+  on public.orders (created_at desc) where admin_hidden is not true;
+create index if not exists orders_user_idx
+  on public.orders (user_id, created_at desc);
+create index if not exists orders_status_idx
+  on public.orders (status);
+create index if not exists orders_assigned_idx
+  on public.orders (assigned_to) where assigned_to is not null;
+create index if not exists orders_deleted_idx
+  on public.orders (is_deleted) where is_deleted is true;
+
+-- Table international_transfers
+create index if not exists transfers_visible_created_idx
+  on public.international_transfers (created_at desc) where admin_hidden is not true;
+create index if not exists transfers_user_idx
+  on public.international_transfers (user_id, created_at desc);
+create index if not exists transfers_status_idx
+  on public.international_transfers (status);
+create index if not exists transfers_assigned_idx
+  on public.international_transfers (assigned_to) where assigned_to is not null;
+```
+
+---
+
+_Le reste (temps réel incrémental anti-lag, pagination complète, anti-flash,
+reçus PDF, base de connaissances, signature email, etc.) est déjà en ligne
+côté code._
