@@ -91,7 +91,7 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50"
-      style={{ backgroundColor: 'rgba(26,26,26,0.85)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderBottom: `1px solid ${BORDER}` }}
+      style={{ backgroundColor: BG, borderBottom: `1px solid ${BORDER}` }}
     >
       <style>{`
         @keyframes hs-drop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
