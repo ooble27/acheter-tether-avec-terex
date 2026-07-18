@@ -49,6 +49,22 @@ const handler = async (req: Request): Promise<Response> => {
       orderData
     } = await req.json();
 
+    // ─── Garde anti-phishing ────────────────────────────────────────────────
+    // Les emails d'authentification (lien magique, réinitialisation de mot de
+    // passe, alerte sécurité) ne peuvent être déclenchés QUE par un appel
+    // interne muni du secret. Les emails de commande/contact/KYC restent libres.
+    const SENSITIVE_TYPES = ['magic_link', 'password_reset', 'security_alert'];
+    if (SENSITIVE_TYPES.includes(emailType)) {
+      const internalSecret = Deno.env.get('EMAIL_INTERNAL_SECRET');
+      const provided = req.headers.get('x-terex-secret');
+      if (!internalSecret || provided !== internalSecret) {
+        console.error('send-email-notification: type sensible refusé (secret manquant)', emailType);
+        return new Response(JSON.stringify({ success: false, error: 'unauthorized' }), {
+          status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
     console.log('Début de l\'envoi d\'email:', {
       userId,
       emailType,

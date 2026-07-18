@@ -583,7 +583,20 @@ serve(async (req) => {
   }
 
   try {
-    const { message, conversationHistory = [], userId, enableTransactions = false, executeIntent }: ChatRequest = await req.json();
+    const { message, conversationHistory = [], enableTransactions = false, executeIntent }: ChatRequest = await req.json();
+
+    // SÉCURITÉ : l'utilisateur est déterminé par le JETON de connexion, jamais
+    // par le corps de la requête. Empêche de lire/agir sur le compte d'autrui.
+    const token = (req.headers.get('Authorization') || '').replace('Bearer ', '');
+    const { data: { user: authedUser } } = await supabase.auth.getUser(token);
+    const userId = authedUser?.id ?? null;
+
+    // Toute action transactionnelle exige une connexion valide.
+    if ((enableTransactions || executeIntent) && !userId) {
+      return new Response(JSON.stringify({ error: 'unauthorized' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
     console.log('Requête AI Assistant Transactionnel:', { message, userId, enableTransactions, executeIntent });
 

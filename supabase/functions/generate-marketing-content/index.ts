@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import Anthropic from "npm:@anthropic-ai/sdk@0.68.0";
 
 const corsHeaders = {
@@ -29,6 +30,27 @@ serve(async (req) => {
   }
 
   try {
+    // ─── Autorisation : réservé à l'équipe marketing / admin ────────────────
+    // Empêche n'importe quel utilisateur de gaspiller les crédits Anthropic.
+    const admin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+    );
+    const token = (req.headers.get("Authorization") || "").replace("Bearer ", "");
+    const { data: { user }, error: userErr } = await admin.auth.getUser(token);
+    if (userErr || !user) {
+      return new Response(JSON.stringify({ error: "unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const { data: roles } = await admin.from("user_roles").select("role").eq("user_id", user.id);
+    const allowed = (roles || []).some((r: any) => r.role === "admin" || r.role === "marketing");
+    if (!allowed) {
+      return new Response(JSON.stringify({ error: "forbidden" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
     if (!apiKey) {
       return new Response(

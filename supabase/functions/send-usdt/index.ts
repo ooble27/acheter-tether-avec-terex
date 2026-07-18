@@ -99,6 +99,20 @@ serve(async (req) => {
   }
 
   try {
+    // ─── Verrou de sécurité (CRITIQUE) ───────────────────────────────────────
+    // Cette fonction envoie de l'USDT réel. Elle n'accepte QUE les appels munis
+    // du secret interne. Fail-closed : si le secret n'est pas configuré, on
+    // refuse tout — impossible de déclencher un retrait sans autorisation.
+    const expectedSecret = Deno.env.get('SEND_USDT_SECRET');
+    const providedSecret = req.headers.get('x-terex-secret');
+    if (!expectedSecret || providedSecret !== expectedSecret) {
+      console.error('send-usdt: appel non autorisé (secret manquant ou invalide)');
+      return new Response(
+        JSON.stringify({ success: false, error: 'unauthorized' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 }
+      );
+    }
+
     const { orderId } = await req.json();
 
     if (!orderId) {
