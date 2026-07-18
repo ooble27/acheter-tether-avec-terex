@@ -5,7 +5,6 @@ import {
   Shield, Zap, Repeat, Wallet, Clock, ChevronDown,
 } from 'lucide-react';
 import { FooterSection } from './sections/FooterSection';
-import { HeaderSection } from './sections/HeaderSection';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import waveLogo from '@/assets/wave-logo.png';
 import orangeLogo from '@/assets/orange-money-logo.png';
@@ -109,9 +108,27 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
       <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, left: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
       <div className="tx-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 560px)', width: 1, background: 'rgba(255,255,255,0.05)', pointerEvents: 'none', zIndex: 0 }} />
 
-      {/* En-tête unifié — identique sur toutes les pages (menu + Commencer) */}
-      <HeaderSection user={user ?? null} onShowDashboard={onShowDashboard} onLogout={() => {}} />
-      <div style={{ height: 64 }} />
+      {/* NAV */}
+      <nav style={{ position: 'relative', zIndex: 50, background: BG, borderBottom: `1px solid ${BORDER}` }}>
+        <div className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '0 32px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <img src={LOGO} alt="Terex" style={{ width: 44, height: 44, objectFit: 'contain' }} />
+            <span style={{ color: '#fff', fontSize: 20, fontWeight: 700, letterSpacing: '-0.03em' }}>Terex</span>
+          </button>
+          <div className="tx-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+            {[['Fonctionnalités', 'features'], ['Réseaux', 'networks'], ['Comment ça marche', 'how'], ['FAQ', 'faq']].map(([label, id]) => (
+              <button key={id} onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.55)', fontSize: 14, fontWeight: 500 }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#fff')} onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}>
+                {label}
+              </button>
+            ))}
+          </div>
+          <button onClick={goPrimary} style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 10, height: 38, padding: '0 18px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            {user ? 'Tableau de bord' : 'Commencer'} <ArrowRight size={14} />
+          </button>
+        </div>
+      </nav>
 
       {/* HERO */}
       <header className="tx-pad" style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 32px 64px', position: 'relative', zIndex: 1 }}>

@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { HeaderSection } from './sections/HeaderSection';
 import {
   ArrowRight, Layers, Zap, Globe, BarChart2, Shield, Code2,
   ChevronDown, ChevronUp, Copy, Check,
@@ -353,9 +352,20 @@ export function BusinessLanding() {
       <div className="biz-vline" style={{ position: 'fixed', top: 0, bottom: 0, right: 'calc(50% - 580px)', width: 1, background: 'rgba(255,255,255,0.04)', pointerEvents: 'none', zIndex: 1 }} />
 
       {/* ── NAV ──────────────────────────────────────────────────── */}
-      {/* En-tête unifié — identique sur toutes les pages */}
-      <HeaderSection user={null} onShowDashboard={() => navigate('/dashboard')} onLogout={() => {}} />
-      <div style={{ height: 64 }} />
+      <nav className="biz-nav" style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(26,26,26,0.94)', backdropFilter: 'blur(14px)', borderBottom: `1px solid ${C.bds}`, padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <img src="/terex-logo.png" alt="Terex" style={{ width: 28, height: 28, borderRadius: 7, objectFit: 'cover' }} />
+            <span style={{ color: C.t1, fontSize: 15, fontWeight: 700 }}>Terex</span>
+          </button>
+          <div style={{ width: 1, height: 14, background: C.bds, margin: '0 4px' }} />
+          <span style={{ color: C.t3, fontSize: 13 }}>Business</span>
+        </div>
+        <div className="biz-nav-actions" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <span className="biz-nav-link"><OutlineBtn onClick={() => navigate('/auth')}>Se connecter</OutlineBtn></span>
+          <PrimaryBtn onClick={() => navigate('/auth')}>Commencer <ArrowRight style={{ width: 14, height: 14 }} /></PrimaryBtn>
+        </div>
+      </nav>
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <div style={{ background: C.bg, paddingTop: 96, overflow: 'hidden', position: 'relative' }}>
