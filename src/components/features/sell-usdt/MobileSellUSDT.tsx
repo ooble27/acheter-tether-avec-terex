@@ -21,7 +21,7 @@ const WALLET_ADDRESSES: Record<string, string> = {
   Arbitrum: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
   Polygon:  '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
   Solana:   '8ES2hxsfqZVX3cjxWLBJ8jCdzSu9hTBYELSkX82UdnhN',
-  Aptos:    '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
+  Aptos:    '0x87ea7ab47d563950886a4416af58cd2060f2b20bb94fd8d522cc8d3df57afca0',
 };
 
 const NETWORK_LOGOS: Record<string, string> = {
