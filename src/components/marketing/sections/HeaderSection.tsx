@@ -90,8 +90,14 @@ export function HeaderSection({ user, onShowDashboard, onLogout }: HeaderSection
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50"
-      style={{ backgroundColor: BG, borderBottom: `1px solid ${BORDER}` }}
+      style={{
+        // Desktop : header FIXE (reste en haut). Mobile : header en flux normal
+        // (absolu en haut de page) → il défile avec la page et disparaît au scroll,
+        // comme demandé. Aucun blur (bug iOS du header qui disparaît).
+        position: isCompact ? 'absolute' : 'fixed',
+        top: 0, left: 0, right: 0, zIndex: 50,
+        backgroundColor: BG, borderBottom: `1px solid ${BORDER}`,
+      }}
     >
       <style>{`
         @keyframes hs-drop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
