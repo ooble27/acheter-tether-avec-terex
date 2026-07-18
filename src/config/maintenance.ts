@@ -12,7 +12,7 @@
 // L'accès est mémorisé sur l'appareil. Pour le retirer : ?acces=off
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const MAINTENANCE_MODE = true;
+export const MAINTENANCE_MODE = false;
 
 // Code d'accès secret pour contourner la page de maintenance.
 const ACCESS_CODE = 'terex-equipe';
