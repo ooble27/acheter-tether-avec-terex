@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Copy, Send, CheckCircle, AlertCircle, Wallet, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { TEREX_BINANCE_INFO } from '@/config/walletAddresses';
 
 interface OrderData {
   amount: string;
@@ -24,13 +25,6 @@ interface USDTSendingInstructionsProps {
   onBack: () => void;
   onUSDTSent: () => void;
 }
-
-// Informations Binance de TEREX
-const TEREX_BINANCE_INFO = {
-  email: 'lomohamed834@gmail.com',
-  id: '450715599',
-  payId: '450715599'
-};
 
 export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTSendingInstructionsProps) {
   const [confirmingSent, setConfirmingSent] = useState(false);

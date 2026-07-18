@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { WALLET_ADDRESSES } from '@/config/walletAddresses';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -7,16 +8,6 @@ import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization
 import { Switch } from '@/components/ui/switch';
 import { ArrowLeft, Check, HandCoins, Copy } from 'lucide-react';
 import { KYCPage } from '../KYCPage';
-
-const WALLET_ADDRESSES = {
-  TRC20: 'TSPUk2W5bcGGNPpKzx1xTDc2NuxpRJRCBb',
-  BEP20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
-  ERC20: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
-  Arbitrum: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
-  Polygon: '0xe1d04ef9b4c199ba6a59460ed8bd0a486dc4fc84',
-  Solana: '8ES2hxsfqZVX3cjxWLBJ8jCdzSu9hTBYELSkX82UdnhN',
-  Aptos: '0x87ea7ab47d563950886a4416af58cd2060f2b20bb94fd8d522cc8d3df57afca0'
-};
 
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
