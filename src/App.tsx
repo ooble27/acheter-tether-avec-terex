@@ -42,8 +42,20 @@ import { ScrollToTop } from "./components/ScrollToTop";
 import { AppLoader } from "./components/AppLoader";
 import NeobankVisionPage from "./pages/NeobankVisionPage";
 import BusinessPage from "./pages/BusinessPage";
+import { MaintenancePage } from "./components/MaintenancePage";
+import { MAINTENANCE_MODE, hasMaintenanceBypass } from "./config/maintenance";
 
 function App() {
+  // Mode maintenance : page « en construction » pour le public.
+  // L'équipe passe outre via le lien secret (?acces=terex-equipe).
+  if (MAINTENANCE_MODE && !hasMaintenanceBypass()) {
+    return (
+      <ThemeProvider>
+        <MaintenancePage />
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider>
       <AppLoader>
