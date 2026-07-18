@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock, BookOpen,
+  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock, BookOpen, PenTool,
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { OpsQueue } from '@/components/admin/orders/OpsQueue';
@@ -11,6 +11,7 @@ import { KYCAdmin } from '@/components/admin/KYCAdmin';
 import { StaffPunch } from '@/components/admin/StaffPunch';
 import { StaffAttendance } from '@/components/admin/StaffAttendance';
 import { KnowledgeBase } from '@/components/admin/KnowledgeBase';
+import { ContentStudio } from '@/components/admin/ContentStudio';
 import { OrdersDataProvider } from '@/components/admin/OrdersDataProvider';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
 import { AccountingAdmin } from '@/components/admin/AccountingAdmin';
@@ -35,6 +36,7 @@ const NAV: NavItem[] = [
   { id: 'performance',  label: 'Performance',    desc: "Activité et volumes par membre de l'équipe", icon: Trophy,  roles: ['admin'] },
   { id: 'attendance',   label: 'Présences',      desc: 'Pointage horaire de l\'équipe — pour la paie', icon: Clock,  roles: ['admin'] },
   { id: 'accounting',   label: 'Comptabilité',   desc: 'Revenus et marges',                     icon: Calculator,   roles: ['admin'] },
+  { id: 'content',      label: 'Studio',         desc: 'Générateur de contenu pour les réseaux',  icon: PenTool,      roles: ['admin', 'marketing'] },
   { id: 'newsletter',   label: 'Campagnes',      desc: 'Emails marketing aux clients',          icon: Mail,         roles: ['admin', 'marketing'] },
   { id: 'applications', label: 'Candidatures',   desc: 'Recrutement',                           icon: UserCheck,    roles: ['admin', 'hr'] },
   { id: 'team',         label: 'Équipe',         desc: "Membres et rôles du back-office",       icon: Users,        roles: ['admin'] },
@@ -139,6 +141,7 @@ export function AdminPortal() {
           {currentTab === 'performance' && <TeamPerformance />}
           {currentTab === 'attendance' && <StaffAttendance />}
           {currentTab === 'accounting' && <AccountingAdmin />}
+          {currentTab === 'content' && <ContentStudio />}
           {currentTab === 'newsletter' && <NewsletterAdmin />}
           {currentTab === 'applications' && <JobApplicationsAdmin />}
           {currentTab === 'team' && <TeamAdmin />}

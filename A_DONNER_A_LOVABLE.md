@@ -91,6 +91,23 @@ create index if not exists transfers_assigned_idx
 
 ---
 
+---
+
+## 3. Activer l'agent créateur de contenu (marketing IA)
+
+**Fonctionnalité :** un « Studio de contenu » dans le portail admin qui génère
+automatiquement des publications (Facebook, Instagram, TikTok, WhatsApp, X)
+prêtes à poster.
+
+**Ce que tu dois faire :** ajouter un **secret** dans Supabase (Edge Functions)
+nommé exactement `ANTHROPIC_API_KEY`, avec comme valeur la clé obtenue sur
+console.anthropic.com (elle commence par `sk-ant-...`).
+
+Une fois le secret ajouté, l'onglet **Studio** fonctionne tout seul. Tant que
+la clé n'est pas là, le studio affiche un message d'attente (rien de cassé).
+
+---
+
 _Le reste (temps réel incrémental anti-lag, pagination complète, anti-flash,
-reçus PDF, base de connaissances, signature email, etc.) est déjà en ligne
-côté code._
+reçus PDF, base de connaissances, signature email, studio de contenu, etc.)
+est déjà en ligne côté code._
