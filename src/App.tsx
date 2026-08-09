@@ -26,7 +26,6 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MarketingPage } from "./pages/MarketingPage";
 import AdminPage from "./pages/AdminPage";
-import { Toaster } from "@/components/ui/toaster"
 import BlockchainPage from "./pages/BlockchainPage";
 import BlogPage from "./pages/BlogPage";
 import OTCPage from "./pages/OTCPage";
@@ -64,7 +63,6 @@ function App() {
           <AuthProvider>
             <TransactionProvider>
               <PWASessionSync />
-              <Toaster />
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/dashboard" element={<DashboardPage />} />

@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Copy, CheckCircle, Clock, AlertCircle, Phone, Mail } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { ArrowLeft, Copy, CheckCircle, Clock } from 'lucide-react';
 
 interface PaymentInstructionsProps {
   orderData: {
@@ -20,10 +16,11 @@ interface PaymentInstructionsProps {
   onPaymentConfirmed: () => void;
 }
 
+const WAVE_NUMBER = '777569268';
+
 export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfirmed }: PaymentInstructionsProps) {
-  const [copied, setCopied] = useState(false);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(30 * 60);
-  const { toast } = useToast();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -32,14 +29,10 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          return 0;
-        }
+        if (prev <= 1) { clearInterval(timer); return 0; }
         return prev - 1;
       });
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
 
@@ -49,285 +42,112 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = (text: string, field: string) => {
     navigator.clipboard.writeText(text);
-    setCopied(true);
-    toast({
-      title: "Copié !",
-      description: "L'information a été copiée dans le presse-papiers",
-    });
-    setTimeout(() => setCopied(false), 2000);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
   };
 
-  // Generate unique security question and answer based on orderId
-  const generateSecurityDetails = (orderId: string) => {
-    const orderNumber = orderId.slice(-8).toUpperCase();
-    const question = "TEREX";
-    const answer = orderNumber;
-    
-    return { question, answer };
-  };
+  const CopyRow = ({ label, value, field }: { label: string; value: string; field: string }) => (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      <div>
+        <div style={{ color: 'rgba(255,255,255,0.45)', fontSize: '11px', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
+        <div style={{ color: '#fff', fontSize: '15px', fontWeight: 600, fontFamily: field === 'number' ? 'monospace' : undefined }}>{value}</div>
+      </div>
+      <button
+        onClick={() => copyToClipboard(value, field)}
+        style={{ background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '10px', padding: '8px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: copiedField === field ? '#4ade80' : 'rgba(255,255,255,0.6)', fontSize: '12px', fontWeight: 500, transition: 'all 0.15s' }}
+      >
+        {copiedField === field ? <><CheckCircle size={14} /> Copié</> : <><Copy size={14} /> Copier</>}
+      </button>
+    </div>
+  );
 
-  const getPaymentInstructions = () => {
-    const securityDetails = generateSecurityDetails(orderId);
-    
-    if (orderData.paymentMethod === 'card') {
-      return {
-        title: "Instructions de virement Interac",
-        steps: [
-          "Connectez-vous à votre banque en ligne ou application mobile",
-          "Sélectionnez 'Virement Interac' ou 'Envoyer de l'argent'",
-          `Email destinataire : mohalaval4@gmail.com`,
-          `Montant : ${orderData.amount} ${orderData.currency}`,
-          `Message/Référence : ${orderId.slice(-8).toUpperCase()}`,
-          `Question de sécurité : ${securityDetails.question}`,
-          `Réponse : ${securityDetails.answer}`,
-          "Confirmez le virement",
-          "Cliquez sur 'J'ai payé' ci-dessous"
-        ],
-        recipientEmail: "mohalaval4@gmail.com",
-        securityQuestion: securityDetails.question,
-        securityAnswer: securityDetails.answer
-      };
-    } else {
-      return {
-        title: "Instructions de paiement Mobile Money",
-        steps: [
-          "Ouvrez votre application Wave ou Orange Money",
-          "Sélectionnez 'Envoyer de l'argent'",
-          `Entrez le numéro : +221 777569268`,
-          `Montant : ${orderData.amount} ${orderData.currency}`,
-          "Confirmez le transfert",
-          "Cliquez sur 'J'ai payé' ci-dessous"
-        ],
-        recipientNumber: "+221 777569268"
-      };
-    }
-  };
-
-  const instructions = getPaymentInstructions();
-
-  return (
-    <div className="min-h-screen bg-terex-dark px-0 py-2 md:p-4">
-      <div className="max-w-4xl mx-auto px-0">
-        <div className="mb-6 flex items-center space-x-4 px-3 md:px-0">
-          <Button
-            variant="ghost"
-            onClick={onBack}
-            className="text-gray-400 hover:text-white"
-          >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Retour
-          </Button>
-          <div>
-            <h1 className="text-2xl md:text-3xl font-light text-white">Effectuer le paiement</h1>
-            <p className="text-gray-400">Suivez les instructions pour compléter votre achat</p>
-          </div>
-        </div>
-
-        <div className="grid lg:grid-cols-3 gap-6 px-0">
-          <div className="lg:col-span-2 space-y-6 px-0">
-            <Card className="bg-terex-darker border-terex-gray mx-0">
-              <CardHeader>
-                <CardTitle className="text-white">{instructions.title}</CardTitle>
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-orange-500" />
-                  <span className="text-orange-500 font-medium">
-                    Temps restant : {formatTime(timeLeft)}
-                  </span>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {instructions.steps.map((step, index) => (
-                  <div key={index} className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-terex-accent rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-white text-xs font-bold">{index + 1}</span>
-                    </div>
-                    <p className="text-gray-300">{step}</p>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            {orderData.paymentMethod === 'card' && 'recipientEmail' in instructions && (
-              <Card className="bg-terex-darker border-terex-gray mx-0">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center">
-                    <Mail className="w-5 h-5 mr-2 text-terex-accent" />
-                    Email destinataire
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between bg-terex-gray rounded-lg p-4">
-                    <span className="text-white font-mono text-lg">{instructions.recipientEmail}</span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => copyToClipboard(instructions.recipientEmail!)}
-                      className="border-terex-gray text-white hover:bg-terex-gray"
-                    >
-                      {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {orderData.paymentMethod === 'card' && 'securityQuestion' in instructions && (
-              <>
-                <Card className="bg-terex-darker border-terex-gray mx-0">
-                  <CardHeader>
-                    <CardTitle className="text-white">Question de sécurité</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between bg-terex-gray rounded-lg p-4">
-                      <span className="text-white font-mono text-lg">{instructions.securityQuestion}</span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => copyToClipboard(instructions.securityQuestion!)}
-                        className="border-terex-gray text-white hover:bg-terex-gray"
-                      >
-                        {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-terex-darker border-terex-gray mx-0">
-                  <CardHeader>
-                    <CardTitle className="text-white">Réponse de sécurité</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between bg-terex-gray rounded-lg p-4">
-                      <span className="text-white font-mono text-lg">{instructions.securityAnswer}</span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => copyToClipboard(instructions.securityAnswer!)}
-                        className="border-terex-gray text-white hover:bg-terex-gray"
-                      >
-                        {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </>
-            )}
-
-            {orderData.paymentMethod === 'mobile' && 'recipientNumber' in instructions && (
-              <Card className="bg-terex-darker border-terex-gray mx-0">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center">
-                    <Phone className="w-5 h-5 mr-2 text-terex-accent" />
-                    Numéro de réception
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between bg-terex-gray rounded-lg p-4">
-                    <span className="text-white font-mono text-lg">{instructions.recipientNumber}</span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => copyToClipboard(instructions.recipientNumber!)}
-                      className="border-terex-gray text-white hover:bg-terex-gray"
-                    >
-                      {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            <Card className="bg-amber-500/10 border-amber-500/30 mx-0">
-              <CardContent className="p-4">
-                <div className="flex items-start space-x-3">
-                  <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5" />
-                  <div className="space-y-2">
-                    <p className="text-amber-200 font-medium">Important</p>
-                    <ul className="text-amber-100 text-sm space-y-1">
-                      <li>• Utilisez exactement le montant indiqué</li>
-                      {orderData.paymentMethod === 'card' && (
-                        <li>• N'oubliez pas d'inclure la référence de commande</li>
-                      )}
-                      {orderData.paymentMethod === 'card' && 'securityQuestion' in instructions && (
-                        <>
-                          <li>• Question de sécurité : {instructions.securityQuestion}</li>
-                          <li>• Réponse : {instructions.securityAnswer}</li>
-                        </>
-                      )}
-                      <li>• Le paiement doit être effectué dans les 30 minutes</li>
-                    </ul>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="px-3 md:px-0">
-              <Button
-                onClick={onPaymentConfirmed}
-                size="lg"
-                className="w-full gradient-button text-white font-semibold h-12"
-              >
-                J'ai effectué le paiement
-              </Button>
+  if (orderData.paymentMethod === 'card') {
+    const securityAnswer = orderId.slice(-8).toUpperCase();
+    return (
+      <div style={{ minHeight: '100vh', background: '#1a1a1a' }}>
+        <div style={{ maxWidth: '520px', margin: '0 auto', padding: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+            <button onClick={onBack} style={{ background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <ArrowLeft size={18} color="#fff" />
+            </button>
+            <div>
+              <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: 0 }}>Virement Interac</h2>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
+                <Clock size={13} color="#f97316" />
+                <span style={{ color: '#f97316', fontSize: '13px', fontWeight: 500 }}>{formatTime(timeLeft)}</span>
+              </div>
             </div>
           </div>
 
-          <div className="space-y-6 px-3 md:px-0">
-            <Card className="bg-terex-darker border-terex-gray mx-0">
-              <CardHeader>
-                <CardTitle className="text-white">Récapitulatif</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Commande</span>
-                    <span className="text-white font-mono">#{orderId.slice(-8).toUpperCase()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Montant à payer</span>
-                    <span className="text-white font-bold">
-                      {orderData.amount} {orderData.currency}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">USDT à recevoir</span>
-                    <span className="text-terex-accent font-bold">
-                      {orderData.usdtAmount} USDT
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Méthode</span>
-                    <Badge variant="outline" className="text-terex-accent border-terex-accent">
-                      {orderData.paymentMethod === 'card' ? 'Interac' : 'Mobile Money'}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Réseau</span>
-                    <Badge variant="outline" className="text-terex-accent border-terex-accent">
-                      {orderData.network}
-                    </Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          <div style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', overflow: 'hidden', marginBottom: '16px' }}>
+            <CopyRow label="Email destinataire" value="mohalaval4@gmail.com" field="email" />
+            <CopyRow label="Montant" value={`${orderData.amount} ${orderData.currency}`} field="amount" />
+            <CopyRow label="Question de sécurité" value="TEREX" field="question" />
+            <CopyRow label="Réponse" value={securityAnswer} field="answer" />
+          </div>
 
-            <Card className="bg-white/10 border-white/30 mx-0">
-              <CardContent className="p-4">
-                <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-white mt-0.5" />
-                  <div className="space-y-1">
-                    <p className="text-white font-medium text-sm">Traitement automatique</p>
-                    <p className="text-white text-xs">
-                      Vos USDT seront envoyés automatiquement après confirmation du paiement
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          <div style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '16px', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Vous recevez</span>
+              <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{orderData.usdtAmount} USDT</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Réseau</span>
+              <span style={{ color: '#fff', fontSize: '13px' }}>{orderData.network}</span>
+            </div>
+          </div>
+
+          <button
+            onClick={onPaymentConfirmed}
+            style={{ width: '100%', background: '#fff', color: '#141414', border: 'none', borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700, cursor: 'pointer' }}
+          >
+            J'ai effectué le virement
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#1a1a1a' }}>
+      <div style={{ maxWidth: '520px', margin: '0 auto', padding: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+          <button onClick={onBack} style={{ background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <ArrowLeft size={18} color="#fff" />
+          </button>
+          <div>
+            <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: 0 }}>Paiement Wave</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
+              <Clock size={13} color="#f97316" />
+              <span style={{ color: '#f97316', fontSize: '13px', fontWeight: 500 }}>{formatTime(timeLeft)}</span>
+            </div>
           </div>
         </div>
+
+        <div style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', overflow: 'hidden', marginBottom: '16px' }}>
+          <CopyRow label="Numéro Wave" value={WAVE_NUMBER} field="number" />
+          <CopyRow label="Montant à envoyer" value={`${orderData.amount} ${orderData.currency}`} field="amount" />
+        </div>
+
+        <div style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '16px', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+            <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Vous recevez</span>
+            <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{orderData.usdtAmount} USDT</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Réseau</span>
+            <span style={{ color: '#fff', fontSize: '13px' }}>{orderData.network}</span>
+          </div>
+        </div>
+
+        <button
+          onClick={onPaymentConfirmed}
+          style={{ width: '100%', background: '#fff', color: '#141414', border: 'none', borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700, cursor: 'pointer' }}
+        >
+          J'ai payé
+        </button>
       </div>
     </div>
   );

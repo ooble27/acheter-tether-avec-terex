@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
 import { ArrowLeft, Coins, Check } from 'lucide-react';
@@ -90,7 +89,6 @@ export function MobileBuyUSDT() {
 
   const { createOrder } = useOrders();
   const { user } = useAuth();
-  const { toast } = useToast();
   const { terexRateCfa, terexRateCad } = useTerexRates(2);
   const { isAuthorized } = useTransactionAuthorization();
 
@@ -128,9 +126,9 @@ export function MobileBuyUSDT() {
 
   const handleContinueToNetwork = () => {
     const v = parseFloat(fiatAmount || '0');
-    if (!rawAmount || v <= 0) { toast({ title: 'Erreur', description: 'Veuillez entrer un montant valide', variant: 'destructive' }); return; }
-    if (limits && v < limits.min) { toast({ title: 'Montant trop faible', description: `Minimum ${limits.min.toLocaleString()} ${currency}`, variant: 'destructive' }); return; }
-    if (limits && v > limits.max) { toast({ title: 'Montant trop élevé', description: `Maximum ${limits.max.toLocaleString()} ${currency}`, variant: 'destructive' }); return; }
+    if (!rawAmount || v <= 0) return;
+    if (limits && v < limits.min) return;
+    if (limits && v > limits.max) return;
     setStep('network');
   };
 
@@ -139,14 +137,12 @@ export function MobileBuyUSDT() {
   };
 
   const handleContinueToBinanceConfirm = () => {
-    if (!binanceEmail || !binanceUsername || !binanceId) {
-      toast({ title: 'Erreur', description: 'Veuillez remplir toutes les informations Binance', variant: 'destructive' }); return;
-    }
+    if (!binanceEmail || !binanceUsername || !binanceId) return;
     setStep('confirm');
   };
 
   const handleContinueToConfirm = () => {
-    if (!walletAddress) { toast({ title: 'Erreur', description: 'Veuillez entrer une adresse valide', variant: 'destructive' }); return; }
+    if (!walletAddress) return;
     setStep('confirm');
   };
 
@@ -171,7 +167,6 @@ export function MobileBuyUSDT() {
       setCurrentOrderId(result.id);
       setStep('pay');
     } else {
-      toast({ title: 'Erreur', description: 'Impossible de créer la commande', variant: 'destructive' });
     }
     setLoading(false);
   };
