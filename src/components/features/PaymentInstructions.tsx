@@ -97,7 +97,6 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
           "Sélectionnez 'Envoyer de l'argent'",
           `Entrez le numéro : +221 777569268`,
           `Montant : ${orderData.amount} ${orderData.currency}`,
-          `Référence : ${orderId.slice(-8).toUpperCase()}`,
           "Confirmez le transfert",
           "Cliquez sur 'J'ai payé' ci-dessous"
         ],
@@ -248,7 +247,9 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
                     <p className="text-amber-200 font-medium">Important</p>
                     <ul className="text-amber-100 text-sm space-y-1">
                       <li>• Utilisez exactement le montant indiqué</li>
-                      <li>• N'oubliez pas d'inclure la référence de commande</li>
+                      {orderData.paymentMethod === 'card' && (
+                        <li>• N'oubliez pas d'inclure la référence de commande</li>
+                      )}
                       {orderData.paymentMethod === 'card' && 'securityQuestion' in instructions && (
                         <>
                           <li>• Question de sécurité : {instructions.securityQuestion}</li>
