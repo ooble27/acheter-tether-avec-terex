@@ -6,12 +6,13 @@ import { useOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
-import { useNabooPay } from '@/hooks/useNabooPay';
 import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
 import { ArrowRight, Check, ArrowLeft } from 'lucide-react';
 import { BinanceEmailInput } from './BinanceEmailInput';
 import { PURCHASE_LIMITS, getLimitMessage, enforceMaxLimit } from './LimitsValidator';
 import { KYCPage } from '../KYCPage';
+import { PaymentInstructions } from '../PaymentInstructions';
+import { PaymentPending } from '../PaymentPending';
 
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
@@ -24,8 +25,9 @@ const NETWORK_LOGOS = {
 };
 
 export function DesktopBuyUSDT() {
-  const [step, setStep] = useState<'amount' | 'network' | 'address' | 'binance' | 'confirm'>('amount');
+  const [step, setStep] = useState<'amount' | 'network' | 'address' | 'binance' | 'confirm' | 'pay' | 'pending'>('amount');
   const [showKYCPage, setShowKYCPage] = useState(false);
+  const [currentOrderId, setCurrentOrderId] = useState('');
   const [inputCurrency, setInputCurrency] = useState<'XOF' | 'USDT'>('XOF');
   const [rawAmount, setRawAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'mobile'>('mobile');
@@ -40,7 +42,6 @@ export function DesktopBuyUSDT() {
   const { createOrder } = useOrders();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { createTransaction } = useNabooPay();
   const { terexRateCfa, terexRateCad } = useTerexRates(2);
   const { isAuthorized, kycStatus } = useTransactionAuthorization();
 
@@ -160,35 +161,62 @@ export function DesktopBuyUSDT() {
     };
 
     const result = await createOrder(orderData);
-    
-    if (result) {
-      const nabooResult = await createTransaction({
-        orderId: result.id,
-        amount: parseFloat(fiatAmount),
-        products: [{
-          name: `Achat USDT - ${parseFloat(usdtAmount).toFixed(2)} USDT`,
-          category: 'Crypto',
-          amount: parseFloat(fiatAmount),
-          quantity: 1,
-          description: `Achat de ${parseFloat(usdtAmount).toFixed(2)} USDT`
-        }],
-        paymentMethods: ['WAVE', 'ORANGE_MONEY'],
-        successUrl: `${window.location.origin}/dashboard`,
-        errorUrl: `${window.location.origin}/dashboard`
-      });
 
-      if (nabooResult?.success && nabooResult.checkoutUrl) {
-        window.location.href = nabooResult.checkoutUrl;
-      } else {
-        toast({ title: "Erreur", description: "Impossible de créer le paiement", variant: "destructive" });
-      }
+    if (result) {
+      // Paiement manuel : on affiche les instructions Wave au lieu de rediriger
+      // vers le prestataire (contourne la limite de 200 000 FCFA).
+      setCurrentOrderId(result.id);
+      setStep('pay');
+    } else {
+      toast({ title: "Erreur", description: "Impossible de créer la commande", variant: "destructive" });
     }
-    
+
     setLoading(false);
+  };
+
+  const resetFlow = () => {
+    setStep('amount');
+    setRawAmount('');
+    setWalletAddress('');
+    setBinanceEmail('');
+    setBinanceUsername('');
+    setBinanceId('');
+    setCurrentOrderId('');
   };
 
   if (showKYCPage) {
     return <KYCPage onBack={() => setShowKYCPage(false)} />;
+  }
+
+  const paymentOrderData = {
+    amount: fiatAmount,
+    currency,
+    usdtAmount,
+    network: isBinanceNetwork ? 'BINANCE' : network,
+    walletAddress: isBinanceNetwork ? binanceEmail : walletAddress,
+    paymentMethod: 'mobile' as const,
+    exchangeRate,
+  };
+
+  if (step === 'pay') {
+    return (
+      <PaymentInstructions
+        orderData={paymentOrderData}
+        orderId={currentOrderId}
+        onBack={() => setStep('confirm')}
+        onPaymentConfirmed={() => setStep('pending')}
+      />
+    );
+  }
+
+  if (step === 'pending') {
+    return (
+      <PaymentPending
+        orderData={paymentOrderData}
+        orderId={currentOrderId}
+        onBackToHome={resetFlow}
+      />
+    );
   }
 
   return (
