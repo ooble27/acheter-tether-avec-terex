@@ -1,21 +1,20 @@
-// Template email MARKETING Terex — même design system que les emails
-// transactionnels : sombre neutre, accent blanc, valeurs « presque pures »
-// (jamais #fff/#000 : Gmail inverse mal les valeurs pures), logo, CTA blanc,
-// et pied de page avec lien de désabonnement obligatoire.
+// Template email MARKETING Terex — style Ooble : light mode forcé, palette
+// claire (fond gris clair, carte blanche, encre foncée), CTA encre + texte
+// blanc. Résout le problème de rendu inversé/moche dans Gmail dark mode.
 
 const C = {
-  pageBg: '#141414', cardBg: '#1a1a1a', footerBg: '#161616', infoBg: '#1e1e1e',
-  border: '#2c2c2c', borderSoft: '#202020',
-  text: '#f5f5f5', muted: '#a1a1a1', dim: '#6e6e6e',
-  accent: '#f4f4f4', accentText: '#191919',
+  pageBg: '#EEF2F2', cardBg: '#ffffff', footerBg: '#EEF2F2', infoBg: '#F5F7F7',
+  border: '#E4EAEA', borderSoft: '#F0F3F3',
+  text: '#14201f', muted: '#475467', dim: '#8a97a0',
+  accent: '#14201f', accentText: '#ffffff',
 };
 const F = `-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif`;
 const LOGO = 'https://terangaexchange.com/terex-icon.png';
 const BASE = 'https://terangaexchange.com';
 
 const CSS = `
-:root{color-scheme:dark !important;supported-color-schemes:dark !important;}
-html,body{margin:0;padding:0;background-color:${C.pageBg} !important;color:${C.text} !important;-webkit-text-size-adjust:100%;color-scheme:dark !important;}
+:root{color-scheme:light only;supported-color-schemes:light;}
+html,body{margin:0;padding:0;background-color:${C.pageBg} !important;color:${C.text} !important;-webkit-text-size-adjust:100%;color-scheme:light only;}
 .etxt{color:${C.text};} .emuted{color:${C.muted};} .edim{color:${C.dim};}
 @media (prefers-color-scheme:light){
   html,body,.ebg{background-color:${C.pageBg} !important;}
@@ -78,16 +77,17 @@ export function marketingEmailHtml(p: MarketingEmailProps): string {
       </td></tr>` : '';
 
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" style="background-color:${C.pageBg};color-scheme:dark;">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" style="background-color:${C.pageBg};color-scheme:light only;">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="color-scheme" content="dark"/>
-<meta name="supported-color-schemes" content="dark"/>
+<meta name="color-scheme" content="light only"/>
+<meta name="supported-color-schemes" content="light"/>
+<meta name="x-apple-disable-message-reformatting"/>
 <title>${escapeHtml(p.previewText)}</title>
 <style type="text/css">${CSS}</style>
 </head>
-<body class="ebg" style="margin:0;padding:0;background-color:${C.pageBg};color-scheme:dark;">
+<body class="ebg" style="margin:0;padding:0;background-color:${C.pageBg};color-scheme:light only;">
 <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">${escapeHtml(p.previewText)}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" class="ebg" style="background-color:${C.pageBg};">
 <tr><td align="center" style="padding:24px 12px;">

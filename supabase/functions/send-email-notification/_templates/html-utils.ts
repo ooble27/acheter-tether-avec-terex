@@ -1,26 +1,27 @@
-// HTML email utilities — pure table-based, always-dark, works in Gmail / Apple Mail / Outlook
+// HTML email utilities — pure table-based, forced LIGHT mode, works in Gmail / Apple Mail / Outlook
+//
+// Stratégie style Ooble : on force le mode CLAIR via `color-scheme: light only`.
+// Fini l'inversion imprévisible de Gmail — le rendu est cohérent partout.
+// Palette : encre profonde sur gris clair et carte blanche.
 
 export const C = {
-  // Accent neutre. IMPORTANT : jamais de #ffffff / #000 purs — Gmail (mode sombre)
-  // inverse les valeurs PURES de façon incohérente (texte blanc → noir invisible).
-  // Des valeurs « presque blanches / presque noires » s'inversent proprement AVEC
-  // leur fond → l'email reste lisible que Gmail l'affiche sombre ou l'inverse.
-  green:      '#f5f5f5',   // (clé conservée pour compat) = accent d'emphase clair
-  white:      '#f5f5f5',   // « blanc » d'emphase (montants, points, icônes) — jamais #fff pur
-  accent:     '#f4f4f4',   // fond bouton (quasi-blanc, s'inverse proprement)
-  accentText: '#191919',   // texte sur bouton (quasi-noir, s'inverse proprement)
-  pageBg:     '#141414',
-  cardBg:     '#1a1a1a',
-  footerBg:   '#161616',
-  infoBg:     '#1e1e1e',
-  rowBg:      '#242424',
-  border:     '#2c2c2c',
-  borderSoft: '#202020',
-  text:       '#f5f5f5',
-  textMuted:  '#a1a1a1',
-  textDim:    '#6e6e6e',
-  red:        '#f87171',
-  amber:      '#fbbf24',
+  // « Blanc / accent » d'emphase — devient l'encre foncée en light mode.
+  green:      '#0F3A43',
+  white:      '#14201f',   // texte d'emphase (montants, points, icônes)
+  accent:     '#14201f',   // fond bouton — encre profonde
+  accentText: '#ffffff',   // texte sur bouton
+  pageBg:     '#EEF2F2',
+  cardBg:     '#ffffff',
+  footerBg:   '#EEF2F2',
+  infoBg:     '#F5F7F7',
+  rowBg:      '#EEF2F2',
+  border:     '#E4EAEA',
+  borderSoft: '#F0F3F3',
+  text:       '#14201f',
+  textMuted:  '#475467',
+  textDim:    '#8a97a0',
+  red:        '#dc2626',
+  amber:      '#d97706',
 };
 
 const F  = `-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif`;
@@ -29,60 +30,60 @@ const LOGO = `https://terangaexchange.com/terex-icon.png`;
 const TEAM = `https://terangaexchange.com/email/terex-team.jpg`; // illustration signature
 const BASE = `https://terangaexchange.com`;
 
-// ─── CSS — always dark, both light+dark system prefs, Gmail dark mode overrides ────────────
+// ─── CSS — force LIGHT mode (style Ooble), cohérent Gmail / Outlook / Apple Mail ─────
 const CSS = `
-/* Surfaces toujours sombres, texte toujours clair — cohérent quel que soit le client */
-:root{color-scheme:dark !important;supported-color-schemes:dark !important;}
-html,body{margin:0;padding:0;background-color:#141414 !important;color:#f5f5f5 !important;-webkit-text-size-adjust:100%;color-scheme:dark !important;}
-/* Couleurs de base des classes (toujours définies, pas seulement dans les media queries) */
-.etxt{color:#f5f5f5;} .emuted{color:#a1a1a1;} .edim{color:#6e6e6e;} .egreen{color:#f5f5f5;} .ered{color:#f87171;}
-/* light system → on garde le thème sombre */
+/* On force le mode CLAIR — plus d'inversion Gmail imprévisible */
+:root{color-scheme:light only;supported-color-schemes:light;}
+html,body{margin:0;padding:0;background-color:#EEF2F2 !important;color:#14201f !important;-webkit-text-size-adjust:100%;color-scheme:light only;}
+/* Couleurs de base des classes */
+.etxt{color:#14201f;} .emuted{color:#475467;} .edim{color:#8a97a0;} .egreen{color:#14201f;} .ered{color:#dc2626;}
+/* light system → thème clair (défaut) */
 @media (prefers-color-scheme:light){
-  html,body,.ebg{background-color:#141414 !important;color-scheme:dark !important;}
-  .ecard{background-color:#1a1a1a !important;}
-  .efooter,.ebar{background-color:#161616 !important;}
-  .einfo{background-color:#1e1e1e !important;border-color:#2c2c2c !important;}
-  .erow{background-color:#242424 !important;}
-  .etxt{color:#f5f5f5 !important;}
-  .emuted{color:#a1a1a1 !important;}
-  .edim{color:#6e6e6e !important;}
-  .egreen{color:#f5f5f5 !important;}
-  .ered{color:#f87171 !important;}
+  html,body,.ebg{background-color:#EEF2F2 !important;color-scheme:light !important;}
+  .ecard{background-color:#ffffff !important;}
+  .efooter,.ebar{background-color:#EEF2F2 !important;}
+  .einfo{background-color:#F5F7F7 !important;border-color:#E4EAEA !important;}
+  .erow{background-color:#EEF2F2 !important;}
+  .etxt{color:#14201f !important;}
+  .emuted{color:#475467 !important;}
+  .edim{color:#8a97a0 !important;}
+  .egreen{color:#14201f !important;}
+  .ered{color:#dc2626 !important;}
 }
-/* dark system → surfaces sombres forcées, texte clair (jamais de texte sombre sur carte sombre) */
+/* dark system → on force quand même le light (comme Ooble) */
 @media (prefers-color-scheme:dark){
-  html,body,.ebg{background-color:#141414 !important;color-scheme:dark !important;}
-  .ecard{background-color:#1a1a1a !important;}
-  .efooter,.ebar{background-color:#161616 !important;}
-  .einfo{background-color:#1e1e1e !important;border-color:#2c2c2c !important;}
-  .erow{background-color:#242424 !important;}
-  .etxt{color:#f5f5f5 !important;}
-  .emuted{color:#a1a1a1 !important;}
-  .edim{color:#6e6e6e !important;}
-  .egreen{color:#f5f5f5 !important;}
-  .ered{color:#f87171 !important;}
+  html,body,.ebg{background-color:#EEF2F2 !important;color-scheme:light !important;}
+  .ecard{background-color:#ffffff !important;}
+  .efooter,.ebar{background-color:#EEF2F2 !important;}
+  .einfo{background-color:#F5F7F7 !important;border-color:#E4EAEA !important;}
+  .erow{background-color:#EEF2F2 !important;}
+  .etxt{color:#14201f !important;}
+  .emuted{color:#475467 !important;}
+  .edim{color:#8a97a0 !important;}
+  .egreen{color:#14201f !important;}
+  .ered{color:#dc2626 !important;}
 }
-/* Gmail Android [data-ogsc] — on re-force surfaces sombres + texte clair après l'inversion Gmail */
-[data-ogsc] body,[data-ogsb] body{background-color:#141414 !important;}
+/* Gmail Android [data-ogsc] — on re-force le clair même si Gmail tente une inversion */
+[data-ogsc] body,[data-ogsb] body{background-color:#EEF2F2 !important;}
 [data-ogsc] table,[data-ogsb] table{background-color:transparent !important;}
-[data-ogsc] .ecard,[data-ogsb] .ecard{background-color:#1a1a1a !important;}
-[data-ogsc] .ebar,[data-ogsb] .ebar{background-color:#161616 !important;}
-[data-ogsc] .efooter,[data-ogsb] .efooter{background-color:#161616 !important;}
-[data-ogsc] .einfo,[data-ogsb] .einfo{background-color:#1e1e1e !important;}
-[data-ogsc] .erow,[data-ogsb] .erow{background-color:#242424 !important;}
-[data-ogsc] .etxt,[data-ogsb] .etxt{color:#f5f5f5 !important;}
-[data-ogsc] .emuted,[data-ogsb] .emuted{color:#a1a1a1 !important;}
-[data-ogsc] .edim,[data-ogsb] .edim{color:#6e6e6e !important;}
-[data-ogsc] .egreen,[data-ogsb] .egreen{color:#f5f5f5 !important;}
-[data-ogsc] .ered,[data-ogsb] .ered{color:#f87171 !important;}
-[data-ogsc] .einfo,[data-ogsb] .einfo{border-color:#2c2c2c !important;}
+[data-ogsc] .ecard,[data-ogsb] .ecard{background-color:#ffffff !important;}
+[data-ogsc] .ebar,[data-ogsb] .ebar{background-color:#EEF2F2 !important;}
+[data-ogsc] .efooter,[data-ogsb] .efooter{background-color:#EEF2F2 !important;}
+[data-ogsc] .einfo,[data-ogsb] .einfo{background-color:#F5F7F7 !important;}
+[data-ogsc] .erow,[data-ogsb] .erow{background-color:#EEF2F2 !important;}
+[data-ogsc] .etxt,[data-ogsb] .etxt{color:#14201f !important;}
+[data-ogsc] .emuted,[data-ogsb] .emuted{color:#475467 !important;}
+[data-ogsc] .edim,[data-ogsb] .edim{color:#8a97a0 !important;}
+[data-ogsc] .egreen,[data-ogsb] .egreen{color:#14201f !important;}
+[data-ogsc] .ered,[data-ogsb] .ered{color:#dc2626 !important;}
+[data-ogsc] .einfo,[data-ogsb] .einfo{border-color:#E4EAEA !important;}
 /* Mobile */
 @media only screen and (max-width:620px){
   .w600{width:100% !important;max-width:100% !important;}
   .mpad{padding:28px 20px !important;}
   .mpad-sm{padding:16px 20px !important;}
   .mh1{font-size:22px !important;line-height:1.35 !important;}
-  .scol{display:block !important;width:100% !important;box-sizing:border-box !important;border-right:none !important;border-bottom:1px solid #2a2a2a !important;}
+  .scol{display:block !important;width:100% !important;box-sizing:border-box !important;border-right:none !important;border-bottom:1px solid #E4EAEA !important;}
   .scol-last{border-bottom:none !important;}
   .irow td{padding:12px 16px !important;}
   .mfull{display:block !important;width:100% !important;box-sizing:border-box !important;}
@@ -446,16 +447,17 @@ export function wrapEmail(preview: string, rows: string, _topRightOrNote?: strin
   const topRight = _topRightOrNote && _topRightOrNote.includes('<') ? _topRightOrNote : undefined;
   const note = footerNote ?? (_topRightOrNote && !_topRightOrNote.includes('<') ? _topRightOrNote : undefined);
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" bgcolor="${C.pageBg}" style="background-color:${C.pageBg};color-scheme:dark;">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" bgcolor="${C.pageBg}" style="background-color:${C.pageBg};color-scheme:light only;">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="color-scheme" content="dark"/>
-<meta name="supported-color-schemes" content="dark"/>
+<meta name="color-scheme" content="light only"/>
+<meta name="supported-color-schemes" content="light"/>
+<meta name="x-apple-disable-message-reformatting"/>
 <title>${preview}</title>
 <style type="text/css">${CSS}</style>
 </head>
-<body class="ebg" bgcolor="${C.pageBg}" style="margin:0;padding:0;background-color:${C.pageBg};color-scheme:dark;">
+<body class="ebg" bgcolor="${C.pageBg}" style="margin:0;padding:0;background-color:${C.pageBg};color-scheme:light only;">
 <!--[if mso]><table role="presentation" width="100%"><tr><td><![endif]-->
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="${C.pageBg}" class="ebg" style="background-color:${C.pageBg};">
 <tr><td align="center" style="padding:24px 12px;">

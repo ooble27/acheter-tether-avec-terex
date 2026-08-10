@@ -133,8 +133,9 @@ export function AdminPortal() {
           </div>
         </div>
 
-        {/* Hero de section (style Ooble) — chiffre saillant + stats */}
-        <div style={{ marginBottom: '20px' }}>
+        {/* Hero de section (style Ooble) — occupe une colonne à gauche, pas
+            toute la largeur (respiration comme sur ooble / stripe). */}
+        <div style={{ marginBottom: '20px', maxWidth: '560px' }}>
           <SectionHero tab={currentTab} />
         </div>
 
