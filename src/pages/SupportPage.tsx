@@ -72,7 +72,6 @@ const sidebarSections = [
     title: 'SÉCURITÉ',
     icon: Shield,
     items: [
-      { label: 'Politique de sécurité', href: '/security' },
       { label: 'Protection des données', href: '/privacy' },
       { label: 'Conditions d\'utilisation', href: '/terms' },
       { label: 'Signaler un problème', href: '/contact' },

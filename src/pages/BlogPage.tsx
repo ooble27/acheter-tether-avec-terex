@@ -66,7 +66,6 @@ const RESOURCES = [
   { label: "FAQ", to: "/faq" },
   { label: "Guide Terex", to: "/guide" },
   { label: "Support", to: "/support" },
-  { label: "Sécurité", to: "/security" },
 ];
 
 export default function BlogPage() {

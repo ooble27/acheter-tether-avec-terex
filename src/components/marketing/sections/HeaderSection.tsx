@@ -42,7 +42,6 @@ const GROUPS: Group[] = [
       { icon: Newspaper,  title: 'Blog',     desc: 'Articles & actualités',  href: '/blog' },
       { icon: BookOpen,   title: 'Guide',    desc: 'Bien démarrer',          href: '/guide' },
       { icon: HelpCircle, title: 'FAQ',      desc: 'Questions fréquentes',   href: '/faq' },
-      { icon: Shield,     title: 'Sécurité', desc: 'Vos fonds protégés',     href: '/security' },
     ],
   },
   {

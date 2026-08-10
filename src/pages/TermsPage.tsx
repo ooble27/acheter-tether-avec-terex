@@ -90,7 +90,7 @@ const TermsPage = () => {
 
       {/* Hero */}
       <section className="relative z-[1] pt-12 pb-8 md:pt-20 md:pb-12" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-        <div className="pp-fade max-w-7xl mx-auto px-5 sm:px-6">
+        <div className="pp-fade max-w-6xl mx-auto px-5 sm:px-6">
           <p style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.4)', margin: '0 0 14px' }}>Conditions d'utilisation</p>
           <h1 style={{ fontSize: 'clamp(1.9rem, 4vw, 2.6rem)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.08, color: '#fff', margin: '0 0 18px' }}>
             Conditions Générales<br className="hidden md:block" /> d'Utilisation
@@ -105,14 +105,14 @@ const TermsPage = () => {
 
       {/* Info bar */}
       <div className="relative z-[1]" style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 py-3.5 flex flex-wrap gap-2 items-center" style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.55)' }}>
+        <div className="max-w-6xl mx-auto px-5 sm:px-6 py-3.5 flex flex-wrap gap-2 items-center" style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.55)' }}>
           <span style={{ fontWeight: 600, color: 'rgba(255,255,255,0.8)' }}>Important :</span>
           <span>En utilisant les services Terex, vous acceptez l'intégralité des présentes Conditions Générales d'Utilisation. Veuillez les lire attentivement avant toute utilisation de la plateforme.</span>
         </div>
       </div>
 
       {/* Two-column layout */}
-      <div className="relative z-[1] max-w-7xl mx-auto px-5 sm:px-6 flex gap-12 py-12 md:py-16">
+      <div className="relative z-[1] max-w-6xl mx-auto px-5 sm:px-6 flex gap-12 py-12 md:py-16">
 
         {/* TOC sticky sidebar — desktop only */}
         <aside className="hidden lg:block w-64 flex-shrink-0">

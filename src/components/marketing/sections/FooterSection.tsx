@@ -44,7 +44,6 @@ export function FooterSection() {
       links: [
         { label: "Conditions d'Utilisation", href: "/terms" },
         { label: "Confidentialité", href: "/privacy" },
-        { label: "Sécurité", href: "/security" }
       ]
     }
   ];
@@ -146,15 +145,6 @@ export function FooterSection() {
               onMouseLeave={(e) => (e.currentTarget.style.color = MUTED_SOFT)}
             >
               Conditions
-            </button>
-            <button
-              onClick={() => navigate('/security')}
-              className="text-xs transition-colors"
-              style={{ color: MUTED_SOFT }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = MUTED_SOFT)}
-            >
-              Sécurité
             </button>
           </div>
         </div>
