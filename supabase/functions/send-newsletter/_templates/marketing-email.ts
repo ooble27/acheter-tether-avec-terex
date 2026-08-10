@@ -4,6 +4,7 @@
 
 const F = `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`;
 const BASE = 'https://terangaexchange.com';
+const LOGO = 'https://terangaexchange.com/terex-icon.png';
 
 export interface MarketingEmailProps {
   userName?: string;
@@ -46,7 +47,8 @@ export function marketingEmailHtml(p: MarketingEmailProps): string {
   .wrap { max-width: 560px; margin: 0 auto; padding: 32px 20px 40px; }
   .card { background: #ffffff; border-radius: 14px; box-shadow: 0 1px 0 rgba(0,0,0,0.02), 0 12px 32px -12px rgba(20,20,20,0.08); overflow: hidden; }
   .head { padding: 22px 28px 12px; }
-  .brand { font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; color: #111; font-weight: 500; }
+  .brand-logo { display: inline-block; width: 28px; height: 28px; border-radius: 7px; vertical-align: middle; margin-right: 10px; border: 0; }
+  .brand { display: inline-block; vertical-align: middle; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; color: #111; font-weight: 500; }
   .body { padding: 4px 28px 22px; font-size: 15px; color: #111; }
   .btn { display: inline-block; background: #111; color: #fff !important; padding: 12px 22px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500; }
   .foot { border-top: 1px solid #ececea; color: #4a4a47; font-size: 12px; line-height: 1.55; }
@@ -62,7 +64,10 @@ export function marketingEmailHtml(p: MarketingEmailProps): string {
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;font-size:1px;line-height:1px;color:#f6f6f4;">${esc(p.previewText)}</div>
   <div class="wrap">
     <div class="card">
-      <div class="head"><span class="brand">Terex</span></div>
+      <div class="head">
+        <img class="brand-logo" src="${LOGO}" width="28" height="28" alt="Terex" />
+        <span class="brand">Terex</span>
+      </div>
       <div class="body">
         <h1 style="margin:0 0 12px;font-size:22px;line-height:1.3;font-weight:500;letter-spacing:-0.01em;color:#111;">${esc(p.heroTitle)}</h1>
         <p style="margin:0 0 14px;font-size:15px;font-weight:500;color:#111;">${greeting}</p>

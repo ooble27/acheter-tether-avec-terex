@@ -77,9 +77,9 @@ function primaryButton(href: string, label: string): string {
   </td></tr></table>`;
 }
 
-/** Encart de rappel / avertissement. */
+/** Encart de rappel / avertissement — simple carte grise, sans liseré. */
 function notice(text: string): string {
-  return `<div style="margin:16px 0;padding:12px 14px;background:${C.infoBg};border:1px solid ${C.border};border-left:3px solid ${C.text};border-radius:6px;font-size:13px;line-height:1.55;color:${C.textMuted};">${text}</div>`;
+  return `<div style="margin:16px 0;padding:14px 16px;background:${C.infoBg};border-radius:10px;font-size:13.5px;line-height:1.6;color:${C.textMuted};">${text}</div>`;
 }
 
 // ────────────────────────────────────────────────────────────
@@ -246,7 +246,9 @@ export function wrapEmail(preview: string, rows: string, _topRightOrNote?: strin
   .wrap { max-width: 560px; margin: 0 auto; padding: 32px 20px 40px; }
   .card { background: ${C.cardBg}; border-radius: 14px; box-shadow: 0 1px 0 rgba(0,0,0,0.02), 0 12px 32px -12px rgba(20,20,20,0.08); overflow: hidden; }
   .head { padding: 22px 28px 12px; }
-  .brand { font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; color: ${C.text}; font-weight: 500; }
+  .brand-row { line-height: 1; }
+  .brand-logo { display: inline-block; width: 28px; height: 28px; border-radius: 7px; vertical-align: middle; margin-right: 10px; border: 0; }
+  .brand { display: inline-block; vertical-align: middle; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; color: ${C.text}; font-weight: 500; }
   .body { padding: 4px 0 20px; font-size: 15px; color: ${C.text}; }
   .foot { border-top: 1px solid ${C.border}; color: ${C.textMuted}; font-size: 12px; line-height: 1.55; }
   .foot a { color: ${C.textMuted}; text-decoration: none; }
@@ -261,7 +263,12 @@ export function wrapEmail(preview: string, rows: string, _topRightOrNote?: strin
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;font-size:1px;line-height:1px;color:${C.pageBg};">${preview}</div>
   <div class="wrap">
     <div class="card">
-      <div class="head"><span class="brand">Terex</span></div>
+      <div class="head">
+        <div class="brand-row">
+          <img class="brand-logo" src="${LOGO}" width="28" height="28" alt="Terex" />
+          <span class="brand">Terex</span>
+        </div>
+      </div>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="body">${rows}</table>
       <div class="foot">
         <div class="row">
