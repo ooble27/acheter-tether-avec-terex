@@ -169,24 +169,28 @@ const handler = async (req: Request): Promise<Response> => {
     let htmlContent = '';
 
     switch (emailType) {
-      case 'order_confirmation':
+      case 'order_confirmation': {
+        const ref = `TEREX-${(orderData.id || '').slice(-8).toUpperCase()}`;
         if (transactionType === 'buy') {
-          subject = `Votre demande d'achat de ${orderData.usdt_amount || 0} USDT a été reçue`;
+          subject = `Votre ordre d'achat Terex (${ref})`;
         } else if (transactionType === 'sell') {
-          subject = `Votre demande de vente de ${orderData.usdt_amount || 0} USDT a été reçue`;
+          subject = `Votre ordre de vente Terex (${ref})`;
         } else {
-          subject = `Votre demande a été reçue — TEREX-${orderData.id?.slice(-8)}`;
+          subject = `Votre demande Terex (${ref})`;
         }
         htmlContent = orderConfirmationHtml({ orderData, transactionType: transactionType as 'buy' | 'sell', clientName });
 
-        // Notification admin pour nouvelle commande
+        // Notification admin pour nouvelle commande — sujet style Ooble, sans crochets ni tirets
         try {
-          const adminOrderRef = `TEREX-${(orderData.id || '').slice(-8).toUpperCase()}`;
-          const adminTypeLabel = transactionType === 'buy' ? 'Achat USDT' : transactionType === 'sell' ? 'Vente USDT' : 'Commande';
+          const adminSubject = transactionType === 'buy'
+            ? `Nouvelle commande d'achat ${ref}`
+            : transactionType === 'sell'
+              ? `Nouvelle commande de vente ${ref}`
+              : `Nouvelle demande ${ref}`;
           await resend.emails.send({
             from: "Terex Admin <noreply@terangaexchange.com>",
             to: ["terangaexchange@gmail.com"],
-            subject: `[Commande] ${adminTypeLabel} · ${adminOrderRef}`,
+            subject: adminSubject,
             html: adminNewOrderHtml({
               orderData,
               transactionType,
@@ -199,50 +203,51 @@ const handler = async (req: Request): Promise<Response> => {
           console.error('Erreur notification admin commande:', adminErr);
         }
         break;
+      }
 
       case 'status_update':
         if (transactionType === 'buy') {
-          subject = `Mise à jour de votre achat USDT - En cours de traitement`;
+          subject = `On traite votre achat Terex`;
         } else if (transactionType === 'sell') {
-          subject = `Mise à jour de votre vente USDT - En cours de traitement`;
+          subject = `On traite votre vente Terex`;
         } else if (transactionType === 'transfer') {
-          subject = `Mise à jour de votre transfert - En cours de traitement`;
+          subject = `On traite votre transfert Terex`;
         } else {
-          subject = `Mise à jour de votre transaction - En cours de traitement`;
+          subject = `On traite votre demande Terex`;
         }
         htmlContent = statusUpdateHtml({ orderData, transactionType, clientName });
         break;
 
-      case 'payment_confirmed':
+      case 'payment_confirmed': {
+        const ref = `TEREX-${(orderData.id || '').slice(-8).toUpperCase()}`;
         if (transactionType === 'buy') {
-          subject = `Votre achat de ${orderData.usdt_amount || 0} USDT a été finalisé avec succès`;
+          subject = `Transaction terminée (${ref})`;
         } else if (transactionType === 'sell') {
-          subject = `Votre vente de ${orderData.usdt_amount || 0} USDT a été finalisée avec succès`;
+          subject = `Transaction terminée (${ref})`;
         } else if (transactionType === 'transfer') {
-          subject = `Votre transfert de ${orderData.amount || 0} ${orderData.from_currency || 'USDT'} à ${orderData.recipient_name} a été déposé avec succès`;
+          subject = `Transfert terminé (${ref})`;
         } else {
-          subject = `Votre transaction a été finalisée avec succès`;
+          subject = `Transaction terminée (${ref})`;
         }
         htmlContent = paymentConfirmedHtml({ orderData, transactionType, clientName });
         break;
+      }
 
       case 'transfer_confirmation':
-        subject = `Votre transfert de ${orderData.amount || 0} ${orderData.from_currency || 'USDT'} à ${orderData.recipient_name} a été confirmé`;
+        subject = `Votre transfert Terex est confirmé`;
         htmlContent = transferConfirmationHtml({ transferData: orderData, clientName });
         break;
 
       case 'contact_message': {
-        // Email de confirmation pour le client
-        subject = `Nous avons bien reçu votre message — ${orderData.subject}`;
+        subject = `Nous avons bien reçu votre message`;
         htmlContent = contactConfirmationHtml({ contactData: orderData });
 
-        // Envoyer aussi une notification à l'équipe Terex
         try {
           const teamNotificationHtml = contactNotificationHtml({ contactData: orderData });
           await resend.emails.send({
             from: "Terex <noreply@terangaexchange.com>",
             to: ["terangaexchange@gmail.com"],
-            subject: `Nouveau message de contact - ${orderData.subject}`,
+            subject: `Nouveau message de contact`,
             html: teamNotificationHtml,
           });
           console.log('Notification envoyée à l\'équipe Terex');
@@ -253,7 +258,7 @@ const handler = async (req: Request): Promise<Response> => {
       }
 
       case 'kyc_approved': {
-        subject = `Félicitations ! Votre vérification d'identité a été approuvée - Accédez à votre compte Terex`;
+        subject = `Votre identité est vérifiée`;
 
         const { data: magicLinkData, error: magicLinkError } = await supabase.auth.admin.generateLink({
           type: 'magiclink',
@@ -277,8 +282,7 @@ const handler = async (req: Request): Promise<Response> => {
       }
 
       case 'job_application':
-        // Email de confirmation pour le candidat
-        subject = `Candidature reçue — ${orderData.position} chez Terex`;
+        subject = `Votre candidature Terex pour ${orderData.position}`;
         htmlContent = jobApplicationConfirmationHtml({
           firstName: orderData.first_name || 'Candidat',
           lastName: orderData.last_name || '',
@@ -286,12 +290,11 @@ const handler = async (req: Request): Promise<Response> => {
           appliedAt: orderData.created_at,
         });
 
-        // Notification admin RH Terex
         try {
           await resend.emails.send({
             from: "Terex Careers <noreply@terangaexchange.com>",
             to: ["terangaexchange@gmail.com"],
-            subject: `[RH] Nouvelle candidature : ${orderData.position} — ${orderData.first_name} ${orderData.last_name || ''}`,
+            subject: `Nouvelle candidature pour ${orderData.position}`,
             html: jobApplicationAdminHtml({
               firstName: orderData.first_name || '',
               lastName: orderData.last_name || '',
@@ -317,7 +320,7 @@ const handler = async (req: Request): Promise<Response> => {
           rejected:  'Candidature non retenue',
         };
         const statusLabel = statusLabels[orderData.status] || 'Mise à jour';
-        subject = `Candidature ${orderData.position} — ${statusLabel}`;
+        subject = `Votre candidature pour ${orderData.position}`;
         htmlContent = jobApplicationStatusHtml({
           firstName:   orderData.first_name || 'Candidat',
           position:    orderData.position   || 'Poste',
@@ -328,14 +331,13 @@ const handler = async (req: Request): Promise<Response> => {
       }
 
       case 'cancellation_confirmation': {
-        const cancelTypeLabel = transactionType === 'buy' ? 'achat' : transactionType === 'sell' ? 'vente' : 'transfert';
-        subject = `Confirmation d'annulation — Votre ${cancelTypeLabel} USDT a été annulé`;
+        subject = `Votre commande Terex a été annulée`;
         htmlContent = cancellationConfirmationHtml({ orderData, transactionType, clientName });
         break;
       }
 
       case 'magic_link':
-        subject = `Votre lien de connexion sécurisé — Terex`;
+        subject = `Votre lien de connexion Terex`;
         htmlContent = magicLinkHtml({
           magicLink: orderData?.magicLink || '#',
           userEmail: finalEmailAddress,
@@ -344,12 +346,12 @@ const handler = async (req: Request): Promise<Response> => {
         break;
 
       case 'welcome':
-        subject = `Bienvenue sur Terex${clientName ? `, ${clientName}` : ''} — Commencez par vérifier votre identité`;
+        subject = `Bienvenue sur Terex${clientName ? `, ${clientName}` : ''}`;
         htmlContent = welcomeHtml({ userFirstName: clientName, kycLink: 'https://terangaexchange.com/dashboard' });
         break;
 
       case 'kyc_rejected':
-        subject = `Votre vérification KYC n'a pas abouti — Action requise`;
+        subject = `Votre vérification d'identité nécessite une action`;
         htmlContent = kycRejectedHtml({
           userFirstName: clientName,
           reasons: orderData?.reasons || undefined,
@@ -363,7 +365,7 @@ const handler = async (req: Request): Promise<Response> => {
         break;
 
       case 'security_alert':
-        subject = `Alerte sécurité — Connexion depuis un nouvel appareil`;
+        subject = `Connexion depuis un nouvel appareil`;
         htmlContent = securityAlertHtml({
           device: orderData?.device || 'Appareil inconnu',
           location: orderData?.location || 'Localisation inconnue',
@@ -382,7 +384,7 @@ const handler = async (req: Request): Promise<Response> => {
         break;
 
       case 'reengagement':
-        subject = `Ça fait un moment${clientName ? `, ${clientName}` : ''} — Le taux du jour vous attend sur Terex`;
+        subject = `Le taux du jour Terex${clientName ? ` vous attend, ${clientName}` : ''}`;
         htmlContent = reengagementHtml({
           userFirstName: clientName,
           currentRate: orderData?.currentRate || undefined,

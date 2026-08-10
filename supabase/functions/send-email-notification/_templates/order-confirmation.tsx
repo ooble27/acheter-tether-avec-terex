@@ -1,4 +1,4 @@
-import { C, wrapEmail, hero, flowBar, infoTable, sectionLabel, steps, ctaButton, dotBadge } from './html-utils.ts';
+import { wrapEmail, hero, infoTable, ctaButton, noticeBox } from './html-utils.ts';
 
 interface OrderConfirmationProps {
   orderData: any;
@@ -9,65 +9,49 @@ interface OrderConfirmationProps {
 export function orderConfirmationHtml({ orderData, transactionType, clientName }: OrderConfirmationProps): string {
   const isBuy = transactionType === 'buy';
   const reference = `TEREX-${(orderData.id || '').slice(-8).toUpperCase() || 'N/A'}`;
-  const dateStr = new Date(orderData.created_at || Date.now()).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' });
 
   let clientInfo: any = null;
   try { if (orderData.notes) clientInfo = JSON.parse(orderData.notes); } catch (_) {}
 
-  const phoneNumber = clientInfo?.phoneNumber || orderData.phone_number || 'N/A';
+  const phone   = clientInfo?.phoneNumber || orderData.phone_number || 'N/A';
   const provider = clientInfo?.provider || orderData.payment_method || 'wave';
   const providerName = provider === 'wave' ? 'Wave' : (provider === 'orange' || provider === 'orange_money') ? 'Orange Money' : 'Mobile Money';
-  const amount = Number(orderData.amount || 0).toLocaleString('fr-FR');
-  const usdt   = Number(orderData.usdt_amount || 0).toLocaleString('fr-FR');
+  const amount  = Number(orderData.amount || 0).toLocaleString('fr-FR');
+  const usdt    = Number(orderData.usdt_amount || 0).toLocaleString('fr-FR');
   const network = orderData.network || 'TRC-20';
   const wallet  = orderData.wallet_address || 'N/A';
   const currency = orderData.currency || 'CFA';
-  const greeting = clientName
-    ? `Bonjour ${clientName}, nous avons bien reçu votre commande et notre équipe la traite actuellement.`
-    : `Nous avons bien reçu votre commande et notre équipe la traite actuellement.`;
+
+  const title = isBuy
+    ? 'Payez pour recevoir vos USDT'
+    : 'Envoyez vos USDT pour recevoir vos francs';
+
+  const lead = isBuy
+    ? `Envoyez le paiement ${providerName} avec les informations ci-dessous. Dès réception, nous envoyons vos USDT à l'adresse que vous nous avez indiquée.`
+    : `Transférez vos USDT à l'adresse ci-dessous. Dès confirmation sur la blockchain, vous recevez vos ${currency} sur ${providerName}.`;
 
   const detailRows = isBuy ? [
-    { label: 'Référence',            value: reference,           mono: true },
-    { label: 'Mode de paiement',     value: providerName },
-    { label: 'Réseau',               value: network },
-    { label: 'Adresse portefeuille', value: wallet,              mono: true, last: true },
+    { label: 'Référence',       value: reference,      mono: true },
+    { label: 'Montant à payer',  value: `${amount} ${currency}` },
+    { label: 'Vous recevrez',    value: `${usdt} USDT` },
+    { label: 'Réseau',           value: network },
+    { label: 'Adresse de réception', value: wallet, mono: true, last: true },
   ] : [
-    { label: 'Référence',          value: reference,      mono: true },
-    { label: 'USDT à envoyer',     value: `${usdt} USDT` },
-    { label: 'Réseau',             value: network },
-    { label: 'Service réception',  value: providerName },
-    { label: 'Numéro',             value: phoneNumber,    mono: true, last: true },
-  ];
-
-  const stepsItems = isBuy ? [
-    { text: 'Demande reçue et enregistrée', done: true },
-    { text: `Effectuez le paiement ${providerName}` },
-    { text: 'Vérification du paiement par notre équipe' },
-    { text: `Envoi de ${usdt} USDT sur votre adresse` },
-  ] : [
-    { text: 'Demande reçue et enregistrée', done: true },
-    { text: `Envoyez ${usdt} USDT vers l'adresse Terex communiquée` },
-    { text: 'Vérification par notre équipe' },
-    { text: `Versement de ${amount} ${currency} sur ${providerName}` },
+    { label: 'Référence',      value: reference,      mono: true },
+    { label: 'Vous envoyez',    value: `${usdt} USDT` },
+    { label: 'Vous recevrez',   value: `${amount} ${currency}` },
+    { label: 'Réseau',          value: network },
+    { label: 'Numéro à créditer', value: `${providerName} · ${phone}`, mono: true, last: true },
   ];
 
   const rows =
-    hero({ reference: `Référence · ${reference}`, title: isBuy ? "Votre demande d'achat a été reçue" : 'Votre demande de vente a été reçue', date: dateStr, subtitle: greeting }) +
-    flowBar(
-      { label: isBuy ? 'Vous payez' : 'Vous envoyez', amount: isBuy ? `${amount} ${currency}` : `${usdt} USDT`, sub: isBuy ? providerName : network },
-      { label: 'Vous recevez', amount: isBuy ? `${usdt} USDT` : `${amount} ${currency}`, sub: isBuy ? network : providerName },
-      `${Number(orderData.exchange_rate || 0).toLocaleString('fr-FR')} ${currency} / USDT`,
-    ) +
-    sectionLabel('Détails de la transaction') +
+    hero({ eyebrow: isBuy ? "Ordre d'achat" : 'Ordre de vente', title, subtitle: (clientName ? `Bonjour ${clientName}, ` : '') + lead }) +
     infoTable(detailRows) +
-    sectionLabel('Prochaines étapes') +
-    steps(stepsItems) +
-    ctaButton('Suivre ma commande', 'https://terangaexchange.com/dashboard');
+    (isBuy
+      ? ''
+      : noticeBox(`Envoyez uniquement de l'USDT sur le réseau <strong>${network}</strong>. Un autre réseau entraînerait la perte des fonds.`)
+    ) +
+    ctaButton('Voir ma commande', 'https://terangaexchange.com/dashboard');
 
-  return wrapEmail(
-    `${reference} — ${usdt} USDT`,
-    rows,
-    dotBadge('En cours de traitement', C.textMuted),
-    'Vous avez reçu cet email suite à votre commande sur Terex.'
-  );
+  return wrapEmail(title, rows);
 }
