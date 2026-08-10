@@ -234,9 +234,6 @@ export function linkBox(url: string): string {
 export function wrapEmail(preview: string, rows: string, _topRightOrNote?: string, footerNote?: string): string {
   const note = footerNote ?? (_topRightOrNote && !_topRightOrNote.includes('<') ? _topRightOrNote : undefined);
   const yr = new Date().getFullYear();
-  // Tout est dans UNE SEULE table continue (pas de <div> qui casse le flux).
-  // Résultat : Gmail voit un seul bloc du haut jusqu'au copyright, plus de
-  // « trois points » ni de footer détaché en mode sombre.
   return `<!doctype html>
 <html lang="fr">
 <head>
@@ -246,59 +243,54 @@ export function wrapEmail(preview: string, rows: string, _topRightOrNote?: strin
 <style>
   body { margin: 0; background: ${C.pageBg}; font-family: ${F}; color: ${C.text}; line-height: 1.55; }
   a { color: ${C.text}; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 32px 20px 40px; }
+  .card { background: ${C.cardBg}; border-radius: 14px; box-shadow: 0 1px 0 rgba(0,0,0,0.02), 0 12px 32px -12px rgba(20,20,20,0.08); overflow: hidden; }
+  .head { padding: 22px 28px 12px; }
+  .brand-row { line-height: 1; }
   .brand-logo { display: inline-block; width: 28px; height: 28px; border-radius: 7px; vertical-align: middle; margin-right: 10px; border: 0; }
   .brand { display: inline-block; vertical-align: middle; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; color: ${C.text}; font-weight: 500; }
-  .foot-brand { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: ${C.text}; font-weight: 500; }
-  .foot-link { color: ${C.textMuted}; text-decoration: none; margin-right: 14px; font-size: 12px; }
+  .body { padding: 4px 0 20px; font-size: 15px; color: ${C.text}; }
+  .foot { border-top: 1px solid ${C.border}; color: ${C.textMuted}; font-size: 12px; line-height: 1.55; }
+  .foot a { color: ${C.textMuted}; text-decoration: none; }
+  .foot a:hover { text-decoration: underline; }
+  .foot .row { padding: 16px 28px; }
+  .foot .brand-mark { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: ${C.text}; font-weight: 500; }
+  .foot .fine { border-top: 1px solid ${C.border}; color: ${C.textDim}; }
+  .foot .links a { margin-right: 14px; }
 </style>
 </head>
-<body style="margin:0;padding:0;background:${C.pageBg};">
+<body>
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;font-size:1px;line-height:1px;color:${C.pageBg};">${preview}</div>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${C.pageBg};">
-    <tr><td align="center" style="padding:32px 14px 40px;">
-      <table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" style="width:560px;max-width:100%;background:${C.cardBg};border-radius:14px;box-shadow:0 1px 0 rgba(0,0,0,0.02),0 12px 32px -12px rgba(20,20,20,0.08);">
-
-        <!-- Header : logo + brand -->
-        <tr><td style="padding:22px 28px 12px;">
+  <div class="wrap">
+    <div class="card">
+      <div class="head">
+        <div class="brand-row">
           <img class="brand-logo" src="${LOGO}" width="28" height="28" alt="Terex" />
           <span class="brand">Terex</span>
-        </td></tr>
-
-        <!-- Corps -->
-        ${rows}
-
-        <!-- Espace avant footer (pas de border-top qui casserait la carte) -->
-        <tr><td style="padding:14px 28px 4px;">
-          <div style="height:1px;background:${C.border};font-size:1px;line-height:1px;">&nbsp;</div>
-        </td></tr>
-
-        <!-- Footer : brand + contact -->
-        <tr><td style="padding:14px 28px 4px;font-family:${F};font-size:12px;color:${C.textMuted};line-height:1.55;">
-          <div class="foot-brand">Terex</div>
+        </div>
+      </div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="body">${rows}</table>
+      <div class="foot">
+        <div class="row">
+          <div class="brand-mark">Terex</div>
           <div style="margin-top:6px">
-            <a href="mailto:terangaexchange@gmail.com" style="color:${C.textMuted};text-decoration:none;">terangaexchange@gmail.com</a>
-            &nbsp;·&nbsp;
-            <a href="${BASE}" style="color:${C.textMuted};text-decoration:none;">terangaexchange.com</a>
+            <a href="mailto:terangaexchange@gmail.com">terangaexchange@gmail.com</a> &nbsp;·&nbsp;
+            <a href="${BASE}">terangaexchange.com</a>
           </div>
-        </td></tr>
-
-        <!-- Footer : liens -->
-        <tr><td style="padding:12px 28px 4px;font-family:${F};font-size:12px;">
-          <a href="${BASE}" class="foot-link">Site</a>
-          <a href="${BASE}/help" class="foot-link">Aide</a>
-          <a href="${BASE}/privacy" class="foot-link">Confidentialité</a>
-          <a href="${BASE}/terms" class="foot-link">Conditions</a>
-        </td></tr>
-
-        <!-- Footer : fine print (fin de la même carte, aucun border) -->
-        <tr><td style="padding:14px 28px 24px;font-family:${F};font-size:11.5px;color:${C.textDim};line-height:1.6;">
+        </div>
+        <div class="row links" style="padding-top:0">
+          <a href="${BASE}">Site</a>
+          <a href="${BASE}/help">Aide</a>
+          <a href="${BASE}/privacy">Confidentialité</a>
+          <a href="${BASE}/terms">Conditions</a>
+        </div>
+        <div class="row fine">
           ${note ?? "Vous recevez cet e-mail parce que vous avez un compte sur Terex."}
           <br />&copy; ${yr} Teranga Exchange. Tous droits réservés.
-        </td></tr>
-
-      </table>
-    </td></tr>
-  </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>`;
 }
