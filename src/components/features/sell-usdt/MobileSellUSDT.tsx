@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
 import { ArrowLeft, HandCoins, Check, Copy } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { KYCPage } from '../KYCPage';
 
 const CARD = '#1e1e1e';
@@ -451,8 +452,13 @@ export function MobileSellUSDT() {
                 </div>
               ) : (
                 <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '16px' }}>
-                  <p style={{ color: '#6b7280', fontSize: '12px', margin: '0 0 10px' }}>Adresse de réception Terex :</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <p style={{ color: '#6b7280', fontSize: '12px', margin: '0 0 12px', textAlign: 'center' }}>Scannez ou copiez l'adresse</p>
+                  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
+                    <div style={{ background: '#fff', padding: '12px', borderRadius: '12px', lineHeight: 0 }}>
+                      <QRCodeSVG value={WALLET_ADDRESSES[network]} size={168} level="M" />
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingTop: '12px', borderTop: `1px solid ${BORDER}` }}>
                     <p style={{ color: '#fff', fontSize: '11px', wordBreak: 'break-all', fontFamily: 'monospace', flex: 1, margin: 0, lineHeight: 1.6 }}>
                       {WALLET_ADDRESSES[network]}
                     </p>

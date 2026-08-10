@@ -7,6 +7,7 @@ import { useTerexRates } from '@/hooks/useTerexRates';
 import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
 import { Switch } from '@/components/ui/switch';
 import { ArrowLeft, Check, HandCoins, Copy } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { KYCPage } from '../KYCPage';
 
 const NETWORK_LOGOS = {
@@ -442,8 +443,13 @@ export function DesktopSellUSDT() {
                   </div>
                 ) : (
                   <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: '12px' }}>
-                    <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px', marginBottom: '8px' }}>Sur le réseau {network} à l'adresse :</p>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                    <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px', marginBottom: '10px', textAlign: 'center' }}>Scannez ou copiez l'adresse {network}</p>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
+                      <div style={{ background: '#fff', padding: '12px', borderRadius: '12px', lineHeight: 0 }}>
+                        <QRCodeSVG value={WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]} size={180} level="M" />
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', paddingTop: '10px', borderTop: `1px solid ${BORDER}` }}>
                       <span style={{ color: '#fff', fontSize: '12px', fontFamily: 'monospace', flex: 1, wordBreak: 'break-all' }}>
                         {WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
                       </span>
