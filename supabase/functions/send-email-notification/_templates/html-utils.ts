@@ -1,186 +1,117 @@
-// HTML email utilities — pure table-based, forced LIGHT mode, works in Gmail / Apple Mail / Outlook
+// Primitives email Terex — style Ooble : minimaliste, light mode forcé,
+// typo système, palette monochrome sur fond gris clair / carte blanche.
 //
-// Stratégie style Ooble : on force le mode CLAIR via `color-scheme: light only`.
-// Fini l'inversion imprévisible de Gmail — le rendu est cohérent partout.
-// Palette : encre profonde sur gris clair et carte blanche.
+// Toutes les signatures d'export sont conservées pour ne rien casser des
+// templates existants (welcome, order-confirmation, etc.) ; c'est le rendu
+// qui change : plus sobre, plus lisible, cohérent Gmail / Apple Mail / Outlook.
 
 export const C = {
-  // « Blanc / accent » d'emphase — devient l'encre foncée en light mode.
-  green:      '#0F3A43',
-  white:      '#14201f',   // texte d'emphase (montants, points, icônes)
-  accent:     '#14201f',   // fond bouton — encre profonde
-  accentText: '#ffffff',   // texte sur bouton
-  pageBg:     '#EEF2F2',
+  // Blanc/accent d'emphase → devient l'encre foncée en light mode.
+  green:      '#111111',
+  white:      '#111111',
+  accent:     '#111111',   // bouton principal : noir presque pur
+  accentText: '#ffffff',
+  pageBg:     '#f6f6f4',
   cardBg:     '#ffffff',
-  footerBg:   '#EEF2F2',
-  infoBg:     '#F5F7F7',
-  rowBg:      '#EEF2F2',
-  border:     '#E4EAEA',
-  borderSoft: '#F0F3F3',
-  text:       '#14201f',
-  textMuted:  '#475467',
-  textDim:    '#8a97a0',
-  red:        '#dc2626',
-  amber:      '#d97706',
+  footerBg:   '#ffffff',
+  infoBg:     '#fafaf8',
+  rowBg:      '#f6f6f4',
+  border:     '#ececea',
+  borderSoft: '#f0f0ee',
+  text:       '#111111',
+  textMuted:  '#4a4a47',
+  textDim:    '#8a8a86',
+  red:        '#c93030',
+  amber:      '#a15c00',
 };
 
-const F  = `-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif`;
-const FM = `ui-monospace,SFMono-Regular,Menlo,'Courier New',monospace`;
-const LOGO = `https://terangaexchange.com/terex-icon.png`;
-const TEAM = `https://terangaexchange.com/email/terex-team.jpg`; // illustration signature
+const F  = `-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif`;
+const FM = `'SFMono-Regular',Consolas,Menlo,monospace`;
+const LOGO_URL = `https://terangaexchange.com/terex-icon.png`;
 const BASE = `https://terangaexchange.com`;
 
-// ─── CSS — force LIGHT mode (style Ooble), cohérent Gmail / Outlook / Apple Mail ─────
+// ─── CSS commun ── LIGHT MODE FORCÉ (comme Ooble) ─────────────────────────────
 const CSS = `
-/* On force le mode CLAIR — plus d'inversion Gmail imprévisible */
 :root{color-scheme:light only;supported-color-schemes:light;}
-html,body{margin:0;padding:0;background-color:#EEF2F2 !important;color:#14201f !important;-webkit-text-size-adjust:100%;color-scheme:light only;}
-/* Couleurs de base des classes */
-.etxt{color:#14201f;} .emuted{color:#475467;} .edim{color:#8a97a0;} .egreen{color:#14201f;} .ered{color:#dc2626;}
-/* light system → thème clair (défaut) */
-@media (prefers-color-scheme:light){
-  html,body,.ebg{background-color:#EEF2F2 !important;color-scheme:light !important;}
-  .ecard{background-color:#ffffff !important;}
-  .efooter,.ebar{background-color:#EEF2F2 !important;}
-  .einfo{background-color:#F5F7F7 !important;border-color:#E4EAEA !important;}
-  .erow{background-color:#EEF2F2 !important;}
-  .etxt{color:#14201f !important;}
-  .emuted{color:#475467 !important;}
-  .edim{color:#8a97a0 !important;}
-  .egreen{color:#14201f !important;}
-  .ered{color:#dc2626 !important;}
-}
-/* dark system → on force quand même le light (comme Ooble) */
+html,body{margin:0;padding:0;background:#f6f6f4;color:#111;line-height:1.55;-webkit-text-size-adjust:100%;color-scheme:light only;}
+a{color:#111;}
 @media (prefers-color-scheme:dark){
-  html,body,.ebg{background-color:#EEF2F2 !important;color-scheme:light !important;}
-  .ecard{background-color:#ffffff !important;}
-  .efooter,.ebar{background-color:#EEF2F2 !important;}
-  .einfo{background-color:#F5F7F7 !important;border-color:#E4EAEA !important;}
-  .erow{background-color:#EEF2F2 !important;}
-  .etxt{color:#14201f !important;}
-  .emuted{color:#475467 !important;}
-  .edim{color:#8a97a0 !important;}
-  .egreen{color:#14201f !important;}
-  .ered{color:#dc2626 !important;}
+  html,body,.ebg{background:#f6f6f4 !important;color:#111 !important;color-scheme:light !important;}
+  .ecard{background:#ffffff !important;}
+  .efooter{background:#ffffff !important;}
+  .einfo{background:#fafaf8 !important;border-color:#ececea !important;}
+  .etxt{color:#111 !important;} .emuted{color:#4a4a47 !important;} .edim{color:#8a8a86 !important;}
 }
-/* Gmail Android [data-ogsc] — on re-force le clair même si Gmail tente une inversion */
-[data-ogsc] body,[data-ogsb] body{background-color:#EEF2F2 !important;}
-[data-ogsc] table,[data-ogsb] table{background-color:transparent !important;}
-[data-ogsc] .ecard,[data-ogsb] .ecard{background-color:#ffffff !important;}
-[data-ogsc] .ebar,[data-ogsb] .ebar{background-color:#EEF2F2 !important;}
-[data-ogsc] .efooter,[data-ogsb] .efooter{background-color:#EEF2F2 !important;}
-[data-ogsc] .einfo,[data-ogsb] .einfo{background-color:#F5F7F7 !important;}
-[data-ogsc] .erow,[data-ogsb] .erow{background-color:#EEF2F2 !important;}
-[data-ogsc] .etxt,[data-ogsb] .etxt{color:#14201f !important;}
-[data-ogsc] .emuted,[data-ogsb] .emuted{color:#475467 !important;}
-[data-ogsc] .edim,[data-ogsb] .edim{color:#8a97a0 !important;}
-[data-ogsc] .egreen,[data-ogsb] .egreen{color:#14201f !important;}
-[data-ogsc] .ered,[data-ogsb] .ered{color:#dc2626 !important;}
-[data-ogsc] .einfo,[data-ogsb] .einfo{border-color:#E4EAEA !important;}
-/* Mobile */
+[data-ogsc] body,[data-ogsb] body{background:#f6f6f4 !important;color:#111 !important;}
+[data-ogsc] .ecard,[data-ogsb] .ecard{background:#ffffff !important;}
+[data-ogsc] .efooter,[data-ogsb] .efooter{background:#ffffff !important;}
+[data-ogsc] .einfo,[data-ogsb] .einfo{background:#fafaf8 !important;border-color:#ececea !important;}
+[data-ogsc] .etxt,[data-ogsb] .etxt{color:#111 !important;}
+[data-ogsc] .emuted,[data-ogsb] .emuted{color:#4a4a47 !important;}
+[data-ogsc] .edim,[data-ogsb] .edim{color:#8a8a86 !important;}
 @media only screen and (max-width:620px){
-  .w600{width:100% !important;max-width:100% !important;}
-  .mpad{padding:28px 20px !important;}
-  .mpad-sm{padding:16px 20px !important;}
-  .mh1{font-size:22px !important;line-height:1.35 !important;}
-  .scol{display:block !important;width:100% !important;box-sizing:border-box !important;border-right:none !important;border-bottom:1px solid #E4EAEA !important;}
+  .w560{width:100% !important;max-width:100% !important;}
+  .mpad{padding:24px 22px !important;}
+  .mh1{font-size:20px !important;line-height:1.3 !important;}
+  .scol{display:block !important;width:100% !important;box-sizing:border-box !important;border-right:none !important;border-bottom:1px solid #ececea !important;text-align:left !important;}
   .scol-last{border-bottom:none !important;}
-  .irow td{padding:12px 16px !important;}
-  .mfull{display:block !important;width:100% !important;box-sizing:border-box !important;}
-  .mhide{display:none !important;}
 }
 `;
 
-
-// ─── Header ─── logo tile + wordmark + statut optionnel à droite ──────────────
+// ─── Header — juste « Terex » en lettres, sans image (moins d'échec Gmail) ────
 export function header(right?: string): string {
   return `
-<tr bgcolor="${C.cardBg}">
-  <td class="ecard" bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:20px 28px;border-bottom:1px solid ${C.borderSoft};">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td style="vertical-align:middle;">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
-            <td style="vertical-align:middle;padding-right:11px;">
-              <img src="${LOGO}" width="40" height="40" alt="Terex" style="display:block;width:40px;height:40px;border-radius:11px;border:1px solid ${C.border};">
-            </td>
-            <td style="vertical-align:middle;">
-              <span class="etxt" style="font-family:${F};font-size:18px;font-weight:700;letter-spacing:-0.02em;color:${C.text};">Terex</span>
-            </td>
-          </tr></table>
-        </td>
-        ${right ? `<td class="mhide" style="vertical-align:middle;text-align:right;">${right}</td>` : ''}
-      </tr>
-    </table>
+<tr>
+  <td class="ecard" style="background:${C.cardBg};padding:22px 28px 16px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+      <td style="vertical-align:middle;">
+        <span style="font-family:${F};font-size:15px;letter-spacing:0.14em;text-transform:uppercase;color:${C.text};font-weight:500;">Terex</span>
+      </td>
+      ${right ? `<td style="vertical-align:middle;text-align:right;">${right}</td>` : ''}
+    </tr></table>
   </td>
 </tr>`;
 }
 
-// ─── Footer ───────────────────────────────────────────────────────────────────
-// Emplacement des réseaux sociaux : quand les liens seront fournis, remplir
-// SOCIALS ci-dessous (label + url). Vide pour l'instant → la rangée n'apparaît pas.
-const SOCIALS: { label: string; url: string }[] = [
-  // { label: 'Facebook',  url: 'https://facebook.com/...' },
-  // { label: 'Instagram', url: 'https://instagram.com/...' },
-  // { label: 'X',         url: 'https://x.com/...' },
-  // { label: 'LinkedIn',  url: 'https://linkedin.com/company/...' },
-];
-
-export function footer(note = "Vous avez reçu cet email suite à une activité sur votre compte Terex."): string {
+// ─── Footer — coordonnées, liens, mentions ────────────────────────────────────
+export function footer(note = "Vous recevez cet e-mail parce que vous avez un compte sur Terex."): string {
   const yr = new Date().getFullYear();
-
-  const socialsRow = SOCIALS.length === 0 ? '' : `
-          <p style="font-family:${F};font-size:12px;margin:0 0 18px 0;text-align:center;">
-            ${SOCIALS.map(s => `<a href="${s.url}" class="emuted" style="color:${C.textMuted};text-decoration:none;">${s.label}</a>`).join(`<span class="edim" style="color:${C.textDim};"> · </span>`)}
-          </p>`;
-
   return `
-<tr bgcolor="${C.footerBg}">
-  <td class="efooter" bgcolor="${C.footerBg}" style="background-color:${C.footerBg};padding:32px 32px 30px;border-top:1px solid ${C.borderSoft};text-align:center;">
+<tr>
+  <td class="efooter" style="background:${C.footerBg};border-top:1px solid ${C.border};padding:0;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr bgcolor="${C.footerBg}">
-        <td align="center" bgcolor="${C.footerBg}" style="background-color:${C.footerBg};text-align:center;">
-
-          <!-- Signature — illustration de l'équipe dans un cadre arrondi -->
-          <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 14px;">
-            <tr><td style="background-color:${C.cardBg};border:1px solid ${C.border};border-radius:20px;padding:6px;">
-              <img src="${TEAM}" width="92" height="92" alt="L'équipe Terex" style="display:block;width:92px;height:92px;border-radius:15px;">
-            </td></tr>
-          </table>
-          <p class="emuted" style="font-family:${F};font-size:13px;color:${C.textMuted};margin:0 0 3px 0;">Bien cordialement,</p>
-          <p class="etxt" style="font-family:${F};font-size:15px;font-weight:700;letter-spacing:-0.01em;color:${C.text};margin:0 0 22px 0;">L'équipe Terex</p>
-
-          <!-- Séparateur court, centré — plus délicat qu'un filet pleine largeur -->
-          <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:6px auto 24px;"><tr><td style="width:44px;border-top:1px solid ${C.border};font-size:0;line-height:0;height:1px;">&nbsp;</td></tr></table>
-
-          <!-- (Réseaux sociaux — à activer plus tard) -->
-          ${socialsRow}
-
-          <!-- Liens — aérés -->
-          <p style="font-family:${F};font-size:12px;line-height:1.9;margin:0 0 20px 0;text-align:center;">
-            <a href="mailto:terangaexchange@gmail.com" class="emuted" style="color:${C.textMuted};text-decoration:none;">Nous contacter</a>
-            <span class="edim" style="color:${C.textDim};">&nbsp;&nbsp;·&nbsp;&nbsp;</span>
-            <a href="${BASE}/privacy" class="emuted" style="color:${C.textMuted};text-decoration:none;">Confidentialité</a>
-            <span class="edim" style="color:${C.textDim};">&nbsp;&nbsp;·&nbsp;&nbsp;</span>
-            <a href="${BASE}/help" class="emuted" style="color:${C.textMuted};text-decoration:none;">Centre d'aide</a>
-            <span class="edim" style="color:${C.textDim};">&nbsp;&nbsp;·&nbsp;&nbsp;</span>
-            <a href="${BASE}" class="emuted" style="color:${C.textMuted};text-decoration:none;">terangaexchange.com</a>
-          </p>
-
-          <!-- Identité + mentions — soignées, discrètes -->
-          <p class="emuted" style="font-family:${F};font-size:12px;font-weight:600;color:${C.textMuted};letter-spacing:0.2px;margin:0 0 7px 0;">Terex&nbsp;·&nbsp;Teranga Exchange</p>
-          <p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};line-height:1.75;margin:0 0 2px 0;">Achat &amp; vente d'USDT en francs CFA</p>
-          <p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};line-height:1.75;margin:0 0 10px 0;max-width:400px;display:inline-block;">${note}</p>
-          <p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};line-height:1.75;margin:0;">© ${yr} Teranga Exchange — Tous droits réservés.</p>
-
-        </td>
-      </tr>
+      <tr><td style="padding:18px 28px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+          <td style="vertical-align:top;padding-right:20px;">
+            <div style="font-family:${F};font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:${C.text};font-weight:500;">Terex</div>
+            <div style="font-family:${F};margin-top:6px;font-size:12px;color:${C.textMuted};">
+              <a href="mailto:terangaexchange@gmail.com" style="color:${C.textMuted};text-decoration:none;">terangaexchange@gmail.com</a>
+              &nbsp;·&nbsp;
+              <a href="${BASE}" style="color:${C.textMuted};text-decoration:none;">terangaexchange.com</a>
+            </div>
+          </td>
+          <td style="vertical-align:top;text-align:right;">
+            <div style="font-family:${F};font-size:12px;color:${C.textMuted};">Teranga Exchange</div>
+            <div style="font-family:${F};margin-top:4px;font-size:12px;color:${C.textMuted};">Dakar · Sénégal</div>
+          </td>
+        </tr></table>
+      </td></tr>
+      <tr><td style="padding:0 28px 16px;">
+        <a href="${BASE}" style="font-family:${F};font-size:12px;color:${C.textMuted};text-decoration:none;margin-right:14px;">Site</a>
+        <a href="${BASE}/help" style="font-family:${F};font-size:12px;color:${C.textMuted};text-decoration:none;margin-right:14px;">Aide</a>
+        <a href="${BASE}/privacy" style="font-family:${F};font-size:12px;color:${C.textMuted};text-decoration:none;margin-right:14px;">Confidentialité</a>
+        <a href="${BASE}/terms" style="font-family:${F};font-size:12px;color:${C.textMuted};text-decoration:none;">Conditions</a>
+      </td></tr>
+      <tr><td style="padding:14px 28px 20px;border-top:1px solid ${C.border};font-family:${F};font-size:11.5px;color:${C.textDim};line-height:1.6;">
+        ${note}
+        <br />&copy; ${yr} Teranga Exchange. Tous droits réservés.
+      </td></tr>
     </table>
   </td>
 </tr>`;
 }
 
-// ─── Hero ─────────────────────────────────────────────────────────────────────
+// ─── Hero — eyebrow + heading + sous-titre optionnels ─────────────────────────
 export function hero(opts: {
   eyebrow?: string;
   reference?: string;
@@ -189,75 +120,67 @@ export function hero(opts: {
   subtitle?: string;
   iconHtml?: string;
 }): string {
-  const centered = !!opts.iconHtml;
-  const align = centered ? 'center' : 'left';
   return `
-<tr bgcolor="${C.cardBg}">
-  <td class="ecard mpad" bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:${centered ? '44px 32px 26px' : '40px 32px 28px'};text-align:${align};">
-    ${opts.iconHtml ? `<table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 22px;"><tr><td>${opts.iconHtml}</td></tr></table>` : ''}
-    ${opts.eyebrow ? `<p class="edim" style="font-family:${F};font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${C.textDim};margin:0 0 16px 0;">${opts.eyebrow}</p>` : ''}
-    <h1 class="mh1 etxt" style="font-family:${F};font-size:27px;font-weight:700;letter-spacing:-0.02em;color:${C.text};line-height:1.25;margin:0 0 12px 0;">${opts.title}</h1>
-    ${opts.subtitle ? `<p class="emuted" style="font-family:${F};font-size:15px;color:${C.textMuted};line-height:1.65;margin:0;">${opts.subtitle}</p>` : ''}
-    ${opts.date ? `<p class="edim" style="font-family:${F};font-size:12px;color:${C.textDim};margin:12px 0 0 0;">${opts.date}</p>` : ''}
-    ${opts.reference ? `<p class="edim" style="font-family:${FM};font-size:10.5px;color:${C.textDim};letter-spacing:0.5px;margin:${opts.date ? '6px' : '12px'} 0 0 0;">${opts.reference}</p>` : ''}
+<tr>
+  <td class="ecard mpad" style="background:${C.cardBg};padding:26px 28px 6px;">
+    ${opts.iconHtml ? `<div style="margin:0 0 18px;">${opts.iconHtml}</div>` : ''}
+    ${opts.eyebrow ? `<p style="margin:0 0 8px;font-family:${F};font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:${C.textDim};">${opts.eyebrow}</p>` : ''}
+    <h1 class="mh1" style="margin:0 0 12px;font-family:${F};font-size:22px;line-height:1.3;font-weight:500;letter-spacing:-0.01em;color:${C.text};">${opts.title}</h1>
+    ${opts.subtitle ? `<p style="margin:0 0 6px;font-family:${F};font-size:15px;color:${C.textMuted};line-height:1.6;">${opts.subtitle}</p>` : ''}
+    ${opts.date ? `<p style="margin:10px 0 0;font-family:${F};font-size:12px;color:${C.textDim};">${opts.date}</p>` : ''}
+    ${opts.reference ? `<p style="margin:${opts.date ? '4px' : '10px'} 0 0;font-family:${FM};font-size:11px;color:${C.textDim};letter-spacing:0.3px;">${opts.reference}</p>` : ''}
   </td>
 </tr>`;
 }
 
-// ─── Summary bar — carte arrondie, colonnes ────────────────────────────────────
+// ─── Summary bar — colonnes en ligne ─────────────────────────────────────────
 export function summaryBar(cols: Array<{ label: string; value: string; sub?: string; green?: boolean }>): string {
   const w = Math.floor(100 / cols.length);
   const cells = cols.map((c, i) => `
-    <td class="scol${i === cols.length - 1 ? ' scol-last' : ''}" style="padding:20px 22px;vertical-align:top;width:${w}%;${i < cols.length - 1 ? `border-right:1px solid ${C.border};` : ''}">
-      <p class="edim" style="font-family:${F};font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:${C.textDim};margin:0 0 8px 0;">${c.label}</p>
-      <p class="${c.green ? 'egreen' : 'etxt'}" style="font-family:${F};font-size:21px;font-weight:700;letter-spacing:-0.02em;color:${c.green ? C.white : C.text};margin:0;line-height:1.15;">${c.value}</p>
-      ${c.sub ? `<p class="edim" style="font-family:${F};font-size:10.5px;color:${C.textDim};margin:6px 0 0 0;">${c.sub}</p>` : ''}
+    <td class="scol${i === cols.length - 1 ? ' scol-last' : ''}" style="padding:16px 18px;vertical-align:top;width:${w}%;${i < cols.length - 1 ? `border-right:1px solid ${C.border};` : ''}">
+      <p style="margin:0 0 6px;font-family:${F};font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:${C.textDim};">${c.label}</p>
+      <p style="margin:0;font-family:${F};font-size:17px;font-weight:500;letter-spacing:-0.01em;color:${C.text};line-height:1.2;">${c.value}</p>
+      ${c.sub ? `<p style="margin:5px 0 0;font-family:${F};font-size:11px;color:${C.textDim};">${c.sub}</p>` : ''}
     </td>`).join('');
   return `
-<tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:16px;overflow:hidden;border-collapse:separate;border-spacing:0;">
+<tr>
+  <td class="ecard" style="background:${C.cardBg};padding:6px 28px 20px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background:${C.infoBg};border:1px solid ${C.border};border-radius:12px;border-collapse:separate;border-spacing:0;overflow:hidden;">
       <tr>${cells}</tr>
     </table>
   </td>
 </tr>`;
 }
 
-// ─── Flow bar — itinéraire « de → vers » relié par points (style reçu Lyft) ────
+// ─── Flow bar — de → vers (usage : montants source/destination) ──────────────
 export function flowBar(
   from: { label: string; amount: string; sub?: string },
   to:   { label: string; amount: string; sub?: string },
   rate?: string
 ): string {
-  const endpoint = (
-    p: { label: string; amount: string; sub?: string },
-    filled: boolean
-  ) => `
-        <tr>
-          <td width="30" style="vertical-align:middle;padding:0;">
-            <div style="width:13px;height:13px;border-radius:50%;background:${filled ? C.white : C.infoBg};border:2px solid ${filled ? C.white : C.textMuted};margin:0 auto;"></div>
-          </td>
-          <td style="vertical-align:middle;padding:0;">
-            <p class="edim" style="font-family:${F};font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:${C.textDim};margin:0 0 3px 0;">${p.label}</p>
-            <p class="etxt" style="font-family:${F};font-size:18px;font-weight:700;letter-spacing:-0.01em;color:${C.text};margin:0;line-height:1.15;">${p.amount}</p>
-          </td>
-          ${p.sub ? `<td style="vertical-align:middle;text-align:right;padding:0;"><p class="edim" style="font-family:${F};font-size:11px;color:${C.textDim};margin:0;">${p.sub}</p></td>` : '<td></td>'}
-        </tr>`;
+  const cell = (p: { label: string; amount: string; sub?: string }) => `
+    <tr>
+      <td style="padding:10px 0;">
+        <p style="margin:0 0 4px;font-family:${F};font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:${C.textDim};">${p.label}</p>
+        <p style="margin:0;font-family:${F};font-size:17px;font-weight:500;color:${C.text};letter-spacing:-0.01em;">${p.amount}</p>
+        ${p.sub ? `<p style="margin:4px 0 0;font-family:${F};font-size:11px;color:${C.textDim};">${p.sub}</p>` : ''}
+      </td>
+    </tr>`;
   return `
-<tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:16px;overflow:hidden;border-collapse:separate;border-spacing:0;">
-      <tr><td style="padding:22px 20px;">
+<tr>
+  <td class="ecard" style="background:${C.cardBg};padding:6px 28px 20px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background:${C.infoBg};border:1px solid ${C.border};border-radius:12px;">
+      <tr><td style="padding:8px 18px;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-          ${endpoint(from, false)}
-          <tr><td width="30" style="padding:2px 0;text-align:center;"><div style="width:2px;height:22px;background:${C.border};margin:0 auto;"></div></td><td colspan="2"></td></tr>
-          ${endpoint(to, true)}
+          ${cell(from)}
+          <tr><td style="padding:0 0 10px;"><div style="height:1px;background:${C.border};font-size:1px;line-height:1px;">&nbsp;</div></td></tr>
+          ${cell(to)}
         </table>
       </td></tr>
-      ${rate ? `<tr><td style="border-top:1px solid ${C.border};padding:13px 22px;">
+      ${rate ? `<tr><td style="border-top:1px solid ${C.border};padding:11px 18px;">
         <table role="presentation" width="100%"><tr>
-          <td class="emuted" style="font-family:${F};font-size:12px;color:${C.textMuted};">Taux appliqué</td>
-          <td class="etxt" style="font-family:${F};font-size:12px;font-weight:600;color:${C.text};text-align:right;">${rate}</td>
+          <td style="font-family:${F};font-size:12px;color:${C.textMuted};">Taux appliqué</td>
+          <td style="font-family:${F};font-size:12px;color:${C.text};text-align:right;">${rate}</td>
         </tr></table>
       </td></tr>` : ''}
     </table>
@@ -265,71 +188,53 @@ export function flowBar(
 </tr>`;
 }
 
-// ─── Info table — carte « récapitulatif » : conteneur arrondi, lignes aérées ──
+// ─── Info table — clé/valeur ──────────────────────────────────────────────────
 export function infoTable(
   rows: Array<{ label: string; value: string; mono?: boolean; green?: boolean; big?: boolean; last?: boolean }>,
   title?: string
 ): string {
   const rowsHtml = rows.map((r, i) => {
     const isLast = r.last ?? (i === rows.length - 1);
-    // Ligne « big » = total : filet de séparation net au-dessus + emphase.
-    const totalTop = r.big ? `border-top:1px solid ${C.border};` : '';
-    const under = isLast || r.big ? '' : `border-bottom:1px solid ${C.borderSoft};`;
-    const pad = r.big ? '16px 20px 4px' : '13px 20px';
-    // Valeurs mono (référence, portefeuille) : rendu code discret, cassables.
-    const valFont = r.mono ? FM : F;
-    const valSize = r.big ? '16px' : r.mono ? '12px' : '13.5px';
-    const valColor = r.green || r.big ? C.white : C.text;
+    const under = isLast ? '' : `border-bottom:1px solid ${C.border};`;
     return `
-    <tr class="irow">
-      <td class="emuted" style="padding:${pad};${totalTop}${under}font-family:${F};font-size:${r.big ? '14px' : '12.5px'};font-weight:${r.big ? 700 : 400};color:${r.big ? C.text : C.textMuted};vertical-align:middle;width:42%;">${r.label}</td>
-      <td class="${r.green || r.big ? 'egreen' : 'etxt'}" style="padding:${pad};${totalTop}${under}font-family:${valFont};font-size:${valSize};font-weight:${r.big ? 700 : 600};color:${valColor};text-align:right;word-break:break-word;vertical-align:middle;letter-spacing:${r.mono ? '0.2px' : '-0.01em'};">${r.value}</td>
-    </tr>`;
+      <tr>
+        <td style="padding:11px 0;${under}font-family:${F};font-size:13px;color:${C.textDim};vertical-align:top;">${r.label}</td>
+        <td style="padding:11px 0;${under}font-family:${r.mono ? FM : F};font-size:${r.mono ? '12.5px' : (r.big ? '15px' : '13.5px')};color:${C.text};text-align:right;vertical-align:top;word-break:break-word;font-weight:${r.big ? 600 : 400};">${r.value}</td>
+      </tr>`;
   }).join('');
   return `
-<tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 26px;">
-    ${title ? `<p class="edim" style="font-family:${F};font-size:9.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};margin:0 0 10px 2px;">${title}</p>` : ''}
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:16px;overflow:hidden;border-collapse:separate;border-spacing:0;">
-      <tr><td style="padding:4px 4px;">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-          ${rowsHtml}
-        </table>
-      </td></tr>
+<tr>
+  <td class="ecard" style="background:${C.cardBg};padding:0 28px 20px;">
+    ${title ? `<p style="margin:0 0 8px;font-family:${F};font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:${C.textDim};">${title}</p>` : ''}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid ${C.border};">
+      ${rowsHtml}
     </table>
   </td>
 </tr>`;
 }
 
-// ─── Notice box ───────────────────────────────────────────────────────────────
+// ─── Notice box — encart d'alerte / rappel ────────────────────────────────────
 export function noticeBox(text: string, tone: 'neutral' | 'warning' | 'danger' | 'success' = 'neutral'): string {
-  // Box neutre simple : fond neutre, bordure fine, texte clair. Pas de liseré
-  // coloré sur le côté — c'est le style sobre que tu préfères.
-  const color = tone === 'success' ? C.text : C.textMuted;
+  const leftBorder = tone === 'warning' ? '3px solid ' + C.amber
+                   : tone === 'danger' ? '3px solid ' + C.red
+                   : tone === 'success' ? '3px solid ' + C.text
+                   : '3px solid ' + C.text;
   return `
-<tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="einfo" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:12px;">
-      <tr>
-        <td style="padding:15px 18px;font-family:${F};font-size:12.5px;color:${color};line-height:1.7;">${text}</td>
-      </tr>
-    </table>
+<tr>
+  <td class="ecard" style="background:${C.cardBg};padding:0 28px 20px;">
+    <div style="background:${C.infoBg};border:1px solid ${C.border};border-left:${leftBorder};border-radius:6px;padding:12px 14px;font-family:${F};font-size:13px;color:${C.textMuted};line-height:1.6;">${text}</div>
   </td>
 </tr>`;
 }
 
-// ─── CTA Button — style bouton Terex : blanc, arrondi 12px, compact, centré ────
+// ─── CTA Button ───────────────────────────────────────────────────────────────
 export function ctaButton(text: string, href: string): string {
   return `
-<tr bgcolor="${C.cardBg}">
-  <td align="center" bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:10px 32px 22px;text-align:center;">
-    <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
-      <tr>
-        <td align="center" bgcolor="${C.accent}" style="background-color:${C.accent};border-radius:12px;">
-          <a href="${href}" style="display:inline-block;background-color:${C.accent};color:${C.accentText};font-family:${F};font-size:13.5px;font-weight:700;padding:12px 26px;border-radius:12px;text-decoration:none;letter-spacing:0.1px;white-space:nowrap;">${text}</a>
-        </td>
-      </tr>
-    </table>
+<tr>
+  <td class="ecard" style="background:${C.cardBg};padding:6px 28px 22px;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td>
+      <a href="${href}" style="display:inline-block;padding:12px 22px;font-family:${F};font-size:14px;font-weight:500;color:${C.accentText};background:${C.accent};text-decoration:none;border-radius:8px;">${text}</a>
+    </td></tr></table>
   </td>
 </tr>`;
 }
@@ -337,69 +242,63 @@ export function ctaButton(text: string, href: string): string {
 // ─── Section label ────────────────────────────────────────────────────────────
 export function sectionLabel(text: string): string {
   return `
-<tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 12px;">
-    <p class="edim" style="font-family:${F};font-size:9.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};margin:0;">${text}</p>
+<tr>
+  <td class="ecard" style="background:${C.cardBg};padding:6px 28px 8px;">
+    <p style="margin:0;font-family:${F};font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:${C.textDim};">${text}</p>
   </td>
 </tr>`;
 }
 
 // ─── Spacer ───────────────────────────────────────────────────────────────────
-export function spacer(h = 24): string {
-  return `<tr bgcolor="${C.cardBg}"><td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};height:${h}px;line-height:${h}px;font-size:1px;">&nbsp;</td></tr>`;
+export function spacer(h = 20): string {
+  return `<tr><td class="ecard" style="background:${C.cardBg};height:${h}px;line-height:${h}px;font-size:1px;">&nbsp;</td></tr>`;
 }
 
 // ─── Divider ──────────────────────────────────────────────────────────────────
 export function divider(): string {
-  return `<tr bgcolor="${C.cardBg}"><td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px;"><div style="height:1px;background-color:${C.border};font-size:1px;line-height:1px;">&nbsp;</div></td></tr>`;
+  return `<tr><td class="ecard" style="background:${C.cardBg};padding:0 28px;"><div style="height:1px;background:${C.border};font-size:1px;line-height:1px;">&nbsp;</div></td></tr>`;
 }
 
 // ─── Status badge (inline) ────────────────────────────────────────────────────
 export function statusBadge(text: string, tone: 'success' | 'warning' | 'danger' | 'neutral' = 'success'): string {
   const m = {
-    success: { c: C.text,     bg: 'rgba(255,255,255,0.08)', b: 'rgba(255,255,255,0.18)' },
-    warning: { c: C.amber,    bg: '#211a08',               b: '#3a2f0f'              },
-    danger:  { c: C.red,      bg: '#210d0e',               b: '#3a1517'              },
-    neutral: { c: C.textMuted,bg: C.rowBg,                 b: C.border               },
+    success: { c: '#166534', bg: '#dcfce7', b: '#bbf7d0' },
+    warning: { c: C.amber,   bg: '#fef3c7', b: '#fde68a' },
+    danger:  { c: C.red,     bg: '#fee2e2', b: '#fecaca' },
+    neutral: { c: C.textMuted, bg: C.infoBg, b: C.border  },
   }[tone];
-  return `<span style="font-family:${F};font-size:10px;font-weight:700;letter-spacing:0.5px;color:${m.c};background:${m.bg};padding:6px 12px;border-radius:999px;border:1px solid ${m.b};">${text}</span>`;
+  return `<span style="font-family:${F};font-size:10.5px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:${m.c};background:${m.bg};padding:5px 11px;border-radius:999px;border:1px solid ${m.b};">${text}</span>`;
 }
 
 // ─── Dot badge — pastille avec point coloré ───────────────────────────────────
 export function dotBadge(text: string, color: string): string {
-  return `<span style="font-family:${F};font-size:11px;font-weight:600;color:${C.textMuted};background:rgba(255,255,255,0.05);border:1px solid ${C.border};border-radius:999px;padding:6px 12px;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${color};margin-right:6px;vertical-align:middle;"></span>${text}</span>`;
+  return `<span style="font-family:${F};font-size:11px;color:${C.textMuted};background:${C.infoBg};border:1px solid ${C.border};border-radius:999px;padding:5px 12px;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${color};margin-right:6px;vertical-align:middle;"></span>${text}</span>`;
 }
 
-// ─── Check ring — badge succès raffiné (halo + disque doux + coche) ───────────
+// ─── Check ring — badge succès ────────────────────────────────────────────────
 export function checkRing(): string {
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
-    <td style="width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.04);text-align:center;vertical-align:middle;">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center"><tr>
-        <td style="width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.22);text-align:center;vertical-align:middle;font-size:26px;color:${C.white};line-height:54px;font-weight:400;">&#10003;</td>
-      </tr></table>
-    </td>
-  </tr></table>`;
+  return `<div style="width:56px;height:56px;border-radius:50%;background:${C.infoBg};border:1px solid ${C.border};text-align:center;line-height:56px;font-size:26px;color:${C.text};">&#10003;</div>`;
 }
 
 // ─── Alert ring ───────────────────────────────────────────────────────────────
 export function alertRing(sym = '!', color = C.red): string {
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px;height:60px;border-radius:50%;border:1.5px solid ${color};text-align:center;vertical-align:middle;font-size:24px;color:${color};line-height:58px;font-weight:700;">${sym}</td></tr></table>`;
+  return `<div style="width:56px;height:56px;border-radius:50%;background:${C.infoBg};border:1.5px solid ${color};text-align:center;line-height:54px;font-size:24px;color:${color};font-weight:600;">${sym}</div>`;
 }
 
 // ─── Steps list — timeline ────────────────────────────────────────────────────
 export function steps(items: Array<{ text: string; done?: boolean }>): string {
   const rows = items.map((s, i) => `
     <tr>
-      <td style="width:30px;padding:0 0 ${i < items.length - 1 ? '18px' : '0'} 0;vertical-align:top;">
-        <div style="width:22px;height:22px;border-radius:50%;background:${s.done ? C.accent : C.rowBg};border:${s.done ? 'none' : `1px solid ${C.border}`};color:${s.done ? C.accentText : C.text};font-size:${s.done ? '11px' : '10px'};font-weight:${s.done ? 800 : 700};text-align:center;line-height:22px;font-family:${F};">${s.done ? '&#10003;' : i + 1}</div>
+      <td style="width:26px;padding:0 0 ${i < items.length - 1 ? '14px' : '0'} 0;vertical-align:top;">
+        <div style="width:22px;height:22px;border-radius:50%;background:${s.done ? C.accent : C.infoBg};border:${s.done ? 'none' : `1px solid ${C.border}`};color:${s.done ? C.accentText : C.textMuted};font-size:11px;font-weight:600;text-align:center;line-height:22px;font-family:${F};">${s.done ? '&#10003;' : i + 1}</div>
       </td>
-      <td style="padding:0 0 ${i < items.length - 1 ? '18px' : '0'} 8px;vertical-align:top;">
-        <p class="etxt" style="font-family:${F};font-size:13.5px;line-height:1.4;color:${C.text};margin:0;padding-top:2px;">${s.text}</p>
+      <td style="padding:0 0 ${i < items.length - 1 ? '14px' : '0'} 10px;vertical-align:top;">
+        <p style="font-family:${F};font-size:13.5px;line-height:1.5;color:${C.text};margin:0;padding-top:1px;">${s.text}</p>
       </td>
     </tr>`).join('');
   return `
-<tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:6px 32px 28px;">
+<tr>
+  <td class="ecard" style="background:${C.cardBg};padding:6px 28px 22px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       ${rows}
     </table>
@@ -410,17 +309,13 @@ export function steps(items: Array<{ text: string; done?: boolean }>): string {
 // ─── OTP Card ─────────────────────────────────────────────────────────────────
 export function otpCard(code: string): string {
   return `
-<tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td class="einfo" align="center" bgcolor="${C.infoBg}" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:16px;padding:34px 24px;">
-          <p class="edim" style="font-family:${F};font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:${C.textDim};margin:0 0 12px 0;">Code de vérification</p>
-          <p class="etxt" style="font-family:${FM};font-size:42px;font-weight:600;letter-spacing:12px;color:${C.text};margin:8px 0;line-height:1;">${code}</p>
-          <p class="edim" style="font-family:${F};font-size:11.5px;color:${C.textDim};margin:12px 0 0 0;">Expire dans <span style="color:${C.red};">10 minutes</span></p>
-        </td>
-      </tr>
-    </table>
+<tr>
+  <td class="ecard" style="background:${C.cardBg};padding:0 28px 22px;">
+    <div class="einfo" style="background:${C.infoBg};border:1px solid ${C.border};border-radius:12px;padding:24px 20px;text-align:center;">
+      <p style="margin:0 0 10px;font-family:${F};font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:${C.textDim};">Code de vérification</p>
+      <p style="margin:6px 0;font-family:${FM};font-size:34px;font-weight:600;letter-spacing:10px;color:${C.text};line-height:1;">${code}</p>
+      <p style="margin:10px 0 0;font-family:${F};font-size:12px;color:${C.textDim};">Expire dans <span style="color:${C.red};">10 minutes</span></p>
+    </div>
   </td>
 </tr>`;
 }
@@ -429,46 +324,44 @@ export function otpCard(code: string): string {
 export function linkBox(url: string): string {
   const display = url.length > 55 ? url.slice(0, 55) + '...' : url;
   return `
-<tr bgcolor="${C.cardBg}">
-  <td bgcolor="${C.cardBg}" style="background-color:${C.cardBg};padding:0 32px 28px;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <td class="einfo" bgcolor="${C.infoBg}" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:10px;padding:14px 16px;">
-          <a href="${url}" class="emuted" style="font-family:${FM};font-size:10.5px;color:${C.textMuted};text-decoration:none;word-break:break-all;">${display}</a>
-        </td>
-      </tr>
-    </table>
+<tr>
+  <td class="ecard" style="background:${C.cardBg};padding:0 28px 22px;">
+    <div class="einfo" style="background:${C.infoBg};border:1px solid ${C.border};border-radius:8px;padding:12px 14px;">
+      <a href="${url}" style="font-family:${FM};font-size:11px;color:${C.textMuted};text-decoration:none;word-break:break-all;">${display}</a>
+    </div>
   </td>
 </tr>`;
 }
 
-// ─── Main wrapper — le statut (3e arg HTML) s'affiche à droite de l'en-tête ────
+// ─── Main wrapper ─────────────────────────────────────────────────────────────
 export function wrapEmail(preview: string, rows: string, _topRightOrNote?: string, footerNote?: string): string {
   const topRight = _topRightOrNote && _topRightOrNote.includes('<') ? _topRightOrNote : undefined;
   const note = footerNote ?? (_topRightOrNote && !_topRightOrNote.includes('<') ? _topRightOrNote : undefined);
-  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" bgcolor="${C.pageBg}" style="background-color:${C.pageBg};color-scheme:light only;">
+  return `<!doctype html>
+<html lang="fr">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="color-scheme" content="light only"/>
 <meta name="supported-color-schemes" content="light"/>
 <meta name="x-apple-disable-message-reformatting"/>
 <title>${preview}</title>
-<style type="text/css">${CSS}</style>
+<style>${CSS}</style>
 </head>
-<body class="ebg" bgcolor="${C.pageBg}" style="margin:0;padding:0;background-color:${C.pageBg};color-scheme:light only;">
-<!--[if mso]><table role="presentation" width="100%"><tr><td><![endif]-->
-<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="${C.pageBg}" class="ebg" style="background-color:${C.pageBg};">
-<tr><td align="center" style="padding:24px 12px;">
-<table class="w600" role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" bgcolor="${C.cardBg}" style="max-width:600px;width:100%;background-color:${C.cardBg};border:1px solid ${C.border};border-radius:20px;overflow:hidden;">
+<body class="ebg" style="margin:0;padding:0;background:${C.pageBg};">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;font-size:1px;line-height:1px;color:${C.pageBg};">${preview}</div>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background:${C.pageBg};">
+<tr><td align="center" style="padding:28px 14px 40px;">
+<table class="w560" role="presentation" border="0" cellpadding="0" cellspacing="0" width="560" style="max-width:560px;width:100%;background:${C.cardBg};border-radius:14px;box-shadow:0 1px 0 rgba(0,0,0,0.02),0 12px 32px -12px rgba(20,20,20,0.08);overflow:hidden;">
 ${header(topRight)}
 ${rows}
 ${footer(note)}
 </table>
 </td></tr>
 </table>
-<!--[if mso]></td></tr></table><![endif]-->
 </body>
 </html>`;
 }
+
+// Vestige LOGO (utilisé nulle part maintenant que le header est textuel)
+export const LOGO = LOGO_URL;

@@ -1,45 +1,54 @@
 /**
  * Héro par onglet du back-office Terex — style Ooble.
  *
- * Insère un `AdminHero` juste au-dessus du contenu de chaque onglet, avec
- * des stats calculées depuis les commandes réelles quand l'onglet en dépend
- * (queue, orders, accounting). Pour les onglets sans données commandes, on
- * affiche un héro descriptif propre au domaine (ex. équipe, marketing…).
- *
- * Aucun onglet n'est modifié : le hero vit à côté, dans le AdminPortal.
+ * Toujours 3 stats pour uniformiser la taille visuelle entre tous les onglets.
+ * Les stats sont calculées depuis les commandes réelles (queue, orders,
+ * accounting) ou depuis les KPIs métier attendus dans chaque section.
  */
 import { useMemo } from 'react';
 import AdminHero from './AdminHero';
 import { useOrdersData } from './OrdersDataProvider';
+import { useOrderOps } from '@/hooks/useOrderOps';
 
 const nfCfa = new Intl.NumberFormat('fr-FR');
 
 export function SectionHero({ tab }: { tab: string }) {
   const { orders } = useOrdersData();
+  const { currentUserId } = useOrderOps();
 
-  const stats = useMemo(() => {
-    const buys = orders.filter(o => o.type === 'buy');
-    const sells = orders.filter(o => o.type === 'sell');
-    const pending = orders.filter(o => o.status === 'pending' || o.status === 'processing');
-    const completed = orders.filter(o => o.status === 'completed');
-    const totalVolumeCFA = completed
+  const s = useMemo(() => {
+    const alive = orders.filter(o => !(o as any).is_deleted);
+    const active = alive.filter(o => o.status === 'pending' || o.status === 'processing');
+    const unassigned = active.filter(o => !(o as any).assigned_to);
+    const mine = active.filter(o => (o as any).assigned_to && (o as any).assigned_to === currentUserId);
+    const others = active.filter(o => (o as any).assigned_to && (o as any).assigned_to !== currentUserId);
+    const completed = alive.filter(o => o.status === 'completed');
+    const totalCFA = completed
       .filter(o => (o as any).currency === 'CFA')
-      .reduce((s, o) => s + Number(o.amount || 0), 0);
-    const totalUSDT = completed.reduce((s, o) => s + Number((o as any).usdt_amount || 0), 0);
-    return { buys, sells, pending, completed, totalVolumeCFA, totalUSDT };
-  }, [orders]);
+      .reduce((sum, o) => sum + Number(o.amount || 0), 0);
+    const totalUSDT = completed.reduce((sum, o) => sum + Number((o as any).usdt_amount || 0), 0);
+    const buys = alive.filter(o => o.type === 'buy');
+    const sells = alive.filter(o => o.type === 'sell');
+    // Volume 7 derniers jours
+    const weekAgo = Date.now() - 7 * 24 * 3600 * 1000;
+    const weekOrders = completed.filter(o => new Date(o.created_at).getTime() >= weekAgo);
+    const weekVolumeCFA = weekOrders
+      .filter(o => (o as any).currency === 'CFA')
+      .reduce((sum, o) => sum + Number(o.amount || 0), 0);
+    return { alive, active, unassigned, mine, others, completed, totalCFA, totalUSDT, buys, sells, weekOrders, weekVolumeCFA };
+  }, [orders, currentUserId]);
 
   switch (tab) {
     case 'queue':
       return (
         <AdminHero
           eyebrow="File d'attente"
-          value={stats.pending.length}
-          unit={stats.pending.length > 1 ? 'commandes à traiter' : 'commande à traiter'}
+          value={s.unassigned.length}
+          unit={s.unassigned.length > 1 ? 'à prendre' : 'à prendre'}
           stats={[
-            { label: 'Achats', value: stats.buys.filter(o => o.status === 'pending' || o.status === 'processing').length },
-            { label: 'Ventes', value: stats.sells.filter(o => o.status === 'pending' || o.status === 'processing').length },
-            { label: 'Volume actif', value: nfCfa.format(stats.pending.reduce((s, o) => s + Number(o.amount || 0), 0)), hint: 'CFA' },
+            { label: 'Mes commandes', value: s.mine.length },
+            { label: "Par l'équipe", value: s.others.length },
+            { label: 'Volume actif', value: nfCfa.format(s.active.reduce((sum, o) => sum + Number(o.amount || 0), 0)), hint: 'CFA' },
           ]}
         />
       );
@@ -48,13 +57,12 @@ export function SectionHero({ tab }: { tab: string }) {
       return (
         <AdminHero
           eyebrow="Commandes"
-          value={orders.length}
+          value={s.alive.length}
           unit="au total"
           stats={[
-            { label: 'Complétées', value: stats.completed.length },
-            { label: 'En cours', value: stats.pending.length },
-            { label: 'Achats', value: stats.buys.length },
-            { label: 'Ventes', value: stats.sells.length },
+            { label: 'Complétées', value: s.completed.length },
+            { label: 'En cours', value: s.active.length },
+            { label: 'Achats · Ventes', value: `${s.buys.length} · ${s.sells.length}` },
           ]}
         />
       );
@@ -63,12 +71,12 @@ export function SectionHero({ tab }: { tab: string }) {
       return (
         <AdminHero
           eyebrow="Comptabilité"
-          value={nfCfa.format(stats.totalVolumeCFA)}
+          value={nfCfa.format(s.totalCFA)}
           unit="CFA échangés"
           stats={[
-            { label: 'USDT traité', value: nfCfa.format(Math.round(stats.totalUSDT)), hint: 'USDT' },
-            { label: 'Commandes complétées', value: stats.completed.length },
-            { label: 'Marge brute', value: nfCfa.format(Math.round(stats.totalVolumeCFA * 0.02)), hint: 'CFA' },
+            { label: 'USDT traité', value: nfCfa.format(Math.round(s.totalUSDT)), hint: 'USDT' },
+            { label: 'Commandes', value: s.completed.length, hint: 'complétées' },
+            { label: 'Volume 7j', value: nfCfa.format(s.weekVolumeCFA), hint: 'CFA' },
           ]}
         />
       );
@@ -77,12 +85,12 @@ export function SectionHero({ tab }: { tab: string }) {
       return (
         <AdminHero
           eyebrow="KYC"
-          value="Vérifications"
-          unit="d'identité"
+          value={s.alive.filter(o => (o as any).currency === 'CFA').length}
+          unit="clients actifs"
           stats={[
-            { label: 'À traiter', value: '—' },
-            { label: 'Approuvées', value: '—' },
-            { label: 'Rejetées', value: '—' },
+            { label: 'À examiner', value: '—' },
+            { label: 'Approuvés', value: '—' },
+            { label: 'Rejetés', value: '—' },
           ]}
         />
       );
@@ -91,11 +99,12 @@ export function SectionHero({ tab }: { tab: string }) {
       return (
         <AdminHero
           eyebrow="Équipe"
-          value="Performance"
-          unit="par membre"
+          value={s.completed.length}
+          unit="commandes traitées"
           stats={[
-            { label: 'Commandes traitées', value: stats.completed.length },
-            { label: 'Volume', value: nfCfa.format(stats.totalVolumeCFA), hint: 'CFA' },
+            { label: 'Volume total', value: nfCfa.format(s.totalCFA), hint: 'CFA' },
+            { label: 'En cours', value: s.active.length },
+            { label: 'Cette semaine', value: s.weekOrders.length },
           ]}
         />
       );
@@ -104,10 +113,12 @@ export function SectionHero({ tab }: { tab: string }) {
       return (
         <AdminHero
           eyebrow="Ressources humaines"
-          value="Présences"
-          unit="et pointage"
+          value={0}
+          unit="membres pointés"
           stats={[
-            { label: 'Pour la paie', value: '—' },
+            { label: 'Actifs aujourd\'hui', value: '—' },
+            { label: 'Heures cumulées', value: '—' },
+            { label: 'Cette semaine', value: '—' },
           ]}
         />
       );
@@ -116,9 +127,12 @@ export function SectionHero({ tab }: { tab: string }) {
       return (
         <AdminHero
           eyebrow="Marketing"
-          value="Studio de contenu"
+          value={0}
+          unit="publications"
           stats={[
-            { label: 'Réseaux', value: 'IG · X · LinkedIn' },
+            { label: 'Programmées', value: '—' },
+            { label: 'Publiées', value: '—' },
+            { label: 'Ce mois-ci', value: '—' },
           ]}
         />
       );
@@ -127,9 +141,12 @@ export function SectionHero({ tab }: { tab: string }) {
       return (
         <AdminHero
           eyebrow="Marketing"
-          value="Campagnes email"
+          value={0}
+          unit="campagnes"
           stats={[
-            { label: 'Envois programmés', value: '—' },
+            { label: 'Envoyées', value: '—' },
+            { label: 'Ouvertures', value: '—' },
+            { label: 'Clics', value: '—' },
           ]}
         />
       );
@@ -138,9 +155,12 @@ export function SectionHero({ tab }: { tab: string }) {
       return (
         <AdminHero
           eyebrow="Recrutement"
-          value="Candidatures"
+          value={0}
+          unit="candidatures"
           stats={[
             { label: 'À examiner', value: '—' },
+            { label: 'Entretiens', value: '—' },
+            { label: 'Ce mois-ci', value: '—' },
           ]}
         />
       );
@@ -149,8 +169,13 @@ export function SectionHero({ tab }: { tab: string }) {
       return (
         <AdminHero
           eyebrow="Organisation"
-          value="Équipe & rôles"
-          unit="du back-office"
+          value={0}
+          unit="membres"
+          stats={[
+            { label: 'Admins', value: '—' },
+            { label: 'Opérateurs', value: '—' },
+            { label: 'Rôles définis', value: '—' },
+          ]}
         />
       );
 
@@ -158,8 +183,13 @@ export function SectionHero({ tab }: { tab: string }) {
       return (
         <AdminHero
           eyebrow="Vision"
-          value="Néobanque Terex"
+          value="Néobanque"
           unit="feuille de route"
+          stats={[
+            { label: 'Phase actuelle', value: 'Exchange' },
+            { label: 'Prochaine étape', value: 'Cartes' },
+            { label: 'Statut', value: 'En cours' },
+          ]}
         />
       );
 
@@ -167,8 +197,13 @@ export function SectionHero({ tab }: { tab: string }) {
       return (
         <AdminHero
           eyebrow="Interne"
-          value="Base de connaissances"
-          unit="équipe"
+          value="Guide équipe"
+          unit=""
+          stats={[
+            { label: 'Articles', value: '—' },
+            { label: 'Sections', value: '—' },
+            { label: 'Mise à jour', value: '—' },
+          ]}
         />
       );
 
