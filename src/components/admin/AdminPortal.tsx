@@ -13,6 +13,7 @@ import { StaffAttendance } from '@/components/admin/StaffAttendance';
 import { KnowledgeBase } from '@/components/admin/KnowledgeBase';
 import { ContentStudio } from '@/components/admin/ContentStudio';
 import { OrdersDataProvider } from '@/components/admin/OrdersDataProvider';
+import { SectionHero } from '@/components/admin/SectionHero';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
 import { AccountingAdmin } from '@/components/admin/AccountingAdmin';
 import { NewsletterAdmin } from '@/components/admin/NewsletterAdmin';
@@ -130,6 +131,11 @@ export function AdminPortal() {
             <h2 style={{ color: '#fff', fontSize: '17px', fontWeight: 600, margin: 0 }}>{active.label}</h2>
             <p style={{ color: '#6b7280', fontSize: '12px', margin: '1px 0 0' }}>{active.desc}</p>
           </div>
+        </div>
+
+        {/* Hero de section (style Ooble) — chiffre saillant + stats */}
+        <div style={{ marginBottom: '20px' }}>
+          <SectionHero tab={currentTab} />
         </div>
 
         {/* Section content — sécurisé : seul un onglet autorisé peut être actif.
