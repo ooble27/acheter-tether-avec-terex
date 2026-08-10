@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
 import { Switch } from '@/components/ui/switch';
-import { ArrowLeft, Check, HandCoins, Copy } from 'lucide-react';
+import { ArrowLeft, Check, HandCoins, Copy, CheckCircle } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { KYCPage } from '../KYCPage';
 
@@ -100,6 +100,7 @@ export function DesktopSellUSDT() {
   const [provider, setProvider] = useState<'wave' | 'orange'>('wave');
   const [useBinancePay, setUseBinancePay] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
 
   const { createOrder } = useOrders();
   const { user } = useAuth();
@@ -170,9 +171,25 @@ export function DesktopSellUSDT() {
 
   if (showKYCPage) return <KYCPage onBack={() => setShowKYCPage(false)} />;
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast({ title: "Copié !", description: "Copié dans le presse-papiers" });
+  const copyToClipboard = async (text: string, field: string = 'default') => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch (e) {
+      /* silent */
+    }
   };
 
   const backBtn = (to: typeof step) => (
@@ -411,9 +428,18 @@ export function DesktopSellUSDT() {
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Envoyer vos USDT</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Suivez ces instructions pour compléter votre vente</p>
 
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '16px' }}>
-                <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', marginBottom: '4px' }}>Envoyez exactement</p>
-                <p style={{ color: '#fff', fontSize: '24px', fontWeight: 300, marginBottom: '12px' }}>{usdtAmount} USDT</p>
+              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                  <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '36px', height: '36px' }} />
+                  {!useBinancePay && network && NETWORK_LOGOS[network as keyof typeof NETWORK_LOGOS] && (
+                    <img src={NETWORK_LOGOS[network as keyof typeof NETWORK_LOGOS]} alt={network} style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
+                  )}
+                  <div style={{ flex: 1 }}>
+                    <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', margin: 0 }}>Envoyez exactement</p>
+                    <p style={{ color: '#fff', fontSize: '24px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px' }}>{usdtAmount} <span style={{ fontSize: '14px', fontWeight: 500, color: '#9ca3af' }}>USDT</span></p>
+                  </div>
+                </div>
+                {!useBinancePay && <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', marginBottom: '12px' }}>sur le réseau <span style={{ color: '#fff', fontWeight: 600 }}>{network}</span></p>}
 
                 {useBinancePay ? (
                   <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: '12px' }}>
@@ -442,21 +468,31 @@ export function DesktopSellUSDT() {
                     </button>
                   </div>
                 ) : (
-                  <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: '12px' }}>
-                    <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px', marginBottom: '10px', textAlign: 'center' }}>Scannez ou copiez l'adresse {network}</p>
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
-                      <div style={{ background: '#fff', padding: '12px', borderRadius: '12px', lineHeight: 0 }}>
-                        <QRCodeSVG value={WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]} size={180} level="M" />
+                  <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: '14px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '12px' }}>
+                      <p style={{ color: '#fff', fontSize: '13px', fontWeight: 600, margin: 0 }}>Scannez le QR</p>
+                      <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px' }}>ou copiez l'adresse</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
+                      <div style={{ position: 'relative', background: '#fff', padding: '14px', borderRadius: '14px', lineHeight: 0 }}>
+                        <QRCodeSVG value={WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]} size={200} level="M" />
+                        {network && NETWORK_LOGOS[network as keyof typeof NETWORK_LOGOS] && (
+                          <img src={NETWORK_LOGOS[network as keyof typeof NETWORK_LOGOS]} alt={network}
+                            style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '40px', height: '40px', borderRadius: '50%', border: '3px solid #fff', background: '#fff' }} />
+                        )}
                       </div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', paddingTop: '10px', borderTop: `1px solid ${BORDER}` }}>
-                      <span style={{ color: '#fff', fontSize: '12px', fontFamily: 'monospace', flex: 1, wordBreak: 'break-all' }}>
-                        {WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
-                      </span>
-                      <button onClick={() => copyToClipboard(WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES])}
-                        style={{ padding: '6px', background: SEL_BG, border: 'none', borderRadius: '8px', cursor: 'pointer', color: '#fff', display: 'flex', flexShrink: 0 }}>
-                        <Copy size={14} />
-                      </button>
+                    <div style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '10px 12px' }}>
+                      <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '10px', margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Adresse {network}</p>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ color: '#fff', fontSize: '12px', fontFamily: 'monospace', flex: 1, wordBreak: 'break-all' }}>
+                          {WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES]}
+                        </span>
+                        <button onClick={() => copyToClipboard(WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES], 'address')}
+                          style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', background: copiedField === 'address' ? 'rgba(74,222,128,0.15)' : SEL_BG, border: 'none', borderRadius: '10px', cursor: 'pointer', color: copiedField === 'address' ? '#4ade80' : '#fff', fontSize: '12px', fontWeight: 600, flexShrink: 0, transition: 'all 0.15s' }}>
+                          {copiedField === 'address' ? <><CheckCircle size={13} /> Copié</> : <><Copy size={13} /> Copier</>}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}

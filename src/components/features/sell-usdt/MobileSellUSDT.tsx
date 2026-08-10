@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization';
-import { ArrowLeft, HandCoins, Check, Copy } from 'lucide-react';
+import { ArrowLeft, HandCoins, Check, Copy, CheckCircle } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { KYCPage } from '../KYCPage';
 
@@ -83,6 +83,7 @@ export function MobileSellUSDT() {
   const [provider, setProvider] = useState<'wave' | 'orange'>('wave');
   const [useBinancePay, setUseBinancePay] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
 
   const { createOrder } = useOrders();
   const { user } = useAuth();
@@ -135,9 +136,25 @@ export function MobileSellUSDT() {
     setPhoneNumber('');
   };
 
-  const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    toast({ title: 'Copié !', description: `${label} copié dans le presse-papiers` });
+  const copyToClipboard = async (text: string, field: string) => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch (e) {
+      /* silent */
+    }
   };
 
   if (showKYCPage) return <KYCPage onBack={() => setShowKYCPage(false)} />;
@@ -413,9 +430,15 @@ export function MobileSellUSDT() {
             <div style={{ padding: '4px 20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {/* Amount highlight */}
               <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '20px', textAlign: 'center' }}>
-                <p style={{ color: '#6b7280', fontSize: '12px', margin: '0 0 8px' }}>Envoyez exactement</p>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginBottom: '10px' }}>
+                  <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '32px', height: '32px' }} />
+                  {!useBinancePay && network && NETWORK_LOGOS[network] && (
+                    <img src={NETWORK_LOGOS[network]} alt={network} style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
+                  )}
+                </div>
+                <p style={{ color: '#6b7280', fontSize: '12px', margin: '0 0 6px' }}>Envoyez exactement</p>
                 <p style={{ color: '#fff', fontSize: '32px', fontWeight: 700, margin: '0 0 4px', letterSpacing: '-1px' }}>{usdtAmount} <span style={{ fontSize: '16px', fontWeight: 500, color: '#9ca3af' }}>USDT</span></p>
-                {!useBinancePay && <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>sur le réseau {network}</p>}
+                {!useBinancePay && <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>sur le réseau <span style={{ color: '#fff', fontWeight: 600 }}>{network}</span></p>}
               </div>
 
               {useBinancePay ? (
@@ -452,20 +475,30 @@ export function MobileSellUSDT() {
                 </div>
               ) : (
                 <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '16px' }}>
-                  <p style={{ color: '#6b7280', fontSize: '12px', margin: '0 0 12px', textAlign: 'center' }}>Scannez ou copiez l'adresse</p>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '12px' }}>
+                    <p style={{ color: '#fff', fontSize: '13px', fontWeight: 600, margin: 0 }}>Scannez le QR</p>
+                    <span style={{ color: '#6b7280', fontSize: '13px' }}>ou copiez l'adresse</span>
+                  </div>
                   <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
-                    <div style={{ background: '#fff', padding: '12px', borderRadius: '12px', lineHeight: 0 }}>
-                      <QRCodeSVG value={WALLET_ADDRESSES[network]} size={168} level="M" />
+                    <div style={{ position: 'relative', background: '#fff', padding: '14px', borderRadius: '14px', lineHeight: 0 }}>
+                      <QRCodeSVG value={WALLET_ADDRESSES[network]} size={180} level="M" />
+                      {network && NETWORK_LOGOS[network] && (
+                        <img src={NETWORK_LOGOS[network]} alt={network}
+                          style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '36px', height: '36px', borderRadius: '50%', border: '3px solid #fff', background: '#fff' }} />
+                      )}
                     </div>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingTop: '12px', borderTop: `1px solid ${BORDER}` }}>
-                    <p style={{ color: '#fff', fontSize: '11px', wordBreak: 'break-all', fontFamily: 'monospace', flex: 1, margin: 0, lineHeight: 1.6 }}>
-                      {WALLET_ADDRESSES[network]}
-                    </p>
-                    <button onClick={() => copyToClipboard(WALLET_ADDRESSES[network], 'Adresse')}
-                      style={{ padding: '8px', background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '8px', cursor: 'pointer', flexShrink: 0 }}>
-                      <Copy size={15} color="#9ca3af" />
-                    </button>
+                  <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '10px 12px' }}>
+                    <p style={{ color: '#6b7280', fontSize: '10px', margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Adresse {network}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <p style={{ color: '#fff', fontSize: '11px', wordBreak: 'break-all', fontFamily: 'monospace', flex: 1, margin: 0, lineHeight: 1.5 }}>
+                        {WALLET_ADDRESSES[network]}
+                      </p>
+                      <button onClick={() => copyToClipboard(WALLET_ADDRESSES[network], 'address')}
+                        style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', background: copiedField === 'address' ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.08)', border: 'none', borderRadius: '10px', cursor: 'pointer', flexShrink: 0, color: copiedField === 'address' ? '#4ade80' : '#fff', fontSize: '12px', fontWeight: 600, transition: 'all 0.15s' }}>
+                        {copiedField === 'address' ? <><CheckCircle size={13} /> Copié</> : <><Copy size={13} /> Copier</>}
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
