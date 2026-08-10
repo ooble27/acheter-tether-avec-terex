@@ -48,6 +48,12 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
     setTimeout(() => setCopiedField(null), 2000);
   };
 
+  const baseAmount = parseFloat(orderData.amount) || 0;
+  const waveFee = Math.ceil(baseAmount * 0.01);
+  const waveTotal = baseAmount + waveFee;
+  const waveFeeStr = waveFee.toLocaleString('fr-FR');
+  const waveTotalStr = waveTotal.toLocaleString('fr-FR');
+
   const CopyRow = ({ label, value, field }: { label: string; value: string; field: string }) => (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
       <div>
@@ -128,11 +134,19 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
 
         <div style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', overflow: 'hidden', marginBottom: '16px' }}>
           <CopyRow label="Numéro Wave" value={WAVE_NUMBER} field="number" />
-          <CopyRow label="Montant à envoyer" value={`${orderData.amount} ${orderData.currency}`} field="amount" />
+          <CopyRow label="Montant à envoyer" value={`${waveTotalStr} ${orderData.currency}`} field="amount" />
         </div>
 
         <div style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '16px', marginBottom: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+            <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Montant</span>
+            <span style={{ color: '#fff', fontSize: '13px' }}>{orderData.amount} {orderData.currency}</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+            <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Frais Wave (1%)</span>
+            <span style={{ color: '#f97316', fontSize: '13px' }}>{waveFeeStr} {orderData.currency}</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
             <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Vous recevez</span>
             <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{orderData.usdtAmount} USDT</span>
           </div>

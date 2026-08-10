@@ -148,6 +148,8 @@ export function DesktopBuyUSDT() {
 
   const isBinanceNetwork = network === 'BINANCE';
   const limitMessage = getLimitMessage(fiatAmount || '0', currency);
+  const waveFee = Math.ceil(numericFiat * 0.01);
+  const totalWithFees = numericFiat + waveFee;
 
   const handleContinueToNetwork = () => {
     const numericFiatVal = parseFloat(fiatAmount || '0');
@@ -353,6 +355,18 @@ export function DesktopBuyUSDT() {
                     <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '16px', height: '16px' }} />
                   </div>
                 </div>
+                {numericFiat > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                    <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Frais Wave (1%)</span>
+                    <span style={{ color: '#f97316', fontSize: '12px' }}>{waveFee.toLocaleString('fr-FR')} {currency}</span>
+                  </div>
+                )}
+                {numericFiat > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                    <span style={{ color: '#fff', fontSize: '12px', fontWeight: 600 }}>Total à payer</span>
+                    <span style={{ color: '#fff', fontSize: '12px', fontWeight: 700 }}>{totalWithFees.toLocaleString('fr-FR')} {currency}</span>
+                  </div>
+                )}
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Taux</span>
                   <span style={{ color: '#fff', fontSize: '12px' }}>1 USDT = {exchangeRate} {currency}</span>
@@ -450,6 +464,14 @@ export function DesktopBuyUSDT() {
 
               <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '4px 16px' }}>
                 {row('Montant', `${fiatAmount} ${currency}`)}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${BORDER}` }}>
+                  <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Frais Wave (1%)</span>
+                  <span style={{ color: '#f97316', fontSize: '13px', fontWeight: 500 }}>{waveFee.toLocaleString('fr-FR')} {currency}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${BORDER}` }}>
+                  <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>Total à payer</span>
+                  <span style={{ color: '#fff', fontSize: '13px', fontWeight: 700 }}>{totalWithFees.toLocaleString('fr-FR')} {currency}</span>
+                </div>
                 {row('Vous recevez', `${usdtAmount} USDT`)}
                 {row('Destination', isBinanceNetwork ? 'Binance' : network)}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '10px 0' }}>

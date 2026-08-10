@@ -123,6 +123,8 @@ export function MobileBuyUSDT() {
 
   const isBinanceNetwork = network === 'BINANCE';
   const limitMessage = getLimitMessage(fiatAmount || '0', currency);
+  const waveFee = Math.ceil(numericFiat * 0.01);
+  const totalWithFees = numericFiat + waveFee;
 
   const handleContinueToNetwork = () => {
     const v = parseFloat(fiatAmount || '0');
@@ -321,6 +323,18 @@ export function MobileBuyUSDT() {
                   <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '18px', height: '18px' }} />
                 </div>
               </div>
+              {numericFiat > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#6b7280', fontSize: '13px' }}>Frais Wave (1%)</span>
+                  <span style={{ color: '#f97316', fontSize: '13px' }}>{waveFee.toLocaleString('fr-FR')} {currency}</span>
+                </div>
+              )}
+              {numericFiat > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>Total à payer</span>
+                  <span style={{ color: '#fff', fontSize: '14px', fontWeight: 700 }}>{totalWithFees.toLocaleString('fr-FR')} {currency}</span>
+                </div>
+              )}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ color: '#6b7280', fontSize: '13px' }}>Taux</span>
                 <span style={{ color: '#9ca3af', fontSize: '13px' }}>1 USDT = {exchangeRate} {currency}</span>
@@ -428,14 +442,16 @@ export function MobileBuyUSDT() {
             <div style={{ padding: '4px 20px' }}>
               <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', overflow: 'hidden' }}>
                 {[
-                  { label: 'Vous payez',   value: `${fiatAmount} ${currency}` },
+                  { label: 'Montant',      value: `${fiatAmount} ${currency}` },
+                  { label: 'Frais Wave (1%)', value: `${waveFee.toLocaleString('fr-FR')} ${currency}`, accent: true },
+                  { label: 'Total à payer', value: `${totalWithFees.toLocaleString('fr-FR')} ${currency}`, bold: true },
                   { label: 'Vous recevez', value: `${usdtAmount} USDT` },
                   { label: 'Destination',  value: isBinanceNetwork ? 'Binance' : network },
                   { label: isBinanceNetwork ? 'Email' : 'Adresse', value: isBinanceNetwork ? binanceEmail : walletAddress, mono: true },
-                ].map(({ label, value, mono }, i, arr) => (
+                ].map(({ label, value, mono, accent, bold }, i, arr) => (
                   <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none' }}>
                     <span style={{ color: '#6b7280', fontSize: '13px' }}>{label}</span>
-                    <span style={{ color: '#fff', fontSize: mono ? '11px' : '13px', fontWeight: 500, maxWidth: '60%', textAlign: 'right', wordBreak: 'break-all', fontFamily: mono ? 'monospace' : undefined }}>
+                    <span style={{ color: accent ? '#f97316' : '#fff', fontSize: mono ? '11px' : '13px', fontWeight: bold ? 700 : 500, maxWidth: '60%', textAlign: 'right', wordBreak: 'break-all', fontFamily: mono ? 'monospace' : undefined }}>
                       {value}
                     </span>
                   </div>
