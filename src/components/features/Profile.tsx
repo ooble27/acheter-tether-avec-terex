@@ -173,66 +173,92 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   // ── Informations ────────────────────────────────────────────────────────
 
   if (section === 'informations') {
+    const InfoCard = ({ label, value, icon: Icon }: { label: string; value: string; icon: any }) => (
+      <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '18px 20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Icon size={18} color="rgba(255,255,255,0.7)" />
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ color: '#6b7280', fontSize: '11px', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{label}</p>
+          <p style={{ color: value ? '#fff' : '#4b5563', fontSize: '15px', margin: 0, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value || 'Non renseigné'}</p>
+        </div>
+      </div>
+    );
+
     return (
       <div style={subPageStyle}>
         <SubHeader title="Informations personnelles" />
-        <div style={{ padding: '0 20px' }}>
+        <div style={{ padding: '0 20px', maxWidth: '900px', margin: '0 auto', boxSizing: 'border-box' }}>
           {!isEditing ? (
             <>
-              <Field label="Nom complet" value={formData.name} icon={User} />
-              <Field label="Email" value={user?.email || ''} icon={Mail} />
-              <Field label="Téléphone" value={formData.phone} icon={Phone} />
-              <Field label="Pays" value={formData.country} icon={MapPin} />
-              <Field label="Langue" value={formData.language === 'fr' ? 'Français' : 'English'} icon={Globe} />
-              <div style={{ paddingTop: '24px' }}>
-                <button onClick={() => setIsEditing(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, border: `1px solid rgba(255,255,255,0.10)`, borderRadius: '14px', padding: '13px 22px', color: '#fff', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
-                  <Edit2 size={15} /> Modifier mes informations
+              {/* Hero avatar + edit */}
+              <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '18px', padding: '24px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '18px', flexWrap: 'wrap' }}>
+                <div style={{ width: '68px', height: '68px', borderRadius: '50%', background: '#2d2d2d', border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+                  {initials}
+                </div>
+                <div style={{ flex: 1, minWidth: 200 }}>
+                  <p style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '0 0 4px' }}>{formData.name || 'Utilisateur'}</p>
+                  <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Membre depuis {memberSince}</p>
+                </div>
+                <button onClick={() => setIsEditing(true)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: BTN, border: `1px solid rgba(255,255,255,0.10)`, borderRadius: '12px', padding: '10px 18px', color: '#fff', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+                  <Edit2 size={14} /> Modifier
                 </button>
+              </div>
+
+              {/* Grille infos */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '12px' }}>
+                <InfoCard label="Nom complet" value={formData.name} icon={User} />
+                <InfoCard label="Email" value={user?.email || ''} icon={Mail} />
+                <InfoCard label="Téléphone" value={formData.phone} icon={Phone} />
+                <InfoCard label="Pays" value={formData.country} icon={MapPin} />
+                <InfoCard label="Langue" value={formData.language === 'fr' ? 'Français' : 'English'} icon={Globe} />
               </div>
             </>
           ) : (
-            <div style={{ paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {[
-                { label: 'Nom complet', icon: User, key: 'name', placeholder: 'Votre nom' },
-                { label: 'Téléphone', icon: Phone, key: 'phone', placeholder: '+221 XX XXX XX XX' },
-              ].map(({ label, icon: Icon, key, placeholder }) => (
-                <div key={key}>
-                  <label style={labelStyle}><Icon size={12} />{label}</label>
-                  <input value={(formData as any)[key]} onChange={e => setFormData({ ...formData, [key]: e.target.value })}
-                    placeholder={placeholder} style={inputStyle} />
+            <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '18px', padding: '24px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '18px' }}>
+                {[
+                  { label: 'Nom complet', icon: User, key: 'name', placeholder: 'Votre nom' },
+                  { label: 'Téléphone', icon: Phone, key: 'phone', placeholder: '+221 XX XXX XX XX' },
+                ].map(({ label, icon: Icon, key, placeholder }) => (
+                  <div key={key}>
+                    <label style={labelStyle}><Icon size={12} />{label}</label>
+                    <input value={(formData as any)[key]} onChange={e => setFormData({ ...formData, [key]: e.target.value })}
+                      placeholder={placeholder} style={inputStyle} />
+                  </div>
+                ))}
+                <div>
+                  <label style={labelStyle}><MapPin size={12} />Pays</label>
+                  <Select value={formData.country} onValueChange={v => setFormData({ ...formData, country: v })}>
+                    <SelectTrigger className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] text-white">
+                      <SelectValue placeholder="Sélectionnez" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] z-50">
+                      {['senegal:Sénégal','mali:Mali','burkina:Burkina Faso','cote_ivoire:Côte d\'Ivoire','niger:Niger','canada:Canada'].map(s => {
+                        const [v, l] = s.split(':');
+                        return <SelectItem key={v} value={v} className="text-white focus:bg-[rgba(255,255,255,0.06)] focus:text-white">{l}</SelectItem>;
+                      })}
+                    </SelectContent>
+                  </Select>
                 </div>
-              ))}
-              <div>
-                <label style={labelStyle}><MapPin size={12} />Pays</label>
-                <Select value={formData.country} onValueChange={v => setFormData({ ...formData, country: v })}>
-                  <SelectTrigger className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] text-white">
-                    <SelectValue placeholder="Sélectionnez" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] z-50">
-                    {['senegal:Sénégal','mali:Mali','burkina:Burkina Faso','cote_ivoire:Côte d\'Ivoire','niger:Niger','canada:Canada'].map(s => {
-                      const [v, l] = s.split(':');
-                      return <SelectItem key={v} value={v} className="text-white focus:bg-[rgba(255,255,255,0.06)] focus:text-white">{l}</SelectItem>;
-                    })}
-                  </SelectContent>
-                </Select>
+                <div>
+                  <label style={labelStyle}><Globe size={12} />Langue</label>
+                  <Select value={formData.language} onValueChange={v => setFormData({ ...formData, language: v })}>
+                    <SelectTrigger className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] z-50">
+                      <SelectItem value="fr" className="text-white focus:bg-[rgba(255,255,255,0.06)] focus:text-white">Français</SelectItem>
+                      <SelectItem value="en" className="text-white focus:bg-[rgba(255,255,255,0.06)] focus:text-white">English</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-              <div>
-                <label style={labelStyle}><Globe size={12} />Langue</label>
-                <Select value={formData.language} onValueChange={v => setFormData({ ...formData, language: v })}>
-                  <SelectTrigger className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] text-white">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#1e1e1e] border-[rgba(255,255,255,0.07)] z-50">
-                    <SelectItem value="fr" className="text-white focus:bg-[rgba(255,255,255,0.06)] focus:text-white">Français</SelectItem>
-                    <SelectItem value="en" className="text-white focus:bg-[rgba(255,255,255,0.06)] focus:text-white">English</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div style={{ display: 'flex', gap: '12px', paddingTop: '8px' }}>
-                <button onClick={handleSave} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#ffffff', border: 'none', borderRadius: '14px', padding: '13px 22px', color: '#141414', fontSize: '14px', fontWeight: 700, cursor: 'pointer' }}>
+              <div style={{ display: 'flex', gap: '12px', paddingTop: '20px', marginTop: '20px', borderTop: `1px solid ${BORDER}` }}>
+                <button onClick={handleSave} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#ffffff', border: 'none', borderRadius: '12px', padding: '11px 22px', color: '#141414', fontSize: '14px', fontWeight: 700, cursor: 'pointer' }}>
                   <Save size={15} /> Sauvegarder
                 </button>
-                <button onClick={() => setIsEditing(false)} style={{ background: BTN, border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '13px 22px', color: '#9ca3af', fontSize: '14px', fontWeight: 500, cursor: 'pointer' }}>
+                <button onClick={() => setIsEditing(false)} style={{ background: BTN, border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '11px 22px', color: '#9ca3af', fontSize: '14px', fontWeight: 500, cursor: 'pointer' }}>
                   Annuler
                 </button>
               </div>
@@ -354,25 +380,51 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   // ── Activité ────────────────────────────────────────────────────────────
 
   if (section === 'activite') {
+    const statsCards = [
+      { label: 'Transactions totales', value: String(stats.count), sub: 'toutes commandes', icon: Activity, tint: 'rgba(96,165,250,0.12)', color: '#60a5fa' },
+      { label: 'Volume total', value: stats.volume.toLocaleString('fr-FR'), sub: stats.currency, icon: TrendingUp, tint: 'rgba(74,222,128,0.12)', color: '#4ade80' },
+      { label: 'Membre depuis', value: memberSince, sub: 'inscription', icon: Clock, tint: 'rgba(251,191,36,0.12)', color: '#fbbf24' },
+    ];
     return (
       <div style={subPageStyle}>
         <SubHeader title="Activité" />
-        <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {[
-            { label: 'Transactions totales', value: String(stats.count), icon: Activity },
-            { label: 'Volume total', value: `${stats.volume.toLocaleString('fr-FR')} ${stats.currency}`, icon: TrendingUp },
-            { label: 'Membre depuis', value: memberSince, icon: Clock },
-          ].map(({ label, value, icon: Icon }) => (
-            <div key={label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Icon size={20} color="rgba(255,255,255,0.7)" />
+        <div style={{ padding: '0 20px', maxWidth: '900px', margin: '0 auto', boxSizing: 'border-box' }}>
+
+          {/* Hero résumé */}
+          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '28px 24px', marginBottom: '20px', textAlign: 'center' }}>
+            <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 8px' }}>Volume total échangé</p>
+            <p style={{ color: '#fff', fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 800, letterSpacing: '-1.5px', margin: '0 0 4px' }}>
+              {stats.volume.toLocaleString('fr-FR')} <span style={{ fontSize: '18px', color: '#9ca3af', fontWeight: 500 }}>{stats.currency}</span>
+            </p>
+            <p style={{ color: '#6b7280', fontSize: '13px', margin: 0 }}>Cumul de toutes vos transactions complétées</p>
+          </div>
+
+          {/* Tuiles stats */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px', marginBottom: '20px' }}>
+            {statsCards.map(({ label, value, sub, icon: Icon, tint, color }) => (
+              <div key={label} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                  <span style={{ color: '#6b7280', fontSize: '12px' }}>{label}</span>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: tint, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Icon size={16} color={color} />
+                  </div>
+                </div>
+                <p style={{ color: '#fff', fontSize: '22px', fontWeight: 700, margin: '0 0 2px', letterSpacing: '-0.5px' }}>{value}</p>
+                <p style={{ color: '#6b7280', fontSize: '11px', margin: 0 }}>{sub}</p>
               </div>
-              <div>
-                <p style={{ color: '#6b7280', fontSize: '12px', margin: '0 0 4px' }}>{label}</p>
-                <p style={{ color: '#fff', fontSize: '20px', fontWeight: 600, margin: 0 }}>{value}</p>
-              </div>
+            ))}
+          </div>
+
+          {/* Astuce / prochaine action */}
+          <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '18px 20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <TrendingUp size={18} color="rgba(255,255,255,0.7)" />
             </div>
-          ))}
+            <div style={{ flex: 1 }}>
+              <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 2px' }}>Continuez à échanger</p>
+              <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>Consultez l'historique de vos commandes depuis le tableau de bord.</p>
+            </div>
+          </div>
         </div>
       </div>
     );
