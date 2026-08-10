@@ -85,14 +85,13 @@ function notice(text: string): string {
 // ────────────────────────────────────────────────────────────
 // SIGNATURES HISTORIQUES — enveloppes conservées pour ne pas casser
 // les templates enfants existants (welcome, order-confirmation, etc.).
-// Chaque enveloppe rend un <tr>…</tr> pour rester compatible avec
-// l'appel wrapEmail(preview, rows) où `rows` est concaténé dans une
-// grande table verticale. En interne : chaque enveloppe délègue aux
-// primitives ci-dessus.
+// Chaque enveloppe rend un simple bloc HTML (pas de <tr>) : ils sont
+// concaténés dans un <div class="body"> — même approche qu'Ooble.
+// C'est ce qui évite le clipping Gmail (« trois points » en bas).
 // ────────────────────────────────────────────────────────────
 
 function bodyRow(inner: string): string {
-  return `<tr><td style="padding:6px 28px;">${inner}</td></tr>`;
+  return inner;
 }
 
 export function header(_right?: string): string {
@@ -164,7 +163,7 @@ export function sectionLabel(text: string): string {
 }
 
 export function spacer(h = 16): string {
-  return `<tr><td style="height:${h}px;line-height:${h}px;font-size:1px;">&nbsp;</td></tr>`;
+  return `<div style="height:${h}px;line-height:${h}px;font-size:1px;">&nbsp;</div>`;
 }
 
 export function divider(): string {
@@ -249,7 +248,9 @@ export function wrapEmail(preview: string, rows: string, _topRightOrNote?: strin
   .brand-row { line-height: 1; }
   .brand-logo { display: inline-block; width: 28px; height: 28px; border-radius: 7px; vertical-align: middle; margin-right: 10px; border: 0; }
   .brand { display: inline-block; vertical-align: middle; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; color: ${C.text}; font-weight: 500; }
-  .body { padding: 4px 0 20px; font-size: 15px; color: ${C.text}; }
+  .body { padding: 4px 28px 28px; font-size: 15px; color: ${C.text}; }
+  .body p { margin: 0 0 14px; }
+  .body p:last-child { margin-bottom: 0; }
   .foot { border-top: 1px solid ${C.border}; color: ${C.textMuted}; font-size: 12px; line-height: 1.55; }
   .foot a { color: ${C.textMuted}; text-decoration: none; }
   .foot a:hover { text-decoration: underline; }
@@ -269,7 +270,7 @@ export function wrapEmail(preview: string, rows: string, _topRightOrNote?: strin
           <span class="brand">Terex</span>
         </div>
       </div>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="body">${rows}</table>
+      <div class="body">${rows}</div>
       <div class="foot">
         <div class="row">
           <div class="brand-mark">Terex</div>
