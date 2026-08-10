@@ -12,7 +12,7 @@ interface Announcement {
 }
 
 const ANNOUNCEMENTS: Announcement[] = [
-  { text: 'Les paiements se font manuellement via Wave' },
+  { text: 'En attendant, les paiements se font manuellement via Wave' },
 ];
 
 export function AnnouncementBanner() {
@@ -26,11 +26,10 @@ export function AnnouncementBanner() {
     <div
       style={{
         position: 'relative',
-        background: 'rgba(251,191,36,0.10)',
-        borderBottom: '1px solid rgba(251,191,36,0.22)',
-        color: '#fbbf24',
+        background: 'transparent',
+        color: '#ffffff',
         fontSize: '12.5px',
-        fontWeight: 500,
+        fontWeight: 400,
         letterSpacing: '0.02em',
         overflow: 'hidden',
         whiteSpace: 'nowrap',
