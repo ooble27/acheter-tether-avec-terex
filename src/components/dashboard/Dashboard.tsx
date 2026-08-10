@@ -28,6 +28,7 @@ import { Button } from '@/components/ui/button';
 import { LogOut, User } from 'lucide-react';
 import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
 import { B2BPage } from '@/components/features/B2BPage';
+import { AnnouncementBanner } from '@/components/dashboard/AnnouncementBanner';
 
 interface DashboardProps {
   user: { email: string; name: string } | null;
@@ -182,6 +183,10 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     <TransactionProvider>
       <SidebarProvider>
         <div className="min-h-screen flex flex-col w-full bg-terex-dark">
+          {/* Bandeau d'annonces défilant — placé en tout premier pour être
+              visible sur toutes les pages du dashboard. */}
+          <AnnouncementBanner />
+
           {/* Bouton profil flottant — IDENTIQUE partout (site bureau, mobile, PWA) :
               va DIRECTEMENT à la page Profil (qui contient tout le menu). Pas de
               menu déroulant ni de hamburger. Masqué lorsqu'on est déjà sur le profil. */}
@@ -192,7 +197,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               onClick={() => handleNavigate('profile')}
               aria-label="Mon profil"
               className="fixed right-4 z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 shadow-lg rounded-xl w-12 h-12"
-              style={{ top: 'calc(env(safe-area-inset-top, 0px) + 16px)' }}
+              style={{ top: 'calc(env(safe-area-inset-top, 0px) + 48px)' }}
             >
               <User className="h-5 w-5" />
             </Button>
