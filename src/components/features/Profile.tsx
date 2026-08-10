@@ -24,7 +24,7 @@ interface ProfileProps {
   onNavigate?: (section: string) => void;
 }
 
-type Section = null | 'informations' | 'securite' | 'preferences' | 'activite' | 'parrainage' | 'partager' | 'contact' | 'faq';
+type Section = null | 'informations' | 'activite' | 'parrainage' | 'partager' | 'contact' | 'faq';
 
 const BG     = '#1a1a1a';
 const CARD   = '#1e1e1e';
@@ -243,9 +243,8 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
     );
   }
 
-  // ── Sécurité ────────────────────────────────────────────────────────────
-
-  if (section === 'securite') {
+  // ── Sécurité (supprimée du menu — bloc conservé pour compat, jamais atteint) ──
+  if (section === ('securite' as any)) {
     return (
       <div style={subPageStyle}>
         <SubHeader title="Sécurité" />
@@ -379,9 +378,8 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
     );
   }
 
-  // ── Préférences ────────────────────────────────────────────────────────
-
-  if (section === 'preferences') {
+  // ── Préférences (supprimée du menu — bloc conservé pour compat, jamais atteint) ──
+  if (section === ('preferences' as any)) {
     return (
       <div style={subPageStyle}>
         <SubHeader title="Préférences" />
@@ -614,13 +612,6 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
       ],
     },
     {
-      title: 'Paramètres',
-      items: [
-        { id: 'securite', label: 'Sécurité', desc: 'KYC, mot de passe', icon: Shield },
-        { id: 'preferences', label: 'Préférences', desc: 'Notifications, langue', icon: Bell },
-      ],
-    },
-    {
       title: 'Plus',
       items: [
         { id: 'parrainage', label: 'Parrainage', desc: 'Invitez vos amis', icon: Gift },
@@ -630,6 +621,9 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
       ],
     },
   ];
+
+  // Toutes les tuiles à plat (pour la grille desktop)
+  const allTiles = menuGroups.flatMap(g => g.items);
 
   return (
     <div style={{ minHeight: '100vh', background: BG, paddingBottom: '100px', position: 'relative' }}>
@@ -657,68 +651,115 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
         </div>
       </div>
 
-      {/* Menu groups */}
-      <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '560px', margin: '0 auto' }}>
-        {menuGroups.map(group => (
-          <div key={group.title}>
-            <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>{group.title}</p>
-            <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
-              {group.items.map(({ id, label, desc, icon: Icon }, i, arr) => (
-                <button key={id} onClick={() => setSection(id as Section)}
-                  style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left' }}>
+      {/* Contenu principal : grille desktop / liste mobile */}
+      {isMobile ? (
+        <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '560px', margin: '0 auto' }}>
+          {menuGroups.map(group => (
+            <div key={group.title}>
+              <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>{group.title}</p>
+              <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
+                {group.items.map(({ id, label, desc, icon: Icon }, i, arr) => (
+                  <button key={id} onClick={() => setSection(id as Section)}
+                    style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left' }}>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <Icon size={18} color="rgba(255,255,255,0.7)" />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <p style={{ color: '#fff', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>{label}</p>
+                      <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>{desc}</p>
+                    </div>
+                    <ChevronRight size={16} color="#4b5563" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          {isStaff() && (
+            <div>
+              <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>Administration</p>
+              <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
+                <button onClick={() => navigate('/admin')}
+                  style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left' }}>
                   <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Icon size={18} color="rgba(255,255,255,0.7)" />
+                    <Shield size={18} color="rgba(255,255,255,0.7)" />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <p style={{ color: '#fff', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>{label}</p>
-                    <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>{desc}</p>
+                    <p style={{ color: '#fff', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>Portail Administrateur</p>
+                    <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>{isAdmin() ? 'Commandes, KYC, comptabilité…' : 'Commandes et vérifications'}</p>
                   </div>
                   <ChevronRight size={16} color="#4b5563" />
                 </button>
-              ))}
+              </div>
             </div>
-          </div>
-        ))}
+          )}
 
-        {/* Administration — visible uniquement pour les admins / reviewers */}
-        {isStaff() && (
           <div>
-            <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>Administration</p>
+            <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>Session</p>
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
-              <button onClick={() => navigate('/admin')}
-                style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Shield size={18} color="rgba(255,255,255,0.7)" />
+              <button onClick={onLogout} style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(239,68,68,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <LogOut size={18} color="#ef4444" />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <p style={{ color: '#fff', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>Portail Administrateur</p>
-                  <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>{isAdmin() ? 'Commandes, KYC, comptabilité…' : 'Commandes et vérifications'}</p>
+                  <p style={{ color: '#ef4444', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>Déconnexion</p>
+                  <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>Quitter votre session</p>
                 </div>
                 <ChevronRight size={16} color="#4b5563" />
               </button>
             </div>
           </div>
-        )}
 
-        {/* Logout */}
-        <div>
-          <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>Session</p>
-          <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
-            <button onClick={onLogout} style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(239,68,68,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <LogOut size={18} color="#ef4444" />
-              </div>
-              <div style={{ flex: 1 }}>
-                <p style={{ color: '#ef4444', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>Déconnexion</p>
-                <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>Quitter votre session</p>
-              </div>
-              <ChevronRight size={16} color="#4b5563" />
+          <p style={{ textAlign: 'center', color: '#374151', fontSize: '11px', marginTop: '8px' }}>Terex · v1.0</p>
+        </div>
+      ) : (
+        /* Grille desktop : tuiles côte à côte au lieu de longue liste */
+        <div style={{ padding: '0 32px', maxWidth: '1100px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
+            {allTiles.map(({ id, label, desc, icon: Icon }) => (
+              <button key={id} onClick={() => setSection(id as Section)}
+                style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '18px', padding: '22px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '14px', textAlign: 'left', transition: 'background 0.15s, border-color 0.15s' }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#232323'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = CARD; e.currentTarget.style.borderColor = BORDER; }}>
+                <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Icon size={20} color="rgba(255,255,255,0.85)" />
+                </div>
+                <div>
+                  <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 4px' }}>{label}</p>
+                  <p style={{ color: '#6b7280', fontSize: '12px', margin: 0, lineHeight: 1.4 }}>{desc}</p>
+                </div>
+              </button>
+            ))}
+
+            {isStaff() && (
+              <button onClick={() => navigate('/admin')}
+                style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '18px', padding: '22px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '14px', textAlign: 'left', transition: 'background 0.15s, border-color 0.15s' }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#232323'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = CARD; e.currentTarget.style.borderColor = BORDER; }}>
+                <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Shield size={20} color="rgba(255,255,255,0.85)" />
+                </div>
+                <div>
+                  <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 4px' }}>Portail Admin</p>
+                  <p style={{ color: '#6b7280', fontSize: '12px', margin: 0, lineHeight: 1.4 }}>{isAdmin() ? 'Commandes, KYC, comptabilité' : 'Commandes et vérifications'}</p>
+                </div>
+              </button>
+            )}
+          </div>
+
+          {/* Déconnexion à part */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '32px' }}>
+            <button onClick={onLogout}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '14px', padding: '12px 24px', color: '#ef4444', fontSize: '14px', fontWeight: 600, cursor: 'pointer', transition: 'background 0.15s' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.14)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}>
+              <LogOut size={16} /> Déconnexion
             </button>
           </div>
-        </div>
 
-        <p style={{ textAlign: 'center', color: '#374151', fontSize: '11px', marginTop: '8px' }}>Terex · v1.0</p>
-      </div>
+          <p style={{ textAlign: 'center', color: '#374151', fontSize: '11px', marginTop: '24px' }}>Terex · v1.0</p>
+        </div>
+      )}
     </div>
   );
 }
