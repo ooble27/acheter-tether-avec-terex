@@ -1,9 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Clock, RefreshCw, AlertCircle } from 'lucide-react';
+import { CheckCircle, Clock, RefreshCw } from 'lucide-react';
 
 interface PaymentPendingProps {
   orderData: {
@@ -28,12 +25,10 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
   }, []);
 
   useEffect(() => {
-    // Animation des points de chargement
     const dotsInterval = setInterval(() => {
       setDots(prev => prev.length >= 3 ? '' : prev + '.');
     }, 500);
 
-    // Simulation de progression (en réalité, ça viendrait du backend)
     const stepInterval = setInterval(() => {
       setStep(prev => prev < 3 ? prev + 1 : prev);
     }, 3000);
@@ -45,150 +40,96 @@ export function PaymentPending({ orderData, orderId, onBackToHome }: PaymentPend
   }, []);
 
   const steps = [
-    {
-      id: 1,
-      title: "Vérification du paiement",
-      description: "Nous vérifions votre paiement auprès de notre partenaire",
-      icon: <RefreshCw className="w-5 h-5" />,
-      status: step >= 1 ? 'current' : 'pending'
-    },
-    {
-      id: 2,
-      title: "Confirmation reçue",
-      description: "Votre paiement a été confirmé avec succès",
-      icon: <CheckCircle className="w-5 h-5" />,
-      status: step >= 2 ? 'completed' : step === 1 ? 'current' : 'pending'
-    },
-    {
-      id: 3,
-      title: "Transfert USDT en cours",
-      description: "Vos USDT sont en cours d'envoi vers votre adresse",
-      icon: <Clock className="w-5 h-5" />,
-      status: step >= 3 ? 'current' : 'pending'
-    }
+    { id: 1, label: 'Vérification', icon: <RefreshCw size={16} /> },
+    { id: 2, label: 'Confirmé', icon: <CheckCircle size={16} /> },
+    { id: 3, label: 'Envoi USDT', icon: <Clock size={16} /> },
   ];
 
+  const shortAddr = `${orderData.walletAddress.substring(0, 6)}...${orderData.walletAddress.substring(orderData.walletAddress.length - 4)}`;
+
   return (
-    <div className="min-h-screen bg-terex-dark px-0 py-2 md:p-4">
-      <div className="max-w-4xl mx-auto px-0">
-        <div className="mb-6 px-3 md:px-0">
-          <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
-            Traitement en cours{dots}
-          </h1>
-          <p className="text-gray-400">
-            Votre achat est en cours de traitement. Veuillez patienter quelques instants.
-          </p>
-        </div>
+    <div style={{ minHeight: '100vh', background: '#1a1a1a' }}>
+      <div style={{ maxWidth: '520px', margin: '0 auto', padding: '20px' }}>
 
-        <div className="grid lg:grid-cols-3 gap-6 px-0">
-          {/* Statut du traitement */}
-          <div className="lg:col-span-2">
-            <Card className="bg-terex-darker border-terex-gray mb-6 mx-0">
-              <CardHeader>
-                <CardTitle className="text-white">Statut de votre commande</CardTitle>
-                <p className="text-gray-400">Commande #{orderId.slice(-8).toUpperCase()}</p>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {steps.map((stepItem, index) => (
-                  <div key={stepItem.id} className="flex items-start space-x-4">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1 ${
-                      stepItem.status === 'completed' ? 'bg-white/10' : 
-                      stepItem.status === 'current' ? 'bg-terex-accent animate-pulse' : 
-                      'bg-gray-700'
-                    }`}>
-                      {stepItem.icon}
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className={`font-medium ${
-                        stepItem.status === 'completed' ? 'text-white' : 
-                        stepItem.status === 'current' ? 'text-terex-accent' : 
-                        'text-gray-400'
-                      }`}>
-                        {stepItem.title}
-                      </h4>
-                      <p className="text-gray-400 text-sm">{stepItem.description}</p>
-                    </div>
-                    {index < steps.length - 1 && (
-                      <div className="h-12 border-l border-gray-700 absolute ml-5 mt-10"></div>
-                    )}
-                  </div>
-                ))}
-                
-                <div className="bg-terex-gray/40 p-4 rounded-lg mt-6">
-                  <div className="flex items-start space-x-3">
-                    <AlertCircle className="w-5 h-5 text-yellow-500 mt-0.5" />
-                    <p className="text-gray-300 text-sm">
-                      {step >= 2 
-                        ? "Vos USDT seront envoyés à votre adresse dans les prochaines minutes. Vous recevrez un e-mail de confirmation une fois la transaction finalisée."
-                        : "Votre paiement est en cours de vérification. Cette étape peut prendre quelques minutes."}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+        <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 700, margin: '0 0 6px 0' }}>
+          Traitement en cours{dots}
+        </h2>
+        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px', margin: '0 0 20px 0' }}>
+          Commande #{orderId.slice(-8).toUpperCase()}
+        </p>
 
-            <div className="px-3 md:px-0">
-              <Button
-                variant="outline"
-                onClick={onBackToHome}
-                className="text-white border-terex-gray hover:bg-terex-gray"
+        {/* Progress steps */}
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
+          {steps.map((s) => {
+            const active = step >= s.id;
+            const current = step === s.id;
+            return (
+              <div
+                key={s.id}
+                style={{
+                  flex: 1,
+                  background: active ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)',
+                  border: current ? '1px solid rgba(255,255,255,0.2)' : '1px solid rgba(255,255,255,0.06)',
+                  borderRadius: '12px',
+                  padding: '12px',
+                  textAlign: 'center',
+                  transition: 'all 0.3s',
+                }}
               >
-                Retourner à l'accueil
-              </Button>
-            </div>
-          </div>
-
-          {/* Récapitulatif de commande */}
-          <div>
-            <Card className="bg-terex-darker border-terex-gray mx-0">
-              <CardHeader>
-                <CardTitle className="text-white">Récapitulatif</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Montant payé</span>
-                  <span className="text-white font-medium">
-                    {orderData.amount} {orderData.currency}
-                  </span>
+                <div style={{
+                  display: 'flex', justifyContent: 'center', marginBottom: '6px',
+                  color: active ? '#fff' : 'rgba(255,255,255,0.3)',
+                  animation: current ? 'pulse 2s infinite' : undefined,
+                }}>
+                  {s.icon}
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">USDT à recevoir</span>
-                  <span className="text-terex-accent font-bold">
-                    {orderData.usdtAmount} USDT
-                  </span>
+                <div style={{ color: active ? '#fff' : 'rgba(255,255,255,0.3)', fontSize: '11px', fontWeight: 600 }}>
+                  {s.label}
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Adresse de réception</span>
-                  <span className="text-white text-xs font-mono">
-                    {`${orderData.walletAddress.substring(0, 6)}...${orderData.walletAddress.substring(orderData.walletAddress.length - 4)}`}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Réseau</span>
-                  <Badge variant="outline" className="text-terex-accent border-terex-accent">
-                    {orderData.network}
-                  </Badge>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Méthode</span>
-                  <span className="text-white">
-                    {orderData.paymentMethod === 'card' ? 'Carte bancaire' : 'Mobile Money'}
-                  </span>
-                </div>
-                <div className="flex justify-between border-t border-terex-gray pt-3 mt-3">
-                  <span className="text-white">Statut</span>
-                  <Badge variant="outline" className={`${
-                    step >= 3 ? 'bg-white/10 text-white border-white/30' : 
-                    'bg-yellow-500/10 text-yellow-500 border-yellow-500/30'
-                  }`}>
-                    {step >= 3 ? 'Transfert en cours' : 'Paiement confirmé'}
-                  </Badge>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            );
+          })}
         </div>
+
+        {/* Recap */}
+        <div style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', overflow: 'hidden', marginBottom: '16px' }}>
+          <Row label="Montant payé" value={`${orderData.amount} ${orderData.currency}`} />
+          <Row label="Vous recevez" value={`${orderData.usdtAmount} USDT`} highlight />
+          <Row label="Réseau" value={orderData.network} />
+          <Row label="Adresse" value={shortAddr} mono />
+          <Row label="Statut" value={step >= 3 ? 'Envoi en cours' : step >= 2 ? 'Confirmé' : 'Vérification...'} last />
+        </div>
+
+        <button
+          onClick={onBackToHome}
+          style={{
+            width: '100%', background: '#fff', color: '#141414', border: 'none',
+            borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700, cursor: 'pointer',
+          }}
+        >
+          Retourner à l'accueil
+        </button>
       </div>
+    </div>
+  );
+}
+
+function Row({ label, value, highlight, mono, last }: { label: string; value: string; highlight?: boolean; mono?: boolean; last?: boolean }) {
+  return (
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      padding: '13px 16px',
+      borderBottom: last ? 'none' : '1px solid rgba(255,255,255,0.06)',
+    }}>
+      <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>{label}</span>
+      <span style={{
+        color: highlight ? '#4ade80' : '#fff',
+        fontSize: '13px',
+        fontWeight: highlight ? 700 : 600,
+        fontFamily: mono ? 'monospace' : undefined,
+      }}>
+        {value}
+      </span>
     </div>
   );
 }
