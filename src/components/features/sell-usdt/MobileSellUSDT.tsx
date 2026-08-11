@@ -347,7 +347,7 @@ export function MobileSellUSDT() {
             <div style={{ padding: '4px 20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>
                 <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px' }}>Service Mobile Money</p>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   <ProviderPill provider="wave"   selected={provider === 'wave'}   onSelect={() => setProvider('wave')} />
                   <ProviderPill provider="orange" selected={provider === 'orange'} onSelect={() => setProvider('orange')} />
                 </div>

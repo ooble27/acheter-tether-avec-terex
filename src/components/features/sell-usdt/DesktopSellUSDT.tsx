@@ -363,7 +363,7 @@ export function DesktopSellUSDT() {
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Entrez votre numéro Mobile Money</p>
 
               <label style={labelStyle}>Service Mobile Money</label>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '16px' }}>
                 <ProviderPill provider="wave"   selected={provider === 'wave'}   onSelect={() => setProvider('wave')} />
                 <ProviderPill provider="orange" selected={provider === 'orange'} onSelect={() => setProvider('orange')} />
               </div>
