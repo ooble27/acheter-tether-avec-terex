@@ -9,6 +9,7 @@ import { PURCHASE_LIMITS, getLimitMessage, enforceMaxLimit } from './LimitsValid
 import { KYCPage } from '../KYCPage';
 import { PaymentInstructions } from '../PaymentInstructions';
 import { PaymentPending } from '../PaymentPending';
+import { NetworkPill } from '../shared/NetworkPill';
 
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
@@ -386,18 +387,10 @@ export function DesktopBuyUSDT() {
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Destination</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Choisissez où vous voulez recevoir vos USDT</p>
 
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                {Object.entries(NETWORK_LOGOS).map(([net, logo]) => {
-                  const sel = network === net;
-                  return (
-                    <button key={net} onClick={() => setNetwork(net)}
-                      style={{ display: 'flex', alignItems: 'center', gap: '9px', padding: '9px 16px 9px 10px', borderRadius: '100px', border: `1px solid ${sel ? 'rgba(255,255,255,0.40)' : 'rgba(255,255,255,0.18)'}`, background: sel ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.08)', cursor: 'pointer', outline: 'none', transition: 'all 0.15s' }}>
-                      <img src={logo} alt={net} style={{ width: '26px', height: '26px', borderRadius: '50%' }} />
-                      <span style={{ color: sel ? '#fff' : 'rgba(255,255,255,0.55)', fontSize: '13px', fontWeight: sel ? 600 : 400 }}>{net}</span>
-                      {sel && <Check size={12} color="rgba(255,255,255,0.8)" strokeWidth={2.5} />}
-                    </button>
-                  );
-                })}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                {Object.keys(NETWORK_LOGOS).map(net => (
+                  <NetworkPill key={net} network={net} selected={network === net} onSelect={() => setNetwork(net)} />
+                ))}
               </div>
             </div>
 

@@ -9,6 +9,7 @@ import { useTransactionAuthorization } from '@/hooks/useTransactionAuthorization
 import { ArrowLeft, HandCoins, Check, Copy, CheckCircle } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { KYCPage } from '../KYCPage';
+import { NetworkPill } from '../shared/NetworkPill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -267,18 +268,10 @@ export function MobileSellUSDT() {
               {!useBinancePay && (
                 <div>
                   <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '4px 0 10px' }}>Réseau blockchain</p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                    {Object.entries(NETWORK_LOGOS).map(([net, logo]) => {
-                      const sel = network === net;
-                      return (
-                        <button key={net} onClick={() => setNetwork(net)}
-                          style={{ display: 'flex', alignItems: 'center', gap: '9px', padding: '9px 16px 9px 10px', borderRadius: '100px', border: `1px solid ${sel ? 'rgba(255,255,255,0.40)' : 'rgba(255,255,255,0.18)'}`, background: sel ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.08)', cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', transition: 'all 0.15s' }}>
-                          <img src={logo} alt={net} style={{ width: '26px', height: '26px', borderRadius: '50%' }} />
-                          <span style={{ color: sel ? '#fff' : 'rgba(255,255,255,0.55)', fontSize: '13px', fontWeight: sel ? 600 : 400 }}>{net}</span>
-                          {sel && <Check size={12} color="rgba(255,255,255,0.8)" strokeWidth={2.5} />}
-                        </button>
-                      );
-                    })}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+                    {Object.keys(NETWORK_LOGOS).map(net => (
+                      <NetworkPill key={net} network={net} selected={network === net} onSelect={() => setNetwork(net)} />
+                    ))}
                   </div>
                 </div>
               )}
