@@ -12,58 +12,77 @@ export interface SavedPhone {
   created_at: string;
 }
 
-// Bus de notifications partagé entre toutes les instances du hook — voir
-// useSavedWallets pour l'explication détaillée du bug résolu.
+// Voir useSavedWallets pour l'explication du cache et du bus.
+const cache = new Map<string, SavedPhone[]>();
 let listeners: Array<() => void> = [];
 const notify = () => listeners.forEach(fn => fn());
 
+const cacheKey = (userId: string) => userId;
+
+function filterByProvider(all: SavedPhone[], provider?: string): SavedPhone[] {
+  const filtered = provider ? all.filter(p => p.provider === provider) : all;
+  return [...filtered].sort((a, b) => {
+    if (a.is_default !== b.is_default) return a.is_default ? -1 : 1;
+    return b.created_at.localeCompare(a.created_at);
+  });
+}
+
 /**
- * Numéros Mobile Money enregistrés par le client. Filtre optionnel par provider.
+ * Numéros Mobile Money enregistrés par le client.
+ * Cache-first : affichage immédiat depuis le cache, refetch en arrière-plan.
  */
 export function useSavedPhones(provider?: string) {
   const { user } = useAuth();
-  const [phones, setPhones] = useState<SavedPhone[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [tick, setTick] = useState(0);
+  const userId = user?.id;
+  const [phones, setPhones] = useState<SavedPhone[]>(() =>
+    userId ? filterByProvider(cache.get(cacheKey(userId)) || [], provider) : []
+  );
+  const [, setTick] = useState(0);
 
   useEffect(() => {
-    const fn = () => setTick(t => t + 1);
+    const fn = () => {
+      if (!userId) { setPhones([]); return; }
+      setPhones(filterByProvider(cache.get(cacheKey(userId)) || [], provider));
+      setTick(t => t + 1);
+    };
     listeners.push(fn);
     return () => { listeners = listeners.filter(l => l !== fn); };
-  }, []);
+  }, [userId, provider]);
 
   const reload = useCallback(async () => {
-    if (!user?.id) { setPhones([]); return; }
-    setLoading(true);
-    let q = supabase
+    if (!userId) { setPhones([]); return; }
+    const { data } = await supabase
       .from('saved_phones' as any)
       .select('*')
-      .eq('user_id', user.id)
-      .order('is_default', { ascending: false })
-      .order('created_at', { ascending: false });
-    if (provider) q = q.eq('provider', provider);
-    const { data } = await q;
-    setPhones((data as unknown as SavedPhone[]) || []);
-    setLoading(false);
-  }, [user?.id, provider]);
+      .eq('user_id', userId);
+    const all = (data as unknown as SavedPhone[]) || [];
+    cache.set(cacheKey(userId), all);
+    setPhones(filterByProvider(all, provider));
+  }, [userId, provider]);
 
-  useEffect(() => { reload(); }, [reload, tick]);
+  useEffect(() => { reload(); }, [reload]);
+
+  useEffect(() => {
+    if (userId) setPhones(filterByProvider(cache.get(cacheKey(userId)) || [], provider));
+  }, [userId, provider]);
 
   const add = useCallback(async (input: { provider: string; phone: string; label?: string; setDefault?: boolean }) => {
-    if (!user?.id) return null;
+    if (!userId) return null;
 
-    // Voir useSavedWallets : démarquer l'ancien défaut AVANT l'insert
-    // pour ne pas violer l'index unique (user_id, provider) WHERE is_default.
     if (input.setDefault) {
       await supabase
         .from('saved_phones' as any)
         .update({ is_default: false })
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
         .eq('provider', input.provider);
+      const current = cache.get(cacheKey(userId)) || [];
+      cache.set(cacheKey(userId), current.map(p =>
+        p.provider === input.provider ? { ...p, is_default: false } : p
+      ));
     }
 
     const row = {
-      user_id: user.id,
+      user_id: userId,
       provider: input.provider,
       phone: input.phone.trim(),
       label: input.label?.trim() || null,
@@ -78,28 +97,38 @@ export function useSavedPhones(provider?: string) {
       if (error.code === '23505') { notify(); return null; }
       throw error;
     }
+    const inserted = data as unknown as SavedPhone;
+    const current = cache.get(cacheKey(userId)) || [];
+    cache.set(cacheKey(userId), [inserted, ...current]);
     notify();
-    return data as unknown as SavedPhone;
-  }, [user?.id]);
+    return inserted;
+  }, [userId]);
 
   const remove = useCallback(async (id: string) => {
+    if (!userId) return;
     await supabase.from('saved_phones' as any).delete().eq('id', id);
+    const current = cache.get(cacheKey(userId)) || [];
+    cache.set(cacheKey(userId), current.filter(p => p.id !== id));
     notify();
-  }, []);
+  }, [userId]);
 
   const setDefault = useCallback(async (id: string, prov: string) => {
-    if (!user?.id) return;
+    if (!userId) return;
     await supabase
       .from('saved_phones' as any)
       .update({ is_default: false })
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .eq('provider', prov);
     await supabase
       .from('saved_phones' as any)
       .update({ is_default: true })
       .eq('id', id);
+    const current = cache.get(cacheKey(userId)) || [];
+    cache.set(cacheKey(userId), current.map(p =>
+      p.provider === prov ? { ...p, is_default: p.id === id } : p
+    ));
     notify();
-  }, [user?.id]);
+  }, [userId]);
 
-  return { phones, loading, add, remove, setDefault, reload };
+  return { phones, loading: false, add, remove, setDefault, reload };
 }

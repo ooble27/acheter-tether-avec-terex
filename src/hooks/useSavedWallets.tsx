@@ -12,65 +12,86 @@ export interface SavedWallet {
   created_at: string;
 }
 
-// ── Bus de notifications simple ────────────────────────────────────────────
-// Deux instances du hook (parent + enfant) partagent les mises à jour :
-// dès qu'une add/remove/setDefault s'exécute, toutes les autres instances
-// rechargent leurs données. Résout le bug "je viens d'ajouter une adresse
-// mais elle n'apparaît pas dans le carnet".
+// ── Cache module-level + bus de notifications ──────────────────────────────
+// Le cache garde les adresses en mémoire une fois chargées : quand le client
+// revient à l'étape adresse, on affiche IMMÉDIATEMENT ce qu'on a en cache,
+// puis on refetch en arrière-plan. Plus de "clignotement de chargement".
+const cache = new Map<string, SavedWallet[]>(); // key = user_id
 let listeners: Array<() => void> = [];
 const notify = () => listeners.forEach(fn => fn());
 
+const cacheKey = (userId: string) => userId;
+
+function filterByNetwork(all: SavedWallet[], network?: string): SavedWallet[] {
+  const filtered = network ? all.filter(w => w.network === network) : all;
+  // Tri : défauts d'abord, puis plus récents
+  return [...filtered].sort((a, b) => {
+    if (a.is_default !== b.is_default) return a.is_default ? -1 : 1;
+    return b.created_at.localeCompare(a.created_at);
+  });
+}
+
 /**
  * Adresses USDT enregistrées par le client. Filtre optionnel par réseau.
+ * Cache-first : affichage immédiat depuis le cache, refetch en arrière-plan.
  */
 export function useSavedWallets(network?: string) {
   const { user } = useAuth();
-  const [wallets, setWallets] = useState<SavedWallet[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [tick, setTick] = useState(0);
+  const userId = user?.id;
+  const [wallets, setWallets] = useState<SavedWallet[]>(() =>
+    userId ? filterByNetwork(cache.get(cacheKey(userId)) || [], network) : []
+  );
+  const [, setTick] = useState(0);
 
-  // Abonnement au bus : toute add/remove faite ailleurs déclenche un reload ici.
   useEffect(() => {
-    const fn = () => setTick(t => t + 1);
+    const fn = () => {
+      if (!userId) { setWallets([]); return; }
+      setWallets(filterByNetwork(cache.get(cacheKey(userId)) || [], network));
+      setTick(t => t + 1);
+    };
     listeners.push(fn);
     return () => { listeners = listeners.filter(l => l !== fn); };
-  }, []);
+  }, [userId, network]);
 
   const reload = useCallback(async () => {
-    if (!user?.id) { setWallets([]); return; }
-    setLoading(true);
-    let q = supabase
+    if (!userId) { setWallets([]); return; }
+    const { data } = await supabase
       .from('saved_wallets' as any)
       .select('*')
-      .eq('user_id', user.id)
-      .order('is_default', { ascending: false })
-      .order('created_at', { ascending: false });
-    if (network) q = q.eq('network', network);
-    const { data } = await q;
-    setWallets((data as unknown as SavedWallet[]) || []);
-    setLoading(false);
-  }, [user?.id, network]);
+      .eq('user_id', userId);
+    const all = (data as unknown as SavedWallet[]) || [];
+    cache.set(cacheKey(userId), all);
+    setWallets(filterByNetwork(all, network));
+  }, [userId, network]);
 
-  useEffect(() => { reload(); }, [reload, tick]);
+  // Toujours refetch en arrière-plan pour capter les changements hors-session.
+  useEffect(() => { reload(); }, [reload]);
+
+  // Sync quand le filtre network change (le cache est global, pas filtré).
+  useEffect(() => {
+    if (userId) setWallets(filterByNetwork(cache.get(cacheKey(userId)) || [], network));
+  }, [userId, network]);
 
   const add = useCallback(async (input: { network: string; address: string; label?: string; setDefault?: boolean }) => {
-    if (!user?.id) return null;
+    if (!userId) return null;
 
-    // ORDRE CRUCIAL : quand on marque la nouvelle adresse comme défaut,
-    // on doit démarquer l'ancienne défaut AVANT l'insert. Sinon l'index
-    // unique (user_id, network) WHERE is_default fait échouer l'insert
-    // avec un 23505 — c'est le bug qui empêchait d'enregistrer plus
-    // d'une adresse par réseau.
+    // ORDRE CRUCIAL : démarquer l'ancien défaut AVANT l'insert pour ne pas
+    // violer l'index unique (user_id, network) WHERE is_default IS TRUE.
     if (input.setDefault) {
       await supabase
         .from('saved_wallets' as any)
         .update({ is_default: false })
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
         .eq('network', input.network);
+      // Mise à jour optimiste du cache
+      const current = cache.get(cacheKey(userId)) || [];
+      cache.set(cacheKey(userId), current.map(w =>
+        w.network === input.network ? { ...w, is_default: false } : w
+      ));
     }
 
     const row = {
-      user_id: user.id,
+      user_id: userId,
       network: input.network,
       address: input.address.trim(),
       label: input.label?.trim() || null,
@@ -82,33 +103,42 @@ export function useSavedWallets(network?: string) {
       .select('*')
       .single();
     if (error) {
-      // Doublon d'adresse (unique index (user_id, network, address)) :
-      // on remonte silencieusement et on force reload.
       if (error.code === '23505') { notify(); return null; }
       throw error;
     }
+    // Cache optimiste
+    const inserted = data as unknown as SavedWallet;
+    const current = cache.get(cacheKey(userId)) || [];
+    cache.set(cacheKey(userId), [inserted, ...current]);
     notify();
-    return data as unknown as SavedWallet;
-  }, [user?.id]);
+    return inserted;
+  }, [userId]);
 
   const remove = useCallback(async (id: string) => {
+    if (!userId) return;
     await supabase.from('saved_wallets' as any).delete().eq('id', id);
+    const current = cache.get(cacheKey(userId)) || [];
+    cache.set(cacheKey(userId), current.filter(w => w.id !== id));
     notify();
-  }, []);
+  }, [userId]);
 
   const setDefault = useCallback(async (id: string, net: string) => {
-    if (!user?.id) return;
+    if (!userId) return;
     await supabase
       .from('saved_wallets' as any)
       .update({ is_default: false })
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .eq('network', net);
     await supabase
       .from('saved_wallets' as any)
       .update({ is_default: true })
       .eq('id', id);
+    const current = cache.get(cacheKey(userId)) || [];
+    cache.set(cacheKey(userId), current.map(w =>
+      w.network === net ? { ...w, is_default: w.id === id } : w
+    ));
     notify();
-  }, [user?.id]);
+  }, [userId]);
 
-  return { wallets, loading, add, remove, setDefault, reload };
+  return { wallets, loading: false, add, remove, setDefault, reload };
 }

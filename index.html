@@ -23,6 +23,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- Preconnect + preload des logos réseaux blockchain : chargés au boot
+         de l'app, disponibles instantanément dans le cache navigateur quand
+         le client ouvre le flow achat/vente. Élimine le "flash de logo qui
+         charge" sur les pastilles. -->
+    <link rel="preconnect" href="https://s2.coinmarketcap.com" crossorigin>
+    <link rel="preload" as="image" href="https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png" fetchpriority="high">
+    <link rel="preload" as="image" href="https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png" fetchpriority="high">
+    <link rel="preload" as="image" href="https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png" fetchpriority="high">
+    <link rel="preload" as="image" href="https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png" fetchpriority="high">
+    <link rel="preload" as="image" href="https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png" fetchpriority="high">
+    <link rel="preload" as="image" href="https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png" fetchpriority="high">
+    <link rel="preload" as="image" href="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" fetchpriority="high">
+
     <!-- PWA Meta Tags -->
     <meta name="application-name" content="Terex" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
