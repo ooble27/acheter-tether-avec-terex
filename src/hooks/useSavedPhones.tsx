@@ -51,6 +51,17 @@ export function useSavedPhones(provider?: string) {
 
   const add = useCallback(async (input: { provider: string; phone: string; label?: string; setDefault?: boolean }) => {
     if (!user?.id) return null;
+
+    // Voir useSavedWallets : démarquer l'ancien défaut AVANT l'insert
+    // pour ne pas violer l'index unique (user_id, provider) WHERE is_default.
+    if (input.setDefault) {
+      await supabase
+        .from('saved_phones' as any)
+        .update({ is_default: false })
+        .eq('user_id', user.id)
+        .eq('provider', input.provider);
+    }
+
     const row = {
       user_id: user.id,
       provider: input.provider,
@@ -66,14 +77,6 @@ export function useSavedPhones(provider?: string) {
     if (error) {
       if (error.code === '23505') { notify(); return null; }
       throw error;
-    }
-    if (input.setDefault) {
-      await supabase
-        .from('saved_phones' as any)
-        .update({ is_default: false })
-        .eq('user_id', user.id)
-        .eq('provider', input.provider)
-        .neq('id', (data as any).id);
     }
     notify();
     return data as unknown as SavedPhone;

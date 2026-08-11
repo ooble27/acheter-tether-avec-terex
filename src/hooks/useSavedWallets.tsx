@@ -55,6 +55,20 @@ export function useSavedWallets(network?: string) {
 
   const add = useCallback(async (input: { network: string; address: string; label?: string; setDefault?: boolean }) => {
     if (!user?.id) return null;
+
+    // ORDRE CRUCIAL : quand on marque la nouvelle adresse comme défaut,
+    // on doit démarquer l'ancienne défaut AVANT l'insert. Sinon l'index
+    // unique (user_id, network) WHERE is_default fait échouer l'insert
+    // avec un 23505 — c'est le bug qui empêchait d'enregistrer plus
+    // d'une adresse par réseau.
+    if (input.setDefault) {
+      await supabase
+        .from('saved_wallets' as any)
+        .update({ is_default: false })
+        .eq('user_id', user.id)
+        .eq('network', input.network);
+    }
+
     const row = {
       user_id: user.id,
       network: input.network,
@@ -68,17 +82,10 @@ export function useSavedWallets(network?: string) {
       .select('*')
       .single();
     if (error) {
-      // Doublon (unique index) : on remonte silencieusement et on force reload.
+      // Doublon d'adresse (unique index (user_id, network, address)) :
+      // on remonte silencieusement et on force reload.
       if (error.code === '23505') { notify(); return null; }
       throw error;
-    }
-    if (input.setDefault) {
-      await supabase
-        .from('saved_wallets' as any)
-        .update({ is_default: false })
-        .eq('user_id', user.id)
-        .eq('network', input.network)
-        .neq('id', (data as any).id);
     }
     notify();
     return data as unknown as SavedWallet;
