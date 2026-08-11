@@ -122,18 +122,25 @@ export function AddressBook({
 
       {(mode === 'new' || wallets.length === 0) && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <div style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '14px', display: 'flex', alignItems: 'center', gap: '10px', padding: '4px 14px' }}>
-            <img src={logo} alt="" style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
+          {/* Style Ooble AppAcheter step address : card rounded-[14px] avec
+              header (logo + nom réseau + tag) séparé par un border-bottom. */}
+          <div style={{ overflow: 'hidden', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.10)', background: 'rgba(255,255,255,0.02)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '10px 16px' }}>
+              <img src={logo} alt="" style={{ width: '26px', height: '26px', borderRadius: '50%' }} />
+              <span style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>{network}</span>
+            </div>
             <input
               type="text"
+              spellCheck={false}
+              autoCapitalize="none"
               placeholder={placeholder || `Votre adresse ${network}`}
               value={value}
-              onChange={e => onChange(e.target.value)}
-              style={{ flex: 1, background: 'transparent', border: 'none', padding: '14px 0', color: '#fff', fontSize: '15px', outline: 'none', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}
+              onChange={e => onChange(e.target.value.trim())}
+              style={{ width: '100%', background: 'transparent', border: 'none', padding: '16px', color: '#fff', fontSize: '15px', outline: 'none', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', lineHeight: 1.5, boxSizing: 'border-box' }}
             />
           </div>
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', color: 'rgba(255,255,255,0.75)', fontSize: '13px', userSelect: 'none' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', color: 'rgba(255,255,255,0.65)', fontSize: '13px', userSelect: 'none', padding: '2px' }}>
             <input
               type="checkbox"
               checked={saveToBook}
@@ -144,13 +151,13 @@ export function AddressBook({
           </label>
 
           {saveToBook && (
-            <div style={{ background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '14px', padding: '4px 14px' }}>
+            <div style={{ overflow: 'hidden', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.10)', background: 'rgba(255,255,255,0.02)' }}>
               <input
                 type="text"
                 placeholder="Nom (optionnel) — ex : Trust Wallet"
                 value={label}
                 onChange={e => onLabelChange(e.target.value)}
-                style={{ width: '100%', background: 'transparent', border: 'none', padding: '12px 0', color: '#fff', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
+                style={{ width: '100%', background: 'transparent', border: 'none', padding: '14px 16px', color: '#fff', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
           )}

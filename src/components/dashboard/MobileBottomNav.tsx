@@ -1,16 +1,16 @@
 import React from 'react';
-import { House, Coins, HandCoins, Send } from 'lucide-react';
+import { House, Coins, HandCoins } from 'lucide-react';
 
 interface MobileBottomNavProps {
   activeSection: string;
   setActiveSection: (section: string) => void;
 }
 
+// 3 boutons uniquement, comme Ooble BottomNav.
 const navItems = [
-  { id: 'home',     Icon: House,     label: 'Accueil'  },
-  { id: 'buy',      Icon: Coins,     label: 'Acheter'  },
-  { id: 'sell',     Icon: HandCoins, label: 'Vendre'   },
-  { id: 'transfer', Icon: Send,      label: 'Virement' },
+  { id: 'home', Icon: House,     label: 'Accueil' },
+  { id: 'buy',  Icon: Coins,     label: 'Acheter' },
+  { id: 'sell', Icon: HandCoins, label: 'Vendre'  },
 ];
 
 export function MobileBottomNav({ activeSection, setActiveSection }: MobileBottomNavProps) {
@@ -24,7 +24,7 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
         zIndex: 50,
         display: 'flex',
         justifyContent: 'center',
-        padding: '0 20px calc(20px + env(safe-area-inset-bottom))',
+        padding: '0 20px calc(12px + env(safe-area-inset-bottom))',
       }}
     >
       <div
@@ -32,13 +32,14 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
           display: 'flex',
           alignItems: 'center',
           gap: '6px',
-          background: '#1e1e1e',
-          borderRadius: '24px',
+          background: 'rgba(30,30,30,0.95)',
+          borderRadius: '22px',
           padding: '8px',
-          boxShadow: 'none',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
           border: '1px solid rgba(255,255,255,0.07)',
           width: '100%',
-          maxWidth: '390px',
+          maxWidth: '320px',
           justifyContent: 'space-around',
         }}
       >
@@ -54,19 +55,19 @@ export function MobileBottomNav({ activeSection, setActiveSection }: MobileBotto
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: isActive ? '8px' : '0px',
-                padding: isActive ? '13px 18px' : '13px 15px',
+                padding: isActive ? '12px 18px' : '12px 15px',
                 background: isActive ? '#2d2d2d' : 'transparent',
                 borderRadius: '16px',
                 border: 'none',
                 cursor: 'pointer',
-                transition: 'background 0.25s ease, padding 0.25s ease',
+                transition: 'background 0.3s cubic-bezier(0.4,0,0.2,1), padding 0.3s cubic-bezier(0.4,0,0.2,1)',
                 outline: 'none',
                 WebkitTapHighlightColor: 'transparent',
                 flexShrink: 0,
               }}
             >
               <Icon
-                size={21}
+                size={20}
                 color={isActive ? '#ffffff' : '#71717a'}
                 strokeWidth={isActive ? 2.1 : 1.7}
                 style={{ flexShrink: 0, transition: 'color 0.2s ease' }}

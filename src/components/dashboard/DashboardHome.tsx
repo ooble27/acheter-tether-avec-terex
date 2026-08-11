@@ -1,4 +1,4 @@
-import { ArrowUpRight, Coins, HandCoins, Send, Handshake } from 'lucide-react';
+import { Coins, HandCoins } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
 import { useTerexRates } from '@/hooks/useTerexRates';
@@ -15,11 +15,11 @@ const BORDER = 'rgba(255,255,255,0.07)';
 const ICON_BG = 'rgba(255,255,255,0.06)';
 const ICON_COLOR = 'rgba(255,255,255,0.85)';
 
+// Style Ooble Dashboard : uniquement Acheter et Vendre (pas de virement,
+// pas d'OTC). L'OTC reste accessible via le profil / menu latéral.
 const quickActions = [
-  { id: 'buy',      label: 'Acheter',  icon: Coins,     sub: 'Achat rapide'  },
-  { id: 'sell',     label: 'Vendre',   icon: HandCoins, sub: 'Vente rapide'  },
-  { id: 'transfer', label: 'Virement', icon: Send,      sub: 'International' },
-  { id: 'otc',      label: 'OTC',      icon: Handshake, sub: 'Gros volumes'  },
+  { id: 'buy',  label: 'Acheter', icon: Coins },
+  { id: 'sell', label: 'Vendre',  icon: HandCoins },
 ];
 
 function PersonWaving() {
@@ -124,28 +124,20 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           <p style={{ color: '#374151', fontSize: '11px', margin: '8px 0 0' }}>pour 1 USDT · Terex</p>
         </div>
 
-        {/* Quick actions */}
+        {/* Quick actions — style Ooble Dashboard : grid 2 cols, chip
+            horizontal avec icône ronde + label, sans texture "carte grande". */}
         <div style={{ padding: '4px 20px 0' }}>
-          <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 12px' }}>Actions rapides</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            {quickActions.map(({ id, label, icon: Icon, sub }) => (
+            {quickActions.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
                 onClick={() => onNavigate?.(id)}
-                style={{ background: CARD, borderRadius: '18px', border: `1px solid ${BORDER}`, padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: '12px', cursor: 'pointer', textAlign: 'left', transition: 'transform 0.12s ease', outline: 'none', WebkitTapHighlightColor: 'transparent' }}
-                onTouchStart={e => (e.currentTarget.style.transform = 'scale(0.97)')}
-                onTouchEnd={e => (e.currentTarget.style.transform = 'scale(1)')}
+                style={{ background: CARD, borderRadius: '16px', border: `1px solid ${BORDER}`, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', textAlign: 'left', transition: 'background 0.15s', outline: 'none', WebkitTapHighlightColor: 'transparent' }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Icon size={20} color={ICON_COLOR} strokeWidth={1.8} />
-                  </div>
-                  <ArrowUpRight size={14} color="rgba(255,255,255,0.18)" />
-                </div>
-                <div>
-                  <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 2px' }}>{label}</p>
-                  <p style={{ color: 'rgba(255,255,255,0.28)', fontSize: '11px', margin: 0 }}>{sub}</p>
-                </div>
+                <span style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon size={20} color={ICON_COLOR} strokeWidth={1.6} />
+                </span>
+                <span style={{ color: '#fff', fontSize: '15px', fontWeight: 500 }}>{label}</span>
               </button>
             ))}
           </div>
@@ -189,26 +181,22 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
             </div>
           </div>
 
-          {/* Quick actions 2x2 */}
+          {/* Quick actions — style Ooble Dashboard desktop : 2 cols, chip
+              horizontal avec icône ronde + label, sans sub-text. */}
           <div>
-            <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 14px' }}>Actions rapides</p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-              {quickActions.map(({ id, label, icon: Icon, sub }) => (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              {quickActions.map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => onNavigate?.(id)}
-                  style={{ background: CARD, borderRadius: '20px', border: `1px solid ${BORDER}`, padding: '22px 20px', display: 'flex', alignItems: 'center', gap: '16px', cursor: 'pointer', transition: 'background 0.15s, transform 0.15s', outline: 'none', textAlign: 'left' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = '#252525'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = CARD; e.currentTarget.style.transform = 'translateY(0)'; }}
+                  style={{ background: CARD, borderRadius: '16px', border: `1px solid ${BORDER}`, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', transition: 'background 0.15s', outline: 'none', textAlign: 'left' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#252525'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = CARD; }}
                 >
-                  <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Icon size={22} color={ICON_COLOR} strokeWidth={1.8} />
-                  </div>
-                  <div>
-                    <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 3px' }}>{label}</p>
-                    <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '12px', margin: 0 }}>{sub}</p>
-                  </div>
-                  <ArrowUpRight size={15} color="rgba(255,255,255,0.15)" style={{ marginLeft: 'auto' }} />
+                  <span style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Icon size={20} color={ICON_COLOR} strokeWidth={1.6} />
+                  </span>
+                  <span style={{ color: '#fff', fontSize: '15px', fontWeight: 500 }}>{label}</span>
                 </button>
               ))}
             </div>
