@@ -10,6 +10,8 @@ import { KYCPage } from '../KYCPage';
 import { PaymentInstructions } from '../PaymentInstructions';
 import { PaymentPending } from '../PaymentPending';
 import { NetworkPill } from '../shared/NetworkPill';
+import { AddressBook } from '../shared/AddressBook';
+import { useSavedWallets } from '@/hooks/useSavedWallets';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -83,6 +85,9 @@ export function MobileBuyUSDT() {
   const [currency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
   const [walletAddress, setWalletAddress] = useState('');
+  const [saveAddress, setSaveAddress] = useState(true);
+  const [addressLabel, setAddressLabel] = useState('');
+  const { add: addSavedWallet } = useSavedWallets();
   const [binanceEmail, setBinanceEmail] = useState('');
   const [binanceUsername, setBinanceUsername] = useState('');
   const [binanceId, setBinanceId] = useState('');
@@ -381,21 +386,26 @@ export function MobileBuyUSDT() {
             />
 
             <div style={{ padding: '4px 20px' }}>
-              <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '14px', overflow: 'hidden' }}>
-                <div style={{ display: 'flex', alignItems: 'center', padding: '10px 16px', borderBottom: `1px solid ${BORDER}`, gap: '10px' }}>
-                  <img src={NETWORK_LOGOS[network]} alt={network} style={{ width: '26px', height: '26px', borderRadius: '50%' }} />
-                  <span style={{ color: '#9ca3af', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{network}</span>
-                </div>
-                <input
-                  placeholder={`Votre adresse ${network}`}
-                  value={walletAddress}
-                  onChange={(e) => setWalletAddress(e.target.value)}
-                  style={{ width: '100%', background: 'transparent', border: 'none', padding: '16px', color: '#fff', fontSize: '13px', outline: 'none', fontFamily: 'monospace', lineHeight: 1.6, boxSizing: 'border-box' }}
-                />
-              </div>
+              <AddressBook
+                network={network}
+                value={walletAddress}
+                onChange={setWalletAddress}
+                saveToBook={saveAddress}
+                onToggleSave={setSaveAddress}
+                label={addressLabel}
+                onLabelChange={setAddressLabel}
+              />
             </div>
 
-            <ContinueBtn onClick={handleContinueToConfirm} disabled={!walletAddress} />
+            <ContinueBtn
+              onClick={async () => {
+                if (saveAddress && walletAddress) {
+                  try { await addSavedWallet({ network, address: walletAddress, label: addressLabel, setDefault: true }); } catch (_) {}
+                }
+                handleContinueToConfirm();
+              }}
+              disabled={!walletAddress}
+            />
           </div>
         )}
 

@@ -10,6 +10,8 @@ import { KYCPage } from '../KYCPage';
 import { PaymentInstructions } from '../PaymentInstructions';
 import { PaymentPending } from '../PaymentPending';
 import { NetworkPill } from '../shared/NetworkPill';
+import { AddressBook } from '../shared/AddressBook';
+import { useSavedWallets } from '@/hooks/useSavedWallets';
 
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
@@ -108,6 +110,9 @@ export function DesktopBuyUSDT() {
   const [currency] = useState('CFA');
   const [network, setNetwork] = useState('TRC20');
   const [walletAddress, setWalletAddress] = useState('');
+  const [saveAddress, setSaveAddress] = useState(true);
+  const [addressLabel, setAddressLabel] = useState('');
+  const { add: addSavedWallet } = useSavedWallets();
   const [binanceEmail, setBinanceEmail] = useState('');
   const [binanceUsername, setBinanceUsername] = useState('');
   const [binanceId, setBinanceId] = useState('');
@@ -406,22 +411,26 @@ export function DesktopBuyUSDT() {
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Adresse de réception</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Entrez votre adresse {network} pour recevoir les USDT</p>
 
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', overflow: 'hidden' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 14px', borderBottom: `1px solid ${BORDER}` }}>
-                  <img src={NETWORK_LOGOS[network as keyof typeof NETWORK_LOGOS]} alt={network} style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
-                  <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '13px' }}>{network}</span>
-                </div>
-                <textarea
-                  placeholder={`Votre adresse ${network}`}
-                  value={walletAddress}
-                  onChange={(e) => setWalletAddress(e.target.value)}
-                  rows={3}
-                  style={{ width: '100%', background: 'transparent', border: 'none', padding: '14px', color: '#fff', fontSize: '13px', fontFamily: 'monospace', outline: 'none', resize: 'none', boxSizing: 'border-box' }}
-                />
-              </div>
+              <AddressBook
+                network={network}
+                value={walletAddress}
+                onChange={setWalletAddress}
+                saveToBook={saveAddress}
+                onToggleSave={setSaveAddress}
+                label={addressLabel}
+                onLabelChange={setAddressLabel}
+              />
             </div>
 
-            <ContinueBtn onClick={handleContinueToConfirm} disabled={!walletAddress} />
+            <ContinueBtn
+              onClick={async () => {
+                if (saveAddress && walletAddress) {
+                  try { await addSavedWallet({ network, address: walletAddress, label: addressLabel, setDefault: true }); } catch (_) {}
+                }
+                handleContinueToConfirm();
+              }}
+              disabled={!walletAddress}
+            />
           </div>
         )}
 

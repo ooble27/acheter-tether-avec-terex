@@ -11,6 +11,8 @@ import { QRCodeSVG } from 'qrcode.react';
 import { KYCPage } from '../KYCPage';
 import { NetworkPill } from '../shared/NetworkPill';
 import { ProviderPill } from '../shared/ProviderPill';
+import { PhoneBook } from '../shared/PhoneBook';
+import { useSavedPhones } from '@/hooks/useSavedPhones';
 
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
@@ -100,6 +102,9 @@ export function DesktopSellUSDT() {
   const [network, setNetwork] = useState('TRC20');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [provider, setProvider] = useState<'wave' | 'orange'>('wave');
+  const [savePhone, setSavePhone] = useState(true);
+  const [phoneLabel, setPhoneLabel] = useState('');
+  const { add: addSavedPhone } = useSavedPhones();
   const [useBinancePay, setUseBinancePay] = useState(false);
   const [loading, setLoading] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -364,16 +369,26 @@ export function DesktopSellUSDT() {
               </div>
 
               <label style={labelStyle}>Numéro de téléphone</label>
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', overflow: 'hidden' }}>
-                <input
-                  type="tel" placeholder="+221 XX XXX XX XX" value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  style={{ width: '100%', background: 'transparent', border: 'none', padding: '14px 16px', color: '#fff', fontSize: '15px', outline: 'none', boxSizing: 'border-box' }}
-                />
-              </div>
+              <PhoneBook
+                provider={provider}
+                value={phoneNumber}
+                onChange={setPhoneNumber}
+                saveToBook={savePhone}
+                onToggleSave={setSavePhone}
+                label={phoneLabel}
+                onLabelChange={setPhoneLabel}
+              />
             </div>
 
-            <ContinueBtn onClick={handleContinueToConfirm} disabled={!phoneNumber} />
+            <ContinueBtn
+              onClick={async () => {
+                if (savePhone && phoneNumber) {
+                  try { await addSavedPhone({ provider, phone: phoneNumber, label: phoneLabel, setDefault: true }); } catch (_) {}
+                }
+                handleContinueToConfirm();
+              }}
+              disabled={!phoneNumber}
+            />
           </div>
         )}
 
