@@ -1,4 +1,4 @@
-import { wrapEmail, hero, infoTable, ctaButton, noticeBox } from './html-utils.ts';
+import { wrapEmail, hero, infoTable, ctaButton } from './html-utils.ts';
 
 interface OrderConfirmationProps {
   orderData: any;
@@ -45,12 +45,8 @@ export function orderConfirmationHtml({ orderData, transactionType, clientName }
   ];
 
   const rows =
-    hero({ eyebrow: isBuy ? "Ordre d'achat" : 'Ordre de vente', title, subtitle: (clientName ? `Bonjour ${clientName}, ` : '') + lead }) +
+    hero({ eyebrow: isBuy ? 'Paiement en attente' : 'Dépôt USDT en attente', title, subtitle: (clientName ? `Bonjour ${clientName}, ` : '') + lead }) +
     infoTable(detailRows) +
-    (isBuy
-      ? ''
-      : noticeBox(`Envoyez uniquement de l'USDT sur le réseau <strong>${network}</strong>. Un autre réseau entraînerait la perte des fonds.`)
-    ) +
     ctaButton('Voir ma commande', 'https://terangaexchange.com/dashboard');
 
   return wrapEmail(title, rows);

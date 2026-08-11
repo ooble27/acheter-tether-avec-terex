@@ -10,7 +10,7 @@ interface AdminNewOrderProps {
 export function adminNewOrderHtml({ orderData, transactionType, clientName, clientEmail }: AdminNewOrderProps): string {
   const isBuy  = transactionType === 'buy';
   const isSell = transactionType === 'sell';
-  const sideLabel = isBuy ? "Ordre d'achat" : isSell ? 'Ordre de vente' : 'Virement';
+  const sideLabel = isBuy ? 'Achat' : isSell ? 'Vente' : 'Virement';
 
   const reference = `TEREX-${(orderData.id || '').slice(-8).toUpperCase() || 'N/A'}`;
   const amount    = Number(orderData.amount || 0).toLocaleString('fr-FR');
@@ -36,9 +36,9 @@ export function adminNewOrderHtml({ orderData, transactionType, clientName, clie
       : `Virement ${amount} ${currency}`;
 
   const lead = isBuy
-    ? "Un client vient de placer un ordre d'achat. Confirmez la réception du paiement puis envoyez les USDT à l'adresse indiquée."
+    ? "Un client vient de démarrer un achat. Confirmez la réception du paiement puis envoyez les USDT à l'adresse indiquée."
     : isSell
-      ? "Un client vient de placer un ordre de vente. Confirmez la réception des USDT sur l'adresse de dépôt puis versez les fonds."
+      ? "Un client vient de démarrer une vente. Confirmez la réception des USDT sur l'adresse de dépôt puis versez les fonds."
       : "Un client vient de placer une demande de virement. Traitez la demande dans le dashboard.";
 
   const addressLabel = isBuy ? 'Adresse de réception client' : 'Adresse de dépôt Terex';

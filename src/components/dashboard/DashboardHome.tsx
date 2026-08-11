@@ -101,7 +101,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
       <div style={{ minHeight: '100vh', background: '#1a1a1a', overflowY: 'auto', paddingBottom: '110px' }}>
 
         {/* Greeting */}
-        <div style={{ padding: '24px 20px 8px' }}>
+        <div style={{ padding: '4px 20px 8px' }}>
           <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 2px' }}>{getGreeting()},</p>
           <h1 style={{ color: '#fff', fontSize: '26px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px', display: 'flex', alignItems: 'center', gap: '10px' }}>
             {firstName}
@@ -161,7 +161,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
 
   // ── Desktop ──────────────────────────────────────────────────────────────
   return (
-    <div style={{ minHeight: 'calc(100vh - 8rem)', padding: '40px 32px 120px', maxWidth: '1100px', margin: '0 auto' }}>
+    <div style={{ minHeight: 'calc(100vh - 8rem)', padding: '8px 32px 120px', maxWidth: '1100px', margin: '0 auto' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '28px', alignItems: 'start' }}>
 
         {/* Left column */}

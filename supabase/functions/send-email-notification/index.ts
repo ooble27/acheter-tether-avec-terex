@@ -172,9 +172,9 @@ const handler = async (req: Request): Promise<Response> => {
       case 'order_confirmation': {
         const ref = `TEREX-${(orderData.id || '').slice(-8).toUpperCase()}`;
         if (transactionType === 'buy') {
-          subject = `Votre ordre d'achat Terex (${ref})`;
+          subject = `Votre paiement Terex (${ref})`;
         } else if (transactionType === 'sell') {
-          subject = `Votre ordre de vente Terex (${ref})`;
+          subject = `Votre dépôt USDT Terex (${ref})`;
         } else {
           subject = `Votre demande Terex (${ref})`;
         }
@@ -183,9 +183,9 @@ const handler = async (req: Request): Promise<Response> => {
         // Notification admin pour nouvelle commande — sujet style Ooble, sans crochets ni tirets
         try {
           const adminSubject = transactionType === 'buy'
-            ? `Nouvelle commande d'achat ${ref}`
+            ? `Nouvel achat ${ref}`
             : transactionType === 'sell'
-              ? `Nouvelle commande de vente ${ref}`
+              ? `Nouvelle vente ${ref}`
               : `Nouvelle demande ${ref}`;
           await resend.emails.send({
             from: "Terex Admin <noreply@terangaexchange.com>",
