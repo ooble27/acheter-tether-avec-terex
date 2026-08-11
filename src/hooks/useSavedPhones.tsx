@@ -12,14 +12,25 @@ export interface SavedPhone {
   created_at: string;
 }
 
+// Bus de notifications partagé entre toutes les instances du hook — voir
+// useSavedWallets pour l'explication détaillée du bug résolu.
+let listeners: Array<() => void> = [];
+const notify = () => listeners.forEach(fn => fn());
+
 /**
- * Numéros Mobile Money enregistrés par le client — même approche que
- * useSavedWallets. Filtre optionnel par provider (wave, orange).
+ * Numéros Mobile Money enregistrés par le client. Filtre optionnel par provider.
  */
 export function useSavedPhones(provider?: string) {
   const { user } = useAuth();
   const [phones, setPhones] = useState<SavedPhone[]>([]);
   const [loading, setLoading] = useState(false);
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    const fn = () => setTick(t => t + 1);
+    listeners.push(fn);
+    return () => { listeners = listeners.filter(l => l !== fn); };
+  }, []);
 
   const reload = useCallback(async () => {
     if (!user?.id) { setPhones([]); return; }
@@ -36,7 +47,7 @@ export function useSavedPhones(provider?: string) {
     setLoading(false);
   }, [user?.id, provider]);
 
-  useEffect(() => { reload(); }, [reload]);
+  useEffect(() => { reload(); }, [reload, tick]);
 
   const add = useCallback(async (input: { provider: string; phone: string; label?: string; setDefault?: boolean }) => {
     if (!user?.id) return null;
@@ -53,7 +64,7 @@ export function useSavedPhones(provider?: string) {
       .select('*')
       .single();
     if (error) {
-      if (error.code === '23505') { await reload(); return null; }
+      if (error.code === '23505') { notify(); return null; }
       throw error;
     }
     if (input.setDefault) {
@@ -64,14 +75,14 @@ export function useSavedPhones(provider?: string) {
         .eq('provider', input.provider)
         .neq('id', (data as any).id);
     }
-    await reload();
+    notify();
     return data as unknown as SavedPhone;
-  }, [user?.id, reload]);
+  }, [user?.id]);
 
   const remove = useCallback(async (id: string) => {
     await supabase.from('saved_phones' as any).delete().eq('id', id);
-    await reload();
-  }, [reload]);
+    notify();
+  }, []);
 
   const setDefault = useCallback(async (id: string, prov: string) => {
     if (!user?.id) return;
@@ -84,8 +95,8 @@ export function useSavedPhones(provider?: string) {
       .from('saved_phones' as any)
       .update({ is_default: true })
       .eq('id', id);
-    await reload();
-  }, [user?.id, reload]);
+    notify();
+  }, [user?.id]);
 
   return { phones, loading, add, remove, setDefault, reload };
 }

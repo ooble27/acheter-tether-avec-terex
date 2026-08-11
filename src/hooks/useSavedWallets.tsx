@@ -12,15 +12,29 @@ export interface SavedWallet {
   created_at: string;
 }
 
+// ── Bus de notifications simple ────────────────────────────────────────────
+// Deux instances du hook (parent + enfant) partagent les mises à jour :
+// dès qu'une add/remove/setDefault s'exécute, toutes les autres instances
+// rechargent leurs données. Résout le bug "je viens d'ajouter une adresse
+// mais elle n'apparaît pas dans le carnet".
+let listeners: Array<() => void> = [];
+const notify = () => listeners.forEach(fn => fn());
+
 /**
- * Adresses USDT enregistrées par le client — chargées une fois puis mises
- * à jour localement pour éviter les allers-retours réseau à chaque action.
- * Filtre optionnel par réseau (TRC20, BEP20, etc.).
+ * Adresses USDT enregistrées par le client. Filtre optionnel par réseau.
  */
 export function useSavedWallets(network?: string) {
   const { user } = useAuth();
   const [wallets, setWallets] = useState<SavedWallet[]>([]);
   const [loading, setLoading] = useState(false);
+  const [tick, setTick] = useState(0);
+
+  // Abonnement au bus : toute add/remove faite ailleurs déclenche un reload ici.
+  useEffect(() => {
+    const fn = () => setTick(t => t + 1);
+    listeners.push(fn);
+    return () => { listeners = listeners.filter(l => l !== fn); };
+  }, []);
 
   const reload = useCallback(async () => {
     if (!user?.id) { setWallets([]); return; }
@@ -37,7 +51,7 @@ export function useSavedWallets(network?: string) {
     setLoading(false);
   }, [user?.id, network]);
 
-  useEffect(() => { reload(); }, [reload]);
+  useEffect(() => { reload(); }, [reload, tick]);
 
   const add = useCallback(async (input: { network: string; address: string; label?: string; setDefault?: boolean }) => {
     if (!user?.id) return null;
@@ -54,14 +68,10 @@ export function useSavedWallets(network?: string) {
       .select('*')
       .single();
     if (error) {
-      // Doublon (unique index) : on remonte silencieusement l'existant
-      if (error.code === '23505') {
-        await reload();
-        return null;
-      }
+      // Doublon (unique index) : on remonte silencieusement et on force reload.
+      if (error.code === '23505') { notify(); return null; }
       throw error;
     }
-    // Si on marque celle-ci par défaut, on démarque les autres du même réseau.
     if (input.setDefault) {
       await supabase
         .from('saved_wallets' as any)
@@ -70,14 +80,14 @@ export function useSavedWallets(network?: string) {
         .eq('network', input.network)
         .neq('id', (data as any).id);
     }
-    await reload();
+    notify();
     return data as unknown as SavedWallet;
-  }, [user?.id, reload]);
+  }, [user?.id]);
 
   const remove = useCallback(async (id: string) => {
     await supabase.from('saved_wallets' as any).delete().eq('id', id);
-    await reload();
-  }, [reload]);
+    notify();
+  }, []);
 
   const setDefault = useCallback(async (id: string, net: string) => {
     if (!user?.id) return;
@@ -90,8 +100,8 @@ export function useSavedWallets(network?: string) {
       .from('saved_wallets' as any)
       .update({ is_default: true })
       .eq('id', id);
-    await reload();
-  }, [user?.id, reload]);
+    notify();
+  }, [user?.id]);
 
   return { wallets, loading, add, remove, setDefault, reload };
 }

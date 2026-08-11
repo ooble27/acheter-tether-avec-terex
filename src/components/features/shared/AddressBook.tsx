@@ -26,18 +26,20 @@ export function AddressBook({
   const { wallets, remove, setDefault } = useSavedWallets(network);
   const [mode, setMode] = useState<'saved' | 'new'>('saved');
 
-  // Si le client n'a aucune adresse enregistrée pour ce réseau, on force le
-  // mode « nouvelle » — sinon on préselectionne l'adresse par défaut.
+  // À CHAQUE changement de réseau, on RESET l'adresse (l'adresse de TRC20
+  // n'a rien à faire sur BEP20) puis on préselectionne l'adresse par défaut
+  // du nouveau réseau si le client en a enregistré une.
   useEffect(() => {
     if (wallets.length === 0) {
+      onChange('');
       setMode('new');
-    } else if (!value) {
+    } else {
       const def = wallets.find(w => w.is_default) || wallets[0];
       onChange(def.address);
       setMode('saved');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wallets.length, network]);
+  }, [network, wallets.length]);
 
   const logo = NETWORK_LOGOS[network];
 
@@ -46,7 +48,7 @@ export function AddressBook({
       {wallets.length > 0 && (
         <div>
           <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
-            <TabBtn active={mode === 'saved'} onClick={() => setMode('saved')} label={`Mes adresses (${wallets.length})`} />
+            <TabBtn active={mode === 'saved'} onClick={() => setMode('saved')} label="Mes adresses" />
             <TabBtn active={mode === 'new'} onClick={() => { setMode('new'); onChange(''); }} label="Nouvelle adresse" icon={<Plus size={13} />} />
           </div>
 

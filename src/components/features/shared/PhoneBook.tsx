@@ -24,16 +24,19 @@ export function PhoneBook({
   const { phones, remove, setDefault } = useSavedPhones(provider);
   const [mode, setMode] = useState<'saved' | 'new'>('saved');
 
+  // À CHAQUE changement de provider, on RESET le numéro et on préselectionne
+  // le numéro par défaut du nouveau provider si le client en a un.
   useEffect(() => {
     if (phones.length === 0) {
+      onChange('');
       setMode('new');
-    } else if (!value) {
+    } else {
       const def = phones.find(p => p.is_default) || phones[0];
       onChange(def.phone);
       setMode('saved');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phones.length, provider]);
+  }, [provider, phones.length]);
 
   const p = PROVIDERS[provider];
 
@@ -42,7 +45,7 @@ export function PhoneBook({
       {phones.length > 0 && (
         <div>
           <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
-            <TabBtn active={mode === 'saved'} onClick={() => setMode('saved')} label={`Mes numéros (${phones.length})`} />
+            <TabBtn active={mode === 'saved'} onClick={() => setMode('saved')} label="Mes numéros" />
             <TabBtn active={mode === 'new'} onClick={() => { setMode('new'); onChange(''); }} label="Nouveau numéro" icon={<Plus size={13} />} />
           </div>
 
