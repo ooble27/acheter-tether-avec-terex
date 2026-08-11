@@ -25,24 +25,44 @@ jobs:
           version: latest
 
       # ── Migrations SQL ──────────────────────────────────────────────────
-      # On applique les migrations avant de déployer les functions : si une
-      # migration ajoute une table utilisée par une function, la function
-      # doit trouver la table en place au premier appel.
-      - name: Apply pending migrations
-        if: ${{ hashFiles('supabase/migrations/*.sql') != '' }}
+      # On applique via l'API Management (endpoint SQL) plutôt que "db push" :
+      # ça évite les blocages liés à un historique de migrations désynchronisé
+      # entre le local et la prod (fréquent quand le projet a été bootstrappé
+      # avant l'usage de la CLI). Chaque .sql est idempotent (IF NOT EXISTS,
+      # DROP POLICY IF EXISTS ... CREATE POLICY) donc rejouable sans risque.
+      - name: Apply pending migrations via Management API
         run: |
-          MIG_CHANGED=$(git diff --name-only HEAD~1 HEAD | grep '^supabase/migrations/' || true)
-          # Sur workflow_dispatch (pas de diff), on tente toujours ; sinon on
-          # ne push que s'il y a eu du changement dans migrations/.
-          if [ -n "$MIG_CHANGED" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "→ Applying migrations to Supabase project"
-            supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }} --password "${{ secrets.SUPABASE_DB_PASSWORD }}"
-            supabase db push --password "${{ secrets.SUPABASE_DB_PASSWORD }}" --yes
-          else
+          MIG_CHANGED=$(git diff --name-only HEAD~1 HEAD | grep '^supabase/migrations/.*\.sql$' || true)
+          if [ -z "$MIG_CHANGED" ] && [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
             echo "No migration changes detected."
+            exit 0
           fi
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          # Sur workflow_dispatch sans diff, on rejoue toutes les migrations
+          # (elles sont idempotentes) — utile pour un resync manuel.
+          if [ -z "$MIG_CHANGED" ]; then
+            MIG_CHANGED=$(ls supabase/migrations/*.sql 2>/dev/null | sort || true)
+          fi
+          if [ -z "$MIG_CHANGED" ]; then
+            echo "Aucun fichier de migration trouvé."
+            exit 0
+          fi
+          for f in $MIG_CHANGED; do
+            echo "→ Applying $f"
+            body=$(jq -Rs '{query: .}' < "$f")
+            resp=$(curl -sS -w "\n%{http_code}" -X POST \
+              "https://api.supabase.com/v1/projects/${{ secrets.SUPABASE_PROJECT_ID }}/database/query" \
+              -H "Authorization: Bearer ${{ secrets.SUPABASE_ACCESS_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d "$body")
+            code=$(echo "$resp" | tail -1)
+            body=$(echo "$resp" | sed '$d')
+            if [ "$code" != "200" ] && [ "$code" != "201" ]; then
+              echo "❌ Migration $f échouée (HTTP $code) :"
+              echo "$body"
+              exit 1
+            fi
+            echo "✅ $f appliquée"
+          done
 
       # ── Edge Functions ──────────────────────────────────────────────────
       - name: Deploy only changed functions
@@ -52,9 +72,8 @@ jobs:
             echo "No function changes detected."
             exit 0
           fi
-          # Sur workflow_dispatch sans diff, on redéploie toutes les functions.
           if [ -z "$CHANGED" ]; then
-            CHANGED=$(ls -1 supabase/functions/ 2>/dev/null | grep -v '^_')
+            CHANGED=$(ls -1 supabase/functions/ 2>/dev/null | grep -v '^_' || true)
           fi
           for fn in $CHANGED; do
             if [ -d "supabase/functions/$fn" ]; then
