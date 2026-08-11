@@ -1,12 +1,15 @@
-name: Deploy Supabase (functions + migrations)
+name: Deploy Supabase Edge Functions
 
+# Note : les migrations SQL ne sont PAS appliquées par ce workflow.
+# L'historique local est désynchronisé du remote (le projet a été
+# bootstrappé avant l'usage de la CLI). Appliquer les migrations à la
+# main via le SQL Editor Supabase (Dashboard → SQL Editor).
 on:
   push:
     branches:
       - main
     paths:
       - 'supabase/functions/**'
-      - 'supabase/migrations/**'
   workflow_dispatch:
 
 jobs:
@@ -24,53 +27,6 @@ jobs:
         with:
           version: latest
 
-      # ── Migrations SQL ──────────────────────────────────────────────────
-      # On applique via l'API Management (endpoint SQL) plutôt que "db push" :
-      # ça évite les blocages liés à un historique de migrations désynchronisé
-      # entre local et prod (fréquent quand le projet a été bootstrappé avant
-      # la CLI). Chaque .sql moderne est idempotent (IF NOT EXISTS, DROP POLICY
-      # IF EXISTS…) donc rejouable sans dégât.
-      #
-      # On ne traite QUE les migrations au format standard "YYYYMMDDhhmmss_nom.sql"
-      # (14 chiffres + underscore) — les anciens fichiers bootstrappés avec un
-      # suffixe uuid (ex : 20250614041839-d8ac...uuid.sql) sont ignorés.
-      - name: Apply pending migrations via Management API
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_ID }}
-        run: |
-          MIG_CHANGED=$(git diff --name-only HEAD~1 HEAD | grep -E '^supabase/migrations/[0-9]{14}_.*\.sql$' || true)
-          if [ -z "$MIG_CHANGED" ] && [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
-            echo "No standard migration changes detected."
-            exit 0
-          fi
-          # Sur workflow_dispatch sans diff, on rejoue toutes les migrations
-          # au format standard (elles sont idempotentes).
-          if [ -z "$MIG_CHANGED" ]; then
-            MIG_CHANGED=$(ls supabase/migrations/[0-9]*_*.sql 2>/dev/null | grep -E '/[0-9]{14}_.*\.sql$' | sort || true)
-          fi
-          if [ -z "$MIG_CHANGED" ]; then
-            echo "Aucune migration à appliquer."
-            exit 0
-          fi
-          URL="https://api.supabase.com/v1/projects/${PROJECT_REF}/database/query"
-          for f in $MIG_CHANGED; do
-            echo "→ Applying $f"
-            body=$(jq -Rs '{query: .}' < "$f")
-            http_code=$(curl -sS -o /tmp/sup-resp.json -w "%{http_code}" -X POST "$URL" \
-              -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
-              -H "Content-Type: application/json" \
-              -d "$body")
-            if [ "$http_code" != "200" ] && [ "$http_code" != "201" ]; then
-              echo "❌ Migration $f échouée (HTTP $http_code) :"
-              cat /tmp/sup-resp.json
-              echo
-              exit 1
-            fi
-            echo "✅ $f appliquée"
-          done
-
-      # ── Edge Functions ──────────────────────────────────────────────────
       - name: Deploy only changed functions
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}

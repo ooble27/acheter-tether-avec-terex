@@ -1,5 +1,3 @@
-import { Check } from 'lucide-react';
-
 /**
  * Source unique de vérité pour la liste des réseaux blockchain.
  * L'ID (TRC20, BEP20…) est ce qui est envoyé au backend et conservé pour
@@ -33,9 +31,9 @@ interface NetworkPillProps {
 }
 
 /**
- * Pastille de réseau — style Ooble : capsule compacte, une seule ligne,
- * logo rond + nom du réseau. Sélection = fond blanc translucide + check.
- * S'insère dans un layout "flex wrap" (pas de grille).
+ * Pastille de réseau — style Ooble : petite capsule, logo rond à gauche
+ * + nom du réseau. Pas de coche : la sélection = fond blanc translucide
+ * et bordure plus claire, comme sur Ooble.
  */
 export function NetworkPill({ network, selected, onSelect }: NetworkPillProps) {
   const logo = NETWORK_LOGOS[network];
@@ -48,40 +46,29 @@ export function NetworkPill({ network, selected, onSelect }: NetworkPillProps) {
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        gap: '10px',
-        padding: '8px 14px 8px 8px',
+        gap: '8px',
+        padding: '6px 14px 6px 6px',
         borderRadius: '999px',
-        border: `1px solid ${selected ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.14)'}`,
-        background: selected ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.04)',
+        border: `1px solid ${selected ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.10)'}`,
+        background: selected ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.03)',
         cursor: 'pointer',
         outline: 'none',
         WebkitTapHighlightColor: 'transparent',
         transition: 'all 0.15s',
-        color: selected ? '#fff' : 'rgba(255,255,255,0.85)',
+        color: '#fff',
         fontSize: '14px',
-        fontWeight: selected ? 600 : 500,
+        fontWeight: 500,
         lineHeight: 1,
         whiteSpace: 'nowrap',
       }}
     >
-      <img src={logo} alt="" style={{ width: '26px', height: '26px', borderRadius: '50%', flexShrink: 0 }} />
+      <img
+        src={logo}
+        alt=""
+        onError={(e) => { (e.currentTarget as HTMLImageElement).style.visibility = 'hidden'; }}
+        style={{ width: '24px', height: '24px', borderRadius: '50%', flexShrink: 0, background: 'rgba(255,255,255,0.08)' }}
+      />
       <span>{name}</span>
-      {selected && (
-        <span
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '18px',
-            height: '18px',
-            borderRadius: '50%',
-            background: '#fff',
-            flexShrink: 0,
-          }}
-        >
-          <Check size={11} color="#111" strokeWidth={3} />
-        </span>
-      )}
     </button>
   );
 }

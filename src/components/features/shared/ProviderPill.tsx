@@ -1,5 +1,3 @@
-import { Check } from 'lucide-react';
-
 export type ProviderId = 'wave' | 'orange';
 
 export const PROVIDERS: Record<ProviderId, { label: string; sub: string; logo: string }> = {
@@ -14,8 +12,7 @@ interface ProviderPillProps {
 }
 
 /**
- * Pastille prestataire Mobile Money — même style que NetworkPill :
- * capsule compacte 999px, une seule ligne, logo + nom, coche mini.
+ * Pastille prestataire Mobile Money — même style que NetworkPill.
  */
 export function ProviderPill({ provider, selected, onSelect }: ProviderPillProps) {
   const p = PROVIDERS[provider];
@@ -27,40 +24,29 @@ export function ProviderPill({ provider, selected, onSelect }: ProviderPillProps
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        gap: '10px',
-        padding: '8px 14px 8px 8px',
+        gap: '8px',
+        padding: '6px 14px 6px 6px',
         borderRadius: '999px',
-        border: `1px solid ${selected ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.14)'}`,
-        background: selected ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.04)',
+        border: `1px solid ${selected ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.10)'}`,
+        background: selected ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.03)',
         cursor: 'pointer',
         outline: 'none',
         WebkitTapHighlightColor: 'transparent',
         transition: 'all 0.15s',
-        color: selected ? '#fff' : 'rgba(255,255,255,0.85)',
+        color: '#fff',
         fontSize: '14px',
-        fontWeight: selected ? 600 : 500,
+        fontWeight: 500,
         lineHeight: 1,
         whiteSpace: 'nowrap',
       }}
     >
-      <img src={p.logo} alt="" style={{ width: '26px', height: '26px', borderRadius: '50%', objectFit: 'contain', background: '#fff', flexShrink: 0 }} />
+      <img
+        src={p.logo}
+        alt=""
+        onError={(e) => { (e.currentTarget as HTMLImageElement).style.visibility = 'hidden'; }}
+        style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'contain', background: '#fff', flexShrink: 0 }}
+      />
       <span>{p.label}</span>
-      {selected && (
-        <span
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '18px',
-            height: '18px',
-            borderRadius: '50%',
-            background: '#fff',
-            flexShrink: 0,
-          }}
-        >
-          <Check size={11} color="#111" strokeWidth={3} />
-        </span>
-      )}
     </button>
   );
 }
