@@ -1,13 +1,7 @@
 name: Apply Supabase Migration (manual)
 
-# Workflow one-shot pour appliquer les migrations SQL contenues dans
-# supabase/migrations/. Utilise l'API Management de Supabase (endpoint
-# /database/query) — pas la CLI supabase db push (qui échoue à cause du
-# désalignement d'historique local vs remote).
-#
-# À déclencher manuellement depuis GitHub Actions → Run workflow.
-# Accepte en input le nom d'un fichier précis, sinon applique le plus
-# récent (par nom).
+# Applique les migrations SQL contenues dans supabase/migrations/
+# via l'API Management Supabase. Déclenchement manuel uniquement.
 
 on:
   workflow_dispatch:
@@ -30,35 +24,59 @@ jobs:
           PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_ID }}
           INPUT_FILE: ${{ inputs.migration_file }}
         run: |
-          if [ -n "$INPUT_FILE" ]; then
-            F="supabase/migrations/$INPUT_FILE"
-          else
-            # Plus récent au format standard YYYYMMDDhhmmss_nom.sql
-            F=$(ls supabase/migrations/[0-9]*_*.sql 2>/dev/null | grep -E '/[0-9]{14}_.*\.sql$' | sort | tail -1)
-          fi
-          if [ -z "$F" ] || [ ! -f "$F" ]; then
-            echo "❌ Aucun fichier de migration trouvé"
-            exit 1
-          fi
-          echo "→ Applying $F"
-          echo "──── SQL ────"
-          cat "$F"
-          echo "─────────────"
+          python3 <<'PYEOF'
+          import os, glob, sys, urllib.request, urllib.error, json
 
-          body=$(jq -Rs '{query: .}' < "$F")
-          URL="https://api.supabase.com/v1/projects/${PROJECT_REF}/database/query"
-          http_code=$(curl -sS -o /tmp/resp.json -w "%{http_code}" -X POST "$URL" \
-            -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
-            -H "Content-Type: application/json" \
-            -d "$body")
+          project = os.environ.get("PROJECT_REF", "").strip()
+          token   = os.environ.get("SUPABASE_ACCESS_TOKEN", "").strip()
+          inp     = os.environ.get("INPUT_FILE", "").strip()
 
-          echo "──── Response (HTTP $http_code) ────"
-          cat /tmp/resp.json
-          echo
-          echo "─────────────────────────────────────"
+          if not project:
+              sys.exit("❌ SUPABASE_PROJECT_ID secret manquant")
+          if not token:
+              sys.exit("❌ SUPABASE_ACCESS_TOKEN secret manquant")
 
-          if [ "$http_code" != "200" ] && [ "$http_code" != "201" ]; then
-            echo "❌ Migration échouée"
-            exit 1
-          fi
-          echo "✅ Migration appliquée"
+          if inp:
+              path = f"supabase/migrations/{inp}"
+              if not os.path.isfile(path):
+                  sys.exit(f"❌ Fichier introuvable : {path}")
+          else:
+              files = sorted(glob.glob("supabase/migrations/[0-9]*_*.sql"))
+              # Format standard YYYYMMDDhhmmss_nom.sql
+              import re
+              files = [f for f in files if re.search(r"/\d{14}_.*\.sql$", f)]
+              if not files:
+                  sys.exit("❌ Aucune migration standard trouvée")
+              path = files[-1]
+
+          print(f"→ Applying {path}")
+          with open(path) as fh:
+              sql = fh.read()
+          print("──── SQL ────")
+          print(sql)
+          print("─────────────")
+
+          url = f"https://api.supabase.com/v1/projects/{project}/database/query"
+          data = json.dumps({"query": sql}).encode()
+          req = urllib.request.Request(
+              url,
+              data=data,
+              method="POST",
+              headers={
+                  "Authorization": f"Bearer {token}",
+                  "Content-Type": "application/json",
+              },
+          )
+          try:
+              with urllib.request.urlopen(req, timeout=60) as resp:
+                  body = resp.read().decode()
+                  print(f"──── Response (HTTP {resp.status}) ────")
+                  print(body)
+                  print("─────────────────────────────────────")
+                  print("✅ Migration appliquée")
+          except urllib.error.HTTPError as e:
+              body = e.read().decode()
+              print(f"❌ HTTP {e.code}")
+              print(body)
+              sys.exit(1)
+          PYEOF
