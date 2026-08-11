@@ -2,7 +2,19 @@ import { Coins, HandCoins } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
 import { useTerexRates } from '@/hooks/useTerexRates';
+import { NETWORK_LOGOS } from '@/components/features/shared/NetworkPill';
 import { useEffect } from 'react';
+
+// Réseaux affichés sur la home dans la bande "Recevez sur X réseaux".
+// On garde les blockchains publiques (pas Binance CEX qui est un cas à part).
+const HOME_NETWORKS: Array<{ id: string; name: string }> = [
+  { id: 'TRC20',   name: 'Tron' },
+  { id: 'BEP20',   name: 'BNB Chain' },
+  { id: 'ERC20',   name: 'Ethereum' },
+  { id: 'Polygon', name: 'Polygon' },
+  { id: 'Solana',  name: 'Solana' },
+  { id: 'Aptos',   name: 'Aptos' },
+];
 
 interface DashboardHomeProps {
   user: { email: string; name: string } | null;
@@ -143,6 +155,21 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
           </div>
         </div>
 
+        {/* Recevez sur X réseaux — style Ooble Dashboard */}
+        <div style={{ padding: '24px 20px 0' }}>
+          <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', margin: '0 0 10px' }}>
+            Recevez sur {HOME_NETWORKS.length} réseaux
+          </p>
+          <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px', margin: '0 -20px', padding: '0 20px 4px', scrollbarWidth: 'none' }}>
+            {HOME_NETWORKS.map(n => (
+              <div key={n.id} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 14px 8px 8px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.10)', background: CARD, flexShrink: 0 }}>
+                <img src={NETWORK_LOGOS[n.id]} alt="" style={{ width: '28px', height: '28px', borderRadius: '50%' }} />
+                <span style={{ color: '#fff', fontSize: '14px', fontWeight: 400, whiteSpace: 'nowrap' }}>{n.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Recent transactions */}
         <div style={{ padding: '24px 20px 0' }}>
           <RecentTransactions onNavigate={onNavigate} />
@@ -198,6 +225,21 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                   </span>
                   <span style={{ color: '#fff', fontSize: '15px', fontWeight: 500 }}>{label}</span>
                 </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Recevez sur X réseaux — style Ooble Dashboard */}
+          <div>
+            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', margin: '0 0 10px' }}>
+              Recevez sur {HOME_NETWORKS.length} réseaux
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              {HOME_NETWORKS.map(n => (
+                <div key={n.id} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 14px 8px 8px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.10)', background: CARD }}>
+                  <img src={NETWORK_LOGOS[n.id]} alt="" style={{ width: '28px', height: '28px', borderRadius: '50%' }} />
+                  <span style={{ color: '#fff', fontSize: '14px', fontWeight: 400, whiteSpace: 'nowrap' }}>{n.name}</span>
+                </div>
               ))}
             </div>
           </div>

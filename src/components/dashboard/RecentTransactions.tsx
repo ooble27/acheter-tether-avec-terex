@@ -23,7 +23,8 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
     if (user && transactions.length === 0 && !loading) refetch();
   }, [user?.id]);
 
-  const recentTransactions = transactions.slice(0, 5);
+  // Max 3 lignes comme Ooble (listMyOrders(3)) — moins d'encombrement.
+  const recentTransactions = transactions.slice(0, 3);
 
   const typeConfig = (type: string) => {
     const iconBg = 'rgba(255,255,255,0.06)';
