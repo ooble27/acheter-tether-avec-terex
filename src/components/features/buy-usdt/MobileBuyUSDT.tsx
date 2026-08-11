@@ -366,7 +366,7 @@ export function MobileBuyUSDT() {
               description="Choisissez où vous voulez recevoir vos USDT"
             />
 
-            <div style={{ padding: '4px 20px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+            <div style={{ padding: '4px 20px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
               {Object.keys(NETWORK_LOGOS).map(net => (
                 <NetworkPill key={net} network={net} selected={network === net} onSelect={() => setNetwork(net)} />
               ))}

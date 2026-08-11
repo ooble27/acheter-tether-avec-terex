@@ -1,21 +1,29 @@
 import { Check } from 'lucide-react';
 
+/**
+ * Source unique de vérité pour la liste des réseaux blockchain.
+ * L'ID (TRC20, BEP20…) est ce qui est envoyé au backend et conservé pour
+ * compatibilité avec l'historique de commandes ; le NOM affiché suit la
+ * convention Ooble (Tron, BNB Chain…).
+ */
 export const NETWORK_LOGOS: Record<string, string> = {
-  TRC20:    'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
-  BEP20:    'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',
-  Polygon:  'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
-  Solana:   'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',
-  Arbitrum: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11841.png',
-  Base:     'https://s2.coinmarketcap.com/static/img/coins/64x64/27716.png',
+  TRC20:   'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
+  BEP20:   'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png',
+  ERC20:   'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
+  Polygon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
+  Solana:  'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',
+  Aptos:   'https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png',
+  BINANCE: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png',
 };
 
-const NETWORK_TAGS: Record<string, string> = {
-  TRC20:    'Tron · TRC-20',
-  BEP20:    'BNB Smart Chain',
-  Polygon:  'Polygon POS',
-  Solana:   'Solana',
-  Arbitrum: 'Arbitrum One',
-  Base:     'Base',
+const NETWORK_NAMES: Record<string, string> = {
+  TRC20:   'Tron',
+  BEP20:   'BNB Chain',
+  ERC20:   'Ethereum',
+  Polygon: 'Polygon',
+  Solana:  'Solana',
+  Aptos:   'Aptos',
+  BINANCE: 'Binance',
 };
 
 interface NetworkPillProps {
@@ -25,79 +33,53 @@ interface NetworkPillProps {
 }
 
 /**
- * Pastille de réseau — style Ooble : rectangle arrondi (16px) avec logo,
- * nom du réseau en gras et tag descriptif dessous. Coche à droite quand
- * sélectionné. Prévu pour être posé dans une grille à 2 colonnes.
+ * Pastille de réseau — style Ooble : capsule compacte, une seule ligne,
+ * logo rond + nom du réseau. Sélection = fond blanc translucide + check.
+ * S'insère dans un layout "flex wrap" (pas de grille).
  */
 export function NetworkPill({ network, selected, onSelect }: NetworkPillProps) {
   const logo = NETWORK_LOGOS[network];
-  const tag = NETWORK_TAGS[network] || network;
+  const name = NETWORK_NAMES[network] || network;
   return (
     <button
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
       style={{
-        display: 'flex',
+        display: 'inline-flex',
         alignItems: 'center',
-        gap: '12px',
-        padding: '12px 14px',
-        borderRadius: '16px',
+        gap: '10px',
+        padding: '8px 14px 8px 8px',
+        borderRadius: '999px',
         border: `1px solid ${selected ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.14)'}`,
         background: selected ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.04)',
         cursor: 'pointer',
         outline: 'none',
         WebkitTapHighlightColor: 'transparent',
-        textAlign: 'left',
         transition: 'all 0.15s',
-        width: '100%',
-        minWidth: 0,
+        color: selected ? '#fff' : 'rgba(255,255,255,0.85)',
+        fontSize: '14px',
+        fontWeight: selected ? 600 : 500,
+        lineHeight: 1,
+        whiteSpace: 'nowrap',
       }}
     >
-      <img src={logo} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', flexShrink: 0 }} />
-      <span style={{ minWidth: 0, flex: 1 }}>
-        <span
-          style={{
-            display: 'block',
-            color: selected ? '#fff' : 'rgba(255,255,255,0.85)',
-            fontSize: '14px',
-            fontWeight: 600,
-            lineHeight: 1.2,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {network}
-        </span>
-        <span
-          style={{
-            display: 'block',
-            color: 'rgba(255,255,255,0.45)',
-            fontSize: '11px',
-            marginTop: '3px',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {tag}
-        </span>
-      </span>
+      <img src={logo} alt="" style={{ width: '26px', height: '26px', borderRadius: '50%', flexShrink: 0 }} />
+      <span>{name}</span>
       {selected && (
         <span
           style={{
-            display: 'flex',
+            display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '20px',
-            height: '20px',
+            width: '18px',
+            height: '18px',
             borderRadius: '50%',
             background: '#fff',
             flexShrink: 0,
           }}
         >
-          <Check size={12} color="#111" strokeWidth={3} />
+          <Check size={11} color="#111" strokeWidth={3} />
         </span>
       )}
     </button>

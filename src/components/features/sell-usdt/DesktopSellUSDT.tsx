@@ -298,7 +298,7 @@ export function DesktopSellUSDT() {
               </div>
 
               {!useBinancePay && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {Object.keys(NETWORK_LOGOS).map(net => (
                     <NetworkPill key={net} network={net} selected={network === net} onSelect={() => setNetwork(net)} />
                   ))}

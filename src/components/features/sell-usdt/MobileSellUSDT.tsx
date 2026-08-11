@@ -274,7 +274,7 @@ export function MobileSellUSDT() {
               {!useBinancePay && (
                 <div>
                   <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '4px 0 10px' }}>Réseau blockchain</p>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                     {Object.keys(NETWORK_LOGOS).map(net => (
                       <NetworkPill key={net} network={net} selected={network === net} onSelect={() => setNetwork(net)} />
                     ))}

@@ -392,7 +392,7 @@ export function DesktopBuyUSDT() {
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Destination</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Choisissez où vous voulez recevoir vos USDT</p>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 {Object.keys(NETWORK_LOGOS).map(net => (
                   <NetworkPill key={net} network={net} selected={network === net} onSelect={() => setNetwork(net)} />
                 ))}
