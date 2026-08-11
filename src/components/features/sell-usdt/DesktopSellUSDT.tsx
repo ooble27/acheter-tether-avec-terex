@@ -10,6 +10,7 @@ import { ArrowLeft, Check, HandCoins, Copy, CheckCircle } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { KYCPage } from '../KYCPage';
 import { NetworkPill } from '../shared/NetworkPill';
+import { ProviderPill } from '../shared/ProviderPill';
 
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
@@ -358,22 +359,8 @@ export function DesktopSellUSDT() {
 
               <label style={labelStyle}>Service Mobile Money</label>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '16px' }}>
-                {[
-                  { value: 'wave' as const, label: 'Wave', logo: '/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png' },
-                  { value: 'orange' as const, label: 'Orange Money', logo: '/payment-methods/orange-money-logo.png' }
-                ].map(p => (
-                  <button key={p.value} onClick={() => setProvider(p.value)}
-                    style={{
-                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px',
-                      padding: '16px 12px', borderRadius: '12px',
-                      border: `1px solid ${provider === p.value ? SEL_BORDER : BORDER}`,
-                      background: provider === p.value ? SEL_BG : 'rgba(255,255,255,0.02)', cursor: 'pointer', position: 'relative',
-                    }}>
-                    <img src={p.logo} alt={p.label} style={{ width: '44px', height: '44px', objectFit: 'contain' }} />
-                    <span style={{ color: '#fff', fontSize: '13px' }}>{p.label}</span>
-                    {provider === p.value && <Check size={13} color="rgba(255,255,255,0.8)" style={{ position: 'absolute', top: '8px', right: '8px' }} />}
-                  </button>
-                ))}
+                <ProviderPill provider="wave"   selected={provider === 'wave'}   onSelect={() => setProvider('wave')} />
+                <ProviderPill provider="orange" selected={provider === 'orange'} onSelect={() => setProvider('orange')} />
               </div>
 
               <label style={labelStyle}>Numéro de téléphone</label>

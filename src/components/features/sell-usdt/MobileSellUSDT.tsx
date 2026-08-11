@@ -10,6 +10,7 @@ import { ArrowLeft, HandCoins, Check, Copy, CheckCircle } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { KYCPage } from '../KYCPage';
 import { NetworkPill } from '../shared/NetworkPill';
+import { ProviderPill } from '../shared/ProviderPill';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -342,20 +343,8 @@ export function MobileSellUSDT() {
               <div>
                 <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px' }}>Service Mobile Money</p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                  {([
-                    { id: 'wave' as const, label: 'Wave', logo: '/lovable-uploads/6263aec7-9ad9-482d-89be-e5cac3c36ed4.png' },
-                    { id: 'orange' as const, label: 'Orange Money', logo: '/payment-methods/orange-money-logo.png' },
-                  ]).map(({ id, label, logo }) => {
-                    const sel = provider === id;
-                    return (
-                      <button key={id} onClick={() => setProvider(id)}
-                        style={{ padding: '16px 12px', borderRadius: '14px', border: `1px solid ${sel ? SEL_BORDER : BORDER}`, background: sel ? SEL_BG : 'rgba(255,255,255,0.02)', cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', transition: 'all 0.15s' }}>
-                        <img src={logo} alt={label} style={{ width: '44px', height: '44px', objectFit: 'contain' }} />
-                        <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{label}</span>
-                        {sel && <Check size={14} color="#fff" strokeWidth={2.5} />}
-                      </button>
-                    );
-                  })}
+                  <ProviderPill provider="wave"   selected={provider === 'wave'}   onSelect={() => setProvider('wave')} />
+                  <ProviderPill provider="orange" selected={provider === 'orange'} onSelect={() => setProvider('orange')} />
                 </div>
               </div>
 
