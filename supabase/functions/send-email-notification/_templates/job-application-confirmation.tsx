@@ -23,7 +23,7 @@ export function jobApplicationConfirmationHtml({ firstName, lastName, position, 
     hero({
       iconHtml: checkRing(),
       title: 'Votre candidature a été reçue',
-      subtitle: `Bonjour ${firstName}, nous avons bien enregistré votre candidature pour le poste de <strong style="color:#fafafa;">${position}</strong> chez Terex.`,
+      subtitle: `Bonjour ${firstName}, nous avons bien enregistré votre candidature pour le poste de <strong style="color:#111;">${position}</strong> chez Terex.`,
     }) +
     spacer(28) +
     infoTable([

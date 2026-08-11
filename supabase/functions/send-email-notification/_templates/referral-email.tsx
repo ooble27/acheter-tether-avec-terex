@@ -1,4 +1,4 @@
-import { wrapEmail, hero, summaryBar, infoTable, ctaButton, linkBox, statusBadge } from './html-utils.ts';
+import { wrapEmail, hero, summaryBar, infoTable, ctaButton, linkBox, statusBadge, spacer } from './html-utils.ts';
 
 interface ReferralEmailProps {
   referrerName: string;
@@ -18,7 +18,7 @@ export function referralHtml({ referrerName, referralLink }: ReferralEmailProps)
       { label: 'Temps moyen',  value: '~3 min',    sub: 'Par transaction' },
       { label: 'Commission',   value: '2%',         sub: 'Fixe et transparente' },
     ]) +
-    `<tr><td style="height:28px;"></td></tr>` +
+    spacer(28) +
     infoTable([
       { label: 'Étape 1', value: 'Créez votre compte gratuitement' },
       { label: 'Étape 2', value: 'Vérifiez votre identité (KYC)' },

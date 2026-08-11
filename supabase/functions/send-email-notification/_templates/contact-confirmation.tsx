@@ -17,7 +17,7 @@ export function contactConfirmationHtml({ contactData }: ContactConfirmationProp
     hero({
       iconHtml: checkRing(),
       title: 'Message bien reçu !',
-      subtitle: `Bonjour ${firstName}, nous avons bien reçu votre message concernant <strong style="color:#fafafa;">${contactData.subject}</strong>. Notre équipe vous répondra sous 24 heures.`,
+      subtitle: `Bonjour ${firstName}, nous avons bien reçu votre message concernant <strong style="color:#111;">${contactData.subject}</strong>. Notre équipe vous répondra sous 24 heures.`,
     }) +
     infoTable([
       { label: 'Sujet',         value: contactData.subject },

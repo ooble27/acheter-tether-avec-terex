@@ -8,7 +8,7 @@ interface MagicLinkEmailProps {
 
 export function magicLinkHtml({ magicLink, userEmail, otpCode }: MagicLinkEmailProps): string {
   const rows =
-    hero({ eyebrow: 'Connexion sécurisée', title: 'Votre lien de connexion à Terex', subtitle: `Une demande de connexion a été initiée pour le compte associé à <strong style="color:#fafafa;">${userEmail}</strong>.` }) +
+    hero({ eyebrow: 'Connexion sécurisée', title: 'Votre lien de connexion à Terex', subtitle: `Une demande de connexion a été initiée pour le compte associé à <strong style="color:#111;">${userEmail}</strong>.` }) +
     (otpCode ? otpCard(otpCode) : '') +
     ctaButton('Accéder à mon compte', magicLink) +
     linkBox(magicLink) +

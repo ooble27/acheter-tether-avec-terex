@@ -1,4 +1,4 @@
-import { wrapEmail, hero, infoTable, noticeBox, alertRing, C } from './html-utils.ts';
+import { wrapEmail, hero, infoTable, noticeBox, alertRing, spacer, C } from './html-utils.ts';
 
 interface SecurityAlertEmailProps {
   device?: string;
@@ -17,24 +17,22 @@ export function securityAlertHtml({
   const F = `-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif`;
 
   const dualButtons = `
-<tr>
-  <td style="padding:0 24px 32px;">
+  <div style="padding:0 0 32px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td style="padding-right:10px;">
           <a href="${secureLink}" style="display:inline-block;background-color:${C.accent};color:${C.accentText};font-family:${F};font-size:13px;font-weight:600;padding:13px 28px;border-radius:8px;text-decoration:none;">Sécuriser mon compte</a>
         </td>
         <td>
-          <a href="https://terangaexchange.com/dashboard" class="emuted" style="display:inline-block;background-color:${C.rowBg};color:${C.textMuted};font-family:${F};font-size:13px;font-weight:500;padding:13px 28px;border-radius:8px;text-decoration:none;border:1px solid ${C.border};">C'est moi</a>
+          <a href="https://terangaexchange.com/dashboard" style="display:inline-block;background-color:${C.rowBg};color:${C.textMuted};font-family:${F};font-size:13px;font-weight:500;padding:13px 28px;border-radius:8px;text-decoration:none;border:1px solid ${C.border};">C'est moi</a>
         </td>
       </tr>
     </table>
-  </td>
-</tr>`;
+  </div>`;
 
   const rows =
     hero({ iconHtml: alertRing('⚠', C.red), title: 'Connexion depuis un nouvel appareil', subtitle: "Une connexion à votre compte Terex a été détectée depuis un appareil inconnu. Si ce n'est pas vous, sécurisez votre compte immédiatement." }) +
-    `<tr><td style="height:28px;"></td></tr>` +
+    spacer(28) +
     infoTable([
       { label: 'Date',        value: dateStr },
       { label: 'Appareil',    value: device },

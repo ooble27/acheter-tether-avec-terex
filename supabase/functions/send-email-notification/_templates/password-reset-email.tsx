@@ -7,7 +7,7 @@ interface PasswordResetEmailProps {
 
 export function passwordResetHtml({ resetLink, userEmail }: PasswordResetEmailProps): string {
   const subtitle = userEmail
-    ? `Vous avez demandé à réinitialiser le mot de passe du compte associé à <strong style="color:#fafafa;">${userEmail}</strong>. Cliquez sur le bouton ci-dessous pour en créer un nouveau.`
+    ? `Vous avez demandé à réinitialiser le mot de passe du compte associé à <strong style="color:#111;">${userEmail}</strong>. Cliquez sur le bouton ci-dessous pour en créer un nouveau.`
     : 'Vous avez demandé à réinitialiser votre mot de passe. Cliquez sur le bouton ci-dessous pour en créer un nouveau.';
 
   const rows =

@@ -1,4 +1,4 @@
-import { wrapEmail, hero, summaryBar, infoTable, noticeBox, ctaButton, sectionLabel, statusBadge } from './html-utils.ts';
+import { wrapEmail, hero, summaryBar, infoTable, noticeBox, ctaButton, sectionLabel, statusBadge, spacer } from './html-utils.ts';
 
 interface WelcomeEmailProps {
   userFirstName?: string;
@@ -16,7 +16,7 @@ export function welcomeHtml({ userFirstName, kycLink = 'https://terangaexchange.
       { label: 'Étape 2', value: 'KYC requis',   sub: "Vérification d'identité" },
       { label: 'Étape 3', value: 'Trader',        sub: 'Achat & vente USDT' },
     ]) +
-    `<tr><td style="height:28px;"></td></tr>` +
+    spacer(28) +
     sectionLabel('Prochaine étape — Vérification KYC') +
     infoTable([
       { label: 'Document', value: 'CNI ou Passeport en cours de validité' },

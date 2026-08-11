@@ -12,7 +12,7 @@ interface Announcement {
 }
 
 const ANNOUNCEMENTS: Announcement[] = [
-  { text: 'En attendant, les paiements se font manuellement via Wave' },
+  { text: 'Les paiements sont actuellement traités manuellement via Wave. Merci de votre compréhension.' },
 ];
 
 export function AnnouncementBanner() {
@@ -45,7 +45,7 @@ export function AnnouncementBanner() {
         }
         .terex-marquee-track {
           display: inline-block;
-          padding: 8px 0;
+          padding: 5px 0;
           animation: terex-marquee 32s linear infinite;
           will-change: transform;
         }

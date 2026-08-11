@@ -21,18 +21,16 @@ export function contactNotificationHtml({ contactData }: ContactNotificationEmai
   ];
 
   const messageBlock = `
-<tr>
-  <td style="padding:0 24px 24px;">
+  <div style="padding:0 0 24px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:10px;overflow:hidden;">
       <tr>
-        <td class="edim" style="padding:10px 16px;font-family:${F};font-size:10px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};border-bottom:1px solid ${C.borderSoft};">Message</td>
+        <td style="padding:10px 16px;font-family:${F};font-size:10px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};border-bottom:1px solid ${C.borderSoft};">Message</td>
       </tr>
       <tr>
-        <td class="emuted" style="padding:16px;font-family:${F};font-size:13px;color:${C.textMuted};line-height:1.7;white-space:pre-wrap;">${contactData.message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>
+        <td style="padding:16px;font-family:${F};font-size:13px;color:${C.textMuted};line-height:1.7;white-space:pre-wrap;">${contactData.message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>
       </tr>
     </table>
-  </td>
-</tr>`;
+  </div>`;
 
   const rows =
     hero({ eyebrow: 'Nouveau message', title: 'Message de contact reçu', subtitle: `Un message a été envoyé via le formulaire de contact par ${contactData.user_name}.` }) +

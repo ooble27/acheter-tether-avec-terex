@@ -1,4 +1,4 @@
-import { wrapEmail, hero, infoTable, noticeBox, ctaButton } from './html-utils.ts';
+import { wrapEmail, hero, infoTable, noticeBox, ctaButton, spacer } from './html-utils.ts';
 
 interface ReengagementEmailProps {
   userFirstName?: string;
@@ -18,7 +18,7 @@ export function reengagementHtml({
 
   const rows =
     hero({ eyebrow: 'On pense à vous', title: greeting, subtitle }) +
-    `<tr><td style="height:28px;"></td></tr>` +
+    spacer(28) +
     infoTable([
       { label: 'Paiement',   value: 'Orange Money · Wave',        green: true },
       { label: 'Délai',      value: '~3 minutes par transaction' },

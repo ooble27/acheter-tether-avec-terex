@@ -28,44 +28,40 @@ export function jobApplicationAdminHtml({ firstName, lastName, email, phone, pos
   ];
 
   const coverLetterBlock = coverLetter ? `
-<tr>
-  <td style="padding:0 24px 24px;">
+  <div style="padding:0 0 24px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
-      style="background-color:${C.infoBg};border:1px solid ${C.border};border-left:3px solid ${C.green};border-radius:10px;overflow:hidden;border-collapse:separate;border-spacing:0;">
+      style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:10px;overflow:hidden;border-collapse:separate;border-spacing:0;">
       <tr>
-        <td class="edim" style="padding:10px 16px;font-family:${F};font-size:10px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};border-bottom:1px solid ${C.borderSoft};">
+        <td style="padding:10px 16px;font-family:${F};font-size:10px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};border-bottom:1px solid ${C.borderSoft};">
           Lettre de motivation
         </td>
       </tr>
       <tr>
-        <td class="emuted" style="padding:16px;font-family:${F};font-size:13px;color:${C.textMuted};line-height:1.7;white-space:pre-wrap;">
+        <td style="padding:16px;font-family:${F};font-size:13px;color:${C.textMuted};line-height:1.7;white-space:pre-wrap;">
           ${coverLetter.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
         </td>
       </tr>
     </table>
-  </td>
-</tr>` : '';
+  </div>` : '';
 
   const replyBlock = `
-<tr>
-  <td style="padding:0 24px 28px;">
+  <div style="padding:0 0 28px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
-      style="background-color:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:10px;border-collapse:separate;border-spacing:0;">
+      style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:10px;border-collapse:separate;border-spacing:0;">
       <tr>
         <td style="padding:14px 16px;font-family:${F};font-size:12px;color:${C.textMuted};line-height:1.6;">
-          <strong style="color:${C.green};">Répondre directement :</strong>
-          &nbsp;<a href="mailto:${email}" style="color:${C.green};text-decoration:none;font-family:monospace;">${email}</a>
+          <strong style="color:${C.text};">Répondre directement :</strong>
+          &nbsp;<a href="mailto:${email}" style="color:${C.text};text-decoration:none;font-family:monospace;">${email}</a>
         </td>
       </tr>
     </table>
-  </td>
-</tr>`;
+  </div>`;
 
   const rows =
     hero({
       eyebrow: 'RH · Recrutement',
       title: 'Nouvelle candidature reçue',
-      subtitle: `<strong style="color:#fafafa;">${fullName}</strong> vient de postuler pour le poste de <strong style="color:#fafafa;">${position}</strong>.`,
+      subtitle: `<strong style="color:${C.text};">${fullName}</strong> vient de postuler pour le poste de <strong style="color:${C.text};">${position}</strong>.`,
     }) +
     infoTable(detailRows, 'Informations du candidat') +
     coverLetterBlock +

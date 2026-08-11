@@ -1,4 +1,4 @@
-import { wrapEmail, hero, noticeBox, ctaButton, sectionLabel, steps, alertRing, C } from './html-utils.ts';
+import { wrapEmail, hero, noticeBox, ctaButton, sectionLabel, steps, alertRing, spacer, C } from './html-utils.ts';
 
 interface KYCRejectedEmailProps {
   userFirstName?: string;
@@ -38,20 +38,18 @@ export function kycRejectedHtml({
     </tr>`).join('');
 
   const reasonsBlock = `
-<tr>
-  <td style="padding:0 24px 28px;">
+  <div style="padding:0 0 28px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${C.infoBg};border:1px solid ${C.border};border-radius:10px;overflow:hidden;border-collapse:separate;border-spacing:0;">
       <tr>
-        <td colspan="2" class="edim" style="padding:10px 16px;font-family:${F};font-size:10px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};border-bottom:1px solid ${C.borderSoft};">Problèmes détectés</td>
+        <td colspan="2" style="padding:10px 16px;font-family:${F};font-size:10px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:${C.textDim};border-bottom:1px solid ${C.borderSoft};">Problèmes détectés</td>
       </tr>
       ${reasonRows}
     </table>
-  </td>
-</tr>`;
+  </div>`;
 
   const rows =
     hero({ iconHtml: alertRing('!', C.red), title: "Votre vérification KYC n'a pas abouti", subtitle }) +
-    `<tr><td style="height:28px;"></td></tr>` +
+    spacer(28) +
     sectionLabel('Raison(s) du refus') +
     reasonsBlock +
     sectionLabel('Comment corriger') +
