@@ -161,7 +161,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
 
   // ── Desktop ──────────────────────────────────────────────────────────────
   return (
-    <div style={{ minHeight: 'calc(100vh - 8rem)', padding: '8px 32px 120px', maxWidth: '1100px', margin: '0 auto' }}>
+    <div style={{ minHeight: 'calc(100vh - 8rem)', padding: '40px 32px 120px', maxWidth: '1100px', margin: '0 auto' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '28px', alignItems: 'start' }}>
 
         {/* Left column */}

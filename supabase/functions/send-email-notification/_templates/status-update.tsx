@@ -45,11 +45,7 @@ export function statusUpdateHtml({ orderData, transactionType, clientName }: Sta
   ];
 
   let notice = '';
-  if (orderData.status === 'processing') {
-    notice = noticeBox(`Notre équipe traite activement votre ${isTransfer ? 'transfert' : 'commande'}. Vous recevrez une nouvelle notification dès la finalisation.`, 'neutral');
-  } else if (orderData.status === 'completed') {
-    notice = noticeBox(isTransfer ? 'Les fonds ont été crédités au destinataire avec succès.' : 'Votre transaction a été traitée avec succès.', 'success');
-  } else if (orderData.status === 'cancelled') {
+  if (orderData.status === 'cancelled') {
     const reason = orderData.cancellation_reason ? `Motif : ${orderData.cancellation_reason}. ` : '';
     notice = noticeBox(`Votre ${isTransfer ? 'transfert' : 'commande'} a été annulé. ${reason}Si un paiement a été effectué, il sera remboursé sous 3 à 5 jours ouvrables.`, 'danger');
   } else if (orderData.status === 'failed') {

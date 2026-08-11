@@ -244,10 +244,8 @@ export function wrapEmail(preview: string, rows: string, _topRightOrNote?: strin
   a { color: ${C.text}; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
   .wrap { max-width: 560px; margin: 0 auto; padding: 32px 20px 40px; }
   .card { background: ${C.cardBg}; border-radius: 14px; box-shadow: 0 1px 0 rgba(0,0,0,0.02), 0 12px 32px -12px rgba(20,20,20,0.08); overflow: hidden; }
-  .head { padding: 22px 28px 12px; }
-  .brand-row { line-height: 1; }
-  .brand-logo { display: inline-block; width: 28px; height: 28px; border-radius: 7px; vertical-align: middle; margin-right: 10px; border: 0; }
-  .brand { display: inline-block; vertical-align: middle; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; color: ${C.text}; font-weight: 500; }
+  .head { padding: 22px 28px 16px; }
+  .brand { font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; color: ${C.text}; font-weight: 500; }
   .body { padding: 4px 28px 28px; font-size: 15px; color: ${C.text}; }
   .body p { margin: 0 0 14px; }
   .body p:last-child { margin-bottom: 0; }
@@ -261,14 +259,10 @@ export function wrapEmail(preview: string, rows: string, _topRightOrNote?: strin
 </style>
 </head>
 <body>
-  <div style="display:none;max-height:0;overflow:hidden;opacity:0;font-size:1px;line-height:1px;color:${C.pageBg};">${preview}</div>
   <div class="wrap">
     <div class="card">
       <div class="head">
-        <div class="brand-row">
-          <img class="brand-logo" src="${LOGO}" width="28" height="28" alt="Terex" />
-          <span class="brand">Terex</span>
-        </div>
+        <span class="brand">Terex</span>
       </div>
       <div class="body">${rows}</div>
       <div class="foot">
