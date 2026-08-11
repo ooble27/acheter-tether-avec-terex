@@ -31,9 +31,12 @@ interface NetworkPillProps {
 }
 
 /**
- * Pastille de réseau — style Ooble : petite capsule, logo rond à gauche
- * + nom du réseau. Pas de coche : la sélection = fond blanc translucide
- * et bordure plus claire, comme sur Ooble.
+ * Pastille réseau — copiée à l'identique du code source Ooble
+ * (src/pages/app/AppVendre.tsx, step "network") :
+ *   rounded-[10px] border py-2 pl-2 pr-3.5 gap-2.5
+ *   logo h-7 w-7 rounded-full
+ *   text-sm
+ *   sélectionné = border-foreground + bg-secondary
  */
 export function NetworkPill({ network, selected, onSelect }: NetworkPillProps) {
   const logo = NETWORK_LOGOS[network];
@@ -46,18 +49,18 @@ export function NetworkPill({ network, selected, onSelect }: NetworkPillProps) {
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        gap: '8px',
-        padding: '6px 14px 6px 6px',
-        borderRadius: '999px',
-        border: `1px solid ${selected ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.10)'}`,
-        background: selected ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.03)',
+        gap: '10px',
+        padding: '8px 14px 8px 8px',
+        borderRadius: '10px',
+        border: `1px solid ${selected ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.10)'}`,
+        background: selected ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.02)',
         cursor: 'pointer',
         outline: 'none',
         WebkitTapHighlightColor: 'transparent',
         transition: 'all 0.15s',
         color: '#fff',
         fontSize: '14px',
-        fontWeight: 500,
+        fontWeight: 400,
         lineHeight: 1,
         whiteSpace: 'nowrap',
       }}
@@ -66,7 +69,7 @@ export function NetworkPill({ network, selected, onSelect }: NetworkPillProps) {
         src={logo}
         alt=""
         onError={(e) => { (e.currentTarget as HTMLImageElement).style.visibility = 'hidden'; }}
-        style={{ width: '24px', height: '24px', borderRadius: '50%', flexShrink: 0, background: 'rgba(255,255,255,0.08)' }}
+        style={{ width: '28px', height: '28px', borderRadius: '50%', flexShrink: 0 }}
       />
       <span>{name}</span>
     </button>
