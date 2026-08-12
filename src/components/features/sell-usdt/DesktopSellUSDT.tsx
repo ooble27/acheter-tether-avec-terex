@@ -37,7 +37,7 @@ const SEL_BORDER = 'rgba(255,255,255,0.18)';
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  background: 'rgba(255,255,255,0.04)',
+  background: '#232323',
   border: `1px solid rgba(255,255,255,0.07)`,
   borderRadius: '12px',
   padding: '13px 16px',
@@ -230,7 +230,7 @@ export function DesktopSellUSDT() {
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                 <label style={labelStyle}>Montant</label>
-                <div style={{ display: 'flex', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
+                <div style={{ display: 'flex', background: '#232323', borderRadius: '10px', padding: '3px', gap: '2px' }}>
                   {(['USDT', 'XOF'] as const).map(c => (
                     <button key={c} onClick={() => { setInputCurrency(c); setRawAmount(''); }}
                       style={{ padding: '4px 12px', borderRadius: '8px', border: 'none', fontSize: '12px', fontWeight: 500, cursor: 'pointer', background: inputCurrency === c ? '#2d2d2d' : 'transparent', color: inputCurrency === c ? '#fff' : 'rgba(255,255,255,0.4)' }}>
@@ -255,7 +255,7 @@ export function DesktopSellUSDT() {
               </div>
               <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '11px', marginBottom: '8px' }}>Minimum : {MIN_SELL_USDT} USDT</p>
 
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '12px 14px', marginBottom: '4px' }}>
+              <div style={{ background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '12px 14px', marginBottom: '4px' }}>
                 {inputCurrency === 'XOF' && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                     <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Vous vendez</span>
@@ -286,7 +286,7 @@ export function DesktopSellUSDT() {
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Choisissez comment envoyer vos USDT</p>
 
               {/* Binance Pay toggle */}
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '14px 16px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '14px 16px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <img src="https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png" alt="Binance" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
                   <div>
@@ -333,7 +333,7 @@ export function DesktopSellUSDT() {
                 </ol>
               </div>
 
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '4px 14px' }}>
+              <div style={{ background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '4px 14px' }}>
                 {[['Email Binance', 'lomohamed834@gmail.com'], ['ID Binance Pay', '450715599']].map(([label, val]) => (
                   <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${BORDER}` }}>
                     <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '12px' }}>{label}</span>
@@ -400,7 +400,7 @@ export function DesktopSellUSDT() {
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Confirmer la vente</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Vérifiez les détails de votre transaction</p>
 
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '4px 16px' }}>
+              <div style={{ background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '4px 16px' }}>
                 {rowItem('Vous envoyez', `${usdtAmount} USDT`)}
                 {rowItem('Vous recevez', `${fiatAmount} CFA`)}
                 {rowItem('Réseau', useBinancePay ? 'Binance Pay' : network)}
@@ -423,7 +423,7 @@ export function DesktopSellUSDT() {
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Envoyer vos USDT</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Suivez ces instructions pour compléter votre vente</p>
 
-              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '20px' }}>
+              <div style={{ background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '20px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                   <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '36px', height: '36px' }} />
                   {!useBinancePay && network && NETWORK_LOGOS[network as keyof typeof NETWORK_LOGOS] && (
@@ -477,7 +477,7 @@ export function DesktopSellUSDT() {
                         )}
                       </div>
                     </div>
-                    <div style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '10px 12px' }}>
+                    <div style={{ background: '#232323', border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '10px 12px' }}>
                       <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '10px', margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Adresse {network}</p>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <span style={{ color: '#fff', fontSize: '12px', fontFamily: 'monospace', flex: 1, wordBreak: 'break-all' }}>

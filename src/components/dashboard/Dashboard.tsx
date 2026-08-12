@@ -203,7 +203,10 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
             </Button>
           )}
 
-          <main className={`flex-1 ${isMobile ? 'p-4 pt-4 pb-20' : 'p-6 pt-6 pb-24'} relative`}>
+          <main
+            className={`flex-1 ${isMobile ? 'px-4 pb-20' : 'p-6 pt-6 pb-24'} relative`}
+            style={isMobile ? { paddingTop: 'calc(env(safe-area-inset-top, 0px) + 16px)' } : undefined}
+          >
             {/* key = fondu doux à chaque changement de section (transitions fluides) */}
             <div key={activeSection} className="section-fade">
               {renderContent()}

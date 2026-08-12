@@ -240,7 +240,7 @@ export function MobileBuyUSDT() {
                 <span style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Montant</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   {/* Currency toggle */}
-                  <div style={{ display: 'inline-flex', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
+                  <div style={{ display: 'inline-flex', background: '#232323', borderRadius: '10px', padding: '3px', gap: '2px' }}>
                     {(['XOF', 'USDT'] as const).map(c => (
                       <button key={c} onClick={() => { setInputCurrency(c); setRawAmount(''); }}
                         style={{ padding: '5px 12px', borderRadius: '7px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600, outline: 'none',
@@ -296,7 +296,7 @@ export function MobileBuyUSDT() {
                       setRawAmount(val);
                     }
                   }}
-                  style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '18px 84px 18px 20px', color: '#fff', fontSize: '34px', fontWeight: 700, outline: 'none', letterSpacing: '-1px', boxSizing: 'border-box', fontFamily: 'inherit' }}
+                  style={{ width: '100%', background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '18px 84px 18px 20px', color: '#fff', fontSize: '34px', fontWeight: 700, outline: 'none', letterSpacing: '-1px', boxSizing: 'border-box', fontFamily: 'inherit' }}
                 />
                 <span style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   {inputCurrency === 'USDT' ? (

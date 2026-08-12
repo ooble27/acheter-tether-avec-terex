@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Check, Trash2, Plus, ChevronDown } from 'lucide-react';
 import { useSavedWallets } from '@/hooks/useSavedWallets';
 import { NETWORK_LOGOS } from './NetworkPill';
+import { BottomSheet } from './BottomSheet';
 
 interface AddressBookProps {
   network: string;
@@ -34,7 +35,6 @@ export function AddressBook({
   const { wallets, remove } = useSavedWallets(network);
   const [mode, setMode] = useState<'saved' | 'new'>('saved');
   const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
 
   // À chaque changement de réseau, on reset + préselectionne le défaut du nouveau réseau.
   useEffect(() => {
@@ -50,31 +50,21 @@ export function AddressBook({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [network, wallets.length]);
 
-  // Ferme le dropdown au clic hors du composant.
-  useEffect(() => {
-    if (!open) return;
-    const onClick = (e: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', onClick);
-    return () => document.removeEventListener('mousedown', onClick);
-  }, [open]);
-
   const logo = NETWORK_LOGOS[network];
   const selected = wallets.find(w => w.address === value) || wallets[0];
 
   return (
-    <div ref={rootRef} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
       {wallets.length > 0 && mode === 'saved' && (
-        <div style={{ position: 'relative' }}>
-          {/* Carte "sélection actuelle" — cliquable pour dérouler */}
+        <>
+          {/* Carte "sélection actuelle" — cliquable pour ouvrir le bottom-sheet */}
           <button
             type="button"
-            onClick={() => setOpen(o => !o)}
+            onClick={() => setOpen(true)}
             style={{
               width: '100%', display: 'flex', alignItems: 'center', gap: '12px',
               padding: '14px 16px', borderRadius: '14px',
-              border: `1px solid ${open ? CARD_BORDER_SEL : CARD_BORDER}`,
+              border: `1px solid ${CARD_BORDER}`,
               background: CARD_BG, cursor: 'pointer', outline: 'none',
               WebkitTapHighlightColor: 'transparent', transition: 'all 0.15s',
               textAlign: 'left',
@@ -96,77 +86,15 @@ export function AddressBook({
                 {selected ? short(selected.address) : ''}
               </div>
             </div>
-            <ChevronDown size={16} color="rgba(255,255,255,0.55)" style={{ transition: 'transform 0.15s', transform: open ? 'rotate(180deg)' : 'none', flexShrink: 0 }} />
+            <ChevronDown size={16} color="rgba(255,255,255,0.55)" style={{ flexShrink: 0 }} />
           </button>
 
-          {/* Menu déroulant */}
-          {open && (
-            <div style={{
-              position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0,
-              zIndex: 20, background: CARD_BG, border: `1px solid ${CARD_BORDER}`,
-              borderRadius: '14px', overflow: 'hidden',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
-              maxHeight: '280px', overflowY: 'auto',
-            }}>
-              {wallets.map(w => {
-                const sel = w.address === value;
-                return (
-                  <div key={w.id} style={{
-                    display: 'flex', alignItems: 'center', gap: '10px',
-                    padding: '12px 14px',
-                    background: sel ? CARD_HOVER : 'transparent',
-                    borderBottom: `1px solid ${CARD_BORDER}`,
-                  }}>
-                    <button
-                      type="button"
-                      onClick={() => { onChange(w.address); setOpen(false); }}
-                      style={{
-                        flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: '10px',
-                        background: 'transparent', border: 'none', padding: 0, cursor: 'pointer',
-                        textAlign: 'left', outline: 'none', WebkitTapHighlightColor: 'transparent',
-                      }}
-                    >
-                      <img src={logo} alt="" style={{ width: '26px', height: '26px', borderRadius: '50%', flexShrink: 0 }} />
-                      <div style={{ minWidth: 0, flex: 1 }}>
-                        {w.label && (
-                          <div style={{ color: '#fff', fontSize: '13px', fontWeight: 600, marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {w.label}
-                          </div>
-                        )}
-                        <div style={{
-                          color: 'rgba(255,255,255,0.6)', fontSize: '11px',
-                          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                        }}>
-                          {short(w.address)}
-                        </div>
-                      </div>
-                      {sel && (
-                        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '18px', height: '18px', borderRadius: '50%', background: '#fff', flexShrink: 0 }}>
-                          <Check size={11} color="#111" strokeWidth={3} />
-                        </span>
-                      )}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={(e) => { e.stopPropagation(); if (confirm('Supprimer cette adresse ?')) remove(w.id); }}
-                      title="Supprimer"
-                      style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: '6px', flexShrink: 0 }}
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {/* Bouton "Nouvelle adresse" sous la carte */}
+          {/* Bouton "Nouvelle adresse" en dessous */}
           <button
             type="button"
-            onClick={() => { setMode('new'); setOpen(false); onChange(''); }}
+            onClick={() => { setMode('new'); onChange(''); }}
             style={{
-              marginTop: '8px', display: 'inline-flex', alignItems: 'center', gap: '6px',
+              alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: '6px',
               padding: '8px 12px', borderRadius: '10px',
               border: `1px dashed ${CARD_BORDER}`, background: 'transparent',
               color: 'rgba(255,255,255,0.75)', fontSize: '13px', fontWeight: 500,
@@ -175,7 +103,63 @@ export function AddressBook({
           >
             <Plus size={14} /> Nouvelle adresse
           </button>
-        </div>
+
+          {/* Bottom sheet : liste complète, scrollable, avec suppression */}
+          <BottomSheet open={open} onClose={() => setOpen(false)} title="Mes adresses">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {wallets.map(w => {
+                const sel = w.address === value;
+                return (
+                  <div key={w.id} style={{
+                    display: 'flex', alignItems: 'center', gap: '10px',
+                    padding: '14px', borderRadius: '12px',
+                    background: sel ? '#2a2a2a' : '#181818',
+                    border: `1px solid ${sel ? CARD_BORDER_SEL : CARD_BORDER}`,
+                  }}>
+                    <button
+                      type="button"
+                      onClick={() => { onChange(w.address); setOpen(false); }}
+                      style={{
+                        flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: '12px',
+                        background: 'transparent', border: 'none', padding: 0, cursor: 'pointer',
+                        textAlign: 'left', outline: 'none', WebkitTapHighlightColor: 'transparent',
+                      }}
+                    >
+                      <img src={logo} alt="" style={{ width: '30px', height: '30px', borderRadius: '50%', flexShrink: 0 }} />
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        {w.label && (
+                          <div style={{ color: '#fff', fontSize: '14px', fontWeight: 600, marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {w.label}
+                          </div>
+                        )}
+                        <div style={{
+                          color: 'rgba(255,255,255,0.6)', fontSize: '12px',
+                          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        }}>
+                          {short(w.address)}
+                        </div>
+                      </div>
+                      {sel && (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px', borderRadius: '50%', background: '#fff', flexShrink: 0 }}>
+                          <Check size={12} color="#111" strokeWidth={3} />
+                        </span>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); if (confirm('Supprimer cette adresse ?')) remove(w.id); }}
+                      title="Supprimer"
+                      style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: '8px', flexShrink: 0 }}
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </BottomSheet>
+        </>
       )}
 
       {(mode === 'new' || wallets.length === 0) && (
