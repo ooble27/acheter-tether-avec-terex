@@ -171,12 +171,14 @@ const handler = async (req: Request): Promise<Response> => {
     switch (emailType) {
       case 'order_confirmation': {
         const ref = `TEREX-${(orderData.id || '').slice(-8).toUpperCase()}`;
+        // Le ref contient déjà "TEREX-" → pas besoin de répéter "Terex"
+        // dans le sujet. Format court style Ooble.
         if (transactionType === 'buy') {
-          subject = `Votre paiement Terex (${ref})`;
+          subject = `Paiement en attente · ${ref}`;
         } else if (transactionType === 'sell') {
-          subject = `Votre dépôt USDT Terex (${ref})`;
+          subject = `Dépôt USDT en attente · ${ref}`;
         } else {
-          subject = `Votre demande Terex (${ref})`;
+          subject = `Votre demande · ${ref}`;
         }
         htmlContent = orderConfirmationHtml({ orderData, transactionType: transactionType as 'buy' | 'sell', clientName });
 

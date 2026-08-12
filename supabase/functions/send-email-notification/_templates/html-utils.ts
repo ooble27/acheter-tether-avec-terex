@@ -233,6 +233,10 @@ export function linkBox(url: string): string {
 export function wrapEmail(preview: string, rows: string, _topRightOrNote?: string, footerNote?: string): string {
   const note = footerNote ?? (_topRightOrNote && !_topRightOrNote.includes('<') ? _topRightOrNote : undefined);
   const yr = new Date().getFullYear();
+  // Anti-Gmail-clip : Gmail détecte les footers identiques entre les emails
+  // et les cache derrière "…". On glisse une empreinte unique dans le
+  // preview → chaque mail a une signature différente, plus de collapse.
+  const uniq = Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
   return `<!doctype html>
 <html lang="fr">
 <head>
@@ -282,6 +286,7 @@ export function wrapEmail(preview: string, rows: string, _topRightOrNote?: strin
         <div class="row fine">
           ${note ?? "Vous recevez cet e-mail parce que vous avez un compte sur Terex."}
           <br />&copy; ${yr} Teranga Exchange. Tous droits réservés.
+          <span style="display:none;color:${C.pageBg};font-size:1px;line-height:1px;">Ref ${uniq}</span>
         </div>
       </div>
     </div>

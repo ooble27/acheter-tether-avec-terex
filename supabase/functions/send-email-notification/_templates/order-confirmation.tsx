@@ -27,8 +27,8 @@ export function orderConfirmationHtml({ orderData, transactionType, clientName }
     : 'Envoyez vos USDT pour recevoir vos francs';
 
   const lead = isBuy
-    ? `Envoyez le paiement ${providerName} avec les informations ci-dessous. Dès réception, nous envoyons vos USDT à l'adresse que vous nous avez indiquée.`
-    : `Transférez vos USDT à l'adresse ci-dessous. Dès confirmation sur la blockchain, vous recevez vos ${currency} sur ${providerName}.`;
+    ? `Votre commande est enregistrée. Envoyez <strong>${amount} ${currency}</strong> par ${providerName} au numéro Terex, puis nous transférons <strong>${usdt} USDT</strong> vers votre adresse ${network} indiquée dans le récapitulatif.`
+    : `Votre commande est enregistrée. Transférez <strong>${usdt} USDT</strong> vers l'adresse ${network} indiquée dans le récapitulatif. Dès confirmation blockchain, vous recevez <strong>${amount} ${currency}</strong> sur votre ${providerName}.`;
 
   const detailRows = isBuy ? [
     { label: 'Référence',       value: reference,      mono: true },
