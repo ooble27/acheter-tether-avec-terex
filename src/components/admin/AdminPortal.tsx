@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock, BookOpen, PenTool,
+  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock, BookOpen, PenTool, MessageSquare,
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { OpsQueue } from '@/components/admin/orders/OpsQueue';
@@ -17,6 +17,7 @@ import { SectionHero } from '@/components/admin/SectionHero';
 import { JobApplicationsAdmin } from '@/components/admin/JobApplicationsAdmin';
 import { AccountingAdmin } from '@/components/admin/AccountingAdmin';
 import { NewsletterAdmin } from '@/components/admin/NewsletterAdmin';
+import { MailboxAdmin } from '@/components/admin/MailboxAdmin';
 import { NeobankVision } from '@/components/admin/neobank/NeobankVision';
 import { useUserRole } from '@/hooks/useUserRole';
 
@@ -38,6 +39,7 @@ const NAV: NavItem[] = [
   { id: 'attendance',   label: 'Présences',      desc: 'Pointage horaire de l\'équipe — pour la paie', icon: Clock,  roles: ['admin'] },
   { id: 'accounting',   label: 'Comptabilité',   desc: 'Revenus et marges',                     icon: Calculator,   roles: ['admin'] },
   { id: 'content',      label: 'Studio',         desc: 'Générateur de contenu pour les réseaux',  icon: PenTool,      roles: ['admin', 'marketing'] },
+  { id: 'mailbox',      label: 'Messagerie',     desc: 'Écrire librement à un client',          icon: MessageSquare, roles: ['admin', 'marketing', 'support', 'operator'] },
   { id: 'newsletter',   label: 'Campagnes',      desc: 'Emails marketing aux clients',          icon: Mail,         roles: ['admin', 'marketing'] },
   { id: 'applications', label: 'Candidatures',   desc: 'Recrutement',                           icon: UserCheck,    roles: ['admin', 'hr'] },
   { id: 'team',         label: 'Équipe',         desc: "Membres et rôles du back-office",       icon: Users,        roles: ['admin'] },
@@ -149,6 +151,7 @@ export function AdminPortal() {
           {currentTab === 'attendance' && <StaffAttendance />}
           {currentTab === 'accounting' && <AccountingAdmin />}
           {currentTab === 'content' && <ContentStudio />}
+          {currentTab === 'mailbox' && <MailboxAdmin />}
           {currentTab === 'newsletter' && <NewsletterAdmin />}
           {currentTab === 'applications' && <JobApplicationsAdmin />}
           {currentTab === 'team' && <TeamAdmin />}
