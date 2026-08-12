@@ -24,7 +24,7 @@ const NETWORK_LOGOS = {
 };
 
 const CARD: React.CSSProperties = {
-  background: '#1e1e1e',
+  background: 'rgba(255,255,255,0.03)',
   border: '1px solid rgba(255,255,255,0.07)',
   borderRadius: '20px',
   overflow: 'hidden',
@@ -36,7 +36,7 @@ const SEL_BORDER = 'rgba(255,255,255,0.18)';
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  background: '#232323',
+  background: 'rgba(255,255,255,0.04)',
   border: `1px solid ${BORDER}`,
   borderRadius: '12px',
   padding: '13px 16px',
@@ -290,7 +290,7 @@ export function DesktopBuyUSDT() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                 <label style={labelStyle}>Montant</label>
                 <div style={{ display: 'flex', gap: '4px' }}>
-                  <div style={{ display: 'flex', background: '#232323', borderRadius: '10px', padding: '3px', gap: '2px' }}>
+                  <div style={{ display: 'flex', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
                     {(['XOF', 'USDT'] as const).map(c => (
                       <button key={c} onClick={() => { setInputCurrency(c); setRawAmount(''); }}
                         style={{ padding: '4px 12px', borderRadius: '8px', border: 'none', fontSize: '12px', fontWeight: 500, cursor: 'pointer', background: inputCurrency === c ? '#2d2d2d' : 'transparent', color: inputCurrency === c ? '#fff' : 'rgba(255,255,255,0.4)' }}>
@@ -347,7 +347,7 @@ export function DesktopBuyUSDT() {
                 </p>
               )}
 
-              <div style={{ background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '12px 14px', marginTop: '12px', marginBottom: '4px' }}>
+              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '12px 14px', marginTop: '12px', marginBottom: '4px' }}>
                 {inputCurrency === 'USDT' && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                     <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Vous payez</span>
@@ -464,7 +464,7 @@ export function DesktopBuyUSDT() {
               <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: 400, marginBottom: '4px' }}>Confirmer l'achat</h2>
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginBottom: '20px' }}>Vérifiez les détails de votre transaction</p>
 
-              <div style={{ background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '4px 16px' }}>
+              <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '4px 16px' }}>
                 {row('Montant', `${fiatAmount} ${currency}`)}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid ${BORDER}` }}>
                   <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Frais Wave (1%)</span>

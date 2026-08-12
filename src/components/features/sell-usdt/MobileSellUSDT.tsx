@@ -14,7 +14,7 @@ import { ProviderPill } from '../shared/ProviderPill';
 import { PhoneBook } from '../shared/PhoneBook';
 import { useSavedPhones } from '@/hooks/useSavedPhones';
 
-const CARD = '#1e1e1e';
+const CARD = 'rgba(255,255,255,0.03)';
 const BORDER = 'rgba(255,255,255,0.07)';
 const BTN = '#2d2d2d';
 const SEL_BG = 'rgba(255,255,255,0.06)';
@@ -182,7 +182,7 @@ export function MobileSellUSDT() {
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
                 <span style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Montant</span>
-                <div style={{ display: 'inline-flex', background: '#232323', borderRadius: '10px', padding: '3px', gap: '2px' }}>
+                <div style={{ display: 'inline-flex', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', padding: '3px', gap: '2px' }}>
                   {(['USDT', 'XOF'] as const).map(c => (
                     <button key={c} onClick={() => { setInputCurrency(c); setRawAmount(''); }}
                       style={{ padding: '5px 12px', borderRadius: '7px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600, outline: 'none',
@@ -197,7 +197,7 @@ export function MobileSellUSDT() {
               <div style={{ position: 'relative' }}>
                 <input type="number" placeholder="0" value={rawAmount}
                   onChange={e => setRawAmount(e.target.value)}
-                  style={{ width: '100%', background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '18px 84px 18px 20px', color: '#fff', fontSize: '34px', fontWeight: 700, outline: 'none', letterSpacing: '-1px', boxSizing: 'border-box', fontFamily: 'inherit' }}
+                  style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '14px', padding: '18px 84px 18px 20px', color: '#fff', fontSize: '34px', fontWeight: 700, outline: 'none', letterSpacing: '-1px', boxSizing: 'border-box', fontFamily: 'inherit' }}
                 />
                 <span style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   {inputCurrency === 'USDT' ? (
@@ -264,7 +264,7 @@ export function MobileSellUSDT() {
                   <Switch checked={useBinancePay} onCheckedChange={setUseBinancePay} className="data-[state=checked]:bg-[#2d2d2d]" />
                 </div>
                 {useBinancePay && (
-                  <div style={{ marginTop: '12px', padding: '10px 14px', background: '#232323', borderRadius: '10px', border: `1px solid ${BORDER}` }}>
+                  <div style={{ marginTop: '12px', padding: '10px 14px', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', border: `1px solid ${BORDER}` }}>
                     <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>Vous enverrez vos USDT via Binance Pay à notre ID Binance</p>
                   </div>
                 )}
@@ -485,7 +485,7 @@ export function MobileSellUSDT() {
                       )}
                     </div>
                   </div>
-                  <div style={{ background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '10px 12px' }}>
+                  <div style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}`, borderRadius: '10px', padding: '10px 12px' }}>
                     <p style={{ color: '#6b7280', fontSize: '10px', margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Adresse {network}</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <p style={{ color: '#fff', fontSize: '11px', wordBreak: 'break-all', fontFamily: 'monospace', flex: 1, margin: 0, lineHeight: 1.5 }}>

@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Check, Trash2, Plus, ChevronDown } from 'lucide-react';
 import { useSavedPhones } from '@/hooks/useSavedPhones';
 import { PROVIDERS, type ProviderId } from './ProviderPill';
-import { BottomSheet } from './BottomSheet';
 
 interface PhoneBookProps {
   provider: ProviderId;
@@ -14,14 +13,11 @@ interface PhoneBookProps {
   onLabelChange: (v: string) => void;
 }
 
-const CARD_BG = '#1f1f1f';
-const CARD_HOVER = '#252525';
 const CARD_BORDER = 'rgba(255,255,255,0.10)';
-const CARD_BORDER_SEL = 'rgba(255,255,255,0.55)';
 
 /**
- * Sélecteur de numéro Mobile Money — même approche dropdown que AddressBook :
- * une carte "sélection actuelle" en haut qui déroule la liste complète.
+ * Sélecteur de numéro Mobile Money — même style que AddressBook :
+ * petit bouton chevron à droite, menu qui s'ouvre VERS LE HAUT.
  */
 export function PhoneBook({
   provider, value, onChange, saveToBook, onToggleSave, label, onLabelChange,
@@ -29,6 +25,7 @@ export function PhoneBook({
   const { phones, remove } = useSavedPhones(provider);
   const [mode, setMode] = useState<'saved' | 'new'>('saved');
   const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (phones.length === 0) {
@@ -43,29 +40,37 @@ export function PhoneBook({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provider, phones.length]);
 
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e: MouseEvent) => {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('mousedown', onClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
   const p = PROVIDERS[provider];
   const selected = phones.find(ph => ph.phone === value) || phones[0];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    <div ref={rootRef} style={{ display: 'flex', flexDirection: 'column', gap: '10px', position: 'relative' }}>
       {phones.length > 0 && mode === 'saved' && (
         <>
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            style={{
-              width: '100%', display: 'flex', alignItems: 'center', gap: '12px',
-              padding: '14px 16px', borderRadius: '14px',
-              border: `1px solid ${CARD_BORDER}`,
-              background: CARD_BG, cursor: 'pointer', outline: 'none',
-              WebkitTapHighlightColor: 'transparent', transition: 'all 0.15s',
-              textAlign: 'left',
-            }}
-          >
-            <img src={p.logo} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'contain', background: '#fff', flexShrink: 0 }} />
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '10px',
+            padding: '12px 8px 12px 14px', borderRadius: '14px',
+            border: `1px solid ${CARD_BORDER}`,
+            background: 'rgba(255,255,255,0.03)',
+          }}>
+            <img src={p.logo} alt="" style={{ width: '30px', height: '30px', borderRadius: '50%', objectFit: 'contain', background: '#fff', flexShrink: 0 }} />
             <div style={{ minWidth: 0, flex: 1 }}>
               {selected?.label && (
-                <div style={{ color: '#fff', fontSize: '14px', fontWeight: 600, marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div style={{ color: '#fff', fontSize: '13px', fontWeight: 600, marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {selected.label}
                 </div>
               )}
@@ -77,73 +82,95 @@ export function PhoneBook({
                 {selected?.phone || ''}
               </div>
             </div>
-            <ChevronDown size={16} color="rgba(255,255,255,0.55)" style={{ flexShrink: 0 }} />
-          </button>
+            <button
+              type="button"
+              onClick={() => setOpen(o => !o)}
+              aria-label="Choisir un autre numéro"
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: '32px', height: '32px', borderRadius: '8px',
+                background: open ? 'rgba(255,255,255,0.10)' : 'transparent',
+                border: 'none', cursor: 'pointer', outline: 'none',
+                WebkitTapHighlightColor: 'transparent', transition: 'background 0.15s',
+                flexShrink: 0, color: 'rgba(255,255,255,0.75)',
+              }}
+            >
+              <ChevronDown size={16} strokeWidth={2} style={{ transition: 'transform 0.15s', transform: open ? 'rotate(180deg)' : 'none' }} />
+            </button>
+          </div>
 
-          <button
-            type="button"
-            onClick={() => { setMode('new'); onChange(''); }}
-            style={{
-              alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: '6px',
-              padding: '8px 12px', borderRadius: '10px',
-              border: `1px dashed ${CARD_BORDER}`, background: 'transparent',
-              color: 'rgba(255,255,255,0.75)', fontSize: '13px', fontWeight: 500,
-              cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent',
-            }}
-          >
-            <Plus size={14} /> Nouveau numéro
-          </button>
-
-          <BottomSheet open={open} onClose={() => setOpen(false)} title="Mes numéros">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {open && (
+            <div style={{
+              position: 'absolute',
+              bottom: 'calc(100% + 6px)', right: 0,
+              minWidth: '240px', maxWidth: 'calc(100vw - 40px)',
+              zIndex: 30,
+              background: '#1f1f1f',
+              border: `1px solid ${CARD_BORDER}`,
+              borderRadius: '12px', overflow: 'hidden',
+              boxShadow: '0 -8px 24px rgba(0,0,0,0.45)',
+              maxHeight: '260px', overflowY: 'auto',
+            }}>
               {phones.map(ph => {
                 const sel = ph.phone === value;
                 return (
                   <div key={ph.id} style={{
                     display: 'flex', alignItems: 'center', gap: '10px',
-                    padding: '14px', borderRadius: '12px',
-                    background: sel ? '#2a2a2a' : '#181818',
-                    border: `1px solid ${sel ? CARD_BORDER_SEL : CARD_BORDER}`,
+                    padding: '10px 12px',
+                    background: sel ? 'rgba(255,255,255,0.08)' : 'transparent',
+                    borderBottom: `1px solid ${CARD_BORDER}`,
                   }}>
                     <button
                       type="button"
                       onClick={() => { onChange(ph.phone); setOpen(false); }}
                       style={{
-                        flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: '12px',
+                        flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: '10px',
                         background: 'transparent', border: 'none', padding: 0, cursor: 'pointer',
                         textAlign: 'left', outline: 'none', WebkitTapHighlightColor: 'transparent',
                       }}
                     >
-                      <img src={p.logo} alt="" style={{ width: '30px', height: '30px', borderRadius: '50%', objectFit: 'contain', background: '#fff', flexShrink: 0 }} />
+                      <img src={p.logo} alt="" style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'contain', background: '#fff', flexShrink: 0 }} />
                       <div style={{ minWidth: 0, flex: 1 }}>
                         {ph.label && (
-                          <div style={{ color: '#fff', fontSize: '14px', fontWeight: 600, marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <div style={{ color: '#fff', fontSize: '12px', fontWeight: 600, marginBottom: '1px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {ph.label}
                           </div>
                         )}
-                        <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
+                        <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: '12px', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
                           {ph.phone}
                         </div>
                       </div>
                       {sel && (
-                        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px', borderRadius: '50%', background: '#fff', flexShrink: 0 }}>
-                          <Check size={12} color="#111" strokeWidth={3} />
-                        </span>
+                        <Check size={14} color="#fff" strokeWidth={3} style={{ flexShrink: 0 }} />
                       )}
                     </button>
                     <button
                       type="button"
                       onClick={(e) => { e.stopPropagation(); if (confirm('Supprimer ce numéro ?')) remove(ph.id); }}
                       title="Supprimer"
-                      style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: '8px', flexShrink: 0 }}
+                      style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: '4px', flexShrink: 0 }}
                     >
-                      <Trash2 size={15} />
+                      <Trash2 size={12} />
                     </button>
                   </div>
                 );
               })}
             </div>
-          </BottomSheet>
+          )}
+
+          <button
+            type="button"
+            onClick={() => { setMode('new'); onChange(''); }}
+            style={{
+              alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: '6px',
+              padding: '6px 10px', borderRadius: '8px',
+              background: 'transparent', border: 'none',
+              color: 'rgba(255,255,255,0.65)', fontSize: '12px', fontWeight: 500,
+              cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent',
+            }}
+          >
+            <Plus size={13} /> Nouveau numéro
+          </button>
         </>
       )}
 
@@ -163,7 +190,7 @@ export function PhoneBook({
             </button>
           )}
 
-          <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: CARD_BG }}>
+          <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: 'rgba(255,255,255,0.03)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderBottom: `1px solid ${CARD_BORDER}`, padding: '10px 16px' }}>
               <img src={p.logo} alt="" style={{ width: '22px', height: '22px', borderRadius: '50%', objectFit: 'contain', background: '#fff' }} />
               <span style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>{p.label}</span>
@@ -188,7 +215,7 @@ export function PhoneBook({
           </label>
 
           {saveToBook && (
-            <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: CARD_BG }}>
+            <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: 'rgba(255,255,255,0.03)' }}>
               <input
                 type="text"
                 placeholder="Nom (optionnel) — ex : Mon perso"
