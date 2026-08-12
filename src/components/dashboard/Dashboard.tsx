@@ -196,8 +196,14 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
               size="icon"
               onClick={() => handleNavigate('profile')}
               aria-label="Mon profil"
-              className="fixed right-4 z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 rounded-xl w-12 h-12"
-              style={{ top: 'calc(env(safe-area-inset-top, 0px) + 16px)' }}
+              className="fixed z-50 bg-terex-darker/95 backdrop-blur-sm border border-terex-gray/50 text-white hover:bg-terex-gray/80 rounded-xl w-12 h-12"
+              style={{
+                top: 'calc(env(safe-area-inset-top, 0px) + 16px)',
+                // Sur desktop, on colle le bouton juste à droite du bloc de contenu
+                // (max-width 1000px) au lieu du bord de l'écran. Sur mobile, offset
+                // habituel de 16px du bord droit.
+                right: 'max(16px, calc((100vw - 1000px) / 2 + 8px))',
+              }}
             >
               <User className="h-5 w-5" />
             </Button>
