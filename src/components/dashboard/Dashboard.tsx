@@ -28,7 +28,6 @@ import { Button } from '@/components/ui/button';
 import { LogOut, User } from 'lucide-react';
 import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
 import { B2BPage } from '@/components/features/B2BPage';
-import { AnnouncementBanner } from '@/components/dashboard/AnnouncementBanner';
 import { SavedDataPrefetch } from '@/components/dashboard/SavedDataPrefetch';
 
 interface DashboardProps {
@@ -187,10 +186,6 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
           {/* Préchauffe le cache des adresses/numéros dès que le dashboard
               se monte, pour un affichage instantané dans les flows Achat/Vente. */}
           <SavedDataPrefetch />
-
-          {/* Bandeau d'annonces défilant — placé en tout premier pour être
-              visible sur toutes les pages du dashboard. */}
-          <AnnouncementBanner />
 
           {/* Bouton profil flottant — IDENTIQUE partout (site bureau, mobile, PWA) :
               va DIRECTEMENT à la page Profil (qui contient tout le menu). Pas de

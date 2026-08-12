@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Check, Trash2, Plus } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Check, Trash2, Plus, ChevronDown } from 'lucide-react';
 import { useSavedWallets } from '@/hooks/useSavedWallets';
 import { NETWORK_LOGOS } from './NetworkPill';
 
@@ -14,21 +14,29 @@ interface AddressBookProps {
   placeholder?: string;
 }
 
+// Palette : cartes VRAIMENT visibles (comme Ooble bg-card), pas quasi-transparentes.
+const CARD_BG = '#1f1f1f';
+const CARD_HOVER = '#252525';
+const CARD_BORDER = 'rgba(255,255,255,0.10)';
+const CARD_BORDER_SEL = 'rgba(255,255,255,0.55)';
+
+const short = (v: string) => (v.length > 22 ? `${v.slice(0, 10)}…${v.slice(-8)}` : v);
+
 /**
- * Étape « Adresse USDT » pour le flow d'achat.
- * Liste les adresses enregistrées pour le réseau sélectionné (sélection en
- * un clic), + saisie d'une nouvelle adresse avec case à cocher pour
- * l'ajouter au carnet.
+ * Sélecteur d'adresse USDT — style Ooble avec un dropdown scalable :
+ * une carte "sélection actuelle" en haut qui, cliquée, déroule la liste
+ * complète des adresses enregistrées (scrollable). Un bouton "+ Nouvelle
+ * adresse" bascule vers la saisie d'une adresse à retenir.
  */
 export function AddressBook({
   network, value, onChange, saveToBook, onToggleSave, label, onLabelChange, placeholder,
 }: AddressBookProps) {
-  const { wallets, remove, setDefault } = useSavedWallets(network);
+  const { wallets, remove } = useSavedWallets(network);
   const [mode, setMode] = useState<'saved' | 'new'>('saved');
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
 
-  // À CHAQUE changement de réseau, on RESET l'adresse (l'adresse de TRC20
-  // n'a rien à faire sur BEP20) puis on préselectionne l'adresse par défaut
-  // du nouveau réseau si le client en a enregistré une.
+  // À chaque changement de réseau, on reset + préselectionne le défaut du nouveau réseau.
   useEffect(() => {
     if (wallets.length === 0) {
       onChange('');
@@ -38,97 +46,157 @@ export function AddressBook({
       onChange(def.address);
       setMode('saved');
     }
+    setOpen(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [network, wallets.length]);
 
+  // Ferme le dropdown au clic hors du composant.
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e: MouseEvent) => {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, [open]);
+
   const logo = NETWORK_LOGOS[network];
+  const selected = wallets.find(w => w.address === value) || wallets[0];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-      {wallets.length > 0 && (
-        <div>
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
-            <TabBtn active={mode === 'saved'} onClick={() => setMode('saved')} label="Mes adresses" />
-            <TabBtn active={mode === 'new'} onClick={() => { setMode('new'); onChange(''); }} label="Nouvelle adresse" icon={<Plus size={13} />} />
-          </div>
+    <div ref={rootRef} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      {wallets.length > 0 && mode === 'saved' && (
+        <div style={{ position: 'relative' }}>
+          {/* Carte "sélection actuelle" — cliquable pour dérouler */}
+          <button
+            type="button"
+            onClick={() => setOpen(o => !o)}
+            style={{
+              width: '100%', display: 'flex', alignItems: 'center', gap: '12px',
+              padding: '14px 16px', borderRadius: '14px',
+              border: `1px solid ${open ? CARD_BORDER_SEL : CARD_BORDER}`,
+              background: CARD_BG, cursor: 'pointer', outline: 'none',
+              WebkitTapHighlightColor: 'transparent', transition: 'all 0.15s',
+              textAlign: 'left',
+            }}
+          >
+            <img src={logo} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', flexShrink: 0 }} />
+            <div style={{ minWidth: 0, flex: 1 }}>
+              {selected?.label && (
+                <div style={{ color: '#fff', fontSize: '14px', fontWeight: 600, marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {selected.label}
+                </div>
+              )}
+              <div style={{
+                color: selected?.label ? 'rgba(255,255,255,0.55)' : '#fff',
+                fontSize: selected?.label ? '11px' : '13px',
+                fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+              }}>
+                {selected ? short(selected.address) : ''}
+              </div>
+            </div>
+            <ChevronDown size={16} color="rgba(255,255,255,0.55)" style={{ transition: 'transform 0.15s', transform: open ? 'rotate(180deg)' : 'none', flexShrink: 0 }} />
+          </button>
 
-          {mode === 'saved' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {/* Menu déroulant */}
+          {open && (
+            <div style={{
+              position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0,
+              zIndex: 20, background: CARD_BG, border: `1px solid ${CARD_BORDER}`,
+              borderRadius: '14px', overflow: 'hidden',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
+              maxHeight: '280px', overflowY: 'auto',
+            }}>
               {wallets.map(w => {
-                const sel = value === w.address;
+                const sel = w.address === value;
                 return (
                   <div key={w.id} style={{
                     display: 'flex', alignItems: 'center', gap: '10px',
-                    padding: '12px 14px', borderRadius: '14px',
-                    border: `1px solid ${sel ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.14)'}`,
-                    background: sel ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.04)',
-                    transition: 'all 0.15s',
+                    padding: '12px 14px',
+                    background: sel ? CARD_HOVER : 'transparent',
+                    borderBottom: `1px solid ${CARD_BORDER}`,
                   }}>
                     <button
                       type="button"
-                      onClick={() => onChange(w.address)}
+                      onClick={() => { onChange(w.address); setOpen(false); }}
                       style={{
                         flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: '10px',
                         background: 'transparent', border: 'none', padding: 0, cursor: 'pointer',
-                        textAlign: 'left', color: 'inherit', outline: 'none', WebkitTapHighlightColor: 'transparent',
+                        textAlign: 'left', outline: 'none', WebkitTapHighlightColor: 'transparent',
                       }}
                     >
-                      <img src={logo} alt="" style={{ width: '28px', height: '28px', borderRadius: '50%', flexShrink: 0 }} />
+                      <img src={logo} alt="" style={{ width: '26px', height: '26px', borderRadius: '50%', flexShrink: 0 }} />
                       <div style={{ minWidth: 0, flex: 1 }}>
                         {w.label && (
-                          <div style={{ color: '#fff', fontSize: '13px', fontWeight: 600, marginBottom: '2px' }}>
+                          <div style={{ color: '#fff', fontSize: '13px', fontWeight: 600, marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {w.label}
-                            {w.is_default && <span style={{ marginLeft: '8px', color: 'rgba(255,255,255,0.5)', fontSize: '10px', fontWeight: 500 }}>· par défaut</span>}
                           </div>
                         )}
                         <div style={{
-                          color: 'rgba(255,255,255,0.55)', fontSize: '11px', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+                          color: 'rgba(255,255,255,0.6)', fontSize: '11px',
+                          fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
                           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                         }}>
-                          {w.address}
+                          {short(w.address)}
                         </div>
                       </div>
                       {sel && (
-                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px', borderRadius: '50%', background: '#fff', flexShrink: 0 }}>
-                          <Check size={12} color="#111" strokeWidth={3} />
+                        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '18px', height: '18px', borderRadius: '50%', background: '#fff', flexShrink: 0 }}>
+                          <Check size={11} color="#111" strokeWidth={3} />
                         </span>
                       )}
                     </button>
-                    <div style={{ display: 'flex', gap: '4px' }}>
-                      {!w.is_default && (
-                        <button
-                          type="button"
-                          onClick={() => setDefault(w.id, network)}
-                          title="Définir par défaut"
-                          style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: '4px', fontSize: '10px' }}
-                        >
-                          ★
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => { if (confirm('Supprimer cette adresse ?')) remove(w.id); }}
-                        title="Supprimer"
-                        style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: '4px' }}
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); if (confirm('Supprimer cette adresse ?')) remove(w.id); }}
+                      title="Supprimer"
+                      style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: '6px', flexShrink: 0 }}
+                    >
+                      <Trash2 size={14} />
+                    </button>
                   </div>
                 );
               })}
             </div>
           )}
+
+          {/* Bouton "Nouvelle adresse" sous la carte */}
+          <button
+            type="button"
+            onClick={() => { setMode('new'); setOpen(false); onChange(''); }}
+            style={{
+              marginTop: '8px', display: 'inline-flex', alignItems: 'center', gap: '6px',
+              padding: '8px 12px', borderRadius: '10px',
+              border: `1px dashed ${CARD_BORDER}`, background: 'transparent',
+              color: 'rgba(255,255,255,0.75)', fontSize: '13px', fontWeight: 500,
+              cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent',
+            }}
+          >
+            <Plus size={14} /> Nouvelle adresse
+          </button>
         </div>
       )}
 
       {(mode === 'new' || wallets.length === 0) && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {/* Style Ooble AppAcheter step address : card rounded-[14px] avec
-              header (logo + nom réseau + tag) séparé par un border-bottom. */}
-          <div style={{ overflow: 'hidden', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.10)', background: 'rgba(255,255,255,0.02)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '10px 16px' }}>
-              <img src={logo} alt="" style={{ width: '26px', height: '26px', borderRadius: '50%' }} />
+          {wallets.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setMode('saved')}
+              style={{
+                alignSelf: 'flex-start', background: 'transparent', border: 'none',
+                color: 'rgba(255,255,255,0.55)', fontSize: '12px', cursor: 'pointer',
+                padding: '2px 0', textDecoration: 'underline',
+              }}
+            >
+              ← Utiliser une adresse enregistrée
+            </button>
+          )}
+
+          <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: CARD_BG }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderBottom: `1px solid ${CARD_BORDER}`, padding: '10px 16px' }}>
+              <img src={logo} alt="" style={{ width: '22px', height: '22px', borderRadius: '50%' }} />
               <span style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>{network}</span>
             </div>
             <input
@@ -138,11 +206,11 @@ export function AddressBook({
               placeholder={placeholder || `Votre adresse ${network}`}
               value={value}
               onChange={e => onChange(e.target.value.trim())}
-              style={{ width: '100%', background: 'transparent', border: 'none', padding: '16px', color: '#fff', fontSize: '15px', outline: 'none', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', lineHeight: 1.5, boxSizing: 'border-box' }}
+              style={{ width: '100%', background: 'transparent', border: 'none', padding: '16px', color: '#fff', fontSize: '15px', outline: 'none', boxSizing: 'border-box', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}
             />
           </div>
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', color: 'rgba(255,255,255,0.65)', fontSize: '13px', userSelect: 'none', padding: '2px' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', color: 'rgba(255,255,255,0.75)', fontSize: '13px', userSelect: 'none', padding: '2px' }}>
             <input
               type="checkbox"
               checked={saveToBook}
@@ -153,7 +221,7 @@ export function AddressBook({
           </label>
 
           {saveToBook && (
-            <div style={{ overflow: 'hidden', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.10)', background: 'rgba(255,255,255,0.02)' }}>
+            <div style={{ overflow: 'hidden', borderRadius: '14px', border: `1px solid ${CARD_BORDER}`, background: CARD_BG }}>
               <input
                 type="text"
                 placeholder="Nom (optionnel) — ex : Trust Wallet"
@@ -166,26 +234,5 @@ export function AddressBook({
         </div>
       )}
     </div>
-  );
-}
-
-function TabBtn({ active, onClick, label, icon }: { active: boolean; onClick: () => void; label: string; icon?: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      style={{
-        display: 'inline-flex', alignItems: 'center', gap: '6px',
-        padding: '7px 12px', borderRadius: '10px',
-        border: `1px solid ${active ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.14)'}`,
-        background: active ? 'rgba(255,255,255,0.10)' : 'transparent',
-        color: active ? '#fff' : 'rgba(255,255,255,0.55)',
-        fontSize: '12px', fontWeight: 500, cursor: 'pointer', outline: 'none',
-        WebkitTapHighlightColor: 'transparent', transition: 'all 0.15s',
-      }}
-    >
-      {icon}
-      {label}
-    </button>
   );
 }

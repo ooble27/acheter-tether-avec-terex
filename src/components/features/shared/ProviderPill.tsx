@@ -29,7 +29,7 @@ export function ProviderPill({ provider, selected, onSelect }: ProviderPillProps
         padding: '8px 14px 8px 8px',
         borderRadius: '10px',
         border: `1px solid ${selected ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.10)'}`,
-        background: selected ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.02)',
+        background: selected ? '#2a2a2a' : '#1f1f1f',
         cursor: 'pointer',
         outline: 'none',
         WebkitTapHighlightColor: 'transparent',
