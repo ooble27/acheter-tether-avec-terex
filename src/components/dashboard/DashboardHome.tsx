@@ -1,4 +1,4 @@
-import { Coins, HandCoins } from 'lucide-react';
+import { Coins, HandCoins, Zap, Shield, Clock, HeadphonesIcon, Gift, HelpCircle, TrendingUp } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
 import { useTerexRates } from '@/hooks/useTerexRates';
@@ -179,59 +179,90 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   }
 
   // ── Desktop ──────────────────────────────────────────────────────────────
+  const trustPoints = [
+    { icon: Clock,          title: '~3 minutes',      sub: 'Traitement moyen' },
+    { icon: Shield,         title: 'KYC vérifié',      sub: 'Compte sécurisé' },
+    { icon: Zap,            title: 'Wave · Orange',    sub: 'Paiement Mobile Money' },
+    { icon: HeadphonesIcon, title: 'Support 24/7',     sub: 'Équipe humaine' },
+  ];
+
+  const steps = [
+    { n: 1, title: 'Choisissez le montant', sub: 'CFA ou USDT, taux du jour affiché en temps réel.' },
+    { n: 2, title: 'Sélectionnez le réseau', sub: 'Tron, BNB Chain, Ethereum, Polygon, Solana, Aptos, Binance.' },
+    { n: 3, title: 'Payez avec Wave',        sub: 'Réception des USDT sous ~3 minutes après confirmation.' },
+  ];
+
   return (
-    <div style={{ minHeight: 'calc(100vh - 8rem)', padding: '40px 32px 120px', maxWidth: '1100px', margin: '0 auto' }}>
+    <div style={{ minHeight: 'calc(100vh - 8rem)', padding: '40px 32px 120px', maxWidth: '1200px', margin: '0 auto' }}>
+      {/* Bandeau supérieur : greeting + rate hero */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '28px', alignItems: 'stretch', marginBottom: '28px' }}>
+        {/* Greeting hero */}
+        <div style={{ background: CARD, borderRadius: '20px', border: `1px solid ${BORDER}`, padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '180px' }}>
+          <div>
+            <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{getGreeting()}</p>
+            <h1 style={{ color: '#fff', fontSize: '32px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              {firstName}
+              <PersonWaving />
+            </h1>
+          </div>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            {quickActions.map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                onClick={() => onNavigate?.(id)}
+                style={{ flex: 1, background: '#252525', borderRadius: '14px', border: `1px solid ${BORDER}`, padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', transition: 'background 0.15s', outline: 'none', textAlign: 'left' }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#2d2d2d'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = '#252525'; }}
+              >
+                <span style={{ width: '36px', height: '36px', borderRadius: '10px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon size={18} color={ICON_COLOR} strokeWidth={1.7} />
+                </span>
+                <span style={{ color: '#fff', fontSize: '15px', fontWeight: 500 }}>{label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Rate hero — grosse carte avec taux du jour */}
+        <div style={{ background: CARD, borderRadius: '20px', border: `1px solid ${BORDER}`, padding: '28px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '180px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ color: '#6b7280', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em' }}>Taux du jour</span>
+            <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style={{ width: '36px', height: '36px', opacity: 0.85 }} />
+          </div>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
+              <span style={{ color: '#fff', fontSize: '44px', fontWeight: 300, letterSpacing: '-1.5px', lineHeight: 1 }}>
+                {rateDisplay}
+              </span>
+              <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: '15px', fontWeight: 500 }}>CFA</span>
+            </div>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px', margin: '8px 0 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <TrendingUp size={12} strokeWidth={2} /> pour 1 USDT · Terex
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Corps principal : grille 2 colonnes */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '28px', alignItems: 'start' }}>
-
         {/* Left column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-
-          {/* Greeting + Rate */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px' }}>
-            <div>
-              <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 2px' }}>{getGreeting()},</p>
-              <h1 style={{ color: '#fff', fontSize: '28px', fontWeight: 700, margin: 0, letterSpacing: '-0.5px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                {firstName}
-                <PersonWaving />
-              </h1>
-            </div>
-
-            {/* Rate pill — neutre */}
-            <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '12px 20px', display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
-              <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style={{ width: '32px', height: '32px', opacity: 0.85 }} />
-              <div>
-                <p style={{ color: '#6b7280', fontSize: '10px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 2px' }}>1 USDT</p>
-                <p style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: 0, letterSpacing: '-0.3px' }}>
-                  {rateDisplay} <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px', fontWeight: 500 }}>CFA</span>
-                </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+          {/* Trust strip : 4 KPIs */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
+            {trustPoints.map(({ icon: Icon, title, sub }) => (
+              <div key={title} style={{ background: CARD, borderRadius: '14px', border: `1px solid ${BORDER}`, padding: '18px 16px' }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '10px', background: ICON_BG, marginBottom: '12px' }}>
+                  <Icon size={16} color={ICON_COLOR} strokeWidth={1.7} />
+                </span>
+                <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 2px' }}>{title}</p>
+                <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '11px', margin: 0 }}>{sub}</p>
               </div>
-            </div>
+            ))}
           </div>
 
-          {/* Quick actions — style Ooble Dashboard desktop : 2 cols, chip
-              horizontal avec icône ronde + label, sans sub-text. */}
+          {/* Recevez sur X réseaux */}
           <div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              {quickActions.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => onNavigate?.(id)}
-                  style={{ background: CARD, borderRadius: '16px', border: `1px solid ${BORDER}`, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', transition: 'background 0.15s', outline: 'none', textAlign: 'left' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = '#252525'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = CARD; }}
-                >
-                  <span style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Icon size={20} color={ICON_COLOR} strokeWidth={1.6} />
-                  </span>
-                  <span style={{ color: '#fff', fontSize: '15px', fontWeight: 500 }}>{label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Recevez sur X réseaux — style Ooble Dashboard */}
-          <div>
-            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', margin: '0 0 10px' }}>
+            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', margin: '0 0 12px' }}>
               Recevez sur {HOME_NETWORKS.length} réseaux
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -243,13 +274,60 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
               ))}
             </div>
           </div>
+
+          {/* Comment ça marche — 3 étapes */}
+          <div>
+            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', margin: '0 0 12px' }}>
+              Comment ça marche
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+              {steps.map(({ n, title, sub }) => (
+                <div key={n} style={{ background: CARD, borderRadius: '14px', border: `1px solid ${BORDER}`, padding: '20px' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', borderRadius: '50%', background: '#252525', color: '#fff', fontSize: '13px', fontWeight: 600, marginBottom: '12px' }}>{n}</span>
+                  <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 6px' }}>{title}</p>
+                  <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', margin: 0, lineHeight: 1.5 }}>{sub}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bas de page : cartes CTA parrainage + aide */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <button
+              onClick={() => onNavigate?.('referral')}
+              style={{ background: CARD, borderRadius: '14px', border: `1px solid ${BORDER}`, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer', transition: 'background 0.15s', outline: 'none', textAlign: 'left' }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#252525'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = CARD; }}
+            >
+              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, flexShrink: 0 }}>
+                <Gift size={18} color={ICON_COLOR} strokeWidth={1.7} />
+              </span>
+              <div style={{ minWidth: 0 }}>
+                <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 2px' }}>Parrainez vos amis</p>
+                <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '12px', margin: 0 }}>Faites-leur découvrir Terex</p>
+              </div>
+            </button>
+            <button
+              onClick={() => onNavigate?.('faq')}
+              style={{ background: CARD, borderRadius: '14px', border: `1px solid ${BORDER}`, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer', transition: 'background 0.15s', outline: 'none', textAlign: 'left' }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#252525'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = CARD; }}
+            >
+              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, flexShrink: 0 }}>
+                <HelpCircle size={18} color={ICON_COLOR} strokeWidth={1.7} />
+              </span>
+              <div style={{ minWidth: 0 }}>
+                <p style={{ color: '#fff', fontSize: '14px', fontWeight: 600, margin: '0 0 2px' }}>Centre d'aide</p>
+                <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '12px', margin: 0 }}>FAQ · guides · support</p>
+              </div>
+            </button>
+          </div>
         </div>
 
         {/* Right column — recent transactions */}
         <div style={{ position: 'sticky', top: '24px' }}>
           <RecentTransactions onNavigate={onNavigate} />
         </div>
-
       </div>
     </div>
   );

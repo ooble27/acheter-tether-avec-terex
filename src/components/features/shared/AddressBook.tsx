@@ -177,13 +177,13 @@ export function AddressBook({
             onClick={() => { setMode('new'); onChange(''); }}
             style={{
               alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: '6px',
-              padding: '6px 10px', borderRadius: '8px',
-              background: 'transparent', border: 'none',
-              color: 'rgba(255,255,255,0.65)', fontSize: '12px', fontWeight: 500,
+              padding: '8px 12px', borderRadius: '10px',
+              border: `1px dashed ${CARD_BORDER}`, background: 'transparent',
+              color: 'rgba(255,255,255,0.75)', fontSize: '13px', fontWeight: 500,
               cursor: 'pointer', outline: 'none', WebkitTapHighlightColor: 'transparent',
             }}
           >
-            <Plus size={13} /> Nouvelle adresse
+            <Plus size={14} /> Nouvelle adresse
           </button>
         </>
       )}
