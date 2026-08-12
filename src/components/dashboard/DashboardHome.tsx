@@ -179,15 +179,14 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
     );
   }
 
-  // ── Desktop — copie fidèle du Dashboard Ooble (src/pages/app/Dashboard.tsx)
-  // Header greeting + grid 2 col dans le main : rate card avec mini-chart
-  // à gauche | actions + réseaux à droite. La sidebar de droite garde
-  // l'activité récente (comme sur Terex, à la demande de l'utilisateur).
+  // ── Desktop — copie fidèle du Dashboard Ooble ────────────────────────────
+  // Layout exact : grid 2 col (rate card avec chart | actions + networks)
+  // pleine largeur, puis activité récente EN DESSOUS pleine largeur.
   const history = useMemo(() => synthHistory(terexRateCfa ?? 0), [terexRateCfa]);
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 8rem)', padding: '32px 32px 120px', maxWidth: '1200px', margin: '0 auto' }}>
-      {/* Header greeting — style Ooble : petit chapeau + gros prénom */}
+    <div style={{ minHeight: 'calc(100vh - 8rem)', padding: '32px 32px 120px', maxWidth: '1100px', margin: '0 auto' }}>
+      {/* Header greeting */}
       <div style={{ marginBottom: '20px' }}>
         <p style={{ color: '#6b7280', fontSize: '12px', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 500 }}>{getGreeting()}</p>
         <h1 style={{ color: '#fff', fontSize: '26px', fontWeight: 600, margin: 0, letterSpacing: '-0.4px', display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -196,65 +195,60 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
         </h1>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '28px', alignItems: 'start' }}>
-        {/* Left column — 2 sous-colonnes Ooble : Rate card | Actions + Networks */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-          {/* Rate card avec mini-chart */}
-          <section style={{ display: 'flex', flexDirection: 'column', background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '20px' }}>
-            <span style={{ color: '#6b7280', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Taux du jour</span>
-            <div style={{ marginTop: '16px', display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-              <span style={{ color: '#fff', fontSize: '34px', fontWeight: 300, lineHeight: 1, letterSpacing: '-1px' }}>{rateDisplay}</span>
-              <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: '15px', fontWeight: 500 }}>CFA</span>
-            </div>
-            <MiniRateChart
-              data={history}
-              className="mini-rate-chart"
-              height={96}
-            />
-            <style>{`.mini-rate-chart { color: rgba(255,255,255,0.55); flex: 1; min-height: 96px; margin-top: 16px; }`}</style>
-          </section>
+      {/* Row 1 : Rate card + (Actions + Networks) — grid 2 cols pleine largeur */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+        {/* Rate card avec mini-chart — grande, colonne gauche */}
+        <section style={{ display: 'flex', flexDirection: 'column', background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '24px' }}>
+          <span style={{ color: '#6b7280', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Taux du jour</span>
+          <div style={{ marginTop: '16px', display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+            <span style={{ color: '#fff', fontSize: '38px', fontWeight: 300, lineHeight: 1, letterSpacing: '-1px' }}>{rateDisplay}</span>
+            <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: '15px', fontWeight: 500 }}>CFA</span>
+          </div>
+          <MiniRateChart
+            data={history}
+            className="mini-rate-chart"
+            height={110}
+          />
+          <style>{`.mini-rate-chart { color: rgba(255,255,255,0.55); flex: 1; min-height: 110px; margin-top: 20px; }`}</style>
+        </section>
 
-          {/* Actions + Réseaux (2 boutons puis pastilles réseaux) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              {quickActions.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => onNavigate?.(id)}
-                  style={{ background: CARD, borderRadius: '16px', border: `1px solid ${BORDER}`, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', transition: 'background 0.15s', outline: 'none', textAlign: 'left' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = '#252525'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = CARD; }}
-                >
-                  <span style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Icon size={20} color={ICON_COLOR} strokeWidth={1.6} />
-                  </span>
-                  <span style={{ color: '#fff', fontSize: '15px', fontWeight: 500 }}>{label}</span>
-                </button>
+        {/* Actions + Réseaux — colonne droite */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            {quickActions.map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                onClick={() => onNavigate?.(id)}
+                style={{ background: CARD, borderRadius: '16px', border: `1px solid ${BORDER}`, padding: '18px 22px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', transition: 'background 0.15s', outline: 'none', textAlign: 'left' }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#252525'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = CARD; }}
+              >
+                <span style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon size={20} color={ICON_COLOR} strokeWidth={1.6} />
+                </span>
+                <span style={{ color: '#fff', fontSize: '15px', fontWeight: 500 }}>{label}</span>
+              </button>
+            ))}
+          </div>
+
+          <div>
+            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', margin: '0 0 10px' }}>
+              Recevez sur {HOME_NETWORKS.length} réseaux
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              {HOME_NETWORKS.map(n => (
+                <div key={n.id} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 14px 8px 8px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.10)', background: CARD }}>
+                  <img src={NETWORK_LOGOS[n.id]} alt="" style={{ width: '28px', height: '28px', borderRadius: '50%' }} />
+                  <span style={{ color: '#fff', fontSize: '14px', fontWeight: 400, whiteSpace: 'nowrap' }}>{n.name}</span>
+                </div>
               ))}
-            </div>
-
-            <div>
-              <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', margin: '0 0 10px' }}>
-                Recevez sur {HOME_NETWORKS.length} réseaux
-              </p>
-              {/* Scroll horizontal des pastilles pour rester compact dans la sous-colonne */}
-              <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px', scrollbarWidth: 'none' }}>
-                {HOME_NETWORKS.map(n => (
-                  <div key={n.id} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '8px 14px 8px 8px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.10)', background: CARD, flexShrink: 0 }}>
-                    <img src={NETWORK_LOGOS[n.id]} alt="" style={{ width: '28px', height: '28px', borderRadius: '50%' }} />
-                    <span style={{ color: '#fff', fontSize: '14px', fontWeight: 400, whiteSpace: 'nowrap' }}>{n.name}</span>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         </div>
-
-        {/* Right sidebar — Activité récente (sticky) */}
-        <div style={{ position: 'sticky', top: '24px' }}>
-          <RecentTransactions onNavigate={onNavigate} />
-        </div>
       </div>
+
+      {/* Row 2 : Activité récente — pleine largeur en dessous, comme Ooble */}
+      <RecentTransactions onNavigate={onNavigate} />
     </div>
   );
 }
