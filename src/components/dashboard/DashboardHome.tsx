@@ -1,4 +1,4 @@
-import { Coins, HandCoins, Shield, Clock, HeadphonesIcon } from 'lucide-react';
+import { Coins, HandCoins } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
 import { useTerexRates } from '@/hooks/useTerexRates';
@@ -178,56 +178,53 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
     );
   }
 
-  // ── Desktop ──────────────────────────────────────────────────────────────
-  const trustPoints = [
-    { icon: Clock,          title: '~3 minutes',  sub: 'Traitement moyen' },
-    { icon: Shield,         title: 'KYC vérifié', sub: 'Compte sécurisé' },
-    { icon: HeadphonesIcon, title: 'Support 24/7', sub: 'Équipe humaine' },
-  ];
-
+  // ── Desktop — version compacte + zoom global ─────────────────────────────
+  // Même layout que la version précédente compacte : rate card + actions/
+  // réseaux en haut, activité récente en bas à gauche. Tout est juste un
+  // peu plus grand (proportionnel) pour combler l'espace vide.
   return (
-    <div style={{ minHeight: 'calc(100vh - 8rem)', padding: '32px 32px 120px', maxWidth: '1000px', margin: '0 auto' }}>
+    <div style={{ minHeight: 'calc(100vh - 8rem)', padding: '40px 40px 120px', maxWidth: '1000px', margin: '0 auto' }}>
       {/* Header greeting */}
-      <div style={{ marginBottom: '20px' }}>
-        <p style={{ color: '#6b7280', fontSize: '12px', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 500 }}>{getGreeting()}</p>
-        <h1 style={{ color: '#fff', fontSize: '26px', fontWeight: 600, margin: 0, letterSpacing: '-0.4px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <div style={{ marginBottom: '26px' }}>
+        <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 500 }}>{getGreeting()}</p>
+        <h1 style={{ color: '#fff', fontSize: '30px', fontWeight: 600, margin: 0, letterSpacing: '-0.4px', display: 'flex', alignItems: 'center', gap: '12px' }}>
           {firstName}
           <PersonWaving />
         </h1>
       </div>
 
-      {/* Row 1 : Rate card + (Actions + Networks + Trust) */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+      {/* Row 1 : Rate card + (Actions + Networks) — grid 2 cols */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
         {/* Rate card — taux + logo USDT */}
-        <section style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '22px' }}>
+        <section style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '18px', padding: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
             <div style={{ minWidth: 0 }}>
-              <span style={{ display: 'block', color: '#6b7280', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em' }}>Taux du jour</span>
-              <div style={{ marginTop: '14px', display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                <span style={{ color: '#fff', fontSize: '34px', fontWeight: 300, lineHeight: 1, letterSpacing: '-0.8px' }}>{rateDisplay}</span>
-                <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: '14px', fontWeight: 500 }}>CFA</span>
+              <span style={{ display: 'block', color: '#6b7280', fontSize: '12px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em' }}>Taux du jour</span>
+              <div style={{ marginTop: '16px', display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                <span style={{ color: '#fff', fontSize: '38px', fontWeight: 300, lineHeight: 1, letterSpacing: '-1px' }}>{rateDisplay}</span>
+                <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: '16px', fontWeight: 500 }}>CFA</span>
               </div>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '11px', margin: '6px 0 0' }}>pour 1 USDT · Terex</p>
+              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px', margin: '8px 0 0' }}>pour 1 USDT · Terex</p>
             </div>
-            <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style={{ width: '40px', height: '40px', opacity: 0.9, flexShrink: 0 }} />
+            <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style={{ width: '44px', height: '44px', opacity: 0.9, flexShrink: 0 }} />
           </div>
         </section>
 
-        {/* Actions + Réseaux + Trust — colonne droite */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+        {/* Actions + Réseaux */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             {quickActions.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
                 onClick={() => onNavigate?.(id)}
-                style={{ background: CARD, borderRadius: '14px', border: `1px solid ${BORDER}`, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', transition: 'background 0.15s', outline: 'none', textAlign: 'left' }}
+                style={{ background: CARD, borderRadius: '16px', border: `1px solid ${BORDER}`, padding: '17px 20px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', transition: 'background 0.15s', outline: 'none', textAlign: 'left' }}
                 onMouseEnter={e => { e.currentTarget.style.background = '#252525'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = CARD; }}
               >
-                <span style={{ width: '36px', height: '36px', borderRadius: '10px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon size={18} color={ICON_COLOR} strokeWidth={1.6} />
+                <span style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon size={20} color={ICON_COLOR} strokeWidth={1.6} />
                 </span>
-                <span style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>{label}</span>
+                <span style={{ color: '#fff', fontSize: '15px', fontWeight: 500 }}>{label}</span>
               </button>
             ))}
           </div>
@@ -245,29 +242,11 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
               ))}
             </div>
           </div>
-
-          {/* Nouveau bloc : garanties Terex (sous les pastilles) */}
-          <div>
-            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.14em', margin: '0 0 10px' }}>
-              Pourquoi Terex
-            </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
-              {trustPoints.map(({ icon: Icon, title, sub }) => (
-                <div key={title} style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '12px', padding: '12px' }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', borderRadius: '8px', background: ICON_BG, marginBottom: '8px' }}>
-                    <Icon size={14} color={ICON_COLOR} strokeWidth={1.7} />
-                  </span>
-                  <p style={{ color: '#fff', fontSize: '12px', fontWeight: 600, margin: '0 0 1px' }}>{title}</p>
-                  <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '10px', margin: 0 }}>{sub}</p>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
 
       {/* Row 2 : Activité récente à gauche, même largeur qu'une carte */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
         <RecentTransactions onNavigate={onNavigate} />
       </div>
     </div>
