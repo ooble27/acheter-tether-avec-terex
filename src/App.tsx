@@ -7,6 +7,7 @@ import {
 import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
 import AuthCallback from "./pages/AuthCallback";
+import UpdatePasswordPage from "./pages/UpdatePasswordPage";
 import DashboardPage from "./pages/DashboardPage";
 import NotFound from "./pages/NotFound";
 import AboutPage from "./pages/AboutPage";
@@ -67,6 +68,7 @@ function App() {
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
+                <Route path="/auth/update-password" element={<UpdatePasswordPage />} />
                 <Route path="/blockchain" element={<BlockchainPage />} />
                 <Route path="/marketing" element={<MarketingPage />} />
                 <Route path="/about" element={<AboutPage />} />

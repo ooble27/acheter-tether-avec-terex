@@ -16,6 +16,9 @@ export function LoginForm() {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [mode, setMode] = useState<'default' | 'forgot'>('default');
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetSent, setResetSent] = useState(false);
 
   const { signUp } = useAuth();
   const { toast } = useToast();
@@ -44,6 +47,31 @@ export function LoginForm() {
         toast({ title: "Trop de tentatives", description: "Veuillez attendre quelques minutes.", variant: "destructive" });
       } else {
         toast({ title: "Erreur de connexion", description: "Impossible de se connecter. Vérifiez vos identifiants.", variant: "destructive" });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${window.location.origin}/auth/update-password`,
+      });
+      if (error) throw error;
+      setResetSent(true);
+      toast({
+        title: "Email envoyé",
+        description: "Consultez votre boîte de réception pour réinitialiser votre mot de passe.",
+      });
+    } catch (error: any) {
+      const msg = error?.message || '';
+      if (msg.includes('For security purposes') || msg.includes('rate limit')) {
+        toast({ title: "Trop de tentatives", description: "Veuillez attendre quelques minutes avant de réessayer.", variant: "destructive" });
+      } else {
+        toast({ title: "Erreur", description: "Impossible d'envoyer l'email de réinitialisation. Vérifiez votre adresse.", variant: "destructive" });
       }
     } finally {
       setIsLoading(false);
@@ -113,7 +141,7 @@ export function LoginForm() {
               {(['login', 'register'] as const).map(tab => (
                 <button
                   key={tab}
-                  onClick={() => setActiveTab(tab)}
+                  onClick={() => { setActiveTab(tab); setMode('default'); setResetSent(false); }}
                   className="flex-1 py-2 text-sm font-medium rounded-md transition-all duration-200"
                   style={{
                     background: activeTab === tab ? '#ffffff' : 'transparent',
@@ -125,8 +153,77 @@ export function LoginForm() {
               ))}
             </div>
 
+            {/* ── MOT DE PASSE OUBLIÉ ── */}
+            {activeTab === 'login' && mode === 'forgot' && (
+              <form onSubmit={handleForgotPassword} className="space-y-5">
+                <div>
+                  <h1 className="text-2xl font-semibold text-white mb-1">Mot de passe oublié</h1>
+                  <p className="text-sm text-gray-500">
+                    Entrez l'adresse email de votre compte, nous vous enverrons un lien pour définir un nouveau mot de passe.
+                  </p>
+                </div>
+
+                {resetSent ? (
+                  <div
+                    className="rounded-md p-4 text-sm"
+                    style={{
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(255,255,255,0.10)',
+                      color: 'rgba(255,255,255,0.85)',
+                    }}
+                  >
+                    <p className="mb-2 font-medium">Email envoyé à {resetEmail}</p>
+                    <p className="text-xs text-gray-400 leading-relaxed">
+                      Cliquez sur le lien reçu pour créer un nouveau mot de passe. Le lien expire après 1 heure.
+                      Si vous ne recevez rien, vérifiez vos spams.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4 pt-2">
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-medium text-gray-400">Adresse email</Label>
+                      <Input
+                        type="email"
+                        placeholder="votre@email.com"
+                        value={resetEmail}
+                        onChange={e => setResetEmail(e.target.value)}
+                        className={inputClass}
+                        required
+                        disabled={isLoading}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {!resetSent && (
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full h-10 font-medium rounded-md text-sm transition-all"
+                    style={{ background: '#ffffff', color: '#141414', border: 'none' }}
+                  >
+                    {isLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Envoi…</> : 'Envoyer le lien'}
+                  </Button>
+                )}
+
+                <p className="text-center text-xs text-gray-500">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMode('default');
+                      setResetSent(false);
+                    }}
+                    className="underline"
+                    style={{ color: '#fff' }}
+                  >
+                    Retour à la connexion
+                  </button>
+                </p>
+              </form>
+            )}
+
             {/* ── CONNEXION ── */}
-            {activeTab === 'login' && (
+            {activeTab === 'login' && mode === 'default' && (
               <form onSubmit={handlePasswordLogin} className="space-y-5">
                 <div>
                   <h1 className="text-2xl font-semibold text-white mb-1">Connexion</h1>
@@ -148,7 +245,22 @@ export function LoginForm() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label className="text-xs font-medium text-gray-400">Mot de passe</Label>
+                    <div className="flex items-center justify-between">
+                      <Label className="text-xs font-medium text-gray-400">Mot de passe</Label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setResetEmail(email);
+                          setResetSent(false);
+                          setMode('forgot');
+                        }}
+                        className="text-xs underline"
+                        style={{ color: 'rgba(255,255,255,0.7)' }}
+                        disabled={isLoading}
+                      >
+                        Mot de passe oublié ?
+                      </button>
+                    </div>
                     <div className="relative">
                       <Input
                         type={showPassword ? 'text' : 'password'}

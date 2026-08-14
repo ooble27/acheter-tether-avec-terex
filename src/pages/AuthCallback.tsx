@@ -125,6 +125,13 @@ const AuthCallback = () => {
 
         console.log('AuthCallback: Données de session:', data);
 
+        // Si c'est un lien de récupération de mot de passe
+        if (type === 'recovery') {
+          console.log('AuthCallback: Lien de récupération détecté, redirection vers /auth/update-password');
+          navigate('/auth/update-password');
+          return;
+        }
+
         // Si c'est une confirmation d'email (première inscription)
         if (type === 'signup' && data.session) {
           console.log('AuthCallback: Email confirmé lors de l\'inscription');
