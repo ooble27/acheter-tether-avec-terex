@@ -15,7 +15,7 @@ import {
   Mail, Send, Users, User, X, Loader2, Check, AlertTriangle,
   Sparkles, Bookmark, History, Search, Eye, ArrowLeft,
   UserCheck, ShieldAlert, HandCoins, HelpCircle, MessageSquare,
-  Wallet, Clock, Wrench, Trophy, Gift,
+  Wallet, Clock, Wrench, Trophy, Gift, Wand2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -294,6 +294,11 @@ export function MailboxAdmin() {
   const [pickedSnippetId, setPickedSnippetId] = useState<string | null>(null);
   const [pendingSnippet, setPendingSnippet] = useState<Snippet | null>(null);
 
+  // Assistant IA
+  const [aiOpen, setAiOpen] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [aiBusy, setAiBusy] = useState(false);
+
   const [sent, setSent] = useState<SentMail[]>([]);
 
   // Charger l'annuaire clients
@@ -352,7 +357,12 @@ export function MailboxAdmin() {
       .join('');
 
   const sendAll = async () => {
-    if (!isReady || busy) return;
+    if (busy) return;
+    // Validation explicite pour feedback clair (au lieu du bouton silencieusement disabled)
+    if (recipients.length === 0) { toast.error('Ajoutez au moins un destinataire'); return; }
+    if (!subject.trim()) { toast.error('Le sujet est vide'); return; }
+    if (!body.trim()) { toast.error('Le message est vide'); return; }
+
     setBusy(true);
     let ok = 0, ko = 0;
     let firstErr: string | undefined;
@@ -400,13 +410,42 @@ export function MailboxAdmin() {
     }
   };
 
+  // ── Assistant IA : demande un draft à Claude ────────────────────────────
+  const runAiDraft = async () => {
+    const intention = aiPrompt.trim();
+    if (!intention || aiBusy) return;
+    setAiBusy(true);
+    try {
+      // Contexte client si un vrai destinataire est sélectionné
+      const target = recipients.find(r => r.id) || recipients[0];
+      const { data, error } = await supabase.functions.invoke('ai-draft-mail', {
+        body: {
+          intention,
+          clientName: target?.firstName || undefined,
+          clientEmail: target?.email || undefined,
+        },
+      });
+      if (error) throw new Error(error.message);
+      if (!data?.success) throw new Error(data?.error || 'Échec du draft IA');
+      setSubject(data.subject);
+      setBody(data.body);
+      setAiPrompt('');
+      setAiOpen(false);
+      toast.success(`Draft IA généré (${data.tokens.in} + ${data.tokens.out} tokens)`);
+    } catch (e: any) {
+      toast.error(e?.message || 'Erreur lors du draft IA');
+    } finally {
+      setAiBusy(false);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-5">
       <style>{drillStyles}</style>
       <PageHeader title="Messagerie" sub="Écrivez librement à un client ou à plusieurs" />
 
-      {/* Sous-tabs */}
-      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+      {/* Sous-tabs — même style que la nav du haut (rounded 12) */}
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         {[
           { id: 'compose', label: 'Composer', Icon: Mail },
           { id: 'sent',    label: `Envoyés${sent.length ? ` (${sent.length})` : ''}`, Icon: History },
@@ -419,14 +458,15 @@ export function MailboxAdmin() {
               onClick={() => setTab(id as SubTab)}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
-                padding: '9px 16px', borderRadius: 999,
-                background: sel ? ACCENT_ROW : 'transparent',
-                border: `1px solid ${sel ? ACCENT_BORDER : BORDER}`,
-                color: sel ? '#fff' : '#9ca3af', fontSize: 13, fontWeight: 500,
+                padding: '10px 16px', borderRadius: 12,
+                background: sel ? '#ffffff' : CARD,
+                border: `1px solid ${sel ? '#ffffff' : BORDER}`,
+                color: sel ? '#141414' : '#9ca3af',
+                fontSize: 13, fontWeight: 600,
                 cursor: 'pointer', outline: 'none', transition: 'all 0.15s',
               }}
             >
-              <Icon size={14} /> {label}
+              <Icon size={14} strokeWidth={2} /> {label}
             </button>
           );
         })}
@@ -466,7 +506,7 @@ export function MailboxAdmin() {
               </FieldRow>
             </div>
 
-            {/* Astuce variables */}
+            {/* Toolbar : variables + Assistant IA */}
             <div style={{ padding: '10px 20px', borderBottom: `1px solid ${BORDER}`, background: 'rgba(255,255,255,0.015)',
               display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
               <Sparkles size={13} color="#9ca3af" />
@@ -479,10 +519,65 @@ export function MailboxAdmin() {
                   {`{{${v}}}`}
                 </button>
               ))}
-              <span style={{ fontSize: 11, color: '#6b7280', marginLeft: 'auto' }}>
-                Substituées au moment de l'envoi (une par destinataire).
-              </span>
+              <button
+                type="button"
+                onClick={() => setAiOpen(o => !o)}
+                style={{
+                  marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '5px 12px', borderRadius: 8,
+                  background: aiOpen ? ACCENT_ROW : INPUT_BG,
+                  border: `1px solid ${aiOpen ? ACCENT_BORDER : BORDER}`,
+                  color: '#fff', fontSize: 11.5, fontWeight: 600, cursor: 'pointer', outline: 'none',
+                }}>
+                <Wand2 size={12} strokeWidth={2} /> Suggérer avec l'IA
+              </button>
             </div>
+
+            {/* Bandeau IA plié/déplié */}
+            {aiOpen && (
+              <div style={{ padding: '12px 20px', borderBottom: `1px solid ${BORDER}`,
+                background: 'rgba(255,255,255,0.02)' }}>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                  <Wand2 size={14} color="#9ca3af" style={{ marginTop: 8, flexShrink: 0 }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <textarea
+                      value={aiPrompt}
+                      onChange={e => setAiPrompt(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); void runAiDraft(); }
+                      }}
+                      placeholder="Décrivez en une phrase ce que vous voulez dire. Ex : « réponds gentiment qu'on a bien reçu son KYC mais qu'il manque la preuve d'adresse »"
+                      rows={2}
+                      style={{ width: '100%', boxSizing: 'border-box', border: 'none', outline: 'none',
+                        background: 'transparent', color: '#fff', fontSize: 14, lineHeight: 1.5,
+                        resize: 'none', padding: '6px 0',
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}
+                    />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 6, gap: 10 }}>
+                      <span style={{ fontSize: 10.5, color: '#6b7280' }}>
+                        {recipients[0]
+                          ? `Contexte : ${recipients[0].fullName || recipients[0].email}`
+                          : 'Aucun contexte — sélectionnez un destinataire pour personnaliser.'}
+                      </span>
+                      <button type="button" onClick={runAiDraft}
+                        disabled={!aiPrompt.trim() || aiBusy}
+                        style={{
+                          display: 'inline-flex', alignItems: 'center', gap: 6,
+                          padding: '6px 14px', borderRadius: 8, border: 'none',
+                          background: aiPrompt.trim() && !aiBusy ? '#fff' : '#3d3d3d',
+                          color: aiPrompt.trim() && !aiBusy ? '#141414' : '#6b7280',
+                          fontSize: 12, fontWeight: 600,
+                          cursor: aiPrompt.trim() && !aiBusy ? 'pointer' : 'not-allowed', outline: 'none',
+                        }}>
+                        {aiBusy
+                          ? <><Loader2 size={12} className="animate-spin" /> Génération…</>
+                          : <><Wand2 size={12} /> Générer le draft</>}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Body */}
             <textarea
@@ -514,12 +609,13 @@ export function MailboxAdmin() {
                   </span>
                 )}
               </div>
-              <button onClick={sendAll} disabled={!isReady || busy}
+              <button onClick={sendAll} disabled={busy}
                 style={{ height: 38, padding: '0 20px', borderRadius: 10, border: 'none',
-                  background: isReady && !busy ? '#fff' : '#3d3d3d',
-                  color: isReady && !busy ? '#141414' : '#6b7280',
+                  background: !busy ? '#fff' : '#3d3d3d',
+                  color: !busy ? '#141414' : '#6b7280',
                   fontSize: 13, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 7,
-                  cursor: isReady && !busy ? 'pointer' : 'not-allowed', transition: 'all 0.15s' }}>
+                  cursor: !busy ? 'pointer' : 'not-allowed', transition: 'all 0.15s', opacity: isReady ? 1 : 0.7 }}
+                title={isReady ? 'Envoyer' : 'Complétez destinataire, sujet et message'}>
                 {busy
                   ? <><Loader2 size={14} className="animate-spin" /> Envoi…</>
                   : <><Send size={14} /> {recipients.length > 1 ? `Envoyer à ${recipients.length}` : 'Envoyer'}</>}
