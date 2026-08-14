@@ -301,24 +301,22 @@ export function MailboxAdmin() {
 
   const [sent, setSent] = useState<SentMail[]>([]);
 
-  // Charger l'annuaire clients
+  // Charger l'annuaire clients depuis la nouvelle edge function
+  // (auth.admin.listUsers accessible seulement côté serveur).
   useEffect(() => {
     (async () => {
       setClientsLoading(true);
       try {
-        const { data } = await (supabase as any)
-          .from('client_infos')
-          .select('id, user_id, first_name, last_name, email')
-          .not('email', 'is', null)
-          .limit(500);
-        const list: ClientDirEntry[] = (data || []).map((c: any) => {
-          const fn = c.first_name || '';
-          const ln = c.last_name || '';
-          const full = [fn, ln].filter(Boolean).join(' ') || c.email;
-          return { id: c.user_id || c.id, email: c.email, firstName: fn, fullName: full };
+        const { data, error } = await supabase.functions.invoke('list-clients-directory', {
+          body: {},
         });
-        setClients(list);
-      } catch { /* silencieux */ }
+        if (error) throw new Error(error.message);
+        if (!data?.success) throw new Error(data?.error || 'Chargement échoué');
+        setClients((data.clients as ClientDirEntry[]) || []);
+      } catch (e: any) {
+        console.error('list-clients-directory error:', e);
+        toast.error('Impossible de charger l\'annuaire clients');
+      }
       setClientsLoading(false);
     })();
     setSent(loadSent());

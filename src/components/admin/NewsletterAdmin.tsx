@@ -446,8 +446,8 @@ interface GalleryProps {
 
 function GalleryView({ category, onCategoryChange, templates, selectedId, onPickTemplate, onStartBlank }: GalleryProps) {
   return (
-    <div className="flex flex-col gap-4">
-      {/* Header + filtres catégories + CTA vierge — sur une même rangée */}
+    <div className="flex flex-col gap-5">
+      {/* Header + filtres catégories + CTA vierge */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {CATEGORIES.map(c => (
@@ -481,44 +481,92 @@ function GalleryView({ category, onCategoryChange, templates, selectedId, onPick
         </button>
       </div>
 
-      {/* Grille modèles — directement sur la page, pas dans un card wrapper */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-        {templates.map(t => {
-          const Icon = t.icon;
-          const sel = selectedId === t.id;
-          return (
-            <button
-              key={t.id}
-              onClick={() => onPickTemplate(t)}
-              className="text-left transition-all"
-              style={{
-                padding: '20px', borderRadius: '16px',
-                background: sel ? '#252525' : CARD,
-                border: `1px solid ${sel ? 'rgba(255,255,255,0.20)' : BORDER}`,
-                display: 'flex', flexDirection: 'column', gap: '14px',
-                outline: 'none', cursor: 'pointer',
-                minHeight: 160,
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background = '#252525'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = sel ? '#252525' : CARD; }}
-            >
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                width: '44px', height: '44px', borderRadius: '12px',
-                background: 'rgba(255,255,255,0.06)',
-                color: '#fff',
-              }}>
-                <Icon className="w-5 h-5" strokeWidth={1.7} />
-              </div>
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <h4 className="text-white font-semibold text-[15px] mb-1.5">{t.name}</h4>
-                <p className="text-[#6b7280] text-[12px] leading-relaxed line-clamp-3">{t.description}</p>
-              </div>
-            </button>
-          );
-        })}
+      {/* Grille — chaque carte = mini aperçu de l'email (comme un template picker Figma) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {templates.map(t => (
+          <TemplateCard key={t.id} t={t} selected={selectedId === t.id} onPick={() => onPickTemplate(t)} />
+        ))}
       </div>
     </div>
+  );
+}
+
+/**
+ * Carte modèle avec MINI APERÇU de l'email intégré (fond blanc, comme un
+ * template picker Figma/Notion). Plus visuel qu'une simple icône.
+ */
+function TemplateCard({ t, selected, onPick }: { t: CampaignTemplate; selected: boolean; onPick: () => void }) {
+  const Icon = t.icon;
+  return (
+    <button
+      onClick={onPick}
+      className="text-left transition-all group"
+      style={{
+        padding: 0, borderRadius: 18, overflow: 'hidden',
+        background: CARD,
+        border: `1px solid ${selected ? 'rgba(255,255,255,0.35)' : BORDER}`,
+        display: 'flex', flexDirection: 'column',
+        outline: 'none', cursor: 'pointer',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)'; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = selected ? 'rgba(255,255,255,0.35)' : BORDER; }}
+    >
+      {/* Mini aperçu email (fond blanc/gris comme un vrai mail) */}
+      <div style={{
+        background: '#f6f6f4', padding: '16px 18px 14px',
+        borderBottom: `1px solid ${BORDER}`, minHeight: 168,
+        display: 'flex', flexDirection: 'column', gap: 10,
+      }}>
+        <div style={{ fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#111', fontWeight: 500 }}>
+          Terex
+        </div>
+        <div style={{ height: 1, background: '#ececea' }} />
+        <div style={{
+          fontSize: 10.5, color: '#8a8a86', textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 500,
+        }}>
+          {(t.category === 'promo' ? 'Promo' : t.category === 'product' ? 'Produit' : t.category === 'education' ? 'Éducation' : 'Cycle client')}
+        </div>
+        <div style={{ fontSize: 15, color: '#111', fontWeight: 600, lineHeight: 1.3, letterSpacing: '-0.01em' }}>
+          {t.heroTitle}
+        </div>
+        <div style={{ fontSize: 11, color: '#4a4a47', lineHeight: 1.55,
+          display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          {t.content.split('\n')[0]}
+        </div>
+        {t.highlightValue && (
+          <div style={{ background: '#fff', border: `1px solid #ececea`, borderRadius: 8, padding: '8px 10px', marginTop: 'auto' }}>
+            <div style={{ fontSize: 9, color: '#8a8a86', textTransform: 'uppercase', letterSpacing: '0.14em' }}>
+              {t.highlightLabel}
+            </div>
+            <div style={{ fontSize: 14, color: '#111', fontWeight: 600, marginTop: 2 }}>
+              {t.highlightValue}
+            </div>
+          </div>
+        )}
+        <div style={{ marginTop: t.highlightValue ? 0 : 'auto', display: 'flex' }}>
+          <div style={{ background: '#111', color: '#fff', fontSize: 10.5,
+            padding: '6px 12px', borderRadius: 8, fontWeight: 500 }}>
+            {t.ctaText}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer : nom + description */}
+      <div style={{ padding: '14px 18px', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          width: 34, height: 34, borderRadius: 10, background: 'rgba(255,255,255,0.06)',
+          color: '#fff', flexShrink: 0,
+        }}>
+          <Icon size={16} strokeWidth={1.7} />
+        </div>
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div className="text-white font-semibold text-[13.5px] truncate">{t.name}</div>
+          <div className="text-[#6b7280] text-[11px] leading-snug truncate">{t.description}</div>
+        </div>
+        <ChevronRight size={14} color="#4b5563" style={{ flexShrink: 0 }} />
+      </div>
+    </button>
   );
 }
 
@@ -549,101 +597,63 @@ interface ComposerProps {
 function ComposerView(p: ComposerProps) {
   return (
     <div className="flex flex-col gap-4">
-      {/* Header — bouton retour + badge modèle + segment audience compacte */}
+      {/* Header — bouton retour + badge modèle + actions rapides */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
-        <button onClick={p.onBack}
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '10px 16px', borderRadius: 12,
-            background: CARD, border: `1px solid ${BORDER}`,
-            color: '#fff', fontSize: 13, fontWeight: 600,
-            cursor: 'pointer', outline: 'none',
-          }}
-        >
-          <ArrowLeft size={14} strokeWidth={2} /> Retour aux modèles
-        </button>
-        {p.selectedTpl && (
-          <span className="text-[#9ca3af] text-[12px]">
-            Basé sur <strong className="text-white">« {p.selectedTpl.name} »</strong>
-          </span>
-        )}
+        <div className="flex items-center gap-3 flex-wrap">
+          <button onClick={p.onBack}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '10px 16px', borderRadius: 12,
+              background: CARD, border: `1px solid ${BORDER}`,
+              color: '#fff', fontSize: 13, fontWeight: 600,
+              cursor: 'pointer', outline: 'none',
+            }}
+          >
+            <ArrowLeft size={14} strokeWidth={2} /> Retour
+          </button>
+          {p.selectedTpl && (
+            <span className="text-[#9ca3af] text-[12px]">
+              Basé sur <strong className="text-white">« {p.selectedTpl.name} »</strong>
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <Button onClick={p.onRefreshPreview} disabled={p.previewLoading}
+            size="sm" className="text-white hover:opacity-90"
+            style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 12 }}>
+            {p.previewLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Aperçu réel</>}
+          </Button>
+        </div>
       </div>
 
-      {/* Grid principale : composer left | preview right */}
-      <div className="grid grid-cols-1 xl:grid-cols-[1fr_520px] gap-5 items-start">
-        {/* ═══ Colonne gauche : composer en sections aérées ═══ */}
-        <div className="flex flex-col gap-4">
-          {/* SECTION 1 : Contenu principal (sujet + titre + message) */}
-          <section style={cardStyle}>
-            <SectionTitle icon={Mail} label="Contenu" />
-            <div className="flex flex-col gap-4 mt-4">
-              <StackedField
-                label="Sujet"
-                helper="Ce que le client voit dans sa boîte de réception"
-                value={p.subject} onChange={p.setSubject}
-                placeholder="Ex : Le taux du jour est disponible"
-              />
-              <StackedField
-                label="Aperçu"
-                helper="Petit texte sous le sujet dans la liste des mails"
-                value={p.previewText} onChange={p.setPreviewText}
-                placeholder="Ex : Consultez le taux et lancez une transaction en 3 min."
-              />
-              <StackedField
-                label="Titre principal"
-                helper="Grand titre en tête de l'email"
-                value={p.heroTitle} onChange={p.setHeroTitle}
-                placeholder="Ex : Le taux du jour vous attend"
-              />
-              <div>
-                <div className="flex items-baseline justify-between mb-1.5">
-                  <label className="text-white text-[13px] font-semibold">Message</label>
-                  <span className="text-[#6b7280] text-[11px]">Un paragraphe par ligne vide</span>
-                </div>
-                <Textarea value={p.content} onChange={e => p.setContent(e.target.value)}
-                  placeholder={'Premier paragraphe…\n\nDeuxième paragraphe…'}
-                  className={`resize-none ${inputClass}`} style={{ ...inputStyle, padding: 14 }} rows={8} />
+      {/* WYSIWYG : l'aperçu email EST l'éditeur.
+          À gauche : rendu email fond clair, chaque bloc éditable au clic (contentEditable).
+          À droite : panneau de contrôle compact (audience + envoi + IA).
+          Aperçu réel (iframe rendue par l'edge function) toggle-able. */}
+      <div className="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-5 items-start">
+        {/* ═══ Canvas WYSIWYG à gauche ═══ */}
+        <div>
+          {/* Le canvas WYSIWYG est TOUJOURS visible. Le "Aperçu réel"
+              apparaît juste au-dessus quand il est chargé. */}
+          {p.previewHtml && (
+            <div style={{ ...cardStyle, marginBottom: 16 }}>
+              <div className="flex items-center justify-between mb-3">
+                <SectionTitle icon={Eye} label="Rendu final chez le client" />
               </div>
+              <iframe title="Aperçu email" srcDoc={p.previewHtml} sandbox=""
+                className="w-full rounded-xl"
+                style={{ height: 500, border: `1px solid ${BORDER}`, background: '#141414' }} />
             </div>
-          </section>
+          )}
+          <WysiwygCanvas p={p} />
+        </div>
 
-          {/* SECTION 2 : Bloc mis en avant (highlight) */}
-          <section style={cardStyle}>
-            <div className="flex items-start justify-between gap-3 mb-3">
-              <SectionTitle icon={Sparkles} label="Bloc mis en avant" optional />
-              <ToggleAuto value={p.autoRate} onChange={p.setAutoRate} />
-            </div>
-            {!p.autoRate ? (
-              <div className="grid grid-cols-3 gap-3">
-                <Input value={p.highlightLabel} onChange={e => p.setHighlightLabel(e.target.value)}
-                  placeholder="Libellé" className={inputClass} style={inputStyle} />
-                <Input value={p.highlightValue} onChange={e => p.setHighlightValue(e.target.value)}
-                  placeholder="Valeur" className={inputClass} style={inputStyle} />
-                <Input value={p.highlightSub} onChange={e => p.setHighlightSub(e.target.value)}
-                  placeholder="Sous-texte" className={inputClass} style={inputStyle} />
-              </div>
-            ) : (
-              <p className="text-[#9ca3af] text-[12px] flex items-center gap-2">
-                <CheckCircle2 size={13} /> Le taux USDT/CFA sera récupéré et affiché automatiquement à l'envoi.
-              </p>
-            )}
-          </section>
-
-          {/* SECTION 3 : Bouton d'action */}
-          <section style={cardStyle}>
-            <SectionTitle icon={ChevronRight} label="Bouton d'action" />
-            <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.5fr] gap-3 mt-4">
-              <Input value={p.ctaText} onChange={e => p.setCtaText(e.target.value)}
-                placeholder="Texte du bouton" className={inputClass} style={inputStyle} />
-              <Input value={p.ctaUrl} onChange={e => p.setCtaUrl(e.target.value)}
-                placeholder="URL de destination" className={inputClass} style={inputStyle} />
-            </div>
-          </section>
-
-          {/* SECTION 4 : Audience */}
+        {/* ═══ Panneau contrôle à droite (sticky) ═══ */}
+        <div className="flex flex-col gap-4" style={{ position: 'sticky', top: 16 }}>
+          {/* Audience */}
           <section style={cardStyle}>
             <SectionTitle icon={Users} label="Audience" />
-            <div className="grid grid-cols-2 gap-2 mt-4">
+            <div className="grid grid-cols-2 gap-2 mt-3">
               {SEGMENTS.map(({ id, label, desc, Icon }) => (
                 <button key={id} onClick={() => p.setSegment(id)}
                   className="p-3 rounded-xl text-left transition-all"
@@ -651,115 +661,238 @@ function ComposerView(p: ComposerProps) {
                     background: p.segment === id ? '#252525' : INPUT_BG,
                     border: `1px solid ${p.segment === id ? 'rgba(255,255,255,0.20)' : BORDER}`,
                   }}>
-                  <Icon className={`w-4 h-4 mb-2 ${p.segment === id ? 'text-white' : 'text-[#9ca3af]'}`} />
-                  <p className="text-white text-[13px] font-semibold">{label}</p>
-                  <p className="text-[#6b7280] text-[11px]">{desc}</p>
+                  <Icon className={`w-4 h-4 mb-1.5 ${p.segment === id ? 'text-white' : 'text-[#9ca3af]'}`} />
+                  <p className="text-white text-[12px] font-semibold">{label}</p>
+                  <p className="text-[#6b7280] text-[10.5px]">{desc}</p>
                 </button>
               ))}
             </div>
-            <div className="mt-3 flex items-center gap-2 text-[12.5px]" style={{ color: '#9ca3af' }}>
+            <div className="mt-3 flex items-center gap-2 text-[12px]" style={{ color: '#9ca3af' }}>
               {p.countLoading
                 ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Calcul…</>
                 : p.segmentCount !== null
-                  ? <><CheckCircle2 className="w-3.5 h-3.5" /> <span className="text-white font-semibold">{p.segmentCount}</span> destinataire(s) — désabonnés exclus</>
+                  ? <><CheckCircle2 className="w-3.5 h-3.5" /> <span className="text-white font-semibold">{p.segmentCount}</span> destinataire(s)</>
                   : <><AlertCircle className="w-3.5 h-3.5" /> Nombre indisponible</>}
             </div>
           </section>
 
-          {/* SECTION 5 : Actions d'envoi (sticky feel) */}
+          {/* Envoi */}
           <section style={{ ...cardStyle, background: '#181818' }}>
-            <div className="flex items-center gap-2 mb-3">
-              <Send size={14} className="text-[#9ca3af]" />
-              <h4 className="text-white font-semibold text-[13px]">Envoyer</h4>
-            </div>
-            <div className="flex flex-col gap-3">
-              <div className="flex gap-3">
+            <SectionTitle icon={Send} label="Envoyer" />
+            <div className="mt-3 flex flex-col gap-3">
+              <div className="flex gap-2">
                 <Input type="email" value={p.testEmail} onChange={e => p.setTestEmail(e.target.value)}
-                  placeholder="Email pour un test…" className={`flex-1 ${inputClass}`} style={inputStyle} />
+                  placeholder="Email de test…" className={`flex-1 ${inputClass}`}
+                  style={{ ...inputStyle, fontSize: 12 }} />
                 <Button onClick={p.onSendTest} disabled={p.isTesting || !p.testEmail || !p.isReady}
-                  className="text-white hover:opacity-90" style={{ background: '#2d2d2d', border: `1px solid ${BORDER}` }}>
-                  {p.isTesting ? <Loader2 className="w-4 h-4 animate-spin" /> : <><TestTube className="w-4 h-4 mr-2" /> Tester</>}
+                  className="text-white hover:opacity-90" size="sm"
+                  style={{ background: '#2d2d2d', border: `1px solid ${BORDER}` }}>
+                  {p.isTesting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <><TestTube className="w-3.5 h-3.5 mr-1" />Test</>}
                 </Button>
               </div>
               <Button onClick={p.onSendCampaign} disabled={p.isSending || !p.isReady}
                 className="w-full font-semibold hover:opacity-90"
-                style={{ background: '#fff', color: '#141414', height: 46, fontSize: 14 }}>
+                style={{ background: '#fff', color: '#141414', height: 44, fontSize: 13 }}>
                 {p.isSending
                   ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Envoi…</>
-                  : <><Send className="w-4 h-4 mr-2" /> Envoyer à « {segmentLabel(p.segment)} »{p.segmentCount !== null ? ` · ${p.segmentCount}` : ''}</>}
+                  : <><Send className="w-4 h-4 mr-2" /> Envoyer à {p.segmentCount ?? 0}</>}
               </Button>
+              <p className="text-[10.5px] text-[#6b7280] leading-relaxed">
+                Clic sur « Aperçu réel » en haut pour voir le rendu exact avant d'envoyer.
+              </p>
             </div>
           </section>
         </div>
-
-        {/* ═══ Colonne droite : Aperçu sticky ═══ */}
-        <section style={{ ...cardStyle, position: 'sticky', top: 16 }}>
-          <div className="flex items-center justify-between mb-4">
-            <SectionTitle icon={Eye} label="Aperçu réel" />
-            <Button onClick={p.onRefreshPreview} size="sm" disabled={p.previewLoading}
-              className="text-white hover:opacity-90" style={{ background: '#2d2d2d', border: `1px solid ${BORDER}` }}>
-              {p.previewLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><RefreshCw className="w-4 h-4 mr-2" /> Actualiser</>}
-            </Button>
-          </div>
-          {p.previewHtml ? (
-            <iframe title="Aperçu email" srcDoc={p.previewHtml} sandbox=""
-              className="w-full rounded-xl" style={{ height: 720, border: `1px solid ${BORDER}`, background: '#141414' }} />
-          ) : (
-            <div className="flex flex-col items-center justify-center text-center rounded-xl"
-              style={{ height: 400, border: `1px dashed ${BORDER}` }}>
-              <Eye className="w-6 h-6 mb-2" style={{ color: '#4b5563' }} />
-              <p className="text-[#6b7280] text-[13px]">Cliquez sur « Actualiser » pour voir le rendu<br />exact chez le client.</p>
-            </div>
-          )}
-        </section>
       </div>
     </div>
   );
 }
 
-// ── Petits composants du composer ────────────────────────────────────────
+/**
+ * Canvas WYSIWYG — le mail est rendu en fond clair (comme il apparaîtra
+ * chez le client) et chaque bloc est éditable en place (contentEditable).
+ * Bien plus lisible qu'un formulaire de champs empilés.
+ */
+function WysiwygCanvas({ p }: { p: ComposerProps }) {
+  const paragraphs = p.content.split('\n').filter(Boolean);
+  return (
+    <div style={{
+      background: '#f6f6f4', borderRadius: 20, padding: 24,
+      border: `1px solid ${BORDER}`,
+    }}>
+      {/* Sujet + preview text — au-dessus de la carte mail, comme dans une boîte de réception */}
+      <div style={{ marginBottom: 16, paddingLeft: 4 }}>
+        <label className="block text-[10px] uppercase tracking-[0.12em] mb-1" style={{ color: '#8a8a86' }}>Sujet</label>
+        <input
+          value={p.subject} onChange={e => p.setSubject(e.target.value)}
+          placeholder="Sujet de l'email…"
+          style={{
+            width: '100%', border: 'none', outline: 'none', background: 'transparent',
+            color: '#111', fontSize: 15, fontWeight: 600, padding: '4px 0',
+          }}
+        />
+        <input
+          value={p.previewText} onChange={e => p.setPreviewText(e.target.value)}
+          placeholder="Petit texte d'aperçu affiché sous le sujet dans la boîte…"
+          style={{
+            width: '100%', border: 'none', outline: 'none', background: 'transparent',
+            color: '#6b6b68', fontSize: 12, padding: '2px 0 0',
+          }}
+        />
+      </div>
+
+      {/* Carte email — le vrai design */}
+      <div style={{
+        background: '#fff', borderRadius: 14,
+        boxShadow: '0 1px 0 rgba(0,0,0,0.02), 0 12px 32px -12px rgba(20,20,20,0.08)',
+        overflow: 'hidden', color: '#111',
+      }}>
+        {/* Header brand */}
+        <div style={{ padding: '22px 28px 12px' }}>
+          <span style={{
+            fontSize: 15, letterSpacing: '0.14em', textTransform: 'uppercase',
+            color: '#111', fontWeight: 500,
+          }}>Terex</span>
+        </div>
+
+        {/* Body */}
+        <div style={{ padding: '4px 28px 28px', fontSize: 15 }}>
+          {/* Hero title éditable */}
+          <textarea
+            value={p.heroTitle}
+            onChange={e => { p.setHeroTitle(e.target.value); autosize(e.target); }}
+            onFocus={e => autosize(e.target)}
+            placeholder="Grand titre de l'email…"
+            rows={1}
+            style={{
+              width: '100%', border: 'none', outline: 'none', background: 'transparent',
+              color: '#111', fontSize: 22, fontWeight: 500,
+              margin: '0 0 12px', letterSpacing: '-0.01em', lineHeight: 1.3,
+              resize: 'none', padding: 0, fontFamily: 'inherit',
+            }}
+          />
+
+          <p style={{ margin: '0 0 14px', fontSize: 15, fontWeight: 500, color: '#111' }}>
+            Bonjour {'{{prenom}}'},
+          </p>
+
+          {/* Body message éditable en textarea */}
+          <textarea
+            value={p.content}
+            onChange={e => { p.setContent(e.target.value); autosize(e.target, 100); }}
+            onFocus={e => autosize(e.target, 100)}
+            placeholder={'Rédigez votre message ici.\n\nUn paragraphe par ligne vide.'}
+            rows={5}
+            style={{
+              width: '100%', border: 'none', outline: 'none', background: 'transparent',
+              color: '#4a4a47', fontSize: 15, lineHeight: 1.6,
+              margin: '0 0 14px', resize: 'none', padding: 0, fontFamily: 'inherit',
+            }}
+          />
+
+          {/* Highlight block — mode auto-rate ou fields éditables */}
+          <div style={{
+            margin: '8px 0 20px', background: '#f6f6f4', borderRadius: 10,
+            padding: '22px 18px', textAlign: 'center', position: 'relative',
+          }}>
+            {/* Toggle auto-rate en coin */}
+            <button type="button" onClick={() => p.setAutoRate(!p.autoRate)}
+              style={{
+                position: 'absolute', top: 8, right: 8,
+                background: p.autoRate ? '#111' : '#fff',
+                color: p.autoRate ? '#fff' : '#111',
+                border: `1px solid ${p.autoRate ? '#111' : '#ececea'}`,
+                borderRadius: 6, padding: '3px 8px',
+                fontSize: 9.5, fontWeight: 600, cursor: 'pointer', outline: 'none',
+              }}>
+              {p.autoRate ? '● Taux auto ON' : '○ Taux auto'}
+            </button>
+
+            {p.autoRate ? (
+              <>
+                <p style={{ margin: '0 0 10px', fontSize: 11, fontWeight: 500,
+                  letterSpacing: '0.14em', textTransform: 'uppercase', color: '#8a8a86' }}>Taux du jour</p>
+                <p style={{ margin: 0, fontSize: 32, fontWeight: 500, letterSpacing: '-0.02em', color: '#111', lineHeight: 1 }}>
+                  585 CFA / USDT
+                </p>
+                <p style={{ margin: '10px 0 0', fontSize: 13, color: '#4a4a47' }}>Mis à jour en temps réel</p>
+              </>
+            ) : (
+              <>
+                <input value={p.highlightLabel} onChange={e => p.setHighlightLabel(e.target.value)}
+                  placeholder="LIBELLÉ (ex : TAUX DU JOUR)"
+                  style={{
+                    width: '100%', border: 'none', outline: 'none', background: 'transparent',
+                    textAlign: 'center', color: '#8a8a86', fontSize: 11, fontWeight: 500,
+                    letterSpacing: '0.14em', textTransform: 'uppercase', margin: '0 0 10px', padding: 0,
+                  }} />
+                <input value={p.highlightValue} onChange={e => p.setHighlightValue(e.target.value)}
+                  placeholder="Valeur (ex : 585 CFA)"
+                  style={{
+                    width: '100%', border: 'none', outline: 'none', background: 'transparent',
+                    textAlign: 'center', color: '#111', fontSize: 32, fontWeight: 500,
+                    letterSpacing: '-0.02em', lineHeight: 1, padding: 0,
+                  }} />
+                <input value={p.highlightSub} onChange={e => p.setHighlightSub(e.target.value)}
+                  placeholder="Sous-texte"
+                  style={{
+                    width: '100%', border: 'none', outline: 'none', background: 'transparent',
+                    textAlign: 'center', color: '#4a4a47', fontSize: 13,
+                    margin: '10px 0 0', padding: 0,
+                  }} />
+              </>
+            )}
+          </div>
+
+          {/* CTA button éditable */}
+          <div style={{ margin: '4px 0 8px', display: 'flex', gap: 12, alignItems: 'stretch' }}>
+            <input
+              value={p.ctaText} onChange={e => p.setCtaText(e.target.value)}
+              placeholder="Texte bouton"
+              style={{
+                background: '#111', color: '#fff', border: 'none', outline: 'none',
+                padding: '12px 22px', borderRadius: 8, fontSize: 14, fontWeight: 500,
+                width: 'auto', minWidth: 140, textAlign: 'center',
+              }}
+            />
+            <input
+              value={p.ctaUrl} onChange={e => p.setCtaUrl(e.target.value)}
+              placeholder="URL du bouton"
+              style={{
+                flex: 1, background: '#fff', color: '#4a4a47', border: '1px dashed #d0d0cc',
+                outline: 'none', padding: '12px 14px', borderRadius: 8,
+                fontSize: 12, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Footer visuel (informatif) */}
+        <div style={{ borderTop: '1px solid #ececea', padding: '16px 28px', color: '#4a4a47', fontSize: 12 }}>
+          <div style={{ fontSize: 13, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#111', fontWeight: 500 }}>Terex</div>
+          <div style={{ marginTop: 6 }}>terangaexchange@gmail.com · terangaexchange.com</div>
+        </div>
+      </div>
+
+      <p style={{ marginTop: 12, fontSize: 11, color: '#6b6b68', textAlign: 'center' }}>
+        Cliquez sur n'importe quel champ pour l'éditer. « Aperçu réel » en haut pour voir le rendu exact.
+      </p>
+    </div>
+  );
+}
+
+function autosize(el: HTMLTextAreaElement, minHeight = 30) {
+  el.style.height = 'auto';
+  el.style.height = Math.max(el.scrollHeight, minHeight) + 'px';
+}
 
 function SectionTitle({ icon: Icon, label, optional }: { icon: any; label: string; optional?: boolean }) {
   return (
     <div className="flex items-center gap-2">
       <Icon className="w-4 h-4 text-[#9ca3af]" />
-      <h3 className="text-white font-semibold text-[14px]">{label}</h3>
+      <h3 className="text-white font-semibold text-[13.5px]">{label}</h3>
       {optional && <span className="text-[#6b7280] text-[11px]">optionnel</span>}
     </div>
-  );
-}
-
-function StackedField({ label, helper, value, onChange, placeholder }: {
-  label: string; helper?: string; value: string; onChange: (v: string) => void; placeholder?: string;
-}) {
-  return (
-    <div>
-      <div className="flex items-baseline justify-between mb-1.5">
-        <label className="text-white text-[13px] font-semibold">{label}</label>
-        {helper && <span className="text-[#6b7280] text-[11px]">{helper}</span>}
-      </div>
-      <Input value={value} onChange={e => onChange(e.target.value)}
-        placeholder={placeholder} className={inputClass} style={inputStyle} />
-    </div>
-  );
-}
-
-function ToggleAuto({ value, onChange }: { value: boolean; onChange: (v: boolean) => void }) {
-  return (
-    <button type="button" onClick={() => onChange(!value)}
-      className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5"
-      style={{
-        background: value ? '#fff' : INPUT_BG,
-        border: `1px solid ${value ? '#fff' : BORDER}`,
-        color: value ? '#141414' : '#9ca3af',
-        fontSize: 11.5, fontWeight: 600, cursor: 'pointer', outline: 'none',
-      }}>
-      <span style={{
-        width: 8, height: 8, borderRadius: 999,
-        background: value ? '#22c55e' : '#4b5563',
-      }} />
-      Taux auto
-    </button>
   );
 }
 
