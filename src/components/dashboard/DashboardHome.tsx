@@ -140,9 +140,8 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
       {/* Header greeting */}
       <div style={{ marginBottom: '26px' }}>
         <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 500 }}>{getGreeting()}</p>
-        <h1 style={{ color: '#fff', fontSize: '30px', fontWeight: 600, margin: 0, letterSpacing: '-0.4px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <h1 style={{ color: '#fff', fontSize: '30px', fontWeight: 600, margin: 0, letterSpacing: '-0.4px' }}>
           {firstName}
-          <PersonWaving />
         </h1>
       </div>
 
