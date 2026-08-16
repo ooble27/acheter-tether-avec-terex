@@ -28,6 +28,7 @@ import { Button } from '@/components/ui/button';
 import { LogOut, User } from 'lucide-react';
 import { HighVolumeRequest } from '@/components/features/HighVolumeRequest';
 import { B2BPage } from '@/components/features/B2BPage';
+import { SendMoney } from '@/components/features/SendMoney';
 import { SavedDataPrefetch } from '@/components/dashboard/SavedDataPrefetch';
 
 interface DashboardProps {
@@ -150,6 +151,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         );
       case 'otc':
         return <HighVolumeRequest onBack={() => setActiveSection('home')} requestedAmount="" />;
+      case 'send':
+        return <SendMoney onBack={handleBackToHome} />;
       case 'history':
         return <TransactionHistoryPage />;
       case 'profile':
