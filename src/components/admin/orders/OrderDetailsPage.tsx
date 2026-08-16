@@ -175,9 +175,13 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate, onArchive }: O
 
   const handleSavePaymentLink = async () => {
     if (!order || !paymentLinkInput.trim()) return;
-    const link = paymentLinkInput.trim();
-    if (!link.startsWith('http')) {
-      toast({ title: 'Lien invalide', description: 'Le lien doit commencer par http:// ou https://', variant: 'destructive' });
+    // Extrait la première URL du texte collé (Wave envoie souvent un message
+    // du type "Pay Terex with Wave by clicking this link: https://pay.wave.com/…")
+    const raw = paymentLinkInput.trim();
+    const urlMatch = raw.match(/https?:\/\/\S+/i);
+    const link = urlMatch ? urlMatch[0] : raw;
+    if (!/^https?:\/\//i.test(link)) {
+      toast({ title: 'Lien invalide', description: 'Aucune URL http(s) détectée dans le texte collé.', variant: 'destructive' });
       return;
     }
     setSavingLink(true);
@@ -186,13 +190,15 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate, onArchive }: O
         .from('orders')
         .update({ payment_reference: link, updated_at: new Date().toISOString() })
         .eq('id', order.id)
-        .select('id');
+        .select('id, payment_reference');
       if (error) throw error;
       if (!data || data.length === 0) {
-        toast({ title: 'Erreur', description: 'La commande n\'a pas pu être mise à jour (vérifiez les permissions)', variant: 'destructive' });
+        toast({ title: 'Erreur RLS', description: 'La commande n\'a pas pu être mise à jour (droits insuffisants). Ouvre la console.', variant: 'destructive' });
+        console.error('handleSavePaymentLink: 0 rows updated for order', order.id);
       } else {
         setPaymentLinkSaved(link);
-        toast({ title: 'Lien envoyé', description: 'Le client voit le bouton de paiement instantanément' });
+        setPaymentLinkInput(link);
+        toast({ title: 'Lien envoyé', description: 'Le client voit le bouton de paiement instantanément.' });
         logOrderEvent(order.id, 'payment_link_sent', link).then(reloadEvents);
       }
     } catch (err: any) {
@@ -397,10 +403,10 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate, onArchive }: O
                 </p>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <input
-                    type="url"
+                    type="text"
                     value={paymentLinkInput}
                     onChange={(e) => setPaymentLinkInput(e.target.value)}
-                    placeholder="https://pay.wave.com/m/..."
+                    placeholder="Collez le message Wave (l'URL sera extraite automatiquement)"
                     style={{
                       flex: 1, minWidth: 0, background: '#1a1a1a', color: '#fff',
                       border: `1px solid ${BORDER}`, borderRadius: 10, padding: '10px 14px',
