@@ -40,9 +40,8 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
   const [timeLeft, setTimeLeft] = useState(30 * 60);
   const [overrideLink, setOverrideLink] = useState<string | null>(null);
 
-  // Lien auto : calculé depuis le montant de la commande (montant + 1 % Wave).
+  // Lien auto : calculé depuis le montant de la commande (montant + frais Wave).
   const baseAmount = parseFloat(orderData.amount) || 0;
-  const waveTotalAmount = useMemo(() => Math.ceil(baseAmount * (1 + WAVE_FEE_RATE)), [baseAmount]);
   const autoLink = useMemo(() => buildWaveLink(baseAmount), [baseAmount]);
   const paymentLink = overrideLink || autoLink;
 
@@ -192,19 +191,11 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
           </div>
         </div>
 
-        {/* Order recap */}
+        {/* Order recap — affichage épuré, frais Wave silencieusement inclus dans le lien */}
         <div style={{ background: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px', marginBottom: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Montant commande</span>
+            <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Montant</span>
             <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{baseAmount.toLocaleString('fr-FR')} {orderData.currency}</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Frais Wave (1 %)</span>
-            <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: '13px' }}>+ {(waveTotalAmount - baseAmount).toLocaleString('fr-FR')} {orderData.currency}</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.10)' }}>
-            <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>Total à payer via Wave</span>
-            <span style={{ color: '#1B6EF3', fontSize: '15px', fontWeight: 700 }}>{waveTotalAmount.toLocaleString('fr-FR')} {orderData.currency}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
             <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Vous recevez</span>
@@ -223,7 +214,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
             <p style={{ color: '#4ade80', fontSize: '14px', fontWeight: 600, margin: 0 }}>Prêt à payer</p>
           </div>
           <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '13px', margin: '0 0 16px', lineHeight: 1.5 }}>
-            Cliquez ci-dessous pour ouvrir Wave et régler <strong style={{ color: '#fff' }}>{waveTotalAmount.toLocaleString('fr-FR')} {orderData.currency}</strong>.
+            Cliquez ci-dessous pour ouvrir Wave et effectuer le paiement.
           </p>
           <a
             href={paymentLink}

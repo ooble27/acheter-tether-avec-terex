@@ -95,7 +95,7 @@ export function MobileSellUSDT() {
   const { createOrder } = useOrders();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { terexBuyRateCfa } = useTerexRates(2);
+  const { terexBuyRateCfa } = useTerexRates(2.5);
   const { isAuthorized } = useTransactionAuthorization();
 
   const usdtAmount = inputCurrency === 'USDT'

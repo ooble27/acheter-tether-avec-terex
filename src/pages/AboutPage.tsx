@@ -43,7 +43,7 @@ const AboutPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { terexRateCfa, loading: rateLoading } = useTerexRates(2);
+  const { terexRateCfa, loading: rateLoading } = useTerexRates(2.5);
   const rateDisplay = !rateLoading && terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : null;
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);

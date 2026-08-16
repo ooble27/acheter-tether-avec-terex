@@ -79,7 +79,7 @@ function DesktopSellUSDT() {
     error: ratesError,
     lastUpdated,
     refresh: refreshRates
-  } = useTerexRates(2);
+  } = useTerexRates(2.5);
 
   const exchangeRates = {
     CFA: terexBuyRateCfa

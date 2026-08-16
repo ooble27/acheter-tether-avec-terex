@@ -2,7 +2,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { UnifiedOrder } from '@/hooks/useOrders';
 import {
   Coins, HandCoins, Send, Copy, CheckCircle, XCircle, Clock, ArrowLeft,
-  Hand, Lock, ArrowRight, Hash, Mail, Trash2, Link2,
+  Hand, Lock, ArrowRight, Hash, Mail, Trash2,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -88,9 +88,6 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate, onArchive }: O
   const [sendingEmail, setSendingEmail] = useState(false);
   const [section, setSection] = useState('client');
   const [showClient, setShowClient] = useState(false);
-  const [paymentLinkInput, setPaymentLinkInput] = useState('');
-  const [paymentLinkSaved, setPaymentLinkSaved] = useState<string | null>(null);
-  const [savingLink, setSavingLink] = useState(false);
   const { toast } = useToast();
 
   const { claimOrder, releaseOrder, logOrderEvent, currentUserId } = useOrderOps();
@@ -153,60 +150,8 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate, onArchive }: O
     return () => { cancelled = true; };
   }, [order?.user_id]);
 
-  // Load existing payment link from payment_reference
-  useEffect(() => {
-    if (!order) return;
-    let cancelled = false;
-    (async () => {
-      const { data } = await (supabase as any)
-        .from('orders')
-        .select('payment_reference')
-        .eq('id', order.id)
-        .maybeSingle();
-      if (cancelled) return;
-      const ref = data?.payment_reference;
-      if (ref && typeof ref === 'string' && ref.startsWith('http')) {
-        setPaymentLinkSaved(ref);
-        setPaymentLinkInput(ref);
-      }
-    })();
-    return () => { cancelled = true; };
-  }, [order?.id]);
-
-  const handleSavePaymentLink = async () => {
-    if (!order || !paymentLinkInput.trim()) return;
-    // Extrait la première URL du texte collé (Wave envoie souvent un message
-    // du type "Pay Terex with Wave by clicking this link: https://pay.wave.com/…")
-    const raw = paymentLinkInput.trim();
-    const urlMatch = raw.match(/https?:\/\/\S+/i);
-    const link = urlMatch ? urlMatch[0] : raw;
-    if (!/^https?:\/\//i.test(link)) {
-      toast({ title: 'Lien invalide', description: 'Aucune URL http(s) détectée dans le texte collé.', variant: 'destructive' });
-      return;
-    }
-    setSavingLink(true);
-    try {
-      const { data, error } = await (supabase as any)
-        .from('orders')
-        .update({ payment_reference: link, updated_at: new Date().toISOString() })
-        .eq('id', order.id)
-        .select('id, payment_reference');
-      if (error) throw error;
-      if (!data || data.length === 0) {
-        toast({ title: 'Erreur RLS', description: 'La commande n\'a pas pu être mise à jour (droits insuffisants). Ouvre la console.', variant: 'destructive' });
-        console.error('handleSavePaymentLink: 0 rows updated for order', order.id);
-      } else {
-        setPaymentLinkSaved(link);
-        setPaymentLinkInput(link);
-        toast({ title: 'Lien envoyé', description: 'Le client voit le bouton de paiement instantanément.' });
-        logOrderEvent(order.id, 'payment_link_sent', link).then(reloadEvents);
-      }
-    } catch (err: any) {
-      console.error('handleSavePaymentLink error:', err);
-      toast({ title: 'Erreur', description: err?.message || 'Impossible de sauvegarder le lien', variant: 'destructive' });
-    }
-    setSavingLink(false);
-  };
+  // Payment link admin section removed — the client generates the Wave link
+  // automatically from the order amount (see PaymentInstructions.tsx).
 
   if (!order) return null;
 
@@ -378,57 +323,6 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate, onArchive }: O
                     ? <>Le client a payé <span style={{ color: '#fff' }}>{amountLine}</span> via <span style={{ color: '#fff' }}>{method}</span> au taux de <span style={{ color: '#fff' }}>{order.exchange_rate} {order.currency}/USDT</span>.</>
                     : <>Le client envoie <span style={{ color: '#fff' }}>{usdtLine}</span> au taux de <span style={{ color: '#fff' }}>{order.exchange_rate} {order.currency}/USDT</span>.</>}
                 </p>
-              </div>
-            </div>
-          )}
-
-          {/* LIEN DE PAIEMENT WAVE — admin colle le lien, le client le voit en temps réel */}
-          {openActive && order.type === 'buy' && order.payment_method !== 'card' && (
-            <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: 'hidden' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 16px', borderBottom: `1px solid ${BORDER}` }}>
-                <Link2 size={15} color="#1B6EF3" />
-                <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 700, margin: 0 }}>Lien de paiement Wave</p>
-                {paymentLinkSaved && (
-                  <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 4, color: '#4ade80', fontSize: 11.5, fontWeight: 600 }}>
-                    <CheckCircle size={12} /> Envoyé
-                  </span>
-                )}
-              </div>
-              <div style={{ padding: 16 }}>
-                <p style={{ color: '#6b7280', fontSize: 12, margin: '0 0 10px', lineHeight: 1.5 }}>
-                  {paymentLinkSaved
-                    ? 'Le client a reçu le lien de paiement. Vous pouvez le modifier si besoin.'
-                    : <>Collez le lien de paiement Wave ici. Le client le verra <strong style={{ color: '#fff' }}>instantanément</strong> sur son écran.</>
-                  }
-                </p>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <input
-                    type="text"
-                    value={paymentLinkInput}
-                    onChange={(e) => setPaymentLinkInput(e.target.value)}
-                    placeholder="Collez le message Wave (l'URL sera extraite automatiquement)"
-                    style={{
-                      flex: 1, minWidth: 0, background: '#1a1a1a', color: '#fff',
-                      border: `1px solid ${BORDER}`, borderRadius: 10, padding: '10px 14px',
-                      fontSize: 13, outline: 'none', fontFamily: 'ui-monospace,Menlo,monospace',
-                    }}
-                  />
-                  <button
-                    onClick={handleSavePaymentLink}
-                    disabled={savingLink || !paymentLinkInput.trim() || paymentLinkInput.trim() === paymentLinkSaved}
-                    style={{
-                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                      background: (!paymentLinkInput.trim() || paymentLinkInput.trim() === paymentLinkSaved) ? '#2d2d2d' : '#1B6EF3',
-                      color: '#fff', border: 'none', borderRadius: 10, padding: '10px 16px',
-                      fontSize: 13, fontWeight: 700, cursor: savingLink ? 'wait' : 'pointer',
-                      opacity: (!paymentLinkInput.trim() || paymentLinkInput.trim() === paymentLinkSaved) ? 0.4 : 1,
-                      flexShrink: 0, transition: 'all 0.15s',
-                    }}
-                  >
-                    <Send size={14} />
-                    {savingLink ? 'Envoi…' : paymentLinkSaved ? 'Modifier' : 'Envoyer'}
-                  </button>
-                </div>
               </div>
             </div>
           )}
