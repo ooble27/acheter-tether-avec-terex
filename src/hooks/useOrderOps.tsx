@@ -29,6 +29,7 @@ export const EVENT_LABELS: Record<string, string> = {
   status_completed: 'Marquée « Terminée »',
   status_cancelled: 'Annulée',
   cancellation_email_sent: 'Email d\'annulation envoyé au client',
+  payment_link_sent: 'Lien de paiement Wave envoyé au client',
   note: 'Note interne',
 };
 
