@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock, BookOpen, PenTool, MessageSquare,
+  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock, BookOpen, PenTool, MessageSquare, FlaskConical,
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { OpsQueue } from '@/components/admin/orders/OpsQueue';
@@ -19,6 +19,7 @@ import { AccountingAdmin } from '@/components/admin/AccountingAdmin';
 import { NewsletterAdmin } from '@/components/admin/NewsletterAdmin';
 import { MailboxAdmin } from '@/components/admin/MailboxAdmin';
 import { NeobankVision } from '@/components/admin/neobank/NeobankVision';
+import { LaboAdmin } from '@/components/admin/labo/LaboAdmin';
 import { useUserRole } from '@/hooks/useUserRole';
 
 const BG = '#1a1a1a';
@@ -44,6 +45,7 @@ const NAV: NavItem[] = [
   { id: 'applications', label: 'Candidatures',   desc: 'Recrutement',                           icon: UserCheck,    roles: ['admin', 'hr'] },
   { id: 'team',         label: 'Équipe',         desc: "Membres et rôles du back-office",       icon: Users,        roles: ['admin'] },
   { id: 'neobank',      label: 'Vision',         desc: 'Néobanque Terex',                       icon: Sparkles,     roles: ['admin'] },
+  { id: 'labo',         label: 'Labo',           desc: 'Prototypes isolés — sans impact sur la production', icon: FlaskConical, roles: ['admin'] },
   { id: 'kb',           label: 'Guide',          desc: "Base de connaissances de l'équipe",     icon: BookOpen,     roles: ['admin', 'operator', 'kyc_reviewer', 'marketing', 'hr', 'support'] },
 ];
 
@@ -156,6 +158,7 @@ export function AdminPortal() {
           {currentTab === 'applications' && <JobApplicationsAdmin />}
           {currentTab === 'team' && <TeamAdmin />}
           {currentTab === 'neobank' && <NeobankVision />}
+          {currentTab === 'labo' && <LaboAdmin />}
           {currentTab === 'kb' && <KnowledgeBase />}
         </div>
       </div>

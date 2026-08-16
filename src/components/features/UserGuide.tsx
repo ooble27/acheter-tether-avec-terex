@@ -64,7 +64,7 @@ const IconTile = ({ icon: Icon }: { icon: any }) => (
 
 /* Rate card mockup */
 const RateCardMock = () => {
-  const { terexRateCfa } = useTerexRates(2);
+  const { terexRateCfa } = useTerexRates(2.5);
   const rate = terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : '—';
   return (
   <MockFrame caption="Taux en temps réel sur votre tableau de bord">

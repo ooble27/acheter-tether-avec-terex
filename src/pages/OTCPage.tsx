@@ -29,7 +29,7 @@ const OTCPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { marketRateCfa, loading: rateLoading } = useTerexRates(2);
+  const { marketRateCfa, loading: rateLoading } = useTerexRates(2.5);
   const market = !rateLoading && marketRateCfa ? marketRateCfa : null;
 
   const [side, setSide] = useState<'buy' | 'sell'>('sell'); // sell = donne USDT, reçoit CFA

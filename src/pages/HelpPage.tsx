@@ -69,7 +69,7 @@ const HelpPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { terexRateCfa, loading: rateLoading } = useTerexRates(2);
+  const { terexRateCfa, loading: rateLoading } = useTerexRates(2.5);
   const rateDisplay = !rateLoading && terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : null;
 
   const [selectedFlowId, setSelectedFlowId] = useState<string | null>(null);

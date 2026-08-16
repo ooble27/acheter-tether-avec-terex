@@ -47,7 +47,7 @@ export default function SharePage() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
-  const { terexRateCfa, loading: rateLoading } = useTerexRates(2);
+  const { terexRateCfa, loading: rateLoading } = useTerexRates(2.5);
   const rateDisplay = !rateLoading && terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : null;
 
   const appUrl = 'https://terangaexchange.com';

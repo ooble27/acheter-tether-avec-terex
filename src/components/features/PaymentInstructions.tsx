@@ -1,6 +1,21 @@
-import { useState, useEffect } from 'react';
-import { ArrowLeft, Copy, CheckCircle, Clock, ExternalLink, Loader2 } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { ArrowLeft, Copy, CheckCircle, Clock, ExternalLink } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+
+// Lien marchand Wave (fixe) — seul le paramètre `amount` change par commande.
+// Peut être surchargé via VITE_WAVE_MERCHANT_URL si le marchand change.
+const WAVE_MERCHANT_URL =
+  (import.meta as any).env?.VITE_WAVE_MERCHANT_URL ||
+  'https://pay.wave.com/m/M_sn_0yPNqe48JO3h/c/sn/';
+// Wave prélève ~1 % au marchand → on le répercute pour recevoir net.
+const WAVE_FEE_RATE = 0.01;
+
+function buildWaveLink(amountCfa: number): string {
+  const waveAmount = Math.ceil(amountCfa * (1 + WAVE_FEE_RATE));
+  const url = new URL(WAVE_MERCHANT_URL);
+  url.searchParams.set('amount', String(waveAmount));
+  return url.toString();
+}
 
 interface PaymentInstructionsProps {
   orderData: {
@@ -23,45 +38,53 @@ const BORDER = 'rgba(255,255,255,0.07)';
 export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfirmed }: PaymentInstructionsProps) {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(30 * 60);
-  const [paymentLink, setPaymentLink] = useState<string | null>(null);
-  const [dots, setDots] = useState('');
+  const [overrideLink, setOverrideLink] = useState<string | null>(null);
+
+  // Lien auto : calculé depuis le montant de la commande (montant + frais Wave).
+  const baseAmount = parseFloat(orderData.amount) || 0;
+  const autoLink = useMemo(() => buildWaveLink(baseAmount), [baseAmount]);
+  const paymentLink = overrideLink || autoLink;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  // Check if a payment link already exists on mount
+  // Écoute un override admin (payment_reference posé manuellement en DB).
+  // Le lien auto reste disponible tout de suite — l'override le remplace s'il arrive.
   useEffect(() => {
     if (!orderId) return;
+    let cancelled = false;
     (async () => {
       const { data } = await supabase
         .from('orders')
         .select('payment_reference')
         .eq('id', orderId)
         .maybeSingle();
-      if (data?.payment_reference) {
-        setPaymentLink(data.payment_reference);
+      if (cancelled) return;
+      const ref = (data as any)?.payment_reference;
+      if (ref && typeof ref === 'string' && ref.startsWith('http')) {
+        setOverrideLink(ref);
       }
     })();
-  }, [orderId]);
 
-  // Subscribe to realtime updates on this order
-  useEffect(() => {
-    if (!orderId) return;
     const channel = supabase
       .channel(`order-payment-${orderId}`)
       .on(
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'orders', filter: `id=eq.${orderId}` },
         (payload) => {
-          const ref = payload.new?.payment_reference;
+          const ref = (payload.new as any)?.payment_reference;
           if (ref && typeof ref === 'string' && ref.startsWith('http')) {
-            setPaymentLink(ref);
+            setOverrideLink(ref);
           }
         }
       )
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+
+    return () => {
+      cancelled = true;
+      supabase.removeChannel(channel);
+    };
   }, [orderId]);
 
   // Countdown timer
@@ -74,13 +97,6 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
     }, 1000);
     return () => clearInterval(timer);
   }, []);
-
-  // Animated dots for waiting state
-  useEffect(() => {
-    if (paymentLink) return;
-    const id = setInterval(() => setDots(p => p.length >= 3 ? '' : p + '.'), 500);
-    return () => clearInterval(id);
-  }, [paymentLink]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -175,11 +191,11 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
           </div>
         </div>
 
-        {/* Order recap */}
+        {/* Order recap — affichage épuré, frais Wave silencieusement inclus dans le lien */}
         <div style={{ background: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '16px', marginBottom: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
             <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Montant</span>
-            <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{parseFloat(orderData.amount).toLocaleString('fr-FR')} {orderData.currency}</span>
+            <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{baseAmount.toLocaleString('fr-FR')} {orderData.currency}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
             <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px' }}>Vous recevez</span>
@@ -191,60 +207,37 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
           </div>
         </div>
 
-        {/* Payment link area — waiting or ready */}
-        {!paymentLink ? (
-          <div style={{ background: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '28px 20px', marginBottom: '16px', textAlign: 'center' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
-              <Loader2 size={32} color="rgba(255,255,255,0.5)" style={{ animation: 'spin 1.2s linear infinite' }} />
-            </div>
-            <p style={{ color: '#fff', fontSize: '16px', fontWeight: 600, margin: '0 0 8px' }}>
-              Préparation du paiement{dots}
-            </p>
-            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px', margin: 0, lineHeight: 1.6 }}>
-              Votre lien de paiement Wave est en cours de création. Vous recevrez le lien automatiquement, sans recharger la page.
-            </p>
-            <div style={{ marginTop: '16px', padding: '10px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
-              <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>
-                Commande #{orderId.slice(-8).toUpperCase()} · Généralement prêt en moins de 2 min
-              </p>
-            </div>
-            <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+        {/* Bouton Wave — toujours dispo, lien auto-généré */}
+        <div style={{ background: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '20px', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+            <CheckCircle size={18} color="#4ade80" />
+            <p style={{ color: '#4ade80', fontSize: '14px', fontWeight: 600, margin: 0 }}>Prêt à payer</p>
           </div>
-        ) : (
-          <div style={{ background: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '16px', padding: '20px', marginBottom: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-              <CheckCircle size={18} color="#4ade80" />
-              <p style={{ color: '#4ade80', fontSize: '14px', fontWeight: 600, margin: 0 }}>Lien de paiement prêt</p>
-            </div>
-            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '13px', margin: '0 0 16px', lineHeight: 1.5 }}>
-              Cliquez sur le bouton ci-dessous pour ouvrir Wave et effectuer le paiement.
-            </p>
-            <a
-              href={paymentLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
-                width: '100%', background: '#1B6EF3', color: '#fff', border: 'none',
-                borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700,
-                cursor: 'pointer', textDecoration: 'none', textAlign: 'center',
-              }}
-            >
-              <ExternalLink size={18} />
-              Payer avec Wave
-            </a>
-          </div>
-        )}
-
-        {/* Confirm button — only show when link is available */}
-        {paymentLink && (
-          <button
-            onClick={onPaymentConfirmed}
-            style={{ width: '100%', background: '#fff', color: '#141414', border: 'none', borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700, cursor: 'pointer' }}
+          <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '13px', margin: '0 0 16px', lineHeight: 1.5 }}>
+            Cliquez ci-dessous pour ouvrir Wave et effectuer le paiement.
+          </p>
+          <a
+            href={paymentLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+              width: '100%', background: '#1B6EF3', color: '#fff', border: 'none',
+              borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700,
+              cursor: 'pointer', textDecoration: 'none', textAlign: 'center',
+            }}
           >
-            J'ai payé
-          </button>
-        )}
+            <ExternalLink size={18} />
+            Payer avec Wave
+          </a>
+        </div>
+
+        <button
+          onClick={onPaymentConfirmed}
+          style={{ width: '100%', background: '#fff', color: '#141414', border: 'none', borderRadius: '14px', padding: '15px', fontSize: '15px', fontWeight: 700, cursor: 'pointer' }}
+        >
+          J'ai payé
+        </button>
       </div>
     </div>
   );

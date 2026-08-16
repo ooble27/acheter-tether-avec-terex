@@ -44,7 +44,7 @@ function getGreeting() {
 
 export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
   const isMobile = useIsMobile();
-  const { terexRateCfa } = useTerexRates(2);
+  const { terexRateCfa } = useTerexRates(2.5);
 
   const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
     (window.navigator as any).standalone ||

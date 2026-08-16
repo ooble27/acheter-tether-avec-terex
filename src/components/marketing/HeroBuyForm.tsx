@@ -22,7 +22,7 @@ const quickAmounts = [50000, 100000, 250000, 500000, 1000000];
 export function HeroBuyForm() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { terexRateCfa } = useTerexRates(2);
+  const { terexRateCfa } = useTerexRates(2.5);
 
   const [amount, setAmount] = useState('');
   const [network, setNetwork] = useState('TRC20');

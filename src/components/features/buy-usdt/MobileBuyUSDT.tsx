@@ -95,7 +95,7 @@ export function MobileBuyUSDT() {
 
   const { createOrder } = useOrders();
   const { user } = useAuth();
-  const { terexRateCfa, terexRateCad } = useTerexRates(2);
+  const { terexRateCfa, terexRateCad } = useTerexRates(2.5);
   const { isAuthorized } = useTransactionAuthorization();
 
   const exchangeRate = currency === 'CFA' ? terexRateCfa : terexRateCad;

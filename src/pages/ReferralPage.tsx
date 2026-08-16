@@ -43,7 +43,7 @@ export default function ReferralPage() {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
-  const { terexRateCfa, loading: rateLoading } = useTerexRates(2);
+  const { terexRateCfa, loading: rateLoading } = useTerexRates(2.5);
   const rateDisplay = !rateLoading && terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : null;
 
   // Génération d'un code de parrainage basé sur l'ID utilisateur

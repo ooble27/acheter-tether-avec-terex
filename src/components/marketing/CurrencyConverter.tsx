@@ -23,7 +23,7 @@ export function CurrencyConverter() {
     loading: ratesLoading, 
     lastUpdated,
     refresh: refreshRates
-  } = useTerexRates(2);
+  } = useTerexRates(2.5);
 
   const formatAmount = (amount: string | number) => {
     const num = parseFloat(amount.toString());

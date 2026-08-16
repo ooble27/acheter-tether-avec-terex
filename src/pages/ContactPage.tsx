@@ -54,7 +54,7 @@ const ContactPage = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const { sendMessage, loading } = useContactMessages();
-  const { terexRateCfa, loading: rateLoading } = useTerexRates(2);
+  const { terexRateCfa, loading: rateLoading } = useTerexRates(2.5);
   const rateDisplay = !rateLoading && terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : null;
 
   useEffect(() => {

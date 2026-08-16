@@ -28,7 +28,7 @@ const GuidePage = () => {
   const { toast } = useToast();
   const [showDetailedGuide, setShowDetailedGuide] = useState(false);
   const [selectedGuide, setSelectedGuide] = useState<Guide | null>(null);
-  const { terexRateCfa } = useTerexRates(2);
+  const { terexRateCfa } = useTerexRates(2.5);
   const rateDisplay = terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : '—';
 
   useEffect(() => {

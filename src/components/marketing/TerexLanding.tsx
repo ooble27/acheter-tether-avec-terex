@@ -73,7 +73,7 @@ export function TerexLanding({ user, onShowDashboard }: { user?: { email: string
   const goAuth = () => navigate('/auth');
   const goPrimary = () => (user ? onShowDashboard?.() : navigate('/auth'));
   const [faqOpen, setFaqOpen] = useState<number | null>(0);
-  const { terexRateCfa, loading: rateLoading } = useTerexRates(2);
+  const { terexRateCfa, loading: rateLoading } = useTerexRates(2.5);
   const rateDisplay = !rateLoading && terexRateCfa ? terexRateCfa.toLocaleString('fr-FR') : null;
 
   return (

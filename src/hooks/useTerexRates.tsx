@@ -17,7 +17,7 @@ interface TerexRates {
   marginPercentage: number;
 }
 
-export function useTerexRates(marginPercentage: number = 2) {
+export function useTerexRates(marginPercentage: number = 2.5) {
   const { usdtToCfa, usdtToCad, loading, error, lastUpdated, refresh } = useCryptoRates();
 
   // Calcul des taux TEREX d'achat (avec marge)
