@@ -1,5 +1,5 @@
-import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import { ArrowLeft, Search, Send, CheckCircle2, ChevronRight, User, X } from 'lucide-react';
+import { useState, useMemo, useRef, useEffect } from 'react';
+import { ArrowLeft, Send, CheckCircle2, Copy, Check, User } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTerexRates } from '@/hooks/useTerexRates';
@@ -16,13 +16,7 @@ const GREEN = '#4ade80';
 
 const nf = new Intl.NumberFormat('fr-FR');
 
-interface Recipient {
-  id: string;
-  full_name: string | null;
-  phone: string | null;
-  email?: string;
-}
-
+interface Recipient { id: string; full_name: string | null; terex_id: string; }
 type Step = 'recipient' | 'amount' | 'confirm' | 'success';
 
 function press(e: React.MouseEvent | React.TouchEvent) {
@@ -39,17 +33,18 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
   const rate = marketRateCfa || 0;
 
   const [step, setStep] = useState<Step>('recipient');
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<Recipient[]>([]);
-  const [searching, setSearching] = useState(false);
+  const [identifier, setIdentifier] = useState('');
   const [recipient, setRecipient] = useState<Recipient | null>(null);
+  const [lookupError, setLookupError] = useState('');
+  const [looking, setLooking] = useState(false);
   const [amountCfa, setAmountCfa] = useState('');
   const [sending, setSending] = useState(false);
   const [transferId, setTransferId] = useState<string | null>(null);
+  const [myTerexId, setMyTerexId] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);
-  const searchTimeout = useRef<ReturnType<typeof setTimeout>>();
 
   const usdtAmount = useMemo(() => {
     const cfa = parseFloat(amountCfa) || 0;
@@ -62,29 +57,40 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
     if (step === 'amount') amountRef.current?.focus();
   }, [step]);
 
-  const searchUsers = useCallback(async (q: string) => {
-    if (q.length < 2) { setResults([]); return; }
-    setSearching(true);
-    const term = `%${q}%`;
-    const { data } = await (supabase as any)
-      .from('profiles')
-      .select('id, full_name, phone')
-      .or(`full_name.ilike.${term},phone.ilike.${term}`)
-      .neq('id', user?.id)
-      .limit(8);
-    setResults((data as Recipient[]) || []);
-    setSearching(false);
-  }, [user?.id]);
+  // Charger son propre Terex ID
+  useEffect(() => {
+    if (!user) return;
+    (supabase as any).from('profiles').select('terex_id').eq('id', user.id).single()
+      .then(({ data }: any) => { if (data?.terex_id) setMyTerexId(data.terex_id); });
+  }, [user]);
 
-  const handleQueryChange = (val: string) => {
-    setQuery(val);
-    clearTimeout(searchTimeout.current);
-    searchTimeout.current = setTimeout(() => searchUsers(val), 300);
-  };
+  const lookupUser = async () => {
+    const val = identifier.trim();
+    if (!val) return;
+    setLooking(true);
+    setLookupError('');
+    setRecipient(null);
 
-  const selectRecipient = (r: Recipient) => {
-    setRecipient(r);
-    setStep('amount');
+    try {
+      const { data, error } = await (supabase as any).rpc('lookup_user', { identifier: val });
+      if (error) throw error;
+      if (!data || data.length === 0) {
+        setLookupError('Aucun utilisateur trouve avec cet ID ou email.');
+        setLooking(false);
+        return;
+      }
+      const found = data[0];
+      if (found.id === user?.id) {
+        setLookupError('Vous ne pouvez pas vous envoyer a vous-meme.');
+        setLooking(false);
+        return;
+      }
+      setRecipient(found);
+      setStep('amount');
+    } catch (err: any) {
+      setLookupError(err?.message || 'Erreur de recherche');
+    }
+    setLooking(false);
   };
 
   const handleSend = async () => {
@@ -111,6 +117,13 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
       toast({ title: 'Erreur', description: err?.message || 'Transfert impossible', variant: 'destructive' });
     }
     setSending(false);
+  };
+
+  const copyId = () => {
+    if (!myTerexId) return;
+    navigator.clipboard.writeText(myTerexId);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const glassCard: React.CSSProperties = {
@@ -145,110 +158,111 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
           )}
           <div>
             <h1 style={{ color: WHITE, fontSize: 19, fontWeight: 700, margin: 0, letterSpacing: '-0.4px' }}>Envoyer</h1>
-            <p style={{ color: DIM, fontSize: 12, margin: '1px 0 0' }}>Transfert instantane entre utilisateurs Terex</p>
+            <p style={{ color: DIM, fontSize: 12, margin: '1px 0 0' }}>Transfert entre utilisateurs Terex</p>
           </div>
         </div>
 
         <div style={{ padding: '20px 16px' }}>
-          <div style={{ position: 'relative', marginBottom: 20 }}>
-            <Search size={18} color={FAINT} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+          {/* Mon Terex ID */}
+          {myTerexId && (
+            <div style={{
+              ...glassCard, padding: '16px', marginBottom: 24,
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            }}>
+              <div>
+                <p style={{ color: DIM, fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 6px' }}>
+                  Mon Terex ID
+                </p>
+                <p style={{ color: WHITE, fontSize: 22, fontWeight: 700, margin: 0, letterSpacing: '2px', fontFamily: 'monospace' }}>
+                  {myTerexId}
+                </p>
+              </div>
+              <button
+                onClick={copyId}
+                style={{
+                  background: SUBTLE, border: `1px solid ${BORDER}`, borderRadius: 12,
+                  padding: '10px 14px', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  transition: 'all 0.15s ease',
+                }}
+                onMouseDown={press} onMouseUp={release} onMouseLeave={release}
+                onTouchStart={press} onTouchEnd={release}
+              >
+                {copied ? <Check size={15} color={GREEN} /> : <Copy size={15} color={DIM} />}
+                <span style={{ color: copied ? GREEN : DIM, fontSize: 12, fontWeight: 600 }}>
+                  {copied ? 'Copie' : 'Copier'}
+                </span>
+              </button>
+            </div>
+          )}
+
+          {/* Entrer ID ou email */}
+          <p style={{ color: DIM, fontSize: 13, fontWeight: 500, margin: '0 0 10px' }}>
+            Entrez le Terex ID ou l'email du destinataire
+          </p>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
             <input
               ref={inputRef}
-              value={query}
-              onChange={e => handleQueryChange(e.target.value)}
-              placeholder="Nom ou telephone"
+              value={identifier}
+              onChange={e => { setIdentifier(e.target.value); setLookupError(''); }}
+              onKeyDown={e => { if (e.key === 'Enter') lookupUser(); }}
+              placeholder="Ex : 12345678 ou email@exemple.com"
               style={{
-                width: '100%',
+                flex: 1,
                 background: 'rgba(255,255,255,0.04)',
                 color: WHITE,
                 border: `1.5px solid ${BORDER}`,
                 borderRadius: 14,
-                padding: '14px 16px 14px 44px',
+                padding: '14px 16px',
                 fontSize: 15,
                 fontWeight: 500,
                 outline: 'none',
                 transition: 'border-color 0.2s ease',
-                letterSpacing: '-0.01em',
+                letterSpacing: '0.02em',
               }}
               onFocus={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; }}
               onBlur={e => { e.currentTarget.style.borderColor = BORDER; }}
             />
-            {query && (
-              <button onClick={() => { setQuery(''); setResults([]); }} style={{
-                position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
-                background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%',
-                width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-              }}>
-                <X size={13} color="rgba(255,255,255,0.6)" />
-              </button>
-            )}
+            <button
+              onClick={lookupUser}
+              disabled={looking || !identifier.trim()}
+              style={{
+                background: identifier.trim() ? WHITE : SUBTLE,
+                color: identifier.trim() ? '#000' : FAINT,
+                border: 'none', borderRadius: 14,
+                padding: '0 20px', fontSize: 14, fontWeight: 700,
+                cursor: identifier.trim() ? 'pointer' : 'default',
+                transition: 'all 0.15s ease',
+                flexShrink: 0,
+              }}
+              onMouseDown={e => { if (identifier.trim()) press(e); }}
+              onMouseUp={release}
+              onTouchStart={e => { if (identifier.trim()) press(e); }}
+              onTouchEnd={release}
+            >
+              {looking ? '...' : 'OK'}
+            </button>
           </div>
 
-          {searching && <p style={{ color: DIM, fontSize: 13, textAlign: 'center', padding: '20px 0' }}>Recherche...</p>}
-
-          {!searching && results.length === 0 && query.length >= 2 && (
-            <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-              <div style={{
-                width: 56, height: 56, borderRadius: 16, background: SUBTLE,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px',
-              }}>
-                <User size={24} color={FAINT} />
-              </div>
-              <p style={{ color: DIM, fontSize: 14 }}>Aucun utilisateur trouve</p>
-              <p style={{ color: FAINT, fontSize: 12, marginTop: 4 }}>Verifiez le nom ou le numero</p>
-            </div>
+          {lookupError && (
+            <p style={{ color: '#f87171', fontSize: 13, margin: '0 0 16px', padding: '0 4px' }}>{lookupError}</p>
           )}
 
-          {results.length > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {results.map(r => (
-                <button
-                  key={r.id}
-                  onClick={() => selectRecipient(r)}
-                  style={{
-                    ...glassCard, padding: '14px 16px',
-                    display: 'flex', alignItems: 'center', gap: 14,
-                    cursor: 'pointer', textAlign: 'left', width: '100%',
-                    transition: 'transform 0.15s ease',
-                  }}
-                  onMouseDown={press} onMouseUp={release} onMouseLeave={release}
-                  onTouchStart={press} onTouchEnd={release}
-                >
-                  <div style={{
-                    width: 44, height: 44, borderRadius: 14, background: SUBTLE,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                  }}>
-                    <span style={{ color: WHITE, fontSize: 17, fontWeight: 700 }}>
-                      {(r.full_name || '?')[0].toUpperCase()}
-                    </span>
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ color: WHITE, fontSize: 15, fontWeight: 600, margin: 0 }}>
-                      {r.full_name || 'Utilisateur'}
-                    </p>
-                    {r.phone && (
-                      <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 13, margin: '2px 0 0' }}>{r.phone}</p>
-                    )}
-                  </div>
-                  <ChevronRight size={16} color={FAINT} />
-                </button>
-              ))}
+          {/* Instructions */}
+          <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+            <div style={{
+              width: 64, height: 64, borderRadius: 20, background: SUBTLE,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 18px',
+            }}>
+              <Send size={26} color={DIM} strokeWidth={1.6} />
             </div>
-          )}
-
-          {!query && (
-            <div style={{ textAlign: 'center', padding: '50px 20px' }}>
-              <div style={{
-                width: 64, height: 64, borderRadius: 20, background: SUBTLE,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 18px',
-              }}>
-                <Send size={26} color={DIM} strokeWidth={1.6} />
-              </div>
-              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 15, fontWeight: 500, lineHeight: 1.6 }}>
-                Cherchez un utilisateur Terex<br />par nom ou numero de telephone
-              </p>
-            </div>
-          )}
+            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, fontWeight: 500, lineHeight: 1.7, maxWidth: 280, margin: '0 auto' }}>
+              Demandez a votre destinataire son <strong style={{ color: WHITE }}>Terex ID</strong> (8 chiffres) ou utilisez son <strong style={{ color: WHITE }}>email</strong> de connexion.
+            </p>
+            <p style={{ color: FAINT, fontSize: 12, marginTop: 14, lineHeight: 1.6 }}>
+              Partagez votre ID ci-dessus pour recevoir des transferts.
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -283,9 +297,11 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
             </div>
             <div style={{ flex: 1 }}>
               <p style={{ color: WHITE, fontSize: 14, fontWeight: 600, margin: 0 }}>{recipient?.full_name}</p>
-              {recipient?.phone && <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, margin: '1px 0 0' }}>{recipient.phone}</p>}
+              <p style={{ color: FAINT, fontSize: 12, margin: '2px 0 0', fontFamily: 'monospace', letterSpacing: '1px' }}>
+                ID {recipient?.terex_id}
+              </p>
             </div>
-            <button onClick={() => setStep('recipient')} style={{
+            <button onClick={() => { setStep('recipient'); setRecipient(null); }} style={{
               background: SUBTLE, border: 'none', borderRadius: 8,
               padding: '6px 10px', fontSize: 12, color: DIM, cursor: 'pointer', fontWeight: 600,
             }}>
@@ -298,21 +314,19 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
             <p style={{ color: DIM, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 16px' }}>
               Montant en CFA
             </p>
-            <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'baseline', gap: 8 }}>
-              <input
-                ref={amountRef}
-                type="number"
-                inputMode="numeric"
-                value={amountCfa}
-                onChange={e => setAmountCfa(e.target.value)}
-                placeholder="0"
-                style={{
-                  background: 'transparent', border: 'none', outline: 'none',
-                  color: WHITE, fontSize: 52, fontWeight: 300, letterSpacing: '-2px',
-                  textAlign: 'center', width: '100%', maxWidth: 280, lineHeight: 1,
-                }}
-              />
-            </div>
+            <input
+              ref={amountRef}
+              type="number"
+              inputMode="numeric"
+              value={amountCfa}
+              onChange={e => setAmountCfa(e.target.value)}
+              placeholder="0"
+              style={{
+                background: 'transparent', border: 'none', outline: 'none',
+                color: WHITE, fontSize: 52, fontWeight: 300, letterSpacing: '-2px',
+                textAlign: 'center', width: '100%', maxWidth: 280, lineHeight: 1,
+              }}
+            />
             <p style={{ color: FAINT, fontSize: 13, marginTop: 8 }}>CFA</p>
           </div>
 
@@ -331,11 +345,9 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
                   {usdtAmount.toLocaleString('fr-FR')} <span style={{ color: DIM, fontSize: 14, fontWeight: 500 }}>USDT</span>
                 </p>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <p style={{ color: FAINT, fontSize: 11.5, margin: 0 }}>
-                  Taux : {rate ? nf.format(rate) : '...'} CFA
-                </p>
-              </div>
+              <p style={{ color: FAINT, fontSize: 11.5, margin: 0, textAlign: 'right' }}>
+                Taux : {rate ? nf.format(rate) : '...'} CFA
+              </p>
             </div>
           )}
 
@@ -363,7 +375,6 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
             })}
           </div>
 
-          {/* CTA */}
           <button
             onClick={() => { if (usdtAmount > 0) setStep('confirm'); }}
             disabled={!usdtAmount}
@@ -374,7 +385,6 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
               border: 'none', fontSize: 16, fontWeight: 700,
               cursor: usdtAmount > 0 ? 'pointer' : 'default',
               transition: 'all 0.2s ease',
-              letterSpacing: '-0.02em',
             }}
             onMouseDown={e => { if (usdtAmount > 0) press(e); }}
             onMouseUp={release}
@@ -421,12 +431,10 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
                 <span style={{ color: DIM, fontSize: 13 }}>Destinataire</span>
                 <span style={{ color: WHITE, fontSize: 13, fontWeight: 600 }}>{recipient?.full_name}</span>
               </div>
-              {recipient?.phone && (
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: DIM, fontSize: 13 }}>Telephone</span>
-                  <span style={{ color: WHITE, fontSize: 13, fontWeight: 600 }}>{recipient.phone}</span>
-                </div>
-              )}
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: DIM, fontSize: 13 }}>Terex ID</span>
+                <span style={{ color: WHITE, fontSize: 13, fontWeight: 600, fontFamily: 'monospace' }}>{recipient?.terex_id}</span>
+              </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: DIM, fontSize: 13 }}>Taux</span>
                 <span style={{ color: WHITE, fontSize: 13, fontWeight: 600 }}>{nf.format(rate)} CFA/USDT</span>
@@ -449,7 +457,6 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
               opacity: sending ? 0.7 : 1,
               transition: 'all 0.2s ease',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-              letterSpacing: '-0.02em',
             }}
             onMouseDown={e => { if (!sending) press(e); }}
             onMouseUp={release}
@@ -461,7 +468,7 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
           </button>
 
           <p style={{ color: FAINT, fontSize: 12, textAlign: 'center', marginTop: 14, lineHeight: 1.6 }}>
-            Le transfert est instantane et gratuit entre utilisateurs Terex.
+            Transfert instantane et gratuit entre utilisateurs Terex.
           </p>
         </div>
       </div>
@@ -512,7 +519,6 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
           background: SUBTLE, color: WHITE,
           border: `1px solid ${BORDER}`, fontSize: 15, fontWeight: 600,
           cursor: 'pointer', transition: 'all 0.15s ease',
-          letterSpacing: '-0.01em',
         }}
         onMouseDown={press} onMouseUp={release} onMouseLeave={release}
         onTouchStart={press} onTouchEnd={release}
