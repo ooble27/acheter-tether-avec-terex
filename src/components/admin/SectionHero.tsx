@@ -193,6 +193,20 @@ export function SectionHero({ tab }: { tab: string }) {
         />
       );
 
+    case 'labo':
+      return (
+        <AdminHero
+          eyebrow="Labo"
+          value="Prototypes"
+          unit="isolés de la prod"
+          stats={[
+            { label: 'Expérimentations', value: 1 },
+            { label: 'Fonds réels', value: 'Aucun' },
+            { label: 'Statut', value: 'Bêta' },
+          ]}
+        />
+      );
+
     case 'kb':
       return (
         <AdminHero
