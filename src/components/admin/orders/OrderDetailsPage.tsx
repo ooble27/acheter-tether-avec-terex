@@ -158,13 +158,13 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate, onArchive }: O
     if (!order) return;
     let cancelled = false;
     (async () => {
-      const { data } = await supabase
+      const { data } = await (supabase as any)
         .from('orders')
         .select('payment_reference')
         .eq('id', order.id)
         .maybeSingle();
       if (cancelled) return;
-      const ref = (data as any)?.payment_reference;
+      const ref = data?.payment_reference;
       if (ref && typeof ref === 'string' && ref.startsWith('http')) {
         setPaymentLinkSaved(ref);
         setPaymentLinkInput(ref);
@@ -177,20 +177,27 @@ export function OrderDetailsPage({ order, onBack, onStatusUpdate, onArchive }: O
     if (!order || !paymentLinkInput.trim()) return;
     const link = paymentLinkInput.trim();
     if (!link.startsWith('http')) {
-      toast({ title: 'Lien invalide', description: 'Le lien doit commencer par https://', variant: 'destructive' });
+      toast({ title: 'Lien invalide', description: 'Le lien doit commencer par http:// ou https://', variant: 'destructive' });
       return;
     }
     setSavingLink(true);
-    const { error } = await supabase
-      .from('orders')
-      .update({ payment_reference: link, updated_at: new Date().toISOString() })
-      .eq('id', order.id);
-    if (error) {
-      toast({ title: 'Erreur', description: 'Impossible de sauvegarder le lien', variant: 'destructive' });
-    } else {
-      setPaymentLinkSaved(link);
-      toast({ title: 'Lien envoyé', description: 'Le client voit le bouton de paiement instantanément' });
-      logOrderEvent(order.id, 'payment_link_sent', link).then(reloadEvents);
+    try {
+      const { data, error } = await (supabase as any)
+        .from('orders')
+        .update({ payment_reference: link, updated_at: new Date().toISOString() })
+        .eq('id', order.id)
+        .select('id');
+      if (error) throw error;
+      if (!data || data.length === 0) {
+        toast({ title: 'Erreur', description: 'La commande n\'a pas pu être mise à jour (vérifiez les permissions)', variant: 'destructive' });
+      } else {
+        setPaymentLinkSaved(link);
+        toast({ title: 'Lien envoyé', description: 'Le client voit le bouton de paiement instantanément' });
+        logOrderEvent(order.id, 'payment_link_sent', link).then(reloadEvents);
+      }
+    } catch (err: any) {
+      console.error('handleSavePaymentLink error:', err);
+      toast({ title: 'Erreur', description: err?.message || 'Impossible de sauvegarder le lien', variant: 'destructive' });
     }
     setSavingLink(false);
   };
