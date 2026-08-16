@@ -200,7 +200,7 @@ export function SectionHero({ tab }: { tab: string }) {
           value="Prototypes"
           unit="isolés de la prod"
           stats={[
-            { label: 'Expérimentations', value: 2 },
+            { label: 'Expérimentations', value: 1 },
             { label: 'Fonds réels', value: 'Aucun' },
             { label: 'Statut', value: 'Bêta' },
           ]}
