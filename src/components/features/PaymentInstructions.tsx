@@ -30,22 +30,40 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  // Check if a payment link already exists on mount
+  // Fetch le lien courant depuis la DB (utilisé au mount + polling de secours)
   useEffect(() => {
     if (!orderId) return;
-    (async () => {
-      const { data } = await supabase
+    let cancelled = false;
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+
+    const fetchLink = async () => {
+      const { data, error } = await supabase
         .from('orders')
         .select('payment_reference')
         .eq('id', orderId)
         .maybeSingle();
-      if (data?.payment_reference) {
-        setPaymentLink(data.payment_reference);
+      if (cancelled) return;
+      if (error) { console.warn('fetchLink error:', error); return; }
+      const ref = (data as any)?.payment_reference;
+      if (ref && typeof ref === 'string' && ref.startsWith('http')) {
+        setPaymentLink(ref);
+        if (intervalId) { clearInterval(intervalId); intervalId = null; }
       }
-    })();
+    };
+
+    // 1) Fetch immédiat
+    fetchLink();
+    // 2) Polling toutes les 4s en secours si Realtime n'est pas activé
+    intervalId = setInterval(fetchLink, 4000);
+
+    return () => {
+      cancelled = true;
+      if (intervalId) clearInterval(intervalId);
+    };
   }, [orderId]);
 
-  // Subscribe to realtime updates on this order
+  // Realtime : fonctionne si la table `orders` est dans la publication
+  // `supabase_realtime` du projet ; sinon le polling ci-dessus prend le relais.
   useEffect(() => {
     if (!orderId) return;
     const channel = supabase
@@ -54,7 +72,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'orders', filter: `id=eq.${orderId}` },
         (payload) => {
-          const ref = payload.new?.payment_reference;
+          const ref = (payload.new as any)?.payment_reference;
           if (ref && typeof ref === 'string' && ref.startsWith('http')) {
             setPaymentLink(ref);
           }
