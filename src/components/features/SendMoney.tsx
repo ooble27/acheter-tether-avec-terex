@@ -1,14 +1,11 @@
 /**
- * SendMoney — Envoi P2P entre utilisateurs Terex (Apple design).
+ * SendMoney — Envoi P2P entre utilisateurs Terex.
  *
- * Flow (4 etapes) :
- *   1. Destinataire (lookup par Terex ID ou email)
- *   2. Montant + message
- *   3. Confirmation
- *   4. Succes
+ * Utilise le design system Terex (couleurs, cards, boutons) — identique au
+ * reste de la plateforme. 4 etapes : destinataire → montant → confirmation → succes.
  */
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { ArrowLeft, Send, CheckCircle2, Copy, Check, Clock, Info, User, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Send, CheckCircle2, Copy, Check, Clock, Info, RotateCcw } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserProfile } from '@/hooks/useUserProfile';
@@ -16,20 +13,14 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useTerexRates } from '@/hooks/useTerexRates';
 import { useToast } from '@/hooks/use-toast';
 
-const BG_DEEP = '#141414';
-const BORDER = 'rgba(255,255,255,0.07)';
-const GLASS = 'rgba(24,24,24,0.72)';
-const CARD = '#1c1c1c';
-const CARD_ELEVATED = '#212121';
-const SUBTLE = 'rgba(255,255,255,0.05)';
-const WHITE = '#ffffff';
-const DIM = 'rgba(255,255,255,0.55)';
-const FADE = 'rgba(255,255,255,0.35)';
-const FAINT = 'rgba(255,255,255,0.18)';
-const GREEN = '#34d399';
-const AMBER = '#fbbf24';
+const CARD    = '#1e1e1e';
+const BORDER  = 'rgba(255,255,255,0.07)';
+const BTN     = '#2d2d2d';
+const ICON_BG = 'rgba(255,255,255,0.06)';
+const GREEN   = '#4ade80';
+const AMBER   = '#fbbf24';
 
-const nfCfa = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 });
+const nfCfa  = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 });
 const nfUsdt = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 });
 
 const FEE_RATE = 0.01;
@@ -88,13 +79,13 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
       const { data, error } = await (supabase as any).rpc('lookup_user', { identifier: val });
       if (error) throw error;
       if (!data || data.length === 0) {
-        setLookupError('Aucun utilisateur trouve avec cet ID ou email.');
+        setLookupError('Aucun utilisateur trouvé avec cet ID ou email.');
         setLooking(false);
         return;
       }
       const found = data[0];
       if (found.id === user?.id) {
-        setLookupError('Vous ne pouvez pas vous envoyer a vous-meme.');
+        setLookupError('Vous ne pouvez pas vous envoyer à vous-même.');
         setLooking(false);
         return;
       }
@@ -140,43 +131,30 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
     setTimeout(() => setCopied(false), 1600);
   };
 
-  // ─── Shared styles ────────────────────────────────────────────────────
-  const glassCard: React.CSSProperties = {
-    background: `linear-gradient(180deg, ${CARD_ELEVATED} 0%, ${CARD} 100%)`,
-    border: `1px solid ${BORDER}`,
-    borderRadius: 22,
+  const container: React.CSSProperties = {
+    maxWidth: isMobile ? '100%' : 640,
+    margin: '0 auto',
+    display: 'flex', flexDirection: 'column', gap: 16,
   };
 
-  const header = (title: string, sub: string, onBackClick: () => void) => (
-    <div style={{
-      position: 'sticky', top: 0, zIndex: 20,
-      background: GLASS,
-      backdropFilter: 'blur(28px) saturate(180%)',
-      WebkitBackdropFilter: 'blur(28px) saturate(180%)',
-      borderBottom: `1px solid ${BORDER}`,
-      padding: 'calc(env(safe-area-inset-top, 0px) + 14px) 20px 14px',
-    }}>
-      <div style={{ maxWidth: 640, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 14 }}>
-        <button
-          onClick={onBackClick}
-          aria-label="Retour"
-          style={{
-            width: 40, height: 40, borderRadius: '50%',
-            background: SUBTLE, border: `1px solid ${BORDER}`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer',
-            transition: 'transform 0.15s ease, background 0.2s ease',
-          }}
-          onPointerDown={press} onPointerUp={release} onPointerLeave={release} onPointerCancel={release}
-          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.09)'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = SUBTLE; }}
-        >
-          <ArrowLeft size={18} color={WHITE} strokeWidth={2} />
-        </button>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <h1 style={{ color: WHITE, fontSize: 20, fontWeight: 700, margin: 0, letterSpacing: '-0.02em' }}>{title}</h1>
-          <p style={{ color: DIM, fontSize: 12.5, margin: '2px 0 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sub}</p>
-        </div>
+  const subHeader = (title: string, sub: string, onBackClick: () => void) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '4px 4px 20px' }}>
+      <button
+        onClick={onBackClick}
+        aria-label="Retour"
+        style={{
+          width: 38, height: 38, borderRadius: '50%',
+          background: ICON_BG, border: `1px solid ${BORDER}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer', transition: 'transform 0.15s ease',
+        }}
+        onPointerDown={press} onPointerUp={release} onPointerLeave={release} onPointerCancel={release}
+      >
+        <ArrowLeft size={17} color="#fff" strokeWidth={2} />
+      </button>
+      <div style={{ minWidth: 0 }}>
+        <h1 style={{ color: '#fff', fontSize: 18, fontWeight: 700, margin: 0 }}>{title}</h1>
+        <p style={{ color: '#6b7280', fontSize: 12, margin: '2px 0 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sub}</p>
       </div>
     </div>
   );
@@ -186,20 +164,17 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
       onClick={onClick}
       disabled={!enabled || loading}
       style={{
-        width: '100%', padding: '17px 20px', borderRadius: 18,
-        background: enabled ? WHITE : SUBTLE,
-        color: enabled ? '#0a0a0a' : FAINT,
-        border: 'none', fontSize: 15.5, fontWeight: 700, letterSpacing: '-0.01em',
+        width: '100%', padding: '15px 20px', borderRadius: 14,
+        background: enabled ? '#fff' : ICON_BG,
+        color: enabled ? '#141414' : 'rgba(255,255,255,0.3)',
+        border: 'none', fontSize: 15, fontWeight: 700,
         cursor: enabled && !loading ? 'pointer' : 'default',
         opacity: loading ? 0.7 : 1,
-        transition: 'transform 0.15s ease, background 0.2s ease',
+        transition: 'transform 0.15s ease',
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-        boxShadow: enabled ? '0 8px 24px -12px rgba(255,255,255,0.15)' : 'none',
       }}
       onPointerDown={e => { if (enabled && !loading) press(e); }}
-      onPointerUp={release}
-      onPointerLeave={release}
-      onPointerCancel={release}
+      onPointerUp={release} onPointerLeave={release} onPointerCancel={release}
     >
       {loading ? '...' : (<>{extra}{label}</>)}
     </button>
@@ -208,52 +183,58 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
   // ─── STEP 1 : Destinataire ────────────────────────────────────────────
   if (step === 'recipient') {
     return (
-      <div style={{ minHeight: '100vh', background: BG_DEEP, padding: '0 0 120px' }}>
-        {header('Envoyer', 'Transfert instantane entre utilisateurs Terex', onBack || (() => {}))}
+      <div style={{ paddingBottom: 100 }}>
+        {subHeader('Envoyer', 'Transfert instantané entre utilisateurs Terex', onBack || (() => {}))}
 
-        <div style={{ maxWidth: 640, margin: '0 auto', padding: '24px 16px 0', display: 'flex', flexDirection: 'column', gap: 18 }}>
+        <div style={container}>
           {/* Mon Terex ID */}
           {profile?.terex_id && (
-            <div style={{ ...glassCard, padding: '20px 22px', position: 'relative', overflow: 'hidden' }}>
-              <div aria-hidden style={{
-                position: 'absolute', inset: 0, pointerEvents: 'none',
-                background: 'radial-gradient(120% 60% at 100% 0%, rgba(255,255,255,0.06) 0%, transparent 50%)',
-              }} />
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, position: 'relative' }}>
-                <div style={{ minWidth: 0 }}>
-                  <p style={{ color: FADE, fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 10px' }}>
-                    Mon Terex ID
-                  </p>
-                  <p style={{
-                    color: WHITE, fontSize: 26, fontWeight: 700, margin: 0,
-                    letterSpacing: '0.14em', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-                    fontVariantNumeric: 'tabular-nums', lineHeight: 1,
-                  }}>
-                    {profile.terex_id}
-                  </p>
-                </div>
-                <button
-                  onClick={copyMyId}
-                  aria-label="Copier"
-                  style={{
-                    width: 40, height: 40, borderRadius: 13,
-                    background: copied ? 'rgba(52,211,153,0.14)' : SUBTLE,
-                    border: `1px solid ${copied ? 'rgba(52,211,153,0.35)' : BORDER}`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    cursor: 'pointer', flexShrink: 0,
-                    transition: 'transform 0.15s ease, background 0.2s ease',
-                  }}
-                  onPointerDown={press} onPointerUp={release} onPointerLeave={release} onPointerCancel={release}
-                >
-                  {copied ? <Check size={16} color={GREEN} strokeWidth={2.4} /> : <Copy size={15} color={DIM} strokeWidth={1.8} />}
-                </button>
+            <div style={{
+              background: CARD, border: `1px solid ${BORDER}`, borderRadius: 18,
+              padding: '18px 20px',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14,
+            }}>
+              <div style={{ minWidth: 0 }}>
+                <p style={{
+                  color: '#6b7280', fontSize: 11, fontWeight: 600,
+                  textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px',
+                }}>
+                  Mon Terex ID
+                </p>
+                <p style={{
+                  color: '#fff', fontSize: 22, fontWeight: 700, margin: 0,
+                  letterSpacing: '2.5px',
+                  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+                  fontVariantNumeric: 'tabular-nums', lineHeight: 1,
+                }}>
+                  {profile.terex_id}
+                </p>
               </div>
+              <button
+                onClick={copyMyId}
+                aria-label="Copier"
+                style={{
+                  width: 40, height: 40, borderRadius: 12,
+                  background: copied ? 'rgba(74,222,128,0.14)' : BTN,
+                  border: `1px solid ${copied ? 'rgba(74,222,128,0.30)' : 'rgba(255,255,255,0.10)'}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer', flexShrink: 0,
+                  transition: 'transform 0.15s ease',
+                }}
+                onPointerDown={press} onPointerUp={release} onPointerLeave={release} onPointerCancel={release}
+              >
+                {copied ? <Check size={16} color={GREEN} strokeWidth={2.4} /> : <Copy size={15} color="rgba(255,255,255,0.75)" strokeWidth={1.8} />}
+              </button>
             </div>
           )}
 
           {/* Recherche */}
           <div>
-            <label style={{ color: FADE, fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', margin: '0 4px 10px' }}>
+            <label style={{
+              color: '#4b5563', fontSize: 11, fontWeight: 600,
+              textTransform: 'uppercase', letterSpacing: '0.08em',
+              display: 'block', margin: '0 4px 10px',
+            }}>
               Terex ID ou email du destinataire
             </label>
             <div style={{ display: 'flex', gap: 8 }}>
@@ -265,52 +246,48 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
                 placeholder="12345678 ou email@exemple.com"
                 style={{
                   flex: 1, minWidth: 0,
-                  background: SUBTLE, color: WHITE,
-                  border: `1.5px solid ${BORDER}`, borderRadius: 16,
-                  padding: '15px 18px', fontSize: 15, fontWeight: 500,
-                  outline: 'none',
-                  transition: 'border-color 0.2s ease, background 0.2s ease',
-                  letterSpacing: '0.01em',
+                  background: 'rgba(255,255,255,0.04)', color: '#fff',
+                  border: `1px solid ${BORDER}`, borderRadius: 12,
+                  padding: '14px 16px', fontSize: 15,
+                  outline: 'none', transition: 'border-color 0.2s ease',
                 }}
-                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.24)'; e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; }}
-                onBlur={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.background = SUBTLE; }}
+                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.20)'; }}
+                onBlur={e => { e.currentTarget.style.borderColor = BORDER; }}
               />
               <button
                 onClick={lookupUser}
                 disabled={looking || !identifier.trim()}
                 style={{
-                  background: identifier.trim() ? WHITE : SUBTLE,
-                  color: identifier.trim() ? '#0a0a0a' : FAINT,
-                  border: 'none', borderRadius: 16,
-                  padding: '0 22px', fontSize: 14.5, fontWeight: 700,
+                  background: identifier.trim() ? '#fff' : ICON_BG,
+                  color: identifier.trim() ? '#141414' : 'rgba(255,255,255,0.3)',
+                  border: 'none', borderRadius: 12,
+                  padding: '0 20px', fontSize: 14, fontWeight: 700,
                   cursor: identifier.trim() ? 'pointer' : 'default',
                   transition: 'transform 0.15s ease',
-                  flexShrink: 0, letterSpacing: '-0.01em',
+                  flexShrink: 0,
                 }}
                 onPointerDown={e => { if (identifier.trim()) press(e); }}
-                onPointerUp={release}
-                onPointerLeave={release}
-                onPointerCancel={release}
+                onPointerUp={release} onPointerLeave={release} onPointerCancel={release}
               >
                 {looking ? '...' : 'Chercher'}
               </button>
             </div>
             {lookupError && (
-              <p style={{ color: '#f87171', fontSize: 12.5, margin: '10px 4px 0', lineHeight: 1.5 }}>{lookupError}</p>
+              <p style={{ color: '#f87171', fontSize: 13, margin: '10px 4px 0' }}>{lookupError}</p>
             )}
           </div>
 
           {/* Hint */}
-          <div style={{ textAlign: 'center', padding: '20px 16px' }}>
+          <div style={{ textAlign: 'center', padding: '24px 16px 0' }}>
             <div style={{
-              width: 56, height: 56, borderRadius: 18, background: SUBTLE,
+              width: 52, height: 52, borderRadius: 16, background: ICON_BG,
               border: `1px solid ${BORDER}`,
               display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px',
             }}>
-              <Send size={20} color={FADE} strokeWidth={1.8} />
+              <Send size={20} color="rgba(255,255,255,0.4)" strokeWidth={1.8} />
             </div>
-            <p style={{ color: DIM, fontSize: 13, fontWeight: 500, lineHeight: 1.7, maxWidth: 320, margin: '0 auto' }}>
-              Demandez a votre destinataire son <strong style={{ color: WHITE }}>Terex ID</strong> ou utilisez son <strong style={{ color: WHITE }}>email</strong> de connexion Terex.
+            <p style={{ color: '#9ca3af', fontSize: 13, lineHeight: 1.7, maxWidth: 320, margin: '0 auto' }}>
+              Demandez à votre destinataire son <strong style={{ color: '#fff' }}>Terex ID</strong> ou utilisez son <strong style={{ color: '#fff' }}>email</strong> de connexion Terex.
             </p>
           </div>
         </div>
@@ -321,36 +298,39 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
   // ─── STEP 2 : Montant ─────────────────────────────────────────────────
   if (step === 'amount') {
     return (
-      <div style={{ minHeight: '100vh', background: BG_DEEP, padding: '0 0 120px' }}>
-        {header('Montant', `Envoi a ${recipient?.full_name || 'destinataire'}`, () => setStep('recipient'))}
+      <div style={{ paddingBottom: 100 }}>
+        {subHeader('Montant', `Envoi à ${recipient?.full_name || 'destinataire'}`, () => setStep('recipient'))}
 
-        <div style={{ maxWidth: 640, margin: '0 auto', padding: '24px 16px 0', display: 'flex', flexDirection: 'column', gap: 18 }}>
+        <div style={container}>
           {/* Recipient chip */}
-          <div style={{ ...glassCard, padding: '14px 18px', display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{
+            background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16,
+            padding: '13px 16px', display: 'flex', alignItems: 'center', gap: 14,
+          }}>
             <div style={{
-              width: 44, height: 44, borderRadius: 14,
-              background: SUBTLE, border: `1px solid ${BORDER}`,
+              width: 42, height: 42, borderRadius: 12,
+              background: ICON_BG, border: `1px solid ${BORDER}`,
               display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
             }}>
-              <span style={{ color: WHITE, fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>
+              <span style={{ color: '#fff', fontSize: 17, fontWeight: 700 }}>
                 {(recipient?.full_name || '?')[0].toUpperCase()}
               </span>
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ color: WHITE, fontSize: 14.5, fontWeight: 600, margin: 0, letterSpacing: '-0.01em', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <p style={{ color: '#fff', fontSize: 14.5, fontWeight: 600, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {recipient?.full_name}
               </p>
-              <p style={{ color: FADE, fontSize: 11.5, margin: '3px 0 0', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', letterSpacing: '0.08em', fontVariantNumeric: 'tabular-nums' }}>
+              <p style={{ color: '#6b7280', fontSize: 11.5, margin: '3px 0 0', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', letterSpacing: '0.06em', fontVariantNumeric: 'tabular-nums' }}>
                 ID {recipient?.terex_id}
               </p>
             </div>
             <button
               onClick={() => { setStep('recipient'); setRecipient(null); }}
               style={{
-                background: SUBTLE, border: `1px solid ${BORDER}`, borderRadius: 10,
-                padding: '7px 12px', fontSize: 11.5, color: DIM, cursor: 'pointer', fontWeight: 600,
+                background: BTN, border: `1px solid rgba(255,255,255,0.10)`, borderRadius: 10,
+                padding: '7px 12px', fontSize: 11.5, color: '#9ca3af', cursor: 'pointer', fontWeight: 600,
                 display: 'flex', alignItems: 'center', gap: 5,
-                transition: 'background 0.2s ease, transform 0.15s ease',
+                transition: 'transform 0.15s ease',
               }}
               onPointerDown={press} onPointerUp={release} onPointerLeave={release} onPointerCancel={release}
             >
@@ -358,55 +338,56 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
             </button>
           </div>
 
-          {/* Amount input hero */}
-          <div style={{ ...glassCard, padding: '32px 20px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-            <div aria-hidden style={{
-              position: 'absolute', inset: 0, pointerEvents: 'none',
-              background: 'radial-gradient(80% 40% at 50% 0%, rgba(255,255,255,0.04) 0%, transparent 60%)',
-            }} />
-            <p style={{ color: FADE, fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 14px', position: 'relative' }}>
-              Montant a envoyer
+          {/* Amount hero */}
+          <div style={{
+            background: CARD, border: `1px solid ${BORDER}`, borderRadius: 18,
+            padding: '28px 20px', textAlign: 'center',
+          }}>
+            <p style={{
+              color: '#6b7280', fontSize: 11, fontWeight: 600,
+              textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 12px',
+            }}>
+              Montant à envoyer
             </p>
-            <div style={{ position: 'relative' }}>
-              <input
-                ref={amountRef}
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                value={amountCfa}
-                onChange={e => setAmountCfa(e.target.value.replace(/[^0-9]/g, ''))}
-                placeholder="0"
-                style={{
-                  background: 'transparent', border: 'none', outline: 'none',
-                  color: WHITE, fontSize: isMobile ? 56 : 68, fontWeight: 300,
-                  letterSpacing: '-0.04em', textAlign: 'center', width: '100%', maxWidth: 320,
-                  lineHeight: 1, fontVariantNumeric: 'tabular-nums',
-                }}
-              />
-            </div>
-            <p style={{ color: FADE, fontSize: 13, margin: '10px 0 0', fontWeight: 500, letterSpacing: '0.05em', position: 'relative' }}>
-              CFA
-            </p>
+            <input
+              ref={amountRef}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={amountCfa}
+              onChange={e => setAmountCfa(e.target.value.replace(/[^0-9]/g, ''))}
+              placeholder="0"
+              style={{
+                background: 'transparent', border: 'none', outline: 'none',
+                color: '#fff', fontSize: isMobile ? 48 : 60, fontWeight: 300,
+                letterSpacing: '-2px', textAlign: 'center', width: '100%', maxWidth: 320,
+                lineHeight: 1, fontVariantNumeric: 'tabular-nums',
+              }}
+            />
+            <p style={{ color: '#6b7280', fontSize: 13, margin: '8px 0 0', fontWeight: 500 }}>CFA</p>
           </div>
 
-          {/* Live recap */}
+          {/* Recap live */}
           {cfa > 0 && (
-            <div style={{ ...glassCard, padding: '16px 20px', animation: 'fadeIn 0.25s ease' }}>
+            <div style={{
+              background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16,
+              padding: '16px 18px', animation: 'fadeIn 0.25s ease',
+            }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
-                <span style={{ color: DIM, fontSize: 13 }}>Recu par le destinataire</span>
-                <span style={{ color: WHITE, fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
+                <span style={{ color: '#9ca3af', fontSize: 13 }}>Reçu par le destinataire</span>
+                <span style={{ color: '#fff', fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
                   {nfCfa.format(cfa)} CFA · {nfUsdt.format(usdtAmount)} USDT
                 </span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
-                <span style={{ color: DIM, fontSize: 13 }}>Frais (1% · min 100 CFA)</span>
-                <span style={{ color: WHITE, fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
+                <span style={{ color: '#9ca3af', fontSize: 13 }}>Frais (1 % · min 100 CFA)</span>
+                <span style={{ color: '#fff', fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
                   {nfCfa.format(feeCfa)} CFA
                 </span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 12, borderTop: `1px solid ${BORDER}` }}>
-                <span style={{ color: WHITE, fontSize: 13.5, fontWeight: 700, letterSpacing: '-0.01em' }}>Total a payer</span>
-                <span style={{ color: WHITE, fontSize: 16, fontWeight: 700, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums' }}>
+                <span style={{ color: '#fff', fontSize: 13.5, fontWeight: 700 }}>Total à payer</span>
+                <span style={{ color: '#fff', fontSize: 16, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
                   {nfCfa.format(totalCfa)} CFA
                 </span>
               </div>
@@ -422,12 +403,12 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
                   key={v}
                   onClick={() => setAmountCfa(String(v))}
                   style={{
-                    background: selected ? 'rgba(255,255,255,0.11)' : SUBTLE,
-                    color: selected ? WHITE : DIM,
-                    border: `1px solid ${selected ? 'rgba(255,255,255,0.22)' : BORDER}`,
-                    borderRadius: 14, padding: '11px 8px', fontSize: 12.5, fontWeight: 700,
-                    cursor: 'pointer', transition: 'transform 0.15s ease, background 0.2s ease',
-                    fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.01em',
+                    background: selected ? BTN : ICON_BG,
+                    color: selected ? '#fff' : '#9ca3af',
+                    border: `1px solid ${selected ? 'rgba(255,255,255,0.15)' : BORDER}`,
+                    borderRadius: 12, padding: '11px 8px', fontSize: 12.5, fontWeight: 700,
+                    cursor: 'pointer', transition: 'transform 0.15s ease',
+                    fontVariantNumeric: 'tabular-nums',
                   }}
                   onPointerDown={press} onPointerUp={release} onPointerLeave={release} onPointerCancel={release}
                 >
@@ -439,7 +420,11 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
 
           {/* Message */}
           <div>
-            <label style={{ color: FADE, fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', margin: '0 4px 10px' }}>
+            <label style={{
+              color: '#4b5563', fontSize: 11, fontWeight: 600,
+              textTransform: 'uppercase', letterSpacing: '0.08em',
+              display: 'block', margin: '0 4px 10px',
+            }}>
               Message (optionnel)
             </label>
             <input
@@ -448,13 +433,13 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
               placeholder="Un petit mot..."
               style={{
                 width: '100%', boxSizing: 'border-box',
-                background: SUBTLE, color: WHITE,
-                border: `1.5px solid ${BORDER}`, borderRadius: 16,
+                background: 'rgba(255,255,255,0.04)', color: '#fff',
+                border: `1px solid ${BORDER}`, borderRadius: 12,
                 padding: '13px 16px', fontSize: 14, outline: 'none',
-                transition: 'border-color 0.2s ease, background 0.2s ease',
+                transition: 'border-color 0.2s ease',
               }}
-              onFocus={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.24)'; e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; }}
-              onBlur={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.background = SUBTLE; }}
+              onFocus={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.20)'; }}
+              onBlur={e => { e.currentTarget.style.borderColor = BORDER; }}
             />
           </div>
 
@@ -469,86 +454,86 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
   // ─── STEP 3 : Confirmation ────────────────────────────────────────────
   if (step === 'confirm') {
     return (
-      <div style={{ minHeight: '100vh', background: BG_DEEP, padding: '0 0 120px' }}>
-        {header('Confirmation', 'Verifiez les details avant d\'envoyer', () => setStep('amount'))}
+      <div style={{ paddingBottom: 100 }}>
+        {subHeader('Confirmation', 'Vérifiez les détails avant d\'envoyer', () => setStep('amount'))}
 
-        <div style={{ maxWidth: 640, margin: '0 auto', padding: '24px 16px 0', display: 'flex', flexDirection: 'column', gap: 18 }}>
-          <div style={{ ...glassCard, padding: '28px 22px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-            <div aria-hidden style={{
-              position: 'absolute', inset: 0, pointerEvents: 'none',
-              background: 'radial-gradient(80% 40% at 50% 0%, rgba(255,255,255,0.05) 0%, transparent 60%)',
-            }} />
-            <div style={{ position: 'relative' }}>
-              <div style={{
-                width: 60, height: 60, borderRadius: 18,
-                background: SUBTLE, border: `1px solid ${BORDER}`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px',
-              }}>
-                <Send size={24} color={WHITE} strokeWidth={1.8} />
-              </div>
-              <p style={{
-                color: WHITE, fontSize: isMobile ? 36 : 42, fontWeight: 300, letterSpacing: '-0.03em', margin: '0 0 6px',
-                fontVariantNumeric: 'tabular-nums', lineHeight: 1,
-              }}>
-                {nfCfa.format(cfa)}
-                <span style={{ fontSize: 18, color: FADE, marginLeft: 8 }}>CFA</span>
-              </p>
-              <p style={{ color: DIM, fontSize: 14, margin: 0, fontVariantNumeric: 'tabular-nums' }}>
-                = {nfUsdt.format(usdtAmount)} USDT au destinataire
-              </p>
+        <div style={container}>
+          <div style={{
+            background: CARD, border: `1px solid ${BORDER}`, borderRadius: 18,
+            padding: '26px 22px', textAlign: 'center',
+          }}>
+            <div style={{
+              width: 56, height: 56, borderRadius: 16, background: ICON_BG,
+              border: `1px solid ${BORDER}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px',
+            }}>
+              <Send size={22} color="#fff" strokeWidth={1.8} />
             </div>
+            <p style={{
+              color: '#fff', fontSize: isMobile ? 32 : 38, fontWeight: 300,
+              letterSpacing: '-1.5px', margin: '0 0 4px',
+              fontVariantNumeric: 'tabular-nums', lineHeight: 1,
+            }}>
+              {nfCfa.format(cfa)}
+              <span style={{ fontSize: 17, color: '#6b7280', marginLeft: 8 }}>CFA</span>
+            </p>
+            <p style={{ color: '#9ca3af', fontSize: 13.5, margin: 0, fontVariantNumeric: 'tabular-nums' }}>
+              = {nfUsdt.format(usdtAmount)} USDT au destinataire
+            </p>
           </div>
 
-          <div style={{ ...glassCard, padding: '18px 20px' }}>
+          <div style={{
+            background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16,
+            padding: '18px 20px',
+          }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 13 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-                <span style={{ color: DIM, fontSize: 13 }}>Destinataire</span>
-                <span style={{ color: WHITE, fontSize: 13, fontWeight: 600, textAlign: 'right' }}>{recipient?.full_name}</span>
+                <span style={{ color: '#9ca3af', fontSize: 13 }}>Destinataire</span>
+                <span style={{ color: '#fff', fontSize: 13, fontWeight: 600, textAlign: 'right' }}>{recipient?.full_name}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: DIM, fontSize: 13 }}>Terex ID</span>
-                <span style={{ color: WHITE, fontSize: 13, fontWeight: 600, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', letterSpacing: '0.06em', fontVariantNumeric: 'tabular-nums' }}>
+                <span style={{ color: '#9ca3af', fontSize: 13 }}>Terex ID</span>
+                <span style={{ color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', letterSpacing: '0.06em', fontVariantNumeric: 'tabular-nums' }}>
                   {recipient?.terex_id}
                 </span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: DIM, fontSize: 13 }}>Taux applique</span>
-                <span style={{ color: WHITE, fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
+                <span style={{ color: '#9ca3af', fontSize: 13 }}>Taux appliqué</span>
+                <span style={{ color: '#fff', fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
                   {nfCfa.format(rate)} CFA/USDT
                 </span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: DIM, fontSize: 13 }}>Frais Terex</span>
-                <span style={{ color: WHITE, fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{nfCfa.format(feeCfa)} CFA</span>
+                <span style={{ color: '#9ca3af', fontSize: 13 }}>Frais Terex</span>
+                <span style={{ color: '#fff', fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{nfCfa.format(feeCfa)} CFA</span>
               </div>
               {message.trim() && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-                  <span style={{ color: DIM, fontSize: 13, flexShrink: 0 }}>Message</span>
-                  <span style={{ color: WHITE, fontSize: 13, fontStyle: 'italic', textAlign: 'right', lineHeight: 1.4 }}>« {message} »</span>
+                  <span style={{ color: '#9ca3af', fontSize: 13, flexShrink: 0 }}>Message</span>
+                  <span style={{ color: '#fff', fontSize: 13, fontStyle: 'italic', textAlign: 'right', lineHeight: 1.4 }}>« {message} »</span>
                 </div>
               )}
               <div style={{
                 display: 'flex', justifyContent: 'space-between',
                 paddingTop: 13, borderTop: `1px solid ${BORDER}`, marginTop: 4,
               }}>
-                <span style={{ color: WHITE, fontSize: 14, fontWeight: 700, letterSpacing: '-0.01em' }}>Total a payer</span>
-                <span style={{ color: WHITE, fontSize: 18, fontWeight: 700, letterSpacing: '-0.015em', fontVariantNumeric: 'tabular-nums' }}>
+                <span style={{ color: '#fff', fontSize: 14, fontWeight: 700 }}>Total à payer</span>
+                <span style={{ color: '#fff', fontSize: 18, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
                   {nfCfa.format(totalCfa)} CFA
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Info labo */}
           <div style={{
             background: 'rgba(251,191,36,0.05)',
             border: '1px solid rgba(251,191,36,0.18)',
-            borderRadius: 14, padding: '13px 15px',
+            borderRadius: 12, padding: '13px 15px',
             display: 'flex', gap: 10, alignItems: 'flex-start',
           }}>
             <Info size={15} color={AMBER} style={{ flexShrink: 0, marginTop: 1 }} strokeWidth={2} />
             <p style={{ color: 'rgba(251,191,36,0.92)', fontSize: 12, lineHeight: 1.55, margin: 0 }}>
-              <strong>Mode labo :</strong> le paiement est simule. Aucun fonds reel n'est debite. Le transfert est directement pret a etre reclame par le destinataire.
+              <strong>Mode test :</strong> le paiement est simulé. Aucun fonds réel n'est débité. Le transfert est directement prêt à être réclamé par le destinataire.
             </p>
           </div>
 
@@ -564,27 +549,28 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
 
   // ─── STEP 4 : Succes ──────────────────────────────────────────────────
   return (
-    <div style={{ minHeight: '100vh', background: BG_DEEP, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '80px 20px 40px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '60px 20px 40px', maxWidth: 500, margin: '0 auto' }}>
       <div style={{
-        width: 88, height: 88, borderRadius: 26,
-        background: 'rgba(52,211,153,0.14)',
-        border: '1px solid rgba(52,211,153,0.28)',
+        width: 80, height: 80, borderRadius: 24,
+        background: 'rgba(74,222,128,0.12)',
+        border: '1px solid rgba(74,222,128,0.25)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        marginBottom: 26,
-        animation: 'scaleIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        marginBottom: 24,
+        animation: 'scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
       }}>
-        <CheckCircle2 size={42} color={GREEN} strokeWidth={1.8} />
+        <CheckCircle2 size={40} color={GREEN} strokeWidth={1.7} />
       </div>
 
-      <h2 style={{ color: WHITE, fontSize: 26, fontWeight: 700, margin: '0 0 10px', letterSpacing: '-0.03em', textAlign: 'center' }}>
-        Transfert envoye
+      <h2 style={{ color: '#fff', fontSize: 24, fontWeight: 700, margin: '0 0 10px', textAlign: 'center' }}>
+        Transfert envoyé
       </h2>
-      <p style={{ color: DIM, fontSize: 14.5, margin: '0 0 34px', textAlign: 'center', lineHeight: 1.6, maxWidth: 400 }}>
-        {nfCfa.format(cfa)} CFA prets a etre reclames par <strong style={{ color: WHITE }}>{recipient?.full_name}</strong>.
+      <p style={{ color: '#9ca3af', fontSize: 14.5, margin: '0 0 32px', textAlign: 'center', lineHeight: 1.6 }}>
+        {nfCfa.format(cfa)} CFA prêts à être réclamés par <strong style={{ color: '#fff' }}>{recipient?.full_name}</strong>.
       </p>
 
       <div style={{
-        ...glassCard, padding: '18px 20px', width: '100%', maxWidth: 440, marginBottom: 16,
+        background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16,
+        padding: '18px 20px', width: '100%', marginBottom: 14,
         display: 'flex', gap: 12, alignItems: 'flex-start',
       }}>
         <div style={{
@@ -595,52 +581,54 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
           <Clock size={16} color={AMBER} strokeWidth={2} />
         </div>
         <div>
-          <p style={{ color: WHITE, fontSize: 14, fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.01em' }}>
-            En attente de reception
+          <p style={{ color: '#fff', fontSize: 14, fontWeight: 700, margin: '0 0 4px' }}>
+            En attente de réception
           </p>
-          <p style={{ color: DIM, fontSize: 12.5, margin: 0, lineHeight: 1.55 }}>
-            Le destinataire sera notifie et choisira ou recevoir ses USDT (wallet externe, Binance...).
+          <p style={{ color: '#9ca3af', fontSize: 12.5, margin: 0, lineHeight: 1.55 }}>
+            Le destinataire sera notifié et choisira où recevoir ses USDT (wallet externe, Binance...).
           </p>
         </div>
       </div>
 
-      <div style={{ ...glassCard, padding: '18px 20px', width: '100%', maxWidth: 440, marginBottom: 32 }}>
+      <div style={{
+        background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16,
+        padding: '18px 20px', width: '100%', marginBottom: 24,
+      }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: DIM, fontSize: 13 }}>Reference</span>
-            <span style={{ color: WHITE, fontSize: 12.5, fontWeight: 600, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
+            <span style={{ color: '#9ca3af', fontSize: 13 }}>Référence</span>
+            <span style={{ color: '#fff', fontSize: 12.5, fontWeight: 600, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
               {transferId?.slice(0, 8).toUpperCase()}
             </span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: DIM, fontSize: 13 }}>Destinataire</span>
-            <span style={{ color: WHITE, fontSize: 13, fontWeight: 600 }}>{recipient?.full_name}</span>
+            <span style={{ color: '#9ca3af', fontSize: 13 }}>Destinataire</span>
+            <span style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>{recipient?.full_name}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: DIM, fontSize: 13 }}>Montant</span>
-            <span style={{ color: WHITE, fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
+            <span style={{ color: '#9ca3af', fontSize: 13 }}>Montant</span>
+            <span style={{ color: '#fff', fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
               {nfCfa.format(cfa)} CFA · {nfUsdt.format(usdtAmount)} USDT
             </span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: DIM, fontSize: 13 }}>Frais</span>
-            <span style={{ color: WHITE, fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{nfCfa.format(feeCfa)} CFA</span>
+            <span style={{ color: '#9ca3af', fontSize: 13 }}>Frais</span>
+            <span style={{ color: '#fff', fontSize: 13, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{nfCfa.format(feeCfa)} CFA</span>
           </div>
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: 10, width: '100%', maxWidth: 440 }}>
+      <div style={{ display: 'flex', gap: 10, width: '100%' }}>
         <button
           onClick={() => {
             setStep('recipient'); setIdentifier(''); setRecipient(null);
             setAmountCfa(''); setMessage(''); setTransferId(null);
           }}
           style={{
-            flex: 1, padding: '15px', borderRadius: 16,
-            background: SUBTLE, color: WHITE,
-            border: `1px solid ${BORDER}`, fontSize: 14, fontWeight: 600,
-            cursor: 'pointer', transition: 'transform 0.15s ease, background 0.2s ease',
-            letterSpacing: '-0.01em',
+            flex: 1, padding: '14px', borderRadius: 12,
+            background: BTN, color: '#fff',
+            border: `1px solid rgba(255,255,255,0.10)`, fontSize: 14, fontWeight: 600,
+            cursor: 'pointer', transition: 'transform 0.15s ease',
           }}
           onPointerDown={press} onPointerUp={release} onPointerLeave={release} onPointerCancel={release}
         >
@@ -649,11 +637,10 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
         <button
           onClick={() => onBack?.()}
           style={{
-            flex: 1, padding: '15px', borderRadius: 16,
-            background: WHITE, color: '#0a0a0a',
+            flex: 1, padding: '14px', borderRadius: 12,
+            background: '#fff', color: '#141414',
             border: 'none', fontSize: 14, fontWeight: 700,
             cursor: 'pointer', transition: 'transform 0.15s ease',
-            letterSpacing: '-0.01em',
           }}
           onPointerDown={press} onPointerUp={release} onPointerLeave={release} onPointerCancel={release}
         >
@@ -661,12 +648,7 @@ export function SendMoney({ onBack }: { onBack?: () => void }) {
         </button>
       </div>
 
-      <style>{`
-        @keyframes scaleIn {
-          0% { transform: scale(0.5); opacity: 0; }
-          100% { transform: scale(1); opacity: 1; }
-        }
-      `}</style>
+      <style>{`@keyframes scaleIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }`}</style>
     </div>
   );
 }
