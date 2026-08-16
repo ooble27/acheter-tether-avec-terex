@@ -9,6 +9,7 @@ interface UserProfile {
   phone: string;
   country: string;
   language: string;
+  terex_id?: string;
 }
 
 export const useUserProfile = () => {
@@ -29,7 +30,7 @@ export const useUserProfile = () => {
       
       const { data, error } = await supabase
         .from('profiles')
-        .select('full_name, phone, country, language')
+        .select('full_name, phone, country, language, terex_id')
         .eq('id', user.id)
         .single();
 

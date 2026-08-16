@@ -689,7 +689,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
       </div>
 
       {/* Avatar hero */}
-      <div style={{ padding: '20px 24px 32px' }}>
+      <div style={{ padding: '20px 24px 24px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', textAlign: 'center' }}>
           <div style={{ width: '88px', height: '88px', borderRadius: '50%', background: '#2d2d2d', border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '30px', fontWeight: 700, color: '#fff', letterSpacing: '-1px' }}>
             {initials}
@@ -702,6 +702,46 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
           </div>
         </div>
       </div>
+
+      {/* Terex ID — identifiant unique pour recevoir des transferts */}
+      {profile?.terex_id && (
+        <div style={{ padding: '0 20px 24px', maxWidth: '560px', margin: '0 auto' }}>
+          <div style={{
+            background: CARD, border: `1px solid ${BORDER}`, borderRadius: '18px',
+            padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '14px',
+          }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ color: '#6b7280', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 6px' }}>
+                Mon Terex ID
+              </p>
+              <p style={{ color: '#fff', fontSize: '22px', fontWeight: 700, margin: 0, letterSpacing: '3px', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
+                {profile.terex_id}
+              </p>
+              <p style={{ color: '#6b7280', fontSize: '11.5px', margin: '6px 0 0', lineHeight: 1.5 }}>
+                Partagez cet identifiant pour recevoir des transferts entre utilisateurs Terex.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                navigator.clipboard?.writeText(profile.terex_id!);
+                toast({ title: 'Terex ID copié' });
+              }}
+              style={{
+                width: '44px', height: '44px', borderRadius: '12px',
+                background: BTN, border: `1px solid rgba(255,255,255,0.10)`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', flexShrink: 0, transition: 'transform 0.15s ease',
+              }}
+              onMouseDown={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(0.94)'; }}
+              onMouseUp={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)'; }}
+              aria-label="Copier le Terex ID"
+            >
+              <Copy size={17} color="rgba(255,255,255,0.75)" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Contenu principal : grille desktop / liste mobile */}
       {isMobile ? (
