@@ -1,4 +1,4 @@
-import { Coins, HandCoins, Send } from 'lucide-react';
+import { Coins, HandCoins } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions';
 import { useTerexRates } from '@/hooks/useTerexRates';
@@ -32,7 +32,6 @@ const ICON_COLOR = 'rgba(255,255,255,0.85)';
 const quickActions = [
   { id: 'buy',  label: 'Acheter', icon: Coins },
   { id: 'sell', label: 'Vendre',  icon: HandCoins },
-  { id: 'send', label: 'Envoyer', icon: Send },
 ];
 
 function getGreeting() {
@@ -93,19 +92,17 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
         {/* Quick actions — style Ooble Dashboard : grid 2 cols, chip
             horizontal avec icône ronde + label, sans texture "carte grande". */}
         <div style={{ padding: '4px 20px 0' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             {quickActions.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
                 onClick={() => onNavigate?.(id)}
-                style={{ background: CARD, borderRadius: '16px', border: `1px solid ${BORDER}`, padding: '14px 12px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', cursor: 'pointer', textAlign: 'center', transition: 'transform 0.15s ease, background 0.15s', outline: 'none', WebkitTapHighlightColor: 'transparent' }}
-                onTouchStart={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(0.95)'; }}
-                onTouchEnd={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)'; }}
+                style={{ background: CARD, borderRadius: '16px', border: `1px solid ${BORDER}`, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', textAlign: 'left', transition: 'background 0.15s', outline: 'none', WebkitTapHighlightColor: 'transparent' }}
               >
-                <span style={{ width: '44px', height: '44px', borderRadius: '14px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon size={21} color={ICON_COLOR} strokeWidth={1.6} />
+                <span style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon size={20} color={ICON_COLOR} strokeWidth={1.6} />
                 </span>
-                <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{label}</span>
+                <span style={{ color: '#fff', fontSize: '15px', fontWeight: 500 }}>{label}</span>
               </button>
             ))}
           </div>
@@ -167,21 +164,19 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
 
         {/* Actions + Réseaux */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             {quickActions.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
                 onClick={() => onNavigate?.(id)}
-                style={{ background: CARD, borderRadius: '16px', border: `1px solid ${BORDER}`, padding: '17px 14px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', cursor: 'pointer', transition: 'transform 0.15s ease, background 0.15s', outline: 'none', textAlign: 'center' }}
+                style={{ background: CARD, borderRadius: '16px', border: `1px solid ${BORDER}`, padding: '17px 20px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', transition: 'background 0.15s', outline: 'none', textAlign: 'left' }}
                 onMouseEnter={e => { e.currentTarget.style.background = '#252525'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = CARD; e.currentTarget.style.transform = 'scale(1)'; }}
-                onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.96)'; }}
-                onMouseUp={e => { e.currentTarget.style.transform = 'scale(1)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = CARD; }}
               >
-                <span style={{ width: '44px', height: '44px', borderRadius: '14px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon size={21} color={ICON_COLOR} strokeWidth={1.6} />
+                <span style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon size={20} color={ICON_COLOR} strokeWidth={1.6} />
                 </span>
-                <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>{label}</span>
+                <span style={{ color: '#fff', fontSize: '15px', fontWeight: 500 }}>{label}</span>
               </button>
             ))}
           </div>

@@ -1,13 +1,7 @@
 import { useState } from 'react';
-import { ArrowLeft, Receipt, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Receipt, Send, ChevronRight } from 'lucide-react';
 import { BillPaymentLab } from './BillPaymentLab';
-
-/**
- * Labo — zone d'expérimentation admin-only, isolée de la plateforme
- * de production. Chaque idée de nouvelle fonctionnalité (vision produit)
- * obtient sa propre page ici, testable sans impact sur les commandes
- * réelles ni les fonds des clients, avant toute intégration définitive.
- */
+import { SendMoney } from '@/components/features/SendMoney';
 
 const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -23,16 +17,41 @@ interface Experiment {
 
 const EXPERIMENTS: Experiment[] = [
   {
+    id: 'p2p_transfer',
+    label: 'Transfert P2P',
+    desc: 'Envoyer des USDT entre utilisateurs Terex — instantane, gratuit, sans blockchain.',
+    icon: Send,
+    status: 'testing',
+  },
+  {
     id: 'bill_payment',
     label: 'Paiement de factures en USDT',
-    desc: 'Senelec, Woyofal, SDE, Canal+, crédit téléphone — réglé en stablecoin, payé en CFA côté fournisseur.',
+    desc: 'Senelec, Woyofal, SDE, Canal+, credit telephone — regle en stablecoin, paye en CFA cote fournisseur.',
     icon: Receipt,
-    status: 'testing',
+    status: 'draft',
   },
 ];
 
 export function LaboAdmin() {
   const [active, setActive] = useState<string | null>(null);
+
+  if (active === 'p2p_transfer') {
+    return (
+      <div>
+        <button
+          onClick={() => setActive(null)}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8, background: CARD, color: '#fff',
+            border: `1px solid ${BORDER}`, borderRadius: 10, padding: '8px 14px', fontSize: 13,
+            fontWeight: 600, cursor: 'pointer', marginBottom: 16,
+          }}
+        >
+          <ArrowLeft size={15} /> Retour au labo
+        </button>
+        <SendMoney onBack={() => setActive(null)} />
+      </div>
+    );
+  }
 
   if (active === 'bill_payment') {
     return (
@@ -61,7 +80,13 @@ export function LaboAdmin() {
           style={{
             display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left', width: '100%',
             background: CARD, border: `1px solid ${BORDER}`, borderRadius: 16, padding: 16, cursor: 'pointer',
+            transition: 'transform 0.15s ease',
           }}
+          onMouseDown={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(0.98)'; }}
+          onMouseUp={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)'; }}
+          onTouchStart={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(0.98)'; }}
+          onTouchEnd={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)'; }}
         >
           <div style={{ width: 42, height: 42, borderRadius: 12, background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <Icon size={19} color="rgba(255,255,255,0.85)" strokeWidth={1.8} />

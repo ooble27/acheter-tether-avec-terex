@@ -1,5 +1,5 @@
 import React from 'react';
-import { House, Coins, HandCoins, Send } from 'lucide-react';
+import { House, Coins, HandCoins } from 'lucide-react';
 
 interface DesktopBottomNavProps {
   activeSection: string;
@@ -10,7 +10,6 @@ const navItems = [
   { id: 'home', Icon: House,     label: 'Accueil' },
   { id: 'buy',  Icon: Coins,     label: 'Acheter' },
   { id: 'sell', Icon: HandCoins, label: 'Vendre'  },
-  { id: 'send', Icon: Send,      label: 'Envoyer' },
 ];
 
 export function DesktopBottomNav({ activeSection, setActiveSection }: DesktopBottomNavProps) {
