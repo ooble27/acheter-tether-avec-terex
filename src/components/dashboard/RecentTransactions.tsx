@@ -7,9 +7,11 @@ interface RecentTransactionsProps {
   onNavigate?: (section: string) => void;
 }
 
-const CARD = '#1e1e1e';
-const BORDER = 'rgba(255,255,255,0.07)';
-const ACCENT = 'rgba(255,255,255,0.45)';
+// Card « pleine » — meme traitement que DashboardHome pour la coherence.
+const CARD = '#242424';
+const BORDER = 'rgba(255,255,255,0.10)';
+const ACCENT = 'rgba(255,255,255,0.55)';
+const ICON_SQUARE = '#2f2f2f';
 
 const TetherLogo = () => (
   <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style={{ width: '12px', height: '12px' }} />
@@ -27,8 +29,8 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
   const recentTransactions = transactions.slice(0, 3);
 
   const typeConfig = (type: string) => {
-    const iconBg = 'rgba(255,255,255,0.06)';
-    const iconColor = 'rgba(255,255,255,0.85)';
+    const iconBg = ICON_SQUARE;
+    const iconColor = 'rgba(255,255,255,0.90)';
     switch (type) {
       case 'buy':      return { label: 'Achat USDT',  Icon: Coins,     iconColor, iconBg };
       case 'sell':     return { label: 'Vente USDT',  Icon: HandCoins, iconColor, iconBg };
@@ -74,7 +76,7 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
       {/* Empty */}
       {!loading && recentTransactions.length === 0 && (
         <div style={{ padding: '40px 20px', textAlign: 'center' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: 'rgba(255,255,255,0.04)', margin: '0 auto 12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: ICON_SQUARE, margin: '0 auto 12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Coins size={20} color="#4b5563" />
           </div>
           <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 4px', fontWeight: 500 }}>Aucune transaction</p>
@@ -129,7 +131,7 @@ export function RecentTransactions({ onNavigate }: RecentTransactionsProps) {
             <button
               onClick={() => repeat(tx)}
               title="Refaire"
-              style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(255,255,255,0.04)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
+              style={{ width: '32px', height: '32px', borderRadius: '10px', background: ICON_SQUARE, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
             >
               <RotateCcw size={13} color="#6b7280" />
             </button>

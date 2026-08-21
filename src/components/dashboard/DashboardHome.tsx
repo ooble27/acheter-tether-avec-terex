@@ -22,10 +22,12 @@ interface DashboardHomeProps {
 }
 
 const ACCENT_LIGHT = '#e5e5e5';
-const CARD = '#1e1e1e';
-const BORDER = 'rgba(255,255,255,0.07)';
-const ICON_BG = 'rgba(255,255,255,0.06)';
-const ICON_COLOR = 'rgba(255,255,255,0.85)';
+// Cards plus « pleines » — plus de contraste avec le fond (#1a1a1a).
+// Avant : #1e1e1e (trop transparent), maintenant : #242424 + bordure marquee.
+const CARD = '#242424';
+const BORDER = 'rgba(255,255,255,0.10)';
+const ICON_BG = '#2f2f2f';
+const ICON_COLOR = 'rgba(255,255,255,0.90)';
 
 // Style Ooble Dashboard : uniquement Acheter et Vendre (pas de virement,
 // pas d'OTC). L'OTC reste accessible via le profil / menu latéral.
@@ -170,7 +172,7 @@ export function DashboardHome({ user, onNavigate }: DashboardHomeProps) {
                 key={id}
                 onClick={() => onNavigate?.(id)}
                 style={{ background: CARD, borderRadius: '16px', border: `1px solid ${BORDER}`, padding: '17px 20px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', transition: 'background 0.15s', outline: 'none', textAlign: 'left' }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#252525'; }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#2a2a2a'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = CARD; }}
               >
                 <span style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
