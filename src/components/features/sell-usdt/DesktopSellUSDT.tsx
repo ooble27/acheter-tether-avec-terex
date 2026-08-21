@@ -178,7 +178,7 @@ export function DesktopSellUSDT() {
 
   if (showKYCPage) return <KYCPage onBack={() => setShowKYCPage(false)} />;
 
-  const copyToClipboard = async (text: string, field: string = 'default') => {
+  const copyToClipboard = async (text: string, field: string = 'default', label?: string) => {
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(text);
@@ -194,8 +194,9 @@ export function DesktopSellUSDT() {
       }
       setCopiedField(field);
       setTimeout(() => setCopiedField(null), 2000);
+      toast({ title: 'Copié !', description: label || 'Contenu copié dans le presse-papier' });
     } catch (e) {
-      /* silent */
+      toast({ title: 'Impossible de copier', description: 'Sélectionnez et copiez manuellement.', variant: 'destructive' });
     }
   };
 
@@ -339,8 +340,13 @@ export function DesktopSellUSDT() {
                     <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '12px' }}>{label}</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ color: '#fff', fontSize: '13px' }}>{val}</span>
-                      <button onClick={() => copyToClipboard(val)} style={{ padding: '4px', background: SEL_BG, border: 'none', borderRadius: '6px', cursor: 'pointer', color: '#fff', display: 'flex' }}>
-                        <Copy size={12} />
+                      <button onClick={() => copyToClipboard(val, label, label)}
+                        style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 8px',
+                          background: copiedField === label ? 'rgba(74,222,128,0.15)' : SEL_BG,
+                          border: 'none', borderRadius: '6px', cursor: 'pointer',
+                          color: copiedField === label ? '#4ade80' : '#fff',
+                          fontSize: '11px', fontWeight: 600, transition: 'all 0.15s' }}>
+                        {copiedField === label ? <><CheckCircle size={12} /> Copié</> : <Copy size={12} />}
                       </button>
                     </div>
                   </div>

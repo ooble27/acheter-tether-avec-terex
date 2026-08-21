@@ -143,7 +143,7 @@ export function MobileSellUSDT() {
     setPhoneNumber('');
   };
 
-  const copyToClipboard = async (text: string, field: string) => {
+  const copyToClipboard = async (text: string, field: string, label?: string) => {
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(text);
@@ -159,8 +159,9 @@ export function MobileSellUSDT() {
       }
       setCopiedField(field);
       setTimeout(() => setCopiedField(null), 2000);
+      toast({ title: 'Copié !', description: label || 'Contenu copié dans le presse-papier' });
     } catch (e) {
-      /* silent */
+      toast({ title: 'Impossible de copier', description: 'Sélectionnez et copiez manuellement.', variant: 'destructive' });
     }
   };
 
@@ -319,9 +320,13 @@ export function MobileSellUSDT() {
                     <span style={{ color: '#6b7280', fontSize: '12px' }}>{label}</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{value}</span>
-                      <button onClick={() => copyToClipboard(value, label)}
-                        style={{ padding: '4px', background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
-                        <Copy size={13} color="#9ca3af" />
+                      <button onClick={() => copyToClipboard(value, label, label)}
+                        style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 8px',
+                          background: copiedField === label ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.06)',
+                          border: 'none', borderRadius: '6px', cursor: 'pointer',
+                          color: copiedField === label ? '#4ade80' : '#9ca3af',
+                          fontSize: '11px', fontWeight: 600, transition: 'all 0.15s' }}>
+                        {copiedField === label ? <><CheckCircle size={13} /> Copié</> : <Copy size={13} />}
                       </button>
                     </div>
                   </div>
