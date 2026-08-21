@@ -52,21 +52,50 @@ serve(async (req) => {
     }
 
     const userIds = users.map(u => u.id);
-    const { data: infos } = await admin
-      .from("client_infos")
-      .select("user_id, full_name, first_name, last_name")
-      .in("user_id", userIds);
+    const [{ data: infos }, { data: profiles }] = await Promise.all([
+      admin.from("client_infos").select("user_id, full_name, first_name, last_name").in("user_id", userIds),
+      admin.from("profiles").select("id, full_name").in("id", userIds),
+    ]);
 
     const infoByUid = new Map<string, any>();
     for (const i of infos || []) infoByUid.set(i.user_id, i);
+    const profileByUid = new Map<string, any>();
+    for (const p of profiles || []) profileByUid.set(p.id, p);
+
+    // Cherche le prénom dans plusieurs sources, sans jamais retomber sur le préfixe d'email
+    // (le préfixe donnerait des « bonjour » ou « a » comme prénom, ce qui pollue les messages).
+    const pickFirstName = (u: any, info: any, profile: any): string => {
+      const sources = [
+        info?.first_name,
+        info?.full_name?.split(" ")[0],
+        profile?.full_name?.split(" ")[0],
+        u?.user_metadata?.first_name,
+        u?.user_metadata?.name?.split(" ")[0],
+        u?.user_metadata?.full_name?.split(" ")[0],
+      ];
+      for (const s of sources) {
+        const v = (s || "").trim();
+        if (v) return v;
+      }
+      return "";
+    };
+
+    const pickFullName = (u: any, info: any, profile: any, first: string): string => {
+      const last = info?.last_name || info?.full_name?.split(" ").slice(1).join(" ") ||
+                   profile?.full_name?.split(" ").slice(1).join(" ") || "";
+      const built = [first, last].filter(Boolean).join(" ").trim();
+      if (built) return built;
+      // Aucune trace de nom réel — on tombe sur l'email pour l'affichage annuaire uniquement
+      return u.email!;
+    };
 
     const directory = users
       .filter(u => u.email && u.email_confirmed_at)
       .map(u => {
-        const info = infoByUid.get(u.id) || {};
-        const first = info.first_name || info.full_name?.split(" ")[0] || "";
-        const last = info.last_name || info.full_name?.split(" ").slice(1).join(" ") || "";
-        const fullName = [first, last].filter(Boolean).join(" ") || u.email!.split("@")[0];
+        const info = infoByUid.get(u.id);
+        const profile = profileByUid.get(u.id);
+        const first = pickFirstName(u, info, profile);
+        const fullName = pickFullName(u, info, profile, first);
         return {
           id: u.id,
           email: u.email!,

@@ -254,14 +254,24 @@ const varsFor = (r: Recipient) => ({
   nom_complet: r.fullName || r.email,
   email: r.email,
 });
+// Substitue les variables. Si {{prenom}} est vide et suivi d'une ponctuation
+// (« Bonjour {{prenom}}, » → « Bonjour, »), on supprime les espaces orphelins
+// devant la ponctuation ou en fin de ligne pour éviter des tournures cassées.
 const substituteVars = (text: string, vars: Record<string, string>) =>
-  text.replace(/\{\{(\w+)\}\}/g, (_, k) => (vars[k] ?? `{{${k}}}`));
+  text
+    .replace(/\{\{(\w+)\}\}/g, (_, k) => (vars[k] ?? `{{${k}}}`))
+    .replace(/[ \t]+([,;:!?])/g, '$1')
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/[ \t]{2,}/g, ' ');
 
-const manualRecipient = (email: string): Recipient => {
-  const local = email.split('@')[0] ?? '';
-  const first = (local.split(/[._-]/)[0] || '').replace(/^./, c => c.toUpperCase());
-  return { email, firstName: first, fullName: first };
-};
+// Destinataire tapé à la main : on n'invente pas de prénom depuis le préfixe
+// d'email (ça donnait des « Bonjour a, » ou « Bonjour bonjour, »). Sans nom
+// réel, le composer utilisera « Bonjour, » (nettoyé par substituteVars).
+const manualRecipient = (email: string): Recipient => ({
+  email,
+  firstName: '',
+  fullName: email,
+});
 
 // ── Localstorage : historique envois ─────────────────────────────────────
 const SENT_KEY = 'terex_mailbox_sent_v1';
