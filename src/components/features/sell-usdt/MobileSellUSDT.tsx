@@ -320,12 +320,13 @@ export function MobileSellUSDT() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{value}</span>
                       <button onClick={() => copyToClipboard(value, label)}
-                        style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 8px',
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          width: 26, height: 26,
                           background: copiedField === label ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.06)',
                           border: 'none', borderRadius: '6px', cursor: 'pointer',
                           color: copiedField === label ? '#4ade80' : '#9ca3af',
-                          fontSize: '11px', fontWeight: 600, transition: 'all 0.15s' }}>
-                        {copiedField === label ? <><CheckCircle size={13} /> Copié</> : <Copy size={13} />}
+                          transition: 'all 0.15s' }}>
+                        {copiedField === label ? <CheckCircle size={13} /> : <Copy size={13} />}
                       </button>
                     </div>
                   </div>
@@ -497,7 +498,7 @@ export function MobileSellUSDT() {
                       </p>
                       <button onClick={() => copyToClipboard(WALLET_ADDRESSES[network], 'address')}
                         style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', background: copiedField === 'address' ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.08)', border: 'none', borderRadius: '10px', cursor: 'pointer', flexShrink: 0, color: copiedField === 'address' ? '#4ade80' : '#fff', fontSize: '12px', fontWeight: 600, transition: 'all 0.15s' }}>
-                        {copiedField === 'address' ? <><CheckCircle size={13} /> Copié</> : <><Copy size={13} /> Copier</>}
+                        {copiedField === 'address' ? <CheckCircle size={13} /> : <Copy size={13} />} Copier
                       </button>
                     </div>
                   </div>

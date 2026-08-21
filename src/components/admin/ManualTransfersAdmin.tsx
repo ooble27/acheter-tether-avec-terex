@@ -98,7 +98,6 @@ export function ManualTransfersAdmin() {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
-    toast.success('Copié!');
   };
 
   const checkPaymentStatus = async (orderId: string, paymentReference?: string) => {

@@ -1160,7 +1160,7 @@ function ApiPage({ onBack, lang }: { onBack: () => void; lang: Lang }) {
               <div style={{ display: 'flex', gap: 8 }}>
                 <button onClick={() => copy(k.key, k.id)}
                   style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: copied === k.id ? C.teal : C.t3, background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT, transition: 'color 0.12s' }}>
-                  {copied === k.id ? <><Check size={11} /> {fr ? 'Copié' : 'Copied'}</> : <><Copy size={11} /> {fr ? 'Copier' : 'Copy'}</>}
+                  {copied === k.id ? <Check size={11} /> : <Copy size={11} />} {fr ? 'Copier' : 'Copy'}
                 </button>
                 <DangerBtn onClick={() => setKeys(p => p.filter(x => x.id !== k.id))} style={{ height: 28, padding: '0 10px', fontSize: 11 }}>
                   <Trash2 size={11} /> {fr ? 'Supprimer' : 'Delete'}

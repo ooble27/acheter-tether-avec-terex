@@ -340,12 +340,13 @@ export function DesktopSellUSDT() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ color: '#fff', fontSize: '13px' }}>{val}</span>
                       <button onClick={() => copyToClipboard(val, label)}
-                        style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 8px',
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          width: 24, height: 24,
                           background: copiedField === label ? 'rgba(74,222,128,0.15)' : SEL_BG,
                           border: 'none', borderRadius: '6px', cursor: 'pointer',
                           color: copiedField === label ? '#4ade80' : '#fff',
-                          fontSize: '11px', fontWeight: 600, transition: 'all 0.15s' }}>
-                        {copiedField === label ? <><CheckCircle size={12} /> Copié</> : <Copy size={12} />}
+                          transition: 'all 0.15s' }}>
+                        {copiedField === label ? <CheckCircle size={12} /> : <Copy size={12} />}
                       </button>
                     </div>
                   </div>
@@ -490,7 +491,7 @@ export function DesktopSellUSDT() {
                         </span>
                         <button onClick={() => copyToClipboard(WALLET_ADDRESSES[network as keyof typeof WALLET_ADDRESSES], 'address')}
                           style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', background: copiedField === 'address' ? 'rgba(74,222,128,0.15)' : SEL_BG, border: 'none', borderRadius: '10px', cursor: 'pointer', color: copiedField === 'address' ? '#4ade80' : '#fff', fontSize: '12px', fontWeight: 600, flexShrink: 0, transition: 'all 0.15s' }}>
-                          {copiedField === 'address' ? <><CheckCircle size={13} /> Copié</> : <><Copy size={13} /> Copier</>}
+                          {copiedField === 'address' ? <CheckCircle size={13} /> : <Copy size={13} />} Copier
                         </button>
                       </div>
                     </div>

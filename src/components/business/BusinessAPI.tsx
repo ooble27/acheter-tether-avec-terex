@@ -253,7 +253,7 @@ function ApiKeyCard({ apiKey, onRevoke }: { apiKey: ApiKey; onRevoke: (id: strin
             {visible ? '🙈 Masquer' : '👁 Afficher'}
           </Btn>
           <Btn onClick={handleCopy} variant="outline" size="sm">
-            {copied ? '✓ Copié !' : '📋 Copier'}
+            {copied ? '✓' : '📋'} Copier
           </Btn>
           {confirmRevoke ? (
             <>
@@ -679,7 +679,7 @@ export function BusinessAPI({ user }: { user: { email: string; name: string; id?
               cursor: 'pointer', fontFamily: FONT, transition: 'all 0.15s',
             }}
           >
-            {codeCopied ? '✓ Copié !' : 'Copier le code'}
+            {codeCopied ? '✓ ' : ''}Copier le code
           </button>
         </div>
       </div>

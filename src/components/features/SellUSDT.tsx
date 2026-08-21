@@ -117,10 +117,6 @@ function DesktopSellUSDT() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast({
-      title: "Copié !",
-      description: "L'adresse a été copiée dans le presse-papiers",
-    });
   };
 
   const handleSellClick = () => {

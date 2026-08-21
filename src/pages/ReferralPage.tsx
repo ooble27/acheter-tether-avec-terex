@@ -51,17 +51,17 @@ export default function ReferralPage() {
   const referralLink = `https://terangaexchange.com/auth?ref=${referralCode}`;
 
   const handleCopyCode = () => {
-    navigator.clipboard.writeText(referralCode);
-    setCopied(true);
-    toast({ title: 'Code copié !', description: 'Votre code de parrainage a été copié' });
-    setTimeout(() => setCopied(false), 2000);
+    navigator.clipboard.writeText(referralCode).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
   };
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(referralLink);
-    setLinkCopied(true);
-    setTimeout(() => setLinkCopied(false), 2000);
-    toast({ title: 'Lien copié !', description: 'Votre lien de parrainage a été copié' });
+    navigator.clipboard.writeText(referralLink).then(() => {
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
+    });
   };
 
   const handleShare = async () => {
@@ -164,7 +164,7 @@ export default function ReferralPage() {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
                 <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: '0.04em', fontFamily: 'ui-monospace, Menlo, monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{referralCode}</span>
                 <button onClick={handleCopyCode} className="rf-cta" style={{ flexShrink: 0, background: '#fff', color: '#141414', border: 'none', borderRadius: 10, height: 36, padding: '0 14px', fontSize: 12.5, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                  {copied ? <Check size={14} /> : <Copy size={14} />} {copied ? 'Copié' : 'Copier'}
+                  {copied ? <Check size={14} /> : <Copy size={14} />} Copier
                 </button>
               </div>
             </div>
@@ -211,7 +211,7 @@ export default function ReferralPage() {
               className="rf-cta"
               style={{ background: '#fff', color: '#141414', border: 'none', borderRadius: 12, height: 44, padding: '0 20px', fontSize: 14.5, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}
             >
-              {copied ? <Check size={16} /> : <Copy size={16} />} {copied ? 'Copié !' : 'Copier le code'}
+              {copied ? <Check size={16} /> : <Copy size={16} />} Copier le code
             </button>
           </div>
 
@@ -225,7 +225,7 @@ export default function ReferralPage() {
               className="rf-cta"
               style={{ background: '#2d2d2d', color: '#fff', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 12, height: 44, padding: '0 18px', fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8 }}
             >
-              {linkCopied ? <Check size={16} /> : <Copy size={16} />} {linkCopied ? 'Copié' : 'Copier'}
+              {linkCopied ? <Check size={16} /> : <Copy size={16} />} Copier
             </button>
             <button
               onClick={handleShare}

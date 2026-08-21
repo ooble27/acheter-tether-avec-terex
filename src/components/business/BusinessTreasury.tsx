@@ -98,7 +98,7 @@ function QRModal({ wallet, onClose }: { wallet: typeof WALLETS[0]; onClose: () =
           fontFamily: FONT, transition: 'all 0.15s',
         }}>
           {copied ? <Check style={{ width: 14, height: 14 }} /> : <Copy style={{ width: 14, height: 14 }} />}
-          {copied ? 'Copié !' : "Copier l'adresse"}
+          Copier l'adresse
         </button>
         <p style={{
           color: C.t3, fontSize: 11, textAlign: 'center', margin: '10px 0 0',

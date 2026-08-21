@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Copy, Send, CheckCircle, AlertCircle, Wallet, ExternalLink } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 import { TEREX_BINANCE_INFO } from '@/config/walletAddresses';
 
 interface OrderData {
@@ -29,17 +28,16 @@ interface USDTSendingInstructionsProps {
 export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTSendingInstructionsProps) {
   const [confirmingSent, setConfirmingSent] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const { toast } = useToast();
+  const [copiedField, setCopiedField] = useState<string | null>(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast({
-      title: "Copié !",
-      description: "L'information a été copiée dans le presse-papiers",
+  const copyToClipboard = (text: string, field: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
     });
   };
 
@@ -190,11 +188,11 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
                         <div className="flex items-center space-x-2">
                           <span className="text-white break-all text-sm">{TEREX_BINANCE_INFO.email}</span>
                           <Button
-                            onClick={() => copyToClipboard(TEREX_BINANCE_INFO.email)}
+                            onClick={() => copyToClipboard(TEREX_BINANCE_INFO.email, 'binance-email')}
                             size="sm"
                             className="bg-terex-accent hover:bg-terex-accent/80 h-6 w-6 p-0"
                           >
-                            <Copy className="w-3 h-3" />
+                            {copiedField === 'binance-email' ? <CheckCircle className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                           </Button>
                         </div>
                       </div>
@@ -203,11 +201,11 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
                         <div className="flex items-center space-x-2">
                           <span className="text-white text-sm">{TEREX_BINANCE_INFO.id}</span>
                           <Button
-                            onClick={() => copyToClipboard(TEREX_BINANCE_INFO.id)}
+                            onClick={() => copyToClipboard(TEREX_BINANCE_INFO.id, 'binance-id')}
                             size="sm"
                             className="bg-terex-accent hover:bg-terex-accent/80 h-6 w-6 p-0"
                           >
-                            <Copy className="w-3 h-3" />
+                            {copiedField === 'binance-id' ? <CheckCircle className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                           </Button>
                         </div>
                       </div>
@@ -283,11 +281,11 @@ export function USDTSendingInstructions({ orderData, onBack, onUSDTSent }: USDTS
                         {orderData.walletAddress}
                       </div>
                       <Button
-                        onClick={() => copyToClipboard(orderData.walletAddress)}
+                        onClick={() => copyToClipboard(orderData.walletAddress, 'wallet')}
                         size="sm"
                         className="bg-terex-accent hover:bg-terex-accent/80 w-full sm:w-auto"
                       >
-                        <Copy className="w-4 h-4 mr-2 sm:mr-0" />
+                        {copiedField === 'wallet' ? <CheckCircle className="w-4 h-4 mr-2 sm:mr-0" /> : <Copy className="w-4 h-4 mr-2 sm:mr-0" />}
                         <span className="sm:hidden">Copier</span>
                       </Button>
                     </div>

@@ -1,11 +1,11 @@
 
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Share2, Mail, Phone, MessageCircle, ExternalLink } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Share2, Mail, Phone, MessageCircle, ExternalLink, Check } from 'lucide-react';
 
 export function ShareAndContactCard() {
-  const { toast } = useToast();
+  const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -19,10 +19,9 @@ export function ShareAndContactCard() {
         console.log('Erreur lors du partage:', error);
       }
     } else {
-      navigator.clipboard.writeText('https://terangaexchange.com');
-      toast({
-        title: "Lien copié !",
-        description: "Le lien de Terex a été copié dans le presse-papiers",
+      navigator.clipboard.writeText('https://terangaexchange.com').then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
       });
     }
   };
@@ -62,7 +61,7 @@ export function ShareAndContactCard() {
             variant="outline"
             className="w-full border-terex-accent text-terex-accent hover:bg-terex-accent hover:text-[#141414] text-sm px-2"
           >
-            <Share2 className="w-4 h-4 mr-2 flex-shrink-0" />
+            {copied ? <Check className="w-4 h-4 mr-2 flex-shrink-0" /> : <Share2 className="w-4 h-4 mr-2 flex-shrink-0" />}
             <span className="truncate">Partager Terex</span>
           </Button>
         </div>

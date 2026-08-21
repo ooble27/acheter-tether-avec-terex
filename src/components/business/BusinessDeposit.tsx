@@ -76,7 +76,7 @@ function CopyBtn({ text, label }: { text: string; label?: string }) {
       onClick={() => { navigator.clipboard?.writeText(text).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
       style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 6, background: copied ? C.tealT : C.l2, border: `1px solid ${copied ? C.tealB : C.bds}`, color: copied ? C.teal : C.t2, fontSize: 11, cursor: 'pointer', fontFamily: FONT, transition: 'all 0.12s', flexShrink: 0 }}>
       {copied ? <Check style={{ width: 11, height: 11 }} /> : <Copy style={{ width: 11, height: 11 }} />}
-      {label || (copied ? 'Copié !' : 'Copier')}
+      {label || 'Copier'}
     </button>
   );
 }

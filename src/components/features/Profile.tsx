@@ -15,7 +15,7 @@ import {
   User, Mail, Phone, MapPin, Shield, CheckCircle, Clock, XCircle, AlertTriangle,
   LogOut, ChevronRight, ArrowLeft, Key, Lock, Trash2, Eye, EyeOff,
   Globe, Bell, Activity, TrendingUp, Edit2, Save, Gift, Share2, HelpCircle,
-  MessageCircle, Copy, ExternalLink
+  MessageCircle, Copy, ExternalLink, Check
 } from 'lucide-react';
 
 interface ProfileProps {
@@ -61,6 +61,13 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
   const isMobile = useIsMobile();
   const { isAdmin, isKYCReviewer, isStaff } = useUserRole();
   const navigate = useNavigate();
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const copy = (text: string, key: string) => {
+    navigator.clipboard?.writeText(text).then(() => {
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey(null), 2000);
+    });
+  };
   const [formData, setFormData] = useState({ name: '', phone: '', country: '', language: 'fr' });
   const [stats, setStats] = useState<{ count: number; volume: number; currency: string }>({ count: 0, volume: 0, currency: 'CFA' });
 
@@ -499,9 +506,9 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
                 <span style={{ color: '#fff', fontSize: '18px', fontWeight: 700, letterSpacing: '2px' }}>{referralCode}</span>
               </div>
               <button
-                onClick={() => { navigator.clipboard?.writeText(referralCode); toast({ title: 'Code copié !' }); }}
-                style={{ width: '48px', height: '48px', borderRadius: '14px', background: BTN, border: `1px solid rgba(255,255,255,0.10)`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
-                <Copy size={18} color="rgba(255,255,255,0.7)" />
+                onClick={() => copy(referralCode, 'code')}
+                style={{ width: '48px', height: '48px', borderRadius: '14px', background: copiedKey === 'code' ? 'rgba(74,222,128,0.15)' : BTN, border: `1px solid ${copiedKey === 'code' ? 'rgba(74,222,128,0.35)' : 'rgba(255,255,255,0.10)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, transition: 'all 0.15s' }}>
+                {copiedKey === 'code' ? <Check size={18} color="#4ade80" /> : <Copy size={18} color="rgba(255,255,255,0.7)" />}
               </button>
             </div>
             <p style={{ color: '#4b5563', fontSize: '11px', margin: 0 }}>Lien : {referralLink}</p>
@@ -513,8 +520,7 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
               if (navigator.share) {
                 try { await navigator.share({ title: 'Rejoignez Terex', text: `Utilisez mon code ${referralCode} pour rejoindre Terex !`, url: referralLink }); } catch {}
               } else {
-                navigator.clipboard?.writeText(referralLink);
-                toast({ title: 'Lien copié !' });
+                copy(referralLink, 'link');
               }
             }}
             style={{ background: '#fff', border: 'none', borderRadius: '14px', padding: '15px', color: '#141414', fontSize: '15px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
@@ -572,13 +578,13 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
               <button onClick={async () => {
                 if (navigator.share) {
                   try { await navigator.share({ title: 'Terex', text: shareText, url: appUrl }); } catch {}
-                } else { navigator.clipboard?.writeText(appUrl); toast({ title: 'Lien copié !' }); }
+                } else { copy(appUrl, 'app-share'); }
               }} style={{ background: '#fff', border: 'none', borderRadius: '12px', padding: '11px 20px', color: '#141414', fontSize: '14px', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                 <ExternalLink size={14} /> Partager
               </button>
-              <button onClick={() => { navigator.clipboard?.writeText(appUrl); toast({ title: 'Lien copié !' }); }}
-                style={{ background: BTN, border: `1px solid rgba(255,255,255,0.10)`, borderRadius: '12px', padding: '11px 20px', color: '#fff', fontSize: '14px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                <Copy size={14} /> Copier
+              <button onClick={() => copy(appUrl, 'app-copy')}
+                style={{ background: copiedKey === 'app-copy' ? 'rgba(74,222,128,0.15)' : BTN, border: `1px solid ${copiedKey === 'app-copy' ? 'rgba(74,222,128,0.35)' : 'rgba(255,255,255,0.10)'}`, borderRadius: '12px', padding: '11px 20px', color: copiedKey === 'app-copy' ? '#4ade80' : '#fff', fontSize: '14px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', transition: 'all 0.15s' }}>
+                {copiedKey === 'app-copy' ? <Check size={14} /> : <Copy size={14} />} Copier
               </button>
             </div>
           </div>

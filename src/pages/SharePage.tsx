@@ -70,12 +70,9 @@ export default function SharePage() {
   };
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(appUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-    toast({
-      title: 'Lien copié !',
-      description: 'Le lien a été copié dans le presse-papier',
+    navigator.clipboard.writeText(appUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     });
   };
 
@@ -170,7 +167,7 @@ export default function SharePage() {
                 className="sp-cta"
                 style={{ flex: 1, background: '#2d2d2d', color: '#fff', border: `1px solid rgba(255,255,255,0.08)`, borderRadius: 12, height: 50, fontSize: 15, fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
               >
-                {copied ? <Check size={17} /> : <Link2 size={17} />} {copied ? 'Copié !' : 'Copier le lien'}
+                {copied ? <Check size={17} /> : <Link2 size={17} />} Copier le lien
               </button>
             </div>
           </div>

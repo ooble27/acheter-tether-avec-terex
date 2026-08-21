@@ -196,7 +196,6 @@ export function B2BPage({ onBack }: B2BPageProps) {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast({ title: 'Copié !', description: text.slice(0, 30) + '…' });
   };
 
   const useSupplierAddress = (sup: Supplier) => {

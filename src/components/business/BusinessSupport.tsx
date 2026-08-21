@@ -108,7 +108,7 @@ function CodeBlock({ code, lang = 'bash' }: { code: string; lang?: string }) {
         <span style={{ fontSize: 10, color: C.t3, fontFamily: FONT, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{lang}</span>
         <button onClick={() => { navigator.clipboard.writeText(code).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 1500); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: copied ? C.t1 : C.t3, display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontFamily: FONT, padding: '2px 6px', transition: 'color 0.15s' }}>
           {copied ? <Check style={{ width: 12, height: 12 }} /> : <Copy style={{ width: 12, height: 12 }} />}
-          {copied ? 'Copié' : 'Copier'}
+          Copier
         </button>
       </div>
       <pre style={{ margin: 0, padding: '14px 16px', overflowX: 'auto', fontFamily: MONO, fontSize: 12, lineHeight: 1.7, color: '#d1d5db', whiteSpace: 'pre' }}>{code}</pre>

@@ -163,7 +163,7 @@ export function ContentStudio() {
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
                 <button onClick={() => copy(v, i)}
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: copied === i ? 'rgba(52,211,153,0.12)' : 'rgba(255,255,255,0.05)', color: copied === i ? '#34d399' : '#fff', border: `1px solid ${BORDER}`, borderRadius: 9, padding: '8px 14px', fontSize: 12.5, fontWeight: 600, cursor: 'pointer' }}>
-                  {copied === i ? <><Check size={14} /> Copié</> : <><Copy size={14} /> Copier</>}
+                  {copied === i ? <Check size={14} /> : <Copy size={14} />} Copier
                 </button>
               </div>
             </div>

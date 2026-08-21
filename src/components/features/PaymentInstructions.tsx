@@ -121,7 +121,7 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
         onClick={() => copyToClipboard(value, field)}
         style={{ background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '10px', padding: '8px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', color: copiedField === field ? '#4ade80' : 'rgba(255,255,255,0.6)', fontSize: '12px', fontWeight: 500, transition: 'all 0.15s' }}
       >
-        {copiedField === field ? <><CheckCircle size={14} /> Copié</> : <><Copy size={14} /> Copier</>}
+        {copiedField === field ? <CheckCircle size={14} /> : <Copy size={14} />} Copier
       </button>
     </div>
   );

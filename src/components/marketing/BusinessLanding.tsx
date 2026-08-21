@@ -542,7 +542,7 @@ export function BusinessLanding() {
             <pre style={{ margin: 0, padding: '22px 26px', fontFamily: MONO, fontSize: 12.5, lineHeight: 1.75, color: '#d1d5db', overflowX: 'auto', whiteSpace: 'pre' }}>{CODE_EXAMPLES[codeLang]}</pre>
             <button onClick={copyCode} style={{ width: '100%', padding: '13px', background: C.l2, border: 'none', borderTop: `1px solid ${C.bds}`, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: C.t2, fontSize: 13, fontFamily: FONT, transition: 'color 0.15s' }}
               onMouseEnter={e => (e.currentTarget.style.color = C.t1)} onMouseLeave={e => (e.currentTarget.style.color = C.t2)}>
-              {codeCopied ? <><Check style={{ width: 14, height: 14 }} /> Copié !</> : <><Copy style={{ width: 14, height: 14 }} /> Copier le code</>}
+              {codeCopied ? <Check style={{ width: 14, height: 14 }} /> : <Copy style={{ width: 14, height: 14 }} />} Copier le code
             </button>
           </div>
         </div>

@@ -17,13 +17,10 @@ export function PaymentInstructions({ transferData, onPaymentSent, onBack }: Pay
   const { toast } = useToast();
 
   const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(label);
-    toast({
-      title: "Copié !",
-      description: `${label} copié dans le presse-papier`,
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(label);
+      setTimeout(() => setCopied(null), 2000);
     });
-    setTimeout(() => setCopied(null), 2000);
   };
 
   const renderInteracInstructions = () => (
