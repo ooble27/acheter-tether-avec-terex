@@ -143,7 +143,7 @@ export function MobileSellUSDT() {
     setPhoneNumber('');
   };
 
-  const copyToClipboard = async (text: string, field: string, label?: string) => {
+  const copyToClipboard = async (text: string, field: string) => {
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(text);
@@ -159,9 +159,8 @@ export function MobileSellUSDT() {
       }
       setCopiedField(field);
       setTimeout(() => setCopiedField(null), 2000);
-      toast({ title: 'Copié !', description: label || 'Contenu copié dans le presse-papier' });
     } catch (e) {
-      toast({ title: 'Impossible de copier', description: 'Sélectionnez et copiez manuellement.', variant: 'destructive' });
+      /* silent — le bouton ne changera pas d'état si la copie a échoué */
     }
   };
 
@@ -320,7 +319,7 @@ export function MobileSellUSDT() {
                     <span style={{ color: '#6b7280', fontSize: '12px' }}>{label}</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ color: '#fff', fontSize: '13px', fontWeight: 500 }}>{value}</span>
-                      <button onClick={() => copyToClipboard(value, label, label)}
+                      <button onClick={() => copyToClipboard(value, label)}
                         style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 8px',
                           background: copiedField === label ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.06)',
                           border: 'none', borderRadius: '6px', cursor: 'pointer',

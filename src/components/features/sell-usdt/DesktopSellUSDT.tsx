@@ -178,7 +178,7 @@ export function DesktopSellUSDT() {
 
   if (showKYCPage) return <KYCPage onBack={() => setShowKYCPage(false)} />;
 
-  const copyToClipboard = async (text: string, field: string = 'default', label?: string) => {
+  const copyToClipboard = async (text: string, field: string = 'default') => {
     try {
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(text);
@@ -194,9 +194,8 @@ export function DesktopSellUSDT() {
       }
       setCopiedField(field);
       setTimeout(() => setCopiedField(null), 2000);
-      toast({ title: 'Copié !', description: label || 'Contenu copié dans le presse-papier' });
     } catch (e) {
-      toast({ title: 'Impossible de copier', description: 'Sélectionnez et copiez manuellement.', variant: 'destructive' });
+      /* silent — le bouton ne changera pas d'état si la copie a échoué */
     }
   };
 
@@ -340,7 +339,7 @@ export function DesktopSellUSDT() {
                     <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '12px' }}>{label}</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ color: '#fff', fontSize: '13px' }}>{val}</span>
-                      <button onClick={() => copyToClipboard(val, label, label)}
+                      <button onClick={() => copyToClipboard(val, label)}
                         style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '4px 8px',
                           background: copiedField === label ? 'rgba(74,222,128,0.15)' : SEL_BG,
                           border: 'none', borderRadius: '6px', cursor: 'pointer',

@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { ArrowLeft, Copy, CheckCircle, Clock, ExternalLink } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
 
 // Lien marchand Wave (fixe) — seul le paramètre `amount` change par commande.
 // Peut être surchargé via VITE_WAVE_MERCHANT_URL si le marchand change.
@@ -37,7 +36,6 @@ const CARD_BG = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 
 export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfirmed }: PaymentInstructionsProps) {
-  const { toast } = useToast();
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(30 * 60);
   const [overrideLink, setOverrideLink] = useState<string | null>(null);
@@ -107,14 +105,10 @@ export function PaymentInstructions({ orderData, orderId, onBack, onPaymentConfi
   };
 
   const copyToClipboard = (text: string, field: string) => {
-    navigator.clipboard.writeText(text).then(
-      () => {
-        setCopiedField(field);
-        setTimeout(() => setCopiedField(null), 2000);
-        toast({ title: 'Copié !', description: 'Contenu copié dans le presse-papier' });
-      },
-      () => toast({ title: 'Impossible de copier', description: 'Sélectionnez et copiez manuellement.', variant: 'destructive' }),
-    );
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
+    });
   };
 
   const CopyRow = ({ label, value, field }: { label: string; value: string; field: string }) => (
