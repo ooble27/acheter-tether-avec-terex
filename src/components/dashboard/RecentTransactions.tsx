@@ -8,10 +8,10 @@ interface RecentTransactionsProps {
 }
 
 // Card « pleine » — meme traitement que DashboardHome pour la coherence.
-const CARD = '#202020';
-const BORDER = 'rgba(255,255,255,0.08)';
+const CARD = '#222222';
+const BORDER = 'rgba(255,255,255,0.09)';
 const ACCENT = 'rgba(255,255,255,0.55)';
-const ICON_SQUARE = '#2a2a2a';
+const ICON_SQUARE = '#2c2c2c';
 
 const TetherLogo = () => (
   <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT" style={{ width: '12px', height: '12px' }} />

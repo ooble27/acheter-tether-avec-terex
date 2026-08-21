@@ -24,9 +24,9 @@ interface DashboardHomeProps {
 const ACCENT_LIGHT = '#e5e5e5';
 // Cards plus « pleines » — plus de contraste avec le fond (#1a1a1a).
 // Avant : #1e1e1e (trop transparent), maintenant : #242424 + bordure marquee.
-const CARD = '#202020';
-const BORDER = 'rgba(255,255,255,0.08)';
-const ICON_BG = '#2a2a2a';
+const CARD = '#222222';
+const BORDER = 'rgba(255,255,255,0.09)';
+const ICON_BG = '#2c2c2c';
 const ICON_COLOR = 'rgba(255,255,255,0.90)';
 
 // Style Ooble Dashboard : uniquement Acheter et Vendre (pas de virement,
