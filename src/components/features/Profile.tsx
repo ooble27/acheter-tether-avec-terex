@@ -15,9 +15,8 @@ import {
   User, Mail, Phone, MapPin, Shield, CheckCircle, Clock, XCircle, AlertTriangle,
   LogOut, ChevronRight, ArrowLeft, Key, Lock, Trash2, Eye, EyeOff,
   Globe, Bell, Activity, TrendingUp, Edit2, Save, Gift, Share2, HelpCircle,
-  MessageCircle, Copy, ExternalLink, Send, FlaskConical
+  MessageCircle, Copy, ExternalLink
 } from 'lucide-react';
-import { P2PTestPage } from './P2PTestPage';
 
 interface ProfileProps {
   user: { email: string; name: string } | null;
@@ -25,7 +24,7 @@ interface ProfileProps {
   onNavigate?: (section: string) => void;
 }
 
-type Section = null | 'informations' | 'activite' | 'parrainage' | 'partager' | 'contact' | 'faq' | 'test-p2p';
+type Section = null | 'informations' | 'activite' | 'parrainage' | 'partager' | 'contact' | 'faq';
 
 const BG     = '#1a1a1a';
 const CARD   = '#1e1e1e';
@@ -654,12 +653,6 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
     );
   }
 
-  // ── Test : Transfert P2P ────────────────────────────────────────────────
-
-  if (section === 'test-p2p') {
-    return <P2PTestPage onBack={() => setSection(null)} />;
-  }
-
   // ── Main view ────────────────────────────────────────────────────────────
 
   const menuGroups = [
@@ -754,25 +747,6 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
             </div>
           )}
 
-          {isAdmin() && (
-            <div>
-              <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>Test</p>
-              <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
-                <button onClick={() => setSection('test-p2p')}
-                  style={{ width: '100%', padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: ICON_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Send size={18} color="rgba(255,255,255,0.7)" />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ color: '#fff', fontSize: '15px', fontWeight: 500, margin: '0 0 2px' }}>Transfert P2P</p>
-                    <p style={{ color: '#6b7280', fontSize: '12px', margin: 0 }}>Envoyer et recevoir entre utilisateurs Terex</p>
-                  </div>
-                  <ChevronRight size={16} color="#4b5563" />
-                </button>
-              </div>
-            </div>
-          )}
-
           <div>
             <p style={{ color: '#4b5563', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px 4px' }}>Session</p>
             <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '20px', overflow: 'hidden' }}>
@@ -825,20 +799,6 @@ export function Profile({ user, onLogout, onNavigate }: ProfileProps) {
               </button>
             )}
 
-            {isAdmin() && (
-              <button onClick={() => setSection('test-p2p')}
-                style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '18px', padding: '22px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '14px', textAlign: 'left', transition: 'background 0.15s, border-color 0.15s' }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#232323'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = CARD; e.currentTarget.style.borderColor = BORDER; }}>
-                <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(251,191,36,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <FlaskConical size={20} color="#fbbf24" />
-                </div>
-                <div>
-                  <p style={{ color: '#fff', fontSize: '15px', fontWeight: 600, margin: '0 0 4px' }}>Transfert P2P <span style={{ color: '#fbbf24', fontSize: 10, fontWeight: 700, marginLeft: 6, padding: '2px 6px', background: 'rgba(251,191,36,0.10)', borderRadius: 4, letterSpacing: '0.04em' }}>TEST</span></p>
-                  <p style={{ color: '#6b7280', fontSize: '12px', margin: 0, lineHeight: 1.4 }}>Envoyer et recevoir entre utilisateurs Terex</p>
-                </div>
-              </button>
-            )}
           </div>
 
           {/* Déconnexion à part */}
