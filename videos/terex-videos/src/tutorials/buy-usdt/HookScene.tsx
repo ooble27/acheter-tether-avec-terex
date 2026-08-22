@@ -7,15 +7,15 @@ export const HookScene: React.FC = () => {
   const { fps } = useVideoConfig();
 
   const line1Opacity = interpolate(frame, [0, 0.35 * fps], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
-  const line1Y = interpolate(frame, [0, 0.5 * fps], [40, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
+  const line1Y = interpolate(frame, [0, 0.5 * fps], [30, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
 
-  const line2Opacity = interpolate(frame, [0.3 * fps, 0.7 * fps], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const line2Y = interpolate(frame, [0.3 * fps, 0.8 * fps], [40, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
+  const numberScale = interpolate(frame, [0.3 * fps, 0.9 * fps], [0.5, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(1.4)) });
+  const numberOpacity = interpolate(frame, [0.3 * fps, 0.7 * fps], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
-  const badgeScale = interpolate(frame, [0.9 * fps, 1.4 * fps], [0.5, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(1.5)) });
-  const badgeOpacity = interpolate(frame, [0.9 * fps, 1.2 * fps], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const line3Opacity = interpolate(frame, [0.8 * fps, 1.2 * fps], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const line3Y = interpolate(frame, [0.8 * fps, 1.2 * fps], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
 
-  const outOpacity = interpolate(frame, [2.2 * fps, 2.5 * fps], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const outOpacity = interpolate(frame, [2.1 * fps, 2.5 * fps], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
     <AbsoluteFill
@@ -24,7 +24,7 @@ export const HookScene: React.FC = () => {
         justifyContent: "center",
         fontFamily: poppins,
         opacity: outOpacity,
-        padding: "0 80px",
+        padding: "0 60px",
         textAlign: "center",
       }}
     >
@@ -33,46 +33,45 @@ export const HookScene: React.FC = () => {
         style={{
           opacity: line1Opacity,
           translate: `0px ${line1Y}px`,
-          color: colors.muted,
-          fontSize: 42,
+          color: colors.textDim,
+          fontSize: 38,
           fontWeight: 400,
-          letterSpacing: "0.02em",
         }}
       >
-        Ton tuto en
+        Ton USDT en
       </Interactive.Div>
 
       <Interactive.Div
-        name="Line2"
+        name="BigNumber"
         style={{
-          opacity: line2Opacity,
-          translate: `0px ${line2Y}px`,
-          color: colors.accent,
-          fontSize: 130,
+          opacity: numberOpacity,
+          scale: numberScale,
+          margin: "18px 0 30px",
+          fontSize: 220,
           fontWeight: 800,
-          letterSpacing: "-0.04em",
-          lineHeight: 1.02,
-          margin: "18px 0 36px",
+          letterSpacing: "-0.06em",
+          lineHeight: 1,
+          background: `linear-gradient(180deg, ${colors.white} 0%, ${colors.brandGreen} 100%)`,
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
         }}
       >
-        6 étapes
+        6
       </Interactive.Div>
 
       <Interactive.Div
-        name="Badge"
+        name="Line3"
         style={{
-          scale: badgeScale,
-          opacity: badgeOpacity,
-          padding: "16px 36px",
-          borderRadius: 999,
-          background: colors.card,
-          border: `1px solid ${colors.border}`,
-          color: colors.accent,
-          fontSize: 28,
-          fontWeight: 500,
+          opacity: line3Opacity,
+          translate: `0px ${line3Y}px`,
+          color: colors.white,
+          fontSize: 44,
+          fontWeight: 600,
+          letterSpacing: "-0.02em",
         }}
       >
-        Acheter des USDT
+        étapes simples
       </Interactive.Div>
     </AbsoluteFill>
   );

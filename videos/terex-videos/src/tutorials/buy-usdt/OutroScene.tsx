@@ -7,13 +7,16 @@ export const OutroScene: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const logoOpacity = interpolate(frame, [0, 0.5 * fps], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const logoY = interpolate(frame, [0, 0.7 * fps], [30, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
+  const logoOpacity = interpolate(frame, [0, 0.6 * fps], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const logoScale = interpolate(frame, [0, 0.9 * fps], [0.8, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.cubic) });
 
   const ctaOpacity = interpolate(frame, [0.5 * fps, 1 * fps], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const ctaY = interpolate(frame, [0.5 * fps, 1 * fps], [30, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
+  const ctaY = interpolate(frame, [0.5 * fps, 1 * fps], [24, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
 
   const urlOpacity = interpolate(frame, [1 * fps, 1.5 * fps], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const urlY = interpolate(frame, [1 * fps, 1.5 * fps], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
+
+  const fineOpacity = interpolate(frame, [1.5 * fps, 2 * fps], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
     <AbsoluteFill
@@ -21,7 +24,7 @@ export const OutroScene: React.FC = () => {
         alignItems: "center",
         justifyContent: "center",
         fontFamily: poppins,
-        padding: "0 80px",
+        padding: "0 60px",
         textAlign: "center",
       }}
     >
@@ -29,38 +32,39 @@ export const OutroScene: React.FC = () => {
         name="OutroLogo"
         style={{
           opacity: logoOpacity,
-          translate: `0px ${logoY}px`,
+          scale: logoScale,
         }}
       >
-        <BrandMark size={140} />
+        <BrandMark size={160} />
       </Interactive.Div>
 
       <Interactive.Div
         name="OutroCTA"
         style={{
-          marginTop: 60,
+          marginTop: 50,
           opacity: ctaOpacity,
           translate: `0px ${ctaY}px`,
-          color: colors.accent,
-          fontSize: 66,
+          color: colors.white,
+          fontSize: 60,
           fontWeight: 700,
           letterSpacing: "-0.03em",
-          lineHeight: 1.1,
+          lineHeight: 1.15,
           maxWidth: 900,
         }}
       >
-        Prêt à acheter tes USDT ?
+        Achète tes USDT dès maintenant
       </Interactive.Div>
 
       <Interactive.Div
         name="OutroURL"
         style={{
-          marginTop: 48,
+          marginTop: 44,
           opacity: urlOpacity,
-          padding: "22px 44px",
+          translate: `0px ${urlY}px`,
+          padding: "20px 44px",
           borderRadius: 999,
-          background: colors.accent,
-          color: colors.dark,
+          background: colors.white,
+          color: colors.onWhite,
           fontSize: 34,
           fontWeight: 700,
           letterSpacing: "-0.01em",
@@ -73,12 +77,19 @@ export const OutroScene: React.FC = () => {
         name="OutroFine"
         style={{
           marginTop: 40,
-          opacity: urlOpacity,
-          color: colors.muted,
-          fontSize: 26,
+          opacity: fineOpacity,
+          color: colors.textDim,
+          fontSize: 24,
+          display: "flex",
+          alignItems: "center",
+          gap: 14,
         }}
       >
-        Wave · Orange Money · USDT
+        <span>Wave</span>
+        <span style={{ opacity: 0.35 }}>·</span>
+        <span>Orange Money</span>
+        <span style={{ opacity: 0.35 }}>·</span>
+        <span>USDT</span>
       </Interactive.Div>
     </AbsoluteFill>
   );
