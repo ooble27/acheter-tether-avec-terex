@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock, BookOpen, PenTool, MessageSquare, FlaskConical,
+  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock, BookOpen, PenTool, MessageSquare, FlaskConical, Brain,
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { OpsQueue } from '@/components/admin/orders/OpsQueue';
@@ -20,6 +20,7 @@ import { NewsletterAdmin } from '@/components/admin/NewsletterAdmin';
 import { MailboxAdmin } from '@/components/admin/MailboxAdmin';
 import { NeobankVision } from '@/components/admin/neobank/NeobankVision';
 import { LaboAdmin } from '@/components/admin/labo/LaboAdmin';
+import { AIKnowledgeEditor } from '@/components/admin/AIKnowledgeEditor';
 import { useUserRole } from '@/hooks/useUserRole';
 
 const BG = '#1a1a1a';
@@ -46,6 +47,7 @@ const NAV: NavItem[] = [
   { id: 'team',         label: 'Équipe',         desc: "Membres et rôles du back-office",       icon: Users,        roles: ['admin'] },
   { id: 'neobank',      label: 'Vision',         desc: 'Néobanque Terex',                       icon: Sparkles,     roles: ['admin'] },
   { id: 'labo',         label: 'Labo',           desc: 'Prototypes isolés — sans impact sur la production', icon: FlaskConical, roles: ['admin'] },
+  { id: 'ai-knowledge', label: 'IA',             desc: "Connaissance plateforme de l'IA",       icon: Brain,        roles: ['admin'] },
   { id: 'kb',           label: 'Guide',          desc: "Base de connaissances de l'équipe",     icon: BookOpen,     roles: ['admin', 'operator', 'kyc_reviewer', 'marketing', 'hr', 'support'] },
 ];
 
@@ -159,6 +161,7 @@ export function AdminPortal() {
           {currentTab === 'team' && <TeamAdmin />}
           {currentTab === 'neobank' && <NeobankVision />}
           {currentTab === 'labo' && <LaboAdmin />}
+          {currentTab === 'ai-knowledge' && <AIKnowledgeEditor />}
           {currentTab === 'kb' && <KnowledgeBase />}
         </div>
       </div>
