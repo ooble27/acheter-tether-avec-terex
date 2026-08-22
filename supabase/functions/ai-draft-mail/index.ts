@@ -38,6 +38,29 @@ RÈGLES DE RÉDACTION
   Le "body" est du texte simple avec des \\n pour les sauts de ligne (paragraphes séparés par \\n\\n).
   Le "subject" est court (≤ 60 caractères), informatif — pas de « Terex » dedans (l'expéditeur le montre déjà).`;
 
+const BRAND_VOICE_FALLBACK = `
+═══════════════════════════════════════════════════════════════
+VOIX DE MARQUE TEREX — GARDE-FOUS
+═══════════════════════════════════════════════════════════════
+
+🚫 INTERDITS ABSOLUS :
+- AUCUNE comparaison bancaire. Jamais « contrairement aux banques classiques », jamais « là où ta banque met 5 jours », jamais « les frais bancaires ». Terex se raconte pour ce qu'elle est, pas contre ce qu'elle n'est pas.
+- AUCUNE promesse de rendement ou d'investissement. Terex est un service d'achat/vente, pas une plateforme d'investissement.
+- AUCUN superlatif vide : pas de « le meilleur service », « la plateforme la plus fiable », « n°1 en Afrique ». Si on ne peut pas prouver le chiffre, on ne l'écrit pas.
+- AUCUN anglicisme gratuit : pas de « amazing », « game-changer », « next-gen ». On parle français naturel, avec les mots techniques qui existent (USDT, TRC20, wallet).
+- AUCUNE urgence artificielle : pas de « offre limitée ! », « dernière chance ! », « agis maintenant ! ». On informe, on ne presse pas.
+- AUCUN jargon crypto intimidant : pas de « DeFi », « yield farming », « liquidity pool ». Le lecteur veut acheter ou vendre des USDT, c'est tout.
+
+✅ IMPÉRATIFS :
+- Ton local et chaleureux. On tutoie. On dit « tu » pas « vous ». Sauf contexte professionnel explicite.
+- Vocabulaire du quotidien sénégalais/UEMOA : Wave, Orange Money, CFA, « en quelques minutes ». Pas de « mobile payment solution ».
+- Concret et factuel : montants réels, étapes réelles, réseaux réels (TRC20, BEP20, etc.).
+- Bienveillant mais jamais condescendant. On n'explique pas « ce qu'est un stablecoin » sauf si le lecteur le demande.
+- On signe « L'équipe Terex ». Jamais de nom personnel, jamais de « votre agent IA ».
+- Le lien principal est toujours terangaexchange.com — jamais un lien raccourci, jamais un domaine tiers.
+- On termine par une invitation à répondre en cas de question, jamais par une formule vide (« cordialement »).
+`;
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
 
@@ -72,21 +95,22 @@ serve(async (req) => {
         { status: 500, headers: { ...CORS, "Content-Type": "application/json" } });
     }
 
-    // Charger la connaissance plateforme depuis la base de données (table ai_config).
-    // Si la table n'existe pas ou est vide, on utilise le fallback hardcodé.
+    // Charger la connaissance plateforme et la voix de marque depuis ai_config.
     let knowledgeBase = "";
+    let brandVoice = "";
     try {
-      const { data: config } = await admin
+      const { data: configs } = await admin
         .from("ai_config")
-        .select("value")
-        .eq("key", "platform_knowledge")
-        .single();
-      if (config?.value) knowledgeBase = config.value;
+        .select("key, value")
+        .in("key", ["platform_knowledge", "brand_voice"]);
+      for (const c of configs ?? []) {
+        if (c.key === "platform_knowledge" && c.value) knowledgeBase = c.value;
+        if (c.key === "brand_voice" && c.value) brandVoice = c.value;
+      }
     } catch { /* table doesn't exist yet — use fallback */ }
 
-    if (!knowledgeBase) {
-      knowledgeBase = FALLBACK_KNOWLEDGE;
-    }
+    if (!knowledgeBase) knowledgeBase = FALLBACK_KNOWLEDGE;
+    if (!brandVoice) brandVoice = BRAND_VOICE_FALLBACK;
 
     const anthropic = new Anthropic({ apiKey });
 
@@ -97,6 +121,8 @@ CONNAISSANCE PLATEFORME TEREX
 ═══════════════════════════════════════════════════════════════
 
 ${knowledgeBase}
+
+${brandVoice}
 
 ${RULES}`;
 

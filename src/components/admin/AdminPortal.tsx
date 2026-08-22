@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock, BookOpen, PenTool, MessageSquare, FlaskConical, Brain,
+  ShoppingCart, FileCheck, UserCheck, ArrowLeft, Calculator, Mail, Sparkles, Shield, Inbox, Trophy, Users, Clock, BookOpen, PenTool, MessageSquare, FlaskConical, Brain, Palette,
 } from 'lucide-react';
 import { OrdersDashboardNew } from '@/components/admin/orders/OrdersDashboardNew';
 import { OpsQueue } from '@/components/admin/orders/OpsQueue';
@@ -21,6 +21,7 @@ import { MailboxAdmin } from '@/components/admin/MailboxAdmin';
 import { NeobankVision } from '@/components/admin/neobank/NeobankVision';
 import { LaboAdmin } from '@/components/admin/labo/LaboAdmin';
 import { AIKnowledgeEditor } from '@/components/admin/AIKnowledgeEditor';
+import { MailStudioAdmin } from '@/components/admin/MailStudioAdmin';
 import { useUserRole } from '@/hooks/useUserRole';
 
 const BG = '#1a1a1a';
@@ -43,6 +44,7 @@ const NAV: NavItem[] = [
   { id: 'content',      label: 'Studio',         desc: 'Générateur de contenu pour les réseaux',  icon: PenTool,      roles: ['admin', 'marketing'] },
   { id: 'mailbox',      label: 'Messagerie',     desc: 'Écrire librement à un client',          icon: MessageSquare, roles: ['admin', 'marketing', 'support', 'operator'] },
   { id: 'newsletter',   label: 'Campagnes',      desc: 'Emails marketing aux clients',          icon: Mail,         roles: ['admin', 'marketing'] },
+  { id: 'mail-studio',  label: 'Mail Studio',    desc: 'Templates email par blocs',             icon: Palette,      roles: ['admin', 'marketing'] },
   { id: 'applications', label: 'Candidatures',   desc: 'Recrutement',                           icon: UserCheck,    roles: ['admin', 'hr'] },
   { id: 'team',         label: 'Équipe',         desc: "Membres et rôles du back-office",       icon: Users,        roles: ['admin'] },
   { id: 'neobank',      label: 'Vision',         desc: 'Néobanque Terex',                       icon: Sparkles,     roles: ['admin'] },
@@ -157,6 +159,7 @@ export function AdminPortal() {
           {currentTab === 'content' && <ContentStudio />}
           {currentTab === 'mailbox' && <MailboxAdmin />}
           {currentTab === 'newsletter' && <NewsletterAdmin />}
+          {currentTab === 'mail-studio' && <MailStudioAdmin />}
           {currentTab === 'applications' && <JobApplicationsAdmin />}
           {currentTab === 'team' && <TeamAdmin />}
           {currentTab === 'neobank' && <NeobankVision />}
