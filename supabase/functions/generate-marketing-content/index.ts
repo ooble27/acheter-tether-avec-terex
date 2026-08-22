@@ -73,6 +73,17 @@ serve(async (req) => {
     const platformGuide = PLATFORM_GUIDE[platform] || PLATFORM_GUIDE.facebook;
     const toneGuide = TONE_GUIDE[tone] || TONE_GUIDE.proximite;
 
+    // Charger la voix de marque depuis ai_config si disponible
+    let brandVoice = "";
+    try {
+      const { data: bv } = await admin
+        .from("ai_config")
+        .select("value")
+        .eq("key", "brand_voice")
+        .single();
+      if (bv?.value) brandVoice = bv.value;
+    } catch { /* fallback below */ }
+
     const system = [
       "Tu es le responsable marketing de Terex (Teranga Exchange), une plateforme fiable d'achat et de vente d'USDT (Tether) en francs CFA, basée au Sénégal et destinée à l'Afrique de l'Ouest (zone UEMOA).",
       "Les clients paient et sont payés via Mobile Money : Wave et Orange Money. Terex est rapide, sûr et humain.",
@@ -80,7 +91,14 @@ serve(async (req) => {
       "Écris en français, avec un vocabulaire simple et accessible — beaucoup de clients débutent en crypto.",
       "Reste honnête et concret : pas de promesses de gains, pas de « devenez riche ». Terex est un service d'échange, pas un placement.",
       "N'invente jamais de chiffres, de taux ou de témoignages précis qui ne sont pas fournis.",
-    ].join(" ");
+      "",
+      "RÈGLES DE VOIX DE MARQUE :",
+      "- AUCUNE comparaison bancaire : jamais « contrairement aux banques », « là où ta banque met 5 jours ». Terex se raconte pour ce qu'elle est.",
+      "- AUCUN superlatif vide : pas de « le meilleur service », « n°1 en Afrique ». Si on ne peut pas prouver, on ne l'écrit pas.",
+      "- AUCUNE urgence artificielle : pas de « offre limitée ! », « dernière chance ! ».",
+      "- AUCUN jargon crypto intimidant : pas de « DeFi », « yield farming ». Le lecteur veut acheter/vendre des USDT.",
+      brandVoice ? `\nRÈGLES SUPPLÉMENTAIRES :\n${brandVoice}` : "",
+    ].filter(Boolean).join(" ");
 
     const userPrompt = [
       `Génère ${count} variantes distinctes d'une publication marketing pour Terex.`,
