@@ -94,11 +94,7 @@ export const IntroScene: React.FC = () => {
           fontWeight: 800,
           letterSpacing: "-0.08em",
           lineHeight: 0.9,
-          background: `linear-gradient(180deg, #ffffff 0%, ${colors.brandGreen} 100%)`,
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
-          textShadow: "0 20px 80px rgba(63,214,165,0.25)",
+          color: "#ffffff",
         }}
       >
         USDT

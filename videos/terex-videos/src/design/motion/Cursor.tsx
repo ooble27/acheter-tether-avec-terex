@@ -7,20 +7,19 @@ type Props = {
   path: { at: number; to: Point }[];
   /** Frames où un tap ripple part depuis le curseur. */
   taps?: number[];
-  /** Frame où le curseur apparaît (opacity in). Par défaut 0. */
+  /** Frame où le curseur apparaît. */
   appearAt?: number;
   /** Frame où le curseur disparaît. */
   disappearAt?: number;
 };
 
 /**
- * Curseur/pointeur promo (façon Apple/Claude Code) qui glisse
- * entre des points et laisse des ripples à chaque tap.
+ * Curseur macOS classique — flèche noire cerclée de blanc, tip en haut à gauche.
+ * Le SVG reproduit le pointeur système Mac (24×24 → scale x1.9 pour être visible).
  */
 export const Cursor: React.FC<Props> = ({ path, taps = [], appearAt = 0, disappearAt }) => {
   const frame = useCurrentFrame();
 
-  // interpolate through path segments
   let x = path[0]?.to.x ?? 0;
   let y = path[0]?.to.y ?? 0;
   for (let i = 0; i < path.length - 1; i++) {
@@ -43,7 +42,7 @@ export const Cursor: React.FC<Props> = ({ path, taps = [], appearAt = 0, disappe
     }
   }
 
-  const inOpacity = interpolate(frame, [appearAt, appearAt + 8], [0, 1], {
+  const inOpacity = interpolate(frame, [appearAt, appearAt + 6], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -55,28 +54,32 @@ export const Cursor: React.FC<Props> = ({ path, taps = [], appearAt = 0, disappe
         })
       : 1;
 
-  // press scale on nearest tap
+  // On press, cursor scales slightly down like a real mouse click
   let pressScale = 1;
   for (const t of taps) {
-    if (frame >= t - 3 && frame <= t + 3) {
-      pressScale = interpolate(Math.abs(frame - t), [0, 3], [0.85, 1], {
+    if (frame >= t - 3 && frame <= t + 4) {
+      pressScale = interpolate(Math.abs(frame - t), [0, 3], [0.88, 1], {
         extrapolateLeft: "clamp",
         extrapolateRight: "clamp",
       });
     }
   }
 
+  // Cursor "hit point" is the top-left tip of the arrow (0,0 in SVG).
+  // We render the arrow so its tip lands exactly at (x, y).
+  const cursorSize = 60;
+
   return (
     <>
-      {/* Ripples */}
+      {/* Ripples émanant de la POINTE du curseur */}
       {taps.map((t) => {
-        if (frame < t || frame > t + 30) return null;
-        const r = interpolate(frame, [t, t + 30], [0, 180], {
+        if (frame < t || frame > t + 32) return null;
+        const r = interpolate(frame, [t, t + 32], [0, 220], {
           easing: Easing.out(Easing.cubic),
           extrapolateLeft: "clamp",
           extrapolateRight: "clamp",
         });
-        const op = interpolate(frame, [t, t + 30], [0.45, 0], {
+        const op = interpolate(frame, [t, t + 32], [0.55, 0], {
           extrapolateLeft: "clamp",
           extrapolateRight: "clamp",
         });
@@ -90,37 +93,52 @@ export const Cursor: React.FC<Props> = ({ path, taps = [], appearAt = 0, disappe
               width: r * 2,
               height: r * 2,
               borderRadius: "50%",
-              border: "3px solid rgba(255,255,255,0.9)",
+              border: "4px solid rgba(255,255,255,0.95)",
               opacity: op,
               pointerEvents: "none",
+              boxShadow: `0 0 40px rgba(255,255,255,${op * 0.5})`,
             }}
           />
         );
       })}
 
-      {/* Pointer */}
+      {/* Flèche curseur macOS */}
       <div
         style={{
           position: "absolute",
-          left: x - 12,
-          top: y - 12,
-          width: 44,
-          height: 44,
+          left: x - 2,
+          top: y - 2,
+          width: cursorSize,
+          height: cursorSize,
           opacity: inOpacity * outOpacity,
           scale: pressScale,
+          transformOrigin: "top left",
+          filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.55))",
           pointerEvents: "none",
-          filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.55))",
         }}
       >
-        <div
-          style={{
-            width: 44,
-            height: 44,
-            borderRadius: "50%",
-            background: "rgba(255,255,255,0.95)",
-            border: "3px solid rgba(0,0,0,0.25)",
-          }}
-        />
+        <svg
+          width={cursorSize}
+          height={cursorSize}
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* Classic macOS pointer — black arrow with white outline */}
+          <path
+            d="M4 2 L4 18.5 L8.2 14.3 L11 20.5 L13.4 19.4 L10.6 13.2 L16.5 13.2 Z"
+            fill="#ffffff"
+            stroke="#ffffff"
+            strokeWidth="2.6"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M4 2 L4 18.5 L8.2 14.3 L11 20.5 L13.4 19.4 L10.6 13.2 L16.5 13.2 Z"
+            fill="#111111"
+            stroke="none"
+            strokeLinejoin="round"
+          />
+        </svg>
       </div>
     </>
   );

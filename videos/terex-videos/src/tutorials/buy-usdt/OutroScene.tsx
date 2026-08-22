@@ -82,10 +82,7 @@ export const OutroScene: React.FC = () => {
           letterSpacing: "-0.04em",
           lineHeight: 1.02,
           maxWidth: 950,
-          background: `linear-gradient(180deg, #ffffff 0%, ${colors.brandGreen} 100%)`,
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
+          color: "#ffffff",
         }}
       >
         Achète tes USDT
