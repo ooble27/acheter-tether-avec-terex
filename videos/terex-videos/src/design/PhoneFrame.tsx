@@ -27,7 +27,7 @@ export const PhoneFrame: React.FC<{
           width: "100%",
           height: "100%",
           borderRadius: 50,
-          background: colors.dark,
+          background: colors.bg,
           overflow: "hidden",
           position: "relative",
           border: `1px solid ${colors.border}`,

@@ -16,7 +16,6 @@ import {
 const FPS = 30;
 const SEC = FPS;
 
-// Timings (frames)
 const INTRO = 3 * SEC;
 const HOOK = 2.5 * SEC;
 const STEP = 4 * SEC;
@@ -25,12 +24,12 @@ const OUTRO = 3.5 * SEC;
 export const BUY_USDT_DURATION = INTRO + HOOK + STEP * 6 + OUTRO;
 
 const steps = [
-  { title: "Le montant", subtitle: "Entre ce que tu veux acheter", screen: <AmountScreen /> },
-  { title: "Le réseau", subtitle: "TRC20, BEP20, Solana…", screen: <NetworkScreen /> },
-  { title: "Ton wallet", subtitle: "Adresse de réception USDT", screen: <AddressScreen /> },
-  { title: "Confirme", subtitle: "Vérifie et valide", screen: <ConfirmScreen /> },
-  { title: "Paye", subtitle: "Wave ou Orange Money", screen: <PaymentScreen /> },
-  { title: "C'est reçu !", subtitle: "USDT dans ton wallet", screen: <SuccessScreen /> },
+  { title: "Le montant", screen: <AmountScreen /> },
+  { title: "Le réseau", screen: <NetworkScreen /> },
+  { title: "Ton wallet", screen: <AddressScreen /> },
+  { title: "Confirme", screen: <ConfirmScreen /> },
+  { title: "Wave", screen: <PaymentScreen /> },
+  { title: "Reçu !", screen: <SuccessScreen /> },
 ];
 
 const HOOK_START = INTRO;
@@ -57,7 +56,7 @@ export const BuyUsdtTutorial: React.FC = () => {
           durationInFrames={STEP}
           name={`Step ${i + 1}`}
         >
-          <StepScene index={i + 1} total={steps.length} title={s.title} subtitle={s.subtitle} screen={s.screen} />
+          <StepScene index={i + 1} total={steps.length} title={s.title} screen={s.screen} />
         </Sequence>
       ))}
 
