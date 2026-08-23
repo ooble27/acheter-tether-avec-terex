@@ -124,7 +124,7 @@ export function TeamAdmin() {
               <button key={id} onClick={() => setRole(id)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 9, padding: '9px 16px 9px 10px',
-                  borderRadius: 100, cursor: 'pointer', outline: 'none', transition: 'background 0.15s, border-color 0.15s, color 0.15s',
+                  borderRadius: 12, cursor: 'pointer', outline: 'none', transition: 'background 0.15s, border-color 0.15s, color 0.15s',
                   border: `1px solid ${sel ? 'rgba(255,255,255,0.40)' : 'rgba(255,255,255,0.18)'}`,
                   background: sel ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.08)',
                   WebkitTapHighlightColor: 'transparent',

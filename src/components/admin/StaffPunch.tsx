@@ -28,7 +28,7 @@ export function StaffPunch({ compact = false }: { compact?: boolean }) {
         style={{
           display: 'inline-flex', alignItems: 'center', gap: 6, flexShrink: 0,
           background: 'rgba(74,222,128,0.08)', border: `1px solid rgba(74,222,128,0.2)`,
-          borderRadius: 999, padding: '6px 12px', cursor: 'pointer',
+          borderRadius: 12, padding: '6px 12px', cursor: 'pointer',
         }}>
         <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 0 2px rgba(74,222,128,0.15)', flexShrink: 0 }} />
         <span style={{ color: '#4ade80', fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap' }}>{durationSince(current.clock_in)}</span>
@@ -39,7 +39,7 @@ export function StaffPunch({ compact = false }: { compact?: boolean }) {
         style={{
           display: 'inline-flex', alignItems: 'center', gap: 6, flexShrink: 0,
           background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`,
-          borderRadius: 999, padding: '6px 12px', cursor: 'pointer',
+          borderRadius: 12, padding: '6px 12px', cursor: 'pointer',
         }}>
         <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#6b7280', flexShrink: 0 }} />
         <span style={{ color: '#9ca3af', fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap' }}>Pointer</span>
