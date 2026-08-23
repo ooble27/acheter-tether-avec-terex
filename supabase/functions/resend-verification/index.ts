@@ -2,8 +2,8 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { Resend } from "npm:resend@2.0.0";
 import {
-  BrandHeader, BigTitle, TextBlock, CTAButton, QuietDivider, Footer, wrapMailStudio,
-} from '../_shared/mail-studio/index.ts';
+  hero, ctaButton, noticeBox, wrapEmail,
+} from '../send-email-notification/_templates/html-utils.ts';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -18,25 +18,22 @@ const CORS = {
 const SITE_URL = "https://terangaexchange.com";
 
 function verificationEmailHtml(name: string, confirmUrl: string): string {
-  const greeting = name ? `Bonjour ${name},` : 'Bonjour,';
-  const blocks = [
-    BrandHeader(),
-    BigTitle({ title: 'Confirme ton compte Terex' }),
-    TextBlock({
-      greeting,
-      text: "Tu as créé un compte sur Terex mais tu n'as pas encore confirmé ton adresse email. " +
-            "Clique sur le bouton ci-dessous pour activer ton compte et accéder à la plateforme.\n\n" +
-            "Une fois ton compte activé, tu pourras acheter et vendre des USDT en toute simplicité avec Wave ou Orange Money.",
-    }),
-    CTAButton({ text: 'Confirmer mon compte', url: confirmUrl, style: 'brand' }),
-    TextBlock({
-      text: "Si tu n'as pas créé de compte sur Terex, ignore simplement cet email.\n\n" +
-            "À très vite,\nL'équipe Terex",
-    }),
-    QuietDivider(),
-    Footer({ note: 'Vous recevez cet e-mail parce que vous avez créé un compte sur Terex.' }),
-  ];
-  return wrapMailStudio('Confirme ton compte Terex', 'Confirme ton compte Terex', blocks.join(''));
+  const title = name ? `Bonjour ${name}, confirme ton compte` : 'Confirme ton compte Terex';
+  const subtitle = "Tu as créé un compte sur Terex mais tu n'as pas encore confirmé ton adresse email. " +
+    "Clique sur le bouton ci-dessous pour activer ton compte et accéder à la plateforme.";
+
+  const rows =
+    hero({ eyebrow: 'Confirmation de compte', title, subtitle }) +
+    ctaButton('Confirmer mon compte', confirmUrl) +
+    noticeBox("Une fois ton compte activé, tu pourras acheter et vendre des USDT en toute simplicité avec Wave ou Orange Money.") +
+    noticeBox("Si tu n'as pas créé de compte sur Terex, ignore simplement cet email.", 'warning');
+
+  return wrapEmail(
+    'Confirme ton compte Terex',
+    rows,
+    undefined,
+    'Vous recevez cet e-mail parce que vous avez créé un compte sur Terex.'
+  );
 }
 
 serve(async (req) => {
@@ -63,7 +60,13 @@ serve(async (req) => {
     const mode: string = body.mode || 'list';
 
     if (mode === 'test') {
-      const html = verificationEmailHtml('Aïssatou', `${SITE_URL}/auth/callback?preview=true`);
+      const { data: linkData } = await admin.auth.admin.generateLink({
+        type: 'signup',
+        email: user.email!,
+        options: { redirectTo: `${SITE_URL}/auth/callback` },
+      });
+      const confirmUrl = linkData?.properties?.action_link || `${SITE_URL}/auth/callback`;
+      const html = verificationEmailHtml('Aïssatou', confirmUrl);
       const { error: sendErr } = await resend.emails.send({
         from: "Terex <noreply@terangaexchange.com>",
         to: [user.email!],

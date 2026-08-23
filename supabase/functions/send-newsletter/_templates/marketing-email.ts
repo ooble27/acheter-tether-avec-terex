@@ -1,17 +1,6 @@
-// Email MARKETING Terex — refactorisé avec le système de blocs Mail Studio.
-// L'interface MarketingEmailProps et la signature marketingEmailHtml() restent
-// inchangées pour la rétrocompatibilité avec send-newsletter/index.ts.
-
 import {
-  BrandHeader,
-  BigTitle,
-  TextBlock,
-  HighlightBox,
-  CTAButton,
-  QuietDivider,
-  Footer,
-  wrapMailStudio,
-} from '../../_shared/mail-studio/index.ts';
+  hero, ctaButton, noticeBox, summaryBar, wrapEmail, C, LOGO,
+} from '../../send-email-notification/_templates/html-utils.ts';
 
 export interface MarketingEmailProps {
   userName?: string;
@@ -27,47 +16,23 @@ export interface MarketingEmailProps {
 export function marketingEmailHtml(p: MarketingEmailProps): string {
   const greeting = p.userName ? `Bonjour ${p.userName},` : 'Bonjour,';
 
-  const blocks: string[] = [
-    BrandHeader(),
+  let rows = hero({ title: p.heroTitle });
 
-    BigTitle({
-      title: p.heroTitle,
-    }),
+  rows += `<p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:${C.textMuted};">${greeting}</p>`;
 
-    TextBlock({
-      greeting,
-      text: p.paragraphs.join('\n\n'),
-    }),
-  ];
-
-  if (p.highlight) {
-    blocks.push(
-      HighlightBox({
-        label: p.highlight.label,
-        value: p.highlight.value,
-        sub: p.highlight.sub,
-      }),
-    );
+  for (const para of p.paragraphs) {
+    rows += `<p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:${C.textMuted};">${para}</p>`;
   }
 
-  blocks.push(
-    CTAButton({
-      text: p.ctaText,
-      url: p.ctaUrl,
-      style: 'brand',
-    }),
+  if (p.highlight) {
+    rows += summaryBar([
+      { label: p.highlight.label, value: p.highlight.value, sub: p.highlight.sub },
+    ]);
+  }
 
-    QuietDivider(),
+  rows += ctaButton(p.ctaText, p.ctaUrl);
 
-    Footer({
-      unsubscribeUrl: p.unsubscribeUrl,
-      note: 'Vous recevez cet e-mail parce que vous êtes inscrit sur Terex.',
-    }),
-  );
+  const footerNote = `Vous recevez cet e-mail parce que vous êtes inscrit sur Terex. <a href="${p.unsubscribeUrl}" style="color:${C.textDim};text-decoration:underline;">Se désabonner</a>`;
 
-  return wrapMailStudio(
-    p.previewText,
-    p.previewText,
-    blocks.join(''),
-  );
+  return wrapEmail(p.previewText, rows, undefined, footerNote);
 }

@@ -2,25 +2,18 @@ import { useEffect, useState } from 'react';
 import { LogIn, LogOut } from 'lucide-react';
 import { useStaffShifts } from '@/hooks/useStaffShifts';
 
-const CARD = '#1e1e1e';
 const BORDER = 'rgba(255,255,255,0.07)';
 
 function durationSince(iso: string): string {
   const mins = Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 60000));
   const h = Math.floor(mins / 60);
-  return h > 0 ? `${h} h ${mins % 60} min` : `${mins} min`;
+  return h > 0 ? `${h}h${String(mins % 60).padStart(2, '0')}` : `${mins} min`;
 }
 
-/**
- * Barre de pointage (arrivée / sortie) — affichée sur sa PROPRE ligne, pleine
- * largeur, sous l'en-tête du back-office. Ne surcharge plus la barre du haut
- * sur mobile. Masquée tant que la table `staff_shifts` n'est pas déployée.
- */
-export function StaffPunch() {
+export function StaffPunch({ compact = false }: { compact?: boolean }) {
   const { available, current, busy, clockIn, clockOut } = useStaffShifts();
   const [, tick] = useState(0);
 
-  // Rafraîchit la durée affichée chaque minute.
   useEffect(() => {
     if (!current) return;
     const t = setInterval(() => tick(n => n + 1), 30000);
@@ -29,10 +22,36 @@ export function StaffPunch() {
 
   if (!available) return null;
 
+  if (compact) {
+    return current ? (
+      <button onClick={clockOut} disabled={busy}
+        style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6, flexShrink: 0,
+          background: 'rgba(74,222,128,0.08)', border: `1px solid rgba(74,222,128,0.2)`,
+          borderRadius: 999, padding: '6px 12px', cursor: 'pointer',
+        }}>
+        <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 0 2px rgba(74,222,128,0.15)', flexShrink: 0 }} />
+        <span style={{ color: '#4ade80', fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap' }}>{durationSince(current.clock_in)}</span>
+        <LogOut size={12} color="#4ade80" />
+      </button>
+    ) : (
+      <button onClick={() => clockIn()} disabled={busy}
+        style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6, flexShrink: 0,
+          background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`,
+          borderRadius: 999, padding: '6px 12px', cursor: 'pointer',
+        }}>
+        <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#6b7280', flexShrink: 0 }} />
+        <span style={{ color: '#9ca3af', fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap' }}>Pointer</span>
+        <LogIn size={12} color="#9ca3af" />
+      </button>
+    );
+  }
+
   return (
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
-      background: CARD, border: `1px solid ${BORDER}`, borderRadius: 14,
+      background: '#1e1e1e', border: `1px solid ${BORDER}`, borderRadius: 14,
       padding: '10px 14px', marginBottom: 16,
     }}>
       {current ? (
