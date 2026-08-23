@@ -36,18 +36,29 @@ STRUCTURE DE RÉPONSE (JSON strict) :
 }`;
 
 const RULES = `
-RÈGLES :
-- Commence TOUJOURS par brand-header et termine par footer.
-- Le greeting du bloc text utilise {{prenom}} pour la personnalisation.
-- Écris en français, ton chaleureux, tutoiement.
-- Sois concret et factuel. Pas de superlatifs vides.
-- Pas de markdown dans les textes (** * # _ etc).
-- Maximum 8-10 blocs par template.
-- Utilise quiet-divider pour aérer entre sections.
-- Le CTA principal pointe vers https://terangaexchange.com/dashboard sauf indication contraire.
-- Signe "L'équipe Terex" dans le dernier bloc text avant le footer.
-- Ne mentionne JAMAIS de comparaison bancaire.
-- Vocabulaire : USDT, CFA, Wave, Orange Money, TRC20 — pas de jargon crypto complexe.`;
+RÈGLES DE STRUCTURE :
+- Commence TOUJOURS par brand-header (props vides {}) et termine par footer (props vides {}).
+- Ouvre le corps par un big-title (titre + sous-titre) — PAS par une image.
+- Le greeting du bloc text utilise {{prenom}} pour la personnalisation ("Bonjour {{prenom}},").
+- Utilise quiet-divider pour aérer entre les grandes sections (2-3 max).
+- Un seul cta-button principal, pointant vers https://terangaexchange.com/dashboard sauf indication contraire.
+- highlight-box uniquement quand il y a une vraie valeur chiffrée à montrer (taux, montant, délai).
+- feature-row uniquement pour présenter 2-3 fonctionnalités concrètes de la plateforme.
+- 5 à 8 blocs au total. Reste sobre : mieux vaut peu de blocs bien remplis.
+
+⚠️ IMAGES — INTERDICTION ABSOLUE D'INVENTER :
+- N'utilise le bloc hero-image QUE si l'utilisateur fournit explicitement une URL d'image dans sa demande.
+- Sinon, N'AJOUTE JAMAIS de bloc hero-image. N'invente JAMAIS d'URL d'image (pas d'Unsplash, pas de lien au hasard).
+- Un big-title propre remplace toujours une image inventée.
+
+RÈGLES DE TON :
+- Écris en français, ton chaleureux et local, tutoiement ("tu", jamais "vous").
+- Concret et factuel. Aucun superlatif vide ("le meilleur", "la plateforme n°1").
+- Aucune comparaison bancaire ("contrairement aux banques", "frais bancaires"…).
+- Aucune urgence artificielle, aucun anglicisme gratuit, aucun jargon crypto (DeFi, yield…).
+- Pas de markdown dans les textes (pas de ** * # _ \`).
+- Vocabulaire réel : USDT, CFA, Wave, Orange Money, TRC20, BEP20.
+- Signe "L'équipe Terex" à la fin du dernier bloc text (avant le footer). Jamais de nom d'IA.`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
@@ -115,12 +126,20 @@ Réponds UNIQUEMENT en JSON valide. Rien d'autre.`;
     }
 
     const result = JSON.parse(jsonMatch[0]);
+    let blocks: any[] = Array.isArray(result.blocks) ? result.blocks : [];
+
+    // Garde-fou : si l'utilisateur n'a pas fourni d'URL d'image, on retire tout
+    // bloc hero-image que l'IA aurait inventé (évite les photos au hasard).
+    const userGaveImageUrl = /https?:\/\/\S+\.(png|jpe?g|webp|gif)/i.test(prompt);
+    if (!userGaveImageUrl) {
+      blocks = blocks.filter((b) => b?.type !== "hero-image");
+    }
 
     return new Response(JSON.stringify({
       success: true,
       subject: result.subject || "",
       preview_text: result.preview_text || "",
-      blocks: result.blocks || [],
+      blocks,
       tokens: msg.usage,
     }), { headers: { ...CORS, "Content-Type": "application/json" } });
 
