@@ -49,6 +49,7 @@ interface ClientDirEntry {
   email: string;
   firstName: string;
   fullName: string;
+  confirmed?: boolean;
 }
 
 interface SentMail {
@@ -840,9 +841,13 @@ function RecipientPicker({ selected, clients, loading, onAdd, onRemove, onSelect
                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {c.fullName}
                 </span>
-                <span style={{ display: 'block', fontSize: 11, color: '#6b7280',
-                  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {c.email}
+                <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#6b7280',
+                  overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.email}</span>
+                  {c.confirmed === false && (
+                    <span style={{ flexShrink: 0, fontSize: 9, color: '#fbbf24', background: 'rgba(251,191,36,0.10)',
+                      padding: '1px 5px', borderRadius: 4 }}>non confirmé</span>
+                  )}
                 </span>
               </span>
             </button>

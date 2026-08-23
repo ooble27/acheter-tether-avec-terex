@@ -90,7 +90,7 @@ serve(async (req) => {
     };
 
     const directory = users
-      .filter(u => u.email && u.email_confirmed_at)
+      .filter(u => u.email)
       .map(u => {
         const info = infoByUid.get(u.id);
         const profile = profileByUid.get(u.id);
@@ -101,6 +101,7 @@ serve(async (req) => {
           email: u.email!,
           firstName: first,
           fullName,
+          confirmed: !!u.email_confirmed_at,
         };
       })
       .sort((a, b) => a.fullName.localeCompare(b.fullName));

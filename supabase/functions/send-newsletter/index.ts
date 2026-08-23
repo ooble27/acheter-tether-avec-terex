@@ -24,7 +24,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-type Segment = 'all' | 'active_clients' | 'never_ordered' | 'inactive_30d';
+type Segment = 'all' | 'active_clients' | 'never_ordered' | 'inactive_30d' | 'unconfirmed';
 
 interface CampaignRequest {
   mode?: 'send' | 'test' | 'count' | 'preview';
@@ -94,17 +94,18 @@ async function unsubscribeUrlFor(email: string): Promise<string> {
 }
 
 // ── Résolution de l'audience ──────────────────────────────────────────────────
-async function fetchAllUsers(): Promise<Array<{ id: string; email: string; name?: string }>> {
-  const users: Array<{ id: string; email: string; name?: string }> = [];
+async function fetchAllUsers(includeUnconfirmed = false): Promise<Array<{ id: string; email: string; name?: string; confirmed: boolean }>> {
+  const users: Array<{ id: string; email: string; name?: string; confirmed: boolean }> = [];
   let page = 1;
-  // Pagination complète (perPage max 1000)
   for (;;) {
     const { data, error } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
     if (error) throw new Error(`listUsers: ${error.message}`);
     for (const u of data.users) {
-      if (u.email && u.email_confirmed_at) {
+      if (!u.email) continue;
+      const confirmed = !!u.email_confirmed_at;
+      if (confirmed || includeUnconfirmed) {
         const meta: any = u.user_metadata || {};
-        users.push({ id: u.id, email: u.email, name: meta.full_name || meta.name || undefined });
+        users.push({ id: u.id, email: u.email, name: meta.full_name || meta.name || undefined, confirmed });
       }
     }
     if (data.users.length < 1000) break;
@@ -114,7 +115,8 @@ async function fetchAllUsers(): Promise<Array<{ id: string; email: string; name?
 }
 
 async function resolveRecipients(segment: Segment): Promise<Recipient[]> {
-  const users = await fetchAllUsers();
+  const needUnconfirmed = segment === 'unconfirmed';
+  const users = await fetchAllUsers(needUnconfirmed);
 
   // Noms depuis les profils (prioritaires sur les métadonnées)
   const { data: profiles } = await supabase.from('profiles').select('id, full_name');
@@ -138,11 +140,13 @@ async function resolveRecipients(segment: Segment): Promise<Recipient[]> {
   return users
     .filter(u => !optoutSet.has(u.email.toLowerCase()))
     .filter(u => {
+      if (segment === 'unconfirmed') return !u.confirmed;
+      if (!u.confirmed) return false;
       const last = lastOrder.get(u.id);
       switch (segment) {
-        case 'active_clients': return last !== undefined;                          // a déjà commandé
-        case 'never_ordered':  return last === undefined;                          // jamais commandé
-        case 'inactive_30d':   return last !== undefined && last < thirtyDaysAgo;  // a commandé, plus rien depuis 30 j
+        case 'active_clients': return last !== undefined;
+        case 'never_ordered':  return last === undefined;
+        case 'inactive_30d':   return last !== undefined && last < thirtyDaysAgo;
         case 'all':
         default: return true;
       }

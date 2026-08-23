@@ -22,7 +22,7 @@ import {
   UserCheck, UserX, Moon, CheckCircle2, AlertCircle, Sparkles,
   Coins, Zap, Gift, Bell, Megaphone, Rocket, Shield, BookOpen,
   Wrench, TrendingUp, PartyPopper, Network, HeartHandshake, Newspaper,
-  ArrowLeft, Plus, LayoutGrid, ChevronRight, Pencil,
+  ArrowLeft, Plus, LayoutGrid, ChevronRight, Pencil, ShieldAlert,
 } from 'lucide-react';
 import { PageHeader, drillStyles } from '@/components/admin/AdminDrill';
 
@@ -41,12 +41,13 @@ const inputStyle: React.CSSProperties = {
 };
 
 // ── Segments ─────────────────────────────────────────────────────────────
-type Segment = 'all' | 'active_clients' | 'never_ordered' | 'inactive_30d';
+type Segment = 'all' | 'active_clients' | 'never_ordered' | 'inactive_30d' | 'unconfirmed';
 const SEGMENTS: { id: Segment; label: string; desc: string; Icon: any }[] = [
   { id: 'all',            label: 'Tous les clients', desc: 'Tous les comptes confirmés',       Icon: Users },
   { id: 'active_clients', label: 'Clients actifs',    desc: 'Ont déjà passé une commande',     Icon: UserCheck },
   { id: 'never_ordered',  label: 'Jamais commandé',   desc: 'Inscrits sans commande',          Icon: UserX },
   { id: 'inactive_30d',   label: 'Inactifs 30 j',      desc: 'Aucune commande depuis 30 jours', Icon: Moon },
+  { id: 'unconfirmed',    label: 'Non confirmés',     desc: 'Email non vérifié',                Icon: ShieldAlert },
 ];
 
 // ── Templates ────────────────────────────────────────────────────────────
@@ -674,6 +675,9 @@ function ComposerView(p: ComposerProps) {
                   ? <><CheckCircle2 className="w-3.5 h-3.5" /> <span className="text-white font-semibold">{p.segmentCount}</span> destinataire(s)</>
                   : <><AlertCircle className="w-3.5 h-3.5" /> Nombre indisponible</>}
             </div>
+            {p.segment === 'unconfirmed' && (
+              <VerificationPanel count={p.segmentCount} />
+            )}
           </section>
 
           {/* Envoi */}
@@ -892,6 +896,52 @@ function SectionTitle({ icon: Icon, label, optional }: { icon: any; label: strin
       <Icon className="w-4 h-4 text-[#9ca3af]" />
       <h3 className="text-white font-semibold text-[13.5px]">{label}</h3>
       {optional && <span className="text-[#6b7280] text-[11px]">optionnel</span>}
+    </div>
+  );
+}
+
+// ── Panneau relance validation ──────────────────────────────────────────
+function VerificationPanel({ count }: { count: number | null }) {
+  const [sending, setSending] = useState(false);
+  const [result, setResult] = useState<{ sent: number; errors: number } | null>(null);
+
+  const sendAll = async () => {
+    setSending(true);
+    setResult(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('resend-verification', {
+        body: { mode: 'send_all' },
+      });
+      if (error) throw error;
+      if (data?.success) {
+        setResult({ sent: data.stats.sent, errors: data.stats.errors });
+        toast.success(`${data.stats.sent} email(s) de vérification envoyé(s)`);
+      } else {
+        throw new Error(data?.error || 'Erreur inconnue');
+      }
+    } catch (e: any) {
+      toast.error(e?.message || 'Erreur lors de l\'envoi');
+    }
+    setSending(false);
+  };
+
+  return (
+    <div className="mt-3 p-3 rounded-xl" style={{ background: INPUT_BG, border: `1px solid ${BORDER}` }}>
+      <p className="text-[11px] text-[#9ca3af] leading-relaxed mb-2">
+        Envoyer un email de vérification personnalisé (avec lien de confirmation) aux {count ?? '…'} comptes non confirmés.
+      </p>
+      <Button onClick={sendAll} disabled={sending || !count}
+        size="sm" className="w-full text-[12px] font-semibold hover:opacity-90"
+        style={{ background: '#fff', color: '#141414', height: 36 }}>
+        {sending
+          ? <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> Envoi en cours…</>
+          : <><Mail className="w-3.5 h-3.5 mr-1.5" /> Relancer la validation ({count ?? 0})</>}
+      </Button>
+      {result && (
+        <p className="text-[10.5px] mt-2" style={{ color: result.errors > 0 ? '#fbbf24' : '#22c55e' }}>
+          {result.sent} envoyé(s){result.errors > 0 ? `, ${result.errors} erreur(s)` : ''}
+        </p>
+      )}
     </div>
   );
 }
