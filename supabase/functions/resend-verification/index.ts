@@ -61,7 +61,13 @@ serve(async (req) => {
     const mode: string = body.mode || 'list';
 
     if (mode === 'test') {
-      const html = verificationEmailHtml('Aïssatou', `${SITE_URL}/auth/callback?preview=true`);
+      const { data: linkData } = await admin.auth.admin.generateLink({
+        type: 'signup',
+        email: user.email!,
+        options: { redirectTo: `${SITE_URL}/auth/callback` },
+      });
+      const confirmUrl = linkData?.properties?.action_link || `${SITE_URL}/auth/callback`;
+      const html = verificationEmailHtml('Aïssatou', confirmUrl);
       const { error: sendErr } = await resend.emails.send({
         from: "Terex <noreply@terangaexchange.com>",
         to: [user.email!],
