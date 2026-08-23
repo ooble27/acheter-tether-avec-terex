@@ -350,6 +350,41 @@ export function MailboxAdmin() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingSnippet]);
 
+  const unconfirmedRecipients = recipients.filter(r => {
+    const c = clients.find(cl => cl.id === r.id);
+    return c && c.confirmed === false;
+  });
+  const [verifyBusy, setVerifyBusy] = useState(false);
+
+  const sendVerificationEmails = async () => {
+    if (verifyBusy || unconfirmedRecipients.length === 0) return;
+    setVerifyBusy(true);
+    try {
+      if (unconfirmedRecipients.length === 1) {
+        const { data, error } = await supabase.functions.invoke('resend-verification', {
+          body: { mode: 'send_one', userId: unconfirmedRecipients[0].id },
+        });
+        if (error) throw new Error(error.message);
+        if (!data?.success) throw new Error(data?.error || 'Échec');
+        toast.success(data.message);
+      } else {
+        const { data, error } = await supabase.functions.invoke('resend-verification', {
+          body: { mode: 'send_all' },
+        });
+        if (error) throw new Error(error.message);
+        if (!data?.success) throw new Error(data?.error || 'Échec');
+        toast.success(data.message);
+        if (data.stats?.errors > 0) {
+          toast.warning(`${data.stats.errors} erreur(s) lors de l'envoi`);
+        }
+      }
+    } catch (e: any) {
+      toast.error(e?.message || 'Erreur lors de l\'envoi de validation');
+    } finally {
+      setVerifyBusy(false);
+    }
+  };
+
   const isReady = recipients.length > 0 && subject.trim().length > 0 && body.trim().length > 0;
 
   // Prévisualisation pour le 1er destinataire (variables substituées)
@@ -496,7 +531,28 @@ export function MailboxAdmin() {
                 )}
                 onRemove={(email) => setRecipients(prev => prev.filter(r => r.email !== email))}
                 onSelectAll={() => setRecipients(clients.map(c => ({ id: c.id, email: c.email, firstName: c.firstName, fullName: c.fullName })))}
+                onSelectUnconfirmed={() => setRecipients(
+                  clients.filter(c => c.confirmed === false).map(c => ({ id: c.id, email: c.email, firstName: c.firstName, fullName: c.fullName }))
+                )}
               />
+              {unconfirmedRecipients.length > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '4px 0' }}>
+                  <ShieldAlert size={13} color="#fbbf24" />
+                  <span style={{ fontSize: 12, color: '#fbbf24' }}>
+                    {unconfirmedRecipients.length} destinataire{unconfirmedRecipients.length > 1 ? 's' : ''} non confirmé{unconfirmedRecipients.length > 1 ? 's' : ''}
+                  </span>
+                  <button type="button" onClick={sendVerificationEmails} disabled={verifyBusy}
+                    style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 5,
+                      padding: '5px 12px', borderRadius: 8, border: 'none',
+                      background: verifyBusy ? '#3d3d3d' : 'rgba(251,191,36,0.15)',
+                      color: verifyBusy ? '#6b7280' : '#fbbf24',
+                      fontSize: 11.5, fontWeight: 600, cursor: verifyBusy ? 'not-allowed' : 'pointer' }}>
+                    {verifyBusy
+                      ? <><Loader2 size={11} className="animate-spin" /> Envoi…</>
+                      : <><Mail size={11} /> Envoyer email de validation</>}
+                  </button>
+                </div>
+              )}
               {showCc ? (
                 <FieldRow label="Cc">
                   <input value={cc} onChange={e => setCc(e.target.value)} placeholder="terangaexchange@gmail.com"
@@ -741,17 +797,21 @@ export function MailboxAdmin() {
 interface PickerProps {
   selected: Recipient[]; clients: ClientDirEntry[]; loading: boolean;
   onAdd: (r: Recipient) => void; onRemove: (email: string) => void; onSelectAll: () => void;
+  onSelectUnconfirmed: () => void;
 }
 
-function RecipientPicker({ selected, clients, loading, onAdd, onRemove, onSelectAll }: PickerProps) {
+function RecipientPicker({ selected, clients, loading, onAdd, onRemove, onSelectAll, onSelectUnconfirmed }: PickerProps) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
+  const [filterUnconfirmed, setFilterUnconfirmed] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const q = query.trim().toLowerCase();
   const selectedIds = new Set(selected.map(r => r.email.toLowerCase()));
+  const pool = filterUnconfirmed ? clients.filter(c => c.confirmed === false) : clients;
+  const unconfirmedCount = clients.filter(c => c.confirmed === false).length;
   const matches = q
-    ? clients
+    ? pool
         .filter(c => !selectedIds.has(c.email.toLowerCase()))
         .filter(c =>
           c.fullName.toLowerCase().includes(q) ||
@@ -759,7 +819,7 @@ function RecipientPicker({ selected, clients, loading, onAdd, onRemove, onSelect
           c.firstName.toLowerCase().includes(q)
         )
         .slice(0, 8)
-    : clients.filter(c => !selectedIds.has(c.email.toLowerCase())).slice(0, 6);
+    : pool.filter(c => !selectedIds.has(c.email.toLowerCase())).slice(0, 6);
 
   const commit = () => {
     const raw = query.trim();
@@ -853,16 +913,41 @@ function RecipientPicker({ selected, clients, loading, onAdd, onRemove, onSelect
             </button>
           ))}
           {!loading && clients.length > 0 && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '8px 10px', borderTop: `1px solid ${BORDER}`, marginTop: 4,
-              fontSize: 11, color: '#6b7280' }}>
-              <span>{clients.length} clients dans l'annuaire</span>
-              <button type="button" onMouseDown={onSelectAll}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 5,
-                  background: 'transparent', border: 'none', cursor: 'pointer',
-                  color: '#9ca3af', fontSize: 11, padding: 0 }}>
-                <Users size={11} /> Tout sélectionner
-              </button>
+            <div style={{ borderTop: `1px solid ${BORDER}`, marginTop: 4 }}>
+              {unconfirmedCount > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8,
+                  padding: '7px 10px', borderBottom: `1px solid ${BORDER}` }}>
+                  <button type="button"
+                    onMouseDown={() => setFilterUnconfirmed(f => !f)}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 5,
+                      background: filterUnconfirmed ? 'rgba(251,191,36,0.12)' : 'transparent',
+                      border: `1px solid ${filterUnconfirmed ? 'rgba(251,191,36,0.3)' : BORDER}`,
+                      borderRadius: 6, cursor: 'pointer',
+                      color: filterUnconfirmed ? '#fbbf24' : '#9ca3af', fontSize: 10.5,
+                      padding: '3px 8px', fontWeight: 500 }}>
+                    <ShieldAlert size={10} /> Non confirmés ({unconfirmedCount})
+                  </button>
+                  {filterUnconfirmed && (
+                    <button type="button"
+                      onMouseDown={() => { onSelectUnconfirmed(); setFilterUnconfirmed(false); }}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 4,
+                        background: 'transparent', border: 'none', cursor: 'pointer',
+                        color: '#fbbf24', fontSize: 10.5, padding: 0, fontWeight: 500 }}>
+                      <Users size={10} /> Tous les sélectionner
+                    </button>
+                  )}
+                </div>
+              )}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '8px 10px', fontSize: 11, color: '#6b7280' }}>
+                <span>{filterUnconfirmed ? `${unconfirmedCount} non confirmés` : `${clients.length} clients`}</span>
+                <button type="button" onMouseDown={onSelectAll}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 5,
+                    background: 'transparent', border: 'none', cursor: 'pointer',
+                    color: '#9ca3af', fontSize: 11, padding: 0 }}>
+                  <Users size={11} /> Tout sélectionner
+                </button>
+              </div>
             </div>
           )}
         </div>
