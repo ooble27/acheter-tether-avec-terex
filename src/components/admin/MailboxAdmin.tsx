@@ -355,6 +355,7 @@ export function MailboxAdmin() {
     return c && c.confirmed === false;
   });
   const [verifyBusy, setVerifyBusy] = useState(false);
+  const [testBusy, setTestBusy] = useState(false);
 
   const sendVerificationEmails = async () => {
     if (verifyBusy || unconfirmedRecipients.length === 0) return;
@@ -382,6 +383,23 @@ export function MailboxAdmin() {
       toast.error(e?.message || 'Erreur lors de l\'envoi de validation');
     } finally {
       setVerifyBusy(false);
+    }
+  };
+
+  const testVerificationEmail = async () => {
+    if (testBusy) return;
+    setTestBusy(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('resend-verification', {
+        body: { mode: 'test' },
+      });
+      if (error) throw new Error(error.message);
+      if (!data?.success) throw new Error(data?.error || 'Échec');
+      toast.success(data.message);
+    } catch (e: any) {
+      toast.error(e?.message || 'Erreur lors du test');
+    } finally {
+      setTestBusy(false);
     }
   };
 
@@ -536,21 +554,33 @@ export function MailboxAdmin() {
                 )}
               />
               {unconfirmedRecipients.length > 0 && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '4px 0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '4px 0', flexWrap: 'wrap' }}>
                   <ShieldAlert size={13} color="#fbbf24" />
                   <span style={{ fontSize: 12, color: '#fbbf24' }}>
                     {unconfirmedRecipients.length} destinataire{unconfirmedRecipients.length > 1 ? 's' : ''} non confirmé{unconfirmedRecipients.length > 1 ? 's' : ''}
                   </span>
-                  <button type="button" onClick={sendVerificationEmails} disabled={verifyBusy}
-                    style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 5,
-                      padding: '5px 12px', borderRadius: 8, border: 'none',
-                      background: verifyBusy ? '#3d3d3d' : 'rgba(251,191,36,0.15)',
-                      color: verifyBusy ? '#6b7280' : '#fbbf24',
-                      fontSize: 11.5, fontWeight: 600, cursor: verifyBusy ? 'not-allowed' : 'pointer' }}>
-                    {verifyBusy
-                      ? <><Loader2 size={11} className="animate-spin" /> Envoi…</>
-                      : <><Mail size={11} /> Envoyer email de validation</>}
-                  </button>
+                  <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <button type="button" onClick={testVerificationEmail} disabled={testBusy}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 5,
+                        padding: '5px 12px', borderRadius: 8, border: `1px solid ${testBusy ? '#3d3d3d' : 'rgba(255,255,255,0.15)'}`,
+                        background: testBusy ? '#3d3d3d' : 'transparent',
+                        color: testBusy ? '#6b7280' : '#9ca3af',
+                        fontSize: 11.5, fontWeight: 600, cursor: testBusy ? 'not-allowed' : 'pointer' }}>
+                      {testBusy
+                        ? <><Loader2 size={11} className="animate-spin" /> Envoi…</>
+                        : <><Eye size={11} /> Tester sur moi</>}
+                    </button>
+                    <button type="button" onClick={sendVerificationEmails} disabled={verifyBusy}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 5,
+                        padding: '5px 12px', borderRadius: 8, border: 'none',
+                        background: verifyBusy ? '#3d3d3d' : 'rgba(251,191,36,0.15)',
+                        color: verifyBusy ? '#6b7280' : '#fbbf24',
+                        fontSize: 11.5, fontWeight: 600, cursor: verifyBusy ? 'not-allowed' : 'pointer' }}>
+                      {verifyBusy
+                        ? <><Loader2 size={11} className="animate-spin" /> Envoi…</>
+                        : <><Mail size={11} /> Envoyer email de validation</>}
+                    </button>
+                  </div>
                 </div>
               )}
               {showCc ? (

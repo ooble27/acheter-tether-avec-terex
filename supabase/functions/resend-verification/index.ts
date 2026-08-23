@@ -62,6 +62,22 @@ serve(async (req) => {
     const body = await req.json();
     const mode: string = body.mode || 'list';
 
+    if (mode === 'test') {
+      const html = verificationEmailHtml('Aïssatou', `${SITE_URL}/auth/callback?preview=true`);
+      const { error: sendErr } = await resend.emails.send({
+        from: "Terex <noreply@terangaexchange.com>",
+        to: [user.email!],
+        subject: "[TEST] Confirme ton compte Terex",
+        html,
+      });
+      if (sendErr) throw sendErr;
+
+      return new Response(JSON.stringify({
+        success: true,
+        message: `Email de test envoyé à ${user.email}`,
+      }), { headers: { ...CORS, "Content-Type": "application/json" } });
+    }
+
     const allUsers: any[] = [];
     let page = 1;
     for (;;) {
@@ -177,7 +193,7 @@ serve(async (req) => {
       }), { headers: { ...CORS, "Content-Type": "application/json" } });
     }
 
-    return new Response(JSON.stringify({ error: "Mode invalide. Utilisez: list, send_one, send_all" }),
+    return new Response(JSON.stringify({ error: "Mode invalide. Utilisez: list, send_one, send_all, test" }),
       { status: 400, headers: { ...CORS, "Content-Type": "application/json" } });
 
   } catch (e: any) {
