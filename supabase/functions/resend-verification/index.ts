@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { Resend } from "npm:resend@2.0.0";
 import {
-  hero, ctaButton, noticeBox, linkBox, wrapEmail,
+  hero, ctaButton, noticeBox, wrapEmail,
 } from '../send-email-notification/_templates/html-utils.ts';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -25,7 +25,6 @@ function verificationEmailHtml(name: string, confirmUrl: string): string {
   const rows =
     hero({ eyebrow: 'Confirmation de compte', title, subtitle }) +
     ctaButton('Confirmer mon compte', confirmUrl) +
-    linkBox(confirmUrl) +
     noticeBox("Une fois ton compte activé, tu pourras acheter et vendre des USDT en toute simplicité avec Wave ou Orange Money.") +
     noticeBox("Si tu n'as pas créé de compte sur Terex, ignore simplement cet email.", 'warning');
 
