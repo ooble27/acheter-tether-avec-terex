@@ -12,6 +12,7 @@ import { PaymentPending } from '../PaymentPending';
 import { NetworkPill } from '../shared/NetworkPill';
 import { AddressBook } from '../shared/AddressBook';
 import { useSavedWallets } from '@/hooks/useSavedWallets';
+import { useNabooPay } from '@/hooks/useNabooPay';
 
 const NETWORK_LOGOS = {
   TRC20: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png',
@@ -122,6 +123,7 @@ export function DesktopBuyUSDT() {
   const { user } = useAuth();
   const { terexRateCfa, terexRateCad } = useTerexRates(2.5);
   const { isAuthorized } = useTransactionAuthorization();
+  const { createTransaction } = useNabooPay();
 
   const exchangeRate = currency === 'CFA' ? terexRateCfa : terexRateCad;
   const limits = PURCHASE_LIMITS[currency as keyof typeof PURCHASE_LIMITS];
@@ -205,11 +207,28 @@ export function DesktopBuyUSDT() {
 
     const result = await createOrder(orderData);
     if (result) {
-      // Paiement manuel : on affiche les instructions Wave au lieu de rediriger
-      // vers le prestataire (contourne la limite de 200 000 FCFA).
       setCurrentOrderId(result.id);
-      setStep('pay');
-    } else {
+
+      const nabooResult = await createTransaction({
+        orderId: result.id,
+        amount: parseFloat(fiatAmount),
+        products: [{
+          name: `Achat USDT - ${parseFloat(usdtAmount).toFixed(2)} USDT`,
+          category: 'Crypto',
+          amount: parseFloat(fiatAmount),
+          quantity: 1,
+          description: `Achat de ${parseFloat(usdtAmount).toFixed(2)} USDT`
+        }],
+        paymentMethods: ['WAVE', 'ORANGE_MONEY'],
+        successUrl: `${window.location.origin}/dashboard`,
+        errorUrl: `${window.location.origin}/dashboard`
+      });
+
+      if (nabooResult?.success && nabooResult.checkoutUrl) {
+        window.location.href = nabooResult.checkoutUrl;
+      } else {
+        setStep('pay');
+      }
     }
     setLoading(false);
   };
