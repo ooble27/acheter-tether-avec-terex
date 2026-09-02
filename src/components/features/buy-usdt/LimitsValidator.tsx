@@ -8,11 +8,11 @@ interface LimitsValidatorProps {
 
 export const PURCHASE_LIMITS = {
   CFA: {
-    min: 20000,
+    min: 1,
     max: 2000000
   },
   CAD: {
-    min: 100,
+    min: 1,
     max: 5000
   }
 };
