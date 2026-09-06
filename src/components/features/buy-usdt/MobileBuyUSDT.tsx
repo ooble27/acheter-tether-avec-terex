@@ -131,8 +131,6 @@ export function MobileBuyUSDT() {
 
   const isBinanceNetwork = network === 'BINANCE';
   const limitMessage = getLimitMessage(fiatAmount || '0', currency);
-  const waveFee = Math.ceil(numericFiat * 0.01);
-  const totalWithFees = numericFiat + waveFee;
 
   const handleContinueToNetwork = () => {
     const v = parseFloat(fiatAmount || '0');
@@ -348,18 +346,6 @@ export function MobileBuyUSDT() {
                   <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/825.png" alt="USDT" style={{ width: '18px', height: '18px' }} />
                 </div>
               </div>
-              {numericFiat > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#6b7280', fontSize: '13px' }}>Frais Wave (1%)</span>
-                  <span style={{ color: '#f97316', fontSize: '13px' }}>{waveFee.toLocaleString('fr-FR')} {currency}</span>
-                </div>
-              )}
-              {numericFiat > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#fff', fontSize: '13px', fontWeight: 600 }}>Total à payer</span>
-                  <span style={{ color: '#fff', fontSize: '14px', fontWeight: 700 }}>{totalWithFees.toLocaleString('fr-FR')} {currency}</span>
-                </div>
-              )}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ color: '#6b7280', fontSize: '13px' }}>Taux</span>
                 <span style={{ color: '#9ca3af', fontSize: '13px' }}>1 USDT = {exchangeRate} {currency}</span>
@@ -465,8 +451,6 @@ export function MobileBuyUSDT() {
               <div style={{ background: CARD, border: `1px solid ${BORDER}`, borderRadius: '16px', overflow: 'hidden' }}>
                 {[
                   { label: 'Montant',      value: `${fiatAmount} ${currency}` },
-                  { label: 'Frais Wave (1%)', value: `${waveFee.toLocaleString('fr-FR')} ${currency}`, accent: true },
-                  { label: 'Total à payer', value: `${totalWithFees.toLocaleString('fr-FR')} ${currency}`, bold: true },
                   { label: 'Vous recevez', value: `${usdtAmount} USDT` },
                   { label: 'Destination',  value: isBinanceNetwork ? 'Binance' : network },
                   { label: isBinanceNetwork ? 'Email' : 'Adresse', value: isBinanceNetwork ? binanceEmail : walletAddress, mono: true },
